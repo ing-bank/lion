@@ -1,0 +1,23 @@
+## editors
+/.idea
+/.vscode
+/*.code-workspace
+/.history
+
+## system files
+.DS_Store
+
+## npm
+/node_modules/
+/npm-debug.log
+
+# we do prefer yarn.lock so we do not want npms version of it
+/package-lock.json
+
+## build artifacts
+/lib/
+/build/
+
+## temp folders
+/.tmp/
+/coverage/

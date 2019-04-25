@@ -1,0 +1,468 @@
+<link rel="import"  href="../../polymer/polymer-element.html">
+<link rel="import"  href="../../polymer/lib/elements/dom-if.html">
+<link rel="import"  href="../../polymer/lib/elements/dom-repeat.html">
+
+<script type="module">
+  import '../lion-steps.js';
+  import '../lion-step.js';
+</script>
+
+<dom-module id="complex-demo-app">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        margin-top: 50px;
+      }
+
+      .steps {
+        border: 2px solid #aaa;
+        background: #fff;
+        margin: 0 auto;
+        padding: 50px;
+      }
+
+      .info {
+        border-top: 2px solid #aaa;
+        padding: 20px 50px;
+      }
+
+      .step-list div {
+        display: flex;
+        width: 50px;
+        height: 50px;
+        border: 1px solid rgb(146, 146, 146);
+        background: rgb(204, 204, 204);
+        align-items: center;
+        justify-content: center;
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      .step-list div.entered {
+        background: rgb(108, 172, 112);
+      }
+
+      .step-list div.skipped {
+        background: rgb(238, 238, 238);
+      }
+
+      .step-list div.left {
+        background: rgb(196, 228, 198);
+      }
+    </style>
+
+    <div class="steps">
+      <lion-steps id="steps" data="{{data}}">
+        <lion-step initial-step>
+          <h2>General information</h2>
+          <p>Product information goes here</p>
+          <button on-click="next">next</button>
+        </lion-step>
+
+        <lion-step on-enter="offeringCheck" forward-only>
+          <p>Fetching your current offers... </p>
+          <p>%Animated Spinner%</p>
+        </lion-step>
+        <lion-step condition="[[hasOffering]]">
+          <p>You already have an open offer.</p>
+          <p>See your <a href="#">open offer</a></p>
+        </lion-step>
+        <lion-step condition="[[hasOffering]]" invert-condition>
+          <p>No open offers found</p>
+          <button on-click="next">Create new loan offer calculation </button>
+        </lion-step>
+
+        <lion-step>
+          <p>How much do you want to loan?</p>
+          <input id="amount" type="text" value="3000" />
+          <br /><br />
+          <button on-click="setAmount">next</button>
+        </lion-step>
+        <lion-step condition="[[amountLess2500]]">
+          <p>
+            Unfortunately you can’t get this loan
+            If you want to loan less then EUR2500 than upgrade your spendable amount on your creditcard
+          </p>
+        </lion-step>
+        <lion-step condition="[[amountMore75000]]">
+          <p>
+            Unfortunately you can’t get this loan
+            If you want to loan more than EUR75000 than we want to help you with a personal loan.
+          </p>
+          <a href="#">get in contact</a>
+        </lion-step>
+
+        <lion-step>
+          <h3>Choose your loan goal</h3>
+          <p>You will get the best fitting loan.</p>
+            <p>
+            <div>
+              <input type="radio" id="goalChoice1" name="goal" value="car" checked>
+              <label for="goalChoice1">Car</label>
+            </div>
+            <div>
+              <input type="radio" id="goalChoice2" name="goal" value="motorcycle">
+              <label for="goalChoice2">Motorcycle</label>
+            </div>
+            <div>
+              <input type="radio" id="goalChoice3" name="goal" value="caravan">
+              <label for="goalChoice3">Caravan</label>
+            </div>
+            <div>
+              <input type="radio" id="goalChoice4" name="goal" value="boat">
+              <label for="goalChoice4">Boat</label>
+            </div>
+          </p>
+          <button on-click="setGoal">next</button>
+        </lion-step>
+
+        <lion-step condition="[[validUser]]" invert-condition>
+          <h3>Personal details</h3>
+          <p>Enter new Address</p>
+          <input type="text">
+          <input type="text">
+          <button on-click="next">next</button>
+        </lion-step>
+        <lion-step condition="[[validUser]]">
+          <h3>Personal details</h3>
+          <p>Is this address correct?</p>
+          <quote>
+            Perzikweg 789 a-17
+            1234 AB s’Hertogenbosch
+          </quote>
+          <br /> <br />
+          <button on-click="next">yes</button>
+          <br /> <br />
+          <a href="#">Change address (external service)</a>
+        </lion-step>
+
+        <lion-step>
+          <h3>Marital status</h3>
+          <p>What is your martial status?</p>
+          <p>
+            <div>
+              <input type="radio" id="martialStatusChoice1" name="martialStatus" value="single"
+                checked>
+              <label for="martialStatusChoice1">Single</label>
+            </div>
+            <div>
+              <input type="radio" id="martialStatusChoice2" name="martialStatus"
+                value="living-together">
+              <label for="martialStatusChoice2">Living together</label>
+            </div>
+            <div>
+              <input type="radio" id="martialStatusChoice3" name="martialStatus"
+                value="married-common-ownership">
+              <label for="martialStatusChoice3">Married with common ownership of property</label>
+            </div>
+            <div>
+              <input type="radio" id="martialStatusChoice4" name="martialStatus"
+                value="married-martial-conditions">
+              <label for="martialStatusChoice4">Married under marital conditions</label>
+            </div>
+            <div>
+              <input type="radio" id="martialStatusChoice5" name="martialStatus" value="divorced">
+              <label for="martialStatusChoice5">Divorced</label>
+            </div>
+          </p>
+          <button on-click="setMartialStatus">next</button>
+        </lion-step>
+
+        <lion-step>
+          <h3>Is taking a loan a wise thing to do?</h3>
+          <p>Some information on doing a BKR check</p>
+          <button on-click="next">BKR-check</button>
+        </lion-step>
+
+        <lion-step on-enter="bkrCheck" forward-only>
+          <p>Checking your BRK status... </p>
+          <p>%Animated Spinner%</p>
+        </lion-step>
+        <lion-step condition="[[validBkr]]" invert-condition>
+          <h3>BKR check outcome negative</h3>
+          <p>You cannot get a loan!</p>
+          <a href="#">Contact Us</a>
+        </lion-step>
+        <lion-step condition="[[validBkr]]">
+          <h3>BKR check outcome positive</h3>
+          <p>The BKR check is done!</p>
+          <p>How do you receive your income?</p>
+          <p>
+            <div>
+              <input type="radio" id="incomeChoice1" name="income" value="payroll" checked>
+              <label for="incomeChoice1">Payroll</label>
+            </div>
+            <div>
+              <input type="radio" id="incomeChoice2" name="income" value="independent">
+              <label for="incomeChoice2">Independent</label>
+            </div>
+            <div>
+              <input type="radio" id="incomeChoice3" name="income" value="temporary-agency-worker">
+              <label for="incomeChoice3">Temporary agency worker</label>
+            </div>
+            <div>
+              <input type="radio" id="incomeChoice4" name="income" value="social-payment">
+              <label for="incomeChoice4">Social payment</label>
+            </div>
+            <div>
+              <input type="radio" id="incomeChoice5" name="income" value="no-income">
+              <label for="incomeChoice5">No income</label>
+            </div>
+          </p>
+          <button on-click="setIncome">next</button>
+        </lion-step>
+
+        <lion-step condition="[[isIncomeSocialPayment]]">
+          <p>You cannot get a loan if you are on social welfare.</p>
+        </lion-step>
+        <lion-step condition="[[isIncomeNoIncome]]">
+          <p>Without an income you cannot get a loan.</p>
+        </lion-step>
+
+        <lion-step>
+          <h3>Contract type</h3>
+          <p>What type of employee contract do you have?</p>
+          <p>
+            <div>
+              <input type="radio" id="contractChoice1" name="contract" value="temporary" checked>
+              <label for="contractChoice1">Temporary</label>
+            </div>
+            <div>
+              <input type="radio" id="contractChoice2" name="contract" value="indefinite">
+              <label for="contractChoice2">Indefinite</label>
+            </div>
+          </p>
+          <button on-click="setContract">next</button>
+        </lion-step>
+        <lion-step condition="[[isContractTemporary]]">
+          <h3>Received monthly income?</h3>
+          <p>Did you receive a regular monthly income  in the past year?</p>
+          <p>
+            <div>
+              <input type="radio" id="paymentChoice1" name="payment" value="monthly" checked>
+              <label for="paymentChoice1">Yes</label>
+            </div>
+            <div>
+              <input type="radio" id="paymentChoice2" name="payment" value="non-monthly">
+              <label for="paymentChoice2">No</label>
+            </div>
+          </p>
+          <button on-click="setPayment">next</button>
+        </lion-step>
+        <lion-step condition="[[isPaymentNonMonthly]]">
+          <p>You cannot get a loan</p>
+        </lion-step>
+
+        <lion-step>
+          <h3>Enter employee contract details</h3>
+          <label>Contract start date</label><br />
+          <input type="text"><br /><br />
+          <button on-click="next">Done</button>
+        </lion-step>
+
+        <lion-step>
+          <h3>End of DEMO</h3>
+          <p>You reached a successful end of this demo!</p>
+        </lion-step>
+      </lion-steps>
+    </div>
+
+    <div class="info">
+      <div>
+        <strong>Gathered Data:</strong>
+        <pre>[[stringifiedData]]</pre>
+      </div>
+      <div class="step-list">
+        <dom-repeat items="{{stepsChildren}}" mutable-data>
+          <template>
+            <div class$="[[item.status]]">[[index]]</div>
+          </template>
+        </dom-repeat>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /* global Polymer */
+    /* eslint-disable class-methods-use-this, no-underscore-dangle */
+
+    class ComplexDemoApp extends Polymer.Element {
+      static get is() { return 'complex-demo-app'; }
+
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            value: {
+              userId: 10,
+            },
+          },
+          stepsChildren: {
+            type: Array,
+            value: [],
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.stepsChildren = Array.from(this.$.steps.children);
+        this.stringifiedData = this.getStringifiedData();
+        this.$.steps.addEventListener('transition', (event) => {
+          this.saveBrowserHistory(event.detail.fromStep, event.detail.toStep);
+          this.stepsChildren = this.stepsChildren.slice();
+          this.stringifiedData = this.getStringifiedData();
+        });
+        window.addEventListener('popstate', (event) => {
+          this.onPopState(event.state);
+        });
+      }
+
+      getStringifiedData() {
+        return JSON.stringify(this.$.steps.data, null, 2);
+      }
+
+      next() {
+        this.updateBrowserHistory();
+        this.$.steps.next();
+      }
+
+      offeringCheck(event) {
+        const { controller } = event.target;
+        fetch('data.json')
+          .then(response => response.json())
+          .then((data) => {
+            controller.data.hasOffering = data[controller.data.userId].hasOffering;
+            setTimeout(() => {
+              controller.next();
+            }, 2000);
+          }).catch((error) => {
+            console.error(error); // eslint-disable-line no-console
+          });
+      }
+
+      hasOffering(data) {
+        return data.hasOffering;
+      }
+
+      setAmount() {
+        this.data.amount = Number(this.$.amount.value);
+        this.next();
+      }
+
+      amountLess2500(data) {
+        return data.amount < 2500;
+      }
+
+      amountMore75000(data) {
+        return data.amount > 75000;
+      }
+
+      setGoal() {
+        const goalChoice = this.shadowRoot.querySelector('input[name=goal]:checked');
+        this.data.goal = goalChoice.value;
+        this.next();
+      }
+
+      validUser(data) {
+        return data.userId > 0;
+      }
+
+      setMartialStatus() {
+        const martialStatusChoice = this.shadowRoot.querySelector('input[name=martialStatus]:checked');
+        this.data.martialStatus = martialStatusChoice.value;
+        this.next();
+      }
+
+      bkrCheck(event) {
+        const { controller } = event.target;
+        fetch('data.json')
+          .then(response => response.json())
+          .then((data) => {
+            controller.data.bkr = data[controller.data.userId].bkr;
+            setTimeout(() => {
+              controller.next();
+            }, 2000);
+          }).catch((error) => {
+            console.error(error); // eslint-disable-line no-console
+          });
+      }
+
+      validBkr(data) {
+        return data.bkr;
+      }
+
+      setIncome() {
+        const incomeChoice = this.shadowRoot.querySelector('input[name=income]:checked');
+        this.data.income = incomeChoice.value;
+        this.next();
+      }
+
+      isIncomeSocialPayment(data) {
+        return data.income === 'social-payment';
+      }
+
+      isIncomeNoIncome(data) {
+        return data.income === 'no-income';
+      }
+
+      setContract() {
+        const contractChoice = this.shadowRoot.querySelector('input[name=contract]:checked');
+        this.data.contract = contractChoice.value;
+        this.next();
+      }
+
+      isContractTemporary(data) {
+        return data.contract === 'temporary';
+      }
+
+      setPayment() {
+        const paymentChoice = this.shadowRoot.querySelector('input[name=payment]:checked');
+        this.data.payment = paymentChoice.value;
+        this.next();
+      }
+
+      isPaymentNonMonthly(data) {
+        return data.payment === 'non-monthly';
+      }
+
+      saveBrowserHistory(fromStep, toStep) {
+        if (this._noHistory) {
+          this._noHistory = false;
+          return;
+        }
+
+        if (!toStep.element.forwardOnly) {
+          const state = {
+            stepNumber: toStep.number,
+            data: this.data,
+          };
+          window.history.pushState(state, `Step ${toStep.number + 1}`, `?step=${toStep.number}`);
+        }
+      }
+
+      updateBrowserHistory() {
+        const number = this.$.steps.current;
+        const currentStep = this.$.steps.children[number];
+        if (!currentStep.forwardOnly) {
+          const state = {
+            stepNumber: number,
+            data: this.data,
+          };
+          window.history.replaceState(state, `Step ${number + 1}`, `?step=${number}`);
+        }
+      }
+
+      onPopState(state) {
+        this.data = state.data;
+        this._noHistory = true;
+        this.$.steps.current = state.stepNumber;
+      }
+    }
+    customElements.define(ComplexDemoApp.is, ComplexDemoApp);
+  </script>
+
+</dom-module>
