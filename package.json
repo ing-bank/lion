@@ -1,0 +1,63 @@
+{
+  "name": "@lion/root",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/eslint-config": "^0.4.0",
+    "@open-wc/prettier-config": "^0.1.0",
+    "@open-wc/storybook": "^0.1.5",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing-karma": "^1.0.0",
+    "@open-wc/testing-karma-bs": "^1.0.0",
+    "@webcomponents/webcomponentsjs": "^2.2.5",
+    "babel-eslint": "^8.2.6",
+    "babel-polyfill": "^6.26.0",
+    "eclint": "^2.8.1",
+    "eslint": "^5.14.1",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-html": "^5.0.3",
+    "eslint-plugin-import": "^2.16.0",
+    "husky": "^1.0.0",
+    "lerna": "3.4.3",
+    "lint-staged": "^8.0.0",
+    "npm-run-all": "^4.1.5",
+    "sinon": "^7.2.2",
+    "webpack-merge": "^4.1.5",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "scripts": {
+    "start": "npm run storybook",
+    "storybook": "start-storybook -p 9001 -s ./assets",
+    "storybook:build": "build-storybook -s ./assets",
+    "test": "karma start --coverage",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:update-snapshots": "karma start --update-snapshots",
+    "test:prune-snapshots": "karma start --prune-snapshots",
+    "test:bs": "karma start karma.bs.config.js --legacy --coverage",
+    "lint": "run-p lint:*",
+    "lint:eclint": "eclint check $(find . \\( -name '*.html' -o -name '*.js' -o -name '*.css' \\) -type f -not -path '*/\\.*' -not -path '*node_modules/*' -not -path '*assets/*' -not -path '*coverage/*')",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "lint:prettier": "prettier '**/*.js' --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "format:prettier": "prettier '**/*.js' --write"
+  },
+  "lint-staged": {
+    "*": [
+      "eclint fix",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

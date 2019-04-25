@@ -1,0 +1,10 @@
+{
+  "10": {
+    "hasOffering": false,
+    "bkr": true
+  },
+  "20": {
+    "hasOffering": true,
+    "bkr": false
+  }
+}

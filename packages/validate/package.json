@@ -1,0 +1,40 @@
+{
+  "name": "@lion/validate",
+  "version": "0.0.0",
+  "description": "Validate your form elements",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/validate"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/insert-header.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "validate"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "stories",
+    "test",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.0.0",
+    "@lion/localize": "0.0.0"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/storybook": "^0.1.5",
+    "sinon": "^7.2.2"
+  }
+}

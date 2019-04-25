@@ -1,0 +1,40 @@
+{
+  "name": "@lion/select",
+  "version": "0.0.0",
+  "description": "Provide a set of options where you can select one",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/select"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/insert-header.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "select"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "stories",
+    "test",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.0.0",
+    "@lion/field": "0.0.0"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/storybook": "^0.1.5"
+  }
+
+}

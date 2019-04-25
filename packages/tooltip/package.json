@@ -1,0 +1,41 @@
+{
+  "name": "@lion/tooltip",
+  "version": "0.0.0",
+  "description": "Show relative overlay content on hover",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/tooltip"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/insert-header.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "tooltip"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "stories",
+    "test",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.0.0",
+    "@lion/overlays": "0.0.0"
+  },
+  "devDependencies": {
+    "@lion/icon": "0.0.0",
+    "@lion/button": "0.0.0",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/storybook": "^0.1.5"
+  }
+}

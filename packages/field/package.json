@@ -1,0 +1,41 @@
+{
+  "name": "@lion/field",
+  "version": "0.0.0",
+  "description": "Fields are the most fundamental building block of the Form System",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/field"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/insert-header.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "field"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "stories",
+    "test",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.0.0",
+    "@lion/validate": "0.0.0"
+  },
+  "devDependencies": {
+    "@lion/localize": "0.0.0",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/storybook": "^0.1.5",
+    "sinon": "^7.2.2"
+  }
+}
