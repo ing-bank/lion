@@ -206,25 +206,25 @@ export function parseDate(date) {
   let parsedString;
   switch (memoizedGetDateFormatBasedOnLocale()) {
     case 'day-month-year':
-      parsedString = `${stringToParse.slice(6, 10)}-${stringToParse.slice(
+      parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
         3,
         5,
-      )}-${stringToParse.slice(0, 2)}T00:00:00Z`;
+      )}/${stringToParse.slice(0, 2)}`;
       break;
     case 'month-day-year':
-      parsedString = `${stringToParse.slice(6, 10)}-${stringToParse.slice(
+      parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
         0,
         2,
-      )}-${stringToParse.slice(3, 5)}T00:00:00Z`;
+      )}/${stringToParse.slice(3, 5)}`;
       break;
     case 'year-month-day':
-      parsedString = `${stringToParse.slice(0, 4)}-${stringToParse.slice(
+      parsedString = `${stringToParse.slice(0, 4)}/${stringToParse.slice(
         5,
         7,
-      )}-${stringToParse.slice(8, 10)}T00:00:00Z`;
+      )}/${stringToParse.slice(8, 10)}`;
       break;
     default:
-      parsedString = '0000-00-00T00:00:00Z';
+      parsedString = '0000/00/00';
   }
   const parsedDate = new Date(parsedString);
   // Check if parsedDate is not `Invalid Date`

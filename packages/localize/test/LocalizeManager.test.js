@@ -368,7 +368,7 @@ describe('LocalizeManager', () => {
         date: 'I was written on {today, date}.',
         number: 'You have {n, plural, =0 {no photos.} =1 {one photo.} other {# photos.}}',
       });
-      const today = new Date('2018-04-30');
+      const today = new Date('2018/04/30');
       expect(removeLtrRtl(manager.msg('my-ns:date', { today }))).to.equal(
         'I was written on 30 Apr 2018.',
       );
