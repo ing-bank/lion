@@ -1,11 +1,10 @@
 import { html, css, nothing } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { FormatMixin } from '@lion/field';
 
 /* eslint-disable no-underscore-dangle, class-methods-use-this */
 export const ChoiceInputMixin = superclass =>
   // eslint-disable-next-line
-  class ChoiceInputMixin extends FormatMixin(ObserverMixin(superclass)) {
+  class ChoiceInputMixin extends FormatMixin(superclass) {
     get delegations() {
       return {
         ...super.delegations,
@@ -22,18 +21,18 @@ export const ChoiceInputMixin = superclass =>
       };
     }
 
-    static get syncObservers() {
-      return {
-        ...super.syncObservers,
-        _syncModelValueToChecked: ['modelValue'],
-      };
+    _requestUpdate(name, oldValue) {
+      super._requestUpdate(name, oldValue);
+      if (name === 'modelValue') {
+        this._syncModelValueToChecked({ modelValue: oldValue });
+      }
     }
 
-    static get asyncObservers() {
-      return {
-        ...super.asyncObservers,
-        _reflectCheckedToCssClass: ['modelValue'],
-      };
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has('modelValue')) {
+        this._reflectCheckedToCssClass();
+      }
     }
 
     get choiceChecked() {
