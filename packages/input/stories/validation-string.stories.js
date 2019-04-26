@@ -7,7 +7,7 @@ import {
   isEmailValidator,
 } from '@lion/validate';
 import { LocalizeMixin } from '@lion/localize';
-import { LionInput } from '@lion/input';
+import { LionInput } from '../src/LionInput.js';
 
 storiesOf('Forms|<lion-input> String Validation', module)
   .add(
