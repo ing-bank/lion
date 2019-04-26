@@ -1,6 +1,6 @@
 {
   "name": "@lion/ajax",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Thin wrapper around axios to allow for custom interceptors",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -29,12 +29,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.0.0",
-    "@bundled-es-modules/axios": "0.18.0"
+    "@bundled-es-modules/axios": "0.18.0",
+    "@lion/core": "^0.1.0"
   },
   "devDependencies": {
-    "@open-wc/testing": "^0.11.1",
     "@open-wc/storybook": "^0.1.5",
+    "@open-wc/testing": "^0.11.1",
     "sinon": "^7.2.2"
   }
 }

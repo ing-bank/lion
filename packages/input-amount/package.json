@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-amount",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Provide a way for users to fill in an amount",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -29,15 +29,14 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.0.0",
-    "@lion/input": "0.0.0",
-    "@lion/field": "0.0.0",
-    "@lion/localize": "0.0.0",
-    "@lion/validate": "0.0.0"
+    "@lion/core": "^0.1.0",
+    "@lion/field": "^0.1.0",
+    "@lion/input": "^0.1.0",
+    "@lion/localize": "^0.1.0",
+    "@lion/validate": "^0.1.0"
   },
   "devDependencies": {
-    "@open-wc/testing": "^0.11.1",
-    "@open-wc/storybook": "^0.1.5"
+    "@open-wc/storybook": "^0.1.5",
+    "@open-wc/testing": "^0.11.1"
   }
-
 }
