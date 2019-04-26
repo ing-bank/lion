@@ -21,3 +21,6 @@
 ## temp folders
 /.tmp/
 /coverage/
+
+## temp files
+local.log
