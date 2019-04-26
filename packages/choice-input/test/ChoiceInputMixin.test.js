@@ -20,7 +20,6 @@ describe('ChoiceInputMixin', () => {
     const el = await fixture(html`
       <choice-input .choiceValue=${'foo'}></choice-input>
     `);
-
     expect(el.choiceValue).to.equal('foo');
     expect(el.modelValue).to.deep.equal({
       value: 'foo',

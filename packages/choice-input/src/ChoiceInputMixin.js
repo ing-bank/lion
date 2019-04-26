@@ -24,7 +24,14 @@ export const ChoiceInputMixin = superclass =>
     _requestUpdate(name, oldValue) {
       super._requestUpdate(name, oldValue);
       if (name === 'modelValue') {
-        this._syncModelValueToChecked({ modelValue: oldValue });
+        if (oldValue !== undefined) {
+          this._syncModelValueToChecked({
+            modelValue: {
+              value: oldValue.value,
+              checked: oldValue.checked,
+            },
+          });
+        }
       }
     }
 
