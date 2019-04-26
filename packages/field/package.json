@@ -24,6 +24,8 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "docs",
+    "src",
     "stories",
     "test",
     "*.js"

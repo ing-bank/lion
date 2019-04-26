@@ -24,8 +24,10 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "src",
     "stories",
     "test",
+    "translations",
     "*.js"
   ],
   "dependencies": {
