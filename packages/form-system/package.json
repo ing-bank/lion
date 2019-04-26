@@ -1,7 +1,7 @@
 {
-  "name": "@lion/form",
+  "name": "@lion/form-system",
   "version": "0.0.0",
-  "description": "It enhances the functionality of the native `form` component. It is designed to interact with (instances of) form fields",
+  "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages/form"
+    "directory": "packages/form-system"
   },
   "scripts": {
     "prepublishOnly": "../../scripts/insert-header.js"
@@ -28,15 +28,20 @@
     "test",
     "*.js"
   ],
-  "dependencies": {
-    "@lion/core": "0.0.0",
-    "@lion/fieldset": "0.0.0"
-  },
   "devDependencies": {
-    "@lion/input": "0.0.0",
-    "@lion/input-iban": "0.0.0",
+    "@lion/core": "0.0.0",
+    "@lion/form": "0.0.0",
+    "@lion/fieldset": "0.0.0",
     "@lion/textarea": "0.0.0",
-    "@lion/validate": "0.0.0",
+    "@lion/input": "0.0.0",
+    "@lion/checkbox": "0.0.0",
+    "@lion/checkbox-group": "0.0.0",
+    "@lion/radio": "0.0.0",
+    "@lion/radio-group": "0.0.0",
+    "@lion/input-iban": "0.0.0",
+    "@lion/input-amount": "0.0.0",
+    "@lion/input-date": "0.0.0",
+    "@lion/input-email": "0.0.0",
     "@open-wc/testing": "^0.11.1",
     "@open-wc/storybook": "^0.1.5"
   }
