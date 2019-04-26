@@ -2,7 +2,7 @@
 import { storiesOf, html } from '@open-wc/storybook';
 import { maxLengthValidator } from '@lion/validate';
 import { localize, LocalizeMixin } from '@lion/localize';
-import { LionInput } from '@lion/input';
+import { LionInput } from '../src/LionInput.js';
 
 storiesOf('Forms|<lion-input> Localize', module).add('localize', () => {
   class InputValidationExample extends LocalizeMixin(LionInput) {
