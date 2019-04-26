@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-date",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Provide a way for users to fill in a date",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -30,11 +30,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.0",
-    "@lion/field": "^0.1.0",
-    "@lion/input": "^0.1.0",
-    "@lion/localize": "^0.1.0",
-    "@lion/validate": "^0.1.0"
+    "@lion/core": "^0.1.1",
+    "@lion/field": "^0.1.1",
+    "@lion/input": "^0.1.1",
+    "@lion/localize": "^0.1.1",
+    "@lion/validate": "^0.1.1"
   },
   "devDependencies": {
     "@open-wc/storybook": "^0.1.5",

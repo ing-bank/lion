@@ -1,6 +1,6 @@
 {
   "name": "@lion/steps",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Breaks a single goal down into dependable sub-tasks.",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -30,7 +30,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.0"
+    "@lion/core": "^0.1.1"
   },
   "devDependencies": {
     "@open-wc/storybook": "^0.1.5",

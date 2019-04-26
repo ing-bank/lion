@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.1...@lion/form-system@0.0.2) (2019-04-26)
+
+
+### Bug Fixes
+
+* add missing files to npm packages ([0e3ca17](https://github.com/ing-bank/lion/commit/0e3ca17))
+
+
+
+
+
 ## 0.0.1 (2019-04-26)
 
 
