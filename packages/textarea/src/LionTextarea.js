@@ -32,12 +32,15 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      resizeTextarea: ['maxRows', 'modelValue'],
-      setTextareaMaxHeight: ['maxRows', 'rows'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('maxRows') || changedProperties.has('modelValue')) {
+      this.resizeTextarea();
+    }
+    if (changedProperties.has('maxRows') || changedProperties.has('rows')) {
+      this.setTextareaMaxHeight();
+    }
   }
 
   get slots() {
