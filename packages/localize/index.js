@@ -6,6 +6,6 @@ export {
   getDecimalSeparator,
   getGroupSeparator,
 } from './src/formatNumber.js';
-export { localize } from './src/localize.js';
+export { localize, setLocalize } from './src/localize.js';
 export { LocalizeManager } from './src/LocalizeManager.js';
 export { LocalizeMixin } from './src/LocalizeMixin.js';
