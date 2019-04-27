@@ -50,14 +50,6 @@ export const InteractionStateMixin = dedupeMixin(
         };
       }
 
-      // static get syncObservers() {
-      //   return {
-      //     ...super.syncObservers,
-      //     _onTouchedChanged: ['touched'],
-      //     _onDirtyChanged: ['dirty'],
-      //   };
-      // }
-
       _requestUpdate(name, oldValue) {
         super._requestUpdate(name, oldValue);
 
