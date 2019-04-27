@@ -1,6 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
-
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
@@ -81,7 +78,6 @@ describe('LocalOverlayController', () => {
     it('will hide and show html nodes provided to overlay', async () => {
       const tagString = defineCE(
         class extends LionLitElement {
-          // eslint-disable-next-line class-methods-use-this
           render() {
             return html`
               <slot></slot>

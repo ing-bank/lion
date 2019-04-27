@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 
 import '@lion/icon/lion-icon.js';
@@ -49,7 +49,7 @@ const tooltipDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System|<lion-tooltip>', module)
+storiesOf('Local Overlay System|Tooltip', module)
   .add(
     'Button tooltip',
     () => html`

@@ -8,8 +8,8 @@
 .DS_Store
 
 ## npm
-/node_modules/
-/npm-debug.log
+node_modules/
+npm-debug.log
 
 # we do prefer yarn.lock so we do not want npms version of it
 /package-lock.json

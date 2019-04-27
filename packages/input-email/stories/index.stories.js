@@ -1,10 +1,10 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { localize } from '@lion/localize';
 
 import '../lion-input-email.js';
 
-storiesOf('Forms|<lion-input-email>', module)
+storiesOf('Forms|Input Email', module)
   .add(
     'Default',
     () => html`

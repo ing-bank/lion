@@ -1,6 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
-
 import { expect, fixture, html } from '@open-wc/testing';
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
 import { keyCodes } from '../src/utils/key-codes.js';

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import {
   expect,
   fixture,
@@ -138,7 +136,6 @@ describe('<lion-field>', () => {
   });
 
   it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
-    // eslint-disable-line
     const lionField = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
     await triggerFocusFor(lionField);
     await lionField.updateComplete;

@@ -1,8 +1,6 @@
-/* eslint-disable no-underscore-dangle */
 import { css, html, DelegateMixin, SlotMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 
-// eslint-disable-next-line no-unused-vars
 export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   static get properties() {
     return {

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, class-methods-use-this, no-unused-expressions */
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '../src/LionLitElement.js';

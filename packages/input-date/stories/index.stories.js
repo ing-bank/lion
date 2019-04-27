@@ -1,9 +1,9 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { maxDateValidator, minDateValidator, minMaxDateValidator } from '@lion/validate';
 
 import '../lion-input-date.js';
 
-storiesOf('Forms|<lion-input-date>', module)
+storiesOf('Forms|Input Date', module)
   .add(
     'Default',
     () => html`

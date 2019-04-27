@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect } from '@open-wc/testing';
 import { localize } from '../src/localize.js';
 import { localizeTearDown } from '../test-helpers.js';

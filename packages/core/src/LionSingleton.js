@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 /**
  * 'LionSingleton' provides an instance of the given class via .getInstance(foo, bar) and will
  * return the same instance if already created. It can reset its instance so a new one will be

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-
 import { expect } from '@open-wc/testing';
 
 import { GlobalOverlayController } from '../src/GlobalOverlayController.js';

@@ -1,8 +1,9 @@
+/* eslint-disable class-methods-use-this */
+
 import { html, css, nothing } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { FormatMixin } from '@lion/field';
 
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
 export const ChoiceInputMixin = superclass =>
   // eslint-disable-next-line
   class ChoiceInputMixin extends FormatMixin(ObserverMixin(superclass)) {

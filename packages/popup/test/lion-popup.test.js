@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-env mocha */
 import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-popup.js';

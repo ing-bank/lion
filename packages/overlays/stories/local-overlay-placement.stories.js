@@ -1,4 +1,4 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 import { managePosition } from '../src/utils/manage-position.js';
 
@@ -30,7 +30,7 @@ const popupPlacementDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System|Local/Local Overlay Placement', module)
+storiesOf('Local Overlay System|Local Overlay Placement', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add('Preferred placement overlay absolute', () => {
     const element = document.createElement('div');
@@ -68,7 +68,6 @@ storiesOf('Overlay System|Local/Local Overlay Placement', module)
         default:
           placement = 'top left';
       }
-      action('position: ')(placement);
       managePosition(element, target, { placement, position: 'absolute' });
     };
     return html`
@@ -123,7 +122,6 @@ storiesOf('Overlay System|Local/Local Overlay Placement', module)
         default:
           placement = 'top left';
       }
-      action('position: ')(placement);
       managePosition(element, target, { placement, position: 'absolute' });
     };
     return html`

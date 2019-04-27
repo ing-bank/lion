@@ -8,10 +8,10 @@
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
-    "@open-wc/eslint-config": "^0.4.0",
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/eslint-config": "^0.4.5",
     "@open-wc/prettier-config": "^0.1.0",
-    "@open-wc/storybook": "^0.1.5",
-    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing": "^0.11.5",
     "@open-wc/testing-karma": "^1.0.0",
     "@open-wc/testing-karma-bs": "^1.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.5",

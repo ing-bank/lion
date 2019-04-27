@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { DelegateMixin } from '@lion/core';
 import { LionFieldset } from '@lion/fieldset';
 

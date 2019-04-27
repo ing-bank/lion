@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect } from '@open-wc/testing';
 
 import isLocalizeESModule from '../src/isLocalizeESModule.js';

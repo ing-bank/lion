@@ -1,9 +1,9 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-steps.js';
 import '../lion-step.js';
 
-storiesOf('Steps|<lion-steps>', module)
+storiesOf('Steps|Steps', module)
   /* eslint-disable */
   .add(
     'Default',

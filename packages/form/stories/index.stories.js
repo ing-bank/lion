@@ -1,4 +1,4 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-form.js';
 import '@lion/fieldset/lion-fieldset.js';
@@ -7,7 +7,7 @@ import '@lion/textarea/lion-textarea.js';
 
 import { maxLengthValidator } from '@lion/validate';
 
-storiesOf('Forms|<lion-form>', module)
+storiesOf('Forms|Form', module)
   .add(
     'Basic form result',
     () => html`
@@ -29,10 +29,7 @@ storiesOf('Forms|<lion-form>', module)
             help-text="If none, leave empty"
             label="Comments"
           ></lion-textarea>
-          <button
-            @click=${() =>
-              action('serializeGroup')(document.querySelector('#form').serializeGroup())}
-          >
+          <button @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
             Log to Action Logger
           </button>
         </form></lion-form
@@ -43,7 +40,7 @@ storiesOf('Forms|<lion-form>', module)
     const submit = () => {
       const form = document.querySelector('#form');
       if (form.errorState === false) {
-        action('serializeGroup')(form.serializeGroup());
+        console.log(form.serializeGroup());
       }
     };
     return html`

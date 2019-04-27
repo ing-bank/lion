@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
 /* global ShadyCSS */
 import { dedupeMixin } from './dedupeMixin.js';
 import { DomHelpersMixin } from './DomHelpersMixin.js';

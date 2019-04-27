@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions */
 import { expect } from '@open-wc/testing';
 import { smokeTestValidator } from '@lion/validate/test/validators.test.js';
 

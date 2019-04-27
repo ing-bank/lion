@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions */
 import { expect } from '@open-wc/testing';
 
 import { LionSingleton } from '../src/LionSingleton.js';

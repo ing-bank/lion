@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
 import { LionSingleton } from '@lion/core';
 import isLocalizeESModule from './isLocalizeESModule.js';
@@ -24,8 +22,8 @@ export class LocalizeManager extends LionSingleton {
     this.formatNumberOptions = { returnIfNaN: '' };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get locale() {
-    // eslint-disable-line class-methods-use-this
     return document.documentElement.lang;
   }
 
@@ -168,6 +166,7 @@ export class LocalizeManager extends LionSingleton {
     /* eslint-enable no-restricted-syntax */
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _getLangFromLocale(locale) {
     return locale.substring(0, 2);
   }

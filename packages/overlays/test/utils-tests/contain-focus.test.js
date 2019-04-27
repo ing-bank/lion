@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { isValidIBAN } from '@bundled-es-modules/ibantools/ibantools.js';
 
 export const isIBAN = value => isValidIBAN(value);

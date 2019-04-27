@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { css } from '@lion/core';
 import { overlays } from '../src/overlays.js';
@@ -20,7 +19,7 @@ const modalDialogDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System|Global/Modal Dialog', module)
+storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
     const dialogCtrl = overlays.add(
       new ModalDialogController({

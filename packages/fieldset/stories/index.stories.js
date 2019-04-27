@@ -1,8 +1,8 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-fieldset.js';
 
-storiesOf('Forms|<lion-fieldset>', module)
+storiesOf('Forms|Fieldset', module)
   .add(
     'Default',
     () => html`
@@ -25,7 +25,7 @@ storiesOf('Forms|<lion-fieldset>', module)
       <lion-fieldset name="nameGroup" label="Name">
         <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
         <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
-        <button @click=${ev => action('modelValue')(ev.target.parentElement.modelValue)}>
+        <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
           Log to Action Logger
         </button>
       </lion-fieldset>
@@ -44,13 +44,12 @@ storiesOf('Forms|<lion-fieldset>', module)
           <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
         </lion-fieldset>
         <lion-input name="age" label="Age" .modelValue=${21}></lion-input>
-        <button @click=${ev => action('modelValue')(ev.target.parentElement.modelValue)}>
+        <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
           Log to Action Logger
         </button>
         <br />
         <button
-          @click=${ev =>
-            action('modelValue')(ev.target.parentElement.formElements.nameGroup.modelValue)}
+          @click=${ev => console.log(ev.target.parentElement.formElements.nameGroup.modelValue)}
         >
           Log nameGroup to Action Logger
         </button>

@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this, no-underscore-dangle */
-
 import { html, css } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 

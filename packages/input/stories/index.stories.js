@@ -1,8 +1,8 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-input.js';
 
-storiesOf('Forms|<lion-input>', module)
+storiesOf('Forms|Input', module)
   .add(
     'Default',
     () => html`

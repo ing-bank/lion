@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { until } from '@lion/core';
 
 import '../lion-icon.js';
@@ -20,7 +20,7 @@ import sun from './icons/space/sun.svg.js';
 import moonFlag from './icons/space/moon-flag.svg.js';
 import night from './icons/space/night.svg.js';
 
-storiesOf('Icon System|<lion-icon>', module)
+storiesOf('Icon System|Icon', module)
   .add(
     'default',
     () => html`

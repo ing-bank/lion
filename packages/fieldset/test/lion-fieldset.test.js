@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle */
 import {
   expect,
   fixture,
@@ -73,7 +71,6 @@ describe('<lion-fieldset>', () => {
     ]);
   });
 
-  /* eslint-disable no-console */
   it('throws if an element without a name tries to register', async () => {
     const orig = console.info;
     console.info = () => {};

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { expect, fixture, defineCE } from '@open-wc/testing';
 
 import { SlotMixin } from '../src/SlotMixin.js';

@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect, fixture, oneEvent } from '@open-wc/testing';
 
 import '../lion-steps.js';

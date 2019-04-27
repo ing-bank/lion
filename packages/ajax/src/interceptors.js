@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { axios } from '@bundled-es-modules/axios';
 
 // FIXME: lang must be dynamic, fallback to html tag lang attribute or use the user-provided one
