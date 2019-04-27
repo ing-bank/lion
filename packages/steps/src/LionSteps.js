@@ -33,10 +33,13 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     };
   }
 
-  static get asyncObservers() {
-    return {
-      _onCurrentChanged: ['current'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('current'))
+      this._onCurrentChanged(
+        { data: this.data, current: this.current },
+        { data: changedProperties.get('data'), current: changedProperties.get('current') },
+      );
   }
 
   constructor() {
@@ -127,6 +130,7 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
   }
 
   _onCurrentChanged(newValues, oldValues) {
+    console.log(newValues, oldValues);
     if (this._internalCurrentSync) {
       this._internalCurrentSync = false;
     } else {
