@@ -194,7 +194,6 @@ describe('<lion-field>', () => {
           </${tagString}>
         `);
       const nativeInput = lionField.$$slot('input');
-
       expect(nativeInput.getAttribute('aria-labelledby')).to.equal(` label-${lionField._inputId}`);
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(
         ` help-text-${lionField._inputId}`,
