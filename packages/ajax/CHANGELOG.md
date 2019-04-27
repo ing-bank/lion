@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.1...@lion/ajax@0.1.2) (2019-04-27)
+
+
+### Bug Fixes
+
+* **ajax:** add setAjax to public api ([9a69b1a](https://github.com/ing-bank/lion/commit/9a69b1a))
+
+
+
+
+
 ## [0.1.1](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.0...@lion/ajax@0.1.1) (2019-04-26)
 
 
