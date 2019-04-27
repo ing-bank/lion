@@ -202,29 +202,55 @@ export const ValidateMixin = dedupeMixin(
             'prefilled',
             'label',
           ],
-          _onErrorShowChangedAsync: ['errorShow'],
+          // _onErrorShowChangedAsync: ['errorShow'],
         };
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          validate: [
-            'errorValidators',
-            'warningValidators',
-            'infoValidators',
-            'successValidators',
-            'modelValue',
-          ],
-          _onErrorChanged: ['error'],
-          _onWarningChanged: ['warning'],
-          _onInfoChanged: ['info'],
-          _onSuccessChanged: ['success'],
-          _onErrorStateChanged: ['errorState'],
-          _onWarningStateChanged: ['warningState'],
-          _onInfoStateChanged: ['infoState'],
-          _onSuccessStateChanged: ['successState'],
-        };
+      updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('errorShow')) {
+          this._onErrorShowChangedAsync({ errorShow: this.errorShow });
+        }
+      }
+
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+
+        switch (name) {
+          case 'errorValidators':
+          case 'warningValidators':
+          case 'infoValidators':
+          case 'successValidators':
+          case 'modelValue':
+            this.validate();
+            break;
+          case 'error':
+            this._onErrorChanged({ error: this[name] }, { error: oldValue });
+            break;
+          case 'warning':
+            this._onWarningChanged({ warning: this[name] }, { warning: oldValue });
+            break;
+          case 'info':
+            this._onInfoChanged({ info: this[name] }, { info: oldValue });
+            break;
+          case 'success':
+            this._onSuccessChanged({ success: this[name] }, { success: oldValue });
+            break;
+          case 'errorState':
+            this._onErrorStateChanged();
+            break;
+          case 'warningState':
+            this._onWarningStateChanged();
+            break;
+          case 'infoState':
+            this._onInfoStateChanged();
+            break;
+          case 'successState':
+            this._onSuccessStateChanged();
+            break;
+          default:
+            break;
+        }
       }
 
       static get validationTypes() {
@@ -301,6 +327,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       _onErrorChanged(newValues, oldValues) {
+        console.log(newValues, oldValues);
         if (!this.constructor._objectEquals(newValues.error, oldValues.error)) {
           this.dispatchEvent(new CustomEvent('error-changed', { bubbles: true, composed: true }));
         }
