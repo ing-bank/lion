@@ -39,11 +39,14 @@ export class LionFieldset extends FormControlMixin(
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _onDisabledChanged: ['disabled'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('disabled'))
+      this._onDisabledChanged(
+        { disabled: this.disabled },
+        { disabled: changedProperties.get('disabled') },
+      );
   }
 
   get events() {
