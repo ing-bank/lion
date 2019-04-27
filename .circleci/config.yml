@@ -35,33 +35,33 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           paths: .
-  # deploy:
-  #   <<: *defaults
-  #   steps:
-  #     # will add github as known host
-  #     - checkout
-  #     - attach_workspace:
-  #         at: ~/repo
-  #     - add_ssh_keys:
-  #         fingerprints:
-  #           - "3f:ea:54:b7:77:13:b6:cf:29:90:2b:19:bb:eb:b5:f1"
-  #     - run:
-  #         name: Authenticate with registry
-  #         command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-  #     - run: git config --global user.email circleci@circleci
-  #     - run: git config --global user.name CircleCI
-  #     - run:
-  #         name: Publish package
-  #         command: "./node_modules/.bin/lerna publish --message 'chore: release new versions' --yes"
+  deploy:
+    <<: *defaults
+    steps:
+      # will add github as known host
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - add_ssh_keys:
+          fingerprints:
+            - "df:41:a0:89:d0:a1:30:7d:08:38:d6:65:73:61:a4:ec"
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: git config --global user.email circleci@circleci
+      - run: git config --global user.name CircleCI
+      - run:
+          name: Publish package
+          command: "./node_modules/.bin/lerna publish --message 'chore: release new versions' --yes"
 
 workflows:
   version: 2
   test-deploy:
     jobs:
       - test
-      # - deploy:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only: master
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
