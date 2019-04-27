@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '@lion/form/lion-form.js';
 import '@lion/fieldset/lion-fieldset.js';
@@ -14,7 +14,7 @@ import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
 
-storiesOf('Forms|<lion-form>', module).add('Umbrella form', () => {
+storiesOf('Forms|Form', module).add('Umbrella form', () => {
   return html`
     <lion-form
       ><form>

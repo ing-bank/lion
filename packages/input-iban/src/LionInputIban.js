@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-
 import { LocalizeMixin } from '@lion/localize';
 import { LionInput } from '@lion/input';
 import { FieldCustomMixin } from '@lion/field';

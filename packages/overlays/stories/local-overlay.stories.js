@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 import { overlays } from '../src/overlays.js';
 import { LocalOverlayController } from '../src/LocalOverlayController.js';
@@ -26,7 +26,7 @@ const popupDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System|Local/Local Overlay', module)
+storiesOf('Local Overlay System|Local Overlay', module)
   .add('Basic', () => {
     const popup = overlays.add(
       new LocalOverlayController({

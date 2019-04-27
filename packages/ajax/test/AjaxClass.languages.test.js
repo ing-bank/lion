@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 

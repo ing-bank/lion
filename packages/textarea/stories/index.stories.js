@@ -1,8 +1,8 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-textarea.js';
 
-storiesOf('Forms|<lion-textarea>', module)
+storiesOf('Forms|Textarea', module)
   .add(
     'Default',
     () => html`

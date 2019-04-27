@@ -1,8 +1,8 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-select.js';
 
-storiesOf('Forms|<lion-select>', module)
+storiesOf('Forms|Select', module)
   .add(
     'Default',
     () => html`
@@ -49,7 +49,7 @@ storiesOf('Forms|<lion-select>', module)
     const submit = () => {
       const form = document.querySelector('#form');
       if (form.errorState === false) {
-        action('serializeGroup')(form.serializeGroup());
+        console.log(form.serializeGroup());
       }
     };
     return html`

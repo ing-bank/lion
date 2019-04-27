@@ -3,8 +3,6 @@ import { LionInput } from '@lion/input';
 import { css } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
-/* eslint-disable no-underscore-dangle */
-
 /**
  * LionTextarea: extension of lion-field with native input element in place and user friendly API
  *
@@ -12,7 +10,6 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
  * @extends LionInput
  */
 export class LionTextarea extends ObserverMixin(LionInput) {
-  // eslint-disable-line no-unused-vars
   static get properties() {
     return {
       ...super.properties,

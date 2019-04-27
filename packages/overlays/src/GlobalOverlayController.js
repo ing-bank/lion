@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-
 import { render } from '@lion/core';
 import { containFocus } from './utils/contain-focus';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
@@ -284,6 +282,7 @@ export class GlobalOverlayController {
    * @param {HTMLElement[]} containers
    * @returns {[OverlayController] | []}
    */
+  // eslint-disable-next-line class-methods-use-this
   _findOverlays(containers) {
     return containers.map(container => container._overlayController);
   }
@@ -312,6 +311,7 @@ export class GlobalOverlayController {
    * Plays a backdrop fade out animation. This is applied to the overlay container as the
    * overlay which had a backdrop is already removed at this point.
    */
+  // eslint-disable-next-line class-methods-use-this
   _fadeOutBackdrop() {
     GlobalOverlayController._rootNode.classList.add('global-overlays--backdrop-fade-out');
     // a new overlay could be opened within 600ms, but it is only an animation

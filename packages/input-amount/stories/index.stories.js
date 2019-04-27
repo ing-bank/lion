@@ -1,8 +1,8 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-input-amount.js';
 
-storiesOf('Forms|<lion-input-amount>', module)
+storiesOf('Forms|Input Amount', module)
   .add(
     'Default',
     () => html`

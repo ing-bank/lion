@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this, no-unused-expressions */
-
 import { render, html } from '@lion/core';
 import { managePosition } from './utils/manage-position.js';
 import { containFocus } from './utils/contain-focus.js';
@@ -87,6 +85,7 @@ export class LocalOverlayController {
    * Toggles the overlay.
    */
   toggle() {
+    // eslint-disable-next-line no-unused-expressions
     this.isShown ? this.hide() : this.show();
   }
 

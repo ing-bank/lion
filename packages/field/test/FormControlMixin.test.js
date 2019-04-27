@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this, no-underscore-dangle, no-unused-expressions */
 import { expect, fixture, html, defineCE, unsafeStatic, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import { SlotMixin } from '@lion/core';
@@ -12,7 +11,6 @@ describe('FormControlMixin', () => {
   let tag;
 
   before(async () => {
-    // eslint-disable-next-line max-len
     const FormControlMixinClass = class extends FormControlMixin(SlotMixin(LionLitElement)) {
       static get properties() {
         return {

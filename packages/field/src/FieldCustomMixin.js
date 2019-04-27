@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { dedupeMixin, nothing } from '@lion/core';
 
 /**

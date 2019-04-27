@@ -1,8 +1,3 @@
-/* eslint-env mocha */
-/*
-  eslint-disable class-method-use-this, no-underscore-dangle,
-  no-unused-expressions, no-new, no-unused-vars
-*/
 import { expect, fixture, unsafeStatic, html, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
@@ -50,7 +45,6 @@ describe('InteractionStateMixin', async () => {
   // See: https://stackblitz.com/edit/lit-element-request-update-bug-g59tjq?file=blurry.js
   // it.skip
   it('sets touched to true when field left after focus', async () => {
-    // eslint-disable-next-line max-len
     // const formElement = await LionTest.htmlFixture(`<${elem}><input type="text" slot="input"></${elem}>`);
     // await triggerFocusFor(formElement.inputElement); // focus/blur can't be delegated
     // await triggerBlurFor(formElement.inputElement);

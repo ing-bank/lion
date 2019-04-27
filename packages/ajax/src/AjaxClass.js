@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { axios } from '@bundled-es-modules/axios';
 import { LionSingleton } from '@lion/core';
 import {

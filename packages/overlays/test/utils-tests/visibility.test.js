@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 
 import { isVisible } from '../../src/utils/is-visible.js';

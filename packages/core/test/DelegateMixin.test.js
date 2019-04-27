@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions, class-methods-use-this */
 import { expect, fixture, defineCE, unsafeStatic, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '../src/LionLitElement.js';
@@ -503,6 +501,6 @@ describe('DelegateMixin', () => {
 
     // we expect to NOT use an "internal" property
     // TODO: double check if we test the right thing here
-    expect(el.constructor._classProperties.get('size')).to.be.undefined; // eslint-disable-line no-underscore-dangle
+    expect(el.constructor._classProperties.get('size')).to.be.undefined;
   });
 });

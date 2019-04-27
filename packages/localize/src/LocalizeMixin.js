@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { dedupeMixin, until, nothing } from '@lion/core';
 import { localize } from './localize.js';
 

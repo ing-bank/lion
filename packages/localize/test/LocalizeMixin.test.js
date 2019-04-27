@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, class-methods-use-this, no-unused-expressions */
 import {
   expect,
   fixture,
@@ -335,7 +333,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // eslint-disable-next-line max-len
     const tag = defineCE(
       class TestPromise extends LocalizeMixin(LionLitElement) {
         static get localizeNamespaces() {

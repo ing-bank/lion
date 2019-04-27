@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { bug12 } from '@lion/icon/stories/icons/bugs-collection';
 import '@lion/icon/lion-icon.js';
 import '@lion/form/lion-form.js';
@@ -7,7 +6,7 @@ import '@lion/input/lion-input.js';
 
 import '../lion-button.js';
 
-storiesOf('Buttons|<lion-button>', module)
+storiesOf('Buttons|Button', module)
   .add(
     'Used on its own',
     () => html`
@@ -39,8 +38,7 @@ storiesOf('Buttons|<lion-button>', module)
           <lion-input name="foo" label="Foo" .modelValue=${'bar'}></lion-input>
           <lion-button
             type="submit"
-            @click=${() =>
-              action('serializeGroup')(document.querySelector('#form').serializeGroup())}
+            @click=${() => console.log(document.querySelector('#form').serializeGroup())}
             >Submit</lion-button
           >
         </form></lion-form

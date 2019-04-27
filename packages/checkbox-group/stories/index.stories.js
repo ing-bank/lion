@@ -1,10 +1,10 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-checkbox-group.js';
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/form/lion-form.js';
 
-storiesOf('Forms|<lion-checkbox-group>', module)
+storiesOf('Forms|Checkbox Group', module)
   .add(
     'Default',
     () => html`
@@ -92,7 +92,7 @@ storiesOf('Forms|<lion-checkbox-group>', module)
     const submit = () => {
       const form = document.querySelector('#form');
       if (form.errorState === false) {
-        action('serializeGroup')(form.serializeGroup());
+        console.log(form.serializeGroup());
       }
     };
     return html`

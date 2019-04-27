@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this, no-underscore-dangle */
 import { UpdatingElement } from '@lion/core';
 import { overlays, LocalOverlayController } from '@lion/overlays';
 

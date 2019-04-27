@@ -13,9 +13,6 @@ import { FocusMixin } from './FocusMixin.js';
  *   field is left non-empty
  * - on keyup (actually, on the model-value-changed event) -> 'dirty' will be set to true
  */
-
-/* eslint-disable class-methods-use-this, no-underscore-dangle */
-
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow

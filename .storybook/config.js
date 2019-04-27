@@ -1,9 +1,5 @@
 import { configure } from '@storybook/polymer';
-import { setOptions } from '@storybook/addon-options';
-
-setOptions({
-  hierarchyRootSeparator: /\|/,
-});
+import '@storybook/addon-console';
 
 const req = require.context('../stories', true, /\.stories\.js$/);
 function loadStories() {

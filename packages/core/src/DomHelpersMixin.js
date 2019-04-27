@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { dedupeMixin } from './dedupeMixin.js';
 
 /**

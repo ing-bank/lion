@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable class-methods-use-this, no-underscore-dangle */
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -12,7 +10,6 @@ function mimicUserInput(formControl, newViewValue) {
   formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
-/* eslint-disable no-unused-expressions */
 describe('FormatMixin', () => {
   let elem;
   let nonFormat;

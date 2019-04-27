@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { html as litHtml } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
@@ -13,7 +12,7 @@ import {
 } from '../src/formatNumber.js';
 import { formatDate, parseDate, getDateFormatBasedOnLocale } from '../src/formatDate.js';
 
-storiesOf('Localize System|localize', module).add('lit component', () => {
+storiesOf('Localize System|Localize', module).add('lit component', () => {
   class LitHtmlExample extends LocalizeMixin(LionLitElement) {
     static get localizeNamespaces() {
       return [
@@ -187,14 +186,14 @@ storiesOf('Localize System|localize', module).add('lit component', () => {
 //     <p>try 'demo:bar' as well</p>
 //     <input type="text" value="demo:foo" id="keyInput">
 //
-//     <button @click=${() => action('translate')(localize.msg(keyInput.value))}>
+//     <button @click=${() => console.log(localize.msg(keyInput.value))}>
 //       Translate to Action Logger
 //     </button>
 //     <br />
 //     <button @click=${() => { localize.locale = 'en'; }}>en</button>
 //     <button @click=${() => { localize.locale = 'en-GB'; }}>en-GB</button>
 //     <br /><br />
-//     <button @click=${() => action('localize data')(localize.__storage)}>
+//     <button @click=${() => console.log(localize.__storage)}>
 //       Log available Data to Action Logger
 //     </button>
 //   `;

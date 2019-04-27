@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';

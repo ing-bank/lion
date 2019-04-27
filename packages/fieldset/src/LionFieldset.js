@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { SlotMixin, html } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
@@ -20,7 +18,6 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export class LionFieldset extends FormControlMixin(
   ValidateMixin(EventMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
 ) {
-  // eslint-disable-line no-unused-vars, max-len
   static get properties() {
     return {
       ...super.properties,
@@ -344,7 +341,7 @@ export class LionFieldset extends FormControlMixin(
       this.constructor._addDescriptionElementIdsToField(
         child,
         parent._getAriaDescriptionElements(),
-      ); // eslint-disable-line max-len
+      );
       // Also check if the newly added child needs to refer grandparents
       parent = parent.__parentFormGroup;
     }

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
 

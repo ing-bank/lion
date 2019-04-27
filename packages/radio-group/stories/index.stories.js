@@ -1,10 +1,10 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
 import '@lion/form/lion-form.js';
 
-storiesOf('Forms|<lion-radio-group>', module)
+storiesOf('Forms|Radio Group', module)
   .add(
     'Default',
     () => html`
@@ -71,7 +71,7 @@ storiesOf('Forms|<lion-radio-group>', module)
     const submit = () => {
       const form = document.querySelector('#form');
       if (form.errorState === false) {
-        action('serializeGroup')(form.serializeGroup());
+        console.log(form.serializeGroup());
       }
     };
     return html`

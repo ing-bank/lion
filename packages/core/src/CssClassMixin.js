@@ -1,7 +1,5 @@
 import { dedupeMixin } from './dedupeMixin.js';
 
-/* eslint-disable no-underscore-dangle */
-
 /**
  * # CssClassMixin
  * `CssClassMixin` is a base mixin for the use of css in lion-components.
