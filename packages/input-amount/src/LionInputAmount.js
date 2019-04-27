@@ -25,11 +25,9 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixi
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _onCurrencyChanged: ['currency'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('currency')) this._onCurrencyChanged({ currency: this.currency });
   }
 
   get slots() {
