@@ -1,6 +1,5 @@
 import { dedupeMixin } from '@lion/core';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 import { FocusMixin } from './FocusMixin.js';
 
@@ -19,7 +18,7 @@ import { FocusMixin } from './FocusMixin.js';
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class InteractionStateMixin extends CssClassMixin(FocusMixin(ObserverMixin(superclass))) {
+    class InteractionStateMixin extends CssClassMixin(FocusMixin(superclass)) {
       static get properties() {
         return {
           ...super.properties,

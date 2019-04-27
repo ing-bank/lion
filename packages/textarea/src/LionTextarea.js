@@ -1,7 +1,6 @@
 import autosize from 'autosize/src/autosize.js';
 import { LionInput } from '@lion/input';
 import { css } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /* eslint-disable no-underscore-dangle */
 
@@ -11,7 +10,7 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
  * @customElement
  * @extends LionInput
  */
-export class LionTextarea extends ObserverMixin(LionInput) {
+export class LionTextarea extends LionInput {
   // eslint-disable-line no-unused-vars
   static get properties() {
     return {

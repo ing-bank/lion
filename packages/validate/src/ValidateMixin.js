@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle, class-methods-use-this, camelcase, no-param-reassign */
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
@@ -15,7 +14,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow, max-len
-    class ValidateMixin extends CssClassMixin(ObserverMixin(LocalizeMixin(SlotMixin(superclass)))) {
+    class ValidateMixin extends CssClassMixin(LocalizeMixin(SlotMixin(superclass))) {
       /* * * * * * * * * *
     Configuration  */
 

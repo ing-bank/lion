@@ -4,7 +4,6 @@ import { SlotMixin, html } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { EventMixin } from '@lion/core/src/EventMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from '@lion/field';
 
@@ -18,7 +17,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormControlMixin(
-  ValidateMixin(EventMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+  ValidateMixin(EventMixin(CssClassMixin(SlotMixin(LionLitElement)))),
 ) {
   // eslint-disable-line no-unused-vars, max-len
   static get properties() {
