@@ -1,14 +1,13 @@
 /* eslint-disable class-methods-use-this, no-underscore-dangle */
 import { html, css } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /**
  * `LionSteps` is a controller for a multi step system.
  *
  * @customElement
  */
-export class LionSteps extends ObserverMixin(LionLitElement) {
+export class LionSteps extends LionLitElement {
   static get properties() {
     /**
      * Fired when a transition between steps happens.
@@ -33,10 +32,13 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     };
   }
 
-  static get asyncObservers() {
-    return {
-      _onCurrentChanged: ['current'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('current'))
+      this._onCurrentChanged(
+        { data: this.data, current: this.current },
+        { data: changedProperties.get('data'), current: changedProperties.get('current') },
+      );
   }
 
   constructor() {
@@ -127,6 +129,7 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
   }
 
   _onCurrentChanged(newValues, oldValues) {
+    console.log(newValues, oldValues);
     if (this._internalCurrentSync) {
       this._internalCurrentSync = false;
     } else {

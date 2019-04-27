@@ -1,6 +1,5 @@
 import { dedupeMixin } from '@lion/core';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 import { FocusMixin } from './FocusMixin.js';
 
@@ -19,7 +18,7 @@ import { FocusMixin } from './FocusMixin.js';
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class InteractionStateMixin extends CssClassMixin(FocusMixin(ObserverMixin(superclass))) {
+    class InteractionStateMixin extends CssClassMixin(FocusMixin(superclass)) {
       static get properties() {
         return {
           ...super.properties,
@@ -50,12 +49,19 @@ export const InteractionStateMixin = dedupeMixin(
         };
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          _onTouchedChanged: ['touched'],
-          _onDirtyChanged: ['dirty'],
-        };
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+
+        switch (name) {
+          case 'touched':
+            this._onTouchedChanged();
+            break;
+          case 'dirty':
+            this._onDirtyChanged();
+            break;
+          default:
+            break;
+        }
       }
 
       static _isPrefilled(modelValue) {

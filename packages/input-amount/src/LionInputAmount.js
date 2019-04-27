@@ -2,7 +2,6 @@
 
 import { css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { LionInput } from '@lion/input';
 import { FieldCustomMixin } from '@lion/field';
 import { isNumberValidator, randomOkValidator } from '@lion/validate';
@@ -15,7 +14,7 @@ import { formatAmount } from './formatters.js';
  * @customElement
  * @extends {LionInput}
  */
-export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixin(LionInput))) {
+export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) {
   static get properties() {
     return {
       ...super.properties,
@@ -25,11 +24,9 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixi
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _onCurrencyChanged: ['currency'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('currency')) this._onCurrencyChanged({ currency: this.currency });
   }
 
   get slots() {

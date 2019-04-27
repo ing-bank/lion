@@ -12,11 +12,10 @@ import { isDateValidator } from '@lion/validate';
  * @extends {LionInput}
  */
 export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _calculateValues: ['locale'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('locale')) this._calculateValues();
   }
 
   constructor() {

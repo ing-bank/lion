@@ -81,6 +81,12 @@ export class LionField extends FormControlMixin(
     };
   }
 
+  // updated(changedProperties) {
+  //   super.updated(changedProperties);
+
+  //   if(changedProperties.has('disabled')) this._setDisabledClass();
+  // }
+
   // We don't delegate, because we want to 'preprocess' via _setValueAndPreserveCaret
   set value(value) {
     // if not yet connected to dom can't change the value

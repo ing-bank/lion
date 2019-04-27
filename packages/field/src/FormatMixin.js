@@ -2,7 +2,6 @@
 
 import { dedupeMixin } from '@lion/core';
 import { EventMixin } from '@lion/core/src/EventMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
 /**
@@ -12,7 +11,7 @@ import { Unparseable } from '@lion/validate';
 export const FormatMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class FormatMixin extends EventMixin(ObserverMixin(superclass)) {
+    class FormatMixin extends EventMixin(superclass) {
       static get properties() {
         return {
           ...super.properties,
@@ -81,13 +80,38 @@ export const FormatMixin = dedupeMixin(
         };
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          _onModelValueChanged: ['modelValue'],
-          _onSerializedValueChanged: ['serializedValue'],
-          _onFormattedValueChanged: ['formattedValue'],
-        };
+      // static get syncObservers() {
+      //   return {
+      //     ...super.syncObservers,
+      //     _onModelValueChanged: ['modelValue'],
+      //     _onSerializedValueChanged: ['serializedValue'],
+      //     _onFormattedValueChanged: ['formattedValue'],
+      //   };
+      // }
+
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+
+        switch (name) {
+          case 'serializedValue':
+            this._onSerializedValueChanged();
+            break;
+          case 'formattedValue':
+            this._onFormattedValueChanged();
+            break;
+          case 'modelValue':
+            this._onModelValueChanged(
+              {
+                modelValue: this.modelValue,
+              },
+              {
+                modelValue: oldValue,
+              },
+            );
+            break;
+          default:
+            break;
+        }
       }
 
       get events() {

@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle, class-methods-use-this, camelcase, no-param-reassign */
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
@@ -15,7 +14,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow, max-len
-    class ValidateMixin extends CssClassMixin(ObserverMixin(LocalizeMixin(SlotMixin(superclass)))) {
+    class ValidateMixin extends CssClassMixin(LocalizeMixin(SlotMixin(superclass))) {
       /* * * * * * * * * *
     Configuration  */
 
@@ -186,45 +185,89 @@ export const ValidateMixin = dedupeMixin(
         };
       }
 
-      static get asyncObservers() {
-        return {
-          ...super.asyncObservers,
-          // TODO: consider adding 'touched', 'dirty', 'submitted', 'prefilled' on LionFieldFundament
-          // level, since ValidateMixin doesn't have a direct dependency on interactionState
-          _createMessageAndRenderFeedback: [
-            'error',
-            'warning',
-            'info',
-            'success',
-            'touched',
-            'dirty',
-            'submitted',
-            'prefilled',
-            'label',
-          ],
-          _onErrorShowChangedAsync: ['errorShow'],
-        };
+      // static get asyncObservers() {
+      //   return {
+      //     ...super.asyncObservers,
+      // TODO: consider adding 'touched', 'dirty', 'submitted', 'prefilled' on LionFieldFundament
+      // level, since ValidateMixin doesn't have a direct dependency on interactionState
+      // _createMessageAndRenderFeedback: [
+      //   'error',
+      //   'warning',
+      //   'info',
+      //   'success',
+      //   'touched',
+      //   'dirty',
+      //   'submitted',
+      //   'prefilled',
+      //   'label',
+      // ],
+      // _onErrorShowChangedAsync: ['errorShow'],
+      //   };
+      // }
+
+      updated(changedProperties) {
+        super.updated(changedProperties);
+        const list = [
+          'error',
+          'warning',
+          'info',
+          'success',
+          'touched',
+          'dirty',
+          'submitted',
+          'prefilled',
+          'label',
+        ];
+
+        // TODO, breaks:
+        // ✖ sets a class "state-(error|warning|info|success)-show" when the component has a corresponding state and "show{type}Condition()" is met
+        list.forEach(item => {
+          if (changedProperties.has(item)) this._createMessageAndRenderFeedback();
+        });
+
+        if (changedProperties.has('errorShow')) {
+          this._onErrorShowChangedAsync({ errorShow: this.errorShow });
+        }
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          validate: [
-            'errorValidators',
-            'warningValidators',
-            'infoValidators',
-            'successValidators',
-            'modelValue',
-          ],
-          _onErrorChanged: ['error'],
-          _onWarningChanged: ['warning'],
-          _onInfoChanged: ['info'],
-          _onSuccessChanged: ['success'],
-          _onErrorStateChanged: ['errorState'],
-          _onWarningStateChanged: ['warningState'],
-          _onInfoStateChanged: ['infoState'],
-          _onSuccessStateChanged: ['successState'],
-        };
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+
+        switch (name) {
+          case 'errorValidators':
+          case 'warningValidators':
+          case 'infoValidators':
+          case 'successValidators':
+          case 'modelValue':
+            this.validate();
+            break;
+          case 'error':
+            this._onErrorChanged({ error: this[name] }, { error: oldValue });
+            break;
+          case 'warning':
+            this._onWarningChanged({ warning: this[name] }, { warning: oldValue });
+            break;
+          case 'info':
+            this._onInfoChanged({ info: this[name] }, { info: oldValue });
+            break;
+          case 'success':
+            this._onSuccessChanged({ success: this[name] }, { success: oldValue });
+            break;
+          case 'errorState':
+            this._onErrorStateChanged();
+            break;
+          case 'warningState':
+            this._onWarningStateChanged();
+            break;
+          case 'infoState':
+            this._onInfoStateChanged();
+            break;
+          case 'successState':
+            this._onSuccessStateChanged();
+            break;
+          default:
+            break;
+        }
       }
 
       static get validationTypes() {

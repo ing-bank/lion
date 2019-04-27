@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import { html, css, nothing, dedupeMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /**
  * #FormControlMixin :
@@ -15,7 +14,7 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 export const FormControlMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormControlMixin extends ObserverMixin(superclass) {
+    class FormControlMixin extends superclass {
       static get properties() {
         return {
           ...super.properties,
@@ -66,14 +65,24 @@ export const FormControlMixin = dedupeMixin(
         };
       }
 
-      static get asyncObservers() {
-        return {
-          ...super.asyncObservers,
-          _onAriaLabelledbyChanged: ['_ariaLabelledby'],
-          _onAriaDescribedbyChanged: ['_ariaDescribedby'],
-          _onLabelChanged: ['label'],
-          _onHelpTextChanged: ['helpText'],
-        };
+      updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (changedProperties.has('_ariaLabelledby')) {
+          this._onAriaLabelledbyChanged({ _ariaLabelledby: this._ariaLabelledby });
+        }
+
+        if (changedProperties.has('_ariaDescribedby')) {
+          this._onAriaDescribedbyChanged({ _ariaDescribedby: this._ariaDescribedby });
+        }
+
+        if (changedProperties.has('label')) {
+          this._onLabelChanged({ label: this.label });
+        }
+
+        if (changedProperties.has('helpText')) {
+          this._onHelpTextChanged({ helpText: this.helpText });
+        }
       }
 
       get inputElement() {
