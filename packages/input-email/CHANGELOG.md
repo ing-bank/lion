@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/ing-bank/lion/compare/@lion/input-email@0.1.2...@lion/input-email@0.1.3) (2019-04-28)
+
+
+### Bug Fixes
+
+* update storybook/linting; adjust story labels, eslint ignores ([8d96f84](https://github.com/ing-bank/lion/commit/8d96f84))
+
+
+
+
+
 ## [0.1.2](https://github.com/ing-bank/lion/compare/@lion/input-email@0.1.1...@lion/input-email@0.1.2) (2019-04-27)
 
 **Note:** Version bump only for package @lion/input-email
