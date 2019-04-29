@@ -1,4 +1,6 @@
-export { formatDate, getDateFormatBasedOnLocale, parseDate } from './src/formatDate.js';
+export { formatDate } from './src/date/formatDate.js';
+export { getDateFormatBasedOnLocale } from './src/date/getDateFormatBasedOnLocale.js';
+export { parseDate } from './src/date/parseDate.js';
 export {
   formatNumber,
   formatNumberToParts,

@@ -10,7 +10,9 @@ import {
   getGroupSeparator,
   getDecimalSeparator,
 } from '../src/formatNumber.js';
-import { formatDate, parseDate, getDateFormatBasedOnLocale } from '../src/formatDate.js';
+import { formatDate } from '../src/date/formatDate.js';
+import { parseDate } from '../src/date/parseDate.js';
+import { getDateFormatBasedOnLocale } from '../src/date/getDateFormatBasedOnLocale.js';
 
 storiesOf('Localize System|Localize', module).add('lit component', () => {
   class LitHtmlExample extends LocalizeMixin(LionLitElement) {
