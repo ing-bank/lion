@@ -185,26 +185,6 @@ export const ValidateMixin = dedupeMixin(
         };
       }
 
-      // static get asyncObservers() {
-      //   return {
-      //     ...super.asyncObservers,
-      // TODO: consider adding 'touched', 'dirty', 'submitted', 'prefilled' on LionFieldFundament
-      // level, since ValidateMixin doesn't have a direct dependency on interactionState
-      // _createMessageAndRenderFeedback: [
-      //   'error',
-      //   'warning',
-      //   'info',
-      //   'success',
-      //   'touched',
-      //   'dirty',
-      //   'submitted',
-      //   'prefilled',
-      //   'label',
-      // ],
-      // _onErrorShowChangedAsync: ['errorShow'],
-      //   };
-      // }
-
       updated(changedProperties) {
         super.updated(changedProperties);
         const list = [
@@ -219,8 +199,6 @@ export const ValidateMixin = dedupeMixin(
           'label',
         ];
 
-        // TODO, breaks:
-        // ✖ sets a class "state-(error|warning|info|success)-show" when the component has a corresponding state and "show{type}Condition()" is met
         list.forEach(item => {
           if (changedProperties.has(item)) this._createMessageAndRenderFeedback();
         });
