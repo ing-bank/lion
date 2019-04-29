@@ -80,15 +80,6 @@ export const FormatMixin = dedupeMixin(
         };
       }
 
-      // static get syncObservers() {
-      //   return {
-      //     ...super.syncObservers,
-      //     _onModelValueChanged: ['modelValue'],
-      //     _onSerializedValueChanged: ['serializedValue'],
-      //     _onFormattedValueChanged: ['formattedValue'],
-      //   };
-      // }
-
       _requestUpdate(name, oldValue) {
         super._requestUpdate(name, oldValue);
 
@@ -232,10 +223,12 @@ export const FormatMixin = dedupeMixin(
        * This is wrapped in a distinct method, so that parents can control when the changed event is
        * fired. For instance: when modelValue is an object, a deep comparison is needed first
        */
-      _dispatchModelValueChangedEvent() {
-        this.dispatchEvent(
-          new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
-        );
+      _dispatchModelValueChangedEvent({ modelValue }, { modelValue: old }) {
+        if (modelValue !== old) {
+          this.dispatchEvent(
+            new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
+          );
+        }
       }
 
       _onFormattedValueChanged() {

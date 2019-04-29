@@ -254,16 +254,24 @@ export const ValidateMixin = dedupeMixin(
             this._onSuccessChanged({ success: this[name] }, { success: oldValue });
             break;
           case 'errorState':
-            this._onErrorStateChanged();
+            if (oldValue !== this[name]) {
+              this._onErrorStateChanged();
+            }
             break;
           case 'warningState':
-            this._onWarningStateChanged();
+            if (oldValue !== this[name]) {
+              this._onWarningStateChanged();
+            }
             break;
           case 'infoState':
-            this._onInfoStateChanged();
+            if (oldValue !== this[name]) {
+              this._onInfoStateChanged();
+            }
             break;
           case 'successState':
-            this._onSuccessStateChanged();
+            if (oldValue !== this[name]) {
+              this._onSuccessStateChanged();
+            }
             break;
           default:
             break;

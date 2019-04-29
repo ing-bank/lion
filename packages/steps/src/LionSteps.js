@@ -129,7 +129,6 @@ export class LionSteps extends LionLitElement {
   }
 
   _onCurrentChanged(newValues, oldValues) {
-    console.log(newValues, oldValues);
     if (this._internalCurrentSync) {
       this._internalCurrentSync = false;
     } else {

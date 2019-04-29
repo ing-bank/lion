@@ -2,7 +2,15 @@
   eslint-disable class-method-use-this,
   no-underscore-dangle, no-unused-expressions, no-unused-vars, no-param-reassign
 */
-import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  html,
+  unsafeStatic,
+  defineCE,
+  aTimeout,
+  nextFrame,
+} from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
@@ -421,6 +429,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'a';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(true);
       expect(validationState.classList.contains('state-warning-show')).to.equal(false);
       expect(validationState.classList.contains('state-info-show')).to.equal(false);
@@ -428,6 +438,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'abc';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(false);
       expect(validationState.classList.contains('state-warning-show')).to.equal(true);
       expect(validationState.classList.contains('state-info-show')).to.equal(false);
@@ -435,6 +447,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'abcde';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(false);
       expect(validationState.classList.contains('state-warning-show')).to.equal(false);
       expect(validationState.classList.contains('state-info-show')).to.equal(true);
@@ -442,6 +456,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'abcdefg';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(false);
       expect(validationState.classList.contains('state-warning-show')).to.equal(false);
       expect(validationState.classList.contains('state-info-show')).to.equal(false);
@@ -449,6 +465,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'a';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(true);
       expect(validationState.classList.contains('state-warning-show')).to.equal(false);
       expect(validationState.classList.contains('state-info-show')).to.equal(false);
@@ -456,6 +474,8 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'abcdefg';
       await validationState.updateComplete;
+      await nextFrame();
+
       expect(validationState.classList.contains('state-error-show')).to.equal(false);
       expect(validationState.classList.contains('state-warning-show')).to.equal(false);
       expect(validationState.classList.contains('state-info-show')).to.equal(false);
