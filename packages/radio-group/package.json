@@ -14,7 +14,7 @@
     "directory": "packages/radio-group"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
   },
   "keywords": [
     "lion",

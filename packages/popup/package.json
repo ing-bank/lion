@@ -14,7 +14,7 @@
     "directory": "packages/popup"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
   },
   "keywords": [
     "lion",
