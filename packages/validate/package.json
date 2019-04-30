@@ -14,7 +14,7 @@
     "directory": "packages/validate"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
   },
   "keywords": [
     "lion",
