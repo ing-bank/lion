@@ -1,5 +1,13 @@
 /* eslint-disable no-unused-vars, no-param-reassign */
-import { expect, fixture, html, unsafeStatic, defineCE, aTimeout, nextFrame } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  html,
+  unsafeStatic,
+  defineCE,
+  aTimeout,
+  nextFrame,
+} from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
