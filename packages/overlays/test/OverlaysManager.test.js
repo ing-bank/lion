@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions, no-underscore-dangle */
 import { expect } from '@open-wc/testing';
 import sinon from 'sinon';
 

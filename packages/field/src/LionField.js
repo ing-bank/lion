@@ -9,8 +9,6 @@ import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
 import { FormatMixin } from './FormatMixin.js';
 
-/* eslint-disable max-len, no-underscore-dangle, class-methods-use-this, camelcase, no-param-reassign */
-
 /**
  * LionField: wraps components input, textarea and select and potentially others
  * (checkbox group, radio group)
@@ -198,6 +196,7 @@ export class LionField extends FormControlMixin(
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   __isRequired(modelValue) {
     return {
       required:

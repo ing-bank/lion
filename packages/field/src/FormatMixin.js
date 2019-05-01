@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
+/* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@lion/core';
 import { EventMixin } from '@lion/core/src/EventMixin.js';
@@ -53,7 +53,7 @@ export const FormatMixin = dedupeMixin(
            * Examples:
            * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
            * - For a number input this would be the String representation of a float ('1234.56' instead
-           *   of 1234.56) // eslint-disable-line max-len
+           *   of 1234.56)
            *
            * When no parser is available, the value is usually the same as the formattedValue
            * (being inputElement.value)

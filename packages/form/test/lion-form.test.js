@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle */
 import { expect, fixture, html } from '@open-wc/testing';
 
 import '@lion/input/lion-input.js';

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';

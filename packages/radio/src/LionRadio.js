@@ -1,8 +1,6 @@
 import { LionInput } from '@lion/input';
 import { ChoiceInputMixin } from '@lion/choice-input';
 
-/* eslint-disable no-underscore-dangle */
-
 /**
  * Lion-radio can be used inside a lion-radio-group.
  *

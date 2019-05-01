@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable class-method-use-this, no-underscore-dangle, no-unused-expressions */
 import { expect } from '@open-wc/testing';
 
 import {

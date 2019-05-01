@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions, class-methods-use-this */
 import { expect, fixture, html, defineCE } from '@open-wc/testing';
 import { LionLitElement } from '../src/LionLitElement.js';
 
@@ -38,7 +36,6 @@ describe('EventMixin', () => {
         };
       }
 
-      // eslint-disable-next-line class-methods-use-this
       render() {
         return html`
           <button id="button1">with click event</button>
@@ -108,7 +105,7 @@ describe('EventMixin', () => {
     expect(element.fired).to.equal(true);
 
     // this will clear it's state on window
-    delete window.__eventMixinProcessed; // eslint-disable-line no-underscore-dangle
+    delete window.__eventMixinProcessed;
   });
 
   it('supports multiple different events for a single node', async () => {
@@ -142,7 +139,7 @@ describe('EventMixin', () => {
 
       connectedCallback() {
         this.lightDomInput = this.querySelector('input');
-        this.__registerEvents(); // eslint-disable-line
+        this.__registerEvents();
       }
     }
     customElements.define('multi-events', MultiEvents);
@@ -177,7 +174,7 @@ describe('EventMixin', () => {
 
       connectedCallback() {
         this.lightDomButton = this.querySelector('button');
-        this.__registerEvents(); // eslint-disable-line
+        this.__registerEvents();
       }
     }
     customElements.define('multi-functions', MultiFunctions);
@@ -194,9 +191,9 @@ describe('EventMixin', () => {
 
   it('will not add same event/function multiple times to a node', async () => {
     const element = await fixture(`<event-mixin></event-mixin>`);
-    element.__registerEvents(); // eslint-disable-line
-    element.__registerEvents(); // eslint-disable-line
-    expect(element.__eventsCache.length).to.equal(4); // eslint-disable-line
+    element.__registerEvents();
+    element.__registerEvents();
+    expect(element.__eventsCache.length).to.equal(4);
   });
 
   it('will cleanup events', async () => {
@@ -205,8 +202,8 @@ describe('EventMixin', () => {
     // in dev tools you can use getEventListeners but that is not available globally
     // so we are at least testing our implementation
     const element = await fixture(`<event-mixin></event-mixin>`);
-    element.__unregisterEvents(); // eslint-disable-line
-    expect(element.__eventsCache.length).to.equal(0); // eslint-disable-line
+    element.__unregisterEvents();
+    expect(element.__eventsCache.length).to.equal(0);
   });
 
   it('reregisters events if dom node is moved', async () => {

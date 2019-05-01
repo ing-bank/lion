@@ -1,7 +1,5 @@
 import { LionField } from '@lion/field';
 
-/* eslint-disable no-underscore-dangle */
-
 /**
  * LionInput: extension of lion-field with native input element in place and user friendly API
  *

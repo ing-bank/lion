@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { css } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
@@ -26,7 +25,7 @@ const globalOverlayDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System|Global/Global Overlay', module)
+storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
     const overlayCtrl = overlays.add(
       new GlobalOverlayController({

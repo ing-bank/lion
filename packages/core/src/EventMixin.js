@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this */
+/* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from './dedupeMixin.js';
 

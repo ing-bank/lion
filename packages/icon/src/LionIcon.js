@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { html, css, render, unsafeHTML, until } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 
@@ -73,7 +72,6 @@ export class LionIcon extends LionLitElement {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   render() {
     return html`
       <slot></slot>

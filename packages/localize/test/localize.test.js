@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle */
 import { expect } from '@open-wc/testing';
 
 import { LionSingleton } from '@lion/core';

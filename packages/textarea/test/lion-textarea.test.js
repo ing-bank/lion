@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-textarea.js';

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable class-methods-use-this, no-underscore-dangle, max-len */
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import { LionField } from '../src/LionField.js';
 

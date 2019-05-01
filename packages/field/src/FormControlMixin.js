@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { html, css, nothing, dedupeMixin } from '@lion/core';
 
 /**
@@ -505,7 +504,7 @@ export const FormControlMixin = dedupeMixin(
         return (
           super.showSuccessCondition(newStates, oldStates) &&
           this._interactionStateFeedbackCondition()
-        ); // eslint-disable-line max-len
+        );
       }
 
       _interactionStateFeedbackCondition() {

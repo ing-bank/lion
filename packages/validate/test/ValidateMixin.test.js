@@ -1,16 +1,5 @@
-/*
-  eslint-disable class-method-use-this,
-  no-underscore-dangle, no-unused-expressions, no-unused-vars, no-param-reassign
-*/
-import {
-  expect,
-  fixture,
-  html,
-  unsafeStatic,
-  defineCE,
-  aTimeout,
-  nextFrame,
-} from '@open-wc/testing';
+/* eslint-disable no-unused-vars, no-param-reassign */
+import { expect, fixture, html, unsafeStatic, defineCE, aTimeout, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
@@ -28,7 +17,6 @@ const lightDom = '';
 
 const tagString = defineCE(
   class extends ValidateMixin(LionLitElement) {
-    // eslint-disable-line max-len
     static get properties() {
       return {
         ...super.properties,
@@ -555,7 +543,6 @@ describe('ValidateMixin', () => {
 
     const defaultElement = defineCE(
       class extends ValidateMixin(LionLitElement) {
-        // eslint-disable-line max-len
         static get properties() {
           return {
             ...super.properties,
@@ -838,7 +825,6 @@ describe('ValidateMixin', () => {
             };
           }
 
-          // eslint-disable-next-line class-methods-use-this
           translateMessage(rawKeys) {
             const translationData = {
               error: {
@@ -1112,8 +1098,6 @@ describe('ValidateMixin', () => {
       `, async () => {
         // Tests are in 'reversed order', so we can increase prio by filling up localize storage
         const is12Validator = () => [modelValue => ({ is12Validator: modelValue === 12 })];
-        // eslint-disable-next-line max-len
-
         const orderName = defineCE(
           class extends ValidateMixin(LionLitElement) {
             static get properties() {

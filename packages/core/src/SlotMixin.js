@@ -1,7 +1,7 @@
+/* eslint-disable class-methods-use-this */
+
 import { dedupeMixin } from './dedupeMixin.js';
 import { DomHelpersMixin } from './DomHelpersMixin.js';
-
-/* eslint-disable class-methods-use-this, no-underscore-dangle */
 
 /**
  * # SlotMixin

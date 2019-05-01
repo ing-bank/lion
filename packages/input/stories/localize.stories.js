@@ -1,10 +1,9 @@
-/* eslint-disable no-underscore-dangle */
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { maxLengthValidator } from '@lion/validate';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { LionInput } from '../src/LionInput.js';
 
-storiesOf('Forms|<lion-input> Localize', module).add('localize', () => {
+storiesOf('Forms|Input Localize', module).add('localize', () => {
   class InputValidationExample extends LocalizeMixin(LionInput) {
     static get localizeNamespaces() {
       return [

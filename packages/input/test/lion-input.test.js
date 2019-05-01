@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import { expect, fixture } from '@open-wc/testing';
 
 import '../lion-input.js';

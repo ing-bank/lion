@@ -1,10 +1,9 @@
-import { storiesOf, html, action } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { ajax } from '../src/ajax.js';
 import { AjaxClass } from '../src/AjaxClass.js';
 
-/* eslint-disable indent */
-storiesOf('Ajax system|ajax', module)
+storiesOf('Ajax system|Ajax', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add(
     'Get',
@@ -14,10 +13,10 @@ storiesOf('Ajax system|ajax', module)
           ajax
             .get('./dummy-jsons/peter.json')
             .then(response => {
-              action('request-response')(response.data);
+              console.log(response.data);
             })
             .catch(error => {
-              action('request-error')(error);
+              console.log(error);
             });
         }}
       >
@@ -38,10 +37,10 @@ storiesOf('Ajax system|ajax', module)
           myAjax
             .get('./dummy-jsons/peter.json')
             .then(response => {
-              action('request-response')(response.data);
+              console.log(response.data);
             })
             .catch(error => {
-              action('request-error')(error);
+              console.log(error);
             });
         }}
       >
@@ -58,19 +57,19 @@ storiesOf('Ajax system|ajax', module)
           myAjax
             .get('./dummy-jsons/peter.json')
             .then(response => {
-              action('Request 1:')(response.data);
+              console.log(response.data);
             })
             .catch(error => {
-              action('Request 1: I got cancelled:')(error.message);
+              console.log(error.message);
             });
 
           myAjax
             .get('./dummy-jsons/max.json')
             .then(response => {
-              action('Request 2:')(response.data);
+              console.log(response.data);
             })
             .catch(error => {
-              action('Request 2: I got cancelled:')(error.message);
+              console.log(error.message);
             });
         }}
       >

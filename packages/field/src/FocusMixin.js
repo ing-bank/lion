@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { dedupeMixin, DelegateMixin } from '@lion/core';
 
 export const FocusMixin = dedupeMixin(

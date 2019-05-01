@@ -2,8 +2,6 @@ import autosize from 'autosize/src/autosize.js';
 import { LionInput } from '@lion/input';
 import { css } from '@lion/core';
 
-/* eslint-disable no-underscore-dangle */
-
 /**
  * LionTextarea: extension of lion-field with native input element in place and user friendly API
  *

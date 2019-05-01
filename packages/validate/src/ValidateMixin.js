@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, class-methods-use-this, camelcase, no-param-reassign */
+/* eslint-disable class-methods-use-this, camelcase, no-param-reassign */
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';

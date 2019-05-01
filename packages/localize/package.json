@@ -1,6 +1,6 @@
 {
   "name": "@lion/localize",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "The localization system helps to manage localization data split into locales and automate its loading",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -31,11 +31,11 @@
   ],
   "dependencies": {
     "@bundled-es-modules/message-format": "6.0.4",
-    "@lion/core": "^0.1.2"
+    "@lion/core": "^0.1.3"
   },
   "devDependencies": {
     "@bundled-es-modules/fetch-mock": "^6.5.2",
-    "@open-wc/storybook": "^0.1.5",
+    "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.11.1",
     "sinon": "^7.2.2"
   }

@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions, class-methods-use-this */
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import { LitElement, html } from '@lion/core';
 

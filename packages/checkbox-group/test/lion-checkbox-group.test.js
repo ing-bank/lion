@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { expect, html, fixture, triggerFocusFor, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 

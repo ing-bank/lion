@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { expect, fixture, nextFrame, html } from '@open-wc/testing';
 import '@lion/radio/lion-radio.js';
 

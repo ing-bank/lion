@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle */
 import { expect, fixture, aTimeout, html } from '@open-wc/testing';
 import { until } from '@lion/core';
 

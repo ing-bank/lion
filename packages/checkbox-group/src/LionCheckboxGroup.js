@@ -1,7 +1,5 @@
 import { LionFieldset } from '@lion/fieldset';
 
-/* eslint-disable no-underscore-dangle */
-
 export class LionCheckboxGroup extends LionFieldset {
   constructor() {
     super();

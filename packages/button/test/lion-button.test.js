@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions */
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import { pressEnter, pressSpace } from '@polymer/iron-test-helpers/mock-interactions.js';

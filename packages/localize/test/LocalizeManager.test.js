@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-underscore-dangle */
 import { expect, oneEvent } from '@open-wc/testing';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from './test-utils.js';

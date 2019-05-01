@@ -1,6 +1,5 @@
 import { LionFieldset } from '@lion/fieldset';
 
-/* eslint-disable no-underscore-dangle */
 /**
  * LionRadioGroup: extends the lion-fieldset
  *

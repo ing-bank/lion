@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/storybook';
+import { storiesOf, html } from '@open-wc/demoing-storybook';
 import {
   equalsLengthValidator,
   minLengthValidator,
@@ -9,7 +9,7 @@ import {
 import { LocalizeMixin } from '@lion/localize';
 import { LionInput } from '../src/LionInput.js';
 
-storiesOf('Forms|<lion-input> String Validation', module)
+storiesOf('Forms|Input String Validation', module)
   .add(
     'equalsLength',
     () => html`

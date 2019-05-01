@@ -11,7 +11,7 @@ module.exports = config => {
         //
         // npm run test -- --grep test/foo/bar.test.js
         // npm run test -- --grep test/bar/*
-        config.grep ? config.grep : 'packages/*/test/*.test.js',
+        config.grep ? config.grep : 'packages/*/test/**/*.test.js',
       ],
 
       // TODO: improve coverage
