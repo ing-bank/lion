@@ -3,7 +3,6 @@ import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { EventMixin } from '@lion/core/src/EventMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 
 import { FormControlMixin } from './FormControlMixin.js';
@@ -34,9 +33,7 @@ export class LionField extends FormControlMixin(
   ValidateMixin(
     InteractionStateMixin(
       FormatMixin(
-        EventMixin(
-          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
-        ),
+        EventMixin(CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(LionLitElement))))),
       ),
     ),
   ),
@@ -49,11 +46,10 @@ export class LionField extends FormControlMixin(
         ...super.delegations.properties,
         'name',
         'type',
-        'disabled',
         'selectionStart',
         'selectionEnd',
       ], // eslint-disable-line max-len
-      attributes: [...super.delegations.attributes, 'name', 'type', 'disabled'],
+      attributes: [...super.delegations.attributes, 'name', 'type'],
     };
   }
 
@@ -71,21 +67,24 @@ export class LionField extends FormControlMixin(
         // make sure validation can be triggered based on observer
         type: Boolean,
       },
+      disabled: {
+        type: Boolean,
+        reflect: true,
+      },
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _setDisabledClass: ['disabled'],
-    };
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.inputElement.setAttribute('disabled', this.disabled);
+      } else {
+        this.inputElement.removeAttribute('disabled');
+      }
+      this._setDisabledClass();
+    }
   }
-
-  // updated(changedProperties) {
-  //   super.updated(changedProperties);
-
-  //   if(changedProperties.has('disabled')) this._setDisabledClass();
-  // }
 
   // We don't delegate, because we want to 'preprocess' via _setValueAndPreserveCaret
   set value(value) {

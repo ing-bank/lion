@@ -160,6 +160,7 @@ describe('<lion-field>', () => {
 
       lionField.disabled = true;
       await lionField.updateComplete;
+
       expect(lionField.classList.contains('state-disabled')).to.equal(true);
       expect(lionField.inputElement.hasAttribute('disabled')).to.equal(true);
 

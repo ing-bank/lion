@@ -187,7 +187,7 @@ export const ValidateMixin = dedupeMixin(
 
       updated(changedProperties) {
         super.updated(changedProperties);
-        const list = [
+        const states = [
           'error',
           'warning',
           'info',
@@ -199,8 +199,8 @@ export const ValidateMixin = dedupeMixin(
           'label',
         ];
 
-        list.forEach(item => {
-          if (changedProperties.has(item)) this._createMessageAndRenderFeedback();
+        states.forEach(state => {
+          if (changedProperties.has(state)) this._createMessageAndRenderFeedback();
         });
 
         if (changedProperties.has('errorShow')) {
