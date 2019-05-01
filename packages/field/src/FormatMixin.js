@@ -251,6 +251,21 @@ export const FormatMixin = dedupeMixin(
         }
       }
 
+      // Current flow works like this: setting of modelValue triggers observers for:
+      // - computation of 'formattedValue'
+      // - validation (and thus computation of 'errorState')
+      // Observers will be handled in above order. Since computation of formattedValue depends on 'errorState'
+      // (erroneous inputs should not be formatted), the formatter is handled with a not yet updated errorState.
+      //
+      // TODO: rewrite to a flow handling observers in this order: modelValue -> errorState(validation) -> formattedValue
+      // Important: currently, a situation where a value changes from valid to invalid will still lead to formatting when not
+      // required.
+      // Since the flow above involves two mixins (FormatMixin and ValidateMixin) and ValidateMixin should have no
+      // knowledge about FormatMixin, think of a proper way to do this.
+      _reformatOnErrorStateChanged() {
+        this.formattedValue = this.__callFormatter(this.modelValue);
+      }
+
       // TODO: rename to __dispatchNormalizedInputEvent?
       // This can be called whenever the view value should be updated. Dependent on component type
       // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be used
@@ -298,6 +313,7 @@ export const FormatMixin = dedupeMixin(
           this._syncValueUpwards();
         }
         this._reflectBackFormattedValueToUser();
+        this.addEventListener('error-state-changed', this._reformatOnErrorStateChanged);
       }
 
       disconnectedCallback() {
@@ -308,6 +324,7 @@ export const FormatMixin = dedupeMixin(
           this.formatOn,
           this._reflectBackFormattedValueDebounced,
         );
+        this.removeEventListener('error-state-changed', this._reformatOnErrorStateChanged);
       }
     },
 );

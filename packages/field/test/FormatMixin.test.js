@@ -223,8 +223,27 @@ describe('FormatMixin', () => {
       el.errorState = false;
       el.modelValue = 'bar2';
       expect(formatterSpy.callCount).to.equal(2);
-
       expect(el.formattedValue).to.equal('foo: bar2');
+    });
+
+    it('will call the formatter when validity changes from invalid to valid', async () => {
+      const formatterSpy = sinon.spy(value => `foo: ${value}`);
+
+      const el = await fixture(html`
+        <${elem} .formatter=${formatterSpy}>
+          <input slot="input" value="init-string">
+        </${elem}>
+      `);
+
+      el.errorState = true;
+      el.modelValue = 'bar';
+      expect(formatterSpy.callCount).to.equal(1);
+      expect(el.formattedValue).to.equal('foo: init-string');
+
+      el.errorState = false;
+      el.dispatchEvent(new CustomEvent('error-state-changed', { bubbles: true }));
+      expect(formatterSpy.callCount).to.equal(2);
+      expect(el.formattedValue).to.equal('foo: bar');
     });
   });
 
