@@ -614,26 +614,28 @@ describe('<lion-fieldset>', () => {
     });
 
     it('has correct validation afterwards', async () => {
-      const isCat = modelValue => ({ isCat: modelValue.value === 'cat' });
+      const isCat = modelValue => ({ isCat: modelValue === 'cat' });
       const containsA = modelValues => ({
-        containsA: modelValues.color.value ? modelValues.color.value.indexOf('a') > -1 : false,
+        containsA: modelValues.color ? modelValues.color.indexOf('a') > -1 : false,
       });
 
       const fieldset = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
       await nextFrame();
-      fieldset.formElements.color.modelValue = { value: 'onlyb' };
       fieldset.errorValidators = [[containsA]];
       fieldset.formElements.color.errorValidators = [[isCat]];
 
+      fieldset.formElements.color.modelValue = 'onlyb';
       expect(fieldset.errorState).to.equal(true);
       expect(fieldset.error.containsA).to.equal(true);
+      expect(fieldset.formElements.color.errorState).to.equal(true);
       expect(fieldset.formElements.color.error.isCat).to.equal(true);
 
-      fieldset.formElements.color.modelValue = { value: 'cat' };
+      fieldset.formElements.color.modelValue = 'cat';
       expect(fieldset.errorState).to.equal(false);
+      expect(fieldset.formElements.color.errorState).to.equal(false);
 
       fieldset.resetGroup();
-      fieldset.formElements.color.modelValue = { value: 'Foo' };
+      fieldset.formElements.color.modelValue = 'onlyb';
       fieldset.errorValidators = [[containsA]];
       fieldset.formElements.color.errorValidators = [[isCat]];
       expect(fieldset.errorState).to.equal(true);
