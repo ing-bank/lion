@@ -220,35 +220,17 @@ export const ValidateMixin = dedupeMixin(
             this.validate();
             break;
           case 'error':
-            this._onErrorChanged({ error: this[name] }, { error: oldValue });
-            break;
           case 'warning':
-            this._onWarningChanged({ warning: this[name] }, { warning: oldValue });
-            break;
           case 'info':
-            this._onInfoChanged({ info: this[name] }, { info: oldValue });
-            break;
           case 'success':
-            this._onSuccessChanged({ success: this[name] }, { success: oldValue });
+            this[`_on${pascalCase(name)}Changed`]({ [name]: this[name] }, { [name]: oldValue });
             break;
           case 'errorState':
-            if (oldValue !== this[name]) {
-              this._onErrorStateChanged();
-            }
-            break;
           case 'warningState':
-            if (oldValue !== this[name]) {
-              this._onWarningStateChanged();
-            }
-            break;
           case 'infoState':
-            if (oldValue !== this[name]) {
-              this._onInfoStateChanged();
-            }
-            break;
           case 'successState':
             if (oldValue !== this[name]) {
-              this._onSuccessStateChanged();
+              this[`_on${pascalCase(name)}Changed`]();
             }
             break;
           default:
