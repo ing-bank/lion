@@ -57,7 +57,7 @@ export const SlotMixin = dedupeMixin(
             if (!this.$$slot(slotName)) {
               const slotFactory = this.slots[slotName];
               const slotContent = slotFactory();
-              if (slotContent instanceof Element) {
+              if (slotContent instanceof Element || slotContent instanceof HTMLElement) {
                 slotContent.setAttribute('slot', slotName);
                 this.appendChild(slotContent);
                 this.__privateSlots.add(slotName);
