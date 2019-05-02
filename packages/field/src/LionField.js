@@ -2,7 +2,6 @@ import { DelegateMixin, SlotMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
-import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 
@@ -32,9 +31,7 @@ export class LionField extends FormControlMixin(
   ValidateMixin(
     InteractionStateMixin(
       FormatMixin(
-        EventMixin(
-          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
-        ),
+        CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
       ),
     ),
   ),
@@ -52,13 +49,6 @@ export class LionField extends FormControlMixin(
         'selectionEnd',
       ],
       attributes: [...super.delegations.attributes, 'name', 'type', 'disabled'],
-    };
-  }
-
-  get events() {
-    return {
-      ...super.events,
-      _onChange: [() => this.inputElement, 'change'],
     };
   }
 
@@ -106,6 +96,7 @@ export class LionField extends FormControlMixin(
     Lifecycle  */
   connectedCallback() {
     super.connectedCallback();
+    this.inputElement.addEventListener('change', this._onChange.bind(this));
     this._delegateInitialValueAttr(); // TODO: find a better way to do this
     this._setDisabledClass();
     this.classList.add('form-field');
@@ -120,6 +111,7 @@ export class LionField extends FormControlMixin(
       });
       this.__parentFormGroup.dispatchEvent(event);
     }
+    this.inputElement.removeEventListener('change', this._onChange.bind(this));
   }
 
   /**
