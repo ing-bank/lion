@@ -1,6 +1,5 @@
 import { SlotMixin, html } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
@@ -16,7 +15,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormControlMixin(
-  ValidateMixin(EventMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+  ValidateMixin(EventMixin(SlotMixin(ObserverMixin(LionLitElement)))),
 ) {
   static get properties() {
     return {
@@ -24,14 +23,15 @@ export class LionFieldset extends FormControlMixin(
       disabled: {
         type: Boolean,
         reflect: true,
-        nonEmptyToClass: 'state-disabled',
+        attribute: 'state-disabled',
       },
       name: {
         type: String,
       },
       submitted: {
         type: Boolean,
-        nonEmptyToClass: 'state-submitted',
+        reflect: true,
+        attribute: 'state-submitted',
       },
     };
   }
@@ -256,15 +256,27 @@ export class LionFieldset extends FormControlMixin(
   }
 
   _updateFocusedClass() {
-    this.classList[this.touched ? 'add' : 'remove']('state-focused');
+    if (this.touched) {
+      this.setAttribute('state-focused', '');
+    } else {
+      this.removeAttribute('state-focused');
+    }
   }
 
   _updateTouchedClass() {
-    this.classList[this.touched ? 'add' : 'remove']('state-touched');
+    if (this.touched) {
+      this.setAttribute('state-touched', '');
+    } else {
+      this.removeAttribute('state-touched');
+    }
   }
 
   _updateDirtyClass() {
-    this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
+    if (this.dirty) {
+      this.setAttribute('state-dirty', '');
+    } else {
+      this.removeAttribute('state-touched');
+    }
   }
 
   _onDisabledChanged({ disabled }, { disabled: oldDisabled }) {

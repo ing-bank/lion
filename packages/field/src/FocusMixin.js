@@ -31,17 +31,17 @@ export const FocusMixin = dedupeMixin(
        *   return this.inputElement === document.activeElement;
        */
       get focused() {
-        return this.classList.contains('state-focused');
+        return this.hasAttribute('state-focused');
       }
 
       _onFocus() {
         if (super._onFocus) super._onFocus();
-        this.classList.add('state-focused');
+        this.setAttribute('state-focused', '');
       }
 
       _onBlur() {
         if (super._onBlur) super._onBlur();
-        this.classList.remove('state-focused');
+        this.removeAttribute('state-focused');
       }
     },
 );

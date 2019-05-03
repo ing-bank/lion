@@ -341,7 +341,7 @@ describe('ValidateMixin', () => {
       expect(cbError.callCount).to.equal(3);
     });
 
-    it(`sets a class "state-(error|warning|info|success)" when the component has a
+    it(`sets an attribute "state-(error|warning|info|success)" when the component has a
         corresponding state`, async () => {
       const element = await fixture(html`
         <${tag}
@@ -354,31 +354,31 @@ describe('ValidateMixin', () => {
       element.modelValue = 'a';
       await element.updateComplete;
 
-      expect(element.classList.contains('state-error')).to.equal(true, 'has state-error');
-      expect(element.classList.contains('state-warning')).to.equal(true, 'has state-warning');
-      expect(element.classList.contains('state-info')).to.equal(true, 'has state-info');
-      expect(element.classList.contains('state-success')).to.equal(true, 'has state-success');
+      expect(element.hasAttribute('state-error')).to.equal(true, 'has state-error');
+      expect(element.hasAttribute('state-warning')).to.equal(true, 'has state-warning');
+      expect(element.hasAttribute('state-info')).to.equal(true, 'has state-info');
+      expect(element.hasAttribute('state-success')).to.equal(true, 'has state-success');
 
       element.modelValue = 'abc';
       await element.updateComplete;
-      expect(element.classList.contains('state-error')).to.equal(false, 'has no state-error');
-      expect(element.classList.contains('state-warning')).to.equal(true, 'has state-warning');
-      expect(element.classList.contains('state-info')).to.equal(true, 'has state-info');
-      expect(element.classList.contains('state-success')).to.equal(true, 'has state-success');
+      expect(element.hasAttribute('state-error')).to.equal(false, 'has no state-error');
+      expect(element.hasAttribute('state-warning')).to.equal(true, 'has state-warning');
+      expect(element.hasAttribute('state-info')).to.equal(true, 'has state-info');
+      expect(element.hasAttribute('state-success')).to.equal(true, 'has state-success');
 
       element.modelValue = 'abcde';
       await element.updateComplete;
-      expect(element.classList.contains('state-error')).to.equal(false, 'has no state-error');
-      expect(element.classList.contains('state-warning')).to.equal(false, 'has no state-warning');
-      expect(element.classList.contains('state-info')).to.equal(true, 'has state-info');
-      expect(element.classList.contains('state-success')).to.equal(true, 'has state-success');
+      expect(element.hasAttribute('state-error')).to.equal(false, 'has no state-error');
+      expect(element.hasAttribute('state-warning')).to.equal(false, 'has no state-warning');
+      expect(element.hasAttribute('state-info')).to.equal(true, 'has state-info');
+      expect(element.hasAttribute('state-success')).to.equal(true, 'has state-success');
 
       element.modelValue = 'abcdefg';
       await element.updateComplete;
-      expect(element.classList.contains('state-error')).to.equal(false, 'has no state-error');
-      expect(element.classList.contains('state-warning')).to.equal(false, 'has no state-warning');
-      expect(element.classList.contains('state-info')).to.equal(false, 'has no state-info');
-      expect(element.classList.contains('state-success')).to.equal(true, 'has state-success');
+      expect(element.hasAttribute('state-error')).to.equal(false, 'has no state-error');
+      expect(element.hasAttribute('state-warning')).to.equal(false, 'has no state-warning');
+      expect(element.hasAttribute('state-info')).to.equal(false, 'has no state-info');
+      expect(element.hasAttribute('state-success')).to.equal(true, 'has state-success');
     });
 
     it(`stores validity of validator for every type in
@@ -398,7 +398,7 @@ describe('ValidateMixin', () => {
       expect(validationState.error.alwaysFalse).to.equal(true);
     });
 
-    it(`sets a class "state-(error|warning|info|success)-show" when the component has
+    it(`sets an attribute "state-(error|warning|info|success)-show" when the component has
         a corresponding state and "show{type}Condition()" is met`, async () => {
       const validationState = await fixture(html`
         <${tag}
@@ -417,45 +417,46 @@ describe('ValidateMixin', () => {
 
       validationState.modelValue = 'a';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(true);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(false);
-      expect(validationState.classList.contains('state-info-show')).to.equal(false);
-      expect(validationState.classList.contains('state-success-show')).to.equal(false);
+
+      expect(validationState.hasAttribute('state-error-show')).to.equal(true);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(false);
 
       validationState.modelValue = 'abc';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(false);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(true);
-      expect(validationState.classList.contains('state-info-show')).to.equal(false);
-      expect(validationState.classList.contains('state-success-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-error-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(true);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(false);
 
       validationState.modelValue = 'abcde';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(false);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(false);
-      expect(validationState.classList.contains('state-info-show')).to.equal(true);
-      expect(validationState.classList.contains('state-success-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-error-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(true);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(false);
 
       validationState.modelValue = 'abcdefg';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(false);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(false);
-      expect(validationState.classList.contains('state-info-show')).to.equal(false);
-      expect(validationState.classList.contains('state-success-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-error-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(false);
 
       validationState.modelValue = 'a';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(true);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(false);
-      expect(validationState.classList.contains('state-info-show')).to.equal(false);
-      expect(validationState.classList.contains('state-success-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-error-show')).to.equal(true);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(false);
 
       validationState.modelValue = 'abcdefg';
       await validationState.updateComplete;
-      expect(validationState.classList.contains('state-error-show')).to.equal(false);
-      expect(validationState.classList.contains('state-warning-show')).to.equal(false);
-      expect(validationState.classList.contains('state-info-show')).to.equal(false);
-      expect(validationState.classList.contains('state-success-show')).to.equal(true);
+      expect(validationState.hasAttribute('state-error-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-warning-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-info-show')).to.equal(false);
+      expect(validationState.hasAttribute('state-success-show')).to.equal(true);
     });
 
     it('fires "(error|warning|info|success)-state-changed" event when state changes', async () => {
@@ -1161,7 +1162,7 @@ describe('ValidateMixin', () => {
   describe(`Asynchronous validation [to-be-implemented] ${suffixName}`, () => {
     it('handles promises as custom validator functions [to-be-implemented]', async () => {});
 
-    it('sets a class "state-pending" when validation is in progress [to-be-implemented]', async () => {});
+    it('sets an attribute "state-pending" when validation is in progress [to-be-implemented]', async () => {});
 
     it('debounces async validation for performance [to-be-implemented]', async () => {});
 

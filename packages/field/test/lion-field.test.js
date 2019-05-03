@@ -62,13 +62,13 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(2);
   });
 
-  it('has class "state-focused" if focused', async () => {
+  it('has attribute "state-focused" if focused', async () => {
     const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-    expect(el.classList.contains('state-focused')).to.equal(false, 'no state-focused initially');
+    expect(el.hasAttribute('state-focused')).to.equal(false, 'no state-focused initially');
     await triggerFocusFor(el.inputElement);
-    expect(el.classList.contains('state-focused')).to.equal(true, 'state-focused after focus()');
+    expect(el.hasAttribute('state-focused')).to.equal(true, 'state-focused after focus()');
     await triggerBlurFor(el.inputElement);
-    expect(el.classList.contains('state-focused')).to.equal(false, 'no state-focused after blur()');
+    expect(el.hasAttribute('state-focused')).to.equal(false, 'no state-focused after blur()');
   });
 
   it('offers simple getter "this.focused" returning true/false for the current focus state', async () => {

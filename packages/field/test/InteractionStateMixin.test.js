@@ -51,15 +51,15 @@ describe('InteractionStateMixin', async () => {
     // expect(formElement.touched).to.equal(true);
   });
 
-  it('sets a class "state-(touched|dirty)"', async () => {
+  it('sets an attribute "state-(touched|dirty)"', async () => {
     const state = await fixture(`<${elem}><input slot="input"></${elem}>`);
     state.touched = true;
     await state.updateComplete;
-    expect(state.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
+    expect(state.hasAttribute('state-touched')).to.equal(true, 'has attribute "state-touched"');
 
     state.dirty = true;
     await state.updateComplete;
-    expect(state.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+    expect(state.hasAttribute('state-dirty')).to.equal(true, 'has attribute "state-dirty"');
   });
 
   it('fires "(touched|dirty)-state-changed" event when state changes', async () => {

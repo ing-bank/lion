@@ -2,7 +2,6 @@
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
 import { randomOk } from './validators.js';
@@ -15,7 +14,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow, max-len
-    class ValidateMixin extends CssClassMixin(ObserverMixin(LocalizeMixin(SlotMixin(superclass)))) {
+    class ValidateMixin extends ObserverMixin(LocalizeMixin(SlotMixin(superclass))) {
       /* * * * * * * * * *
     Configuration  */
 
@@ -119,11 +118,13 @@ export const ValidateMixin = dedupeMixin(
           },
           errorState: {
             type: Boolean,
-            nonEmptyToClass: 'state-error',
+            reflect: true,
+            attribute: 'state-error',
           },
           errorShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-error-show',
+            reflect: true,
+            attribute: 'state-error-show',
           },
           warningValidators: {
             type: Object,
@@ -133,11 +134,13 @@ export const ValidateMixin = dedupeMixin(
           },
           warningState: {
             type: Boolean,
-            nonEmptyToClass: 'state-warning',
+            reflect: true,
+            attribute: 'state-warning',
           },
           warningShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-warning-show',
+            reflect: true,
+            attribute: 'state-warning-show',
           },
           infoValidators: {
             type: Object,
@@ -147,11 +150,13 @@ export const ValidateMixin = dedupeMixin(
           },
           infoState: {
             type: Boolean,
-            nonEmptyToClass: 'state-info',
+            reflect: true,
+            attribute: 'state-info',
           },
           infoShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-info-show',
+            reflect: true,
+            attribute: 'state-info-show',
           },
           successValidators: {
             type: Object,
@@ -161,15 +166,18 @@ export const ValidateMixin = dedupeMixin(
           },
           successState: {
             type: Boolean,
-            nonEmptyToClass: 'state-success',
+            reflect: true,
+            attribute: 'state-success',
           },
           successShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-success-show',
+            reflect: true,
+            attribute: 'state-success-show',
           },
           invalid: {
             type: Boolean,
-            nonEmptyToClass: 'state-invalid',
+            reflect: true,
+            attribute: 'state-invalid',
           },
           message: {
             type: Boolean,

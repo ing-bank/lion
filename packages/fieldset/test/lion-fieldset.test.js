@@ -319,19 +319,19 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.touched).to.equal(true);
     });
 
-    it('sets a class "state-(touched|dirty)"', async () => {
+    it('sets an attribute "state-(touched|dirty)"', async () => {
       const fieldset = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
       await nextFrame();
       fieldset.formElements.color.touched = true;
       await fieldset.updateComplete;
-      expect(fieldset.classList.contains('state-touched')).to.equal(
+      expect(fieldset.hasAttribute('state-touched')).to.equal(
         true,
-        'has class "state-touched"',
+        'has attribute "state-touched"',
       );
 
       fieldset.formElements.color.dirty = true;
       await fieldset.updateComplete;
-      expect(fieldset.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+      expect(fieldset.hasAttribute('state-dirty')).to.equal(true, 'has attribute "state-dirty"');
     });
 
     it('sets prefilled when field left and value non-empty', async () => {
