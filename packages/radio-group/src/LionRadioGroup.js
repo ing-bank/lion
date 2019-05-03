@@ -25,13 +25,6 @@ import { LionFieldset } from '@lion/fieldset';
  */
 
 export class LionRadioGroup extends LionFieldset {
-  get events() {
-    return {
-      ...super.events,
-      _checkRadioElements: [() => this, 'model-value-changed'],
-    };
-  }
-
   get checkedValue() {
     const el = this._getCheckedRadioElement();
     return el ? el.modelValue.value : '';
@@ -59,7 +52,13 @@ export class LionRadioGroup extends LionFieldset {
 
   connectedCallback() {
     super.connectedCallback();
+    this.addEventListener('model-value-changed', this._checkRadioElements.bind(this));
     this._setRole('radiogroup');
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('model-value-changed', this._checkRadioElements.bind(this));
   }
 
   _checkRadioElements(ev) {
