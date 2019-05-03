@@ -20,14 +20,14 @@ export class LionForm extends DelegateMixin(LionFieldset) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('submit', this._submit.bind(this));
-    this.addEventListener('reset', this._reset.bind(this));
+    this.addEventListener('submit', this._submit);
+    this.addEventListener('reset', this._reset);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('submit', this._submit.bind(this));
-    this.removeEventListener('reset', this._reset.bind(this));
+    this.removeEventListener('submit', this._submit);
+    this.removeEventListener('reset', this._reset);
   }
 
   get formElement() {

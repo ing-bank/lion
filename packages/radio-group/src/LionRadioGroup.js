@@ -52,13 +52,13 @@ export class LionRadioGroup extends LionFieldset {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('model-value-changed', this._checkRadioElements.bind(this));
+    this.addEventListener('model-value-changed', this._checkRadioElements);
     this._setRole('radiogroup');
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('model-value-changed', this._checkRadioElements.bind(this));
+    this.removeEventListener('model-value-changed', this._checkRadioElements);
   }
 
   _checkRadioElements(ev) {

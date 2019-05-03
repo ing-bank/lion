@@ -96,7 +96,8 @@ export class LionField extends FormControlMixin(
     Lifecycle  */
   connectedCallback() {
     super.connectedCallback();
-    this.inputElement.addEventListener('change', this._onChange.bind(this));
+    this._onChange = this._onChange.bind(this);
+    this.inputElement.addEventListener('change', this._onChange);
     this._delegateInitialValueAttr(); // TODO: find a better way to do this
     this._setDisabledClass();
     this.classList.add('form-field');
@@ -111,7 +112,7 @@ export class LionField extends FormControlMixin(
       });
       this.__parentFormGroup.dispatchEvent(event);
     }
-    this.inputElement.removeEventListener('change', this._onChange.bind(this));
+    this.inputElement.removeEventListener('change', this._onChange);
   }
 
   /**

@@ -32,12 +32,12 @@ import { LionField } from '@lion/field';
 export class LionSelect extends LionField {
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('change', this._proxyChangeEvent.bind(this));
+    this.addEventListener('change', this._proxyChangeEvent);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('change', this._proxyChangeEvent.bind(this));
+    this.removeEventListener('change', this._proxyChangeEvent);
   }
 
   _proxyChangeEvent() {
