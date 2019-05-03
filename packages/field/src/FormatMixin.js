@@ -90,14 +90,6 @@ export const FormatMixin = dedupeMixin(
         };
       }
 
-      get events() {
-        return {
-          ...super.events,
-          _proxyInputEvent: [() => this.inputElement, 'input'],
-          _onUserInputChanged: [() => this, 'user-input-changed'],
-        };
-      }
-
       /**
        * === Formatting and parsing ====
        * To understand all concepts below, please consult the flow diagrams in the documentation.
@@ -288,13 +280,15 @@ export const FormatMixin = dedupeMixin(
       connectedCallback() {
         super.connectedCallback();
         this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
+
         this._reflectBackFormattedValueDebounced = () => {
           // Make sure this is fired after the change event of inputElement, so that formattedValue
           // is guaranteed to be calculated
           setTimeout(this._reflectBackFormattedValueToUser);
         };
         this.inputElement.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
-
+        this.inputElement.addEventListener('input', this._proxyInputEvent.bind(this));
+        this.addEventListener('user-input-changed', this._onUserInputChanged.bind(this));
         // Connect the value found in <input> to the formatting/parsing/serializing loop as a fallback
         // mechanism. Assume the user uses the value property of the <lion-field>(recommended api) as
         // the api (this is a downwards sync).
@@ -308,6 +302,8 @@ export const FormatMixin = dedupeMixin(
 
       disconnectedCallback() {
         super.disconnectedCallback();
+        this.inputElement.removeEventListener('input', this._proxyInputEvent.bind(this));
+        this.removeEventListener('user-input-changed', this._onUserInputChanged.bind(this));
         this.inputElement.removeEventListener(
           this.formatOn,
           this._reflectBackFormattedValueDebounced,
