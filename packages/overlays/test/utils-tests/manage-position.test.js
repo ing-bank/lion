@@ -1,7 +1,9 @@
+/* eslint-env mocha */
+/* eslint-disable no-unused-expressions, no-underscore-dangle */
 import { expect } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import { managePosition } from '../../src/utils/manage-position.js';
+import { managePosition } from '../../utils/manage-position.js';
 
 describe('managePosition()', () => {
   let positionedBoundingRectCalls = 0;
@@ -46,6 +48,8 @@ describe('managePosition()', () => {
     },
     offsetTop: 50,
     offsetLeft: 50,
+    offsetHeight: 50,
+    offsetWidth: 50,
   };
 
   beforeEach(() => {
@@ -67,9 +71,9 @@ describe('managePosition()', () => {
       zIndex: '10',
       overflow: 'auto',
       boxSizing: 'border-box',
-      top: '8px',
+      top: '16px',
       left: '50px',
-      maxHeight: '34px',
+      maxHeight: '26px',
       width: '50px',
     });
 

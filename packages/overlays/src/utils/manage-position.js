@@ -3,7 +3,7 @@ import { animationFrame } from './async.js';
 import { getPosition } from './get-position.js';
 
 /* eslint-disable no-param-reassign */
-const genericObservedEvents = ['resize', 'orentationchange'];
+const genericObservedEvents = ['resize', 'orientationchange'];
 const observedFixedEvents = ['scroll'];
 const elementStyleProps = [
   'position',
@@ -15,7 +15,7 @@ const elementStyleProps = [
   'max-height',
   'width',
 ];
-const elementAttributes = ['js-positioning-horizontal', 'js-positioning-vertical'];
+const elementAttributes = ['position'];
 
 /**
  * @param {HTMLElement} el
@@ -24,20 +24,21 @@ const elementAttributes = ['js-positioning-horizontal', 'js-positioning-vertical
  * @param {number} verticalMargin
  * @param {number} horizontalMargin
  * @param {Config} config
+ * @param {Viewport} viewport
  */
 /* eslint-disable-next-line max-len */
-function updatePosition(
-  el,
-  relEl,
-  viewportMargin,
-  verticalMargin,
-  horizontalMargin,
-  config,
-  viewport,
-) {
+export function updatePosition(el, relEl, config = {}, viewport = document.documentElement) {
+  const { viewportMargin = 16, verticalMargin = 8, horizontalMargin = 8 } = config;
+
   // Reset width/height restrictions so that desired height/width can be calculated
   el.style.removeProperty('max-height');
   el.style.removeProperty('width');
+
+  el.style.position = config.position;
+  el.style.zIndex = config.position === 'absolute' ? '10' : '200';
+  el.style.overflow = 'auto';
+  el.style.boxSizing = 'border-box';
+  relEl.style.boxSizing = 'border-box';
 
   const elRect = el.getBoundingClientRect();
   const relRect = relEl.getBoundingClientRect();
@@ -50,14 +51,18 @@ function updatePosition(
     horizontalMargin,
     viewport,
   };
-  const position = getPosition(positionContext, config);
 
-  el.style.top = `${position.top}px`;
-  el.style.left = `${position.left}px`;
-  el.style.maxHeight = `${position.maxHeight}px`;
-  el.style.width = `${position.width}px`;
-  el.setAttribute('js-positioning-horizontal', position.horizontalDir);
-  el.setAttribute('js-positioning-vertical', position.verticalDir);
+  const placement = getPosition(positionContext, config);
+  el.style.top = `${placement.top}px`;
+  el.style.left = `${placement.left}px`;
+  el.style.maxHeight = `${placement.maxHeight}px`;
+  el.style.width = `${placement.width}px`;
+  el.setAttribute('position', placement.position);
+
+  // If the width / height are explicitly or inline styled, take the style.
+  // If not, take the relRect dimensions.
+  el.setAttribute('invoker-width', positionContext.relRect.width);
+  el.setAttribute('invoker-height', positionContext.relRect.height);
 }
 
 /**
@@ -73,6 +78,7 @@ function updatePosition(
  * @param {HTMLElement} element The element to position relatively.
  * @param {HTMLElement} relativeTo The element to position relatively to.
  * @param {Config} config
+ * @param {Viewport} viewport
  */
 // eslint-disable-next-line max-len
 export function managePosition(
@@ -85,7 +91,7 @@ export function managePosition(
     viewportMargin = 16,
     verticalMargin = 8,
     horizontalMargin = 8,
-    placement = 'bottom right',
+    placement = 'right-of-bottom',
     position = 'absolute',
     minHeight,
     minWidth,
@@ -100,18 +106,13 @@ export function managePosition(
     const updateConfig = {
       placement,
       position,
-      minHeight,
-      minWidth,
-    };
-    const params = [
-      element,
-      relativeTo,
       viewportMargin,
       verticalMargin,
       horizontalMargin,
-      updateConfig,
-      viewport,
-    ];
+      minHeight,
+      minWidth,
+    };
+    const params = [element, relativeTo, updateConfig, viewport];
     updatePosition(...params);
   }
 
@@ -139,11 +140,6 @@ export function managePosition(
   observedEvents.forEach(e =>
     window.addEventListener(e, handleUpdateEvent, { capture: true, passive: true }),
   );
-  element.style.position = position;
-  element.style.zIndex = position === 'absolute' ? '10' : '200';
-  element.style.overflow = 'auto';
-  element.style.boxSizing = 'border-box';
-  relativeTo.style.boxSizing = 'border-box';
   handleUpdate();
 
   return { updatePosition: handleUpdate, disconnect };
