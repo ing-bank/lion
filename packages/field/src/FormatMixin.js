@@ -83,26 +83,14 @@ export const FormatMixin = dedupeMixin(
       _requestUpdate(name, oldValue) {
         super._requestUpdate(name, oldValue);
 
-        switch (name) {
-          case 'serializedValue':
-            this._onSerializedValueChanged();
-            break;
-          case 'formattedValue':
-            this._onFormattedValueChanged();
-            break;
-          case 'modelValue':
-            this._onModelValueChanged(
-              {
-                modelValue: this.modelValue,
-              },
-              {
-                modelValue: oldValue,
-              },
-            );
-            break;
-          default:
-            break;
-        }
+        const map = {
+          serializedValue: () => this._onSerializedValueChanged(),
+          formattedValue: () => this._onFormattedValueChanged(),
+          modelValue: () =>
+            this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue }),
+        };
+
+        if (map[name]) map[name]();
       }
 
       get events() {

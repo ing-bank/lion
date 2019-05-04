@@ -48,17 +48,12 @@ export const InteractionStateMixin = dedupeMixin(
 
       _requestUpdate(name, oldValue) {
         super._requestUpdate(name, oldValue);
+        const map = {
+          touched: () => this._onTouchedChanged(),
+          dirty: () => this._onDirtyChanged(),
+        };
 
-        switch (name) {
-          case 'touched':
-            this._onTouchedChanged();
-            break;
-          case 'dirty':
-            this._onDirtyChanged();
-            break;
-          default:
-            break;
-        }
+        if (map[name]) map[name]();
       }
 
       static _isPrefilled(modelValue) {
