@@ -8,6 +8,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/building-rollup": "^0.14.8",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/prettier-config": "^0.1.0",
@@ -19,6 +20,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.5",
     "babel-eslint": "^8.2.6",
     "babel-polyfill": "^6.26.0",
+    "bundlesize": "^0.17.1",
     "eclint": "^2.8.1",
     "eslint": "^6.1.0",
     "husky": "^1.0.0",
@@ -26,6 +28,8 @@
     "lint-staged": "^8.0.0",
     "markdownlint-cli": "^0.17.0",
     "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.27.8",
     "sinon": "^7.2.2",
     "webpack-merge": "^4.1.5",
     "whatwg-fetch": "^3.0.0"
@@ -50,7 +54,8 @@
     "lint:versions": "node ./scripts/lint-versions.js",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
-    "format:prettier": "prettier \"**/*.{js,md}\" --write"
+    "format:prettier": "prettier \"**/*.{js,md}\" --write",
+    "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize"
   },
   "lint-staged": {
     "*": [
@@ -73,5 +78,15 @@
     "yarn.lock": [
       "node ./scripts/yarn-lock-scan.js"
     ]
-  }
+  },
+  "bundlesize": [
+    {
+      "path": "./bundlesize/dist/core/core-*.js",
+      "maxSize": "10 kB"
+    },
+    {
+      "path": "./bundlesize/dist/all/all-*.js",
+      "maxSize": "30 kB"
+    }
+  ]
 }
