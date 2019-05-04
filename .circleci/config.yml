@@ -32,6 +32,9 @@ jobs:
       # run test locally first
       - run: npm run test
 
+      # make sure size is ok
+      - run: npm run bundlesize
+
       # run compatibility tests for multiple browser via browserstack
       # disabled until we can safely test multiple browsers
       # - run: npm run test:bs
