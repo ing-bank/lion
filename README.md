@@ -126,6 +126,10 @@ context, supports many edge cases and is accessible in all relevant screen reade
 Lion aims to do the heavy lifting for you.
 This means you only have to apply your own Design System: by delivering styles, configuring components and adding a minimal set of custom logic on top.
 
+## Coding guidlines
+
+Check out our [coding guidelines](./docs/README.md) for more detailed information.
+
 ## How to contribute
 
 Lion Web Components are only as good as its contributions.
