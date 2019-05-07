@@ -1,6 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { isCountryIBANValidator } from '../src/validators.js';
+import { isCountryIBANValidator } from '../index.js';
 import '../lion-input-iban.js';
 
 storiesOf('Forms|Input IBAN', module)
