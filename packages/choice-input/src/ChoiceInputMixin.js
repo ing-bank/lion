@@ -16,13 +16,6 @@ export const ChoiceInputMixin = superclass =>
       };
     }
 
-    get events() {
-      return {
-        ...super.events,
-        _toggleChecked: [() => this, 'user-input-changed'],
-      };
-    }
-
     static get syncObservers() {
       return {
         ...super.syncObservers,
@@ -104,7 +97,13 @@ export const ChoiceInputMixin = superclass =>
 
     connectedCallback() {
       if (super.connectedCallback) super.connectedCallback();
+      this.addEventListener('user-input-changed', this._toggleChecked);
       this._reflectCheckedToCssClass();
+    }
+
+    disconnectedCallback() {
+      if (super.disconnectedCallback) super.disconnectedCallback();
+      this.removeEventListener('user-input-changed', this._toggleChecked);
     }
 
     _toggleChecked() {
