@@ -1,7 +1,6 @@
 import { SlotMixin, html } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
-import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from '@lion/field';
@@ -16,7 +15,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormControlMixin(
-  ValidateMixin(EventMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+  ValidateMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement)))),
 ) {
   static get properties() {
     return {
@@ -40,18 +39,6 @@ export class LionFieldset extends FormControlMixin(
     return {
       ...super.asyncObservers,
       _onDisabledChanged: ['disabled'],
-    };
-  }
-
-  get events() {
-    return {
-      ...super.events,
-      __validate: [() => this, 'validation-done'],
-      _updateFocusedClass: [() => this, 'focused-changed'], // TODO: currently not available in InteractionStates
-      _updateTouchedClass: [() => this, 'touched-changed'],
-      _updateDirtyClass: [() => this, 'dirty-changed'],
-      __onFormElementRegister: [() => this, 'form-element-register'],
-      __onFormElementUnRegister: [() => this, 'form-element-unregister'],
     };
   }
 
@@ -118,12 +105,24 @@ export class LionFieldset extends FormControlMixin(
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
+    this.addEventListener('validation-done', this.__validate);
+    this.addEventListener('focused-changed', this._updateFocusedClass);
+    this.addEventListener('touched-changed', this._updateTouchedClass);
+    this.addEventListener('dirty-changed', this._updateDirtyClass);
+    this.addEventListener('form-element-register', this.__onFormElementRegister);
+    this.addEventListener('form-element-unregister', this.__onFormElementUnRegister);
     this._setRole();
   }
 
   disconnectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.disconnectedCallback();
+    this.removeEventListener('validation-done', this.__validate);
+    this.removeEventListener('focused-changed', this._updateFocusedClass);
+    this.removeEventListener('touched-changed', this._updateTouchedClass);
+    this.removeEventListener('dirty-changed', this._updateDirtyClass);
+    this.removeEventListener('form-element-register', this.__onFormElementRegister);
+    this.removeEventListener('form-element-unregister', this.__onFormElementUnRegister);
     if (this.__parentFormGroup) {
       const event = new CustomEvent('form-element-unregister', {
         detail: { element: this },
