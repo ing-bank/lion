@@ -15,6 +15,7 @@ git clone https://github.com/ing-bank/lion.git
 cd lion
 
 # Install dependencies
+# We require yarn as we use yarn workspaces
 yarn install
 
 # Create a branch for your changes
