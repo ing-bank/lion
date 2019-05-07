@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.5](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.4...@lion/input-amount@0.1.5) (2019-05-07)
+
+
+### Bug Fixes
+
+* **input-amount:** remove randomOkValidator as default ([d5e2dfe](https://github.com/ing-bank/lion/commit/d5e2dfe))
+
+
+
+
+
 ## [0.1.4](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.3...@lion/input-amount@0.1.4) (2019-04-29)
 
 **Note:** Version bump only for package @lion/input-amount
