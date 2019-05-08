@@ -137,23 +137,23 @@ describe('LionValidate', () => {
     });
 
     it('provides minDate() to allow only dates earlier then min', () => {
-      expect(minDate(new Date('2018-02-03'), new Date('2018-02-02'))).to.be.true;
-      expect(minDate(new Date('2018-02-01'), new Date('2018-02-02'))).to.be.false;
+      expect(minDate(new Date('2018-02-03'), new Date('2018/02/02'))).to.be.true;
+      expect(minDate(new Date('2018-02-01'), new Date('2018/02/02'))).to.be.false;
     });
 
     it('provides maxDate() to allow only dates before max', () => {
-      expect(maxDate(new Date('2018-02-01'), new Date('2018-02-02'))).to.be.true;
-      expect(maxDate(new Date('2018-02-03'), new Date('2018-02-02'))).to.be.false;
+      expect(maxDate(new Date('2018-02-01'), new Date('2018/02/02'))).to.be.true;
+      expect(maxDate(new Date('2018-02-03'), new Date('2018/02/02'))).to.be.false;
     });
 
     it('provides minMaxDate() to allow only dates between min and max', () => {
       const minMaxSetting = {
-        min: new Date('2018-02-02'),
-        max: new Date('2018-02-04'),
+        min: new Date('2018/02/02'),
+        max: new Date('2018/02/04'),
       };
-      expect(minMaxDate(new Date('2018-02-03'), minMaxSetting)).to.be.true;
-      expect(minMaxDate(new Date('2018-02-01'), minMaxSetting)).to.be.false;
-      expect(minMaxDate(new Date('2018-02-05'), minMaxSetting)).to.be.false;
+      expect(minMaxDate(new Date('2018/02/03'), minMaxSetting)).to.be.true;
+      expect(minMaxDate(new Date('2018/02/01'), minMaxSetting)).to.be.false;
+      expect(minMaxDate(new Date('2018/02/05'), minMaxSetting)).to.be.false;
     });
 
     it('provides {isDate, minDate, maxDate, minMaxDate}Validator factory function for all types', () => {
@@ -162,20 +162,20 @@ describe('LionValidate', () => {
       smokeTestValidator(
         'minDate',
         minDateValidator,
-        new Date('2018-02-03'),
-        new Date('2018-02-02'),
+        new Date('2018/02/03'),
+        new Date('2018/02/02'),
       );
       smokeTestValidator(
         'maxDate',
         maxDateValidator,
-        new Date('2018-02-01'),
-        new Date('2018-02-02'),
+        new Date('2018/02/01'),
+        new Date('2018/02/02'),
       );
       const minMaxSetting = {
-        min: new Date('2018-02-02'),
-        max: new Date('2018-02-04'),
+        min: new Date('2018/02/02'),
+        max: new Date('2018/02/04'),
       };
-      smokeTestValidator('minMaxDate', minMaxDateValidator, new Date('2018-02-03'), minMaxSetting);
+      smokeTestValidator('minMaxDate', minMaxDateValidator, new Date('2018/02/03'), minMaxSetting);
     });
   });
 
