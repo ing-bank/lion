@@ -12,7 +12,7 @@ or a float). The modelValue can(and is recommended to) be used as both input val
 output value of the `<lion-field>`
 
 Examples:
-- For a date input: a String '20/01/1999' will be converted to new Date('1999-01-20')
+- For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
 - For a number input: a formatted String '1.234,56' will be converted to a Number: 1234.56
 
 ### formattedValue
