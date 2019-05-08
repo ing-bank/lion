@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { localizeTearDown } from '../../test-helpers.js';
 
 import { parseDate } from '../../src/date/parseDate.js';
 
@@ -12,6 +13,10 @@ function equalsDate(value, date) {
 }
 
 describe('parseDate()', () => {
+  beforeEach(() => {
+    localizeTearDown();
+  });
+
   it('adds leading zeros', () => {
     expect(equalsDate(parseDate('1-1-1979'), new Date('1979/01/01'))).to.equal(true);
     expect(equalsDate(parseDate('1-11-1979'), new Date('1979/11/01'))).to.equal(true);
