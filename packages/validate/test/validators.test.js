@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { smokeTestValidator } from './test-utils.js';
 
 import {
   isString,
@@ -34,14 +35,6 @@ import {
   randomOkValidator,
   defaultOkValidator,
 } from '../src/validators.js';
-
-export const smokeTestValidator = (name, validator, value, params = undefined) => {
-  const generated = validator(params);
-  expect(generated[0](value, params)[name]).to.be.true;
-  if (params) {
-    expect(generated[1]).to.equals(params);
-  }
-};
 
 describe('LionValidate', () => {
   describe('String Validation', () => {
