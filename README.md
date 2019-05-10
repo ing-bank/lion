@@ -13,6 +13,10 @@
 Lion web components is a set of highly performant, accessible and flexible Web Components.
 They provide an unopinionated, white label layer that can be extended to your own layer of components.
 
+## Demos
+
+We do have a [live Storybook](http://lion-web-components.netlify.com) which shows all our components.
+
 ## How to install
 
 ```bash
@@ -49,6 +53,7 @@ npm i @lion/<package-name>
 | **-- [Steps](./packages/steps) --**         |                                                                                                                                |                                                    |
 | [steps](./packages/steps)                   | [![steps](https://img.shields.io/npm/v/@lion/steps.svg)](https://www.npmjs.com/package/@lion/steps)                            | Multi Step System                                  |
 | **-- Individual Packages --**               |                                                                                                                                |                                                    |
+| [core](./packages/core)                     | [![core](https://img.shields.io/npm/v/@lion/core.svg)](https://www.npmjs.com/package/@lion/core)                               | Core System (exports LitElement, lit-html)         |
 | [ajax](./packages/ajax)                     | [![ajax](https://img.shields.io/npm/v/@lion/ajax.svg)](https://www.npmjs.com/package/@lion/ajax)                               | Fetching data via ajax request                     |
 | [button](./packages/button)                 | [![button](https://img.shields.io/npm/v/@lion/button.svg)](https://www.npmjs.com/package/@lion/button)                         | Button                                             |
 
@@ -121,7 +126,13 @@ This means you only have to apply your own Design System: by delivering styles, 
 ## How to contribute
 
 Lion Web Components are only as good as its contributions.
-Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve our product .
+Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve our product.
+
+## Contact
+Feel free to create a github issue for any feedback or questions you might have.
+You can also find us on the Polymer slack in the [#lion](https://polymer.slack.com/messages/CJGFWJN9J/convo/CE6D9DN05-1557486154.187100/) channel.
+
+You can join the Polymer slack by visiting [Polymer Slack Invite](https://join.slack.com/t/polymer/shared_invite/enQtNTAzNzg3NjU4ODM4LTkzZGVlOGIxMmNiMjMzZDM1YzYyMzdiYTk0YjQyOWZhZTMwN2RlNjM5ZDFmZjMxZWRjMWViMDA1MjNiYWFhZWM).
 
 ## Support and issues
 
