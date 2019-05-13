@@ -26,6 +26,35 @@ const globalOverlayDemoStyle = css`
 
 storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
+    const buttonEl = document.createElement('button');
+    buttonEl.innerText = 'Open overlay';
+
+    const overlayCtrl = overlays.add(
+      new GlobalOverlayController({
+        contentTemplate: () => html`
+          <div class="demo-overlay">
+            <p>Simple overlay</p>
+            <button @click="${() => overlayCtrl.hide()}">Close</button>
+          </div>
+        `,
+        invokerNodes: [buttonEl],
+      }),
+    );
+    return html`
+      <style>
+        ${globalOverlayDemoStyle}
+      </style>
+      <a href="#">Anchor 1</a>
+      ${buttonEl}
+      <a href="#">Anchor 2</a>
+      ${Array(50).fill(
+        html`
+          <p>Lorem ipsum</p>
+        `,
+      )}
+    `;
+  })
+  .add('Adding invoker node later', () => {
     const overlayCtrl = overlays.add(
       new GlobalOverlayController({
         contentTemplate: () => html`
@@ -41,15 +70,16 @@ storiesOf('Global Overlay System|Global Overlay', module)
       <style>
         ${globalOverlayDemoStyle}
       </style>
-      <a href="#">Anchor 1</a>
       <button
-        @click="${event => overlayCtrl.show(event.target)}"
-        aria-haspopup="dialog"
-        aria-expanded="false"
+        @click=${event => {
+          const buttonEl = document.createElement('button');
+          buttonEl.innerText = 'Open overlay';
+          overlayCtrl.addInvokerNodes([buttonEl]);
+          event.target.insertAdjacentElement('afterend', buttonEl);
+        }}
       >
-        Open overlay
+        Click here to generate an invoker to your overlay
       </button>
-      <a href="#">Anchor 2</a>
       ${Array(50).fill(
         html`
           <p>Lorem ipsum</p>

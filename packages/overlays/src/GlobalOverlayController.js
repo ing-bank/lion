@@ -40,6 +40,10 @@ export class GlobalOverlayController {
     this._isShown = false;
     this._data = {};
     this._container = null;
+
+    if (finalParams.invokerNodes) {
+      this.addInvokerNodes(finalParams.invokerNodes);
+    }
   }
 
   get isShown() {
@@ -48,7 +52,7 @@ export class GlobalOverlayController {
 
   /**
    * Syncs shown state and data.
-   * @param {object} options optioons to sync
+   * @param {object} options options to sync
    * @param {boolean} [options.isShown] whether the overlay should be shown
    * @param {object} [options.data] data to pass to the content template function
    * @param {HTMLElement} [options.elementToFocusAfterHide] element to return focus when hiding
@@ -78,7 +82,22 @@ export class GlobalOverlayController {
    * Hides the overlay.
    */
   hide() {
+    if (this._expandedInvokerNode) {
+      this._expandedInvokerNode.setAttribute('aria-expanded', 'false');
+    }
     this._createOrUpdateOverlay(false, this._data);
+  }
+
+  addInvokerNodes(nodes) {
+    nodes.forEach(node => {
+      node.addEventListener('click', () => {
+        node.setAttribute('aria-expanded', 'true');
+        this._expandedInvokerNode = node;
+        this.show(node);
+      });
+      node.setAttribute('aria-haspopup', 'dialog');
+      node.setAttribute('aria-expanded', 'false');
+    });
   }
 
   /**

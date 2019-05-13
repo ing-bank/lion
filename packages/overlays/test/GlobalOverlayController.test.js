@@ -220,6 +220,67 @@ describe('GlobalOverlayController', () => {
       controller.sync({ isShown: false, data: { text: 'goodbye world' } });
       expect(getRenderedContainers().length).to.equal(0);
     });
+
+    it('supports setting the invoker to HTML node(s)', () => {
+      const buttonEl = document.createElement('button');
+      const buttonEl2 = document.createElement('button');
+      const controller = new GlobalOverlayController({
+        contentTemplate: () =>
+          html`
+            <p>Hello, World!</p>
+          `,
+        invokerNodes: [buttonEl, buttonEl2],
+      });
+
+      buttonEl.click();
+      expect(getRenderedOverlay(0).innerText).to.be.equal('Hello, World!');
+      controller.hide();
+      expect(getRenderedOverlay(0)).to.be.null;
+      buttonEl2.click();
+      expect(getRenderedOverlay(0).innerText).to.be.equal('Hello, World!');
+    });
+
+    it('supports adding an invoker node later', () => {
+      const controller = new GlobalOverlayController({
+        contentTemplate: () =>
+          html`
+            <p>Hello, World!</p>
+          `,
+      });
+
+      const buttonEl = document.createElement('button');
+      controller.addInvokerNodes([buttonEl]);
+
+      buttonEl.click();
+      expect(getRenderedOverlay(0).innerText).to.be.equal('Hello, World!');
+    });
+
+    it('sets default aria roles for the invoker if a node is supplied', () => {
+      const buttonEl = document.createElement('button');
+      const buttonEl2 = document.createElement('button');
+      const controller = new GlobalOverlayController({
+        contentTemplate: () =>
+          html`
+            <p>Hello, World!</p>
+          `,
+        invokerNodes: [buttonEl, buttonEl2],
+      });
+
+      expect(buttonEl.getAttribute('aria-haspopup')).to.be.equal('dialog');
+      expect(buttonEl2.getAttribute('aria-haspopup')).to.be.equal('dialog');
+
+      expect(buttonEl.getAttribute('aria-expanded')).to.be.equal('false');
+      expect(buttonEl2.getAttribute('aria-expanded')).to.be.equal('false');
+      buttonEl.click();
+      expect(buttonEl.getAttribute('aria-expanded')).to.be.equal('true');
+      expect(buttonEl2.getAttribute('aria-expanded')).to.be.equal('false');
+      controller.hide();
+      expect(buttonEl.getAttribute('aria-expanded')).to.be.equal('false');
+      expect(buttonEl2.getAttribute('aria-expanded')).to.be.equal('false');
+      buttonEl2.click();
+      expect(buttonEl.getAttribute('aria-expanded')).to.be.equal('false');
+      expect(buttonEl2.getAttribute('aria-expanded')).to.be.equal('true');
+    });
   });
 
   describe('elementToFocusAfterHide', () => {
