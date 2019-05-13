@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.5...@lion/ajax@0.1.6) (2019-05-13)
+
+
+### Bug Fixes
+
+* add prepublish step to make links absolute for npm docs ([9f2c4f6](https://github.com/ing-bank/lion/commit/9f2c4f6))
+
+
+
+
+
 ## [0.1.5](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.4...@lion/ajax@0.1.5) (2019-05-07)
 
 

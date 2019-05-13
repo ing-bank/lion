@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/ing-bank/lion/compare/@lion/core@0.1.3...@lion/core@0.1.4) (2019-05-13)
+
+
+### Bug Fixes
+
+* add prepublish step to make links absolute for npm docs ([9f2c4f6](https://github.com/ing-bank/lion/commit/9f2c4f6))
+
+
+
+
+
 ## [0.1.3](https://github.com/ing-bank/lion/compare/@lion/core@0.1.2...@lion/core@0.1.3) (2019-04-28)
 
 

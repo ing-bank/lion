@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.8](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.7...@lion/form-system@0.0.8) (2019-05-13)
+
+
+### Bug Fixes
+
+* add prepublish step to make links absolute for npm docs ([9f2c4f6](https://github.com/ing-bank/lion/commit/9f2c4f6))
+
+
+
+
+
 ## [0.0.7](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.6...@lion/form-system@0.0.7) (2019-05-08)
 
 **Note:** Version bump only for package @lion/form-system
