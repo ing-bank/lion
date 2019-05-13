@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.1.7...@lion/localize@0.2.0) (2019-05-13)
+
+
+### Features
+
+* **localize:** add reusable generators for month and weekday names ([043106c](https://github.com/ing-bank/lion/commit/043106c))
+
+
+
+
+
 ## [0.1.7](https://github.com/ing-bank/lion/compare/@lion/localize@0.1.6...@lion/localize@0.1.7) (2019-05-13)
 
 
