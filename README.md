@@ -1,8 +1,10 @@
 > ## 🛠 Status: Pilot Phase
+>
 > Lion Web Components are still in an early alpha stage; they should not be considered production ready yet.
 >
 > The goal of our pilot phase is to gather feedback from a private group of users.
 > Therefore, during this phase, we kindly ask you to:
+>
 > - not publicly promote or link us yet: (no tweets, blog posts or other forms of communication about Lion Web Components)
 > - not publicly promote or link products derived from/based on Lion Web Components
 >
@@ -56,6 +58,7 @@ npm i @lion/<package-name>
 | [core](./packages/core)                     | [![core](https://img.shields.io/npm/v/@lion/core.svg)](https://www.npmjs.com/package/@lion/core)                               | Core System (exports LitElement, lit-html)         |
 | [ajax](./packages/ajax)                     | [![ajax](https://img.shields.io/npm/v/@lion/ajax.svg)](https://www.npmjs.com/package/@lion/ajax)                               | Fetching data via ajax request                     |
 | [button](./packages/button)                 | [![button](https://img.shields.io/npm/v/@lion/button.svg)](https://www.npmjs.com/package/@lion/button)                         | Button                                             |
+| [calendar](./packages/calendar)             | [![calendar](https://img.shields.io/npm/v/@lion/calendar.svg)](https://www.npmjs.com/package/@lion/calendar)                   | Standalone calendar                                |
 
 ## How to use
 
@@ -129,6 +132,7 @@ Lion Web Components are only as good as its contributions.
 Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve our product.
 
 ## Contact
+
 Feel free to create a github issue for any feedback or questions you might have.
 You can also find us on the Polymer slack in the [#lion](https://polymer.slack.com/messages/CJGFWJN9J/convo/CE6D9DN05-1557486154.187100/) channel.
 
