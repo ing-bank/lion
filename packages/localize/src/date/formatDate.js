@@ -10,7 +10,7 @@ import { normalizeDate } from './normalizeDate.js';
  */
 export function formatDate(date, options) {
   if (!(date instanceof Date)) {
-    return '0000-00-00';
+    return '';
   }
   const formatOptions = options || {};
   // make sure months and days are always 2-digits

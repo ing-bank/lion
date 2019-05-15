@@ -108,8 +108,8 @@ describe('formatDate', () => {
     expect(formatDate(parsedDate, options)).to.equal('maandag 01 januari 1940');
   });
 
-  it('returns a zero-date when input is not a Date object', async () => {
+  it('returns empty string when input is not a Date object', async () => {
     const date = '1-1-2016';
-    expect(formatDate(date)).to.equal('0000-00-00');
+    expect(formatDate(date)).to.equal('');
   });
 });
