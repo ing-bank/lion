@@ -25,11 +25,13 @@ import {
   isDate,
   minDate,
   maxDate,
+  isDateDisabled,
   minMaxDate,
   isDateValidator,
   minDateValidator,
   maxDateValidator,
   minMaxDateValidator,
+  isDateDisabledValidator,
   randomOk,
   defaultOk,
   randomOkValidator,
@@ -149,7 +151,12 @@ describe('LionValidate', () => {
       expect(minMaxDate(new Date('2018/02/05'), minMaxSetting)).to.be.false;
     });
 
-    it('provides {isDate, minDate, maxDate, minMaxDate}Validator factory function for all types', () => {
+    it('provides isDateDisabled() to disable dates matching specified condition', () => {
+      expect(isDateDisabled(new Date('2018/02/03'), d => d.getDate() === 3)).to.be.true;
+      expect(isDateDisabled(new Date('2018/02/04'), d => d.getDate() === 3)).to.be.false;
+    });
+
+    it('provides {isDate, minDate, maxDate, minMaxDate, isDateDisabled}Validator factory function for all types', () => {
       // do a smoke test for each type
       smokeTestValidator('isDate', isDateValidator, new Date());
       smokeTestValidator(
@@ -169,6 +176,12 @@ describe('LionValidate', () => {
         max: new Date('2018/02/04'),
       };
       smokeTestValidator('minMaxDate', minMaxDateValidator, new Date('2018/02/03'), minMaxSetting);
+      smokeTestValidator(
+        'isDateDisabled',
+        isDateDisabledValidator,
+        new Date('2018/02/03'),
+        d => d.getDate() !== 15,
+      );
     });
   });
 

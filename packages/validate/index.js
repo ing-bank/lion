@@ -1,9 +1,12 @@
 export { ValidateMixin } from './src/ValidateMixin.js';
 export { Unparseable } from './src/Unparseable.js';
+export { isValidatorApplied } from './src/isValidatorApplied.js';
 
 export {
   defaultOk,
   defaultOkValidator,
+  isDateDisabled,
+  isDateDisabledValidator,
   equalsLength,
   equalsLengthValidator,
   isDate,
