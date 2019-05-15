@@ -18,6 +18,7 @@ export default {
     maxDate: 'Veuillez indiquer un(e) {fieldName} avant {validatorParams.max, date, YYYYMMDD}.',
     minMaxDate:
       'Veuillez indiquer un(e) {fieldName} entre {validatorParams.min, date, YYYYMMDD} et {validatorParams.max, date, YYYYMMDD}.',
+    isDisabledDate: "Cette date n'est pas disponible, veuillez en choisir une autre.",
     isEmail: 'Veuillez indiquer un(e) {fieldName} au format "nom@exemple.com".',
   },
   warning: {
@@ -39,6 +40,7 @@ export default {
     maxDate: 'Veuillez indiquer un(e) {fieldName} avant {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Veuillez indiquer un(e) {fieldName} entre {validatorParams.min, date, YYYYMMDD} et {validatorParams.max, date, YYYYMMDD}.',
+    isDisabledDate: "Cette date n'est pas disponible, veuillez en choisir une autre.",
     isEmail: 'Veuillez indiquer un(e) {fieldName} au format "nom@exemple.com".',
   },
   success: {
