@@ -151,7 +151,6 @@ export class LionInputDatepicker extends LionInputDate {
 
   constructor() {
     super();
-    // Create a unique id for the invoker, since it is placed in light dom for a11y.
     this.__invokerId = this.__createUniqueIdForA11y();
     this._calendarInvokerSlot = 'suffix';
 
@@ -272,7 +271,7 @@ export class LionInputDatepicker extends LionInputDate {
   // eslint-disable-next-line class-methods-use-this
   _invokerTemplate() {
     // TODO: aria-expanded should be toggled by Overlay system, to allow local overlays
-    // (a.k.a. dropdowns) as well
+    // (a.k.a. dropdowns) as well. Important: will be breaking for subclassers
     return html`
       <button
         @click="${this.__openCalendarOverlay}"
@@ -287,7 +286,6 @@ export class LionInputDatepicker extends LionInputDate {
     `;
   }
 
-  // Renders the invoker button + the calendar overlay invoked by this button
   __createPickerAndReturnInvokerNode() {
     const renderParent = document.createElement('div');
     render(this._invokerTemplate(), renderParent);
