@@ -1,4 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { spy } from 'sinon';
 
 import '@lion/input/lion-input.js';
 import '@lion/fieldset/lion-fieldset.js';
@@ -36,5 +37,20 @@ describe('<lion-form>', () => {
     expect(withDefaults.modelValue).to.deep.equal({
       firstName: 'Foo',
     });
+  });
+
+  it('works with the native submit event (triggered via a button)', async () => {
+    const submitSpy = spy();
+    const el = await fixture(html`
+      <lion-form @submit=${submitSpy}>
+        <form>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+
+    const button = el.querySelector('button');
+    button.click();
+    expect(submitSpy.callCount).to.equal(1);
   });
 });
