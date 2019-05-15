@@ -16,6 +16,7 @@ export default {
     maxDate: 'Введите значение поля {fieldName} до {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Введите значение поля {fieldName} от {validatorParams.min, date, YYYYMMDD} до {validatorParams.max, date, YYYYMMDD}.',
+    isDisabledDate: 'Эта дата недоступна, выберите другой вариант.',
     isEmail: 'Введите действительное значение поля {fieldName} в формате «name@example.com».',
   },
   warning: {
@@ -35,6 +36,7 @@ export default {
     maxDate: 'Введите значение поля {fieldName} до {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Введите значение поля {fieldName} от {validatorParams.min, date, YYYYMMDD} до {validatorParams.max, date, YYYYMMDD}.',
+    isDisabledDate: 'Эта дата недоступна, выберите другой вариант.',
     isEmail: 'Введите действительное значение поля {fieldName} в формате «name@example.com».',
   },
   success: {
