@@ -30,6 +30,8 @@ export {
   CSSResult,
   defaultConverter,
   notEqual,
+  property,
+  PropertyDeclarations,
 } from 'lit-element';
 // ours
 export { dedupeMixin } from './src/dedupeMixin.js';
