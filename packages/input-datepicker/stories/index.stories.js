@@ -25,10 +25,10 @@ storiesOf('Forms|Input Datepicker', module)
     `,
   )
   .add(
-    'disabledDatesValidator',
+    'isDateDisabledValidator',
     () => html`
       <lion-input-datepicker
-        label="disabledDates"
+        label="isDateDisabled"
         help-text="You're not allowed to choose the 15th"
         .errorValidators=${[isDateDisabledValidator(d => d.getDate() === 15)]}
       >
