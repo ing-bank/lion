@@ -6,6 +6,7 @@ import '../packages/input/stories/localize.stories.js';
 import '../packages/textarea/stories/index.stories.js';
 import '../packages/input-amount/stories/index.stories.js';
 import '../packages/input-date/stories/index.stories.js';
+import '../packages/input-datepicker/stories/index.stories.js';
 import '../packages/input-email/stories/index.stories.js';
 import '../packages/input-iban/stories/index.stories.js';
 import '../packages/select/stories/index.stories.js';
