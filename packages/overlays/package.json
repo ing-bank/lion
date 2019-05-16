@@ -27,6 +27,7 @@
     "src",
     "stories",
     "test",
+    "translations",
     "*.js"
   ],
   "dependencies": {
