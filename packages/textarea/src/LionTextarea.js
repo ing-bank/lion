@@ -17,6 +17,10 @@ export class LionTextarea extends ObserverMixin(LionInput) {
         type: Number,
         attribute: 'max-rows',
       },
+      maxLengthIndicator: {
+        type: Number,
+        attribute: 'max-length-indicator'
+      }
     };
   }
 
@@ -40,7 +44,7 @@ export class LionTextarea extends ObserverMixin(LionInput) {
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('textarea'),
+      input: () => document.createElement('textarea')
     };
   }
 
