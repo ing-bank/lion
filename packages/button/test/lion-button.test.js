@@ -6,43 +6,87 @@ import '../lion-button.js';
 
 describe('lion-button', () => {
   it('behaves like native `button` in terms of a11y', async () => {
-    const lionButton = await fixture(`<lion-button>foo</lion-button>`);
-    expect(lionButton.getAttribute('role')).to.equal('button');
-    expect(lionButton.getAttribute('tabindex')).to.equal('0');
+    const el = await fixture(`<lion-button>foo</lion-button>`);
+    expect(el.getAttribute('role')).to.equal('button');
+    expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
   it('has no type by default on the native button', async () => {
-    const lionButton = await fixture(`<lion-button>foo</lion-button>`);
-    const nativeButton = lionButton.$$slot('_button');
+    const el = await fixture(`<lion-button>foo</lion-button>`);
+    const nativeButton = el.$$slot('_button');
     expect(nativeButton.getAttribute('type')).to.be.null;
   });
 
   it('has type="submit" on the native button when set', async () => {
-    const lionButton = await fixture(`<lion-button type="submit">foo</lion-button>`);
-    const nativeButton = lionButton.$$slot('_button');
+    const el = await fixture(`<lion-button type="submit">foo</lion-button>`);
+    const nativeButton = el.$$slot('_button');
     expect(nativeButton.getAttribute('type')).to.equal('submit');
   });
 
   it('hides the native button in the UI', async () => {
-    const lionButton = await fixture(`<lion-button>foo</lion-button>`);
-    const nativeButton = lionButton.$$slot('_button');
+    const el = await fixture(`<lion-button>foo</lion-button>`);
+    const nativeButton = el.$$slot('_button');
     expect(nativeButton.getAttribute('tabindex')).to.equal('-1');
     expect(window.getComputedStyle(nativeButton).visibility).to.equal('hidden');
   });
 
   it('can be disabled imperatively', async () => {
-    const lionButton = await fixture(`<lion-button disabled>foo</lion-button>`);
-    expect(lionButton.getAttribute('tabindex')).to.equal('-1');
+    const el = await fixture(`<lion-button disabled>foo</lion-button>`);
+    expect(el.getAttribute('tabindex')).to.equal('-1');
 
-    lionButton.disabled = false;
-    await lionButton.updateComplete;
-    expect(lionButton.getAttribute('tabindex')).to.equal('0');
-    expect(lionButton.hasAttribute('disabled')).to.equal(false);
+    el.disabled = false;
+    await el.updateComplete;
+    expect(el.getAttribute('tabindex')).to.equal('0');
+    expect(el.hasAttribute('disabled')).to.equal(false);
 
-    lionButton.disabled = true;
-    await lionButton.updateComplete;
-    expect(lionButton.getAttribute('tabindex')).to.equal('-1');
-    expect(lionButton.hasAttribute('disabled')).to.equal(true);
+    el.disabled = true;
+    await el.updateComplete;
+    expect(el.getAttribute('tabindex')).to.equal('-1');
+    expect(el.hasAttribute('disabled')).to.equal(true);
+  });
+
+  describe('a11y', () => {
+    it('has a role="button" by default', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      expect(el.getAttribute('role')).to.equal('button');
+      el.role = 'foo';
+      await el.updateComplete;
+      expect(el.getAttribute('role')).to.equal('foo');
+    });
+
+    it('does not override user provided role', async () => {
+      const el = await fixture(`<lion-button role="foo">foo</lion-button>`);
+      expect(el.getAttribute('role')).to.equal('foo');
+    });
+
+    it('has a tabindex="0" by default', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      expect(el.getAttribute('tabindex')).to.equal('0');
+    });
+
+    it('has a tabindex="-1" when disabled', async () => {
+      const el = await fixture(`<lion-button disabled>foo</lion-button>`);
+      expect(el.getAttribute('tabindex')).to.equal('-1');
+      el.disabled = false;
+      await el.updateComplete;
+      expect(el.getAttribute('tabindex')).to.equal('0');
+      el.disabled = true;
+      await el.updateComplete;
+      expect(el.getAttribute('tabindex')).to.equal('-1');
+    });
+
+    it('does not override user provided tabindex', async () => {
+      const el = await fixture(`<lion-button tabindex="5">foo</lion-button>`);
+      expect(el.getAttribute('tabindex')).to.equal('5');
+    });
+
+    it('disabled does not override user provided tabindex', async () => {
+      const el = await fixture(`<lion-button tabindex="5" disabled>foo</lion-button>`);
+      expect(el.getAttribute('tabindex')).to.equal('-1');
+      el.disabled = false;
+      await el.updateComplete;
+      expect(el.getAttribute('tabindex')).to.equal('5');
+    });
   });
 
   describe('form integration', () => {
