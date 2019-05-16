@@ -30,6 +30,7 @@
     "src",
     "stories",
     "test",
+    "translations",
     "*.js"
   ],
   "dependencies": {
@@ -46,4 +47,8 @@
     "@open-wc/testing": "^0.11.1",
     "@polymer/iron-test-helpers": "^3.0.1"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> fix(input-datepicker): publish translations to npm
