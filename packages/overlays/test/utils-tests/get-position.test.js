@@ -1,8 +1,6 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions, no-underscore-dangle */
 import { expect } from '@open-wc/testing';
 
-import { getPosition, getPlacement } from '../../utils/get-position.js';
+import { getPosition, getPlacement } from '../../src/utils/get-position.js';
 
 // Test cases:
 // offset top, absolute in absolute

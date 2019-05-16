@@ -36,9 +36,12 @@ export function updatePosition(el, relEl, config = {}, viewport = document.docum
 
   el.style.position = config.position;
   el.style.zIndex = config.position === 'absolute' ? '10' : '200';
-  el.style.overflow = 'auto';
   el.style.boxSizing = 'border-box';
   relEl.style.boxSizing = 'border-box';
+  // IE11 bug with overflow: auto behavior, not sure if fixable
+  if (!window.navigator.userAgent.match(/Trident.*rv:11\./)) {
+    el.style.overflow = 'auto';
+  }
 
   const elRect = el.getBoundingClientRect();
   const relRect = relEl.getBoundingClientRect();
@@ -137,9 +140,9 @@ export function managePosition(
     relativeTo.style.removeProperty('box-sizing');
   }
 
-  observedEvents.forEach(e =>
-    window.addEventListener(e, handleUpdateEvent, { capture: true, passive: true }),
-  );
+  observedEvents.forEach(e => {
+    window.addEventListener(e, handleUpdateEvent, { capture: true, passive: true });
+  });
   handleUpdate();
 
   return { updatePosition: handleUpdate, disconnect };

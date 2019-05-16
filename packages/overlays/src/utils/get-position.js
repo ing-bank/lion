@@ -405,6 +405,7 @@ export function getPosition(pc, config) {
   // Actual dimensions will be max dimensions or current dimensions if they are already smaller
   const eventualHeight = Math.min(maxHeight, pc.elRect.height);
   const eventualWidth = Math.min(maxWidth, pc.elRect.width);
+
   const calcPosition = config.position === 'absolute' ? calcAbsolutePosition : calcFixedPosition;
 
   const returnPosition = horizontalIsPrimary
@@ -412,10 +413,10 @@ export function getPosition(pc, config) {
     : `${horizontalDir.name}-of-${verticalDir.name}`;
 
   return {
-    maxHeight,
-    width: Math.min(eventualWidth, maxWidth),
-    top: calcPosition[verticalDir.name](pc, horizontalIsPrimary, eventualHeight),
-    left: calcPosition[horizontalDir.name](pc, horizontalIsPrimary, eventualWidth),
+    maxHeight: Math.round(maxHeight),
+    width: Math.ceil(Math.min(eventualWidth, maxWidth)),
+    top: Math.round(calcPosition[verticalDir.name](pc, horizontalIsPrimary, eventualHeight)),
+    left: Math.round(calcPosition[horizontalDir.name](pc, horizontalIsPrimary, eventualWidth)),
     verticalDir: verticalDir.name,
     horizontalDir: horizontalDir.name,
     position: returnPosition,

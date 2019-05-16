@@ -1,0 +1,41 @@
+{
+  "name": "@lion/pointing-frame",
+  "version": "0.0.0",
+  "description": "Show overlay content in a frame which has a pointer/arrow",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/pointing-frame"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/insert-header.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "pointing-frame"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "src",
+    "stories",
+    "test",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.3",
+    "@lion/overlays": "^0.1.3"
+  },
+  "devDependencies": {
+    "@lion/icon": "^0.1.3",
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^0.11.1"
+  }
+}

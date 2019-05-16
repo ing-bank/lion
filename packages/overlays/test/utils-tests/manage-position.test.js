@@ -1,9 +1,7 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions, no-underscore-dangle */
 import { expect } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import { managePosition } from '../../utils/manage-position.js';
+import { managePosition } from '../../src/utils/manage-position.js';
 
 describe('managePosition()', () => {
   let positionedBoundingRectCalls = 0;
