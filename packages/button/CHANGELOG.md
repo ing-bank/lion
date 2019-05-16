@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.11](https://github.com/ing-bank/lion/compare/@lion/button@0.1.10...@lion/button@0.1.11) (2019-05-16)
+
+
+### Bug Fixes
+
+* **button:** do not override user provided tabindex ([76ccb94](https://github.com/ing-bank/lion/commit/76ccb94))
+
+
+
+
+
 ## [0.1.10](https://github.com/ing-bank/lion/compare/@lion/button@0.1.9...@lion/button@0.1.10) (2019-05-16)
 
 **Note:** Version bump only for package @lion/button
