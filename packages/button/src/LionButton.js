@@ -8,6 +8,14 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
         type: Boolean,
         reflect: true,
       },
+      role: {
+        type: String,
+        reflect: true,
+      },
+      tabindex: {
+        type: Number,
+        reflect: true,
+      },
     };
   }
 
@@ -93,10 +101,10 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     ];
   }
 
-  update(changedProperties) {
-    super.update(changedProperties);
-    if (changedProperties.has('disabled')) {
-      this.__onDisabledChanged();
+  _requestUpdate(name, oldValue) {
+    super._requestUpdate(name, oldValue);
+    if (name === 'disabled') {
+      this.__onDisabledChanged(oldValue);
     }
   }
 
@@ -125,12 +133,13 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   constructor() {
     super();
     this.disabled = false;
+    this.role = 'button';
+    this.tabindex = 0;
     this.__keydownDelegationHandler = this.__keydownDelegationHandler.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.__setupA11y();
     this.__setupKeydownDelegation();
   }
 
@@ -142,11 +151,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   __clickDelegationHandler(e) {
     e.stopPropagation(); // prevent click on the fake element and cause click on the native button
     this.$$slot('_button').click();
-  }
-
-  __setupA11y() {
-    this.setAttribute('role', 'button');
-    this.setAttribute('tabindex', this.disabled ? -1 : 0);
   }
 
   __setupKeydownDelegation() {
@@ -167,6 +171,11 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   }
 
   __onDisabledChanged() {
-    this.setAttribute('tabindex', this.disabled ? -1 : 0);
+    if (this.disabled) {
+      this.__originalTabIndex = this.tabindex;
+      this.tabindex = -1;
+    } else {
+      this.tabindex = this.__originalTabIndex;
+    }
   }
 }
