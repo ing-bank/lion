@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.5](https://github.com/ing-bank/lion/compare/@lion/core@0.1.4...@lion/core@0.1.5) (2019-05-16)
+
+
+### Bug Fixes
+
+* **core:** exposed property and PropertyDeclarations from lit-element ([ef3ce64](https://github.com/ing-bank/lion/commit/ef3ce64))
+
+
+
+
+
 ## [0.1.4](https://github.com/ing-bank/lion/compare/@lion/core@0.1.3...@lion/core@0.1.4) (2019-05-13)
 
 
