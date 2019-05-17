@@ -16,7 +16,7 @@ export default {
     maxDate: 'Adjon meg egy {validatorParams, date, YYYYMMDD} előtti {fieldName} értéket.',
     minMaxDate:
       'Adjon meg egy {validatorParams.min, date, YYYYMMDD} és {validatorParams.max, date, YYYYMMDD} közötti {fieldName} értéket.',
-    isDisabledDate: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
+    isDateDisabled: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
     isEmail:
       'Adjon meg egy érvényes {fieldName} értéket, a következő formátumban: „név@példa.com”.',
   },
@@ -37,7 +37,7 @@ export default {
     maxDate: 'Adjon meg egy {validatorParams, date, YYYYMMDD} előtti {fieldName} értéket.',
     minMaxDate:
       'Adjon meg egy {validatorParams.min, date, YYYYMMDD} és {validatorParams.max, date, YYYYMMDD} közötti {fieldName} értéket.',
-    isDisabledDate: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
+    isDateDisabled: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
     isEmail:
       'Adjon meg egy érvényes {fieldName} értéket, a következő formátumban: „név@példa.com”.',
   },

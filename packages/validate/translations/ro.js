@@ -17,7 +17,7 @@ export default {
     maxDate: 'Introduceți un/o {fieldName} înainte de {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min, date, YYYYMMDD} și {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Această dată nu este disponibilă, alegeți alta.',
+    isDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
     isEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
   },
   warning: {
@@ -38,7 +38,7 @@ export default {
     maxDate: 'Introduceți un/o {fieldName} înainte de {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min, date, YYYYMMDD} și {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Această dată nu este disponibilă, alegeți alta.',
+    isDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
     isEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
   },
   success: {

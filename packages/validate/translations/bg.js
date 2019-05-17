@@ -15,7 +15,7 @@ export default {
     maxDate: 'Моля, въведете {fieldName} преди {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Моля, въведете {fieldName} между {validatorParams.min, date, YYYYMMDD} и {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Тази дата не е на разположение, моля, изберете друга.',
+    isDateDisabled: 'Тази дата не е на разположение, моля, изберете друга.',
     isEmail: 'Моля, въведете валиден {fieldName} с формат "name@example.com".',
   },
   warning: {
@@ -34,7 +34,7 @@ export default {
     maxDate: 'Моля, въведете {fieldName} преди {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Моля, въведете {fieldName} между {validatorParams.min, date, YYYYMMDD} и {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Тази дата не е на разположение, моля, изберете друга.',
+    isDateDisabled: 'Тази дата не е на разположение, моля, изберете друга.',
     isEmail: 'Моля, въведете валиден {fieldName} с формат "name@example.com".',
   },
   success: {

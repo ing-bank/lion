@@ -19,7 +19,7 @@ export default {
       'Geben Sie für {fieldName} einen Wert ein, der vor {validatorParams, date, YYYYMMDD} liegt.',
     minMaxDate:
       'Geben Sie für {fieldName} einen Wert zwischen {validatorParams.min, date, YYYYMMDD} und {validatorParams.max, date, YYYYMMDD} ein.',
-    isDisabledDate: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
+    isDateDisabled: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
     isEmail: 'Geben Sie einen gültige {fieldName} im Format „name@example.com“ ein.',
   },
   warning: {
@@ -42,7 +42,7 @@ export default {
       'Geben Sie für {fieldName} einen Wert ein, der vor {validatorParams, date, YYYYMMDD} liegt.',
     minMaxDate:
       'Geben Sie für {fieldName} einen Wert zwischen {validatorParams.min, date, YYYYMMDD} und {validatorParams.max, date, YYYYMMDD} ein.',
-    isDisabledDate: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
+    isDateDisabled: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
     isEmail: 'Geben Sie einen gültige {fieldName} im Format „name@example.com“ ein.',
   },
   success: {

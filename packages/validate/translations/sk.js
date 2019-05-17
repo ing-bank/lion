@@ -16,7 +16,7 @@ export default {
     maxDate: 'Uveďte {fieldName} skôr ako {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Uveďte {fieldName} od {validatorParams.min, date, YYYYMMDD} do {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Tento dátum je nedostupný, vyberte iný.',
+    isDateDisabled: 'Tento dátum je nedostupný, vyberte iný.',
     isEmail: 'Uveďte platnú položku {fieldName} vo formáte „meno@príklad.com“.',
   },
   warning: {
@@ -36,7 +36,7 @@ export default {
     maxDate: 'Uveďte {fieldName} skôr ako {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Uveďte {fieldName} od {validatorParams.min, date, YYYYMMDD} do {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Tento dátum je nedostupný, vyberte iný.',
+    isDateDisabled: 'Tento dátum je nedostupný, vyberte iný.',
     isEmail: 'Uveďte platnú položku {fieldName} vo formáte „meno@príklad.com“.',
   },
   success: {

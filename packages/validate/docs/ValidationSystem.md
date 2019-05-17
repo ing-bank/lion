@@ -58,8 +58,10 @@ By default, the validate system ships with the following validators:
 - isStringValidator
 - equalsLengthValidator, minLengthValidator, maxLengthValidator, minMaxLengthValidator
 - isNumberValidator, minNumberValidator, maxNumberValidator, minMaxNumberValidator
-- isDateValidator, minDateValidator, maxDateValidator, minMaxDateValidator
+- isDateValidator, minDateValidator, maxDateValidator, minMaxDateValidator, isDateDisabled
 - isEmailValidator
+
+All validators return `true` if the required validity state is met.
 
 As you can see, 'required' is placed in a string notation. It is the exception to the rule,
 since the implementation of required is context dependent: it will be different for a regular input
