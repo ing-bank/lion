@@ -15,7 +15,7 @@ export default {
     maxDate: 'Vul een {fieldName} in voor {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Vul een {fieldName} in tussen {validatorParams.min, date, YYYYMMDD} en {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Deze datum is niet mogelijk, kies een andere.',
+    isDateDisabled: 'Deze datum is niet mogelijk, kies een andere.',
     isEmail: 'Vul een {fieldName} in formaat "name@example.com".',
   },
   warning: {
@@ -34,7 +34,7 @@ export default {
     maxDate: 'Vul een {fieldName} in voor {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Vul een {fieldName} in tussen {validatorParams.min, date, YYYYMMDD} en {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Deze datum is niet mogelijk, kies een andere.',
+    isDateDisabled: 'Deze datum is niet mogelijk, kies een andere.',
     isEmail: 'Vul een {fieldName} in formaat "name@example.com".',
   },
   success: {
