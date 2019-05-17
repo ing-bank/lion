@@ -131,7 +131,7 @@ describe('LionValidate', () => {
       expect(isDate(4)).to.be.false;
     });
 
-    it('provides minDate() to allow only dates earlier then min', () => {
+    it('provides minDate() to allow only dates after min', () => {
       expect(minDate(new Date('2018-02-03'), new Date('2018/02/02'))).to.be.true;
       expect(minDate(new Date('2018-02-01'), new Date('2018/02/02'))).to.be.false;
     });
@@ -152,8 +152,8 @@ describe('LionValidate', () => {
     });
 
     it('provides isDateDisabled() to disable dates matching specified condition', () => {
-      expect(isDateDisabled(new Date('2018/02/03'), d => d.getDate() === 3)).to.be.true;
-      expect(isDateDisabled(new Date('2018/02/04'), d => d.getDate() === 3)).to.be.false;
+      expect(isDateDisabled(new Date('2018/02/03'), d => d.getDate() === 3)).to.be.false;
+      expect(isDateDisabled(new Date('2018/02/04'), d => d.getDate() === 3)).to.be.true;
     });
 
     it('provides {isDate, minDate, maxDate, minMaxDate, isDateDisabled}Validator factory function for all types', () => {
@@ -180,7 +180,7 @@ describe('LionValidate', () => {
         'isDateDisabled',
         isDateDisabledValidator,
         new Date('2018/02/03'),
-        d => d.getDate() !== 15,
+        d => d.getDate() === 15,
       );
     });
   });

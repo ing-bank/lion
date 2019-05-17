@@ -16,7 +16,7 @@ export default {
     maxDate: 'Inserire un(a) {fieldName} prima di {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Inserire un(a) {fieldName} tra {validatorParams.min, date, YYYYMMDD} e {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: "ТQuesta data non è disponibile, sceglierne un'altra.",
+    isDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
     isEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
   },
   warning: {
@@ -36,7 +36,7 @@ export default {
     maxDate: 'Inserire un(a) {fieldName} prima di {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Inserire un(a) {fieldName} tra {validatorParams.min, date, YYYYMMDD} e {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: "ТQuesta data non è disponibile, sceglierne un'altra.",
+    isDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
     isEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
   },
   success: {

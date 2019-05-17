@@ -16,7 +16,7 @@ export default {
     maxDate: 'Please enter a(n) {fieldName} before {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Please enter a {fieldName} between {validatorParams.min, date, YYYYMMDD} and {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'This date is unavailable, please choose another one.',
+    isDateDisabled: 'This date is unavailable, please choose another one.',
     isEmail: 'Please enter a valid {fieldName} in the format "name@example.com".',
   },
   warning: {
@@ -36,7 +36,7 @@ export default {
     maxDate: 'Please enter a(n) {fieldName} before {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Please enter a {fieldName} between {validatorParams.min, date, YYYYMMDD} and {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'This date is unavailable, please choose another one.',
+    isDateDisabled: 'This date is unavailable, please choose another one.',
     isEmail: 'Please enter a valid {fieldName} in the format "name@example.com".',
   },
   success: {

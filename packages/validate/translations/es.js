@@ -17,7 +17,7 @@ export default {
     maxDate: 'Introduzca un/a {fieldName} antes de {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Introduzca un/a {fieldName} entre {validatorParams.min, date, YYYYMMDD} y {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Esta fecha no está disponible. Elija otra.',
+    isDateDisabled: 'Esta fecha no está disponible. Elija otra.',
     isEmail: 'Introduzca un/a {fieldName} válido/a con el formato "nombre@ejemplo.com".',
   },
   warning: {
@@ -38,7 +38,7 @@ export default {
     maxDate: 'Introduzca un/a {fieldName} antes de {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Introduzca un/a {fieldName} entre {validatorParams.min, date, YYYYMMDD} y {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Esta fecha no está disponible. Elija otra.',
+    isDateDisabled: 'Esta fecha no está disponible. Elija otra.',
     isEmail: 'Introduzca un/a {fieldName} válido/a con el formato "nombre@ejemplo.com".',
   },
   success: {

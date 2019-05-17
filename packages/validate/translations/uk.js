@@ -17,7 +17,7 @@ export default {
     maxDate: 'Уведіть значення {fieldName} перед {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Уведіть значення {fieldName} між {validatorParams.min, date, YYYYMMDD} та {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Ця дата недоступна, виберіть іншу.',
+    isDateDisabled: 'Ця дата недоступна, виберіть іншу.',
     isEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
   },
   warning: {
@@ -38,7 +38,7 @@ export default {
     maxDate: 'Уведіть значення {fieldName} перед {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
       'Уведіть значення {fieldName} між {validatorParams.min, date, YYYYMMDD} та {validatorParams.max, date, YYYYMMDD}.',
-    isDisabledDate: 'Ця дата недоступна, виберіть іншу.',
+    isDateDisabled: 'Ця дата недоступна, виберіть іншу.',
     isEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
   },
   success: {
