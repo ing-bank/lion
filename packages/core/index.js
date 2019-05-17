@@ -1,3 +1,8 @@
+/**
+ * Info for TypeScript users:
+ *   For now please import types from lit-element and lit-html directly.
+ */
+
 // lit-html
 export {
   html,
@@ -23,15 +28,22 @@ export { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export { until } from 'lit-html/directives/until.js';
 // lit-element
 export {
-  css,
   LitElement,
-  UpdatingElement,
-  unsafeCSS,
+  // css-tag.js
+  supportsAdoptingStyleSheets,
   CSSResult,
+  unsafeCSS,
+  css,
+  // updating-element.js
   defaultConverter,
   notEqual,
+  UpdatingElement,
+  // decorators.js
+  customElement,
   property,
-  PropertyDeclarations,
+  query,
+  queryAll,
+  eventOptions,
 } from 'lit-element';
 // ours
 export { dedupeMixin } from './src/dedupeMixin.js';
