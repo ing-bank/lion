@@ -1,6 +1,6 @@
 {
   "name": "@lion/select",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Provide a set of options where you can select one",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,8 +32,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.5",
-    "@lion/field": "^0.1.10"
+    "@lion/core": "^0.1.6",
+    "@lion/field": "^0.1.11"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
