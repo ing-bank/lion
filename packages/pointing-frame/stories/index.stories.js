@@ -1,9 +1,4 @@
-import { storiesOf, html, withKnobs } from '@open-wc/demoing-storybook';
-
-// TODO: MR to @open-wc to export optionsKnob
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { optionsKnob } from '@storybook/addon-knobs';
-
+import { storiesOf, html, withKnobs, optionsKnob } from '@open-wc/demoing-storybook';
 import { css, unsafeHTML } from '@lion/core';
 import customPointerSvg from '../test/custom-pointer.svg.js';
 
