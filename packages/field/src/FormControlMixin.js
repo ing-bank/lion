@@ -92,8 +92,12 @@ export const FormControlMixin = dedupeMixin(
         super.connectedCallback();
         this._enhanceLightDomClasses();
         this._enhanceLightDomA11y();
-        this._registerFormElement();
         this._requestParentFormGroupUpdateOfResetModelValue();
+      }
+
+      firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        this._registerFormElement();
       }
 
       /**
