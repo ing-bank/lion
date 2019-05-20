@@ -1,6 +1,6 @@
 import autosize from 'autosize/src/autosize.js';
 import { LionInput } from '@lion/input';
-import { css } from '@lion/core';
+import { css, html, nothing } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /**
@@ -19,8 +19,8 @@ export class LionTextarea extends ObserverMixin(LionInput) {
       },
       maxLengthIndicator: {
         type: Number,
-        attribute: 'max-length-indicator'
-      }
+        attribute: 'max-length-indicator',
+      },
     };
   }
 
@@ -41,10 +41,16 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     };
   }
 
+  updated(changedProperties) {
+    if (changedProperties.has('modelValue')) {
+      this.lengthChanged();
+    }
+  }
+
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('textarea')
+      input: () => document.createElement('textarea'),
     };
   }
 
@@ -52,6 +58,7 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     super();
     this.rows = 2;
     this.maxRows = 6;
+    this._textLength = 0;
   }
 
   connectedCallback() {
@@ -91,5 +98,27 @@ export class LionTextarea extends ObserverMixin(LionInput) {
 
   resizeTextarea() {
     autosize.update(this.inputElement);
+  }
+
+  inputGroupAfterTemplate() {
+    return html`
+      ${super.inputGroupAfterTemplate()}
+      ${!this.maxLengthIndicator
+        ? nothing
+        : html`
+            <div class="textarea-counter">
+              ${this._textLength}/${this.maxLengthIndicator}
+            </div>
+          `}
+    `;
+  }
+
+  lengthChanged() {
+    if (this.modelValue.length > this.maxLengthIndicator) {
+      this.modelValue = this.modelValue.substring(0, this.maxLengthIndicator);
+      this.value = this.modelValue;
+    }
+    this._textLength = this.value.length;
+    super.requestUpdate();
   }
 }
