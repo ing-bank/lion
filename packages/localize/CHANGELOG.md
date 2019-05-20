@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.2.0...@lion/localize@0.3.0) (2019-05-16)
+
+
+### Bug Fixes
+
+* **localize:** empty dates should be formatted as empty string ([6cfa301](https://github.com/ing-bank/lion/commit/6cfa301))
+
+
+### Features
+
+* **localize:** allow long/short/narrow param getMonthNames ([144ebce](https://github.com/ing-bank/lion/commit/144ebce))
+
+
+
+
+
 # [0.2.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.1.7...@lion/localize@0.2.0) (2019-05-13)
 
 

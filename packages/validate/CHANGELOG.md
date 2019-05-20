@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.1.8...@lion/validate@0.2.0) (2019-05-16)
+
+
+### Features
+
+* **validate:** added disabledDatesValidator ([14df4fc](https://github.com/ing-bank/lion/commit/14df4fc))
+* **validate:** added isValidatorApplied util ([4ee8b8f](https://github.com/ing-bank/lion/commit/4ee8b8f))
+
+
+
+
+
 ## [0.1.8](https://github.com/ing-bank/lion/compare/@lion/validate@0.1.7...@lion/validate@0.1.8) (2019-05-13)
 
 **Note:** Version bump only for package @lion/validate
