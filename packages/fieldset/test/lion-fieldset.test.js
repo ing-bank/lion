@@ -150,6 +150,7 @@ describe('<lion-fieldset>', () => {
     expect(Object.keys(fieldset.formElements).length).to.equal(3);
 
     fieldset.appendChild(newField);
+    await fieldset.updateComplete;
     await nextFrame();
     expect(Object.keys(fieldset.formElements).length).to.equal(4);
 
@@ -721,6 +722,9 @@ describe('<lion-fieldset>', () => {
               <!-- group referred by: #msg_l1_g (local) -->
             </lion-fieldset>
           `);
+          const domElement = await dom;
+          await domElement.updateComplete;
+          await domElement.querySelector('[name=l2_g]').updateComplete;
           await nextFrame();
           return dom;
         };
