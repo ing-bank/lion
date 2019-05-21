@@ -27,5 +27,6 @@ import '@lion/textarea/lion-textarea.js';
 <lion-textarea
   label="Stops growing after 4 rows"
   max-rows="4"
+  max-length-indicator="100"
 ></lion-textarea>
 ```

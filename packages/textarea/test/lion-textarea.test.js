@@ -77,4 +77,23 @@ describe('<lion-textarea>', () => {
       .to.be.below(el.clientHeight)
       .and.to.be.below(el.scrollHeight);
   });
+
+  it('show length counter under textarea after property "max-length-indicator" is set', async () => {
+    const el = await fixture(`<lion-textarea max-length-indicator="10"></lion-textarea>`);
+    await el.updateComplete;
+    expect(el.maxLengthIndicator).to.be.equal(10);
+    expect(el._textLength).to.be.equal(0);
+    const counter = el.shadowRoot.querySelector('.textarea-counter');
+    expect(counter).to.exist;
+    expect(counter.innerText).to.be.equal('0/10');
+  });
+
+  it('should count text length after modelValue is changed', async () => {
+    const el = await fixture(`<lion-textarea max-length-indicator="10"></lion-textarea>`);
+    el.modelValue = 'Batman';
+    await el.updateComplete;
+    await el.updateComplete;
+    const counter = el.shadowRoot.querySelector('.textarea-counter');
+    expect(counter.innerText).to.be.equal('6/10');
+  });
 });

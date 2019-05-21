@@ -41,4 +41,10 @@ storiesOf('Forms|Textarea', module)
       <p>To have a fixed size provide rows and maxRows with the same value</p>
       <lion-textarea label="Non Growing" rows="3" max-rows="3"></lion-textarea>
     `,
+  )
+  .add(
+    'Max length indicator',
+    () => html`
+      <lion-textarea label="Max length indicator" max-length-indicator="100"></lion-textarea>
+    `,
   );
