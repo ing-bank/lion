@@ -92,8 +92,17 @@ describe('<lion-textarea>', () => {
     const el = await fixture(`<lion-textarea max-length-indicator="10"></lion-textarea>`);
     el.modelValue = 'Batman';
     await el.updateComplete;
-    await el.updateComplete;
     const counter = el.shadowRoot.querySelector('.textarea-counter');
     expect(counter.innerText).to.be.equal('6/10');
+  });
+
+  it('should shorten text to max length provided', async () => {
+    const el = await fixture(`<lion-textarea max-length-indicator="10"></lion-textarea>`);
+    el.modelValue = 'Batman and Robin';
+    await el.updateComplete;
+    await el.updateComplete;
+    const counter = el.shadowRoot.querySelector('.textarea-counter');
+    expect(counter.innerText).to.be.equal('10/10');
+    expect(el.value).to.be.equal('Batman and');
   });
 });
