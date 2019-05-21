@@ -1,0 +1,47 @@
+{
+  "name": "@lion/select-rich",
+  "version": "0.0.0",
+  "description": "Provide a set of [role=option]s and select one",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/select"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "select",
+    "listbox",
+    "field",
+    "form",
+    "option"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.6",
+    "@lion/field": "^0.1.11",
+    "@lion/button": "^0.1.11"
+  },
+  "devDependencies": {
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^0.11.1"
+  }
+}

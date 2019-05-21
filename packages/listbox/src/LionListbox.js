@@ -1,10 +1,20 @@
-import { html, LitElement } from '@lion/core';
+import { html, css, LitElement } from '@lion/core';
 import { Listbox as ListboxBehavior } from './ListBoxBehavior.js';
 
 // Wai-aria pattern: https://www.w3.org/TR/wai-aria-practices/#Listbox
 // Implements ListNavigationBehavior
 // SelectableBehavior (with active-descendant)
 export class LionListbox extends LitElement {
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+        }
+      `,
+    ];
+  }
+
   static get properties() {
     return {
       multi: { type: Boolean, reflect: true },
