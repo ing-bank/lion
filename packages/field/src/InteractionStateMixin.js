@@ -25,7 +25,6 @@ export const InteractionStateMixin = dedupeMixin(
           touched: {
             type: Boolean,
             reflect: true,
-            attribute: 'state-touched',
           },
 
           /**
@@ -34,7 +33,6 @@ export const InteractionStateMixin = dedupeMixin(
           dirty: {
             type: Boolean,
             reflect: true,
-            attribute: 'state-dirty',
           },
 
           /**
