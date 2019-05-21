@@ -100,9 +100,9 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     autosize.update(this.inputElement);
   }
 
-  inputGroupAfterTemplate() {
+  inputGroupTemplate() {
     return html`
-      ${super.inputGroupAfterTemplate()} ${this.renderLengthIndicator()}
+      ${super.inputGroupTemplate()} ${this.renderLengthIndicator()}
     `;
   }
 
