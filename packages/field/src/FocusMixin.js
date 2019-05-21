@@ -15,13 +15,18 @@ export const FocusMixin = dedupeMixin(
         };
       }
 
-      get events() {
-        return {
-          ...super.events,
-          // Listen to focusin instead of focus, because it blurs
-          _onFocus: [() => this.inputElement, 'focusin'],
-          _onBlur: [() => this.inputElement, 'focusout'],
-        };
+      connectedCallback() {
+        super.connectedCallback();
+        this._onFocus = this._onFocus.bind(this);
+        this._onBlur = this._onBlur.bind(this);
+        this.inputElement.addEventListener('focusin', this._onFocus);
+        this.inputElement.addEventListener('focusout', this._onBlur);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.inputElement.removeEventListener('focusin', this._onFocus);
+        this.inputElement.removeEventListener('focusout', this._onBlur);
       }
 
       /**

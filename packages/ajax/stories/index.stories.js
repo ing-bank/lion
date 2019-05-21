@@ -1,7 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { ajax } from '../src/ajax.js';
-import { AjaxClass } from '../src/AjaxClass.js';
+import { ajax, AjaxClass } from '../index.js';
 
 storiesOf('Ajax system|Ajax', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })

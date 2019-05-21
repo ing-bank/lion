@@ -1,8 +1,7 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { css } from '@lion/core';
-import { overlays } from '../src/overlays.js';
-import { ModalDialogController } from '../src/ModalDialogController.js';
+import { overlays, ModalDialogController } from '../index.js';
 
 const modalDialogDemoStyle = css`
   .demo-overlay {

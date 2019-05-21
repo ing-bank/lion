@@ -2,8 +2,7 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { css } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { overlays } from '../src/overlays.js';
-import { GlobalOverlayController } from '../src/GlobalOverlayController';
+import { overlays, GlobalOverlayController } from '../index.js';
 
 const globalOverlayDemoStyle = css`
   .demo-overlay {

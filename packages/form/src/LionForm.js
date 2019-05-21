@@ -18,12 +18,16 @@ export class LionForm extends DelegateMixin(LionFieldset) {
     };
   }
 
-  get events() {
-    return {
-      ...super.events,
-      _submit: [() => this, 'submit'],
-      _reset: [() => this, 'reset'],
-    };
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('submit', this._submit);
+    this.addEventListener('reset', this._reset);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('submit', this._submit);
+    this.removeEventListener('reset', this._reset);
   }
 
   get formElement() {
