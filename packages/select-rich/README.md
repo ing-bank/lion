@@ -36,7 +36,7 @@ import '@lion/select-rich/lion-select-rich.js';
   .errorValidators=${[['required']]}
 >
   <div slot="label">Favorite color</div>
-  <lion-button slot="invoker">Please select</button>
+  <lion-button slot="invoker">Please select</lion-button>
   <lion-listbox slot="input">
     <lion-option value="red">Red</lion-option>
     <lion-option value="hotpink" disabled>Hotpink</lion-option>

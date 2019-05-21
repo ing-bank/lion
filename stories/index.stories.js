@@ -24,3 +24,5 @@ import '../packages/overlays/stories/index.stories.js';
 import '../packages/popup/stories/index.stories.js';
 import '../packages/tooltip/stories/index.stories.js';
 import '../packages/calendar/stories/index.stories.js';
+
+import '../packages/listbox/stories/index.stories.js';

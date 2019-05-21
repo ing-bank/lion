@@ -19,7 +19,7 @@
           <lion-option value=”y”> Option Y </lion-option>
           <lion-optgroup>
               <lion-option value=”y”> Option Y </lion-option>
-              <lion-divider></lion-divider>
+              <lion-separator></lion-separator>
               <lion-option value=”y”> Option Y </lion-option>
           </lion-optgroup>
       </lion-listbox>
@@ -27,7 +27,7 @@
   - Sub elements:
     - <lion-option>
     - <lion-optgroup>
-    - <lion-divider>
+    - <lion-separator>
   - Dependencies:
     - SelectionListBehavior
 
@@ -58,11 +58,12 @@ It can support pointers and the margin to invoker should be configurable.
       </lion-listbox>
   </lion-select>
   ```
-  - It al relies on the listbox component. The most tricky part on top will be the
-  cloning of the selected option, but we already have the code for this in the lion-uic-select.
-  On top of this, we should provide
-  - See if we support both <select> and <lion-listbox> as slot=”input” or that we
+  - It al relies on the listbox component. A tricky part on top will be the
+  cloning of the selected option, but we might only provide an api where the user provides the
+  invoker button
+  - See if we support both <select> and <lion-listbox> as slot=”input” or that we create component
+  <liion-select-rich>
   - Dependencies:
     - Field
-    -	<lion-listbox>, <lion-option> (maybe lion-optgroup, lion-divider)
+    -	<lion-listbox>, <lion-option> (maybe lion-optgroup, lion-separator)
   -	DropdownController
