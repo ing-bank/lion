@@ -102,23 +102,27 @@ export class LionTextarea extends ObserverMixin(LionInput) {
 
   inputGroupAfterTemplate() {
     return html`
-      ${super.inputGroupAfterTemplate()}
-      ${!this.maxLengthIndicator
-        ? nothing
-        : html`
-            <div class="textarea-counter">
-              ${this._textLength}/${this.maxLengthIndicator}
-            </div>
-          `}
+      ${super.inputGroupAfterTemplate()} ${this.renderLengthIndicator()}
     `;
+  }
+
+  renderLengthIndicator() {
+    if (this.maxLengthIndicator) {
+      this._textLength = this.modelValue.length;
+      return html`
+        <div class="textarea-counter">
+          ${this._textLength}/${this.maxLengthIndicator}
+        </div>
+      `;
+    }
+    return nothing;
   }
 
   lengthChanged() {
     if (this.modelValue.length > this.maxLengthIndicator) {
       this.modelValue = this.modelValue.substring(0, this.maxLengthIndicator);
       this.value = this.modelValue;
+      super.requestUpdate();
     }
-    this._textLength = this.value.length;
-    super.requestUpdate();
   }
 }
