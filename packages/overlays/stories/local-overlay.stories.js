@@ -1,7 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-import { overlays } from '../src/overlays.js';
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { overlays, LocalOverlayController } from '../index.js';
 
 const popupDemoStyle = css`
   .demo-box {

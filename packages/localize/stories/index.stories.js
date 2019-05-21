@@ -2,17 +2,17 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { html as litHtml } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { localize } from '../src/localize.js';
-import { LocalizeMixin } from '../src/LocalizeMixin.js';
 import {
+  localize,
+  LocalizeMixin,
   formatNumber,
   formatNumberToParts,
   getGroupSeparator,
   getDecimalSeparator,
-} from '../src/formatNumber.js';
-import { formatDate } from '../src/date/formatDate.js';
-import { parseDate } from '../src/date/parseDate.js';
-import { getDateFormatBasedOnLocale } from '../src/date/getDateFormatBasedOnLocale.js';
+  formatDate,
+  parseDate,
+  getDateFormatBasedOnLocale,
+} from '../index.js';
 
 storiesOf('Localize System|Localize', module).add('lit component', () => {
   class LitHtmlExample extends LocalizeMixin(LionLitElement) {

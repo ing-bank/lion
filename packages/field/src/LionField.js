@@ -2,7 +2,6 @@ import { DelegateMixin, SlotMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
-import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ValidateMixin } from '@lion/validate';
 
 import { FormControlMixin } from './FormControlMixin.js';
@@ -30,9 +29,7 @@ import { FormatMixin } from './FormatMixin.js';
 export class LionField extends FormControlMixin(
   ValidateMixin(
     InteractionStateMixin(
-      FormatMixin(
-        EventMixin(CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(LionLitElement))))),
-      ),
+      FormatMixin(CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(LionLitElement))))),
     ),
   ),
 ) {
@@ -48,13 +45,6 @@ export class LionField extends FormControlMixin(
         'selectionEnd',
       ], // eslint-disable-line max-len
       attributes: [...super.delegations.attributes, 'name', 'type'],
-    };
-  }
-
-  get events() {
-    return {
-      ...super.events,
-      _onChange: [() => this.inputElement, 'change'],
     };
   }
 
@@ -111,6 +101,8 @@ export class LionField extends FormControlMixin(
     Lifecycle  */
   connectedCallback() {
     super.connectedCallback();
+    this._onChange = this._onChange.bind(this);
+    this.inputElement.addEventListener('change', this._onChange);
     this._delegateInitialValueAttr(); // TODO: find a better way to do this
     this._setDisabledClass();
     this.classList.add('form-field');
@@ -125,6 +117,7 @@ export class LionField extends FormControlMixin(
       });
       this.__parentFormGroup.dispatchEvent(event);
     }
+    this.inputElement.removeEventListener('change', this._onChange);
   }
 
   /**

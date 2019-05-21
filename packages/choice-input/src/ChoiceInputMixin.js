@@ -15,13 +15,6 @@ export const ChoiceInputMixin = superclass =>
       };
     }
 
-    get events() {
-      return {
-        ...super.events,
-        _toggleChecked: [() => this, 'user-input-changed'],
-      };
-    }
-
     _requestUpdate(name, oldValue) {
       super._requestUpdate(name, oldValue);
       if (name === 'modelValue' && typeof oldValue !== 'undefined') {
@@ -108,7 +101,13 @@ export const ChoiceInputMixin = superclass =>
 
     connectedCallback() {
       if (super.connectedCallback) super.connectedCallback();
+      this.addEventListener('user-input-changed', this._toggleChecked);
       this._reflectCheckedToCssClass();
+    }
+
+    disconnectedCallback() {
+      if (super.disconnectedCallback) super.disconnectedCallback();
+      this.removeEventListener('user-input-changed', this._toggleChecked);
     }
 
     _toggleChecked() {

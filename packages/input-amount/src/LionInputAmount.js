@@ -2,7 +2,7 @@ import { css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 import { LionInput } from '@lion/input';
 import { FieldCustomMixin } from '@lion/field';
-import { isNumberValidator, randomOkValidator } from '@lion/validate';
+import { isNumberValidator } from '@lion/validate';
 import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
 
@@ -62,14 +62,10 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
   }
 
   getValidatorsForType(type) {
-    switch (type) {
-      case 'error':
-        return [isNumberValidator()].concat(super.getValidatorsForType(type) || []);
-      case 'success':
-        return [randomOkValidator()].concat(super.getValidatorsForType(type) || []);
-      default:
-        return super.getValidatorsForType(type);
+    if (type === 'error') {
+      return [isNumberValidator()].concat(super.getValidatorsForType(type) || []);
     }
+    return super.getValidatorsForType(type);
   }
 
   static get styles() {

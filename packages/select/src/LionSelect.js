@@ -30,11 +30,14 @@ import { LionField } from '@lion/field';
 
 // eslint-disable-next-line no-unused-vars
 export class LionSelect extends LionField {
-  get events() {
-    return {
-      ...super.events,
-      _proxyChangeEvent: [() => this.inputElement, 'change'],
-    };
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('change', this._proxyChangeEvent);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('change', this._proxyChangeEvent);
   }
 
   _proxyChangeEvent() {
