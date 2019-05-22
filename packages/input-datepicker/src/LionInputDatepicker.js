@@ -274,6 +274,7 @@ export class LionInputDatepicker extends LionInputDate {
     // (a.k.a. dropdowns) as well. Important: will be breaking for subclassers
     return html`
       <button
+        type="button"
         @click="${this.__openCalendarOverlay}"
         id="${this.__invokerId}"
         aria-haspopup="dialog"
