@@ -1,5 +1,5 @@
 import { render, html } from '@lion/core';
-import { managePosition } from './utils/manage-position.js';
+import { managePosition, updatePosition } from './utils/manage-position.js';
 import { containFocus } from './utils/contain-focus.js';
 import { keyCodes } from './utils/key-codes.js';
 
@@ -33,6 +33,7 @@ export class LocalOverlayController {
     this._prevData = {};
 
     if (this.hidesOnEsc) this._setupHidesOnEsc();
+    this._created = false;
   }
 
   get isShown() {
@@ -85,7 +86,7 @@ export class LocalOverlayController {
    * Toggles the overlay.
    */
   toggle() {
-    // eslint-disable-next-line no-unused-expressions
+    /* eslint-disable-next-line no-unused-expressions */
     this.isShown ? this.hide() : this.show();
   }
 
@@ -102,10 +103,21 @@ export class LocalOverlayController {
       this.contentNode.id = this.contentId;
       this.invokerNode.setAttribute('aria-expanded', true);
 
-      managePosition(this.contentNode, this.invokerNode, {
-        placement: this.placement,
-        position: this.position,
-      });
+      const positionParams = [
+        this.contentNode,
+        this.invokerNode,
+        {
+          placement: this._contentData.placement || this.placement,
+          position: this.position,
+        },
+      ];
+
+      if (!this._created) {
+        managePosition(...positionParams);
+        this._created = true;
+      } else {
+        updatePosition(...positionParams);
+      }
 
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();

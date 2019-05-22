@@ -46,6 +46,8 @@ describe('managePosition()', () => {
     },
     offsetTop: 50,
     offsetLeft: 50,
+    offsetHeight: 50,
+    offsetWidth: 50,
   };
 
   beforeEach(() => {
@@ -67,9 +69,9 @@ describe('managePosition()', () => {
       zIndex: '10',
       overflow: 'auto',
       boxSizing: 'border-box',
-      top: '8px',
+      top: '16px',
       left: '50px',
-      maxHeight: '34px',
+      maxHeight: '26px',
       width: '50px',
     });
 

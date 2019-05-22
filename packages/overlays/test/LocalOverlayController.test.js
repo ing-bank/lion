@@ -1,3 +1,6 @@
+/* eslint-env mocha */
+/* eslint-disable no-underscore-dangle, no-unused-expressions */
+
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
@@ -44,9 +47,11 @@ describe('LocalOverlayController', () => {
           ${controller.invoker} ${controller.content}
         </div>
       `);
-      expect(el.querySelectorAll('div')[0].textContent.trim()).to.equal('Invoker');
+      expect(el.firstElementChild.textContent.trim()).to.equal('Invoker');
       controller.show();
-      expect(el.querySelectorAll('div')[1].textContent.trim()).to.equal('Content');
+      expect(el.querySelectorAll('div')[1].firstElementChild.textContent.trim()).to.equal(
+        'Content',
+      );
     });
 
     it('will add/remove the content on show/hide', async () => {
@@ -211,7 +216,7 @@ describe('LocalOverlayController', () => {
       expect(controller.content.firstElementChild.style.top).to.equal('8px');
     });
 
-    it('uses top as the default placement', async () => {
+    it('uses center-of-top as the default placement', async () => {
       const controller = new LocalOverlayController({
         contentTemplate: () =>
           html`
@@ -228,8 +233,7 @@ describe('LocalOverlayController', () => {
       `);
       controller.show();
       const invokerChild = controller.content.firstElementChild;
-      expect(invokerChild.getAttribute('js-positioning-vertical')).to.equal('top');
-      expect(invokerChild.getAttribute('js-positioning-horizontal')).to.equal('centerHorizontal');
+      expect(invokerChild.getAttribute('position').trim()).to.equal('center-of-top');
     });
 
     it('positions to preferred place if placement is set and space is available', async () => {
@@ -241,7 +245,7 @@ describe('LocalOverlayController', () => {
           html`
             <p>Content</p>
           `,
-        placement: 'top right',
+        placement: 'right-of-top',
       });
       await fixture(html`
         <div style="position: absolute; left: 100px; top: 50px;">
@@ -251,8 +255,7 @@ describe('LocalOverlayController', () => {
 
       controller.show();
       const contentChild = controller.content.firstElementChild;
-      expect(contentChild.getAttribute('js-positioning-vertical')).to.equal('top');
-      expect(contentChild.getAttribute('js-positioning-horizontal')).to.equal('right');
+      expect(contentChild.getAttribute('position')).to.equal('right-of-top');
     });
 
     it('positions to different place if placement is set and no space is available', async () => {
@@ -274,8 +277,7 @@ describe('LocalOverlayController', () => {
 
       controller.show();
       const invokerChild = controller.content.firstElementChild;
-      expect(invokerChild.getAttribute('js-positioning-vertical')).to.equal('bottom');
-      expect(invokerChild.getAttribute('js-positioning-horizontal')).to.equal('right');
+      expect(invokerChild.getAttribute('position')).to.equal('right-of-bottom');
     });
   });
 
@@ -325,9 +327,7 @@ describe('LocalOverlayController', () => {
       controller.show();
 
       const elOutside = await fixture(`<button>click me</button>`);
-      const [el1, el2] = [].slice.call(
-        controller.content.firstElementChild.querySelectorAll('[id]'),
-      );
+      const [el1, el2] = [].slice.call(controller.content.querySelectorAll('[id]'));
 
       el2.focus();
       // this mimics a tab within the contain-focus system used
@@ -336,7 +336,7 @@ describe('LocalOverlayController', () => {
       window.dispatchEvent(event);
 
       expect(elOutside).to.not.equal(document.activeElement);
-      expect(el1).to.equal(document.activeElement);
+      expect(el1.firstElementChild).to.equal(document.activeElement);
     });
 
     it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
@@ -360,7 +360,7 @@ describe('LocalOverlayController', () => {
       );
       const elOutside = await fixture(`<button>click me</button>`);
       controller.show();
-      const el1 = controller.content.firstElementChild.querySelector('button');
+      const el1 = controller.content.querySelector('button');
 
       el1.focus();
       simulateTab();

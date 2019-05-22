@@ -1,6 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-import { managePosition } from '../src/utils/manage-position.js';
+import { updatePosition } from '../src/utils/manage-position.js';
 
 const popupPlacementDemoStyle = css`
   .demo-container {
@@ -30,7 +30,7 @@ const popupPlacementDemoStyle = css`
   }
 `;
 
-storiesOf('Local Overlay System|Local Overlay Placement', module)
+storiesOf('Overlay System|Local/Local Overlay Placement', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add('Preferred placement overlay absolute', () => {
     const element = document.createElement('div');
@@ -41,34 +41,36 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
     target.id = 'target';
     target.classList.add('demo-box');
 
-    let placement = 'top left';
+    const placements = [
+      'center-of-top',
+      'right-of-top',
+      'top-of-right',
+      'center-of-right',
+      'bottom-of-right',
+      'right-of-bottom',
+      'center-of-bottom',
+      'left-of-bottom',
+      'bottom-of-left',
+      'center-of-left',
+      'top-of-left',
+      'left-of-top',
+    ];
+    let placement = 'top-of-left';
+
     const togglePlacement = () => {
-      switch (placement) {
-        case 'top left':
-          placement = 'top';
-          break;
-        case 'top':
-          placement = 'top right';
-          break;
-        case 'top right':
-          placement = 'right';
-          break;
-        case 'right':
-          placement = 'bottom right';
-          break;
-        case 'bottom right':
-          placement = 'bottom';
-          break;
-        case 'bottom':
-          placement = 'bottom left';
-          break;
-        case 'bottom left':
-          placement = 'left';
-          break;
-        default:
-          placement = 'top left';
-      }
-      managePosition(element, target, { placement, position: 'absolute' });
+      placements.some((pos, index) => {
+        if (placement === pos) {
+          if (index === placements.length - 1) {
+            [placement] = placements;
+          } else {
+            placement = placements[index + 1];
+          }
+          return true;
+        }
+        return false;
+      });
+      console.log(`position: ${placement}`);
+      updatePosition(element, target, { placement, position: 'absolute' });
     };
     return html`
       <style>
@@ -122,7 +124,8 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         default:
           placement = 'top left';
       }
-      managePosition(element, target, { placement, position: 'absolute' });
+      console.log(`position: ${placement}`);
+      updatePosition(element, target, { placement, position: 'absolute' });
     };
     return html`
       <style>
