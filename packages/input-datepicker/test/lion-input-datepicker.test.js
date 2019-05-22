@@ -1,4 +1,5 @@
 import { expect, fixture, aTimeout, defineCE } from '@open-wc/testing';
+import sinon from 'sinon';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { html, LitElement } from '@lion/core';
 import {
@@ -420,6 +421,22 @@ describe('<lion-input-datepicker>', () => {
       });
 
       it.skip('can configure the overlay presentation based on media query switch', async () => {});
+    });
+  });
+
+  describe('regression tests', async () => {
+    it('does not submit a form when datepicker is opened', async () => {
+      const submitSpy = sinon.spy();
+      const form = await fixture(html`
+        <form @submit="${submitSpy}">
+          <lion-input-datepicker></lion-input-datepicker>
+        </form>
+      `);
+      const el = form.children[0];
+      await el.updateComplete;
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      expect(submitSpy.callCount).to.equal(0);
     });
   });
 });
