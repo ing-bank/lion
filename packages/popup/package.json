@@ -1,6 +1,6 @@
 {
   "name": "@lion/popup",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Show relative overlay content on click",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,12 +32,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.6",
-    "@lion/overlays": "^0.2.2"
+    "@lion/core": "^0.1.7",
+    "@lion/overlays": "^0.2.3"
   },
   "devDependencies": {
-    "@lion/button": "^0.1.14",
-    "@lion/icon": "^0.1.6",
+    "@lion/button": "^0.1.15",
+    "@lion/icon": "^0.1.7",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.11.1"
   }

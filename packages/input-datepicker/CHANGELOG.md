@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.5...@lion/input-datepicker@0.1.6) (2019-05-22)
+
+
+### Bug Fixes
+
+* **input-datepicker:** prevent button from submitting forms ([0f2dfc6](https://github.com/ing-bank/lion/commit/0f2dfc6))
+
+
+
+
+
 ## [0.1.5](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.4...@lion/input-datepicker@0.1.5) (2019-05-21)
 
 **Note:** Version bump only for package @lion/input-datepicker
