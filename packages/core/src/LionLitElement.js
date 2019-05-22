@@ -5,6 +5,6 @@ export { css } from 'lit-element';
 export { html } from './lit-html.js';
 
 /**
- * @deprecated
+ * @deprecated use LitElement instead.
  */
 export class LionLitElement extends ElementMixin(LitElement) {}
