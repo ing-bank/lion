@@ -13,14 +13,14 @@ storiesOf('Forms|Listbox', module).add(
     <button>knopje</button>
 
     <lion-listbox>
-      <md-option>is</md-option>
-      <md-option>eventueel</md-option>
-      <lion-optgroup label="ook" disabled>
-        <md-option>een</md-option>
-        <md-option>optie</md-option>
+      <md-option aria-setsize="6" aria-posinset="1">is</md-option>
+      <md-option aria-setsize="6" aria-posinset="2">eventueel</md-option>
+      <lion-optgroup label="ook">
+        <md-option aria-setsize="6" aria-posinset="3">een</md-option>
+        <md-option aria-setsize="6" aria-posinset="4" disabled>optie</md-option>
         <lion-separator></lion-separator>
-        <md-option>in</md-option>
-        <md-option>principe</md-option>
+        <md-option aria-setsize="6" aria-posinset="5">in</md-option>
+        <md-option aria-setsize="6" aria-posinset="6">principe</md-option>
       </lion-optgroup>
     </lion-listbox>
   `,
