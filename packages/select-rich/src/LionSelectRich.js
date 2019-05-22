@@ -1,5 +1,5 @@
 import { LionField } from '@lion/field';
-import { html } from '@lion/core';
+import { html, css } from '@lion/core';
 import { LocalOverlayController, overlays } from '@lion/overlays'; // eslint-disable-line
 import '../lion-listbox-invoker.js'; // eslint-disable-line
 
@@ -10,6 +10,16 @@ import '../lion-listbox-invoker.js'; // eslint-disable-line
  * @extends LionField
  */
 export class LionSelectRich extends LionField {
+  static get styles() {
+    return [
+      css`
+      .input-group__input {
+        display: block;
+      }
+      `
+    ]
+  }
+
   get slots() {
     return {
       ...super.slots,
@@ -22,6 +32,22 @@ export class LionSelectRich extends LionField {
   constructor() {
     super();
     this.__syncSelectedStateWithInvoker = this.__syncSelectedStateWithInvoker.bind(this);
+    this.__toggleListboxOverlay = this.__toggleListboxOverlay.bind(this);
+    this.__checkShowListbox = this.__checkShowListbox.bind(this);
+    this.__checkHideListbox = this.__checkHideListbox.bind(this);
+    this._hideListbox = this._hideListbox.bind(this);
+  }
+
+  get _listboxElement() {
+    return this.$$slot('input');
+  }
+
+  get _invokerElement() {
+    return this.$$slot('invoker');
+  }
+
+  get __listboxBehavior() {
+    return this._listboxElement._listbox;
   }
 
   connectedCallback() {
@@ -40,27 +66,89 @@ export class LionSelectRich extends LionField {
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
         placement: 'bottom center',
-        invokerNode: this.$$slot('invoker'),
-        contentNode: this.$$slot('input'),
+        invokerNode: this._invokerElement,
+        contentNode: this._listboxElement,
+
+        // fullWIdth: true,
+        // offset: 8px
+        // pointer: true | false | element
       }),
     );
-    this.$$slot('invoker').addEventListener('click', () => this._overlayCtrl.toggle());
-    this.$$slot('input').setAttribute('tabindex', '0');
+
+
+    // TODO: get rid of fuzzyiness created by fuzzyiness
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      this._invokerElement.addEventListener('click', this.__toggleListboxOverlay);
+      this._invokerElement.addEventListener('keyup', this.__checkShowListbox);
+      this.__listboxBehavior.listboxNode.addEventListener('blur', this._hideListbox);
+      this.__listboxBehavior.listboxNode.addEventListener('keydown', this.__checkHideListbox);
+      this.__listboxBehavior.setHandleFocusChange(this.__syncSelectedStateWithInvoker);
+    }));
+  }
+
+  __syncSelectedStateWithInvoker() {
+    const selected = this._listboxElement.querySelector(`#${this.__listboxBehavior.activeDescendant}`);
+    this._invokerElement.selectedElement = selected;
+  }
+
+  __toggleListboxOverlay() {
+    if (this._overlayCtrl.isShown) {
+      this._overlayCtrl.hide();
+    } else {
+      this._showListbox();
+    }
   }
 
   __handleA11ySelect() {
     this.$$slot('invoker').setAttribute('aria-haspopup', 'listbox');
   }
 
-  __syncSelectedStateWithInvoker({ target }) {
-    // TODO: also support array when multi is supported
-    this.$$slot('invoker').selectedElement = target;
+  /**
+   * @override
+   */
+  // eslint-disable-next-line
+  inputGroupInputTemplate() {
+    return html`
+      <div class="input-group__input">
+        <slot name="invoker"></slot>
+        <slot name="input"></slot>
+      </div>
+    `;
   }
 
-  render() {
-    return html`
-      <slot name="invoker"></slot>
-      ${super.render()}
-    `;
+  __checkShowListbox(evt) {
+    switch (evt.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+        evt.preventDefault();
+        this._showListbox();
+        this.__listboxBehavior.checkKeyPress(evt);
+        break;
+      default:
+    }
+  };
+
+  __checkHideListbox(evt) {
+    switch (evt.key) {
+      case 'Enter':
+      case 'Escape':
+        evt.preventDefault();
+        this._hideListbox();
+        this._invokerElement.focus();
+        break;
+      default:
+    }
+  };
+
+  async _showListbox() {
+    this._overlayCtrl.show();
+    await this._listboxElement.updateComplete;
+    this._invokerElement.setAttribute('aria-expanded', 'true');
+    this.__listboxBehavior.listboxNode.focus();
+  };
+
+  _hideListbox() {
+    this._overlayCtrl.hide();
+    this._invokerElement.setAttribute('aria-expanded', 'false');
   }
 }

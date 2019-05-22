@@ -60,17 +60,25 @@ export class LionOption extends LitElement {
     ];
   }
 
-  connectedCallback() {
+  get value() {
+    return this.__value || this.textContent;
+  }
+
+  set value(v) {
+    this.requestUpdate('value', this.value);
+    this.__value = v;
+  }
+
+  async connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'option');
 
     // Register or mutation observer in parent.
     // Wait for shady poyfill (after render);
-    this.updateComplete.then(() => {
-      this.dispatchEvent(
-        new CustomEvent('option-register', { bubbles: true, detail: { element: this } }),
-      );
-    });
+    await this.updateComplete;
+    this.dispatchEvent(
+      new CustomEvent('option-register', { bubbles: true, detail: { element: this } }),
+    );
   }
 
   disconnectedCallback() {

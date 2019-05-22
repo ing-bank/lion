@@ -1,5 +1,5 @@
 import { html, css, LitElement } from '@lion/core';
-import { Listbox as ListboxBehavior } from './ListBoxBehavior.js';
+import { ListboxBehavior } from './ListBoxBehavior.js';
 
 // Wai-aria pattern: https://www.w3.org/TR/wai-aria-practices/#Listbox
 // Implements ListNavigationBehavior
@@ -45,16 +45,14 @@ export class LionListbox extends LitElement {
     });
 
     // TODO: loose the fuzzyiness here
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       this._listbox = new ListboxBehavior(this);
-    }, 200);
+    });
   }
 
   render() {
     return html`
-      <div>
-        <slot></slot>
-      </div>
+      <slot></slot>
     `;
   }
 }

@@ -10,7 +10,22 @@ import { html, css } from '@lion/core';
 // eslint-disable-next-line no-unused-vars
 export class LionListboxInvoker extends LionButton {
   static get styles() {
-    return [css``];
+    return [
+      // ...super.styles,
+      css`
+        :host {
+          background-color: lightgray;
+          display: block;
+          padding: 8px;
+        }
+
+        /* sr-only */
+        :host ::slotted(button) {
+          position: absolute;
+          visibility: hidden;
+          top: 0;
+        }
+    `];
   }
 
   static get properties() {
@@ -27,22 +42,20 @@ export class LionListboxInvoker extends LionButton {
     };
   }
 
+  // eslint-disable-next-line
   __clickDelegationHandler() {
-    // eslint-disable-line
     // no delegate here, just the original click
   }
 
   _contentTemplate() {
-    return this.selectedElement && this.selectedElement.value;
+    return this.selectedElement ? this.selectedElement.value : '';
   }
 
   render() {
     return html`
-      <div class="btn">
-        ${this._contentTemplate()}
-        <slot name="_button"></slot>
-        <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
-      </div>
+      ${this._contentTemplate()}
+      <slot name="_button"></slot>
+      <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
     `;
   }
 }
