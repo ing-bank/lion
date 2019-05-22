@@ -815,7 +815,10 @@ describe('<lion-calendar>', () => {
 
         it('is on day closest to today, if today (and surrounding dates) is/are disabled', async () => {
           const el = await fixture(html`
-            <lion-calendar .disableDates="${d => d.getDate() <= 16}"></lion-calendar>
+            <lion-calendar
+              .centralDate="${new Date('2000/12/15')}"
+              .disableDates="${d => d.getDate() <= 16}"
+            ></lion-calendar>
           `);
           const elObj = new CalendarObject(el);
           expect(elObj.centralDayObj.monthday).to.equal(17);

@@ -7,5 +7,9 @@ import { friendlyFormatIBAN } from '@bundled-es-modules/ibantools';
  * @return {string} formatted value
  */
 export function formatIBAN(modelValue) {
+  // defensive code because of ibantools
+  if (modelValue === '') {
+    return '';
+  }
   return friendlyFormatIBAN(modelValue);
 }
