@@ -132,10 +132,12 @@ In our component library, we want to have the following overlay ‘child’ comp
 - Dialog
 - Tooltip
 - Popover
-- Select/Combobox
-- Dropdown menu
+- Dropdown
 - Toast
 - Sheet (bottom, top, left, right)
+- Select
+- Combobox/autocomplete
+- Application menu
 
 **Dialog**
 
