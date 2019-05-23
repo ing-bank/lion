@@ -7,8 +7,8 @@ describe('lion-listbox', () => {
   it('should register all its child options', async () => {
     const el = await fixture(html`
       <lion-listbox>
-        <lion-option>Item 1</lion-option>
-        <lion-option>Item 2</lion-option>
+        <lion-option value="nr1">Item 1</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
       </lion-listbox>
     `);
     expect(el.__optionElements.length).to.equal(2);
@@ -17,11 +17,11 @@ describe('lion-listbox', () => {
   it('should register all its child options despite optgroups or separators', async () => {
     const el = await fixture(html`
       <lion-listbox>
-        <lion-option>Item 1</lion-option>
+        <lion-option value="nr1">Item 1</lion-option>
         <lion-separator></lion-separator>
-        <lion-option>Item 2</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
         <lion-optgroup label="foo">
-          <lion-option>Item 3</lion-option>
+          <lion-option value="nr3">Item 3</lion-option>
         </lion-optgroup>
       </lion-listbox>
     `);
@@ -31,31 +31,66 @@ describe('lion-listbox', () => {
   it('has an empty value by default', async () => {
     const el = await fixture(html`
       <lion-listbox>
-        <lion-option>Item 1</lion-option>
-        <lion-option>Item 2</lion-option>
+        <lion-option value="nr1">Item 1</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
       </lion-listbox>
     `);
     expect(el.value).to.equal('');
   });
 
-  it('has an empty value of Type Arry when multi by default', async () => {
-    const el = await fixture(html`
-      <lion-listbox multi>
-        <lion-option>Item 1</lion-option>
-        <lion-option>Item 2</lion-option>
-      </lion-listbox>
-    `);
-    expect(el.value).to.equal({});
-  });
-
-  it('can set focused on an option', async () => {
+  it('has the selected option as value', async () => {
     const el = await fixture(html`
       <lion-listbox>
-        <lion-option>Item 1</lion-option>
-        <lion-option>Item 2</lion-option>
+        <lion-option value="nr1" selected>Item 1</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
       </lion-listbox>
     `);
-    expect(el.__optionElements.length).to.equal(3);
+    expect(el.value).to.equal('Item 1');
+  });
+
+  it('get selected by setting focus on an option', async () => {
+    const el = await fixture(html`
+      <lion-listbox>
+        <lion-option value="nr1">Item 1</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
+      </lion-listbox>
+    `);
+    el.querySelectorAll('lion-option')[1].focus();
+    expect(el.querySelectorAll('lion-option')[1].selected).to.be.true;
+  });
+
+  it('deselects an option on setting focus on another option', async () => {
+    const el = await fixture(html`
+      <lion-listbox>
+        <lion-option value="nr1" selected>Item 1</lion-option>
+        <lion-option value="nr2">Item 2</lion-option>
+      </lion-listbox>
+    `);
+    expect(el.querySelectorAll('lion-option')[0].selected).to.be.true;
+    el.querySelectorAll('lion-option')[1].focus();
+    expect(el.querySelectorAll('lion-option')[0].selected).to.be.false;
+  });
+
+  describe('Multi select', () => {
+    it('has an empty value of Type Array when multi by default', async () => {
+      const el = await fixture(html`
+        <lion-listbox multi>
+          <lion-option value="nr1">Item 1</lion-option>
+          <lion-option value="nr2">Item 2</lion-option>
+        </lion-listbox>
+      `);
+      expect(el.value).to.equal({});
+    });
+
+    it('has the selected options as value', async () => {
+      const el = await fixture(html`
+        <lion-listbox multi>
+          <lion-option value="nr1" selected>Item 1</lion-option>
+          <lion-option value="nr2">Item 2</lion-option>
+        </lion-listbox>
+      `);
+      expect(el.value).to.equal({ selected: true, value: 'nr1' });
+    });
   });
 
   describe('Keyboard navigation', () => {
@@ -145,22 +180,21 @@ describe('lion-listbox', () => {
   });
 
   describe('A11y', () => {
-    it('has the right aria attributes', async () => {
+    it('has a reference to the selected option', async () => {
       const el = await fixture(html`
         <lion-listbox>
-          <lion-option>Item 1</lion-option>
-          <lion-option selected>Item 2</lion-option>
+          <lion-option value="nr1">Item 1</lion-option>
+          <lion-option value="nr2" selected>Item 2</lion-option>
         </lion-listbox>
       `);
-      expect(el.getAttribute('aria-labelledby')).to.equal('ID_REF-label');
       expect(el.getAttribute('aria-activedescendant')).to.equal('ID_REF-selected-option');
     });
 
     it('has aria-multiselectable attribute if multi enabled', async () => {
       const el = await fixture(html`
         <lion-listbox multi>
-          <lion-option>Item 1</lion-option>
-          <lion-option>Item 2</lion-option>
+          <lion-option value="nr1">Item 1</lion-option>
+          <lion-option value="nr2">Item 2</lion-option>
         </lion-listbox>
       `);
       expect(el.getAttribute('aria-multiselectable')).to.be.true;
@@ -169,7 +203,7 @@ describe('lion-listbox', () => {
     it('has tabindex="-1" to be focusable', async () => {
       const el = await fixture(html`
         <lion-listbox>
-          <lion-option>Item 1</lion-option>
+          <lion-option value="nr1">Item 1</lion-option>
         </lion-listbox>
       `);
       expect(el.getAttribute('tabindex')).to.equal('-1');
