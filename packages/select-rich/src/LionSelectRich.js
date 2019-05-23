@@ -1,6 +1,8 @@
 import { LionField } from '@lion/field';
-import { html, css } from '@lion/core';
+import { html, css, render } from '@lion/core';
 import { LocalOverlayController, overlays } from '@lion/overlays'; // eslint-disable-line
+import { managePosition } from '@lion/overlays/src/utils/manage-position.js'; // eslint-disable-line
+
 import '../lion-listbox-invoker.js'; // eslint-disable-line
 
 /**
@@ -13,11 +15,11 @@ export class LionSelectRich extends LionField {
   static get styles() {
     return [
       css`
-      .input-group__input {
-        display: block;
-      }
-      `
-    ]
+        .input-group__input {
+          display: block;
+        }
+      `,
+    ];
   }
 
   get slots() {
@@ -68,26 +70,65 @@ export class LionSelectRich extends LionField {
         placement: 'bottom center',
         invokerNode: this._invokerElement,
         contentNode: this._listboxElement,
-
-        // fullWIdth: true,
-        // offset: 8px
+        verticalMargin: 0,
+        horizontalMargin: 0,
         // pointer: true | false | element
+        // fullWidth
       }),
     );
 
+    // TODO: add verticalMargin and horizontalMargin. See: https://github.com/ing-bank/lion/pull/61
+    // eslint-disable-next-line
+    this._overlayCtrl._createOrUpdateOverlay = function(
+      shown = this._prevShown,
+      data = this._prevData,
+    ) {
+      if (shown) {
+        this._contentData = { ...this._contentData, ...data };
+
+        // let lit-html manage the template and update the properties
+        if (this.contentTemplate) {
+          render(this.contentTemplate(this._contentData), this.content);
+          this.contentNode = this.content.firstElementChild;
+        }
+        this.contentNode.style.display = 'inline-block';
+        this.contentNode.id = this.contentId;
+        this.invokerNode.setAttribute('aria-expanded', true);
+
+        managePosition(this.contentNode, this.invokerNode, {
+          placement: this.placement,
+          position: this.position,
+          verticalMargin: 0,
+          horizontalMargin: 0,
+        });
+
+        if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
+        if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
+      } else {
+        this._updateContent();
+        this.invokerNode.setAttribute('aria-expanded', false);
+        if (this.hidesOnOutsideClick) this._teardownHidesOnOutsideClick();
+      }
+      this._prevShown = shown;
+      this._prevData = data;
+    }.bind(this._overlayCtrl);
 
     // TODO: get rid of fuzzyiness created by fuzzyiness
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      this._invokerElement.addEventListener('click', this.__toggleListboxOverlay);
-      this._invokerElement.addEventListener('keyup', this.__checkShowListbox);
-      this.__listboxBehavior.listboxNode.addEventListener('blur', this._hideListbox);
-      this.__listboxBehavior.listboxNode.addEventListener('keydown', this.__checkHideListbox);
-      this.__listboxBehavior.setHandleFocusChange(this.__syncSelectedStateWithInvoker);
-    }));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        this._invokerElement.addEventListener('click', this.__toggleListboxOverlay);
+        this._invokerElement.addEventListener('keyup', this.__checkShowListbox);
+        this.__listboxBehavior.listboxNode.addEventListener('blur', this._hideListbox);
+        this.__listboxBehavior.listboxNode.addEventListener('keydown', this.__checkHideListbox);
+        this.__listboxBehavior.setHandleFocusChange(this.__syncSelectedStateWithInvoker);
+      }),
+    );
   }
 
   __syncSelectedStateWithInvoker() {
-    const selected = this._listboxElement.querySelector(`#${this.__listboxBehavior.activeDescendant}`);
+    const selected = this._listboxElement.querySelector(
+      `#${this.__listboxBehavior.activeDescendant}`,
+    );
     this._invokerElement.selectedElement = selected;
   }
 
@@ -126,7 +167,7 @@ export class LionSelectRich extends LionField {
         break;
       default:
     }
-  };
+  }
 
   __checkHideListbox(evt) {
     switch (evt.key) {
@@ -138,14 +179,20 @@ export class LionSelectRich extends LionField {
         break;
       default:
     }
-  };
+  }
 
   async _showListbox() {
+    // measure invoker height and apply as min-width:
+    this._listboxElement.style.minWidth = window.getComputedStyle(this._invokerElement).width;
+    console.log('sdds', this._listboxElement.style.minWidth);
+
+    // TODO: decide if we need to apply above in OverlayController
+
     this._overlayCtrl.show();
     await this._listboxElement.updateComplete;
     this._invokerElement.setAttribute('aria-expanded', 'true');
     this.__listboxBehavior.listboxNode.focus();
-  };
+  }
 
   _hideListbox() {
     this._overlayCtrl.hide();
