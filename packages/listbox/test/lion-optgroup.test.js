@@ -14,18 +14,18 @@ describe('lion-optgroup', () => {
   it('sets hierarchyLevel to all child options', async () => {
     const el = await fixture(html`
       <lion-optgroup label="foo">
-        <lion-option>Foo</lion-option>
+        <lion-option value="bar">Bar</lion-option>
       </lion-optgroup>
     `);
-    expect(el.querySelectorAll('lion-option').hierarchyLevel).to.equal('1');
+    expect(el.querySelectorAll('lion-option')[0].hierarchyLevel).to.equal('1');
   });
 
   it('setting disabled will disable all child options', async () => {
     const el = await fixture(html`
       <lion-optgroup label="foo" disabled>
-        <lion-option>Foo</lion-option>
+        <lion-option value="bar">Bar</lion-option>
       </lion-optgroup>
     `);
-    expect(el.querySelectorAll('lion-option').disabled).to.be.true;
+    expect(el.querySelectorAll('lion-option')[0].disabled).to.be.true;
   });
 });
