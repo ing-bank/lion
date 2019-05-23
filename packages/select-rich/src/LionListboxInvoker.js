@@ -25,7 +25,8 @@ export class LionListboxInvoker extends LionButton {
           visibility: hidden;
           top: 0;
         }
-    `];
+      `,
+    ];
   }
 
   static get properties() {
@@ -45,6 +46,9 @@ export class LionListboxInvoker extends LionButton {
   // eslint-disable-next-line
   __clickDelegationHandler() {
     // no delegate here, just the original click
+    // if (this.type === 'submit' && this.$$slot('_button').form) {
+    //   this.$$slot('_button').form.dispatchEvent(new Event('submit'));
+    // }
   }
 
   _contentTemplate() {

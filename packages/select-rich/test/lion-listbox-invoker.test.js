@@ -1,64 +1,76 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, defineCE } from '@open-wc/testing';
+import { LionButton } from '@lion/button';
+import { LionListboxInvoker } from '../src/LionListboxInvoker.js';
 
 import '../lion-listbox-invoker.js';
 
 describe('lion-listbox-invoker', () => {
-  it('should not be shown by default', async () => {
+  it('should behave as a button', async () => {
     const el = await fixture(html`
       <lion-listbox-invoker></lion-listbox-invoker>
     `);
-    expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+    expect(el instanceof LionButton).to.be.true;
   });
 
-  it('can toggle the listbox', async () => {
+  it('should render value based on selectedElement', async () => {
     const el = await fixture(html`
       <lion-listbox-invoker></lion-listbox-invoker>
     `);
-    expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
-    el.click();
-    expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+    expect(el).lightDom.to.equal('');
+    const myNode = document.createElement('div');
+    myNode.textContent = 'foo';
+    el.selectedElement = myNode;
+    await el.updateComplete;
+    expect(el).lightDom.to.equal('foo');
   });
 
-  describe('Keyboard navigation', () => {
-    it('opens the listbox with [enter] key', async () => {
-      const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
-      `);
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-      await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
-    });
+  it.skip('should render multiple values based on selectedElements', async () => {});
 
-    it('opens the listbox with [space] key', async () => {
-      const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
-      `);
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-      await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
-    });
+  describe('Subclassers', () => {
+    it('can create complex custom invoker renderers', async () => {
+      const nodes = [];
 
-    it('opens the listbox with [arrow down] key and changes focus to listbox', async () => {
-      const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
-      `);
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
-      expect(el.querySelector('[slot="content"]').focus).to.be.true;
-    });
-  });
+      for (let i = 0; i < 2; i += 1) {
+        const myNode = document.createElement('div');
+        myNode.propX = `x${i}`;
+        myNode.propY = `y${i}`;
+        nodes.push(myNode);
+      }
 
-  describe('A11y', () => {
-    it('has the right aria attributes', async () => {
-      const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
-      `);
-      expect(el.getAttribute('aria-labelledby')).to.equal('ID_REF-label ID_RED-button');
-      expect(el.getAttribute('aria-haspopup')).to.equal('listbox');
-      expect(el.getAttribute('aria-expanded')).to.be.false;
-      el.click();
-      expect(el.getAttribute('aria-expanded')).to.be.true;
+      // TODO: pseudo code: api for multiple selected might change
+      const myTag = defineCE(
+        class extends LionListboxInvoker {
+          constructor() {
+            super();
+            this.selectedElements = nodes;
+          }
+
+          _contentTemplate() {
+            // Display multi-select as chips
+            return html`
+              <div>
+                ${this.selectedElements.forEach(
+                  sEl => html`
+                    <div class="c-chip">
+                      ${sEl.propX}
+                      <span class="c-chip__part">
+                        ${sEl.propY}
+                      </span>
+                    </div>
+                  `,
+                )}
+              </div>
+            `;
+          }
+        },
+      );
+
+      const myEl = await fixture(`<${myTag}></${myTag}>`);
+      // pseudo...
+      expect(myEl).lightDom.to.contain('x1');
+      expect(myEl).lightDom.to.contain('x2');
+      expect(myEl).lightDom.to.contain('y1');
+      expect(myEl).lightDom.to.contain('y2');
     });
   });
 });
