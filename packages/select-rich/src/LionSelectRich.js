@@ -183,10 +183,10 @@ export class LionSelectRich extends LionField {
 
   async _showListbox() {
     // measure invoker height and apply as min-width:
+    // TODO: decide if we need to apply in OverlayController
     this._listboxElement.style.minWidth = window.getComputedStyle(this._invokerElement).width;
-    console.log('sdds', this._listboxElement.style.minWidth);
-
-    // TODO: decide if we need to apply above in OverlayController
+    // TODO: get rid of this horrible hack
+    this._listboxElement.style.marginLeft = '-8px';
 
     this._overlayCtrl.show();
     await this._listboxElement.updateComplete;
