@@ -16,18 +16,20 @@ to control:
 - It’s ‘physical position’ (where the dialog is attached). This can either be:
     - globally: at root level of the DOM. This guarantees a total control over its painting, since
     the stacking context can be controlled from here and interfering parents (that set overflow
-    values or transforms) can’t be apparent
+    values or transforms) can’t be apparent. Additionally, making a modal dialog requiring
+    all surroundings to have aria-hidden="true", will be easier when the overlay is attached on
+    body level.
     - locally: next to the invoking element. This gives advantages for accessibility and
-    (performant) rendering of  an overlay next to its invoker on scroll and window resizes
+    (performant) rendering of an overlay next to its invoker on scroll and window resizes
 - Toggling of the ‘shown’ state of the overlay
 - Positioning preferences(for instance ‘bottom-left’) and strategies (ordered fallback preferences)
 
 Presentation/styling of the overlay is out of the scope of the manager, except for its positioning
 in its context.
 
-Accessibility is usually dependant on the type of overlay, its specific implementation and its
-browser/screen reader support (aria 1.0 vs 1.1) and should therefore be left to the developer
-implementing the overlay.
+Accessibility is usually dependent on the type of overlay, its specific implementation and its
+browser/screen reader support (aria 1.0 vs 1.1). We strive for an optimum here by supporting
+1.0 as a bare minimum and add 1.1 enrichments on top.
 
 For every overlay, the manager has access to the overlay element and the invoker (and possible
 other elements that are needed for focus delegation as described in
@@ -35,7 +37,7 @@ https://www.w3.org/TR/wai-aria-practices/#dialog_modal (notes).
 
 ## Defining different types of overlays
 
-When browsing to the average ui library, one can encounter multiple names for occurrences of
+When browsing through the average ui library, one can encounter multiple names for occurrences of
 overlays. Here is a list of names encountered throughout the years:
 - dialog
 - modal
@@ -50,6 +52,9 @@ overlays. Here is a list of names encountered throughout the years:
 - tooltip
 - layover
 - overlay
+- toast
+- snackbar
+- sheet (bottom, top, left, right)
 - etc..
 
 The problem with most of those terms is their lack of clear definition: what might be considered a
@@ -106,6 +111,7 @@ https://inclusive-components.design/tooltips-toggletips/
 Summarizing, the main differences between dialogs and tooltips are:
 - Dialogs have a modal option, tooltips don’t
 - Dialogs have interactive content, tooltips don’t
+- Dialogs are opened via regular buttons (click/space/enter), tooltips act on focus/mouseover
 
 
 **Other roles and concepts**
@@ -122,7 +128,7 @@ Also, the W3C document often refers to *popup*. This term is mentioned in the co
 
 ## Common Overlay Components
 
-In our component library, we used to have the following overlay ‘child’ components:
+In our component library, we want to have the following overlay ‘child’ components:
 - Dialog
 - Tooltip
 - Popover
