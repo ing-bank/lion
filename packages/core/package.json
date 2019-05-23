@@ -31,8 +31,8 @@
     "*.js"
   ],
   "dependencies": {
-    "lit-element": "2.1.0",
-    "lit-html": "1.0.0"
+    "lit-element": "~2.1.0",
+    "lit-html": "^1.0.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
