@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.8](https://github.com/ing-bank/lion/compare/@lion/core@0.1.7...@lion/core@0.1.8) (2019-05-24)
+
+
+### Bug Fixes
+
+* **core:** do not pin lit-html version and allow lit-element patches ([28fa203](https://github.com/ing-bank/lion/commit/28fa203))
+
+
+
+
+
 ## [0.1.7](https://github.com/ing-bank/lion/compare/@lion/core@0.1.6...@lion/core@0.1.7) (2019-05-22)
 
 **Note:** Version bump only for package @lion/core
