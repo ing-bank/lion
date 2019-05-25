@@ -1,0 +1,104 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { bug24 } from './icons/iconset-bugs.js';
+import '../lion-icon.js';
+import './icon-resolvers.js';
+
+<Meta title="Icons/Icon" />
+
+# Icon
+
+A web component for displaying icons.
+
+<Story name="Default">
+  {html`
+    <style>
+      lion-icon {
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+    <lion-icon icon-id="lion:space:alienSpaceship"></lion-icon>
+  `}
+</Story>
+
+```html
+<lion-icon icon-id="lion:space:alienSpaceship"></lion-icon>
+```
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/icon
+```
+
+```js
+import '@lion/icon/lion-icon.js';
+```
+
+### Displaying icons
+
+Icons are displayed using icon sets. These are collections of icons, lazily loaded on demand for performance.
+See the system documentation to learn more about icon sets.
+
+<Story name="Iconset">
+  {html`
+    <lion-icon icon-id="lion:space:alienSpaceship"></lion-icon>
+  `}
+</Story>
+
+```html
+<lion-icon icon-id="lion:space:alienSpaceship"></lion-icon>
+```
+
+If for some reason you don't want to lazy load icons, you can still import and use them
+synchronously.
+
+### Accessibility
+
+It is recommended to add an `aria-label` to provide information to visually impaired users:
+
+A `lion-icon` without an `aria-label` attribute will be automatically given an `aria-hidden` attribute.
+
+<Story name="Accessible label">
+  {html`
+    <lion-icon icon-id="lion:misc:arrowLeft" aria-label="Pointing left"></lion-icon>
+  `}
+</Story>
+
+```html
+<lion-icon icon-id="lion:misc:arrowLeft" aria-label="Pointing left"></lion-icon>
+```
+
+### Styling
+
+By default, a `lion-icon` will be `1em` × `1em` (the current line-height).
+
+`lion-icon` uses SVGs and may be styled with CSS, including using CSS properties such as `fill` and `stroke`:
+
+<Story name="Styling">
+  {html`
+    <style>
+      lion-icon.custom {
+        width: 50px;
+        height: 50px;
+        fill: blue;
+        stroke: red;
+      }
+    </style>
+    <lion-icon icon-id="lion:bugs:bug02" aria-label="Pointing left"></lion-icon>
+  `}
+</Story>
+
+```html
+<style>
+  lion-icon {
+    fill: blue;
+    stroke: lightsteelblue;
+  }
+</style>
+<lion-icon icon-id="lion:bugs:bug02" aria-label="Pointing left"></lion-icon>
+```
+
+See <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS" target="_blank">SVG and CSS</a> on MDN web docs for more information.
