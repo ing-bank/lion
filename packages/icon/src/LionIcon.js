@@ -1,5 +1,6 @@
 import { html, css, render, unsafeHTML, until } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { icons } from './icons';
 
 const isDefinedPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
 
@@ -22,6 +23,10 @@ export class LionIcon extends LionLitElement {
         type: String,
         attribute: 'aria-label',
         reflect: true,
+      },
+      iconId: {
+        type: String,
+        attribute: 'icon-id',
       },
     };
   }
@@ -67,8 +72,13 @@ export class LionIcon extends LionLitElement {
         this._setSvg();
       }
     }
+
     if (changedProperties.has('ariaLabel')) {
       this._onLabelChanged(changedProperties);
+    }
+
+    if (changedProperties.has('iconId')) {
+      this._onIconIdChanged(changedProperties.get('iconId'));
     }
   }
 
@@ -114,6 +124,25 @@ export class LionIcon extends LionLitElement {
     } else {
       this.setAttribute('aria-hidden', 'true');
       this.removeAttribute('aria-label');
+    }
+  }
+
+  async _onIconIdChanged(prevIconId) {
+    const { iconId } = this;
+
+    if (!iconId) {
+      // clear if switching from iconId to no iconId
+      if (prevIconId) {
+        this.svg = null;
+        this._setSvg();
+      }
+    } else {
+      const svg = await icons.resolveIconForId(iconId);
+
+      // update SVG if it did not change in the meantime to avoid race conditions
+      if (this.iconId === iconId) {
+        this.svg = svg;
+      }
     }
   }
 }

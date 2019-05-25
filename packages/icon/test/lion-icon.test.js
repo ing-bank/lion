@@ -1,5 +1,6 @@
 import { expect, fixture, aTimeout, html } from '@open-wc/testing';
 import { until } from '@lion/core';
+import { icons } from '../src/icons';
 
 import heartSvg from './heart.svg.js';
 import hammerSvg from './hammer.svg.js';
@@ -148,5 +149,32 @@ describe('lion-icon', () => {
     await aTimeout();
 
     expect(el.children[0].id).to.equal('svg-heart');
+  });
+
+  it('supports icons using an icon id', async () => {
+    icons.addIconResolver('foo', () => heartSvg);
+    const el = await fixture(
+      html`
+        <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
+      `,
+    );
+
+    expect(el.children[0].id).to.equal('svg-heart');
+    icons.removeIconResolver('foo');
+  });
+
+  it('clears rendered icon when icon id is removed', async () => {
+    icons.addIconResolver('foo', () => heartSvg);
+    const el = await fixture(
+      html`
+        <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
+      `,
+    );
+    await el.updateComplete;
+    el.removeAttribute('icon-id');
+    await el.updateComplete;
+    expect(el.children.length).to.equal(0);
+
+    icons.removeIconResolver('foo');
   });
 });
