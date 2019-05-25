@@ -116,6 +116,26 @@ describe('LocalizeManager', () => {
       });
     });
 
+    it('can load a namespace for a different locale', async () => {
+      setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hello!' } });
+
+      const manager = new LocalizeManager();
+      manager.locale = 'en-US';
+
+      await manager.loadNamespace(
+        {
+          'my-component': locale => fakeImport(`./my-component/${locale}.js`),
+        },
+        { locale: 'nl-NL' },
+      );
+
+      expect(manager.__storage).to.deep.equal({
+        'nl-NL': {
+          'my-component': { greeting: 'Hello!' },
+        },
+      });
+    });
+
     it('loads multiple namespaces via loadNamespaces()', async () => {
       setupFakeImport('./my-defaults/en-GB.js', { default: { submit: 'Submit' } });
       setupFakeImport('./my-send-button/en-GB.js', { default: { submit: 'Send' } });
@@ -129,6 +149,29 @@ describe('LocalizeManager', () => {
 
       expect(manager.__storage).to.deep.equal({
         'en-GB': {
+          'my-defaults': { submit: 'Submit' },
+          'my-send-button': { submit: 'Send' },
+        },
+      });
+    });
+
+    it('can load multiple namespaces for a different locale', async () => {
+      setupFakeImport('./my-defaults/nl-NL.js', { default: { submit: 'Submit' } });
+      setupFakeImport('./my-send-button/nl-NL.js', { default: { submit: 'Send' } });
+
+      const manager = new LocalizeManager();
+      manager.locale = 'en-US';
+
+      await manager.loadNamespaces(
+        [
+          { 'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`) },
+          { 'my-send-button': locale => fakeImport(`./my-send-button/${locale}.js`) },
+        ],
+        { locale: 'nl-NL' },
+      );
+
+      expect(manager.__storage).to.deep.equal({
+        'nl-NL': {
           'my-defaults': { submit: 'Submit' },
           'my-send-button': { submit: 'Send' },
         },
