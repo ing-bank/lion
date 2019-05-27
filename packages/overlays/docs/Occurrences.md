@@ -5,25 +5,29 @@ For all concepts referred to in this document, please read [Overlay Overview](./
 
 ## Local and global overlay controllers
 Currently, we have a global and a local overlay controller.
-They handle all positioning logic, accessibility and automatic interaction patterns,
+They handle all positioning logic, accessibility and interaction patterns,
 based on provided config.
 
-All of their configuration options are described below in ResponsiveOverlay.
+All of their configuration options are described below.
 
 ## Responsive overlay
 Based on screen size, we might want to switch the appearance of an overlay.
-For instance: an application menu might be displayed as a dropdown on desktop,
+For instance: an application menu can be displayed as a dropdown on desktop,
 but as a bottom sheet on mobile.
-Similarly, a dialog might be displayed as a popover on desktop, but as a (global) dialog on mobile.
+Similarly, a dialog can be displayed as a popover on desktop, but as a (global) dialog on mobile.
 
 To implement such a flexible overlay, we need an 'umbrella' layer that allows for switching between
+different configuration options, also between the connection point in dom (global and local).
 
 Luckily, interfaces of Global and OverlayControllers are very similar.
 Therefore we can make a wrapping ResponsiveOverlayController.
 
 ### Configuration options for local and global overlays
 
-In total, we could end up with these configuration options for it (all Booleans default to false):
+In total, we should end up with configuration options as depicted below, for all possible overlays.
+All boolean flags default to 'false'.
+Some options are mutually exclusive, in which case their dependent options and requirement will be
+mentiooned.
 ```
 - {Element} elementToFocusAfterHide - the element that should be called `.focus()` on after dialog closes
 - {Boolean} hasBackdrop - whether it should have a backdrop (currently exclusive to globalOverlayController)
@@ -32,7 +36,10 @@ In total, we could end up with these configuration options for it (all Booleans 
 - {Boolean} trapsKeyboardFocus - rotates tab, implicitly set when 'isModal'
 - {Boolean} hidesOnEsc - hides the overlay when pressing [esc]
 - {Boolean} hidesOnOutsideClick - hides hides the overlay when clicking next to it, exluding invoker. (currently exclusive to localOverlayController)
-- {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api discussions
+- {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api. Consists of 'primary-align' and 'secondary-align', separated via '-'.
+  - v-align : 'bottom' | 'top' | 'left' | 'right' | 'fill'
+  - h-align: 'start' | 'end' | 'fill' (occupies width of invoker) | 'middle' (implicit option that will be choosen by default when none of the previous are specified)
+
 - {String} cssPosition - 'absolute' or 'fixed'. TODO: choose name that cannot be mistaken for placement like cssPosition or positioningTechnique: https://github.com/ing-bank/lion/pull/61
 - {TemplateResult} contentTemplate
 - {TemplateResult} invokerTemplate (currently exclusive to localOverlayController)
@@ -44,28 +51,29 @@ These options are suggested to be added to the current ones:
 ```
 - {Boolean} isModal - sets aria-modal and/or aria-hidden="true" on siblings
 - {Boolean} isGlobal - determines the connection point in DOM (body vs handled by user)
-- {Boolean} isTooltip - has a totally different interaction - and accessibility pattern than all
+- {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all
 other overlays, so needed for internals.
-- {Boolean} handlesUserInteraction - sets toggle on click, or hover when 'isTooltip'
+- {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
 - {Boolean} handlesAccessibility -
-  - For non tooltips: sets aria-expanded="true/false" when and aria-haspopup="true"
+  - For non tooltips: sets aria-expanded="true/false" and aria-haspopup="true"
   - For tooltips: sets role="tooltip" on the invoker
   - Returns focus to invokerNode on hide
   - Sets focus to dialog content (?)
-- {Object} placementConfig
-- {Object} placementConfig.verticalMargin
-- {Object} placementConfig.horizontalMargin
-- {Object} placementConfig.viewportMargin
-- {Element} pointerNode - the arrow element that is optionally provided and will point to the middle of the invoker
+- {Object} placementConfig - all these options hook in to function `managePosition`
+- {Number} placementConfig.verticalMargin
+- {Number} placementConfig.horizontalMargin
+- {Number} placementConfig.viewportMargin
+- {Element} placementConfig.pointerNode - the arrow element that is optionally provided and will point to the middle of the invoker
 ```
 
 What we should think about more properly is a global placement option (positioned relative to window instead of invoker)
 ```
 // TODO: namings very much under construction (we should also reconsider 'placement' names, see: https://github.com/ing-bank/lion/pull/61)
 // Something like the drawing Joren made: https://github.com/ing-bank/lion/issues/36#issuecomment-491855381
-- {String} globalPlacement:
-  - primary: 'center', 'bottom', 'top', 'left', 'right'
-  - justify (secondary): 'middle', 'start', 'end', 'fullwidth'
+- {String} globalPlacement - consists of 'v-align' (vertical alignment) and 'h-align' (horizontal alignment), separated via '-'
+  - v-align : 'center' | 'bottom' | 'top' | 'left' | 'right' | 'fullheight'
+  - h-align: 'middle' | 'start' | 'end' | 'fullwidth'
+  Examples: 'center-middle' (dialog, alertdialog), 'top-fullWidth' (top sheet)
 ```
 
 ## Controllers/behaviors
@@ -104,6 +112,8 @@ overlay controllers.
 }
 ```
 #### Dropdown
+It will be quite common to override placement to 'bottom-fullwidth'.
+Also, it would be quite common to add a pointerNode.
 ```js
 {
   placement: 'bottom',
@@ -112,6 +122,9 @@ overlay controllers.
 }
 ```
 #### Toast
+TODO:
+- add an option for role="alertdialog" ?
+- add an option for a 'hide timer' and belonging a11y features for this
 ```js
 {
   ...Dialog,
@@ -126,11 +139,11 @@ overlay controllers.
 }
 ```
 #### Select
-No need for cfg, will probably invoke ResponsiveOverlayCtrl and switches
+No need for a config, will probably invoke ResponsiveOverlayCtrl and switches
 config based on media query from Dropdown to BottomSheet/CenteredDialog
 
 #### Combobox/autocomplete
-No need for cfg, will probably invoke ResponsiveOverlayCtrl and switches
+No need for a config, will probably invoke ResponsiveOverlayCtrl and switches
 config based on media query from Dropdown to BottomSheet/CenteredDialog
 
 #### Application menu
