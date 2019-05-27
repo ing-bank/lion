@@ -1,4 +1,4 @@
-import { expect, fixture, aTimeout, defineCE } from '@open-wc/testing';
+import { expect, fixture, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { html, LitElement } from '@lion/core';
@@ -164,7 +164,6 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      await aTimeout();
       expect(elObj.calendarObj.focusedDayObj.el).not.to.equal(null);
     });
 
