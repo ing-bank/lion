@@ -306,7 +306,10 @@ export class LionInputDatepicker extends LionInputDate {
 
   async __openCalendarOverlay() {
     this._overlayCtrl.show();
-    await this._calendarElement.updateComplete;
+    await Promise.all([
+      this._calendarOverlayElement.updateComplete,
+      this._calendarElement.updateComplete,
+    ]);
     this._onCalendarOverlayOpened();
   }
 
