@@ -45,7 +45,7 @@ export class LionOption extends LitElement {
           padding: 4px;
         }
 
-        :host([focused]) {
+        :host([selected]) {
           background: lightblue;
         }
 

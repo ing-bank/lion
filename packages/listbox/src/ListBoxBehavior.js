@@ -536,5 +536,4 @@ export class ListboxBehavior {
   setHandleFocusChange(focusChangeHandler) {
     this.handleFocusChange = focusChangeHandler;
   };
-
 }

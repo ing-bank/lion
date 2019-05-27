@@ -53,14 +53,14 @@ describe('lion-select-rich', () => {
   describe('Invoker', () => {
     it('should not be shown by default', async () => {
       const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
+        <lion-select-rich></lion-select-rich>
       `);
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
     });
 
     it('can toggle the listbox', async () => {
       const el = await fixture(html`
-        <lion-listbox-invoker></lion-listbox-invoker>
+        <lion-select-rich></lion-select-rich>
       `);
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
       el.click();
@@ -70,7 +70,7 @@ describe('lion-select-rich', () => {
     describe('Keyboard navigation', () => {
       it('opens the listbox with [enter] key', async () => {
         const el = await fixture(html`
-          <lion-listbox-invoker></lion-listbox-invoker>
+          <lion-select-rich></lion-select-rich>
         `);
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         await el.updateComplete;
@@ -79,7 +79,7 @@ describe('lion-select-rich', () => {
 
       it('opens the listbox with [space] key', async () => {
         const el = await fixture(html`
-          <lion-listbox-invoker></lion-listbox-invoker>
+          <lion-select-rich></lion-select-rich>
         `);
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
         await el.updateComplete;
@@ -88,7 +88,7 @@ describe('lion-select-rich', () => {
 
       it('opens the listbox with [arrow down] key and changes focus to listbox', async () => {
         const el = await fixture(html`
-          <lion-listbox-invoker></lion-listbox-invoker>
+          <lion-select-rich></lion-select-rich>
         `);
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await el.updateComplete;
@@ -97,10 +97,11 @@ describe('lion-select-rich', () => {
       });
     });
 
-    describe('A11y', () => {
+    describe('Accessibility', () => {
+      // TODO: elaborate/ split up
       it('has the right aria attributes', async () => {
         const el = await fixture(html`
-          <lion-listbox-invoker></lion-listbox-invoker>
+          <lion-select-rich></lion-select-rich>
         `);
         expect(el.getAttribute('aria-labelledby')).to.equal('ID_REF-label ID_RED-button');
         expect(el.getAttribute('aria-haspopup')).to.equal('listbox');
@@ -108,6 +109,20 @@ describe('lion-select-rich', () => {
         el.click();
         expect(el.getAttribute('aria-expanded')).to.be.true;
       });
+    });
+
+    it('has tabindex="0" to on the invoker element', async () => {
+      const el = await fixture(html`
+        <lion-select-rich></lion-select-rich>
+      `);
+      expect(el._invokerElement.getAttribute('tabindex')).to.equal('-1');
+    });
+
+    it('has tabindex="-1" to on role="listbox" element', async () => {
+      const el = await fixture(html`
+        <lion-select-rich></lion-select-rich>
+      `);
+      expect(el._listboxElement.getAttribute('tabindex')).to.equal('-1');
     });
   });
 });
