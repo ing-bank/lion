@@ -74,22 +74,23 @@ describe('lion-listbox', () => {
   describe('Multi select', () => {
     it('has an empty value of Type Array when multi by default', async () => {
       const el = await fixture(html`
-        <lion-listbox multi>
+        <lion-listbox multi-select>
           <lion-option value="nr1">Item 1</lion-option>
           <lion-option value="nr2">Item 2</lion-option>
         </lion-listbox>
       `);
-      expect(el.value).to.equal({});
+      expect(el.value).to.equal([]);
     });
 
     it('has the selected options as value', async () => {
       const el = await fixture(html`
-        <lion-listbox multi>
+        <lion-listbox multi-select>
           <lion-option value="nr1" selected>Item 1</lion-option>
-          <lion-option value="nr2">Item 2</lion-option>
+          <lion-option value="nr2" selected>Item 2</lion-option>
+          <lion-option value="nr3">Item 3</lion-option>
         </lion-listbox>
       `);
-      expect(el.value).to.equal({ selected: true, value: 'nr1' });
+      expect(el.value).to.equal(['nr1', 'nr2']);
     });
   });
 

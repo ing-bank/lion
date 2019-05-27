@@ -17,6 +17,17 @@ describe('lion-option', () => {
     expect(el.value).to.equal('Item 1');
   });
 
+  it('can have different types of values', async () => {
+    const el1 = await fixture(html`
+      <lion-option value="${1}">Item 1</lion-option>
+    `);
+    const el2 = await fixture(html`
+      <lion-option value="${new Date()}">Item 1</lion-option>
+    `);
+    expect(el1.value).to.equal(1);
+    expect(el2.value).to.equal(new Date());
+  });
+
   describe('A11y', () => {
     it('has the role option', async () => {
       const el = await fixture(html`
