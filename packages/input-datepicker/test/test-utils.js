@@ -14,7 +14,14 @@ export class DatepickerInputObject {
     // Make sure the calendar is opened, not closed/toggled;
     this.overlayController.hide();
     this.invokerEl.click();
-    return this.calendarEl ? this.calendarEl.updateComplete : false;
+    const completePromises = [];
+    if (this.overlayEl) {
+      completePromises.push(this.overlayEl.updateComplete);
+    }
+    if (this.calendarEl) {
+      completePromises.push(this.calendarEl.updateComplete);
+    }
+    return Promise.all(completePromises);
   }
 
   async selectMonthDay(day) {
