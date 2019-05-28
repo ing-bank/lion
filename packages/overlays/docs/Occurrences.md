@@ -4,11 +4,42 @@ general and thus provided by Lion.
 For all concepts referred to in this document, please read [Overlay Overview](./OverlayOverview.md).
 
 ## Local and global overlay controllers
-Currently, we have a global and a local overlay controller.
-They handle all positioning logic, accessibility and interaction patterns,
-based on provided config.
+Currently, we have a global and a local overlay controller, as two separate entities.
+Based on provided config, they handle all positioning logic, accessibility and interaction patterns.
+All of their configuration options will be described below as part of the _Responsive overlay_ section.
 
-All of their configuration options are described below.
+### Connection points and placement contexts
+It's currently not clear where the border between global and local overlays lie. They seem to be
+separated based on their 'dom connection point' (body vs 'page cursor'(usually invoker sibling)).
+However, there is no required relationship here: we can create a modal dialog from
+local context('page cursor') as well.
+
+Only, we would have a few concerns when creating global overlays from a local connection point:
+- Accessibility will be harder to implement. When wai-aria 1.0 needs to be supported, all siblings
+need to have aria-hidden="true" and all parents role="presentation". Not always straightforward
+in shadow dom. If we only need to support wai-aria 1.1, we could use aria-modal="true" on the
+element with role="dialog". (we basically need to test our supported browsers and screen readers
+for compatibility with aria-modal).
+- Stacking context need to be managed: the whole 'z-index chain' should win (it's a battle between
+parents in the hierarchy). This would require some complex code to cover all edge cases.
+- Side effects of parents adding transforms or clipping become a risk. This is hard to detect and
+'counter'.
+
+When the dom connection point is 'body', content projection will not work, but a template that
+can be rendered without being dependent on its context will be required.
+
+There usually also is a correllation with their relative positioning context: invoker/other
+relative element for local(tooltip/popover/dropdown) vs. 'window/viewport level' for global
+(dialog/toast/sheet).
+
+For responsive overlays (see below for an elaborate explanation), we need to switch from global to
+local. When we switch the dom connection point, (think of rotating a mobile or tablet), we
+will loose the current focus, which can be an a11y concern. This can eventually be 'catched' by
+syncing the activeElement (we would only loose the screenreader active element (for instance,
+focused cell in table mode))
+
+For maximum flexibility, it should be up to the developer to decide how overlays should be rendered,
+per instance of an overlay.
 
 ## Responsive overlay
 Based on screen size, we might want to switch the appearance of an overlay.
@@ -27,7 +58,7 @@ Therefore we can make a wrapping ResponsiveOverlayController.
 In total, we should end up with configuration options as depicted below, for all possible overlays.
 All boolean flags default to 'false'.
 Some options are mutually exclusive, in which case their dependent options and requirement will be
-mentiooned.
+mentioned.
 ```
 - {Element} elementToFocusAfterHide - the element that should be called `.focus()` on after dialog closes
 - {Boolean} hasBackdrop - whether it should have a backdrop (currently exclusive to globalOverlayController)
@@ -35,7 +66,7 @@ mentiooned.
 - {Boolean} preventsScroll - prevents scrolling body content when overlay opened (currently exclusive to globalOverlayController)
 - {Boolean} trapsKeyboardFocus - rotates tab, implicitly set when 'isModal'
 - {Boolean} hidesOnEsc - hides the overlay when pressing [esc]
-- {Boolean} hidesOnOutsideClick - hides hides the overlay when clicking next to it, exluding invoker. (currently exclusive to localOverlayController)
+- {Boolean} hidesOnOutsideClick - hides the overlay when clicking next to it, exluding invoker. (currently exclusive to localOverlayController)
 - {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api. Consists of 'primary-align' and 'secondary-align', separated via '-'.
   - v-align : 'bottom' | 'top' | 'left' | 'right' | 'fill'
   - h-align: 'start' | 'end' | 'fill' (occupies width of invoker) | 'middle' (implicit option that will be choosen by default when none of the previous are specified)
@@ -50,7 +81,7 @@ mentiooned.
 These options are suggested to be added to the current ones:
 ```
 - {Boolean} isModal - sets aria-modal and/or aria-hidden="true" on siblings
-- {Boolean} isGlobal - determines the connection point in DOM (body vs handled by user)
+- {Boolean} isGlobal - determines the connection point in DOM (body vs handled by user) TODO: rename to renderToBody?
 - {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all
 other overlays, so needed for internals.
 - {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
@@ -70,7 +101,7 @@ What we should think about more properly is a global placement option (positione
 ```
 // TODO: namings very much under construction (we should also reconsider 'placement' names, see: https://github.com/ing-bank/lion/pull/61)
 // Something like the drawing Joren made: https://github.com/ing-bank/lion/issues/36#issuecomment-491855381
-- {String} globalPlacement - consists of 'v-align' (vertical alignment) and 'h-align' (horizontal alignment), separated via '-'
+- {String} viewportPlacement - consists of 'v-align' (vertical alignment) and 'h-align' (horizontal alignment), separated via '-'
   - v-align : 'center' | 'bottom' | 'top' | 'left' | 'right' | 'fullheight'
   - h-align: 'middle' | 'start' | 'end' | 'fullwidth'
   Examples: 'center-middle' (dialog, alertdialog), 'top-fullWidth' (top sheet)
@@ -79,6 +110,8 @@ What we should think about more properly is a global placement option (positione
 ## Controllers/behaviors
 Controllers/behaviors provide preconfigured configuration objects for the global/local
 overlay controllers.
+They provide an imperative and very flexible api for creating overlays and should be used by
+Subclassers, inside webcomponents.
 
 #### Dialog
 ```js
@@ -155,6 +188,7 @@ config based on media query from Dropdown to BottomSheet/CenteredDialog
 Web components provide a declaritive, developer friendly interface with a prewconfigured styling
 that fits the Design System and makes it really easy for Application Developers to build
 user interfaces.
+Web components should use
 The ground layers for the webcomponents in Lion are the following:
 
 #### Dialog
@@ -164,35 +198,33 @@ Imperative might be better here? We can add a web component later if needed.
 #### Tooltip
 ```html
 <lion-tooltip>
-  <button slot="invoker">hover me</button>
-  This will be shown
+  <button slot="invoker">hover/focus</button>
+  <div slot="content">This will be shown</div>
 </lion-tooltip>
 ```
 #### Popover
 ```html
 <lion-popover>
-  <button slot="invoker">
-    interact with click/space/enter
-  </button>
-  This will be shown
+  <button slot="invoker">click/space/enter</button>
+  <div slot="content">This will be shown</div>
 </lion-popover>
 ```
 #### Dropdown
 Like the name suggests, the default placement will be button
 ```html
 <lion-dropdown>
-  <button slot="invoker">
-    interact with click/space/enter
-  </button>
-  <ul>
-    <li>This will be shown on hover</li>
+  <button slot="invoker">click/space/enter</button>
+  <ul slot="content">
+    <li>This</li>
+    <li>will be</li>
+    <li>shown</li>
   </ul>
 </lion-dropdown>
 ```
 #### Toast
 
 Imperative might be better here?
-- Sheet (bottom, top, left, right)
+#### Sheet (bottom, top, left, right)
 
 Imperative might be better here?
 
