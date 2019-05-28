@@ -29,7 +29,7 @@ npm i @lion/<package-name>
 
 | Package                                     | Version                                                                                                                        | Description                                        |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| **-- [Forms](./docs/forms.md) --**          |                                                                                                                                |                                                    |
+| **-- Forms --**                             |                                                                                                                                |                                                    |
 | [checkbox](./packages/checkbox)             | [![checkbox](https://img.shields.io/npm/v/@lion/checkbox.svg)](https://www.npmjs.com/package/@lion/checkbox)                   | Checkbox form element                              |
 | [checkbox-group](./packages/checkbox-group) | [![checkbox-group](https://img.shields.io/npm/v/@lion/checkbox-group.svg)](https://www.npmjs.com/package/@lion/checkbox-group) | Group of checkboxes                                |
 | [field](./packages/field)                   | [![field](https://img.shields.io/npm/v/@lion/field.svg)](https://www.npmjs.com/package/@lion/field)                            | Base Class for all inputs                          |
@@ -48,7 +48,7 @@ npm i @lion/<package-name>
 | [icon](./packages/icon)                     | [![icon](https://img.shields.io/npm/v/@lion/icon.svg)](https://www.npmjs.com/package/@lion/icon)                               | Display our svg icons                              |
 | **-- [Localize](./packages/localize) --**   |                                                                                                                                |                                                    |
 | [localize](./packages/localize)             | [![localize](https://img.shields.io/npm/v/@lion/localize.svg)](https://www.npmjs.com/package/@lion/localize)                   | Localize and translate your application/components |
-| **-- [Overlays](./docs/overlays.md) --**    |                                                                                                                                |                                                    |
+| **-- Overlays --**                          |                                                                                                                                |                                                    |
 | [overlays](./packages/overlays)             | [![overlays](https://img.shields.io/npm/v/@lion/overlays.svg)](https://www.npmjs.com/package/@lion/overlays)                   | Overlays System using lit-html for rendering       |
 | [popup](./packages/popup)                   | [![popup](https://img.shields.io/npm/v/@lion/popup.svg)](https://www.npmjs.com/package/@lion/popup)                            | Popup element                                      |
 | [tooltip](./packages/tooltip)               | [![tooltip](https://img.shields.io/npm/v/@lion/tooltip.svg)](https://www.npmjs.com/package/@lion/tooltip)                      | Popup element                                      |
