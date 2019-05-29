@@ -59,6 +59,8 @@ In total, we should end up with configuration options as depicted below, for all
 All boolean flags default to 'false'.
 Some options are mutually exclusive, in which case their dependent options and requirement will be
 mentioned.
+Note: a more generic and precise term for all mentionings of `invoker` below would actually be
+`relative positioning element`.
 ```
 - {Element} elementToFocusAfterHide - the element that should be called `.focus()` on after dialog closes
 - {Boolean} hasBackdrop - whether it should have a backdrop (currently exclusive to globalOverlayController)
@@ -67,15 +69,15 @@ mentioned.
 - {Boolean} trapsKeyboardFocus - rotates tab, implicitly set when 'isModal'
 - {Boolean} hidesOnEsc - hides the overlay when pressing [esc]
 - {Boolean} hidesOnOutsideClick - hides the overlay when clicking next to it, exluding invoker. (currently exclusive to localOverlayController)
-- {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api. Consists of 'primary-align' and 'secondary-align', separated via '-'.
-  - v-align : 'bottom' | 'top' | 'left' | 'right' | 'fill'
-  - h-align: 'start' | 'end' | 'fill' (occupies width of invoker) | 'middle' (implicit option that will be choosen by default when none of the previous are specified)
+- {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api. Consists of a primary part (where the overlay is located relative from invoker) and secondary alignnment part (how the overlay 'snaps' to the perpendicular boundary of the invoker), separated via '-'.
+  - primary : 'bottom' | 'top' | 'left' | 'right' | 'over' (this means the overlay will be positioned on top of the invoker. Think for instance of a select dropdown that opens a selected option on top of the invoker (default behavior of `<select>` on iOS))
+  - secondary : 'start' | 'end' | 'fill' (occupies width of invoker) | 'middle' (implicit option that will be choosen by default when none of the previous are specified)
 
 - {String} cssPosition - 'absolute' or 'fixed'. TODO: choose name that cannot be mistaken for placement like cssPosition or positioningTechnique: https://github.com/ing-bank/lion/pull/61
 - {TemplateResult} contentTemplate
-- {TemplateResult} invokerTemplate (currently exclusive to localOverlayController)
-- {Element} invokerNode (currently exclusive to localOverlayController)
-- {Element} contentNode (currently exclusive to localOverlayController)
+- {TemplateResult} invokerTemplate (currently exclusive to LocalOverlayController)
+- {Element} invokerNode (currently exclusive to LocalOverlayController)
+- {Element} contentNode (currently exclusive to LocalOverlayController)
 ```
 
 These options are suggested to be added to the current ones:
@@ -86,10 +88,13 @@ These options are suggested to be added to the current ones:
 other overlays, so needed for internals.
 - {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
 - {Boolean} handlesAccessibility -
-  - For non tooltips: sets aria-expanded="true/false" and aria-haspopup="true"
-  - For tooltips: sets role="tooltip" on the invoker
-  - Returns focus to invokerNode on hide
-  - Sets focus to dialog content (?)
+  - For non `isTooltip`:
+    - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
+    - sets aria-controls on invokerNode
+    - returns focus to invokerNode on hide
+    - sets focus to overlay content(?)
+  - For `isTooltip`:
+    - sets role="tooltip" and aria-labelledby/aria-describedby on the content
 - {Object} placementConfig - all these options hook in to function `managePosition`
 - {Number} placementConfig.verticalMargin
 - {Number} placementConfig.horizontalMargin
@@ -101,10 +106,11 @@ What we should think about more properly is a global placement option (positione
 ```
 // TODO: namings very much under construction (we should also reconsider 'placement' names, see: https://github.com/ing-bank/lion/pull/61)
 // Something like the drawing Joren made: https://github.com/ing-bank/lion/issues/36#issuecomment-491855381
-- {String} viewportPlacement - consists of 'v-align' (vertical alignment) and 'h-align' (horizontal alignment), separated via '-'
-  - v-align : 'center' | 'bottom' | 'top' | 'left' | 'right' | 'fullheight'
-  - h-align: 'middle' | 'start' | 'end' | 'fullwidth'
-  Examples: 'center-middle' (dialog, alertdialog), 'top-fullWidth' (top sheet)
+- {String} viewportPlacement - consists of a vertical alignment part and an horizontal alignment part,
+  separated via '-'
+  - vertical align : 'center' | 'bottom' | 'top' | 'left' | 'right' | 'fullheight'
+  - horizontal align: 'middle' | 'start' | 'end' | 'fullwidth'
+  Examples: 'center-middle' (dialog, alertdialog), 'top-fullwidth' (top sheet)
 ```
 
 ## Controllers/behaviors
@@ -124,7 +130,7 @@ Subclassers, inside webcomponents.
   hidesOnEsc: true,
   handlesUserInteraction: true,
   handlesAccessibility: true,
-  globalPlacement: 'center-middle',
+  viewportPlacement: 'center-middle',
 }
 ```
 
@@ -161,14 +167,14 @@ TODO:
 ```js
 {
   ...Dialog,
-  globalPlacement: 'top-right', (?)
+  viewportPlacement: 'top-right', (?)
 }
 ```
 #### Sheet (bottom, top, left, right)
 ```js
 {
   ...Dialog,
-  globalPlacement: '{top|bottom|left|right}-fullwidth', (?)
+  viewportPlacement: '{top|bottom|left|right}-fullwidth', (?)
 }
 ```
 #### Select

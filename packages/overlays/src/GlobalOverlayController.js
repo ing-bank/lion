@@ -12,8 +12,17 @@ export class GlobalOverlayController {
   static _createRoot() {
     if (!this._rootNode) {
       this._rootNode = document.createElement('div');
+      // TODO: create a shadow dom root here. Currently, the only way this works with shadyCSS is
+      // by creating webcomponent, so create <lion-overlay-root> instead of <div>
+      // Also, make this root configurable, so:
+      // - it supports all viewport placements:
+      //     - v-align : 'center' | 'bottom' | 'top' | 'left' | 'right' | 'fullheight'
+      //     - h-align: 'middle' | 'start' | 'end' | 'fullwidth'
+      // - allow to style backdrop (opacity, color, animation(?))
+      // - allow to animate overlay
       this._rootNode.classList.add('global-overlays');
       document.body.appendChild(this._rootNode);
+      // TODO: add part to web component described above, and parts to body
       document.head.appendChild(styleTag);
     }
   }
