@@ -1,6 +1,6 @@
 {
   "name": "@lion/button",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "A button that is easily stylable and accessible in all contexts",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,12 +32,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.8"
+    "@lion/core": "^0.1.9"
   },
   "devDependencies": {
-    "@lion/form": "^0.1.15",
-    "@lion/icon": "^0.1.8",
-    "@lion/input": "^0.1.13",
+    "@lion/form": "^0.1.16",
+    "@lion/icon": "^0.1.9",
+    "@lion/input": "^0.1.14",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5",
     "@polymer/iron-test-helpers": "^3.0.1",

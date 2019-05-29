@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-datepicker",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Provide a way for users to fill in a date via a calendar overlay",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -35,15 +35,15 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/calendar": "^0.1.11",
-    "@lion/core": "^0.1.8",
-    "@lion/input-date": "^0.1.13",
-    "@lion/localize": "^0.3.4",
-    "@lion/overlays": "^0.2.4",
-    "@lion/validate": "^0.2.4"
+    "@lion/calendar": "^0.1.12",
+    "@lion/core": "^0.1.9",
+    "@lion/input-date": "^0.1.14",
+    "@lion/localize": "^0.3.5",
+    "@lion/overlays": "^0.2.5",
+    "@lion/validate": "^0.2.5"
   },
   "devDependencies": {
-    "@lion/button": "^0.1.16",
+    "@lion/button": "^0.1.17",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5",
     "@polymer/iron-test-helpers": "^3.0.1",
