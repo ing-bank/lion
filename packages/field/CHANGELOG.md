@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.15](https://github.com/ing-bank/lion/compare/@lion/field@0.1.14...@lion/field@0.1.15) (2019-05-29)
+
+
+### Bug Fixes
+
+* **field:** fix form registration in Edge ([7e1a7ef](https://github.com/ing-bank/lion/commit/7e1a7ef))
+
+
+
+
+
 ## [0.1.14](https://github.com/ing-bank/lion/compare/@lion/field@0.1.13...@lion/field@0.1.14) (2019-05-29)
 
 **Note:** Version bump only for package @lion/field
