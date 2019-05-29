@@ -518,7 +518,8 @@ describe('<lion-fieldset>', () => {
           <lion-input id="firstName" name="firstName" .modelValue="${'Foo'}"></lion-input>
         </lion-fieldset>
       `);
-      await nextFrame();
+      await el.querySelector('lion-input').updateComplete;
+
       const input = el.querySelector('#firstName');
 
       input.modelValue = 'Bar';
@@ -536,7 +537,8 @@ describe('<lion-fieldset>', () => {
           <lion-input id="firstName" name="firstName[]" .modelValue="${'Foo'}"></lion-input>
         </lion-fieldset>
       `);
-      await nextFrame();
+      await el.querySelector('lion-input').updateComplete;
+
       const input = el.querySelector('#firstName');
 
       input.modelValue = 'Bar';
@@ -556,9 +558,11 @@ describe('<lion-fieldset>', () => {
           </lion-fieldset>
         </lion-fieldset>
       `);
-      // 2 times as we are nested here
-      await nextFrame();
-      await nextFrame();
+      await Promise.all([
+        el.querySelector('lion-fieldset').updateComplete,
+        el.querySelector('lion-input').updateComplete,
+      ]);
+
       const input = el.querySelector('#firstName');
       const nestedFieldset = el.querySelector('#name');
 

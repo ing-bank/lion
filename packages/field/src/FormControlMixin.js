@@ -145,7 +145,7 @@ export const FormControlMixin = dedupeMixin(
        * will requires a `await nextFrame()` in tests
        */
       _registerFormElement() {
-        requestAnimationFrame(() => {
+        this.updateComplete.then(() => {
           this.dispatchEvent(
             new CustomEvent('form-element-register', {
               detail: { element: this },
@@ -164,7 +164,7 @@ export const FormControlMixin = dedupeMixin(
        * @see {@link this._registerFormElement}
        */
       _requestParentFormGroupUpdateOfResetModelValue() {
-        requestAnimationFrame(() => {
+        this.updateComplete.then(() => {
           if (this.__parentFormGroup) {
             this.__parentFormGroup._updateResetModelValue();
           }
