@@ -1737,14 +1737,6 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@lion/localize@^0.1.6":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@lion/localize/-/localize-0.1.7.tgz#2f0eb725fbe5fa8842985140ae3a6f0dfbd732d6"
-  integrity sha512-6ayWBoBI6W9pwOS6qUKBo3lUltniv8v9/xcRGm3IH5+7tbeR6/3mWILwz69MvNaoj7MQhHEF7Ox746o0qIgbFw==
-  dependencies:
-    "@bundled-es-modules/message-format" "6.0.4"
-    "@lion/core" "^0.1.4"
-
 "@marionebl/sander@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@marionebl/sander/-/sander-0.6.1.tgz#1958965874f24bc51be48875feb50d642fc41f7b"

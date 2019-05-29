@@ -38,7 +38,7 @@
     "@lion/calendar": "^0.1.11",
     "@lion/core": "^0.1.8",
     "@lion/input-date": "^0.1.13",
-    "@lion/localize": "^0.1.6",
+    "@lion/localize": "^0.3.4",
     "@lion/overlays": "^0.2.4",
     "@lion/validate": "^0.2.4"
   },
