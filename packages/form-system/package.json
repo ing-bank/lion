@@ -46,6 +46,6 @@
     "@lion/radio-group": "^0.1.15",
     "@lion/textarea": "^0.1.13",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1"
+    "@open-wc/testing": "^0.12.5"
   }
 }
