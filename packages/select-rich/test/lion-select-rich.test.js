@@ -36,7 +36,7 @@ describe('lion-select-rich', () => {
         </lion-listbox>
       </lion-select-rich>
     `);
-    expect(el.querySelector('button').value).to.equal('nr2');
+    expect(el._listboxElement.value).to.equal('nr2');
   });
 
   it('shows content of the selected option inside the invoker', async () => {
@@ -47,7 +47,7 @@ describe('lion-select-rich', () => {
         </lion-listbox>
       </lion-select-rich>
     `);
-    expect(el.querySelector('button').innerHTML).to.equal('<span>Item 1</span>');
+    expect(el._invokerElement.innerHTML).to.equal('<span>Item 1</span>');
   });
 
   it('has a class "state-disabled"', async () => {});
