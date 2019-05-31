@@ -327,6 +327,31 @@ describe('<lion-field>', () => {
       lionField.modelValue = 'cat';
       expect(lionField.error.required).to.be.undefined;
     });
+
+    it('will only update formattedValue the value when valid', async () => {
+      const formatterSpy = sinon.spy(value => `foo: ${value}`);
+      function isBarValidator(value) {
+        return { isBar: value === 'bar' };
+      }
+      const lionField = await fixture(html`
+        <${tag}
+          .modelValue=${'init-string'}
+          .formatter=${formatterSpy}
+          .errorValidators=${[[isBarValidator]]}
+        >${inputSlot}</${tag}>
+      `);
+
+      expect(formatterSpy.callCount).to.equal(0);
+      expect(lionField.formattedValue).to.equal('init-string');
+
+      lionField.modelValue = 'bar';
+      expect(formatterSpy.callCount).to.equal(1);
+      expect(lionField.formattedValue).to.equal('foo: bar');
+
+      lionField.modelValue = 'foo';
+      expect(formatterSpy.callCount).to.equal(1);
+      expect(lionField.formattedValue).to.equal('foo: bar');
+    });
   });
 
   describe(`Content projection${nameSuffix}`, () => {
