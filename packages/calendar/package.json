@@ -1,6 +1,6 @@
 {
   "name": "@lion/calendar",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Standalone calendar",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,10 +33,10 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.9",
-    "@lion/localize": "^0.3.5"
+    "@lion/localize": "^0.3.6"
   },
   "devDependencies": {
-    "@lion/button": "^0.1.18",
+    "@lion/button": "^0.1.19",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5",
     "sinon": "^7.2.2"
