@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.17](https://github.com/ing-bank/lion/compare/@lion/field@0.1.16...@lion/field@0.1.17) (2019-05-31)
+
+
+### Bug Fixes
+
+* **field:** formats value after validation update ([667eb81](https://github.com/ing-bank/lion/commit/667eb81))
+
+
+
+
+
 ## [0.1.16](https://github.com/ing-bank/lion/compare/@lion/field@0.1.15...@lion/field@0.1.16) (2019-05-31)
 
 **Note:** Version bump only for package @lion/field
