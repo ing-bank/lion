@@ -28,9 +28,9 @@ import { FormatMixin } from './FormatMixin.js';
 // TODO: Consider exporting as FieldMixin
 // eslint-disable-next-line max-len, no-unused-vars
 export class LionField extends FormControlMixin(
-  ValidateMixin(
-    InteractionStateMixin(
-      FormatMixin(
+  InteractionStateMixin(
+    FormatMixin(
+      ValidateMixin(
         CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
       ),
     ),
