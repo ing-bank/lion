@@ -405,5 +405,14 @@ describe('LocalizeManager', () => {
       manager.addData('en-GB', 'overridden-ns', { greeting: 'Hello!' });
       expect(manager.msg(keys)).to.equal('Hello!');
     });
+
+    it('throws a custom error when namespace prefix is missing', () => {
+      const manager = new LocalizeManager();
+      const msgKey = 'greeting';
+      manager.addData('en-GB', 'my-ns', { [msgKey]: 'Hello!' });
+      expect(() => manager.msg(msgKey)).to.throw(
+        `Namespace is missing in the key "${msgKey}". The format for keys is "namespace:name".`,
+      );
+    });
   });
 });
