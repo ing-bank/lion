@@ -218,6 +218,11 @@ export class LocalizeManager extends LionSingleton {
   }
 
   _getMessageForKey(key, locale) {
+    if (key.indexOf(':') === -1) {
+      throw new Error(
+        `Namespace is missing in the key "${key}". The format for keys is "namespace:name".`,
+      );
+    }
     const [ns, namesString] = key.split(':');
     const namespaces = this.__storage[locale];
     const messages = namespaces ? namespaces[ns] : null;
