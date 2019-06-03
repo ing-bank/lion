@@ -7,9 +7,14 @@ Whenever a new type of Form component is made, a list of questions needs to be a
 
 This document is meant to illustrate how all of the above mentioned factors are taken
 into account and prioritized.
-It does so by going through the design process of the `<lion-field-listbox>` and `<lion-listbox>`,
+It does so by going through the design process of the concept 'listbox',
 step by step.
 
+The listbox concept will end up in several webcomponents:
+- lion-listbox: a listbox implementation agnostic of Lion form system
+- lion-field-listbox: a Field wrapping lion-listbox
+- lion-field-listbox-collapsible(current working name lion-select-rich): extension of Lion-field listbox with collapsible dropdown
+- lion-field-combobox: a Field wrapping lion-listbox, but with a text field as the input element. 
 
 ## Creating a Form Control
 The goal of every form web component we build is to end up as a [FormControl]((https://github.com/ing-bank/lion/tree/master/packages/field)).
@@ -37,7 +42,7 @@ As far as the api is concerned, the ideal api for our rich select would be:
   <lion-option></lion-option>
 </lion-select-rich>
 ```
-The difference with our api is the lack of a <lion-listbox> around <lion-option>s
+The difference with our api is the lack of a '<lion-listbox>' around '<lion-option>'s
 In order to transform the ideal api into an accessible solution, it needs to be transformed into something like this:
 
 ```html
@@ -47,10 +52,10 @@ In order to transform the ideal api into an accessible solution, it needs to be 
   <div role=“option” id=“two”></div>
 </div>
 ```
-The element with role=“listbox” and  aria-activedescendant needs to be in the same dom as the elements with role=“option”.
-If we would have the ‘ideal api’ as suggested above, we would have two different doms (shadow and light) and the aformentioned elements would not find each other.
+The element with [role=“listbox”] and  aria-activedescendant needs to be in the same dom as the elements with [role=“option”].
+If we would have the ‘ideal api’ as suggested above, we would have two different doms (shadow and light) and the aforementioned elements would not find each other.
 Transferring the lion-options to a part of the light dom that already has the listbox, would be a technically possible, but hacky solution.
-Putting role=“listbox” on the host(like suggested before) is not a solution either: it causes the button to be a child of the listbox and this would confuse
+Putting [role=“listbox”] on the host(like suggested before) is not a solution either: it causes the button to be a child of the listbox and this would confuse
 screen reader users.
 
 Concluding, a nice incidental with this api is the similarity with the api for the native select:
