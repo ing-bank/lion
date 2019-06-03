@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.12](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.11...@lion/ajax@0.1.12) (2019-06-03)
+
+
+### Bug Fixes
+
+* **ajax:** update to axios with security vularability fix ([d227a04](https://github.com/ing-bank/lion/commit/d227a04))
+
+
+
+
+
 ## [0.1.11](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.10...@lion/ajax@0.1.11) (2019-05-29)
 
 **Note:** Version bump only for package @lion/ajax
