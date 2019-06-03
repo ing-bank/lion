@@ -63,7 +63,7 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
 
   firstUpdated() {
     super.firstUpdated();
-    this._max = this.children.length - 1;
+    this._max = this.steps.length - 1;
   }
 
   next() {
@@ -74,12 +74,17 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     this._goTo(this.current - 1, this.current);
   }
 
+  get steps() {
+    const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
+    return defaultSlot.assignedNodes().filter(node => node.nodeType === Node.ELEMENT_NODE);
+  }
+
   _goTo(newCurrent, oldCurrent) {
     if (newCurrent < 0 || newCurrent > this._max) {
       throw new Error(`There is no step at index ${newCurrent}.`);
     }
 
-    const nextStep = this.children[newCurrent];
+    const nextStep = this.steps[newCurrent];
     const back = newCurrent < oldCurrent;
 
     if (nextStep.passesCondition(this.data)) {
@@ -99,8 +104,8 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
   }
 
   _changeStep(newCurrent, oldCurrent) {
-    const oldStepElement = this.children[oldCurrent];
-    const newStepElement = this.children[newCurrent];
+    const oldStepElement = this.steps[oldCurrent];
+    const newStepElement = this.steps[newCurrent];
     const fromStep = { number: oldCurrent, element: oldStepElement };
     const toStep = { number: newCurrent, element: newStepElement };
 

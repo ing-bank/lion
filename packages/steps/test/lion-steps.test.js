@@ -27,6 +27,21 @@ async function checkWorkflow(steps, expected) {
 }
 
 describe('lion-steps', () => {
+  it('has "steps" getter that returns default slot elements', async () => {
+    const el = await fixture(html`
+      <lion-steps>
+        <lion-step>Step 1</lion-step>
+        <lion-step initial-step>Step 2</lion-step>
+        <other-step-element>Step 3</other-step-element>
+        <steps-extension-element slot="new-slot">e.g. steps indicator</steps-extension-element>
+      </lion-steps>
+    `);
+    expect(el.steps.length).to.equal(3);
+    expect(el.steps[0].tagName).to.equal('LION-STEP');
+    expect(el.steps[1].tagName).to.equal('LION-STEP');
+    expect(el.steps[2].tagName).to.equal('OTHER-STEP-ELEMENT');
+  });
+
   describe('initialization', () => {
     it('activates step with an "initial-step" attribute', async () => {
       const el = await fixture(html`
