@@ -249,29 +249,29 @@ describe('lion-listbox', () => {
       expect(el.getAttribute('tabindex')).to.equal('0');
     });
 
-    it('puts "aria-setsize" on all options', async () => {
+    it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
       const el = await fixture(html`
         <lion-listbox>
           <lion-option value="nr1">Item 1</lion-option>
           <optgroup>
-            <lion-option value="nr1">Item 1</lion-option>
-            <lion-option value="nr1">Item 1</lion-option>
+            <lion-option value="nr2">Item 2</lion-option>
+            <lion-option value="nr3">Item 3</lion-option>
           </optgroup>
         </lion-listbox>
       `);
       const optionEls = [].slice.call(el.querySelectorAll('lion-option'));
-      optionEls.forEach((oEl) => {
+      optionEls.forEach(oEl => {
         expect(oEl.getAttribute('aria-setsize')).to.equal('3');
       });
     });
 
-    it('puts "aria-posinset" on all options', async () => {
+    it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
       const el = await fixture(html`
         <lion-listbox>
           <lion-option value="nr1">Item 1</lion-option>
           <optgroup>
-            <lion-option value="nr1">Item 1</lion-option>
-            <lion-option value="nr1">Item 1</lion-option>
+            <lion-option value="nr2">Item 2</lion-option>
+            <lion-option value="nr3">Item 3</lion-option>
           </optgroup>
         </lion-listbox>
       `);

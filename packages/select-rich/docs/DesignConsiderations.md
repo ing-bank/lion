@@ -1,11 +1,11 @@
 # Design considerations for new Custom Fields (draft)
 
-Whenever a new type of Form component needs to be made, a list of questions pops up:
-- How can we deliver a predictable/consistent Developer Experience?
+Whenever a new type of Form component needs to be made, a list of questions needs to be addressed:
 - How can we build an accessible form component?
 - How can we build a flexible fundament layer that can be extended in multiple ways?
+- How can we deliver a predictable/consistent Developer Experience?
 
-This document is meant to illustrate step by step how all of the above mentioned factors are taken
+This document is meant to illustrate how all of the above mentioned factors are taken
 into account and prioritized.
 It does so by going through the design process of the `<lion-field-listbox>` and `<lion-listbox>`,
 step by step.
