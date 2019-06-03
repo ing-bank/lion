@@ -1,6 +1,6 @@
 # Design considerations for new Custom Fields (draft)
 
-Whenever a new type of Form component needs to be made, a list of questions needs to be addressed:
+Whenever a new type of Form component is made, a list of questions needs to be addressed:
 - How can we build an accessible form component?
 - How can we build a flexible fundament layer that can be extended in multiple ways?
 - How can we deliver a predictable/consistent Developer Experience?
