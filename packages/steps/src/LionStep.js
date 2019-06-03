@@ -97,9 +97,8 @@ export class LionStep extends LionLitElement {
     `;
   }
 
-  connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.connectedCallback();
+  firstUpdated() {
+    super.firstUpdated();
     this.controller = this.parentNode;
     if (this.initialStep === true) {
       this.enter(true);
@@ -107,9 +106,9 @@ export class LionStep extends LionLitElement {
   }
 
   getControllerIndex() {
-    const controllerChildren = this.controller.children;
-    for (let i = 0; i < controllerChildren.length; i += 1) {
-      if (controllerChildren[i] === this) {
+    const { steps } = this.controller;
+    for (let i = 0; i < steps.length; i += 1) {
+      if (steps[i] === this) {
         return i;
       }
     }
