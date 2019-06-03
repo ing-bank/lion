@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.10](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.9...@lion/steps@0.1.10) (2019-06-03)
+
+
+### Bug Fixes
+
+* **steps:** allow extensions to introduce new non-default slots ([37d0db5](https://github.com/ing-bank/lion/commit/37d0db5))
+
+
+
+
+
 ## [0.1.9](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.8...@lion/steps@0.1.9) (2019-05-29)
 
 **Note:** Version bump only for package @lion/steps
