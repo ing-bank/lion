@@ -760,10 +760,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@bundled-es-modules/axios@0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@bundled-es-modules/axios/-/axios-0.18.0.tgz#2187b5240f4dba78228fa4bc3dc9b383de648fb4"
-  integrity sha512-w3/dEG9dAwuFdliiZPn2mw8zknuY0ysT6iMIjv2GmlYEhHRfQkl1FYnKf5Rn0DPFH9VTAXJ566b7OrEyoCL1xQ==
+"@bundled-es-modules/axios@0.18.1":
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/@bundled-es-modules/axios/-/axios-0.18.1.tgz#8beedbc92e9b0ed7df7c6cbdc6dfce84d306d80b"
+  integrity sha512-7c389uGe0dmfdedi9PQ3Om4vKg1HFzm/IntaqZ4FbXOo+gNiiPIM4He8MIkuRpgqUitbm1km0jOQ8p+tSpUp4Q==
 
 "@bundled-es-modules/chai@^4.2.0":
   version "4.2.1"

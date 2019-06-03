@@ -32,7 +32,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@bundled-es-modules/axios": "0.18.0",
+    "@bundled-es-modules/axios": "0.18.1",
     "@lion/core": "^0.1.9"
   },
   "devDependencies": {
