@@ -43,12 +43,12 @@
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:bs": "karma start karma.bs.config.js --coverage",
     "lint": "run-p lint:*",
-    "lint:eclint": "eclint check $(find . \\( -name '*.html' -o -name '*.js' -o -name '*.css' \\) -type f -not -path '*/\\.*' -not -path '*node_modules/*' -not -path '*assets/*' -not -path '*coverage/*')",
+    "lint:eclint": "git ls-files | xargs eclint check",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:prettier": "prettier '**/*.js' --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
-    "format:prettier": "prettier '**/*.js' --write"
+    "format:prettier": "prettier \"**/*.js\" --write"
   },
   "lint-staged": {
     "*": [
