@@ -42,11 +42,11 @@ import '@lion/select/lion-select.js';
 ```
 
 You can preselect an option by setting the property modelValue.
- ```html
+```html
 <lion-select
   name="favoriteColor"
   .modelValue="${'<value of option 2>'}"
 >
   ...
 </lion-select>
- ```
+```
