@@ -306,6 +306,22 @@ describe('<lion-calendar>', () => {
           expect(new DayObject(d).isDisabled).to.equal(shouldBeDisabled);
         });
       });
+
+      it('does not prevent initializing "centralDate" from "selectedDate" when today is disabled', async () => {
+        const clock = sinon.useFakeTimers({ now: new Date('2019/06/03').getTime() });
+
+        const el = await fixture(html`
+          <lion-calendar
+            .selectedDate="${new Date('2001/01/08')}"
+            .disableDates=${day => day.getDate() === 3}
+          ></lion-calendar>
+        `);
+        const elObj = new CalendarObject(el);
+        expect(isSameDate(el.centralDate, new Date('2001/01/08'))).to.be.true;
+        expect(elObj.activeMonthAndYear).to.equal('January 2001');
+
+        clock.restore();
+      });
     });
   });
 
