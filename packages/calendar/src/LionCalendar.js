@@ -374,7 +374,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   __disableDatesChanged() {
-    this.__ensureValidCentralDate();
+    if (this.__connectedCallbackDone) {
+      this.__ensureValidCentralDate();
+    }
   }
 
   __dateSelectedByUser(selectedDate) {
