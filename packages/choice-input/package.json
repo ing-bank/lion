@@ -1,6 +1,6 @@
 {
   "name": "@lion/choice-input",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Base for all choise inputs like checkbox/radio",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,10 +33,10 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.9",
-    "@lion/field": "^0.1.17"
+    "@lion/field": "^0.1.18"
   },
   "devDependencies": {
-    "@lion/input": "^0.1.17",
+    "@lion/input": "^0.1.18",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5"
   }
