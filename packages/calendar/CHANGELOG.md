@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.16](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.15...@lion/calendar@0.1.16) (2019-06-04)
+
+
+### Bug Fixes
+
+* **calendar:** init centralDate from selectedDate when today is disabled ([1643379](https://github.com/ing-bank/lion/commit/1643379))
+
+
+
+
+
 ## [0.1.15](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.14...@lion/calendar@0.1.15) (2019-05-31)
 
 **Note:** Version bump only for package @lion/calendar
