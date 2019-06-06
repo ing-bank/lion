@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.3.6...@lion/localize@0.4.0) (2019-06-06)
+
+
+### Features
+
+* **localize:** allow custom locale when loading namespaces ([2e76ca0](https://github.com/ing-bank/lion/commit/2e76ca0))
+
+
+
+
+
 ## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/localize@0.3.5...@lion/localize@0.3.6) (2019-05-31)
 
 **Note:** Version bump only for package @lion/localize

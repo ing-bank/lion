@@ -1,6 +1,6 @@
 {
   "name": "@lion/input",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "It enhances the functionality of the native `<input>` element",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,11 +33,11 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.9",
-    "@lion/field": "^0.1.18"
+    "@lion/field": "^0.1.19"
   },
   "devDependencies": {
-    "@lion/localize": "^0.3.6",
-    "@lion/validate": "^0.2.6",
+    "@lion/localize": "^0.4.0",
+    "@lion/validate": "^0.2.7",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5"
   }
