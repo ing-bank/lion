@@ -59,25 +59,25 @@ export class LocalizeManager extends LionSingleton {
     this.__namespacePatternsMap.set(pattern, loader);
   }
 
-  loadNamespaces(namespaces) {
-    return Promise.all(namespaces.map(namespace => this.loadNamespace(namespace)));
+  loadNamespaces(namespaces, { locale } = {}) {
+    return Promise.all(namespaces.map(namespace => this.loadNamespace(namespace, { locale })));
   }
 
-  loadNamespace(namespaceObj) {
+  loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
 
     const namespace = isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj;
 
-    if (this._isNamespaceInCache(this.locale, namespace)) {
+    if (this._isNamespaceInCache(locale, namespace)) {
       return Promise.resolve();
     }
 
-    const existingLoaderPromise = this._getCachedNamespaceLoaderPromise(this.locale, namespace);
+    const existingLoaderPromise = this._getCachedNamespaceLoaderPromise(locale, namespace);
     if (existingLoaderPromise) {
       return existingLoaderPromise;
     }
 
-    return this._loadNamespaceData(this.locale, namespaceObj, isDynamicImport, namespace);
+    return this._loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace);
   }
 
   msg(keys, vars, opts = {}) {
