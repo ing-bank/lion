@@ -1,3 +1,18 @@
+import { getDateMask } from '@lion/localize';
+
+export const isDate = value =>
+Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
+export const isDateValidator = (validatorParams, cfg = {}) => {
+  const maskCfg = cfg.locale ? { locale: cfg.locale } : {};
+  const dateMask = getDateMask(maskCfg);
+  return [
+    (...params) => ({ isDate: isDate(...params) }),
+    validatorParams, 
+    { dateMask, ...cfg },
+  ];
+};
+
+
 export const isString = value => typeof value === 'string';
 export const isStringValidator = () => [(...params) => ({ isString: isString(...params) })];
 
@@ -57,9 +72,9 @@ export const minMaxNumberValidator = (...factoryParams) => [
   ...factoryParams,
 ];
 
-export const isDate = value =>
-  Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
-export const isDateValidator = () => [(...params) => ({ isDate: isDate(...params) })];
+// export const isDate = value =>
+//   Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
+// export const isDateValidator = () => [(...params) => ({ isDate: isDate(...params) })];
 
 export const minDate = (value, min) => isDate(value) && value >= min;
 export const minDateValidator = (...factoryParams) => [

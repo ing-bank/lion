@@ -7,7 +7,7 @@ import { clean } from './clean.js';
  * @param date
  * @returns {string|XML}
  */
-export function sanitizedDateTimeFormat(date) {
-  const fDate = formatDate(date);
+export function sanitizedDateTimeFormat(date, options) {
+  const fDate = formatDate(date, options);
   return clean(fDate);
 }

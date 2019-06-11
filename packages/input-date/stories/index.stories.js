@@ -7,7 +7,7 @@ storiesOf('Forms|Input Date', module)
   .add(
     'Default',
     () => html`
-      <lion-input-date label="Date" .modelValue=${new Date('2017/06/15')}> </lion-input-date>
+      <lion-input-date label="Date" .modelValue=${new Date('20g/06/15')}> </lion-input-date>
     `,
   )
   .add(

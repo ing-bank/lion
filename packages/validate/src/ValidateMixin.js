@@ -282,8 +282,11 @@ export const ValidateMixin = dedupeMixin(
         this._createMessageAndRenderFeedback();
       }
 
-      _createMessageAndRenderFeedback() {
-        this._createMessage();
+      async _createMessageAndRenderFeedback() {
+        // await Promise.all(this.__pendingValidatorResources);
+        console.log('rendah', this.error);
+
+        await this._createMessage();
         const details = {};
 
         this.constructor.validationTypes.forEach(type => {
@@ -324,7 +327,7 @@ export const ValidateMixin = dedupeMixin(
         }
       }
 
-      _createMessage() {
+      async _createMessage() {
         const newStates = this.getValidationStates();
         this.message = { list: [], message: '' };
         this.constructor.validationTypes.forEach(type => {
@@ -339,6 +342,15 @@ export const ValidateMixin = dedupeMixin(
           this.messageState = true;
           const { translationKeys, data } = this.message.list[0];
           data.fieldName = this.getFieldName(data.validatorParams);
+          
+          const promises = Object.entries(data.validatorConfig)
+            .filter((kv) => kv[1] instanceof Promise)
+            .map(([key]) => key);
+          
+          await promises.forEach(async(k) => {
+            data.validatorConfig[k] = await data.validatorConfig[k];
+          });
+          
           this._validationMessage = this.translateMessage(translationKeys, data);
           this.message.message = this._validationMessage;
         } else {
@@ -584,5 +596,30 @@ export const ValidateMixin = dedupeMixin(
       static __isEmpty(v) {
         return v === null || typeof v === 'undefined' || v === '';
       }
+
+      // async performUpdate() {
+      //   await Promise.all(this.__pendingValidatorResources);
+      //   super.performUpdate();
+      // }
+
+      // _onErrorValidatorsChanged(errorValidators) {
+      //   this.__pendingValidatorResources = errorValidators.reduce((acc, current) => {
+      //     if (current[2]) {
+      //       const promises = Object.values(current[2]).filter(c => c instanceof Promise);
+      //       acc.push(promises);
+      //     }
+      //     return acc;
+      //   }, []);
+      // }
+
+      // constructor() {
+      //   super();
+      //   this.__pendingValidatorResources = [];
+      // }
+
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   this._onErrorValidatorsChanged(this.getValidatorsForType('error'));
+      // }
     },
 );

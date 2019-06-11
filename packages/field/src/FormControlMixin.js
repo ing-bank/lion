@@ -479,9 +479,9 @@ export const FormControlMixin = dedupeMixin(
       }
 
       // Extend validity showing conditions of ValidateMixin
-      showErrorCondition(newStates) {
-        return super.showErrorCondition(newStates) && this._interactionStateFeedbackCondition();
-      }
+      // showErrorCondition(newStates) {
+      //   return super.showErrorCondition(newStates) && this._interactionStateFeedbackCondition();
+      // }
 
       showWarningCondition(newStates) {
         return super.showWarningCondition(newStates) && this._interactionStateFeedbackCondition();

@@ -6,7 +6,7 @@ import { splitDate } from './splitDate.js';
  *
  * @returns {string}
  */
-export function getDateFormatBasedOnLocale() {
+export function getDateFormatBasedOnLocale(locale) {
   function computePositions(dateParts) {
     function getPartByIndex(index) {
       return { 2012: 'year', 12: 'month', 20: 'day' }[dateParts[index]];
@@ -22,7 +22,7 @@ export function getDateFormatBasedOnLocale() {
   date.setFullYear(2012);
 
   // Strange characters added by IE11 need to be taken into account here
-  const formattedDate = sanitizedDateTimeFormat(date);
+  const formattedDate = sanitizedDateTimeFormat(date, { locale });
 
   // For Dutch locale, dateParts would match: [ 1:'20', 2:'-', 3:'12', 4:'-', 5:'2012' ]
   const dateParts = splitDate(formattedDate);

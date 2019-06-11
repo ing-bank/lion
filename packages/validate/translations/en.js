@@ -11,7 +11,7 @@ export default {
     maxNumber: 'Please enter a(n) {fieldName} lower than {validatorParams}.',
     minMaxNumber:
       'Please enter a(n) {fieldName} between {validatorParams.min} and {validatorParams.max}.',
-    isDate: 'Please enter a valid date (DD/MM/YYYY).',
+    isDate: 'Please enter a valid date ({validatorConfig.dateMask}).',
     minDate: 'Please enter a(n) {fieldName} after {validatorParams, date, YYYYMMDD}.',
     maxDate: 'Please enter a(n) {fieldName} before {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
@@ -31,7 +31,7 @@ export default {
     maxNumber: 'Please enter a(n) {fieldName} lower than {validatorParams}.',
     minMaxNumber:
       'Please enter a(n) {fieldName} between {validatorParams.min} and {validatorParams.max}.',
-    isDate: 'lease enter a valid date (DD/MM/YYYY).',
+    isDate: 'lease enter a valid date ({validatorConfig.dateMask}).',
     minDate: 'Please enter a(n) {fieldName} after {validatorParams, date, YYYYMMDD}.',
     maxDate: 'Please enter a(n) {fieldName} before {validatorParams, date, YYYYMMDD}.',
     minMaxDate:
