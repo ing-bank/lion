@@ -5,21 +5,51 @@ import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
+// TODO:
+// - clearly document relation between `.value`, `.formattedValue` and `view value` and simplify
+// where possible.
+// - investigate if `_dispatchModelValueChanged` also can be solved by using 'hasChanged' on
+// property accessor inside choiceInputs
+
+// For a future breaking release:
+// - do not allow `.formattedValue` and `.serializedValue` as properties that can be set to
+// trigger a computation loop. They are protected and private concepts respectively.
+// - do not fire events for those private and protected concepts
+// - simplify _calculateValues: recursive trigger lock can be omitted, since need for connecting
+// the loop via sync observers is not needed anymore.
+// - consider `formatOn` as an overridable function, by default something like:
+// `(!__isHandlingUserInput || !errorState) && !focused`
+// This would allow for more advanced scenarios, like formatting an input whenever it becomes valid.
+// Possibly, it's wise here to make a distinction between 2 scenarios:
+// 'reflectBackFormattedValueCondition' and 'computeFormattedValueCondition',
+// We need to find the best balance between backwards compatibility, DX and seperation of concerns.
+
 /**
- * @desc Designed to be applied on top of a LionField
+ * @desc Designed to be applied on top of a LionField.
+ * To understand all concepts within the Mixin, please consult the flow diagram in the
+ * documentation.
  *
+ * ## Flows
  * FormatMixin supports these two main flows:
- * 1) Application Developer sets `.modelValue`:
- *    Flow: `.modelValue` -> `.formattedValue` -> `.inputElement.value`
+ * [1] Application Developer sets `.modelValue`:
+ *     Flow: `.modelValue` -> `.formattedValue` -> `.inputElement.value`
  *                        -> `.serializedValue`
- * 2) End user interacts with field:
- *    Flow: `@user-input-changed` -> `.modelValue` -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `.inputElement.value`
+ * [2] End user interacts with field:
+ *     Flow: `@user-input-changed` -> `.modelValue` -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `.inputElement.value`
  *                                -> `.serializedValue`
- *    After that, loops as above
  *
- * For backwards compatibility with the platform, we also support `.value` as an api.
+ * For backwards compatibility with the platform, we also support `.value` as an api. In that case
+ * the flow will be like [2], without the debounce.
  *
- * The debounce as depicted above indicates that `._formattedValue`
+ * ## Difference between value, viewValue and formattedValue
+ * A viewValue is a concept rather than a property. To be compatible with the platform api, the
+ * property for the concept of viewValue is thus called `.value`.
+ * When reading code and docs, one should be aware that the term viewValue is mostly used, but the
+ * terms can be used interchangeably.
+ * The `.formattedValue` should be seen as the 'scheduled' viewValue. It is computed realtime and
+ * stores the output of formatter. It will replace viewValue. once condition `formatOn` is met.
+ * Another difference is that formattedValue lives on `LionField`, whereas viewValue is shared
+ * across `LionField` and `.inputElement`.
  *
  * @mixinFunction
  */
@@ -34,9 +64,9 @@ export const FormatMixin = dedupeMixin(
           /**
            * The model value is the result of the parser function(when available).
            * It should be considered as the internal value used for validation and reasoning/logic.
-           * The model value is 'ready for consumption' by the outside world (think of a Date object
-           * or a float). The modelValue can(and is recommended to) be used as both input value and
-           * output value of the <lion-field>
+           * The model value is 'ready for consumption' by the outside world (think of a Date
+           * object or a float). The modelValue can(and is recommended to) be used as both input
+           * value and output value of the <lion-field>.
            *
            * Examples:
            * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
@@ -55,6 +85,8 @@ export const FormatMixin = dedupeMixin(
            * - For a date input, this would be '20/01/1999' (dependent on locale).
            * - For a number input, this could be '1,234.56' (a String representation of modelValue
            * 1234.56)
+           *
+           * @private
            */
           formattedValue: {
             type: String,
@@ -73,6 +105,8 @@ export const FormatMixin = dedupeMixin(
            *
            * When no parser is available, the value is usually the same as the formattedValue
            * (being inputElement.value)
+           *
+           * @protected
            */
           serializedValue: {
             type: String,
@@ -106,11 +140,6 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * === Formatting and parsing ====
-       * To understand all concepts below, please consult the flow diagrams in the documentation.
-       */
-
-      /**
        * Converts formattedValue to modelValue
        * For instance, a localized date to a Date Object
        * @param {String} value - formattedValue: the formatted value inside <input>
@@ -121,10 +150,11 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Converts modelValue to formattedValue (formattedValue will be synced with <input>.value)
-       * For instance, a Date object to a localized date
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the input
-       * type(date, number, email etc)
+       * Converts modelValue to formattedValue (formattedValue will be synced with
+       * `.inputElement.value`)
+       * For instance, a Date object to a localized date.
+       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+       * input type(date, number, email etc)
        * @returns {String} formattedValue
        */
       formatter(v) {
@@ -132,10 +162,10 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Converts modelValue to serializedValue (<lion-field>.value).
+       * Converts `.modelValue` to `.serializedValue`
        * For instance, a Date object to an iso formatted date string
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the input
-       * type(date, number, email etc)
+       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+       * input type(date, number, email etc)
        * @returns {String} serializedValue
        */
       serializer(v) {
@@ -143,10 +173,10 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Converts <lion-field>.value to modelValue
+       * Converts `LionField.value` to `.modelValue`
        * For instance, an iso formatted date string to a Date object
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the input
-       * type(date, number, email etc)
+       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+       * input type(date, number, email etc)
        * @returns {Object} modelValue
        */
       deserializer(v) {
@@ -155,9 +185,8 @@ export const FormatMixin = dedupeMixin(
 
       /**
        * Responsible for storing all representations(modelValue, serializedValue, formattedValue
-       * and value) of the input value.
-       * Prevents infinite loops, so all value observers can be treated like they will only be
-       * called once, without indirectly calling other observers.
+       * and value) of the input value. Prevents infinite loops, so all value observers can be
+       * treated like they will only be called once, without indirectly calling other observers.
        * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
        * second call from having effect).
        *
@@ -187,11 +216,23 @@ export const FormatMixin = dedupeMixin(
       }
 
       __callParser(value = this.formattedValue) {
-        let result;
-        if (typeof value === 'string') {
-          result = this.parser(value, this.formatOptions);
+        if (value === '' || typeof value !== 'string') {
+          // This means there is nothing to find inside the view that can be of
+          // interest to the Application Developer or needed to store for future form state
+          // retrieval.
+          return undefined;
         }
-        return typeof result !== 'undefined' ? result : new Unparseable(value);
+
+        const result = this.parser(value, this.formatOptions);
+        if (!result) {
+          // Apparently, the parser was not able to produce a satisfactory output
+          // for the desired modelValue type, based on the current viewValue.
+          // Unparseable allows to restore all states (for instance from a lost user session),
+          // since it saves the current viewValue.
+          return new Unparseable(value);
+        }
+        // Return the successfully parsed viewValue
+        return result;
       }
 
       __callFormatter() {
@@ -222,19 +263,19 @@ export const FormatMixin = dedupeMixin(
         this._dispatchModelValueChangedEvent(...args);
       }
 
-      // TODO: investigate if this also can be solved by using 'hasChanged' on property accessor
-      // inside choiceInputs
       /**
-       * This is wrapped in a distinct method, so that parents can control when the changed event is
-       * fired. For instance: when modelValue is an object, a deep comparison is needed first
+       * This is wrapped in a distinct method, so that parents can control when the changed event
+       * is fired. For instance: when modelValue is an object, a deep comparison is needed first.
        */
       _dispatchModelValueChangedEvent() {
+        /** @event model-value-changed */
         this.dispatchEvent(
           new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
         );
       }
 
       _onFormattedValueChanged() {
+        /** @deprecated */
         this.dispatchEvent(
           new CustomEvent('formatted-value-changed', {
             bubbles: true,
@@ -245,6 +286,7 @@ export const FormatMixin = dedupeMixin(
       }
 
       _onSerializedValueChanged() {
+        /** @deprecated */
         this.dispatchEvent(
           new CustomEvent('serialized-value-changed', {
             bubbles: true,
@@ -255,7 +297,7 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Synchronization from <input>.value to <lion-field>.formattedValue
+       * Synchronization from `.inputElement.value` to `LionField` (flow [2])
        */
       _syncValueUpwards() {
         // Downwards syncing should only happen for <lion-field>.value changes from 'above'
@@ -265,23 +307,25 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Synchronization from <lion-field>.value to <input>.value
+       * Synchronization from `LionField.value` to `.inputElement.value`
+       * - flow [1] will always be reflected back
+       * - flow [2] will not be reflected back when this flow was triggered via
+       *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
         // Downwards syncing 'back and forth' prevents change event from being fired in IE.
-        // So only sync when the source of new <lion-field>.value change was not the 'input' event
+        // So only sync when the source of new `LionField.value` change was not the 'input' event
         // of inputElement
         if (!this.__isHandlingUserInput) {
           // Text 'undefined' should not end up in <input>
-          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+          this.value = this.formattedValue === undefined ? this.formattedValue : '';
         }
       }
 
-      // TODO: rename to __dispatchNormalizedInputEvent?
       // This can be called whenever the view value should be updated. Dependent on component type
-      // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be used
-      // as "source" for the "user-input-changed" event (which can be seen as an abstraction layer on
-      // top of other events (input, change, whatever))
+      // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
+      // used  as "source" for the "user-input-changed" event (which can be seen as an abstraction
+      // layer on top of other events (input, change, whatever))
       _proxyInputEvent() {
         this.dispatchEvent(
           new CustomEvent('user-input-changed', {
@@ -294,7 +338,6 @@ export const FormatMixin = dedupeMixin(
       _onUserInputChanged() {
         // Upwards syncing. Most properties are delegated right away, value is synced to
         // <lion-field>, to be able to act on (imperatively set) value changes
-
         this.__isHandlingUserInput = true;
         this._syncValueUpwards();
         this.__isHandlingUserInput = false;
