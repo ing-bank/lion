@@ -1,4 +1,4 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { pressEnter, pressSpace } from '@polymer/iron-test-helpers/mock-interactions.js';
 
@@ -117,6 +117,8 @@ describe('lion-button', () => {
       `);
 
       pressSpace(form.querySelector('lion-button'));
+      await aTimeout();
+      await aTimeout();
 
       expect(formSubmitSpy.called).to.be.true;
     });
@@ -130,6 +132,8 @@ describe('lion-button', () => {
       `);
 
       pressEnter(form.querySelector('lion-button'));
+      await aTimeout();
+      await aTimeout();
 
       expect(formSubmitSpy.called).to.be.true;
     });

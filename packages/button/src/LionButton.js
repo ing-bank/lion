@@ -87,6 +87,11 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
           fill: whitesmoke;
         }
 
+        :host(:active) .btn,
+        .btn[active] {
+          background: grey;
+        }
+
         :host([disabled]) {
           pointer-events: none;
         }
@@ -140,12 +145,12 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.__setupKeydownDelegation();
+    this.__setupDelegation();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.__teardownKeydownDelegation();
+    this.__teardownDelegation();
   }
 
   __clickDelegationHandler(e) {
@@ -153,19 +158,29 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.$$slot('_button').click();
   }
 
-  __setupKeydownDelegation() {
+  __setupDelegation() {
     this.addEventListener('keydown', this.__keydownDelegationHandler);
+    this.addEventListener('keyup', this.__keyupDelegationHandler);
   }
 
-  __teardownKeydownDelegation() {
+  __teardownDelegation() {
     this.removeEventListener('keydown', this.__keydownDelegationHandler);
+    this.removeEventListener('keyup', this.__keyupDelegationHandler);
   }
 
   __keydownDelegationHandler(e) {
+    if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
+      e.preventDefault();
+      this.shadowRoot.querySelector('.btn').setAttribute('active', '');
+    }
+  }
+
+  __keyupDelegationHandler(e) {
     // Makes the real button the trigger in forms (will submit form, as opposed to paper-button)
     // and make click handlers on button work on space and enter
     if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
       e.preventDefault();
+      this.shadowRoot.querySelector('.btn').removeAttribute('active');
       this.$$slot('_button').click();
     }
   }
