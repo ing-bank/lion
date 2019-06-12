@@ -157,6 +157,25 @@ describe('FormatMixin', () => {
     expect(formatEl.inputElement.value).to.equal('foo: test');
   });
 
+  it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
+    const el = await fixture(html`
+      <${elem} .formatter="${value => `foo: ${value}`}">
+        <input slot="input" />
+      </${elem}>
+    `);
+    // The FormatMixin can be used in conjunction with the ValidateMixin, in which case
+    // it can hold errorState (affecting the formatting)
+    el.errorState = true;
+
+    // users types value 'test'
+    mimicUserInput(el, 'test');
+    expect(el.inputElement.value).to.not.equal('foo: test');
+
+    // Now see the difference for an imperative change
+    el.modelValue = 'test2';
+    expect(el.inputElement.value).to.equal('foo: test2');
+  });
+
   describe('parsers/formatters/serializers', () => {
     it('should call the parser|formatter|serializer provided by user', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
@@ -206,7 +225,7 @@ describe('FormatMixin', () => {
       expect(parserSpy.callCount).to.equal(1);
     });
 
-    it('will only call the formatter for valid values', async () => {
+    it('will only call the formatter for valid values on `user-input-changed` ', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
       const el = await fixture(html`
         <${elem} .formatter=${formatterSpy}>
@@ -216,12 +235,12 @@ describe('FormatMixin', () => {
       expect(formatterSpy.callCount).to.equal(1);
 
       el.errorState = true;
-      el.modelValue = 'bar';
-      expect(formatterSpy.callCount).to.equal(1);
-      expect(el.formattedValue).to.equal('foo: init-string');
+      mimicUserInput(el, 'bar');
+      // expect(formatterSpy.callCount).to.equal(1);
+      // expect(el.formattedValue).to.equal('foo: init-string');
 
       el.errorState = false;
-      el.modelValue = 'bar2';
+      mimicUserInput(el, 'bar2');
       expect(formatterSpy.callCount).to.equal(2);
 
       expect(el.formattedValue).to.equal('foo: bar2');
