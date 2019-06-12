@@ -6,7 +6,16 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
 /**
- * @polymerMixin
+ * @desc Designed to be applied on top of a LionField
+ *
+ * FormatMixin supports these two main flows:
+ * 1) Application Developer sets `.modelValue`:
+ *    Flow: `.modelValue` -> `.formattedValue` -> `.inputElement.value`
+ *                        -> `.serializedValue`
+ * 2) End user interacts with field:
+ *    Flow: `@user-input-changed` -> `.modelValue` -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `.inputElement.value`
+ *                                -> `.serializedValue`
+ *
  * @mixinFunction
  */
 export const FormatMixin = dedupeMixin(
@@ -26,7 +35,8 @@ export const FormatMixin = dedupeMixin(
            *
            * Examples:
            * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
-           * - For a number input: a formatted String '1.234,56' will be converted to a Number: 1234.56
+           * - For a number input: a formatted String '1.234,56' will be converted to a Number:
+           *   1234.56
            */
           modelValue: {
             type: Object,
@@ -48,13 +58,13 @@ export const FormatMixin = dedupeMixin(
           /**
            * The serialized version of the model value.
            * This value exists for maximal compatibility with the platform API.
-           * The serialized value can be an interface in context where data binding is not supported
-           * and a serialized string needs to be set.
+           * The serialized value can be an interface in context where data binding is not
+           * supported and a serialized string needs to be set.
            *
            * Examples:
            * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
-           * - For a number input this would be the String representation of a float ('1234.56' instead
-           *   of 1234.56)
+           * - For a number input this would be the String representation of a float ('1234.56'
+           *   instead of 1234.56)
            *
            * When no parser is available, the value is usually the same as the formattedValue
            * (being inputElement.value)
@@ -139,15 +149,16 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Responsible for storing all representations(modelValue, serializedValue, formattedValue and
-       * value) of the input value.
-       * Prevents infinite loops, so all value observers can be treated like they will only be called
-       * once, without indirectly calling other observers.
-       * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the second
-       * call from having effect).
+       * Responsible for storing all representations(modelValue, serializedValue, formattedValue
+       * and value) of the input value.
+       * Prevents infinite loops, so all value observers can be treated like they will only be
+       * called once, without indirectly calling other observers.
+       * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
+       * second call from having effect).
        *
-       * @param {string} source - the type of value that triggered this method. It should not be set
-       * again, so that its observer won't be triggered. Can be: 'model'|'formatted'|'serialized'.
+       * @param {string} source - the type of value that triggered this method. It should not be
+       * set again, so that its observer won't be triggered. Can be:
+       * 'model'|'formatted'|'serialized'.
        */
       _calculateValues({ source } = {}) {
         if (this.__preventRecursiveTrigger) return; // prevent infinite loops
@@ -182,7 +193,19 @@ export const FormatMixin = dedupeMixin(
         if (this.modelValue instanceof Unparseable) {
           return this.modelValue.viewValue;
         }
-        if (this.errorState) {
+
+        // - Why check for this.errorState?
+        // We only want to format values that are considered valid. For best UX,
+        // we only 'reward' valid inputs.
+        // - Why check for __isHandlingUserInput?
+        // Downwards sync is prevented whenever we are in a `@user-input-changed` flow.
+        // If we are in a 'imperatively set `.modelValue`' flow, we want to reflect back
+        // the value, no matter what.
+        // This means, whenever we are in errorState, we and modelValue is set
+        // imperatively, we DO want to format a value (it is the only way to get meaningful
+        // input into `.inputElement` with modelValue as input)
+
+        if (this.__isHandlingUserInput && this.errorState) {
           return this.inputElement ? this.value : undefined;
         }
         return this.formatter(this.modelValue, this.formatOptions);
@@ -231,11 +254,9 @@ export const FormatMixin = dedupeMixin(
        */
       _syncValueUpwards() {
         // Downwards syncing should only happen for <lion-field>.value changes from 'above'
-        this.__preventDownwardsSync = true;
         // This triggers _onModelValueChanged and connects user input to the
         // parsing/formatting/serializing loop
         this.modelValue = this.__callParser(this.value);
-        this.__preventDownwardsSync = false;
       }
 
       /**
@@ -243,9 +264,9 @@ export const FormatMixin = dedupeMixin(
        */
       _reflectBackFormattedValueToUser() {
         // Downwards syncing 'back and forth' prevents change event from being fired in IE.
-        // So only sync when the source of new <lion-field>.value change was not the 'input' event of
-        // inputElement
-        if (!this.__preventDownwardsSync) {
+        // So only sync when the source of new <lion-field>.value change was not the 'input' event
+        // of inputElement
+        if (!this.__isHandlingUserInput) {
           // Text 'undefined' should not end up in <input>
           this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
         }
@@ -266,9 +287,12 @@ export const FormatMixin = dedupeMixin(
       }
 
       _onUserInputChanged() {
-        // Upwards syncing. Most properties are delegated right away, value is synced to <lion-field>,
-        // to be able to act on (imperatively set) value changes
+        // Upwards syncing. Most properties are delegated right away, value is synced to
+        // <lion-field>, to be able to act on (imperatively set) value changes
+
+        this.__isHandlingUserInput = true;
         this._syncValueUpwards();
+        this.__isHandlingUserInput = false;
       }
 
       constructor() {
@@ -289,11 +313,11 @@ export const FormatMixin = dedupeMixin(
         this.inputElement.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
         this.inputElement.addEventListener('input', this._proxyInputEvent);
         this.addEventListener('user-input-changed', this._onUserInputChanged);
-        // Connect the value found in <input> to the formatting/parsing/serializing loop as a fallback
-        // mechanism. Assume the user uses the value property of the <lion-field>(recommended api) as
-        // the api (this is a downwards sync).
-        // However, when no value is specified on <lion-field>, have support for sync of the real input
-        // to the <lion-field> (upwards sync).
+        // Connect the value found in <input> to the formatting/parsing/serializing loop as a
+        // fallback mechanism. Assume the user uses the value property of the
+        // <lion-field>(recommended api) as the api (this is a downwards sync).
+        // However, when no value is specified on <lion-field>, have support for sync of the real
+        // input to the <lion-field> (upwards sync).
         if (typeof this.modelValue === 'undefined') {
           this._syncValueUpwards();
         }
