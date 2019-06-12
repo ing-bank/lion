@@ -386,10 +386,7 @@ export const ValidateMixin = dedupeMixin(
        */
       validate() {
         if (this.modelValue === undefined) {
-          this.constructor.validationTypes.forEach(type => {
-            this[`${type}State`] = false;
-            this[type] = {};
-          });
+          this.__resetValidationStates();
           return;
         }
         this.__oldValidationStates = this.getValidationStates();
@@ -397,6 +394,13 @@ export const ValidateMixin = dedupeMixin(
           this.validateType(type);
         });
         this.dispatchEvent(new CustomEvent('validation-done', { bubbles: true, composed: true }));
+      }
+
+      __resetValidationStates() {
+        this.constructor.validationTypes.forEach(type => {
+          this[`${type}State`] = false;
+          this[type] = {};
+        });
       }
 
       /**

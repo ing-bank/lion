@@ -513,6 +513,7 @@ describe('ValidateMixin', () => {
       `);
 
       el.modelValue = 'a';
+      expect(el.errorState).to.equal(true);
       expect(el.warningState).to.equal(true);
       expect(el.infoState).to.equal(true);
       expect(el.successState).to.equal(true);
