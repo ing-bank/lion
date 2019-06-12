@@ -1,3 +1,5 @@
+import '../packages/debug-tools/src/formsDebugConfig.js';
+
 import '../packages/button/stories/index.stories.js';
 
 import '../packages/input/stories/index.stories.js';

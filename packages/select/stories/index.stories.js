@@ -6,6 +6,7 @@ storiesOf('Forms|Select', module)
   .add(
     'Default',
     () => html`
+      <lion-debug-viewer></lion-debug-viewer>
       <lion-select>
         <div slot="label">Favorite color</div>
         <select slot="input">

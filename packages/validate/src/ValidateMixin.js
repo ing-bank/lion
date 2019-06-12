@@ -343,13 +343,15 @@ export const ValidateMixin = dedupeMixin(
           const { translationKeys, data } = this.message.list[0];
           data.fieldName = this.getFieldName(data.validatorParams);
           
-          const promises = Object.entries(data.validatorConfig)
-            .filter((kv) => kv[1] instanceof Promise)
-            .map(([key]) => key);
-          
-          await promises.forEach(async(k) => {
-            data.validatorConfig[k] = await data.validatorConfig[k];
-          });
+          if (data.validatorConfig) {
+            const promises = Object.entries(data.validatorConfig)
+              .filter((kv) => kv[1] instanceof Promise)
+              .map(([key]) => key);
+            
+            await promises.forEach(async(k) => {
+              data.validatorConfig[k] = await data.validatorConfig[k];
+            });
+          }
           
           this._validationMessage = this.translateMessage(translationKeys, data);
           this.message.message = this._validationMessage;
@@ -396,11 +398,14 @@ export const ValidateMixin = dedupeMixin(
        * Other transitions (from Warning/Info) are not followed by a success message
        */
       validate() {
+        console.log('validate before', this.name, this.errorState);
         if (this.modelValue === undefined) return;
         this.__oldValidationStates = this.getValidationStates();
         this.constructor.validationTypes.forEach(type => {
           this.validateType(type);
         });
+        console.log('validate after', this.name, this.errorState);
+
         this.dispatchEvent(new CustomEvent('validation-done', { bubbles: true, composed: true }));
       }
 

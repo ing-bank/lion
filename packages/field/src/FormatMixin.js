@@ -161,6 +161,7 @@ export const FormatMixin = dedupeMixin(
           }
         }
         if (source !== 'formatted') {
+          console.log('fromage');
           this.formattedValue = this.__callFormatter();
         }
         if (source !== 'serialized') {
@@ -175,10 +176,13 @@ export const FormatMixin = dedupeMixin(
         if (typeof value === 'string') {
           result = this.parser(value, this.formatOptions);
         }
+        console.log('__callParser', this.formattedValue, result);
+
         return typeof result !== 'undefined' ? result : new Unparseable(value);
       }
 
       __callFormatter() {
+        console.log('__callFormatter', this.modelValue , this.errorState);
         if (this.modelValue instanceof Unparseable) {
           return this.modelValue.viewValue;
         }

@@ -1,0 +1,39 @@
+{
+  "name": "@lion/debug-tools",
+  "version": "0.0.0",
+  "description": "Debug tooling for Lion Web Components",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/core"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.5",
+    "@lion/field": "^0.1.10",
+    "@lion/fieldset": "^0.1.10",
+    "@lion/checkbox": "^0.1.10",
+    "@lion/radio": "^0.1.10"
+  }
+}

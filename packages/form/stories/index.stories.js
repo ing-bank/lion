@@ -44,6 +44,8 @@ storiesOf('Forms|Form', module)
       }
     };
     return html`
+          <lion-debug-viewer></lion-debug-viewer>
+
       <lion-form id="form" @submit="${submit}"
         ><form>
           <lion-fieldset label="Name" name="name">
