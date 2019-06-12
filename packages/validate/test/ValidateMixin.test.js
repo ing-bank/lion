@@ -690,6 +690,9 @@ describe('ValidateMixin', () => {
       const errorRenderer = defineCE(
         class extends HTMLElement {
           renderFeedback(validationStates, message) {
+            if (!message.list.length) {
+              return;
+            }
             const validator = message.list[0].data.validatorName;
             const showError = validationStates.error;
             this.innerText = showError ? `ERROR on ${validator}` : '';
@@ -982,6 +985,9 @@ describe('ValidateMixin', () => {
         const errorRenderer = defineCE(
           class extends HTMLElement {
             renderFeedback(validationStates, message) {
+              if (!message.list.length) {
+                return;
+              }
               const validator = message.list[0].data.validatorName;
               const hide =
                 message.list[0].data.validatorConfig &&

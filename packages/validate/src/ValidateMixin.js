@@ -384,9 +384,13 @@ export const ValidateMixin = dedupeMixin(
        * Other transitions (from Warning/Info) are not followed by a success message
        */
       validate() {
-        console.log('validate', this.modelValue);
-
-        if (this.modelValue === undefined) return;
+        if (this.modelValue === undefined) {
+          this.constructor.validationTypes.forEach(type => {
+            this[`${type}State`] = false;
+            this[type] = {};
+          });
+          return;
+        }
         this.__oldValidationStates = this.getValidationStates();
         this.constructor.validationTypes.forEach(type => {
           this.validateType(type);
