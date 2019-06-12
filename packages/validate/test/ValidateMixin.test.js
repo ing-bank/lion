@@ -501,6 +501,36 @@ describe('ValidateMixin', () => {
       expect(cbInfo.callCount).to.equal(2);
       expect(cbSuccess.callCount).to.equal(1);
     });
+
+    it('removes invalid states whenever modelValue becomes undefined', async () => {
+      const el = await fixture(html`
+        <${tag}
+          .errorValidators=${[[minLength, { min: 3 }]]}
+          .warningValidators=${[[minLength, { min: 5 }]]}
+          .infoValidators=${[[minLength, { min: 7 }]]}
+          .successValidators=${[[alwaysFalse]]}
+        >${lightDom}</${tag}>
+      `);
+
+      el.modelValue = 'a';
+      expect(el.warningState).to.equal(true);
+      expect(el.infoState).to.equal(true);
+      expect(el.successState).to.equal(true);
+      expect(el.error).to.not.eql({});
+      expect(el.warning).to.not.eql({});
+      expect(el.info).to.not.eql({});
+      expect(el.success).to.not.eql({});
+
+      el.modelValue = undefined;
+      expect(el.errorState).to.equal(false);
+      expect(el.warningState).to.equal(false);
+      expect(el.infoState).to.equal(false);
+      expect(el.successState).to.equal(false);
+      expect(el.error).to.eql({});
+      expect(el.warning).to.eql({});
+      expect(el.info).to.eql({});
+      expect(el.success).to.eql({});
+    });
   });
 
   describe(`Accessibility ${suffixName}`, () => {
@@ -690,6 +720,9 @@ describe('ValidateMixin', () => {
       const errorRenderer = defineCE(
         class extends HTMLElement {
           renderFeedback(validationStates, message) {
+            if (!message.list.length) {
+              return;
+            }
             const validator = message.list[0].data.validatorName;
             const showError = validationStates.error;
             this.innerText = showError ? `ERROR on ${validator}` : '';
@@ -982,6 +1015,9 @@ describe('ValidateMixin', () => {
         const errorRenderer = defineCE(
           class extends HTMLElement {
             renderFeedback(validationStates, message) {
+              if (!message.list.length) {
+                return;
+              }
               const validator = message.list[0].data.validatorName;
               const hide =
                 message.list[0].data.validatorConfig &&
