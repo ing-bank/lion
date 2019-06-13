@@ -31,6 +31,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
               return import('../translations/de.js');
             case 'en-AU':
             case 'en-GB':
+            case 'en-PH':
             case 'en-US':
             case 'en':
               return import('../translations/en.js');

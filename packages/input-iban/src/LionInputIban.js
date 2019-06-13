@@ -35,6 +35,7 @@ export class LionInputIban extends FieldCustomMixin(LocalizeMixin(LionInput)) {
               return import('../translations/en-GB.js');
             case 'en-US':
               return import('../translations/en-US.js');
+            case 'en-PH':
             case 'en':
               return import('../translations/en.js');
             case 'es-ES':
