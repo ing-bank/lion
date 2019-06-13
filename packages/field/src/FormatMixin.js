@@ -216,7 +216,13 @@ export const FormatMixin = dedupeMixin(
       }
 
       __callParser(value = this.formattedValue) {
-        if (value === '' || typeof value !== 'string') {
+        if (value === '') {
+          // Ideally, modelValue should be undefined for empty strings.
+          // For backwards compatibility we return an empty string
+          return '';
+        }
+
+        if (typeof value !== 'string') {
           // This means there is nothing to find inside the view that can be of
           // interest to the Application Developer or needed to store for future form state
           // retrieval.
@@ -318,7 +324,7 @@ export const FormatMixin = dedupeMixin(
         // of inputElement
         if (!this.__isHandlingUserInput) {
           // Text 'undefined' should not end up in <input>
-          this.value = this.formattedValue === undefined ? this.formattedValue : '';
+          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
         }
       }
 
