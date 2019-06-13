@@ -72,6 +72,10 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     const offset = cs.boxSizing === 'border-box' ? paddingOffset + borderOffset : 0;
 
     this.inputElement.style.maxHeight = `${lineHeight * this.maxRows + offset}px`;
+
+    if (this.rows) {
+      this.inputElement.style.height = `${lineHeight * this.rows + offset}px`;
+    }
   }
 
   static get styles() {
