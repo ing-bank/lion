@@ -2,13 +2,18 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 // just a POC
 // eslint-disable-next-line
 import { overlays, LocalOverlayController } from '@lion/overlays';
+import { LitElement } from '@lion/core';
 
 import '../lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
 import '@lion/form/lion-form.js';
 import { LionRadioGroup } from '../src/LionRadioGroup.js';
 
-export class LionSelectRich extends LionRadioGroup {
+export class LionSelectRich extends LitElement {
+  get modelValue() {
+    return this.contentNode.modelValue;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.contentNode = this.querySelector('[slotpoc="content"]');
@@ -33,7 +38,7 @@ export class LionSelectRich extends LionRadioGroup {
     };
 
     this.invokerNode.addEventListener('click', this._toggle);
-    this.addEventListener('checked-value-changed', ev => {
+    this.contentNode.addEventListener('checked-value-changed', ev => {
       this.invokerNode.innerText = ev.target.checkedValue;
     });
   }
@@ -42,9 +47,19 @@ export class LionSelectRich extends LionRadioGroup {
     super.disconnectedCallback();
     this.invokerNode.removeEventListener('click', this._toggle);
   }
+
+  render() {
+    return html`
+      <slot></slot>
+    `;
+  }
 }
 
 customElements.define('lion-select-rich', LionSelectRich);
+
+export class LionListbox extends LionRadioGroup {}
+
+customElements.define('lion-listbox', LionListbox);
 
 storiesOf('Forms|Radio Group', module)
   .add(
@@ -54,7 +69,7 @@ storiesOf('Forms|Radio Group', module)
         <form>
           <lion-select-rich name="dinosGroup" label="What are your favourite dinosaurs?">
             <button slotpoc="invoker">click</button>
-            <div slotpoc="content">
+            <lion-listbox slotpoc="content" name="foo">
               <lion-radio
                 name="dinos[]"
                 label="allosaurus"
@@ -70,7 +85,7 @@ storiesOf('Forms|Radio Group', module)
                 label="diplodocus"
                 .modelValue=${{ value: 'diplodocus', checked: true }}
               ></lion-radio>
-            </div>
+            </lion-listbox>
           </lion-select-rich>
         </form>
       </lion-form>
