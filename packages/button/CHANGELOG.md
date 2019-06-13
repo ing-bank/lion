@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.23](https://github.com/ing-bank/lion/compare/@lion/button@0.1.22...@lion/button@0.1.23) (2019-06-13)
+
+
+### Bug Fixes
+
+* **button:** indicate visually the active state on enter/space ([d809890](https://github.com/ing-bank/lion/commit/d809890))
+
+
+
+
+
 ## [0.1.22](https://github.com/ing-bank/lion/compare/@lion/button@0.1.21...@lion/button@0.1.22) (2019-06-06)
 
 **Note:** Version bump only for package @lion/button
