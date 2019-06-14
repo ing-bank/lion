@@ -23,6 +23,7 @@ import { Unparseable } from '@lion/validate';
 // Possibly, it's wise here to make a distinction between 2 scenarios:
 // 'reflectBackFormattedValueCondition' and 'computeFormattedValueCondition',
 // We need to find the best balance between backwards compatibility, DX and seperation of concerns.
+// - always return
 
 /**
  * @desc Designed to be applied on top of a LionField.
@@ -33,10 +34,10 @@ import { Unparseable } from '@lion/validate';
  * FormatMixin supports these two main flows:
  * [1] Application Developer sets `.modelValue`:
  *     Flow: `.modelValue` -> `.formattedValue` -> `.inputElement.value`
- *                        -> `.serializedValue`
+ *                         -> `.serializedValue`
  * [2] End user interacts with field:
  *     Flow: `@user-input-changed` -> `.modelValue` -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `.inputElement.value`
- *                                -> `.serializedValue`
+ *                                 -> `.serializedValue`
  *
  * For backwards compatibility with the platform, we also support `.value` as an api. In that case
  * the flow will be like [2], without the debounce.
@@ -217,15 +218,15 @@ export const FormatMixin = dedupeMixin(
 
       __callParser(value = this.formattedValue) {
         if (value === '') {
-          // Ideally, modelValue should be undefined for empty strings.
-          // For backwards compatibility we return an empty string
+          // Ideally, modelValue should be undefined for empty strings, but
+          // for backwards compatibility we return an empty string.
           return '';
         }
 
         if (typeof value !== 'string') {
           // This means there is nothing to find inside the view that can be of
-          // interest to the Application Developer or needed to store for future form state
-          // retrieval.
+          // interest to the Application Developer or needed to store for future
+          // form state retrieval.
           return undefined;
         }
 
@@ -242,24 +243,30 @@ export const FormatMixin = dedupeMixin(
       }
 
       __callFormatter() {
-        if (this.modelValue instanceof Unparseable) {
-          return this.modelValue.viewValue;
-        }
-
         // - Why check for this.errorState?
         // We only want to format values that are considered valid. For best UX,
         // we only 'reward' valid inputs.
         // - Why check for __isHandlingUserInput?
-        // Downwards sync is prevented whenever we are in a `@user-input-changed` flow.
+        // Downwards sync is prevented whenever we are in an `@user-input-changed` flow.
         // If we are in a 'imperatively set `.modelValue`' flow, we want to reflect back
         // the value, no matter what.
         // This means, whenever we are in errorState, we and modelValue is set
         // imperatively, we DO want to format a value (it is the only way to get meaningful
         // input into `.inputElement` with modelValue as input)
-
         if (this.__isHandlingUserInput && this.errorState) {
-          return this.inputElement ? this.value : undefined;
+          // We don't want to update our view value.
+          // By returning undefined, we know for sure that the existing view value
+          // will be kept at the time `.formattedValue` is synced to `.inputElement.value`
+          return undefined;
         }
+
+        if (this.modelValue instanceof Unparseable) {
+          // When the modelValue currently is unparseable, we need to sync back the supplied
+          // viewValue. In flow [2], this should not be needed.
+          // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
+          return this.modelValue.viewValue;
+        }
+
         return this.formatter(this.modelValue, this.formatOptions);
       }
 
@@ -271,7 +278,7 @@ export const FormatMixin = dedupeMixin(
 
       /**
        * This is wrapped in a distinct method, so that parents can control when the changed event
-       * is fired. For instance: when modelValue is an object, a deep comparison is needed first.
+       * is fired. For objects, a deep comparison might be needed.
        */
       _dispatchModelValueChangedEvent() {
         /** @event model-value-changed */
@@ -306,8 +313,8 @@ export const FormatMixin = dedupeMixin(
        * Synchronization from `.inputElement.value` to `LionField` (flow [2])
        */
       _syncValueUpwards() {
-        // Downwards syncing should only happen for <lion-field>.value changes from 'above'
-        // This triggers _onModelValueChanged and connects user input to the
+        // Downwards syncing should only happen for `LionField`.value changes from 'above'
+        // This triggers `_onModelValueChanged` and connects user input to the
         // parsing/formatting/serializing loop
         this.modelValue = this.__callParser(this.value);
       }
@@ -319,9 +326,6 @@ export const FormatMixin = dedupeMixin(
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
-        // Downwards syncing 'back and forth' prevents change event from being fired in IE.
-        // So only sync when the source of new `LionField.value` change was not the 'input' event
-        // of inputElement
         if (!this.__isHandlingUserInput) {
           // Text 'undefined' should not end up in <input>
           this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
@@ -330,7 +334,7 @@ export const FormatMixin = dedupeMixin(
 
       // This can be called whenever the view value should be updated. Dependent on component type
       // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
-      // used  as "source" for the "user-input-changed" event (which can be seen as an abstraction
+      // used  as source for the "user-input-changed" event (which can be seen as an abstraction
       // layer on top of other events (input, change, whatever))
       _proxyInputEvent() {
         this.dispatchEvent(
