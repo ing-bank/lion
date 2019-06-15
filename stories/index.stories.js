@@ -1,5 +1,7 @@
 import '../packages/button/stories/index.stories.js';
 
+import '../packages/field/stories/index.stories.js';
+
 import '../packages/input/stories/index.stories.js';
 import '../packages/input/stories/validation-string.stories.js';
 import '../packages/input/stories/localize.stories.js';

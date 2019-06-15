@@ -247,10 +247,10 @@ export const FormatMixin = dedupeMixin(
         // We only want to format values that are considered valid. For best UX,
         // we only 'reward' valid inputs.
         // - Why check for __isHandlingUserInput?
-        // Downwards sync is prevented whenever we are in an `@user-input-changed` flow.
-        // If we are in a 'imperatively set `.modelValue`' flow, we want to reflect back
+        // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
+        // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
         // the value, no matter what.
-        // This means, whenever we are in errorState, we and modelValue is set
+        // This means, whenever we are in errorState and modelValue is set
         // imperatively, we DO want to format a value (it is the only way to get meaningful
         // input into `.inputElement` with modelValue as input)
         if (this.__isHandlingUserInput && this.errorState) {
@@ -261,7 +261,7 @@ export const FormatMixin = dedupeMixin(
         }
 
         if (this.modelValue instanceof Unparseable) {
-          // When the modelValue currently is unparseable, we need to sync back the supplied
+          // When the modelValue currently is not parseable, we need to sync back the supplied
           // viewValue. In flow [2], this should not be needed.
           // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
           return this.modelValue.viewValue;
