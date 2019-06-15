@@ -106,7 +106,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(DomHelpersMixin(LitE
             case 'uk':
               return import('@lion/overlays/translations/uk.js');
             default:
-              throw new Error(`Unknown locale: ${locale}`);
+              return import(`../translations/${locale}.js`);
           }
         },
       },
