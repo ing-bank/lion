@@ -46,7 +46,7 @@ storiesOf('Forms|Checkbox Group', module)
               name="scientists[]"
               label="Francis Bacon"
               .choiceValue=${'Francis Bacon'}
-              .choiceChecked=${true}
+              checked
             ></lion-checkbox>
             <lion-checkbox
               name="scientists[]"
