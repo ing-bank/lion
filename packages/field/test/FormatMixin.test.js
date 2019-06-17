@@ -10,6 +10,11 @@ function mimicUserInput(formControl, newViewValue) {
   formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
+function newDateValid(d) {
+  const result = d ? new Date(d) : new Date();
+  return !isNaN(result.getTime()) ? result : null; // eslint-disable-line no-restricted-globals
+}
+
 describe('FormatMixin', () => {
   let elem;
   let nonFormat;
@@ -300,6 +305,49 @@ describe('FormatMixin', () => {
       `);
       el.modelValue = new Unparseable('foo');
       expect(el.value).to.equal('foo');
+    });
+  });
+
+  describe('Restore modelValues from serialized form data', () => {
+    const deserialize = sinon.spy(serializedMv => newDateValid(serializedMv) || undefined);
+    it('should deserialize serialized modelValues', async () => {
+      const el = await fixture(html`
+        <${elem}
+        .parser="${viewValue => newDateValid(viewValue) || undefined}"
+        .formatter="${modelValue => new Intl.DateTimeFormat('en-GB').format(modelValue)}"
+        .serializer="${modelValue => modelValue.toISOString().slice(0, 10)}"
+        .deserializer="${deserialize}"
+        .modelValue="${'2000-12-12'}">
+        >
+          <input slot="input">
+        </${elem}>
+      `);
+      expect(deserialize.called).to.equal(true);
+      expect(el.modelValue).to.be.an.instanceof(Date);
+    });
+
+    it('should accept Unparseable values as input', async () => {
+      const el = await fixture(html`
+        <${elem}
+          .parser="${viewValue => new Date(viewValue)}"
+          .formatter="${modelValue => new Intl.DateTimeFormat('en-GB').format(modelValue)}"
+          .modelValue="${new Unparseable('2000/12')}">
+            <input slot="input">
+        </${elem}>
+      `);
+      expect(el.value).to.equal('2000/12');
+    });
+
+    it('should accept serialized Unparseable values as input', async () => {
+      const el = await fixture(html`
+        <${elem}
+          .parser="${viewValue => new Date(viewValue)}"
+          .formatter="${modelValue => new Intl.DateTimeFormat('en-GB').format(modelValue)}"
+          .modelValue="${{ type: 'unparseable', viewValue: '2000/12' }}">
+            <input slot="input">
+        </${elem}>
+      `);
+      expect(el.value).to.equal('2000/12');
     });
   });
 });
