@@ -260,7 +260,7 @@ export const FormatMixin = dedupeMixin(
           return undefined;
         }
 
-        if (this.modelValue instanceof Unparseable) {
+        if (this.__checkModelValueUnparseable(this.modelValue)) {
           // When the modelValue currently is not parseable, we need to sync back the supplied
           // viewValue. In flow [2], this should not be needed.
           // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
@@ -270,10 +270,38 @@ export const FormatMixin = dedupeMixin(
         return this.formatter(this.modelValue, this.formatOptions);
       }
 
+      __checkModelValueUnparseable(modelValue = this.modelValue) {
+        return (
+          modelValue instanceof Unparseable ||
+          (typeof modelValue === 'object' && modelValue.type === 'unparseable')
+        );
+      }
+
       /** Observer Handlers */
       _onModelValueChanged(...args) {
+        if (this.__isDeserializing) {
+          return;
+        }
+        this.__deserializeWhenNeeded(this.modelValue);
         this._calculateValues({ source: 'model' });
         this._dispatchModelValueChangedEvent(...args);
+      }
+
+      /**
+       * The modelValue should be the SSOT for capturing and providing form state.
+       * Not all types of modelValues are serializable to JSON. For instance, a Date would
+       * be sent to a server as a serialized string, Whenever this modelValue is restored,
+       * it should make sure the internal modelValue gets the desired type first.
+       */
+      __deserializeWhenNeeded(modelValue = this.modelValue) {
+        const shouldDeserialize = typeof modelValue === 'string';
+        if (!this.__isHandlingUserInput && shouldDeserialize) {
+          // See __callParser for an explanation about Unparseable
+          const result = this.deserializer(modelValue) || new Unparseable(modelValue);
+          this.__isDeserializing = true;
+          this.modelValue = result;
+          this.__isDeserializing = false;
+        }
       }
 
       /**
