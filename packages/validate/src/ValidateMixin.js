@@ -97,7 +97,7 @@ export const ValidateMixin = dedupeMixin(
                 case 'uk':
                   return import('../translations/uk.js');
                 default:
-                  throw new Error(`Unknown locale: ${locale}`);
+                  return import(`../translations/${locale}.js`);
               }
             },
           },

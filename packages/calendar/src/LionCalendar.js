@@ -67,7 +67,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
             case 'uk':
               return import('../translations/uk.js');
             default:
-              throw new Error(`Unknown locale: ${locale}`);
+              return import(`../translations/${locale}.js`);
           }
         },
       },
