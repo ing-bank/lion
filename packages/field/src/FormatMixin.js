@@ -260,7 +260,7 @@ export const FormatMixin = dedupeMixin(
           return undefined;
         }
 
-        if (this.__checkModelValueUnparseable(this.modelValue)) {
+        if (this.modelValue instanceof Unparseable) {
           // When the modelValue currently is not parseable, we need to sync back the supplied
           // viewValue. In flow [2], this should not be needed.
           // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
@@ -270,19 +270,14 @@ export const FormatMixin = dedupeMixin(
         return this.formatter(this.modelValue, this.formatOptions);
       }
 
-      __checkModelValueUnparseable(modelValue = this.modelValue) {
-        return (
-          modelValue instanceof Unparseable ||
-          (typeof modelValue === 'object' && modelValue.type === 'unparseable')
-        );
-      }
-
       /** Observer Handlers */
       _onModelValueChanged(...args) {
-        if (this.__isDeserializing) {
+        if (this.__lockModelValue) {
           return;
         }
+        // Sanitize imperatively set modelValues when needed
         this.__deserializeWhenNeeded(this.modelValue);
+        // Compute derived values
         this._calculateValues({ source: 'model' });
         this._dispatchModelValueChangedEvent(...args);
       }
@@ -292,15 +287,25 @@ export const FormatMixin = dedupeMixin(
        * Not all types of modelValues are serializable to JSON. For instance, a Date would
        * be sent to a server as a serialized string, Whenever this modelValue is restored,
        * it should make sure the internal modelValue gets the desired type first.
+       * See __callParser for an explanation about Unparseable
        */
       __deserializeWhenNeeded(modelValue = this.modelValue) {
         const shouldDeserialize = typeof modelValue === 'string';
+        // deserialize a serialized modelValue
         if (!this.__isHandlingUserInput && shouldDeserialize) {
-          // See __callParser for an explanation about Unparseable
-          const result = this.deserializer(modelValue) || new Unparseable(modelValue);
-          this.__isDeserializing = true;
+          let result = this.deserializer(modelValue);
+          if (result === undefined) {
+            result = new Unparseable(modelValue);
+          }
+          this.__lockModelValue = true;
           this.modelValue = result;
-          this.__isDeserializing = false;
+          this.__lockModelValue = false;
+        }
+        // deserialize a serialized Unparseable
+        else if (typeof modelValue === 'object' && modelValue.type === 'unparseable') {
+          this.__lockModelValue = true;
+          this.modelValue = new Unparseable(modelValue.viewValue);
+          this.__lockModelValue = false;
         }
       }
 
@@ -354,9 +359,8 @@ export const FormatMixin = dedupeMixin(
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
-        if (!this.__isHandlingUserInput) {
-          // Text 'undefined' should not end up in <input>
-          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+        if (!this.__isHandlingUserInput && typeof this.formattedValue !== 'undefined') {
+          this.value = this.formattedValue;
         }
       }
 

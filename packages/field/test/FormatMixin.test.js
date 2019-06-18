@@ -10,6 +10,12 @@ function mimicUserInput(formControl, newViewValue) {
   formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
+async function waitForFormatCondition(formControl) {
+  formControl.inputElement.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+  await aTimeout();
+  await aTimeout();
+}
+
 function newDateValid(d) {
   const result = d ? new Date(d) : new Date();
   return !isNaN(result.getTime()) ? result : null; // eslint-disable-line no-restricted-globals
@@ -17,8 +23,6 @@ function newDateValid(d) {
 
 describe('FormatMixin', () => {
   let elem;
-  let nonFormat;
-  let fooFormat;
 
   before(async () => {
     const tagString = defineCE(
@@ -44,15 +48,6 @@ describe('FormatMixin', () => {
     );
 
     elem = unsafeStatic(tagString);
-    nonFormat = await fixture(html`<${elem}><input slot="input"></${elem}>`);
-    fooFormat = await fixture(html`
-    <${elem}
-      .formatter="${value => `foo: ${value}`}"
-      .parser="${value => value.replace('foo: ', '')}"
-      .serializer="${value => `[foo] ${value}`}"
-      .deserializer="${value => value.replace('[foo] ', '')}"
-    ><input slot="input">
-    </${elem}>`);
   });
 
   it('fires `model-value-changed` for every change on the input', async () => {
@@ -92,6 +87,8 @@ describe('FormatMixin', () => {
   });
 
   it('has modelValue, formattedValue and serializedValue which are computed synchronously', async () => {
+    const nonFormat = await fixture(html`<${elem}><input slot="input"></${elem}>`);
+
     expect(nonFormat.modelValue).to.equal('', 'modelValue initially');
     expect(nonFormat.formattedValue).to.equal('', 'formattedValue initially');
     expect(nonFormat.serializedValue).to.equal('', 'serializedValue initially');
@@ -102,6 +99,16 @@ describe('FormatMixin', () => {
   });
 
   it('has an input node (like <input>/<textarea>) which holds the formatted (view) value', async () => {
+    const fooFormat = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .parser="${value => value.replace('foo: ', '')}"
+        .serializer="${value => `[foo] ${value}`}"
+        .deserializer="${value => value.replace('[foo] ', '')}"
+      ><input slot="input">
+      </${elem}>
+    `);
+
     fooFormat.modelValue = 'string';
     expect(fooFormat.formattedValue).to.equal('foo: string');
     expect(fooFormat.value).to.equal('foo: string');
@@ -109,22 +116,58 @@ describe('FormatMixin', () => {
   });
 
   it('converts modelValue => formattedValue (via this.formatter)', async () => {
+    const fooFormat = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .parser="${value => value.replace('foo: ', '')}"
+        .serializer="${value => `[foo] ${value}`}"
+        .deserializer="${value => value.replace('[foo] ', '')}"
+      ><input slot="input">
+      </${elem}>
+    `);
     fooFormat.modelValue = 'string';
     expect(fooFormat.formattedValue).to.equal('foo: string');
     expect(fooFormat.serializedValue).to.equal('[foo] string');
   });
 
   it('converts modelValue => serializedValue (via this.serializer)', async () => {
+    const fooFormat = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .parser="${value => value.replace('foo: ', '')}"
+        .serializer="${value => `[foo] ${value}`}"
+        .deserializer="${value => value.replace('[foo] ', '')}"
+      ><input slot="input">
+      </${elem}>
+    `);
     fooFormat.modelValue = 'string';
     expect(fooFormat.serializedValue).to.equal('[foo] string');
   });
 
   it('converts formattedValue => modelValue (via this.parser)', async () => {
+    const fooFormat = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .parser="${value => value.replace('foo: ', '')}"
+        .serializer="${value => `[foo] ${value}`}"
+        .deserializer="${value => value.replace('[foo] ', '')}"
+      ><input slot="input">
+      </${elem}>
+    `);
     fooFormat.formattedValue = 'foo: string';
     expect(fooFormat.modelValue).to.equal('string');
   });
 
   it('converts serializedValue => modelValue (via this.deserializer)', async () => {
+    const fooFormat = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .parser="${value => value.replace('foo: ', '')}"
+        .serializer="${value => `[foo] ${value}`}"
+        .deserializer="${value => value.replace('[foo] ', '')}"
+      ><input slot="input">
+      </${elem}>
+    `);
     fooFormat.serializedValue = '[foo] string';
     expect(fooFormat.modelValue).to.equal('string');
   });
@@ -179,6 +222,26 @@ describe('FormatMixin', () => {
     // Now see the difference for an imperative change
     el.modelValue = 'test2';
     expect(el.inputElement.value).to.equal('foo: test2');
+  });
+
+  it('should not reflect back when formattedValue is undefined', async () => {
+    const el = await fixture(html`
+      <${elem}
+        .formatter="${value => `foo: ${value}`}"
+        .modelValue="${'bar'}"
+      ><input slot="input">
+      </${elem}>
+    `);
+    expect(el.value).to.equal('foo: bar');
+    expect(el.inputElement.value).to.equal('foo: bar');
+
+    el.errorState = true;
+    mimicUserInput(el, 'string');
+    await waitForFormatCondition(el);
+
+    expect(el.formattedValue).to.equal(undefined);
+    expect(el.value).to.equal('string');
+    expect(el.inputElement.value).to.equal('string');
   });
 
   describe('parsers/formatters/serializers', () => {
@@ -291,7 +354,7 @@ describe('FormatMixin', () => {
     });
   });
 
-  describe.only('Restore modelValues from serialized form data', () => {
+  describe('Restore modelValues from serialized form data', () => {
     const deserialize = sinon.spy(serializedMv => newDateValid(serializedMv) || undefined);
     it('should deserialize serialized modelValues', async () => {
       const el = await fixture(html`
@@ -331,6 +394,7 @@ describe('FormatMixin', () => {
         </${elem}>
       `);
       expect(el.value).to.equal('2000/12');
+      expect(el.modelValue).to.be.an.instanceof(Unparseable);
     });
   });
 });

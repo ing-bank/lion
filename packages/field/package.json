@@ -37,6 +37,9 @@
   },
   "devDependencies": {
     "@lion/localize": "^0.4.0",
+    "@lion/checkbox": "^0.1.19",
+    "@lion/checkbox-group": "^0.1.21",
+    "@lion/form": "^0.1.21",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5",
     "sinon": "^7.2.2"
