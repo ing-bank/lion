@@ -5,6 +5,8 @@ import { keyCodes } from './utils/key-codes.js';
 
 export class LocalOverlayController {
   constructor(params = {}) {
+    this._fakeExtendsEventTarget();
+
     const finalParams = {
       placement: 'top',
       position: 'absolute',
@@ -88,7 +90,11 @@ export class LocalOverlayController {
 
     this.invokerNode.setAttribute('aria-expanded', this.isShown);
     this.invokerNode.setAttribute('aria-controls', this.contentId);
+    // [a11y] TODO: this is only needed for tooltips, I assume?
+    // Also, we should allow to configure tooltips in such a way that we can use
+    // aria-labelledby instead: https://inclusive-components.design/tooltips-toggletips/
     this.invokerNode.setAttribute('aria-describedby', this.contentId);
+    // Also, we should add role="tooltip" on this.contentNode ?
   }
 
   /**
@@ -96,6 +102,7 @@ export class LocalOverlayController {
    */
   show() {
     this._createOrUpdateOverlay(true, this._prevData);
+    this.dispatchEvent(new Event('show'));
   }
 
   /**
@@ -103,6 +110,7 @@ export class LocalOverlayController {
    */
   hide() {
     this._createOrUpdateOverlay(false, this._prevData);
+    this.dispatchEvent(new Event('hide'));
   }
 
   /**
@@ -213,5 +221,14 @@ export class LocalOverlayController {
     if (e.keyCode === keyCodes.escape) {
       this.hide();
     }
+  }
+
+  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
+  // issue: https://gitlab.ing.net/TheGuideComponents/lion-element/issues/12
+  _fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      this[funcName] = (...args) => delegate[funcName](...args);
+    });
   }
 }

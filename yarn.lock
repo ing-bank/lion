@@ -1824,6 +1824,14 @@
     lru-cache "^5.1.1"
     minimatch "^3.0.4"
 
+"@open-wc/chai-dom-equals@^0.11.7":
+  version "0.11.7"
+  resolved "https://registry.yarnpkg.com/@open-wc/chai-dom-equals/-/chai-dom-equals-0.11.7.tgz#80c868f7137535093753ff956f61209f873ba9a5"
+  integrity sha512-p9l/Gv1cl8kDd+gav3wWOUqNyQjsESuWmkPnHmyuQeVh2EeCmtXE5ChFA9PogxIyk+JamQoPo9mggz0lNif4Hw==
+  dependencies:
+    "@open-wc/semantic-dom-diff" "^0.10.7"
+    "@types/chai" "^4.1.7"
+
 "@open-wc/chai-dom-equals@^0.12.5":
   version "0.12.5"
   resolved "https://registry.yarnpkg.com/@open-wc/chai-dom-equals/-/chai-dom-equals-0.12.5.tgz#bf883c2403b8cf282c63a2f44a7c1eb38331be76"
@@ -1899,10 +1907,20 @@
     eslint-config-prettier "^3.3.0"
     prettier "^1.15.0"
 
+"@open-wc/semantic-dom-diff@^0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.10.7.tgz#d4a6c59557adfa8204725242917215ceca82a1e5"
+  integrity sha512-HuoB6udX2pR5wvQu1zZAprQRJE/MLUsNxw6j003vMkn31UEUi4L6HJHif3I5HDNFkxQOcmRpU4ug68yS/PGa8Q==
+
 "@open-wc/semantic-dom-diff@^0.11.5":
   version "0.11.5"
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.11.5.tgz#7e028a15ea74d758b8e5593d11d0abb945d51bf8"
   integrity sha512-+IQ8o64Z+voxn5807+YTN9GjIEfPsdZ6Zb1O04fGL2w1/qjWAKMFZa+G0r1UuFyEUP3LU+5XGGmCXPefWmSbhA==
+
+"@open-wc/testing-helpers@^0.8.10":
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-0.8.10.tgz#d0552e4be8a8905a86ce837b50f34f843d101fda"
+  integrity sha512-E3/BvJR9zonNNNKAOd7jUrqb2quTlngbtDxKfOIiW2yu9T/96UNHX1byTtA4W0MmKI9W3qnlHJEJ5hrjnGCJcg==
 
 "@open-wc/testing-helpers@^0.9.5":
   version "0.9.5"
@@ -1956,6 +1974,19 @@
   dependencies:
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
+
+"@open-wc/testing@^0.11.1":
+  version "0.11.7"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-0.11.7.tgz#a6bbf1c72f821952ad5b20d2879bd87ab8ff6075"
+  integrity sha512-qN30skJqV45C3odtxNc3cQLIUeiGgbAP1LPDj7SlR8rI709GACEdHwzhaXH8KNAGM54hDLbzgHzq4yk7HA9ghA==
+  dependencies:
+    "@bundled-es-modules/chai" "^4.2.0"
+    "@open-wc/chai-dom-equals" "^0.11.7"
+    "@open-wc/semantic-dom-diff" "^0.10.7"
+    "@open-wc/testing-helpers" "^0.8.10"
+    "@types/chai" "^4.1.7"
+    "@types/mocha" "^5.0.0"
+    mocha "^5.0.0"
 
 "@open-wc/testing@^0.12.5":
   version "0.12.5"
