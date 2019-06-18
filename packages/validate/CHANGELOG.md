@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.7...@lion/validate@0.2.8) (2019-06-18)
+
+
+### Bug Fixes
+
+* support language fallback for non found locales ([#102](https://github.com/ing-bank/lion/issues/102)) ([b729bf0](https://github.com/ing-bank/lion/commit/b729bf0))
+
+
+
+
+
 ## [0.2.7](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.6...@lion/validate@0.2.7) (2019-06-06)
 
 **Note:** Version bump only for package @lion/validate

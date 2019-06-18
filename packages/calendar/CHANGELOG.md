@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.20](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.19...@lion/calendar@0.1.20) (2019-06-18)
+
+
+### Bug Fixes
+
+* support language fallback for non found locales ([#102](https://github.com/ing-bank/lion/issues/102)) ([b729bf0](https://github.com/ing-bank/lion/commit/b729bf0))
+
+
+
+
+
 ## [0.1.19](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.18...@lion/calendar@0.1.19) (2019-06-13)
 
 **Note:** Version bump only for package @lion/calendar
