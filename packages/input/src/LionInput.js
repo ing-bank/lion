@@ -7,12 +7,21 @@ import { LionField } from '@lion/field';
  * @extends LionField
  */
 export class LionInput extends LionField {
-  get delegations() {
+  static get properties() {
     return {
-      ...super.delegations,
-      target: () => this.inputElement,
-      properties: [...super.delegations.properties, 'readOnly'],
-      attributes: [...super.delegations.attributes, 'readonly'],
+      ...super.properties,
+      /**
+       * A Boolean attribute which, if present, indicates that the user should not be able to edit
+       * the value of the input. The difference between disabled and readonly is that read-only
+       * controls can still function, whereas disabled controls generally do not function as
+       * controls until they are enabled.
+       *
+       * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+       */
+      readOnly: {
+        type: Boolean,
+        attribute: 'readonly',
+      },
     };
   }
 
@@ -29,5 +38,23 @@ export class LionInput extends LionField {
         return native;
       },
     };
+  }
+
+  _requestUpdate(name, oldValue) {
+    super._requestUpdate(name, oldValue);
+    if (name === 'readOnly') {
+      this.__delegateReadOnly();
+    }
+  }
+
+  firstUpdated(c) {
+    super.firstUpdated(c);
+    this.__delegateReadOnly();
+  }
+
+  __delegateReadOnly() {
+    if (this.inputElement) {
+      this.inputElement.readOnly = this.readOnly;
+    }
   }
 }

@@ -49,6 +49,17 @@ storiesOf('Forms|Input Datepicker', module)
   .add(
     'Disabled',
     () => html`
-      <lion-input-datepicker disabled></lion-input-datepicker>
+      <lion-input-datepicker label="Disabled" disabled></lion-input-datepicker>
+    `,
+  )
+  .add(
+    'Readonly',
+    () => html`
+      <lion-input-datepicker
+        help-text="Notice that it's not possible to open the calendar on readonly inputs"
+        label="Readonly"
+        readonly
+        .modelValue="${new Date()}"
+      ></lion-input-datepicker>
     `,
   );
