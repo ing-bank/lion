@@ -25,7 +25,8 @@ is very well explained on MDN:
  certain aspects like any element — for example, manipulating the box model, the displayed
  font, etc., and you can use the appearance property to remove the default system appearance.
 
-On top of this, a listbox is allows us to create advanced user experiences that are not :
+On top of this, a listbox is allows us to create advanced user experiences that are not or hardly
+possible with `<select>`/`<datalist>` :
 - create an autocomplete/autosuggest combobox
 - create advanced user interaction like explained here: https://www.w3.org/TR/wai-aria-practices/#Listbox
 
@@ -47,7 +48,7 @@ predictability, SSOT and data flow. TODO: add that document later.
 
 
 ## Getting the right api: accessibility
-As far as the api is concerned, the ideal api for our rich select would be:
+The ideal api for our rich select would be:
 
 ```html
 <lion-select-rich>
@@ -55,7 +56,7 @@ As far as the api is concerned, the ideal api for our rich select would be:
   <lion-option></lion-option>
 </lion-select-rich>
 ```
-The difference with our api is the lack of a `<lion-listbox>` around `<lion-option>`s
+The above api will pose some problems, though.
 In order to transform the ideal api into an accessible solution, it needs to be transformed into
 something like this:
 
@@ -68,7 +69,7 @@ something like this:
 ```
 The element with [role=listbox] and [aria-activedescendant] needs to be in the same dom as the
 elements with [role=option].
-Attempting to provide the ‘ideal api’ as suggested above poses a challenge:
+The challenge our ‘ideal api’ poses:
 since we would have two different doms (shadow and light), the aforementioned elements would not
 find each other<sup>(1)</sup>.
 
@@ -183,23 +184,28 @@ So, we would end up with <sup>(3)</sup>:
 </lion-field-listbox>
 ```
 
+Although [role=lisbox] communicates to the screen reader that we deal with a group of options,
+we still want to reuse the `Fieldset` functionality for an interface comparable to radio-group/
+checkbox-group and child registration/orchestration. 
+The [role="group"] that is applied by default, will the be omitted.
+
 ### ChoiceInput or not?
 Options have a lot in common with radio inputs and checkboxes(multiselect). There main difference
 seems to be [aria-selected] for option (having possible values of true and false) and
 [aria-checked] for radio buttons and checkboxes (having a tristate, including indeterminate).
 Another difference is the fact that input[type="radio/checkbox"] can be used on its own, whereas
 an option can't.
-Since ChoiceInput adds `.choiceValue` for complex data, we can consider aligning with the
-ChoiceInput. Since we already deliver the `.value` property on the ChoiceInputs, we could
-add `.choiceValue` later in a non breaking way.
-
+Since Interaction and state are similar for checkboxes/radio inputs and options, we can reuse the
+ChoiceInputMixin and override its template (we don't need a native input for role=option).
+By inheriting from ChoiceInputMixin we also get automatically the `.choiceValue` api.
 
 
 ### Complex values on lion-listbox level?
 As of now, we never needed our `<select>` options to have a `.modelValue`; our main assumption for
 the listbox should be the same.
 Adding a modelValue on option level (or lion-listbox/select level) is thus not needed.
-It would also be confusing, because modelValues are a concept exclusive to FormControls(Fields or Fieldsets):
+It would also be confusing, because modelValues are a concept exclusive to FormControls (Fields or 
+Fieldsets):
 the lion-listbox and lion-option are none of those.
 There might be a need for complex values, they can be added on Field level by writing a `parser`.
 
