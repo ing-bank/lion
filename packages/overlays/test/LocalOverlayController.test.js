@@ -208,7 +208,7 @@ describe('LocalOverlayController', () => {
       });
 
       controller.show();
-      expect(controller.content.firstElementChild.style.top).to.equal('8px');
+      expect(controller.contentNode.style.top).to.equal('8px');
     });
 
     it('uses top as the default placement', async () => {
@@ -218,7 +218,9 @@ describe('LocalOverlayController', () => {
             <p>Content</p>
           `,
         invokerTemplate: () => html`
-          <button style="padding: 16px;" @click=${() => controller.show()}>Invoker</button>
+          <button style="padding: 16px;" @click=${() => controller.show()}>
+            Invoker
+          </button>
         `,
       });
       await fixture(html`
@@ -227,15 +229,17 @@ describe('LocalOverlayController', () => {
         </div>
       `);
       controller.show();
-      const invokerChild = controller.content.firstElementChild;
-      expect(invokerChild.getAttribute('js-positioning-vertical')).to.equal('top');
-      expect(invokerChild.getAttribute('js-positioning-horizontal')).to.equal('centerHorizontal');
+      const { contentNode } = controller;
+      expect(contentNode.getAttribute('js-positioning-vertical')).to.equal('top');
+      expect(contentNode.getAttribute('js-positioning-horizontal')).to.equal('centerHorizontal');
     });
 
     it('positions to preferred place if placement is set and space is available', async () => {
       const controller = new LocalOverlayController({
         invokerTemplate: () => html`
-          <button style="padding: 16px;" @click=${() => controller.show()}>Invoker</button>
+          <button style="padding: 16px;" @click=${() => controller.show()}>
+            Invoker
+          </button>
         `,
         contentTemplate: () =>
           html`
@@ -250,9 +254,9 @@ describe('LocalOverlayController', () => {
       `);
 
       controller.show();
-      const contentChild = controller.content.firstElementChild;
-      expect(contentChild.getAttribute('js-positioning-vertical')).to.equal('top');
-      expect(contentChild.getAttribute('js-positioning-horizontal')).to.equal('right');
+      const { contentNode } = controller;
+      expect(contentNode.getAttribute('js-positioning-vertical')).to.equal('top');
+      expect(contentNode.getAttribute('js-positioning-horizontal')).to.equal('right');
     });
 
     it('positions to different place if placement is set and no space is available', async () => {
@@ -262,7 +266,9 @@ describe('LocalOverlayController', () => {
             <p>Content</p>
           `,
         invokerTemplate: () => html`
-          <button style="padding: 16px;" @click=${() => controller.show()}>Invoker</button>
+          <button style="padding: 16px;" @click=${() => controller.show()}>
+            Invoker
+          </button>
         `,
         placement: 'top right',
       });
@@ -273,9 +279,9 @@ describe('LocalOverlayController', () => {
       `);
 
       controller.show();
-      const invokerChild = controller.content.firstElementChild;
-      expect(invokerChild.getAttribute('js-positioning-vertical')).to.equal('bottom');
-      expect(invokerChild.getAttribute('js-positioning-horizontal')).to.equal('right');
+      const { contentNode } = controller;
+      expect(contentNode.getAttribute('js-positioning-vertical')).to.equal('bottom');
+      expect(contentNode.getAttribute('js-positioning-horizontal')).to.equal('right');
     });
   });
 
@@ -292,14 +298,14 @@ describe('LocalOverlayController', () => {
           `,
       });
 
-      expect(controller.invoker.firstElementChild.getAttribute('aria-controls')).to.contain(
+      expect(controller.invokerNode.getAttribute('aria-controls')).to.contain(
         controller.content.id,
       );
-      expect(controller.invoker.firstElementChild.getAttribute('aria-expanded')).to.equal('false');
+      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('false');
       controller.show();
-      expect(controller.invoker.firstElementChild.getAttribute('aria-expanded')).to.equal('true');
+      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('true');
       controller.hide();
-      expect(controller.invoker.firstElementChild.getAttribute('aria-expanded')).to.equal('false');
+      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('false');
     });
 
     it('traps the focus via option { trapsKeyboardFocus: true }', async () => {
@@ -317,17 +323,45 @@ describe('LocalOverlayController', () => {
         trapsKeyboardFocus: true,
       });
       // make sure we're connected to the dom
-      await fixture(
-        html`
-          ${controller.invoker}${controller.content}
-        `,
-      );
+      await fixture(html`
+        ${controller.invoker}${controller.content}
+      `);
       controller.show();
 
       const elOutside = await fixture(`<button>click me</button>`);
-      const [el1, el2] = [].slice.call(
-        controller.content.firstElementChild.querySelectorAll('[id]'),
-      );
+      const [el1, el2] = [].slice.call(controller.contentNode.querySelectorAll('[id]'));
+      el2.focus();
+      // this mimics a tab within the contain-focus system used
+      const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
+      event.keyCode = keyCodes.tab;
+      window.dispatchEvent(event);
+
+      expect(elOutside).to.not.equal(document.activeElement);
+      expect(el1).to.equal(document.activeElement);
+    });
+
+    it('traps the focus via option { trapsKeyboardFocus: true } when using contentNode', async () => {
+      const invokerNode = await fixture('<button>Invoker</button>');
+      const contentNode = await fixture(`
+        <div>
+          <button id="el1">Button</button>
+          <a id="el2" href="#">Anchor</a>
+        </div>
+      `);
+
+      const controller = new LocalOverlayController({
+        contentNode,
+        invokerNode,
+        trapsKeyboardFocus: true,
+      });
+      // make sure we're connected to the dom
+      await fixture(html`
+        ${controller.invoker}${controller.content}
+      `);
+      controller.show();
+
+      const elOutside = await fixture(`<button>click me</button>`);
+      const [el1, el2] = [].slice.call(controller.contentNode.querySelectorAll('[id]'));
 
       el2.focus();
       // this mimics a tab within the contain-focus system used
@@ -360,7 +394,7 @@ describe('LocalOverlayController', () => {
       );
       const elOutside = await fixture(`<button>click me</button>`);
       controller.show();
-      const el1 = controller.content.firstElementChild.querySelector('button');
+      const el1 = controller.content.querySelector('button');
 
       el1.focus();
       simulateTab();
@@ -388,7 +422,7 @@ describe('LocalOverlayController', () => {
       );
       ctrl.show();
 
-      keyUpOn(ctrl.content, keyCodes.escape);
+      keyUpOn(ctrl.contentNode, keyCodes.escape);
       ctrl.updateComplete;
       expect(ctrl.isShown).to.equal(false);
     });
@@ -457,25 +491,23 @@ describe('LocalOverlayController', () => {
             <button @click="${() => ctrl.show()}">Invoker</button>
           `,
       });
-      const { content, invoker, invokerNode } = ctrl;
-      await fixture(
-        html`
-          ${invoker}${content}
-        `,
-      );
+      const { content, invoker } = ctrl;
+      await fixture(html`
+        ${invoker}${content}
+      `);
 
       // Don't hide on first invoker click
-      invokerNode.click();
+      ctrl.invokerNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
 
       // Don't hide on inside (content) click
-      content.click();
+      ctrl.contentNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
 
       // Don't hide on invoker click when shown
-      invokerNode.click();
+      ctrl.invokerNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
 

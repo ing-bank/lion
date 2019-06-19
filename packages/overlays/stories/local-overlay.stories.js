@@ -37,7 +37,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
           `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.show()}>UK</button>
+            <button @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );
@@ -62,7 +62,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
           `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.show()}>UK</button>
+            <button @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );
@@ -88,7 +88,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
         `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.show()}>Click me</button>
+            <button @click=${() => popup.toggle()}>Click me</button>
           `,
       }),
     );
@@ -153,30 +153,6 @@ storiesOf('Local Overlay System|Local Overlay', module)
       </div>
     `;
   })
-  .add('On toggle', () => {
-    const popup = overlays.add(
-      new LocalOverlayController({
-        hidesOnEsc: true,
-        hidesOnOutsideClick: true,
-        contentTemplate: () =>
-          html`
-            <div class="demo-popup">United Kingdom</div>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button @click=${() => popup.toggle()}>UK</button>
-          `,
-      }),
-    );
-    return html`
-      <style>
-        ${popupDemoStyle}
-      </style>
-      <div class="demo-box">
-        <label for="input">Weather in ${popup.invoker}${popup.content} toggles.</label>
-      </div>
-    `;
-  })
   .add('trapsKeyboardFocus', () => {
     const popup = overlays.add(
       new LocalOverlayController({
@@ -198,10 +174,44 @@ storiesOf('Local Overlay System|Local Overlay', module)
         `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.show()}>UK</button>
+            <button @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );
+    return html`
+      <style>
+        ${popupDemoStyle}
+      </style>
+      <div class="demo-box">
+        ${popup.invoker}${popup.content}
+      </div>
+    `;
+  })
+  .add('trapsKeyboardFocus with nodes', () => {
+    const invokerNode = document.createElement('button');
+    invokerNode.innerHTML = 'Invoker Button';
+
+    const contentNode = document.createElement('div');
+    contentNode.classList.add('demo-popup');
+    const contentButton = document.createElement('button');
+    contentButton.innerHTML = 'Content Button';
+    const contentInput = document.createElement('input');
+    contentNode.appendChild(contentButton);
+    contentNode.appendChild(contentInput);
+
+    const popup = overlays.add(
+      new LocalOverlayController({
+        hidesOnEsc: true,
+        hidesOnOutsideClick: true,
+        trapsKeyboardFocus: true,
+        contentNode,
+        invokerNode,
+      }),
+    );
+
+    invokerNode.addEventListener('click', () => {
+      popup.toggle();
+    });
     return html`
       <style>
         ${popupDemoStyle}
