@@ -9,6 +9,7 @@ import '../packages/input-date/stories/index.stories.js';
 import '../packages/input-datepicker/stories/index.stories.js';
 import '../packages/input-email/stories/index.stories.js';
 import '../packages/input-iban/stories/index.stories.js';
+import '../packages/input-range/stories/index.stories.js';
 import '../packages/select/stories/index.stories.js';
 import '../packages/fieldset/stories/index.stories.js';
 import '../packages/checkbox-group/stories/index.stories.js';

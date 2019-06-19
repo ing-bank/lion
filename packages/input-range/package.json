@@ -1,0 +1,44 @@
+{
+  "name": "@lion/input-range",
+  "version": "0.0.0",
+  "description": "Provide a way for users to specify a numeric value which must be no less than a given value, and no more than another given value",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/input"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "input-range"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.9",
+    "@lion/field": "^0.1.19"
+  },
+  "devDependencies": {
+    "@lion/localize": "^0.4.0",
+    "@lion/validate": "^0.2.7",
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^0.12.5"
+  }
+}
