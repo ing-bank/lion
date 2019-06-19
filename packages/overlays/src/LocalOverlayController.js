@@ -15,24 +15,48 @@ export class LocalOverlayController {
     this.trapsKeyboardFocus = finalParams.trapsKeyboardFocus;
     this.placement = finalParams.placement;
     this.position = finalParams.position;
+    /**
+     * A wrapper to render into the invokerTemplate
+     *
+     * @property {HTMLElement}
+     */
     this.invoker = document.createElement('div');
     this.invoker.style.display = 'inline-block';
+    this.invokerTemplate = finalParams.invokerTemplate;
+    /**
+     * The actual invoker element we work with - it get's all the events and a11y
+     *
+     * @property {HTMLElement}
+     */
+    this.invokerNode = this.invoker;
+    if (finalParams.invokerNode) {
+      this.invokerNode = finalParams.invokerNode;
+      this.invoker = this.invokerNode;
+    }
+
+    /**
+     * A wrapper the contentTemplate renders into
+     *
+     * @property {HTMLElement}
+     */
     this.content = document.createElement('div');
     this.content.style.display = 'inline-block';
+    this.contentTemplate = finalParams.contentTemplate;
+    this.contentNode = this.content;
+    if (finalParams.contentNode) {
+      this.contentNode = finalParams.contentNode;
+      this.content = this.contentNode;
+    }
+
     this.contentId = `overlay-content-${Math.random()
       .toString(36)
       .substr(2, 10)}`;
     this._contentData = {};
-    this.invokerTemplate = finalParams.invokerTemplate;
-    this.invokerNode = finalParams.invokerNode;
-    this.contentTemplate = finalParams.contentTemplate;
-    this.contentNode = finalParams.contentNode;
     this.syncInvoker();
     this._updateContent();
     this._prevShown = false;
     this._prevData = {};
-
-    if (this.hidesOnEsc) this._setupHidesOnEsc();
+    this.__boundEscKeyHandler = this.__escKeyHandler.bind(this);
   }
 
   get isShown() {
@@ -109,10 +133,12 @@ export class LocalOverlayController {
 
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
+      if (this.hidesOnEsc) this._setupHidesOnEsc();
     } else {
       this._updateContent();
       this.invokerNode.setAttribute('aria-expanded', false);
       if (this.hidesOnOutsideClick) this._teardownHidesOnOutsideClick();
+      if (this.hidesOnEsc) this._teardownHidesOnEsc();
     }
     this._prevShown = shown;
     this._prevData = data;
@@ -127,15 +153,15 @@ export class LocalOverlayController {
       this._containFocusHandler.disconnect();
       this._containFocusHandler = undefined; // eslint-disable-line no-param-reassign
     }
-    this._containFocusHandler = containFocus(this.content.firstElementChild);
+    this._containFocusHandler = containFocus(this.contentNode);
   }
 
   _setupHidesOnEsc() {
-    this.content.addEventListener('keyup', event => {
-      if (event.keyCode === keyCodes.escape) {
-        this.hide();
-      }
-    });
+    this.contentNode.addEventListener('keyup', this.__boundEscKeyHandler);
+  }
+
+  _teardownHidesOnEsc() {
+    this.contentNode.removeEventListener('keyup', this.__boundEscKeyHandler);
   }
 
   _setupHidesOnOutsideClick() {
@@ -162,14 +188,14 @@ export class LocalOverlayController {
       });
     };
 
-    this.content.addEventListener('click', this.__preventCloseOutsideClick, true);
-    this.invoker.addEventListener('click', this.__preventCloseOutsideClick, true);
+    this.contentNode.addEventListener('click', this.__preventCloseOutsideClick, true);
+    this.invokerNode.addEventListener('click', this.__preventCloseOutsideClick, true);
     document.documentElement.addEventListener('click', this.__onCaptureHtmlClick, true);
   }
 
   _teardownHidesOnOutsideClick() {
-    this.content.removeEventListener('click', this.__preventCloseOutsideClick, true);
-    this.invoker.removeEventListener('click', this.__preventCloseOutsideClick, true);
+    this.contentNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
+    this.invokerNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
     document.documentElement.removeEventListener('click', this.__onCaptureHtmlClick, true);
     this.__preventCloseOutsideClick = null;
     this.__onCaptureHtmlClick = null;
@@ -180,6 +206,12 @@ export class LocalOverlayController {
       render(html``, this.content);
     } else {
       this.contentNode.style.display = 'none';
+    }
+  }
+
+  __escKeyHandler(e) {
+    if (e.keyCode === keyCodes.escape) {
+      this.hide();
     }
   }
 }
