@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.21](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.20...@lion/calendar@0.1.21) (2019-06-20)
+
+
+### Bug Fixes
+
+* support en-PH locale for polymer-cli ([7643e64](https://github.com/ing-bank/lion/commit/7643e64))
+
+
+
+
+
 ## [0.1.20](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.19...@lion/calendar@0.1.20) (2019-06-18)
 
 
