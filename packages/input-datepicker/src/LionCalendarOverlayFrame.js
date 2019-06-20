@@ -59,6 +59,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(DomHelpersMixin(LitE
               return import('@lion/overlays/translations/en-GB.js');
             case 'en-US':
               return import('@lion/overlays/translations/en-US.js');
+            case 'en-PH':
             case 'en':
               return import('@lion/overlays/translations/en.js');
             case 'es-ES':
