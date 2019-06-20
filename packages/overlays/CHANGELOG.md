@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/ing-bank/lion/compare/@lion/overlays@0.2.5...@lion/overlays@0.2.6) (2019-06-20)
+
+
+### Bug Fixes
+
+* **overlays:** trapsKeyboardFocus should work with contentNode ([4695cfd](https://github.com/ing-bank/lion/commit/4695cfd))
+
+
+
+
+
 ## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/overlays@0.2.4...@lion/overlays@0.2.5) (2019-05-29)
 
 **Note:** Version bump only for package @lion/overlays
