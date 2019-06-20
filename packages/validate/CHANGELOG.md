@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.9](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.8...@lion/validate@0.2.9) (2019-06-20)
+
+
+### Bug Fixes
+
+* support en-PH locale for polymer-cli ([7643e64](https://github.com/ing-bank/lion/commit/7643e64))
+
+
+
+
+
 ## [0.2.8](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.7...@lion/validate@0.2.8) (2019-06-18)
 
 
