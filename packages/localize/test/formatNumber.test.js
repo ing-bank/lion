@@ -29,7 +29,7 @@ describe('formatNumber', () => {
     expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
       '123.456,79 EUR',
     );
-    expect(formatNumber(123456.789, { currency: 'JPY', ...currencySymbol })).to.equal('123.457 ¥');
+    expect(formatNumber(123456.789, { currency: 'JPY', ...currencySymbol })).to.equal('¥ 123.457');
     localize.locale = 'fr-FR';
     expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
       '123 456,79 EUR',
@@ -57,10 +57,10 @@ describe('formatNumber', () => {
     const currencySymbol = { style: 'currency', currencyDisplay: 'symbol' };
     localize.locale = 'nl-NL';
     expect(formatNumber(123456.789, { currency: 'EUR', ...currencySymbol })).to.equal(
-      '123.456,79 €',
+      '€ 123.456,79',
     );
     expect(formatNumber(123456.789, { currency: 'USD', ...currencySymbol })).to.equal(
-      '123.456,79 $',
+      '$ 123.456,79',
     );
   });
 
@@ -333,13 +333,13 @@ describe('formatNumberToParts', () => {
       currencyDisplay: 'symbol',
     });
     expect(formattedToParts).to.eql([
+      { type: 'currency', value: '€' },
+      { type: 'literal', value: ' ' },
       { type: 'integer', value: '3' },
       { type: 'group', value: '.' },
       { type: 'integer', value: '500' },
       { type: 'decimal', value: ',' },
       { type: 'fraction', value: '00' },
-      { type: 'literal', value: ' ' },
-      { type: 'currency', value: '€' },
     ]);
   });
 
