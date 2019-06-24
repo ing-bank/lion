@@ -916,6 +916,40 @@ describe('ValidateMixin', () => {
       );
     });
 
+    it('translates validity messages for customly defined namespaces', async () => {
+      localize.reset();
+      localize.addData('en-GB', 'my-overrides', {
+        error: { minLength: 'Provide at least {validatorParams.min} characters.' },
+      });
+      localize.addData('de-DE', 'my-overrides', {
+        error: {
+          minLength: 'Geben Sie mindestens {validatorParams.min} Zeichen, bitte.',
+        },
+      });
+
+      const validityFeedback = await fixture(
+        html`
+        <${defaultElementName}
+          .modelValue=${'cat'}
+          .errorValidators=${[[minLength, { min: 4 }, { namespace: 'my-overrides' }]]}
+        >${lightDom}</${defaultElementName}>
+      `,
+        () => ({
+          modelValue: 'cat',
+          errorValidators: [[minLength, { min: 4 }, { namespace: 'my-overrides' }]],
+        }),
+      );
+      expect(validityFeedback.$$slot('feedback').innerText).to.equal(
+        'Provide at least 4 characters.',
+      );
+
+      localize.locale = 'de-DE';
+      await validityFeedback.updateComplete;
+      expect(validityFeedback.$$slot('feedback').innerText).to.equal(
+        'Geben Sie mindestens 4 Zeichen, bitte.',
+      );
+    });
+
     describe('Field name', () => {
       beforeEach(() => {
         localizeTearDown();

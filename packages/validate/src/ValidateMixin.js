@@ -425,6 +425,7 @@ export const ValidateMixin = dedupeMixin(
         return this.constructor.__getLocalizeKeys(
           `error.${data.validatorName}`,
           data.validatorName,
+          data.validatorConfig.namespace,
         );
       }
 
@@ -432,11 +433,16 @@ export const ValidateMixin = dedupeMixin(
         return this.constructor.__getLocalizeKeys(
           `warning.${data.validatorName}`,
           data.validatorName,
+          data.validatorConfig.namespace,
         );
       }
 
       getInfoTranslationsKeys(data) {
-        return this.constructor.__getLocalizeKeys(`info.${data.validatorName}`, data.validatorName);
+        return this.constructor.__getLocalizeKeys(
+          `info.${data.validatorName}`,
+          data.validatorName,
+          data.validatorConfig.namespace,
+        );
       }
 
       /**
@@ -452,14 +458,22 @@ export const ValidateMixin = dedupeMixin(
           return this.__lastGetSuccessResult;
         }
         if (data.validatorName.indexOf('random') === 0) {
-          const getKeys = this.constructor.__getLocalizeKeys(key, data.validatorName);
+          const getKeys = this.constructor.__getLocalizeKeys(
+            key,
+            data.validatorName,
+            data.validatorConfig.namespace,
+          );
           const keysToConsider = this.translateMessage(getKeys); // eslint-disable-line max-len
           if (keysToConsider) {
             const randomKeys = keysToConsider.split(',');
             key = randomKeys[Math.floor(Math.random() * randomKeys.length)].trim();
           }
         }
-        const result = this.constructor.__getLocalizeKeys(key, data.validatorName);
+        const result = this.constructor.__getLocalizeKeys(
+          key,
+          data.validatorName,
+          data.validatorConfig.namespace,
+        );
         this.__lastGetSuccessResult = result;
         return result;
       }
@@ -469,9 +483,14 @@ export const ValidateMixin = dedupeMixin(
        *
        * @param {string} key usually `${type}.${validatorName}`
        * @param {string} validatorName for which to create the keys
+       * @param {string} customNamespace Extra localize namespace to consider from validatorConfig
        */
-      static __getLocalizeKeys(key, validatorName) {
+      static __getLocalizeKeys(key, validatorName, customNamespace) {
         const result = [];
+        if (customNamespace) {
+          result.push(`${customNamespace}+${validatorName}:${key}`);
+          result.push(`${customNamespace}:${key}`);
+        }
         this.localizeNamespaces.forEach(ns => {
           const namespace = typeof ns === 'object' ? Object.keys(ns)[0] : ns;
           result.push(`${namespace}+${validatorName}:${key}`);
@@ -504,7 +523,7 @@ export const ValidateMixin = dedupeMixin(
           const validatorArray = Array.isArray(validators[i]) ? validators[i] : [validators[i]];
           let validatorFn = validatorArray[0];
           const validatorParams = validatorArray[1];
-          const validatorConfig = validatorArray[2];
+          const validatorConfig = validatorArray[2] || {}; // empty obj prevents defensive programming
 
           let isRequiredValidator = false; // Whether the current is the required validator
           if (typeof validatorFn === 'string' && validatorFn === 'required' && this.__isRequired) {
