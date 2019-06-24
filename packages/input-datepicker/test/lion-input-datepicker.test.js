@@ -128,6 +128,22 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(false);
+      el.disabled = false;
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
+    });
+
+    it('disables invoker when host input is readonly', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker readonly></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      expect(elObj.overlayController.isShown).to.equal(false);
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(false);
+      el.readOnly = false;
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
     });
   });
 
