@@ -1,43 +1,41 @@
 /* eslint-disable class-methods-use-this */
 
 import { html, css, nothing } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { FormatMixin } from '@lion/field';
 
 export const ChoiceInputMixin = superclass =>
   // eslint-disable-next-line
-  class ChoiceInputMixin extends FormatMixin(ObserverMixin(superclass)) {
-    get delegations() {
+  class ChoiceInputMixin extends FormatMixin(superclass) {
+    static get properties() {
       return {
-        ...super.delegations,
-        target: () => this.inputElement,
-        properties: [...super.delegations.properties, 'checked'],
-        attributes: [...super.delegations.attributes, 'checked'],
+        ...super.properties,
+        /**
+         * Boolean indicating whether or not this element is checked by the end user.
+         */
+        checked: {
+          type: Boolean,
+          reflect: true,
+        },
+        /**
+         * Whereas 'normal' `.modelValue`s usually store a complex/typed version
+         * of a view value, choice inputs have a slightly different approach.
+         * In order to remain their Single Source of Truth characteristic, choice inputs
+         * store both the value and 'checkedness', in the format { value: 'x', checked: true }
+         * Different from the platform, this also allows to serialize the 'non checkedness',
+         * allowing to restore form state easily and inform the server about unchecked options.
+         */
+        modelValue: {
+          type: Object,
+          hasChanged: (nw, old = {}) => nw.value !== old.value || nw.checked !== old.checked,
+        },
+        /**
+         * The value property of the modelValue. It provides an easy inteface for storing
+         * (complex) values in the modelValue
+         */
+        choiceValue: {
+          type: Object,
+        },
       };
-    }
-
-    static get syncObservers() {
-      return {
-        ...super.syncObservers,
-        _syncModelValueToChecked: ['modelValue'],
-      };
-    }
-
-    static get asyncObservers() {
-      return {
-        ...super.asyncObservers,
-        _reflectCheckedToCssClass: ['modelValue'],
-      };
-    }
-
-    get choiceChecked() {
-      return this.modelValue.checked;
-    }
-
-    set choiceChecked(checked) {
-      if (this.modelValue.checked !== checked) {
-        this.modelValue = { value: this.modelValue.value, checked };
-      }
     }
 
     get choiceValue() {
@@ -45,8 +43,40 @@ export const ChoiceInputMixin = superclass =>
     }
 
     set choiceValue(value) {
+      this.requestUpdate('choiceValue', this.choiceValue);
       if (this.modelValue.value !== value) {
         this.modelValue = { value, checked: this.modelValue.checked };
+      }
+    }
+
+    _requestUpdate(name, oldValue) {
+      super._requestUpdate(name, oldValue);
+
+      if (name === 'modelValue') {
+        if (this.modelValue.checked !== this.checked) {
+          this.__syncModelCheckedToChecked(this.modelValue.checked);
+        }
+      } else if (name === 'checked') {
+        if (this.modelValue.checked !== this.checked) {
+          this.__syncCheckedToModel(this.checked);
+        }
+      }
+    }
+
+    firstUpdated(c) {
+      super.firstUpdated(c);
+      if (c.has('checked')) {
+        // Here we set the initial value for our [slot=input] content,
+        // which has been set by our SlotMixin
+        this.__syncCheckedToInputElement();
+      }
+    }
+
+    updated(c) {
+      super.updated(c);
+      if (c.has('modelValue')) {
+        this._reflectCheckedToCssClass({ modelValue: this.modelValue });
+        this.__syncCheckedToInputElement();
       }
     }
 
@@ -56,15 +86,9 @@ export const ChoiceInputMixin = superclass =>
     }
 
     /**
-     * @override
-     * Override InteractionStateMixin
-     * 'prefilled' should be false when modelValue is { checked: false }, which would return
-     * true in original method (since non-empty objects are considered prefilled by default).
+     * Styles for [input=radio] and [input=checkbox] wrappers.
+     * For [role=option] extensions, please override completely
      */
-    static _isPrefilled(modelValue) {
-      return modelValue.checked;
-    }
-
     static get styles() {
       return [
         css`
@@ -79,6 +103,10 @@ export const ChoiceInputMixin = superclass =>
       ];
     }
 
+    /**
+     * Template for [input=radio] and [input=checkbox] wrappers.
+     * For [role=option] extensions, please override completely
+     */
     render() {
       return html`
         <slot name="input"></slot>
@@ -96,22 +124,44 @@ export const ChoiceInputMixin = superclass =>
     }
 
     connectedCallback() {
-      if (super.connectedCallback) super.connectedCallback();
-      this.addEventListener('user-input-changed', this._toggleChecked);
+      super.connectedCallback();
+      this.addEventListener('user-input-changed', this.__toggleChecked);
       this._reflectCheckedToCssClass();
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) super.disconnectedCallback();
-      this.removeEventListener('user-input-changed', this._toggleChecked);
+      super.disconnectedCallback();
+      this.removeEventListener('user-input-changed', this.__toggleChecked);
     }
 
-    _toggleChecked() {
-      this.choiceChecked = !this.choiceChecked;
+    __toggleChecked() {
+      this.checked = !this.checked;
     }
 
-    _syncModelValueToChecked({ modelValue }) {
-      this.checked = !!modelValue.checked;
+    __syncModelCheckedToChecked(checked) {
+      this.checked = checked;
+    }
+
+    __syncCheckedToModel(checked) {
+      this.modelValue = { value: this.choiceValue, checked };
+    }
+
+    __syncCheckedToInputElement() {
+      // .inputElement might not be available yet(slot content)
+      // or at all (no reliance on platform construct, in case of [role=option])
+      if (this.inputElement) {
+        this.inputElement.checked = this.checked;
+      }
+    }
+
+    /**
+     * @override
+     * Override InteractionStateMixin
+     * 'prefilled' should be false when modelValue is { checked: false }, which would return
+     * true in original method (since non-empty objects are considered prefilled by default).
+     */
+    static _isPrefilled(modelValue) {
+      return modelValue.checked;
     }
 
     /**
@@ -126,30 +176,13 @@ export const ChoiceInputMixin = superclass =>
 
     /**
      * @override
-     * Override FormatMixin default dispatching of model-value-changed as it only does a simple
-     * comparision which is not enough in js because
-     * { value: 'foo', checked: true } !== { value: 'foo', checked: true }
-     * We do our own "deep" comparision.
-     *
-     * @param {object} modelValue
-     * @param {object} modelValue the old one
+     * hasChanged is designed for async (updated) callback, also check for sync
+     * (_requestUpdate) callback
      */
-    // TODO: consider making a generic option inside FormatMixin for deep object comparisons when
-    // modelValue is an object
-    _dispatchModelValueChangedEvent({ modelValue }, { modelValue: old }) {
-      let changed = true;
-      if (old) {
-        changed = modelValue.value !== old.value || modelValue.checked !== old.checked;
+    _onModelValueChanged({ modelValue }, { modelValue: old }) {
+      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, old)) {
+        super._onModelValueChanged({ modelValue });
       }
-      if (changed) {
-        this.dispatchEvent(
-          new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
-        );
-      }
-    }
-
-    _reflectCheckedToCssClass() {
-      this.classList[this.choiceChecked ? 'add' : 'remove']('state-checked');
     }
 
     /**
@@ -171,11 +204,30 @@ export const ChoiceInputMixin = superclass =>
 
     /**
      * @override
-     * Overridden from ValidateMixin, since a different modelValue is used for choice inputs.
+     * Overridden from Field, since a different modelValue is used for choice inputs.
      */
     __isRequired(modelValue) {
       return {
         required: !!modelValue.checked,
       };
+    }
+
+    /**
+     * @deprecated use .checked
+     */
+    get choiceChecked() {
+      return this.checked;
+    }
+
+    /**
+     * @deprecated use .checked
+     */
+    set choiceChecked(c) {
+      this.checked = c;
+    }
+
+    /** @deprecated for styling purposes, use [checked] attribute */
+    _reflectCheckedToCssClass() {
+      this.classList[this.checked ? 'add' : 'remove']('state-checked');
     }
   };
