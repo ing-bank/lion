@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.22](https://github.com/ing-bank/lion/compare/@lion/input@0.1.21...@lion/input@0.1.22) (2019-06-24)
+
+
+### Bug Fixes
+
+* **input-datepicker:** disable invoker when readonly ([5cd9452](https://github.com/ing-bank/lion/commit/5cd9452))
+
+
+
+
+
 ## [0.1.21](https://github.com/ing-bank/lion/compare/@lion/input@0.1.20...@lion/input@0.1.21) (2019-06-20)
 
 **Note:** Version bump only for package @lion/input
