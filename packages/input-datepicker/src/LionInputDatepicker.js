@@ -197,8 +197,13 @@ export class LionInputDatepicker extends LionInputDate {
    */
   _requestUpdate(name, oldValue) {
     super._requestUpdate(name, oldValue);
+
     if (name === 'disabled') {
       this.__delegateDisabled();
+    }
+
+    if (name === 'disabled' || name === 'readOnly') {
+      this.__toggleInvokerDisabled();
     }
   }
 
@@ -206,11 +211,14 @@ export class LionInputDatepicker extends LionInputDate {
    * TODO: [delegation of disabled] move this to LionField (or FormControl) level
    */
   __delegateDisabled() {
-    if (this.delegations.target()) {
-      this.delegations.target().disabled = this.disabled;
+    if (this.inputElement) {
+      this.inputElement.disabled = this.disabled;
     }
+  }
+
+  __toggleInvokerDisabled() {
     if (this._invokerElement) {
-      this._invokerElement.disabled = this.disabled;
+      this._invokerElement.disabled = this.disabled || this.readOnly;
     }
   }
 
@@ -220,6 +228,7 @@ export class LionInputDatepicker extends LionInputDate {
   firstUpdated(c) {
     super.firstUpdated(c);
     this.__delegateDisabled();
+    this.__toggleInvokerDisabled();
   }
 
   /**
