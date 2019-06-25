@@ -54,6 +54,13 @@ describe('formatAmount()', () => {
         maximumFractionDigits: 3,
       }),
     ).to.equal('12.346');
+    expect(
+      formatAmount(-12.345678, {
+        locale: 'en-GB',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    ).to.equal('-12.35');
   });
 
   it('formats the right amount of fraction digits for a certain currency', async () => {

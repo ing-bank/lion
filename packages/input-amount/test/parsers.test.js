@@ -112,11 +112,27 @@ describe('parseAmount()', () => {
     expect(parseAmount('1 23.4')).to.equal(123.4);
   });
 
+  it('parses negative numbers', () => {
+    expect(parseAmount('-0')).to.equal(0);
+    expect(parseAmount('-1')).to.equal(-1);
+    expect(parseAmount('-1234')).to.equal(-1234);
+    expect(parseAmount('-1.234,5')).to.equal(-1234.5);
+    expect(parseAmount('-1,234.5')).to.equal(-1234.5);
+    expect(parseAmount('-1.234,5678')).to.equal(-1234.5678);
+    expect(parseAmount('-1,234.5678')).to.equal(-1234.5678);
+  });
+
   it('ignores all non-number symbols (including currency)', () => {
     expect(parseAmount('€ 1,234.56')).to.equal(1234.56);
+    expect(parseAmount('€ -1,234.56')).to.equal(-1234.56);
+    expect(parseAmount('-€ 1,234.56')).to.equal(-1234.56);
     expect(parseAmount('1,234.56 €')).to.equal(1234.56);
+    expect(parseAmount('-1,234.56 €')).to.equal(-1234.56);
     expect(parseAmount('EUR 1,234.56')).to.equal(1234.56);
+    expect(parseAmount('EUR -1,234.56')).to.equal(-1234.56);
+    expect(parseAmount('-EUR 1,234.56')).to.equal(-1234.56);
     expect(parseAmount('1,234.56 EUR')).to.equal(1234.56);
+    expect(parseAmount('-1,234.56 EUR')).to.equal(-1234.56);
     expect(parseAmount('Number is 1,234.56')).to.equal(1234.56);
   });
 
