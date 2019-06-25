@@ -114,7 +114,9 @@ describe('parseAmount()', () => {
 
   it('ignores all non-number symbols (including currency)', () => {
     expect(parseAmount('€ 1,234.56')).to.equal(1234.56);
+    expect(parseAmount('1,234.56 €')).to.equal(1234.56);
     expect(parseAmount('EUR 1,234.56')).to.equal(1234.56);
+    expect(parseAmount('1,234.56 EUR')).to.equal(1234.56);
     expect(parseAmount('Number is 1,234.56')).to.equal(1234.56);
   });
 
