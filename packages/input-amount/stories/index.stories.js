@@ -11,6 +11,17 @@ storiesOf('Forms|Input Amount', module)
     `,
   )
   .add(
+    'Negative number',
+    () => html`
+      <lion-input-amount
+        .errorValidators="${['required']}"
+        label="Amount"
+        .modelValue=${-123456.78}
+      >
+      </lion-input-amount>
+    `,
+  )
+  .add(
     'Set USD as currency',
     () => html`
       <lion-input-amount label="Price" currency="USD" .modelValue=${123456.78}> </lion-input-amount>
