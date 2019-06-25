@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-
+import { render, TemplateResult } from '../index.js';
 import { dedupeMixin } from './dedupeMixin.js';
 import { DomHelpersMixin } from './DomHelpersMixin.js';
 
@@ -56,7 +56,14 @@ export const SlotMixin = dedupeMixin(
           Object.keys(this.slots).forEach(slotName => {
             if (!this.$$slot(slotName)) {
               const slotFactory = this.slots[slotName];
-              const slotContent = slotFactory();
+              let slotContent = slotFactory();
+
+              if (slotContent instanceof TemplateResult) {
+                const renderContainer = document.createElement('div');
+                render(slotContent, renderContainer);
+                slotContent = renderContainer.firstElementChild;
+              }
+
               if (slotContent instanceof Element) {
                 slotContent.setAttribute('slot', slotName);
                 this.appendChild(slotContent);

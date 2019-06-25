@@ -1,4 +1,4 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
+import { expect, fixture, defineCE, html } from '@open-wc/testing';
 
 import { SlotMixin } from '../src/SlotMixin.js';
 
@@ -112,5 +112,23 @@ describe('SlotMixin', () => {
     renderSlot = false;
     const elNoSlot = await fixture(`<${tag}><${tag}>`);
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
+  });
+
+  it('allows to provide a TemplateResults as content', async () => {
+    const tag = defineCE(
+      class extends SlotMixin(HTMLElement) {
+        get slots() {
+          return {
+            ...super.slots,
+            lit: () =>
+              html`
+                <div>${'TemplateResult'}</div>
+              `,
+          };
+        }
+      },
+    );
+    const el = await fixture(`<${tag}><${tag}>`);
+    expect(el.querySelector('[slot="lit"]').innerHTML).to.equal('<!---->TemplateResult<!---->');
   });
 });
