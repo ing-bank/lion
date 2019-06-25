@@ -1,6 +1,6 @@
 {
   "name": "@lion/checkbox-group",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "A container for multiple checkboxes",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -36,7 +36,7 @@
     "@lion/fieldset": "^0.1.22"
   },
   "devDependencies": {
-    "@lion/checkbox": "^0.1.22",
+    "@lion/checkbox": "^0.1.23",
     "@lion/form": "^0.1.24",
     "@lion/localize": "^0.4.0",
     "@open-wc/demoing-storybook": "^0.2.0",
