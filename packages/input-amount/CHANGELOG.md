@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.23](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.22...@lion/input-amount@0.1.23) (2019-06-25)
+
+
+### Bug Fixes
+
+* **input-amount:** support negative numbers ([83f9baa](https://github.com/ing-bank/lion/commit/83f9baa))
+
+
+
+
+
 ## [0.1.22](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.21...@lion/input-amount@0.1.22) (2019-06-24)
 
 **Note:** Version bump only for package @lion/input-amount
