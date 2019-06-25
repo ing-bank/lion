@@ -61,7 +61,7 @@ function getParseMode(value) {
  */
 function parseWithLocale(value, options) {
   const separator = getDecimalSeparator(options);
-  const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}]`, 'g');
+  const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
   let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator).join('');
   if (separator === ',') {
     numberAndLocaleSeparator = numberAndLocaleSeparator.replace(',', '.');
@@ -110,7 +110,7 @@ function parseHeuristic(value) {
  * @param {object} options Locale Options
  */
 export function parseAmount(value, options) {
-  const matchedInput = value.match(/[0-9,. ]/g);
+  const matchedInput = value.match(/[0-9,.\- ]/g);
   if (!matchedInput) {
     return undefined;
   }
