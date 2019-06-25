@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-amount",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "Provide a way for users to fill in an amount",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
