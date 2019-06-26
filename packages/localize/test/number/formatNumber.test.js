@@ -4,55 +4,36 @@ import { localizeTearDown } from '../../test-helpers.js';
 
 import { formatNumber } from '../../src/number/formatNumber.js';
 
+const currencyCode = currency => ({ style: 'currency', currencyDisplay: 'code', currency });
+const currencySymbol = currency => ({ style: 'currency', currencyDisplay: 'symbol', currency });
+
 describe('formatNumber', () => {
   afterEach(localizeTearDown);
 
   it('displays the appropriate amount of decimal places based on currencies spec http://www.currency-iso.org/en/home/tables/table-a1.html', async () => {
-    const currencyCode = { style: 'currency', currencyDisplay: 'code' };
-    const currencySymbol = { style: 'currency', currencyDisplay: 'symbol' };
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-      'EUR 123,456.79',
-    );
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencySymbol })).to.equal(
-      '€123,456.79',
-    );
+    expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
+    expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123,456.79');
     localize.locale = 'nl-NL';
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-      '123.456,79 EUR',
-    );
-    expect(formatNumber(123456.789, { currency: 'JPY', ...currencySymbol })).to.equal('123.457 ¥');
+    expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
+    expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123.457 ¥');
     localize.locale = 'fr-FR';
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-      '123 456,79 EUR',
-    );
-    expect(formatNumber(123456.789, { currency: 'JPY', ...currencySymbol })).to.equal('123 457 ¥');
+    expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
+    expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123 457 ¥');
     localize.locale = 'de-DE';
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-      '123.456,79 EUR',
-    );
-    expect(formatNumber(123456.789, { currency: 'JPY', ...currencySymbol })).to.equal('123.457 ¥');
+    expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
+    expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123.457 ¥');
   });
 
   it('can display currency as code', async () => {
-    const currencyCode = { style: 'currency', currencyDisplay: 'code' };
     localize.locale = 'nl-NL';
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-      '123.456,79 EUR',
-    );
-    expect(formatNumber(123456.789, { currency: 'USD', ...currencyCode })).to.equal(
-      '123.456,79 USD',
-    );
+    expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
+    expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
   });
 
   it('can display currency as symbol', async () => {
-    const currencySymbol = { style: 'currency', currencyDisplay: 'symbol' };
     localize.locale = 'nl-NL';
-    expect(formatNumber(123456.789, { currency: 'EUR', ...currencySymbol })).to.equal(
-      '123.456,79 €',
-    );
-    expect(formatNumber(123456.789, { currency: 'USD', ...currencySymbol })).to.equal(
-      '123.456,79 $',
-    );
+    expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('123.456,79 €');
+    expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('123.456,79 $');
   });
 
   it('uses minus (and not dash) to indicate negative numbers ', async () => {
@@ -204,50 +185,27 @@ describe('formatNumber', () => {
   });
 
   describe('normalization', () => {
-    const currencyCode = { style: 'currency', currencyDisplay: 'code' };
-    const currencySymbol = { style: 'currency', currencyDisplay: 'symbol' };
-
     it('supports British locale', async () => {
-      expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-        'EUR 123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'USD', ...currencyCode })).to.equal(
-        'USD 123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'EUR', ...currencySymbol })).to.equal(
-        '€123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'USD', ...currencySymbol })).to.equal(
-        '$123,456.79',
-      );
+      expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
+      expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
+      expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123,456.79');
+      expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123,456.79');
     });
 
     it('supports US locale', async () => {
       localize.locale = 'en-US';
-      expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-        'EUR 123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'USD', ...currencyCode })).to.equal(
-        'USD 123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'EUR', ...currencySymbol })).to.equal(
-        '€123,456.79',
-      );
-      expect(formatNumber(123456.789, { currency: 'USD', ...currencySymbol })).to.equal(
-        '$123,456.79',
-      );
+      expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
+      expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
+      expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123,456.79');
+      expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123,456.79');
     });
 
     it('supports Bulgarian locale', async () => {
       localize.locale = 'bg-BG';
-      expect(formatNumber(123456.789, { currency: 'EUR', ...currencyCode })).to.equal(
-        '123 456,79 EUR',
-      );
-      expect(formatNumber(1234567890.789, { currency: 'USD', ...currencyCode })).to.equal(
-        '1 234 567 890,79 USD',
-      );
-      expect(formatNumber(12.789, { currency: 'EUR', ...currencyCode })).to.equal('12,79 EUR');
-      expect(formatNumber(12, { currency: 'USD', ...currencyCode })).to.equal('12,00 USD');
+      expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
+      expect(formatNumber(1234567890.789, currencyCode('USD'))).to.equal('1 234 567 890,79 USD');
+      expect(formatNumber(12.789, currencyCode('EUR'))).to.equal('12,79 EUR');
+      expect(formatNumber(12, currencyCode('USD'))).to.equal('12,00 USD');
       expect(formatNumber(12.789, { style: 'decimal' })).to.equal('12,789');
       expect(formatNumber(12, { style: 'decimal', minimumFractionDigits: 3 })).to.equal('12,000');
       expect(formatNumber(20000, { style: 'decimal', minimumFractionDigits: 3 })).to.equal(
