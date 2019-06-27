@@ -234,9 +234,9 @@ describe('formatNumber', () => {
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
-        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('123.456,79 €');
-        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('123.456,79 $');
-        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123.457 ¥');
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€ 123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$ 123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥ 123.457');
       });
     });
 
@@ -246,9 +246,9 @@ describe('formatNumber', () => {
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
-        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('123.456,79 €');
-        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('123.456,79 $');
-        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('123.457 ¥');
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€ 123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$ 123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥ 123.457');
       });
     });
 
