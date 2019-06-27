@@ -1,5 +1,5 @@
-import { expect, fixture, aTimeout, html } from '@open-wc/testing';
-import { until } from '@lion/core';
+import { expect, fixture, fixtureSync, aTimeout, html } from '@open-wc/testing';
+import { until, render } from '@lion/core';
 
 import heartSvg from './heart.svg.js';
 import hammerSvg from './hammer.svg.js';
@@ -160,5 +160,86 @@ describe('lion-icon', () => {
     el.svg = undefined;
     await el.updateComplete;
     expect(el.innerHTML).to.equal('');
+  });
+
+  describe('race conditions with dynamic promisified icons', () => {
+    async function prepareRaceCondition(...svgs) {
+      const container = fixtureSync(`<div></div>`);
+      const resolves = svgs.map(svg => {
+        let resolveSvg;
+
+        const svgProperty =
+          Promise.resolve(svg) === svg
+            ? new Promise(resolve => {
+                resolveSvg = () => resolve(svg);
+              })
+            : svg;
+
+        render(
+          html`
+            <lion-icon .svg=${svgProperty}></lion-icon>
+          `,
+          container,
+        );
+
+        return resolveSvg;
+      });
+
+      const icon = container.children[0];
+      await icon.updateComplete;
+      return [icon, ...resolves];
+    }
+
+    it('renders in the order of rendering instead of the order of resolution', async () => {
+      let resolveHeartSvg;
+      let resolveHammerSvg;
+      let icon;
+      let svg;
+
+      [icon, resolveHeartSvg, resolveHammerSvg] = await prepareRaceCondition(
+        Promise.resolve(heartSvg),
+        Promise.resolve(hammerSvg),
+      );
+      resolveHeartSvg();
+      resolveHammerSvg();
+      await aTimeout();
+      [svg] = icon.children;
+      expect(svg).to.exist;
+      expect(svg.id).to.equal('svg-hammer');
+
+      [icon, resolveHeartSvg, resolveHammerSvg] = await prepareRaceCondition(
+        Promise.resolve(heartSvg),
+        Promise.resolve(hammerSvg),
+      );
+      resolveHammerSvg();
+      resolveHeartSvg();
+      await aTimeout();
+      [svg] = icon.children;
+      expect(svg).to.exist;
+      expect(svg.id).to.equal('svg-hammer');
+    });
+
+    it('renders if a resolved promise was replaced by a string', async () => {
+      const [icon, resolveHeartSvg] = await prepareRaceCondition(
+        Promise.resolve(heartSvg),
+        hammerSvg,
+      );
+      resolveHeartSvg();
+      await aTimeout();
+      const [svg] = icon.children;
+      expect(svg).to.exist;
+      expect(svg.id).to.equal('svg-hammer');
+    });
+
+    it('does not render if a resolved promise was replaced by another unresolved promise', async () => {
+      const [icon, resolveHeartSvg] = await prepareRaceCondition(
+        Promise.resolve(heartSvg),
+        Promise.resolve(hammerSvg),
+      );
+      resolveHeartSvg();
+      await aTimeout();
+      const [svg] = icon.children;
+      expect(svg).to.not.exist;
+    });
   });
 });
