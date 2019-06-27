@@ -4,212 +4,99 @@ import { localizeTearDown } from '../../test-helpers.js';
 
 import { formatNumberToParts } from '../../src/number/formatNumberToParts.js';
 
+const c = v => ({ type: 'currency', value: v });
+const d = v => ({ type: 'decimal', value: v });
+const i = v => ({ type: 'integer', value: v });
+const f = v => ({ type: 'fraction', value: v });
+const g = v => ({ type: 'group', value: v });
+const l = v => ({ type: 'literal', value: v });
+const m = { type: 'minusSign', value: '-' };
+
+const stringifyParts = parts => parts.map(part => part.value).join('');
+
 describe('formatNumberToParts', () => {
   afterEach(localizeTearDown);
 
-  describe('formats based on ISO standards', () => {
+  describe("style: 'currency'", () => {
     const specs = [
-      ['nl-NL', 'EUR', 1234.5, '1.234,50 EUR'],
-      ['nl-NL', 'USD', 1234.5, '1.234,50 USD'],
-      ['nl-NL', 'EUR', -1234.5, '-1.234,50 EUR'],
-      ['nl-BE', 'EUR', 1234.5, '1.234,50 EUR'],
-      ['nl-BE', 'USD', 1234.5, '1.234,50 USD'],
-      ['nl-BE', 'EUR', -1234.5, '-1.234,50 EUR'],
-      ['en-GB', 'EUR', 1234.5, 'EUR 1,234.50'],
-      ['en-GB', 'USD', 1234.5, 'USD 1,234.50'],
-      ['en-GB', 'EUR', -1234.5, '-EUR 1,234.50'],
-      ['de-DE', 'EUR', 1234.5, '1.234,50 EUR'],
-      ['de-DE', 'USD', 1234.5, '1.234,50 USD'],
-      ['de-DE', 'EUR', -1234.5, '-1.234,50 EUR'],
-      ['fr-BE', 'EUR', 1234.5, '1 234,50 EUR'],
-      ['fr-BE', 'USD', 1234.5, '1 234,50 USD'],
-      ['fr-BE', 'EUR', -1234.5, '-1 234,50 EUR'],
+      ['en-GB', 'EUR', 1234.5, [c('EUR'), l(' '), i('1'), g(','), i('234'), d('.'), f('50')]],
+      ['en-GB', 'EUR', -1234.5, [m, c('EUR'), l(' '), i('1'), g(','), i('234'), d('.'), f('50')]],
+      ['nl-NL', 'EUR', 1234.5, [i('1'), g('.'), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['nl-NL', 'EUR', -1234.5, [m, i('1'), g('.'), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['nl-BE', 'EUR', 1234.5, [i('1'), g('.'), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['nl-BE', 'EUR', -1234.5, [m, i('1'), g('.'), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['fr-FR', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['fr-FR', 'EUR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
+      ['fr-BE', 'EUR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('EUR')]],
     ];
 
-    specs.forEach(spec => {
-      const [locale, currency, amount, expectedResult] = spec;
-
-      it(`formats ${locale} ${currency} ${amount} as ${expectedResult}`, () => {
+    specs.forEach(([locale, currency, amount, expectedResult]) => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
         localize.locale = locale;
-        const parts = formatNumberToParts(amount, {
-          style: 'currency',
-          currency,
-          currencyDisplay: 'code',
-        });
-        const joinedParts = parts.map(p => p.value).join('');
-        expect(joinedParts).to.equal(expectedResult);
+        expect(
+          formatNumberToParts(amount, {
+            style: 'currency',
+            currencyDisplay: 'code',
+            currency,
+          }),
+        ).to.deep.equal(expectedResult);
       });
     });
   });
 
-  it('supports currency symbol with dutch locale', async () => {
-    localize.locale = 'nl-NL';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'symbol',
+  describe("style: 'decimal'", () => {
+    describe('no minimumFractionDigits', () => {
+      const specs = [
+        ['en-GB', 3500, [i('3'), g(','), i('500')]],
+        ['en-GB', -3500, [m, i('3'), g(','), i('500')]],
+        ['nl-NL', 3500, [i('3'), g('.'), i('500')]],
+        ['nl-NL', -3500, [m, i('3'), g('.'), i('500')]],
+        ['nl-BE', 3500, [i('3'), g('.'), i('500')]],
+        ['nl-BE', -3500, [m, i('3'), g('.'), i('500')]],
+        ['fr-FR', 3500, [i('3'), g(' '), i('500')]],
+        ['fr-FR', -3500, [m, i('3'), g(' '), i('500')]],
+        ['fr-BE', 3500, [i('3'), g(' '), i('500')]],
+        ['fr-BE', -3500, [m, i('3'), g(' '), i('500')]],
+      ];
+
+      specs.forEach(([locale, amount, expectedResult]) => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+          localize.locale = locale;
+          expect(
+            formatNumberToParts(amount, {
+              style: 'decimal',
+            }),
+          ).to.deep.equal(expectedResult);
+        });
+      });
     });
-    expect(formattedToParts).to.eql([
-      { type: 'integer', value: '3' },
-      { type: 'group', value: '.' },
-      { type: 'integer', value: '500' },
-      { type: 'decimal', value: ',' },
-      { type: 'fraction', value: '00' },
-      { type: 'literal', value: ' ' },
-      { type: 'currency', value: '€' },
-    ]);
-  });
 
-  it('supports currency symbol with french locale', async () => {
-    localize.locale = 'fr-FR';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'symbol',
+    describe('minimumFractionDigits: 2', () => {
+      const specs = [
+        ['en-GB', 3500, [i('3'), g(','), i('500'), d('.'), f('00')]],
+        ['en-GB', -3500, [m, i('3'), g(','), i('500'), d('.'), f('00')]],
+        ['nl-NL', 3500, [i('3'), g('.'), i('500'), d(','), f('00')]],
+        ['nl-NL', -3500, [m, i('3'), g('.'), i('500'), d(','), f('00')]],
+        ['nl-BE', 3500, [i('3'), g('.'), i('500'), d(','), f('00')]],
+        ['nl-BE', -3500, [m, i('3'), g('.'), i('500'), d(','), f('00')]],
+        ['fr-FR', 3500, [i('3'), g(' '), i('500'), d(','), f('00')]],
+        ['fr-FR', -3500, [m, i('3'), g(' '), i('500'), d(','), f('00')]],
+        ['fr-BE', 3500, [i('3'), g(' '), i('500'), d(','), f('00')]],
+        ['fr-BE', -3500, [m, i('3'), g(' '), i('500'), d(','), f('00')]],
+      ];
+
+      specs.forEach(([locale, amount, expectedResult]) => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+          localize.locale = locale;
+          expect(
+            formatNumberToParts(amount, {
+              style: 'decimal',
+              minimumFractionDigits: 2,
+            }),
+          ).to.deep.equal(expectedResult);
+        });
+      });
     });
-    expect(Object.keys(formattedToParts).length).to.equal(7);
-    expect(formattedToParts[0].type).to.equal('integer');
-    expect(formattedToParts[0].value).to.equal('3');
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(' ');
-    expect(formattedToParts[5].type).to.equal('literal');
-    expect(formattedToParts[5].value).to.equal(' ');
-    expect(formattedToParts[6].type).to.equal('currency');
-    expect(formattedToParts[6].value).to.equal('€');
-  });
-
-  it('supports currency symbol with British locale', async () => {
-    localize.locale = 'en-GB';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'symbol',
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(6);
-    expect(formattedToParts[2].type).to.equal('group');
-    expect(formattedToParts[2].value).to.equal(',');
-    expect(formattedToParts[4].type).to.equal('decimal');
-    expect(formattedToParts[4].value).to.equal('.');
-    expect(formattedToParts[5].type).to.equal('fraction');
-    expect(formattedToParts[5].value).to.equal('00');
-  });
-
-  it('supports currency code with dutch locale', async () => {
-    localize.locale = 'nl-NL';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'code',
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(7);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal('.');
-    expect(formattedToParts[3].type).to.equal('decimal');
-    expect(formattedToParts[3].value).to.equal(',');
-    expect(formattedToParts[5].type).to.equal('literal');
-    expect(formattedToParts[5].value).to.equal(' ');
-    expect(formattedToParts[6].type).to.equal('currency');
-    expect(formattedToParts[6].value).to.equal('EUR');
-  });
-
-  it('supports currency code with french locale', async () => {
-    localize.locale = 'fr-FR';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'code',
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(7);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(' ');
-    expect(formattedToParts[3].type).to.equal('decimal');
-    expect(formattedToParts[3].value).to.equal(',');
-    expect(formattedToParts[4].type).to.equal('fraction');
-    expect(formattedToParts[4].value).to.equal('00');
-  });
-
-  it('supports currency code with British locale', async () => {
-    localize.locale = 'en-GB';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'currency',
-      currency: 'EUR',
-      currencyDisplay: 'code',
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(7);
-    expect(formattedToParts[3].type).to.equal('group');
-    expect(formattedToParts[3].value).to.equal(',');
-    expect(formattedToParts[5].type).to.equal('decimal');
-    expect(formattedToParts[5].value).to.equal('.');
-  });
-
-  it('supports currency with dutch locale and 2 decimals', async () => {
-    localize.locale = 'nl-NL';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(5);
-    expect(formattedToParts[0].type).to.equal('integer');
-    expect(formattedToParts[0].value).to.equal('3');
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal('.');
-    expect(formattedToParts[2].type).to.equal('integer');
-    expect(formattedToParts[2].value).to.equal('500');
-    expect(formattedToParts[3].type).to.equal('decimal');
-    expect(formattedToParts[3].value).to.equal(',');
-    expect(formattedToParts[4].type).to.equal('fraction');
-    expect(formattedToParts[4].value).to.equal('00');
-  });
-
-  it('supports currency with french locale and 2 decimals', async () => {
-    localize.locale = 'fr-FR';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(5);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(' ');
-    expect(formattedToParts[3].type).to.equal('decimal');
-    expect(formattedToParts[3].value).to.equal(',');
-  });
-
-  it('supports currency with british locale and 2 decimals', async () => {
-    localize.locale = 'en-GB';
-    const formattedToParts = formatNumberToParts(3500, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-    });
-    expect(Object.keys(formattedToParts).length).to.equal(5);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(',');
-    expect(formattedToParts[3].type).to.equal('decimal');
-    expect(formattedToParts[3].value).to.equal('.');
-  });
-
-  it('supports currency with dutch locale without decimals', async () => {
-    localize.locale = 'nl-NL';
-    const formattedToParts = formatNumberToParts(3500, { style: 'decimal' });
-    expect(Object.keys(formattedToParts).length).to.equal(3);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal('.');
-    expect(formattedToParts[2].type).to.equal('integer');
-    expect(formattedToParts[2].value).to.equal('500');
-  });
-
-  it('supports currency with french locale without decimals', async () => {
-    localize.locale = 'fr-FR';
-    const formattedToParts = formatNumberToParts(3500, { style: 'decimal' });
-    expect(Object.keys(formattedToParts).length).to.equal(3);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(' ');
-  });
-
-  it('supports currency with british locale without decimals', async () => {
-    localize.locale = 'en-GB';
-    const formattedToParts = formatNumberToParts(3500, { style: 'decimal' });
-    expect(Object.keys(formattedToParts).length).to.equal(3);
-    expect(formattedToParts[1].type).to.equal('group');
-    expect(formattedToParts[1].value).to.equal(',');
   });
 });
