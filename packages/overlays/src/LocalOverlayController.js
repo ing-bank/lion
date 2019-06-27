@@ -9,7 +9,7 @@ export class LocalOverlayController {
   constructor(params = {}) {
     // TODO: Instead of in constructor, prefetch it or use a preloader-manager to load it during idle time
     this.constructor.popperModule = __preloadPopper();
-    this.__mergePlacementConfigs(params.placementConfig || {});
+    this.__mergePopperConfigs(params.popperConfig || {});
 
     this.hidesOnEsc = params.hidesOnEsc;
     this.hidesOnOutsideClick = params.hidesOnOutsideClick;
@@ -125,8 +125,8 @@ export class LocalOverlayController {
 
   // Popper does not export a nice method to update an existing instance with a new config. Therefore we recreate the instance.
   // TODO: Send a merge request to Popper to abstract their logic in the constructor to an exposed method which takes in the user config.
-  async updatePlacementConfig(config = {}) {
-    this.__mergePlacementConfigs(config);
+  async updatePopperConfig(config = {}) {
+    this.__mergePopperConfigs(config);
     await this.__createPopperInstance();
   }
 
@@ -233,12 +233,10 @@ export class LocalOverlayController {
    * Merges the default config with the current config, and finally with the user supplied config
    * @param {Object} config user supplied configuration
    */
-  __mergePlacementConfigs(config = {}) {
-    this.placementConfig = {
+  __mergePopperConfigs(config = {}) {
+    const defaultConfig = {
       placement: 'top',
       positionFixed: false,
-      ...(this.placementConfig || {}),
-      ...(config || {}),
       modifiers: {
         keepTogether: {
           enabled: false,
@@ -259,7 +257,17 @@ export class LocalOverlayController {
         arrow: {
           enabled: false,
         },
-        ...((this.placementConfig && this.placementConfig.modifiers) || {}),
+      },
+    };
+
+    // Deep merging default config, previously configured user config, new user config
+    this.popperConfig = {
+      ...defaultConfig,
+      ...(this.popperConfig || {}),
+      ...(config || {}),
+      modifiers: {
+        ...defaultConfig.modifiers,
+        ...((this.popperConfig && this.popperConfig.modifiers) || {}),
         ...((config && config.modifiers) || {}),
       },
     };
@@ -273,7 +281,7 @@ export class LocalOverlayController {
     const mod = await this.constructor.popperModule;
     const Popper = mod.default;
     this._popper = new Popper(this.invokerNode, this.contentNode, {
-      ...this.placementConfig,
+      ...this.popperConfig,
     });
   }
 }

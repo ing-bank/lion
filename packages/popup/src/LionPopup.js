@@ -4,24 +4,24 @@ import { overlays, LocalOverlayController } from '@lion/overlays';
 export class LionPopup extends UpdatingElement {
   static get properties() {
     return {
-      placementConfig: {
+      popperConfig: {
         type: Object,
       },
     };
   }
 
-  get placementConfig() {
-    return this._placementConfig;
+  get popperConfig() {
+    return this._popperConfig;
   }
 
-  set placementConfig(config) {
-    this._placementConfig = {
-      ...this._placementConfig,
+  set popperConfig(config) {
+    this._popperConfig = {
+      ...this._popperConfig,
       ...config,
     };
 
     if (this._controller && this._controller._popper) {
-      this._controller.updatePlacementConfig(this._placementConfig);
+      this._controller.updatePopperConfig(this._popperConfig);
     }
   }
 
@@ -34,7 +34,7 @@ export class LionPopup extends UpdatingElement {
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placementConfig: this.placementConfig,
+        popperConfig: this.popperConfig,
         contentNode: this.contentNode,
         invokerNode: this.invokerNode,
       }),

@@ -46,7 +46,7 @@ describe('lion-popup', () => {
       expect(el.querySelector('strong')).to.not.be.undefined;
     });
 
-    it('should respond to dynamically changing the placementConfig', async () => {
+    it('should respond to dynamically changing the popperConfig', async () => {
       const el = await fixture(html`
         <lion-popup>
           <div slot="content" class="popup">Hey there</div>
@@ -56,7 +56,7 @@ describe('lion-popup', () => {
       await el._controller.show();
       expect(el._controller._popper.options.placement).to.equal('top');
 
-      el.placementConfig = { placement: 'left' };
+      el.popperConfig = { placement: 'left' };
       await el._controller.show();
       expect(el._controller._popper.options.placement).to.equal('left');
     });
