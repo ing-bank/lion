@@ -83,6 +83,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
             },
             preventOverflow: {
               enabled: false /* disables shifting/sliding behavior on secondary axis */,
+              boundariesElement: 'viewport',
               padding: 32 /* when enabled, this is the viewport-margin for shifting/sliding */,
             },
             flip: {

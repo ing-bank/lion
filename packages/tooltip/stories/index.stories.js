@@ -109,6 +109,7 @@ storiesOf('Local Overlay System|Tooltip', module)
               },
               preventOverflow: {
                 enabled: false /* disables shifting/sliding behavior on secondary axis */,
+                boundariesElement: 'viewport',
                 padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
               },
               flip: {
