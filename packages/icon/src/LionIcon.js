@@ -1,6 +1,6 @@
-import { html, css, render, unsafeHTML, until, LitElement } from '@lion/core';
+import { html, css, LitElement } from '@lion/core';
 
-const isDefinedPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
+const isPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
 
 /**
  * Custom element for rendering SVG icons
@@ -9,6 +9,7 @@ const isDefinedPromise = action => typeof action === 'object' && Promise.resolve
 export class LionIcon extends LitElement {
   static get properties() {
     return {
+      // svg is a property to ensure the setter is called if the property is set before upgrading
       svg: {
         type: String,
       },
@@ -59,13 +60,6 @@ export class LionIcon extends LitElement {
 
   update(changedProperties) {
     super.update(changedProperties);
-    if (changedProperties.has('svg')) {
-      if (isDefinedPromise(this.svg)) {
-        this._setDynamicSvg();
-      } else {
-        this._setSvg();
-      }
-    }
     if (changedProperties.has('ariaLabel')) {
       this._onLabelChanged(changedProperties);
     }
@@ -87,24 +81,25 @@ export class LionIcon extends LitElement {
    * On IE11, svgs without focusable false appear in the tab order
    * so make sure to have <svg focusable="false"> in svg files
    */
-  _setSvg() {
-    this.innerHTML = this.svg ? this.svg : '';
+  set svg(svg) {
+    this.__svg = svg;
+    if (svg === undefined) {
+      this._renderSvg('');
+    } else if (isPromise(svg)) {
+      this._renderSvg(''); // show nothing before resolved
+      svg.then(resolvedSvg => {
+        // render only if it is still the same and was not replaced after loading started
+        if (svg === this.__svg) {
+          this._renderSvg(resolvedSvg);
+        }
+      });
+    } else {
+      this._renderSvg(svg);
+    }
   }
 
-  // TODO: find a better way to render dynamic icons without the need for unsafeHTML
-  _setDynamicSvg() {
-    const template = html`
-      ${until(
-        this.svg.then(_svg => {
-          // If the export was not made explicit, take the default
-          if (typeof _svg !== 'string') {
-            return unsafeHTML(_svg.default);
-          }
-          return unsafeHTML(_svg);
-        }),
-      )}
-    `;
-    render(template, this);
+  get svg() {
+    return this.__svg;
   }
 
   _onLabelChanged() {
@@ -114,5 +109,10 @@ export class LionIcon extends LitElement {
       this.setAttribute('aria-hidden', 'true');
       this.removeAttribute('aria-label');
     }
+  }
+
+  _renderSvg(svgOrModule) {
+    const svg = svgOrModule && svgOrModule.default ? svgOrModule.default : svgOrModule;
+    this.innerHTML = svg;
   }
 }
