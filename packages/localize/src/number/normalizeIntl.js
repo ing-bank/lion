@@ -17,7 +17,7 @@ export function normalizeIntl(formattedParts, options, _locale) {
   let normalize = forceNormalSpaces(formattedParts, options);
   // Dutch and Belgian currency must be moved to end of number
   if (options && options.style === 'currency') {
-    if (_locale === 'nl-NL' || _locale.slice(-2) === 'BE') {
+    if (_locale.slice(0, 2) === 'nl') {
       normalize = forceCurrencyToEnd(normalize);
     }
     // Add group separator for Bulgarian locale
