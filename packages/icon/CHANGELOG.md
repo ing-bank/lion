@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.10](https://github.com/ing-bank/lion/compare/@lion/icon@0.1.9...@lion/icon@0.1.10) (2019-06-27)
+
+
+### Bug Fixes
+
+* **icon:** refactor icon to not use 'until' hack and use get/set ([675fc61](https://github.com/ing-bank/lion/commit/675fc61))
+* **icon:** render nothing consistently when svg is undefined ([c62d335](https://github.com/ing-bank/lion/commit/c62d335))
+* **icon:** use LitElement ([bd5f51e](https://github.com/ing-bank/lion/commit/bd5f51e))
+
+
+
+
+
 ## [0.1.9](https://github.com/ing-bank/lion/compare/@lion/icon@0.1.8...@lion/icon@0.1.9) (2019-05-29)
 
 **Note:** Version bump only for package @lion/icon
