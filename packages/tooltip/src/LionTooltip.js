@@ -1,31 +1,23 @@
-import { UpdatingElement } from '@lion/core';
+import { LionPopup } from '@lion/popup';
 import { overlays, LocalOverlayController } from '@lion/overlays';
 
-export class LionTooltip extends UpdatingElement {
-  static get properties() {
-    return {
-      position: {
-        type: String,
-      },
-    };
-  }
-
+export class LionTooltip extends LionPopup {
   connectedCallback() {
     super.connectedCallback();
-    this.contenNode = this.querySelector('[slot="content"]');
+    this.contentNode = this.querySelector('[slot="content"]');
     this.invokerNode = this.querySelector('[slot="invoker"]');
 
-    this._tooltip = overlays.add(
+    this._controller = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: this.position,
-        contentNode: this.contenNode,
+        placementConfig: this.placementConfig,
+        contentNode: this.contentNode,
         invokerNode: this.invokerNode,
       }),
     );
-    this._show = () => this._tooltip.show();
-    this._hide = () => this._tooltip.hide();
+    this._show = () => this._controller.show();
+    this._hide = () => this._controller.hide();
 
     this.invokerNode.addEventListener('mouseenter', this._show);
     this.invokerNode.addEventListener('mouseleave', this._hide);

@@ -25,6 +25,7 @@ describe('lion-tooltip', () => {
       const eventMouseEnter = new Event('mouseenter');
       invoker.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
+      await aTimeout();
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       const eventMouseLeave = new Event('mouseleave');
       invoker.dispatchEvent(eventMouseLeave);
