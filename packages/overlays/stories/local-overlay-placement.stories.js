@@ -1,13 +1,29 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-import { managePosition } from '../src/utils/manage-position.js';
+import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { overlays } from '../src/overlays.js';
+
+let placement = 'top';
+const togglePlacement = popupController => {
+  const placements = [
+    'top-end',
+    'top',
+    'top-start',
+    'right-end',
+    'right',
+    'right-start',
+    'bottom-start',
+    'bottom',
+    'bottom-end',
+    'left-start',
+    'left',
+    'left-end',
+  ];
+  placement = placements[(placements.indexOf(placement) + 1) % placements.length];
+  popupController.updatePlacementConfig({ placement });
+};
 
 const popupPlacementDemoStyle = css`
-  .demo-container {
-    height: 100vh;
-    background-color: #ebebeb;
-  }
-
   .demo-box {
     width: 40px;
     height: 40px;
@@ -19,9 +35,6 @@ const popupPlacementDemoStyle = css`
   }
 
   .demo-popup {
-    display: block;
-    position: absolute;
-    width: 250px;
     background-color: white;
     border-radius: 2px;
     border: 1px solid grey;
@@ -33,105 +46,111 @@ const popupPlacementDemoStyle = css`
 storiesOf('Local Overlay System|Local Overlay Placement', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add('Preferred placement overlay absolute', () => {
-    const element = document.createElement('div');
-    element.classList.add('demo-popup');
-    element.innerText = 'Toggle the placement of this overlay with the buttons.';
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        hidesOnEsc: true,
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">United Kingdom</div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
+          `,
+      }),
+    );
 
-    const target = document.createElement('div');
-    target.id = 'target';
-    target.classList.add('demo-box');
-
-    let placement = 'top left';
-    const togglePlacement = () => {
-      switch (placement) {
-        case 'top left':
-          placement = 'top';
-          break;
-        case 'top':
-          placement = 'top right';
-          break;
-        case 'top right':
-          placement = 'right';
-          break;
-        case 'right':
-          placement = 'bottom right';
-          break;
-        case 'bottom right':
-          placement = 'bottom';
-          break;
-        case 'bottom':
-          placement = 'bottom left';
-          break;
-        case 'bottom left':
-          placement = 'left';
-          break;
-        default:
-          placement = 'top left';
-      }
-      managePosition(element, target, { placement, position: 'absolute' });
-    };
     return html`
       <style>
         ${popupPlacementDemoStyle}
       </style>
-      <div class="demo-container">
-        <button @click=${() => togglePlacement()}>Toggle placement</button>
-        <p>Check the action logger to see the placement changes on toggling this button.</p>
-        ${target} ${element}
+      <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
       </div>
     `;
   })
-  .add('Space not available', () => {
-    const element = document.createElement('div');
-    element.classList.add('demo-popup');
-    element.innerText = `
-      Toggle the placement of this overlay with the buttons.
-      Since there is not enough space available on the vertical center or the top for this popup,
-      the popup will get displayed on the available space on the bottom.
-      Try dragging the viewport to increase/decrease space see the behavior of this.
-    `;
+  .add('Override the placement config', () => {
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        hidesOnEsc: true,
+        placementConfig: {
+          placement: 'bottom-start',
+          positionFixed: true,
+          modifiers: {
+            keepTogether: {
+              enabled: true /* Prevents detachment of content element from reference element */,
+            },
+            preventOverflow: {
+              enabled: false /* disables shifting/sliding behavior on secondary axis */,
+              padding: 32 /* when enabled, this is the viewport-margin for shifting/sliding */,
+            },
+            flip: {
+              boundariesElement: 'viewport',
+              padding: 16 /* viewport-margin for flipping on primary axis */,
+            },
+            offset: {
+              enabled: true,
+              offset: `0, 16px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
+            },
+          },
+        },
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">United Kingdom</div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
+          `,
+      }),
+    );
 
-    const target = document.createElement('div');
-    target.id = 'target';
-    target.classList.add('demo-box');
-
-    let placement = 'top left';
-    const togglePlacement = () => {
-      switch (placement) {
-        case 'top left':
-          placement = 'top';
-          break;
-        case 'top':
-          placement = 'top right';
-          break;
-        case 'top right':
-          placement = 'right';
-          break;
-        case 'right':
-          placement = 'bottom right';
-          break;
-        case 'bottom right':
-          placement = 'bottom';
-          break;
-        case 'bottom':
-          placement = 'bottom left';
-          break;
-        case 'bottom left':
-          placement = 'left';
-          break;
-        default:
-          placement = 'top left';
-      }
-      managePosition(element, target, { placement, position: 'absolute' });
-    };
     return html`
       <style>
         ${popupPlacementDemoStyle}
       </style>
-      <div class="demo-container">
-        <button @click=${() => togglePlacement()}>Toggle placement</button>
-        <p>Check the action logger to see the placement changes on toggling this button.</p>
-        ${target} ${element}
+      <div>
+        The API is aligned with Popper.js, visit their documentation for more information:
+        <a href="https://popper.js.org/popper-documentation.html">Popper.js Docs</a>
+      </div>
+      <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
+      </div>
+    `;
+  })
+  /* TODO: Add this when we have a feature in place that adds scrollbars / overflow when no space is available */
+  .add('Space not available', () => {
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        hidesOnEsc: true,
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">
+              Toggle the placement of this overlay with the buttons. Since there is not enough space
+              available on the vertical center or the top for this popup, the popup will get
+              displayed on the available space on the bottom. Try dragging the viewport to
+              increase/decrease space see the behavior of this.
+            </div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button style="border: none" @click=${() => popupController.show()}>UK</button>
+          `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${popupPlacementDemoStyle}
+      </style>
+      <div>
+        <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+        <button @click=${() => popupController.hide()}>Close popup</button>
+      </div>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
       </div>
     `;
   });
