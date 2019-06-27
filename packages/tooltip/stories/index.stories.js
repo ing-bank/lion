@@ -40,8 +40,6 @@ const tooltipDemoStyle = css`
     background-color: black;
     border-radius: 4px;
     padding: 8px;
-    /* To display on top of elements with no z-index that are appear later in the DOM */
-    z-index: 1;
   }
 
   @media (max-width: 480px) {

@@ -141,6 +141,8 @@ export class LocalOverlayController {
       }
       this.contentNode.id = this.contentId;
       this.contentNode.style.display = 'inline-block';
+      /* To display on top of elements with no z-index that are appear later in the DOM */
+      this.contentNode.style.zIndex = 1;
       this.invokerNode.setAttribute('aria-expanded', true);
 
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();

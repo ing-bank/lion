@@ -119,9 +119,9 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         ${popupController.invoker} ${popupController.content}
       </div>
     `;
-  })
-  /* TODO: Add this when we have a feature in place that adds scrollbars / overflow when no space is available */
-  .add('Space not available', () => {
+  });
+/* TODO: Add this when we have a feature in place that adds scrollbars / overflow when no space is available */
+/* .add('Space not available', () => {
     const popupController = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
@@ -153,4 +153,4 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         ${popupController.invoker} ${popupController.content}
       </div>
     `;
-  });
+  }); */
