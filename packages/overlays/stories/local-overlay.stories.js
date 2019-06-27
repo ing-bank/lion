@@ -19,7 +19,6 @@ const popupDemoStyle = css`
     position: absolute;
     background-color: white;
     border-radius: 2px;
-    border: 1px solid grey;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.12), 0 6px 6px 0 rgba(0, 0, 0, 0.24);
     padding: 8px;
   }
@@ -37,7 +36,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
           `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.toggle()}>UK</button>
+            <button style="border: none" @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );

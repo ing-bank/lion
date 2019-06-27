@@ -1,20 +1,20 @@
 import { render, html } from '@lion/core';
-import { managePosition } from './utils/manage-position.js';
 import { containFocus } from './utils/contain-focus.js';
 import { keyCodes } from './utils/key-codes.js';
 
+async function __preloadPopper() {
+  return import('popper.js/dist/popper.min.js');
+}
 export class LocalOverlayController {
   constructor(params = {}) {
-    const finalParams = {
-      placement: 'top',
-      position: 'absolute',
-      ...params,
-    };
-    this.hidesOnEsc = finalParams.hidesOnEsc;
-    this.hidesOnOutsideClick = finalParams.hidesOnOutsideClick;
-    this.trapsKeyboardFocus = finalParams.trapsKeyboardFocus;
-    this.placement = finalParams.placement;
-    this.position = finalParams.position;
+    // TODO: Instead of in constructor, prefetch it or use a preloader-manager to load it during idle time
+    this.constructor.popperModule = __preloadPopper();
+    this.__mergePlacementConfigs(params.placementConfig || {});
+
+    this.hidesOnEsc = params.hidesOnEsc;
+    this.hidesOnOutsideClick = params.hidesOnOutsideClick;
+    this.trapsKeyboardFocus = params.trapsKeyboardFocus;
+
     /**
      * A wrapper to render into the invokerTemplate
      *
@@ -22,15 +22,16 @@ export class LocalOverlayController {
      */
     this.invoker = document.createElement('div');
     this.invoker.style.display = 'inline-block';
-    this.invokerTemplate = finalParams.invokerTemplate;
+    this.invokerTemplate = params.invokerTemplate;
+
     /**
      * The actual invoker element we work with - it get's all the events and a11y
      *
      * @property {HTMLElement}
      */
     this.invokerNode = this.invoker;
-    if (finalParams.invokerNode) {
-      this.invokerNode = finalParams.invokerNode;
+    if (params.invokerNode) {
+      this.invokerNode = params.invokerNode;
       this.invoker = this.invokerNode;
     }
 
@@ -41,10 +42,10 @@ export class LocalOverlayController {
      */
     this.content = document.createElement('div');
     this.content.style.display = 'inline-block';
-    this.contentTemplate = finalParams.contentTemplate;
+    this.contentTemplate = params.contentTemplate;
     this.contentNode = this.content;
-    if (finalParams.contentNode) {
-      this.contentNode = finalParams.contentNode;
+    if (params.contentNode) {
+      this.contentNode = params.contentNode;
       this.content = this.contentNode;
     }
 
@@ -94,8 +95,17 @@ export class LocalOverlayController {
   /**
    * Shows the overlay.
    */
-  show() {
+  async show() {
     this._createOrUpdateOverlay(true, this._prevData);
+    /**
+     * Popper is weird about properly positioning the popper element when its is recreated so
+     * we just recreate the popper instance to make it behave like it should.
+     * Probably related to this issue: https://github.com/FezVrasta/popper.js/issues/796
+     * calling just the .update() function on the popper instance sadly does not resolve this.
+     * This is however necessary for initial placement.
+     */
+    await this.__createPopperInstance();
+    this._popper.update();
   }
 
   /**
@@ -113,6 +123,13 @@ export class LocalOverlayController {
     this.isShown ? this.hide() : this.show();
   }
 
+  // Popper does not export a nice method to update an existing instance with a new config. Therefore we recreate the instance.
+  // TODO: Send a merge request to Popper to abstract their logic in the constructor to an exposed method which takes in the user config.
+  async updatePlacementConfig(config = {}) {
+    this.__mergePlacementConfigs(config);
+    await this.__createPopperInstance();
+  }
+
   _createOrUpdateOverlay(shown = this._prevShown, data = this._prevData) {
     if (shown) {
       this._contentData = { ...this._contentData, ...data };
@@ -122,14 +139,9 @@ export class LocalOverlayController {
         render(this.contentTemplate(this._contentData), this.content);
         this.contentNode = this.content.firstElementChild;
       }
-      this.contentNode.style.display = 'inline-block';
       this.contentNode.id = this.contentId;
+      this.contentNode.style.display = 'inline-block';
       this.invokerNode.setAttribute('aria-expanded', true);
-
-      managePosition(this.contentNode, this.invokerNode, {
-        placement: this.placement,
-        position: this.position,
-      });
 
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
@@ -213,5 +225,53 @@ export class LocalOverlayController {
     if (e.keyCode === keyCodes.escape) {
       this.hide();
     }
+  }
+
+  /**
+   * Merges the default config with the current config, and finally with the user supplied config
+   * @param {Object} config user supplied configuration
+   */
+  __mergePlacementConfigs(config = {}) {
+    this.placementConfig = {
+      placement: 'top',
+      positionFixed: false,
+      ...(this.placementConfig || {}),
+      ...(config || {}),
+      modifiers: {
+        keepTogether: {
+          enabled: false,
+        },
+        preventOverflow: {
+          enabled: true,
+          boundariesElement: 'viewport',
+          padding: 16, // viewport-margin for shifting/sliding
+        },
+        flip: {
+          boundariesElement: 'viewport',
+          padding: 16, // viewport-margin for flipping
+        },
+        offset: {
+          enabled: true,
+          offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
+        },
+        arrow: {
+          enabled: false,
+        },
+        ...((this.placementConfig && this.placementConfig.modifiers) || {}),
+        ...((config && config.modifiers) || {}),
+      },
+    };
+  }
+
+  async __createPopperInstance() {
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = null;
+    }
+    const mod = await this.constructor.popperModule;
+    const Popper = mod.default;
+    this._popper = new Popper(this.invokerNode, this.contentNode, {
+      ...this.placementConfig,
+    });
   }
 }

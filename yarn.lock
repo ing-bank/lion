@@ -1736,6 +1736,14 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
+"@lion/localize@^0.1.6":
+  version "0.1.7"
+  resolved "https://artifactory.ing.net/artifactory/api/npm/releases_npm_all/@lion/localize/-/localize-0.1.7.tgz#2f0eb725fbe5fa8842985140ae3a6f0dfbd732d6"
+  integrity sha1-Lw63Jfvl+ohCmFFArjpvDfvXMtY=
+  dependencies:
+    "@bundled-es-modules/message-format" "6.0.4"
+    "@lion/core" "^0.1.4"
+
 "@marionebl/sander@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@marionebl/sander/-/sander-0.6.1.tgz#1958965874f24bc51be48875feb50d642fc41f7b"
@@ -10114,7 +10122,7 @@ polymer-webpack-loader@^2.0.0:
     postcss "^6.0.9"
     source-map "^0.5.6"
 
-popper.js@^1.14.4:
+popper.js@^1.14.4, popper.js@^1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
