@@ -58,7 +58,7 @@ storiesOf('Local Overlay System|Popup', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        <lion-popup .placementConfig="${{ placement: 'top' }}">
+        <lion-popup .popperConfig="${{ placement: 'top' }}">
           <div slot="content" class="popup">Hello there!</div>
           <lion-button slot="invoker">Popup</lion-button>
         </lion-popup>
@@ -72,19 +72,19 @@ storiesOf('Local Overlay System|Popup', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box_placements">
-        <lion-popup .placementConfig="${{ placement: 'top' }}">
+        <lion-popup .popperConfig="${{ placement: 'top' }}">
           <div slot="content" class="popup">Its top placement</div>
           <lion-button slot="invoker">Top</lion-button>
         </lion-popup>
-        <lion-popup .placementConfig="${{ placement: 'right' }}">
+        <lion-popup .popperConfig="${{ placement: 'right' }}">
           <div slot="content" class="popup">Its right placement</div>
           <lion-button slot="invoker">Right</lion-button>
         </lion-popup>
-        <lion-popup .placementConfig="${{ placement: 'bottom' }}">
+        <lion-popup .popperConfig="${{ placement: 'bottom' }}">
           <div slot="content" class="popup">Its bottom placement</div>
           <lion-button slot="invoker">Bottom</lion-button>
         </lion-popup>
-        <lion-popup .placementConfig="${{ placement: 'left' }}">
+        <lion-popup .popperConfig="${{ placement: 'left' }}">
           <div slot="content" class="popup">Its left placement</div>
           <lion-button slot="invoker">Left</lion-button>
         </lion-popup>
@@ -92,15 +92,15 @@ storiesOf('Local Overlay System|Popup', module)
     `,
   )
   .add(
-    'Override placement configuration',
+    'Override popper configuration',
     () => html`
       <style>
         ${popupDemoStyle}
       </style>
-      <p>Use the Storybook Knobs to dynamically change the placement configuration!</p>
+      <p>Use the Storybook Knobs to dynamically change the popper configuration!</p>
       <div class="demo-box">
         <lion-popup
-          .placementConfig="${object('Placement Configuration', {
+          .popperConfig="${object('Popper Configuration', {
             placement: 'bottom-start',
             positionFixed: true,
             modifiers: {

@@ -20,7 +20,7 @@ const togglePlacement = popupController => {
     'left-end',
   ];
   placement = placements[(placements.indexOf(placement) + 1) % placements.length];
-  popupController.updatePlacementConfig({ placement });
+  popupController.updatePopperConfig({ placement });
 };
 
 const popupPlacementDemoStyle = css`
@@ -70,11 +70,11 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       </div>
     `;
   })
-  .add('Override the placement config', () => {
+  .add('Override the popper config', () => {
     const popupController = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
-        placementConfig: {
+        popperConfig: {
           placement: 'bottom-start',
           positionFixed: true,
           modifiers: {

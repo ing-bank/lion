@@ -269,7 +269,7 @@ describe('LocalOverlayController', () => {
           html`
             <p>Content</p>
           `,
-        placementConfig: {
+        popperConfig: {
           placement: 'left-start',
         },
       });
@@ -295,7 +295,7 @@ describe('LocalOverlayController', () => {
             Invoker
           </button>
         `,
-        placementConfig: {
+        popperConfig: {
           placement: 'top-start',
         },
       });
@@ -312,7 +312,7 @@ describe('LocalOverlayController', () => {
 
     it('allows the user to override default Popper modifiers', async () => {
       const controller = new LocalOverlayController({
-        placementConfig: {
+        popperConfig: {
           modifiers: {
             keepTogether: {
               enabled: false,
@@ -345,7 +345,7 @@ describe('LocalOverlayController', () => {
       expect(offset.offset).to.equal('0, 16px');
     });
 
-    it('updates placementConfig even when overlay is closed', async () => {
+    it('updates popperConfig even when overlay is closed', async () => {
       const controller = new LocalOverlayController({
         contentTemplate: () =>
           html`
@@ -356,7 +356,7 @@ describe('LocalOverlayController', () => {
             Invoker
           </button>
         `,
-        placementConfig: {
+        popperConfig: {
           placement: 'top',
         },
       });
@@ -370,7 +370,7 @@ describe('LocalOverlayController', () => {
       expect(contentChild.getAttribute('x-placement')).to.equal('top');
 
       controller.hide();
-      await controller.updatePlacementConfig({ placement: 'bottom' });
+      await controller.updatePopperConfig({ placement: 'bottom' });
       await controller.show();
       expect(controller._popper.options.placement).to.equal('bottom');
     });
@@ -386,7 +386,7 @@ describe('LocalOverlayController', () => {
             Invoker
           </button>
         `,
-        placementConfig: {
+        popperConfig: {
           placement: 'top',
         },
       });
@@ -417,7 +417,7 @@ describe('LocalOverlayController', () => {
             Invoker
           </button>
         `,
-        placementConfig: {
+        popperConfig: {
           placement: 'top',
         },
       });
@@ -432,7 +432,7 @@ describe('LocalOverlayController', () => {
       expect(contentChild.style.transform).to.equal('translate3d(14px, -58px, 0px)');
 
       controller.hide();
-      await controller.updatePlacementConfig({
+      await controller.updatePopperConfig({
         modifiers: {
           offset: {
             enabled: true,

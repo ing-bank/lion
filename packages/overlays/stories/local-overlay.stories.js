@@ -54,7 +54,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'top right',
+        popperConfig: {
+          placement: 'top-end',
+        },
         contentTemplate: () =>
           html`
             <div class="demo-popup">United Kingdom</div>
@@ -79,7 +81,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'bottom',
+        popperConfig: {
+          placement: 'bottom',
+        },
         contentTemplate: () => html`
           <div class="demo-popup">
             Supplying placement with a single parameter will assume 'center' for the other.
@@ -105,7 +109,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'bottom',
+        popperConfig: {
+          placement: 'bottom',
+        },
         contentTemplate: () =>
           html`
             <div class="demo-popup">United Kingdom</div>

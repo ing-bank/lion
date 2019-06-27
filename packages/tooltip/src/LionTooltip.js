@@ -11,7 +11,7 @@ export class LionTooltip extends LionPopup {
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placementConfig: this.placementConfig,
+        popperConfig: this.popperConfig,
         contentNode: this.contentNode,
         invokerNode: this.invokerNode,
       }),

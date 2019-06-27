@@ -58,7 +58,7 @@ storiesOf('Local Overlay System|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box">
-        <lion-tooltip .placementConfig=${{ placement: 'right' }}>
+        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
           <div slot="content" class="tooltip">Hello there!</div>
           <lion-button slot="invoker">Tooltip</lion-button>
         </lion-tooltip>
@@ -72,19 +72,19 @@ storiesOf('Local Overlay System|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box_placements">
-        <lion-tooltip .placementConfig=${{ placement: 'top' }}>
+        <lion-tooltip .popperConfig=${{ placement: 'top' }}>
           <div slot="content" class="tooltip">Its top placement</div>
           <lion-button slot="invoker">Top</lion-button>
         </lion-tooltip>
-        <lion-tooltip .placementConfig=${{ placement: 'right' }}>
+        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
           <div slot="content" class="tooltip">Its right placement</div>
           <lion-button slot="invoker">Right</lion-button>
         </lion-tooltip>
-        <lion-tooltip .placementConfig=${{ placement: 'bottom' }}>
+        <lion-tooltip .popperConfig=${{ placement: 'bottom' }}>
           <div slot="content" class="tooltip">Its bottom placement</div>
           <lion-button slot="invoker">Bottom</lion-button>
         </lion-tooltip>
-        <lion-tooltip .placementConfig=${{ placement: 'left' }}>
+        <lion-tooltip .popperConfig=${{ placement: 'left' }}>
           <div slot="content" class="tooltip">Its left placement</div>
           <lion-button slot="invoker">Left</lion-button>
         </lion-tooltip>
@@ -92,15 +92,15 @@ storiesOf('Local Overlay System|Tooltip', module)
     `,
   )
   .add(
-    'Override placement configuration',
+    'Override popper configuration',
     () => html`
       <style>
         ${tooltipDemoStyle}
       </style>
-      <p>Use the Storybook Knobs to dynamically change the placement configuration!</p>
+      <p>Use the Storybook Knobs to dynamically change the popper configuration!</p>
       <div class="demo-box_placements">
         <lion-tooltip
-          .placementConfig="${object('Placement Configuration', {
+          .popperConfig="${object('Popper Configuration', {
             placement: 'bottom-start',
             positionFixed: true,
             modifiers: {
