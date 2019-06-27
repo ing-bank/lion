@@ -1,4 +1,4 @@
-import { expect, fixture, html, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-tooltip.js';
 
@@ -25,7 +25,6 @@ describe('lion-tooltip', () => {
       const eventMouseEnter = new Event('mouseenter');
       invoker.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
-      await aTimeout();
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       const eventMouseLeave = new Event('mouseleave');
       invoker.dispatchEvent(eventMouseLeave);
@@ -62,12 +61,10 @@ describe('lion-tooltip', () => {
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
-      await aTimeout();
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       const eventFocusOut = new Event('focusout');
       invoker.dispatchEvent(eventFocusOut);
       await el.updateComplete;
-      await aTimeout();
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
     });
 

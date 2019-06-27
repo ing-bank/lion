@@ -1,4 +1,4 @@
-import { expect, fixture, html, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-popup.js';
 
@@ -25,7 +25,7 @@ describe('lion-popup', () => {
       const eventOnClick = new Event('click');
       invoker.dispatchEvent(eventOnClick);
       await el.updateComplete;
-      await aTimeout();
+
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       invoker.dispatchEvent(eventOnClick);
       await el.updateComplete;
@@ -55,9 +55,9 @@ describe('lion-popup', () => {
       `);
       await el._controller.show();
       expect(el._controller._popper.options.placement).to.equal('top');
+
       el.placementConfig = { placement: 'left' };
-      // placementConfig setter calls updateConfig method which recreates popper instance and this process is async..
-      await aTimeout();
+      await el._controller.show();
       expect(el._controller._popper.options.placement).to.equal('left');
     });
   });
