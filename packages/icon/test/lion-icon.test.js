@@ -149,4 +149,16 @@ describe('lion-icon', () => {
 
     expect(el.children[0].id).to.equal('svg-heart');
   });
+
+  it('does not render "undefined" if changed from valid input to undefined', async () => {
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${heartSvg}></lion-icon>
+      `,
+    );
+    await el.updateComplete;
+    el.svg = undefined;
+    await el.updateComplete;
+    expect(el.innerHTML).to.equal('');
+  });
 });
