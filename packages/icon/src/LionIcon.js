@@ -1,5 +1,4 @@
-import { html, css, render, unsafeHTML, until } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { html, css, render, unsafeHTML, until, LitElement } from '@lion/core';
 
 const isDefinedPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
 
@@ -7,7 +6,7 @@ const isDefinedPromise = action => typeof action === 'object' && Promise.resolve
  * Custom element for rendering SVG icons
  * @polymerElement
  */
-export class LionIcon extends LionLitElement {
+export class LionIcon extends LitElement {
   static get properties() {
     return {
       svg: {
