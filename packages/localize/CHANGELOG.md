@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.0...@lion/localize@0.4.1) (2019-06-27)
+
+
+### Bug Fixes
+
+* **localize:** remove unnecessary normalization for Belgium ([0afb0e1](https://github.com/ing-bank/lion/commit/0afb0e1))
+* **localize:** return sign to the front of the currency formatted value in Dutch ([8fb70c2](https://github.com/ing-bank/lion/commit/8fb70c2))
+
+
+
+
+
 # [0.4.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.3.6...@lion/localize@0.4.0) (2019-06-06)
 
 
