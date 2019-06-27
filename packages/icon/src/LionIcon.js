@@ -89,7 +89,7 @@ export class LionIcon extends LionLitElement {
    * so make sure to have <svg focusable="false"> in svg files
    */
   _setSvg() {
-    this.innerHTML = this.svg;
+    this.innerHTML = this.svg ? this.svg : '';
   }
 
   // TODO: find a better way to render dynamic icons without the need for unsafeHTML
