@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.2.7...@lion/overlays@0.3.0) (2019-06-28)
+
+
+### Features
+
+* **overlays:** base LocalOverlay positioning system on Popper.js ([22357ea](https://github.com/ing-bank/lion/commit/22357ea))
+
+
+
+
+
 ## [0.2.7](https://github.com/ing-bank/lion/compare/@lion/overlays@0.2.6...@lion/overlays@0.2.7) (2019-06-24)
 
 **Note:** Version bump only for package @lion/overlays
