@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.1.29...@lion/tooltip@0.2.0) (2019-06-28)
+
+
+### Features
+
+* **tooltip:** change API to popper based ([c01cfe9](https://github.com/ing-bank/lion/commit/c01cfe9))
+
+
+
+
+
 ## [0.1.29](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.1.28...@lion/tooltip@0.1.29) (2019-06-27)
 
 **Note:** Version bump only for package @lion/tooltip
