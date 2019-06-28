@@ -59,6 +59,9 @@
       "eslint --fix",
       "prettier --write",
       "git add"
+    ],
+    "yarn.lock": [
+      "node ./scripts/yarn-lock-scan.js"
     ]
   }
 }
