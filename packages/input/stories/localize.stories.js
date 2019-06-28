@@ -68,6 +68,13 @@ storiesOf('Forms|Input Localize', module).add('localize', () => {
       >
         NL
       </button>
+      <button
+        @click=${() => {
+          localize.locale = 'zh-CN';
+        }}
+      >
+        CN
+      </button>
     </p>
   `;
 });
