@@ -1,6 +1,7 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { DropdownConfig } from '../src/DropdownConfig.js';
 import { overlays } from '../src/overlays.js';
 
 let placement = 'top';
@@ -35,6 +36,7 @@ const popupPlacementDemoStyle = css`
   }
 
   .demo-popup {
+    box-sizing: border-box;
     background-color: white;
     border-radius: 2px;
     border: 1px solid grey;
@@ -116,6 +118,110 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         <a href="https://popper.js.org/popper-documentation.html">Popper.js Docs</a>
       </div>
       <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
+      </div>
+    `;
+  })
+  .add('DropdownConfig', () => {
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        ...DropdownConfig,
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">
+              <ul style="list-style-type: none; margin: 0; padding-inline-start: 0;">
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3, with a longer name</li>
+                <li>item 4</li>
+                <li>item 5</li>
+              </ul>
+            </div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button @click=${() => popupController.toggle()} style="white-space: nowrap">
+              Select invoker
+            </button>
+          `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${popupPlacementDemoStyle}
+      </style>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
+      </div>
+    `;
+  })
+  .add('DropdownConfig maxWidth', () => {
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        ...DropdownConfig,
+        inheritsReferenceObjectWidth: 'max',
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">
+              <ul style="list-style-type: none; margin: 0; padding-inline-start: 0;">
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3</li>
+                <li>item 4</li>
+                <li>item 5</li>
+              </ul>
+            </div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button @click=${() => popupController.toggle()} style="white-space: nowrap">
+              Select invoker
+            </button>
+          `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${popupPlacementDemoStyle}
+      </style>
+      <div class="demo-box">
+        ${popupController.invoker} ${popupController.content}
+      </div>
+    `;
+  })
+  .add('DropdownConfig width', () => {
+    const popupController = overlays.add(
+      new LocalOverlayController({
+        ...DropdownConfig,
+        inheritsReferenceObjectWidth: 'full',
+        contentTemplate: () =>
+          html`
+            <div class="demo-popup">
+              <ul style="list-style-type: none; margin: 0; padding-inline-start: 0;">
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3, with a longer name</li>
+                <li>item 4</li>
+                <li>item 5</li>
+              </ul>
+            </div>
+          `,
+        invokerTemplate: () =>
+          html`
+            <button @click=${() => popupController.toggle()} style="white-space: nowrap">
+              Select invoker
+            </button>
+          `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${popupPlacementDemoStyle}
+      </style>
       <div class="demo-box">
         ${popupController.invoker} ${popupController.content}
       </div>
