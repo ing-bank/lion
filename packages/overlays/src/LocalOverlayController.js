@@ -98,7 +98,7 @@ export class LocalOverlayController {
   async show() {
     this._createOrUpdateOverlay(true, this._prevData);
     /**
-     * Popper is weird about properly positioning the popper element when its is recreated so
+     * Popper is weird about properly positioning the popper element when it is recreated so
      * we just recreate the popper instance to make it behave like it should.
      * Probably related to this issue: https://github.com/FezVrasta/popper.js/issues/796
      * calling just the .update() function on the popper instance sadly does not resolve this.
@@ -128,6 +128,9 @@ export class LocalOverlayController {
   async updatePopperConfig(config = {}) {
     this.__mergePopperConfigs(config);
     await this.__createPopperInstance();
+    if (this.isShown) {
+      this._popper.update();
+    }
   }
 
   _createOrUpdateOverlay(shown = this._prevShown, data = this._prevData) {
