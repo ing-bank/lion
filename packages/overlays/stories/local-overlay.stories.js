@@ -19,7 +19,6 @@ const popupDemoStyle = css`
     position: absolute;
     background-color: white;
     border-radius: 2px;
-    border: 1px solid grey;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.12), 0 6px 6px 0 rgba(0, 0, 0, 0.24);
     padding: 8px;
   }
@@ -37,7 +36,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
           `,
         invokerTemplate: () =>
           html`
-            <button @click=${() => popup.toggle()}>UK</button>
+            <button style="border: none" @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );
@@ -55,7 +54,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'top right',
+        popperConfig: {
+          placement: 'top-end',
+        },
         contentTemplate: () =>
           html`
             <div class="demo-popup">United Kingdom</div>
@@ -80,7 +81,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'bottom',
+        popperConfig: {
+          placement: 'bottom',
+        },
         contentTemplate: () => html`
           <div class="demo-popup">
             Supplying placement with a single parameter will assume 'center' for the other.
@@ -106,7 +109,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: 'bottom',
+        popperConfig: {
+          placement: 'bottom',
+        },
         contentTemplate: () =>
           html`
             <div class="demo-popup">United Kingdom</div>

@@ -1,4 +1,4 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
+import { storiesOf, html, withKnobs, object, text } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 
 import '@lion/icon/lion-icon.js';
@@ -11,11 +11,11 @@ const popupDemoStyle = css`
     background-color: white;
     border-radius: 2px;
     border: 1px solid grey;
-    margin: 250px;
+    margin: 250px 0 0 250px;
     padding: 8px;
   }
 
-  .demo-box_positions {
+  .demo-box_placements {
     display: flex;
     flex-direction: column;
     width: 173px;
@@ -50,6 +50,7 @@ const popupDemoStyle = css`
 `;
 
 storiesOf('Local Overlay System|Popup', module)
+  .addDecorator(withKnobs)
   .add(
     'Button popup',
     () => html`
@@ -57,35 +58,73 @@ storiesOf('Local Overlay System|Popup', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        <lion-popup position="right">
-          <div slot="content" class="popup">hey there</div>
+        <lion-popup .popperConfig="${{ placement: 'top' }}">
+          <div slot="content" class="popup">Hello there!</div>
           <lion-button slot="invoker">Popup</lion-button>
         </lion-popup>
       </div>
     `,
   )
   .add(
-    'positions',
+    'placements',
     () => html`
       <style>
         ${popupDemoStyle}
       </style>
-      <div class="demo-box_positions">
-        <lion-popup position="top">
-          <div slot="content" class="popup">Its top position</div>
+      <div class="demo-box_placements">
+        <lion-popup .popperConfig="${{ placement: 'top' }}">
+          <div slot="content" class="popup">Its top placement</div>
           <lion-button slot="invoker">Top</lion-button>
         </lion-popup>
-        <lion-popup position="right">
-          <div slot="content" class="popup">Its right position</div>
+        <lion-popup .popperConfig="${{ placement: 'right' }}">
+          <div slot="content" class="popup">Its right placement</div>
           <lion-button slot="invoker">Right</lion-button>
         </lion-popup>
-        <lion-popup position="bottom">
-          <div slot="content" class="popup">Its bottom position</div>
+        <lion-popup .popperConfig="${{ placement: 'bottom' }}">
+          <div slot="content" class="popup">Its bottom placement</div>
           <lion-button slot="invoker">Bottom</lion-button>
         </lion-popup>
-        <lion-popup position="left">
-          <div slot="content" class="popup">Its left position</div>
+        <lion-popup .popperConfig="${{ placement: 'left' }}">
+          <div slot="content" class="popup">Its left placement</div>
           <lion-button slot="invoker">Left</lion-button>
+        </lion-popup>
+      </div>
+    `,
+  )
+  .add(
+    'Override popper configuration',
+    () => html`
+      <style>
+        ${popupDemoStyle}
+      </style>
+      <p>Use the Storybook Knobs to dynamically change the popper configuration!</p>
+      <div class="demo-box">
+        <lion-popup
+          .popperConfig="${object('Popper Configuration', {
+            placement: 'bottom-start',
+            positionFixed: true,
+            modifiers: {
+              keepTogether: {
+                enabled: true /* Prevents detachment of content element from reference element */,
+              },
+              preventOverflow: {
+                enabled: true /* disables shifting/sliding behavior on secondary axis */,
+                boundariesElement: 'viewport',
+                padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
+              },
+              flip: {
+                boundariesElement: 'viewport',
+                padding: 4 /* viewport-margin for flipping on primary axis */,
+              },
+              offset: {
+                enabled: true,
+                offset: `0, 4px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
+              },
+            },
+          })}"
+        >
+          <div slot="content" class="popup">${text('Content text', 'Hello, World!')}</div>
+          <lion-button slot="invoker">${text('Invoker text', 'Click me!')}</lion-button>
         </lion-popup>
       </div>
     `,
