@@ -4,29 +4,44 @@ import { overlays, LocalOverlayController } from '@lion/overlays';
 export class LionPopup extends UpdatingElement {
   static get properties() {
     return {
-      position: {
-        type: String,
+      popperConfig: {
+        type: Object,
       },
     };
   }
 
+  get popperConfig() {
+    return this._popperConfig;
+  }
+
+  set popperConfig(config) {
+    this._popperConfig = {
+      ...this._popperConfig,
+      ...config,
+    };
+
+    if (this._controller && this._controller._popper) {
+      this._controller.updatePopperConfig(this._popperConfig);
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
-    this.contenNode = this.querySelector('[slot="content"]');
+    this.contentNode = this.querySelector('[slot="content"]');
     this.invokerNode = this.querySelector('[slot="invoker"]');
 
-    this._popup = overlays.add(
+    this._controller = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
         hidesOnOutsideClick: true,
-        placement: this.position,
-        contentNode: this.contenNode,
+        popperConfig: this.popperConfig,
+        contentNode: this.contentNode,
         invokerNode: this.invokerNode,
       }),
     );
-    this._show = () => this._popup.show();
-    this._hide = () => this._popup.hide();
-    this._toggle = () => this._popup.toggle();
+    this._show = () => this._controller.show();
+    this._hide = () => this._controller.hide();
+    this._toggle = () => this._controller.toggle();
 
     this.invokerNode.addEventListener('click', this._toggle);
   }

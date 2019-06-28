@@ -91,7 +91,7 @@ other overlays, so needed for internals.
     - sets focus to overlay content(?)
   - For `isTooltip`:
     - sets role="tooltip" and aria-labelledby/aria-describedby on the content
-- {Object} placementConfig
+- {Object} popperConfig
   - {String} placement - vertical/horizontal position to be supplied to `managePosition`. See https://github.com/ing-bank/lion/pull/61 for current api. Consists of a primary part (where the overlay is located relative from invoker) and secondary alignnment part (how the overlay 'snaps' to the perpendicular boundary of the invoker), separated via '-'.
     - primary : 'bottom' | 'top' | 'left' | 'right' | 'over' (this means the overlay will be positioned on top of the invoker. Think for instance of a select dropdown that opens a selected option on top of the invoker (default behavior of `<select>` on iOS))
     - secondary : 'start' | 'end' | 'fill' (occupies width of invoker) | 'middle' (implicit option that will be choosen by default when none of the previous are specified)

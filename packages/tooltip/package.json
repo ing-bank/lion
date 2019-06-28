@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.9",
+    "@lion/popup": "^0.1.23",
     "@lion/overlays": "^0.2.7"
   },
   "devDependencies": {
