@@ -219,6 +219,7 @@ export class LionInputDatepicker extends LionInputDate {
   __toggleInvokerDisabled() {
     if (this._invokerElement) {
       this._invokerElement.disabled = this.disabled || this.readOnly;
+      this.classList[this._invokerElement.disabled ? 'add' : 'remove']('state-disabled');
     }
   }
 

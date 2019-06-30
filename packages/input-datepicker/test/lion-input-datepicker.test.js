@@ -139,6 +139,7 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       expect(elObj.overlayController.isShown).to.equal(false);
+      expect(el.classList.contains('state-disabled')).to.equal(true);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(false);
       el.readOnly = false;
