@@ -12,8 +12,6 @@ describe('ChoiceInputMixin', () => {
         if (super.connectedCallback) super.connectedCallback();
         this.type = 'checkbox'; // could also be 'radio', should be tested in integration test
       }
-
-      _syncValueUpwards() {} // We need to disable the method for the test to pass
     }
     customElements.define('choice-input', ChoiceInput);
   });
@@ -82,7 +80,6 @@ describe('ChoiceInputMixin', () => {
     const nativeInput = el.inputElement;
     nativeInput.dispatchEvent(new CustomEvent('input', { bubbles: true })); // fired by (at least) Chrome
     expect(counter).to.equal(0);
-    el._syncValueUpwards = () => {}; // We need to disable the method for the test to pass
     nativeInput.dispatchEvent(new CustomEvent('change', { bubbles: true }));
     expect(counter).to.equal(1);
   });
@@ -105,8 +102,6 @@ describe('ChoiceInputMixin', () => {
       const precheckedElementAttr = await fixture(html`
         <choice-input .checked=${true}></choice-input>
       `);
-      el._syncValueUpwards = () => {}; // We need to disable the method for the test to pass
-
       expect(precheckedElementAttr.checked).to.equal(true, 'initially checked via attribute');
     });
 
@@ -122,7 +117,6 @@ describe('ChoiceInputMixin', () => {
 
     it('can be checked and unchecked via user interaction', async () => {
       const el = await fixture(`<choice-input></choice-input>`);
-      el._syncValueUpwards = () => {}; // We need to disable the method for the test to pass
       el.inputElement.click();
       expect(el.checked).to.be.true;
       el.inputElement.click();

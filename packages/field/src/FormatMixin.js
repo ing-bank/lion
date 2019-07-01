@@ -171,11 +171,37 @@ export const FormatMixin = dedupeMixin(
       }
 
       __callParser(value = this.formattedValue) {
-        let result;
-        if (typeof value === 'string') {
-          result = this.parser(value, this.formatOptions);
+        // A) check if we need to parse at all
+
+        // A.1) The end user had no intention to parse
+        if (value === '') {
+          // Ideally, modelValue should be undefined for empty strings.
+          // For backwards compatibility we return an empty string:
+          // - it triggers validation for required validators (see ValidateMixin.validate())
+          // - it can be expected by 3rd parties (for instance unit tests)
+          // TODO: In a breaking refactor of the Validation System, this behaviot can be corrected.
+          return '';
         }
-        return typeof result !== 'undefined' ? result : new Unparseable(value);
+
+        // A.2) Handle edge cases We might have no view value yet, for instance because
+        // inputElement.value was not available yet
+        if (typeof value !== 'string') {
+          // This means there is nothing to find inside the view that can be of
+          // interest to the Application Developer or needed to store for future form state
+          // retrieval.
+          return undefined;
+        }
+
+        // B) parse the view value
+
+        // - if result:
+        // return the successfully parsed viewValue
+        // - if no result:
+        // Apparently, the parser was not able to produce a satisfactory output for the desired
+        // modelValue type, based on the current viewValue. Unparseable allows to restore all
+        // states (for instance from a lost user session), since it saves the current viewValue.
+        const result = this.parser(value, this.formatOptions);
+        return result !== undefined ? result : new Unparseable(value);
       }
 
       __callFormatter() {
