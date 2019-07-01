@@ -1,4 +1,4 @@
-import { html, css, LitElement } from '@lion/core';
+import { html, nothing, TemplateResult, css, render, LitElement } from '@lion/core';
 
 const isPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
 
@@ -11,7 +11,7 @@ export class LionIcon extends LitElement {
     return {
       // svg is a property to ensure the setter is called if the property is set before upgrading
       svg: {
-        type: String,
+        type: Object,
       },
       role: {
         type: String,
@@ -84,17 +84,17 @@ export class LionIcon extends LitElement {
   set svg(svg) {
     this.__svg = svg;
     if (svg === undefined) {
-      this._renderSvg('');
+      this._renderSvg(nothing);
     } else if (isPromise(svg)) {
-      this._renderSvg(''); // show nothing before resolved
+      this._renderSvg(nothing); // show nothing before resolved
       svg.then(resolvedSvg => {
         // render only if it is still the same and was not replaced after loading started
         if (svg === this.__svg) {
-          this._renderSvg(resolvedSvg);
+          this._renderSvg(this.constructor.__unwrapSvg(resolvedSvg));
         }
       });
     } else {
-      this._renderSvg(svg);
+      this._renderSvg(this.constructor.__unwrapSvg(svg));
     }
   }
 
@@ -111,8 +111,22 @@ export class LionIcon extends LitElement {
     }
   }
 
-  _renderSvg(svgOrModule) {
-    const svg = svgOrModule && svgOrModule.default ? svgOrModule.default : svgOrModule;
-    this.innerHTML = svg;
+  _renderSvg(svgObject) {
+    this.constructor.__validateSvg(svgObject);
+    render(svgObject, this);
+  }
+
+  static __unwrapSvg(wrappedSvgObject) {
+    const svgObject =
+      wrappedSvgObject && wrappedSvgObject.default ? wrappedSvgObject.default : wrappedSvgObject;
+    return typeof svgObject === 'function' ? svgObject(html) : svgObject;
+  }
+
+  static __validateSvg(svg) {
+    if (!(svg === nothing || svg instanceof TemplateResult)) {
+      throw new Error(
+        'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"',
+      );
+    }
   }
 }

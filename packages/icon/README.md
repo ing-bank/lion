@@ -32,6 +32,19 @@ Use it in your lit-html template:
 <lion-icon .svg=${bugSvg}></lion-icon>
 ```
 
+### Icon format
+
+Icon file is an ES module with an extension `.svg.js` which exports a function like this:
+
+```js
+// bug.svg.js
+export default tag => tag`
+  <svg focusable="false" ...>...</svg>
+`;
+```
+
+Make sure you have `focusable="false"` in the icon file to prevent bugs in IE/Edge when the icon appears in tab-order.
+
 ### Accessibiltiy
 
 You may add an `aria-label` to provide information to visually impaired users:
