@@ -13,7 +13,7 @@ describe('lion-icon', () => {
       `,
     );
 
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
     expect(el.getAttribute('role')).to.equal('img');
     expect(el.getAttribute('aria-label')).to.equal('Love');
     expect(el.getAttribute('aria-hidden')).to.equal('false');
@@ -25,7 +25,7 @@ describe('lion-icon', () => {
         <lion-icon .svg=${hammerSvg}></lion-icon>
       `,
     );
-    expect(el.children[0].id).to.equal('svg-hammer');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-hammer');
     expect(el.getAttribute('aria-hidden')).to.equal('true');
     expect(el.hasAttribute('aria-label')).to.equal(false);
   });
@@ -45,10 +45,10 @@ describe('lion-icon', () => {
         <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
       `,
     );
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
     el.svg = hammerSvg;
     await el.updateComplete;
-    expect(el.children[0].id).to.equal('svg-hammer');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-hammer');
   });
 
   it('can add or remove the aria-label attribute', async () => {
@@ -94,7 +94,7 @@ describe('lion-icon', () => {
     );
     await el.svg;
     await el.updateComplete;
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
   });
 
   it('uses the default export, by default', async () => {
@@ -105,7 +105,7 @@ describe('lion-icon', () => {
     );
     await el.svg;
     await el.updateComplete;
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
   });
 
   it('supports dynamic icon bundles', async () => {
@@ -119,7 +119,7 @@ describe('lion-icon', () => {
     );
     await el.svg;
     await el.updateComplete;
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
   });
 
   it('supports dynamic icons using until directive', async () => {
@@ -147,7 +147,7 @@ describe('lion-icon', () => {
     // You can not use updateComplete as until renders on it's own
     await aTimeout();
 
-    expect(el.children[0].id).to.equal('svg-heart');
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
   });
 
   it('does not render "undefined" if changed from valid input to undefined', async () => {
@@ -205,7 +205,7 @@ describe('lion-icon', () => {
       await aTimeout();
       [svg] = icon.children;
       expect(svg).to.exist;
-      expect(svg.id).to.equal('svg-hammer');
+      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
 
       [icon, resolveHeartSvg, resolveHammerSvg] = await prepareRaceCondition(
         Promise.resolve(heartSvg),
@@ -216,7 +216,7 @@ describe('lion-icon', () => {
       await aTimeout();
       [svg] = icon.children;
       expect(svg).to.exist;
-      expect(svg.id).to.equal('svg-hammer');
+      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
     });
 
     it('renders if a resolved promise was replaced by a string', async () => {
@@ -228,7 +228,7 @@ describe('lion-icon', () => {
       await aTimeout();
       const [svg] = icon.children;
       expect(svg).to.exist;
-      expect(svg.id).to.equal('svg-hammer');
+      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
     });
 
     it('does not render if a resolved promise was replaced by another unresolved promise', async () => {
