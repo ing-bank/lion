@@ -6,6 +6,47 @@ import hammerSvg from './hammer.svg.js';
 import '../lion-icon.js';
 
 describe('lion-icon', () => {
+  it('supports svg icon as a function which recieves a tag function as an argument and returns a tagged template literal', async () => {
+    const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${iconFunction}></lion-icon>
+      `,
+    );
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
+  });
+
+  it('supports svg icon as a lit-html template', async () => {
+    const icon = html`
+      <svg data-test-id="svg"></svg>
+    `;
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${icon}></lion-icon>
+      `,
+    );
+    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
+  });
+
+  it('does not support string svg icon', async () => {
+    const errorMessage =
+      'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"';
+    expect(() => {
+      fixtureSync(
+        html`
+          <lion-icon .svg=${'<svg></svg>'}></lion-icon>
+        `,
+      );
+    }).to.throw(Error, errorMessage);
+    expect(() => {
+      fixtureSync(
+        html`
+          <lion-icon .svg=${() => '<svg></svg>'}></lion-icon>
+        `,
+      );
+    }).to.throw(Error, errorMessage);
+  });
+
   it('displays an svg icon with an aria label attribute', async () => {
     const el = await fixture(
       html`
@@ -135,7 +176,7 @@ describe('lion-icon', () => {
               dispatchEvent(new CustomEvent('importDone'));
               return e.default;
             }),
-            '',
+            html``,
           )}
           aria-label="Love"
         ></lion-icon>
@@ -159,7 +200,7 @@ describe('lion-icon', () => {
     await el.updateComplete;
     el.svg = undefined;
     await el.updateComplete;
-    expect(el.innerHTML).to.equal('');
+    expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
 
   describe('race conditions with dynamic promisified icons', () => {
