@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/icon@0.1.10...@lion/icon@0.2.0) (2019-07-01)
+
+
+### Features
+
+* **icon:** enforce icon security using tagged templates ([a6b0780](https://github.com/ing-bank/lion/commit/a6b0780))
+
+
+
+
+
 ## [0.1.10](https://github.com/ing-bank/lion/compare/@lion/icon@0.1.9...@lion/icon@0.1.10) (2019-06-27)
 
 
