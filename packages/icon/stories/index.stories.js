@@ -1,5 +1,4 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { until } from '@lion/core';
 
 import '../lion-icon.js';
 
@@ -141,22 +140,6 @@ storiesOf('Icon System|Icon', module)
         class="icon"
         .svg=${import('./icons/bugs/bug05.svg.js')}
         aria-label="Skinny dung beatle"
-      ></lion-icon>
-    `,
-  )
-  .add(
-    'dynamic icons using until',
-    () => html`
-      <style>
-        .icon {
-          width: 32px;
-          height: 32px;
-        }
-      </style>
-      <lion-icon
-        class="icon"
-        .svg=${until(import('./icons/bugs/bug12.svg.js').then(e => e.default), 'Loading...')}
-        aria-label="Striped beatle"
       ></lion-icon>
     `,
   );
