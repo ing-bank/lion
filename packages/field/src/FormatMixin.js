@@ -133,6 +133,19 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
+       * === Formatting and parsing ====
+       * To understand all concepts below, please consult the flow diagrams in the documentation.
+       */
+
+      /**
+       * @param {String} value - the raw value from the <input> after keyUp/Down event
+       * @returns {String} preprocessedValue: the result of preprocessing for invalid input
+       */
+      preprocessor(v) {
+        return v;
+      }
+
+      /**
        * Converts formattedValue to modelValue
        * For instance, a localized date to a Date Object
        * @param {String} value - formattedValue: the formatted value inside <input>
@@ -206,6 +219,10 @@ export const FormatMixin = dedupeMixin(
         }
         this._reflectBackFormattedValueToUser();
         this.__preventRecursiveTrigger = false;
+      }
+
+      __callPreprocessor(value = this.value) {
+        return this.preprocessor(value, this.preprocessOptions);
       }
 
       __callParser(value = this.formattedValue) {
@@ -309,11 +326,14 @@ export const FormatMixin = dedupeMixin(
 
       /**
        * Synchronization from `.inputElement.value` to `LionField` (flow [2])
+       * Downwards syncing should only happen for `LionField`.value changes from 'above'.
+       * This triggers _onModelValueChanged and connects user input
+       * to the parsing/formatting/serializing loop.
        */
       _syncValueUpwards() {
-        // Downwards syncing should only happen for `LionField`.value changes from 'above'
-        // This triggers _onModelValueChanged and connects user input to the
-        // parsing/formatting/serializing loop
+        // Preprocess the changed <input> value before passing it to the parser.
+        this.value = this.__callPreprocessor(this.value);
+
         this.modelValue = this.__callParser(this.value);
       }
 

@@ -184,16 +184,18 @@ describe('FormatMixin', () => {
     }).to.not.throw();
   });
 
-  describe('parsers/formatters/serializers', () => {
-    it('should call the parser|formatter|serializer provided by user', async () => {
+  describe('parsers/formatters/serializers/preprocessors', () => {
+    it('should call the parser|formatter|serializer|preprocessor provided by user', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
       const parserSpy = sinon.spy(value => value.replace('foo: ', ''));
       const serializerSpy = sinon.spy(value => `[foo] ${value}`);
+      const preprocessorSpy = sinon.spy(value => value.replace('bar', ''));
       const el = await fixture(html`
         <${elem}
           .formatter=${formatterSpy}
           .parser=${parserSpy}
           .serializer=${serializerSpy}
+          .preprocessor=${preprocessorSpy}
           .modelValue=${'test'}
         >
           <input slot="input">
@@ -204,6 +206,8 @@ describe('FormatMixin', () => {
 
       el.formattedValue = 'raw';
       expect(parserSpy.called).to.equal(true);
+      el.dispatchEvent(new CustomEvent('user-input-changed'));
+      expect(preprocessorSpy.called).to.equal(true);
     });
 
     it('should have formatOptions available in formatter', async () => {
@@ -269,6 +273,27 @@ describe('FormatMixin', () => {
       expect(formatterSpy.callCount).to.equal(2);
 
       expect(el.formattedValue).to.equal('foo: bar2');
+    });
+
+    it('will block the user from inputting invalid values when using a preprocessor', async () => {
+      const preprocessorSpy = sinon.spy(value => value.replace(/[bar]/g, ''));
+      const el = await fixture(html`
+        <${elem} .preprocessor=${preprocessorSpy}>
+          <input slot="input" value="init-value">
+        </${elem}>
+      `);
+      expect(preprocessorSpy.callCount).to.equal(1);
+      expect(el.modelValue).to.equal('init-vlue');
+
+      el.dispatchEvent(new CustomEvent('user-input-changed'));
+      expect(preprocessorSpy.callCount).to.equal(2);
+      expect(el.modelValue).to.equal('init-vlue');
+
+      el.modelValue = 'new-value-bar';
+
+      // TODO: Should equal 3, imperatively setting modelValue should also call the preprocessor
+      // expect(preprocessorSpy.callCount).to.equal(3);
+      // expect(el.modelValue).to.equal('new-vlue-');
     });
   });
 
