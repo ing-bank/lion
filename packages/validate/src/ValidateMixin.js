@@ -385,12 +385,22 @@ export const ValidateMixin = dedupeMixin(
        * Other transitions (from Warning/Info) are not followed by a success message
        */
       validate() {
-        if (this.modelValue === undefined) return;
+        if (this.modelValue === undefined) {
+          this.__resetValidationStates();
+          return;
+        }
         this.__oldValidationStates = this.getValidationStates();
         this.constructor.validationTypes.forEach(type => {
           this.validateType(type);
         });
         this.dispatchEvent(new CustomEvent('validation-done', { bubbles: true, composed: true }));
+      }
+
+      __resetValidationStates() {
+        this.constructor.validationTypes.forEach(type => {
+          this[`${type}State`] = false;
+          this[type] = {};
+        });
       }
 
       /**

@@ -9,8 +9,6 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-import '@lion/input/lion-input.js';
-
 import '../lion-fieldset.js';
 
 const tagString = 'lion-fieldset';
@@ -292,6 +290,38 @@ describe('<lion-fieldset>', () => {
       expect(el.formElements.color.error.isCat).to.equal(true);
       el.formElements.color.modelValue = 'cat';
       expect(el.error).to.deep.equal({});
+    });
+
+    it('validates on children (de)registration', async () => {
+      function hasEvenNumberOfChildren(modelValue) {
+        return { even: Object.keys(modelValue).length % 2 === 0 };
+      }
+      const el = await fixture(html`
+        <${tag} .errorValidators=${[[hasEvenNumberOfChildren]]}>
+          <lion-input id="c1" name="c1"></lion-input>
+        </${tag}>
+      `);
+      const child2 = await fixture(
+        html`
+          <lion-input name="c2"></lion-input>
+        `,
+      );
+
+      await nextFrame();
+      expect(el.error.even).to.equal(true);
+
+      el.appendChild(child2);
+      await nextFrame();
+      expect(el.error.even).to.equal(undefined);
+
+      el.removeChild(child2);
+      await nextFrame();
+      expect(el.error.even).to.equal(true);
+
+      // Edge case: remove all children
+      el.removeChild(el.querySelector('[id=c1]'));
+      await nextFrame();
+      expect(el.error.even).to.equal(undefined);
     });
   });
 
