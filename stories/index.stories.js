@@ -14,7 +14,10 @@ import '../packages/fieldset/stories/index.stories.js';
 import '../packages/checkbox-group/stories/index.stories.js';
 import '../packages/radio-group/stories/index.stories.js';
 import '../packages/form/stories/index.stories.js';
+
 import '../packages/form-system/stories/index.stories.js';
+import '../packages/form-system/stories/formatting.stories.js';
+import '../packages/form-system/stories/interactionStates.stories.js';
 
 import '../packages/icon/stories/index.stories.js';
 import '../packages/ajax/stories/index.stories.js';
