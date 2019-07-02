@@ -212,7 +212,7 @@ describe('FormatMixin', () => {
       expect(formatterSpy.args[0][1].decimalSeparator).to.equal('-');
     });
 
-    it('will only call the parser for string values', async () => {
+    it('will only call the parser for defined values', async () => {
       const parserSpy = sinon.spy();
       const el = await fixture(html`
         <${elem} .parser="${parserSpy}">
@@ -221,8 +221,25 @@ describe('FormatMixin', () => {
       `);
       el.modelValue = 'foo';
       expect(parserSpy.callCount).to.equal(1);
+      // This could happen for instance in a reset
       el.modelValue = undefined;
       expect(parserSpy.callCount).to.equal(1);
+      // This could happen when the user erases the input value
+      mimicUserInput(el, '');
+      expect(parserSpy.callCount).to.equal(1);
+    });
+
+    it('will not return Unparseable when empty strings are inputted', async () => {
+      const el = await fixture(html`
+        <${elem}>
+          <input slot="input" value="string">
+        </${elem}>
+      `);
+      // This could happen when the user erases the input value
+      mimicUserInput(el, '');
+      // For backwards compatibility, we keep the modelValue an empty string here.
+      // Undefined would be more appropriate 'conceptually', however
+      expect(el.modelValue).to.equal('');
     });
 
     it('will only call the formatter for valid values on `user-input-changed` ', async () => {
