@@ -35,6 +35,7 @@
     "@lion/checkbox": "^0.1.51",
     "@lion/checkbox-group": "^0.1.57",
     "@lion/core": "^0.1.13",
+    "@lion/field": "^0.2.3",
     "@lion/fieldset": "^0.1.50",
     "@lion/form": "^0.1.56",
     "@lion/input": "^0.1.50",
@@ -42,9 +43,11 @@
     "@lion/input-date": "^0.1.51",
     "@lion/input-email": "^0.1.50",
     "@lion/input-iban": "^0.1.52",
+    "@lion/localize": "^0.4.14",
     "@lion/radio": "^0.1.51",
     "@lion/radio-group": "^0.1.57",
     "@lion/textarea": "^0.1.53",
+    "@lion/validate": "^0.2.29",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.0.6"
   }
