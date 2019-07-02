@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.24](https://github.com/ing-bank/lion/compare/@lion/field@0.1.23...@lion/field@0.1.24) (2019-07-02)
+
+
+### Bug Fixes
+
+* **field:** don't return Unparseable on empty strings ([6a85dbc](https://github.com/ing-bank/lion/commit/6a85dbc))
+
+
+
+
+
 ## [0.1.23](https://github.com/ing-bank/lion/compare/@lion/field@0.1.22...@lion/field@0.1.23) (2019-07-02)
 
 
