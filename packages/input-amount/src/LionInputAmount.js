@@ -6,6 +6,7 @@ import { FieldCustomMixin } from '@lion/field';
 import { isNumberValidator } from '@lion/validate';
 import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
+import { preprocessAmount } from './preprocessors.js';
 
 /**
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
@@ -48,6 +49,7 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixi
     super();
     this.parser = parseAmount;
     this.formatter = formatAmount;
+    this.preprocessor = preprocessAmount;
   }
 
   connectedCallback() {
