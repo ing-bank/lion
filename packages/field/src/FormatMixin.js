@@ -252,8 +252,11 @@ export const FormatMixin = dedupeMixin(
         // imperatively, we DO want to format a value (it is the only way to get meaningful
         // input into `.inputElement` with modelValue as input)
 
-        if (this.__isHandlingUserInput && this.errorState && this.inputElement) {
-          return this.inputElement ? this.value : undefined;
+        if (this.__isHandlingUserInput && this.errorState) {
+          // We don't want to update our view value.
+          // By returning undefined, we know for sure that the existing view value
+          // will be kept at the time `.formattedValue` is synced to `.inputElement.value`
+          return undefined;
         }
 
         if (this.modelValue instanceof Unparseable) {
@@ -322,9 +325,12 @@ export const FormatMixin = dedupeMixin(
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
-        if (!this.__isHandlingUserInput) {
+        // Downwards syncing 'back and forth' prevents change event from being fired in IE.
+        // So only sync when the source of new <lion-field>.value change was not the 'input' event
+        // of inputElement
+        if (!this.__isHandlingUserInput && typeof this.formattedValue !== 'undefined') {
           // Text 'undefined' should not end up in <input>
-          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+          this.value = this.formattedValue;
         }
       }
 

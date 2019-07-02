@@ -324,7 +324,6 @@ export function runFormatMixinSuite(customConfig) {
       it('will only call the formatter for valid values on `user-input-changed` ', async () => {
         const formatterSpy = sinon.spy(value => `foo: ${value}`);
 
-        const generatedModelValue = generateValueBasedOnType();
         const generatedViewValue = generateValueBasedOnType({ viewValue: true });
         const generatedViewValueAlt = generateValueBasedOnType({
           viewValue: true,
@@ -355,7 +354,7 @@ export function runFormatMixinSuite(customConfig) {
         mimicUserInput(el, generatedViewValue);
         expect(formatterSpy.callCount).to.equal(2);
 
-        expect(el.formattedValue).to.equal(`foo: ${generatedModelValue}`);
+        expect(el.formattedValue).to.be.undefined;
       });
     });
 
