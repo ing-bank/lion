@@ -19,6 +19,11 @@ const tag = unsafeStatic(tagString);
 const inputSlotString = '<input slot="input" />';
 const inputSlot = unsafeHTML(inputSlotString);
 
+function mimicUserInput(formControl, newViewValue) {
+  formControl.value = newViewValue; // eslint-disable-line no-param-reassign
+  formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
+}
+
 beforeEach(() => {
   localizeTearDown();
 });
@@ -328,7 +333,7 @@ describe('<lion-field>', () => {
       expect(lionField.error.required).to.be.undefined;
     });
 
-    it('will only update formattedValue the value when valid', async () => {
+    it('will only update formattedValue when valid on `user-input-changed`', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
       function isBarValidator(value) {
         return { isBar: value === 'bar' };
@@ -348,9 +353,9 @@ describe('<lion-field>', () => {
       expect(formatterSpy.callCount).to.equal(1);
       expect(lionField.formattedValue).to.equal('foo: bar');
 
-      lionField.modelValue = 'foo';
+      mimicUserInput(lionField, 'foo');
       expect(formatterSpy.callCount).to.equal(1);
-      expect(lionField.formattedValue).to.equal('foo: bar');
+      expect(lionField.formattedValue).to.equal('foo');
     });
   });
 
