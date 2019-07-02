@@ -213,6 +213,13 @@ export const ChoiceInputMixin = superclass =>
     }
 
     /**
+     * @override
+     * Overridden from FormatMixin, since a different modelValue is used for choice inputs.
+     * Synchronization from user input is already arranged in this Mixin.
+     */
+    _syncValueUpwards() {}
+
+    /**
      * @deprecated use .checked
      */
     get choiceChecked() {

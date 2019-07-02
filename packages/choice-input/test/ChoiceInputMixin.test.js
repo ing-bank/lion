@@ -68,10 +68,12 @@ describe('ChoiceInputMixin', () => {
     let counter = 0;
     const el = await fixture(html`
       <choice-input
-        @user-input-changed=${() => {
+        @user-input-changed="${() => {
           counter += 1;
-        }}
-      ></choice-input>
+        }}"
+      >
+        <input slot="input" />
+      </choice-input>
     `);
     expect(counter).to.equal(0);
     // Here we try to mimic user interaction by firing browser events
@@ -100,8 +102,6 @@ describe('ChoiceInputMixin', () => {
       const precheckedElementAttr = await fixture(html`
         <choice-input .checked=${true}></choice-input>
       `);
-      el._syncValueUpwards = () => {}; // We need to disable the method for the test to pass
-
       expect(precheckedElementAttr.checked).to.equal(true, 'initially checked via attribute');
     });
 
