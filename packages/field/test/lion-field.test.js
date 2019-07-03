@@ -20,7 +20,7 @@ const inputSlotString = '<input slot="input" />';
 const inputSlot = unsafeHTML(inputSlotString);
 
 function mimicUserInput(formControl, newViewValue) {
-  formControl.value = newViewValue; // eslint-disable-line no-param-reassign
+  formControl.inputElement.value = newViewValue; // eslint-disable-line no-param-reassign
   formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 

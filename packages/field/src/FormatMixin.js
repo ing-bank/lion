@@ -73,6 +73,10 @@ export const FormatMixin = dedupeMixin(
             type: String,
           },
 
+          value: {
+            type: String,
+          },
+
           /**
            * Event that will trigger formatting (more precise, visual update of the view, so the
            * user sees the formatted value)
@@ -98,6 +102,14 @@ export const FormatMixin = dedupeMixin(
           _onSerializedValueChanged: ['serializedValue'],
           _onFormattedValueChanged: ['formattedValue'],
         };
+      }
+
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+
+        if (name === 'value') {
+          this._onValueChanged({ value: this.value });
+        }
       }
 
       /**
@@ -204,6 +216,7 @@ export const FormatMixin = dedupeMixin(
         }
 
         // B) parse the view value
+        const result = this.parser(value, this.formatOptions);
 
         // - if result:
         // return the successfully parsed viewValue
@@ -211,7 +224,6 @@ export const FormatMixin = dedupeMixin(
         // Apparently, the parser was not able to produce a satisfactory output for the desired
         // modelValue type, based on the current viewValue. Unparseable allows to restore all
         // states (for instance from a lost user session), since it saves the current viewValue.
-        const result = this.parser(value, this.formatOptions);
         return result !== undefined ? result : new Unparseable(value);
       }
 
@@ -232,12 +244,11 @@ export const FormatMixin = dedupeMixin(
         // input into `.inputElement` with modelValue as input)
 
         if (this.__isHandlingUserInput && this.errorState) {
-          return this.inputElement ? this.value : undefined;
+          return this.inputElement ? this.inputElement.value : undefined;
         }
         return this.formatter(this.modelValue, this.formatOptions);
       }
 
-      /** Observer Handlers */
       _onModelValueChanged(...args) {
         this._calculateValues({ source: 'model' });
         this._dispatchModelValueChangedEvent(...args);
@@ -275,6 +286,49 @@ export const FormatMixin = dedupeMixin(
         this._calculateValues({ source: 'serialized' });
       }
 
+      _onValueChanged({ value }) {
+        if (super._onValueChanged) super._onValueChanged();
+
+        // Delegate to inputElement
+        if (this.inputElement) {
+          this._setValueAndPreserveCaret(value);
+        }
+
+        // Hook into the parse/format loop of FormatMixin
+        if (!this.__preventUpwardsSync) {
+          this._syncValueUpwards();
+        }
+
+        // For styling purposes, make it known the input field is not empty
+        this.classList[value ? 'add' : 'remove']('state-filled');
+      }
+
+      /**
+       * Restores the cursor to its original position after updating the value.
+       * @param {string} newValue The value that should be saved.
+       */
+      _setValueAndPreserveCaret(newValue) {
+        // Only preserve caret if focused (changing selectionStart will move focus in Safari)
+        if (this.focused) {
+          // Not all elements might have selection, and even if they have the
+          // right properties, accessing them might throw an exception (like for
+          // <input type=number>)
+          try {
+            const start = this.inputElement.selectionStart;
+            this.inputElement.value = newValue;
+            // The cursor automatically jumps to the end after re-setting the value,
+            // so restore it to its original position.
+            this.inputElement.selectionStart = start;
+            this.inputElement.selectionEnd = start;
+          } catch (error) {
+            // Just set the value and give up on the caret.
+            this.inputElement.value = newValue;
+          }
+        } else {
+          this.inputElement.value = newValue;
+        }
+      }
+
       /**
        * Synchronization from <input>.value to <lion-field>.formattedValue
        */
@@ -282,7 +336,7 @@ export const FormatMixin = dedupeMixin(
         // Downwards syncing should only happen for <lion-field>.value changes from 'above'
         // This triggers _onModelValueChanged and connects user input to the
         // parsing/formatting/serializing loop
-        this.modelValue = this.__callParser(this.value);
+        this.modelValue = this.__callParser(this.inputElement.value);
       }
 
       /**
@@ -294,7 +348,9 @@ export const FormatMixin = dedupeMixin(
         // of inputElement
         if (!this.__isHandlingUserInput) {
           // Text 'undefined' should not end up in <input>
-          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+          this.__preventUpwardsSync = true;
+          this.value = this.formattedValue !== undefined ? this.formattedValue : '';
+          this.__preventUpwardsSync = false;
         }
       }
 
@@ -312,10 +368,11 @@ export const FormatMixin = dedupeMixin(
         );
       }
 
+      /**
+       * Upwards syncing. Most properties are delegated right away, value is synced to
+       * <lion-field>, to be able to act on (imperatively set) value changes
+       */
       _onUserInputChanged() {
-        // Upwards syncing. Most properties are delegated right away, value is synced to
-        // <lion-field>, to be able to act on (imperatively set) value changes
-
         this.__isHandlingUserInput = true;
         this._syncValueUpwards();
         this.__isHandlingUserInput = false;
@@ -348,6 +405,18 @@ export const FormatMixin = dedupeMixin(
           this._syncValueUpwards();
         }
         this._reflectBackFormattedValueToUser();
+      }
+
+      // Needed for choice-inputs and select (IE11) as an alternative to the input event.
+      // TODO: add in FormatMixin and remove here and in lion-select
+      _onChange() {
+        if (super._onChange) super._onChange();
+        this.dispatchEvent(
+          new CustomEvent('user-input-changed', {
+            bubbles: true,
+            composed: true,
+          }),
+        );
       }
 
       disconnectedCallback() {

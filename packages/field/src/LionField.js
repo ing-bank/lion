@@ -69,19 +69,6 @@ export class LionField extends FormControlMixin(
     };
   }
 
-  // We don't delegate, because we want to 'preprocess' via _setValueAndPreserveCaret
-  set value(value) {
-    // if not yet connected to dom can't change the value
-    if (this.inputElement) {
-      this._setValueAndPreserveCaret(value);
-    }
-    this._onValueChanged({ value });
-  }
-
-  get value() {
-    return (this.inputElement && this.inputElement.value) || '';
-  }
-
   _setDisabledClass() {
     this.classList[this.disabled ? 'add' : 'remove']('state-disabled');
   }
@@ -98,7 +85,6 @@ export class LionField extends FormControlMixin(
     super.connectedCallback();
     this._onChange = this._onChange.bind(this);
     this.inputElement.addEventListener('change', this._onChange);
-    this._delegateInitialValueAttr(); // TODO: find a better way to do this
     this._setDisabledClass();
     this.classList.add('form-field');
   }
@@ -115,17 +101,6 @@ export class LionField extends FormControlMixin(
     this.inputElement.removeEventListener('change', this._onChange);
   }
 
-  /**
-   * This is not done via 'get delegations', because this.inputElement.setAttribute('value')
-   * does not trigger a value change
-   */
-  _delegateInitialValueAttr() {
-    const valueAttr = this.getAttribute('value');
-    if (valueAttr !== null) {
-      this.value = valueAttr;
-    }
-  }
-
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Public Methods (also notice delegated methods that are available on host)  */
 
@@ -136,60 +111,12 @@ export class LionField extends FormControlMixin(
     this.value = ''; // can't set null here, because IE11 treats it as a string
   }
 
-  /* * * * * * * * * *
-    Event Handlers */
-
-  _onChange() {
-    if (super._onChange) super._onChange();
-    this.dispatchEvent(
-      new CustomEvent('user-input-changed', {
-        bubbles: true,
-      }),
-    );
-    this.modelValue = this.parser(this.value);
-  }
-
-  /* * * * * * * * * * * *
-    Observer Handlers  */
-  _onValueChanged({ value }) {
-    if (super._onValueChanged) super._onValueChanged();
-    // For styling purposes, make it known the input field is not empty
-    this.classList[value ? 'add' : 'remove']('state-filled');
-  }
-
-  /**
-   * Copied from Polymer team. TODO: add license
-   * Restores the cursor to its original position after updating the value.
-   * @param {string} newValue The value that should be saved.
-   */
-  _setValueAndPreserveCaret(newValue) {
-    // Only preserve caret if focused (changing selectionStart will move focus in Safari)
-    if (this.focused) {
-      // Not all elements might have selection, and even if they have the
-      // right properties, accessing them might throw an exception (like for
-      // <input type=number>)
-      try {
-        const start = this.inputElement.selectionStart;
-        this.inputElement.value = newValue;
-        // The cursor automatically jumps to the end after re-setting the value,
-        // so restore it to its original position.
-        this.inputElement.selectionStart = start;
-        this.inputElement.selectionEnd = start;
-      } catch (error) {
-        // Just set the value and give up on the caret.
-        this.inputElement.value = newValue;
-      }
-    } else {
-      this.inputElement.value = newValue;
-    }
-  }
-
   // eslint-disable-next-line class-methods-use-this
   __isRequired(modelValue) {
     return {
       required:
         (typeof modelValue === 'string' && modelValue !== '') ||
-        (typeof modelValue !== 'string' && typeof modelValue !== 'undefined'), // TODO: && modelValue !== null ?
+        (typeof modelValue !== 'string' && modelValue !== undefined), // TODO: && modelValue !== null ?
     };
   }
 }

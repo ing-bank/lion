@@ -124,7 +124,12 @@ describe('FormatMixin', () => {
     expect(fooFormat.modelValue).to.equal('string');
   });
 
-  it('synchronizes inputElement.value as a fallback mechanism', async () => {
+  it('converts value to modelValue (for platform api compatibility)', async () => {
+    fooFormat.value = 'foo: string';
+    expect(fooFormat.modelValue).to.equal('string');
+  });
+
+  it('synchronizes inputElement.value upwards as a fallback mechanism, on init', async () => {
     // Note that in lion-field, the attribute would be put on <lion-field>, not on <input>
     const formatElem = await fixture(html`
       <${elem}
@@ -202,7 +207,7 @@ describe('FormatMixin', () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
       await fixture(html`
         <${elem}
-          value="string",
+          value="string"
           .formatter="${formatterSpy}"
           .formatOptions="${{ locale: 'en-GB', decimalSeparator: '-' }}">
           <input slot="input" value="string">
