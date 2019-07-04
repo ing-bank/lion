@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.26](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.25...@lion/fieldset@0.1.26) (2019-07-04)
+
+
+### Bug Fixes
+
+* **fieldset:** test validation after dynamic child removal/addition ([596488b](https://github.com/ing-bank/lion/commit/596488b))
+
+
+
+
+
 ## [0.1.25](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.24...@lion/fieldset@0.1.25) (2019-07-02)
 
 **Note:** Version bump only for package @lion/fieldset
