@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.11](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.10...@lion/validate@0.2.11) (2019-07-04)
+
+
+### Bug Fixes
+
+* **fieldset:** test validation after dynamic child removal/addition ([596488b](https://github.com/ing-bank/lion/commit/596488b))
+* **validate:** reset validation state when modelValue becomes undefined ([9ba6e02](https://github.com/ing-bank/lion/commit/9ba6e02))
+
+
+
+
+
 ## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.9...@lion/validate@0.2.10) (2019-06-27)
 
 **Note:** Version bump only for package @lion/validate
