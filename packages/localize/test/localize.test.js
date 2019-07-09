@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import sinon from 'sinon';
 
 import { LionSingleton } from '@lion/core';
 import { LocalizeManager } from '../src/LocalizeManager.js';
@@ -22,10 +23,16 @@ describe('localize', () => {
 
   it('is overridable globally', () => {
     const oldLocalize = localize;
-    const newLocalize = {};
+    const oldLocalizeTeardown = localize.teardown;
+    localize.teardown = sinon.spy();
+
+    const newLocalize = { teardown: () => {} };
     setLocalize(newLocalize);
     expect(localize).to.equal(newLocalize);
+    expect(oldLocalize.teardown.callCount).to.equal(1);
+
     setLocalize(oldLocalize);
+    localize.teardown = oldLocalizeTeardown;
   });
 
   it('is configured to automatically load namespaces if locale is changed', () => {

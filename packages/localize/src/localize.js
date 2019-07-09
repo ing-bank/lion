@@ -6,5 +6,6 @@ export let localize = LocalizeManager.getInstance({
 });
 
 export function setLocalize(newLocalize) {
+  localize.teardown();
   localize = newLocalize;
 }
