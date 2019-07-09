@@ -11,15 +11,22 @@ export class LocalizeManager extends LionSingleton {
     super(params);
     this._fakeExtendsEventTarget();
 
-    if (!this.locale) {
-      this.locale = 'en-GB';
+    if (!document.documentElement.lang) {
+      document.documentElement.lang = 'en-GB';
     }
+
     this._autoLoadOnLocaleChange = !!params.autoLoadOnLocaleChange;
     this.__storage = {};
     this.__namespacePatternsMap = new Map();
     this.__namespaceLoadersCache = {};
     this.__namespaceLoaderPromisesCache = {};
     this.formatNumberOptions = { returnIfNaN: '' };
+
+    this._setupHtmlLangAttributeObserver();
+  }
+
+  teardown() {
+    this._teardownHtmlLangAttributeObserver();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -29,7 +36,11 @@ export class LocalizeManager extends LionSingleton {
 
   set locale(value) {
     const oldLocale = document.documentElement.lang;
+
+    this._teardownHtmlLangAttributeObserver();
     document.documentElement.lang = value;
+    this._setupHtmlLangAttributeObserver();
+
     this._onLocaleChanged(value, oldLocale);
   }
 
@@ -88,6 +99,25 @@ export class LocalizeManager extends LionSingleton {
     }
     const formatter = new MessageFormat(message, locale);
     return formatter.format(vars);
+  }
+
+  _setupHtmlLangAttributeObserver() {
+    if (!this._htmlLangAttributeObserver) {
+      this._htmlLangAttributeObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
+        });
+      });
+    }
+    this._htmlLangAttributeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['lang'],
+      attributeOldValue: true,
+    });
+  }
+
+  _teardownHtmlLangAttributeObserver() {
+    this._htmlLangAttributeObserver.disconnect();
   }
 
   _isNamespaceInCache(locale, namespace) {
