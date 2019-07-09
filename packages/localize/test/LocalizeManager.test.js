@@ -1,4 +1,4 @@
-import { expect, oneEvent } from '@open-wc/testing';
+import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from './test-utils.js';
@@ -11,9 +11,15 @@ function removeLtrRtl(str) {
 }
 
 describe('LocalizeManager', () => {
+  let manager;
+
   beforeEach(() => {
     // makes sure that between tests the localization is reset to default state
     document.documentElement.lang = 'en-GB';
+  });
+
+  afterEach(() => {
+    manager.teardown();
   });
 
   afterEach(() => {
@@ -22,45 +28,64 @@ describe('LocalizeManager', () => {
   });
 
   it('initializes locale from <html> by default', () => {
-    const manager = new LocalizeManager();
+    manager = new LocalizeManager();
     expect(manager.locale).to.equal('en-GB');
   });
 
   it('syncs locale back to <html> if changed', () => {
-    const manager = new LocalizeManager();
+    manager = new LocalizeManager();
     manager.locale = 'nl-NL';
     expect(document.documentElement.lang).to.equal('nl-NL');
   });
 
   it('sets locale to "en-GB" by default if nothing is set on <html>', () => {
     document.documentElement.lang = '';
-    const manager = new LocalizeManager();
+    manager = new LocalizeManager();
     expect(manager.locale).to.equal('en-GB');
     expect(document.documentElement.lang).to.equal('en-GB');
   });
 
-  it('fires "localeChanged" event with detail.newLocale and detail.oldLocale if locale was changed', async () => {
-    const manager = new LocalizeManager();
-    setTimeout(() => {
-      manager.locale = 'en-US';
-    });
-    const event = await oneEvent(manager, 'localeChanged');
-    expect(event.detail.newLocale).to.equal('en-US');
-    expect(event.detail.oldLocale).to.equal('en-GB');
+  it('has teardown() method removing all side effects', () => {
+    manager = new LocalizeManager();
+    const disconnectObserverSpy = sinon.spy(manager._htmlLangAttributeObserver, 'disconnect');
+    manager.teardown();
+    expect(disconnectObserverSpy.callCount).to.equal(1);
   });
 
-  it('does not fire "localeChanged" event if it was set to the same locale', () => {
-    const manager = new LocalizeManager();
-    const eventSpy = sinon.spy();
-    manager.addEventListener('localeChanged', eventSpy);
-    manager.locale = 'en-US';
-    manager.locale = 'en-US';
-    expect(eventSpy.callCount).to.equal(1);
+  describe('"localeChanged" event with detail.newLocale and detail.oldLocale', () => {
+    it('fires "localeChanged" event if locale was changed via manager', async () => {
+      manager = new LocalizeManager();
+      setTimeout(() => {
+        manager.locale = 'en-US';
+      });
+      const event = await oneEvent(manager, 'localeChanged');
+      expect(event.detail.newLocale).to.equal('en-US');
+      expect(event.detail.oldLocale).to.equal('en-GB');
+    });
+
+    it('fires "localeChanged" event if locale was changed via <html lang> attribute', async () => {
+      manager = new LocalizeManager();
+      setTimeout(() => {
+        document.documentElement.lang = 'en-US';
+      });
+      const event = await oneEvent(manager, 'localeChanged');
+      expect(event.detail.newLocale).to.equal('en-US');
+      expect(event.detail.oldLocale).to.equal('en-GB');
+    });
+
+    it('does not fire "localeChanged" event if it was set to the same locale', () => {
+      manager = new LocalizeManager();
+      const eventSpy = sinon.spy();
+      manager.addEventListener('localeChanged', eventSpy);
+      manager.locale = 'en-US';
+      manager.locale = 'en-US';
+      expect(eventSpy.callCount).to.equal(1);
+    });
   });
 
   describe('addData()', () => {
     it('allows to provide inline data', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
 
@@ -95,7 +120,7 @@ describe('LocalizeManager', () => {
     });
 
     it('prevents mutating existing data for the same locale & namespace', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
 
@@ -113,7 +138,7 @@ describe('LocalizeManager', () => {
     it('loads a namespace via loadNamespace()', async () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       await manager.loadNamespace({
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
@@ -129,7 +154,7 @@ describe('LocalizeManager', () => {
     it('can load a namespace for a different locale', async () => {
       setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hello!' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.locale = 'en-US';
 
       await manager.loadNamespace(
@@ -150,7 +175,7 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-defaults/en-GB.js', { default: { submit: 'Submit' } });
       setupFakeImport('./my-send-button/en-GB.js', { default: { submit: 'Send' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       await manager.loadNamespaces([
         { 'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`) },
@@ -169,7 +194,7 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-defaults/nl-NL.js', { default: { submit: 'Submit' } });
       setupFakeImport('./my-send-button/nl-NL.js', { default: { submit: 'Send' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.locale = 'en-US';
 
       await manager.loadNamespaces(
@@ -191,7 +216,7 @@ describe('LocalizeManager', () => {
     it('fallbacks to language file if locale file is not found', async () => {
       setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       await manager.loadNamespace({
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
@@ -205,7 +230,7 @@ describe('LocalizeManager', () => {
     });
 
     it('throws if both locale and language files could not be loaded', async () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       try {
         await manager.loadNamespace({
@@ -228,7 +253,7 @@ describe('LocalizeManager', () => {
     it('loads a namespace via loadNamespace() using string route', async () => {
       fetchMock.get('./my-component/en-GB.json', { greeting: 'Hello!' });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.setupNamespaceLoader('my-component', async locale => {
         const response = await fetch(`./my-component/${locale}.json`);
@@ -248,7 +273,7 @@ describe('LocalizeManager', () => {
       fetchMock.get('./my-defaults/en-GB.json', { submit: 'Submit' });
       fetchMock.get('./my-send-button/en-GB.json', { submit: 'Send' });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.setupNamespaceLoader('my-defaults', async locale => {
         const response = await fetch(`./my-defaults/${locale}.json`);
@@ -272,7 +297,7 @@ describe('LocalizeManager', () => {
     it('loads a namespace via loadNamespace() using RegExp route', async () => {
       fetchMock.get('./my-component/en-GB.json', { greeting: 'Hello!' });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
         const response = await fetch(`./${namespace}/${locale}.json`);
@@ -292,7 +317,7 @@ describe('LocalizeManager', () => {
       fetchMock.get('./my-defaults/en-GB.json', { submit: 'Submit' });
       fetchMock.get('./my-send-button/en-GB.json', { submit: 'Send' });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       manager.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
         const response = await fetch(`./${namespace}/${locale}.json`);
@@ -310,26 +335,12 @@ describe('LocalizeManager', () => {
     });
   });
 
-  describe('loading extra features', () => {
-    it('has a Promise "loadingComplete" that resolved once all pending loading is done', async () => {
-      setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
-      const manager = new LocalizeManager();
-
-      manager.loadNamespace({
-        'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
-      });
-      expect(manager.__storage).to.deep.equal({});
-      await manager.loadingComplete;
-      expect(manager.__storage).to.deep.equal({
-        'en-GB': { 'my-component': { greeting: 'Hello!' } },
-      });
-    });
-
-    it('supports auto loading of namespaces when locale has been changed', async () => {
+  describe('{ autoLoadOnLocaleChange: true }', () => {
+    it('loads namespaces automatically when locale is changed via manager', async () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
       setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
 
-      const manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
+      manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
 
       await manager.loadNamespace({
         'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
@@ -348,6 +359,46 @@ describe('LocalizeManager', () => {
       });
     });
 
+    it('loads namespaces automatically when locale is changed via <html lang> attribute', async () => {
+      setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
+      setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
+
+      manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
+
+      await manager.loadNamespace({
+        'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
+      });
+
+      expect(manager.__storage).to.deep.equal({
+        'en-GB': { 'my-component': { greeting: 'Hello!' } },
+      });
+
+      document.documentElement.lang = 'nl-NL';
+      await aTimeout(); // wait for mutation observer to be called
+      await manager.loadingComplete;
+
+      expect(manager.__storage).to.deep.equal({
+        'en-GB': { 'my-component': { greeting: 'Hello!' } },
+        'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
+      });
+    });
+  });
+
+  describe('loading extra features', () => {
+    it('has a Promise "loadingComplete" that resolved once all pending loading is done', async () => {
+      setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
+      manager = new LocalizeManager();
+
+      manager.loadNamespace({
+        'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
+      });
+      expect(manager.__storage).to.deep.equal({});
+      await manager.loadingComplete;
+      expect(manager.__storage).to.deep.equal({
+        'en-GB': { 'my-component': { greeting: 'Hello!' } },
+      });
+    });
+
     it('loads namespace only once for the same locale', async () => {
       let called = 0;
       const myNamespace = {
@@ -356,7 +407,7 @@ describe('LocalizeManager', () => {
           return Promise.resolve({ default: {} });
         },
       };
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
 
       await Promise.all([
         manager.loadNamespace(myNamespace),
@@ -370,7 +421,7 @@ describe('LocalizeManager', () => {
     it('does not load inlined data', async () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Loaded hello!' } });
 
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-component', { greeting: 'Hello!' });
 
       await manager.loadNamespace('my-component');
@@ -396,25 +447,25 @@ describe('LocalizeManager', () => {
 
   describe('message()', () => {
     it('gets the message for the key in the format of "namespace:name"', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-ns', { greeting: 'Hello!' });
       expect(manager.msg('my-ns:greeting')).to.equal('Hello!');
     });
 
     it('supports nested names in the format of "namespace:path.to.deep.name"', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-ns', { 'login-section': { greeting: 'Hello!' } });
       expect(manager.msg('my-ns:login-section.greeting')).to.equal('Hello!');
     });
 
     it('supports variables', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-ns', { greeting: 'Hello {name}!' });
       expect(manager.msg('my-ns:greeting', { name: 'John' })).to.equal('Hello John!');
     });
 
     it('supports Intl MessageFormat proposal for messages', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-ns', {
         date: 'I was written on {today, date}.',
         number: 'You have {n, plural, =0 {no photos.} =1 {one photo.} other {# photos.}}',
@@ -429,7 +480,7 @@ describe('LocalizeManager', () => {
     });
 
     it('takes into account globally changed locale', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.locale = 'nl-NL';
       manager.addData('en-GB', 'my-ns', { greeting: 'Hi!' });
       manager.addData('nl-NL', 'my-ns', { greeting: 'Hey!' });
@@ -437,7 +488,7 @@ describe('LocalizeManager', () => {
     });
 
     it('allows to provide a different locale for specific call', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       manager.addData('en-GB', 'my-ns', { greeting: 'Hi!' });
       manager.addData('nl-NL', 'my-ns', { greeting: 'Hey!' });
       expect(manager.msg('my-ns:greeting', null, { locale: 'nl-NL' })).to.equal('Hey!');
@@ -450,7 +501,7 @@ describe('LocalizeManager', () => {
     });
 
     it('allows to provide an ordered list of keys where the first resolved is used', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       const keys = ['overridden-ns:greeting', 'default-ns:greeting'];
       expect(manager.msg(keys)).to.equal('');
       manager.addData('en-GB', 'default-ns', { greeting: 'Hi!' });
@@ -460,7 +511,7 @@ describe('LocalizeManager', () => {
     });
 
     it('throws a custom error when namespace prefix is missing', () => {
-      const manager = new LocalizeManager();
+      manager = new LocalizeManager();
       const msgKey = 'greeting';
       manager.addData('en-GB', 'my-ns', { [msgKey]: 'Hello!' });
       expect(() => manager.msg(msgKey)).to.throw(
