@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.1...@lion/localize@0.4.2) (2019-07-09)
+
+
+### Bug Fixes
+
+* **localize:** don't fire localeChanged event if set to the same locale ([3115c50](https://github.com/ing-bank/lion/commit/3115c50))
+* **localize:** observe <html lang> attribute ([18589f4](https://github.com/ing-bank/lion/commit/18589f4))
+
+
+
+
+
 ## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.0...@lion/localize@0.4.1) (2019-06-27)
 
 
