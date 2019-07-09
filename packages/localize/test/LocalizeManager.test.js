@@ -1,4 +1,5 @@
 import { expect, oneEvent } from '@open-wc/testing';
+import sinon from 'sinon';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from './test-utils.js';
 
@@ -46,6 +47,15 @@ describe('LocalizeManager', () => {
     const event = await oneEvent(manager, 'localeChanged');
     expect(event.detail.newLocale).to.equal('en-US');
     expect(event.detail.oldLocale).to.equal('en-GB');
+  });
+
+  it('does not fire "localeChanged" event if it was set to the same locale', () => {
+    const manager = new LocalizeManager();
+    const eventSpy = sinon.spy();
+    manager.addEventListener('localeChanged', eventSpy);
+    manager.locale = 'en-US';
+    manager.locale = 'en-US';
+    expect(eventSpy.callCount).to.equal(1);
   });
 
   describe('addData()', () => {
