@@ -194,6 +194,7 @@ describe('lion-button', () => {
         'cancelable',
         'clientX',
         'clientY',
+        'target',
       ];
 
       sameProperties.forEach(property => {
