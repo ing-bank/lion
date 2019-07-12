@@ -159,7 +159,18 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     oldEvent.stopPropagation();
     // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
     const newEvent = new MouseEvent(oldEvent.type, oldEvent);
+    this.__enforceHostEventTarget(newEvent);
     this.$$slot('_button').dispatchEvent(newEvent);
+  }
+
+  __enforceHostEventTarget(event) {
+    try {
+      // this is for IE11 (and works in others), because `Object.defineProperty` does not give any effect there
+      event.__defineGetter__('target', () => this); // eslint-disable-line no-restricted-properties
+    } catch (error) {
+      // in case `__defineGetter__` is removed from the platform
+      Object.defineProperty(event, 'target', { writable: false, value: this });
+    }
   }
 
   __setupDelegation() {
