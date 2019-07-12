@@ -152,15 +152,19 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.__teardownDelegation();
   }
 
-  /**
-   * Prevent click on the fake element and cause click on the native button.
-   */
-  __clickDelegationHandler(oldEvent) {
-    oldEvent.stopPropagation();
+  _redispatchClickEvent(oldEvent) {
     // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
     const newEvent = new MouseEvent(oldEvent.type, oldEvent);
     this.__enforceHostEventTarget(newEvent);
     this.$$slot('_button').dispatchEvent(newEvent);
+  }
+
+  /**
+   * Prevent click on the fake element and cause click on the native button.
+   */
+  __clickDelegationHandler(e) {
+    e.stopPropagation();
+    this._redispatchClickEvent(e);
   }
 
   __enforceHostEventTarget(event) {
