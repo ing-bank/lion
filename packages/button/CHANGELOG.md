@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.34](https://github.com/ing-bank/lion/compare/@lion/button@0.1.33...@lion/button@0.1.34) (2019-07-12)
+
+
+### Bug Fixes
+
+* **button:** make redispatch method protected ([b7eb537](https://github.com/ing-bank/lion/commit/b7eb537))
+* **button:** put host element into click event target (fix [#89](https://github.com/ing-bank/lion/issues/89)) ([59e456e](https://github.com/ing-bank/lion/commit/59e456e))
+* **button:** redispatch click event with all original properties ([b71177f](https://github.com/ing-bank/lion/commit/b71177f))
+* **button:** remove unnecessary instance method bind ([4a8c6eb](https://github.com/ing-bank/lion/commit/4a8c6eb))
+
+
+
+
+
 ## [0.1.33](https://github.com/ing-bank/lion/compare/@lion/button@0.1.32...@lion/button@0.1.33) (2019-07-09)
 
 **Note:** Version bump only for package @lion/button
