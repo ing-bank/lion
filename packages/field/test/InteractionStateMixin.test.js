@@ -1,14 +1,28 @@
-import { expect, fixture, unsafeStatic, html, defineCE } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  unsafeStatic,
+  html,
+  defineCE,
+  triggerFocusFor,
+  triggerBlurFor,
+} from '@open-wc/testing';
 import sinon from 'sinon';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement } from '@lion/core';
 
 import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
 
 describe('InteractionStateMixin', async () => {
-  let elem;
+  let tagString;
+  let tag;
   before(() => {
-    elem = defineCE(
-      class IState extends InteractionStateMixin(LionLitElement) {
+    tagString = defineCE(
+      class IState extends InteractionStateMixin(LitElement) {
+        connectedCallback() {
+          super.connectedCallback();
+          this.tabIndex = 0;
+        }
+
         set modelValue(v) {
           this._modelValue = v;
           this.dispatchEvent(
@@ -19,149 +33,120 @@ describe('InteractionStateMixin', async () => {
         get modelValue() {
           return this._modelValue;
         }
-
-        get inputElement() {
-          return this.querySelector('input');
-        }
       },
     );
+    tag = unsafeStatic(tagString);
   });
 
   it('sets states to false on init', async () => {
-    const input = await fixture(`<${elem}><input slot="input"></${elem}>`);
-    expect(input.dirty).to.equal(false);
-    expect(input.touched).to.equal(false);
-    expect(input.prefilled).to.equal(false);
+    const el = await fixture(html`<${tag}></${tag}>`);
+    expect(el.dirty).to.be.false;
+    expect(el.touched).to.be.false;
+    expect(el.prefilled).to.be.false;
   });
 
   it('sets dirty when value changed', async () => {
-    const input = await fixture(`<${elem}><input slot="input"></${elem}>`);
-    input.modelValue = 'foobar';
-    expect(input.dirty).to.equal(true);
+    const el = await fixture(html`<${tag}></${tag}>`);
+    expect(el.dirty).to.be.false;
+    el.modelValue = 'foobar';
+    expect(el.dirty).to.be.true;
   });
 
-  // Skipping, since this issue (not being able to set focus on element extending from LitElement)
-  // only occurs in WCT context (not in Storybook/Stackblitz).
-  // See: https://stackblitz.com/edit/lit-element-request-update-bug-g59tjq?file=blurry.js
-  // it.skip
   it('sets touched to true when field left after focus', async () => {
-    // const formElement = await LionTest.htmlFixture(`<${elem}><input type="text" slot="input"></${elem}>`);
-    // await triggerFocusFor(formElement.inputElement); // focus/blur can't be delegated
-    // await triggerBlurFor(formElement.inputElement);
-    // expect(formElement.touched).to.equal(true);
+    const el = await fixture(html`<${tag}></${tag}>`);
+    await triggerFocusFor(el);
+    await triggerBlurFor(el);
+    expect(el.touched).to.be.true;
   });
 
   it('sets a class "state-(touched|dirty)"', async () => {
-    const state = await fixture(`<${elem}><input slot="input"></${elem}>`);
-    state.touched = true;
-    await state.updateComplete;
-    expect(state.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.touched = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
 
-    state.dirty = true;
-    await state.updateComplete;
-    expect(state.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+    el.dirty = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
   });
 
   it('fires "(touched|dirty)-state-changed" event when state changes', async () => {
-    const iState = await fixture(`<${elem}><input slot="input"></${elem}>`);
-    const cbTouched = sinon.spy();
-    const cbDirty = sinon.spy();
+    const touchedSpy = sinon.spy();
+    const dirtySpy = sinon.spy();
+    const el = await fixture(
+      html`<${tag} @touched-changed=${touchedSpy} @dirty-changed=${dirtySpy}></${tag}>`,
+    );
 
-    iState.addEventListener('touched-changed', cbTouched);
-    iState.addEventListener('dirty-changed', cbDirty);
+    el.touched = true;
+    expect(touchedSpy.callCount).to.equal(1);
 
-    iState.touched = true;
-    expect(cbTouched.callCount).to.equal(1);
-
-    iState.dirty = true;
-    expect(cbDirty.callCount).to.equal(1);
-  });
-
-  // Skipping, since this issue (not being able to set focus on element extending from LitElement)
-  // only occurs in WCT context (not in Storybook/Stackblitz).
-  // See: https://stackblitz.com/edit/lit-element-request-update-bug-g59tjq?file=blurry.js
-  // it.skip
-  it('sets prefilled to true when field left and value non-empty', async () => {
-    // const iState = await LionTest.htmlFixture(`<${elem}><input slot="input"></${elem}>`);
-    // await triggerFocusFor(iState.inputElement);
-    // iState.modelValue = externalVariables.prefilledModelValue || '000';
-    // await triggerBlurFor(iState.inputElement);
-    // expect(iState.prefilled).to.equal(true);
-    // await triggerFocusFor(iState.inputElement);
-    // iState.modelValue = externalVariables.nonPrefilledModelValue || '';
-    // await triggerBlurFor(iState.inputElement);
-    // expect(iState.prefilled).to.equal(false);
+    el.dirty = true;
+    expect(dirtySpy.callCount).to.equal(1);
   });
 
   it('sets prefilled once instantiated', async () => {
-    const tag = unsafeStatic(elem);
-    const element = await fixture(html`
-    <${tag}
-      .modelValue=${'prefilled'}
-    ><input slot="input"></${tag}>`);
-    expect(element.prefilled).to.equal(true);
+    const el = await fixture(html`
+      <${tag} .modelValue=${'prefilled'}></${tag}>
+    `);
+    expect(el.prefilled).to.be.true;
 
     const nonPrefilled = await fixture(html`
-      <${tag}
-      .modelValue=''}
-      ><input slot="input"></${tag}>`);
-    expect(nonPrefilled.prefilled).to.equal(false);
+      <${tag} .modelValue=${''}></${tag}>
+    `);
+    expect(nonPrefilled.prefilled).to.be.false;
   });
 
   // This method actually tests the implementation of the _isPrefilled method.
   it(`can determine "prefilled" based on different modelValue types (Arrays, Objects, Numbers,
     Booleans, Strings)`, async () => {
-    const input = await fixture(`<${elem}><input slot="input"></${elem}>`);
+    const el = await fixture(html`<${tag}></${tag}>`);
 
     const changeModelValueAndLeave = modelValue => {
-      input.dispatchEvent(new Event('focus', { bubbles: true }));
-      input.modelValue = modelValue;
-      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      el.dispatchEvent(new Event('focus', { bubbles: true }));
+      el.modelValue = modelValue;
+      el.dispatchEvent(new Event('blur', { bubbles: true }));
     };
 
     // Prefilled
-    changeModelValueAndLeave(input, ['bla']);
-    expect(input.prefilled).to.equal(false, 'empty array should be considered "prefilled"');
-    changeModelValueAndLeave(input, { bla: 'bla' });
-    expect(input.prefilled).to.equal(false, 'empty object should be considered "prefilled"');
-    changeModelValueAndLeave(input, 0);
-    expect(input.prefilled).to.equal(false, 'numbers should be considered "prefilled"');
-    changeModelValueAndLeave(input, false);
-    expect(input.prefilled).to.equal(false, 'Booleans should be considered "prefilled"');
-    changeModelValueAndLeave(input, '');
-    expect(input.prefilled).to.equal(false, 'empty string should be considered "prefilled"');
+    changeModelValueAndLeave(['not-empty']);
+    expect(el.prefilled, 'not empty array should be "prefilled"').to.be.true;
+    changeModelValueAndLeave({ not: 'empty' });
+    expect(el.prefilled, 'not empty object should be "prefilled"').to.be.true;
+    changeModelValueAndLeave(0);
+    expect(el.prefilled, 'numbers should be "prefilled"').to.be.true;
+    changeModelValueAndLeave(false);
+    expect(el.prefilled, 'booleans should be "prefilled"').to.be.true;
 
     // Not prefilled
-    changeModelValueAndLeave(input, []);
-    expect(input.prefilled).to.equal(false, 'empty array should not be considered "prefilled"');
-    changeModelValueAndLeave(input, {});
-    expect(input.prefilled).to.equal(false, 'empty object should not be considered "prefilled"');
-    changeModelValueAndLeave(input, '');
-    expect(input.prefilled).to.equal(false, 'empty string should not be considered "prefilled"');
-
-    changeModelValueAndLeave(input, null);
-    expect(input.prefilled).to.equal(false, 'null should not be considered "prefilled"');
-    changeModelValueAndLeave(input, undefined);
-    expect(input.prefilled).to.equal(false, 'undefined should not be considered "prefilled"');
+    changeModelValueAndLeave([]);
+    expect(el.prefilled, 'empty array should not be "prefilled"').to.be.false;
+    changeModelValueAndLeave({});
+    expect(el.prefilled, 'empty object should not be "prefilled"').to.be.false;
+    changeModelValueAndLeave('');
+    expect(el.prefilled, 'empty string should not be "prefilled"').to.be.false;
+    changeModelValueAndLeave(null);
+    expect(el.prefilled, 'null should not be "prefilled"').to.be.false;
+    changeModelValueAndLeave(undefined);
+    expect(el.prefilled, 'undefined should not be "prefilled"').to.be.false;
   });
 
   it('has a method resetInteractionState()', async () => {
-    const input = await fixture(`<${elem}><input slot="input"></${elem}>`);
-    input.dirty = true;
-    input.touched = true;
-    input.prefilled = true;
-    input.resetInteractionState();
-    expect(input.dirty).to.equal(false);
-    expect(input.touched).to.equal(false);
-    expect(input.prefilled).to.equal(false);
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.dirty = true;
+    el.touched = true;
+    el.prefilled = true;
+    el.resetInteractionState();
+    expect(el.dirty).to.be.false;
+    expect(el.touched).to.be.false;
+    expect(el.prefilled).to.be.false;
 
-    input.dirty = true;
-    input.touched = true;
-    input.prefilled = false;
-    input.modelValue = 'Some value';
-    input.resetInteractionState();
-    expect(input.dirty).to.equal(false);
-    expect(input.touched).to.equal(false);
-    expect(input.prefilled).to.equal(true);
+    el.dirty = true;
+    el.touched = true;
+    el.prefilled = false;
+    el.modelValue = 'Some value';
+    el.resetInteractionState();
+    expect(el.dirty).to.be.false;
+    expect(el.touched).to.be.false;
+    expect(el.prefilled).to.be.true;
   });
 });
