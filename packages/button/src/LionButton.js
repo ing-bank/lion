@@ -140,7 +140,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.disabled = false;
     this.role = 'button';
     this.tabindex = 0;
-    this.__keydownDelegationHandler = this.__keydownDelegationHandler.bind(this);
   }
 
   connectedCallback() {
@@ -153,9 +152,29 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.__teardownDelegation();
   }
 
+  _redispatchClickEvent(oldEvent) {
+    // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
+    const newEvent = new MouseEvent(oldEvent.type, oldEvent);
+    this.__enforceHostEventTarget(newEvent);
+    this.$$slot('_button').dispatchEvent(newEvent);
+  }
+
+  /**
+   * Prevent click on the fake element and cause click on the native button.
+   */
   __clickDelegationHandler(e) {
-    e.stopPropagation(); // prevent click on the fake element and cause click on the native button
-    this.$$slot('_button').click();
+    e.stopPropagation();
+    this._redispatchClickEvent(e);
+  }
+
+  __enforceHostEventTarget(event) {
+    try {
+      // this is for IE11 (and works in others), because `Object.defineProperty` does not give any effect there
+      event.__defineGetter__('target', () => this); // eslint-disable-line no-restricted-properties
+    } catch (error) {
+      // in case `__defineGetter__` is removed from the platform
+      Object.defineProperty(event, 'target', { writable: false, value: this });
+    }
   }
 
   __setupDelegation() {
@@ -181,7 +200,7 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
       e.preventDefault();
       this.shadowRoot.querySelector('.btn').removeAttribute('active');
-      this.$$slot('_button').click();
+      this.shadowRoot.querySelector('.click-area').click();
     }
   }
 

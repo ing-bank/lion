@@ -1,8 +1,19 @@
-import { expect, fixture, html, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html, aTimeout, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
-import { pressEnter, pressSpace } from '@polymer/iron-test-helpers/mock-interactions.js';
+import {
+  makeMouseEvent,
+  pressEnter,
+  pressSpace,
+} from '@polymer/iron-test-helpers/mock-interactions.js';
 
 import '../lion-button.js';
+
+function getTopElement(el) {
+  const { left, top } = el.getBoundingClientRect();
+  // to support elementFromPoint() in polyfilled browsers we have to use document
+  const crossBrowserRoot = el.shadowRoot.elementFromPoint ? el.shadowRoot : document;
+  return crossBrowserRoot.elementFromPoint(left, top);
+}
 
 describe('lion-button', () => {
   it('behaves like native `button` in terms of a11y', async () => {
@@ -99,11 +110,7 @@ describe('lion-button', () => {
       `);
 
       const button = form.querySelector('lion-button');
-      const { left, top } = button.getBoundingClientRect();
-      // to support elementFromPoint() in polyfilled browsers we have to use document
-      const crossBrowserRoot = button.shadowRoot.elementFromPoint ? button.shadowRoot : document;
-      const shadowClickAreaElement = crossBrowserRoot.elementFromPoint(left, top);
-      shadowClickAreaElement.click();
+      getTopElement(button).click();
 
       expect(formSubmitSpy.called).to.be.true;
     });
@@ -136,6 +143,65 @@ describe('lion-button', () => {
       await aTimeout();
 
       expect(formSubmitSpy.called).to.be.true;
+    });
+  });
+
+  describe('click event', () => {
+    it('is fired once', async () => {
+      const clickSpy = sinon.spy();
+      const el = await fixture(
+        html`
+          <lion-button @click="${clickSpy}"></lion-button>
+        `,
+      );
+
+      getTopElement(el).click();
+
+      // trying to wait for other possible redispatched events
+      await aTimeout();
+      await aTimeout();
+
+      expect(clickSpy.callCount).to.equal(1);
+    });
+
+    describe('event after redispatching', async () => {
+      async function prepareClickEvent(el, host) {
+        setTimeout(() => {
+          if (host) {
+            // click on host like in native button
+            makeMouseEvent('click', { x: 11, y: 11 }, el);
+          } else {
+            // click on click-area which is then redispatched
+            makeMouseEvent('click', { x: 11, y: 11 }, getTopElement(el));
+          }
+        });
+        return oneEvent(el, 'click');
+      }
+
+      let hostEvent;
+      let redispatchedEvent;
+
+      before(async () => {
+        const el = await fixture('<lion-button></lion-button>');
+        hostEvent = await prepareClickEvent(el, true);
+        redispatchedEvent = await prepareClickEvent(el, false);
+      });
+
+      const sameProperties = [
+        'constructor',
+        'composed',
+        'bubbles',
+        'cancelable',
+        'clientX',
+        'clientY',
+        'target',
+      ];
+
+      sameProperties.forEach(property => {
+        it(`has same value of the property "${property}"`, async () => {
+          expect(redispatchedEvent[property]).to.equal(hostEvent[property]);
+        });
+      });
     });
   });
 });
