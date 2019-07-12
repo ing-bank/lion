@@ -8,6 +8,7 @@ import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
 import { FormatMixin } from './FormatMixin.js';
+import { FocusMixin } from './FocusMixin.js';
 
 /**
  * LionField: wraps components input, textarea and select and potentially others
@@ -29,9 +30,11 @@ import { FormatMixin } from './FormatMixin.js';
 // eslint-disable-next-line max-len, no-unused-vars
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
-    FormatMixin(
-      ValidateMixin(
-        CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+    FocusMixin(
+      FormatMixin(
+        ValidateMixin(
+          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+        ),
       ),
     ),
   ),
