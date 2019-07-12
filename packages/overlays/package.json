@@ -32,7 +32,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.5",
+    "@lion/core": "^0.1.9",
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
