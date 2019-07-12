@@ -499,6 +499,27 @@ describe('LocalOverlayController', () => {
         'Popper positioning Y value should be 32 less than previous, due to the added 32px offset',
       );
     });
+
+    it('can set the contentNode minWidth as the invokerNode width', () => {
+      const controller = new LocalOverlayController({
+        inheritsReferenceObjectWidth: 'min',
+      });
+      expect(controller.contentNode.style.minWidth).to.equal(controller.invokerNode.style.width);
+    });
+
+    it('can set the contentNode maxWidth as the invokerNode width', () => {
+      const controller = new LocalOverlayController({
+        inheritsReferenceObjectWidth: 'max',
+      });
+      expect(controller.contentNode.style.maxWidth).to.equal(controller.invokerNode.style.width);
+    });
+
+    it('can set the contentNode width as the invokerNode width', () => {
+      const controller = new LocalOverlayController({
+        inheritsReferenceObjectWidth: 'full',
+      });
+      expect(controller.contentNode.style.width).to.equal(controller.invokerNode.style.width);
+    });
   });
 
   describe('a11y', () => {
