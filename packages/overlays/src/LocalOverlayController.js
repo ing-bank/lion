@@ -7,6 +7,8 @@ async function __preloadPopper() {
 }
 export class LocalOverlayController {
   constructor(params = {}) {
+    this.__fakeExtendsEventTarget();
+
     // TODO: Instead of in constructor, prefetch it or use a preloader-manager to load it during idle time
     this.constructor.popperModule = __preloadPopper();
     this.__mergePopperConfigs(params.popperConfig || {});
@@ -165,11 +167,19 @@ export class LocalOverlayController {
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
       if (this.hidesOnEsc) this._setupHidesOnEsc();
+
+      if (this._prevShown === false) {
+        this.dispatchEvent(new Event('show'));
+      }
     } else {
       this._updateContent();
       this.invokerNode.setAttribute('aria-expanded', false);
       if (this.hidesOnOutsideClick) this._teardownHidesOnOutsideClick();
       if (this.hidesOnEsc) this._teardownHidesOnEsc();
+
+      if (this._prevShown === true) {
+        this.dispatchEvent(new Event('hide'));
+      }
     }
     this._prevShown = shown;
     this._prevData = data;
@@ -299,6 +309,15 @@ export class LocalOverlayController {
     const Popper = mod.default;
     this._popper = new Popper(this.invokerNode, this.contentNode, {
       ...this.popperConfig,
+    });
+  }
+
+  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
+  // issue: https://gitlab.ing.net/TheGuideComponents/lion-element/issues/12
+  __fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      this[funcName] = (...args) => delegate[funcName](...args);
     });
   }
 }
