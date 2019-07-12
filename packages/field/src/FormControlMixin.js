@@ -1,4 +1,4 @@
-import { html, css, nothing, dedupeMixin } from '@lion/core';
+import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /**
@@ -14,7 +14,7 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 export const FormControlMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormControlMixin extends ObserverMixin(superclass) {
+    class FormControlMixin extends ObserverMixin(SlotMixin(superclass)) {
       static get properties() {
         return {
           ...super.properties,
@@ -76,7 +76,19 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get inputElement() {
-        return (this.$$slot && this.$$slot('input')) || this.querySelector('[slot=input]'); // eslint-disable-line
+        return this.__getDirectSlotChild('input');
+      }
+
+      get labelElement() {
+        return this.__getDirectSlotChild('label');
+      }
+
+      get helpTextElement() {
+        return this.__getDirectSlotChild('help-text');
+      }
+
+      get feedbackElement() {
+        return this.__getDirectSlotChild('feedback');
       }
 
       constructor() {
@@ -107,29 +119,31 @@ export const FormControlMixin = dedupeMixin(
       }
 
       _enhanceLightDomA11y() {
-        if (this.inputElement) {
-          this.inputElement.id = this.inputElement.id || this._inputId;
+        const { inputElement, labelElement, helpTextElement, feedbackElement } = this;
+
+        if (inputElement) {
+          inputElement.id = inputElement.id || this._inputId;
         }
-        if (this.$$slot('label')) {
-          this.$$slot('label').setAttribute('for', this._inputId);
-          this.$$slot('label').id = this.$$slot('label').id || `label-${this._inputId}`;
-          const labelledById = ` ${this.$$slot('label').id}`;
+        if (labelElement) {
+          labelElement.setAttribute('for', this._inputId);
+          labelElement.id = labelElement.id || `label-${this._inputId}`;
+          const labelledById = ` ${labelElement.id}`;
           if (this._ariaLabelledby.indexOf(labelledById) === -1) {
-            this._ariaLabelledby += ` ${this.$$slot('label').id}`;
+            this._ariaLabelledby += ` ${labelElement.id}`;
           }
         }
-        if (this.$$slot('help-text')) {
-          this.$$slot('help-text').id = this.$$slot('help-text').id || `help-text-${this._inputId}`;
-          const describeIdHelpText = ` ${this.$$slot('help-text').id}`;
+        if (helpTextElement) {
+          helpTextElement.id = helpTextElement.id || `help-text-${this._inputId}`;
+          const describeIdHelpText = ` ${helpTextElement.id}`;
           if (this._ariaDescribedby.indexOf(describeIdHelpText) === -1) {
-            this._ariaDescribedby += ` ${this.$$slot('help-text').id}`;
+            this._ariaDescribedby += ` ${helpTextElement.id}`;
           }
         }
-        if (this.$$slot('feedback')) {
-          this.$$slot('feedback').id = this.$$slot('feedback').id || `feedback-${this._inputId}`;
-          const describeIdFeedback = ` ${this.$$slot('feedback').id}`;
+        if (feedbackElement) {
+          feedbackElement.id = feedbackElement.id || `feedback-${this._inputId}`;
+          const describeIdFeedback = ` ${feedbackElement.id}`;
           if (this._ariaDescribedby.indexOf(describeIdFeedback) === -1) {
-            this._ariaDescribedby += ` ${this.$$slot('feedback').id}`;
+            this._ariaDescribedby += ` ${feedbackElement.id}`;
           }
         }
         this._enhanceLightDomA11yForAdditionalSlots();
@@ -181,7 +195,7 @@ export const FormControlMixin = dedupeMixin(
         additionalSlots = ['prefix', 'suffix', 'before', 'after'],
       ) {
         additionalSlots.forEach(additionalSlot => {
-          const element = this.$$slot(additionalSlot);
+          const element = this.__getDirectSlotChild(additionalSlot);
           if (element) {
             element.id = element.id || `${additionalSlot}-${this._inputId}`;
             if (element.hasAttribute('data-label') === true) {
@@ -218,14 +232,14 @@ export const FormControlMixin = dedupeMixin(
       }
 
       _onLabelChanged({ label }) {
-        if (this.$$slot && this.$$slot('label')) {
-          this.$$slot('label').textContent = label;
+        if (this.labelElement) {
+          this.labelElement.textContent = label;
         }
       }
 
       _onHelpTextChanged({ helpText }) {
-        if (this.$$slot && this.$$slot('help-text')) {
-          this.$$slot('help-text').textContent = helpText;
+        if (this.helpTextElement) {
+          this.helpTextElement.textContent = helpText;
         }
       }
 
@@ -552,7 +566,7 @@ export const FormControlMixin = dedupeMixin(
 
       // Returns dom references to all elements that should be referred to by field(s)
       _getAriaDescriptionElements() {
-        return [this.$$slot('help-text'), this.$$slot('feedback')];
+        return [this.helpTextElement, this.feedbackElement];
       }
 
       /**
@@ -573,6 +587,10 @@ export const FormControlMixin = dedupeMixin(
        */
       addToAriaDescription(id) {
         this._ariaDescribedby += ` ${id}`;
+      }
+
+      __getDirectSlotChild(slotName) {
+        return [...this.children].find(el => el.slot === slotName);
       }
     },
 );
