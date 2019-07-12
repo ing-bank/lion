@@ -152,9 +152,14 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.__teardownDelegation();
   }
 
-  __clickDelegationHandler(e) {
-    e.stopPropagation(); // prevent click on the fake element and cause click on the native button
-    this.$$slot('_button').click();
+  /**
+   * Prevent click on the fake element and cause click on the native button.
+   */
+  __clickDelegationHandler(oldEvent) {
+    oldEvent.stopPropagation();
+    // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
+    const newEvent = new MouseEvent(oldEvent.type, oldEvent);
+    this.$$slot('_button').dispatchEvent(newEvent);
   }
 
   __setupDelegation() {
@@ -180,7 +185,7 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
       e.preventDefault();
       this.shadowRoot.querySelector('.btn').removeAttribute('active');
-      this.$$slot('_button').click();
+      this.shadowRoot.querySelector('.click-area').click();
     }
   }
 
