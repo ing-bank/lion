@@ -1,4 +1,5 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import Popper from 'popper.js/dist/popper.min.js';
 
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
@@ -896,6 +897,29 @@ describe('LocalOverlayController', () => {
       invokerNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
+    });
+  });
+
+  describe('events', () => {
+    it('fires "show" event once overlay becomes shown', async () => {
+      const showSpy = sinon.spy();
+      const ctrl = new LocalOverlayController();
+      ctrl.addEventListener('show', showSpy);
+      await ctrl.show();
+      expect(showSpy.callCount).to.equal(1);
+      await ctrl.show();
+      expect(showSpy.callCount).to.equal(1);
+    });
+
+    it('fires "hide" event once overlay becomes hidden', async () => {
+      const hideSpy = sinon.spy();
+      const ctrl = new LocalOverlayController();
+      ctrl.addEventListener('hide', hideSpy);
+      ctrl.hide();
+      expect(hideSpy.callCount).to.equal(0);
+      await ctrl.show();
+      ctrl.hide();
+      expect(hideSpy.callCount).to.equal(1);
     });
   });
 });
