@@ -11,6 +11,7 @@ export class LocalOverlayController {
     this.constructor.popperModule = __preloadPopper();
     this.__mergePopperConfigs(params.popperConfig || {});
 
+    this.inheritsReferenceObjectWidth = params.inheritsReferenceObjectWidth;
     this.hidesOnEsc = params.hidesOnEsc;
     this.hidesOnOutsideClick = params.hidesOnOutsideClick;
     this.trapsKeyboardFocus = params.trapsKeyboardFocus;
@@ -148,6 +149,19 @@ export class LocalOverlayController {
       this.contentNode.style.zIndex = 1;
       this.invokerNode.setAttribute('aria-expanded', true);
 
+      if (this.inheritsReferenceObjectWidth) {
+        const referenceObjectWidth = `${this.invokerNode.clientWidth}px`;
+        switch (this.inheritsReferenceObjectWidth) {
+          case 'max':
+            this.contentNode.style.maxWidth = referenceObjectWidth;
+            break;
+          case 'full':
+            this.contentNode.style.width = referenceObjectWidth;
+            break;
+          default:
+            this.contentNode.style.minWidth = referenceObjectWidth;
+        }
+      }
       if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
       if (this.hidesOnEsc) this._setupHidesOnEsc();
