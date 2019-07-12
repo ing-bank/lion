@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.2...@lion/overlays@0.3.3) (2019-07-12)
+
+
+### Bug Fixes
+
+* **overlays:** add inheritsReferenceObjectWidth parameter ([229d282](https://github.com/ing-bank/lion/commit/229d282))
+* **overlays:** fire show/hide event on shown changed ([e02bc42](https://github.com/ing-bank/lion/commit/e02bc42))
+
+
+
+
+
 ## [0.3.2](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.1...@lion/overlays@0.3.2) (2019-07-02)
 
 **Note:** Version bump only for package @lion/overlays
