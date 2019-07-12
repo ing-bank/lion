@@ -140,7 +140,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     this.disabled = false;
     this.role = 'button';
     this.tabindex = 0;
-    this.__keydownDelegationHandler = this.__keydownDelegationHandler.bind(this);
   }
 
   connectedCallback() {
