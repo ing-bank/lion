@@ -2,7 +2,6 @@
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
 import { randomOk } from './validators.js';
@@ -15,7 +14,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow, max-len
-    class ValidateMixin extends CssClassMixin(ObserverMixin(LocalizeMixin(SlotMixin(superclass)))) {
+    class ValidateMixin extends ObserverMixin(LocalizeMixin(SlotMixin(superclass))) {
       /* * * * * * * * * *
     Configuration  */
 
@@ -120,11 +119,9 @@ export const ValidateMixin = dedupeMixin(
           },
           errorState: {
             type: Boolean,
-            nonEmptyToClass: 'state-error',
           },
           errorShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-error-show',
           },
           warningValidators: {
             type: Object,
@@ -134,11 +131,9 @@ export const ValidateMixin = dedupeMixin(
           },
           warningState: {
             type: Boolean,
-            nonEmptyToClass: 'state-warning',
           },
           warningShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-warning-show',
           },
           infoValidators: {
             type: Object,
@@ -148,11 +143,9 @@ export const ValidateMixin = dedupeMixin(
           },
           infoState: {
             type: Boolean,
-            nonEmptyToClass: 'state-info',
           },
           infoShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-info-show',
           },
           successValidators: {
             type: Object,
@@ -162,15 +155,12 @@ export const ValidateMixin = dedupeMixin(
           },
           successState: {
             type: Boolean,
-            nonEmptyToClass: 'state-success',
           },
           successShow: {
             type: Boolean,
-            nonEmptyToClass: 'state-success-show',
           },
           invalid: {
             type: Boolean,
-            nonEmptyToClass: 'state-invalid',
           },
           message: {
             type: Boolean,
@@ -234,6 +224,23 @@ export const ValidateMixin = dedupeMixin(
 
       get _feedbackElement() {
         return (this.$$slot && this.$$slot('feedback')) || this.querySelector('[slot="feedback"]');
+      }
+
+      updated(changedProperties) {
+        super.updated(changedProperties);
+
+        // @deprecated adding css classes for backwards compatibility
+        this.constructor.validationTypes.forEach(name => {
+          if (changedProperties.has(`${name}State`)) {
+            this.classList[this[`${name}State`] ? 'add' : 'remove'](`state-${name}`);
+          }
+          if (changedProperties.has(`${name}Show`)) {
+            this.classList[this[`${name}Show`] ? 'add' : 'remove'](`state-${name}-show`);
+          }
+        });
+        if (changedProperties.has('invalid')) {
+          this.classList[this.invalid ? 'add' : 'remove'](`state-invalid`);
+        }
       }
 
       getFieldName(validatorParams) {
