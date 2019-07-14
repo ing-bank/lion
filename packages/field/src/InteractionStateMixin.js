@@ -73,7 +73,7 @@ export const InteractionStateMixin = dedupeMixin(
         this.touched = false;
         this.dirty = false;
         this.prefilled = false;
-        this.leaveEvent = 'blur';
+        this._leaveEvent = 'blur';
         this._valueChangedEvent = 'model-value-changed';
 
         this._iStateOnLeave = this._iStateOnLeave.bind(this);
@@ -87,7 +87,7 @@ export const InteractionStateMixin = dedupeMixin(
         if (super.connectedCallback) {
           super.connectedCallback();
         }
-        this.addEventListener(this.leaveEvent, this._iStateOnLeave);
+        this.addEventListener(this._leaveEvent, this._iStateOnLeave);
         this.addEventListener(this._valueChangedEvent, this._iStateOnValueChange);
         this.initInteractionState();
       }
@@ -96,7 +96,7 @@ export const InteractionStateMixin = dedupeMixin(
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
-        this.removeEventListener(this.leaveEvent, this._iStateOnLeave);
+        this.removeEventListener(this._leaveEvent, this._iStateOnLeave);
         this.removeEventListener(this._valueChangedEvent, this._iStateOnValueChange);
       }
 
@@ -158,6 +158,20 @@ export const InteractionStateMixin = dedupeMixin(
 
       _onDirtyChanged() {
         this.dispatchEvent(new CustomEvent('dirty-changed', { bubbles: true, composed: true }));
+      }
+
+      /**
+       * @deprecated
+       */
+      get leaveEvent() {
+        return this._leaveEvent;
+      }
+
+      /**
+       * @deprecated
+       */
+      set leaveEvent(eventName) {
+        this._leaveEvent = eventName;
       }
     },
 );
