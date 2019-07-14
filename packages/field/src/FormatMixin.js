@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@lion/core';
-import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
@@ -21,7 +20,7 @@ import { Unparseable } from '@lion/validate';
 export const FormatMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class FormatMixin extends EventMixin(ObserverMixin(superclass)) {
+    class FormatMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
           ...super.properties,
