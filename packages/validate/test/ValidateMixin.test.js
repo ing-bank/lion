@@ -143,6 +143,58 @@ describe('ValidateMixin', () => {
     expect(otherValidatorSpy.calledWith('foo')).to.equal(true);
   });
 
+  // classes are added only for backward compatibility - they are deprecated
+  it('sets a class "state-(error|warning|info|success|invalid)"', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.errorState = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-error')).to.equal(true, 'has class "state-error"');
+
+    el.warningState = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-warning')).to.equal(true, 'has class "state-warning"');
+
+    el.infoState = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-info')).to.equal(true, 'has class "state-info"');
+
+    el.successState = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-success')).to.equal(true, 'has class "state-success"');
+
+    el.invalid = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-invalid')).to.equal(true, 'has class "state-invalid"');
+  });
+
+  it('sets a class "state-(error|warning|info|success)-show"', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.errorShow = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-error-show')).to.equal(
+      true,
+      'has class "state-error-show"',
+    );
+
+    el.warningShow = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-warning-show')).to.equal(
+      true,
+      'has class "state-warning-show"',
+    );
+
+    el.infoShow = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-info-show')).to.equal(true, 'has class "state-info-show"');
+
+    el.successShow = true;
+    await el.updateComplete;
+    expect(el.classList.contains('state-success-show')).to.equal(
+      true,
+      'has class "state-success-show"',
+    );
+  });
+
   describe(`Validators ${suffixName}`, () => {
     function isCat(modelValue, opts) {
       const validateString = opts && opts.number ? `cat${opts.number}` : 'cat';
