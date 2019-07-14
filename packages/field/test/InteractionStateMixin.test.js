@@ -59,6 +59,7 @@ describe('InteractionStateMixin', async () => {
     expect(el.touched).to.be.true;
   });
 
+  // classes are added only for backward compatibility - they are deprecated
   it('sets a class "state-(touched|dirty)"', async () => {
     const el = await fixture(html`<${tag}></${tag}>`);
     el.touched = true;
@@ -68,6 +69,20 @@ describe('InteractionStateMixin', async () => {
     el.dirty = true;
     await el.updateComplete;
     expect(el.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+  });
+
+  it('sets an attribute "touched', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.touched = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('touched')).to.be.true;
+  });
+
+  it('sets an attribute "dirty', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.dirty = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('dirty')).to.be.true;
   });
 
   it('fires "(touched|dirty)-state-changed" event when state changes', async () => {

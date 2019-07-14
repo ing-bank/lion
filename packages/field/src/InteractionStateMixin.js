@@ -1,5 +1,4 @@
 import { dedupeMixin } from '@lion/core';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
@@ -15,7 +14,7 @@ import { Unparseable } from '@lion/validate';
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class InteractionStateMixin extends CssClassMixin(ObserverMixin(superclass)) {
+    class InteractionStateMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
           ...super.properties,
@@ -24,7 +23,7 @@ export const InteractionStateMixin = dedupeMixin(
            */
           touched: {
             type: Boolean,
-            nonEmptyToClass: 'state-touched',
+            reflect: true,
           },
 
           /**
@@ -32,7 +31,7 @@ export const InteractionStateMixin = dedupeMixin(
            */
           dirty: {
             type: Boolean,
-            nonEmptyToClass: 'state-dirty',
+            reflect: true,
           },
 
           /**
@@ -99,6 +98,17 @@ export const InteractionStateMixin = dedupeMixin(
         }
         this.removeEventListener(this.leaveEvent, this._iStateOnLeave);
         this.removeEventListener(this._valueChangedEvent, this._iStateOnValueChange);
+      }
+
+      updated(changedProperties) {
+        super.updated(changedProperties);
+        // classes are added only for backward compatibility - they are deprecated
+        if (changedProperties.has('touched')) {
+          this.classList[this.touched ? 'add' : 'remove']('state-touched');
+        }
+        if (changedProperties.has('dirty')) {
+          this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
+        }
       }
 
       /**
