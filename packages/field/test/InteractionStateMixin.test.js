@@ -164,4 +164,26 @@ describe('InteractionStateMixin', async () => {
     expect(el.touched).to.be.false;
     expect(el.prefilled).to.be.true;
   });
+
+  describe('SubClassers', () => {
+    it('can override the `_leaveEvent`', async () => {
+      const tagLeaveString = defineCE(
+        class IState extends InteractionStateMixin(LitElement) {
+          constructor() {
+            super();
+            this._leaveEvent = 'custom-blur';
+          }
+        },
+      );
+      const tagLeave = unsafeStatic(tagLeaveString);
+      const el = await fixture(html`<${tagLeave}></${tagLeave}>`);
+      el.dispatchEvent(new Event('custom-blur'));
+      expect(el.touched).to.be.true;
+    });
+
+    it('can override the deprecated `leaveEvent`', async () => {
+      const el = await fixture(html`<${tag} .leaveEvent=${'custom-blur'}></${tag}>`);
+      expect(el._leaveEvent).to.equal('custom-blur');
+    });
+  });
 });
