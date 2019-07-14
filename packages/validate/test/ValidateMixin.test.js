@@ -195,6 +195,48 @@ describe('ValidateMixin', () => {
     );
   });
 
+  it('sets attribute "(error|warning|info|success|invalid)-state"', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.errorState = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('error-state'), 'has error-state attribute').to.be.true;
+
+    el.warningState = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('warning-state'), 'has warning-state attribute').to.be.true;
+
+    el.infoState = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('info-state'), 'has info-state attribute').to.be.true;
+
+    el.successState = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('success-state'), 'has error-state attribute').to.be.true;
+
+    el.invalid = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('invalid'), 'has invalid attribute').to.be.true;
+  });
+
+  it('sets attribute "(error|warning|info|success)-show"', async () => {
+    const el = await fixture(html`<${tag}></${tag}>`);
+    el.errorShow = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('error-show'), 'has error-show attribute').to.be.true;
+
+    el.warningShow = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('warning-show'), 'has warning-show attribute').to.be.true;
+
+    el.infoShow = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('info-show'), 'has info-show attribute').to.be.true;
+
+    el.successShow = true;
+    await el.updateComplete;
+    expect(el.hasAttribute('success-show'), 'has success-show attribute').to.be.true;
+  });
+
   describe(`Validators ${suffixName}`, () => {
     function isCat(modelValue, opts) {
       const validateString = opts && opts.number ? `cat${opts.number}` : 'cat';

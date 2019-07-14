@@ -119,9 +119,13 @@ export const ValidateMixin = dedupeMixin(
           },
           errorState: {
             type: Boolean,
+            attribute: 'error-state',
+            reflect: true,
           },
           errorShow: {
             type: Boolean,
+            attribute: 'error-show',
+            reflect: true,
           },
           warningValidators: {
             type: Object,
@@ -131,9 +135,13 @@ export const ValidateMixin = dedupeMixin(
           },
           warningState: {
             type: Boolean,
+            attribute: 'warning-state',
+            reflect: true,
           },
           warningShow: {
             type: Boolean,
+            attribute: 'warning-show',
+            reflect: true,
           },
           infoValidators: {
             type: Object,
@@ -143,9 +151,13 @@ export const ValidateMixin = dedupeMixin(
           },
           infoState: {
             type: Boolean,
+            attribute: 'info-state',
+            reflect: true,
           },
           infoShow: {
             type: Boolean,
+            attribute: 'info-show',
+            reflect: true,
           },
           successValidators: {
             type: Object,
@@ -155,12 +167,17 @@ export const ValidateMixin = dedupeMixin(
           },
           successState: {
             type: Boolean,
+            attribute: 'success-state',
+            reflect: true,
           },
           successShow: {
             type: Boolean,
+            attribute: 'success-show',
+            reflect: true,
           },
           invalid: {
             type: Boolean,
+            reflect: true,
           },
           message: {
             type: Boolean,
