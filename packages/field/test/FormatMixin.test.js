@@ -1,7 +1,7 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement } from '@lion/core';
 import { Unparseable } from '@lion/validate';
 import { FormatMixin } from '../src/FormatMixin.js';
 
@@ -17,7 +17,7 @@ describe('FormatMixin', () => {
 
   before(async () => {
     const tagString = defineCE(
-      class extends FormatMixin(LionLitElement) {
+      class extends FormatMixin(LitElement) {
         render() {
           return html`
             <slot name="input"></slot>
@@ -174,6 +174,14 @@ describe('FormatMixin', () => {
     // Now see the difference for an imperative change
     el.modelValue = 'test2';
     expect(el.inputElement.value).to.equal('foo: test2');
+  });
+
+  it('works if there is no underlying inputElement', async () => {
+    const tagNoInputString = defineCE(class extends FormatMixin(LitElement) {});
+    const tagNoInput = unsafeStatic(tagNoInputString);
+    expect(async () => {
+      await fixture(html`<${tagNoInput}></${tagNoInput}>`);
+    }).to.not.throw();
   });
 
   describe('parsers/formatters/serializers', () => {

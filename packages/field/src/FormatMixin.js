@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@lion/core';
-import { EventMixin } from '@lion/core/src/EventMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
@@ -21,7 +20,7 @@ import { Unparseable } from '@lion/validate';
 export const FormatMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class FormatMixin extends EventMixin(ObserverMixin(superclass)) {
+    class FormatMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
           ...super.properties,
@@ -231,7 +230,7 @@ export const FormatMixin = dedupeMixin(
         // imperatively, we DO want to format a value (it is the only way to get meaningful
         // input into `.inputElement` with modelValue as input)
 
-        if (this.__isHandlingUserInput && this.errorState) {
+        if (this.__isHandlingUserInput && this.errorState && this.inputElement) {
           return this.inputElement ? this.value : undefined;
         }
         return this.formatter(this.modelValue, this.formatOptions);
@@ -336,8 +335,6 @@ export const FormatMixin = dedupeMixin(
           // is guaranteed to be calculated
           setTimeout(this._reflectBackFormattedValueToUser);
         };
-        this.inputElement.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
-        this.inputElement.addEventListener('input', this._proxyInputEvent);
         this.addEventListener('user-input-changed', this._onUserInputChanged);
         // Connect the value found in <input> to the formatting/parsing/serializing loop as a
         // fallback mechanism. Assume the user uses the value property of the
@@ -348,16 +345,26 @@ export const FormatMixin = dedupeMixin(
           this._syncValueUpwards();
         }
         this._reflectBackFormattedValueToUser();
+
+        if (this.inputElement) {
+          this.inputElement.addEventListener(
+            this.formatOn,
+            this._reflectBackFormattedValueDebounced,
+          );
+          this.inputElement.addEventListener('input', this._proxyInputEvent);
+        }
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.inputElement.removeEventListener('input', this._proxyInputEvent);
         this.removeEventListener('user-input-changed', this._onUserInputChanged);
-        this.inputElement.removeEventListener(
-          this.formatOn,
-          this._reflectBackFormattedValueDebounced,
-        );
+        if (this.inputElement) {
+          this.inputElement.removeEventListener('input', this._proxyInputEvent);
+          this.inputElement.removeEventListener(
+            this.formatOn,
+            this._reflectBackFormattedValueDebounced,
+          );
+        }
       }
     },
 );
