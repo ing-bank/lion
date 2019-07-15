@@ -38,4 +38,8 @@ describe('localize', () => {
   it('is configured to automatically load namespaces if locale is changed', () => {
     expect(localize._autoLoadOnLocaleChange).to.equal(true);
   });
+
+  it('is configured to fallback to the locale "en-GB"', () => {
+    expect(localize._fallbackLocale).to.equal('en-GB');
+  });
 });
