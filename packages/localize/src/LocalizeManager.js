@@ -16,6 +16,7 @@ export class LocalizeManager extends LionSingleton {
     }
 
     this._autoLoadOnLocaleChange = !!params.autoLoadOnLocaleChange;
+    this._fallbackLocale = params.fallbackLocale;
     this.__storage = {};
     this.__namespacePatternsMap = new Map();
     this.__namespaceLoadersCache = {};
@@ -163,13 +164,24 @@ export class LocalizeManager extends LionSingleton {
     return loader;
   }
 
-  _getNamespaceLoaderPromise(loader, locale, namespace) {
+  _getNamespaceLoaderPromise(loader, locale, namespace, fallbackLocale = this._fallbackLocale) {
     return loader(locale, namespace).catch(() => {
       const lang = this._getLangFromLocale(locale);
       return loader(lang, namespace).catch(() => {
+        if (fallbackLocale) {
+          return this._getNamespaceLoaderPromise(loader, fallbackLocale, namespace, false).catch(
+            () => {
+              const fallbackLang = this._getLangFromLocale(fallbackLocale);
+              throw new Error(
+                `Data for namespace "${namespace}" and current locale "${locale}" or fallback locale "${fallbackLocale}" could not be loaded. ` +
+                  `Make sure you have data either for locale "${locale}" (and/or generic language "${lang}") or for fallback "${fallbackLocale}" (and/or "${fallbackLang}").`,
+              );
+            },
+          );
+        }
         throw new Error(
           `Data for namespace "${namespace}" and locale "${locale}" could not be loaded. ` +
-            `Make sure you have data for locale "${locale}" and/or generic language "${lang}".`,
+            `Make sure you have data for locale "${locale}" (and/or generic language "${lang}").`,
         );
       });
     });
