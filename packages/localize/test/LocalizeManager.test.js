@@ -213,7 +213,7 @@ describe('LocalizeManager', () => {
       });
     });
 
-    it('fallbacks to language file if locale file is not found', async () => {
+    it('loads generic language file if locale file is not found', async () => {
       setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
 
       manager = new LocalizeManager();
@@ -240,12 +240,68 @@ describe('LocalizeManager', () => {
         expect(e).to.be.instanceof(Error);
         expect(e.message).to.equal(
           'Data for namespace "my-component" and locale "en-GB" could not be loaded. ' +
-            'Make sure you have data for locale "en-GB" and/or generic language "en".',
+            'Make sure you have data for locale "en-GB" (and/or generic language "en").',
         );
         return;
       }
 
       throw new Error('did not throw');
+    });
+
+    describe('fallback locale', () => {
+      it('can load a fallback locale if current one can not be loaded', async () => {
+        manager = new LocalizeManager({ fallbackLocale: 'en-GB' });
+        manager.locale = 'nl-NL';
+
+        setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
+
+        await manager.loadNamespace({
+          'my-component': locale => fakeImport(`./my-component/${locale}.js`),
+        });
+
+        expect(manager.__storage).to.deep.equal({
+          'nl-NL': {
+            'my-component': { greeting: 'Hello!' },
+          },
+        });
+      });
+
+      it('can load fallback generic language file if fallback locale file is not found', async () => {
+        manager = new LocalizeManager({ fallbackLocale: 'en-GB' });
+        manager.locale = 'nl-NL';
+
+        setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
+
+        await manager.loadNamespace({
+          'my-component': locale => fakeImport(`./my-component/${locale}.js`),
+        });
+
+        expect(manager.__storage).to.deep.equal({
+          'nl-NL': {
+            'my-component': { greeting: 'Hello!' },
+          },
+        });
+      });
+
+      it('throws if neither current locale nor fallback locale are found', async () => {
+        manager = new LocalizeManager({ fallbackLocale: 'en-GB' });
+        manager.locale = 'nl-NL';
+
+        try {
+          await manager.loadNamespace({
+            'my-component': locale => fakeImport(`./my-component/${locale}.js`),
+          });
+        } catch (e) {
+          expect(e).to.be.instanceof(Error);
+          expect(e.message).to.equal(
+            'Data for namespace "my-component" and current locale "nl-NL" or fallback locale "en-GB" could not be loaded. ' +
+              'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
+          );
+          return;
+        }
+
+        throw new Error('did not throw');
+      });
     });
   });
 
