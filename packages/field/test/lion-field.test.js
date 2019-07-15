@@ -5,6 +5,7 @@ import {
   unsafeStatic,
   triggerFocusFor,
   triggerBlurFor,
+  aTimeout,
 } from '@open-wc/testing';
 import { unsafeHTML } from '@lion/core';
 import sinon from 'sinon';
@@ -152,25 +153,24 @@ describe('<lion-field>', () => {
     expect(lionField.inputElement.selectionEnd).to.equal(2);
   });
 
-  // TODO: add pointerEvents test
-  // TODO: why is this a describe?
-  describe(`<lion-field> with <input disabled>${nameSuffix}`, () => {
-    it('has a class "state-disabled"', async () => {
-      const lionField = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-      expect(lionField.classList.contains('state-disabled')).to.equal(false);
-      expect(lionField.inputElement.hasAttribute('disabled')).to.equal(false);
+  // TODO: add pointerEvents test for disabled
+  it('has a class "state-disabled"', async () => {
+    const lionField = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    expect(lionField.classList.contains('state-disabled')).to.equal(false);
+    expect(lionField.inputElement.hasAttribute('disabled')).to.equal(false);
 
-      lionField.disabled = true;
-      await lionField.updateComplete;
-      expect(lionField.classList.contains('state-disabled')).to.equal(true);
-      expect(lionField.inputElement.hasAttribute('disabled')).to.equal(true);
+    lionField.disabled = true;
+    await lionField.updateComplete;
+    await aTimeout();
 
-      const disabledlionField = await fixture(
-        `<${tagString} disabled>${inputSlotString}</${tagString}>`,
-      );
-      expect(disabledlionField.classList.contains('state-disabled')).to.equal(true);
-      expect(disabledlionField.inputElement.hasAttribute('disabled')).to.equal(true);
-    });
+    expect(lionField.classList.contains('state-disabled')).to.equal(true);
+    expect(lionField.inputElement.hasAttribute('disabled')).to.equal(true);
+
+    const disabledlionField = await fixture(
+      `<${tagString} disabled>${inputSlotString}</${tagString}>`,
+    );
+    expect(disabledlionField.classList.contains('state-disabled')).to.equal(true);
+    expect(disabledlionField.inputElement.hasAttribute('disabled')).to.equal(true);
   });
 
   describe(`A11y${nameSuffix}`, () => {
@@ -355,7 +355,7 @@ describe('<lion-field>', () => {
 
       mimicUserInput(lionField, 'foo');
       expect(formatterSpy.callCount).to.equal(1);
-      expect(lionField.formattedValue).to.equal('foo');
+      expect(lionField.value).to.equal('foo');
     });
   });
 
