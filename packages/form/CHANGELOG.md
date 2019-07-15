@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.31](https://github.com/ing-bank/lion/compare/@lion/form@0.1.30...@lion/form@0.1.31) (2019-07-15)
+
+**Note:** Version bump only for package @lion/form
+
+
+
+
+
 ## [0.1.30](https://github.com/ing-bank/lion/compare/@lion/form@0.1.29...@lion/form@0.1.30) (2019-07-15)
 
 **Note:** Version bump only for package @lion/form
