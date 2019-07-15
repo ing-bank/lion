@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.27](https://github.com/ing-bank/lion/compare/@lion/field@0.1.26...@lion/field@0.1.27) (2019-07-15)
+
+
+### Bug Fixes
+
+* **field:** make InteractionState leaveEvent protected ([3981985](https://github.com/ing-bank/lion/commit/3981985))
+* **field:** move FocusMixin out of InteractionStateMixin ([b398f40](https://github.com/ing-bank/lion/commit/b398f40))
+* **field:** no DomHelpers for FormControl and apply all needed mixins ([bb1c702](https://github.com/ing-bank/lion/commit/bb1c702))
+* **field:** remove CssClassMixin from InteractionStateMixin ([dcf8726](https://github.com/ing-bank/lion/commit/dcf8726))
+* **field:** remove unused EventMixin from FormatMixin ([901fc8c](https://github.com/ing-bank/lion/commit/901fc8c))
+* **field:** the FormatMixin should work without an inputElement ([2511bf6](https://github.com/ing-bank/lion/commit/2511bf6))
+
+
+
+
+
 ## [0.1.26](https://github.com/ing-bank/lion/compare/@lion/field@0.1.25...@lion/field@0.1.26) (2019-07-09)
 
 **Note:** Version bump only for package @lion/field
