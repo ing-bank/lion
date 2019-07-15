@@ -4,29 +4,32 @@ It is designed to work in conjunction with `LionField`.
 
 ## Concepts of different values
 
-### modelValue
-The model value is the result of the parser function.
-It should be considered as the internal value used for validation and reasoning/logic.
+### model value
+The model value is the result of the parser function. It will be stored as `.modelValue`
+and should be considered the internal value used for validation and reasoning/logic.
 The model value is 'ready for consumption' by the outside world (think of a Date object
-or a float). The modelValue can(and is recommended to) be used as both input value and
-output value of the `<lion-field>`
+or a float). It can(and is recommended to) be used as both input value and
+output value of the `LionField`.
 
 Examples:
-- For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
-- For a number input: a formatted String '1.234,56' will be converted to a Number: 1234.56
+- For a date input: a String '20/01/1999' will be converted to `new Date('1999/01/20')`
+- For a number input: a formatted String '1.234,56' will be converted to a Number: `1234.56`
 
-### formattedValue
-The view value is the result of the formatter function (when available).
-The result will be stored in the native inputElement (usually an input[type=text]).
+### view value
+The view value is the result of the formatter function.
+It will be stored as `.formattedValue` and synchronized to `.value` (a viewValue setter that
+allows to synchronize to `.inputElement`).
+Synchronization happens conditionally and is (by default) the result of a blur. Other conditions
+(like error state/validity and whether the a model value was set programatically) also play a role.
 
 Examples:
 - For a date input, this would be '20/01/1999' (dependent on locale).
 - For a number input, this could be '1,234.56' (a String representation of modelValue
 1234.56)
 
-### serializedValue
-The serialized version of the model value.
-This value exists for maximal compatibility with the platform API.
+### serialized value
+This is the serialized version of the model value.
+It exists for maximal compatibility with the platform API.
 The serialized value can be an interface in context where data binding is not supported
 and a serialized string needs to be set.
 
