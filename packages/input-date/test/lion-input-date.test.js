@@ -86,4 +86,11 @@ describe('<lion-input-date>', () => {
     await el.updateComplete;
     expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
   });
+
+  it('leaves partial (and therefore unparseable) inputs untouched', async () => {
+    const el = await fixture(html`
+      <lion-input-date .value=${'2017/06'}></lion-input-date>
+    `);
+    expect(el.value).to.equal('2017/06');
+  });
 });
