@@ -25,6 +25,14 @@ export class LionInput extends LionField {
     };
   }
 
+  get delegations() {
+    return {
+      ...super.delegations,
+      properties: [...super.delegations.properties, 'step'],
+      attributes: [...super.delegations.attributes, 'step'],
+    };
+  }
+
   get slots() {
     return {
       ...super.slots,
