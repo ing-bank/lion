@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.31](https://github.com/ing-bank/lion/compare/@lion/input@0.1.30...@lion/input@0.1.31) (2019-07-16)
+
+
+### Bug Fixes
+
+* **input:** delegate "step" attribute ([2740f17](https://github.com/ing-bank/lion/commit/2740f17))
+
+
+
+
+
 ## [0.1.30](https://github.com/ing-bank/lion/compare/@lion/input@0.1.29...@lion/input@0.1.30) (2019-07-16)
 
 **Note:** Version bump only for package @lion/input
