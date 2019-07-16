@@ -1,39 +1,43 @@
-import { DelegateMixin, SlotMixin } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { DelegateMixin, SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
-
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
 import { FormatMixin } from './FormatMixin.js';
 import { FocusMixin } from './FocusMixin.js';
 
+/* eslint-disable wc/guard-super-call */
+
+// TODO:
+// - Consider exporting as FieldMixin
+// - Add submitted prop to InteractionStateMixin
+// - Find a better way to do value delegation via attr
+
 /**
- * LionField: wraps components input, textarea and select and potentially others
- * (checkbox group, radio group)
+ * `LionField`: wraps <input>, <textarea>, <select> and other interactable elements.
  * Also it would follow a nice hierarchy: lion-form -> lion-fieldset -> lion-field
  *
+ * Note: We don't support placeholders, because we have a helper text and
+ * placeholders confuse the user with accessibility needs.
+ *
+ * Please see the docs for in depth information.
+ *
+ * @example
  * <lion-field name="myName">
  *   <label slot="label">My Input</label>
  *   <input type="text" slot="input">
  * </lion-field>
  *
- * Note: We do not support placeholders, because we have a helper text and
- * placeholders confuse the user with accessibility needs.
- *
  * @customElement
  */
-
-// TODO: Consider exporting as FieldMixin
-// eslint-disable-next-line max-len, no-unused-vars
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
     FocusMixin(
       FormatMixin(
         ValidateMixin(
-          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LitElement))))),
         ),
       ),
     ),
@@ -65,14 +69,7 @@ export class LionField extends FormControlMixin(
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _setDisabledClass: ['disabled'],
-    };
-  }
-
-  // We don't delegate, because we want to 'preprocess' via _setValueAndPreserveCaret
+  // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
   set value(value) {
     // if not yet connected to dom can't change the value
     if (this.inputElement) {
@@ -85,29 +82,26 @@ export class LionField extends FormControlMixin(
     return (this.inputElement && this.inputElement.value) || '';
   }
 
-  _setDisabledClass() {
-    this.classList[this.disabled ? 'add' : 'remove']('state-disabled');
+  static get asyncObservers() {
+    return {
+      ...super.asyncObservers,
+      _setDisabledClass: ['disabled'],
+    };
   }
 
-  resetInteractionState() {
-    if (super.resetInteractionState) super.resetInteractionState();
-    // TODO: add submitted prop to InteractionStateMixin ?
-    this.submitted = false;
-  }
-
-  /* * * * * * * *
-    Lifecycle  */
   connectedCallback() {
     super.connectedCallback();
+
     this._onChange = this._onChange.bind(this);
     this.inputElement.addEventListener('change', this._onChange);
-    this._delegateInitialValueAttr(); // TODO: find a better way to do this
+    this._delegateInitialValueAttr();
     this._setDisabledClass();
-    this.classList.add('form-field');
+    this.classList.add('form-field'); // eslint-disable-line
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+
     if (this.__parentFormGroup) {
       const event = new CustomEvent('form-element-unregister', {
         detail: { element: this },
@@ -116,6 +110,10 @@ export class LionField extends FormControlMixin(
       this.__parentFormGroup.dispatchEvent(event);
     }
     this.inputElement.removeEventListener('change', this._onChange);
+  }
+
+  _setDisabledClass() {
+    this.classList[this.disabled ? 'add' : 'remove']('state-disabled');
   }
 
   /**
@@ -129,33 +127,37 @@ export class LionField extends FormControlMixin(
     }
   }
 
-  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    Public Methods (also notice delegated methods that are available on host)  */
+  resetInteractionState() {
+    if (super.resetInteractionState) {
+      super.resetInteractionState();
+    }
+    this.submitted = false;
+  }
 
   clear() {
-    // Let validationMixin and interactionStateMixin clear their invalid and dirty/touched states
-    // respectively
-    if (super.clear) super.clear();
+    if (super.clear) {
+      // Let validationMixin and interactionStateMixin clear their
+      // invalid and dirty/touched states respectively
+      super.clear();
+    }
     this.value = ''; // can't set null here, because IE11 treats it as a string
   }
 
-  /* * * * * * * * * *
-    Event Handlers */
-
   _onChange() {
-    if (super._onChange) super._onChange();
+    if (super._onChange) {
+      super._onChange();
+    }
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
       }),
     );
-    this.modelValue = this.parser(this.value);
   }
 
-  /* * * * * * * * * * * *
-    Observer Handlers  */
   _onValueChanged({ value }) {
-    if (super._onValueChanged) super._onValueChanged();
+    if (super._onValueChanged) {
+      super._onValueChanged();
+    }
     // For styling purposes, make it known the input field is not empty
     this.classList[value ? 'add' : 'remove']('state-filled');
   }
