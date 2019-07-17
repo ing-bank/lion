@@ -9,6 +9,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import '@lion/input/lion-input.js';
 import '../lion-fieldset.js';
 
 const tagString = 'lion-fieldset';
