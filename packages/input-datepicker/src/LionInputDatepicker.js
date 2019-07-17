@@ -129,6 +129,9 @@ export class LionInputDatepicker extends LionInputDate {
               return import('../translations/uk-UA.js');
             case 'uk':
               return import('../translations/uk.js');
+            case 'zh-CN':
+            case 'zh':
+              return import('../translations/zh.js');
             default:
               return import(`../translations/${locale}.js`);
           }
