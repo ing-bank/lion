@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.32](https://github.com/ing-bank/lion/compare/@lion/input@0.1.31...@lion/input@0.1.32) (2019-07-17)
+
+
+### Bug Fixes
+
+* support Chinese language ([a0ebd2d](https://github.com/ing-bank/lion/commit/a0ebd2d))
+
+
+
+
+
 ## [0.1.31](https://github.com/ing-bank/lion/compare/@lion/input@0.1.30...@lion/input@0.1.31) (2019-07-16)
 
 
