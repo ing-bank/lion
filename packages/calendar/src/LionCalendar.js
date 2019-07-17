@@ -67,6 +67,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
             case 'uk-UA':
             case 'uk':
               return import('../translations/uk.js');
+            case 'zh-CN':
+            case 'zh':
+              return import('../translations/zh.js');
             default:
               return import(`../translations/${locale}.js`);
           }
