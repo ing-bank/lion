@@ -18,20 +18,14 @@ import {
 } from './test-utils.js';
 
 import { localize } from '../src/localize.js';
+import { localizeTearDown } from '../test-helpers.js';
 
 import { LocalizeMixin } from '../src/LocalizeMixin.js';
 
-const reset = () => {
-  resetFakeImport();
-  // makes sure that between tests the localization is reset to default state
-  document.documentElement.lang = 'en-GB';
-  localize.reset();
-};
-
 describe('LocalizeMixin', () => {
-  reset();
-  afterEach(async () => {
-    reset();
+  afterEach(() => {
+    resetFakeImport();
+    localizeTearDown();
   });
 
   it('loads namespaces defined in "get localizeNamespaces()" when created before attached to DOM', async () => {
