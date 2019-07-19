@@ -1,5 +1,4 @@
-import { expect, fixture, html, defineCE, unsafeStatic, nextFrame } from '@open-wc/testing';
-import sinon from 'sinon';
+import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import { SlotMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 
@@ -24,42 +23,6 @@ describe('FormControlMixin', () => {
 
     elem = defineCE(FormControlMixinClass);
     tag = unsafeStatic(elem);
-  });
-
-  it('dispatches event to register in Light DOM', async () => {
-    const registerSpy = sinon.spy();
-    await fixture(html`
-      <div @form-element-register=${registerSpy}>
-        <${tag}></${tag}>
-      </div>
-    `);
-    await nextFrame();
-    expect(registerSpy.callCount).to.equal(1);
-  });
-
-  it('can by caught by listening in the appropriate dom', async () => {
-    const registerSpy = sinon.spy();
-    const testTag = unsafeStatic(
-      defineCE(
-        class extends LionLitElement {
-          connectedCallback() {
-            super.connectedCallback();
-            this.shadowRoot.addEventListener('form-element-register', registerSpy);
-          }
-
-          render() {
-            return html`
-              <${tag}></${tag}>
-            `;
-          }
-        },
-      ),
-    );
-    await fixture(html`
-      <${testTag}></${testTag}>
-    `);
-    await nextFrame();
-    expect(registerSpy.callCount).to.equal(1);
   });
 
   it('has the capability to override the help text', async () => {

@@ -1,5 +1,6 @@
 import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
+import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
  * #FormControlMixin :
@@ -14,7 +15,7 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 export const FormControlMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormControlMixin extends ObserverMixin(SlotMixin(superclass)) {
+    class FormControlMixin extends FormRegisteringMixin(ObserverMixin(SlotMixin(superclass))) {
       static get properties() {
         return {
           ...super.properties,
@@ -105,8 +106,6 @@ export const FormControlMixin = dedupeMixin(
         super.connectedCallback();
         this._enhanceLightDomClasses();
         this._enhanceLightDomA11y();
-        this._registerFormElement();
-        this._requestParentFormGroupUpdateOfResetModelValue();
       }
 
       /**
@@ -148,42 +147,6 @@ export const FormControlMixin = dedupeMixin(
           }
         }
         this._enhanceLightDomA11yForAdditionalSlots();
-      }
-
-      /**
-       * Fires a registration event in the next frame.
-       *
-       * Why next frame?
-       * if ShadyDOM is used and you add a listener and fire the event in the same frame
-       * it will not bubble and there can not be cought by a parent element
-       * for more details see: https://github.com/Polymer/lit-element/issues/658
-       * will requires a `await nextFrame()` in tests
-       */
-      _registerFormElement() {
-        this.updateComplete.then(() => {
-          this.dispatchEvent(
-            new CustomEvent('form-element-register', {
-              detail: { element: this },
-              bubbles: true,
-            }),
-          );
-        });
-      }
-
-      /**
-       * Makes sure our parentFormGroup has the most up to date resetModelValue
-       * FormGroups will call the same on their parentFormGroup so the full tree gets the correct
-       * values.
-       *
-       * Why next frame?
-       * @see {@link this._registerFormElement}
-       */
-      _requestParentFormGroupUpdateOfResetModelValue() {
-        this.updateComplete.then(() => {
-          if (this.__parentFormGroup) {
-            this.__parentFormGroup._updateResetModelValue();
-          }
-        });
       }
 
       /**
