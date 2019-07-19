@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.35](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.34...@lion/fieldset@0.1.35) (2019-07-19)
+
+
+### Bug Fixes
+
+* **field:** make sure RegistrationSystem works well with ShadyDom ([2a0d18b](https://github.com/ing-bank/lion/commit/2a0d18b))
+
+
+
+
+
 ## [0.1.34](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.33...@lion/fieldset@0.1.34) (2019-07-19)
 
 **Note:** Version bump only for package @lion/fieldset
