@@ -77,11 +77,9 @@ describe('<lion-fieldset>', () => {
     let error = false;
     const el = await fixture(`<lion-fieldset></lion-fieldset>`);
     try {
-      // we need to use the private api here as errors thrown from a web component are in a
+      // we test the api directly as errors thrown from a web component are in a
       // different context and we can not catch them here => register fake elements
-      el.__onFormElementRegister({
-        detail: { element: {} },
-      });
+      el.addFormElement({});
     } catch (err) {
       error = err;
     }
@@ -98,11 +96,9 @@ describe('<lion-fieldset>', () => {
     let error = false;
     const el = await fixture(`<lion-fieldset name="foo"></lion-fieldset>`);
     try {
-      // we need to use the private api here as errors thrown from a web component are in a
+      // we test the api directly as errors thrown from a web component are in a
       // different context and we can not catch them here => register fake elements
-      el.__onFormElementRegister({
-        detail: { element: { name: 'foo' } },
-      });
+      el.addFormElement({ name: 'foo' });
     } catch (err) {
       error = err;
     }
@@ -119,16 +115,10 @@ describe('<lion-fieldset>', () => {
     let error = false;
     const el = await fixture(`<lion-fieldset></lion-fieldset>`);
     try {
-      // we need to use the private api here as errors thrown from a web component are in a
+      // we test the api directly as errors thrown from a web component are in a
       // different context and we can not catch them here => register fake elements
-      el.__onFormElementRegister({
-        stopPropagation: () => {},
-        detail: { element: { name: 'fooBar', addToAriaDescription: () => {} } },
-      });
-      el.__onFormElementRegister({
-        stopPropagation: () => {},
-        detail: { element: { name: 'fooBar' } },
-      });
+      el.addFormElement({ name: 'fooBar' });
+      el.addFormElement({ name: 'fooBar' });
     } catch (err) {
       error = err;
     }
@@ -144,12 +134,10 @@ describe('<lion-fieldset>', () => {
   it('can dynamically add/remove elements', async () => {
     const fieldset = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
     const newField = await fixture(`<lion-input name="lastName"></lion-input>`);
-    await nextFrame();
 
     expect(Object.keys(fieldset.formElements).length).to.equal(3);
 
     fieldset.appendChild(newField);
-    await nextFrame();
     expect(Object.keys(fieldset.formElements).length).to.equal(4);
 
     fieldset.inputElement.removeChild(newField);
@@ -163,8 +151,9 @@ describe('<lion-fieldset>', () => {
         <${tagString} name="newfieldset">${inputSlotString}</${tagString}>
       </lion-fieldset>
     `);
-    await nextFrame();
+    await fieldset.registrationReady;
     const newFieldset = fieldset.querySelector('lion-fieldset');
+    await newFieldset.registrationReady;
     fieldset.formElements.lastName.modelValue = 'Bar';
     newFieldset.formElements['hobbies[]'][0].modelValue = { checked: true, value: 'chess' };
     newFieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'football' };
@@ -649,31 +638,36 @@ describe('<lion-fieldset>', () => {
     });
 
     it('has correct validation afterwards', async () => {
-      const isCat = modelValue => ({ isCat: modelValue.value === 'cat' });
-      const containsA = modelValues => ({
-        containsA: modelValues.color.value ? modelValues.color.value.indexOf('a') > -1 : false,
-      });
+      const isCat = modelValue => ({ isCat: modelValue === 'cat' });
+      const containsA = modelValues => {
+        return {
+          containsA: modelValues.color ? modelValues.color.indexOf('a') > -1 : false,
+        };
+      };
 
-      const fieldset = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-      await nextFrame();
-      fieldset.formElements.color.modelValue = { value: 'onlyb' };
-      fieldset.errorValidators = [[containsA]];
-      fieldset.formElements.color.errorValidators = [[isCat]];
+      const el = await fixture(html`
+        <${tag} .errorValidators=${[[containsA]]}>
+          <lion-input name="color" .errorValidators=${[[isCat]]}></lion-input>
+          <lion-input name="color2"></lion-input>
+        </${tag}>
+      `);
+      await el.registrationReady;
+      expect(el.errorState).to.be.true;
+      expect(el.error.containsA).to.be.true;
+      expect(el.formElements.color.errorState).to.be.false;
 
-      expect(fieldset.errorState).to.equal(true);
-      expect(fieldset.error.containsA).to.equal(true);
-      expect(fieldset.formElements.color.error.isCat).to.equal(true);
+      el.formElements.color.modelValue = 'onlyb';
+      expect(el.errorState).to.be.true;
+      expect(el.error.containsA).to.be.true;
+      expect(el.formElements.color.error.isCat).to.be.true;
 
-      fieldset.formElements.color.modelValue = { value: 'cat' };
-      expect(fieldset.errorState).to.equal(false);
+      el.formElements.color.modelValue = 'cat';
+      expect(el.errorState).to.be.false;
 
-      fieldset.resetGroup();
-      fieldset.formElements.color.modelValue = { value: 'Foo' };
-      fieldset.errorValidators = [[containsA]];
-      fieldset.formElements.color.errorValidators = [[isCat]];
-      expect(fieldset.errorState).to.equal(true);
-      expect(fieldset.error.containsA).to.equal(true);
-      expect(fieldset.formElements.color.error.isCat).to.equal(true);
+      el.resetGroup();
+      expect(el.errorState).to.be.true;
+      expect(el.error.containsA).to.be.true;
+      expect(el.formElements.color.errorState).to.be.false;
     });
   });
 

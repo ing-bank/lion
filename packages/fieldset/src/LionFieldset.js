@@ -3,7 +3,7 @@ import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
-import { FormControlMixin } from '@lion/field';
+import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
 
 // TODO: extract from module like import { pascalCase } from 'lion-element/CaseMapUtils.js'
 const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
@@ -14,8 +14,8 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @customElement
  * @extends LionLitElement
  */
-export class LionFieldset extends FormControlMixin(
-  ValidateMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement)))),
+export class LionFieldset extends FormRegistrarMixin(
+  FormControlMixin(ValidateMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
 ) {
   static get properties() {
     return {
@@ -109,8 +109,6 @@ export class LionFieldset extends FormControlMixin(
     this.addEventListener('focused-changed', this._updateFocusedClass);
     this.addEventListener('touched-changed', this._updateTouchedClass);
     this.addEventListener('dirty-changed', this._updateDirtyClass);
-    this.addEventListener('form-element-register', this.__onFormElementRegister);
-    this.addEventListener('form-element-unregister', this.__onFormElementUnRegister);
     this._setRole();
   }
 
@@ -121,19 +119,6 @@ export class LionFieldset extends FormControlMixin(
     this.removeEventListener('focused-changed', this._updateFocusedClass);
     this.removeEventListener('touched-changed', this._updateTouchedClass);
     this.removeEventListener('dirty-changed', this._updateDirtyClass);
-    this.removeEventListener('form-element-register', this.__onFormElementRegister);
-    this.removeEventListener('form-element-unregister', this.__onFormElementUnRegister);
-    if (this.__parentFormGroup) {
-      const event = new CustomEvent('form-element-unregister', {
-        detail: { element: this },
-        bubbles: true,
-      });
-      this.__parentFormGroup.dispatchEvent(event);
-    }
-  }
-
-  isRegisteredFormElement(el) {
-    return Object.keys(this.formElements).some(name => el.name === name);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -299,10 +284,13 @@ export class LionFieldset extends FormControlMixin(
     return serializedValues;
   }
 
-  __onFormElementRegister(event) {
-    const child = event.detail.element;
-    if (child === this) return; // as we fire and listen - don't add ourselves
-
+  /**
+   * Adds the element to an object with the child name as a key
+   * Note: this is different to the default behavior of just beeing an array
+   *
+   * @override
+   */
+  addFormElement(child) {
     const { name } = child;
     if (!name) {
       console.info('Error Node:', child); // eslint-disable-line no-console
@@ -312,9 +300,9 @@ export class LionFieldset extends FormControlMixin(
       console.info('Error Node:', child); // eslint-disable-line no-console
       throw new TypeError(`You can not have the same name "${name}" as your parent`);
     }
-    event.stopPropagation();
 
     if (this.disabled) {
+      // eslint-disable-next-line no-param-reassign
       child.disabled = true;
     }
     if (name.substr(-2) === '[]') {
@@ -332,6 +320,7 @@ export class LionFieldset extends FormControlMixin(
     }
 
     // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
+    // eslint-disable-next-line no-param-reassign
     child.__parentFormGroup = this;
 
     // aria-describedby of (nested) children
@@ -381,18 +370,15 @@ export class LionFieldset extends FormControlMixin(
     // might go wrong then when dom order changes per instance. Although we could check if
     // 'provision' has taken place or not
     const orderedEls = this._getAriaElementsInRightDomOrder(descriptionElements);
-    orderedEls.forEach(el => field.addToAriaDescription(el.id));
+    orderedEls.forEach(el => {
+      if (field.addToAriaDescription) {
+        field.addToAriaDescription(el.id);
+      }
+    });
   }
 
-  __onFormElementUnRegister(event) {
-    const child = event.detail.element;
+  removeFormElement(child) {
     const { name } = child;
-    if (child === this) {
-      return;
-    } // as we fire and listen - don't add ourself
-
-    event.stopPropagation();
-
     if (name.substr(-2) === '[]' && this.formElements[name]) {
       const index = this.formElements[name].indexOf(child);
       if (index > -1) {
