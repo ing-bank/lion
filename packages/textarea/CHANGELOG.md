@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.36](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.35...@lion/textarea@0.1.36) (2019-07-22)
+
+
+### Bug Fixes
+
+* **textarea:** calculate max-height based on empty state (fix [#184](https://github.com/ing-bank/lion/issues/184)) ([8853435](https://github.com/ing-bank/lion/commit/8853435))
+
+
+
+
+
 ## [0.1.35](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.34...@lion/textarea@0.1.35) (2019-07-19)
 
 **Note:** Version bump only for package @lion/textarea
