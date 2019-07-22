@@ -65,6 +65,10 @@ export class LionTextarea extends ObserverMixin(LionInput) {
    * To support maxRows we need to set max-height of the textarea
    */
   setTextareaMaxHeight() {
+    const { value } = this.inputElement;
+    this.inputElement.value = '';
+    this.resizeTextarea();
+
     const cs = window.getComputedStyle(this.inputElement, null);
     const lineHeight = parseFloat(cs.lineHeight) || parseFloat(cs.height) / this.rows;
     const paddingOffset = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
@@ -72,6 +76,9 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     const offset = cs.boxSizing === 'border-box' ? paddingOffset + borderOffset : 0;
 
     this.inputElement.style.maxHeight = `${lineHeight * this.maxRows + offset}px`;
+
+    this.inputElement.value = value;
+    this.resizeTextarea();
   }
 
   static get styles() {
