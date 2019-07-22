@@ -40,7 +40,16 @@ export class LionTextarea extends ObserverMixin(LionInput) {
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('textarea'),
+      input: () => {
+        const input = document.createElement('textarea');
+
+        // disable user resize behavior if browser supports it
+        if (input.style.resize !== undefined) {
+          input.style.resize = 'none';
+        }
+
+        return input;
+      },
     };
   }
 
