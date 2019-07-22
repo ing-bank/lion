@@ -1,6 +1,6 @@
 {
   "name": "@lion/form",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "description": "It enhances the functionality of the native `form` component. It is designed to interact with (instances of) form fields",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@lion/input": "^0.1.35",
     "@lion/input-iban": "^0.1.36",
-    "@lion/textarea": "^0.1.35",
+    "@lion/textarea": "^0.1.36",
     "@lion/validate": "^0.2.17",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^0.12.5",
