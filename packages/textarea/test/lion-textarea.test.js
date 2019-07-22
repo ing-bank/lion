@@ -11,7 +11,7 @@ describe('<lion-textarea>', () => {
     expect(el.querySelector('textarea').nodeName).to.equal('TEXTAREA');
   });
 
-  it('has a default minRows of 2 and maxRows of 10', async () => {
+  it('has default minRows and maxRows', async () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
     expect(el.rows).to.equal(2);
     expect(el.maxRows).to.equal(6);
@@ -31,13 +31,13 @@ describe('<lion-textarea>', () => {
     const initialHeight = el.offsetHeight;
     el.modelValue = 'batman\nand\nrobin\nand\ncatwoman';
     await el.updateComplete;
-    const hightWith4TextLines = el.offsetHeight;
-    expect(hightWith4TextLines > initialHeight).to.equal(true);
+    const hightWith5TextLines = el.offsetHeight;
+    expect(hightWith5TextLines > initialHeight).to.equal(true);
 
     el.modelValue = 'batman';
     await el.updateComplete;
     const hightWith1Line = el.offsetHeight;
-    expect(hightWith1Line < hightWith4TextLines).to.equal(true);
+    expect(hightWith1Line < hightWith5TextLines).to.equal(true);
   });
 
   it(`starts growing when content is bigger than "rows"
@@ -62,10 +62,11 @@ describe('<lion-textarea>', () => {
   });
 
   it('stops shrinking after property "rows" is reached', async () => {
-    const el = await fixture(`<lion-textarea></lion-textarea>`);
-    el.rows = 1;
-    el.maxRows = 3;
-    await el.updateComplete;
+    const el = await fixture(
+      html`
+        <lion-textarea rows="1" max-rows="3"></lion-textarea>
+      `,
+    );
 
     expect(el.scrollHeight).to.be.equal(el.clientHeight);
     const oneRowHeight = el.clientHeight;
