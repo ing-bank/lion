@@ -3,7 +3,7 @@ import { containFocus } from './utils/contain-focus.js';
 import { keyCodes } from './utils/key-codes.js';
 
 async function __preloadPopper() {
-  return import('popper.js/dist/popper.min.js');
+  return import('popper.js/dist/esm/popper.min.js');
 }
 export class LocalOverlayController {
   constructor(params = {}) {

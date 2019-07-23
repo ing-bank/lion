@@ -1,6 +1,6 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import Popper from 'popper.js/dist/popper.min.js';
+import Popper from 'popper.js/dist/esm/popper.min.js';
 
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
