@@ -8,7 +8,7 @@ import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { CalendarObject, DayObject } from './test-utils.js';
 import './keyboardEventShimIE.js';
 
-import { isSameDate } from '../src/utils/isSameDate';
+import { isSameDate } from '../src/utils/isSameDate.js';
 import '../lion-calendar.js';
 
 describe('<lion-calendar>', () => {

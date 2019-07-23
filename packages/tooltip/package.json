@@ -40,6 +40,6 @@
     "@lion/button": "^0.1.44",
     "@lion/icon": "^0.2.1",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.12.5"
+    "@open-wc/testing": "^2.0.6"
   }
 }
