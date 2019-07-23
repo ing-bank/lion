@@ -1,9 +1,9 @@
 import { expect, fixture, defineCE, unsafeStatic, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionLitElement } from '../src/LionLitElement.js';
-import { ObserverMixin } from '../src/ObserverMixin';
+import { ObserverMixin } from '../src/ObserverMixin.js';
 
-import { DelegateMixin } from '../src/DelegateMixin';
+import { DelegateMixin } from '../src/DelegateMixin.js';
 
 describe('DelegateMixin', () => {
   afterEach(() => {

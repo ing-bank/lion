@@ -3,7 +3,7 @@ import { html } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
-import { formatAmount } from '../src/formatters';
+import { formatAmount } from '../src/formatters.js';
 import { parseAmount } from '../src/parsers.js';
 import '../lion-input-amount.js';
 
