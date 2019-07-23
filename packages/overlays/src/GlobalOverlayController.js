@@ -1,7 +1,7 @@
 import { render } from '@lion/core';
-import { containFocus } from './utils/contain-focus';
+import { containFocus } from './utils/contain-focus.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
-import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings';
+import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
