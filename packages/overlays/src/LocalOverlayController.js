@@ -313,7 +313,6 @@ export class LocalOverlayController {
   }
 
   // TODO: this method has to be removed when EventTarget polyfill is available on IE11
-  // issue: https://gitlab.ing.net/TheGuideComponents/lion-element/issues/12
   __fakeExtendsEventTarget() {
     const delegate = document.createDocumentFragment();
     ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
