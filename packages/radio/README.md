@@ -1,6 +1,6 @@
 # Radio
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-radio` component is a sub-element to be used in [lion-radio-group](../radio-group/) elements. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 

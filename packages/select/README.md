@@ -1,6 +1,6 @@
 # Select
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-select` component is a wrapper around the native `select`.
 
