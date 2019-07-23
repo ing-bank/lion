@@ -29,7 +29,7 @@ import '@lion/tooltip/lion-tooltip.js';
 ```html
 <lion-tooltip>
   <div slot="content" class="tooltip">This is a popup<div>
-  <a slot="invoker" href="https://www.ing.com/Newsroom/All-news/Uslion-AI-to-assess-credit-risk.htm">
+  <a slot="invoker" href="https://www.google.com/">
     Popup on link
   </a>
 </lion-tooltip>
