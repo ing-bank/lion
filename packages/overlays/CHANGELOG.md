@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.5...@lion/overlays@0.3.6) (2019-07-23)
+
+
+### Bug Fixes
+
+* **overlays:** fix popper for IE11 by using esm dist target ([16078c5](https://github.com/ing-bank/lion/commit/16078c5))
+
+
+
+
+
 ## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.4...@lion/overlays@0.3.5) (2019-07-18)
 
 **Note:** Version bump only for package @lion/overlays
