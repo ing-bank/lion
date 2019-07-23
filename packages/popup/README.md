@@ -1,6 +1,6 @@
 # Popup
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-popup` is a component used for basic popups on click.
 Its purpose is to show content appearing when the user clicks an invoker element with the cursor or with the keyboard.

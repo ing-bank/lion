@@ -1,6 +1,6 @@
 # Button
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-button` provides a component that is easily stylable and is accessible in all contexts.
 

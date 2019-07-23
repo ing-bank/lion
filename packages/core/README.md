@@ -1,6 +1,6 @@
 # Core
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 ## Deprecations
 

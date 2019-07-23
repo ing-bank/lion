@@ -1,6 +1,6 @@
 # Form System
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 The Form System allows you to create complex forms with various validation in an easy way.
 

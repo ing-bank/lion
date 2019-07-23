@@ -1,6 +1,6 @@
 # Input IBAN
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-input-iban` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an iban.
 
