@@ -6,7 +6,7 @@ function escapeRegExp(text) {
 }
 
 const filePath = `${process.cwd()}/README.md`;
-const findPattern = escapeRegExp('[//]: # (AUTO INSERT HEADER PREPUBLISH)');
+const findPattern = escapeRegExp("[//]: # 'AUTO INSERT HEADER PREPUBLISH'");
 const text = `
 > ## 🛠 Status: Pilot Phase
 > Lion Web Components are still in an early alpha stage; they should not be considered production ready yet.

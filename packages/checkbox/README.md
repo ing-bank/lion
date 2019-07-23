@@ -1,6 +1,6 @@
 # Checkbox
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-checkbox` component is a sub-element to be used in [lion-checkbox-group](../checkbox-group/) elements. Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 

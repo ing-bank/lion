@@ -1,6 +1,6 @@
 # Input Email
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-input-email` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 
