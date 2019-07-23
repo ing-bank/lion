@@ -1912,12 +1912,12 @@
     rimraf "^2.6.3"
     terser "^4.0.0"
 
-"@open-wc/chai-dom-equals@^0.12.6":
-  version "0.12.10"
-  resolved "https://registry.yarnpkg.com/@open-wc/chai-dom-equals/-/chai-dom-equals-0.12.10.tgz#76ed83d611df66ebfc954ad9598b20e6cb478e03"
-  integrity sha512-ntU1sO/BqlJko3Q9EX29J7oZpVgohENhGy8hLSHwogHO8x/H0AMTLWai6Mg6anb9BnbhkrxF8Z5FZAqTdH1dig==
+"@open-wc/chai-dom-equals@^0.12.27":
+  version "0.12.27"
+  resolved "https://registry.yarnpkg.com/@open-wc/chai-dom-equals/-/chai-dom-equals-0.12.27.tgz#735a32f453325856b0c895086810b17f5a8b33d4"
+  integrity sha512-uB5J+4kucemnZFHb6kSAyT/jTtGWZa0vKdGOSEK8nv5OXuR9bRj1027yhAhmYbZYjz292XUC1ucItJiqBeh2oA==
   dependencies:
-    "@open-wc/semantic-dom-diff" "^0.11.10"
+    "@open-wc/semantic-dom-diff" "^0.13.7"
     "@types/chai" "^4.1.7"
 
 "@open-wc/demoing-storybook@^0.2.0":
@@ -1946,14 +1946,14 @@
     moment "^2.0.0"
     polymer-webpack-loader "^2.0.0"
 
-"@open-wc/eslint-config@^0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@open-wc/eslint-config/-/eslint-config-0.4.5.tgz#edda077fd9134822cd3aa3378aae7500aa10de3c"
-  integrity sha512-RVVtiYWxA4UO0XZFuLka1QYqt8xPkfibifeQ+0jBcvtkwp8KQH4xZ8yoZZAN/CAcqquHdLEx7JMQqVT82ndIvQ==
+"@open-wc/eslint-config@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@open-wc/eslint-config/-/eslint-config-1.0.0.tgz#4d5bca968a89949f5ada6cef8b2716a5f63d1662"
+  integrity sha512-H130SjyCQuUO+Bpi/iHjjRrVT54Yvomh/Jlr5mNkP5bcl29/Mbu1OXZMzcmfnJWDZNm8IFwVzbe3dCvYU9qouw==
   dependencies:
     babel-eslint "^10.0.0"
     eslint "^5.13.0"
-    eslint-config-airbnb-base "^13.0.0"
+    eslint-config-airbnb-base "^13.2.0"
     eslint-plugin-html "^4.0.0"
     eslint-plugin-import "^2.0.0"
     eslint-plugin-wc "^1.0.0"
@@ -1987,15 +1987,15 @@
     eslint-config-prettier "^3.3.0"
     prettier "^1.15.0"
 
-"@open-wc/semantic-dom-diff@^0.11.10", "@open-wc/semantic-dom-diff@^0.11.6":
-  version "0.11.10"
-  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.11.10.tgz#8a2e0ad8a5d6644b03d6a9245ef856fb8f98b4a0"
-  integrity sha512-OAaeNJ9FEFq9eiWWv04KsvoNiVoRwOGptuAufPO7NHfhoKMv45ujvxUSxW0H5CFMtRC9Z9RL8jItYzuIOG4Rwg==
+"@open-wc/semantic-dom-diff@^0.13.7":
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.13.7.tgz#ca73e7a2bbc7a0f6a470d4f3b6165ce0921b6ae6"
+  integrity sha512-KVzp83eat4YcWnLaASv2Wv4oabbEcTdmLLrjONQWcQ1xFDf0N4wZWaumi1pB5fPNDXVTIc/UwybSSdfdfpDgFQ==
 
-"@open-wc/testing-helpers@^0.9.6":
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-0.9.6.tgz#fc1ebf51a54122bc6e105211d0d182bc70b2ca6e"
-  integrity sha512-CllZ1RfhBasOq0uKdlBE1pv6Y0wJemMh1eF8anQkpnYvHT2pl2j5SdVMnhvgE8p1vn05dl7hwW4gNscbtCX0+Q==
+"@open-wc/testing-helpers@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.0.18.tgz#61c57f3ca69050b88bf32da7faa380d5dc6e534e"
+  integrity sha512-izURj+AUJj/wtZ+Z60ZPK4swjCOYezI5YmVYAiS6GTYc7bcmMNyOZKi3QO5I7BlGx4G97lkZL4JnSQK+YdOCaQ==
 
 "@open-wc/testing-karma-bs@^1.1.3":
   version "1.1.8"
@@ -2045,15 +2045,15 @@
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
 
-"@open-wc/testing@^0.12.5":
-  version "0.12.6"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-0.12.6.tgz#2655ce1211a612c359884058ad3d95a794b629c1"
-  integrity sha512-gHavGe5/fwwzcp77zhzKYMUJLZXsr5ahq41gM43M++3sLFcHafQ2I14sDWlCbogZboPgC6IqnWE/czQrahfbuQ==
+"@open-wc/testing@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.0.6.tgz#230b33ab2d97cf97f59b288a1321bcfab0f393b3"
+  integrity sha512-EK46bK0Ujpgusg4TmmYm1ri4JXeec5bjmcocSnNGrv2Dd/RHqOjo8S5WlDEPU+p0WbeRaJN+dRdrl7V4hGWhmg==
   dependencies:
     "@bundled-es-modules/chai" "^4.2.0"
-    "@open-wc/chai-dom-equals" "^0.12.6"
-    "@open-wc/semantic-dom-diff" "^0.11.6"
-    "@open-wc/testing-helpers" "^0.9.6"
+    "@open-wc/chai-dom-equals" "^0.12.27"
+    "@open-wc/semantic-dom-diff" "^0.13.7"
+    "@open-wc/testing-helpers" "^1.0.18"
     "@types/chai" "^4.1.7"
     "@types/mocha" "^5.0.0"
     mocha "^5.0.0"
@@ -4570,6 +4570,11 @@ config-chain@^1.1.11, config-chain@^1.1.12:
     ini "^1.3.4"
     proto-list "~1.2.1"
 
+confusing-browser-globals@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/confusing-browser-globals/-/confusing-browser-globals-1.0.7.tgz#5ae852bd541a910e7ffb2dbb864a2d21a36ad29b"
+  integrity sha512-cgHI1azax5ATrZ8rJ+ODDML9Fvu67PimB6aNxBrc/QwSaDaM9eTfIEUHx3bBLJJ82ioSb+/5zfsMCCEJax3ByQ==
+
 connect@^3.6.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/connect/-/connect-3.7.0.tgz#5d49348910caa5e07a01800b030d0c35f20484f8"
@@ -5672,14 +5677,14 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-airbnb-base@^13.0.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-airbnb-base/-/eslint-config-airbnb-base-13.1.0.tgz#b5a1b480b80dfad16433d6c4ad84e6605052c05c"
-  integrity sha512-XWwQtf3U3zIoKO1BbHh6aUhJZQweOwSt4c2JrPDg9FP3Ltv3+YfEv7jIDB8275tVnO/qOHbfuYg3kzw6Je7uWw==
+eslint-config-airbnb-base@^13.2.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-airbnb-base/-/eslint-config-airbnb-base-13.2.0.tgz#f6ea81459ff4dec2dda200c35f1d8f7419d57943"
+  integrity sha512-1mg/7eoB4AUeB0X1c/ho4vb2gYkNH8Trr/EgCT/aGmKhhG+F6vF5s8+iRBlWAzFIAphxIdp3YfEKgEl0f9Xg+w==
   dependencies:
-    eslint-restricted-globals "^0.1.1"
+    confusing-browser-globals "^1.0.5"
     object.assign "^4.1.0"
-    object.entries "^1.0.4"
+    object.entries "^1.1.0"
 
 eslint-config-prettier@^3.3.0:
   version "3.6.0"
@@ -5749,11 +5754,6 @@ eslint-plugin-wc@^1.0.0:
   dependencies:
     js-levenshtein-esm "^1.2.0"
     validate-element-name "^2.1.1"
-
-eslint-restricted-globals@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-restricted-globals/-/eslint-restricted-globals-0.1.1.tgz#35f0d5cbc64c2e3ed62e93b4b1a7af05ba7ed4d7"
-  integrity sha1-NfDVy8ZMLj7WLpO0saevBbp+1Nc=
 
 eslint-scope@3.7.1:
   version "3.7.1"
@@ -9548,7 +9548,7 @@ object.assign@^4.0.4, object.assign@^4.1.0:
     has-symbols "^1.0.0"
     object-keys "^1.0.11"
 
-object.entries@^1.0.4, object.entries@^1.1.0:
+object.entries@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.1.0.tgz#2024fc6d6ba246aee38bdb0ffd5cfbcf371b7519"
   integrity sha512-l+H6EQ8qzGRxbkHOd5I/aHRhHDKoQXQ8g0BYt4uSweQU1/J6dZUOyWh9a2Vky35YCKjzmgxOzta2hH6kf9HuXA==
