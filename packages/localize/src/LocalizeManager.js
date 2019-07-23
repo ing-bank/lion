@@ -214,7 +214,6 @@ export class LocalizeManager extends LionSingleton {
   }
 
   // TODO: this method has to be removed when EventTarget polyfill is available on IE11
-  // issue: https://gitlab.ing.net/TheGuideComponents/lion-element/issues/12
   _fakeExtendsEventTarget() {
     const delegate = document.createDocumentFragment();
     ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {

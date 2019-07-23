@@ -18,18 +18,18 @@ storiesOf('Forms|Input Email', module)
     `,
   )
   .add('Use own validator', () => {
-    const ingOnly = modelValue => ({ ingOnly: modelValue.indexOf('ing.com') !== -1 });
+    const gmailOnly = modelValue => ({ gmailOnly: modelValue.indexOf('gmail.com') !== -1 });
     localize.locale = 'en';
 
     try {
-      localize.addData('en', 'lion-validate+ingOnly', {
+      localize.addData('en', 'lion-validate+gmailOnly', {
         error: {
-          ingOnly: 'You can only use ing.com email addresses.',
+          gmailOnly: 'You can only use gmail.com email addresses.',
         },
       });
-      localize.addData('nl', 'lion-validate+ingOnly', {
+      localize.addData('nl', 'lion-validate+gmailOnly', {
         error: {
-          ingOnly: 'Je mag hier alleen ing.com e-mailadressen gebruiken.',
+          gmailOnly: 'Je mag hier alleen gmail.com e-mailadressen gebruiken.',
         },
       });
     } catch (error) {
@@ -39,7 +39,7 @@ storiesOf('Forms|Input Email', module)
     return html`
       <lion-input-email
         .modelValue=${'foo@bar.com'}
-        .errorValidators=${[[ingOnly]]}
+        .errorValidators=${[[gmailOnly]]}
       ></lion-input-email>
     `;
   });
