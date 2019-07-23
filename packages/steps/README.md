@@ -1,6 +1,6 @@
 # Steps
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-steps` breaks a single goal down into dependable sub-tasks.
 

@@ -1,7 +1,7 @@
 
 # Form Fundaments
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `Form control`s are the most fundamental building block of the Forms. They are the basis of
 both `field`s and `fieldset`s, and the `form` itself.
