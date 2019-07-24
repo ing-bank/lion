@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.9...@lion/overlays@0.3.10) (2019-07-24)
+
+**Note:** Version bump only for package @lion/overlays
+
+
+
+
+
 ## [0.3.9](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.8...@lion/overlays@0.3.9) (2019-07-23)
 
 **Note:** Version bump only for package @lion/overlays

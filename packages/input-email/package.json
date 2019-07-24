@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-email",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Provide a way for users to fill in an email",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,11 +32,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.11",
-    "@lion/field": "^0.1.36",
-    "@lion/input": "^0.1.38",
-    "@lion/localize": "^0.4.7",
-    "@lion/validate": "^0.2.20"
+    "@lion/core": "^0.1.12",
+    "@lion/field": "^0.1.37",
+    "@lion/input": "^0.1.39",
+    "@lion/localize": "^0.4.8",
+    "@lion/validate": "^0.2.21"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
