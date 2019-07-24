@@ -5,6 +5,7 @@
 `lion-steps` breaks a single goal down into dependable sub-tasks.
 
 ## Features
+
 - navigate between different steps with 'previous' and 'next' functions.
 - keeps status of each step
   - untouched
@@ -21,7 +22,8 @@ In many application you build multi-step workflows like multi-step forms where y
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/select
 ```
 
@@ -45,7 +47,7 @@ We provide two components: `lion-steps` and `lion-step`. Steps need to be direct
 
 The first step needs to be explicitely set via `initial-step` so that it get status `entered`, while others are `untouched` by default. You can navigate between steps using `next()` and `previous()` methods, so that next step gets `entered` status, while previous one becomes `left`:
 
-```javascript
+```js
 ...
 next() {
   return this.$id('steps').next();
@@ -90,7 +92,8 @@ If you have an intermediate step loading data via AJAX request and then automati
 <lion-steps>
   <lion-step>preliminary step</lion-step>
   <lion-step forward-only>data is loaded and next() is called automatically afterwards</lion-step>
-  <lion-step>do smth with data</lion-step><!-- user decides to go to previous step here -->
+  <!-- user decides to go to previous step here -->
+  <lion-step>do smth with data</lion-step>
 </lion-steps>
 ```
 

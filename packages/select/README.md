@@ -10,13 +10,15 @@ where each option name starts with the same word or phrase can also significantl
 usability for keyboard and screen reader users.
 
 ## Features
+
 - catches and forwards the select events
 - can be set to required or disabled
 
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/select
 ```
 
@@ -42,11 +44,9 @@ import '@lion/select/lion-select.js';
 ```
 
 You can preselect an option by setting the property modelValue.
+
 ```html
-<lion-select
-  name="favoriteColor"
-  .modelValue="${'<value of option 2>'}"
->
+<lion-select name="favoriteColor" .modelValue="${'<value of option 2>'}">
   ...
 </lion-select>
 ```

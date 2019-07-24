@@ -4,6 +4,7 @@
 For an input field with a big range, such as `birthday-input`, a datepicker is not the ultimate tool, so use the standard [lion-input-date](../input-date).
 
 ## Features
+
 - input field with a datepicker to help to choose a date
 - based on [lion-input-date](../input-date)
 - makes use of [lion-calendar](../calendar) inside the datepicker
@@ -19,7 +20,8 @@ For an input field with a big range, such as `birthday-input`, a datepicker is n
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/input-datepicker
 ```
 

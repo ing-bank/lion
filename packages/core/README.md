@@ -28,7 +28,7 @@ The more generic the mixin is, the higher the chance of being appliend more than
 
 This is an example of how to make a conventional ES mixin deduping.
 
-```javascript
+```js
 const BaseMixin = dedupeMixin((superClass) => {
   return class extends superClass { ... };
 });
