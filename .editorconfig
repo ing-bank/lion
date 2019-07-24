@@ -8,6 +8,9 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.md]
+indent_size = unset
+
 [*.{html,js,md}]
 block_comment_start = /**
 block_comment = *
