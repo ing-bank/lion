@@ -2,6 +2,11 @@ import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-textarea.js';
 
+function hasBrowserResizeSupport() {
+  const textarea = document.createElement('textarea');
+  return textarea.style.resize !== undefined;
+}
+
 describe('<lion-textarea>', () => {
   it(`can be used with the following declaration
   ~~~
@@ -15,6 +20,16 @@ describe('<lion-textarea>', () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
     expect(el.rows).to.equal(2);
     expect(el.maxRows).to.equal(6);
+  });
+
+  it('disables user resize behavior', async () => {
+    if (!hasBrowserResizeSupport()) {
+      return;
+    }
+
+    const el = await fixture(`<lion-textarea></lion-textarea>`);
+    const computedStyle = window.getComputedStyle(el.inputElement);
+    expect(computedStyle.resize).to.equal('none');
   });
 
   it('supports initial modelValue', async () => {
