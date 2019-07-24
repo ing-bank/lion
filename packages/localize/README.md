@@ -12,7 +12,7 @@ The core of the system is a `LocalizeManager` instance which is responsible for 
 It is exposed as a `localize` singleton instance.
 This ensures that the data can be cached in the single place and reused across different components and same component instances.
 
-```javascript
+```js
 import { localize } from '@lion/localize';
 // localize is the instance of LocalizeManager
 ```
@@ -23,6 +23,7 @@ Component developers will have a unified way to integrate with localization syst
 ## Usage for component developers
 
 As a component developer you get:
+
 - unified data structure for different locales;
 - promisified helper to load data;
 - notification about page locale changes;
@@ -36,52 +37,52 @@ Localization data modules for `my-hello-component` might look like these:
 
 - `/path/to/my-hello-component/translations/en-GB.js`
 
-    ```js
-    export default {
-      greeting: 'Hello {name}!',
-    };
-    ```
+  ```js
+  export default {
+    greeting: 'Hello {name}!',
+  };
+  ```
 
 - `/path/to/my-hello-component/translations/nl-NL.js`
 
-    ```js
-    export default {
-      greeting: 'Hallo {name}!',
-    };
-    ```
+  ```js
+  export default {
+    greeting: 'Hallo {name}!',
+  };
+  ```
 
 The approach with ES modules is great because it allows to simply reuse basic locale data and override only the needed parts for more specific locales.
 
 - `/path/to/my-family-component/translations/en.js`
 
-    ```js
-    export default {
-      havePartnerQuestion: 'Do you have a partner?',
-      haveChildrenQuestion: 'Do you have children?',
-    };
-    ```
+  ```js
+  export default {
+    havePartnerQuestion: 'Do you have a partner?',
+    haveChildrenQuestion: 'Do you have children?',
+  };
+  ```
 
 - `/path/to/my-family-component/translations/en-GB.js`
 
-    ```js
-    import en from './en.js'
-    export default en;
-    ```
+  ```js
+  import en from './en.js';
+  export default en;
+  ```
 
 - `/path/to/my-family-component/translations/en-US.js`
 
-    ```js
-    import en from './en.js'
+  ```js
+  import en from './en.js';
 
-    export default {
-      ...en,
-      haveChildrenQuestion: 'Do you have kids?',
-    };
-    ```
+  export default {
+    ...en,
+    haveChildrenQuestion: 'Do you have kids?',
+  };
+  ```
 
 To load this data the method `loadNamespace()` which returns a promise can be used.
 
-```javascript
+```js
 localize.loadNamespace(namespace).then(() => {
   // do smth when data is loaded
 });
@@ -92,58 +93,60 @@ Let's look at both cases in depth.
 
 1. Using explicit loader functions:
 
-    ```javascript
-    // use the dynamic import to load static assets
-    localize.loadNamespace({
-      'my-hello-component': (locale) => {
-        // resolves to a module with the module.default `{ greeting: 'Hallo {name}!' }`
-        return import(`./translations/${locale}.js`);
-      },
-    });
-    ```
+```js
+// use the dynamic import to load static assets
+localize.loadNamespace({
+  'my-hello-component': locale => {
+    // resolves to a module with the module.default `{ greeting: 'Hallo {name}!' }`
+    return import(`./translations/${locale}.js`);
+  },
+});
+```
 
-    Usage of dynamic imports is recommended if you want to be able to create smart bundles later on for a certain locale.
-    The module must have a `default` export as shown above to be handled properly.
+Usage of dynamic imports is recommended if you want to be able to create smart bundles later on for a certain locale.
+The module must have a `default` export as shown above to be handled properly.
 
-    But in fact you are not limited in the way how exactly the data is loaded.
-    If you want to fetch it from some API this is also possible.
+But in fact you are not limited in the way how exactly the data is loaded.
+If you want to fetch it from some API this is also possible.
 
-    ```javascript
-    // fetch from an API
-    localize.loadNamespace({
-      'my-hello-component': async (locale) => {
-        const response = await fetch(`http://api.example.com/?namespace=my-hello-component&locale=${locale}`);
-        return response.json(); // resolves to the JSON object `{ greeting: 'Hallo {name}!' }`
-      },
-    });
-    ```
+```js
+// fetch from an API
+localize.loadNamespace({
+  'my-hello-component': async locale => {
+    const response = await fetch(
+      `http://api.example.com/?namespace=my-hello-component&locale=${locale}`,
+    );
+    return response.json(); // resolves to the JSON object `{ greeting: 'Hallo {name}!' }`
+  },
+});
+```
 
-    But it does not make much sense to have such a loader function for each of your namespaces.
-    And this is there the second option comes in handy.
+But it does not make much sense to have such a loader function for each of your namespaces.
+And this is there the second option comes in handy.
 
-2. Using the loaders preconfigured via `setupNamespaceLoader()`:
+1. Using the loaders preconfigured via `setupNamespaceLoader()`:
 
-    ```javascript
-    // using the regexp to match all component names staring with 'my-'
-    localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-      const response = await fetch(`http://api.example.com/?namespace=${namespace}&locale=${locale}`);
-      return response.json();
-    });
+```js
+// using the regexp to match all component names staring with 'my-'
+localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
+  const response = await fetch(`http://api.example.com/?namespace=${namespace}&locale=${locale}`);
+  return response.json();
+});
 
-    Promise.all([
-      localize.loadNamespace('my-hello-component');
-      localize.loadNamespace('my-goodbuy-component');
-    ])
-    ```
+Promise.all([
+  localize.loadNamespace('my-hello-component');
+  localize.loadNamespace('my-goodbuy-component');
+])
+```
 
-    Thus there is a loder function for all components having a certain prefix in a name.
+Thus there is a loder function for all components having a certain prefix in a name.
 
 The locale which will be loaded by default is accesed via the `localize.locale`.
 
 The single source of truth for page's locale is `<html lang="my-LOCALE">`.
 At the same time the interaction should happen via `localize.locale` getter/setter to be able to notify and react to the change.
 
-```javascript
+```js
 localize.addEventListener('localeChanged', () => {
   // do smth when data is loaded for a new locale
 });
@@ -160,7 +163,7 @@ When all necessary data is loaded and you want to show localized content on the 
 `localize.msg` comes into play here.
 It expects a key in the format of `namespace:name` and can also receive variables as a second argument.
 
-```javascript
+```js
 _onNameChanged() {
   // inserts 'Hello John!' into the element with id="name"
   const name = localize.msg('my-hello-component:greeting', { name: 'John' });
@@ -174,12 +177,13 @@ _onNameChanged() {
 
 This mixin was created to significantly simplify integration with LionLitElement.
 It provides several capabilities:
+
 - automatic loading of specified namespaces;
 - life-cycle callbacks for localization events;
 - alias `_m` for `localize.msg`;
 - promisified alias `_msgAsync` for `localize.msg` resolved when data is loaded.
 
-```javascript
+```js
 class MyHelloComponent extends LocalizeMixin(LionLitElement) {
   static get localizeNamespaces() {
     // using an explicit loader function
@@ -220,12 +224,13 @@ Refer to demos to see a full example.
 
 This is an extension of LocalizeMixin for usage with LionLitElement and LitRenderMixin.
 It provides extra capabilities on top of LocalizeMixin:
+
 - smart wrapper `msg` for `localize.msg`;
 - automatic update of DOM after locale was changed.
 
 With the help of this mixin writing a component can be as easy as defining namespaces in `localizeNamespaces` and writing lit-html template using `this.msgLit()`:
 
-```javascript
+```js
 render() {
   return html`
     <div>${this.name ? this.msgLit('my-hello-component:greeting', { name: this.name }) : ''}</div>
@@ -238,6 +243,7 @@ Refer to demos to see a full example.
 ## Usage for application developers
 
 As an application developer you get:
+
 - ability to inline localization data for any locales and namespaces to prevent async loading and improve rendering speed in critical cases;
 - smart defaults for data loading;
 - simple customization of paths where the data is loaded from for common use cases;
@@ -247,11 +253,15 @@ As an application developer you get:
 
 If you want to optimize the page rendering and you can inline some of your localization data upfront then there is a simple way to do it:
 
-```javascript
+```js
 // my-inlined-data.js
 import { localize } from 'lion-localize/localize.js';
-localize.addData('en-GB', 'my-namespace', {/* data */});
-localize.addData('nl-NL', 'my-namespace', {/* data */});
+localize.addData('en-GB', 'my-namespace', {
+  /* data */
+});
+localize.addData('nl-NL', 'my-namespace', {
+  /* data */
+});
 
 // my-app.js
 import './my-inlined-data.js'; // must be on top to be executed before any other code using the data
@@ -268,10 +278,12 @@ But as we have already covered in the documentation for component developers the
 The configuration is done via `setupNamespaceLoader()`.
 This is sort of a router for the data and is typically needed to fetch it from an API.
 
-```javascript
+```js
 // for one specific component
-localize.setupNamespaceLoader('my-hello-component', async (locale) => {
-  const response = await fetch(`http://api.example.com/?namespace=my-hello-component&locale=${locale}`);
+localize.setupNamespaceLoader('my-hello-component', async locale => {
+  const response = await fetch(
+    `http://api.example.com/?namespace=my-hello-component&locale=${locale}`,
+  );
   return response.json();
 });
 

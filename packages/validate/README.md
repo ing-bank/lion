@@ -30,7 +30,7 @@ import { %validatorName% } from '@lion/validate';
 ```
 
 > Note that we import an lion-input here as an example of a form control implementing ValidateMixin.
-We could equally well use lion-textarea, lion-select, lion-fieldset etc. to illustrate our example.
+> We could equally well use lion-textarea, lion-select, lion-fieldset etc. to illustrate our example.
 
 ### Example
 
@@ -42,7 +42,8 @@ import '@lion/input/lion-input.js';
 import { isString, maxLengthValidator, defaultOkValidator } from '@lion/validate';
 
 const isInitialsRegex = /^([A-Z]\.)+$/;
-export const isExampleInitials = value => isString(value) && isInitialsRegex.test(value.toUpperCase());
+export const isExampleInitials = value =>
+  isString(value) && isInitialsRegex.test(value.toUpperCase());
 export const isExampleInitialsValidator = () => [
   (...params) => ({ isExampleInitials: isExampleInitials(...params) }),
 ];
@@ -63,7 +64,7 @@ A validator applied to `.errorValidators` expects an array with a function, a pa
 optionally an additional configuration object.
 
 ```js
-minMaxLengthValidator({ min: 5, max: 10 })
+minMaxLengthValidator({ min: 5, max: 10 });
 ```
 
 The custom `isExampleInitialsValidator` checks if the value is fitting our regex, but does not

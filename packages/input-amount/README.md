@@ -5,6 +5,7 @@
 `lion-input-amount` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an amount.
 
 ## Features
+
 - based on [lion-input](../input)
 - makes use of [formatNumber](../localize/docs/number.md) for formatting and parsing.
 - option to show currency as a suffix
@@ -20,7 +21,8 @@
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/input-amount
 ```
 

@@ -3,14 +3,16 @@
 The amount formatter returns a number based on the locale by using [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) specification.
 
 ## Features
+
 - **formatAmountHtml**: returns a formatted amount based on locale to be used in lit-html
 - **formatAmountHtmlString**: returns a formatted amount based on locale as a string
 
 ## How to use
 
 ### Installation
-```
-npm i --save @lion/localize;
+
+```sh
+npm i --save @lion/localize
 ```
 
 ### Example

@@ -7,7 +7,9 @@
 You should use [lion-radio](../radio/)'s inside this element.
 
 ## Features
+
 Since it extends from [lion-fieldset](../fieldset/), it has all the features a fieldset has.
+
 - Get or set the checked value of the group:
   - modelValue (default) - `checkedValue()`
   - formattedValue - `formattedValue()`
@@ -16,7 +18,8 @@ Since it extends from [lion-fieldset](../fieldset/), it has all the features a f
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/radio @lion/radio-group
 ```
 

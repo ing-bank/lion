@@ -1,3 +1,5 @@
+# Lion Web Components
+
 > ## 🛠 Status: Pilot Phase
 >
 > Lion Web Components are still in an early alpha stage; they should not be considered production ready yet.
@@ -8,9 +10,7 @@
 > - not publicly promote or link us yet: (no tweets, blog posts or other forms of communication about Lion Web Components)
 > - not publicly promote or link products derived from/based on Lion Web Components
 >
-> As soon as Pilot Phase ends we will let you know (feel free to subscribe to this issue https://github.com/ing-bank/lion/issues/1)
-
-# Lion Web Components
+> As soon as Pilot Phase ends we will let you know (feel free to subscribe to this issue <https://github.com/ing-bank/lion/issues/1>)
 
 Lion web components is a set of highly performant, accessible and flexible Web Components.
 They provide an unopinionated, white label layer that can be extended to your own layer of components.
