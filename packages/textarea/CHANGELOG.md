@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.40](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.39...@lion/textarea@0.1.40) (2019-07-24)
+
+
+### Bug Fixes
+
+* **textarea:** disable user resize behavior (fix [#165](https://github.com/ing-bank/lion/issues/165)) ([9988e07](https://github.com/ing-bank/lion/commit/9988e07))
+
+
+
+
+
 ## [0.1.39](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.38...@lion/textarea@0.1.39) (2019-07-23)
 
 **Note:** Version bump only for package @lion/textarea

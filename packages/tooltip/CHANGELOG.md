@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.23](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.22...@lion/tooltip@0.2.23) (2019-07-24)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
 ## [0.2.22](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.21...@lion/tooltip@0.2.22) (2019-07-23)
 
 **Note:** Version bump only for package @lion/tooltip
