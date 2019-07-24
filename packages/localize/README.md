@@ -4,7 +4,7 @@
 
 The localization system helps to manage localization data split into locales and automate its loading.
 The loading of data tries to be as unobtrusive as possible for a typical workflow while providing a flexible and controllable mechanism for non-trivial use cases.
-The formatting of data containing numbers and dates takes current locale into accout by using Intl MessageFormat specification.
+The formatting of data containing numbers and dates takes current locale into account by using Intl MessageFormat specification.
 
 ## LocalizeManager
 
@@ -135,13 +135,13 @@ localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
 
 Promise.all([
   localize.loadNamespace('my-hello-component');
-  localize.loadNamespace('my-goodbuy-component');
+  localize.loadNamespace('my-goodbye-component');
 ])
 ```
 
-Thus there is a loder function for all components having a certain prefix in a name.
+Thus there is a loader function for all components having a certain prefix in a name.
 
-The locale which will be loaded by default is accesed via the `localize.locale`.
+The locale which will be loaded by default is accessed via the `localize.locale`.
 
 The single source of truth for page's locale is `<html lang="my-LOCALE">`.
 At the same time the interaction should happen via `localize.locale` getter/setter to be able to notify and react to the change.
@@ -155,7 +155,7 @@ localize.addEventListener('localeChanged', () => {
 localize.locale = 'es-ES';
 ```
 
-If the locale is changed when a few namespaces have been already loaded for the previous one, all the data will be requested for existing namespaces for a new locale and only after that the event listeneres will be called.
+If the locale is changed when a few namespaces have been already loaded for the previous one, all the data will be requested for existing namespaces for a new locale and only after that the event listeners will be called.
 This ensures that all data necessary for localization is loaded prior to rendering.
 If a certain namespace for a certain locale has been loaded previously, it will never be fetched again until the tab is reloaded in the browser.
 
