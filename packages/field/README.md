@@ -1,4 +1,3 @@
-
 # Form Fundaments
 
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
@@ -34,7 +33,7 @@ On top of this, they feature:
 
 Whenever a native form control doesn't exist or is not sufficient, a
 [custom form field](./docs/CustomFieldsTutorial.md) should be created. One could think of components
-  like:
+like:
 
 - slider
 - combobox
@@ -56,9 +55,11 @@ Fieldsets are the basis for:
 
 <!-- TODO: - [`FormControlMixin`] () -->
 <!-- TODO: - [`LionField`] () -->
+
 - [Model Value](./docs/ModelValue.md)
 - [Formatting and parsing](./docs/FormattingAndParsing.md)
 - [Interaction states](./docs/InteractionStates.md)
 - [Validation System](../validate/docs/ValidationSystem.md)
 - [Custom Fields](./docs/CustomFieldsTutorial.md)
+
 <!-- TODO: - [`FocusMixin`] (/FocusMixin.md) -->

@@ -5,6 +5,7 @@
 `lion-checkbox` component is a sub-element to be used in [lion-checkbox-group](../checkbox-group/) elements. Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
 ## Features
+
 - Get or set the checked state (boolean) - `choiceChecked()`
 - Get or set the value of the choice - `choiceValue()`
 - Pre-select an option by setting the `checked` boolean attribute
@@ -12,8 +13,9 @@
 ## How to use
 
 ### Installation
-```
-npm i --save @lion/checkbox;
+
+```sh
+npm i --save @lion/checkbox
 ```
 
 ```js

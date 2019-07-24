@@ -1,29 +1,33 @@
 # Overlay System: Implementation
+
 This document provides an outline of all possible occurrences of overlays found in applications in
 general and thus provided by Lion.
 For all concepts referred to in this document, please read [Overlay System Scope](./OverlaySystemScope.md).
 
 ## Local and global overlay controllers
+
 Currently, we have a global and a local overlay controller, as two separate entities.
 Based on provided config, they handle all positioning logic, accessibility and interaction patterns.
 All of their configuration options will be described below as part of the _Responsive overlay_ section.
 
 ### Connection points and placement contexts
+
 It's currently not clear where the border between global and local overlays lie. They seem to be
 separated based on their 'dom connection point' (body vs 'page cursor'(usually invoker sibling)).
 However, there is no required relationship here: we can create a modal dialog from
 local context('page cursor') as well.
 
 Only, we would have a few concerns when creating global overlays from a local connection point:
+
 - Accessibility will be harder to implement. When wai-aria 1.0 needs to be supported, all siblings
-need to have aria-hidden="true" and all parents role="presentation". Not always straightforward
-in shadow dom. If we only need to support wai-aria 1.1, we could use aria-modal="true" on the
-element with role="dialog". (we basically need to test our supported browsers and screen readers
-for compatibility with aria-modal).
+  need to have aria-hidden="true" and all parents role="presentation". Not always straightforward
+  in shadow dom. If we only need to support wai-aria 1.1, we could use aria-modal="true" on the
+  element with role="dialog". (we basically need to test our supported browsers and screen readers
+  for compatibility with aria-modal).
 - Stacking context need to be managed: the whole 'z-index chain' should win (it's a battle between
-parents in the hierarchy). This would require some complex code to cover all edge cases.
+  parents in the hierarchy). This would require some complex code to cover all edge cases.
 - Side effects of parents adding transforms or clipping become a risk. This is hard to detect and
-'counter'.
+  'counter'.
 
 When the dom connection point is 'body', content projection will not work, but a template that
 can be rendered without being dependent on its context will be required.
@@ -41,7 +45,8 @@ focused cell in table mode))
 For maximum flexibility, it should be up to the developer to decide how overlays should be rendered,
 per instance of an overlay.
 
-## Responsive overlay
+### Responsive overlay
+
 Based on screen size, we might want to switch the appearance of an overlay.
 For instance: an application menu can be displayed as a dropdown on desktop,
 but as a bottom sheet on mobile.
@@ -61,7 +66,8 @@ Some options are mutually exclusive, in which case their dependent options and r
 mentioned.
 Note: a more generic and precise term for all mentionings of `invoker` below would actually be
 `relative positioning element`.
-```
+
+```text
 - {Element} elementToFocusAfterHide - the element that should be called `.focus()` on after dialog closes
 - {Boolean} hasBackdrop - whether it should have a backdrop (currently exclusive to globalOverlayController)
 - {Boolean} isBlocking - hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)
@@ -77,7 +83,8 @@ Note: a more generic and precise term for all mentionings of `invoker` below wou
 ```
 
 These options are suggested to be added to the current ones:
-```
+
+```text
 - {Boolean} isModal - sets aria-modal and/or aria-hidden="true" on siblings
 - {Boolean} isGlobal - determines the connection point in DOM (body vs handled by user) TODO: rename to renderToBody?
 - {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all
@@ -99,7 +106,8 @@ other overlays, so needed for internals.
 ```
 
 What we should think about more properly is a global placement option (positioned relative to window instead of invoker)
-```
+
+```text
 // TODO: namings very much under construction (we should also reconsider 'placement' names, see: https://github.com/ing-bank/lion/pull/61)
 // Something like the drawing Joren made: https://github.com/ing-bank/lion/issues/36#issuecomment-491855381
 - {String} viewportPlacement - consists of a vertical alignment part and an horizontal alignment part,
@@ -110,12 +118,14 @@ What we should think about more properly is a global placement option (positione
 ```
 
 ## Controllers/behaviors
+
 Controllers/behaviors provide preconfigured configuration objects for the global/local
 overlay controllers.
 They provide an imperative and very flexible api for creating overlays and should be used by
 Subclassers, inside webcomponents.
 
-#### Dialog
+### Dialog Controller
+
 ```js
 {
   isGlobal: true,
@@ -130,7 +140,8 @@ Subclassers, inside webcomponents.
 }
 ```
 
-#### Tooltip
+### Tooltip Controller
+
 ```js
 {
   isTooltip: true,
@@ -139,16 +150,20 @@ Subclassers, inside webcomponents.
 }
 ```
 
-#### Popover
+### Popover Controller
+
 ```js
 {
   handlesUserInteraction: true,
   handlesAccessibility: true,
 }
 ```
-#### Dropdown
+
+### Dropdown Controller
+
 It will be quite common to override placement to 'bottom-fullwidth'.
 Also, it would be quite common to add a pointerNode.
+
 ```js
 {
   placement: 'bottom',
@@ -156,63 +171,79 @@ Also, it would be quite common to add a pointerNode.
   handlesAccessibility: true,
 }
 ```
-#### Toast
+
+### Toast Controller
+
 TODO:
+
 - add an option for role="alertdialog" ?
 - add an option for a 'hide timer' and belonging a11y features for this
+
 ```js
 {
   ...Dialog,
   viewportPlacement: 'top-right', (?)
 }
 ```
-#### Sheet (bottom, top, left, right)
+
+### Sheet Controller (bottom, top, left, right)
+
 ```js
 {
   ...Dialog,
   viewportPlacement: '{top|bottom|left|right}-fullwidth', (?)
 }
 ```
-#### Select
+
+### Select Controller
+
 No need for a config, will probably invoke ResponsiveOverlayCtrl and switches
 config based on media query from Dropdown to BottomSheet/CenteredDialog
 
-#### Combobox/autocomplete
+### Combobox/autocomplete Controller
+
 No need for a config, will probably invoke ResponsiveOverlayCtrl and switches
 config based on media query from Dropdown to BottomSheet/CenteredDialog
 
-#### Application menu
+### Application menu Controller
+
 No need for cfg, will probably invoke ResponsiveOverlayCtrl and switches
 config based on media query from Dropdown to BottomSheet/CenteredDialog
 
-
 ## Web components
+
 Web components provide a declaritive, developer friendly interface with a prewconfigured styling
 that fits the Design System and makes it really easy for Application Developers to build
 user interfaces.
 Web components should use
 The ground layers for the webcomponents in Lion are the following:
 
-#### Dialog
+### Dialog Component
 
 Imperative might be better here? We can add a web component later if needed.
 
-#### Tooltip
+### Tooltip Component
+
 ```html
 <lion-tooltip>
   <button slot="invoker">hover/focus</button>
   <div slot="content">This will be shown</div>
 </lion-tooltip>
 ```
-#### Popover
+
+### Popover Component
+
 ```html
 <lion-popover>
   <button slot="invoker">click/space/enter</button>
   <div slot="content">This will be shown</div>
 </lion-popover>
 ```
-#### Dropdown
+
+### Dropdown Component
+
 Like the name suggests, the default placement will be button
+
 ```html
 <lion-dropdown>
   <button slot="invoker">click/space/enter</button>
@@ -223,17 +254,18 @@ Like the name suggests, the default placement will be button
   </ul>
 </lion-dropdown>
 ```
-#### Toast
+
+### Toast Component
 
 Imperative might be better here?
-#### Sheet (bottom, top, left, right)
+
+### Sheet Component (bottom, top, left, right)
 
 Imperative might be better here?
 
+## Web components implementing generic overlays
 
-### Web components implementing generic overlays
-
-#### Select, Combobox/autocomplete, Application menu
+### Select, Combobox/autocomplete, Application menu
 
 Those will be separate web components with a lot of form and a11y logic that will be described
 in detail in different sections.

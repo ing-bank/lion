@@ -8,22 +8,25 @@ All supported types of global overlays are described below.
 ## How to use
 
 ### Installation
+
 ```sh
 npm i --save @lion/overlays
 ```
 
 ### Example
+
 ```js
 import { overlays } from '@lion/overlays';
 
 const myCtrl = overlays.add(
   new GlobalOverlayController({
     /* options */
-  })
+  }),
 );
 ```
 
 ### ModalDialogController
+
 A specific extension of GlobalOverlayController configured to create accessible modal dialogs.
 
 ```js

@@ -25,8 +25,8 @@ All validators are provided via pure functions. They should be applied to the el
 
 ```html
 <validatable-el
-  .errorValidators="${[[ myValidatorFunction, { myParam: 'foo' }, { extra: 'options' } ]]}">
-</validatable-el>
+  .errorValidators="${[[ myValidatorFunction, { myParam: 'foo' }, { extra: 'options' } ]]}"
+></validatable-el>
 ```
 
 As you can see the 'errorValidators' property expects a map (an array of arrays).
@@ -46,8 +46,8 @@ Below example has two validators (as factory functions) applied:
 
 ```html
 <validatable-el
-  .errorValidators="${[minLengthValidator({ min: 3 }), isZipCodeValidator()]}">
-</validatable-el>
+  .errorValidators="${[minLengthValidator({ min: 3 }), isZipCodeValidator()]}"
+></validatable-el>
 ```
 
 ### Default Validators
@@ -112,8 +112,8 @@ The api for warning validators and info validators are as follows:
 ```html
 <validatable-field
   .warningValidators="${[myWarningValidator()]}"
-  .infoValidators="${[myInfoValidator()]}">
-</validatable-field>
+  .infoValidators="${[myInfoValidator()]}"
+></validatable-field>
 ```
 
 ### Success validators

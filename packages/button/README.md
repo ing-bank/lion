@@ -7,12 +7,14 @@
 ## Features
 
 ### Disabled
+
 You can also set a button as disabled with the `disabled` property.
 
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/button
 ```
 

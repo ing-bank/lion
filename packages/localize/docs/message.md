@@ -9,15 +9,16 @@ The localization system helps to manage localization data, split into locales an
 The LocalizeMixin is the one you want to use in your web components. By adding this mixing, you can internationalize your component.
 
 `LocalizeMixin` has the following features:
+
 - Use translated text in your template (`msgLit()`)
 - Get the localize namespaces of the component (`localizeNamespaces`)
 - Await loading of localize namespaces (`localizeNamespacesLoaded`)
 
 Advanced:
+
 - Set whether your component should wait for localize namespaces before rendering your component's template (`waitForLocalizeNamespaces`)
 - Lit-element's `performUpdate()` is overridden in this mixin to perform updates async or delayed sync based on the `waitForLocalizeNamespaces` getter
 - Lifecycle methods `onLocaleReady()`, `onLocaleChanged()`, `onLocaleUpdated()`
-
 
 ## How to use
 
@@ -52,6 +53,7 @@ The `namespace` can be one of two types: an object with an explicit loader funct
 > When calling `this.msgLit()`, what comes after `:` may contain dots only if they are intended as a separator for objects. For more details, please check [messageformat](https://messageformat.github.io/messageformat/), which is the underlying library that we use.
 
 An example of the a preconfigured loader:
+
 ```js
 static get localizeNamespaces() {
   return ['my-hello-component', ...super.localizeNamespaces];
@@ -85,6 +87,7 @@ class MyHelloComponent extends LocalizeMixin(LionLitElement) {
 ```
 
 It is also possible to pass data to your translation:
+
 ```js
 render() {
   return html`
@@ -98,6 +101,7 @@ render() {
 Usage of dynamic imports is recommended if you want to be able to create smart bundles later on for a certain locale.
 
 ### Not using a webcomponent
+
 For example, if you simply want to make a reusable template, you can also use localization using the singleton instance of LocalizeManager called `localize`.
 
 ```js
@@ -112,6 +116,7 @@ export function myTemplate(someData) {
   `;
 }
 ```
+
 This template is meant for importing in your webcomponent which uses this localize namespace.
 
 ### Translation files
@@ -121,33 +126,32 @@ Typically the locale is an ES module which is by convention put into the `/trans
 
 Localization data modules for `my-hello-component` might look like these:
 
-
 - `/path/to/my-family-component/translations/en.js`
 
-    ```js
-    export default {
-      havePartnerQuestion: 'Do you have a partner?',
-      haveChildrenQuestion: 'Do you have children?',
-    };
-    ```
+  ```js
+  export default {
+    havePartnerQuestion: 'Do you have a partner?',
+    haveChildrenQuestion: 'Do you have children?',
+  };
+  ```
 
 - `/path/to/my-family-component/translations/en-GB.js`
 
-    ```js
-    import en from './en.js'
-    export default en;
-    ```
+  ```js
+  import en from './en.js';
+  export default en;
+  ```
 
 - `/path/to/my-family-component/translations/en-US.js`
 
-    ```js
-    import en from './en.js'
+  ```js
+  import en from './en.js';
 
-    export default {
-      ...en,
-      haveChildrenQuestion: 'Do you have kids?',
-    };
-    ```
+  export default {
+    ...en,
+    haveChildrenQuestion: 'Do you have kids?',
+  };
+  ```
 
 The module must have a `default` export as shown above to be handled properly.
 
@@ -158,8 +162,10 @@ If you want to fetch translation data from some API this is also possible.
 ```js
 // fetch from an API
 localize.loadNamespace({
-  'my-hello-component': async (locale) => {
-    const response = await fetch(`http://api.example.com/?namespace=my-hello-component&locale=${locale}`);
+  'my-hello-component': async locale => {
+    const response = await fetch(
+      `http://api.example.com/?namespace=my-hello-component&locale=${locale}`,
+    );
     return response.json(); // resolves to the JSON object `{ greeting: 'Hallo {name}!' }`
   },
 });

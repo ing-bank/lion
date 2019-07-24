@@ -27,7 +27,7 @@ Examples:
 
 - For a date input, this would be '20/01/1999' (dependent on locale).
 - For a number input, this could be '1,234.56' (a String representation of modelValue
-1234.56)
+  1234.56)
 
 ### serializedValue
 
@@ -41,8 +41,8 @@ Examples:
 - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
 - For a number input this would be the String representation of a float ('1234.56' instead
   of 1234.56)
-When no parser is available, the value is usually the same as the formattedValue
-(being inputElement.value)
+
+When no parser is available, the value is usually the same as the formattedValue (being inputElement.value)
 
 ## Formatters, parsers and (de)serializers
 
@@ -108,7 +108,7 @@ Concrete examples can be found at [`<lion-input-date>`](../../input-date/) and
 ## Flow diagram
 
 The following flow diagram is based on both end user input and interaction programmed by the
-developer. It shows how the 'computation loop' for  modelValue, formattedValue and serializedValue
+developer. It shows how the 'computation loop' for modelValue, formattedValue and serializedValue
 is triggered.
 
 [Flow diagram](./formatterParserFlow.svg)

@@ -6,27 +6,30 @@
 It is a promise based system for fetching data, based on [axios](https://github.com/axios/axios)
 
 ## Features
+
 - only JS functions, no (unnecessarily expensive) web components
 - supports GET, POST, PUT, DELETE, REQUEST, PATCH and HEAD methods
 - can be used with or without XSRF token
 
-
 ## How to use
 
 ### Installation
+
 ```sh
 npm i --save @lion/ajax
 ```
 
 ### Example
+
 ```js
 import { ajax } from '@lion/ajax';
 
-ajax.get('data.json')
-  .then((response) => {
+ajax
+  .get('data.json')
+  .then(response => {
     console.log(response);
   })
-  .catch((error) => {
+  .catch(error => {
     console.log(error);
   });
 ```
@@ -34,15 +37,17 @@ ajax.get('data.json')
 ### Create own instances for custom options
 
 #### Cancel
+
 ```js
 import { AjaxClass } from '@lion/ajax';
 
 const myAjax = AjaxClass.getNewInstance({ cancelable: true });
-myAjax.get('data.json')
-  .then((response) => {
+myAjax
+  .get('data.json')
+  .then(response => {
     document.querySelector('#canceled').innerHTML = JSON.stringify(response.data);
   })
-  .catch((error) => {
+  .catch(error => {
     document.querySelector('#canceled').innerHTML = `I got cancelled: ${error.message}`;
   });
 setTimeout(() => {
@@ -51,22 +56,25 @@ setTimeout(() => {
 ```
 
 #### Cancel previous on new request
+
 ```js
-import { AjaxClass } from '@lion/ajax'
+import { AjaxClass } from '@lion/ajax';
 
 const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
-myAjax.get('data.json')
-  .then((response) => {
+myAjax
+  .get('data.json')
+  .then(response => {
     document.querySelector('#request1').innerHTML = 'Request 1: ' + JSON.stringify(response.data);
   })
-  .catch((error) => {
+  .catch(error => {
     document.querySelector('#request1').innerHTML = `Request 1: I got cancelled: ${error.message}`;
   });
-myAjax.get('data2.json')
-  .then((response) => {
+myAjax
+  .get('data2.json')
+  .then(response => {
     document.querySelector('#request2').innerHTML = 'Request 2: ' + JSON.stringify(response.data);
   })
-  .catch((error) => {
+  .catch(error => {
     document.querySelector('#request2').innerHTML = `Request 2: I got cancelled: ${error.message}`;
   });
 ```
