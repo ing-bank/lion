@@ -5,6 +5,7 @@
 `lion-radio` component is a sub-element to be used in [lion-radio-group](../radio-group/) elements. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 
 ## Features
+
 - Get or set the checked state (boolean) - `choiceChecked()`
 - Get or set the value of the choice - `choiceValue()`
 - Pre-select an option by setting the `checked` boolean attribute
@@ -12,8 +13,9 @@
 ## How to use
 
 ### Installation
-```
-npm i --save @lion/radio;
+
+```sh
+npm i --save @lion/radio
 ```
 
 ```js

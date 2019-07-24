@@ -5,6 +5,7 @@
 `lion-input` component is a webcomponent that enhances the functionality of the native `<input>` element.
 
 ## Features
+
 - based on [field](../field/)
 - extra visual elements can be added via `slots`
   - **label**: can also be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
@@ -21,8 +22,9 @@
 ## How to use
 
 ### Installation
-```
-npm i --save @lion/input;
+
+```sh
+npm i --save @lion/input
 ```
 
 ```js
@@ -44,6 +46,7 @@ import { maxLengthValidator } from '@lion/validate';
 ```
 
 Making use of slots:
+
 ```html
 <lion-input name="amount">
   <label slot="label">Amount</label>

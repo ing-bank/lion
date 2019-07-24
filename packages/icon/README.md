@@ -28,8 +28,9 @@ Include the import for both the custom element the icons you want:
 ```
 
 Use it in your lit-html template:
+
 ```html
-<lion-icon .svg=${bugSvg}></lion-icon>
+<lion-icon .svg="${bugSvg}"></lion-icon>
 ```
 
 ### Icon format
@@ -50,7 +51,7 @@ Make sure you have `focusable="false"` in the icon file to prevent bugs in IE/Ed
 You may add an `aria-label` to provide information to visually impaired users:
 
 ```html
-<lion-icon .svg=${arrowLeftSvg} aria-label="Pointing left"></lion-icon>
+<lion-icon .svg="${arrowLeftSvg}" aria-label="Pointing left"></lion-icon>
 ```
 
 A `lion-icon` without an `aria-label` attribute will be automatically be given an `aria-hidden` attribute.
@@ -83,7 +84,7 @@ A `lion-icon` may be styled like a regular HTML element:
     stroke: lightsteelblue;
   }
 </style>
-<lion-icon .icon=${arrowSvg} class="strong"></lion-icon>
+<lion-icon .icon="${arrowSvg}" class="strong"></lion-icon>
 ```
 
 See [SVG and CSS](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS) on MDN web docs for more information.

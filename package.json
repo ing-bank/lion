@@ -26,6 +26,7 @@
     "husky": "^1.0.0",
     "lerna": "3.4.3",
     "lint-staged": "^8.0.0",
+    "markdownlint-cli": "^0.17.0",
     "npm-run-all": "^4.1.5",
     "sinon": "^7.2.2",
     "webpack-merge": "^4.1.5",
@@ -46,9 +47,10 @@
     "lint:eclint": "git ls-files | xargs eclint check",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '**/CHANGELOG.md'",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
-    "format:prettier": "prettier \"**/*.js\" --write"
+    "format:prettier": "prettier \"**/*.{js,md}\" --write"
   },
   "lint-staged": {
     "*": [
@@ -58,6 +60,11 @@
     "*.js": [
       "eslint --fix",
       "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --write",
+      "markdownlint",
       "git add"
     ],
     "yarn.lock": [

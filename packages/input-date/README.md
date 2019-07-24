@@ -4,8 +4,8 @@
 
 `lion-input-date` component is based on the generic text input field. Its purpose is to provide a way for users to fill in a date.
 
-
 ## Features
+
 - based on [lion-input](../input)
 - makes use of [formatDate](../localize/docs/date.md) for formatting and parsing.
 - option to overwrite locale to change the formatting and parsing
@@ -19,7 +19,8 @@
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/input-date
 ```
 

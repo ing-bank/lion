@@ -7,12 +7,14 @@
 You should use [lion-checkbox](../checkbox/)'s inside this element.
 
 ## Features
+
 Since it extends from [lion-fieldset](../fieldset/), it has all the features a fieldset has.
 
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/checkbox @lion/checkbox-group
 ```
 
