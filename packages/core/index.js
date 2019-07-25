@@ -51,3 +51,5 @@ export { DelegateMixin } from './src/DelegateMixin.js';
 export { DomHelpersMixin } from './src/DomHelpersMixin.js';
 export { LionSingleton } from './src/LionSingleton.js';
 export { SlotMixin } from './src/SlotMixin.js';
+export { DisabledMixin } from './src/DisabledMixin.js';
+export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
