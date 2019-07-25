@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/button@0.1.48...@lion/button@0.2.0) (2019-07-25)
+
+
+### Bug Fixes
+
+* **button:** typo in package description ([1d4378e](https://github.com/ing-bank/lion/commit/1d4378e))
+
+
+### Features
+
+* **button:** add template hooks for before/after default slot ([f478b98](https://github.com/ing-bank/lion/commit/f478b98))
+* **button:** reduce to minimal css ([d4299de](https://github.com/ing-bank/lion/commit/d4299de))
+* **button:** use DisabledWithTabIndexMixin ([732411c](https://github.com/ing-bank/lion/commit/732411c))
+
+
+
+
+
 ## [0.1.48](https://github.com/ing-bank/lion/compare/@lion/button@0.1.47...@lion/button@0.1.48) (2019-07-24)
 
 **Note:** Version bump only for package @lion/button

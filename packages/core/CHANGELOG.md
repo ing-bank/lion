@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.13](https://github.com/ing-bank/lion/compare/@lion/core@0.1.12...@lion/core@0.1.13) (2019-07-25)
+
+
+### Bug Fixes
+
+* **core:** add DisabledMixin to manage disabled ([0d64792](https://github.com/ing-bank/lion/commit/0d64792))
+* **core:** add DisabledWithTabIndexMixin to manage disabled and tabindex ([e5b174e](https://github.com/ing-bank/lion/commit/e5b174e))
+
+
+
+
+
 ## [0.1.12](https://github.com/ing-bank/lion/compare/@lion/core@0.1.11...@lion/core@0.1.12) (2019-07-24)
 
 **Note:** Version bump only for package @lion/core
