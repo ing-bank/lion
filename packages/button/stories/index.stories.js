@@ -25,7 +25,9 @@ storiesOf('Buttons|Button', module)
         <lion-button><lion-icon .svg="${bug12}"></lion-icon>Debug</lion-button>
         <lion-button type="submit">Submit</lion-button>
         <lion-button aria-label="Debug"><lion-icon .svg="${bug12}"></lion-icon></lion-button>
-        <lion-button onclick="alert('clicked/spaced/entered')">click/space/enter me</lion-button>
+        <lion-button @click="${e => console.log('clicked/spaced/entered', e)}">
+          click/space/enter me and see log
+        </lion-button>
         <lion-button disabled>Disabled</lion-button>
       </div>
     `,
