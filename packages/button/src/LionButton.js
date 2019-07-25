@@ -1,19 +1,13 @@
-import { css, html, DelegateMixin, SlotMixin } from '@lion/core';
+import { css, html, DelegateMixin, SlotMixin, DisabledWithTabIndexMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 
-export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
+export class LionButton extends DisabledWithTabIndexMixin(
+  DelegateMixin(SlotMixin(LionLitElement)),
+) {
   static get properties() {
     return {
-      disabled: {
-        type: Boolean,
-        reflect: true,
-      },
       role: {
         type: String,
-        reflect: true,
-      },
-      tabindex: {
-        type: Number,
         reflect: true,
       },
     };
@@ -109,13 +103,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
     ];
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
-    if (name === 'disabled') {
-      this.__onDisabledChanged(oldValue);
-    }
-  }
-
   get delegations() {
     return {
       ...super.delegations,
@@ -140,9 +127,7 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
 
   constructor() {
     super();
-    this.disabled = false;
     this.role = 'button';
-    this.tabindex = 0;
   }
 
   connectedCallback() {
@@ -204,15 +189,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
       e.preventDefault();
       this.shadowRoot.querySelector('.btn').removeAttribute('active');
       this.shadowRoot.querySelector('.click-area').click();
-    }
-  }
-
-  __onDisabledChanged() {
-    if (this.disabled) {
-      this.__originalTabIndex = this.tabindex;
-      this.tabindex = -1;
-    } else {
-      this.tabindex = this.__originalTabIndex;
     }
   }
 }
