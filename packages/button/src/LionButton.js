@@ -20,7 +20,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
         <slot></slot>
         ${this._renderAfter()}
         <slot name="_button"></slot>
-        <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
+        <div class="click-area"></div>
       </div>
     `;
   }
@@ -128,6 +128,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
   constructor() {
     super();
     this.role = 'button';
+    this.__setupDelegationInConstructor();
   }
 
   connectedCallback() {
@@ -143,16 +144,19 @@ export class LionButton extends DisabledWithTabIndexMixin(
   _redispatchClickEvent(oldEvent) {
     // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
     const newEvent = new MouseEvent(oldEvent.type, oldEvent);
+    newEvent.__isRedispatchedOnNativeButton = true;
     this.__enforceHostEventTarget(newEvent);
     this.$$slot('_button').dispatchEvent(newEvent);
   }
 
   /**
-   * Prevent click on the fake element and cause click on the native button.
+   * Prevent normal click and redispatch click on the native button unless already redispatched.
    */
   __clickDelegationHandler(e) {
-    e.stopPropagation();
-    this._redispatchClickEvent(e);
+    if (!e.__isRedispatchedOnNativeButton) {
+      e.stopImmediatePropagation();
+      this._redispatchClickEvent(e);
+    }
   }
 
   __enforceHostEventTarget(event) {
@@ -163,6 +167,12 @@ export class LionButton extends DisabledWithTabIndexMixin(
       // in case `__defineGetter__` is removed from the platform
       Object.defineProperty(event, 'target', { writable: false, value: this });
     }
+  }
+
+  __setupDelegationInConstructor() {
+    // do not move to connectedCallback, otherwise IE11 breaks
+    // more info: https://github.com/ing-bank/lion/issues/179#issuecomment-511763835
+    this.addEventListener('click', this.__clickDelegationHandler, true);
   }
 
   __setupDelegation() {

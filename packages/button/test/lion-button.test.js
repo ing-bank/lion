@@ -9,10 +9,11 @@ import {
 import '../lion-button.js';
 
 function getTopElement(el) {
-  const { left, top } = el.getBoundingClientRect();
+  const { left, top, width, height } = el.getBoundingClientRect();
   // to support elementFromPoint() in polyfilled browsers we have to use document
-  const crossBrowserRoot = el.shadowRoot.elementFromPoint ? el.shadowRoot : document;
-  return crossBrowserRoot.elementFromPoint(left, top);
+  const crossBrowserRoot =
+    el.shadowRoot && el.shadowRoot.elementFromPoint ? el.shadowRoot : document;
+  return crossBrowserRoot.elementFromPoint(left + width / 2, top + height / 2);
 }
 
 describe('lion-button', () => {
@@ -151,7 +152,7 @@ describe('lion-button', () => {
       const clickSpy = sinon.spy();
       const el = await fixture(
         html`
-          <lion-button @click="${clickSpy}"></lion-button>
+          <lion-button @click="${clickSpy}">foo</lion-button>
         `,
       );
 
@@ -164,27 +165,22 @@ describe('lion-button', () => {
       expect(clickSpy.callCount).to.equal(1);
     });
 
-    describe('event after redispatching', async () => {
-      async function prepareClickEvent(el, host) {
+    describe('native button behavior', async () => {
+      async function prepareClickEvent(el) {
         setTimeout(() => {
-          if (host) {
-            // click on host like in native button
-            makeMouseEvent('click', { x: 11, y: 11 }, el);
-          } else {
-            // click on click-area which is then redispatched
-            makeMouseEvent('click', { x: 11, y: 11 }, getTopElement(el));
-          }
+          makeMouseEvent('click', { x: 11, y: 11 }, getTopElement(el));
         });
         return oneEvent(el, 'click');
       }
 
-      let hostEvent;
-      let redispatchedEvent;
+      let nativeButtonEvent;
+      let lionButtonEvent;
 
       before(async () => {
-        const el = await fixture('<lion-button></lion-button>');
-        hostEvent = await prepareClickEvent(el, true);
-        redispatchedEvent = await prepareClickEvent(el, false);
+        const nativeButtonEl = await fixture('<button>foo</button>');
+        const lionButtonEl = await fixture('<lion-button>foo</lion-button>');
+        nativeButtonEvent = await prepareClickEvent(nativeButtonEl);
+        lionButtonEvent = await prepareClickEvent(lionButtonEl);
       });
 
       const sameProperties = [
@@ -194,13 +190,18 @@ describe('lion-button', () => {
         'cancelable',
         'clientX',
         'clientY',
-        'target',
       ];
 
       sameProperties.forEach(property => {
-        it(`has same value of the property "${property}"`, async () => {
-          expect(redispatchedEvent[property]).to.equal(hostEvent[property]);
+        it(`has same value of the property "${property}" as in native button event`, () => {
+          expect(lionButtonEvent[property]).to.equal(nativeButtonEvent[property]);
         });
+      });
+
+      it('has host in the target property', async () => {
+        const el = await fixture('<lion-button>foo</lion-button>');
+        const event = await prepareClickEvent(el);
+        expect(event.target).to.equal(el);
       });
     });
   });
