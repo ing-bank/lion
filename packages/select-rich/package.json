@@ -1,0 +1,51 @@
+{
+  "name": "@lion/select-rich",
+  "version": "0.0.0",
+  "description": "Provides a select with options that can contain html",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/select-rich"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "select",
+    "listbox",
+    "field",
+    "form",
+    "option"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.13",
+    "@lion/overlays": "^0.3.11",
+    "@lion/button": "^0.2.0",
+    "@lion/option": "^0.0.0",
+    "@lion/validate": "^0.2.22",
+    "@lion/field": "^0.1.38"
+  },
+  "devDependencies": {
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^2.0.6",
+    "@lion/form": "^0.1.21"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@lion/option",
+  "version": "0.0.0",
+  "description": "Allows to provide options for a rich select",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/option"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "option"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.1.13",
+    "@lion/field": "^0.1.38",
+    "@lion/choice-input": "^0.2.18"
+  },
+  "devDependencies": {
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^2.0.6",
+    "sinon": "^7.2.2"
+  }
+}
