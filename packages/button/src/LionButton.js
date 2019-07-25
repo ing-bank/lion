@@ -22,11 +22,23 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   render() {
     return html`
       <div class="btn">
+        ${this._renderBefore()}
         <slot></slot>
+        ${this._renderAfter()}
         <slot name="_button"></slot>
         <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
       </div>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _renderBefore() {
+    return html``;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _renderAfter() {
+    return html``;
   }
 
   static get styles() {
