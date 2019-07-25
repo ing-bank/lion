@@ -1,19 +1,13 @@
-import { css, html, DelegateMixin, SlotMixin } from '@lion/core';
+import { css, html, DelegateMixin, SlotMixin, DisabledWithTabIndexMixin } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 
-export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
+export class LionButton extends DisabledWithTabIndexMixin(
+  DelegateMixin(SlotMixin(LionLitElement)),
+) {
   static get properties() {
     return {
-      disabled: {
-        type: Boolean,
-        reflect: true,
-      },
       role: {
         type: String,
-        reflect: true,
-      },
-      tabindex: {
-        type: Number,
         reflect: true,
       },
     };
@@ -22,11 +16,23 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
   render() {
     return html`
       <div class="btn">
+        ${this._renderBefore()}
         <slot></slot>
+        ${this._renderAfter()}
         <slot name="_button"></slot>
         <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
       </div>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _renderBefore() {
+    return html``;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _renderAfter() {
+    return html``;
   }
 
   static get styles() {
@@ -36,22 +42,20 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
           display: inline-block;
           padding-top: 2px;
           padding-bottom: 2px;
-          height: 40px; /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
+          min-height: 40px; /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
           outline: 0;
           background-color: transparent;
           box-sizing: border-box;
         }
 
         .btn {
-          height: 24px;
+          min-height: 24px;
           display: flex;
           align-items: center;
           position: relative;
-          border: 1px solid black;
-          border-radius: 8px;
-          background: whitesmoke;
-          color: black;
+          background: #eee; /* minimal styling to make it recognizable as btn */
           padding: 7px 15px;
+          outline: none; /* focus style handled below, else it follows boundaries of click-area */
         }
 
         :host .btn ::slotted(button) {
@@ -69,27 +73,20 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
           padding: 0;
         }
 
-        :host(:focus) {
-          outline: none;
-        }
-
         :host(:focus) .btn {
-          border-color: lightblue;
-          box-shadow: 0 0 8px lightblue, 0 0 0 1px lightblue;
+          /* if you extend, please overwrite */
+          outline: 2px solid #bde4ff;
         }
 
         :host(:hover) .btn {
-          background: black;
-          color: whitesmoke;
-        }
-
-        :host(:hover) .btn ::slotted(lion-icon) {
-          fill: whitesmoke;
+          /* if you extend, please overwrite */
+          background: #f4f6f7;
         }
 
         :host(:active) .btn,
         .btn[active] {
-          background: grey;
+          /* if you extend, please overwrite */
+          background: gray;
         }
 
         :host([disabled]) {
@@ -97,20 +94,13 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
         }
 
         :host([disabled]) .btn {
+          /* if you extend, please overwrite */
           background: lightgray;
-          color: gray;
-          fill: gray;
-          border-color: gray;
+          color: #adadad;
+          fill: #adadad;
         }
       `,
     ];
-  }
-
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
-    if (name === 'disabled') {
-      this.__onDisabledChanged(oldValue);
-    }
   }
 
   get delegations() {
@@ -137,9 +127,7 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
 
   constructor() {
     super();
-    this.disabled = false;
     this.role = 'button';
-    this.tabindex = 0;
   }
 
   connectedCallback() {
@@ -201,15 +189,6 @@ export class LionButton extends DelegateMixin(SlotMixin(LionLitElement)) {
       e.preventDefault();
       this.shadowRoot.querySelector('.btn').removeAttribute('active');
       this.shadowRoot.querySelector('.click-area').click();
-    }
-  }
-
-  __onDisabledChanged() {
-    if (this.disabled) {
-      this.__originalTabIndex = this.tabindex;
-      this.tabindex = -1;
-    } else {
-      this.tabindex = this.__originalTabIndex;
     }
   }
 }
