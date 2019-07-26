@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/button@0.2.0...@lion/button@0.3.0) (2019-07-26)
+
+
+### Bug Fixes
+
+* **button:** click event fired twice in IE11 (fix [#179](https://github.com/ing-bank/lion/issues/179)) ([e269b5d](https://github.com/ing-bank/lion/commit/e269b5d))
+* **button:** prevent unnecessary keydown/keyup handlers ([06124e0](https://github.com/ing-bank/lion/commit/06124e0))
+* **button:** remove active when mouse/key up on other element (fix [#210](https://github.com/ing-bank/lion/issues/210)) ([f3303ae](https://github.com/ing-bank/lion/commit/f3303ae))
+
+
+### Features
+
+* **button:** move active to host for cross-browser support (fix [#188](https://github.com/ing-bank/lion/issues/188)) ([471d662](https://github.com/ing-bank/lion/commit/471d662))
+
+
+
+
+
 # [0.2.0](https://github.com/ing-bank/lion/compare/@lion/button@0.1.48...@lion/button@0.2.0) (2019-07-25)
 
 
