@@ -4,6 +4,10 @@ import {
   makeMouseEvent,
   pressEnter,
   pressSpace,
+  down,
+  up,
+  keyDownOn,
+  keyUpOn,
 } from '@polymer/iron-test-helpers/mock-interactions.js';
 
 import '../lion-button.js';
@@ -55,6 +59,53 @@ describe('lion-button', () => {
     await el.updateComplete;
     expect(el.getAttribute('tabindex')).to.equal('-1');
     expect(el.hasAttribute('disabled')).to.equal(true);
+  });
+
+  describe('active', () => {
+    it('updates "active" attribute on host when mousedown/mouseup on button', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      down(topEl);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      up(topEl);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
+
+    it('updates "active" attribute on host when space keydown/keyup on button', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      keyDownOn(topEl, 32);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      keyUpOn(topEl, 32);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
+
+    it('updates "active" attribute on host when enter keydown/keyup on button', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      keyDownOn(topEl, 13);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      keyUpOn(topEl, 13);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
   });
 
   describe('a11y', () => {
