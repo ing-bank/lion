@@ -77,6 +77,21 @@ describe('lion-button', () => {
       expect(el.hasAttribute('active')).to.be.false;
     });
 
+    it('updates "active" attribute on host when mousedown on button and mouseup anywhere else', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      down(topEl);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      up(document.body);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
+
     it('updates "active" attribute on host when space keydown/keyup on button', async () => {
       const el = await fixture(`<lion-button>foo</lion-button>`);
       const topEl = getTopElement(el);
@@ -92,6 +107,21 @@ describe('lion-button', () => {
       expect(el.hasAttribute('active')).to.be.false;
     });
 
+    it('updates "active" attribute on host when space keydown on button and space keyup anywhere else', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      keyDownOn(topEl, 32);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      keyUpOn(document.body, 32);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
+
     it('updates "active" attribute on host when enter keydown/keyup on button', async () => {
       const el = await fixture(`<lion-button>foo</lion-button>`);
       const topEl = getTopElement(el);
@@ -102,6 +132,21 @@ describe('lion-button', () => {
       expect(el.hasAttribute('active')).to.be.true;
 
       keyUpOn(topEl, 13);
+      expect(el.active).to.be.false;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.false;
+    });
+
+    it('updates "active" attribute on host when enter keydown on button and space keyup anywhere else', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      const topEl = getTopElement(el);
+
+      keyDownOn(topEl, 13);
+      expect(el.active).to.be.true;
+      await el.updateComplete;
+      expect(el.hasAttribute('active')).to.be.true;
+
+      keyUpOn(document.body, 13);
       expect(el.active).to.be.false;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.false;

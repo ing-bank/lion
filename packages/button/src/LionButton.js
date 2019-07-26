@@ -138,12 +138,12 @@ export class LionButton extends DisabledWithTabIndexMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    this.__setupDelegation();
+    this.__setupEvents();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.__teardownDelegation();
+    this.__teardownEvents();
   }
 
   _redispatchClickEvent(oldEvent) {
@@ -180,42 +180,50 @@ export class LionButton extends DisabledWithTabIndexMixin(
     this.addEventListener('click', this.__clickDelegationHandler, true);
   }
 
-  __setupDelegation() {
-    this.addEventListener('mousedown', this.__mousedownDelegationHandler);
-    this.addEventListener('mouseup', this.__mouseupDelegationHandler);
-    this.addEventListener('keydown', this.__keydownDelegationHandler);
-    this.addEventListener('keyup', this.__keyupDelegationHandler);
+  __setupEvents() {
+    this.addEventListener('mousedown', this.__mousedownHandler);
+    this.addEventListener('keydown', this.__keydownHandler);
+    this.addEventListener('keyup', this.__keyupHandler);
   }
 
-  __teardownDelegation() {
-    this.removeEventListener('mousedown', this.__mousedownDelegationHandler);
-    this.removeEventListener('mouseup', this.__mouseupDelegationHandler);
-    this.removeEventListener('keydown', this.__keydownDelegationHandler);
-    this.removeEventListener('keyup', this.__keyupDelegationHandler);
+  __teardownEvents() {
+    this.removeEventListener('mousedown', this.__mousedownHandler);
+    this.removeEventListener('keydown', this.__keydownHandler);
+    this.removeEventListener('keyup', this.__keyupHandler);
   }
 
-  __mousedownDelegationHandler() {
+  __mousedownHandler() {
     this.active = true;
-  }
-
-  __mouseupDelegationHandler() {
-    this.active = false;
-  }
-
-  __keydownDelegationHandler(e) {
-    if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
-      e.preventDefault();
-      this.active = true;
-    }
-  }
-
-  __keyupDelegationHandler(e) {
-    // Makes the real button the trigger in forms (will submit form, as opposed to paper-button)
-    // and make click handlers on button work on space and enter
-    if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
-      e.preventDefault();
+    const mouseupHandler = () => {
       this.active = false;
+      document.removeEventListener('mouseup', mouseupHandler);
+    };
+    document.addEventListener('mouseup', mouseupHandler);
+  }
+
+  __keydownHandler(e) {
+    if (!this.__isKeyboardClickEvent(e)) {
+      return;
+    }
+    this.active = true;
+    const keyupHandler = keyupEvent => {
+      if (this.__isKeyboardClickEvent(keyupEvent)) {
+        this.active = false;
+        document.removeEventListener('keyup', keyupHandler, true);
+      }
+    };
+    document.addEventListener('keyup', keyupHandler, true);
+  }
+
+  __keyupHandler(e) {
+    if (this.__isKeyboardClickEvent(e)) {
+      // redispatch click
       this.shadowRoot.querySelector('.click-area').click();
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  __isKeyboardClickEvent(e) {
+    return e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */;
   }
 }
