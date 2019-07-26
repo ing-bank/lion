@@ -202,7 +202,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
   }
 
   __keydownHandler(e) {
-    if (!this.__isKeyboardClickEvent(e)) {
+    if (this.active || !this.__isKeyboardClickEvent(e)) {
       return;
     }
     this.active = true;
