@@ -10,6 +10,10 @@ export class LionButton extends DisabledWithTabIndexMixin(
         type: String,
         reflect: true,
       },
+      active: {
+        type: Boolean,
+        reflect: true,
+      },
     };
   }
 
@@ -20,7 +24,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
         <slot></slot>
         ${this._renderAfter()}
         <slot name="_button"></slot>
-        <div class="click-area" @click="${this.__clickDelegationHandler}"></div>
+        <div class="click-area"></div>
       </div>
     `;
   }
@@ -83,8 +87,8 @@ export class LionButton extends DisabledWithTabIndexMixin(
           background: #f4f6f7;
         }
 
-        :host(:active) .btn,
-        .btn[active] {
+        :host(:active) .btn, /* keep native :active to render quickly where possible */
+        :host([active]) .btn /* use custom [active] to fix IE11 */ {
           /* if you extend, please overwrite */
           background: gray;
         }
@@ -128,31 +132,36 @@ export class LionButton extends DisabledWithTabIndexMixin(
   constructor() {
     super();
     this.role = 'button';
+    this.active = false;
+    this.__setupDelegationInConstructor();
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.__setupDelegation();
+    this.__setupEvents();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.__teardownDelegation();
+    this.__teardownEvents();
   }
 
   _redispatchClickEvent(oldEvent) {
     // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
     const newEvent = new MouseEvent(oldEvent.type, oldEvent);
+    newEvent.__isRedispatchedOnNativeButton = true;
     this.__enforceHostEventTarget(newEvent);
     this.$$slot('_button').dispatchEvent(newEvent);
   }
 
   /**
-   * Prevent click on the fake element and cause click on the native button.
+   * Prevent normal click and redispatch click on the native button unless already redispatched.
    */
   __clickDelegationHandler(e) {
-    e.stopPropagation();
-    this._redispatchClickEvent(e);
+    if (!e.__isRedispatchedOnNativeButton) {
+      e.stopImmediatePropagation();
+      this._redispatchClickEvent(e);
+    }
   }
 
   __enforceHostEventTarget(event) {
@@ -165,30 +174,56 @@ export class LionButton extends DisabledWithTabIndexMixin(
     }
   }
 
-  __setupDelegation() {
-    this.addEventListener('keydown', this.__keydownDelegationHandler);
-    this.addEventListener('keyup', this.__keyupDelegationHandler);
+  __setupDelegationInConstructor() {
+    // do not move to connectedCallback, otherwise IE11 breaks
+    // more info: https://github.com/ing-bank/lion/issues/179#issuecomment-511763835
+    this.addEventListener('click', this.__clickDelegationHandler, true);
   }
 
-  __teardownDelegation() {
-    this.removeEventListener('keydown', this.__keydownDelegationHandler);
-    this.removeEventListener('keyup', this.__keyupDelegationHandler);
+  __setupEvents() {
+    this.addEventListener('mousedown', this.__mousedownHandler);
+    this.addEventListener('keydown', this.__keydownHandler);
+    this.addEventListener('keyup', this.__keyupHandler);
   }
 
-  __keydownDelegationHandler(e) {
-    if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
-      e.preventDefault();
-      this.shadowRoot.querySelector('.btn').setAttribute('active', '');
+  __teardownEvents() {
+    this.removeEventListener('mousedown', this.__mousedownHandler);
+    this.removeEventListener('keydown', this.__keydownHandler);
+    this.removeEventListener('keyup', this.__keyupHandler);
+  }
+
+  __mousedownHandler() {
+    this.active = true;
+    const mouseupHandler = () => {
+      this.active = false;
+      document.removeEventListener('mouseup', mouseupHandler);
+    };
+    document.addEventListener('mouseup', mouseupHandler);
+  }
+
+  __keydownHandler(e) {
+    if (this.active || !this.__isKeyboardClickEvent(e)) {
+      return;
     }
+    this.active = true;
+    const keyupHandler = keyupEvent => {
+      if (this.__isKeyboardClickEvent(keyupEvent)) {
+        this.active = false;
+        document.removeEventListener('keyup', keyupHandler, true);
+      }
+    };
+    document.addEventListener('keyup', keyupHandler, true);
   }
 
-  __keyupDelegationHandler(e) {
-    // Makes the real button the trigger in forms (will submit form, as opposed to paper-button)
-    // and make click handlers on button work on space and enter
-    if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
-      e.preventDefault();
-      this.shadowRoot.querySelector('.btn').removeAttribute('active');
+  __keyupHandler(e) {
+    if (this.__isKeyboardClickEvent(e)) {
+      // redispatch click
       this.shadowRoot.querySelector('.click-area').click();
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  __isKeyboardClickEvent(e) {
+    return e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */;
   }
 }
