@@ -10,6 +10,10 @@ export class LionButton extends DisabledWithTabIndexMixin(
         type: String,
         reflect: true,
       },
+      active: {
+        type: Boolean,
+        reflect: true,
+      },
     };
   }
 
@@ -83,8 +87,8 @@ export class LionButton extends DisabledWithTabIndexMixin(
           background: #f4f6f7;
         }
 
-        :host(:active) .btn,
-        .btn[active] {
+        :host(:active) .btn, /* keep native :active to render quickly where possible */
+        :host([active]) .btn /* use custom [active] to fix IE11 */ {
           /* if you extend, please overwrite */
           background: gray;
         }
@@ -128,6 +132,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
   constructor() {
     super();
     this.role = 'button';
+    this.active = false;
     this.__setupDelegationInConstructor();
   }
 
@@ -176,19 +181,31 @@ export class LionButton extends DisabledWithTabIndexMixin(
   }
 
   __setupDelegation() {
+    this.addEventListener('mousedown', this.__mousedownDelegationHandler);
+    this.addEventListener('mouseup', this.__mouseupDelegationHandler);
     this.addEventListener('keydown', this.__keydownDelegationHandler);
     this.addEventListener('keyup', this.__keyupDelegationHandler);
   }
 
   __teardownDelegation() {
+    this.removeEventListener('mousedown', this.__mousedownDelegationHandler);
+    this.removeEventListener('mouseup', this.__mouseupDelegationHandler);
     this.removeEventListener('keydown', this.__keydownDelegationHandler);
     this.removeEventListener('keyup', this.__keyupDelegationHandler);
+  }
+
+  __mousedownDelegationHandler() {
+    this.active = true;
+  }
+
+  __mouseupDelegationHandler() {
+    this.active = false;
   }
 
   __keydownDelegationHandler(e) {
     if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
       e.preventDefault();
-      this.shadowRoot.querySelector('.btn').setAttribute('active', '');
+      this.active = true;
     }
   }
 
@@ -197,7 +214,7 @@ export class LionButton extends DisabledWithTabIndexMixin(
     // and make click handlers on button work on space and enter
     if (e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */) {
       e.preventDefault();
-      this.shadowRoot.querySelector('.btn').removeAttribute('active');
+      this.active = false;
       this.shadowRoot.querySelector('.click-area').click();
     }
   }
