@@ -22,12 +22,11 @@ describe('lion-popup', () => {
         </lion-popup>
       `);
       const invoker = el.querySelector('[slot="invoker"]');
-      const eventOnClick = new Event('click');
-      invoker.dispatchEvent(eventOnClick);
+      invoker.click();
       await el.updateComplete;
 
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
-      invoker.dispatchEvent(eventOnClick);
+      invoker.click();
       await el.updateComplete;
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
     });
