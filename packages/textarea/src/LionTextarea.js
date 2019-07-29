@@ -62,8 +62,7 @@ export class LionTextarea extends ObserverMixin(LionInput) {
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
-    this.setTextareaMaxHeight();
-    autosize(this.inputElement);
+    this.__initializeAutoresize();
   }
 
   disconnectedCallback() {
@@ -101,7 +100,39 @@ export class LionTextarea extends ObserverMixin(LionInput) {
     ];
   }
 
+  get updateComplete() {
+    if (this.__textareaUpdateComplete) {
+      return Promise.all([this.__textareaUpdateComplete, super.updateComplete]);
+    }
+    return super.updateComplete;
+  }
+
   resizeTextarea() {
     autosize.update(this.inputElement);
+  }
+
+  __initializeAutoresize() {
+    if (this.__shady_native_contains) {
+      this.__textareaUpdateComplete = this.__waitForTextareaRenderedInRealDOM().then(() => {
+        this.__startAutoresize();
+        this.__textareaUpdateComplete = null;
+      });
+    } else {
+      this.__startAutoresize();
+    }
+  }
+
+  async __waitForTextareaRenderedInRealDOM() {
+    let count = 3; // max tasks to wait for
+    while (count !== 0 && !this.__shady_native_contains(this.inputElement)) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => setTimeout(resolve));
+      count -= 1;
+    }
+  }
+
+  __startAutoresize() {
+    autosize(this.inputElement);
+    this.setTextareaMaxHeight();
   }
 }
