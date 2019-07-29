@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.43](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.42...@lion/textarea@0.1.43) (2019-07-29)
+
+
+### Bug Fixes
+
+* **textarea:** wait for textarea slot before init autoresize (fix [#203](https://github.com/ing-bank/lion/issues/203)) ([2f2a42a](https://github.com/ing-bank/lion/commit/2f2a42a))
+
+
+
+
+
 ## [0.1.42](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.41...@lion/textarea@0.1.42) (2019-07-25)
 
 **Note:** Version bump only for package @lion/textarea
