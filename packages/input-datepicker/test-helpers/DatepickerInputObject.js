@@ -1,4 +1,4 @@
-import { CalendarObject } from '@lion/calendar/test/test-utils.js';
+import { CalendarObject } from '@lion/calendar/test-helpers.js';
 
 // TODO: refactor CalendarObject to this approach (only methods when arguments are needed)
 export class DatepickerInputObject {

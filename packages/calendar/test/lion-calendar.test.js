@@ -5,7 +5,7 @@ import { html } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
-import { CalendarObject, DayObject } from './test-utils.js';
+import { CalendarObject, DayObject } from '../test-helpers.js';
 import './keyboardEventShimIE.js';
 
 import { isSameDate } from '../src/utils/isSameDate.js';

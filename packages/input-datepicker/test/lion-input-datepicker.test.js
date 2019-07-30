@@ -12,7 +12,7 @@ import { keyCodes } from '@lion/overlays/src/utils/key-codes.js';
 import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
 import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
-import { DatepickerInputObject } from './test-utils.js';
+import { DatepickerInputObject } from '../test-helpers.js';
 import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
 import '../lion-input-datepicker.js';
 
