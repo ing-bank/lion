@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.49](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.48...@lion/calendar@0.1.49) (2019-07-30)
+
+
+### Bug Fixes
+
+* include test-helpers dir in the released package ([6489069](https://github.com/ing-bank/lion/commit/6489069))
+
+
+
+
+
 ## [0.1.48](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.47...@lion/calendar@0.1.48) (2019-07-30)
 
 
