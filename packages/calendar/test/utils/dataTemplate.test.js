@@ -3,7 +3,7 @@ import { expect, fixture } from '@open-wc/testing';
 
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { dataTemplate } from '../../src/utils/dataTemplate.js';
-import { weekdayNames } from '../test-utils.js';
+import { weekdayNames } from '../../test-helpers.js';
 
 // eslint-disable-next-line camelcase
 import snapshot_enGB_Sunday_201812 from './snapshots/monthTemplate_en-GB_Sunday_2018-12.js';

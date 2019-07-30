@@ -11,14 +11,14 @@ import sinon from 'sinon';
 import { isDirective } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import {
+  localizeTearDown,
   setupEmptyFakeImportsFor,
   resetFakeImport,
   fakeImport,
   setupFakeImport,
-} from './test-utils.js';
+} from '../test-helpers.js';
 
 import { localize } from '../src/localize.js';
-import { localizeTearDown } from '../test-helpers.js';
 
 import { LocalizeMixin } from '../src/LocalizeMixin.js';
 

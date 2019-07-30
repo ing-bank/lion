@@ -1,7 +1,7 @@
 import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
-import { setupFakeImport, resetFakeImport, fakeImport } from './test-utils.js';
+import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers.js';
 
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
