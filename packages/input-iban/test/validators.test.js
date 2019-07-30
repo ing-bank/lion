@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { smokeTestValidator } from '@lion/validate/test/test-utils.js';
+import { smokeTestValidator } from '@lion/validate/test-helpers.js';
 
 import {
   isIBAN,
