@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { smokeTestValidator } from './test-utils.js';
+import { smokeTestValidator } from '../test-helpers.js';
 
 import {
   isString,
