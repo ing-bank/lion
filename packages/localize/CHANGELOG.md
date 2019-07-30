@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.11](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.10...@lion/localize@0.4.11) (2019-07-30)
+
+
+### Bug Fixes
+
+* include test-helpers dir in the released package ([6489069](https://github.com/ing-bank/lion/commit/6489069))
+
+
+
+
+
 ## [0.4.10](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.9...@lion/localize@0.4.10) (2019-07-30)
 
 
