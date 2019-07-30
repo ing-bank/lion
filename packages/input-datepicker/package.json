@@ -31,6 +31,7 @@
     "src",
     "stories",
     "test",
+    "test-helpers",
     "translations",
     "*.js"
   ],
