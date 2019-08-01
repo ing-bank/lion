@@ -2,7 +2,7 @@ import { css } from '@lion/core';
 
 export const globalOverlaysStyle = css`
   .global-overlays {
-    position: relative;
+    position: fixed;
     z-index: 200;
   }
 
