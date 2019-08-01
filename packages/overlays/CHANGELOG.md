@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.11...@lion/overlays@0.3.12) (2019-08-01)
+
+
+### Bug Fixes
+
+* **overlays:** global overlays have fixed positioning context ([6bee300](https://github.com/ing-bank/lion/commit/6bee300))
+
+
+
+
+
 ## [0.3.11](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.10...@lion/overlays@0.3.11) (2019-07-25)
 
 **Note:** Version bump only for package @lion/overlays
