@@ -2,6 +2,7 @@ import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing'
 import sinon from 'sinon';
 import { LitElement, UpdatingElement } from '@lion/core';
 
+import { formRegistrarManager } from '../src/formRegistrarManager.js';
 import { FormRegisteringMixin } from '../src/FormRegisteringMixin.js';
 import { FormRegistrarMixin } from '../src/FormRegistrarMixin.js';
 
@@ -34,6 +35,24 @@ describe('FormRegistrationMixins', () => {
     await el.registrationReady;
     expect(el.formElements.length).to.equal(1);
     expect(el.querySelector('form-registrar').formElements.length).to.equal(1);
+  });
+
+  it('forgets disconnected registrars', async () => {
+    const el = await fixture(html`
+      <form-registrar>
+        <form-registrar>
+          <form-registering></form-registering>
+        </form-registrar>
+        <form-registrar id="remove">
+          <form-registering></form-registering>
+        </form-registrar>
+      </form-registrar>
+    `);
+    await el.registrationReady;
+    expect(formRegistrarManager.__elements.length).to.equal(3);
+
+    el.querySelector('#remove').remove();
+    expect(formRegistrarManager.__elements.length).to.equal(2);
   });
 
   it('works for component that have a delayed render', async () => {
