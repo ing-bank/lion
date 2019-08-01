@@ -226,7 +226,7 @@ describe('LocalizeMixin', () => {
     expect(updateSpy.callCount).to.equal(1);
   });
 
-  it('has msg() which integrates with lit-html', async () => {
+  it('has msgLit() which integrates with lit-html', async () => {
     const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
