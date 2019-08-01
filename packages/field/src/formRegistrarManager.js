@@ -16,6 +16,10 @@ class FormRegistrarManager {
     this.ready = false;
   }
 
+  remove(registrar) {
+    this.__elements.splice(this.__elements.indexOf(registrar));
+  }
+
   becomesReady() {
     if (this.__elements.every(el => el.__readyForRegistration === true)) {
       this.dispatchEvent(new Event('all-forms-open-for-registration'));
