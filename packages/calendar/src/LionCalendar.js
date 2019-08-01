@@ -454,11 +454,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   __addEventDelegationForClickDate() {
-    const isDayCellOrButton = el =>
-      el.classList.contains('calendar__day-cell') || el.classList.contains('calendar__day-button');
+    const isDayButton = el => el.classList.contains('calendar__day-button');
     this.__clickDateDelegation = this.__contentWrapperElement.addEventListener('click', ev => {
-      const el = ev.composedPath()[0];
-      if (isDayCellOrButton(el)) {
+      const el = ev.target;
+      if (isDayButton(el)) {
         this.__dateSelectedByUser(el.date);
       }
     });
