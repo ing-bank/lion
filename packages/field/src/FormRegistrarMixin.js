@@ -28,10 +28,16 @@ export const FormRegistrarMixin = dedupeMixin(
         this.registrationReady = new Promise(resolve => {
           this.__resolveRegistrationReady = resolve;
         });
-        formRegistrarManager.add(this);
 
         this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
         this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+      }
+
+      connectedCallback() {
+        if (super.connectedCallback) {
+          super.connectedCallback();
+        }
+        formRegistrarManager.add(this);
       }
 
       disconnectedCallback() {
