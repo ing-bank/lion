@@ -204,6 +204,22 @@ describe('<lion-calendar>', () => {
       ).to.equal(true);
     });
 
+    it('doesn\'t send event "user-selected-date-changed" when user selects a disabled date', async () => {
+      const dateChangedSpy = sinon.spy();
+      const disable15th = d => d.getDate() === 15;
+      const el = await fixture(html`
+        <lion-calendar
+          .selectedDate="${new Date('2000/12/12')}"
+          @user-selected-date-changed="${dateChangedSpy}"
+          .disableDates=${disable15th}
+        ></lion-calendar>
+      `);
+      const elObj = new CalendarObject(el);
+      elObj.getDayEl(15).click();
+      await el.updateComplete;
+      expect(dateChangedSpy.called).to.equal(false);
+    });
+
     it('exposes focusedDate getter', async () => {
       const el = await fixture(html`
         <lion-calendar .centralDate="${new Date('2019/06/01')}"></lion-calendar>
