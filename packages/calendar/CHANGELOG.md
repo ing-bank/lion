@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.50](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.49...@lion/calendar@0.1.50) (2019-08-01)
+
+
+### Bug Fixes
+
+* **calendar:** stop disabled date triggering [@user-selected-date-changed](https://github.com/user-selected-date-changed) ([57823d1](https://github.com/ing-bank/lion/commit/57823d1))
+
+
+
+
+
 ## [0.1.49](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.48...@lion/calendar@0.1.49) (2019-07-30)
 
 
