@@ -27,23 +27,26 @@ describe('lion-button', () => {
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
-  it('has no type by default on the native button', async () => {
+  it('has .type="submit" and type="submit" by default', async () => {
     const el = await fixture(`<lion-button>foo</lion-button>`);
-    const nativeButton = el.$$slot('_button');
-    expect(nativeButton.getAttribute('type')).to.be.null;
+    expect(el.type).to.equal('submit');
+    expect(el.getAttribute('type')).to.be.equal('submit');
+    expect(el._nativeButton.type).to.equal('submit');
+    expect(el._nativeButton.getAttribute('type')).to.be.equal('submit');
   });
 
-  it('has type="submit" on the native button when set', async () => {
-    const el = await fixture(`<lion-button type="submit">foo</lion-button>`);
-    const nativeButton = el.$$slot('_button');
-    expect(nativeButton.getAttribute('type')).to.equal('submit');
+  it('sync type down to the native button', async () => {
+    const el = await fixture(`<lion-button type="button">foo</lion-button>`);
+    expect(el.type).to.equal('button');
+    expect(el.getAttribute('type')).to.be.equal('button');
+    expect(el._nativeButton.type).to.equal('button');
+    expect(el._nativeButton.getAttribute('type')).to.be.equal('button');
   });
 
   it('hides the native button in the UI', async () => {
     const el = await fixture(`<lion-button>foo</lion-button>`);
-    const nativeButton = el.$$slot('_button');
-    expect(nativeButton.getAttribute('tabindex')).to.equal('-1');
-    expect(window.getComputedStyle(nativeButton).visibility).to.equal('hidden');
+    expect(el._nativeButton.getAttribute('tabindex')).to.equal('-1');
+    expect(window.getComputedStyle(el._nativeButton).visibility).to.equal('hidden');
   });
 
   it('can be disabled imperatively', async () => {

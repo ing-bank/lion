@@ -1,9 +1,6 @@
-import { css, html, DelegateMixin, SlotMixin, DisabledWithTabIndexMixin } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { css, html, SlotMixin, DisabledWithTabIndexMixin, LitElement } from '@lion/core';
 
-export class LionButton extends DisabledWithTabIndexMixin(
-  DelegateMixin(SlotMixin(LionLitElement)),
-) {
+export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
     return {
       role: {
@@ -12,6 +9,10 @@ export class LionButton extends DisabledWithTabIndexMixin(
       },
       active: {
         type: Boolean,
+        reflect: true,
+      },
+      type: {
+        type: String,
         reflect: true,
       },
     };
@@ -107,14 +108,6 @@ export class LionButton extends DisabledWithTabIndexMixin(
     ];
   }
 
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.$$slot('_button'),
-      attributes: ['type'],
-    };
-  }
-
   get slots() {
     return {
       ...super.slots,
@@ -129,9 +122,14 @@ export class LionButton extends DisabledWithTabIndexMixin(
     };
   }
 
+  get _nativeButton() {
+    return this.querySelector('[slot=_button]');
+  }
+
   constructor() {
     super();
     this.role = 'button';
+    this.type = 'submit';
     this.active = false;
     this.__setupDelegationInConstructor();
   }
@@ -146,12 +144,22 @@ export class LionButton extends DisabledWithTabIndexMixin(
     this.__teardownEvents();
   }
 
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('type')) {
+      const native = this._nativeButton;
+      if (native) {
+        native.type = this.type;
+      }
+    }
+  }
+
   _redispatchClickEvent(oldEvent) {
     // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
     const newEvent = new MouseEvent(oldEvent.type, oldEvent);
     newEvent.__isRedispatchedOnNativeButton = true;
     this.__enforceHostEventTarget(newEvent);
-    this.$$slot('_button').dispatchEvent(newEvent);
+    this._nativeButton.dispatchEvent(newEvent);
   }
 
   /**
