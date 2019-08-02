@@ -13,7 +13,6 @@ export const FieldCustomMixin = dedupeMixin(
     class FieldCustomMixin extends superclass {
       static get properties() {
         return {
-          ...super.properties,
           /**
            * When no light dom defined and prop set
            */

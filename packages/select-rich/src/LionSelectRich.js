@@ -30,7 +30,6 @@ export class LionSelectRich extends FormRegistrarMixin(
 ) {
   static get properties() {
     return {
-      ...super.properties,
       checkedValue: {
         type: Object,
       },

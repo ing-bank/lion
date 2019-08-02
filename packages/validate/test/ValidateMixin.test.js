@@ -19,7 +19,6 @@ const tagString = defineCE(
   class extends ValidateMixin(LionLitElement) {
     static get properties() {
       return {
-        ...super.properties,
         modelValue: {
           type: String,
         },
@@ -658,7 +657,6 @@ describe('ValidateMixin', () => {
       class extends ValidateMixin(LionLitElement) {
         static get properties() {
           return {
-            ...super.properties,
             modelValue: {
               type: String,
             },
@@ -782,7 +780,6 @@ describe('ValidateMixin', () => {
         class extends ValidateMixin(LionLitElement) {
           static get properties() {
             return {
-              ...super.properties,
               modelValue: {
                 type: String,
               },
@@ -934,7 +931,6 @@ describe('ValidateMixin', () => {
         class extends ValidateMixin(LionLitElement) {
           static get properties() {
             return {
-              ...super.properties,
               modelValue: {
                 type: String,
               },
@@ -1220,7 +1216,7 @@ describe('ValidateMixin', () => {
         const orderName = defineCE(
           class extends ValidateMixin(LionLitElement) {
             static get properties() {
-              return { ...super.properties, modelValue: { type: String } };
+              return { modelValue: { type: String } };
             }
 
             static get localizeNamespaces() {

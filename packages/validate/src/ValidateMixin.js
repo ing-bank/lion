@@ -110,7 +110,6 @@ export const ValidateMixin = dedupeMixin(
 
       static get properties() {
         return {
-          ...super.properties,
           /**
            * List of validators that should set the input to invalid
            */
