@@ -31,6 +31,30 @@ storiesOf('Forms|Fieldset', module)
       </lion-fieldset>
     `,
   )
+  .add('Disabled', () => {
+    function toggleDisabled() {
+      const fieldset = document.querySelector('#fieldset');
+      fieldset.disabled = !fieldset.disabled;
+    }
+    return html`
+      <lion-fieldset name="nameGroup" label="Name" id="fieldset" disabled>
+        <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+        <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <lion-fieldset name="nameGroup2" label="Name">
+          <lion-input
+            name="FirstName2"
+            label="First Name"
+            .modelValue=${'Foo'}
+            disabled
+          ></lion-input>
+          <lion-input name="LastName2" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        </lion-fieldset>
+      </lion-fieldset>
+      <button @click=${toggleDisabled}>
+        Toggle disabled
+      </button>
+    `;
+  })
   .add(
     'Sub Fieldsets Data',
     () => html`
