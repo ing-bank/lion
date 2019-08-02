@@ -11,7 +11,6 @@ describe('FieldCustomMixin', () => {
     const FieldCustomMixinClass = class extends FieldCustomMixin(LionField) {
       static get properties() {
         return {
-          ...super.properties,
           modelValue: {
             type: String,
           },

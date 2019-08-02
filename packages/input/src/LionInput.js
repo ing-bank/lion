@@ -9,7 +9,6 @@ import { LionField } from '@lion/field';
 export class LionInput extends LionField {
   static get properties() {
     return {
-      ...super.properties,
       /**
        * A Boolean attribute which, if present, indicates that the user should not be able to edit
        * the value of the input. The difference between disabled and readonly is that read-only
