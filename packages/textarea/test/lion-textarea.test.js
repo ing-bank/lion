@@ -16,10 +16,26 @@ describe('<lion-textarea>', () => {
     expect(el.querySelector('textarea').nodeName).to.equal('TEXTAREA');
   });
 
-  it('has default minRows and maxRows', async () => {
+  it('has .rows=2 and .maxRows=6', async () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
     expect(el.rows).to.equal(2);
     expect(el.maxRows).to.equal(6);
+  });
+
+  it('has .rows=2 and rows="2" by default', async () => {
+    const el = await fixture(`<lion-textarea>foo</lion-textarea>`);
+    expect(el.rows).to.equal(2);
+    expect(el.getAttribute('rows')).to.be.equal('2');
+    expect(el.inputElement.rows).to.equal(2);
+    expect(el.inputElement.getAttribute('rows')).to.be.equal('2');
+  });
+
+  it('sync rows down to the native textarea', async () => {
+    const el = await fixture(`<lion-textarea rows="8">foo</lion-textarea>`);
+    expect(el.rows).to.equal(8);
+    expect(el.getAttribute('rows')).to.be.equal('8');
+    expect(el.inputElement.rows).to.equal(8);
+    expect(el.inputElement.getAttribute('rows')).to.be.equal('8');
   });
 
   it('disables user resize behavior', async () => {
@@ -102,12 +118,9 @@ describe('<lion-textarea>', () => {
   });
 
   it('stops shrinking after property "rows" is reached', async () => {
-    const el = await fixture(
-      html`
-        <lion-textarea rows="1" max-rows="3"></lion-textarea>
-      `,
-    );
-
+    const el = await fixture(html`
+      <lion-textarea rows="1" max-rows="3"></lion-textarea>
+    `);
     expect(el.scrollHeight).to.be.equal(el.clientHeight);
     const oneRowHeight = el.clientHeight;
 

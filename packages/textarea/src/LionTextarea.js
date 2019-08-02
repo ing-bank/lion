@@ -1,7 +1,6 @@
 import autosize from 'autosize/src/autosize.js';
 import { LionInput } from '@lion/input';
 import { css } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 
 /**
  * LionTextarea: extension of lion-field with native input element in place and user friendly API
@@ -9,30 +8,17 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
  * @customElement
  * @extends LionInput
  */
-export class LionTextarea extends ObserverMixin(LionInput) {
+export class LionTextarea extends LionInput {
   static get properties() {
     return {
       maxRows: {
         type: Number,
         attribute: 'max-rows',
       },
-    };
-  }
-
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.inputElement,
-      properties: [...super.delegations.properties, 'rows'],
-      attributes: [...super.delegations.attributes, 'rows'],
-    };
-  }
-
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      resizeTextarea: ['maxRows', 'modelValue'],
-      setTextareaMaxHeight: ['maxRows', 'rows'],
+      rows: {
+        type: Number,
+        reflect: true,
+      },
     };
   }
 
@@ -66,6 +52,24 @@ export class LionTextarea extends ObserverMixin(LionInput) {
 
   disconnectedCallback() {
     autosize.destroy(this.inputElement);
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('rows')) {
+      const native = this.inputElement;
+      if (native) {
+        native.rows = this.rows;
+      }
+    }
+
+    if (changedProperties.has('modelValue')) {
+      this.resizeTextarea();
+    }
+
+    if (changedProperties.has('maxRows') || changedProperties.has('rows')) {
+      this.setTextareaMaxHeight();
+    }
   }
 
   /**
