@@ -1,6 +1,6 @@
 import { DelegateMixin, SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
+import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
@@ -37,7 +37,7 @@ export class LionField extends FormControlMixin(
     FocusMixin(
       FormatMixin(
         ValidateMixin(
-          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LitElement))))),
+          DisabledMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LitElement))))),
         ),
       ),
     ),
@@ -51,17 +51,15 @@ export class LionField extends FormControlMixin(
         ...super.delegations.properties,
         'name',
         'type',
-        'disabled',
         'selectionStart',
         'selectionEnd',
       ],
-      attributes: [...super.delegations.attributes, 'name', 'type', 'disabled'],
+      attributes: [...super.delegations.attributes, 'name', 'type'],
     };
   }
 
   static get properties() {
     return {
-      ...super.properties,
       submitted: {
         // make sure validation can be triggered based on observer
         type: Boolean,
@@ -82,20 +80,12 @@ export class LionField extends FormControlMixin(
     return (this.inputElement && this.inputElement.value) || '';
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _setDisabledClass: ['disabled'],
-    };
-  }
-
   connectedCallback() {
     super.connectedCallback();
 
     this._onChange = this._onChange.bind(this);
     this.inputElement.addEventListener('change', this._onChange);
     this._delegateInitialValueAttr();
-    this._setDisabledClass();
     this.classList.add('form-field'); // eslint-disable-line
   }
 
@@ -112,8 +102,18 @@ export class LionField extends FormControlMixin(
     this.inputElement.removeEventListener('change', this._onChange);
   }
 
-  _setDisabledClass() {
-    this.classList[this.disabled ? 'add' : 'remove']('state-disabled');
+  updated(changedProps) {
+    super.updated(changedProps);
+
+    if (changedProps.has('disabled')) {
+      if (this.disabled) {
+        this.inputElement.disabled = true;
+        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
+      } else {
+        this.inputElement.disabled = false;
+        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
+      }
+    }
   }
 
   /**
