@@ -12,12 +12,12 @@ module.exports = config => {
         project: 'lion',
       },
       browsers: [
-        'bs_win10_chrome_latest',
+        // 'bs_win10_chrome_latest',
         // Only chrome for now
         // 'bs_win10_firefox_latest',
         // 'bs_win10_edge_latest',
         // 'bs_osxmojave_safari_latest',
-        // 'bs_win10_ie_11',
+        'bs_win10_ie_11',
       ],
     }),
   );
