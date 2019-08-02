@@ -17,7 +17,7 @@ class FormRegistrarManager {
   }
 
   remove(registrar) {
-    this.__elements.splice(this.__elements.indexOf(registrar));
+    this.__elements.splice(this.__elements.indexOf(registrar), 1);
   }
 
   becomesReady() {
