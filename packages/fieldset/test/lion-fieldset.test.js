@@ -223,17 +223,26 @@ describe('<lion-fieldset>', () => {
     expect(el.formElements['hobbies[]'][1].disabled).to.equal(false);
   });
 
-  it('does not propagate/override inital disabled value on nested form elements', async () => {
+  it('does not propagate/override initial disabled value on nested form elements', async () => {
     const el = await fixture(
       `<${tagString}><${tagString} name="sub" disabled>${inputSlotString}</${tagString}></${tagString}>`,
     );
-    await nextFrame();
-
+    await el.updateComplete;
     expect(el.disabled).to.equal(false);
     expect(el.formElements.sub.disabled).to.equal(true);
     expect(el.formElements.sub.formElements.color.disabled).to.equal(true);
     expect(el.formElements.sub.formElements['hobbies[]'][0].disabled).to.equal(true);
     expect(el.formElements.sub.formElements['hobbies[]'][1].disabled).to.equal(true);
+  });
+
+  // classes are added only for backward compatibility - they are deprecated
+  it('sets a state-disabled class when disabled', async () => {
+    const el = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
+    await nextFrame();
+    expect(el.classList.contains('state-disabled')).to.equal(true);
+    el.disabled = false;
+    await nextFrame();
+    expect(el.classList.contains('state-disabled')).to.equal(false);
   });
 
   describe('validation', () => {
