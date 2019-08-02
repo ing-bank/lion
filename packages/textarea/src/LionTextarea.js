@@ -12,7 +12,6 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 export class LionTextarea extends ObserverMixin(LionInput) {
   static get properties() {
     return {
-      ...super.properties,
       maxRows: {
         type: Number,
         attribute: 'max-rows',

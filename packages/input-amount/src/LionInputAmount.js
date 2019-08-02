@@ -16,7 +16,6 @@ import { formatAmount } from './formatters.js';
 export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixin(LionInput))) {
   static get properties() {
     return {
-      ...super.properties,
       currency: {
         type: String,
       },

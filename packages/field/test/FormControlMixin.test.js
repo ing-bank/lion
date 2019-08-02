@@ -13,7 +13,6 @@ describe('FormControlMixin', () => {
     const FormControlMixinClass = class extends FormControlMixin(SlotMixin(LionLitElement)) {
       static get properties() {
         return {
-          ...super.properties,
           modelValue: {
             type: String,
           },
