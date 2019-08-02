@@ -49,7 +49,9 @@ export function parseDate(date) {
       parsedString = '0000/00/00';
   }
   const parsedDate = new Date(parsedString);
-  // Check if parsedDate is not `Invalid Date`
+  // Check if parsedDate is not `Invalid Date`.
+  // `Invalid Date` is actually a Date object, so use isNaN to distinguish between invalid/valid.
+  // Number.isNaN not available on IE11.
   // eslint-disable-next-line no-restricted-globals
   if (!isNaN(parsedDate)) {
     return parsedDate;

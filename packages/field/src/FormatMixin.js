@@ -2,7 +2,7 @@
 
 import { dedupeMixin } from '@lion/core';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { Unparseable } from '@lion/validate';
+import { calculateValues } from './calculateValues.js';
 
 // For a future breaking release:
 // - do not allow the private `.formattedValue` as property that can be set to
@@ -53,6 +53,10 @@ export const FormatMixin = dedupeMixin(
     class FormatMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
+          value: {
+            type: String,
+          },
+
           /**
            * The model value is the result of the parser function(when available).
            * It should be considered as the internal value used for validation and reasoning/logic.
@@ -118,6 +122,22 @@ export const FormatMixin = dedupeMixin(
           formatOptions: {
             type: Object,
           },
+
+          formatter: {
+            type: Function,
+          },
+
+          parser: {
+            type: Function,
+          },
+
+          serializer: {
+            type: Function,
+          },
+
+          deserializer: {
+            type: Function,
+          },
         };
       }
 
@@ -130,145 +150,128 @@ export const FormatMixin = dedupeMixin(
         };
       }
 
-      /**
-       * Converts formattedValue to modelValue
-       * For instance, a localized date to a Date Object
-       * @param {String} value - formattedValue: the formatted value inside <input>
-       * @returns {Object} modelValue
-       */
-      parser(v) {
-        return v;
-      }
-
-      /**
-       * Converts modelValue to formattedValue (formattedValue will be synced with
-       * `.inputElement.value`)
-       * For instance, a Date object to a localized date.
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
-       * input type(date, number, email etc)
-       * @returns {String} formattedValue
-       */
-      formatter(v) {
-        return v;
-      }
-
-      /**
-       * Converts `.modelValue` to `.serializedValue`
-       * For instance, a Date object to an iso formatted date string
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
-       * input type(date, number, email etc)
-       * @returns {String} serializedValue
-       */
-      serializer(v) {
-        return v;
-      }
-
-      /**
-       * Converts `LionField.value` to `.modelValue`
-       * For instance, an iso formatted date string to a Date object
-       * @param {Object} value - modelValue: can be an Object, Number, String depending on the
-       * input type(date, number, email etc)
-       * @returns {Object} modelValue
-       */
-      deserializer(v) {
-        return v;
-      }
-
-      /**
-       * Responsible for storing all representations(modelValue, serializedValue, formattedValue
-       * and value) of the input value. Prevents infinite loops, so all value observers can be
-       * treated like they will only be called once, without indirectly calling other observers.
-       * (in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
-       * second call from having effect).
-       *
-       * @param {string} source - the type of value that triggered this method. It should not be
-       * set again, so that its observer won't be triggered. Can be:
-       * 'model'|'formatted'|'serialized'.
-       */
-      _calculateValues({ source } = {}) {
-        if (this.__preventRecursiveTrigger) return; // prevent infinite loops
+      constructor() {
+        super();
+        this.formatOn = 'blur';
+        this.formatOptions = {};
 
         this.__preventRecursiveTrigger = true;
-        if (source !== 'model') {
-          if (source === 'serialized') {
-            this.modelValue = this.deserializer(this.serializedValue);
-          } else if (source === 'formatted') {
-            this.modelValue = this.__callParser();
-          }
-        }
-        if (source !== 'formatted') {
-          this.formattedValue = this.__callFormatter();
-        }
-        if (source !== 'serialized') {
-          this.serializedValue = this.serializer(this.modelValue);
-        }
-        this._reflectBackFormattedValueToUser();
+        /**
+         * Converts formattedValue to modelValue
+         * For instance, a localized date to a Date Object
+         * @param {String} value - formattedValue: the formatted value inside <input>
+         * @returns {Object} modelValue
+         */
+        this.parser = value => value;
+
+        /**
+         * Converts modelValue to formattedValue (formattedValue will be synced with
+         * `.inputElement.value`)
+         * For instance, a Date object to a localized date.
+         * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+         * input type(date, number, email etc)
+         * @returns {String} formattedValue
+         */
+        this.formatter = value => value;
+
+        /**
+         * Converts `.modelValue` to `.serializedValue`
+         * For instance, a Date object to an iso formatted date string
+         * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+         * input type(date, number, email etc)
+         * @returns {String} serializedValue
+         */
+        this.serializer = value => value;
+
+        /**
+         * Converts `LionField.value` to `.modelValue`
+         * For instance, an iso formatted date string to a Date object
+         * @param {Object} value - modelValue: can be an Object, Number, String depending on the
+         * input type(date, number, email etc)
+         * @returns {Object} modelValue
+         */
+        this.deserializer = value => value;
+
+        /**
+         * @type {string}
+         */
+        this.value = '';
+        /**
+         * @type {string|number|object}
+         */
+        this.modelValue = '';
+        /**
+         * @type {string}
+         */
+        this.formattedValue = '';
+        /**
+         * @type {string}
+         */
+        this.serializedValue = '';
+
         this.__preventRecursiveTrigger = false;
       }
 
-      __callParser(value = this.formattedValue) {
-        // A) check if we need to parse at all
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
 
-        // A.1) The end user had no intention to parse
-        if (value === '') {
-          // Ideally, modelValue should be undefined for empty strings.
-          // For backwards compatibility we return an empty string:
-          // - it triggers validation for required validators (see ValidateMixin.validate())
-          // - it can be expected by 3rd parties (for instance unit tests)
-          // TODO: In a breaking refactor of the Validation System, this behavior can be corrected.
-          return '';
+        const calculcateOn = [
+          'modelValue',
+          'serializedValue',
+          'formattedValue',
+          'value',
+          'formatter',
+          'parser',
+          'serializer',
+          'deserializer',
+        ];
+
+        if (calculcateOn.includes(name)) {
+          this._calculateValues(
+            {
+              modelValue: this.modelValue,
+              formattedValue: this.formattedValue,
+              serializedValue: this.serializedValue,
+            },
+            name,
+          );
         }
-
-        // A.2) Handle edge cases We might have no view value yet, for instance because
-        // inputElement.value was not available yet
-        if (typeof value !== 'string') {
-          // This means there is nothing to find inside the view that can be of
-          // interest to the Application Developer or needed to store for future
-          // form state retrieval.
-          return undefined;
-        }
-
-        // B) parse the view value
-
-        // - if result:
-        // return the successfully parsed viewValue
-        // - if no result:
-        // Apparently, the parser was not able to produce a satisfactory output for the desired
-        // modelValue type, based on the current viewValue. Unparseable allows to restore all
-        // states (for instance from a lost user session), since it saves the current viewValue.
-        const result = this.parser(value, this.formatOptions);
-        return result !== undefined ? result : new Unparseable(value);
       }
 
-      __callFormatter() {
-        // - Why check for this.errorState?
-        // We only want to format values that are considered valid. For best UX,
-        // we only 'reward' valid inputs.
-        // - Why check for __isHandlingUserInput?
-        // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
-        // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
-        // the value, no matter what.
-        // This means, whenever we are in errorState and modelValue is set
-        // imperatively, we DO want to format a value (it is the only way to get meaningful
-        // input into `.inputElement` with modelValue as input)
+      /**
+       * @param {Object} allValues - The value to updated
+       * @param {string} source - Who requested the update can be ['formattedValue', 'modelValue', 'serializedValue', 'value']
+       */
+      _calculateValues(allValues, source) {
+        if (this.__preventRecursiveTrigger) return; // prevent infinite loops
+        this.__preventRecursiveTrigger = true;
 
-        if (this.__isHandlingUserInput && this.errorState && this.inputElement) {
-          return this.inputElement ? this.value : undefined;
+        const newValues = calculateValues(allValues, source, {
+          formatter: {
+            exec: this.formatter,
+            options: this.formatOptions,
+            disabled: this.errorState,
+          },
+          parser: { exec: this.parser, options: this.formatOptions },
+          deserializer: { exec: this.deserializer },
+          serializer: { exec: this.serializer },
+        });
+        Object.assign(this, newValues);
+
+        // imparatively setting a value will always be reflected to end user
+        if (
+          source === 'modelValue' ||
+          source === 'serializedValue' ||
+          source === 'formattedValue'
+        ) {
+          this.value = this.formattedValue !== undefined ? this.formattedValue : '';
         }
 
-        if (this.modelValue instanceof Unparseable) {
-          // When the modelValue currently is unparseable, we need to sync back the supplied
-          // viewValue. In flow [2], this should not be needed.
-          // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
-          return this.modelValue.viewValue;
-        }
-
-        return this.formatter(this.modelValue, this.formatOptions);
+        this.__preventRecursiveTrigger = false;
       }
 
       /** Observer Handlers */
       _onModelValueChanged(...args) {
-        this._calculateValues({ source: 'model' });
         this._dispatchModelValueChangedEvent(...args);
       }
 
@@ -291,7 +294,6 @@ export const FormatMixin = dedupeMixin(
             composed: true,
           }),
         );
-        this._calculateValues({ source: 'formatted' });
       }
 
       _onSerializedValueChanged() {
@@ -302,7 +304,6 @@ export const FormatMixin = dedupeMixin(
             composed: true,
           }),
         );
-        this._calculateValues({ source: 'serialized' });
       }
 
       /**
@@ -312,7 +313,10 @@ export const FormatMixin = dedupeMixin(
         // Downwards syncing should only happen for `LionField`.value changes from 'above'
         // This triggers _onModelValueChanged and connects user input to the
         // parsing/formatting/serializing loop
-        this.modelValue = this.__callParser(this.value);
+        if (this.inputElement) {
+          this.value = this.inputElement.value;
+          // this._calculateValues(this.inputElement.value, 'value');
+        }
       }
 
       /**
@@ -322,9 +326,10 @@ export const FormatMixin = dedupeMixin(
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
-        if (!this.__isHandlingUserInput) {
+        if (!this.__isHandlingUserInput && this.inputElement) {
           // Text 'undefined' should not end up in <input>
-          this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+          this.inputElement.value =
+            typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
         }
       }
 
@@ -349,38 +354,33 @@ export const FormatMixin = dedupeMixin(
         this.__isHandlingUserInput = false;
       }
 
-      constructor() {
-        super();
-        this.formatOn = 'change';
-        this.formatOptions = {};
-      }
-
       connectedCallback() {
         super.connectedCallback();
-        this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
 
-        this._reflectBackFormattedValueDebounced = () => {
-          // Make sure this is fired after the change event of inputElement, so that formattedValue
-          // is guaranteed to be calculated
-          setTimeout(this._reflectBackFormattedValueToUser);
-        };
         this.addEventListener('user-input-changed', this._onUserInputChanged);
         // Connect the value found in <input> to the formatting/parsing/serializing loop as a
         // fallback mechanism. Assume the user uses the value property of the
         // `LionField`(recommended api) as the api (this is a downwards sync).
         // However, when no value is specified on `LionField`, have support for sync of the real
         // input to the `LionField` (upwards sync).
-        if (typeof this.modelValue === 'undefined') {
-          this._syncValueUpwards();
-        }
-        this._reflectBackFormattedValueToUser();
+
+        // if (typeof this.value === 'undefined') {
+        //   this._syncValueUpwards();
+        // }
 
         if (this.inputElement) {
-          this.inputElement.addEventListener(
-            this.formatOn,
-            this._reflectBackFormattedValueDebounced,
-          );
+          this.inputElement.addEventListener(this.formatOn, () => {
+            // Text 'undefined' should not end up in <input>
+            this.value = this.formattedValue !== undefined ? this.formattedValue : '';
+          });
           this.inputElement.addEventListener('input', this._proxyInputEvent);
+        }
+      }
+
+      updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has('value')) {
+          this.inputElement.value = this.value;
         }
       }
 
