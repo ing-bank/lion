@@ -101,6 +101,16 @@ describe('<lion-field>', () => {
     expect(lionField.inputElement.disabled).to.equal(true);
   });
 
+  // classes are added only for backward compatibility - they are deprecated
+  it('sets a state-disabled class when disabled', async () => {
+    const el = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
+    await el.updateComplete;
+    expect(el.classList.contains('state-disabled')).to.equal(true);
+    el.disabled = false;
+    await el.updateComplete;
+    expect(el.classList.contains('state-disabled')).to.equal(false);
+  });
+
   it('can be cleared which erases value, validation and interaction states', async () => {
     const lionField = await fixture(
       `<${tagString} value="Some value from attribute">${inputSlotString}</${tagString}>`,
