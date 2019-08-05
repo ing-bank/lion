@@ -43,15 +43,19 @@ describe('FormRegistrationMixins', () => {
         <form-registrar>
           <form-registering></form-registering>
         </form-registrar>
-        <form-registrar id="remove">
-          <form-registering></form-registering>
-        </form-registrar>
       </form-registrar>
     `);
-    await el.registrationReady;
+
+    const secondRegistrar = await fixture(html`
+      <form-registrar>
+        <form-registering></form-registering>
+      </form-registrar>
+    `);
+
+    el.appendChild(secondRegistrar);
     expect(formRegistrarManager.__elements.length).to.equal(3);
 
-    el.querySelector('#remove').remove();
+    el.removeChild(secondRegistrar);
     expect(formRegistrarManager.__elements.length).to.equal(2);
   });
 
