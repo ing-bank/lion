@@ -14,7 +14,7 @@ import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
 export function runInteractionStateMixinSuite(customConfig) {
   const cfg = {
     tagString: null,
-    allowedModelValueTypes: [Array, Object, Number, Boolean, String],
+    allowedModelValueTypes: [Array, Object, Number, Boolean, String, Date],
     suffix: '',
     ...customConfig,
   };
@@ -153,6 +153,10 @@ export function runInteractionStateMixinSuite(customConfig) {
         expect(el.prefilled, 'booleans should be "prefilled"').to.be.true;
         changeModelValueAndLeave('');
         expect(el.prefilled, 'empty string should not be "prefilled"').to.be.false;
+      }
+      if (cfg.allowedModelValueTypes.includes(Date)) {
+        changeModelValueAndLeave(new Date());
+        expect(el.prefilled, 'Dates should be "prefilled"').to.be.true;
       }
 
       // Not prefilled
