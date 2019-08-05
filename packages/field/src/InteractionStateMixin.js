@@ -60,7 +60,7 @@ export const InteractionStateMixin = dedupeMixin(
           value = modelValue.viewValue;
         }
         // Checks for empty platform types: Objects, Arrays, Dates
-        if (typeof value === 'object' && value !== null) {
+        if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
           return !!Object.keys(value).length;
         }
         // eslint-disable-next-line no-mixed-operators
