@@ -1,4 +1,3 @@
-import { DelegateMixin } from '@lion/core';
 import { LionFieldset } from '@lion/fieldset';
 
 /**
@@ -8,36 +7,31 @@ import { LionFieldset } from '@lion/fieldset';
  * @extends LionFieldset
  */
 // eslint-disable-next-line no-unused-vars
-export class LionForm extends DelegateMixin(LionFieldset) {
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.formElement,
-      events: [...super.delegations.events, 'submit', 'reset'],
-      methods: [...super.delegations.methods, 'submit', 'reset'],
-    };
-  }
-
-  constructor() {
-    super();
-    this.__boundSubmit = this._submit.bind(this);
-    this.__boundReset = this._reset.bind(this);
-  }
-
+export class LionForm extends LionFieldset {
   connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener('submit', this.__boundSubmit);
-    this.addEventListener('reset', this.__boundReset);
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
+    this.__registerEventsForLionForm();
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener('submit', this.__boundSubmit);
-    this.removeEventListener('reset', this.__boundReset);
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
+    this.__teardownEventsForLionForm();
   }
 
   get formElement() {
     return this.querySelector('form');
+  }
+
+  submit() {
+    this.formElement.submit();
+  }
+
+  reset() {
+    this.formElement.reset();
   }
 
   /**
@@ -45,13 +39,26 @@ export class LionForm extends DelegateMixin(LionFieldset) {
    */
   _setRole() {} // eslint-disable-line class-methods-use-this
 
-  _submit(ev) {
-    ev.preventDefault();
-    this.submitGroup();
+  __registerEventsForLionForm() {
+    this._submit = ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.dispatchEvent(new Event('submit', { bubbles: true }));
+      this.submitGroup();
+    };
+    this.formElement.addEventListener('submit', this._submit);
+
+    this._reset = ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.dispatchEvent(new Event('reset', { bubbles: true }));
+      this.resetGroup();
+    };
+    this.formElement.addEventListener('reset', this._reset);
   }
 
-  _reset(ev) {
-    ev.preventDefault();
-    this.resetGroup();
+  __teardownEventsForLionForm() {
+    this.formElement.removeEventListener('submit', this._submit);
+    this.formElement.removeEventListener('rest', this._reset);
   }
 }
