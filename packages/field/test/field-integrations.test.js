@@ -1,0 +1,22 @@
+import { defineCE } from '@open-wc/testing';
+import { runInteractionStateMixinSuite } from '../test-suites/InteractionStateMixin.suite.js';
+import '../lion-field.js';
+
+const fieldTagString = defineCE(
+  class extends customElements.get('lion-field') {
+    get slots() {
+      return {
+        ...super.slots,
+        // LionField needs to have an inputElement defined in order to work...
+        input: () => document.createElement('input'),
+      };
+    }
+  },
+);
+
+describe('<lion-field> integrations', () => {
+  runInteractionStateMixinSuite({
+    tagString: fieldTagString,
+    suffix: 'lion-field',
+  });
+});
