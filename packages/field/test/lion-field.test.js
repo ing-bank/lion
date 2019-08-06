@@ -128,6 +128,18 @@ describe('<lion-field>', () => {
     expect(el.inputElement.getAttribute('name')).to.equal('foo');
   });
 
+  it('has a type which is reflected to an attribute and is synced down to the native input', async () => {
+    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    expect(el.type).to.equal('text');
+    expect(el.getAttribute('type')).to.equal('text');
+    expect(el.inputElement.getAttribute('type')).to.equal('text');
+
+    el.type = 'foo';
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('foo');
+    expect(el.inputElement.getAttribute('type')).to.equal('foo');
+  });
+
   // TODO: find out if we could put all listeners on this.value (instead of this.inputElement.value)
   // and make it act on this.value again
   it('has a class "state-filled" if this.value is filled', async () => {
@@ -395,23 +407,6 @@ describe('<lion-field>', () => {
       el.value = 'one';
       expect(el.value).to.equal('one');
       expect(el.inputElement.value).to.equal('one');
-    });
-
-    it('delegates property type', async () => {
-      const el = await fixture(`<${tagString} type="text">${inputSlotString}</${tagString}>`);
-      const inputElemTag = el.inputElement.tagName.toLowerCase();
-      if (inputElemTag === 'select') {
-        // TODO: later on we might want to support multi select ?
-        expect(el.inputElement.type).to.contain('select-one');
-      } else if (inputElemTag === 'textarea') {
-        expect(el.inputElement.type).to.contain('textarea');
-      } else {
-        // input or custom inputElement
-        expect(el.inputElement.type).to.contain('text');
-        el.type = 'password';
-        expect(el.type).to.equal('password');
-        expect(el.inputElement.type).to.equal('password');
-      }
     });
 
     it('delegates property selectionStart and selectionEnd', async () => {

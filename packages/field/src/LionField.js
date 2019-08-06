@@ -1,4 +1,4 @@
-import { DelegateMixin, SlotMixin, LitElement } from '@lion/core';
+import { SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
@@ -35,23 +35,10 @@ import { FocusMixin } from './FocusMixin.js';
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
     FocusMixin(
-      FormatMixin(
-        ValidateMixin(
-          DisabledMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LitElement))))),
-        ),
-      ),
+      FormatMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement)))))),
     ),
   ),
 ) {
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.inputElement,
-      properties: [...super.delegations.properties, 'type'],
-      attributes: [...super.delegations.attributes, 'type'],
-    };
-  }
-
   static get properties() {
     return {
       submitted: {
@@ -59,6 +46,10 @@ export class LionField extends FormControlMixin(
         type: Boolean,
       },
       name: {
+        type: String,
+        reflect: true,
+      },
+      type: {
         type: String,
         reflect: true,
       },
@@ -112,6 +103,7 @@ export class LionField extends FormControlMixin(
     super();
     this.name = '';
     this.submitted = false;
+    this.type = 'text';
   }
 
   connectedCallback() {
@@ -151,6 +143,9 @@ export class LionField extends FormControlMixin(
 
     if (changedProps.has('name')) {
       this.inputElement.name = this.name;
+    }
+    if (changedProps.has('type')) {
+      this.inputElement.type = this.type;
     }
   }
 
