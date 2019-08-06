@@ -47,8 +47,8 @@ export class LionField extends FormControlMixin(
     return {
       ...super.delegations,
       target: () => this.inputElement,
-      properties: [...super.delegations.properties, 'name', 'type'],
-      attributes: [...super.delegations.attributes, 'name', 'type'],
+      properties: [...super.delegations.properties, 'type'],
+      attributes: [...super.delegations.attributes, 'type'],
     };
   }
 
@@ -57,6 +57,10 @@ export class LionField extends FormControlMixin(
       submitted: {
         // make sure validation can be triggered based on observer
         type: Boolean,
+      },
+      name: {
+        type: String,
+        reflect: true,
       },
     };
   }
@@ -104,6 +108,12 @@ export class LionField extends FormControlMixin(
     return (this.inputElement && this.inputElement.value) || '';
   }
 
+  constructor() {
+    super();
+    this.name = '';
+    this.submitted = false;
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -137,6 +147,10 @@ export class LionField extends FormControlMixin(
         this.inputElement.disabled = false;
         this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
       }
+    }
+
+    if (changedProps.has('name')) {
+      this.inputElement.name = this.name;
     }
   }
 

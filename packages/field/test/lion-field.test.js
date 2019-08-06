@@ -116,6 +116,18 @@ describe('<lion-field>', () => {
     expect(el.$$slot('input').value).to.equal('one');
   });
 
+  it('has a name which is reflected to an attribute and is synced down to the native input', async () => {
+    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    expect(el.name).to.equal('');
+    expect(el.getAttribute('name')).to.equal('');
+    expect(el.inputElement.getAttribute('name')).to.equal('');
+
+    el.name = 'foo';
+    await el.updateComplete;
+    expect(el.getAttribute('name')).to.equal('foo');
+    expect(el.inputElement.getAttribute('name')).to.equal('foo');
+  });
+
   // TODO: find out if we could put all listeners on this.value (instead of this.inputElement.value)
   // and make it act on this.value again
   it('has a class "state-filled" if this.value is filled', async () => {
