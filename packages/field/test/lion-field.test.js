@@ -68,24 +68,6 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(2);
   });
 
-  it('has class "state-focused" if focused', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-    expect(el.classList.contains('state-focused')).to.equal(false, 'no state-focused initially');
-    await triggerFocusFor(el.inputElement);
-    expect(el.classList.contains('state-focused')).to.equal(true, 'state-focused after focus()');
-    await triggerBlurFor(el.inputElement);
-    expect(el.classList.contains('state-focused')).to.equal(false, 'no state-focused after blur()');
-  });
-
-  it('offers simple getter "this.focused" returning true/false for the current focus state', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-    expect(el.focused).to.equal(false);
-    await triggerFocusFor(el);
-    expect(el.focused).to.equal(true);
-    await triggerBlurFor(el);
-    expect(el.focused).to.equal(false);
-  });
-
   it('can be disabled via attribute', async () => {
     const elDisabled = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
     expect(elDisabled.disabled).to.equal(true);
@@ -395,12 +377,6 @@ describe('<lion-field>', () => {
   });
 
   describe(`Delegation${nameSuffix}`, () => {
-    it('delegates attribute autofocus', async () => {
-      const el = await fixture(`<${tagString} autofocus>${inputSlotString}</${tagString}>`);
-      expect(el.hasAttribute('autofocus')).to.be.false;
-      expect(el.inputElement.hasAttribute('autofocus')).to.be.true;
-    });
-
     it('delegates property value', async () => {
       const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
       expect(el.inputElement.value).to.equal('');
@@ -424,23 +400,6 @@ describe('<lion-field>', () => {
         expect(el.type).to.equal('password');
         expect(el.inputElement.type).to.equal('password');
       }
-    });
-
-    it('delegates property onfocus', async () => {
-      const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-      const cbFocusHost = sinon.spy();
-      el.onfocus = cbFocusHost;
-      await triggerFocusFor(el.inputElement);
-      expect(cbFocusHost.callCount).to.equal(1);
-    });
-
-    it('delegates property onblur', async () => {
-      const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-      const cbBlurHost = sinon.spy();
-      el.onblur = cbBlurHost;
-      await triggerFocusFor(el.inputElement);
-      await triggerBlurFor(el.inputElement);
-      expect(cbBlurHost.callCount).to.equal(1);
     });
 
     it('delegates property selectionStart and selectionEnd', async () => {
