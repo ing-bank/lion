@@ -47,13 +47,7 @@ export class LionField extends FormControlMixin(
     return {
       ...super.delegations,
       target: () => this.inputElement,
-      properties: [
-        ...super.delegations.properties,
-        'name',
-        'type',
-        'selectionStart',
-        'selectionEnd',
-      ],
+      properties: [...super.delegations.properties, 'name', 'type'],
       attributes: [...super.delegations.attributes, 'name', 'type'],
     };
   }
@@ -65,6 +59,36 @@ export class LionField extends FormControlMixin(
         type: Boolean,
       },
     };
+  }
+
+  get selectionStart() {
+    const native = this.inputElement;
+    if (native && native.selectionStart) {
+      return native.selectionStart;
+    }
+    return 0;
+  }
+
+  set selectionStart(value) {
+    const native = this.inputElement;
+    if (native && native.selectionStart) {
+      native.selectionStart = value;
+    }
+  }
+
+  get selectionEnd() {
+    const native = this.inputElement;
+    if (native && native.selectionEnd) {
+      return native.selectionEnd;
+    }
+    return 0;
+  }
+
+  set selectionEnd(value) {
+    const native = this.inputElement;
+    if (native && native.selectionEnd) {
+      native.selectionEnd = value;
+    }
   }
 
   // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
