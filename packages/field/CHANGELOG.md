@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.42](https://github.com/ing-bank/lion/compare/@lion/field@0.1.41...@lion/field@0.1.42) (2019-08-07)
+
+
+### Bug Fixes
+
+* **field:** added Date support to InteractionStateMixin ([cfd78bd](https://github.com/ing-bank/lion/commit/cfd78bd))
+
+
+
+
+
 ## [0.1.41](https://github.com/ing-bank/lion/compare/@lion/field@0.1.40...@lion/field@0.1.41) (2019-08-07)
 
 
