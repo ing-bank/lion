@@ -110,6 +110,10 @@ function parseHeuristic(value) {
  * @param {object} options Locale Options
  */
 export function parseAmount(value, options) {
+  const containsNumbers = value.match(/\d/g);
+  if (!containsNumbers) {
+    return undefined;
+  }
   const matchedInput = value.match(/[0-9,.\- ]/g);
   if (!matchedInput) {
     return undefined;

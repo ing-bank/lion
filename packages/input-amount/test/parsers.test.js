@@ -139,6 +139,7 @@ describe('parseAmount()', () => {
   it('ignores non-number characters and returns undefined', () => {
     expect(parseAmount('A')).to.equal(undefined);
     expect(parseAmount('EUR')).to.equal(undefined);
+    expect(parseAmount('EU R')).to.equal(undefined);
   });
 
   it('returns undefined when value is empty string', () => {
