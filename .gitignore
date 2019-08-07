@@ -25,3 +25,6 @@ yarn-error.log
 
 ## temp files
 local.log
+
+## browserstack
+browserstack.err
