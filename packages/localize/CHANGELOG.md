@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.12](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.11...@lion/localize@0.4.12) (2019-08-07)
+
+
+### Bug Fixes
+
+* **localize:** for bg-BG locale, correct Intl output for group separator ([c151f01](https://github.com/ing-bank/lion/commit/c151f01))
+
+
+
+
+
 ## [0.4.11](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.10...@lion/localize@0.4.11) (2019-07-30)
 
 

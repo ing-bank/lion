@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.41](https://github.com/ing-bank/lion/compare/@lion/field@0.1.40...@lion/field@0.1.41) (2019-08-07)
+
+
+### Bug Fixes
+
+* **form:** add elements to Form Registrar Manager when connected ([3d16dc7](https://github.com/ing-bank/lion/commit/3d16dc7))
+* **form:** only splice 1 element ([87bdc9a](https://github.com/ing-bank/lion/commit/87bdc9a))
+* **form:** remove disconnected elements from Form Registrar Manager ([a4f9465](https://github.com/ing-bank/lion/commit/a4f9465))
+* **form:** update test to be compatible with IE11 ([92a548f](https://github.com/ing-bank/lion/commit/92a548f))
+
+
+
+
+
 ## [0.1.40](https://github.com/ing-bank/lion/compare/@lion/field@0.1.39...@lion/field@0.1.40) (2019-07-30)
 
 **Note:** Version bump only for package @lion/field
