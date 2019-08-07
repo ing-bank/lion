@@ -41,7 +41,8 @@
     "@lion/input-date": "^0.1.43",
     "@lion/localize": "^0.4.12",
     "@lion/overlays": "^0.3.12",
-    "@lion/validate": "^0.2.25"
+    "@lion/validate": "^0.2.25",
+    "@lion/field": "^0.1.41"
   },
   "devDependencies": {
     "@lion/button": "^0.3.4",

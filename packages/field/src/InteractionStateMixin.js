@@ -3,13 +3,14 @@ import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
 /**
- * `InteractionStateMixin` adds meta information about touched and dirty states, that can
+ * @desc `InteractionStateMixin` adds meta information about touched and dirty states, that can
  * be read by other form components (ing-uic-input-error for instance, uses the touched state
  * to determine whether an error message needs to be shown).
  * Interaction states will be set when a user:
  * - leaves a form field(blur) -> 'touched' will be set to true. 'prefilled' when a
  *   field is left non-empty
  * - on keyup (actually, on the model-value-changed event) -> 'dirty' will be set to true
+ * @param {HTMLElement} superclass
  */
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
@@ -58,13 +59,15 @@ export const InteractionStateMixin = dedupeMixin(
         if (modelValue instanceof Unparseable) {
           value = modelValue.viewValue;
         }
-        // Checks for empty objects and arrays
-        if (typeof value === 'object' && value !== null) {
+        // Checks for empty platform types: Objects, Arrays, Dates
+        if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
           return !!Object.keys(value).length;
         }
         // eslint-disable-next-line no-mixed-operators
+        // Checks for empty platform types: Numbers, Booleans
         const isNumberValue = typeof value === 'number' && (value === 0 || Number.isNaN(value));
         const isBooleanValue = typeof value === 'boolean' && value === false;
+
         return !!value || isNumberValue || isBooleanValue;
       }
 
