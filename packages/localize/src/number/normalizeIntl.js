@@ -4,6 +4,7 @@ import { forceCurrencyToEnd } from './forceCurrencyToEnd.js';
 import { forceNormalSpaces } from './forceNormalSpaces.js';
 import { forceSpaceBetweenCurrencyCodeAndNumber } from './forceSpaceBetweenCurrencyCodeAndNumber.js';
 import { forceYenSymbol } from './forceYenSymbol.js';
+import { forceSpaceInsteadOfZeroForGroup } from './forceSpaceInsteadOfZeroForGroup.js';
 
 /**
  * Function with all fixes on localize
@@ -23,6 +24,7 @@ export function normalizeIntl(formattedParts, options, _locale) {
     // Add group separator for Bulgarian locale
     if (_locale === 'bg-BG') {
       normalize = forceAddGroupSeparators(normalize, getGroupSeparator());
+      normalize = forceSpaceInsteadOfZeroForGroup(normalize);
     }
     // Force space between currency code and number
     if (_locale === 'en-GB' || _locale === 'en-US' || _locale === 'en-AU') {
