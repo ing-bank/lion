@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.53](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.52...@lion/form-system@0.0.53) (2019-08-08)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
 ## [0.0.52](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.51...@lion/form-system@0.0.52) (2019-08-07)
 
 **Note:** Version bump only for package @lion/form-system

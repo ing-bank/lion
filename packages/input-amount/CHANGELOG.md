@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.46](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.45...@lion/input-amount@0.1.46) (2019-08-08)
+
+
+### Bug Fixes
+
+* **input-amount:** return undefined for non numbers with spaces ([18b714d](https://github.com/ing-bank/lion/commit/18b714d))
+
+
+
+
+
 ## [0.1.45](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.44...@lion/input-amount@0.1.45) (2019-08-07)
 
 **Note:** Version bump only for package @lion/input-amount
