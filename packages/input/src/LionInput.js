@@ -21,14 +21,14 @@ export class LionInput extends LionField {
         type: Boolean,
         attribute: 'readonly',
       },
-    };
-  }
-
-  get delegations() {
-    return {
-      ...super.delegations,
-      properties: [...super.delegations.properties, 'step'],
-      attributes: [...super.delegations.attributes, 'step'],
+      type: {
+        type: String,
+        reflect: true,
+      },
+      step: {
+        type: Number,
+        reflect: true,
+      },
     };
   }
 
@@ -47,6 +47,18 @@ export class LionInput extends LionField {
     };
   }
 
+  constructor() {
+    super();
+    this.readOnly = false;
+    this.type = 'text';
+    /**
+     * Only application to type="amount" & type="range"
+     *
+     * @deprecated
+     */
+    this.step = undefined;
+  }
+
   _requestUpdate(name, oldValue) {
     super._requestUpdate(name, oldValue);
     if (name === 'readOnly') {
@@ -57,6 +69,16 @@ export class LionInput extends LionField {
   firstUpdated(c) {
     super.firstUpdated(c);
     this.__delegateReadOnly();
+  }
+
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('type')) {
+      this.inputElement.type = this.type;
+    }
+    if (changedProps.has('step')) {
+      this.inputElement.step = this.step;
+    }
   }
 
   __delegateReadOnly() {

@@ -1,5 +1,5 @@
 import autosize from 'autosize/src/autosize.js';
-import { LionInput } from '@lion/input';
+import { LionField } from '@lion/field';
 import { css } from '@lion/core';
 
 /**
@@ -8,7 +8,7 @@ import { css } from '@lion/core';
  * @customElement
  * @extends LionInput
  */
-export class LionTextarea extends LionInput {
+export class LionTextarea extends LionField {
   static get properties() {
     return {
       maxRows: {
