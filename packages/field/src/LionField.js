@@ -49,10 +49,6 @@ export class LionField extends FormControlMixin(
         type: String,
         reflect: true,
       },
-      type: {
-        type: String,
-        reflect: true,
-      },
     };
   }
 
@@ -103,7 +99,6 @@ export class LionField extends FormControlMixin(
     super();
     this.name = '';
     this.submitted = false;
-    this.type = 'text';
   }
 
   connectedCallback() {
@@ -143,9 +138,6 @@ export class LionField extends FormControlMixin(
 
     if (changedProps.has('name')) {
       this.inputElement.name = this.name;
-    }
-    if (changedProps.has('type')) {
-      this.inputElement.type = this.type;
     }
   }
 
