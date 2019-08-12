@@ -9,6 +9,7 @@ import { isSameDate } from './utils/isSameDate.js';
 import { calendarStyle } from './calendarStyle.js';
 import './utils/differentKeyNamesShimIE.js';
 import { createDay } from './utils/createDay.js';
+import { normalizeDateTime } from './utils/normalizeDateTime.js';
 
 /**
  * @customElement
@@ -152,7 +153,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.disableDates = () => false;
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
-    this.__today = new Date();
+    this.__today = normalizeDateTime(new Date());
     this.centralDate = this.__today;
     this.__focusedDate = null;
     this.__connectedCallbackDone = false;
@@ -330,7 +331,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   __coreDayPreprocessor(_day, { currentMonth = false } = {}) {
     const day = createDay(new Date(_day.date), _day);
-    const today = new Date();
+    const today = normalizeDateTime(new Date());
     day.central = isSameDate(day.date, this.centralDate);
     day.previousMonth = currentMonth && day.date.getMonth() < currentMonth.getMonth();
     day.currentMonth = currentMonth && day.date.getMonth() === currentMonth.getMonth();
@@ -341,10 +342,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.future = day.date > today;
     day.disabled = this.disableDates(day.date);
 
-    if (this.minDate && day.date < this.minDate) {
+    if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;
     }
-    if (this.maxDate && day.date > this.maxDate) {
+
+    if (this.maxDate && normalizeDateTime(day.date) > normalizeDateTime(this.maxDate)) {
       day.disabled = true;
     }
 
