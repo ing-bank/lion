@@ -1,7 +1,6 @@
 import { html } from '@open-wc/testing';
-import { UpdatingElement, LitElement } from '@lion/core';
+import { UpdatingElement, LitElement, LitPatchShadyMixin } from '@lion/core';
 import { runRegistrationSuite } from './FormRegistrationMixins.suite.js';
-import { LitPatchShadyMixin } from '../src/registration/LitPatchShadyMixin.js';
 
 runRegistrationSuite({
   suffix: 'with HTMLElement',

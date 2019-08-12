@@ -1,13 +1,18 @@
-import { dedupeMixin } from '@lion/core';
+import { dedupeMixin, LitPatchShadyMixin } from '@lion/core';
 
 export const RegistrationChildMixin = dedupeMixin(superclass =>
   // eslint-disable-next-line no-shadow
-  class RegistrationChildMixin extends superclass {
+  class RegistrationChildMixin extends LitPatchShadyMixin(superclass) {
     connectedCallback() {
       if (super.connectedCallback) {
         super.connectedCallback();
       }
-      this.dispatchEvent(new CustomEvent('form-element-register', { bubbles: true, composed: true }));
+      this.dispatchEvent(
+        new CustomEvent('form-element-register', {
+          detail: { element: this },
+          bubbles: true,
+        }),
+      );
     }
 
     disconnectedCallback() {
@@ -15,7 +20,7 @@ export const RegistrationChildMixin = dedupeMixin(superclass =>
         super.disconnectedCallback();
       }
       if (this.__parentFormGroup) {
-        this.__parentFormGroup._unregisterChild(this);
+        this.__parentFormGroup.removeChild(this);
       }
     }
   }

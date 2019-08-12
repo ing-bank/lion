@@ -1,9 +1,8 @@
 import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
-import { LitElement } from '@lion/core';
+import { LitElement, LitPatchShadyMixin } from '@lion/core';
 
 import { RegistrationParentMixin } from '../src/registration/RegistrationParentMixin.js';
 import { RegistrationChildMixin } from '../src/registration/RegistrationChildMixin.js';
-import { LitPatchShadyMixin } from '../src/registration/LitPatchShadyMixin.js';
 
 function printSuffix(suffix) {
   return suffix ? ` (${suffix})` : '';
@@ -23,7 +22,7 @@ export const runRegistrationSuite = customConfig => {
   let parentTag;
   let childTag;
 
-  describe.only(`FormRegistrationMixins${printSuffix(cfg.suffix)}`, () => {
+  describe(`FormRegistrationMixins${printSuffix(cfg.suffix)}`, () => {
     before(async () => {
       if (!cfg.parentTagString) {
         cfg.parentTagString = defineCE(class extends cfg.parentMixin(cfg.baseElement) {});

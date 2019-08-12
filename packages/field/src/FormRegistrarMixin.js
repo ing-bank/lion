@@ -1,92 +1,94 @@
-import { dedupeMixin } from '@lion/core';
-import { formRegistrarManager } from './formRegistrarManager.js';
-import { FormRegisteringMixin } from './FormRegisteringMixin.js';
+export { RegistrationParentMixin as FormRegisteringMixin } from './registration/RegistrationParentMixin.js';
 
-/**
- * This allows an element to become the manager of a register
- */
-export const FormRegistrarMixin = dedupeMixin(
-  superclass =>
-    // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormRegistrarMixin extends FormRegisteringMixin(superclass) {
-      get formElements() {
-        return this.__formElements;
-      }
+// import { dedupeMixin } from '@lion/core';
+// import { formRegistrarManager } from './formRegistrarManager.js';
+// import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
-      set formElements(value) {
-        this.__formElements = value;
-      }
+// /**
+//  * This allows an element to become the manager of a register
+//  */
+// export const FormRegistrarMixin = dedupeMixin(
+//   superclass =>
+//     // eslint-disable-next-line no-shadow, no-unused-vars
+//     class FormRegistrarMixin extends FormRegisteringMixin(superclass) {
+//       get formElements() {
+//         return this.__formElements;
+//       }
 
-      get formElementsArray() {
-        return this.__formElements;
-      }
+//       set formElements(value) {
+//         this.__formElements = value;
+//       }
 
-      constructor() {
-        super();
-        this.formElements = [];
-        this.__readyForRegistration = false;
-        this.registrationReady = new Promise(resolve => {
-          this.__resolveRegistrationReady = resolve;
-        });
-        formRegistrarManager.add(this);
+//       get formElementsArray() {
+//         return this.__formElements;
+//       }
 
-        this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
-        this.addEventListener('form-element-register', this._onRequestToAddFormElement);
-      }
+//       constructor() {
+//         super();
+//         this.formElements = [];
+//         this.__readyForRegistration = false;
+//         this.registrationReady = new Promise(resolve => {
+//           this.__resolveRegistrationReady = resolve;
+//         });
+//         formRegistrarManager.add(this);
 
-      isRegisteredFormElement(el) {
-        return this.formElementsArray.some(exitingEl => exitingEl === el);
-      }
+//         this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
+//         this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+//       }
 
-      firstUpdated(changedProperties) {
-        super.firstUpdated(changedProperties);
-        this.__resolveRegistrationReady();
-        this.__readyForRegistration = true;
-        formRegistrarManager.becomesReady(this);
-      }
+//       isRegisteredFormElement(el) {
+//         return this.formElementsArray.some(exitingEl => exitingEl === el);
+//       }
 
-      addFormElement(child) {
-        // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
-        // eslint-disable-next-line no-param-reassign
-        child.__parentFormGroup = this;
+//       firstUpdated(changedProperties) {
+//         super.firstUpdated(changedProperties);
+//         this.__resolveRegistrationReady();
+//         this.__readyForRegistration = true;
+//         formRegistrarManager.becomesReady(this);
+//       }
 
-        this.formElements.push(child);
-      }
+//       addFormElement(child) {
+//         // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
+//         // eslint-disable-next-line no-param-reassign
+//         child.__parentFormGroup = this;
 
-      removeFormElement(child) {
-        const index = this.formElements.indexOf(child);
-        if (index > -1) {
-          this.formElements.splice(index, 1);
-        }
-      }
+//         this.formElements.push(child);
+//       }
 
-      _onRequestToAddFormElement(ev) {
-        const child = ev.detail.element;
-        if (child === this) {
-          // as we fire and listen - don't add ourselves
-          return;
-        }
-        if (this.isRegisteredFormElement(child)) {
-          // do not readd already existing elements
-          return;
-        }
-        ev.stopPropagation();
-        this.addFormElement(child);
-      }
+//       removeFormElement(child) {
+//         const index = this.formElements.indexOf(child);
+//         if (index > -1) {
+//           this.formElements.splice(index, 1);
+//         }
+//       }
 
-      _onRequestToRemoveFormElement(ev) {
-        const child = ev.detail.element;
-        if (child === this) {
-          // as we fire and listen - don't add ourselves
-          return;
-        }
-        if (!this.isRegisteredFormElement(child)) {
-          // do not readd already existing elements
-          return;
-        }
-        ev.stopPropagation();
+//       _onRequestToAddFormElement(ev) {
+//         const child = ev.detail.element;
+//         if (child === this) {
+//           // as we fire and listen - don't add ourselves
+//           return;
+//         }
+//         if (this.isRegisteredFormElement(child)) {
+//           // do not readd already existing elements
+//           return;
+//         }
+//         ev.stopPropagation();
+//         this.addFormElement(child);
+//       }
 
-        this.removeFormElement(child);
-      }
-    },
-);
+//       _onRequestToRemoveFormElement(ev) {
+//         const child = ev.detail.element;
+//         if (child === this) {
+//           // as we fire and listen - don't add ourselves
+//           return;
+//         }
+//         if (!this.isRegisteredFormElement(child)) {
+//           // do not readd already existing elements
+//           return;
+//         }
+//         ev.stopPropagation();
+
+//         this.removeFormElement(child);
+//       }
+//     },
+// );
