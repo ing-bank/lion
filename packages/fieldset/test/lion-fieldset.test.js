@@ -724,7 +724,7 @@ describe('<lion-fieldset>', () => {
         childAriaFixture = async (
           msgSlotType = 'feedback', // eslint-disable-line no-shadow
         ) => {
-          const dom = fixture(`
+          const dom = await fixture(`
             <lion-fieldset name="l1_g">
               <lion-input name="l1_fa">
                 <div slot="${msgSlotType}" id="msg_l1_fa"></div>
@@ -759,14 +759,12 @@ describe('<lion-fieldset>', () => {
               <!-- group referred by: #msg_l1_g (local) -->
             </lion-fieldset>
           `);
-          await nextFrame();
           return dom;
         };
 
         // eslint-disable-next-line no-shadow
         childAriaTest = childAriaFixture => {
           /* eslint-disable camelcase */
-
           // Message elements: all elements pointed at by inputs
           const msg_l1_g = childAriaFixture.querySelector('#msg_l1_g');
           const msg_l1_fa = childAriaFixture.querySelector('#msg_l1_fa');
@@ -776,10 +774,10 @@ describe('<lion-fieldset>', () => {
           const msg_l2_fb = childAriaFixture.querySelector('#msg_l2_fb');
 
           // Field elements: all inputs pointing to message elements
-          const input_l1_fa = childAriaFixture.querySelector('[name=l1_fa]');
-          const input_l1_fb = childAriaFixture.querySelector('[name=l1_fb]');
-          const input_l2_fa = childAriaFixture.querySelector('[name=l2_fa]');
-          const input_l2_fb = childAriaFixture.querySelector('[name=l2_fb]');
+          const input_l1_fa = childAriaFixture.querySelector('input[name=l1_fa]');
+          const input_l1_fb = childAriaFixture.querySelector('input[name=l1_fb]');
+          const input_l2_fa = childAriaFixture.querySelector('input[name=l2_fa]');
+          const input_l2_fb = childAriaFixture.querySelector('input[name=l2_fb]');
 
           /* eslint-enable camelcase */
 
