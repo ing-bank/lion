@@ -1,4 +1,4 @@
-import { UpdatingElement } from 'lit-html';
+import { UpdatingElement } from 'lit-element';
 import { dedupeMixin } from './dedupeMixin.js';
 
 /**
@@ -29,7 +29,7 @@ export const LitPatchShadyMixin = dedupeMixin(superclass =>
     /** @override */
     update(changedProperties) {
       // Right before LitElement calls render, create a shadow root
-      if(!this.__hasCreatedRenderRoot) {
+      if(!this.__hasCreatedRenderRoot && /* compatibility UpdatingElement */ this.createRenderRoot) {
         // Original logic from LitElement.prototype.initialize is placed here
         this.renderRoot = this.createRenderRoot();
         if (window.ShadowRoot && this.renderRoot instanceof window.ShadowRoot) {

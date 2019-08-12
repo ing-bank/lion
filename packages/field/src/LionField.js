@@ -66,6 +66,13 @@ export class LionField extends FormControlMixin(
         // make sure validation can be triggered based on observer
         type: Boolean,
       },
+      /**
+       * This is the modelValue that can be used to
+       * reset a form. It's read in the `firstUpdated` callback
+       */
+      _initialModelValue: {
+        type: Object,
+      },
     };
   }
 
@@ -87,6 +94,11 @@ export class LionField extends FormControlMixin(
       ...super.asyncObservers,
       _setDisabledClass: ['disabled'],
     };
+  }
+
+  firstUpdated(c) {
+    super.firstUpdated(c);
+    this._initialModelValue = this.modelValue;
   }
 
   connectedCallback() {
@@ -132,6 +144,11 @@ export class LionField extends FormControlMixin(
       super.resetInteractionState();
     }
     this.submitted = false;
+  }
+
+  reset() {
+    this.modelValue = this._initialModelValue;
+    this.resetInteractionState();
   }
 
   clear() {

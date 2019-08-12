@@ -102,8 +102,8 @@ export const FormControlMixin = dedupeMixin(
         this._ariaDescribedby = '';
       }
 
-      connectedCallback() {
-        super.connectedCallback();
+      firstUpdated(c) {
+        super.firstUpdated(c);
         this._enhanceLightDomClasses();
         this._enhanceLightDomA11y();
       }

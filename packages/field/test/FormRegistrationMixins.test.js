@@ -1,25 +1,33 @@
 import { html } from '@open-wc/testing';
-import { UpdatingElement, LitElement, LitPatchShadyMixin } from '@lion/core';
+import { UpdatingElement, LitElement } from '@lion/core';
 import { runRegistrationSuite } from './FormRegistrationMixins.suite.js';
 
-runRegistrationSuite({
-  suffix: 'with HTMLElement',
-  baseElement: HTMLElement ,
-});
+// runRegistrationSuite({
+//   suffix: 'with HTMLElement',
+//   baseElement: HTMLElement ,
+// });
+describe('Registration Mixins', () => {
+  runRegistrationSuite({
+    suffix: 'with HTMLElement',
+    baseElement: HTMLElement,
+  });
 
-runRegistrationSuite({
-  suffix: 'with UpdatingElement',
-  baseElement: UpdatingElement,
-});
+  runRegistrationSuite({
+    suffix: 'with UpdatingElement',
+    baseElement: UpdatingElement,
+  });
 
-runRegistrationSuite({
-  suffix: 'with shadow dom',
-  baseElement: class ShadowElement extends LitPatchShadyMixin(LitElement) {
-    render() {
-      return html`<slot></slot>`;
-    }
-  },
-});
+  runRegistrationSuite({
+    suffix: 'with shadow dom',
+    baseElement: class ShadowElement extends LitElement {
+      render() {
+        return html`<slot></slot>`;
+      }
+    },
+  });
+})
+
+
 
 // runRegistrationSuite({
 //   suffix: 'with Registrar and UpdatingElement',

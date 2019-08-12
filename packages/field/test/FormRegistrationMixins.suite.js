@@ -1,12 +1,8 @@
 import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
-import { LitElement, LitPatchShadyMixin } from '@lion/core';
+import { LitElement } from '@lion/core';
 
 import { RegistrationParentMixin } from '../src/registration/RegistrationParentMixin.js';
 import { RegistrationChildMixin } from '../src/registration/RegistrationChildMixin.js';
-
-function printSuffix(suffix) {
-  return suffix ? ` (${suffix})` : '';
-}
 
 export const runRegistrationSuite = customConfig => {
   const cfg = {
@@ -14,21 +10,19 @@ export const runRegistrationSuite = customConfig => {
     suffix: null,
     parentTagString: null,
     childTagString: null,
-    parentMixin: RegistrationParentMixin,
-    childMixin: RegistrationChildMixin,
     ...customConfig,
   };
 
-  let parentTag;
-  let childTag;
+  describe(`FormRegistrationMixins${cfg.suffix ? ` (${cfg.suffix})` : ''}`, () => {
+    let parentTag;
+    let childTag;
 
-  describe(`FormRegistrationMixins${printSuffix(cfg.suffix)}`, () => {
     before(async () => {
       if (!cfg.parentTagString) {
-        cfg.parentTagString = defineCE(class extends cfg.parentMixin(cfg.baseElement) {});
+        cfg.parentTagString = defineCE(class extends RegistrationParentMixin(cfg.baseElement) {});
       }
       if (!cfg.childTagString) {
-        cfg.childTagString = defineCE(class extends cfg.childMixin(cfg.baseElement) {});
+        cfg.childTagString = defineCE(class extends RegistrationChildMixin(cfg.baseElement) {});
       }
 
       parentTag = unsafeStatic(cfg.parentTagString);
@@ -45,7 +39,7 @@ export const runRegistrationSuite = customConfig => {
       expect(el.formElements.length).to.equal(1);
     });
 
-    it('supports nested registrar', async () => {
+    it('supports nested registration parents', async () => {
       const el = await fixture(html`
         <${parentTag}>
           <${parentTag}>
@@ -58,9 +52,9 @@ export const runRegistrationSuite = customConfig => {
       expect(el.querySelector(cfg.parentTagString).formElements.length).to.equal(1);
     });
 
-    it('works for component that have a delayed render', async () => {
+    it('works for components that have a delayed render', async () => {
       const tagWrapperString = defineCE(
-        class extends cfg.parentMixin(LitPatchShadyMixin(LitElement)) {
+        class extends RegistrationParentMixin(LitElement) {
           async performUpdate() {
             await new Promise(resolve => setTimeout(() => resolve(), 10));
             await super.performUpdate();
@@ -74,7 +68,6 @@ export const runRegistrationSuite = customConfig => {
         },
       );
       const tagWrapper = unsafeStatic(tagWrapperString);
-      // const registerSpy = sinon.spy();
       const el = await fixture(html`
         <${tagWrapper}>
           <${childTag}></${childTag}>
@@ -85,7 +78,7 @@ export const runRegistrationSuite = customConfig => {
     });
 
     // TODO: create registration hooks so this logic can be put along reset logic
-    it.skip('requests update of the resetModelValue function of its parent formGroup', async () => {
+    it('requests update of the resetModelValue function of its parent formGroup', async () => {
       const ParentFormGroupClass = class extends RegistrationParentMixin(LitElement) {
         _updateResetModelValue() {
           this.resetModelValue = 'foo';
@@ -98,12 +91,13 @@ export const runRegistrationSuite = customConfig => {
         }
       };
 
-      const parentClass = defineCE(ParentFormGroupClass);
-      const formGroup = unsafeStatic(parentClass);
-      const childClass = defineCE(ChildFormGroupClass);
-      const childFormGroup = unsafeStatic(childClass);
+      const formGroupTag = unsafeStatic(defineCE(ParentFormGroupClass));
+      const childFormGroupTag = unsafeStatic(defineCE(ChildFormGroupClass));
       const parentFormEl = await fixture(html`
-        <${formGroup}><${childFormGroup} id="child" name="child[]"></${childFormGroup}></${formGroup}>
+        <${formGroupTag}>
+          <${childFormGroupTag} id="child" name="child[]">
+          </${childFormGroupTag}>
+        </${formGroupTag}>
       `);
       expect(parentFormEl.resetModelValue).to.equal('foo');
     });
@@ -125,6 +119,34 @@ export const runRegistrationSuite = customConfig => {
 
       el.removeChild(newField);
       expect(el.formElements.length).to.equal(1);
+    });
+
+    describe('Unregister', () => {
+      it('requests update of the resetModelValue function of its parent formGroup on unregister', async () => {
+        const ParentFormGroupClass = class extends RegistrationParentMixin(LitElement) {
+          _updateResetModelValue() {
+            this.resetModelValue = this.formElements.length;
+          }
+        };
+        const ChildFormGroupClass = class extends RegistrationChildMixin(LitElement) {
+          constructor() {
+            super();
+            this.__parentFormGroup = this.parentNode;
+          }
+        };
+
+        const formGroupTag = unsafeStatic(defineCE(ParentFormGroupClass));
+        const childFormGroupTag = unsafeStatic(defineCE(ChildFormGroupClass));
+        const parentFormEl = await fixture(html`
+          <${formGroupTag}>
+            <${childFormGroupTag} name="child[]"></${childFormGroupTag}>
+            <${childFormGroupTag} name="child[]"></${childFormGroupTag}>
+          </${formGroupTag}>
+        `);
+        expect(parentFormEl.resetModelValue).to.equal(2);
+        parentFormEl.children[0].remove();
+        expect(parentFormEl.resetModelValue).to.equal(1);
+      });
     });
   });
 };

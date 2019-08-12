@@ -1,4 +1,4 @@
-export { RegistrationParentMixin as FormRegisteringMixin } from './registration/RegistrationParentMixin.js';
+export { RegistrationParentMixin as FormRegistrarMixin } from './registration/RegistrationParentMixin.js';
 
 // import { dedupeMixin } from '@lion/core';
 // import { formRegistrarManager } from './formRegistrarManager.js';

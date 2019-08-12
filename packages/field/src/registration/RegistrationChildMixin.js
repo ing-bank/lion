@@ -20,7 +20,7 @@ export const RegistrationChildMixin = dedupeMixin(superclass =>
         super.disconnectedCallback();
       }
       if (this.__parentFormGroup) {
-        this.__parentFormGroup.removeChild(this);
+        this.__parentFormGroup.removeFormElement(this);
       }
     }
   }

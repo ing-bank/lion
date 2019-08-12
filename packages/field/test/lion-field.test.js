@@ -227,7 +227,7 @@ describe('<lion-field>', () => {
     });
 
     // TODO: put this test on FormControlMixin test once there
-    it(`allows to add to aria description or label via addToAriaLabel() and
+    it.only(`allows to add to aria description or label via addToAriaLabel() and
       addToAriaDescription()`, async () => {
       const wrapper = await fixture(`
         <div id="wrapper">
@@ -242,32 +242,32 @@ describe('<lion-field>', () => {
       const el = wrapper.querySelector(`${tagString}`);
       // wait until the field element is done rendering
       await el.updateComplete;
+      await el.updateComplete;
 
       const { inputElement } = el;
-      const get = by => inputElement.getAttribute(`aria-${by}`);
 
       // 1. addToAriaLabel()
       // Check if the aria attr is filled initially
-      expect(get('labelledby')).to.contain(`label-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       el.addToAriaLabel('additionalLabel');
       // Now check if ids are added to the end (not overridden)
-      expect(get('labelledby')).to.contain(`label-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       // Should be placed in the end
       expect(
-        get('labelledby').indexOf(`label-${el._inputId}`) <
-          get('labelledby').indexOf('additionalLabel'),
+        inputElement.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
+        inputElement.getAttribute('aria-labelledby').indexOf('additionalLabel'),
       );
 
       // 2. addToAriaDescription()
       // Check if the aria attr is filled initially
-      expect(get('describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       el.addToAriaDescription('additionalDescription');
       // Now check if ids are added to the end (not overridden)
-      expect(get('describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       // Should be placed in the end
       expect(
-        get('describedby').indexOf(`feedback-${el._inputId}`) <
-          get('describedby').indexOf('additionalDescription'),
+        inputElement.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
+        inputElement.getAttribute('aria-describedby').indexOf('additionalDescription'),
       );
     });
   });

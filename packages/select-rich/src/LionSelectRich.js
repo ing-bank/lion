@@ -22,7 +22,7 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  *
- * @customElement
+ * @customElement lion-select-rich
  * @extends LionField
  */
 export class LionSelectRich extends FormRegistrarMixin(
@@ -90,9 +90,7 @@ export class LionSelectRich extends FormRegistrarMixin(
   get slots() {
     return {
       ...super.slots,
-      invoker: () => {
-        return document.createElement('lion-select-invoker');
-      },
+      invoker: () => document.createElement('lion-select-invoker'),
     };
   }
 
@@ -145,10 +143,8 @@ export class LionSelectRich extends FormRegistrarMixin(
     this.__setupEventListeners();
   }
 
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+  firstUpdated(c) {
+    super.firstUpdated(c);
 
     this.__setupOverlay();
     this.__setupInvokerNode();
