@@ -354,6 +354,31 @@ describe('<lion-calendar>', () => {
           // dates in the month view will be derived from.
           expect(isNormalizedDate(el.centralDate)).to.be.true;
         });
+
+        it('normalizes dates in date comparisons', async () => {
+          const selectedDate = new Date('2000-11-04T03:00:00');
+          // without normalization, selectedDate > maxDate would wrongfully be disabled
+          const maxDate = new Date('2000-11-29T02:00:00');
+          // without normalization, selectedDate < minDate would wrongfully be disabled
+          const minDate = new Date('2000-11-02T04:00:00');
+
+          const el = await fixture(
+            html`
+              <lion-calendar
+                .selectedDate="${selectedDate}"
+                .minDate="${minDate}"
+                .maxDate="${maxDate}"
+              ></lion-calendar>
+            `,
+          );
+          const elObj = new CalendarObject(el);
+
+          expect(elObj.getDayObj(29).isDisabled).to.equal(false);
+          expect(elObj.getDayObj(30).isDisabled).to.equal(true);
+
+          expect(elObj.getDayObj(2).isDisabled).to.equal(false);
+          expect(elObj.getDayObj(1).isDisabled).to.equal(true);
+        });
       });
     });
   });

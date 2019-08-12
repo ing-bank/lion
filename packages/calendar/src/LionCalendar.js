@@ -331,7 +331,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   __coreDayPreprocessor(_day, { currentMonth = false } = {}) {
     const day = createDay(new Date(_day.date), _day);
-    const today = new Date();
+    const today = normalizeDateTime(new Date());
     day.central = isSameDate(day.date, this.centralDate);
     day.previousMonth = currentMonth && day.date.getMonth() < currentMonth.getMonth();
     day.currentMonth = currentMonth && day.date.getMonth() === currentMonth.getMonth();
@@ -342,11 +342,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.future = day.date > today;
     day.disabled = this.disableDates(day.date);
 
-    if (this.minDate && day.date < this.minDate) {
+    if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;
     }
 
-    if (this.maxDate && day.date > this.maxDate) {
+    if (this.maxDate && normalizeDateTime(day.date) > normalizeDateTime(this.maxDate)) {
       day.disabled = true;
     }
 

@@ -1,4 +1,3 @@
-
 /**
  * @desc Makes suitable for date comparisons
  * @param {Date} d
