@@ -338,6 +338,23 @@ describe('<lion-calendar>', () => {
 
         clock.restore();
       });
+
+      describe('Normalization', () => {
+        it('normalizes all generated dates', async () => {
+          function isNormalizedDate(d) {
+            return d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0;
+          }
+
+          const el = await fixture(
+            html`
+              <lion-calendar></lion-calendar>
+            `,
+          );
+          // The central date will be today's date: it's the date all other
+          // dates in the month view will be derived from.
+          expect(isNormalizedDate(el.centralDate)).to.be.true;
+        });
+      });
     });
   });
 

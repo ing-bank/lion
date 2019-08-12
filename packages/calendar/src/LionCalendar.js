@@ -9,6 +9,7 @@ import { isSameDate } from './utils/isSameDate.js';
 import { calendarStyle } from './calendarStyle.js';
 import './utils/differentKeyNamesShimIE.js';
 import { createDay } from './utils/createDay.js';
+import { normalizeDateTime } from './utils/normalizeDateTime.js';
 
 /**
  * @customElement
@@ -152,7 +153,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.disableDates = () => false;
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
-    this.__today = new Date();
+    this.__today = normalizeDateTime(new Date());
     this.centralDate = this.__today;
     this.__focusedDate = null;
     this.__connectedCallbackDone = false;
@@ -344,6 +345,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (this.minDate && day.date < this.minDate) {
       day.disabled = true;
     }
+
     if (this.maxDate && day.date > this.maxDate) {
       day.disabled = true;
     }
