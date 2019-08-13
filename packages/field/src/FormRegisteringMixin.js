@@ -29,17 +29,12 @@ export const FormRegisteringMixin = dedupeMixin(
 
       __setupRegistrationHook() {
         if (formRegistrarManager.ready) {
-          this._registerFormElement();
+          this._dispatchRegistration();
         } else {
           formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
-            this._registerFormElement();
+            this._dispatchRegistration();
           });
         }
-      }
-
-      _registerFormElement() {
-        this._dispatchRegistration();
-        this._requestParentFormGroupUpdateOfResetModelValue();
       }
 
       _dispatchRegistration() {
@@ -54,17 +49,6 @@ export const FormRegisteringMixin = dedupeMixin(
       _unregisterFormElement() {
         if (this.__parentFormGroup) {
           this.__parentFormGroup.removeFormElement(this);
-        }
-      }
-
-      /**
-       * Makes sure our parentFormGroup has the most up to date resetModelValue
-       * FormGroups will call the same on their parentFormGroup so the full tree gets the correct
-       * values.
-       */
-      _requestParentFormGroupUpdateOfResetModelValue() {
-        if (this.__parentFormGroup && this.__parentFormGroup._updateResetModelValue) {
-          this.__parentFormGroup._updateResetModelValue();
         }
       }
     },
