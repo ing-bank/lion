@@ -117,33 +117,5 @@ export const runRegistrationSuite = customConfig => {
       el.removeChild(newField);
       expect(el.formElements.length).to.equal(1);
     });
-
-    describe('Unregister', () => {
-      it.skip('requests update of the resetModelValue function of its parent formGroup on unregister', async () => {
-        const ParentFormGroupClass = class extends FormRegistrarMixin(LitElement) {
-          _updateResetModelValue() {
-            this.resetModelValue = this.formElements.length;
-          }
-        };
-        const ChildFormGroupClass = class extends FormRegisteringMixin(LitElement) {
-          constructor() {
-            super();
-            this.__parentFormGroup = this.parentNode;
-          }
-        };
-
-        const formGroupTag = unsafeStatic(defineCE(ParentFormGroupClass));
-        const childFormGroupTag = unsafeStatic(defineCE(ChildFormGroupClass));
-        const parentFormEl = await fixture(html`
-          <${formGroupTag}>
-            <${childFormGroupTag} name="child[]"></${childFormGroupTag}>
-            <${childFormGroupTag} name="child[]"></${childFormGroupTag}>
-          </${formGroupTag}>
-        `);
-        expect(parentFormEl.resetModelValue.length).to.equal(2);
-        parentFormEl.removeChild(parentFormEl.children[0]);
-        expect(parentFormEl.resetModelValue.length).to.equal(1);
-      });
-    });
   });
 };

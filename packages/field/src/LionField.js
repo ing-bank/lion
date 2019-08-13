@@ -122,14 +122,6 @@ export class LionField extends FormControlMixin(
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    if (this.__parentFormGroup) {
-      const event = new CustomEvent('form-element-unregister', {
-        detail: { element: this },
-        bubbles: true,
-      });
-      this.__parentFormGroup.dispatchEvent(event);
-    }
     this.inputElement.removeEventListener('change', this._onChange);
   }
 
