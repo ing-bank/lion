@@ -31,12 +31,12 @@ beforeEach(() => {
 
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(el.$$slot('input').id).to.equal(el._inputId);
   });
 
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     const cbFocusHost = sinon.spy();
     el.addEventListener('focus', cbFocusHost);
     const cbFocusNativeInput = sinon.spy();
@@ -68,32 +68,31 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(2);
   });
 
+  it('offers simple getter "this.focused" returning true/false for the current focus state', async () => {
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
+    expect(el.focused).to.equal(false);
+    await triggerFocusFor(el);
+    expect(el.focused).to.equal(true);
+    await triggerBlurFor(el);
+    expect(el.focused).to.equal(false);
+  });
+
   it('can be disabled via attribute', async () => {
-    const elDisabled = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
+    const elDisabled = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
     expect(elDisabled.disabled).to.equal(true);
     expect(elDisabled.inputElement.disabled).to.equal(true);
   });
 
   it('can be disabled via property', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     el.disabled = true;
     await el.updateComplete;
     expect(el.inputElement.disabled).to.equal(true);
   });
 
-  // classes are added only for backward compatibility - they are deprecated
-  it('sets a state-disabled class when disabled', async () => {
-    const el = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
-    await el.updateComplete;
-    expect(el.classList.contains('state-disabled')).to.equal(true);
-    el.disabled = false;
-    await el.updateComplete;
-    expect(el.classList.contains('state-disabled')).to.equal(false);
-  });
-
   it('can be cleared which erases value, validation and interaction states', async () => {
     const el = await fixture(
-      `<${tagString} value="Some value from attribute">${inputSlotString}</${tagString}>`,
+      html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`,
     );
     el.clear();
     expect(el.value).to.equal('');
@@ -103,35 +102,34 @@ describe('<lion-field>', () => {
     expect(el.value).to.equal('');
   });
 
+  it('can be reset which restores original modelValue', async () => {
+    const el = await fixture(html`
+      <${tag} .modelValue="${'foo'}">
+        ${inputSlot}
+      </${tag}>`);
+    expect(el._initialModelValue).to.equal('foo');
+    el.modelValue = 'bar';
+    el.reset();
+    expect(el.modelValue).to.equal('foo');
+  });
+
   it('reads initial value from attribute value', async () => {
-    const el = await fixture(`<${tagString} value="one">${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag} value="one">${inputSlot}</${tag}>`);
     expect(el.$$slot('input').value).to.equal('one');
   });
 
   it('delegates value property', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(el.$$slot('input').value).to.equal('');
     el.value = 'one';
     expect(el.value).to.equal('one');
     expect(el.$$slot('input').value).to.equal('one');
   });
 
-  it('has a name which is reflected to an attribute and is synced down to the native input', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
-    expect(el.name).to.equal('');
-    expect(el.getAttribute('name')).to.equal('');
-    expect(el.inputElement.getAttribute('name')).to.equal('');
-
-    el.name = 'foo';
-    await el.updateComplete;
-    expect(el.getAttribute('name')).to.equal('foo');
-    expect(el.inputElement.getAttribute('name')).to.equal('foo');
-  });
-
   // TODO: find out if we could put all listeners on this.value (instead of this.inputElement.value)
   // and make it act on this.value again
   it('has a class "state-filled" if this.value is filled', async () => {
-    const el = await fixture(`<${tagString} value="filled">${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
     expect(el.classList.contains('state-filled')).to.equal(true);
     el.value = '';
     await el.updateComplete;
@@ -142,7 +140,7 @@ describe('<lion-field>', () => {
   });
 
   it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     await triggerFocusFor(el);
     await el.updateComplete;
     el.inputElement.value = 'hello world';
@@ -155,7 +153,7 @@ describe('<lion-field>', () => {
 
   // TODO: add pointerEvents test for disabled
   it('has a class "state-disabled"', async () => {
-    const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(el.classList.contains('state-disabled')).to.equal(false);
     expect(el.inputElement.hasAttribute('disabled')).to.equal(false);
 
@@ -166,7 +164,7 @@ describe('<lion-field>', () => {
     expect(el.classList.contains('state-disabled')).to.equal(true);
     expect(el.inputElement.hasAttribute('disabled')).to.equal(true);
 
-    const disabledel = await fixture(`<${tagString} disabled>${inputSlotString}</${tagString}>`);
+    const disabledel = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
     expect(disabledel.classList.contains('state-disabled')).to.equal(true);
     expect(disabledel.inputElement.hasAttribute('disabled')).to.equal(true);
   });
@@ -186,12 +184,12 @@ describe('<lion-field>', () => {
         <div   slot="feedback"   id="feedback-[id]">[feedback] </span>
       </lion-field>
       ~~~`, async () => {
-      const el = await fixture(`<${tagString}>
+      const el = await fixture(html`<${tag}>
             <label slot="label">My Name</label>
-            ${inputSlotString}
+            ${inputSlot}
             <span slot="help-text">Enter your Name</span>
             <span slot="feedback">No name entered</span>
-          </${tagString}>
+          </${tag}>
         `);
       const nativeInput = el.$$slot('input');
 
@@ -202,13 +200,13 @@ describe('<lion-field>', () => {
 
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
     (via attribute data-label) and in describedby (via attribute data-description)`, async () => {
-      const el = await fixture(`<${tagString}>
-            ${inputSlotString}
+      const el = await fixture(html`<${tag}>
+            ${inputSlot}
             <span slot="before" data-label>[before]</span>
             <span slot="after"  data-label>[after]</span>
             <span slot="prefix" data-description>[prefix]</span>
             <span slot="suffix" data-description>[suffix]</span>
-          </${tagString}>
+          </${tag}>
         `);
 
       const nativeInput = el.$$slot('input');
@@ -223,45 +221,45 @@ describe('<lion-field>', () => {
     // TODO: put this test on FormControlMixin test once there
     it(`allows to add to aria description or label via addToAriaLabel() and
       addToAriaDescription()`, async () => {
-      const wrapper = await fixture(`
+      const wrapper = await fixture(html`
         <div id="wrapper">
-          <${tagString}>
-            ${inputSlotString}
+          <${tag}>
+            ${inputSlot}
             <label slot="label">Added to label by default</label>
             <div slot="feedback">Added to description by default</div>
-          </${tagString}>
+          </${tag}>
           <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
           <div id="additionalDescription"> Same for this </div>
         </div>`);
-      const el = wrapper.querySelector(`${tagString}`);
+      const el = wrapper.querySelector(tagString);
       // wait until the field element is done rendering
+      await el.updateComplete;
       await el.updateComplete;
 
       const { inputElement } = el;
-      const get = by => inputElement.getAttribute(`aria-${by}`);
 
       // 1. addToAriaLabel()
       // Check if the aria attr is filled initially
-      expect(get('labelledby')).to.contain(`label-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       el.addToAriaLabel('additionalLabel');
       // Now check if ids are added to the end (not overridden)
-      expect(get('labelledby')).to.contain(`label-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       // Should be placed in the end
       expect(
-        get('labelledby').indexOf(`label-${el._inputId}`) <
-          get('labelledby').indexOf('additionalLabel'),
+        inputElement.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
+          inputElement.getAttribute('aria-labelledby').indexOf('additionalLabel'),
       );
 
       // 2. addToAriaDescription()
       // Check if the aria attr is filled initially
-      expect(get('describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       el.addToAriaDescription('additionalDescription');
       // Now check if ids are added to the end (not overridden)
-      expect(get('describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       // Should be placed in the end
       expect(
-        get('describedby').indexOf(`feedback-${el._inputId}`) <
-          get('describedby').indexOf('additionalDescription'),
+        inputElement.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
+          inputElement.getAttribute('aria-describedby').indexOf('additionalDescription'),
       );
     });
   });
@@ -285,7 +283,7 @@ describe('<lion-field>', () => {
       function hasX(str) {
         return { hasX: str.indexOf('x') > -1 };
       }
-      const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+      const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
       const feedbackEl = el._feedbackElement;
 
       el.modelValue = 'a@b.nl';
@@ -355,17 +353,17 @@ describe('<lion-field>', () => {
 
   describe(`Content projection${nameSuffix}`, () => {
     it('renders correctly all slot elements in light DOM', async () => {
-      const el = await fixture(`
-        <${tagString}>
+      const el = await fixture(html`
+        <${tag}>
           <label slot="label">[label]</label>
-          ${inputSlotString}
+          ${inputSlot}
           <span slot="help-text">[help-text]</span>
           <span slot="before">[before]</span>
           <span slot="after">[after]</span>
           <span slot="prefix">[prefix]</span>
           <span slot="suffix">[suffix]</span>
           <span slot="feedback">[feedback]</span>
-        </${tagString}>
+        </${tag}>
       `);
 
       const names = [
@@ -388,9 +386,9 @@ describe('<lion-field>', () => {
     });
   });
 
-  describe(`Delegation${nameSuffix}`, () => {
+  describe('Delegation', () => {
     it('delegates property value', async () => {
-      const el = await fixture(`<${tagString}>${inputSlotString}</${tagString}>`);
+      const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
       expect(el.inputElement.value).to.equal('');
       el.value = 'one';
       expect(el.value).to.equal('one');
