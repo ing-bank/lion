@@ -6,7 +6,7 @@ import '@lion/calendar/lion-calendar.js';
 import './lion-calendar-overlay-frame.js';
 
 /**
- * @customElement
+ * @customElement lion-input-datepicker
  * @extends {LionInputDate}
  */
 export class LionInputDatepicker extends LionInputDate {
@@ -27,13 +27,6 @@ export class LionInputDatepicker extends LionInputDate {
        */
       _calendarInvokerSlot: {
         type: String,
-      },
-
-      /**
-       * TODO: [delegation of disabled] move this to LionField (or FormControl) level
-       */
-      disabled: {
-        type: Boolean,
       },
 
       __calendarMinDate: {
@@ -172,49 +165,11 @@ export class LionInputDatepicker extends LionInputDate {
       .substr(2, 10)}`;
   }
 
-  /**
-   * Problem: we need to create a getter for disabled that puts disabled attrs on the invoker
-   * button.
-   * The DelegateMixin creates getters and setters regardless of what's defined on the prototype,
-   * thats why we need to move it out from parent delegations config, in order to make our own
-   * getters and setters work.
-   *
-   * TODO: [delegation of disabled] fix this on a global level:
-   * - LionField
-   *  - move all delegations of attrs and props to static get props for docs
-   * - DelegateMixin needs to be refactored, so that it:
-   *   - gets config from static get properties
-   *   - hooks into _requestUpdate
-   */
-  get delegations() {
-    return {
-      ...super.delegations,
-      properties: super.delegations.properties.filter(p => p !== 'disabled'),
-      attributes: super.delegations.attributes.filter(p => p !== 'disabled'),
-    };
-  }
-
-  /**
-   * TODO: [delegation of disabled] move this to LionField (or FormControl) level
-   */
   _requestUpdate(name, oldValue) {
     super._requestUpdate(name, oldValue);
 
-    if (name === 'disabled') {
-      this.__delegateDisabled();
-    }
-
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
-    }
-  }
-
-  /**
-   * TODO: [delegation of disabled] move this to LionField (or FormControl) level
-   */
-  __delegateDisabled() {
-    if (this.inputElement) {
-      this.inputElement.disabled = this.disabled;
     }
   }
 
@@ -224,12 +179,8 @@ export class LionInputDatepicker extends LionInputDate {
     }
   }
 
-  /**
-   * TODO: [delegation of disabled] move this to LionField (or FormControl) level
-   */
   firstUpdated(c) {
     super.firstUpdated(c);
-    this.__delegateDisabled();
     this.__toggleInvokerDisabled();
   }
 
