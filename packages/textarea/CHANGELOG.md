@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.48](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.47...@lion/textarea@0.1.48) (2019-08-14)
+
+
+### Bug Fixes
+
+* **field:** move type property to input & add step property to input ([5d893f3](https://github.com/ing-bank/lion/commit/5d893f3))
+* **textarea:** sync rows property instead of delegating ([7ac9d88](https://github.com/ing-bank/lion/commit/7ac9d88))
+
+
+
+
+
 ## [0.1.47](https://github.com/ing-bank/lion/compare/@lion/textarea@0.1.46...@lion/textarea@0.1.47) (2019-08-07)
 
 **Note:** Version bump only for package @lion/textarea

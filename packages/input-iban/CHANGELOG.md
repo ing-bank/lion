@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.46](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.1.45...@lion/input-iban@0.1.46) (2019-08-14)
+
+
+### Bug Fixes
+
+* **input-iban:** formatter should handle undefined modelValues ([af1535b](https://github.com/ing-bank/lion/commit/af1535b))
+
+
+
+
+
 ## [0.1.45](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.1.44...@lion/input-iban@0.1.45) (2019-08-07)
 
 **Note:** Version bump only for package @lion/input-iban

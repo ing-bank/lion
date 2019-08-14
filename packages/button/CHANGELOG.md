@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/button@0.3.5...@lion/button@0.3.6) (2019-08-14)
+
+
+### Bug Fixes
+
+* **button:** sync type property instead of delegating ([b3a1f91](https://github.com/ing-bank/lion/commit/b3a1f91))
+
+
+
+
+
 ## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/button@0.3.4...@lion/button@0.3.5) (2019-08-07)
 
 **Note:** Version bump only for package @lion/button
