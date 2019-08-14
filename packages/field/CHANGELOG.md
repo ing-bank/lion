@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.43](https://github.com/ing-bank/lion/compare/@lion/field@0.1.42...@lion/field@0.1.43) (2019-08-14)
+
+
+### Bug Fixes
+
+* **field:** getter/setter for selectionStart/End instead of delegation ([07eddb3](https://github.com/ing-bank/lion/commit/07eddb3))
+* **field:** move type property to input & add step property to input ([5d893f3](https://github.com/ing-bank/lion/commit/5d893f3))
+* **field:** no delegate in FocusMixin; sync focused, redispatch events ([88f5264](https://github.com/ing-bank/lion/commit/88f5264))
+* **field:** sync name down instead of delegating ([d2f4e3c](https://github.com/ing-bank/lion/commit/d2f4e3c))
+* **field:** sync type down instead of delegating ([13b2740](https://github.com/ing-bank/lion/commit/13b2740))
+* **field:** value delegation compatible with FormatMixin ([3217c1a](https://github.com/ing-bank/lion/commit/3217c1a))
+
+
+
+
+
 ## [0.1.42](https://github.com/ing-bank/lion/compare/@lion/field@0.1.41...@lion/field@0.1.42) (2019-08-07)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.50](https://github.com/ing-bank/lion/compare/@lion/form@0.1.49...@lion/form@0.1.50) (2019-08-14)
+
+
+### Bug Fixes
+
+* **form:** sync submit and reset events instead of delegating ([5534369](https://github.com/ing-bank/lion/commit/5534369))
+
+
+
+
+
 ## [0.1.49](https://github.com/ing-bank/lion/compare/@lion/form@0.1.48...@lion/form@0.1.49) (2019-08-07)
 
 **Note:** Version bump only for package @lion/form

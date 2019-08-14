@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.54](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.53...@lion/calendar@0.1.54) (2019-08-14)
+
+**Note:** Version bump only for package @lion/calendar
+
+
+
+
+
 ## [0.1.53](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.52...@lion/calendar@0.1.53) (2019-08-12)
 
 
