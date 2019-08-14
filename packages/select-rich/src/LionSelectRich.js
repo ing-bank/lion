@@ -1,5 +1,5 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
-import { LocalOverlayController, overlays } from '@lion/overlays';
+import { LocalOverlayController, ModalDialogController, overlays } from '@lion/overlays';
 import { FormControlMixin, InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
@@ -22,7 +22,7 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  *
- * @customElement
+ * @customElement lion-select-rich
  * @extends LionField
  */
 export class LionSelectRich extends FormRegistrarMixin(
@@ -193,9 +193,14 @@ export class LionSelectRich extends FormRegistrarMixin(
     super.updated(changedProps);
     if (changedProps.has('opened')) {
       if (this.opened) {
-        this.__overlay.show();
+        if (window.innerWidth > 600) {
+          this.__overlay.show();
+        } else {
+          this.__overlayMobile.show();
+        }
       } else {
         this.__overlay.hide();
+        this.__overlayMobile.hide();
       }
     }
 
@@ -569,6 +574,16 @@ export class LionSelectRich extends FormRegistrarMixin(
       }),
     );
 
+    this.__overlayMobile = overlays.add(
+      new ModalDialogController({
+        contentNode: this._listboxNode,
+        invokerNode: this._invokerNode,
+        hidesOnEsc: false,
+        hidesOnOutsideClick: true,
+        inheritsReferenceObjectWidth: true,
+      }),
+    );
+
     this.__overlayOnShow = () => {
       this.opened = true;
       if (this.checkedIndex) {
@@ -577,17 +592,22 @@ export class LionSelectRich extends FormRegistrarMixin(
       this._listboxNode.focus();
     };
     this.__overlay.addEventListener('show', this.__overlayOnShow);
+    this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
 
     this.__overlayOnHide = () => {
       this.opened = false;
       this._invokerNode.focus();
     };
     this.__overlay.addEventListener('hide', this.__overlayOnHide);
+    this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
+
   }
 
   __teardownOverlay() {
     this.__overlay.removeEventListener('show', this.__overlayOnShow);
     this.__overlay.removeEventListener('hide', this.__overlayOnHide);
+    this.__overlayMobile.removeEventListener('show', this.__overlayOnShow);
+    this.__overlayMobile.removeEventListener('hide', this.__overlayOnHide);
   }
 
   // eslint-disable-next-line class-methods-use-this
