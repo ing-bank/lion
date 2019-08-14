@@ -102,11 +102,16 @@ export class LionField extends FormControlMixin(
   }
 
   connectedCallback() {
+    // TODO: Normally we put super calls on top for predictability,
+    // here we temporarily need to do attribute delegation before,
+    // so the FormatMixin uses the right value. Should be solved
+    // when value delegation is part of the calculation loop of
+    // FormatMixin
+    this._delegateInitialValueAttr();
     super.connectedCallback();
 
     this._onChange = this._onChange.bind(this);
     this.inputElement.addEventListener('change', this._onChange);
-    this._delegateInitialValueAttr();
     this.classList.add('form-field'); // eslint-disable-line
   }
 
