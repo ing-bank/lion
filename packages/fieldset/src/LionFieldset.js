@@ -1,6 +1,6 @@
 import { SlotMixin, html } from '@lion/core';
 import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
+import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
@@ -15,16 +15,10 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormRegistrarMixin(
-  FormControlMixin(ValidateMixin(CssClassMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LionLitElement))))),
 ) {
   static get properties() {
     return {
-      ...super.properties,
-      disabled: {
-        type: Boolean,
-        reflect: true,
-        nonEmptyToClass: 'state-disabled',
-      },
       name: {
         type: String,
       },
@@ -32,13 +26,6 @@ export class LionFieldset extends FormRegistrarMixin(
         type: Boolean,
         nonEmptyToClass: 'state-submitted',
       },
-    };
-  }
-
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _onDisabledChanged: ['disabled'],
     };
   }
 
@@ -119,6 +106,36 @@ export class LionFieldset extends FormRegistrarMixin(
     this.removeEventListener('focused-changed', this._updateFocusedClass);
     this.removeEventListener('touched-changed', this._updateTouchedClass);
     this.removeEventListener('dirty-changed', this._updateDirtyClass);
+  }
+
+  updated(changedProps) {
+    super.updated(changedProps);
+
+    if (changedProps.has('disabled')) {
+      if (this.disabled) {
+        this.__requestChildrenToBeDisabled();
+        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
+      } else {
+        this.__retractRequestChildrenToBeDisabled();
+        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
+      }
+    }
+  }
+
+  __requestChildrenToBeDisabled() {
+    this.formElementsArray.forEach(child => {
+      if (child.makeRequestToBeDisabled) {
+        child.makeRequestToBeDisabled();
+      }
+    });
+  }
+
+  __retractRequestChildrenToBeDisabled() {
+    this.formElementsArray.forEach(child => {
+      if (child.retractRequestToBeDisabled) {
+        child.retractRequestToBeDisabled();
+      }
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -251,13 +268,6 @@ export class LionFieldset extends FormRegistrarMixin(
     this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
   }
 
-  _onDisabledChanged({ disabled }, { disabled: oldDisabled }) {
-    // do not propagate/override inital disabled value on nested form elements
-    if (typeof oldDisabled !== 'undefined') {
-      this._setValueForAllFormElements('disabled', disabled);
-    }
-  }
-
   _setRole(role) {
     this.setAttribute('role', role || 'group');
   }
@@ -303,7 +313,7 @@ export class LionFieldset extends FormRegistrarMixin(
 
     if (this.disabled) {
       // eslint-disable-next-line no-param-reassign
-      child.disabled = true;
+      child.makeRequestToBeDisabled();
     }
     if (name.substr(-2) === '[]') {
       if (!Array.isArray(this.formElements[name])) {

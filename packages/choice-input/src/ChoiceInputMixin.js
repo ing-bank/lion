@@ -8,7 +8,6 @@ export const ChoiceInputMixin = superclass =>
   class ChoiceInputMixin extends FormatMixin(superclass) {
     static get properties() {
       return {
-        ...super.properties,
         /**
          * Boolean indicating whether or not this element is checked by the end user.
          */

@@ -12,7 +12,6 @@ import './lion-calendar-overlay-frame.js';
 export class LionInputDatepicker extends LionInputDate {
   static get properties() {
     return {
-      ...super.properties,
       /**
        * The heading to be added on top of the calendar overlay.
        * Naming chosen from an Application Developer perspective.
