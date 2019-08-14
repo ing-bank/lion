@@ -2,6 +2,7 @@ import { render } from '@lion/core';
 import { containFocus } from './utils/contain-focus.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
+import { throws } from 'assert';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
@@ -40,6 +41,22 @@ export class GlobalOverlayController {
     this._isShown = false;
     this._data = {};
     this._container = null;
+
+    this.__fakeExtendsEventTarget();
+
+    /**
+     * A wrapper the contentTemplate renders into
+     *
+     * @property {HTMLElement}
+     */
+    this.content = document.createElement('div');
+    this.content.style.display = 'inline-block';
+    // this.contentTemplate = params.contentTemplate;
+    this.contentNode = this.content;
+    if (params.contentNode) {
+      this.contentNode = params.contentNode;
+      this.content = this.contentNode;
+    }
   }
 
   get isShown() {
@@ -108,8 +125,16 @@ export class GlobalOverlayController {
         this._initializeContainer();
       }
 
-      // let lit-html manage the template and update the properties
-      render(this.contentTemplate(data), this._container);
+      // // let lit-html manage the template and update the properties
+      // render(this.contentTemplate(data), this._container);
+
+      if (this.contentTemplate) {
+        const container = document.createElement('div');
+        render(this.contentTemplate(data), container);
+        this.contentNode = container.firstElementChild;
+      }
+
+      this._container.appendChild(this.contentNode);
 
       if (firstShow) {
         this._setupFlags();
@@ -318,5 +343,13 @@ export class GlobalOverlayController {
     setTimeout(() => {
       GlobalOverlayController._rootNode.classList.remove('global-overlays--backdrop-fade-out');
     }, 600);
+  }
+
+  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
+  __fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      this[funcName] = (...args) => delegate[funcName](...args);
+    });
   }
 }
