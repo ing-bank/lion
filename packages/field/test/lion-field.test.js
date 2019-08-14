@@ -91,9 +91,7 @@ describe('<lion-field>', () => {
   });
 
   it('can be cleared which erases value, validation and interaction states', async () => {
-    const el = await fixture(
-      html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`,
-    );
+    const el = await fixture(html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`);
     el.clear();
     expect(el.value).to.equal('');
     el.value = 'Some value from property';

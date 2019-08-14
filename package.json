@@ -43,6 +43,7 @@
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:bs": "karma start karma.bs.config.js --coverage",
+    "test:bs:legacy": "karma start --legacy karma.bs.config.js --coverage",
     "lint": "run-p lint:*",
     "lint:eclint": "git ls-files | xargs eclint check",
     "lint:eslint": "eslint --ext .js,.html .",
