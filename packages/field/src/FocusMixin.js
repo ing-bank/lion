@@ -1,52 +1,120 @@
-import { dedupeMixin, DelegateMixin } from '@lion/core';
+import { dedupeMixin } from '@lion/core';
 
 export const FocusMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, max-len, no-shadow
-    class FocusMixin extends DelegateMixin(superclass) {
-      get delegations() {
+    class FocusMixin extends superclass {
+      static get properties() {
         return {
-          ...super.delegations,
-          target: () => this.inputElement,
-          events: [...super.delegations.events, 'focus', 'blur'], // since these events don't bubble
-          methods: [...super.delegations.methods, 'focus', 'blur'],
-          properties: [...super.delegations.properties, 'onfocus', 'onblur', 'autofocus'],
-          attributes: [...super.delegations.attributes, 'onfocus', 'onblur', 'autofocus'],
+          focused: {
+            type: Boolean,
+            reflect: true,
+          },
         };
       }
 
+      constructor() {
+        super();
+        this.focused = false;
+      }
+
       connectedCallback() {
-        super.connectedCallback();
-        this._onFocus = this._onFocus.bind(this);
-        this._onBlur = this._onBlur.bind(this);
-        this.inputElement.addEventListener('focusin', this._onFocus);
-        this.inputElement.addEventListener('focusout', this._onBlur);
+        if (super.connectedCallback) {
+          super.connectedCallback();
+        }
+        this.__registerEventsForFocusMixin();
       }
 
       disconnectedCallback() {
-        super.disconnectedCallback();
-        this.inputElement.removeEventListener('focusin', this._onFocus);
-        this.inputElement.removeEventListener('focusout', this._onBlur);
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
+        this.__teardownEventsForFocusMixin();
+      }
+
+      focus() {
+        const native = this.inputElement;
+        if (native) {
+          native.focus();
+        }
+      }
+
+      blur() {
+        const native = this.inputElement;
+        if (native) {
+          native.blur();
+        }
+      }
+
+      updated(changedProperties) {
+        super.updated(changedProperties);
+        // 'state-focused' css classes are deprecated
+        if (changedProperties.has('focused')) {
+          this.classList[this.focused ? 'add' : 'remove']('state-focused');
+        }
       }
 
       /**
-       * Helper Function to easily check if the element is being focused
+       * Functions should be private
        *
-       * TODO: performance comparision vs
-       *   return this.inputElement === document.activeElement;
+       * @deprecated
        */
-      get focused() {
-        return this.classList.contains('state-focused');
-      }
-
       _onFocus() {
-        if (super._onFocus) super._onFocus();
-        this.classList.add('state-focused');
+        if (super._onFocus) {
+          super._onFocus();
+        }
+        this.focused = true;
       }
 
+      /**
+       * Functions should be private
+       *
+       * @deprecated
+       */
       _onBlur() {
-        if (super._onBlur) super._onBlur();
-        this.classList.remove('state-focused');
+        if (super._onBlur) {
+          super._onBlur();
+        }
+        this.focused = false;
+      }
+
+      __registerEventsForFocusMixin() {
+        // focus
+        this.__redispatchFocus = ev => {
+          ev.stopPropagation();
+          this.dispatchEvent(new FocusEvent('focus'));
+        };
+        this.inputElement.addEventListener('focus', this.__redispatchFocus);
+
+        // blur
+        this.__redispatchBlur = ev => {
+          ev.stopPropagation();
+          this.dispatchEvent(new FocusEvent('blur'));
+        };
+        this.inputElement.addEventListener('blur', this.__redispatchBlur);
+
+        // focusin
+        this.__redispatchFocusin = ev => {
+          ev.stopPropagation();
+          this._onFocus(ev);
+          this.dispatchEvent(new FocusEvent('focusin', { bubbles: true, composed: true }));
+        };
+        this.inputElement.addEventListener('focusin', this.__redispatchFocusin);
+
+        // focusout
+        this.__redispatchFocusout = ev => {
+          ev.stopPropagation();
+          this._onBlur();
+          this.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+        };
+        this.inputElement.addEventListener('focusout', this.__redispatchFocusout);
+      }
+
+      __teardownEventsForFocusMixin() {
+        this.inputElement.removeEventListener('focus', this.__redispatchFocus);
+        this.inputElement.removeEventListener('blur', this.__redispatchBlur);
+        this.inputElement.removeEventListener('focusin', this.__redispatchFocusin);
+        this.inputElement.removeEventListener('focusout', this.__redispatchFocusout);
       }
     },
 );

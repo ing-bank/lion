@@ -26,4 +26,16 @@ describe('<lion-input>', () => {
     const el = await fixture(`<lion-input></lion-input>`);
     expect(el.querySelector('input')).to.equal(el.inputElement);
   });
+
+  it('has a type which is reflected to an attribute and is synced down to the native input', async () => {
+    const el = await fixture(`<lion-input></lion-input>`);
+    expect(el.type).to.equal('text');
+    expect(el.getAttribute('type')).to.equal('text');
+    expect(el.inputElement.getAttribute('type')).to.equal('text');
+
+    el.type = 'foo';
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('foo');
+    expect(el.inputElement.getAttribute('type')).to.equal('foo');
+  });
 });

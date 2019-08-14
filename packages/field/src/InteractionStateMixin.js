@@ -18,7 +18,6 @@ export const InteractionStateMixin = dedupeMixin(
     class InteractionStateMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
-          ...super.properties,
           /**
            * True when user has focused and left(blurred) the field.
            */

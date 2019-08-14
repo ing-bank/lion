@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.13",
-    "@lion/input": "^0.1.44",
+    "@lion/field": "^0.1.42",
     "autosize": "4.0.2"
   },
   "devDependencies": {

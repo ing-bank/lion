@@ -53,8 +53,6 @@ export const FormatMixin = dedupeMixin(
     class FormatMixin extends ObserverMixin(superclass) {
       static get properties() {
         return {
-          ...super.properties,
-
           /**
            * The model value is the result of the parser function(when available).
            * It should be considered as the internal value used for validation and reasoning/logic.

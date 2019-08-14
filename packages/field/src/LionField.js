@@ -1,6 +1,6 @@
-import { DelegateMixin, SlotMixin, LitElement } from '@lion/core';
+import { SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
-import { CssClassMixin } from '@lion/core/src/CssClassMixin.js';
+import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
@@ -35,38 +35,51 @@ import { FocusMixin } from './FocusMixin.js';
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
     FocusMixin(
-      FormatMixin(
-        ValidateMixin(
-          CssClassMixin(ElementMixin(DelegateMixin(SlotMixin(ObserverMixin(LitElement))))),
-        ),
-      ),
+      FormatMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement)))))),
     ),
   ),
 ) {
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.inputElement,
-      properties: [
-        ...super.delegations.properties,
-        'name',
-        'type',
-        'disabled',
-        'selectionStart',
-        'selectionEnd',
-      ],
-      attributes: [...super.delegations.attributes, 'name', 'type', 'disabled'],
-    };
-  }
-
   static get properties() {
     return {
-      ...super.properties,
       submitted: {
         // make sure validation can be triggered based on observer
         type: Boolean,
       },
+      name: {
+        type: String,
+        reflect: true,
+      },
     };
+  }
+
+  get selectionStart() {
+    const native = this.inputElement;
+    if (native && native.selectionStart) {
+      return native.selectionStart;
+    }
+    return 0;
+  }
+
+  set selectionStart(value) {
+    const native = this.inputElement;
+    if (native && native.selectionStart) {
+      native.selectionStart = value;
+    }
+  }
+
+  get selectionEnd() {
+    const native = this.inputElement;
+    if (native && native.selectionEnd) {
+      return native.selectionEnd;
+    }
+    return 0;
+  }
+
+  set selectionEnd(value) {
+    const native = this.inputElement;
+    if (native && native.selectionEnd) {
+      native.selectionEnd = value;
+    }
   }
 
   // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
@@ -82,20 +95,23 @@ export class LionField extends FormControlMixin(
     return (this.inputElement && this.inputElement.value) || '';
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _setDisabledClass: ['disabled'],
-    };
+  constructor() {
+    super();
+    this.name = '';
+    this.submitted = false;
   }
 
   connectedCallback() {
+    // TODO: Normally we put super calls on top for predictability,
+    // here we temporarily need to do attribute delegation before,
+    // so the FormatMixin uses the right value. Should be solved
+    // when value delegation is part of the calculation loop of
+    // FormatMixin
+    this._delegateInitialValueAttr();
     super.connectedCallback();
 
     this._onChange = this._onChange.bind(this);
     this.inputElement.addEventListener('change', this._onChange);
-    this._delegateInitialValueAttr();
-    this._setDisabledClass();
     this.classList.add('form-field'); // eslint-disable-line
   }
 
@@ -112,8 +128,22 @@ export class LionField extends FormControlMixin(
     this.inputElement.removeEventListener('change', this._onChange);
   }
 
-  _setDisabledClass() {
-    this.classList[this.disabled ? 'add' : 'remove']('state-disabled');
+  updated(changedProps) {
+    super.updated(changedProps);
+
+    if (changedProps.has('disabled')) {
+      if (this.disabled) {
+        this.inputElement.disabled = true;
+        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
+      } else {
+        this.inputElement.disabled = false;
+        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
+      }
+    }
+
+    if (changedProps.has('name')) {
+      this.inputElement.name = this.name;
+    }
   }
 
   /**

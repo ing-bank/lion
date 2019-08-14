@@ -18,7 +18,6 @@ export const FormControlMixin = dedupeMixin(
     class FormControlMixin extends FormRegisteringMixin(ObserverMixin(SlotMixin(superclass))) {
       static get properties() {
         return {
-          ...super.properties,
           /**
            * A list of ids that will be put on the inputElement as a serialized string
            */
