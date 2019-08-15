@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.27](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.26...@lion/validate@0.2.27) (2019-08-15)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
 ## [0.2.26](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.25...@lion/validate@0.2.26) (2019-08-14)
 
 **Note:** Version bump only for package @lion/validate
