@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/field@0.1.44...@lion/field@0.2.0) (2019-08-15)
+
+
+### Bug Fixes
+
+* **field:** cleaned up old register code ([95a9ce7](https://github.com/ing-bank/lion/commit/95a9ce7))
+
+
+### Features
+
+* **field:** add reset method and capture inital model value ([d2035e6](https://github.com/ing-bank/lion/commit/d2035e6))
+
+
+
+
+
 ## [0.1.44](https://github.com/ing-bank/lion/compare/@lion/field@0.1.43...@lion/field@0.1.44) (2019-08-15)
 
 **Note:** Version bump only for package @lion/field
