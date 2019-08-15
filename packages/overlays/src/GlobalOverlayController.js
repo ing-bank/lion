@@ -2,7 +2,6 @@ import { render } from '@lion/core';
 import { containFocus } from './utils/contain-focus.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
-import { throws } from 'assert';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
@@ -49,10 +48,10 @@ export class GlobalOverlayController {
      *
      * @property {HTMLElement}
      */
-    this.content = document.createElement('div');
-    this.content.style.display = 'inline-block';
+    const contentNode = document.createElement('div');
+    contentNode.style.display = 'inline-block';
     // this.contentTemplate = params.contentTemplate;
-    this.contentNode = this.content;
+    this.contentNode = contentNode;
     if (params.contentNode) {
       this.contentNode = params.contentNode;
       this.content = this.contentNode;
@@ -139,6 +138,9 @@ export class GlobalOverlayController {
       if (firstShow) {
         this._setupFlags();
       }
+
+      this.dispatchEvent(new Event('show'));
+
     } else if (this._container) {
       GlobalOverlayController._rootNode.removeChild(this._container);
       this._cleanupFlags();
@@ -147,6 +149,7 @@ export class GlobalOverlayController {
       if (this.elementToFocusAfterHide) {
         this.elementToFocusAfterHide.focus();
       }
+      this.dispatchEvent(new Event('hide'));
     }
     this._isShown = isShown;
     this._data = data;

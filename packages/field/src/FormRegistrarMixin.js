@@ -21,6 +21,17 @@ export const FormRegistrarMixin = dedupeMixin(
         return this.__formElements;
       }
 
+      get _delegatedParent() {
+        return this.__delegatedParent;
+      }
+
+      set _delegatedParent(value) {
+        this.__delegatedParent = value;
+        if (this.__delegatedParent !== this) {
+          this.__delegatedParent.removeFormElement = () => {};
+        }
+      }
+
       constructor() {
         super();
         this.formElements = [];
@@ -31,6 +42,11 @@ export const FormRegistrarMixin = dedupeMixin(
 
         this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
         this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+
+        // In some cases, form registration can be delegated from FormControl to
+        // non FormControl. For example, a selectbox(containing an invoker and a listbox)
+        // that delegates to a listbox.
+        this._delegatedParent = this;
       }
 
       connectedCallback() {
@@ -56,13 +72,15 @@ export const FormRegistrarMixin = dedupeMixin(
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
         formRegistrarManager.becomesReady(this);
+
+        console.log('this.formElements Registrar', this.formElements);
       }
 
       addFormElement(child) {
+
         // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
         // eslint-disable-next-line no-param-reassign
-        child.__parentFormGroup = this;
-
+        child.__parentFormGroup = this._delegatedParent;
         this.formElements.push(child);
       }
 
@@ -87,19 +105,19 @@ export const FormRegistrarMixin = dedupeMixin(
         this.addFormElement(child);
       }
 
-      _onRequestToRemoveFormElement(ev) {
-        const child = ev.detail.element;
-        if (child === this) {
-          // as we fire and listen - don't add ourselves
-          return;
-        }
-        if (!this.isRegisteredFormElement(child)) {
-          // do not readd already existing elements
-          return;
-        }
-        ev.stopPropagation();
+      // _onRequestToRemoveFormElement(ev) {
+      //   const child = ev.detail.element;
+      //   if (child === this) {
+      //     // as we fire and listen - don't add ourselves
+      //     return;
+      //   }
+      //   if (!this.isRegisteredFormElement(child)) {
+      //     // do not readd already existing elements
+      //     return;
+      //   }
+      //   ev.stopPropagation();
 
-        this.removeFormElement(child);
-      }
+      //   this.removeFormElement(child);
+      // }
     },
 );

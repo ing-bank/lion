@@ -1,16 +1,12 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
-import { LocalOverlayController, ModalDialogController, overlays } from '@lion/overlays';
-import { FormControlMixin, InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
+// import { LocalOverlayController, ModalDialogController, overlays } from '@lion/overlays';
+import { OverlayController } from '@lion/overlays';
+
+import { FormControlMixin, InteractionStateMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
 
 import '../lion-select-invoker.js';
-
-function uuid() {
-  return Math.random()
-    .toString(36)
-    .substr(2, 10);
-}
 
 function detectInteractionMode() {
   if (navigator.appVersion.indexOf('Mac') !== -1) {
@@ -25,9 +21,7 @@ function detectInteractionMode() {
  * @customElement lion-select-rich
  * @extends LionField
  */
-export class LionSelectRich extends FormRegistrarMixin(
-  InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))),
-) {
+export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))) {
   static get properties() {
     return {
       checkedValue: {
@@ -89,9 +83,7 @@ export class LionSelectRich extends FormRegistrarMixin(
   get slots() {
     return {
       ...super.slots,
-      invoker: () => {
-        return document.createElement('lion-select-invoker');
-      },
+      invoker: () =>  document.createElement('lion-select-invoker'),
     };
   }
 
@@ -99,9 +91,9 @@ export class LionSelectRich extends FormRegistrarMixin(
     return this.querySelector('[slot=invoker]');
   }
 
-  get _listboxNode() {
-    return this.querySelector('[slot=input]');
-  }
+  // get _listboxNode() {
+  //   return this.querySelector('[slot=input]');
+  // }
 
   get _listboxActiveDescendantNode() {
     return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
@@ -125,9 +117,14 @@ export class LionSelectRich extends FormRegistrarMixin(
   }
 
   set activeIndex(index) {
+    console.log('this.formElements', this.formElements);
     if (this.formElements[index]) {
       this.formElements[index].active = true;
     }
+  }
+
+  get formElements() {
+    return this._listboxNode.formElements;
   }
 
   constructor() {
@@ -140,8 +137,6 @@ export class LionSelectRich extends FormRegistrarMixin(
     this._valueChangedEvent = 'select-model-value-changed';
     this._listboxActiveDescendant = null;
     this.__hasInitialSelectedFormElement = false;
-
-    this.__setupEventListeners();
   }
 
   connectedCallback() {
@@ -149,6 +144,15 @@ export class LionSelectRich extends FormRegistrarMixin(
       super.connectedCallback();
     }
 
+    this._listboxNode = this.querySelector('[slot=input]');
+
+    this._listboxNode._delegatedParent = this;
+    this._listboxNode.formElements.forEach((formElement) => {
+      console.log('formElement', formElement);
+      formElement.__parentFormGroup = this;
+    });
+
+    this.__setupEventListeners();
     this.__setupOverlay();
     this.__setupInvokerNode();
     this.__setupListboxNode();
@@ -191,16 +195,24 @@ export class LionSelectRich extends FormRegistrarMixin(
 
   updated(changedProps) {
     super.updated(changedProps);
-    if (changedProps.has('opened')) {
+    if (changedProps.has('opened') && this.__overlay) {
       if (this.opened) {
-        if (window.innerWidth > 600) {
+        console.log('overlay show');
+
+        // if (window.innerWidth > 600) {
+        //   this._listboxNode.style.position = '';
+
           this.__overlay.show();
-        } else {
-          this.__overlayMobile.show();
-        }
+        // } else {
+        //   this._listboxNode.style.position = 'relative';
+        //   this._listboxNode.style.display = '';
+        //   this.__overlayMobile.show();
+        // }
       } else {
+        // console.log('overlay hide');
+
         this.__overlay.hide();
-        this.__overlayMobile.hide();
+        // this.__overlayMobile.hide();
       }
     }
 
@@ -232,39 +244,38 @@ export class LionSelectRich extends FormRegistrarMixin(
     `;
   }
 
-  /**
-   * Overrides FormRegistrar adding to make sure children have specific default states when added
-   *
-   * @override
-   * @param {*} child
-   */
-  addFormElement(child) {
-    super.addFormElement(child);
-    // we need to adjust the elements being registered
-    /* eslint-disable no-param-reassign */
-    child.id = child.id || `${this.localName}-option-${uuid()}`;
+  // /**
+  //  * Overrides FormRegistrar adding to make sure children have specific default states when added
+  //  *
+  //  * @override
+  //  * @param {FormControl} child
+  //  */
+  // addFormElement(child) {
+  //   super.addFormElement(child);
+  //   // we need to adjust the elements being registered
+  //   /* eslint-disable no-param-reassign */
+  //   child.id = child.id || `${this.localName}-option-${uuid()}`;
 
-    if (this.disabled) {
-      child.makeRequestToBeDisabled();
-    }
-    // the first elements checked by default
-    if (!this.__hasInitialSelectedFormElement && (!child.disabled || this.disabled)) {
-      child.active = true;
-      child.checked = true;
-      this.__hasInitialSelectedFormElement = true;
-    }
+  //   if (this.disabled) {
+  //     child.makeRequestToBeDisabled();
+  //   }
+  //   // the first elements checked by default
+  //   if (!this.__hasInitialSelectedFormElement && (!child.disabled || this.disabled)) {
+  //     child.active = true;
+  //     child.checked = true;
+  //     this.__hasInitialSelectedFormElement = true;
+  //   }
 
-    this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-    child.setAttribute('aria-posinset', this.formElements.length);
+  //   this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
+  //   child.setAttribute('aria-posinset', this.formElements.length);
 
-    this.__onChildModelValueChanged({ target: child });
-    this.resetInteractionState();
-    /* eslint-enable no-param-reassign */
-  }
+  //   this.__onChildModelValueChanged({ target: child });
+  //   this.resetInteractionState();
+  //   /* eslint-enable no-param-reassign */
+  // }
 
-  _getFromAllFormElements(property) {
-    return this.formElements.map(e => e[property]);
-  }
+
+
 
   /**
    * add same aria-label to invokerNode as inputElement
@@ -300,18 +311,25 @@ export class LionSelectRich extends FormRegistrarMixin(
     this.__onChildModelValueChanged = this.__onChildModelValueChanged.bind(this);
     this.__onKeyUp = this.__onKeyUp.bind(this);
 
-    this.addEventListener('active-changed', this.__onChildActiveChanged);
-    this.addEventListener('model-value-changed', this.__onChildModelValueChanged);
-    this.addEventListener('keyup', this.__onKeyUp);
+    this._listboxNode.addEventListener('active-changed', this.__onChildActiveChanged);
+    this._listboxNode.addEventListener('model-value-changed', this.__onChildModelValueChanged);
+    // this._listboxNode.addEventListener('keyup', this.__onKeyUp);
+
+    // For switching on closed invoker
+    this._invokerNode.addEventListener('keyup', this.__onKeyUp);
   }
 
   __teardownEventListeners() {
-    this.removeEventListener('active-changed', this.__onChildActiveChanged);
-    this.removeEventListener('model-value-changed', this.__onChildModelValueChanged);
-    this.removeEventListener('keyup', this.__onKeyUp);
+    this._listboxNode.removeEventListener('active-changed', this.__onChildActiveChanged);
+    this._listboxNode.removeEventListener('model-value-changed', this.__onChildModelValueChanged);
+    // this._listboxNode.removeEventListener('keyup', this.__onKeyUp);
+
+    this._invokerNode.removeEventListener('keyup', this.__onKeyUp);
   }
 
   __onChildActiveChanged({ target }) {
+    console.log('__onChildActiveChanged');
+
     if (target.active === true) {
       this.formElements.forEach(formElement => {
         if (formElement !== target) {
@@ -323,11 +341,11 @@ export class LionSelectRich extends FormRegistrarMixin(
     }
   }
 
-  __setAttributeForAllFormElements(attribute, value) {
-    this.formElements.forEach(formElement => {
-      formElement.setAttribute(attribute, value);
-    });
-  }
+  // __setAttributeForAllFormElements(attribute, value) {
+  //   this.formElements.forEach(formElement => {
+  //     formElement.setAttribute(attribute, value);
+  //   });
+  // }
 
   __onChildModelValueChanged({ target }) {
     if (target.checked) {
@@ -381,6 +399,8 @@ export class LionSelectRich extends FormRegistrarMixin(
    * @param ev - the keydown event object
    */
   __listboxOnKeyUp(ev) {
+    console.log('__listboxOnKeyUp', ev.key);
+
     if (this.disabled) {
       return;
     }
@@ -402,6 +422,7 @@ export class LionSelectRich extends FormRegistrarMixin(
         break;
       case 'ArrowUp':
         ev.preventDefault();
+        console.log('omhoog met die pijl');
         this.activeIndex = this.__getPreviousEnabledOption(this.activeIndex);
         break;
       case 'ArrowDown':
@@ -421,11 +442,14 @@ export class LionSelectRich extends FormRegistrarMixin(
 
     const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
     if (keys.includes(key) && this.interactionMode === 'windows/linux') {
+      console.log('set checked');
       this.checkedIndex = this.activeIndex;
     }
   }
 
   __listboxOnKeyDown(ev) {
+    console.log('__listboxOnKeyDown');
+
     if (this.disabled) {
       return;
     }
@@ -443,9 +467,12 @@ export class LionSelectRich extends FormRegistrarMixin(
   }
 
   __onKeyUp(ev) {
+    console.log('__onKeyUp', this.opened, this.disabled);
+
     if (this.disabled) {
       return;
     }
+
 
     if (this.opened) {
       return;
@@ -536,6 +563,7 @@ export class LionSelectRich extends FormRegistrarMixin(
 
   __setupListboxNodeEventListener() {
     this.__listboxOnClick = () => {
+      console.log('__listboxOnClick');
       this.opened = false;
     };
     this._listboxNode.addEventListener('click', this.__listboxOnClick);
@@ -555,13 +583,17 @@ export class LionSelectRich extends FormRegistrarMixin(
     }
   }
 
-  __setupOverlay() {
-    this.__overlay = overlays.add(
-      new LocalOverlayController({
-        contentNode: this._listboxNode,
-        invokerNode: this._invokerNode,
-        hidesOnEsc: false,
-        hidesOnOutsideClick: true,
+  _defineOverlay() {
+    return new OverlayController({
+      contentNode: this._listboxNode,
+      invokerNode: this._invokerNode,
+      hidesOnEsc: false,
+      hidesOnOutsideClick: true,
+    },
+    [
+      {
+        condition: () => window.innerWidth > 600,
+        // ...withDropdownConfig()
         inheritsReferenceObjectWidth: true,
         popperConfig: {
           placement: 'bottom-start',
@@ -571,18 +603,54 @@ export class LionSelectRich extends FormRegistrarMixin(
             },
           },
         },
-      }),
+      },
+      {
+        condition: () => window.innerWidth <= 600,
+        // ...withModalDialogConfig()
+        isGlobal: true,
+        hasBackdrop: true,
+        preventsScroll: true,
+        trapsKeyboardFocus: true,
+        hidesOnEsc: true,
+      }
+    ]
     );
+  }
 
-    this.__overlayMobile = overlays.add(
-      new ModalDialogController({
-        contentNode: this._listboxNode,
-        invokerNode: this._invokerNode,
-        hidesOnEsc: false,
-        hidesOnOutsideClick: true,
-        inheritsReferenceObjectWidth: true,
-      }),
-    );
+  __setupOverlay() {
+    this.__overlay = this._defineOverlay();
+
+    // this.__overlay = overlays.add(
+    //   new LocalOverlayController({
+    //     contentNode: this._listboxNode,
+    //     invokerNode: this._invokerNode,
+    //     hidesOnEsc: false,
+    //     hidesOnOutsideClick: true,
+    //     inheritsReferenceObjectWidth: true,
+    //     popperConfig: {
+    //       placement: 'bottom-start',
+    //       modifiers: {
+    //         offset: {
+    //           enabled: false,
+    //         },
+    //       },
+    //     },
+
+    //     // contentNode: this._listboxNode,
+    //     // invokerNode: this._invokerNode,
+    //     // hidesOnEsc: false,
+    //     // hidesOnOutsideClick: true,
+    //   }),
+    // );
+
+    // this.__overlayMobile = overlays.add(
+    //   new ModalDialogController({
+    //     contentNode: this._listboxNode,
+    //     invokerNode: this._invokerNode,
+    //     hidesOnEsc: false,
+    //     hidesOnOutsideClick: true,
+    //   }),
+    // );
 
     this.__overlayOnShow = () => {
       this.opened = true;
@@ -592,22 +660,21 @@ export class LionSelectRich extends FormRegistrarMixin(
       this._listboxNode.focus();
     };
     this.__overlay.addEventListener('show', this.__overlayOnShow);
-    this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
+    // this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
 
     this.__overlayOnHide = () => {
       this.opened = false;
       this._invokerNode.focus();
     };
     this.__overlay.addEventListener('hide', this.__overlayOnHide);
-    this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
-
+    // this.__overlayMobile.addEventListener('hide', this.__overlayOnHide);
   }
 
   __teardownOverlay() {
     this.__overlay.removeEventListener('show', this.__overlayOnShow);
     this.__overlay.removeEventListener('hide', this.__overlayOnHide);
-    this.__overlayMobile.removeEventListener('show', this.__overlayOnShow);
-    this.__overlayMobile.removeEventListener('hide', this.__overlayOnHide);
+    // this.__overlayMobile.removeEventListener('show', this.__overlayOnShow);
+    // this.__overlayMobile.removeEventListener('hide', this.__overlayOnHide);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -622,5 +689,9 @@ export class LionSelectRich extends FormRegistrarMixin(
         (typeof value === 'string' && value !== '') ||
         (typeof value !== 'string' && value !== undefined && value !== null),
     };
+  }
+
+  _getFromAllFormElements(property) {
+    return this.formElements.map(e => e[property]);
   }
 }
