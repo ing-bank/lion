@@ -101,6 +101,11 @@ export class LionField extends FormControlMixin(
     this.submitted = false;
   }
 
+  firstUpdated(c) {
+    super.firstUpdated(c);
+    this._initialModelValue = this.modelValue;
+  }
+
   connectedCallback() {
     // TODO: Normally we put super calls on top for predictability,
     // here we temporarily need to do attribute delegation before,
@@ -117,14 +122,6 @@ export class LionField extends FormControlMixin(
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    if (this.__parentFormGroup) {
-      const event = new CustomEvent('form-element-unregister', {
-        detail: { element: this },
-        bubbles: true,
-      });
-      this.__parentFormGroup.dispatchEvent(event);
-    }
     this.inputElement.removeEventListener('change', this._onChange);
   }
 
@@ -162,6 +159,11 @@ export class LionField extends FormControlMixin(
       super.resetInteractionState();
     }
     this.submitted = false;
+  }
+
+  reset() {
+    this.modelValue = this._initialModelValue;
+    this.resetInteractionState();
   }
 
   clear() {
