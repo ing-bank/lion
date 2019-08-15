@@ -12,6 +12,6 @@ export function getGroupSeparator(locale) {
   const formattedNumber = Intl.NumberFormat(computedLocale, {
     style: 'decimal',
     minimumFractionDigits: 0,
-  }).format('1000');
-  return normalSpaces(formattedNumber[1]);
+  }).format('10000');
+  return normalSpaces(formattedNumber[2]);
 }
