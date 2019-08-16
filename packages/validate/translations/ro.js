@@ -1,6 +1,6 @@
 export default {
   error: {
-    required: 'Introduceți, de asemenea, un/o {fieldName}.',
+    required: 'Introduceți un/o {fieldName}.',
     equalsLength:
       'Introduceți un/o {fieldName} corect(ă) de exact {validatorParams} (de) caractere.',
     minLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {validatorParams}).',
@@ -21,7 +21,7 @@ export default {
     isEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
   },
   warning: {
-    required: 'Introduceți, de asemenea, un/o {fieldName}.',
+    required: 'Introduceți un/o {fieldName}.',
     equalsLength:
       'Introduceți un/o {fieldName} corect(ă) de exact {validatorParams} (de) caractere.',
     minLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {validatorParams}).',
