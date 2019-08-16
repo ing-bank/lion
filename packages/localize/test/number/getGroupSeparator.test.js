@@ -8,5 +8,6 @@ describe('getGroupSeparator', () => {
     expect(getGroupSeparator('nl-NL')).to.equal('.');
     expect(getGroupSeparator('fr-FR')).to.equal(' ');
     expect(getGroupSeparator('es-ES')).to.equal('.');
+    expect(getGroupSeparator('bg-BG')).to.equal(' ');
   });
 });
