@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.26](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.25...@lion/choice-input@0.2.26) (2019-08-17)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
 ## [0.2.25](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.24...@lion/choice-input@0.2.25) (2019-08-15)
 
 **Note:** Version bump only for package @lion/choice-input
