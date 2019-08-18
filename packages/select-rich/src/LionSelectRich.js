@@ -1,6 +1,6 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
 // import { LocalOverlayController, ModalDialogController, overlays } from '@lion/overlays';
-import { OverlayController } from '@lion/overlays';
+import { DynamicOverlayController, overlays } from '@lion/overlays';
 
 import { FormControlMixin, InteractionStateMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
@@ -14,6 +14,28 @@ function detectInteractionMode() {
   }
   return 'windows/linux';
 }
+
+const withModalDialogConfig = () => ({
+  isGlobal: true,
+  hasBackdrop: true,
+  preventsScroll: true,
+  trapsKeyboardFocus: true,
+  hidesOnEsc: true,
+});
+
+const withDropdownConfig = () => ({
+  inheritsReferenceObjectWidth: true,
+  hidesOnOutsideClick: true,
+  popperConfig: {
+    placement: 'bottom-start',
+    modifiers: {
+      offset: {
+        enabled: false,
+      },
+    },
+  },
+});
+
 
 /**
  * LionSelectRich: wraps the <lion-listbox> element
@@ -91,10 +113,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
     return this.querySelector('[slot=invoker]');
   }
 
-  // get _listboxNode() {
-  //   return this.querySelector('[slot=input]');
-  // }
-
   get _listboxActiveDescendantNode() {
     return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
   }
@@ -117,7 +135,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
   }
 
   set activeIndex(index) {
-    console.log('this.formElements', this.formElements);
     if (this.formElements[index]) {
       this.formElements[index].active = true;
     }
@@ -144,12 +161,13 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
       super.connectedCallback();
     }
 
+    // Getter can't be used, since the (global)
+    // overlay system will move this node to the body
     this._listboxNode = this.querySelector('[slot=input]');
 
     this._listboxNode._delegatedParent = this;
     this._listboxNode.formElements.forEach((formElement) => {
-      console.log('formElement', formElement);
-      formElement.__parentFormGroup = this;
+      formElement.__parentFormGroup = this; // eslint-disable-line no-param-reassign
     });
 
     this.__setupEventListeners();
@@ -195,24 +213,11 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
 
   updated(changedProps) {
     super.updated(changedProps);
-    if (changedProps.has('opened') && this.__overlay) {
+    if (changedProps.has('opened')) {
       if (this.opened) {
-        console.log('overlay show');
-
-        // if (window.innerWidth > 600) {
-        //   this._listboxNode.style.position = '';
-
-          this.__overlay.show();
-        // } else {
-        //   this._listboxNode.style.position = 'relative';
-        //   this._listboxNode.style.display = '';
-        //   this.__overlayMobile.show();
-        // }
+        this.__overlay.show();
       } else {
-        // console.log('overlay hide');
-
         this.__overlay.hide();
-        // this.__overlayMobile.hide();
       }
     }
 
@@ -243,39 +248,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
       </div>
     `;
   }
-
-  // /**
-  //  * Overrides FormRegistrar adding to make sure children have specific default states when added
-  //  *
-  //  * @override
-  //  * @param {FormControl} child
-  //  */
-  // addFormElement(child) {
-  //   super.addFormElement(child);
-  //   // we need to adjust the elements being registered
-  //   /* eslint-disable no-param-reassign */
-  //   child.id = child.id || `${this.localName}-option-${uuid()}`;
-
-  //   if (this.disabled) {
-  //     child.makeRequestToBeDisabled();
-  //   }
-  //   // the first elements checked by default
-  //   if (!this.__hasInitialSelectedFormElement && (!child.disabled || this.disabled)) {
-  //     child.active = true;
-  //     child.checked = true;
-  //     this.__hasInitialSelectedFormElement = true;
-  //   }
-
-  //   this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-  //   child.setAttribute('aria-posinset', this.formElements.length);
-
-  //   this.__onChildModelValueChanged({ target: child });
-  //   this.resetInteractionState();
-  //   /* eslint-enable no-param-reassign */
-  // }
-
-
-
 
   /**
    * add same aria-label to invokerNode as inputElement
@@ -328,8 +300,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
   }
 
   __onChildActiveChanged({ target }) {
-    console.log('__onChildActiveChanged');
-
     if (target.active === true) {
       this.formElements.forEach(formElement => {
         if (formElement !== target) {
@@ -340,12 +310,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
       this._listboxNode.setAttribute('aria-activedescendant', target.id);
     }
   }
-
-  // __setAttributeForAllFormElements(attribute, value) {
-  //   this.formElements.forEach(formElement => {
-  //     formElement.setAttribute(attribute, value);
-  //   });
-  // }
 
   __onChildModelValueChanged({ target }) {
     if (target.checked) {
@@ -399,8 +363,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
    * @param ev - the keydown event object
    */
   __listboxOnKeyUp(ev) {
-    console.log('__listboxOnKeyUp', ev.key);
-
     if (this.disabled) {
       return;
     }
@@ -422,7 +384,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
         break;
       case 'ArrowUp':
         ev.preventDefault();
-        console.log('omhoog met die pijl');
         this.activeIndex = this.__getPreviousEnabledOption(this.activeIndex);
         break;
       case 'ArrowDown':
@@ -442,14 +403,11 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
 
     const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
     if (keys.includes(key) && this.interactionMode === 'windows/linux') {
-      console.log('set checked');
       this.checkedIndex = this.activeIndex;
     }
   }
 
   __listboxOnKeyDown(ev) {
-    console.log('__listboxOnKeyDown');
-
     if (this.disabled) {
       return;
     }
@@ -467,12 +425,9 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
   }
 
   __onKeyUp(ev) {
-    console.log('__onKeyUp', this.opened, this.disabled);
-
     if (this.disabled) {
       return;
     }
-
 
     if (this.opened) {
       return;
@@ -563,7 +518,6 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
 
   __setupListboxNodeEventListener() {
     this.__listboxOnClick = () => {
-      console.log('__listboxOnClick');
       this.opened = false;
     };
     this._listboxNode.addEventListener('click', this.__listboxOnClick);
@@ -583,74 +537,29 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
     }
   }
 
+  /**
+   * @desc returns an instance of a (dynamic) overlay controller
+   * @returns {OverlayController}
+   */
   _defineOverlay() {
-    return new OverlayController({
-      contentNode: this._listboxNode,
-      invokerNode: this._invokerNode,
-      hidesOnEsc: false,
-      hidesOnOutsideClick: true,
-    },
-    [
-      {
-        condition: () => window.innerWidth > 600,
-        // ...withDropdownConfig()
-        inheritsReferenceObjectWidth: true,
-        popperConfig: {
-          placement: 'bottom-start',
-          modifiers: {
-            offset: {
-              enabled: false,
-            },
-          },
-        },
+    const ctrl = new DynamicOverlayController({
+        contentNode: this._listboxNode,
+        invokerNode: this._invokerNode,
+        ...withModalDialogConfig(),
       },
-      {
-        condition: () => window.innerWidth <= 600,
-        // ...withModalDialogConfig()
-        isGlobal: true,
-        hasBackdrop: true,
-        preventsScroll: true,
-        trapsKeyboardFocus: true,
-        hidesOnEsc: true,
-      }
-    ]
+      [{  condition: () => window.innerWidth >= 600,
+          contentNode: this._listboxNode,
+          invokerNode: this._invokerNode,
+          ...withDropdownConfig(),
+      }],
     );
+
+    matchMedia('(min-width: 600px)').addEventListener('change', ctrl.requestDynamicConfigSwitch);
+    return ctrl;
   }
 
   __setupOverlay() {
-    this.__overlay = this._defineOverlay();
-
-    // this.__overlay = overlays.add(
-    //   new LocalOverlayController({
-    //     contentNode: this._listboxNode,
-    //     invokerNode: this._invokerNode,
-    //     hidesOnEsc: false,
-    //     hidesOnOutsideClick: true,
-    //     inheritsReferenceObjectWidth: true,
-    //     popperConfig: {
-    //       placement: 'bottom-start',
-    //       modifiers: {
-    //         offset: {
-    //           enabled: false,
-    //         },
-    //       },
-    //     },
-
-    //     // contentNode: this._listboxNode,
-    //     // invokerNode: this._invokerNode,
-    //     // hidesOnEsc: false,
-    //     // hidesOnOutsideClick: true,
-    //   }),
-    // );
-
-    // this.__overlayMobile = overlays.add(
-    //   new ModalDialogController({
-    //     contentNode: this._listboxNode,
-    //     invokerNode: this._invokerNode,
-    //     hidesOnEsc: false,
-    //     hidesOnOutsideClick: true,
-    //   }),
-    // );
+    this.__overlay = overlays.add(this._defineOverlay());
 
     this.__overlayOnShow = () => {
       this.opened = true;
@@ -660,21 +569,17 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
       this._listboxNode.focus();
     };
     this.__overlay.addEventListener('show', this.__overlayOnShow);
-    // this.__overlayMobile.addEventListener('show', this.__overlayOnShow);
 
     this.__overlayOnHide = () => {
       this.opened = false;
       this._invokerNode.focus();
     };
     this.__overlay.addEventListener('hide', this.__overlayOnHide);
-    // this.__overlayMobile.addEventListener('hide', this.__overlayOnHide);
   }
 
   __teardownOverlay() {
     this.__overlay.removeEventListener('show', this.__overlayOnShow);
     this.__overlay.removeEventListener('hide', this.__overlayOnHide);
-    // this.__overlayMobile.removeEventListener('show', this.__overlayOnShow);
-    // this.__overlayMobile.removeEventListener('hide', this.__overlayOnHide);
   }
 
   // eslint-disable-next-line class-methods-use-this

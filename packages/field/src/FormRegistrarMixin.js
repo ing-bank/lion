@@ -72,12 +72,9 @@ export const FormRegistrarMixin = dedupeMixin(
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
         formRegistrarManager.becomesReady(this);
-
-        console.log('this.formElements Registrar', this.formElements);
       }
 
       addFormElement(child) {
-
         // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
         // eslint-disable-next-line no-param-reassign
         child.__parentFormGroup = this._delegatedParent;

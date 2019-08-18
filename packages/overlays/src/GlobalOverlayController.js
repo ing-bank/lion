@@ -128,9 +128,11 @@ export class GlobalOverlayController {
       // render(this.contentTemplate(data), this._container);
 
       if (this.contentTemplate) {
-        const container = document.createElement('div');
-        render(this.contentTemplate(data), container);
-        this.contentNode = container.firstElementChild;
+        const renderContainer = document.createElement('div');
+        render(this.contentTemplate(data), renderContainer);
+        this.contentNode = renderContainer.firstElementChild;
+      } else {
+        this.contentNode.style.display = '';
       }
 
       this._container.appendChild(this.contentNode);
@@ -140,16 +142,20 @@ export class GlobalOverlayController {
       }
 
       this.dispatchEvent(new Event('show'));
+    } else {
+      if (this._container) {
+        GlobalOverlayController._rootNode.removeChild(this._container);
+        this._cleanupFlags();
+        this._container = null;
+        if (this.elementToFocusAfterHide) {
+          this.elementToFocusAfterHide.focus();
+        }
 
-    } else if (this._container) {
-      GlobalOverlayController._rootNode.removeChild(this._container);
-      this._cleanupFlags();
-      this._container = null;
-
-      if (this.elementToFocusAfterHide) {
-        this.elementToFocusAfterHide.focus();
+        this.dispatchEvent(new Event('hide'));
       }
-      this.dispatchEvent(new Event('hide'));
+      if (!this.contentTemplate) {
+        this.contentNode.style.display = 'none';
+      }
     }
     this._isShown = isShown;
     this._data = data;

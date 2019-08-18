@@ -168,6 +168,10 @@ export class LocalOverlayController {
       if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
       if (this.hidesOnEsc) this._setupHidesOnEsc();
 
+      if (!this.contentTemplate) {
+        this.contentNode.style.display = '';
+      }
+
       if (this._prevShown === false) {
         this.dispatchEvent(new Event('show'));
       }

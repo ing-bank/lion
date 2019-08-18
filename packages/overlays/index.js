@@ -5,5 +5,5 @@ export { ModalDialogController } from './src/ModalDialogController.js';
 export { overlays } from './src/overlays.js';
 export { OverlaysManager } from './src/OverlaysManager.js';
 
-export { OverlayController } from './src/OverlayController.js';
+export { DynamicOverlayController } from './src/DynamicOverlayController.js';
 
