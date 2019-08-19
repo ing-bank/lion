@@ -1,6 +1,6 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
 // import { LocalOverlayController, ModalDialogController, overlays } from '@lion/overlays';
-import { DynamicOverlayController, overlays } from '@lion/overlays';
+import { OverlayController, overlays, withModalDialogConfig, withDropdownConfig } from '@lion/overlays';
 
 import { FormControlMixin, InteractionStateMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
@@ -14,28 +14,6 @@ function detectInteractionMode() {
   }
   return 'windows/linux';
 }
-
-const withModalDialogConfig = () => ({
-  isGlobal: true,
-  hasBackdrop: true,
-  preventsScroll: true,
-  trapsKeyboardFocus: true,
-  hidesOnEsc: true,
-});
-
-const withDropdownConfig = () => ({
-  inheritsReferenceObjectWidth: true,
-  hidesOnOutsideClick: true,
-  popperConfig: {
-    placement: 'bottom-start',
-    modifiers: {
-      offset: {
-        enabled: false,
-      },
-    },
-  },
-});
-
 
 /**
  * LionSelectRich: wraps the <lion-listbox> element
@@ -114,7 +92,7 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
   }
 
   get _listboxActiveDescendantNode() {
-    return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
+    return this._listboxNode.querySelector(this._listboxActiveDescendant);
   }
 
   get checkedIndex() {
@@ -213,7 +191,7 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
 
   updated(changedProps) {
     super.updated(changedProps);
-    if (changedProps.has('opened')) {
+    if (changedProps.has('opened') && this.__overlay) {
       if (this.opened) {
         this.__overlay.show();
       } else {
@@ -537,29 +515,48 @@ export class LionSelectRich extends InteractionStateMixin(ValidateMixin(FormCont
     }
   }
 
+  // /**
+  //  * @desc returns an instance of a (dynamic) overlay controller
+  //  * @returns {OverlayController}
+  //  */
+  // _defineOverlay() {
+  //   return new OverlayController({
+  //       contentNode: this._listboxNode,
+  //       invokerNode: this._invokerNode,
+  //       ...withModalDialogConfig(),
+  //     },
+  //     [{  condition: () => window.innerWidth >= 600,
+  //         ...withDropdownConfig(),
+  //     }],
+  //   );
+  // }
+
   /**
    * @desc returns an instance of a (dynamic) overlay controller
    * @returns {OverlayController}
    */
-  _defineOverlay() {
-    const ctrl = new DynamicOverlayController({
-        contentNode: this._listboxNode,
-        invokerNode: this._invokerNode,
-        ...withModalDialogConfig(),
+  _defineOverlay(contentNode, invokerNode) { // eslint-disable-line class-methods-use-this
+    const ctrl = new OverlayController({
+        contentNode,
+        invokerNode,
+        synchronizesFocus: true,
       },
-      [{  condition: () => window.innerWidth >= 600,
-          contentNode: this._listboxNode,
-          invokerNode: this._invokerNode,
-          ...withDropdownConfig(),
-      }],
     );
 
-    matchMedia('(min-width: 600px)').addEventListener('change', ctrl.requestDynamicConfigSwitch);
+    ctrl.addEventListener('before-show', () => {
+      if (window.innerWidth >= 600) {
+        ctrl.setConfig(withDropdownConfig());
+      } else {
+        console.log('modal...');
+        ctrl.setConfig(withModalDialogConfig());
+      }
+    });
+
     return ctrl;
   }
 
   __setupOverlay() {
-    this.__overlay = overlays.add(this._defineOverlay());
+    this.__overlay = overlays.add(this._defineOverlay(this._listboxNode, this._invokerNode));
 
     this.__overlayOnShow = () => {
       this.opened = true;

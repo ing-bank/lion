@@ -17,7 +17,7 @@ import { LocalOverlayController } from './LocalOverlayController.js';
  * @property {Function} [onUpdate]
  */
 
-export class DynamicOverlayController {
+export class OverlayController {
   /**
    * @typedef {object} OverlayConfig
    * @property {HTMLElement} [elementToFocusAfterHide=document.body] - the element that should be
@@ -35,13 +35,14 @@ export class DynamicOverlayController {
    * https://github.com/ing-bank/lion/pull/61
    * @property {TemplateResult} [contentTemplate]
    * @property {TemplateResult} [invokerTemplate] (currently exclusive to LocalOverlayController)
-   * @property {HTMLElement} [invokerNode] (currently exclusive to LocalOverlayController)
-   * @property {HTMLElement} [contentNode] (currently exclusive to LocalOverlayController)
-   * @property {boolean} isModal - sets aria-modal and/or aria-hidden="true" on siblings
-   * @property {boolean} isGlobal - determines the connection point in DOM (body vs handled by user) TODO: rename to renderToBody?
-   * @property {boolean} isTooltip - has a totally different interaction- and accessibility pattern from all other overlays, so needed for internals.
-   * @property {boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
-   * @property {boolean} handlesAccessibility -
+   * @property {HTMLElement} invokerNode
+   * @property {HTMLElement} contentNode
+   * @property {boolean} [isModal=false] - sets aria-modal and/or aria-hidden="true" on siblings
+   * @property {boolean} [isGlobal=false] - determines the connection point in DOM (body vs next
+   * to invoker). This is what other libraries often refer to as 'portal'. TODO: rename to renderToBody?
+   * @property {boolean} [isTooltip=false] - has a totally different interaction- and accessibility pattern from all other overlays, so needed for internals.
+   * @property {boolean} [handlesUserInteraction] - sets toggle on click, or hover when `isTooltip`
+   * @property {boolean} [handlesAccessibility] -
    *  - For non `isTooltip`:
    *    - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
    *    - sets aria-controls on invokerNode
@@ -68,7 +69,7 @@ export class DynamicOverlayController {
    * @param {boolean} [syncOptions.syncsFocus=true] synchronize focus between overlays rendered locally and
    * globally (to the body)
    */
-  constructor(primaryConfig, secondaryConfigs, syncOptions = {}) {
+  constructor(config) {
     this._defaultConfig = {
       elementToFocusAfterHide: document.body,
       hasBackdrop: false,
@@ -79,8 +80,8 @@ export class DynamicOverlayController {
       hidesOnOutsideClick: false,
       contentTemplate: null,
       invokerTemplate: null,
-      invokerNode: primaryConfig.invokerNode,
-      contentNode: primaryConfig.contentNode,
+      invokerNode: config.invokerNode,
+      contentNode: config.contentNode,
       isModal: false,
       isGlobal: false,
       isTooltip: false,
@@ -88,63 +89,51 @@ export class DynamicOverlayController {
       handlesAccessibility: false,
       popperConfig: null,
       viewportPlacement: null,
+      syncsFocus: false,
     };
 
-    /** @type {OverlayConfig} */
-    this.__primaryConfig = primaryConfig;
-    /** @type {DynamicOverlayConfig[]} */
-    this.__secondaryConfigs = secondaryConfigs;
-    /** @type {OverlayConfig} */
-    this.__activeConfig = null;
     /** @type {OverlayController} */
     this.__activeCtrl = null;
 
-    this.__syncOptions = syncOptions;
-
     fakeExtendsEventTarget(this);
-    // This will initialize with the right configuration
-    this.requestDynamicConfigSwitch(false);
+    this._delegateApi();
+    this.setConfig(config);
   }
 
   /**
    * @desc Makes sure the config can be retrieved from the
    * @param {OverlayConfig} config
    */
-  _setConfig(config) {
-    const filteredConfig = Object.entries(config).reduce((result, [key, value]) => {
-      return Object.assign(result, (key !== 'condition') ? { [key]: value } : {});
-    }, {});
-    Object.assign(this, filteredConfig);
-    this._init();
+  setConfig(config) {
+    if (config.contentNode) {
+      this.__originalContentParent = config.contentNode.parentElement;
+    }
+    const newConfig = { ...this._defaultConfig, ...config };
+    Object.assign(this, newConfig);
+    this._init(newConfig);
   }
 
   // TODO: most of this logic can be removed when GlobalOverlayController and Local are merged
-  _init(config = this.__activeConfig) {
+  _init(config) {
     if (this.isGlobal) {
-      // create render context
-      // lazy import GlobalOverlayController
-      // const { GlobalOverlayController } = await loadGlobalOverlayController();
       if (!this.__globalOverlayController) {
         this.__globalOverlayController = new GlobalOverlayController(config);
       }
-      this.__prevCtrl = this.__activeCtrl;
       this.__activeCtrl = this.__globalOverlayController;
       this.contentNode.style.position = 'fixed';
     } else {
-      // lazy import LocalOverlayController
-      // const { LocalOverlayController } = await loadLocalOverlayController();
-      if(!this.__localOverlayController) {
+      if (!this.__localOverlayController) {
         this.__localOverlayController = new LocalOverlayController(config);
       }
-      this.__prevCtrl = this.__activeCtrl;
       this.__activeCtrl = this.__localOverlayController;
-      this.contentNode.style.position = 'absolute';
+      this.contentNode.style.position = '';
+      this.__originalContentParent.appendChild(this.contentNode);
     }
-    this._delegateApi();
+    this._delegateEvents();
   }
 
   /**
-   * TODO: create one shared OverlayControllerMixin (not to be used on HTMLElement) having this
+   * TODO: create one shared OverlayControllerMixin (not to be used on an HTMLElement) having this
    * interface and delete this method.
    * @desc For all public functions and properties, forward to the currently active
    * controller. Should be run once
@@ -152,23 +141,25 @@ export class DynamicOverlayController {
    */
   _delegateApi() {
     if (!this.__hasDelegated) {
-      // Intercepted methods
-      ['show', 'hide'].forEach((prop) => {
-        this[prop] = (...args) => {
-          if (this.__syncOptions.switchesConfigOnShow) {
-            this.requestDynamicConfigSwitch(false);
-          }
-          if (prop === 'hide' && this.__syncOptions.syncsFocus && this.__secondaryConfigs) {
-            this.__latestActiveElement = this.contentNode.activeElement;
-          }
-          this.__activeCtrl[prop](...args);
-          if (prop === 'show' && this.__syncOptions.syncsFocus && this.__secondaryConfigs) {
-            this.__latestActiveElement.focus();
-          }
-        }
-      });
 
-      // Methods
+      // Intercepted methods
+      this.show = (...args) => {
+        this.dispatchEvent(new Event('before-show'));
+        this.__activeCtrl.show(...args);
+        if (this.syncsFocus) {
+          this.__latestActiveElement.focus();
+        }
+      }
+
+      this.hide = (...args) => {
+        if (this.syncsFocus) {
+          this.__latestActiveElement = this.contentNode.activeElement;
+        }
+        this.dispatchEvent(new Event('before-hide'));
+        this.__activeCtrl.hide(...args);
+      }
+
+      // Other Methods
       ['toggle', 'sync', 'syncInvoker'].forEach((prop) => {
         this[prop] = (...args) => this.__activeCtrl[prop](...args);
       });
@@ -180,8 +171,10 @@ export class DynamicOverlayController {
 
       this.__hasDelegated = true;
     }
+  }
 
-    // Events
+  _delegateEvents() {
+    // Events: we can't use this._activeCtrl, since we need to listen to both
     [this.__globalOverlayController, this.__localOverlayController].forEach((ctrl) => {
       if (ctrl && !ctrl.__listenersDelegated) {
         ['show', 'hide'].forEach((event) => {
@@ -195,41 +188,5 @@ export class DynamicOverlayController {
   __delegateEvent(ev) {
     ev.stopPropagation();
     this.dispatchEvent(new Event(ev.type));
-  }
-
-  /**
-   * Allows an Application Developer to change the configuration of this controller
-   * For instance, the window size exceeds 600px and we need to switch from a dialog to
-   * a dropdown (this would mimic the behavior of a select). The supplied condition
-   * in secondaryConfigs will be checked and a config switch can be the outcome.
-   *
-   * @example
-   * myOverlayController.requestDynamicConfigSwitch();
-   * @param {boolean} shouldSyncIsShown whether a switch from one type(config) to the other type
-   * should synchronize the `isShown` state
-   */
-  requestDynamicConfigSwitch(shouldSyncIsShown = true) {
-    if (!this.__secondaryConfigs) {
-      return;
-    }
-    const useSecondaryConfig = this.__secondaryConfigs.some((config) => {
-      if (config.condition()) {
-        this.__activeConfig = { ...this._defaultConfig, ...config };
-        return true;
-      }
-    });
-    if (!useSecondaryConfig) {
-      // If no conditions applied, we should set back the primary config
-      this.__activeConfig = { ...this._defaultConfig, ...this.__primaryConfig };
-    }
-
-    const { isShown } = this;
-    this._setConfig(this.__activeConfig);
-
-    console.log('do it');
-    if (isShown && shouldSyncIsShown) {
-      this.__prevCtrl.hide();
-      this.__activeCtrl.show();
-    }
   }
 }

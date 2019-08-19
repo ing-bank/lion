@@ -65,8 +65,6 @@ export class LionOptions extends FormRegistrarMixin(LitElement) {
     this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
     child.setAttribute('aria-posinset', this.formElements.length);
 
-    console.log('addFormElement', child);
-
 
     // TODO: notify parent and do there
     // this.__onChildModelValueChanged({ target: child });
