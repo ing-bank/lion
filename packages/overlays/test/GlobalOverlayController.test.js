@@ -700,4 +700,69 @@ describe('GlobalOverlayController', () => {
       expect(getRenderedContainers().length).to.equal(0);
     });
   });
+
+  describe('viewportConfig', () => {
+    it('places the overlay in center by default', async () => {
+      const controller = new GlobalOverlayController({
+        contentTemplate: () =>
+          html`
+            <p>Content</p>
+          `,
+      });
+
+      controller.show();
+      const containerEl = controller.querySelector('global-overlays__overlay');
+      expect(controller.viewportConfig.placement).to.equal('center');
+      expect(window.getComputedStyle(containerEl).display).to.equal('flex');
+      expect(window.getComputedStyle(containerEl).justifyContent).to.equal('center');
+      expect(window.getComputedStyle(containerEl).alignItems).to.equal('center');
+    });
+
+    it('can set the placement relative to the viewport ', async () => {
+      const placementMap = {
+        topLeft: 'top-left',
+        top: 'top',
+        topRight: 'top-right',
+        right: 'right',
+        bottomRight: 'bottom-right',
+        bottom: 'bottom',
+        bottomLeft: 'bottom-left',
+        left: 'left',
+        center: 'center',
+      }
+      controller.show();
+      placementMap.forEach(viewportPlacement => {
+        const controller = new GlobalOverlayController({
+          viewportConfig: {
+            placement: viewportPlacement,
+          },
+          contentTemplate: () =>
+            html`
+              <p>Content</p>
+            `,
+        });
+        const containerEl = controller.querySelector('global-overlays__overlay');
+        expect(controller.viewportConfig.placement).to.equal(viewportPlacement);
+        expect(window.getComputedStyle(containerEl).display).to.equal('flex');
+
+        if (viewportPlacement === topLeft || viewportPlacement === top || viewportPlacement === topRight) {
+        expect(window.getComputedStyle(containerEl).justifyContent).to.equal('start');
+        } else if (viewportPlacement === right || viewportPlacement === left || viewportPlacement === center) {
+          expect(window.getComputedStyle(containerEl).justifyContent).to.equal('center');
+        } else {
+        expect(window.getComputedStyle(containerEl).justifyContent).to.equal('end');
+        }
+
+        if (viewportPlacement === topLeft || viewportPlacement === top || viewportPlacement === topRight) {
+          expect(window.getComputedStyle(containerEl).alignItems).to.equal('flex-start');
+        } else if (viewportPlacement === right || viewportPlacement === left || viewportPlacement === center) {
+          expect(window.getComputedStyle(containerEl).alignItems).to.equal('center');
+        } else {
+          expect(window.getComputedStyle(containerEl).alignItems).to.equal('flex-end');
+        }
+      });
+    });
+  });
+
+
 });

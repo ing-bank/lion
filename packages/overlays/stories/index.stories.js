@@ -1,4 +1,5 @@
 import './global-overlay.stories.js';
 import './modal-dialog.stories.js';
+import './bottomsheet.stories.js';
 import './local-overlay.stories.js';
 import './local-overlay-placement.stories.js';

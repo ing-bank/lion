@@ -6,6 +6,17 @@ export const globalOverlaysStyle = css`
     z-index: 200;
   }
 
+  .global-overlays__overlay {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
   .global-overlays.global-overlays--blocking-opened .global-overlays__overlay {
     display: none;
   }
@@ -17,6 +28,7 @@ export const globalOverlaysStyle = css`
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: -1;
     background-color: #333333;
     opacity: 0.3;
   }

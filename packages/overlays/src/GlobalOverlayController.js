@@ -2,7 +2,6 @@ import { render } from '@lion/core';
 import { containFocus } from './utils/contain-focus.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
-import { throws } from 'assert';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
@@ -27,6 +26,9 @@ export class GlobalOverlayController {
       preventsScroll: false,
       trapsKeyboardFocus: false,
       hidesOnEsc: false,
+      viewportConfig: {
+        placement: 'center',
+      },
       ...params,
     };
 
@@ -37,6 +39,7 @@ export class GlobalOverlayController {
     this.preventsScroll = finalParams.preventsScroll;
     this.trapsKeyboardFocus = finalParams.trapsKeyboardFocus;
     this.hidesOnEsc = finalParams.hidesOnEsc;
+    this.viewportPlacement = finalParams.viewportConfig.placement;
 
     this._isShown = false;
     this._data = {};
@@ -132,6 +135,7 @@ export class GlobalOverlayController {
         const container = document.createElement('div');
         render(this.contentTemplate(data), container);
         this.contentNode = container.firstElementChild;
+        this.contentNode.style.pointerEvents = 'auto';
       }
 
       this._container.appendChild(this.contentNode);
@@ -154,6 +158,45 @@ export class GlobalOverlayController {
 
   _initializeContainer() {
     const container = document.createElement('div');
+    switch (this.viewportPlacement) {
+      case 'top-left':
+        container.style.justifyContent = 'flex-start';
+        container.style.alignItems = 'flex-start';
+        break;
+      case 'top':
+        container.style.justifyContent = 'center';
+        container.style.alignItems = 'flex-start';
+        break;
+      case 'top-right':
+        container.style.justifyContent = 'flex-end';
+        container.style.alignItems = 'flex-start';
+        break;
+      case 'right':
+        container.style.justifyContent = 'flex-end';
+        container.style.alignItems = 'center';
+        break;
+      case 'bottom-left':
+        container.style.justifyContent = 'flex-start';
+        container.style.alignItems = 'flex-end';
+        break;
+      case 'bottom':
+        container.style.justifyContent = 'center';
+        container.style.alignItems = 'flex-end';
+        break;
+      case 'bottom-right':
+        container.style.justifyContent = 'flex-end';
+        container.style.alignItems = 'flex-end';
+        break;
+      case 'left':
+        container.style.justifyContent = 'flex-start';
+        container.style.alignItems = 'center';
+        break;
+      case 'center':
+        container.style.justifyContent = 'center';
+        container.style.alignItems = 'center';
+        break;
+      /* no default */
+    }
     container.classList.add(`global-overlays__overlay${this.isBlocking ? '--blocking' : ''}`);
     this._container = container;
     container._overlayController = this;

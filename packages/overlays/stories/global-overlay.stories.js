@@ -7,9 +7,6 @@ import { overlays, GlobalOverlayController } from '../index.js';
 const globalOverlayDemoStyle = css`
   .demo-overlay {
     background-color: white;
-    position: fixed;
-    top: 20px;
-    left: 20px;
     width: 200px;
     border: 1px solid blue;
   }
@@ -23,6 +20,24 @@ const globalOverlayDemoStyle = css`
     right: 20px;
   }
 `;
+
+let placement = 'top';
+const togglePlacement = overlayCtrl => {
+  const placements = [
+    'top-left',
+    'top',
+    'top-right',
+    'right',
+    'bottom-left',
+    'bottom',
+    'bottom-right',
+    'left',
+    'center',
+  ];
+  placement = placements[(placements.indexOf(placement) + 1) % placements.length];
+  // eslint-disable-next-line no-param-reassign
+  overlayCtrl.viewportPlacement = placement;
+};
 
 storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
@@ -55,6 +70,35 @@ storiesOf('Global Overlay System|Global Overlay', module)
           <p>Lorem ipsum</p>
         `,
       )}
+    `;
+  })
+  .add('Option "viewportConfig:placement"', () => {
+    const overlayCtrl = overlays.add(
+      new GlobalOverlayController({
+        viewportConfig: {
+          placement: 'center',
+        },
+        contentTemplate: () => html`
+          <div class="demo-overlay">
+            <h1>${overlayCtrl.viewportPlacement}</h1>
+            <button @click="${() => overlayCtrl.hide()}">Close</button>
+          </div>
+        `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${globalOverlayDemoStyle}
+      </style>
+      <button @click=${() => togglePlacement(overlayCtrl)}>Change placement</button>
+      <button
+        @click="${event => overlayCtrl.show(event.target)}"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+      >
+        Open overlay
+      </button>
     `;
   })
   .add('Option "preventsScroll"', () => {
