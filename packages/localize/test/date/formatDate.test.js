@@ -56,7 +56,7 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    localize.locale = 'bg';
+    localize.locale = 'bg-BG';
     let date = parseDate('29-12-2017');
     expect(formatDate(date)).to.equal('29.12.2017 г.');
 

@@ -46,6 +46,8 @@ We chose `Intl MessageFormat` as a format for translation parts because:
 
 ### Fallbacks
 
+> Important: language-only locales are now deprecated, and cause a warning. This is because language only locales cause bugs with date and number formatting. It also makes writing locale based tooling harder and more cumbersome. Usage is highly discouraged.
+
 We decided to have a fallback mechanism in case a dialect (e.g. `nl-NL.js`) is not defined, but generic language (e.g. `nl.js`) is, because we wanted to support legacy applications which used [Polymer's AppLocalizeBehavior](https://polymer-library.polymer-project.org/3.0/docs/apps/localize) and could not instantly switch to using full dialects.
 
 We decided to have a fallback locale (`en-GB` by default):
