@@ -302,6 +302,25 @@ describe('LocalizeManager', () => {
 
         throw new Error('did not throw');
       });
+
+      it('throws a warning if the locale set by the user is not a full language locale', async () => {
+        const spy = sinon.spy(console, 'warn');
+        manager = new LocalizeManager();
+        manager.locale = 'nl';
+
+        expect(spy.callCount).to.equal(1);
+        console.warn.restore();
+      });
+
+      it('does not throw a warning if locale was set through the html lang attribute', async () => {
+        const spy = sinon.spy(console, 'warn');
+        manager = new LocalizeManager();
+        document.documentElement.lang = 'nl';
+        await aTimeout(50); // wait for mutation observer to be called
+
+        expect(spy.callCount).to.equal(0);
+        console.warn.restore();
+      });
     });
   });
 

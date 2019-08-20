@@ -19,7 +19,7 @@ storiesOf('Forms|Input Email', module)
   )
   .add('Use own validator', () => {
     const gmailOnly = modelValue => ({ gmailOnly: modelValue.indexOf('gmail.com') !== -1 });
-    localize.locale = 'en';
+    localize.locale = 'en-GB';
 
     try {
       localize.addData('en', 'lion-validate+gmailOnly', {

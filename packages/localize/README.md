@@ -177,6 +177,8 @@ Due to the need to develop application code with not everything translated (yet)
 By default the fallback is `en-GB`, meaning that if some namespace does not have data for the current page locale, the `en-GB` will be loaded, making it an important foundation for all other locales data.
 In addition to that the fallback is a necessary mechanism to allow some features of the browsers like Google Chrome translate to work and use the same original data for translations into all not officially supported languages.
 
+> We highly discourage using fallback locales as a user, because it is bug-prone with things like date and number formatting. Please use full locales whenever possible.
+
 ### Rendering data
 
 When all necessary data are loaded and you want to show localized content on the page you need to format the data.

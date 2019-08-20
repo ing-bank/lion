@@ -42,6 +42,14 @@ export class LocalizeManager extends LionSingleton {
     document.documentElement.lang = value;
     this._setupHtmlLangAttributeObserver();
 
+    if (!value.includes('-')) {
+      console.warn(`
+        Locale was set to ${value}.
+        Language only locales are deprecated, please use the full language locale e.g. 'en-GB' instead of 'en'.
+        See https://github.com/ing-bank/lion/issues/187 for more information.
+      `);
+    }
+
     this._onLocaleChanged(value, oldLocale);
   }
 
