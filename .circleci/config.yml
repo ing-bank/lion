@@ -7,7 +7,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:10.12.0-browsers
+    - image: circleci/node:10.16.0-browsers
 
 jobs:
   test:
@@ -29,8 +29,12 @@ jobs:
       # run lint
       - run: npm run lint
 
-      # run tests
-      - run: npm run test:bs
+      # run test locally first
+      - run: npm run test
+
+      # run compatibility tests for multiple browser via browserstack
+      # disabled until we can safely test multiple browsers
+      # - run: npm run test:bs
 
       - persist_to_workspace:
           root: ~/repo
@@ -44,7 +48,7 @@ jobs:
           at: ~/repo
       - add_ssh_keys:
           fingerprints:
-            - "df:41:a0:89:d0:a1:30:7d:08:38:d6:65:73:61:a4:ec"
+            - 'df:41:a0:89:d0:a1:30:7d:08:38:d6:65:73:61:a4:ec'
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
