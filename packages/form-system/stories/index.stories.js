@@ -14,8 +14,9 @@ import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
 
-storiesOf('Forms|Form', module).add('Umbrella form', () => {
-  return html`
+storiesOf('Forms|Form', module).add(
+  'Umbrella form',
+  () => html`
     <lion-form
       ><form>
         <lion-input
@@ -103,5 +104,5 @@ storiesOf('Forms|Form', module).add('Umbrella form', () => {
         </div>
       </form></lion-form
     >
-  `;
-});
+  `,
+);
