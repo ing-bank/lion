@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const createDefaultConfig = require('@open-wc/testing-karma/default-config');
+const { createDefaultConfig } = require('@open-wc/testing-karma');
 const merge = require('webpack-merge');
 
 module.exports = config => {
@@ -16,6 +16,10 @@ module.exports = config => {
           type: 'module',
         },
       ],
+
+      esm: {
+        nodeResolve: true,
+      },
 
       // TODO: improve coverage
       coverageIstanbulReporter: {

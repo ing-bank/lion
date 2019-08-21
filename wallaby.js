@@ -3,13 +3,9 @@ const wallabyWebpack = require('wallaby-webpack'); // eslint-disable-line import
 // filter packages, e.g. 'core' / '{radio,radio-button}' / '{form,input*}'
 const packagePattern = '*';
 
-const replaceAll = (str, oldValue, newValue) => {
-  return str.split(oldValue).join(newValue);
-};
+const replaceAll = (str, oldValue, newValue) => str.split(oldValue).join(newValue);
 
-const countOccurences = (str, subbstr) => {
-  return str.split(subbstr).length - 1;
-};
+const countOccurences = (str, subbstr) => str.split(subbstr).length - 1;
 
 const makeLionImportsRelative = file => {
   // example:

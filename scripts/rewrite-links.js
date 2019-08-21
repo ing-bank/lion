@@ -74,9 +74,7 @@ function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) 
     return newHref;
   };
 
-  const mdLink = (href, title, text) => {
-    return `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
-  };
+  const mdLink = (href, title, text) => `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
 
   const resultLinks = [];
   // /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/

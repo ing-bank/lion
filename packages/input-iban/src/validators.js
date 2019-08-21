@@ -1,8 +1,6 @@
 import { isValidIBAN } from '@bundled-es-modules/ibantools/ibantools.js';
 
-export const isIBAN = value => {
-  return isValidIBAN(value);
-};
+export const isIBAN = value => isValidIBAN(value);
 
 export const isIBANValidator = () => [(...params) => ({ isIBAN: isIBAN(...params) })];
 
