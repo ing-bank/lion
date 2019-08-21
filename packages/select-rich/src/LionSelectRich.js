@@ -89,9 +89,7 @@ export class LionSelectRich extends FormRegistrarMixin(
   get slots() {
     return {
       ...super.slots,
-      invoker: () => {
-        return document.createElement('lion-select-invoker');
-      },
+      invoker: () => document.createElement('lion-select-invoker'),
     };
   }
 

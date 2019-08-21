@@ -650,11 +650,9 @@ describe('<lion-fieldset>', () => {
 
     it('has correct validation afterwards', async () => {
       const isCat = modelValue => ({ isCat: modelValue === 'cat' });
-      const containsA = modelValues => {
-        return {
-          containsA: modelValues.color ? modelValues.color.indexOf('a') > -1 : false,
-        };
-      };
+      const containsA = modelValues => ({
+        containsA: modelValues.color ? modelValues.color.indexOf('a') > -1 : false,
+      });
 
       const el = await fixture(html`
         <${tag} .errorValidators=${[[containsA]]}>

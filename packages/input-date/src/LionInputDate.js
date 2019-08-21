@@ -19,9 +19,7 @@ export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
 
   constructor() {
     super();
-    this.parser = (value, options) => {
-      return value === '' ? undefined : parseDate(value, options);
-    };
+    this.parser = (value, options) => (value === '' ? undefined : parseDate(value, options));
     this.formatter = formatDate;
   }
 
