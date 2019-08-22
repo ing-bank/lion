@@ -3,6 +3,7 @@ import { LitElement } from '@lion/core';
 
 import { FormRegistrarMixin } from '../src/FormRegistrarMixin.js';
 import { FormRegisteringMixin } from '../src/FormRegisteringMixin.js';
+import { FormRegistrarPortalMixin } from '../src/FormRegistrarPortalMixin.js';
 import { formRegistrarManager } from '../src/formRegistrarManager.js';
 
 export const runRegistrationSuite = customConfig => {
@@ -15,6 +16,7 @@ export const runRegistrationSuite = customConfig => {
   describe(`FormRegistrationMixins${cfg.suffix ? ` (${cfg.suffix})` : ''}`, () => {
     let parentTag;
     let childTag;
+    let portalTag;
 
     before(async () => {
       if (!cfg.parentTagString) {
@@ -23,9 +25,13 @@ export const runRegistrationSuite = customConfig => {
       if (!cfg.childTagString) {
         cfg.childTagString = defineCE(class extends FormRegisteringMixin(cfg.baseElement) {});
       }
+      if (!cfg.portalTagString) {
+        cfg.portalTagString = defineCE(class extends FormRegistrarPortalMixin(cfg.baseElement) {});
+      }
 
       parentTag = unsafeStatic(cfg.parentTagString);
       childTag = unsafeStatic(cfg.childTagString);
+      portalTag = unsafeStatic(cfg.portalTagString);
     });
 
     it('can register a formElement', async () => {
@@ -116,6 +122,73 @@ export const runRegistrationSuite = customConfig => {
 
       el.removeChild(newField);
       expect(el.formElements.length).to.equal(1);
+    });
+
+    describe('FormRegistrarPortalMixin', () => {
+      it('throws if there is no .registrationTarget', async () => {
+        expect(async () => {
+          await fixture(html`<${portalTag}></${portalTag}>`);
+        }).to.throw('A FormRegistrarPortal element requires a .registrationTarget');
+      });
+
+      it('forwards registrations to the .registrationTarget', async () => {
+        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        await fixture(html`
+          <${portalTag} .registrationTarget=${el}>
+            <${childTag}></${childTag}>
+          </${portalTag}>
+        `);
+
+        expect(el.formElements.length).to.equal(1);
+      });
+
+      it('can dynamically add/remove elements', async () => {
+        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const portal = await fixture(html`
+          <${portalTag} .registrationTarget=${el}>
+            <${childTag}></${childTag}>
+          </${portalTag}>
+        `);
+        const newField = await fixture(html`
+          <${childTag}></${childTag}>
+        `);
+
+        expect(el.formElements.length).to.equal(1);
+
+        portal.appendChild(newField);
+        expect(el.formElements.length).to.equal(2);
+
+        portal.removeChild(newField);
+        expect(el.formElements.length).to.equal(1);
+      });
+
+      it('works for portals that have a delayed render', async () => {
+        const delayedPortalString = defineCE(
+          class extends FormRegistrarPortalMixin(LitElement) {
+            async performUpdate() {
+              await new Promise(resolve => setTimeout(() => resolve(), 10));
+              await super.performUpdate();
+            }
+
+            render() {
+              return html`
+                <slot></slot>
+              `;
+            }
+          },
+        );
+        const delayedPortalTag = unsafeStatic(delayedPortalString);
+
+        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        await fixture(html`
+          <${delayedPortalTag} .registrationTarget=${el}>
+            <${childTag}></${childTag}>
+          </${delayedPortalTag}>
+        `);
+
+        await el.registrationReady;
+        expect(el.formElements.length).to.equal(1);
+      });
     });
   });
 };
