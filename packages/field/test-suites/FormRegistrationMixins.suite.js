@@ -1,5 +1,6 @@
 import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from '@lion/core';
+import sinon from 'sinon';
 
 import { FormRegistrarMixin } from '../src/FormRegistrarMixin.js';
 import { FormRegisteringMixin } from '../src/FormRegisteringMixin.js';
@@ -17,6 +18,7 @@ export const runRegistrationSuite = customConfig => {
     let parentTag;
     let childTag;
     let portalTag;
+    let portalTagString;
 
     before(async () => {
       if (!cfg.parentTagString) {
@@ -30,6 +32,7 @@ export const runRegistrationSuite = customConfig => {
       }
 
       parentTag = unsafeStatic(cfg.parentTagString);
+      portalTagString = cfg.portalTagString;
       childTag = unsafeStatic(cfg.childTagString);
       portalTag = unsafeStatic(cfg.portalTagString);
     });
@@ -126,8 +129,11 @@ export const runRegistrationSuite = customConfig => {
 
     describe('FormRegistrarPortalMixin', () => {
       it('throws if there is no .registrationTarget', async () => {
-        expect(async () => {
-          await fixture(html`<${portalTag}></${portalTag}>`);
+        // we test the private api directly as errors thrown from a web component are in a
+        // different context and we can not catch them here
+        const el = document.createElement(portalTagString);
+        expect(() => {
+          el.__checkRegistrationTarget();
         }).to.throw('A FormRegistrarPortal element requires a .registrationTarget');
       });
 
@@ -160,6 +166,21 @@ export const runRegistrationSuite = customConfig => {
 
         portal.removeChild(newField);
         expect(el.formElements.length).to.equal(1);
+      });
+
+      // find a proper way to do this on polyfilled browsers
+      it.skip('fires event "form-element-register" with the child as ev.target', async () => {
+        const registerSpy = sinon.spy();
+        const el = await fixture(
+          html`<${parentTag} @form-element-register=${registerSpy}></${parentTag}>`,
+        );
+        const portal = await fixture(html`
+          <${portalTag} .registrationTarget=${el}>
+            <${childTag}></${childTag}>
+          </${portalTag}>
+        `);
+        const childEl = portal.children[0];
+        expect(registerSpy.args[2][0].target.tagName).to.equal(childEl.tagName);
       });
 
       it('works for portals that have a delayed render', async () => {

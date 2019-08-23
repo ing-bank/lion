@@ -6,3 +6,4 @@ export { InteractionStateMixin } from './src/InteractionStateMixin.js'; // appli
 export { LionField } from './src/LionField.js';
 export { FormRegisteringMixin } from './src/FormRegisteringMixin.js';
 export { FormRegistrarMixin } from './src/FormRegistrarMixin.js';
+export { FormRegistrarPortalMixin } from './src/FormRegistrarPortalMixin.js';
