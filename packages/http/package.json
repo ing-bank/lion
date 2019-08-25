@@ -1,0 +1,44 @@
+{
+  "name": "@lion/http",
+  "version": "0.0.0",
+  "description": "Thin wrapper around fetch.",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/http"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "fetch",
+    "ajax",
+    "http"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/localize": "^0.4.14"
+  },
+  "devDependencies": {
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^2.3.4",
+    "sinon": "^7.2.2"
+  }
+}
