@@ -1,10 +1,11 @@
 # Input Range
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-input-range` component is a webcomponent that enhances the functionality of the native `<input type="range">` element.
 
 ## Features
+
 - based on [field](../field/)
 - extra visual elements can be added via `slots`
   - **label**: can also be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
@@ -21,7 +22,8 @@
 ## How to use
 
 ### Installation
-```
+
+```sh
 npm i --save @lion/input-range;
 ```
 
@@ -42,6 +44,7 @@ import '@lion/input-range.js';
 ```
 
 Making use of slots:
+
 ```html
 <lion-input-range name="amount">
   <label slot="label">Amount</label>
