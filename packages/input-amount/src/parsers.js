@@ -60,7 +60,8 @@ function getParseMode(value) {
  * @param {object} options Locale Options
  */
 function parseWithLocale(value, options) {
-  const separator = getDecimalSeparator(options);
+  const locale = options && options.locale ? options.locale : null;
+  const separator = getDecimalSeparator(locale);
   const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
   let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator).join('');
   if (separator === ',') {
