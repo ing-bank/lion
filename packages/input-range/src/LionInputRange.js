@@ -1,9 +1,9 @@
 import { LionField } from '@lion/field';
 
-function getInitialValue(input) {
-  const min = parseFloat(input.min || 0);
-  const max = parseFloat(input.max || 100);
-  const step = parseFloat(input.step || 1);
+function getInitialValue(minValue, maxValue, stepValue) {
+  const min = parseFloat(minValue || 0);
+  const max = parseFloat(maxValue || 100);
+  const step = parseFloat(stepValue || 1);
   const value = (max - min) / 2 + min;
 
   return Math.floor(value / step) * step;
@@ -29,29 +29,35 @@ export class LionInputRange extends LionField {
     };
   }
 
+  static get properties() {
+    return {
+      min: {
+        type: Number,
+        reflect: true,
+      },
+      max: {
+        type: Number,
+        reflect: true,
+      },
+      step: {
+        type: Number,
+        reflect: true,
+      },
+      autocomplete: {
+        type: String,
+      },
+    };
+  }
+
   constructor() {
     super();
 
+    this.min = undefined;
+    this.max = undefined;
+    this.step = undefined;
+    this.list = undefined;
+    this.autocomplete = undefined;
     this.parser = parser;
-  }
-
-  get delegations() {
-    return {
-      ...super.delegations,
-      target: () => this.inputElement,
-      attributes: [...super.delegations.attributes, 'min', 'max', 'step', 'list', 'autocomplete'],
-      properties: [
-        ...super.delegations.properties,
-        'min',
-        'max',
-        'step',
-        'list',
-        'autocomplete',
-        'valueAsNumber',
-        'stepUp',
-        'stepDown',
-      ],
-    };
   }
 
   get slots() {
@@ -62,23 +68,102 @@ export class LionInputRange extends LionField {
 
         native.setAttribute('type', 'range');
 
-        if (this.min) {
-          this.__setAttribute(native, 'min', this.min);
+        if (this.hasAttribute('min')) {
+          native.setAttribute('min', this.getAttribute('min'));
         }
 
-        if (this.max) {
-          this.__setAttribute(native, 'max', this.max);
+        if (this.hasAttribute('max')) {
+          native.setAttribute('max', this.getAttribute('max'));
         }
 
-        if (this.step) {
-          this.__setAttribute(native, 'step', this.step);
+        if (this.hasAttribute('step')) {
+          native.setAttribute('step', this.getAttribute('step'));
         }
 
-        this.__setAttribute(native, 'value', getInitialValue(native));
+        if (this.hasAttribute('value')) {
+          native.setAttribute('value', this.getAttribute('value'));
+        } else {
+          native.setAttribute('value', getInitialValue(this.min, this.max, this.step));
+        }
 
         return native;
       },
     };
+  }
+
+  _requestUpdate(name, oldValue) {
+    super._requestUpdate(name, oldValue);
+
+    switch (name) {
+      case 'min':
+        this.__delegateMin();
+        break;
+      case 'max':
+        this.__delegateMax();
+        break;
+      case 'step':
+        this.__delegateStep();
+        break;
+      case 'list':
+        this.__delegateList();
+        break;
+      case 'autocomplete':
+        this.__delegateAutocomplete();
+        break;
+      default:
+    }
+  }
+
+  get valueAsNumber() {
+    return this.inputElement && this.inputElement.valueAsNumber;
+  }
+
+  stepUp() {
+    return this.inputElement && this.inputElement.stepUp();
+  }
+
+  stepDown() {
+    return this.inputElement && this.inputElement.stepDown();
+  }
+
+  firstUpdated(c) {
+    super.firstUpdated(c);
+
+    this.__delegateMin();
+    this.__delegateMax();
+    this.__delegateStep();
+    this.__delegateList();
+    this.__delegateAutocomplete();
+  }
+
+  __delegateMin() {
+    if (this.inputElement) {
+      this.inputElement.min = this.min;
+    }
+  }
+
+  __delegateMax() {
+    if (this.inputElement) {
+      this.inputElement.max = this.max;
+    }
+  }
+
+  __delegateStep() {
+    if (this.inputElement) {
+      this.inputElement.step = this.step;
+    }
+  }
+
+  __delegateList() {
+    if (this.inputElement) {
+      this.inputElement.setAttribute('list', this.getAttribute('list'));
+    }
+  }
+
+  __delegateAutocomplete() {
+    if (this.inputElement) {
+      this.inputElement.autocomplete = this.autocomplete;
+    }
   }
 
   _onModelValueChanged(...args) {
@@ -95,11 +180,13 @@ export class LionInputRange extends LionField {
    * @protected
    */
   _onMinChanged() {
-    const newValue = this.parser(this.inputElement.value);
+    if (this.inputElement) {
+      const newValue = this.parser(this.inputElement.value);
 
-    if (this.modelValue !== newValue) {
-      this.modelValue = newValue;
-      this.__fireEvent('min-changed');
+      if (this.modelValue !== newValue) {
+        this.modelValue = newValue;
+        this.__fireEvent('min-changed');
+      }
     }
   }
 
@@ -109,11 +196,13 @@ export class LionInputRange extends LionField {
    * @protected
    */
   _onMaxChanged() {
-    const newValue = this.parser(this.inputElement.value);
+    if (this.inputElement) {
+      const newValue = this.parser(this.inputElement.value);
 
-    if (this.modelValue !== newValue) {
-      this.modelValue = newValue;
-      this.__fireEvent('max-changed');
+      if (this.modelValue !== newValue) {
+        this.modelValue = newValue;
+        this.__fireEvent('max-changed');
+      }
     }
   }
 
@@ -128,9 +217,5 @@ export class LionInputRange extends LionField {
         composed: true,
       }),
     );
-  }
-
-  __setAttribute(native, name, defaultValue) {
-    native.setAttribute(name, this.hasAttribute(name) ? this.getAttribute(name) : defaultValue);
   }
 }

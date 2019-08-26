@@ -13,7 +13,7 @@ describe('lion-input-range', () => {
     element.min = 30;
     await element.updateComplete;
 
-    expect(element.min).to.equal('30');
+    expect(element.min).to.equal(30);
     expect(element.inputElement.min).to.equal('30');
   });
 
@@ -27,7 +27,7 @@ describe('lion-input-range', () => {
     element.max = 50;
     await element.updateComplete;
 
-    expect(element.max).to.equal('50');
+    expect(element.max).to.equal(50);
     expect(element.inputElement.max).to.equal('50');
   });
 
@@ -41,7 +41,7 @@ describe('lion-input-range', () => {
     element.step = 30;
     await element.updateComplete;
 
-    expect(element.step).to.equal('30');
+    expect(element.step).to.equal(30);
     expect(element.inputElement.step).to.equal('30');
   });
 
