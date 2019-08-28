@@ -40,3 +40,7 @@ There are multiple reasons why we used a web component as opposed to a CSS compo
 - **Target size**: The minimum target size is 40 pixels, which makes even the small buttons easy to activate. A container element was needed to make this size possible.
 - **Accessibility**: Our button is accessible because it uses the native button element. Having this native button element available in the light dom, preserves all platform accessibility features, like having it recognized by a native form.
 - **Advanced styling**: There are advanced styling options regarding icons in buttons, where it is a lot more maintainable to handle icons in our button using slots. An example is that a sticky icon-only buttons may looks different from buttons which have both icons and text.
+
+## Known issues
+
+- [Issue 64](https://github.com/ing-bank/lion/issues/64) - Using the JAWS screen reader on IE11 in browse mode might lead to unintended extra navigation. It announces an extra node "button".
