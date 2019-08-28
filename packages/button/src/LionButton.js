@@ -22,7 +22,13 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     return html`
       <div class="btn">
         ${this._renderBefore()}
-        <slot></slot>
+        ${this.constructor.__isIE11()
+          ? html`
+              <div id="${this._buttonId}"><slot></slot></div>
+            `
+          : html`
+              <slot></slot>
+            `}
         ${this._renderAfter()}
         <slot name="_button"></slot>
         <div class="click-area"></div>
@@ -132,6 +138,13 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.type = 'submit';
     this.active = false;
     this.__setupDelegationInConstructor();
+
+    if (this.constructor.__isIE11()) {
+      this._buttonId = `button-${Math.random()
+        .toString(36)
+        .substr(2, 10)}`;
+      this.setAttribute('aria-labelledby', this._buttonId);
+    }
   }
 
   connectedCallback() {
@@ -233,5 +246,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   // eslint-disable-next-line class-methods-use-this
   __isKeyboardClickEvent(e) {
     return e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */;
+  }
+
+  static __isIE11() {
+    const ua = window.navigator.userAgent;
+    const result = /Trident/.test(ua);
+    return result;
   }
 }

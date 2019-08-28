@@ -9,6 +9,7 @@ import {
   keyDownOn,
   keyUpOn,
 } from '@polymer/iron-test-helpers/mock-interactions.js';
+import { LionButton } from '../src/LionButton.js';
 
 import '../lion-button.js';
 
@@ -18,6 +19,16 @@ function getTopElement(el) {
   const crossBrowserRoot =
     el.shadowRoot && el.shadowRoot.elementFromPoint ? el.shadowRoot : document;
   return crossBrowserRoot.elementFromPoint(left + width / 2, top + height / 2);
+}
+
+let originalIsIE11Method;
+function mockIsIE11() {
+  originalIsIE11Method = LionButton.__isIE11;
+  LionButton.__isIE11 = () => true;
+}
+
+function restoreMockIsIE11() {
+  LionButton.__isIE11 = originalIsIE11Method;
 }
 
 describe('lion-button', () => {
@@ -197,6 +208,18 @@ describe('lion-button', () => {
       el.disabled = false;
       await el.updateComplete;
       expect(el.getAttribute('tabindex')).to.equal('5');
+    });
+
+    it('has an aria-labelledby and wrapper element in IE11', async () => {
+      mockIsIE11();
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      expect(el.hasAttribute('aria-labelledby')).to.be.true;
+      const wrapperId = el.getAttribute('aria-labelledby');
+      expect(el.shadowRoot.querySelector(`#${wrapperId}`)).to.exist;
+      expect(el.shadowRoot.querySelector(`#${wrapperId}`)).dom.to.equal(
+        `<div id="${wrapperId}"><slot></slot></div>`,
+      );
+      restoreMockIsIE11();
     });
   });
 
