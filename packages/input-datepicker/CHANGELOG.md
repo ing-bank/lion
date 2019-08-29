@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.64](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.63...@lion/input-datepicker@0.1.64) (2019-08-29)
+
+**Note:** Version bump only for package @lion/input-datepicker
+
+
+
+
+
 ## [0.1.63](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.62...@lion/input-datepicker@0.1.63) (2019-08-23)
 
 **Note:** Version bump only for package @lion/input-datepicker

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/ing-bank/lion/compare/@lion/button@0.3.11...@lion/button@0.3.12) (2019-08-29)
+
+
+### Bug Fixes
+
+* **button:** make JAWS/IE11 work with inner button ([f2c15ce](https://github.com/ing-bank/lion/commit/f2c15ce))
+
+
+
+
+
 ## [0.3.11](https://github.com/ing-bank/lion/compare/@lion/button@0.3.10...@lion/button@0.3.11) (2019-08-23)
 
 **Note:** Version bump only for package @lion/button
