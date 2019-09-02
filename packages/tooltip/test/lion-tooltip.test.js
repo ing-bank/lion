@@ -21,13 +21,12 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
       const eventMouseEnter = new Event('mouseenter');
-      invoker.dispatchEvent(eventMouseEnter);
+      el.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       const eventMouseLeave = new Event('mouseleave');
-      invoker.dispatchEvent(eventMouseLeave);
+      el.dispatchEvent(eventMouseLeave);
       await el.updateComplete;
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
     });
