@@ -145,4 +145,17 @@ describe('parseAmount()', () => {
   it('returns undefined when value is empty string', () => {
     expect(parseAmount('')).to.equal(undefined);
   });
+
+  it('parseAmount with locale set and length is more than four', () => {
+    expect(
+      parseAmount('6,000', {
+        locale: 'gb-GB',
+      }),
+    ).to.equal(6000);
+    expect(
+      parseAmount('6.000', {
+        locale: 'es-ES',
+      }),
+    ).to.equal(6000);
+  });
 });
