@@ -6,6 +6,7 @@ export class LionTooltip extends LionPopup {
     super.connectedCallback();
     this.contentNode = this.querySelector('[slot="content"]');
     this.invokerNode = this.querySelector('[slot="invoker"]');
+    this.contentNode.setAttribute('role', 'tooltip');
 
     this._controller = overlays.add(
       new LocalOverlayController({
