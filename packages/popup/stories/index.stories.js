@@ -59,8 +59,8 @@ storiesOf('Local Overlay System|Popup', module)
       </style>
       <div class="demo-box">
         <lion-popup .popperConfig="${{ placement: 'top' }}">
-          <div slot="content" class="popup">Hello there!</div>
           <lion-button slot="invoker">Popup</lion-button>
+          <div slot="content" class="popup">Hello there!</div>
         </lion-popup>
       </div>
     `,
@@ -73,20 +73,20 @@ storiesOf('Local Overlay System|Popup', module)
       </style>
       <div class="demo-box_placements">
         <lion-popup .popperConfig="${{ placement: 'top' }}">
-          <div slot="content" class="popup">Its top placement</div>
           <lion-button slot="invoker">Top</lion-button>
+          <div slot="content" class="popup">Its top placement</div>
         </lion-popup>
         <lion-popup .popperConfig="${{ placement: 'right' }}">
-          <div slot="content" class="popup">Its right placement</div>
           <lion-button slot="invoker">Right</lion-button>
+          <div slot="content" class="popup">Its right placement</div>
         </lion-popup>
         <lion-popup .popperConfig="${{ placement: 'bottom' }}">
-          <div slot="content" class="popup">Its bottom placement</div>
           <lion-button slot="invoker">Bottom</lion-button>
+          <div slot="content" class="popup">Its bottom placement</div>
         </lion-popup>
         <lion-popup .popperConfig="${{ placement: 'left' }}">
-          <div slot="content" class="popup">Its left placement</div>
           <lion-button slot="invoker">Left</lion-button>
+          <div slot="content" class="popup">Its left placement</div>
         </lion-popup>
       </div>
     `,
@@ -123,8 +123,8 @@ storiesOf('Local Overlay System|Popup', module)
             },
           })}"
         >
-          <div slot="content" class="popup">${text('Content text', 'Hello, World!')}</div>
           <lion-button slot="invoker">${text('Invoker text', 'Click me!')}</lion-button>
+          <div slot="content" class="popup">${text('Content text', 'Hello, World!')}</div>
         </lion-popup>
       </div>
     `,
