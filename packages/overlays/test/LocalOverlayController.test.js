@@ -530,21 +530,6 @@ describe('LocalOverlayController', () => {
       expect(controller.invokerNode.hasAttribute('aria-labelledby')).to.be.false;
     });
 
-    it('adds aria-describedby to the invoker', async () => {
-      const controller = new LocalOverlayController({
-        invokerRelationship: 'description',
-        contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
-        `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}>
-            Invoker
-          </button>
-        `,
-      });
-      expect(controller.invokerNode.hasAttribute('aria-describedby')).to.be.true;
-    });
-
     it('adds aria-labelledby to the invoker', async () => {
       const controller = new LocalOverlayController({
         invokerRelationship: 'label',
@@ -558,6 +543,21 @@ describe('LocalOverlayController', () => {
         `,
       });
       expect(controller.invokerNode.hasAttribute('aria-labelledby')).to.be.true;
+    });
+
+    it('adds aria-describedby to the invoker', async () => {
+      const controller = new LocalOverlayController({
+        invokerRelationship: 'description',
+        contentTemplate: () => html`
+          <p style="width: 80px; height: 20px;"></p>
+        `,
+        invokerTemplate: () => html`
+          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}>
+            Invoker
+          </button>
+        `,
+      });
+      expect(controller.invokerNode.hasAttribute('aria-describedby')).to.be.true;
     });
 
     it('adds and removes aria-expanded on invoker', async () => {
