@@ -6,6 +6,8 @@ import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
 import { randomOk } from './validators.js';
 
+import { Validator } from './Validator.js';
+
 // TODO: extract from module like import { pascalCase } from 'lion-element/CaseMapUtils.js'
 const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -410,7 +412,7 @@ export const ValidateMixin = dedupeMixin(
        * Transition from Error to "nothing" results in success
        * Other transitions (from Warning/Info) are not followed by a success message
        */
-      validate() {
+      async validate() {
         if (this.modelValue === undefined) {
           this.__resetValidationStates();
           return;
@@ -517,6 +519,39 @@ export const ValidateMixin = dedupeMixin(
         return result;
       }
 
+      __getMeta(result, type, validatorParams, validatorConfig, name, value) {
+        const metaResults = [];
+
+        // eslint-disable-next-line
+        for (const validatorName in result) {
+          if (result[validatorName] === false) {
+            const data = {
+              validatorName,
+              validatorParams,
+              validatorConfig,
+              validatorType: type,
+              name,
+              value,
+            };
+            metaResults.push({
+              data,
+              translationKeys: this[`get${pascalCase(type)}TranslationsKeys`](data),
+            });
+          }
+        }
+        return metaResults;
+      }
+
+      static __normalizeValidatorResult(result, validator) {
+        if (typeof result === 'boolean') {
+          // class based, so get name
+          return {
+            [validator.name]: result
+          }
+        }
+        return result;
+      }
+
       /**
        * type can be 'error', 'warning', 'info', 'success'
        *
@@ -530,18 +565,62 @@ export const ValidateMixin = dedupeMixin(
        *     [minLength, {min: 5}],
        *     [contains, 'thisString']
        */
-      validateType(type) {
+      async validateType(type) {
+        function getResults(resultList) {
+          let result = {};
+          if (resultList.length > 0) {
+            result = {
+              list: resultList, // TODO: maybe call this details?
+            };
+            // <lion-form> will have a reference to lion-field by name, so user can do:
+            // formName.fieldName.errors.validatorName
+            resultList.forEach(resultListElement => {
+              result[resultListElement.data.validatorName] = true;
+            });
+          }
+
+          const x = {
+            [`${type}State`]:  resultList.length > 0,
+            [type] : result,
+          }
+          return x;
+        }
+
+        const ctor = this.constructor;
+
         const validators = this.getValidatorsForType(type);
         if (!(validators && Array.isArray(validators) && validators.length > 0)) return;
 
         const resultList = [];
         let value = this.modelValue; // This will end up being modelValue or Unparseable.viewValue
 
+        // When the modelValue can't be created, still allow all validators to give valuable
+        // feedback to the user based on the current viewValue.
+        if (value instanceof Unparseable) {
+          value = value.viewValue;
+        }
+
+        const asyncValidators = [];
+
         for (let i = 0; i < validators.length; i += 1) {
-          const validatorArray = Array.isArray(validators[i]) ? validators[i] : [validators[i]];
-          let validatorFn = validatorArray[0];
-          const validatorParams = validatorArray[1];
-          const validatorConfig = validatorArray[2];
+          let validatorFn;
+          let validatorParams;
+          let validatorConfig;
+
+          if (validators[i] instanceof Validator) {
+            validatorFn = validators[i].execute;
+            validatorParams = validators[i].param;
+            validatorConfig = validators[i].config;
+
+            if (validators[i].async) {
+              asyncValidators.push(validators[i]);
+              break;
+            }
+          } else {
+            // TODO: needed for backwards compatibility: add in extending layer
+            const validatorArray = Array.isArray(validators[i]) ? validators[i] : [validators[i]];
+            [validatorFn, validatorParams, validatorConfig] = validatorArray;
+          }
 
           let isRequiredValidator = false; // Whether the current is the required validator
           if (typeof validatorFn === 'string' && validatorFn === 'required' && this.__isRequired) {
@@ -549,35 +628,37 @@ export const ValidateMixin = dedupeMixin(
             isRequiredValidator = true;
           }
 
-          // When the modelValue can't be created, still allow all validators to give valuable
-          // feedbback to the user based on the current viewValue.
-          if (value instanceof Unparseable) {
-            value = value.viewValue;
-          }
-
           // We don't validate empty values, unless its 'required'
           const shouldValidate = isRequiredValidator || !this.constructor.__isEmpty(value);
 
           if (typeof validatorFn === 'function') {
             if (shouldValidate) {
-              const result = validatorFn(value, validatorParams);
+              let result = validatorFn(value, validatorParams);
+              result = ctor.__normalizeValidatorResult(result, validators[i]);
+
+              const meta = this.__getMeta(result, type, validatorParams, validatorConfig, this.name, this.modelValue);
+              // if (meta) {
+              //   resultList.push(meta);
+              // }
+              meta.forEach((m) => resultList.push(m));
+
               // eslint-disable-next-line no-restricted-syntax
-              for (const validatorName in result) {
-                if (!result[validatorName]) {
-                  const data = {
-                    validatorName,
-                    validatorParams,
-                    validatorConfig,
-                    validatorType: type,
-                    name: this.name,
-                    value: this.modelValue,
-                  };
-                  resultList.push({
-                    data,
-                    translationKeys: this[`get${pascalCase(type)}TranslationsKeys`](data),
-                  });
-                }
-              }
+              // for (const validatorName in result) {
+              //   if (!result[validatorName]) {
+              //     const data = {
+              //       validatorName,
+              //       validatorParams,
+              //       validatorConfig,
+              //       validatorType: type,
+              //       name: this.name,
+              //       value: this.modelValue,
+              //     };
+              //     resultList.push({
+              //       data,
+              //       translationKeys: this[`get${pascalCase(type)}TranslationsKeys`](data),
+              //     });
+              //   }
+              // }
             }
           } else {
             console.warn('That does not look like a validator function', validatorFn); // eslint-disable-line
@@ -589,20 +670,22 @@ export const ValidateMixin = dedupeMixin(
           }
         }
 
-        let result = {};
-        if (resultList.length > 0) {
-          result = {
-            list: resultList, // TODO: maybe call this details?
-          };
-          // <lion-form> will have a reference to lion-field by name, so user can do:
-          // formName.fieldName.errors.validatorName
-          resultList.forEach(resultListElement => {
-            result[resultListElement.data.validatorName] = true;
-          });
-        }
+        Object.assign(this, getResults(resultList));
 
-        this[`${type}State`] = resultList.length > 0;
-        this[type] = result;
+        // if we have async validators, there is some work left
+        if (asyncValidators.length) {
+          const promises = [];
+          asyncValidators.forEach((validator) => {
+            promises.push(validator.execute(value, validator.param));
+          });
+          const results = await Promise.all(promises);
+          results.forEach((res, i) => {
+            const result = ctor.__normalizeValidatorResult(res, validators[i]);
+            const meta = this.__getMeta(result, type, asyncValidators[i].param, asyncValidators[i].config, type, this.name, this.modelValue);
+            meta.forEach(m => resultList.push(m));
+          });
+          Object.assign(this, getResults(resultList));
+        }
       }
 
       getValidatorsForType(type) {
