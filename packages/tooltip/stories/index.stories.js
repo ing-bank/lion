@@ -59,8 +59,8 @@ storiesOf('Local Overlay System|Tooltip', module)
       </style>
       <div class="demo-box">
         <lion-tooltip .popperConfig=${{ placement: 'right' }}>
-          <div slot="content" class="tooltip">Hello there!</div>
           <lion-button slot="invoker">Tooltip</lion-button>
+          <div slot="content" class="tooltip">Hello there!</div>
         </lion-tooltip>
       </div>
     `,
@@ -73,20 +73,20 @@ storiesOf('Local Overlay System|Tooltip', module)
       </style>
       <div class="demo-box_placements">
         <lion-tooltip .popperConfig=${{ placement: 'top' }}>
-          <div slot="content" class="tooltip">Its top placement</div>
           <lion-button slot="invoker">Top</lion-button>
+          <div slot="content" class="tooltip">Its top placement</div>
         </lion-tooltip>
         <lion-tooltip .popperConfig=${{ placement: 'right' }}>
-          <div slot="content" class="tooltip">Its right placement</div>
           <lion-button slot="invoker">Right</lion-button>
+          <div slot="content" class="tooltip">Its right placement</div>
         </lion-tooltip>
         <lion-tooltip .popperConfig=${{ placement: 'bottom' }}>
-          <div slot="content" class="tooltip">Its bottom placement</div>
           <lion-button slot="invoker">Bottom</lion-button>
+          <div slot="content" class="tooltip">Its bottom placement</div>
         </lion-tooltip>
         <lion-tooltip .popperConfig=${{ placement: 'left' }}>
-          <div slot="content" class="tooltip">Its left placement</div>
           <lion-button slot="invoker">Left</lion-button>
+          <div slot="content" class="tooltip">Its left placement</div>
         </lion-tooltip>
       </div>
     `,
@@ -123,8 +123,8 @@ storiesOf('Local Overlay System|Tooltip', module)
             },
           })}"
         >
-          <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>
           <lion-button slot="invoker">${text('Invoker text', 'Click me!')}</lion-button>
+          <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>
         </lion-tooltip>
       </div>
     `,
