@@ -6,6 +6,7 @@ import { Unparseable } from './Unparseable.js';
 import { randomOk } from './legacy-validators.js';
 // import { debounce } from './utils/debounce.js';
 import { Required } from './validators.js';
+import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state
@@ -13,8 +14,8 @@ import { Required } from './validators.js';
  */
 export const ValidateCoreMixin = dedupeMixin(
   superclass =>
-    // eslint-disable-next-line no-unused-vars, no-shadow, max-len, max-classes-per-file
-    class ValidateCoreMixin extends SlotMixin(superclass) {
+    // eslint-disable-next-line no-unused-vars, no-shadow
+    class ValidateCoreMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
       static get properties() {
         return {
           /**
@@ -155,7 +156,6 @@ export const ValidateCoreMixin = dedupeMixin(
       connectedCallback() {
         super.connectedCallback();
         localize.addEventListener('localeChanged', this._renderFeedback);
-        this.__connected = true;
       }
 
       disconnectedCallback() {
@@ -163,35 +163,35 @@ export const ValidateCoreMixin = dedupeMixin(
         localize.removeEventListener('localeChanged', this._renderFeedback);
       }
 
-      static __updateSyncHasChanged(name, oldValue) {
-        const properties = this._classProperties;
-        if (properties.get(name) && properties.get(name).hasChanged) {
-          return properties.get(name).hasChanged(name, oldValue);
-        }
-        return true;
-      }
+      // static __updateSyncHasChanged(name, oldValue) {
+      //   const properties = this._classProperties;
+      //   if (properties.get(name) && properties.get(name).hasChanged) {
+      //     return properties.get(name).hasChanged(name, oldValue);
+      //   }
+      //   return true;
+      // }
 
-      _requestUpdate(name, oldValue) {
-        super._requestUpdate(name, oldValue);
+      // _requestUpdate(name, oldValue) {
+      //   super._requestUpdate(name, oldValue);
 
-        const ctor = this.constructor;
-        if (!this.__connected) {
-          this.__updateSyncQueue = this.__updateSyncQueue || [];
-          this.__updateSyncQueue.push({ name, oldValue });
-        } else if (this.__connected && !this.__isInitializedUpdateSyncQueue) {
-          this.__isInitializedUpdateSyncQueue = true;
-          this.__updateSyncQueue.forEach(({ name: n, oldValue: o }) => {
-            if (ctor.__updateSyncHasChanged(n, o)) {
-              this.updateSync(n, o);
-            }
-          });
-        } else if (ctor.__updateSyncHasChanged(name, oldValue)) {
-          this.updateSync(name, oldValue);
-        }
-      }
+      //   const ctor = this.constructor;
+      //   if (!this.__connected) {
+      //     this.__updateSyncQueue = this.__updateSyncQueue || [];
+      //     this.__updateSyncQueue.push({ name, oldValue });
+      //   } else if (this.__connected && !this.__isInitializedUpdateSyncQueue) {
+      //     this.__isInitializedUpdateSyncQueue = true;
+      //     this.__updateSyncQueue.forEach(({ name: n, oldValue: o }) => {
+      //       if (ctor.__updateSyncHasChanged(n, o)) {
+      //         this.updateSync(n, o);
+      //       }
+      //     });
+      //   } else if (ctor.__updateSyncHasChanged(name, oldValue)) {
+      //     this.updateSync(name, oldValue);
+      //   }
+      // }
 
-      updateSync(name) {
-        // super.updateSync(name, oldValue);
+      updateSync(name, oldValue) {
+        super.updateSync(name, oldValue);
 
         if (name === 'validators') {
           // trigger validation (ideally only for the new or changed validator)
