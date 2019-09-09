@@ -5,8 +5,9 @@ import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { localize } from '@lion/localize';
 
-import { ValidateMixin } from '../src/ValidateMixin.js';
+import { ValidateMixin } from '../src/compat-layer/ValidateMixin.js';
 import { Unparseable } from '../src/Unparseable.js';
+import { Validator } from '../src/Validator.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
 // successShowPrerequisite
@@ -35,10 +36,10 @@ beforeEach(() => {
   localizeTearDown();
 });
 
-describe('ValidateMixin', () => {
-  it('supports multiple validator types: error, warning, info and success [spec-to-be-implemented]', () => {
-    // TODO: implement spec
-  });
+describe.only('ValidateMixin', () => {
+  // it('supports multiple validator types: error, warning, info and success [spec-to-be-implemented]', () => {
+  //   // TODO: implement spec
+  // });
 
   /**
    *   Terminology
@@ -65,6 +66,7 @@ describe('ValidateMixin', () => {
     function alwaysFalse() {
       return { alwaysFalse: false };
     }
+
     const el = await fixture(html`
       <${tag}
         .errorValidators=${[[alwaysFalse]]}
@@ -236,7 +238,7 @@ describe('ValidateMixin', () => {
     expect(el.hasAttribute('success-show'), 'has success-show attribute').to.be.true;
   });
 
-  describe(`Validators ${suffixName}`, () => {
+  describe('Validators', () => {
     function isCat(modelValue, opts) {
       const validateString = opts && opts.number ? `cat${opts.number}` : 'cat';
       return { isCat: modelValue === validateString };
@@ -326,7 +328,7 @@ describe('ValidateMixin', () => {
     });
   });
 
-  describe(`Required validator`, () => {
+  describe('Required validator', () => {
     it('has a string notation', async () => {
       const el = await fixture(html`
         <${tag}
@@ -370,7 +372,7 @@ describe('ValidateMixin', () => {
     });
   });
 
-  describe(`Element Validation States ${suffixName}`, () => {
+  describe('Element Validation States', () => {
     const alwaysFalse = () => ({ alwaysFalse: false });
     const minLength = (modelValue, { min }) => ({ minLength: modelValue.length >= min });
     const containsLowercaseA = modelValue => ({ containsLowercaseA: modelValue.indexOf('a') > -1 });
@@ -411,7 +413,7 @@ describe('ValidateMixin', () => {
       expect(validationState.successState).to.equal(true);
     });
 
-    it('fires "(error|warning|info|success)-changed" event when {state} changes', async () => {
+    it.skip('fires "(error|warning|info|success)-changed" event when {state} changes', async () => {
       const validationState = await fixture(html`
         <${tag}
           .errorValidators=${[[minLength, { min: 3 }], [containsLowercaseA], [containsLowercaseB]]}
@@ -421,9 +423,11 @@ describe('ValidateMixin', () => {
       const cbError = sinon.spy();
       validationState.addEventListener('error-changed', cbError);
 
+      console.log('set to a');
       validationState.modelValue = 'a';
       expect(cbError.callCount).to.equal(1);
 
+      console.log('set to aa');
       validationState.modelValue = 'aa';
       expect(cbError.callCount).to.equal(1);
 
@@ -551,7 +555,7 @@ describe('ValidateMixin', () => {
       expect(validationState.classList.contains('state-success-show')).to.equal(true);
     });
 
-    it('fires "(error|warning|info|success)-state-changed" event when state changes', async () => {
+    it.only('fires "(error|warning|info|success)-state-changed" event when state changes', async () => {
       const el = await fixture(html`
         <${tag}
           .errorValidators=${[[minLength, { min: 7 }]]}
@@ -627,7 +631,7 @@ describe('ValidateMixin', () => {
     });
   });
 
-  describe(`Accessibility ${suffixName}`, () => {
+  describe('Accessibility', () => {
     it(`sets property "aria-invalid" to *input-element* once errors should be shown
         to user(*show-error-feedback-condition* is true) [to-be-implemented]`, async () => {});
 
@@ -639,7 +643,7 @@ describe('ValidateMixin', () => {
         and VoiceOver [to-be-implemented]`, async () => {});
   });
 
-  describe(`Validity Feedback ${suffixName}`, () => {
+  describe('Validity Feedback', () => {
     function alwaysFalse() {
       return { alwaysFalse: false };
     }
@@ -1285,8 +1289,45 @@ describe('ValidateMixin', () => {
     });
   });
 
-  describe(`Asynchronous validation [to-be-implemented] ${suffixName}`, () => {
-    it('handles promises as custom validator functions [to-be-implemented]', async () => {});
+  describe('Asynchronous validation', () => {
+    it('handles promises as custom validator functions', async () => {
+      let asyncValidationReady;
+      const asyncValidationPromise = new Promise((resolve) => {
+        asyncValidationReady = resolve;
+      });
+
+      class DelayedCatValidator extends Validator {
+        constructor(param, config) {
+          super(param, config);
+          this.name = 'delayed-cat';
+          this.async = true;
+        }
+
+       /**
+         * @desc the function that returns a Boolean
+         * @param {string} modelValue
+         */
+        async execute(modelValue) {
+          await asyncValidationPromise;
+          return modelValue === 'cat';
+        }
+      }
+
+      const el = await fixture(html`
+        <${tag}
+          .modelValue=${'dog'}
+          .errorValidators=${[new DelayedCatValidator()]}
+        >
+        ${lightDom}
+        </${tag}>
+      `);
+      const validator = el.errorValidators[0];
+      expect(validator instanceof Validator).to.equal(true);
+      expect(el.errorState).to.equal(false);
+      asyncValidationReady();
+      await aTimeout();
+      expect(el.errorState).to.equal(true);
+    });
 
     it('sets a class "state-pending" when validation is in progress [to-be-implemented]', async () => {});
 

@@ -1,6 +1,8 @@
-export { ValidateMixin } from './src/ValidateMixin.js';
+export { ValidateMixin } from './src/compat-layer/ValidateMixin.js';
+export { ValidateCoreMixin } from './src/ValidateCoreMixin.js';
 export { Unparseable } from './src/Unparseable.js';
 export { isValidatorApplied } from './src/isValidatorApplied.js';
+export { Validator } from './src/Validator.js';
 
 export {
   defaultOk,
@@ -37,4 +39,4 @@ export {
   minNumberValidator,
   randomOk,
   randomOkValidator,
-} from './src/validators.js';
+} from './src/legacy-validators.js';
