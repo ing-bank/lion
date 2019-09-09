@@ -21,15 +21,67 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
       const eventMouseEnter = new Event('mouseenter');
-      invoker.dispatchEvent(eventMouseEnter);
+      el.dispatchEvent(eventMouseEnter);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+      const eventMouseLeave = new Event('mouseleave');
+      el.dispatchEvent(eventMouseLeave);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+    });
+
+    it('should show content on mouseenter and remain shown on focusout', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      `);
+      const eventMouseEnter = new Event('mouseenter');
+      el.dispatchEvent(eventMouseEnter);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+      const eventFocusOut = new Event('focusout');
+      el.dispatchEvent(eventFocusOut);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+    });
+
+    it('should show content on focusin and hide on focusout', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      `);
+      const invoker = el.querySelector('[slot="invoker"]');
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+      const eventFocusOut = new Event('focusout');
+      invoker.dispatchEvent(eventFocusOut);
+      await el.updateComplete;
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+    });
+
+    it('should show content on focusin and remain shown on mouseleave', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      `);
+      const invoker = el.querySelector('[slot="invoker"]');
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
       expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
       const eventMouseLeave = new Event('mouseleave');
       invoker.dispatchEvent(eventMouseLeave);
       await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
     });
 
     it('should tooltip contains html when specified in tooltip content body', async () => {
@@ -50,22 +102,15 @@ describe('lion-tooltip', () => {
   });
 
   describe('Accessibility', () => {
-    it('should visible on focusin and hide on focusout', async () => {
+    it('should have a tooltip role set on the tooltip', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
-      const eventFocusIn = new Event('focusin');
-      invoker.dispatchEvent(eventFocusIn);
-      await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
-      const eventFocusOut = new Event('focusout');
-      invoker.dispatchEvent(eventFocusOut);
-      await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+      const invoker = el.querySelector('[slot="content"]');
+      expect(invoker.getAttribute('role')).to.be.equal('tooltip');
     });
 
     it('should have aria-controls attribute set to the invoker', async () => {
