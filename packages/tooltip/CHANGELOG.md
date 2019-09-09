@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.40](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.39...@lion/tooltip@0.2.40) (2019-09-09)
+
+
+### Bug Fixes
+
+* **tooltip:** add aria role ([b8e9926](https://github.com/ing-bank/lion/commit/b8e9926))
+* **tooltip:** make tooltip hide with what triggered it ([48a41c9](https://github.com/ing-bank/lion/commit/48a41c9))
+* **tooltip:** make tooltip hoverable ([73e2305](https://github.com/ing-bank/lion/commit/73e2305))
+
+
+
+
+
 ## [0.2.39](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.38...@lion/tooltip@0.2.39) (2019-08-29)
 
 **Note:** Version bump only for package @lion/tooltip
