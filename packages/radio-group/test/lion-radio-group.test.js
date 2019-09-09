@@ -211,4 +211,31 @@ describe('<lion-radio-group>', () => {
     el.formElements['gender[]'][0].choiceChecked = true;
     expect(el.error.required).to.be.undefined;
   });
+
+  it('returns serialized value', async () => {
+    const group = await fixture(html`
+      <lion-radio-group .errorValidators="${[['required']]}">
+        <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
+      </lion-radio-group>
+    `);
+
+    await nextFrame();
+    group.formElements['gender[]'][0].choiceChecked = true;
+
+    expect(group.serializedValue).to.deep.equal({ checked: true, value: 'male' });
+  });
+
+  it('returns serialized value on unchecked state', async () => {
+    const group = await fixture(html`
+      <lion-radio-group .errorValidators="${[['required']]}">
+        <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
+      </lion-radio-group>
+    `);
+
+    await nextFrame();
+
+    expect(group.serializedValue).to.deep.equal('');
+  });
 });
