@@ -1,6 +1,6 @@
 {
   "name": "@lion/fieldset",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "description": "Allows to groups multiple input fields or other fieldsets together",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,11 +33,11 @@
   ],
   "dependencies": {
     "@lion/core": "^0.1.13",
-    "@lion/field": "^0.2.2",
+    "@lion/field": "^0.2.3",
     "@lion/validate": "^0.2.29"
   },
   "devDependencies": {
-    "@lion/input": "^0.1.49",
+    "@lion/input": "^0.1.50",
     "@lion/localize": "^0.4.14",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.0.6",
