@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/field@0.2.2...@lion/field@0.2.3) (2019-09-13)
+
+
+### Bug Fixes
+
+* **field:** change FocusEvent to regular Event to support IE11 ([fb25057](https://github.com/ing-bank/lion/commit/fb25057))
+
+
+
+
+
 ## [0.2.2](https://github.com/ing-bank/lion/compare/@lion/field@0.2.1...@lion/field@0.2.2) (2019-08-23)
 
 
