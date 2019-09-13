@@ -82,14 +82,14 @@ export const FocusMixin = dedupeMixin(
         // focus
         this.__redispatchFocus = ev => {
           ev.stopPropagation();
-          this.dispatchEvent(new FocusEvent('focus'));
+          this.dispatchEvent(new Event('focus'));
         };
         this.inputElement.addEventListener('focus', this.__redispatchFocus);
 
         // blur
         this.__redispatchBlur = ev => {
           ev.stopPropagation();
-          this.dispatchEvent(new FocusEvent('blur'));
+          this.dispatchEvent(new Event('blur'));
         };
         this.inputElement.addEventListener('blur', this.__redispatchBlur);
 
@@ -97,7 +97,7 @@ export const FocusMixin = dedupeMixin(
         this.__redispatchFocusin = ev => {
           ev.stopPropagation();
           this._onFocus(ev);
-          this.dispatchEvent(new FocusEvent('focusin', { bubbles: true, composed: true }));
+          this.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         };
         this.inputElement.addEventListener('focusin', this.__redispatchFocusin);
 
@@ -105,7 +105,7 @@ export const FocusMixin = dedupeMixin(
         this.__redispatchFocusout = ev => {
           ev.stopPropagation();
           this._onBlur();
-          this.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+          this.dispatchEvent(new Event('focusout', { bubbles: true, composed: true }));
         };
         this.inputElement.addEventListener('focusout', this.__redispatchFocusout);
       }
