@@ -77,7 +77,7 @@ describe('FocusMixin', () => {
     `);
     setTimeout(() => el.focus());
     const focusEv = await oneEvent(el, 'focus');
-    expect(focusEv).to.be.instanceOf(FocusEvent);
+    expect(focusEv).to.be.instanceOf(Event);
     expect(focusEv.target).to.equal(el);
     expect(focusEv.bubbles).to.be.false;
     expect(focusEv.composed).to.be.false;
@@ -87,7 +87,7 @@ describe('FocusMixin', () => {
       el.blur();
     });
     const blurEv = await oneEvent(el, 'blur');
-    expect(blurEv).to.be.instanceOf(FocusEvent);
+    expect(blurEv).to.be.instanceOf(Event);
     expect(blurEv.target).to.equal(el);
     expect(blurEv.bubbles).to.be.false;
     expect(blurEv.composed).to.be.false;
@@ -99,7 +99,7 @@ describe('FocusMixin', () => {
     `);
     setTimeout(() => el.focus());
     const focusinEv = await oneEvent(el, 'focusin');
-    expect(focusinEv).to.be.instanceOf(FocusEvent);
+    expect(focusinEv).to.be.instanceOf(Event);
     expect(focusinEv.target).to.equal(el);
     expect(focusinEv.bubbles).to.be.true;
     expect(focusinEv.composed).to.be.true;
@@ -109,7 +109,7 @@ describe('FocusMixin', () => {
       el.blur();
     });
     const focusoutEv = await oneEvent(el, 'focusout');
-    expect(focusoutEv).to.be.instanceOf(FocusEvent);
+    expect(focusoutEv).to.be.instanceOf(Event);
     expect(focusoutEv.target).to.equal(el);
     expect(focusoutEv.bubbles).to.be.true;
     expect(focusoutEv.composed).to.be.true;
