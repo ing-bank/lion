@@ -44,7 +44,7 @@ export const SyncUpdatableMixin = dedupeMixin(
         if (properties.get(name) && properties.get(name).hasChanged) {
           return properties.get(name).hasChanged(newValue, oldValue);
         }
-        return this[name] !== oldValue;
+        return newValue !== oldValue;
       }
 
       __syncUpdatableInitialize() {

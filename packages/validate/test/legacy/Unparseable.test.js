@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { Unparseable } from '../src/Unparseable.js';
+import { Unparseable } from '../../src/Unparseable.js';
 
 describe('Unparseable', () => {
   it(`can be instantiated`, async () => {

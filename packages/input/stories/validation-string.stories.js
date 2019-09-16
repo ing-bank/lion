@@ -8,12 +8,12 @@ import {
   Validator,
 } from '@lion/validate';
 import { LocalizeMixin } from '@lion/localize';
-import { Required, EqualsLength, MinDate } from '@lion/validate/src/validators.js';
+import { Required, EqualsLength, MinDate, MaxLength } from '@lion/validate/src/validators.js';
 import '@lion/validate/provision-feedback-messages.js';
 import '@lion/input-date/lion-input-date.js';
+import { aTimeout } from '@open-wc/testing';
 
 import { LionInput } from '../index.js';
-import { aTimeout } from '@open-wc/testing';
 
 
 storiesOf('Forms|Input String Validation', module)
@@ -176,15 +176,26 @@ storiesOf('Forms|Input String Validation', module)
     `;
   })
   .add('New(!!):', () => html`
+      <style>
+        lion-input[success-state] input {
+          outline: 2px solid green;
+        }
+        lion-input[error-state] input {
+          outline: 2px solid red;
+        }
+        lion-input[warning-state] input {
+          outline: 2px solid orange;
+        }
+      </style>
       <lion-input
         .validators="${[new EqualsLength(7)]}"
         .modelValue="${'not exactly'}"
-        label="equalsLengthValidator"
+        label="EqualsLength"
       ></lion-input>
       <lion-input
-        .validators="${[new Required(), new EqualsLength(7, { type: 'warning' })]}"
+        .validators="${[new Required(), new MaxLength(7, { type: 'warning' })]}"
         .modelValue="${'exactly'}"
-        label="equalsLengthValidator"
+        label="MaxLength"
       ></lion-input>
     `,
   )
@@ -196,7 +207,7 @@ storiesOf('Forms|Input String Validation', module)
       }
 
       execute(modelValue, param) {
-        return modelValue === param;
+        return modelValue !== param;
       }
 
       static getMessage({ fieldName, modelValue, validatorParams: param }) {

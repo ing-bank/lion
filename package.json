@@ -32,7 +32,7 @@
   "scripts": {
     "start": "npm run storybook",
     "storybook": "start-storybook -p 9001 -s ./assets",
-    "storybook:build": "build-storybook -s ./assets",
+    "storybook:build": "build-storybook -c ./.storybook -s ./assets",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:compatibility": "karma start --compatibility all --coverage",

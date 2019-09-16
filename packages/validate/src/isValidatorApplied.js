@@ -1,4 +1,8 @@
 /**
+ * @deprecated: checking whether a validator is applied will become:
+ * `myFormControl.validators.find(v => v instanceof MyValidator)`
+ *
+ *
  * TODO: refactor validators to classes, putting needed meta info on instance.
  * Note that direct function comparison (Validator[0] === minDate) doesn't work when code
  * is transpiled

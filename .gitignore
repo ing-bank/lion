@@ -22,6 +22,7 @@ yarn-error.log
 ## temp folders
 /.tmp/
 /coverage/
+/storybook-static/
 
 ## temp files
 local.log

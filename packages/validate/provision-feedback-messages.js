@@ -1,5 +1,5 @@
 import { localize } from '@lion/localize';
-import { Required, EqualsLength } from './src/validators.js';
+import { Required, EqualsLength, MaxLength, DefaultSuccess } from './src/validators.js';
 
 export const validateNamespace = localize.loadNamespace({
   'lion-validate': locale => {
@@ -87,3 +87,15 @@ EqualsLength.getMessage = async data => {
   await validateNamespace;
   return localize.msg('lion-validate:error.equalsLength', data);
 };
+
+MaxLength.getMessage = async data => {
+  await validateNamespace;
+  return localize.msg('lion-validate:error.maxLength', data);
+};
+
+DefaultSuccess.getMessage = async data => {
+  await validateNamespace;
+  const randomKeys = localize.msg('lion-validate:success.randomOk').split(',');
+  const key = randomKeys[Math.floor(Math.random() * randomKeys.length)].trim();
+  return localize.msg(`lion-validate:${key}`, data);
+}

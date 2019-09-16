@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { isValidatorApplied } from '../src/isValidatorApplied.js';
+import { isValidatorApplied } from '../../src/isValidatorApplied.js';
 
 describe('isValidatorApplied', () => {
   it(`checks if validator (provided name string) is applied`, async () => {
