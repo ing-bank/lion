@@ -39,6 +39,6 @@
     "@lion/localize": "^0.4.14",
     "@lion/validate": "^0.2.29",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.0.6"
+    "@open-wc/testing": "^2.3.4"
   }
 }

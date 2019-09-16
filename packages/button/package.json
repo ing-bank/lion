@@ -39,7 +39,7 @@
     "@lion/icon": "^0.2.5",
     "@lion/input": "^0.1.50",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.0.6",
+    "@open-wc/testing": "^2.3.4",
     "@polymer/iron-test-helpers": "^3.0.1",
     "sinon": "^7.2.2"
   }

@@ -777,11 +777,6 @@
   resolved "https://registry.yarnpkg.com/@bundled-es-modules/axios/-/axios-0.18.1.tgz#8beedbc92e9b0ed7df7c6cbdc6dfce84d306d80b"
   integrity sha512-7c389uGe0dmfdedi9PQ3Om4vKg1HFzm/IntaqZ4FbXOo+gNiiPIM4He8MIkuRpgqUitbm1km0jOQ8p+tSpUp4Q==
 
-"@bundled-es-modules/chai@^4.2.0":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@bundled-es-modules/chai/-/chai-4.2.2.tgz#88dffebd7cd1e87397738107c3c54b9b4ea56e5e"
-  integrity sha512-iGmVYw2/zJCoqyKTtWEYCtFmMyi8WmACQKtky0lpNyEKWX0YIOpKWGD7saMXL+tPpllss0otilxV0SLwyi3Ytg==
-
 "@bundled-es-modules/fetch-mock@^6.5.2":
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/@bundled-es-modules/fetch-mock/-/fetch-mock-6.5.2.tgz#f68d78dba49ffcb5b58bede5974c8a9dd035a6fb"
@@ -1909,10 +1904,10 @@
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
 
-"@open-wc/building-utils@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@open-wc/building-utils/-/building-utils-2.8.0.tgz#e3c11ac844d2a150136fd41017dbeed263217638"
-  integrity sha512-Kf1T6b29ETi5r5wzrQNcNnQQuYmRd2YrKXk54YuTm2nErFbYdXWlPoBQrDjBtlo0STOgoY59HOUpWRbGVIbI2g==
+"@open-wc/building-utils@^2.8.2":
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/@open-wc/building-utils/-/building-utils-2.8.2.tgz#0ccc3302add7d2e2cbd5b8328764369e506b50b8"
+  integrity sha512-DAJbvt1A2ACkUqpR/cVE7bTb89o0fEf6MTlpmmd869Zkn6+x+9qR02T+E/xPw2awFv2MhMihHlZWTaZgQ9Xs+w==
   dependencies:
     "@babel/core" "^7.3.3"
     "@babel/plugin-syntax-dynamic-import" "^7.2.0"
@@ -1985,15 +1980,16 @@
     eslint-plugin-import "^2.18.0"
     eslint-plugin-wc "^1.2.0"
 
-"@open-wc/karma-esm@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@open-wc/karma-esm/-/karma-esm-2.4.1.tgz#bc241240f0b39baa1d55b132bc6df76a430fc8b8"
-  integrity sha512-sL/Jf8krPqPmSuTyqdjTtR7IHmChPsk5sU/6BSW6XYYrHQv0ubDyRHRcpfQpUp3zfi35mWiznb7CJKrcq+nQKg==
+"@open-wc/karma-esm@^2.5.8":
+  version "2.5.8"
+  resolved "https://registry.yarnpkg.com/@open-wc/karma-esm/-/karma-esm-2.5.8.tgz#ed7e6739bd07a658324fa92bd304eaef88e78ea6"
+  integrity sha512-4FtYOAdzQGvDnVJ27Xvfm6y1ZG1VybF84Y9tWCTJhkNFQgD5eY9DY3Ofw+2vmVEQYH0vKVm4hj2zk6cNjEpaUQ==
   dependencies:
-    "@open-wc/building-utils" "^2.8.0"
+    "@open-wc/building-utils" "^2.8.2"
     babel-plugin-istanbul "^5.1.4"
+    chokidar "^3.0.2"
     deepmerge "^3.3.0"
-    es-dev-server "^1.14.0"
+    es-dev-server "^1.18.0"
     minimatch "^3.0.4"
     portfinder "^1.0.21"
     request "^2.88.0"
@@ -2006,36 +2002,36 @@
     eslint-config-prettier "^3.3.0"
     prettier "^1.15.0"
 
-"@open-wc/semantic-dom-diff@^0.13.16", "@open-wc/semantic-dom-diff@^0.13.21":
+"@open-wc/semantic-dom-diff@^0.13.16":
   version "0.13.21"
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.13.21.tgz#718b9ec5f9a98935fc775e577ad094ae8d8b7dea"
   integrity sha512-BONpjHcGX2zFa9mfnwBCLEmlDsOHzT+j6Qt1yfK3MzFXFtAykfzFjAgaxPetu0YbBlCfXuMlfxI4vlRGCGMvFg==
 
-"@open-wc/semantic-dom-diff@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.14.1.tgz#c1362fac09a46390584a857387024137687bd39a"
-  integrity sha512-VmrJn8MloBnLx0LmKKASKBL7Y/hj3ci4tugWcRGcm3VE7SdUF7bZz9g4VkHaus18cfLQonziwRouw2Insx7I7w==
+"@open-wc/semantic-dom-diff@^0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.14.2.tgz#4ad2a6fedc22992c6048729fbf7104e472f590d3"
+  integrity sha512-+ENGbkgoruTtuNGUVLi9hCC6+IJVBM/lnFDGjKBUt7T6RyAgidBTV+GPMzpQtfHhLRasVJmcjRW8D2him8HvAA==
 
-"@open-wc/testing-helpers@^1.1.7", "@open-wc/testing-helpers@^1.2.1":
+"@open-wc/testing-helpers@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.2.1.tgz#eecba5ccfe808f9667caf149e68cd80d781f28e0"
   integrity sha512-FZBjqM81GQc+Q8W4YdWNwwk64+PW6frCvHyeov5ivCR2K7SJXwTPRcQIi0qU/6VVRVDlQeQ39PH8oSnjnIYpvQ==
 
-"@open-wc/testing-karma-bs@^1.1.47":
-  version "1.1.47"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma-bs/-/testing-karma-bs-1.1.47.tgz#8e8ceab7e9fea751703c7aedea22a45889642d7b"
-  integrity sha512-TcINS7scTBO3c7FkXySrZbmOqY/+XgaJ0EV4ns4YchHpSl5B48Xvdx6VThMx2Xf2/yMMz/GB2sjH8UO3tX0k5A==
+"@open-wc/testing-karma-bs@^1.1.58":
+  version "1.1.58"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma-bs/-/testing-karma-bs-1.1.58.tgz#d2c46d0cedc2927bc69689a0c25ef906e7505ba5"
+  integrity sha512-zj8BbozAIm7HEOYly594rzvEiENjH06R7RM5fbdkwbTxvcC4m/TmvGpVmwXX37XgxqKo5WxIA7wXeQkReCA8xw==
   dependencies:
-    "@open-wc/testing-karma" "^3.1.22"
+    "@open-wc/testing-karma" "^3.1.33"
     "@types/node" "^11.13.0"
     karma-browserstack-launcher "^1.0.0"
 
-"@open-wc/testing-karma@^3.1.22":
-  version "3.1.22"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma/-/testing-karma-3.1.22.tgz#6c0e14317880151622a8eab0f7ae166fd035a418"
-  integrity sha512-oDLCBqm8HbMnwok5/COVWmubW+UYDaWrokMOfmwmLq6eMlNnEkr3PNuKW0nII6RY5UkWaefbC4BuIWD/S6vt3w==
+"@open-wc/testing-karma@^3.1.33":
+  version "3.1.33"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma/-/testing-karma-3.1.33.tgz#3e0ff02cc2db0cce01ac4a9fe1e979f94c82d79c"
+  integrity sha512-TzzS0CyN62ZxJ2SmDt9LIcT8lRb/jO+mv7U1Lg69iu0KLRJZTrFILstTEVHww0UHgrbOE8N+LbmdYiH8ryBIUQ==
   dependencies:
-    "@open-wc/karma-esm" "^2.4.1"
+    "@open-wc/karma-esm" "^2.5.8"
     axe-core "^3.3.1"
     istanbul-instrumenter-loader "^3.0.0"
     karma "^4.0.0"
@@ -2057,27 +2053,13 @@
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
 
-"@open-wc/testing@^2.0.6":
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.2.8.tgz#ed4d3621601512eeccb0a759127589776da1d279"
-  integrity sha512-z+eRA6luH7TR8iewZJnZBN1JOmDGViFOQqdMoHkQPvQ0C2aBZNW/IrdbYUa+YY4rC+5jtWXHMf9gYdxw/B16bg==
-  dependencies:
-    "@bundled-es-modules/chai" "^4.2.0"
-    "@open-wc/chai-dom-equals" "^0.12.36"
-    "@open-wc/semantic-dom-diff" "^0.13.21"
-    "@open-wc/testing-helpers" "^1.1.7"
-    "@types/chai" "^4.1.7"
-    "@types/mocha" "^5.0.0"
-    chai-a11y-axe "^1.1.1"
-    mocha "^5.0.0"
-
-"@open-wc/testing@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.3.2.tgz#3199d4049d2163d4e74b9390fafbbb8dc8e51eeb"
-  integrity sha512-fdFXO3TVib/3+67BLwMYPqQgs7FaUajoMzazjtFNSUxFZgvqdHNz8gMBUYyD49wdCxBb9RAUtjQTjaLXEY+uWQ==
+"@open-wc/testing@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.3.4.tgz#cb29bbba14208c5ddfcb95119aff31ab1dfe2793"
+  integrity sha512-Jne5opdKgH1EvySXdMv5VO+c/+v1aL8EQQUqe7vggmrf9cEUdQ/fvLBP4qEeUF7kJdzVvvOjfEzPuA5Y/NEUmQ==
   dependencies:
     "@open-wc/chai-dom-equals" "^0.12.36"
-    "@open-wc/semantic-dom-diff" "^0.14.1"
+    "@open-wc/semantic-dom-diff" "^0.14.2"
     "@open-wc/testing-helpers" "^1.2.1"
     "@types/chai" "^4.1.7"
     "@types/chai-dom" "^0.0.8"
@@ -4299,11 +4281,6 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chai-a11y-axe@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/chai-a11y-axe/-/chai-a11y-axe-1.1.1.tgz#5e61e8c2d4b1a5b1b039658d8a21d147c18f612d"
-  integrity sha512-pLrVkN39GUSZl6Yd+HRJGo4XgXdwiSO2pt0NItb5vENRvh+0rTTCQK2ptBlMqtxOw/RCfFNi7avJjAEzGaa66A==
-
 chai-a11y-axe@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/chai-a11y-axe/-/chai-a11y-axe-1.2.1.tgz#173c9bb5cd534ccc9039edc3cdeed7692ab60f15"
@@ -4420,7 +4397,7 @@ chokidar@^2.0.2:
   optionalDependencies:
     fsevents "^1.2.7"
 
-chokidar@^3.0.0:
+chokidar@^3.0.0, chokidar@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.0.2.tgz#0d1cd6d04eb2df0327446188cd13736a3367d681"
   integrity sha512-c4PR2egjNjI1um6bamCQ6bUNPDiyofNQruHvKgHQ4gDUP/ITSVSzNsiI5OWtHOsX323i5ha/kk4YmOZ1Ktg7KA==
@@ -5896,15 +5873,15 @@ es-abstract@^1.10.0, es-abstract@^1.11.0, es-abstract@^1.12.0, es-abstract@^1.13
     is-regex "^1.0.4"
     object-keys "^1.0.12"
 
-es-dev-server@^1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/es-dev-server/-/es-dev-server-1.14.0.tgz#165c332915c1494b0a518417720eaa4460822c56"
-  integrity sha512-6HhP4GlYyn9y7ptPU8Yset+dFDdGiA/2pVLIu7W+wg+HWPIqKIrBenlxYoGvLfR4MzYryG320BAJNW/W4ofYkw==
+es-dev-server@^1.18.0:
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/es-dev-server/-/es-dev-server-1.18.0.tgz#56dd48868c4fa1f2b5029886a35351e385830651"
+  integrity sha512-cw6NyLxim8WB5EeAJOJA4wEq87ZC3NTIx7earYVtR4k3ihJMuLm2pLFpMqovWao7zWZ1WQgoETNsdxSx+0uj3A==
   dependencies:
     "@babel/core" "^7.4.5"
     "@babel/plugin-syntax-import-meta" "^7.2.0"
     "@babel/preset-env" "^7.4.5"
-    "@open-wc/building-utils" "^2.8.0"
+    "@open-wc/building-utils" "^2.8.2"
     "@types/minimatch" "^3.0.3"
     babel-plugin-bare-import-rewrite "^1.5.1"
     camelcase "^5.3.1"
@@ -5913,7 +5890,7 @@ es-dev-server@^1.14.0:
     command-line-usage "^5.0.5"
     debounce "^1.2.0"
     deepmerge "^3.3.0"
-    es-module-lexer "^0.2.0"
+    es-module-lexer "0.3.9"
     get-stream "^5.1.0"
     is-stream "^2.0.0"
     koa "^2.7.0"
@@ -5925,12 +5902,13 @@ es-dev-server@^1.14.0:
     path-is-inside "^1.0.2"
     portfinder "^1.0.21"
     resolve "^1.12.0"
+    strip-ansi "^5.2.0"
     whatwg-url "^7.0.0"
 
-es-module-lexer@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.2.0.tgz#b0e88d22dc270dc5f8c2d426e63a42252188eee9"
-  integrity sha512-HAcAIT+A5ugnSgC1pS+tgVWjlaIx8HZo8fI7xa90WdAjrJqXEZO0oszJQV3q04wCD4/ZQDlgu8nOLPxMWlaQ8g==
+es-module-lexer@0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.3.9.tgz#fbdbb35e1ad434fc71f5d83a887781fadbaca83a"
+  integrity sha512-beowXiBsaVS208GHoJckwOxlG/RpWLLz2ioJHwkUJ3RGFmW508E5RfntV21bMjzO3hQcwZOTHewUFwnGzrBtIg==
 
 es-module-shims@^0.2.13:
   version "0.2.15"
