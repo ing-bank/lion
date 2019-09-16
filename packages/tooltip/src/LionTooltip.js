@@ -1,5 +1,4 @@
 import { LionPopup } from '@lion/popup';
-import { overlays, LocalOverlayController } from '@lion/overlays';
 
 export class LionTooltip extends LionPopup {
   constructor() {
@@ -10,19 +9,7 @@ export class LionTooltip extends LionPopup {
 
   connectedCallback() {
     super.connectedCallback();
-    this.contentNode = this.querySelector('[slot="content"]');
-    this.invokerNode = this.querySelector('[slot="invoker"]');
     this.contentNode.setAttribute('role', 'tooltip');
-
-    this._controller = overlays.add(
-      new LocalOverlayController({
-        hidesOnEsc: true,
-        hidesOnOutsideClick: true,
-        popperConfig: this.popperConfig,
-        contentNode: this.contentNode,
-        invokerNode: this.invokerNode,
-      }),
-    );
 
     this.__resetActive = () => {
       this.mouseActive = false;
