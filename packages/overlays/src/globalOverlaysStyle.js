@@ -4,13 +4,29 @@ export const globalOverlaysStyle = css`
   .global-overlays {
     position: fixed;
     z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
+
+  .global-overlays__overlay,
+  .global-overlays__overlay--blocking {
+    pointer-events: auto;
   }
 
   .global-overlays.global-overlays--blocking-opened .global-overlays__overlay {
     display: none;
   }
 
-  .global-overlays .global-overlays__backdrop::before {
+  .global-overlays.global-overlays--blocking-opened .global-overlays__backdrop {
+    animation: global-overlays-backdrop-fade-out 300ms;
+    opacity: 0;
+  }
+
+  .global-overlays .global-overlays__backdrop,
+  .global-overlays .global-overlays__backdrop--blocking {
     content: '';
     position: fixed;
     top: 0;
@@ -21,11 +37,16 @@ export const globalOverlaysStyle = css`
     opacity: 0.3;
   }
 
-  .global-overlays .global-overlays__backdrop--fade-in::before {
+  .global-overlays .global-overlays__backdrop--fade-in {
     animation: global-overlays-backdrop-fade-in 300ms;
   }
 
-  .global-overlays.global-overlays--backdrop-fade-out::before {
+  .global-overlays .global-overlays__backdrop--fade-out {
+    animation: global-overlays-backdrop-fade-out 300ms;
+    opacity: 0;
+  }
+
+  .global-overlays.global-overlays--backdrop-fade-out {
     content: '';
     position: fixed;
     top: 0;

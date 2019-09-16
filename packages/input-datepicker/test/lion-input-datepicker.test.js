@@ -8,8 +8,6 @@ import {
   minMaxDateValidator,
   isDateDisabledValidator,
 } from '@lion/validate';
-import { keyCodes } from '@lion/overlays/src/utils/key-codes.js';
-import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
 import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
 import { DatepickerInputObject } from '../test-helpers.js';
@@ -92,9 +90,22 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(true);
-      // Mimic user input: should fire the 'selected-date-changed' event
-      // Make sure focus is inside the calendar/overlay
-      keyUpOn(elObj.calendarEl, keyCodes.escape);
+
+      elObj.overlayController.contentNode.dispatchEvent(
+        new KeyboardEvent('keyup', { key: 'Escape' }),
+      );
+      expect(elObj.overlayController.isShown).to.equal(false);
+    });
+
+    it('closes the calendar via close button', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
+
+      elObj.overlayCloseButtonEl.click();
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 

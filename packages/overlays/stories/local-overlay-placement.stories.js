@@ -46,17 +46,18 @@ const popupPlacementDemoStyle = css`
 storiesOf('Local Overlay System|Local Overlay Placement', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add('Preferred placement overlay absolute', () => {
-    const popupController = overlays.add(
+    let popup;
+    const invokerNode = document.createElement('button');
+    invokerNode.innerHTML = 'UK';
+    invokerNode.addEventListener('click', () => popup.toggle());
+
+    popup = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
-        contentTemplate: () =>
-          html`
-            <div class="demo-popup">United Kingdom</div>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
-          `,
+        contentTemplate: () => html`
+          <div class="demo-popup">United Kingdom</div>
+        `,
+        invokerNode,
       }),
     );
 
@@ -64,14 +65,19 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       <style>
         ${popupPlacementDemoStyle}
       </style>
-      <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+      <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${popupController.invoker} ${popupController.content}
+        ${invokerNode} ${popup.content}
       </div>
     `;
   })
   .add('Override the popper config', () => {
-    const popupController = overlays.add(
+    let popup;
+    const invokerNode = document.createElement('button');
+    invokerNode.innerHTML = 'UK';
+    invokerNode.addEventListener('click', () => popup.toggle());
+
+    popup = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
         popperConfig: {
@@ -100,10 +106,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
           html`
             <div class="demo-popup">United Kingdom</div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
-          `,
+        invokerNode,
       }),
     );
 
@@ -115,19 +118,22 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         The API is aligned with Popper.js, visit their documentation for more information:
         <a href="https://popper.js.org/popper-documentation.html">Popper.js Docs</a>
       </div>
-      <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
+      <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${popupController.invoker} ${popupController.content}
+        ${invokerNode} ${popup.content}
       </div>
     `;
   });
 /* TODO: Add this when we have a feature in place that adds scrollbars / overflow when no space is available */
 /* .add('Space not available', () => {
-    const popupController = overlays.add(
+    let popup;
+    const invokerNode = document.createElement('button');
+    invokerNode.innerHTML = 'UK';
+    invokerNode.addEventListener('click', () => popup.toggle());
+    let popup = overlays.add(
       new LocalOverlayController({
         hidesOnEsc: true,
-        contentTemplate: () =>
-          html`
+        contentTemplate: () => html`
             <div class="demo-popup">
               Toggle the placement of this overlay with the buttons. Since there is not enough space
               available on the vertical center or the top for this popup, the popup will get
@@ -135,10 +141,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
               increase/decrease space see the behavior of this.
             </div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button style="border: none" @click=${() => popupController.show()}>UK</button>
-          `,
+        invokerNode,
       }),
     );
 
@@ -147,11 +150,11 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         ${popupPlacementDemoStyle}
       </style>
       <div>
-        <button @click=${() => togglePlacement(popupController)}>Toggle placement</button>
-        <button @click=${() => popupController.hide()}>Close popup</button>
+        <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
+        <button @click=${() => popup.hide()}>Close popup</button>
       </div>
       <div class="demo-box">
-        ${popupController.invoker} ${popupController.content}
+        ${invokerNode} ${popup.content}
       </div>
     `;
   }); */

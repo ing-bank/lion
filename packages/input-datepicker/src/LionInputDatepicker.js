@@ -138,7 +138,7 @@ export class LionInputDatepicker extends LionInputDate {
   }
 
   get _calendarOverlayElement() {
-    return this._overlayCtrl._container.firstElementChild;
+    return this._overlayCtrl.contentNode;
   }
 
   get _calendarElement() {
@@ -202,7 +202,7 @@ export class LionInputDatepicker extends LionInputDate {
 
   _calendarOverlayTemplate() {
     return html`
-      <lion-calendar-overlay-frame>
+      <lion-calendar-overlay-frame @dialog-close=${() => this._overlayCtrl.hide()}>
         <span slot="heading">${this.calendarHeading}</span>
         ${this._calendarTemplate()}
       </lion-calendar-overlay-frame>
@@ -255,9 +255,9 @@ export class LionInputDatepicker extends LionInputDate {
     render(this._invokerTemplate(), renderParent);
     const invokerNode = renderParent.firstElementChild;
 
-    // TODO: ModalDialogController should be replaced by a more flexible
+    // TODO: ModalDialogController could be replaced by a more flexible
     // overlay, allowing the overlay to switch on smaller screens, for instance from dropdown to
-    // bottom sheet (working name for this controller: ResponsiveOverlayController)
+    // bottom sheet via DynamicOverlayController
     this._overlayCtrl = overlays.add(
       new ModalDialogController({
         contentTemplate: () => this._calendarOverlayTemplate(),

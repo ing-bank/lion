@@ -1,13 +1,14 @@
-import { render, html } from '@lion/core';
-import { containFocus } from './utils/contain-focus.js';
-import { keyCodes } from './utils/key-codes.js';
+import { render } from '@lion/core';
+import { BaseOverlayController } from './BaseOverlayController.js';
 
 async function __preloadPopper() {
   return import('popper.js/dist/esm/popper.min.js');
 }
-export class LocalOverlayController {
+export class LocalOverlayController extends BaseOverlayController {
   constructor(params = {}) {
-    this.__fakeExtendsEventTarget();
+    super(params);
+
+    this.__hasActiveHidesOnOutsideClick = false;
 
     // TODO: Instead of in constructor, prefetch it or use a preloader-manager to load it during idle time
     this.constructor.popperModule = __preloadPopper();
@@ -21,10 +22,16 @@ export class LocalOverlayController {
     /**
      * A wrapper to render into the invokerTemplate
      *
+     * @deprecated - please use .invokerNode instead
+     *
      * @property {HTMLElement}
      */
     this.invoker = document.createElement('div');
     this.invoker.style.display = 'inline-block';
+
+    /**
+     * @deprecated - please use .invokerNode instead
+     */
     this.invokerTemplate = params.invokerTemplate;
 
     /**
@@ -38,35 +45,10 @@ export class LocalOverlayController {
       this.invoker = this.invokerNode;
     }
 
-    /**
-     * A wrapper the contentTemplate renders into
-     *
-     * @property {HTMLElement}
-     */
-    this.content = document.createElement('div');
-    this.content.style.display = 'inline-block';
-    this.contentTemplate = params.contentTemplate;
-    this.contentNode = this.content;
-    if (params.contentNode) {
-      this.contentNode = params.contentNode;
-      this.content = this.contentNode;
-    }
-
     this.contentId = `overlay-content-${Math.random()
       .toString(36)
       .substr(2, 10)}`;
-    this._contentData = {};
     this.syncInvoker();
-    this._updateContent();
-    this._prevShown = false;
-    this._prevData = {};
-    this.__boundEscKeyHandler = this.__escKeyHandler.bind(this);
-  }
-
-  get isShown() {
-    return this.contentTemplate
-      ? Boolean(this.content.children.length)
-      : Boolean(this.contentNode.style.display === 'inline-block');
   }
 
   /**
@@ -75,12 +57,22 @@ export class LocalOverlayController {
    * @param {boolean} [options.isShown] whether the overlay should be shown
    * @param {object} [options.data] overlay data to pass to the content template function
    */
-  sync({ isShown, data } = {}) {
-    this._createOrUpdateOverlay(isShown, data);
+  async sync({ isShown, data } = {}) {
+    if (data) {
+      this.contentData = data;
+    }
+
+    if (isShown === true) {
+      await this.show();
+    } else if (isShown === false) {
+      await this.hide();
+    }
   }
 
   /**
    * Syncs data for invoker.
+   *
+   * @deprecated please use .invokerNode instead
    * @param {object} options
    * @param {object} [options.data] overlay data to pass to the invoker template function
    */
@@ -99,7 +91,13 @@ export class LocalOverlayController {
    * Shows the overlay.
    */
   async show() {
-    this._createOrUpdateOverlay(true, this._prevData);
+    const oldIsShown = this.isShown;
+    await super.show();
+    if (oldIsShown === true) {
+      return;
+    }
+    /* To display on top of elements with no z-index that are appear later in the DOM */
+    this.contentNode.style.zIndex = 1;
     /**
      * Popper is weird about properly positioning the popper element when it is recreated so
      * we just recreate the popper instance to make it behave like it should.
@@ -107,152 +105,69 @@ export class LocalOverlayController {
      * calling just the .update() function on the popper instance sadly does not resolve this.
      * This is however necessary for initial placement.
      */
-    await this.__createPopperInstance();
-    this._popper.update();
+    if (this.invokerNode && this.contentNode) {
+      await this.__createPopperInstance();
+      this._popper.update();
+    }
+
+    this.__enableFeatures();
   }
 
   /**
    * Hides the overlay.
    */
-  hide() {
-    this._createOrUpdateOverlay(false, this._prevData);
+  async hide() {
+    const oldIsShown = this.isShown;
+    await super.hide();
+    if (oldIsShown === false) {
+      return;
+    }
+
+    this.__disableFeatures();
   }
 
-  /**
-   * Toggles the overlay.
-   */
-  toggle() {
-    // eslint-disable-next-line no-unused-expressions
-    this.isShown ? this.hide() : this.show();
+  __enableFeatures() {
+    super.__enableFeatures();
+
+    this.invokerNode.setAttribute('aria-expanded', 'true');
+    if (this.inheritsReferenceObjectWidth) {
+      this.enableInheritsReferenceObjectWidth();
+    }
+    if (this.hidesOnOutsideClick) {
+      this.enableHidesOnOutsideClick();
+    }
+  }
+
+  __disableFeatures() {
+    super.__disableFeatures();
+
+    this.invokerNode.setAttribute('aria-expanded', 'false');
+    if (this.hidesOnOutsideClick) {
+      this.disableHidesOnOutsideClick();
+    }
+  }
+
+  enableInheritsReferenceObjectWidth() {
+    const referenceObjectWidth = `${this.invokerNode.clientWidth}px`;
+    switch (this.inheritsReferenceObjectWidth) {
+      case 'max':
+        this.contentNode.style.maxWidth = referenceObjectWidth;
+        break;
+      case 'full':
+        this.contentNode.style.width = referenceObjectWidth;
+        break;
+      default:
+        this.contentNode.style.minWidth = referenceObjectWidth;
+    }
   }
 
   // Popper does not export a nice method to update an existing instance with a new config. Therefore we recreate the instance.
   // TODO: Send a merge request to Popper to abstract their logic in the constructor to an exposed method which takes in the user config.
   async updatePopperConfig(config = {}) {
     this.__mergePopperConfigs(config);
-    await this.__createPopperInstance();
     if (this.isShown) {
+      await this.__createPopperInstance();
       this._popper.update();
-    }
-  }
-
-  _createOrUpdateOverlay(shown = this._prevShown, data = this._prevData) {
-    if (shown) {
-      this._contentData = { ...this._contentData, ...data };
-
-      // let lit-html manage the template and update the properties
-      if (this.contentTemplate) {
-        render(this.contentTemplate(this._contentData), this.content);
-        this.contentNode = this.content.firstElementChild;
-      }
-      this.contentNode.id = this.contentId;
-      this.contentNode.style.display = 'inline-block';
-      /* To display on top of elements with no z-index that are appear later in the DOM */
-      this.contentNode.style.zIndex = 1;
-      this.invokerNode.setAttribute('aria-expanded', true);
-
-      if (this.inheritsReferenceObjectWidth) {
-        const referenceObjectWidth = `${this.invokerNode.clientWidth}px`;
-        switch (this.inheritsReferenceObjectWidth) {
-          case 'max':
-            this.contentNode.style.maxWidth = referenceObjectWidth;
-            break;
-          case 'full':
-            this.contentNode.style.width = referenceObjectWidth;
-            break;
-          default:
-            this.contentNode.style.minWidth = referenceObjectWidth;
-        }
-      }
-      if (this.trapsKeyboardFocus) this._setupTrapsKeyboardFocus();
-      if (this.hidesOnOutsideClick) this._setupHidesOnOutsideClick();
-      if (this.hidesOnEsc) this._setupHidesOnEsc();
-
-      if (this._prevShown === false) {
-        this.dispatchEvent(new Event('show'));
-      }
-    } else {
-      this._updateContent();
-      this.invokerNode.setAttribute('aria-expanded', false);
-      if (this.hidesOnOutsideClick) this._teardownHidesOnOutsideClick();
-      if (this.hidesOnEsc) this._teardownHidesOnEsc();
-
-      if (this._prevShown === true) {
-        this.dispatchEvent(new Event('hide'));
-      }
-    }
-    this._prevShown = shown;
-    this._prevData = data;
-  }
-
-  /**
-   * Sets up focus containment on the given overlay. If there was focus containment set up
-   * previously, it is disconnected.
-   */
-  _setupTrapsKeyboardFocus() {
-    if (this._containFocusHandler) {
-      this._containFocusHandler.disconnect();
-      this._containFocusHandler = undefined; // eslint-disable-line no-param-reassign
-    }
-    this._containFocusHandler = containFocus(this.contentNode);
-  }
-
-  _setupHidesOnEsc() {
-    this.contentNode.addEventListener('keyup', this.__boundEscKeyHandler);
-  }
-
-  _teardownHidesOnEsc() {
-    this.contentNode.removeEventListener('keyup', this.__boundEscKeyHandler);
-  }
-
-  _setupHidesOnOutsideClick() {
-    if (this.__preventCloseOutsideClick) {
-      return;
-    }
-
-    let wasClickInside = false;
-
-    // handle on capture phase and remember till the next task that there was an inside click
-    this.__preventCloseOutsideClick = () => {
-      wasClickInside = true;
-      setTimeout(() => {
-        wasClickInside = false;
-      });
-    };
-
-    // handle on capture phase and schedule the hide if needed
-    this.__onCaptureHtmlClick = () => {
-      setTimeout(() => {
-        if (!wasClickInside) {
-          this.hide();
-        }
-      });
-    };
-
-    this.contentNode.addEventListener('click', this.__preventCloseOutsideClick, true);
-    this.invokerNode.addEventListener('click', this.__preventCloseOutsideClick, true);
-    document.documentElement.addEventListener('click', this.__onCaptureHtmlClick, true);
-  }
-
-  _teardownHidesOnOutsideClick() {
-    this.contentNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
-    this.invokerNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
-    document.documentElement.removeEventListener('click', this.__onCaptureHtmlClick, true);
-    this.__preventCloseOutsideClick = null;
-    this.__onCaptureHtmlClick = null;
-  }
-
-  _updateContent() {
-    if (this.contentTemplate) {
-      render(html``, this.content);
-    } else {
-      this.contentNode.style.display = 'none';
-    }
-  }
-
-  __escKeyHandler(e) {
-    if (e.keyCode === keyCodes.escape) {
-      this.hide();
     }
   }
 
@@ -312,11 +227,68 @@ export class LocalOverlayController {
     });
   }
 
-  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
-  __fakeExtendsEventTarget() {
-    const delegate = document.createDocumentFragment();
-    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
-      this[funcName] = (...args) => delegate[funcName](...args);
-    });
+  get contentTemplate() {
+    return super.contentTemplate;
+  }
+
+  set contentTemplate(value) {
+    super.contentTemplate = value;
+    if (this.contentNode && this.invokerNode) {
+      this.disableHidesOnOutsideClick();
+      this.enableHidesOnOutsideClick();
+    }
+  }
+
+  // **********************************************************************************************
+  // FEATURE - hidesOnOutsideClick
+  // **********************************************************************************************
+  get hasActiveHidesOnOutsideClick() {
+    return this.__hasActiveHidesOnOutsideClick;
+  }
+
+  enableHidesOnOutsideClick() {
+    if (this.hasActiveHidesOnOutsideClick === true) {
+      return;
+    }
+
+    let wasClickInside = false;
+    // handle on capture phase and remember till the next task that there was an inside click
+    this.__preventCloseOutsideClick = () => {
+      wasClickInside = true;
+      setTimeout(() => {
+        wasClickInside = false;
+      });
+    };
+
+    // handle on capture phase and schedule the hide if needed
+    this.__onCaptureHtmlClick = () => {
+      setTimeout(() => {
+        if (wasClickInside === false) {
+          this.hide();
+        }
+      });
+    };
+
+    this.contentNode.addEventListener('click', this.__preventCloseOutsideClick, true);
+    this.invokerNode.addEventListener('click', this.__preventCloseOutsideClick, true);
+    document.documentElement.addEventListener('click', this.__onCaptureHtmlClick, true);
+
+    this.__hasActiveHidesOnOutsideClick = true;
+  }
+
+  disableHidesOnOutsideClick() {
+    if (this.hasActiveHidesOnOutsideClick === false) {
+      return;
+    }
+
+    if (this.contentNode) {
+      this.contentNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
+    }
+    this.invokerNode.removeEventListener('click', this.__preventCloseOutsideClick, true);
+    document.documentElement.removeEventListener('click', this.__onCaptureHtmlClick, true);
+    this.__preventCloseOutsideClick = null;
+    this.__onCaptureHtmlClick = null;
+
+    this.__hasActiveHidesOnOutsideClick = false;
   }
 }
