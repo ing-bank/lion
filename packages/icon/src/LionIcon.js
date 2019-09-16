@@ -83,7 +83,7 @@ export class LionIcon extends LitElement {
    */
   set svg(svg) {
     this.__svg = svg;
-    if (svg === undefined) {
+    if (svg === undefined || svg === null) {
       this._renderSvg(nothing);
     } else if (isPromise(svg)) {
       this._renderSvg(nothing); // show nothing before resolved

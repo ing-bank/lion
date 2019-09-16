@@ -203,6 +203,18 @@ describe('lion-icon', () => {
     expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
 
+  it('does not render "null" if changed from valid input to null', async () => {
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${heartSvg}></lion-icon>
+      `,
+    );
+    await el.updateComplete;
+    el.svg = null;
+    await el.updateComplete;
+    expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
+  });
+
   describe('race conditions with dynamic promisified icons', () => {
     async function prepareRaceCondition(...svgs) {
       const container = fixtureSync(`<div></div>`);
