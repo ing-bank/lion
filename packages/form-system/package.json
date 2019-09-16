@@ -49,6 +49,6 @@
     "@lion/textarea": "^0.1.55",
     "@lion/validate": "^0.2.30",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.0.6"
+    "@open-wc/testing": "^2.3.4"
   }
 }
