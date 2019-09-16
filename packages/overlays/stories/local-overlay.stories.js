@@ -36,7 +36,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
           `,
         invokerTemplate: () =>
           html`
-            <button style="border: none" @click=${() => popup.toggle()}>UK</button>
+            <button @click=${() => popup.toggle()}>UK</button>
           `,
       }),
     );

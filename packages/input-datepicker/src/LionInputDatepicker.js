@@ -138,7 +138,7 @@ export class LionInputDatepicker extends LionInputDate {
   }
 
   get _calendarOverlayElement() {
-    return this._overlayCtrl._container.firstElementChild;
+    return this._overlayCtrl.contentNode;
   }
 
   get _calendarElement() {

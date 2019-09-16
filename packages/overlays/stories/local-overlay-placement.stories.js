@@ -55,7 +55,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
           `,
         invokerTemplate: () =>
           html`
-            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
+            <button @click=${() => popupController.toggle()}>UK</button>
           `,
       }),
     );
@@ -102,7 +102,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
           `,
         invokerTemplate: () =>
           html`
-            <button style="border: none" @click=${() => popupController.toggle()}>UK</button>
+            <button @click=${() => popupController.toggle()}>UK</button>
           `,
       }),
     );
@@ -137,7 +137,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
           `,
         invokerTemplate: () =>
           html`
-            <button style="border: none" @click=${() => popupController.show()}>UK</button>
+            <button @click=${() => popupController.show()}>UK</button>
           `,
       }),
     );
