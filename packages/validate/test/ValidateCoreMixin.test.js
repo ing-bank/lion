@@ -2,13 +2,12 @@
 import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LitElement } from '@lion/core';
-
 import { ValidateCoreMixin } from '../src/ValidateCoreMixin.js';
 import { Unparseable } from '../src/Unparseable.js';
 import { Validator } from '../src/Validator.js';
+import { ResultValidator } from '../src/ResultValidator.js';
 import { Required, MinLength, DefaultSuccess, MaxLength } from '../src/validators.js';
 import { AlwaysValid, AlwaysInvalid } from '../test-helpers/helper-validators.js';
-import { ResultValidator } from '../src/ResultValidator.js';
 import { LionValidationFeedback } from '../src/validation-feedback/LionValidationFeedback.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
@@ -25,7 +24,6 @@ const tagString = defineCE(
   },
 );
 const tag = unsafeStatic(tagString);
-
 
 describe.only('ValidateCoreMixin', () => {
   /**
@@ -51,14 +49,13 @@ describe.only('ValidateCoreMixin', () => {
    */
 
   describe('Validation initiation', () => {
-
     it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
       const el = await fixture(html`
         <${tag}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `);
-      expect(el.errorState).to.be.true
+      expect(el.errorState).to.be.true;
     });
 
     it('revalidates when ".modelValue" changes', async () => {
@@ -95,177 +92,82 @@ describe.only('ValidateCoreMixin', () => {
       const el = await fixture(html`
         <${tag} .validators=${[alwaysValid]}>${lightDom}</${tag}>
       `);
-
+      const isEmptySpy = sinon.spy(el, '__isEmpty');
       const validateSpy = sinon.spy(el, 'validate');
       el.modelValue = '';
       expect(validateSpy.callCount).to.equal(1);
       expect(alwaysValidExecuteSpy.callCount).to.equal(0);
+      expect(isEmptySpy.callCount).to.equal(1);
 
       el.modelValue = 'nonEmpty';
       expect(validateSpy.callCount).to.equal(2);
       expect(alwaysValidExecuteSpy.callCount).to.equal(1);
+      expect(isEmptySpy.callCount).to.equal(2);
     });
 
     it('second checks for synchronous Validators: creates RegularValidationResult', async () => {
-
+      const el = await fixture(html`
+        <${tag} .validators=${[new AlwaysValid()]}>${lightDom}</${tag}>
+      `);
+      const isEmptySpy = sinon.spy(el, '__isEmpty');
+      const syncSpy = sinon.spy(el, '__executeSyncValidators');
+      el.modelValue = 'nonEmpty';
+      expect(isEmptySpy).to.be.calledBefore(syncSpy);
     });
 
     it('third schedules asynchronous Validators: creates RegularValidationResult', async () => {
-
+      const el = await fixture(html`
+        <${tag} .validators=${[new AlwaysValid(), new AlwaysValid(null, { async: true })]}>
+          ${lightDom}
+        </${tag}>
+      `);
+      const syncSpy = sinon.spy(el, '__executeSyncValidators');
+      const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
+      el.modelValue = 'nonEmpty';
+      expect(syncSpy).to.be.calledBefore(asyncSpy);
     });
 
-    it('finally checks for result Validators: creates TotalValidationResult', async () => {
-
-    })
-
-    describe('Finalization', () => {
-      it('fires "validation-done" event', async () => {
-
-      });
-
-      it('renders feedback', async () => {
-
-      });
-    })
-  });
-
-
-  // TODO: move to distinct file
-  describe('Validator', () => {
-    it('supports customized types', async () => {
-      // This test shows the best practice of adding custom types
-      class MyValidator extends Validator {
+    it('finally checks for ResultValidators: creates TotalValidationResult', async () => {
+      class MyResult extends ResultValidator {
         constructor(...args) {
           super(...args);
-          this.type = 'my-type';
+          this.name = 'resultValidator';
         }
       }
-      expect(new MyValidator().type).to.equal('my-type');
-    });
-
-    it('has type "error" by default', async () => {
-      expect(new Validator().type).to.equal('error');
-    });
-
-    it('has an "execute" function returning active state', async () => {
-      // This test shows the best practice of adding custom types
-      class MyValidator extends Validator {
-        execute(modelValue, param) {
-          const showError = modelValue === 'test' && param === 'me';
-          return showError;
-        }
-      }
-      expect(new MyValidator().execute('test', 'me')).to.equal(true);
-    });
-
-    it('receive a param on instantiation', async () => {
-      const vali = new Validator('myParam');
-      expect(vali.param).to.equal('myParam');
-    });
-
-    it('receive a config object on instantiation', async () => {
-      const vali = new Validator('myParam', {'my': 'config'});
-      expect(vali.config).to.eql({'my': 'config'});
-    });
-
-    it('fires "param-changed" event on param change', async () => {
-      const vali = new Validator('foo');
-      const cb = sinon.spy(() => {});
-      vali.addEventListener('param-changed', cb);
-      vali.param = 'bar';
-      expect(cb.callCount).to.equal(1);
-    });
-
-    it('fires "config-changed" event on param change', async () => {
-      const vali = new Validator('foo', {'foo': 'bar'});
-      const cb = sinon.spy(() => {});
-      vali.addEventListener('config-changed', cb);
-      vali.config = {'bar': 'foo'};
-      expect(cb.callCount).to.equal(1);
-    });
-
-    it('has an "execute" function returning active state', async () => {
-      // This test shows the best practice of adding custom types
-      class MyValidator extends Validator {
-        execute(modelValue, param) {
-          const showError = modelValue === 'forbidden' && param === 'values';
-          return showError;
-        }
-      }
-      expect(new MyValidator().execute('forbidden', 'values')).to.equal(true);
-    });
-
-    it('have access to FormControl', async () => {
-      // This test shows the best practice of adding custom types
-      class MyValidator extends Validator {
-        execute(modelValue, param) {
-          const showError = modelValue === 'forbidden' && param === 'values';
-          return showError;
-        }
-      }
-      expect(new MyValidator().execute('forbidden', 'values')).to.equal(true);
-    });
-
-    // describe('Async Validators')
-    it('have access to FormControl', async () => {
-      // This test shows the best practice of creating execute method
-      class MyValidator extends Validator {
-        execute(modelValue, param) {
-          const showError = modelValue === 'forbidden' && param === 'values';
-          return showError;
-        }
-
-        onFormControlConnect(formControl) {
-          // I will do something with a11y here
-        }
-
-        onFormControlDisconnect(formControl) {
-          // I will cleanup something with a11y here
-        }
-      }
-      const myVal = new MyValidator();
-      const connectSpy = sinon.spy(myVal, 'onFormControlConnect');
-      const disconnectSpy = sinon.spy(myVal, 'onFormControlDisconnect');
 
       const el = await fixture(html`
-        <${tag} .validators=${[myVal]}>${lightDom}</${tag}>
+        <${tag}
+          .validators=${[new AlwaysValid(null, { async: true }), new MyResult()]}>
+          ${lightDom}
+        </${tag}>
       `);
 
-      expect(connectSpy.callCount).to.equal(1);
-      expect(connectSpy.calledWith(el)).to.equal(true);
-      expect(disconnectSpy.callCount).to.equal(0);
+      const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
+      const resultSpy = sinon.spy(el, '__executeResultValidators');
 
-      el.validators = [];
-      expect(connectSpy.callCount).to.equal(1);
-      expect(disconnectSpy.callCount).to.equal(1);
-      expect(disconnectSpy.calledWith(el)).to.equal(true);
+      el.modelValue = 'nonEmpty';
+      expect(asyncSpy).to.be.calledBefore(resultSpy);
+
+      const el2 = await fixture(html`
+        <${tag}
+          .validators=${[new AlwaysValid(), new MyResult()]}>
+          ${lightDom}
+        </${tag}>
+      `);
+
+      const syncSpy = sinon.spy(el2, '__executeSyncValidators');
+      const resultSpy2 = sinon.spy(el2, '__executeResultValidators');
+
+      el2.modelValue = 'nonEmpty';
+      expect(syncSpy).to.be.calledBefore(resultSpy2);
     });
 
-    describe('ResultValidators', () => {
-      it('has an "executeOnResults" function returning active state', async () => {
-        // This test shows the best practice of creating executeOnResults method
-        class MyResultValidator extends Validator {
-          executeOnResults({ regularValidarionResult, prevValidationResult}) {
-            const showMessage = regularValidarionResult.length && !prevValidationResult.length;
-            return showMessage;
-          }
-        }
-        expect(new MyResultValidator().executeOnResults({
-          regularValidarionResult: [new Required(), new MinLength(3)],
-          prevValidationResult: [],
-        })).to.equal(true);
-      });
-    });
+    describe('Finalization', () => {
+      it('fires "validation-done" event', async () => {});
 
-
-    it('contain "execute" function returning true when Validator is "active"', async () => {
-      const isCatFn = new IsCat().execute;
-      expect(typeof fn).to.equal('function');
-      expect(isCatFn('cat')).to.be.false;
-      expect(isCatFn('dog')).to.be.true
+      it('renders feedback', async () => {});
     });
   });
-
 
   describe('Validator Integration', () => {
     class IsCat extends Validator {
@@ -276,31 +178,40 @@ describe.only('ValidateCoreMixin', () => {
           const validateString = param && param.number ? `cat${param.number}` : 'cat';
           const showError = modelValue !== validateString;
           return showError;
-        }
+        };
+      }
+    }
+
+    class OtherValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'otherValidator';
+        this.execute = () => true;
       }
     }
 
     it('Validators will be called with modelValue as first argument', async () => {
+      const otherValidator = new OtherValidator();
+      const otherValidatorSpy = sinon.spy(otherValidator, 'execute');
+      await fixture(html`
+        <${tag}
+          .validators=${[new Required(), otherValidator]}
+          .modelValue=${'model'}
+        >${lightDom}</${tag}>
+      `);
+      expect(otherValidatorSpy.calledWith('model')).to.be.true;
     });
 
     it('Validators will be called with viewValue as first argument when modelValue is unparseable', async () => {
-      const otherValidatorSpy = sinon.spy(() => true);
-
-      class OtherValidator extends Validator {
-        constructor(...args) {
-          super(...args);
-          this.name = 'otherValidator';
-          this.execute = otherValidatorSpy;
-        }
-      }
-
+      const otherValidator = new OtherValidator();
+      const otherValidatorSpy = sinon.spy(otherValidator, 'execute');
       await fixture(html`
         <${tag}
           .validators=${[new Required(), new OtherValidator()]}
-          .modelValue=${new Unparseable('foo')}
+          .modelValue=${new Unparseable('view')}
         >${lightDom}</${tag}>
       `);
-      expect(otherValidatorSpy.calledWith('foo')).to.be.true;
+      expect(otherValidatorSpy.calledWith('view')).to.be.true;
     });
 
     it('Validators will be called with param as a second argument', async () => {
@@ -311,7 +222,7 @@ describe.only('ValidateCoreMixin', () => {
           .modelValue=${'cat'}
         >${lightDom}</${tag}>
       `);
-      const validator =  el.validators.find(v => v instanceof IsCat);
+      const validator = el.validators.find(v => v instanceof IsCat);
       const executeSpy = sinon.spy(validator, 'execute');
       expect(executeSpy.calledWith(param)).to.be.true;
     });
@@ -354,7 +265,7 @@ describe.only('ValidateCoreMixin', () => {
     let asyncVResolve;
 
     beforeEach(() => {
-      asyncVPromise = new Promise((resolve) => {
+      asyncVPromise = new Promise(resolve => {
         asyncVResolve = resolve;
       });
     });
@@ -366,11 +277,11 @@ describe.only('ValidateCoreMixin', () => {
         this.async = true;
       }
 
-    /**
-     * @desc the function that determines the validator. It returns true when
-     * the Validator is "active", meaning its message should be shown.
-     * @param {string} modelValue
-     */
+      /**
+       * @desc the function that determines the validator. It returns true when
+       * the Validator is "active", meaning its message should be shown.
+       * @param {string} modelValue
+       */
       async execute(modelValue) {
         await asyncVPromise;
         return modelValue === 'cat';
@@ -389,7 +300,7 @@ describe.only('ValidateCoreMixin', () => {
       `);
 
       const validator = el.errorValidators[0];
-      expect(validator instanceof Validator).to.be.true
+      expect(validator instanceof Validator).to.be.true;
       expect(el.errorState).to.be.false;
       asyncVResolve();
       await aTimeout();
@@ -442,9 +353,7 @@ describe.only('ValidateCoreMixin', () => {
     });
 
     // TODO: nice to have...
-    it.skip('developer can configure debounce on FormControl instance', async () => {
-
-    });
+    it.skip('developer can configure debounce on FormControl instance', async () => {});
 
     it('cancels and reschedules async validation on ".modelValue" change', async () => {
       const asyncV = new IsAsyncCat();
@@ -472,7 +381,7 @@ describe.only('ValidateCoreMixin', () => {
           .isFocused=${true}
           .modelValue=${'dog'}
           .validators=${[asyncV]}
-          .asyncValidateOn=${({formControl}) => !formControl.isFocused}
+          .asyncValidateOn=${({ formControl }) => !formControl.isFocused}
           >
         ${lightDom}
         </${tag}>
@@ -494,10 +403,10 @@ describe.only('ValidateCoreMixin', () => {
 
       // eslint-disable-next-line class-methods-use-this
       executeOnResults({ regularValidationResult, prevValidationResult }) {
-        const errorOrWarning = (v) => (v.type === 'error' || v.type === 'warning');
-        const hasErrorOrWarning = !!(regularValidationResult.filter(errorOrWarning).length);
-        const prevHadErrorOrWarning = !!(prevValidationResult.filter(errorOrWarning).length);
-        return (!hasErrorOrWarning && prevHadErrorOrWarning);
+        const errorOrWarning = v => v.type === 'error' || v.type === 'warning';
+        const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
+        const prevHadErrorOrWarning = !!prevValidationResult.filter(errorOrWarning).length;
+        return !hasErrorOrWarning && prevHadErrorOrWarning;
       }
     }
 
@@ -531,22 +440,24 @@ describe.only('ValidateCoreMixin', () => {
 
     it(`provides "regular" ValidationResult and previous FinalValidationResult as input to
       "executeOnResult" function`, async () => {
-        const resultValidator = new MySuccessResultValidator();
-        const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
+      const resultValidator = new MySuccessResultValidator();
+      const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
 
-        const el = await fixture(html`
+      const el = await fixture(html`
           <${tag}
             .validators=${[new MinLength(3), resultValidator]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
         `);
-        const regularValidationResult = [...el.__syncValidationResult, ...el.__asyncValidationResult];
-        const prevValidationResult = el.__prevValidationResult;
+      const regularValidationResult = [...el.__syncValidationResult, ...el.__asyncValidationResult];
+      const prevValidationResult = el.__prevValidationResult;
 
-        expect(resultValidateSpy.calledWith({
+      expect(
+        resultValidateSpy.calledWith({
           regularValidationResult,
           prevValidationResult,
-        })).to.be.true
+        }),
+      ).to.be.true;
     });
 
     it('adds ResultValidator outcome as highest prio result to the FinalValidationResult', async () => {
@@ -676,7 +587,7 @@ describe.only('ValidateCoreMixin', () => {
       constructor(...args) {
         super(...args);
         this.name = 'containsLowercaseA';
-        this.execute = (modelValue) => !modelValue.includes('a');
+        this.execute = modelValue => !modelValue.includes('a');
       }
     }
 
@@ -684,7 +595,7 @@ describe.only('ValidateCoreMixin', () => {
       constructor(...args) {
         super(...args);
         this.name = 'containsLowercaseB';
-        this.execute = (modelValue) => !modelValue.includes('b');
+        this.execute = modelValue => !modelValue.includes('b');
       }
     }
 
@@ -697,8 +608,8 @@ describe.only('ValidateCoreMixin', () => {
 
       el.modelValue = 'a';
 
-      expect(el.hasError).to.be.true
-      expect(el.hasAttribute('has-error')).to.be.true
+      expect(el.hasError).to.be.true;
+      expect(el.hasAttribute('has-error')).to.be.true;
 
       el.modelValue = 'abc';
       expect(el.hasError).to.be.false;
@@ -741,13 +652,13 @@ describe.only('ValidateCoreMixin', () => {
           .validators=${[new MinLength(3), new AlwaysInvalid()]}
         >${lightDom}</${tag}>`);
 
-      expect(el.errorStates.minLength).to.be.true
-      expect(el.errorStates.alwaysInvalid).to.be.true
+      expect(el.errorStates.minLength).to.be.true;
+      expect(el.errorStates.alwaysInvalid).to.be.true;
 
       el.modelValue = 'abc';
 
       expect(el.errorStates.minLength).to.equal(undefined);
-      expect(el.errorStates.alwaysInvalid).to.be.true
+      expect(el.errorStates.alwaysInvalid).to.be.true;
     });
 
     it('removes "non active" states whenever modelValue becomes undefined', async () => {
@@ -758,7 +669,7 @@ describe.only('ValidateCoreMixin', () => {
       `);
 
       el.modelValue = 'a';
-      expect(el.hasError).to.be.true
+      expect(el.hasError).to.be.true;
 
       expect(el.errorStates).to.not.eql({});
 
@@ -834,13 +745,12 @@ describe.only('ValidateCoreMixin', () => {
           .modelValue=${'123'}
           .validators=${[new MinLength(3, { message: 'foo' })]}>
           <input slot="input">
-        </${tag}>`
-      );
+        </${tag}>`);
       const spy = sinon.spy(el.inputElement, 'setCustomValidity');
-      el.modelValue = ''
+      el.modelValue = '';
       expect(spy.callCount).to.be(1);
       expect(el.validationMessage).to.be('foo');
-      el.modelValue = '123'
+      el.modelValue = '123';
       expect(spy.callCount).to.be(2);
       expect(el.validationMessage).to.be('');
     });
@@ -854,11 +764,7 @@ describe.only('ValidateCoreMixin', () => {
     const customTypeTagString = defineCE(
       class extends ValidateCoreMixin(LitElement) {
         static get validationTypes() {
-          return [
-            ...super.validationTypes,
-            'type1',
-            'type2',
-          ];
+          return [...super.validationTypes, 'type1', 'type2'];
         }
       },
     );
@@ -880,19 +786,19 @@ describe.only('ValidateCoreMixin', () => {
       expect(el.hasType1).to.be.false;
 
       el.modelValue = '12'; // triggers rype1
-      expect(el.hasType2).to.be.true
+      expect(el.hasType2).to.be.true;
       expect(el.hasError).to.be.false;
       expect(el.hasType1).to.be.false;
 
       el.modelValue = '1'; // triggers error
-      expect(el.hasType2).to.be.true
-      expect(el.hasError).to.be.true
+      expect(el.hasType2).to.be.true;
+      expect(el.hasError).to.be.true;
       expect(el.hasType1).to.be.false;
 
       el.modelValue = ''; // triggers error
-      expect(el.hasType2).to.be.true
-      expect(el.hasError).to.be.true
-      expect(el.hasType1).to.be.true
+      expect(el.hasType2).to.be.true;
+      expect(el.hasError).to.be.true;
+      expect(el.hasType1).to.be.true;
     });
 
     it('supports multiple "{type}States" objects', async () => {
@@ -969,11 +875,45 @@ describe.only('ValidateCoreMixin', () => {
       expect(orderedResulTypes2).to.eql(['error', 'type2']);
     });
 
-    // keeps an internal map of handled types
+    it('sends out events for custom types', async () => {
+      const type1MinLength = new MinLength(1, { type: 'type1' });
+      const type2MinLength = new MinLength(2, { type: 'type2' });
 
-    // sends out events for custom types
+      const el = await fixture(html`
+      <${customTypeTag}
+        .validators=${[type1MinLength, type2MinLength]}
+        .modelValue=${'123'}
+      >${lightDom}</${customTypeTag}>
+    `);
+      const type1ChangedSpy = sinon.spy();
+      const hasType1ChangedSpy = sinon.spy();
+      el.addEventListener('type1-changed', type1ChangedSpy);
+      el.addEventListener('has-type1-changed', hasType1ChangedSpy);
 
-    // it doesn't reflect automatically ... yet(?)
+      const type2ChangedSpy = sinon.spy();
+      const hasType2ChangedSpy = sinon.spy();
+      el.addEventListener('type2-changed', type2ChangedSpy);
+      el.addEventListener('has-type2-changed', hasType2ChangedSpy);
+
+      el.modelValue = '';
+      expect(type1ChangedSpy.callCount).to.equal(1);
+      expect(hasType1ChangedSpy.callCount).to.equal(1);
+      expect(type2ChangedSpy.callCount).to.equal(1);
+      expect(hasType2ChangedSpy.callCount).to.equal(1);
+
+      const type2AlwaysInvalid = new AlwaysInvalid(null, { type: 'type2' });
+      el.validators = [...el.validators, type2AlwaysInvalid];
+
+      expect(type1ChangedSpy.callCount).to.equal(1);
+      expect(hasType1ChangedSpy.callCount).to.equal(1);
+      expect(type2ChangedSpy.callCount).to.equal(2); // Change within type 2, since it went from 1 validator to two
+      expect(hasType2ChangedSpy.callCount).to.equal(1);
+    });
+
+    /**
+     * Out of scope:
+     * - automatic reflection of attrs
+     */
   });
 
   describe('Validity Feedback', () => {
@@ -981,7 +921,7 @@ describe.only('ValidateCoreMixin', () => {
       constructor(...args) {
         super(...args);
         this.name = 'containsLowercaseA';
-        this.execute = (modelValue) => !modelValue.includes('a');
+        this.execute = modelValue => !modelValue.includes('a');
       }
     }
 
@@ -989,7 +929,7 @@ describe.only('ValidateCoreMixin', () => {
       constructor(...args) {
         super(...args);
         this.name = 'containsCat';
-        this.execute = (modelValue) => !modelValue.includes('cat');
+        this.execute = modelValue => !modelValue.includes('cat');
       }
     }
 
@@ -1025,14 +965,14 @@ describe.only('ValidateCoreMixin', () => {
 
     it('renders validation result to "._feedbackNode" when async messages are resolved', async () => {
       let unlockMessage;
-      const messagePromise = new Promise((resolve) => {
+      const messagePromise = new Promise(resolve => {
         unlockMessage = resolve;
       });
 
-      AlwaysInvalid.getMessage = async() => {
+      AlwaysInvalid.getMessage = async () => {
         await messagePromise;
         return 'this ends up in ._feedbackNode';
-      }
+      };
 
       const el = await fixture(html`
         <${tag}
@@ -1051,14 +991,14 @@ describe.only('ValidateCoreMixin', () => {
     // N.B. this replaces the 'config.hideFeedback' option we had before...
     it('renders empty result when Validator.getMessage() returns "null"', async () => {
       let unlockMessage;
-      const messagePromise = new Promise((resolve) => {
+      const messagePromise = new Promise(resolve => {
         unlockMessage = resolve;
       });
 
-      AlwaysInvalid.getMessage = async() => {
+      AlwaysInvalid.getMessage = async () => {
         await messagePromise;
         return 'this ends up in ._feedbackNode';
-      }
+      };
 
       const el = await fixture(html`
         <${tag}
@@ -1078,7 +1018,9 @@ describe.only('ValidateCoreMixin', () => {
       const customFeedbackTagString = defineCE(
         class extends LionValidationFeedback {
           render() {
-            return html`ERROR on ${this.validator.name}`;
+            return html`
+              ERROR on ${this.validator.name}
+            `;
           }
         },
       );
@@ -1117,92 +1059,11 @@ describe.only('ValidateCoreMixin', () => {
       expect(el._feedbackNode.innerText).to.equal('This is success message for alwaysInvalid');
     });
 
-    // TODO: Test this in Random Success Message
-    it.skip('supports randomized selection of multiple messages for the same validator', async () => {
-      const randomTranslationsElement = defineCE(
-        class extends ValidateCoreMixin(LitElement) {
-          static get properties() {
-            return {
-              modelValue: {
-                type: String,
-              },
-            };
-          }
-
-          translateMessage(rawKeys) {
-            const translationData = {
-              error: {
-                containsLowercaseA: 'You should have a lowercase a',
-              },
-              success: {
-                randomAlwaysInvalid: 'success.a, success.b, success.c, success.d',
-                a: 'Good job!',
-                b: 'You did great!',
-                c: 'Looks good!',
-                d: 'nice!',
-              },
-            };
-            const keys = !Array.isArray(rawKeys) ? [rawKeys] : rawKeys;
-
-            for (let i = 0; i < keys.length; i += 1) {
-              const key = keys[i].split(':')[1];
-              const found = key.split('.').reduce((o, j) => o[j], translationData);
-              if (found) {
-                return found;
-              }
-            }
-            return '';
-          }
-        },
-      );
-      const mathRandom = Math.random;
-      Math.random = () => 0;
-
-      function randomAlwaysInvalid() {
-        return { randomAlwaysInvalid: false };
-      }
-
-      const randomTranslationsName = unsafeStatic(randomTranslationsElement);
-
-      const randomTranslations = await fixture(html`
-        <${randomTranslationsName}
-          .modelValue=${'dog'}
-          .errorValidators=${[[containsLowercaseA]]}
-          .successValidators=${[[randomAlwaysInvalid]]}
-        ></${randomTranslationsName}>
-      `);
-
-      expect(
-        randomTranslations.translateMessage('random-translations:error.containsLowercaseA'),
-      ).to.equal('You should have a lowercase a');
-      expect(randomTranslations.translateMessage('random-translations:success.a')).to.equal(
-        'Good job!',
-      );
-
-      expect(randomTranslations._feedbackNode.innerText).to.equal(
-        'You should have a lowercase a',
-      );
-
-      randomTranslations.modelValue = 'cat';
-      await randomTranslations.updateComplete;
-      expect(randomTranslations._feedbackNode.innerText).to.equal('Good job!');
-
-      Math.random = () => 0.25;
-      randomTranslations.__lastGetSuccessResult = false;
-      randomTranslations.modelValue = 'dog';
-      randomTranslations.modelValue = 'cat';
-      await randomTranslations.updateComplete;
-
-      expect(randomTranslations._feedbackNode.innerText).to.equal('You did great!');
-
-      Math.random = mathRandom; // manually restore
-    });
-
     describe('Field name', () => {
       let calledWithFieldName;
       MinLength.getMessage = ({ fieldName }) => {
         calledWithFieldName = fieldName;
-        return `${fieldName} needs more characters`
+        return `${fieldName} needs more characters`;
       };
 
       it('allows to use field name in messages', async () => {
@@ -1276,16 +1137,11 @@ describe.only('ValidateCoreMixin', () => {
     // - show validation based on Interaction States
     // - perform async validation only on blur
 
-    describe('Adding new Validator types', () => {
+    describe('Adding new Validator types', () => {});
 
-    });
-
-    describe('Adding new validation triggers', () => {
-
-    });
+    describe('Adding new validation triggers', () => {});
 
     describe('Changing feedback visibility conditions', () => {
-
       // TODO: add this test on LionField layer
       it.skip('reconsiders feedback visibility when interaction states changed', async () => {
         // see https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
@@ -1314,13 +1170,9 @@ describe.only('ValidateCoreMixin', () => {
       });
     });
 
-    describe('Changing feedback messages globally', () => {
-
-    });
+    describe('Changing feedback messages globally', () => {});
 
     // TODO: see how we can combine this functionality with the way to
-    describe.skip('Changing feedback messages per form (control)', () => {
-
-    });
-  })
+    describe.skip('Changing feedback messages per form (control)', () => {});
+  });
 });

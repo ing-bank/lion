@@ -131,12 +131,13 @@ export const ValidateCoreMixin = dedupeMixin(
          */
         this.__asyncValidationResult = [];
         /**
+         * @desc contains results from sync Validators, async Validators and ResultValidators
          * @type {Validator[]}
          */
         this.__validationResult = [];
 
         /**
-         * Stores all types that have been validated. Needed to clear
+         * Stores all types that have been validated. Needed for clearing
          * previously stored states on the instance
          */
         this.__validatorTypeHistoryCache = new Set();
@@ -186,14 +187,12 @@ export const ValidateCoreMixin = dedupeMixin(
         this.constructor.validationTypes.forEach(type => {
           if (c.has(`${type}States`)) {
             this.dispatchEvent(
-              new Event(`${type}-states-changed`, { bubbles: true, composed: true })
+              new Event(`${type}-states-changed`, { bubbles: true, composed: true }),
             );
           }
 
           if (c.has(`has${pascalCase(type)}`)) {
-            this.dispatchEvent(
-              new Event(`has-${type}-changed`, { bubbles: true, composed: true }),
-            );
+            this.dispatchEvent(new Event(`has-${type}-changed`, { bubbles: true, composed: true }));
           }
         });
 
@@ -266,9 +265,10 @@ export const ValidateCoreMixin = dedupeMixin(
         this.__prevValidationResult = this.__validationResult;
       }
 
+      /**
+       * @desc step 1-3
+       */
       async __executeValidators() {
-        console.log('__executeValidators');
-
         // When the modelValue can't be created by FormatMixin.parser, still allow all validators
         // to give valuable feedback to the user based on the current viewValue.
         const value =
@@ -295,12 +295,26 @@ export const ValidateCoreMixin = dedupeMixin(
           return;
         }
 
-        const filteredValidators =
-          this.validators.filter(v => !(v instanceof ResultValidator) && !(v instanceof Required));
+        const filteredValidators = this.validators.filter(
+          v => !(v instanceof ResultValidator) && !(v instanceof Required),
+        );
 
         /**
          * 2. Synchronous validators
          */
+        this.__executeSyncValidators(filteredValidators, value);
+
+        /**
+         * 3. Asynchronous validators
+         */
+        this.__executeAsyncValidators(filteredValidators, value);
+      }
+
+      /**
+       * @desc step 2, calls __finishValidation
+       * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
+       */
+      __executeSyncValidators(filteredValidators, value) {
         /** @type {Validator[]} */
         const syncValidators = filteredValidators.filter(v => !v.async);
 
@@ -308,10 +322,13 @@ export const ValidateCoreMixin = dedupeMixin(
           this.__syncValidationResult = syncValidators.filter(v => v.execute(value, v.param));
           this.__finishValidation();
         }
+      }
 
-        /**
-         * 3. Asynchronous validators
-         */
+      /**
+       * @desc step 3, calls __finishValidation
+       * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
+       */
+      async __executeAsyncValidators(filteredValidators, value) {
         const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
 
         if (asyncValidators.length) {
@@ -326,16 +343,23 @@ export const ValidateCoreMixin = dedupeMixin(
         }
       }
 
+      /**
+       * @desc step 4, called by __finishValidation
+       * @param {Validator[]} regularValidationResult result of steps 1-3
+       */
       __executeResultValidators(regularValidationResult) {
         /** @type {ResultValidator[]} */
-        const resultValidators = this.validators
-          .filter(v => !v.async && v instanceof ResultValidator);
+        const resultValidators = this.validators.filter(
+          v => !v.async && v instanceof ResultValidator,
+        );
 
-        return resultValidators.filter(v => v.executeOnResults({
-          regularValidationResult,
-          prevValidationResult: this.__prevValidationResult,
-          validator: this.validators,
-        }));
+        return resultValidators.filter(v =>
+          v.executeOnResults({
+            regularValidationResult,
+            prevValidationResult: this.__prevValidationResult,
+            validator: this.validators,
+          }),
+        );
       }
 
       __finishValidation() {
@@ -348,7 +372,7 @@ export const ValidateCoreMixin = dedupeMixin(
         this.__validationResult = [
           ...holisticResult,
           ...this.__syncValidationResult,
-          ...this.__asyncValidationResult
+          ...this.__asyncValidationResult,
         ];
 
         this._storeResultsOnInstance(this.__validationResult);
@@ -379,7 +403,8 @@ export const ValidateCoreMixin = dedupeMixin(
           // 'error' type. Subclassers supporting different types need to
           // configure attribute reflection themselves.
           instanceResult[`has${pascalCase(validator.type)}`] = true;
-          instanceResult[`${validator.type}States`] = instanceResult[`${validator.type}States`] || {};
+          instanceResult[`${validator.type}States`] =
+            instanceResult[`${validator.type}States`] || {};
           instanceResult[`${validator.type}States`][validator.name] = true;
           this.__validatorTypeHistoryCache.add(validator.type);
         });
@@ -464,7 +489,7 @@ export const ValidateCoreMixin = dedupeMixin(
        */
       async __getMessageMap(validators) {
         return Promise.all(
-          validators.map(async (validator) => {
+          validators.map(async validator => {
             const message = await validator.getMessage({
               fieldName: this.getFieldName(validator.config),
               validatorParams: validator.param,
@@ -525,7 +550,6 @@ export const ValidateCoreMixin = dedupeMixin(
           result[`has${pascalCase(previouslyStoredType)}Visible`] = false;
         });
 
-        // console.log('__storeTypeVisibilityOnInstance', prioritizedValidators);
         prioritizedValidators.forEach(v => {
           result[`has${pascalCase(v.type)}Visible`] = true;
         });
@@ -539,7 +563,9 @@ export const ValidateCoreMixin = dedupeMixin(
        * @overridable
        * @returns {Validator[]}
        */
-      _prioritizeAndFilterFeedback({ validationResult } = { validationResult: this.__validationResult}) {
+      _prioritizeAndFilterFeedback(
+        { validationResult } = { validationResult: this.__validationResult },
+      ) {
         const types = this.constructor.validationTypes;
         return validationResult.sort((a, b) => types.indexOf(b.type) - types.indexOf(a.type));
       }
