@@ -35,7 +35,8 @@ export class LionRadioGroup extends LionFieldset {
   }
 
   get serializedValue() {
-    return this._getCheckedRadioElement().serializedValue;
+    const el = this._getCheckedRadioElement();
+    return el ? el.serializedValue : '';
   }
 
   set serializedValue(value) {
@@ -43,7 +44,8 @@ export class LionRadioGroup extends LionFieldset {
   }
 
   get formattedValue() {
-    return this._getCheckedRadioElement().formattedValue;
+    const el = this._getCheckedRadioElement();
+    return el ? el.formattedValue : '';
   }
 
   set formattedValue(value) {
