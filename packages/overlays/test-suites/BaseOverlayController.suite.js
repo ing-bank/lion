@@ -1,4 +1,5 @@
 import { expect, html, fixture } from '@open-wc/testing';
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';

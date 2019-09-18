@@ -1,5 +1,6 @@
 import { html, LitElement } from '@lion/core';
 import { localize, getWeekdayNames, getMonthNames, LocalizeMixin } from '@lion/localize';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';
 import { dayTemplate } from './utils/dayTemplate.js';
 import { dataTemplate } from './utils/dataTemplate.js';
@@ -7,7 +8,6 @@ import { getFirstDayNextMonth } from './utils/getFirstDayNextMonth.js';
 import { getLastDayPreviousMonth } from './utils/getLastDayPreviousMonth.js';
 import { isSameDate } from './utils/isSameDate.js';
 import { calendarStyle } from './calendarStyle.js';
-import './utils/differentKeyNamesShimIE.js';
 import { createDay } from './utils/createDay.js';
 import { normalizeDateTime } from './utils/normalizeDateTime.js';
 
