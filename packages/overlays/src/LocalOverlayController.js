@@ -96,6 +96,8 @@ export class LocalOverlayController extends BaseOverlayController {
     if (oldIsShown === true) {
       return;
     }
+    /* To display on top of elements with no z-index that are appear later in the DOM */
+    this.contentNode.style.zIndex = 1;
     /**
      * Popper is weird about properly positioning the popper element when it is recreated so
      * we just recreate the popper instance to make it behave like it should.
