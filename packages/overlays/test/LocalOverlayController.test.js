@@ -8,6 +8,8 @@ import { LocalOverlayController } from '../src/LocalOverlayController.js';
 
 import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.js';
 
+import { normalizeTransformStyle } from './utils-tests/normalize-transform-style.js';
+
 describe('LocalOverlayController', () => {
   describe('extends BaseOverlayController', () => {
     runBaseOverlaySuite((...args) => new LocalOverlayController(...args));
@@ -146,7 +148,8 @@ describe('LocalOverlayController', () => {
       `);
 
       await ctrl.show();
-      expect(ctrl.contentNode.style.transform).to.equal(
+
+      expect(normalizeTransformStyle(ctrl.contentNode.style.transform)).to.equal(
         // TODO: check if 'translate3d(16px, 16px, 0px)' would be more appropriate
         'translate3d(16px, 28px, 0px)',
         '16px displacement is expected due to both horizontal and vertical viewport margin',
@@ -264,11 +267,15 @@ describe('LocalOverlayController', () => {
     it('positions the popper element correctly on show', async () => {
       let controller;
       const invokerNode = await fixture(html`
-        <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
       `);
       controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
         invokerNode,
         popperConfig: {
@@ -282,17 +289,18 @@ describe('LocalOverlayController', () => {
       `);
 
       await controller.show();
+
       let contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -60px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values',
       );
 
       await controller.hide();
       await controller.show();
       contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -60px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values should be identical after hiding and showing',
       );
     });
@@ -301,11 +309,15 @@ describe('LocalOverlayController', () => {
     it('updates placement properly even during hidden state', async () => {
       let controller;
       const invokerNode = await fixture(html`
-        <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
       `);
       controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
         invokerNode,
         popperConfig: {
@@ -326,8 +338,8 @@ describe('LocalOverlayController', () => {
 
       await controller.show();
       let contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -62px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -30px, 0px)',
         'Popper positioning values',
       );
 
@@ -343,8 +355,8 @@ describe('LocalOverlayController', () => {
       await controller.show();
       contentChild = controller.content.firstElementChild;
       expect(controller._popper.options.modifiers.offset.offset).to.equal('0, 20px');
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -72px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
@@ -352,9 +364,9 @@ describe('LocalOverlayController', () => {
     it('updates positioning correctly during shown state when config gets updated', async () => {
       let controller;
       const invokerNode = await fixture(html`
-        <button style="width: 100px; height: 20px;" @click=${() => controller.show()}>
+        <div role="button" style="width: 100px; height: 20px;" @click=${() => controller.show()}>
           Invoker
-        </button>
+        </div>
       `);
       controller = new LocalOverlayController({
         contentTemplate: () => html`
@@ -379,7 +391,7 @@ describe('LocalOverlayController', () => {
 
       await controller.show();
       const contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
         'translate3d(10px, -62px, 0px)',
         'Popper positioning values',
       );
@@ -392,7 +404,7 @@ describe('LocalOverlayController', () => {
           },
         },
       });
-      expect(contentChild.style.transform).to.equal(
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
         'translate3d(10px, -72px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
