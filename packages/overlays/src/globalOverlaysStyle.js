@@ -11,13 +11,15 @@ export const globalOverlaysStyle = css`
     pointer-events: none;
   }
 
-  .global-overlays__overlay {
+  .global-overlays__overlay,
+  .global-overlays__overlay--blocking {
     pointer-events: auto;
   }
 
   .global-overlays.global-overlays--blocking-opened .global-overlays__overlay {
     display: none;
   }
+
   .global-overlays.global-overlays--blocking-opened .global-overlays__backdrop {
     animation: global-overlays-backdrop-fade-out 300ms;
     opacity: 0;
