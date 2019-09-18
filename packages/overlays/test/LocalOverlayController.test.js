@@ -15,11 +15,9 @@ import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.
 export function normalizeTransformStyle(cssValue) {
   // eslint-disable-next-line no-unused-vars
   const [_, transformType, positionPart] = cssValue.match(/(.*)\((.*?)\)/);
-  const numberswithPx = positionPart.split(',').map(p => p.replace('px', ''));
-  const normalizedNumbers = numberswithPx.map(n => {
-    const number = Number(n.replace('px', ''));
-    return Math.floor(number);
-  });
+  const normalizedNumbers = positionPart
+    .split(',')
+    .map(p => Math.floor(Number(p.replace('px', ''))));
   return `${transformType}(${normalizedNumbers
     .map((n, i) => `${n}px${normalizedNumbers.length - 1 === i ? '' : ', '}`)
     .join('')})`;
