@@ -97,6 +97,18 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
+    it('closes the calendar via close button', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
+
+      elObj.overlayCloseButtonEl.click();
+      expect(elObj.overlayController.isShown).to.equal(false);
+    });
+
     /**
      * Not in scope:
      * - centralDate can be overridden
