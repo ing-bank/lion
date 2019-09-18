@@ -97,7 +97,7 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
-    it.only('closes the calendar via close button', async () => {
+    it('closes the calendar via close button', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
       `);
