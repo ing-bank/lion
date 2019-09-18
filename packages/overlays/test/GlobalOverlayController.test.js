@@ -1,6 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import { keyCodes } from '../src/utils/key-codes.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
 
 import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
 import { overlays } from '../src/overlays.js';
@@ -62,48 +60,21 @@ describe('GlobalOverlayController', () => {
   });
 
   describe('basics', () => {
-    // part of BaseController
-    it.skip('creates a controller with methods: show, hide, sync', () => {
-      const controller = new GlobalOverlayController();
-      expect(controller.show).to.be.a('function');
-      expect(controller.hide).to.be.a('function');
-      expect(controller.sync).to.be.a('function');
-    });
-
-    // this is a micro optimization; 1 global root node for all overlays is ok to create and keep right from the start
-    it.skip('creates a root node in body when first controller is shown', async () => {
-      const controller = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: () => html`
-            <p>Content</p>
-          `,
-        }),
-      );
-      expect(document.body.querySelectorAll('.global-overlays').length).to.equal(0);
-      await controller.show();
-      expect(document.body.querySelectorAll('.global-overlays').length).to.equal(1);
-      expect(document.body.querySelector('.global-overlays')).to.equal(
-        GlobalOverlayController._rootNode,
-      );
-      expect(document.body.querySelector('.global-overlays').parentElement).to.equal(document.body);
-      expect(GlobalOverlayController._rootNode.children.length).to.equal(1);
-    });
-
     it('renders an overlay from the lit-html based contentTemplate when showing', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <p>my content</p>
           `,
         }),
       );
-      await controller.show();
+      await ctrl.show();
       expect(getRootNode().children.length).to.equal(1);
       expect(getRootNode().children[0]).to.have.trimmed.text('my content');
     });
 
     it('removes the overlay from DOM when hiding', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <p>Content</p>
@@ -111,19 +82,19 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show();
+      await ctrl.show();
       expect(getRenderedContainers().length).to.equal(1);
       expect(getRenderedOverlay(0).tagName).to.equal('P');
       expect(getRenderedOverlay(0).textContent).to.equal('Content');
       expect(getTopContainer()).to.equal(getRenderedContainer(0));
 
-      await controller.hide();
+      await ctrl.hide();
       expect(getRenderedContainers().length).to.equal(0);
       expect(getTopContainer()).to.not.exist;
     });
 
     it('exposes isShown state for reading', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <p>Content</p>
@@ -131,13 +102,13 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      expect(controller.isShown).to.equal(false);
+      expect(ctrl.isShown).to.equal(false);
 
-      await controller.show();
-      expect(controller.isShown).to.equal(true);
+      await ctrl.show();
+      expect(ctrl.isShown).to.equal(true);
 
-      await controller.hide();
-      expect(controller.isShown).to.equal(false);
+      await ctrl.hide();
+      expect(ctrl.isShown).to.equal(false);
     });
 
     it('puts the latest shown overlay always on top', async () => {
@@ -169,7 +140,7 @@ describe('GlobalOverlayController', () => {
     });
 
     it('does not recreate the overlay elements when calling show multiple times', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <p>Content</p>
@@ -177,42 +148,19 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show();
+      await ctrl.show();
       expect(getRenderedContainers().length).to.equal(1);
       const initialContainer = getRenderedContainer(0);
       const initialOverlay = getRenderedOverlay(0);
 
-      await controller.show();
+      await ctrl.show();
       expect(getRenderedContainers().length).to.equal(1);
       expect(getRenderedContainer(0)).to.equal(initialContainer);
       expect(getRenderedOverlay(0)).to.equal(initialOverlay);
     });
 
-    // why would we do this? right now keep the renderTarget wrapper, disconnect and
-    // reconnect when needed - but do not recreate it every time
-    it.skip('recreates the overlay elements when hiding and showing again', async () => {
-      const controller = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: () => html`
-            <p>Content</p>
-          `,
-        }),
-      );
-
-      await controller.show();
-      expect(getRenderedContainers().length).to.equal(1);
-      const initialContainer = getRenderedContainer(0);
-      const initialOverlay = getRenderedOverlay(0);
-
-      await controller.hide();
-      await controller.show();
-      expect(getRenderedContainers().length).to.equal(1);
-      expect(getRenderedContainer(0)).to.not.equal(initialContainer);
-      expect(getRenderedOverlay(0)).to.not.equal(initialOverlay);
-    });
-
     it('supports .sync(isShown, data)', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: ({ text = 'default' } = {}) => html`
             <p>${text}</p>
@@ -220,22 +168,22 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.sync({ isShown: true, data: { text: 'hello world' } });
+      await ctrl.sync({ isShown: true, data: { text: 'hello world' } });
       expect(getRenderedContainers().length).to.equal(1);
       expect(getRenderedOverlay(0).textContent).to.equal('hello world');
 
-      await controller.sync({ isShown: true, data: { text: 'goodbye world' } });
+      await ctrl.sync({ isShown: true, data: { text: 'goodbye world' } });
       expect(getRenderedContainers().length).to.equal(1);
       expect(getRenderedOverlay(0).textContent).to.equal('goodbye world');
 
-      await controller.sync({ isShown: false, data: { text: 'goodbye world' } });
+      await ctrl.sync({ isShown: false, data: { text: 'goodbye world' } });
       expect(getRenderedContainers().length).to.equal(0);
     });
   });
 
   describe('elementToFocusAfterHide', () => {
     it('focuses body when hiding by default', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <div><input />=</div>
@@ -243,12 +191,12 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show();
+      await ctrl.show();
       const input = getTopOverlay().querySelector('input');
       input.focus();
       expect(document.activeElement).to.equal(input);
 
-      await controller.hide();
+      await ctrl.hide();
       expect(document.activeElement).to.equal(document.body);
     });
 
@@ -257,7 +205,7 @@ describe('GlobalOverlayController', () => {
         <input />
       `);
 
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           elementToFocusAfterHide: input,
           contentTemplate: () => html`
@@ -266,12 +214,12 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show();
+      await ctrl.show();
       const textarea = getTopOverlay().querySelector('textarea');
       textarea.focus();
       expect(document.activeElement).to.equal(textarea);
 
-      await controller.hide();
+      await ctrl.hide();
       expect(document.activeElement).to.equal(input);
     });
 
@@ -280,7 +228,7 @@ describe('GlobalOverlayController', () => {
         <input />
       `);
 
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <div><textarea></textarea></div>
@@ -288,12 +236,12 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show(input);
+      await ctrl.show(input);
       const textarea = getTopOverlay().querySelector('textarea');
       textarea.focus();
       expect(document.activeElement).to.equal(textarea);
 
-      await controller.hide();
+      await ctrl.hide();
       expect(document.activeElement).to.equal(input);
     });
 
@@ -302,7 +250,7 @@ describe('GlobalOverlayController', () => {
         <input />
       `);
 
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           contentTemplate: () => html`
             <div><textarea></textarea></div>
@@ -310,91 +258,27 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.sync({ isShown: true, elementToFocusAfterHide: input });
+      await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
       const textarea = getTopOverlay().querySelector('textarea');
       textarea.focus();
       expect(document.activeElement).to.equal(textarea);
 
-      await controller.hide();
+      await ctrl.hide();
       expect(document.activeElement).to.equal(input);
 
-      await controller.sync({ isShown: true, elementToFocusAfterHide: input });
+      await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
       const textarea2 = getTopOverlay().querySelector('textarea');
       textarea2.focus();
       expect(document.activeElement).to.equal(textarea2);
 
-      await controller.sync({ isShown: false });
+      await ctrl.sync({ isShown: false });
       expect(document.activeElement).to.equal(input);
-    });
-  });
-
-  describe('trapsKeyboardFocus (for a11y)', () => {
-    it('focuses the overlay on show', async () => {
-      const controller = overlays.add(
-        new GlobalOverlayController({
-          trapsKeyboardFocus: true,
-          contentTemplate: () => html`
-            <p>Content</p>
-          `,
-        }),
-      );
-      await controller.show();
-      expect(getRenderedOverlay(0)).to.equal(document.activeElement);
-    });
-
-    it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
-      const controller = overlays.add(
-        new GlobalOverlayController({
-          trapsKeyboardFocus: true,
-          contentTemplate: () => html`
-            <div><input /><input /></div>
-          `,
-        }),
-      );
-      await controller.show();
-
-      const elOutside = await fixture(html`
-        <button>click me</button>
-      `);
-      const input1 = getRenderedOverlay(0).querySelectorAll('input')[0];
-      const input2 = getRenderedOverlay(0).querySelectorAll('input')[1];
-
-      input2.focus();
-      // this mimics a tab within the contain-focus system used
-      const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
-      event.keyCode = keyCodes.tab;
-      window.dispatchEvent(event);
-
-      expect(elOutside).to.not.equal(document.activeElement);
-      expect(input1).to.equal(document.activeElement);
-    });
-
-    it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
-      const controller = overlays.add(
-        new GlobalOverlayController({
-          trapsKeyboardFocus: false,
-          contentTemplate: () => html`
-            <div><input /></div>
-          `,
-        }),
-      );
-      await controller.show();
-
-      const elOutside = await fixture(html`
-        <input />
-      `);
-      const input = getRenderedOverlay(0).querySelector('input');
-
-      input.focus();
-      simulateTab();
-
-      expect(elOutside).to.equal(document.activeElement);
     });
   });
 
   describe('preventsScroll', () => {
     it('prevent scrolling the background', async () => {
-      const controller = overlays.add(
+      const ctrl = overlays.add(
         new GlobalOverlayController({
           preventsScroll: true,
           contentTemplate: () => html`
@@ -403,31 +287,13 @@ describe('GlobalOverlayController', () => {
         }),
       );
 
-      await controller.show();
-      controller.updateComplete;
+      await ctrl.show();
+      ctrl.updateComplete;
       expect(getComputedStyle(document.body).overflow).to.equal('hidden');
 
-      await controller.hide();
-      controller.updateComplete;
+      await ctrl.hide();
+      ctrl.updateComplete;
       expect(getComputedStyle(document.body).overflow).to.equal('visible');
-    });
-  });
-
-  describe('hidesOnEsc', () => {
-    it('hides when Escape is pressed', async () => {
-      const ctrl = overlays.add(
-        new GlobalOverlayController({
-          hidesOnEsc: true,
-          contentTemplate: () => html`
-            <p>Content</p>
-          `,
-        }),
-      );
-      await ctrl.show();
-      expect(ctrl.isShown).to.be.true;
-
-      ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-      expect(ctrl.isShown).to.be.false;
     });
   });
 

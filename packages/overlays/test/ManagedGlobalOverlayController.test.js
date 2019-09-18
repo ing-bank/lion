@@ -68,45 +68,6 @@ describe('Managed GlobalOverlayController', () => {
       expect(ctrl1.backdropNode).to.be.undefined;
       expect(ctrl2.backdropNode).to.have.class('global-overlays__backdrop');
     });
-
-    // we no longer do this
-    it.skip('restores the backdrop to the next element with hasBackdrop when hiding', async () => {
-      const ctrl0 = overlays.add(
-        new GlobalOverlayController({
-          hasBackdrop: true,
-          contentTemplate: () => html`
-            <p>Content0</p>
-          `,
-        }),
-      );
-      await ctrl0.show();
-
-      const ctrl1 = overlays.add(
-        new GlobalOverlayController({
-          hasBackdrop: false,
-          contentTemplate: () => html`
-            <p>Content1</p>
-          `,
-        }),
-      );
-      await ctrl1.show();
-
-      const ctrl2 = overlays.add(
-        new GlobalOverlayController({
-          hasBackdrop: true,
-          contentTemplate: () => html`
-            <p>Content2</p>
-          `,
-        }),
-      );
-      await ctrl2.show();
-
-      await ctrl2.hide();
-
-      // as ctrl1 has "hasBackdrop: false"
-      expect(getRenderedOverlay(0)).to.have.class('global-overlays__backdrop');
-      expect(getRenderedOverlay(1)).to.not.have.class('global-overlays__backdrop');
-    });
   });
 
   describe('isBlocking', () => {

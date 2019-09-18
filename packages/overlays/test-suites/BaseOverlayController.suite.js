@@ -1,5 +1,7 @@
 import { expect, html, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
+import { keyCodes } from '../src/utils/key-codes.js';
+import { simulateTab } from '../src/utils/simulate-tab.js';
 
 export const runBaseOverlaySuite = generateCtrl => {
   describe('shown', () => {
@@ -262,6 +264,104 @@ export const runBaseOverlaySuite = generateCtrl => {
       });
       expect(ctrl.switchIn).to.be.a('function');
       expect(ctrl.switchOut).to.be.a('function');
+    });
+  });
+
+  describe('trapsKeyboardFocus (for a11y)', () => {
+    it('focuses the overlay on show', async () => {
+      const ctrl = generateCtrl({
+        contentTemplate: () => html`
+          <p>Content</p>
+        `,
+      });
+      // add element to dom to allow focus
+      await fixture(html`
+        ${ctrl.content}
+      `);
+      await ctrl.show();
+      ctrl.enableTrapsKeyboardFocus();
+      expect(ctrl.contentNode).to.equal(document.activeElement);
+    });
+
+    it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
+      const ctrl = generateCtrl({
+        contentTemplate: () => html`
+          <div><input /><input /></div>
+        `,
+      });
+      // add element to dom to allow focus
+      await fixture(html`
+        ${ctrl.content}
+      `);
+      await ctrl.show();
+      ctrl.enableTrapsKeyboardFocus();
+
+      const elOutside = await fixture(html`
+        <button>click me</button>
+      `);
+      const input1 = ctrl.contentNode.querySelectorAll('input')[0];
+      const input2 = ctrl.contentNode.querySelectorAll('input')[1];
+
+      input2.focus();
+      // this mimics a tab within the contain-focus system used
+      const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
+      event.keyCode = keyCodes.tab;
+      window.dispatchEvent(event);
+
+      expect(elOutside).to.not.equal(document.activeElement);
+      expect(input1).to.equal(document.activeElement);
+    });
+
+    it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
+      const ctrl = generateCtrl({
+        contentTemplate: () => html`
+          <div><input /></div>
+        `,
+      });
+      // add element to dom to allow focus
+      await fixture(html`
+        ${ctrl.content}
+      `);
+      await ctrl.show();
+      ctrl.enableTrapsKeyboardFocus();
+
+      const elOutside = await fixture(html`
+        <input />
+      `);
+      const input = ctrl.contentNode.querySelector('input');
+
+      input.focus();
+      simulateTab();
+
+      expect(elOutside).to.equal(document.activeElement);
+    });
+  });
+
+  describe('hidesOnEsc', () => {
+    it('hides when [escape] is pressed', async () => {
+      const ctrl = generateCtrl({
+        contentTemplate: () => html`
+          <p>Content</p>
+        `,
+      });
+      await ctrl.show();
+      ctrl.enableHidesOnEsc();
+
+      ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+      expect(ctrl.isShown).to.be.false;
+    });
+
+    it('stays shown when [escape] is pressed on outside element', async () => {
+      const ctrl = generateCtrl({
+        contentTemplate: () => html`
+          <p>Content</p>
+        `,
+      });
+      await ctrl.show();
+      ctrl.enableHidesOnEsc();
+
+      document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+      expect(ctrl.isShown).to.be.true;
     });
   });
 };
