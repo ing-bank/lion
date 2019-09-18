@@ -2,7 +2,7 @@ import { LocalOverlayController } from './LocalOverlayController.js';
 
 export class DynamicOverlayController {
   /**
-   * no setter as .list is inteded to be read-only
+   * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
   get list() {
@@ -10,7 +10,7 @@ export class DynamicOverlayController {
   }
 
   /**
-   * no setter as .active is inteded to be read-only
+   * no setter as .active is intended to be read-only
    * You can use .switchTo to change it
    */
   get active() {

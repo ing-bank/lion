@@ -14,14 +14,18 @@ All overlays exists of an invoker and a content
 
 - **invoker**, the element that can trigger showing (and hiding) the overlay.
   - invokerNode
-- **content**, the toggleable content
-  - contentNode, in case the content is placed next to the invoker (local)
-  - contentTemplate, in case the content is not placed next to the invoker (global).
+- **content**, the toggleable overlays content
+  - contentTemplate, in most cases the content will be placed inside a template as one of the controller configuration options.
+  - contentNode, a node can also be used as the content for local overlays (see next section), such as is done in the [popup](../../popup/).
 
 ## Local and global overlay controllers
 
 Currently, we have a global and a local overlay controller, as two separate entities.
 Based on provided config, they handle all positioning logic, accessibility and interaction patterns.
+
+- [GlobalOverlayController](./GlobalOverlayController.md), the ones positioned relatively to the viewport.
+- [LocalOverlayController](./LocalOverlayController.md), the ones positioned next to invokers they are related to.
+
 All of their configuration options will be described below as part of the _Configuration options_ section.
 
 ### DynamicOverlayController
