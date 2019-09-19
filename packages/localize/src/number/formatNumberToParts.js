@@ -28,7 +28,14 @@ export function formatNumberToParts(number, options) {
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
   const regexSymbol = /[A-Z.,\s0-9]/;
   const regexCode = /[A-Z]/;
-  const regexMinusSign = /[-]/;
+
+  /**
+   * TODO: Preprocessor should convert other "dashes" unicodes to &minus;
+   * Then our regex should test for &minus;
+   * See also https://www.deque.com/blog/dont-screen-readers-read-whats-screen-part-1-punctuation-typographic-symbols/
+   */
+  const regexMinusSign = /[-]/; // U+002D, Hyphen-Minus, &#45;  is what we test on for now, since most keyboards give you this for dash
+
   const regexNum = /[0-9]/;
   const regexSeparator = /[.,]/;
   const regexSpace = /[\s]/;
@@ -38,7 +45,7 @@ export function formatNumberToParts(number, options) {
   for (let i = 0; i < formattedNumber.length; i += 1) {
     // detect minusSign
     if (regexMinusSign.test(formattedNumber[i])) {
-      formattedParts.push({ type: 'minusSign', value: formattedNumber[i] });
+      formattedParts.push({ type: 'minusSign', value: '−' /* U+2212, 'Minus-Sign', &minus; */ });
     }
     // detect numbers
     if (regexNum.test(formattedNumber[i])) {
