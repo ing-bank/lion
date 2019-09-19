@@ -176,12 +176,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   /**
-   * Prevent normal click and redispatch click on the native button unless already redispatched.
+   * Prevent normal click and redispatch submit on the native button unless already redispatched.
    */
-  __clickDelegationHandler(e) {
-    if (!e.__isRedispatchedOnNativeButton) {
-      e.stopImmediatePropagation();
-      this._redispatchClickEvent(e);
+  __clickDelegationHandler() {
+    if (this.type === 'submit' && this._nativeButtonNode.form) {
+      this._nativeButtonNode.form.submit();
     }
   }
 
