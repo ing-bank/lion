@@ -438,7 +438,7 @@ export const FormControlMixin = dedupeMixin(
             }
 
             /***** {state} .state-disabled *****/
-            :host(.state-disabled) .input-group ::slotted(*) {
+            :host(.state-disabled) .input-group ::slotted(slot='input') {
               color: var(--disabled-text-color, #adadad);
             }
 
