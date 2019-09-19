@@ -29,12 +29,8 @@ export function formatNumberToParts(number, options) {
   const regexSymbol = /[A-Z.,\s0-9]/;
   const regexCode = /[A-Z]/;
 
-  /**
-   * TODO: Preprocessor should convert other "dashes" unicodes to &minus;
-   * Then our regex should test for &minus;
-   * See also https://www.deque.com/blog/dont-screen-readers-read-whats-screen-part-1-punctuation-typographic-symbols/
-   */
-  const regexMinusSign = /[-]/; // U+002D, Hyphen-Minus, &#45;  is what we test on for now, since most keyboards give you this for dash
+  // U+002D, Hyphen-Minus, &#45;
+  const regexMinusSign = /[-]/;
 
   const regexNum = /[0-9]/;
   const regexSeparator = /[.,]/;

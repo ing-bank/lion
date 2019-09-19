@@ -60,7 +60,7 @@ describe('formatAmount()', () => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }),
-    ).to.equal('-12.35');
+    ).to.equal('−12.35');
   });
 
   it('formats the right amount of fraction digits for a certain currency', async () => {
