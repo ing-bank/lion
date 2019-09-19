@@ -4,10 +4,10 @@ import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 
-export const runBaseOverlaySuite = generateCtrl => {
+export const runBaseOverlaySuite = createCtrlFn => {
   describe('shown', () => {
     it('has .isShown which defaults to false', () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -16,7 +16,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('has async show() which shows the overlay', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -27,7 +27,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('has async hide() which hides the overlay', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -39,7 +39,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     it('fires "show" event once overlay becomes shown', async () => {
       const showSpy = sinon.spy();
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -53,7 +53,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     it('fires "hide" event once overlay becomes hidden', async () => {
       const hideSpy = sinon.spy();
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -69,7 +69,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('.contentTemplate', () => {
     it('has .content<Node> as a wrapper for a render target', () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -79,14 +79,14 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     it('throws if trying to assign a non function value to .contentTemplate', () => {
       expect(() =>
-        generateCtrl({
+        createCtrlFn({
           contentTemplate: 'foo',
         }),
       ).to.throw('.contentTemplate needs to be a function');
     });
 
     it('has .contentTemplate<Function> to render into .content', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -97,13 +97,13 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     it('throws if .contentTemplate does not return a single child node', async () => {
       expect(() => {
-        generateCtrl({
+        createCtrlFn({
           contentTemplate: () => html``,
         });
       }).to.throw('The .contentTemplate needs to always return exactly one child node');
 
       expect(() => {
-        generateCtrl({
+        createCtrlFn({
           contentTemplate: () => html`
             <p>one</p>
             <p>two</p>
@@ -113,7 +113,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('allows to change the .contentTemplate<Function>', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <div><p>my content</p></div>
         `,
@@ -134,7 +134,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('has .contentData which triggers a updates of the overlay content', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: ({ username = 'default user' } = {}) => html`
           <p>my content - ${username}</p>
         `,
@@ -149,14 +149,14 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('.contentNode', () => {
     it('accepts an .contentNode<Node> to directly set content', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentNode: await fixture('<p>direct node</p>'),
       });
       expect(ctrl.content).to.have.trimmed.text('direct node');
     });
 
     it('throws if .contentData gets used without a .contentTemplate', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentNode: await fixture('<p>direct node</p>'),
       });
       expect(() => {
@@ -167,7 +167,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('_showHideMode="dom" (auto selected with .contentTemplate)', () => {
     it('removes dom content on hide', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -182,7 +182,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('_showHideMode="css" (auto selected with .contentNode)', () => {
     it('hides .contentNode via css on hide', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentNode: await fixture('<p>direct node</p>'),
       });
 
@@ -198,7 +198,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     // do we even want to support contentTemplate?
     it.skip('hides .contentNode from a .contentTemplate via css on hide', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>direct node</p>
         `,
@@ -216,7 +216,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it.skip('does not put a style display on .content when using a .contentTemplate', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>direct node</p>
         `,
@@ -238,7 +238,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     it('throws if .contentTemplate and .contentNode get passed on', async () => {
       const node = await fixture('<p>direct node</p>');
       expect(() => {
-        generateCtrl({
+        createCtrlFn({
           contentTemplate: () => '',
           contentNode: node,
         });
@@ -247,7 +247,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
     it('throws if neither .contentTemplate or .contentNode get passed on', async () => {
       expect(() => {
-        generateCtrl();
+        createCtrlFn();
       }).to.throw('You need to provide a .contentTemplate or a .contentNode');
     });
   });
@@ -258,7 +258,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('switching', () => {
     it('has a switchOut/In function', () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>my content</p>
         `,
@@ -270,7 +270,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('trapsKeyboardFocus (for a11y)', () => {
     it('focuses the overlay on show', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>Content</p>
         `,
@@ -285,7 +285,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <div><input /><input /></div>
         `,
@@ -314,7 +314,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <div><input /></div>
         `,
@@ -340,7 +340,7 @@ export const runBaseOverlaySuite = generateCtrl => {
 
   describe('hidesOnEsc', () => {
     it('hides when [escape] is pressed', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>Content</p>
         `,
@@ -353,7 +353,7 @@ export const runBaseOverlaySuite = generateCtrl => {
     });
 
     it('stays shown when [escape] is pressed on outside element', async () => {
-      const ctrl = generateCtrl({
+      const ctrl = createCtrlFn({
         contentTemplate: () => html`
           <p>Content</p>
         `,

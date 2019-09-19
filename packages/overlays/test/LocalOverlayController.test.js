@@ -47,13 +47,13 @@ describe('LocalOverlayController', () => {
       expect(ctrl.syncInvoker).to.be.a('function');
     });
 
-    it('will render holders for invoker and content', async () => {
+    it('renders holders for invoker and content', async () => {
       const invokerNode = await fixture(html`
         <div role="button" id="invoke">Invoker</div>
       `);
       const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
-          <p id="content">Content</div>
+          <div id="content">Content</div>
         `,
         invokerNode,
       });

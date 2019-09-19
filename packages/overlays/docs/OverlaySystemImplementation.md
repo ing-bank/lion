@@ -75,17 +75,17 @@ Some options are mutually exclusive, in which case their dependent options and r
 #### Suggested additions
 
 ```text
-- {Boolean} isModal - sets aria-modal and/or aria-hidden="true" on siblings
+- {Boolean} isModal - sets [aria-modal] and/or [aria-hidden="true"] on siblings
 - {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all other overlays, so needed for internals.
 - {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
 - {Boolean} handlesAccessibility -
   - For non `isTooltip`:
-    - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
-    - sets aria-controls on invokerNode
+    - sets [aria-expanded="true/false"] and [aria-haspopup="true"] on invokerNode
+    - sets [aria-controls] on invokerNode
     - returns focus to invokerNode on hide
     - sets focus to overlay content(?)
   - For `isTooltip`:
-    - sets role="tooltip" and aria-labelledby/aria-describedby on the content
+    - sets [role="tooltip"] and [aria-labelledby]/[aria-describedby] on the content
 ```
 
 ## Specific Controllers
@@ -214,7 +214,7 @@ Imperative might be better here? We can add a web component later if needed.
 
 ### Dropdown Component
 
-Like the name suggests, the default placement will be button
+Like the name suggests, the default placement will be bottom
 
 ```html
 <lion-dropdown>
