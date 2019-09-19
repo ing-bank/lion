@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/field@0.2.3...@lion/field@0.2.4) (2019-09-19)
+
+
+### Bug Fixes
+
+* **field:** style disabled only on inputs inside input-group ([9e1678a](https://github.com/ing-bank/lion/commit/9e1678a))
+
+
+
+
+
 ## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/field@0.2.2...@lion/field@0.2.3) (2019-09-13)
 
 
