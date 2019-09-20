@@ -28,7 +28,10 @@ export function formatNumberToParts(number, options) {
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
   const regexSymbol = /[A-Z.,\s0-9]/;
   const regexCode = /[A-Z]/;
+
+  // U+002D, Hyphen-Minus, &#45;
   const regexMinusSign = /[-]/;
+
   const regexNum = /[0-9]/;
   const regexSeparator = /[.,]/;
   const regexSpace = /[\s]/;
@@ -38,7 +41,7 @@ export function formatNumberToParts(number, options) {
   for (let i = 0; i < formattedNumber.length; i += 1) {
     // detect minusSign
     if (regexMinusSign.test(formattedNumber[i])) {
-      formattedParts.push({ type: 'minusSign', value: formattedNumber[i] });
+      formattedParts.push({ type: 'minusSign', value: '−' /* U+2212, 'Minus-Sign', &minus; */ });
     }
     // detect numbers
     if (regexNum.test(formattedNumber[i])) {

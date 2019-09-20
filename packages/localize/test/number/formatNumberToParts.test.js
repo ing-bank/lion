@@ -10,7 +10,7 @@ const i = v => ({ type: 'integer', value: v });
 const f = v => ({ type: 'fraction', value: v });
 const g = v => ({ type: 'group', value: v });
 const l = v => ({ type: 'literal', value: v });
-const m = { type: 'minusSign', value: '-' };
+const m = { type: 'minusSign', value: '−' };
 
 const stringifyParts = parts => parts.map(part => part.value).join('');
 
