@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.15](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.14...@lion/localize@0.4.15) (2019-09-20)
+
+
+### Bug Fixes
+
+* **input-amount:** use minus sign unicode instead of hypen-minus ([edd7396](https://github.com/ing-bank/lion/commit/edd7396))
+* **localize:** use minus sign unicode instead of hypen-minus ([85beb18](https://github.com/ing-bank/lion/commit/85beb18))
+
+
+
+
+
 ## [0.4.14](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.13...@lion/localize@0.4.14) (2019-08-23)
 
 **Note:** Version bump only for package @lion/localize

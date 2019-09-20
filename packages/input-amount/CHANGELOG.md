@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.55](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.54...@lion/input-amount@0.1.55) (2019-09-20)
+
+
+### Bug Fixes
+
+* **input-amount:** use minus sign unicode instead of hypen-minus ([edd7396](https://github.com/ing-bank/lion/commit/edd7396))
+
+
+
+
+
 ## [0.1.54](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.53...@lion/input-amount@0.1.54) (2019-09-19)
 
 **Note:** Version bump only for package @lion/input-amount
