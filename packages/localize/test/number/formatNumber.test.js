@@ -27,32 +27,32 @@ describe('formatNumber', () => {
     expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123,456.79');
   });
 
-  it('uses minus (and not dash) to indicate negative numbers ', () => {
-    expect(formatNumber(-12, { style: 'decimal', maximumFractionDigits: 0 })).to.equal('-12');
+  it('uses minus U+2212 (and not dash) to indicate negative numbers ', () => {
+    expect(formatNumber(-12, { style: 'decimal', maximumFractionDigits: 0 })).to.equal('−12');
   });
 
   it('rounds (negative) numbers e.g. `roundMode: round`', () => {
     expect(formatNumber(12.4, { roundMode: 'round' })).to.equal('12');
     expect(formatNumber(12.6, { roundMode: 'round' })).to.equal('13');
 
-    expect(formatNumber(-12.4, { roundMode: 'round' })).to.equal('-12');
-    expect(formatNumber(-12.6, { roundMode: 'round' })).to.equal('-13');
+    expect(formatNumber(-12.4, { roundMode: 'round' })).to.equal('−12');
+    expect(formatNumber(-12.6, { roundMode: 'round' })).to.equal('−13');
   });
 
   it("rounds (negative) numbers up when `roundMode: 'ceiling'`", () => {
     expect(formatNumber(12.4, { roundMode: 'ceiling' })).to.equal('13');
     expect(formatNumber(12.6, { roundMode: 'ceiling' })).to.equal('13');
 
-    expect(formatNumber(-12.4, { roundMode: 'ceiling' })).to.equal('-12');
-    expect(formatNumber(-12.6, { roundMode: 'ceiling' })).to.equal('-12');
+    expect(formatNumber(-12.4, { roundMode: 'ceiling' })).to.equal('−12');
+    expect(formatNumber(-12.6, { roundMode: 'ceiling' })).to.equal('−12');
   });
 
   it('rounds (negative) numbers down when `roundMode: floor`', () => {
     expect(formatNumber(12.4, { roundMode: 'floor' })).to.equal('12');
     expect(formatNumber(12.6, { roundMode: 'floor' })).to.equal('12');
 
-    expect(formatNumber(-12.4, { roundMode: 'floor' })).to.equal('-13');
-    expect(formatNumber(-12.6, { roundMode: 'floor' })).to.equal('-13');
+    expect(formatNumber(-12.4, { roundMode: 'floor' })).to.equal('−13');
+    expect(formatNumber(-12.6, { roundMode: 'floor' })).to.equal('−13');
   });
 
   it('returns empty string when NaN', () => {
