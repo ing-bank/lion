@@ -25,6 +25,8 @@ describe('ModalDialogController', () => {
     expect(ctrl.preventsScroll).to.be.true;
     expect(ctrl.trapsKeyboardFocus).to.be.true;
     expect(ctrl.hidesOnEsc).to.be.true;
-    expect(ctrl.overlayContainerClass).to.equal('global-overlays__overlay-container--center');
+    expect(ctrl.overlayContainerPlacementClass).to.equal(
+      'global-overlays__overlay-container--center',
+    );
   });
 });
