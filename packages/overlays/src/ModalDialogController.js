@@ -7,6 +7,9 @@ export class ModalDialogController extends GlobalOverlayController {
       preventsScroll: true,
       trapsKeyboardFocus: true,
       hidesOnEsc: true,
+      viewportConfig: {
+        placement: 'center',
+      },
       ...params,
     });
   }
