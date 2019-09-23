@@ -71,7 +71,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
         :host .btn ::slotted(button) {
           position: absolute;
-          visibility: hidden;
         }
 
         .click-area {
@@ -111,6 +110,22 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           fill: #adadad;
         }
       `,
+      ...(this.__isIE11() /* visibility hidden in IE11 breaks native button functionality */
+        ? [
+            /* TODO: Make SR-only css mixin? */
+            css`
+              :host .btn ::slotted(button) {
+                clip: rect(0, 0, 0, 0);
+              }
+            `,
+          ]
+        : [
+            css`
+              :host .btn ::slotted(button) {
+                visibility: hidden;
+              }
+            `,
+          ]),
     ];
   }
 
@@ -120,7 +135,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       _button: () => {
         if (!this.constructor._button) {
           this.constructor._button = document.createElement('button');
-          this.constructor._button.setAttribute('slot', '_button');
           this.constructor._button.setAttribute('tabindex', '-1');
         }
         return this.constructor._button.cloneNode();
