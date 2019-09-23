@@ -13,6 +13,9 @@ export class GlobalOverlayController extends BaseOverlayController {
       preventsScroll: false,
       trapsKeyboardFocus: false,
       hidesOnEsc: false,
+      viewportConfig: {
+        placement: 'center',
+      },
       ...params,
     };
 
@@ -26,12 +29,14 @@ export class GlobalOverlayController extends BaseOverlayController {
     this.trapsKeyboardFocus = finalParams.trapsKeyboardFocus;
     this.hidesOnEsc = finalParams.hidesOnEsc;
     this.invokerNode = finalParams.invokerNode;
+    this.overlayContainerClass = `global-overlays__overlay-container`;
+    this.overlayContainerPlacementClass = `${this.overlayContainerClass}--${finalParams.viewportConfig.placement}`;
   }
 
   /**
    * Syncs shown state and data.
    *
-   * @param {object} options optioons to sync
+   * @param {object} options options to sync
    * @param {boolean} [options.isShown] whether the overlay should be shown
    * @param {object} [options.data] data to pass to the content template function
    * @param {HTMLElement} [options.elementToFocusAfterHide] element to return focus when hiding
@@ -69,6 +74,8 @@ export class GlobalOverlayController extends BaseOverlayController {
       return;
     }
     if (!this.content.isConnected) {
+      this.content.classList.add(this.overlayContainerClass);
+      this.content.classList.add(this.overlayContainerPlacementClass);
       this.manager.globalRootNode.appendChild(this.content);
     }
 
@@ -99,6 +106,7 @@ export class GlobalOverlayController extends BaseOverlayController {
 
     this.hideDone();
     if (this.contentTemplate) {
+      this.content.classList.remove(this.overlayContainerPlacementClass);
       this.manager.globalRootNode.removeChild(this.content);
     }
   }
@@ -183,11 +191,11 @@ export class GlobalOverlayController extends BaseOverlayController {
       return;
     }
 
-    const blockingContoller = this.manager.shownList.find(
+    const blockingController = this.manager.shownList.find(
       ctrl => ctrl !== this && ctrl.isBlocking === true,
     );
-    // if there are no other blocking overlays remaning, stop hiding regular overlays
-    if (!blockingContoller) {
+    // if there are no other blocking overlays remaining, stop hiding regular overlays
+    if (!blockingController) {
       this.manager.globalRootNode.classList.remove('global-overlays--blocking-opened');
     }
 
@@ -206,7 +214,7 @@ export class GlobalOverlayController extends BaseOverlayController {
    * it is removed. Otherwise this is the first time displaying a backdrop, so a fade-in
    * animation is played.
    * @param {OverlayController} overlay the overlay
-   * @param {boolean} noAnimation prevent an animatin from being displayed
+   * @param {boolean} noAnimation prevent an animation from being displayed
    */
   enableBackdrop({ animation = true } = {}) {
     if (this.__hasActiveBackdrop === true) {
@@ -242,5 +250,13 @@ export class GlobalOverlayController extends BaseOverlayController {
     }
 
     this.__hasActiveBackdrop = false;
+  }
+
+  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
+  __fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      this[funcName] = (...args) => delegate[funcName](...args);
+    });
   }
 }

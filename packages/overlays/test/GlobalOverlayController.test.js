@@ -76,15 +76,18 @@ describe('GlobalOverlayController', () => {
     it('removes the overlay from DOM when hiding', async () => {
       const ctrl = overlays.add(
         new GlobalOverlayController({
+          viewportConfig: {
+            placement: 'top-left',
+          },
           contentTemplate: () => html`
-            <p>Content</p>
+            <div>Content</div>
           `,
         }),
       );
 
       await ctrl.show();
       expect(getRenderedContainers().length).to.equal(1);
-      expect(getRenderedOverlay(0).tagName).to.equal('P');
+      expect(getRenderedOverlay(0).tagName).to.equal('DIV');
       expect(getRenderedOverlay(0).textContent).to.equal('Content');
       expect(getTopContainer()).to.equal(getRenderedContainer(0));
 
@@ -109,34 +112,6 @@ describe('GlobalOverlayController', () => {
 
       await ctrl.hide();
       expect(ctrl.isShown).to.equal(false);
-    });
-
-    it('puts the latest shown overlay always on top', async () => {
-      const controller0 = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: () => html`
-            <p>Content0</p>
-          `,
-        }),
-      );
-      const controller1 = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: () => html`
-            <p>Content1</p>
-          `,
-        }),
-      );
-
-      await controller0.show();
-      await controller1.show();
-      await controller0.show();
-
-      expect(getRenderedContainers().length).to.equal(2);
-      expect(getRenderedOverlay(0).tagName).to.equal('P');
-      expect(getRenderedOverlay(0).textContent).to.equal('Content0');
-      expect(getRenderedOverlay(1).tagName).to.equal('P');
-      expect(getRenderedOverlay(1).textContent).to.equal('Content1');
-      expect(getTopOverlay().textContent).to.equal('Content0');
     });
 
     it('does not recreate the overlay elements when calling show multiple times', async () => {
@@ -185,6 +160,9 @@ describe('GlobalOverlayController', () => {
     it('focuses body when hiding by default', async () => {
       const ctrl = overlays.add(
         new GlobalOverlayController({
+          viewportConfig: {
+            placement: 'top-left',
+          },
           contentTemplate: () => html`
             <div><input />=</div>
           `,
@@ -208,6 +186,9 @@ describe('GlobalOverlayController', () => {
       const ctrl = overlays.add(
         new GlobalOverlayController({
           elementToFocusAfterHide: input,
+          viewportConfig: {
+            placement: 'top-left',
+          },
           contentTemplate: () => html`
             <div><textarea></textarea></div>
           `,
@@ -230,6 +211,9 @@ describe('GlobalOverlayController', () => {
 
       const ctrl = overlays.add(
         new GlobalOverlayController({
+          viewportConfig: {
+            placement: 'top-left',
+          },
           contentTemplate: () => html`
             <div><textarea></textarea></div>
           `,
@@ -252,6 +236,9 @@ describe('GlobalOverlayController', () => {
 
       const ctrl = overlays.add(
         new GlobalOverlayController({
+          viewportConfig: {
+            placement: 'top-left',
+          },
           contentTemplate: () => html`
             <div><textarea></textarea></div>
           `,
@@ -349,6 +336,51 @@ describe('GlobalOverlayController', () => {
       await ctrl.hide();
       await ctrl.show();
       expect(ctrl.backdropNode).to.have.class('global-overlays__backdrop');
+    });
+  });
+
+  describe('viewportConfig', () => {
+    it('places the overlay in center by default', async () => {
+      const controller = new GlobalOverlayController({
+        contentTemplate: () =>
+          html`
+            <p>Content</p>
+          `,
+      });
+
+      controller.show();
+      expect(controller.overlayContainerClass).to.equal(
+        'global-overlays__overlay-container--center',
+      );
+    });
+
+    it('can set the placement relative to the viewport ', async () => {
+      const placementMap = [
+        'top-left',
+        'top',
+        'top-right',
+        'right',
+        'bottom-right',
+        'bottom',
+        'bottom-left',
+        'left',
+        'center',
+      ];
+      placementMap.forEach(viewportPlacement => {
+        const controller = new GlobalOverlayController({
+          viewportConfig: {
+            placement: viewportPlacement,
+          },
+          contentTemplate: () =>
+            html`
+              <p>Content</p>
+            `,
+        });
+        controller.show();
+        expect(controller.overlayContainerClass).to.equal(
+          `global-overlays__overlay-container--${viewportPlacement}`,
+        );
+      });
     });
   });
 });

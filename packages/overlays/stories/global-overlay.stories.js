@@ -7,22 +7,28 @@ import { overlays, GlobalOverlayController } from '../index.js';
 const globalOverlayDemoStyle = css`
   .demo-overlay {
     background-color: white;
-    position: absolute;
-    top: 20px;
-    left: 20px;
     width: 200px;
-    border: 1px solid blue;
-  }
-
-  .demo-overlay--2 {
-    left: 240px;
-  }
-
-  .demo-overlay--toast {
-    left: initial;
-    right: 20px;
+    border: 1px solid lightgrey;
   }
 `;
+
+let placement = 'center';
+const togglePlacement = overlayCtrl => {
+  const placements = [
+    'top-left',
+    'top',
+    'top-right',
+    'right',
+    'bottom-left',
+    'bottom',
+    'bottom-right',
+    'left',
+    'center',
+  ];
+  placement = placements[(placements.indexOf(placement) + 1) % placements.length];
+  // eslint-disable-next-line no-param-reassign
+  overlayCtrl.overlayContainerClass = `global-overlays__overlay-container--${placement}`;
+};
 
 storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
@@ -126,7 +132,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
             <a id="el2" href="#">Anchor</a>
             <div id="el3" tabindex="0">Tabindex</div>
             <input id="el4" placeholder="Input" />
-            <div id="el5" contenteditable>Contenteditable</div>
+            <div id="el5" contenteditable="true">Contenteditable</div>
             <textarea id="el6">Textarea</textarea>
             <select id="el7">
               <option>1</option>
@@ -156,8 +162,11 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl2 = overlays.add(
       new GlobalOverlayController({
         trapsKeyboardFocus: true,
+        viewportConfig: {
+          placement: 'left',
+        },
         contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay--2">
+          <div class="demo-overlay">
             <p>Overlay 2. Tab key is trapped within the overlay</p>
             <button @click="${() => overlayCtrl2.hide()}">Close</button>
           </div>
@@ -203,8 +212,11 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const blockingOverlayCtrl = overlays.add(
       new GlobalOverlayController({
         isBlocking: true,
+        viewportConfig: {
+          placement: 'left',
+        },
         contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay--2">
+          <div class="demo-overlay">
             <p>Hides other overlays</p>
             <button @click="${() => blockingOverlayCtrl.hide()}">Close</button>
           </div>
@@ -236,6 +248,37 @@ storiesOf('Global Overlay System|Global Overlay', module)
       </style>
       <button
         @click="${event => normalOverlayCtrl.show(event.target)}"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+      >
+        Open overlay
+      </button>
+    `;
+  })
+  .add('Option "viewportConfig:placement"', () => {
+    const overlayCtrl = overlays.add(
+      new GlobalOverlayController({
+        viewportConfig: {
+          placement: 'center',
+        },
+        hasBackdrop: true,
+        trapsKeyboardFocus: true,
+        contentTemplate: () => html`
+          <div class="demo-overlay">
+            <p>Overlay placement: ${placement}</p>
+            <button @click="${() => overlayCtrl.hide()}">Close</button>
+          </div>
+        `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${globalOverlayDemoStyle}
+      </style>
+      <button @click=${() => togglePlacement(overlayCtrl)}>Change placement</button>
+      <button
+        @click="${event => overlayCtrl.show(event.target)}"
         aria-haspopup="dialog"
         aria-expanded="false"
       >
