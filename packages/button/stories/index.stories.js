@@ -35,16 +35,14 @@ storiesOf('Buttons|Button', module)
   .add(
     'Within a form',
     () => html`
-      <lion-form id="form" @submit=${() => console.log('form submitted')}
-        ><form>
-          <lion-input name="foo" label="Foo" .modelValue=${'bar'}></lion-input>
-          <lion-input name="foo2" label="Foo2" .modelValue=${'bar'}></lion-input>
-          <lion-button
-            type="submit"
-            @click=${() => console.log(document.querySelector('#form').serializeGroup())}
-            >Submit</lion-button
-          >
-        </form></lion-form
-      >
+      <form @submit=${() => console.log('native form submitted')}>
+        <input name="foo" label="Foo" .modelValue=${'bar'} />
+        <input name="foo2" label="Foo2" .modelValue=${'bar'} />
+        <lion-button
+          type="submit"
+          @click=${() => console.log(document.querySelector('#form').serializeGroup())}
+          >Submit</lion-button
+        >
+      </form>
     `,
   );
