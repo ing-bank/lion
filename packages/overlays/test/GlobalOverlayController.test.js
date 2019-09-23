@@ -349,7 +349,7 @@ describe('GlobalOverlayController', () => {
       });
 
       controller.show();
-      expect(controller.overlayContainerClass).to.equal(
+      expect(controller.overlayContainerPlacementClass).to.equal(
         'global-overlays__overlay-container--center',
       );
     });
@@ -377,7 +377,7 @@ describe('GlobalOverlayController', () => {
             `,
         });
         controller.show();
-        expect(controller.overlayContainerClass).to.equal(
+        expect(controller.overlayContainerPlacementClass).to.equal(
           `global-overlays__overlay-container--${viewportPlacement}`,
         );
       });
