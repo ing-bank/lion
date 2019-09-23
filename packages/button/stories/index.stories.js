@@ -47,16 +47,4 @@ storiesOf('Buttons|Button', module)
         </form></lion-form
       >
     `,
-  )
-  .add('Within another form', () => {
-    const submitForm = () => console.log('hey');
-    return html`
-      <form id="form" @submit=${submitForm}>
-        <h3>Details</h3>
-        <input name="input1" />
-        <input name="input2" />
-        <input name="input3" />
-        <lion-button>Submit</lion-button>
-      </form>
-    `;
-  });
+  );
