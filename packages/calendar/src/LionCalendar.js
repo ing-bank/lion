@@ -430,6 +430,13 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       this.minDate && this.minDate > date ? new Date(this.minDate) : new Date(date);
     const pastDate = this.maxDate && this.maxDate < date ? new Date(this.maxDate) : new Date(date);
 
+    if (this.minDate && this.minDate > date) {
+      futureDate.setDate(futureDate.getDate() - 1);
+    }
+    if (this.maxDate && this.maxDate < date) {
+      pastDate.setDate(pastDate.getDate() + 1);
+    }
+
     let i = 0;
     do {
       i += 1;
