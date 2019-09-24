@@ -82,6 +82,13 @@ export class GlobalOverlayController {
   }
 
   /**
+   * @type {HTMLElement | null} the first rendered element of the template
+   */
+  get contentElement() {
+    return this._container && this._container.firstElementChild;
+  }
+
+  /**
    * Updates an overlay's template. Creates a render container and appends it to the
    * overlay manager if it wasn't rendered before. Otherwise updates the data.
    *
