@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.12...@lion/overlays@0.4.0) (2019-09-25)
+
+
+### Features
+
+* **overlays:** add viewport placement to global overlays ([1cc92fb](https://github.com/ing-bank/lion/commit/1cc92fb))
+* **overlays:** align Overlays API + add DynamicOverlay ([224f794](https://github.com/ing-bank/lion/commit/224f794))
+* **overlays:** create BottomsheetController ([4b858cb](https://github.com/ing-bank/lion/commit/4b858cb))
+
+
+
+
+
 ## [0.3.12](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.11...@lion/overlays@0.3.12) (2019-08-01)
 
 

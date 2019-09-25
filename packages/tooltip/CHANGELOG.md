@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.45](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.44...@lion/tooltip@0.2.45) (2019-09-25)
+
+
+### Bug Fixes
+
+* **tooltip:** do not recreate overlay controller from extends Popup ([e666180](https://github.com/ing-bank/lion/commit/e666180))
+
+
+
+
+
 ## [0.2.44](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.43...@lion/tooltip@0.2.44) (2019-09-20)
 
 **Note:** Version bump only for package @lion/tooltip
