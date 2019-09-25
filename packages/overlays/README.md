@@ -8,7 +8,7 @@ Manages their position on the screen relative to other elements, including other
 ## Features
 
 - [**Overlays Manager**](./docs/OverlaysManager.md), a global repository keeping track of all different types of overlays.
-- [**Overlays Occurrences**](./docs/OverlayOccurrences.md), outline of all possible occurrences of overlays. Divided into two main types:
+- [**Overlays System: Scope**](./docs/OverlaySystemScope.md), outline of all possible occurrences of overlays. Divided into two main types:
   - [**Global Overlay Controller**](./docs/GlobalOverlayController.md), controller for overlays relative to the viewport.
   - [**Local Overlay Controller**](./docs/LocalOverlayController.md), controller for overlays positioned next to invokers they are related to.
 

@@ -1,6 +1,6 @@
 import { GlobalOverlayController } from './GlobalOverlayController.js';
 
-export class ModalDialogController extends GlobalOverlayController {
+export class BottomsheetController extends GlobalOverlayController {
   constructor(params) {
     super({
       hasBackdrop: true,
@@ -8,7 +8,7 @@ export class ModalDialogController extends GlobalOverlayController {
       trapsKeyboardFocus: true,
       hidesOnEsc: true,
       viewportConfig: {
-        placement: 'center',
+        placement: 'bottom',
       },
       ...params,
     });

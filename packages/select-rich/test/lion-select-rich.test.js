@@ -8,7 +8,9 @@ import '../lion-select-rich.js';
 describe('lion-select-rich', () => {
   it('does not have a tabindex', async () => {
     const el = await fixture(html`
-      <lion-select-rich></lion-select-rich>
+      <lion-select-rich>
+        <lion-options slot="input"></lion-options>
+      </lion-select-rich>
     `);
     expect(el.hasAttribute('tabindex')).to.be.false;
   });
@@ -16,7 +18,9 @@ describe('lion-select-rich', () => {
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
       const el = await fixture(html`
-        <lion-select-rich></lion-select-rich>
+        <lion-select-rich>
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
 
       expect(el._invokerNode).to.exist;
@@ -43,7 +47,9 @@ describe('lion-select-rich', () => {
   describe('overlay', () => {
     it('should be closed by default', async () => {
       const el = await fixture(html`
-        <lion-select-rich></lion-select-rich>
+        <lion-select-rich>
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
       expect(el.opened).to.be.false;
     });
@@ -117,7 +123,9 @@ describe('lion-select-rich', () => {
   describe('interaction-mode', () => {
     it('allows to specify an interaction-mode which determines other behaviors', async () => {
       const el = await fixture(html`
-        <lion-select-rich interaction-mode="mac"></lion-select-rich>
+        <lion-select-rich interaction-mode="mac">
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
       expect(el.interactionMode).to.equal('mac');
     });
@@ -279,6 +287,8 @@ describe('lion-select-rich', () => {
       expect(el._invokerNode.getAttribute('aria-expanded')).to.equal('false');
       el.opened = true;
       await el.updateComplete;
+      await el.updateComplete; // need 2 awaits as overlay.show is an async function
+
       expect(el._invokerNode.getAttribute('aria-expanded')).to.equal('true');
     });
   });
