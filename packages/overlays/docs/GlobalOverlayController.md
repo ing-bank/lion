@@ -1,7 +1,8 @@
 # GlobalOverlayController
 
-This is a base class for different global overlays (e.g. a dialog, see [Overlay Occurrences](./OverlayOccurrences.md) - the ones positioned relatively to the viewport.
-You should not use this controller directly unless you want to create a unique type of global overlays which is not supported out of the box.
+This is a base class for different global overlays (e.g. a dialog, see [Overlay System: Scope](./OverlaySystemScope.md) - the ones positioned relatively to the viewport).
+
+You should not use this controller directly unless you want to create a unique type of global overlays which is not supported out of the box. But for implementation details check out [Overlay System: Implementation](./OverlaySystemImplementation.md).
 
 All supported types of global overlays are described below.
 

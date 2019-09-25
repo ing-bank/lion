@@ -38,7 +38,6 @@
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4",
-    "@polymer/iron-test-helpers": "^3.0.1",
     "sinon": "^7.2.2"
   }
 }
