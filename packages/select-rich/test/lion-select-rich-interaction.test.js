@@ -280,7 +280,9 @@ describe('lion-select-rich interactions', () => {
   describe('Disabled', () => {
     it('cannot be focused if disabled', async () => {
       const el = await fixture(html`
-        <lion-select-rich disabled></lion-select-rich>
+        <lion-select-rich disabled>
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
       expect(el._invokerNode.tabIndex).to.equal(-1);
     });
@@ -312,7 +314,9 @@ describe('lion-select-rich interactions', () => {
 
     it('cannot be opened via click if disabled', async () => {
       const el = await fixture(html`
-        <lion-select-rich disabled> </lion-select-rich>
+        <lion-select-rich disabled>
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
       el._invokerNode.click();
       expect(el.opened).to.be.false;
@@ -320,7 +324,9 @@ describe('lion-select-rich interactions', () => {
 
     it('reflects disabled attribute to invoker', async () => {
       const el = await fixture(html`
-        <lion-select-rich disabled> </lion-select-rich>
+        <lion-select-rich disabled>
+          <lion-options slot="input"></lion-options>
+        </lion-select-rich>
       `);
       expect(el._invokerNode.hasAttribute('disabled')).to.be.true;
       el.removeAttribute('disabled');
