@@ -1,3 +1,4 @@
+export { DynamicOverlayController } from './src/DynamicOverlayController.js';
 export { GlobalOverlayController } from './src/GlobalOverlayController.js';
 export { globalOverlaysStyle } from './src/globalOverlaysStyle.js';
 export { LocalOverlayController } from './src/LocalOverlayController.js';

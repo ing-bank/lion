@@ -7,7 +7,7 @@ import { overlays, GlobalOverlayController } from '../index.js';
 const globalOverlayDemoStyle = css`
   .demo-overlay {
     background-color: white;
-    position: fixed;
+    position: absolute;
     top: 20px;
     left: 20px;
     width: 200px;
@@ -188,6 +188,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       <style>
         ${globalOverlayDemoStyle}
       </style>
+      <a href="#">Anchor 1</a>
       <button
         @click="${event => overlayCtrl1.show(event.target)}"
         aria-haspopup="dialog"
@@ -195,6 +196,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       >
         Open overlay 1
       </button>
+      <a href="#">Anchor 2</a>
     `;
   })
   .add('Option "isBlocking"', () => {
@@ -244,12 +246,12 @@ storiesOf('Global Overlay System|Global Overlay', module)
   .add('Sync', () => {
     const overlayCtrl = overlays.add(
       new GlobalOverlayController({
-        contentTemplate: data => html`
+        contentTemplate: ({ title = 'default' } = {}) => html`
           <div class="demo-overlay">
-            <p>${data.title}</p>
+            <p>${title}</p>
             <label>Edit title:</label>
             <input
-              value="${data.title}"
+              value="${title}"
               @input="${e => overlayCtrl.sync({ isShown: true, data: { title: e.target.value } })}"
             />
             <button @click="${() => overlayCtrl.hide()}">Close</button>
@@ -269,42 +271,6 @@ storiesOf('Global Overlay System|Global Overlay', module)
       >
         Open overlay
       </button>
-    `;
-  })
-  .add('Toast', () => {
-    let counter = 0;
-
-    function openInfo() {
-      const toastCtrl = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: data => html`
-            <div class="demo-overlay demo-overlay--toast" style="top: ${data.counter * 90}px;">
-              <strong>Title ${data.counter}</strong>
-              <p>Lorem ipsum ${data.counter}</p>
-            </div>
-          `,
-        }),
-      );
-      toastCtrl.sync({
-        isShown: true,
-        data: { counter },
-      });
-      counter += 1;
-      setTimeout(() => {
-        toastCtrl.hide();
-        counter -= 1;
-      }, 2000);
-    }
-
-    return html`
-      <style>
-        ${globalOverlayDemoStyle}
-      </style>
-      <button @click="${openInfo}">
-        Open info
-      </button>
-      <p>Very naive toast implementation</p>
-      <p>It does not handle adding new while toasts are getting hidden</p>
     `;
   })
   .add('In web components', () => {
@@ -397,9 +363,9 @@ storiesOf('Global Overlay System|Global Overlay', module)
         this._editOverlay = overlays.add(
           new GlobalOverlayController({
             focusElementAfterHide: this.shadowRoot.querySelector('button'),
-            contentTemplate: data => html`
+            contentTemplate: ({ username = 'standard' } = {}) => html`
               <edit-username-overlay
-                username="${data.username}"
+                username="${username}"
                 @edit-username-submitted="${e => this._onEditSubmitted(e)}"
                 @edit-username-closed="${() => this._onEditClosed()}"
               >
