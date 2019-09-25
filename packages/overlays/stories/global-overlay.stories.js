@@ -7,22 +7,28 @@ import { overlays, GlobalOverlayController } from '../index.js';
 const globalOverlayDemoStyle = css`
   .demo-overlay {
     background-color: white;
-    position: fixed;
-    top: 20px;
-    left: 20px;
     width: 200px;
-    border: 1px solid blue;
-  }
-
-  .demo-overlay--2 {
-    left: 240px;
-  }
-
-  .demo-overlay--toast {
-    left: initial;
-    right: 20px;
+    border: 1px solid lightgrey;
   }
 `;
+
+let placement = 'center';
+const togglePlacement = overlayCtrl => {
+  const placements = [
+    'top-left',
+    'top',
+    'top-right',
+    'right',
+    'bottom-left',
+    'bottom',
+    'bottom-right',
+    'left',
+    'center',
+  ];
+  placement = placements[(placements.indexOf(placement) + 1) % placements.length];
+  // eslint-disable-next-line no-param-reassign
+  overlayCtrl.overlayContainerPlacementClass = `${overlayCtrl.overlayContainerClass}--${placement}`;
+};
 
 storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
@@ -126,7 +132,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
             <a id="el2" href="#">Anchor</a>
             <div id="el3" tabindex="0">Tabindex</div>
             <input id="el4" placeholder="Input" />
-            <div id="el5" contenteditable>Contenteditable</div>
+            <div id="el5" contenteditable="true">Contenteditable</div>
             <textarea id="el6">Textarea</textarea>
             <select id="el7">
               <option>1</option>
@@ -156,8 +162,11 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl2 = overlays.add(
       new GlobalOverlayController({
         trapsKeyboardFocus: true,
+        viewportConfig: {
+          placement: 'left',
+        },
         contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay--2">
+          <div class="demo-overlay">
             <p>Overlay 2. Tab key is trapped within the overlay</p>
             <button @click="${() => overlayCtrl2.hide()}">Close</button>
           </div>
@@ -188,6 +197,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       <style>
         ${globalOverlayDemoStyle}
       </style>
+      <a href="#">Anchor 1</a>
       <button
         @click="${event => overlayCtrl1.show(event.target)}"
         aria-haspopup="dialog"
@@ -195,14 +205,18 @@ storiesOf('Global Overlay System|Global Overlay', module)
       >
         Open overlay 1
       </button>
+      <a href="#">Anchor 2</a>
     `;
   })
   .add('Option "isBlocking"', () => {
     const blockingOverlayCtrl = overlays.add(
       new GlobalOverlayController({
         isBlocking: true,
+        viewportConfig: {
+          placement: 'left',
+        },
         contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay--2">
+          <div class="demo-overlay">
             <p>Hides other overlays</p>
             <button @click="${() => blockingOverlayCtrl.hide()}">Close</button>
           </div>
@@ -241,15 +255,46 @@ storiesOf('Global Overlay System|Global Overlay', module)
       </button>
     `;
   })
+  .add('Option "viewportConfig:placement"', () => {
+    const overlayCtrl = overlays.add(
+      new GlobalOverlayController({
+        viewportConfig: {
+          placement: 'center',
+        },
+        hasBackdrop: true,
+        trapsKeyboardFocus: true,
+        contentTemplate: () => html`
+          <div class="demo-overlay">
+            <p>Overlay placement: ${placement}</p>
+            <button @click="${() => overlayCtrl.hide()}">Close</button>
+          </div>
+        `,
+      }),
+    );
+
+    return html`
+      <style>
+        ${globalOverlayDemoStyle}
+      </style>
+      <button @click=${() => togglePlacement(overlayCtrl)}>Change placement</button>
+      <button
+        @click="${event => overlayCtrl.show(event.target)}"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+      >
+        Open overlay
+      </button>
+    `;
+  })
   .add('Sync', () => {
     const overlayCtrl = overlays.add(
       new GlobalOverlayController({
-        contentTemplate: data => html`
+        contentTemplate: ({ title = 'default' } = {}) => html`
           <div class="demo-overlay">
-            <p>${data.title}</p>
+            <p>${title}</p>
             <label>Edit title:</label>
             <input
-              value="${data.title}"
+              value="${title}"
               @input="${e => overlayCtrl.sync({ isShown: true, data: { title: e.target.value } })}"
             />
             <button @click="${() => overlayCtrl.hide()}">Close</button>
@@ -269,42 +314,6 @@ storiesOf('Global Overlay System|Global Overlay', module)
       >
         Open overlay
       </button>
-    `;
-  })
-  .add('Toast', () => {
-    let counter = 0;
-
-    function openInfo() {
-      const toastCtrl = overlays.add(
-        new GlobalOverlayController({
-          contentTemplate: data => html`
-            <div class="demo-overlay demo-overlay--toast" style="top: ${data.counter * 90}px;">
-              <strong>Title ${data.counter}</strong>
-              <p>Lorem ipsum ${data.counter}</p>
-            </div>
-          `,
-        }),
-      );
-      toastCtrl.sync({
-        isShown: true,
-        data: { counter },
-      });
-      counter += 1;
-      setTimeout(() => {
-        toastCtrl.hide();
-        counter -= 1;
-      }, 2000);
-    }
-
-    return html`
-      <style>
-        ${globalOverlayDemoStyle}
-      </style>
-      <button @click="${openInfo}">
-        Open info
-      </button>
-      <p>Very naive toast implementation</p>
-      <p>It does not handle adding new while toasts are getting hidden</p>
     `;
   })
   .add('In web components', () => {
@@ -397,9 +406,9 @@ storiesOf('Global Overlay System|Global Overlay', module)
         this._editOverlay = overlays.add(
           new GlobalOverlayController({
             focusElementAfterHide: this.shadowRoot.querySelector('button'),
-            contentTemplate: data => html`
+            contentTemplate: ({ username = 'standard' } = {}) => html`
               <edit-username-overlay
-                username="${data.username}"
+                username="${username}"
                 @edit-username-submitted="${e => this._onEditSubmitted(e)}"
                 @edit-username-closed="${() => this._onEditClosed()}"
               >

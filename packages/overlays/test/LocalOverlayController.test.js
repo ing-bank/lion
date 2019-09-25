@@ -1,195 +1,124 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
-import sinon from 'sinon';
 import Popper from 'popper.js/dist/esm/popper.min.js';
 
-import { keyUpOn } from '@polymer/iron-test-helpers/mock-interactions.js';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 
 import { LocalOverlayController } from '../src/LocalOverlayController.js';
 
-import { overlays } from '../src/overlays.js';
+import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.js';
+
+/**
+ * @desc Compensates for browsers that use floats in output
+ * - from: 'transform3d(12.25px, 6.75px, 0px)'
+ * - to: 'transform3d(12px, 7px, 0px)'
+ * @param {string} cssValue
+ */
+export function normalizeTransformStyle(cssValue) {
+  // eslint-disable-next-line no-unused-vars
+  const [_, transformType, positionPart] = cssValue.match(/(.*)\((.*?)\)/);
+  const normalizedNumbers = positionPart
+    .split(',')
+    .map(p => Math.round(Number(p.replace('px', ''))));
+  return `${transformType}(${normalizedNumbers
+    .map((n, i) => `${n}px${normalizedNumbers.length - 1 === i ? '' : ', '}`)
+    .join('')})`;
+}
 
 describe('LocalOverlayController', () => {
+  describe('extends BaseOverlayController', () => {
+    runBaseOverlaySuite((...args) => new LocalOverlayController(...args));
+  });
+
   describe('templates', () => {
-    it('creates a controller with methods: show, hide, sync and syncInvoker', () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+    it('creates a controller with methods: show, hide, sync and syncInvoker', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button">Invoker</div>
+      `);
+      const ctrl = new LocalOverlayController({
+        contentTemplate: () => html`
+          <div>Content</div>
+        `,
+        invokerNode,
       });
-      expect(controller.show).to.be.a('function');
-      expect(controller.hide).to.be.a('function');
-      expect(controller.sync).to.be.a('function');
-      expect(controller.syncInvoker).to.be.a('function');
+      expect(ctrl.show).to.be.a('function');
+      expect(ctrl.hide).to.be.a('function');
+      expect(ctrl.sync).to.be.a('function');
+      expect(ctrl.syncInvoker).to.be.a('function');
     });
 
-    it('will render holders for invoker and content', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+    it('renders holders for invoker and content', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button" id="invoke">Invoker</div>
+      `);
+      const ctrl = new LocalOverlayController({
+        contentTemplate: () => html`
+          <div id="content">Content</div>
+        `,
+        invokerNode,
       });
       const el = await fixture(html`
         <div>
-          ${controller.invoker} ${controller.content}
-        </div>
-      `);
-      expect(el.querySelectorAll('div')[0].textContent.trim()).to.equal('Invoker');
-      controller.show();
-      expect(el.querySelectorAll('div')[1].textContent.trim()).to.equal('Content');
-    });
-
-    it('will add/remove the content on show/hide', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
-      });
-      const el = await fixture(html`
-        <div>
-          ${controller.invoker} ${controller.content}
+          ${ctrl.invoker} ${ctrl.content}
         </div>
       `);
 
-      expect(el.querySelectorAll('div')[1].textContent.trim()).to.equal('');
-
-      controller.show();
-      expect(el.querySelectorAll('div')[1].textContent.trim()).to.equal('Content');
-
-      controller.hide();
-      expect(el.querySelectorAll('div')[1].textContent.trim()).to.equal('');
-    });
-
-    it('will hide and show html nodes provided to overlay', async () => {
-      const tagString = defineCE(
-        class extends LionLitElement {
-          render() {
-            return html`
-              <slot></slot>
-            `;
-          }
-        },
-      );
-
-      const element = unsafeStatic(tagString);
-      const elem = await fixture(html`
-        <${element}>
-          <div slot="content">content</div>
-          <div slot="invoker"><button>invoker</button></div>
-          <${element}> </${element}
-        ></${element}>
-      `);
-
-      const controller = overlays.add(
-        new LocalOverlayController({
-          hidesOnEsc: true,
-          hidesOnOutsideClick: true,
-          contentNode: elem.querySelector('[slot="content"]'),
-          invokerNode: elem.querySelector('[slot="invoker"]'),
-        }),
-      );
-
-      expect(elem.querySelector('[slot="content"]').style.display).to.equal('none');
-      controller.show();
-      expect(elem.querySelector('[slot="content"]').style.display).to.equal('inline-block');
-      controller.hide();
-      expect(elem.querySelector('[slot="content"]').style.display).to.equal('none');
+      expect(el.querySelector('#invoke').textContent.trim()).to.equal('Invoker');
+      await ctrl.show();
+      expect(el.querySelector('#content').textContent.trim()).to.equal('Content');
     });
 
     it('exposes isShown state for reading', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+      const invokerNode = await fixture('<div role="button">Invoker</div>');
+      const ctrl = new LocalOverlayController({
+        contentTemplate: () => html`
+          <div>Content</div>
+        `,
+        invokerNode,
       });
       await fixture(html`
         <div>
-          ${controller.invoker} ${controller.content}
+          ${ctrl.invoker} ${ctrl.content}
         </div>
       `);
-      expect(controller.isShown).to.equal(false);
-      controller.show();
-      expect(controller.isShown).to.equal(true);
-      controller.hide();
-      expect(controller.isShown).to.equal(false);
+      expect(ctrl.isShown).to.equal(false);
+      await ctrl.show();
+      expect(ctrl.isShown).to.equal(true);
+      await ctrl.hide();
+      expect(ctrl.isShown).to.equal(false);
     });
 
-    it('can update the invoker data', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: (data = { text: 'foo' }) =>
-          html`
-            <button>${data.text}</button>
-          `,
+    // deprecated
+    it('@deprecated can use a .invokerTemplate and .syncInvoker', async () => {
+      const ctrl = new LocalOverlayController({
+        contentTemplate: () => html`
+          <div>Content</div>
+        `,
+        invokerTemplate: (data = { text: 'foo' }) => html`
+          <div role="button">${data.text}</div>
+        `,
       });
 
-      expect(controller.invoker.textContent.trim()).to.equal('foo');
-      controller.syncInvoker({ data: { text: 'bar' } });
-      expect(controller.invoker.textContent.trim()).to.equal('bar');
+      expect(ctrl.invoker.textContent.trim()).to.equal('foo');
+      ctrl.syncInvoker({ data: { text: 'bar' } });
+      expect(ctrl.invoker.textContent.trim()).to.equal('bar');
     });
 
     it('can synchronize the content data', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: data =>
-          html`
-            <p>${data.text}</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+      const invokerNode = await fixture('<div role="button">Invoker</div>');
+      const ctrl = new LocalOverlayController({
+        contentTemplate: ({ text = 'fallback' } = {}) => html`
+          <div>${text}</div>
+        `,
+        invokerNode,
       });
 
-      await controller.show();
-      controller.sync({ data: { text: 'foo' } });
-      expect(controller.content.textContent.trim()).to.equal('foo');
+      await ctrl.show();
+      await ctrl.sync({ data: { text: 'foo' } });
+      expect(ctrl.content.textContent.trim()).to.equal('foo');
 
-      controller.sync({ data: { text: 'bar' } });
-      expect(controller.content.textContent.trim()).to.equal('bar');
-    });
-
-    it.skip('can reuse an existing node for the invoker (disables syncInvoker())', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerReference: null, // TODO: invokerReference
-      });
-      await fixture(`
-        <div>
-          <button @click=${() => controller.show()}>Invoker</button>
-          ${controller.content}
-        </div>
-      `);
-      expect(controller.invoker.textContent.trim()).to.equal('Invoker');
-      controller.show();
-      expect(controller.content.textContent.trim()).to.equal('Content');
+      await ctrl.sync({ data: { text: 'bar' } });
+      expect(ctrl.content.textContent.trim()).to.equal('bar');
     });
   });
 
@@ -197,69 +126,87 @@ describe('LocalOverlayController', () => {
   // the test runner from interfering.
   describe('positioning', () => {
     it('creates a popper instance on the controller when shown, keeps it when hidden', async () => {
-      const controller = new LocalOverlayController({
+      const invokerNode = await fixture(
+        html`
+          <div role="button" style="width: 100px; height: 20px;"></div>
+        `,
+      );
+      const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;"></button>
-        `,
+        invokerNode,
       });
-      await controller.show();
-      expect(controller._popper)
+      await ctrl.show();
+      expect(ctrl._popper)
         .to.be.an.instanceof(Popper)
         .and.have.property('modifiers');
-      controller.hide();
-      expect(controller._popper)
+      await ctrl.hide();
+      expect(ctrl._popper)
         .to.be.an.instanceof(Popper)
         .and.have.property('modifiers');
     });
 
     it('positions correctly', async () => {
       // smoke test for integration of popper
-      const controller = new LocalOverlayController({
+      const invokerNode = await fixture(html`
+        <div role="button" style="width: 100px; height: 20px;">Invoker</div>
+      `);
+      const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px; margin: 0;">my content</div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;"></button>
-        `,
+        invokerNode,
       });
+      await fixture(html`
+        ${invokerNode}${ctrl.content}
+      `);
 
-      await controller.show();
-      expect(controller.content.firstElementChild.style.transform).to.equal(
-        'translate3d(16px, 16px, 0px)',
+      await ctrl.show();
+
+      expect(normalizeTransformStyle(ctrl.contentNode.style.transform)).to.equal(
+        // TODO: check if 'translate3d(16px, 16px, 0px)' would be more appropriate
+        'translate3d(16px, 28px, 0px)',
         '16px displacement is expected due to both horizontal and vertical viewport margin',
       );
     });
 
     it('uses top as the default placement', async () => {
-      const controller = new LocalOverlayController({
+      let ctrl;
+      const invokerNode = await fixture(html`
+        <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
+      `);
+      ctrl = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
       });
       await fixture(html`
         <div style="position: absolute; left: 100px; top: 100px;">
-          ${controller.invoker} ${controller.content}
+          ${ctrl.invoker} ${ctrl.content}
         </div>
       `);
-      await controller.show();
-      const contentChild = controller.content.firstElementChild;
+      await ctrl.show();
+      const contentChild = ctrl.content.firstElementChild;
       expect(contentChild.getAttribute('x-placement')).to.equal('top');
     });
 
     it('positions to preferred place if placement is set and space is available', async () => {
-      const controller = new LocalOverlayController({
+      let controller;
+      const invokerNode = await fixture(html`
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
+      `);
+
+      controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
         popperConfig: {
           placement: 'left-start',
         },
@@ -276,36 +223,44 @@ describe('LocalOverlayController', () => {
     });
 
     it('positions to different place if placement is set and no space is available', async () => {
-      const controller = new LocalOverlayController({
+      let ctrl;
+      const invokerNode = await fixture(html`
+        <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
+      `);
+      ctrl = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
         popperConfig: {
           placement: 'top-start',
         },
       });
       await fixture(`
         <div style="position: absolute; top: 0;">
-          ${controller.invoker} ${controller.content}
+          ${ctrl.invoker} ${ctrl.content}
         </div>
       `);
 
-      await controller.show();
-      const contentChild = controller.content.firstElementChild;
+      await ctrl.show();
+      const contentChild = ctrl.content.firstElementChild;
       expect(contentChild.getAttribute('x-placement')).to.equal('bottom-start');
     });
 
     it('allows the user to override default Popper modifiers', async () => {
-      const controller = new LocalOverlayController({
+      let controller;
+      const invokerNode = await fixture(html`
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
+      `);
+      controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
         popperConfig: {
           modifiers: {
             keepTogether: {
@@ -332,44 +287,20 @@ describe('LocalOverlayController', () => {
       expect(offset.offset).to.equal('0, 16px');
     });
 
-    it('updates popperConfig even when overlay is closed', async () => {
-      const controller = new LocalOverlayController({
-        contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
-        `,
-        invokerTemplate: () => html`
-          <button
-            style="width: 100px; height: 20px; margin: 200px;"
-            @click=${() => controller.show()}
-          ></button>
-        `,
-        popperConfig: {
-          placement: 'top',
-        },
-      });
-      await fixture(html`
-        <div style="width: 800px; height: 800px;">
-          ${controller.invoker} ${controller.content}
-        </div>
-      `);
-      await controller.show();
-      const contentChild = controller.content.firstElementChild;
-      expect(contentChild.getAttribute('x-placement')).to.equal('top');
-
-      controller.hide();
-      await controller.updatePopperConfig({ placement: 'bottom' });
-      await controller.show();
-      expect(controller._popper.options.placement).to.equal('bottom');
-    });
-
     it('positions the popper element correctly on show', async () => {
-      const controller = new LocalOverlayController({
+      let controller;
+      const invokerNode = await fixture(html`
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
+      `);
+      controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
         popperConfig: {
           placement: 'top',
         },
@@ -381,29 +312,37 @@ describe('LocalOverlayController', () => {
       `);
 
       await controller.show();
+
       let contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -60px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values',
       );
 
-      controller.hide();
+      await controller.hide();
       await controller.show();
       contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -60px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values should be identical after hiding and showing',
       );
     });
 
+    // TODO: dom get's removed when hidden so no dom node to update placement
     it('updates placement properly even during hidden state', async () => {
-      const controller = new LocalOverlayController({
+      let controller;
+      const invokerNode = await fixture(html`
+        <div
+          role="button"
+          style="width: 100px; height: 20px;"
+          @click=${() => controller.show()}
+        ></div>
+      `);
+      controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}></button>
-        `,
+        invokerNode,
         popperConfig: {
           placement: 'top',
           modifiers: {
@@ -422,12 +361,12 @@ describe('LocalOverlayController', () => {
 
       await controller.show();
       let contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -62px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -30px, 0px)',
         'Popper positioning values',
       );
 
-      controller.hide();
+      await controller.hide();
       await controller.updatePopperConfig({
         modifiers: {
           offset: {
@@ -439,22 +378,24 @@ describe('LocalOverlayController', () => {
       await controller.show();
       contentChild = controller.content.firstElementChild;
       expect(controller._popper.options.modifiers.offset.offset).to.equal('0, 20px');
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -72px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
 
     it('updates positioning correctly during shown state when config gets updated', async () => {
-      const controller = new LocalOverlayController({
+      let controller;
+      const invokerNode = await fixture(html`
+        <div role="button" style="width: 100px; height: 20px;" @click=${() => controller.show()}>
+          Invoker
+        </div>
+      `);
+      controller = new LocalOverlayController({
         contentTemplate: () => html`
-          <p style="width: 80px; height: 20px;"></p>
+          <div style="width: 80px; height: 20px;"></div>
         `,
-        invokerTemplate: () => html`
-          <button style="width: 100px; height: 20px;" @click=${() => controller.show()}>
-            Invoker
-          </button>
-        `,
+        invokerNode,
         popperConfig: {
           placement: 'top',
           modifiers: {
@@ -473,8 +414,8 @@ describe('LocalOverlayController', () => {
 
       await controller.show();
       const contentChild = controller.content.firstElementChild;
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -62px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -30px, 0px)',
         'Popper positioning values',
       );
 
@@ -486,79 +427,99 @@ describe('LocalOverlayController', () => {
           },
         },
       });
-      expect(contentChild.style.transform).to.equal(
-        'translate3d(10px, -72px, 0px)',
+      expect(normalizeTransformStyle(contentChild.style.transform)).to.equal(
+        'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
 
-    it('can set the contentNode minWidth as the invokerNode width', () => {
-      const controller = new LocalOverlayController({
+    it('can set the contentNode minWidth as the invokerNode width', async () => {
+      const invokerNode = await fixture(
+        '<div role="button" style="width: 60px; border: none;">invoker</div>',
+      );
+      const ctrl = new LocalOverlayController({
         inheritsReferenceObjectWidth: 'min',
+        contentTemplate: () =>
+          html`
+            <div>content</div>
+          `,
+        invokerNode,
       });
-      expect(controller.contentNode.style.minWidth).to.equal(controller.invokerNode.style.width);
+      await ctrl.show();
+      expect(ctrl.contentNode.style.minWidth).to.equal('60px');
     });
 
-    it('can set the contentNode maxWidth as the invokerNode width', () => {
-      const controller = new LocalOverlayController({
+    it('can set the contentNode maxWidth as the invokerNode width', async () => {
+      const invokerNode = await fixture(
+        '<div role="button" style="width: 60px; border: none;">invoker</div>',
+      );
+      const ctrl = new LocalOverlayController({
         inheritsReferenceObjectWidth: 'max',
+        contentTemplate: () =>
+          html`
+            <div>content</div>
+          `,
+        invokerNode,
       });
-      expect(controller.contentNode.style.maxWidth).to.equal(controller.invokerNode.style.width);
+      await ctrl.show();
+      expect(ctrl.contentNode.style.maxWidth).to.equal('60px');
     });
 
-    it('can set the contentNode width as the invokerNode width', () => {
-      const controller = new LocalOverlayController({
+    it('can set the contentNode width as the invokerNode width', async () => {
+      const invokerNode = await fixture(
+        '<div role="button" style="width: 60px; border: none;">invoker</div>',
+      );
+      const ctrl = new LocalOverlayController({
         inheritsReferenceObjectWidth: 'full',
+        contentTemplate: () =>
+          html`
+            <div>content</div>
+          `,
+        invokerNode,
       });
-      expect(controller.contentNode.style.width).to.equal(controller.invokerNode.style.width);
+      await ctrl.show();
+      expect(ctrl.contentNode.style.width).to.equal('60px');
     });
   });
 
   describe('a11y', () => {
-    it('adds and removes aria-expanded on invoker', async () => {
-      const controller = new LocalOverlayController({
+    it('adds and removes [aria-expanded] on invoker', async () => {
+      const invokerNode = await fixture('<div role="button">invoker</div>');
+      const ctrl = new LocalOverlayController({
         contentTemplate: () =>
           html`
-            <p>Content</p>
+            <div>Content</div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+        invokerNode,
       });
-
-      expect(controller.invokerNode.getAttribute('aria-controls')).to.contain(
-        controller.content.id,
-      );
-      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('false');
-      controller.show();
-      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('true');
-      controller.hide();
-      expect(controller.invokerNode.getAttribute('aria-expanded')).to.equal('false');
+      expect(ctrl.invokerNode.getAttribute('aria-controls')).to.contain(ctrl.content.id);
+      expect(ctrl.invokerNode).to.have.attribute('aria-expanded', 'false');
+      await ctrl.show();
+      expect(ctrl.invokerNode).to.have.attribute('aria-expanded', 'true');
+      await ctrl.hide();
+      expect(ctrl.invokerNode).to.have.attribute('aria-expanded', 'false');
     });
 
     it('traps the focus via option { trapsKeyboardFocus: true }', async () => {
-      const controller = new LocalOverlayController({
+      const invokerNode = await fixture('<button>invoker</button>');
+      const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
           <div>
             <button id="el1">Button</button>
             <a id="el2" href="#">Anchor</a>
           </div>
         `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
+        invokerNode,
         trapsKeyboardFocus: true,
       });
       // make sure we're connected to the dom
       await fixture(html`
-        ${controller.invoker}${controller.content}
+        ${invokerNode}${ctrl.content}
       `);
-      controller.show();
+      await ctrl.show();
 
-      const elOutside = await fixture(`<button>click me</button>`);
-      const [el1, el2] = [].slice.call(controller.contentNode.querySelectorAll('[id]'));
+      const elOutside = await fixture(`<div role="button">click me</div>`);
+      const [el1, el2] = [].slice.call(ctrl.contentNode.querySelectorAll('[id]'));
       el2.focus();
       // this mimics a tab within the contain-focus system used
       const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
@@ -571,26 +532,26 @@ describe('LocalOverlayController', () => {
 
     it('traps the focus via option { trapsKeyboardFocus: true } when using contentNode', async () => {
       const invokerNode = await fixture('<button>Invoker</button>');
-      const contentNode = await fixture(`
+      const contentNode = await fixture(html`
         <div>
           <button id="el1">Button</button>
           <a id="el2" href="#">Anchor</a>
         </div>
       `);
 
-      const controller = new LocalOverlayController({
+      const ctrl = new LocalOverlayController({
         contentNode,
         invokerNode,
         trapsKeyboardFocus: true,
       });
       // make sure we're connected to the dom
       await fixture(html`
-        ${controller.invoker}${controller.content}
+        ${ctrl.invoker}${ctrl.content}
       `);
-      controller.show();
+      await ctrl.show();
 
-      const elOutside = await fixture(`<button>click me</button>`);
-      const [el1, el2] = [].slice.call(controller.contentNode.querySelectorAll('[id]'));
+      const elOutside = await fixture(`<div role="button">click me</div>`);
+      const [el1, el2] = [].slice.call(ctrl.contentNode.querySelectorAll('[id]'));
 
       el2.focus();
       // this mimics a tab within the contain-focus system used
@@ -603,24 +564,23 @@ describe('LocalOverlayController', () => {
     });
 
     it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
-      const controller = new LocalOverlayController({
+      const invokerNode = await fixture('<button>Invoker</button>');
+      const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
           <div>
             <button id="el1">Button</button>
           </div>
         `,
-        invokerTemplate: () => html`
-          <button>Invoker</button>
-        `,
+        invokerNode,
         trapsKeyboardFocus: false,
       });
       // make sure we're connected to the dom
       await fixture(html`
-        ${controller.invoker}${controller.content}
+        ${ctrl.invoker}${ctrl.content}
       `);
       const elOutside = await fixture(`<button>click me</button>`);
-      controller.show();
-      const el1 = controller.content.querySelector('button');
+      await ctrl.show();
+      const el1 = ctrl.content.querySelector('button');
 
       el1.focus();
       simulateTab();
@@ -628,119 +588,54 @@ describe('LocalOverlayController', () => {
     });
   });
 
-  describe('hidesOnEsc', () => {
-    it('hides when [escape] is pressed', async () => {
-      const ctrl = new LocalOverlayController({
-        hidesOnEsc: true,
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
-      });
-      await fixture(
-        html`
-          ${ctrl.invoker}${ctrl.content}
-        `,
-      );
-      ctrl.show();
-
-      keyUpOn(ctrl.contentNode, keyCodes.escape);
-      ctrl.updateComplete;
-      expect(ctrl.isShown).to.equal(false);
-    });
-
-    it('stays shown when [escape] is pressed on outside element', async () => {
-      const ctrl = new LocalOverlayController({
-        hidesOnEsc: true,
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
-      });
-      await fixture(
-        html`
-          ${ctrl.invoker}${ctrl.content}
-        `,
-      );
-      ctrl.show();
-
-      keyUpOn(document, keyCodes.escape);
-      ctrl.updateComplete;
-      expect(ctrl.isShown).to.equal(true);
-    });
-  });
-
   describe('hidesOnOutsideClick', () => {
     it('hides on outside click', async () => {
-      const controller = new LocalOverlayController({
+      const invokerNode = await fixture('<div role="button">Invoker</div>');
+      const ctrl = new LocalOverlayController({
         hidesOnOutsideClick: true,
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button>Invoker</button>
-          `,
-      });
-      await fixture(
-        html`
-          ${controller.invoker}${controller.content}
+        contentTemplate: () => html`
+          <div>Content</div>
         `,
-      );
-      const { content } = controller;
-      controller.show();
-      expect(content.textContent.trim()).to.equal('Content');
+        invokerNode,
+      });
+      await fixture(html`
+        ${invokerNode}${ctrl.content}
+      `);
+      await ctrl.show();
 
       document.body.click();
       await aTimeout();
-      expect(content.textContent.trim()).to.equal('');
+      expect(ctrl.isShown).to.be.false;
     });
 
     it('doesn\'t hide on "inside" click', async () => {
+      const invokerNode = await fixture(html`
+        <button>Invoker</button>
+      `);
       const ctrl = new LocalOverlayController({
         hidesOnOutsideClick: true,
-        contentTemplate: () =>
-          html`
-            <p>Content</p>
-          `,
-        invokerTemplate: () =>
-          html`
-            <button @click="${() => ctrl.show()}">Invoker</button>
-          `,
+        contentTemplate: () => html`
+          <div>Content</div>
+        `,
+        invokerNode,
       });
-      const { content, invoker } = ctrl;
       await fixture(html`
-        ${invoker}${content}
+        ${invokerNode}${ctrl.content}
       `);
+      await ctrl.show();
 
-      // Don't hide on first invoker click
+      // Don't hide on invoker click
       ctrl.invokerNode.click();
       await aTimeout();
-      expect(ctrl.isShown).to.equal(true);
+      expect(ctrl.isShown).to.be.true;
 
       // Don't hide on inside (content) click
       ctrl.contentNode.click();
       await aTimeout();
-      expect(ctrl.isShown).to.equal(true);
-
-      // Don't hide on invoker click when shown
-      ctrl.invokerNode.click();
-      await aTimeout();
-      expect(ctrl.isShown).to.equal(true);
+      expect(ctrl.isShown).to.be.true;
 
       // Works as well when clicked content element lives in shadow dom
-      ctrl.show();
-      await aTimeout();
-      const tag = defineCE(
+      const tagString = defineCE(
         class extends HTMLElement {
           constructor() {
             super();
@@ -752,35 +647,46 @@ describe('LocalOverlayController', () => {
           }
         },
       );
-      const shadowEl = document.createElement(tag);
-      content.appendChild(shadowEl);
-      shadowEl.shadowRoot.querySelector('button').click();
+      const tag = unsafeStatic(tagString);
+      ctrl.contentTemplate = () =>
+        html`
+          <div>
+            <div>Content</div>
+            <${tag}></${tag}>
+          </div>
+        `;
+
+      // Don't hide on inside shadowDom click
+      ctrl.content
+        .querySelector(tagString)
+        .shadowRoot.querySelector('button')
+        .click();
+
       await aTimeout();
-      expect(ctrl.isShown).to.equal(true);
+      expect(ctrl.isShown).to.be.true;
 
       // Important to check if it can be still shown after, because we do some hacks inside
-      ctrl.hide();
-      expect(ctrl.isShown).to.equal(true);
-      ctrl.show();
-      expect(ctrl.isShown).to.equal(true);
+      await ctrl.hide();
+      expect(ctrl.isShown).to.be.false;
+      await ctrl.show();
+      expect(ctrl.isShown).to.be.true;
     });
 
     it('works with 3rd party code using "event.stopPropagation()" on bubble phase', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button">Invoker</div>
+      `);
       const ctrl = new LocalOverlayController({
         hidesOnOutsideClick: true,
         contentTemplate: () =>
           html`
-            <p>Content</p>
+            <div>Content</div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button @click="${() => ctrl.show()}">Invoker</button>
-          `,
+        invokerNode,
       });
-      const { content, invoker } = ctrl;
       const dom = await fixture(`
         <div>
-          <div id="popup">${invoker}${content}</div>
+          <div id="popup">${invokerNode}${ctrl.content}</div>
           <div
             id="regular-sibling"
             @click="${() => {
@@ -793,7 +699,7 @@ describe('LocalOverlayController', () => {
         </div>
       `);
 
-      ctrl.show();
+      await ctrl.show();
       expect(ctrl.isShown).to.equal(true);
 
       dom.querySelector('third-party-noise').click();
@@ -801,26 +707,25 @@ describe('LocalOverlayController', () => {
       expect(ctrl.isShown).to.equal(false);
 
       // Important to check if it can be still shown after, because we do some hacks inside
-      ctrl.show();
+      await ctrl.show();
       expect(ctrl.isShown).to.equal(true);
     });
 
     it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button">Invoker</div>
+      `);
       const ctrl = new LocalOverlayController({
         hidesOnOutsideClick: true,
         contentTemplate: () =>
           html`
-            <p>Content</p>
+            <div>Content</div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button @click="${() => ctrl.show()}">Invoker</button>
-          `,
+        invokerNode,
       });
-      const { content, invoker } = ctrl;
       const dom = await fixture(`
         <div>
-          <div id="popup">${invoker}${content}</div>
+          <div id="popup">${invokerNode}${ctrl.content}</div>
           <div
             id="regular-sibling"
             @click="${() => {
@@ -841,7 +746,7 @@ describe('LocalOverlayController', () => {
         true,
       );
 
-      ctrl.show();
+      await ctrl.show();
       expect(ctrl.isShown).to.equal(true);
 
       dom.querySelector('third-party-noise').click();
@@ -849,25 +754,26 @@ describe('LocalOverlayController', () => {
       expect(ctrl.isShown).to.equal(false);
 
       // Important to check if it can be still shown after, because we do some hacks inside
-      ctrl.show();
+      await ctrl.show();
       expect(ctrl.isShown).to.equal(true);
     });
   });
 
   describe('toggles', () => {
     it('toggles on clicks', async () => {
-      const ctrl = new LocalOverlayController({
+      let ctrl;
+      const invokerNode = await fixture(html`
+        <button @click="${() => ctrl.toggle()}">Invoker</button>
+      `);
+      ctrl = new LocalOverlayController({
         hidesOnOutsideClick: true,
         contentTemplate: () =>
           html`
-            <p>Content</p>
+            <div>Content</div>
           `,
-        invokerTemplate: () =>
-          html`
-            <button @click="${() => ctrl.toggle()}">Invoker</button>
-          `,
+        invokerNode,
       });
-      const { content, invoker, invokerNode } = ctrl;
+      const { content, invoker, invokerNode: iNode } = ctrl;
       await fixture(
         html`
           ${invoker}${content}
@@ -875,42 +781,19 @@ describe('LocalOverlayController', () => {
       );
 
       // Show content on first invoker click
-      invokerNode.click();
+      iNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
 
       // Hide content on click when shown
-      invokerNode.click();
+      iNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(false);
 
-      // Show contnet on invoker click when hidden
-      invokerNode.click();
+      // Show content on invoker click when hidden
+      iNode.click();
       await aTimeout();
       expect(ctrl.isShown).to.equal(true);
-    });
-  });
-
-  describe('events', () => {
-    it('fires "show" event once overlay becomes shown', async () => {
-      const showSpy = sinon.spy();
-      const ctrl = new LocalOverlayController();
-      ctrl.addEventListener('show', showSpy);
-      await ctrl.show();
-      expect(showSpy.callCount).to.equal(1);
-      await ctrl.show();
-      expect(showSpy.callCount).to.equal(1);
-    });
-
-    it('fires "hide" event once overlay becomes hidden', async () => {
-      const hideSpy = sinon.spy();
-      const ctrl = new LocalOverlayController();
-      ctrl.addEventListener('hide', hideSpy);
-      ctrl.hide();
-      expect(hideSpy.callCount).to.equal(0);
-      await ctrl.show();
-      ctrl.hide();
-      expect(hideSpy.callCount).to.equal(1);
     });
   });
 });

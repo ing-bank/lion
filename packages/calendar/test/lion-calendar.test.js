@@ -1,4 +1,5 @@
 import { expect, fixture } from '@open-wc/testing';
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
 
 import { html } from '@lion/core';
@@ -6,7 +7,6 @@ import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
 import { CalendarObject, DayObject } from '../test-helpers.js';
-import './keyboardEventShimIE.js';
 
 import { isSameDate } from '../src/utils/isSameDate.js';
 import '../lion-calendar.js';

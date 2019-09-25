@@ -26,7 +26,7 @@
     "docs",
     "src",
     "stories",
-    "test",
+    "test-helpers",
     "translations",
     "*.js"
   ],
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.0.6",
+    "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
   }
 }

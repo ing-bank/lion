@@ -1,4 +1,5 @@
-/* eslint-disable class-methods-use-this */
+import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js';
+import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
 /**
  * @typedef {object} OverlayController
@@ -20,19 +21,142 @@
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
 export class OverlaysManager {
+  static __createGlobalRootNode() {
+    const rootNode = document.createElement('div');
+    rootNode.classList.add('global-overlays');
+    document.body.appendChild(rootNode);
+    return rootNode;
+  }
+
+  static __createGlobalStyleNode() {
+    const styleTag = document.createElement('style');
+    styleTag.setAttribute('data-global-overlays', '');
+    styleTag.textContent = globalOverlaysStyle.cssText;
+    document.head.appendChild(styleTag);
+    return styleTag;
+  }
+
+  /**
+   * no setter as .list is inteded to be read-only
+   * You can use .add or .remove to modify it
+   */
+  get globalRootNode() {
+    if (!this.constructor.__globalRootNode) {
+      this.constructor.__globalRootNode = this.constructor.__createGlobalRootNode();
+      this.constructor.__globalStyleNode = this.constructor.__createGlobalStyleNode();
+    }
+    return this.constructor.__globalRootNode;
+  }
+
+  /**
+   * no setter as .list is inteded to be read-only
+   * You can use .add or .remove to modify it
+   */
+  get list() {
+    return this.__list;
+  }
+
+  /**
+   * no setter as .shownList is inteded to be read-only
+   * You can use .show or .hide on individual controllers to modify
+   */
+  get shownList() {
+    return this.__shownList;
+  }
+
+  constructor() {
+    this.__list = [];
+    this.__shownList = [];
+    this.__siblingsInert = false;
+  }
+
   /**
    * Registers an overlay controller.
-   * @param {OverlayController} controller controller of the newly added overlay
+   * @param {OverlayController} ctrlToAdd controller of the newly added overlay
    * @returns {OverlayController} same controller after adding to the manager
    */
-  add(controller) {
-    // TODO: hopefully there will be an event-driven system (which will be implemented here)
-    // and controllers will just be notified about other controllers being shown/hidden
-    // so that we:
-    // 1. don't need to store a stack of overlays which leads to memory leaks
-    //    (unfortunately WeakSet/WeakMap is not an option because we need to iterate over them)
-    // 2. make overlay controllers more independent
-    //    (otherwise there will be a tight coupling between the manager and different types)
-    return controller;
+  add(ctrlToAdd) {
+    if (this.list.find(ctrl => ctrlToAdd === ctrl)) {
+      throw new Error('controller instance is already added');
+    }
+    // eslint-disable-next-line no-param-reassign
+    ctrlToAdd.manager = this;
+    this.list.push(ctrlToAdd);
+    return ctrlToAdd;
+  }
+
+  remove(ctrlToRemove) {
+    if (!this.list.find(ctrl => ctrlToRemove === ctrl)) {
+      throw new Error('could not find controller to remove');
+    }
+    this.__list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
+  }
+
+  show(ctrlToShow) {
+    if (this.list.find(ctrl => ctrlToShow === ctrl)) {
+      this.hide(ctrlToShow);
+    }
+    this.__shownList.unshift(ctrlToShow);
+  }
+
+  hide(ctrlToHide) {
+    if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
+      throw new Error('could not find controller to hide');
+    }
+    this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+  }
+
+  teardown() {
+    this.__list = [];
+    this.__shownList = [];
+    this.__siblingsInert = false;
+
+    const rootNode = this.constructor.__globalRootNode;
+    if (rootNode) {
+      rootNode.parentElement.removeChild(rootNode);
+      this.constructor.__globalRootNode = undefined;
+
+      document.head.removeChild(this.constructor.__globalStyleNode);
+      this.constructor.__globalStyleNode = undefined;
+    }
+  }
+
+  /** Features right now only for Global Overlay Manager */
+
+  get siblingsInert() {
+    return this.__siblingsInert;
+  }
+
+  disableTrapsKeyboardFocusForAll() {
+    this.shownList.forEach(ctrl => {
+      if (ctrl.trapsKeyboardFocus === true && ctrl.disableTrapsKeyboardFocus) {
+        ctrl.disableTrapsKeyboardFocus({ findNewTrap: false });
+      }
+    });
+  }
+
+  informTrapsKeyboardFocusGotEnabled() {
+    if (this.siblingsInert === false) {
+      if (this.constructor.__globalRootNode) {
+        setSiblingsInert(this.globalRootNode);
+      }
+      this.__siblingsInert = true;
+    }
+  }
+
+  informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
+    const next = this.shownList.find(
+      ctrl => ctrl !== disabledCtrl && ctrl.trapsKeyboardFocus === true,
+    );
+    if (next) {
+      if (findNewTrap) {
+        next.enableTrapsKeyboardFocus();
+      }
+    } else if (this.siblingsInert === true) {
+      if (this.constructor.__globalRootNode) {
+        unsetSiblingsInert(this.globalRootNode);
+      }
+      this.__siblingsInert = false;
+    }
   }
 }

@@ -53,7 +53,7 @@ const lightDomAutofocusTemplate = `
 `;
 
 describe('containFocus()', () => {
-  it('starts focus at the root element when there is no element with autofocus', async () => {
+  it('starts focus at the root element when there is no element with [autofocus]', async () => {
     await fixture(lightDomTemplate);
     const root = document.getElementById('rootElement');
     containFocus(root);
@@ -63,7 +63,7 @@ describe('containFocus()', () => {
     expect(root.style.getPropertyValue('outline-style')).to.equal('none');
   });
 
-  it('starts focus at the element with the autofocus attribute', async () => {
+  it('starts focus at the element with [autofocus] attribute', async () => {
     await fixture(lightDomAutofocusTemplate);
     const el = document.querySelector('input[autofocus]');
     containFocus(el);

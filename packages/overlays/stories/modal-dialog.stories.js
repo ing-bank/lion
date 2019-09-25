@@ -6,26 +6,37 @@ import { overlays, ModalDialogController } from '../index.js';
 const modalDialogDemoStyle = css`
   .demo-overlay {
     background-color: white;
-    position: fixed;
-    top: 20px;
-    left: 20px;
     width: 200px;
-    border: 1px solid blue;
-  }
-
-  .demo-overlay--2 {
-    left: 240px;
+    border: 1px solid lightgrey;
   }
 `;
 
 storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
+    const nestedDialogCtrl = overlays.add(
+      new ModalDialogController({
+        contentTemplate: () => html`
+          <div class="demo-overlay">
+            <p>Nested modal dialog</p>
+            <button @click="${() => nestedDialogCtrl.hide()}">Close</button>
+          </div>
+        `,
+      }),
+    );
+
     const dialogCtrl = overlays.add(
       new ModalDialogController({
         contentTemplate: () => html`
           <div class="demo-overlay">
             <p>Modal dialog</p>
             <button @click="${() => dialogCtrl.hide()}">Close</button>
+            <button
+              @click="${event => nestedDialogCtrl.show(event.target)}"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+            >
+              Open nested dialog
+            </button>
           </div>
         `,
       }),
