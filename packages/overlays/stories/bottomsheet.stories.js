@@ -9,7 +9,6 @@ const bottomsheetDemoStyle = css`
     background-color: white;
     border: 1px solid lightgrey;
     text-align: center;
-    height: 800px;
   }
 `;
 
