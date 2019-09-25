@@ -27,7 +27,7 @@ const togglePlacement = overlayCtrl => {
   ];
   placement = placements[(placements.indexOf(placement) + 1) % placements.length];
   // eslint-disable-next-line no-param-reassign
-  overlayCtrl.overlayContainerClass = `global-overlays__overlay-container--${placement}`;
+  overlayCtrl.overlayContainerPlacementClass = `${overlayCtrl.overlayContainerClass}--${placement}`;
 };
 
 storiesOf('Global Overlay System|Global Overlay', module)
