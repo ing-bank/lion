@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/core@0.1.13...@lion/core@0.2.0) (2019-09-25)
+
+
+### Features
+
+* **overlays:** align Overlays API + add DynamicOverlay ([224f794](https://github.com/ing-bank/lion/commit/224f794))
+
+
+
+
+
 ## [0.1.13](https://github.com/ing-bank/lion/compare/@lion/core@0.1.12...@lion/core@0.1.13) (2019-07-25)
 
 
