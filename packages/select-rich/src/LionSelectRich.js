@@ -548,11 +548,15 @@ export class LionSelectRich extends FormRegistrarMixin(
     }
   }
 
-  __setupOverlay() {
-    this.__overlay = overlays.add(
+  /**
+   * @overridable Subclassers can override the default
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _defineOverlay({ invokerNode, contentNode } = {}) {
+    return overlays.add(
       new LocalOverlayController({
-        contentNode: this._listboxNode,
-        invokerNode: this._invokerNode,
+        contentNode,
+        invokerNode,
         hidesOnEsc: false,
         hidesOnOutsideClick: true,
         inheritsReferenceObjectWidth: true,
@@ -566,6 +570,13 @@ export class LionSelectRich extends FormRegistrarMixin(
         },
       }),
     );
+  }
+
+  __setupOverlay() {
+    this.__overlay = this._defineOverlay({
+      invokerNode: this._invokerNode,
+      contentNode: this._listboxNode,
+    });
 
     this.__overlayOnShow = () => {
       this.opened = true;
