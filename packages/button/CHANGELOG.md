@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.18](https://github.com/ing-bank/lion/compare/@lion/button@0.3.17...@lion/button@0.3.18) (2019-09-26)
+
+
+### Bug Fixes
+
+* **button:** change redispatch click logic so form submit fires properly ([94818e4](https://github.com/ing-bank/lion/commit/94818e4))
+* **button:** fix implicit form submission IE11 due to visibility hidden ([a5752fc](https://github.com/ing-bank/lion/commit/a5752fc))
+
+
+
+
+
 ## [0.3.17](https://github.com/ing-bank/lion/compare/@lion/button@0.3.16...@lion/button@0.3.17) (2019-09-25)
 
 **Note:** Version bump only for package @lion/button
