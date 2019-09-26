@@ -57,7 +57,8 @@ describe('lion-button', () => {
   it('hides the native button in the UI', async () => {
     const el = await fixture(`<lion-button>foo</lion-button>`);
     expect(el._nativeButtonNode.getAttribute('tabindex')).to.equal('-1');
-    expect(window.getComputedStyle(el._nativeButtonNode).visibility).to.equal('hidden');
+    // TODO: If we abstract to an srOnlyMixin, we should test that the styling equals that of the srOnlyMixin output
+    expect(window.getComputedStyle(el._nativeButtonNode).clip).to.equal('rect(0px, 0px, 0px, 0px)');
   });
 
   it('can be disabled imperatively', async () => {
@@ -231,6 +232,8 @@ describe('lion-button', () => {
           <lion-button type="submit">foo</lion-button>
         </form>
       `);
+      // Prevent page refresh
+      form.submit = () => {};
 
       const button = form.querySelector('lion-button');
       getTopElement(button).click();
@@ -245,6 +248,8 @@ describe('lion-button', () => {
           <lion-button type="submit">foo</lion-button>
         </form>
       `);
+      // Prevent page refresh
+      form.submit = () => {};
 
       pressSpace(form.querySelector('lion-button'));
       await aTimeout();
@@ -260,8 +265,30 @@ describe('lion-button', () => {
           <lion-button type="submit">foo</lion-button>
         </form>
       `);
+      // Prevent page refresh
+      form.submit = () => {};
 
       pressEnter(form.querySelector('lion-button'));
+      await aTimeout();
+      await aTimeout();
+
+      expect(formSubmitSpy.called).to.be.true;
+    });
+
+    // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
+    it.skip('works with implicit form submission on-enter inside an input', async () => {
+      const formSubmitSpy = sinon.spy(e => e.preventDefault());
+      const form = await fixture(html`
+        <form @submit="${formSubmitSpy}">
+          <input name="foo" />
+          <input name="foo2" />
+          <lion-button type="submit">foo</lion-button>
+        </form>
+      `);
+      // Prevent page refresh
+      form.submit = () => {};
+
+      pressEnter(form.querySelector('input[name="foo2"]'));
       await aTimeout();
       await aTimeout();
 
