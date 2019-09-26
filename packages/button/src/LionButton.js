@@ -71,7 +71,12 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
         :host .btn ::slotted(button) {
           position: absolute;
-          visibility: hidden;
+          clip: rect(0 0 0 0);
+          clip-path: inset(50%);
+          overflow: hidden;
+          white-space: nowrap;
+          height: 1px;
+          width: 1px;
         }
 
         .click-area {
@@ -120,7 +125,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       _button: () => {
         if (!this.constructor._button) {
           this.constructor._button = document.createElement('button');
-          this.constructor._button.setAttribute('slot', '_button');
           this.constructor._button.setAttribute('tabindex', '-1');
         }
         return this.constructor._button.cloneNode();
@@ -167,31 +171,13 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     }
   }
 
-  _redispatchClickEvent(oldEvent) {
-    // replacing `MouseEvent` with `oldEvent.constructor` breaks IE
-    const newEvent = new MouseEvent(oldEvent.type, oldEvent);
-    newEvent.__isRedispatchedOnNativeButton = true;
-    this.__enforceHostEventTarget(newEvent);
-    this._nativeButtonNode.dispatchEvent(newEvent);
-  }
-
   /**
-   * Prevent normal click and redispatch click on the native button unless already redispatched.
+   * Dispatch submit event and invoke submit on the native form when clicked
    */
-  __clickDelegationHandler(e) {
-    if (!e.__isRedispatchedOnNativeButton) {
-      e.stopImmediatePropagation();
-      this._redispatchClickEvent(e);
-    }
-  }
-
-  __enforceHostEventTarget(event) {
-    try {
-      // this is for IE11 (and works in others), because `Object.defineProperty` does not give any effect there
-      event.__defineGetter__('target', () => this); // eslint-disable-line no-restricted-properties
-    } catch (error) {
-      // in case `__defineGetter__` is removed from the platform
-      Object.defineProperty(event, 'target', { writable: false, value: this });
+  __clickDelegationHandler() {
+    if (this.type === 'submit' && this._nativeButtonNode.form) {
+      this._nativeButtonNode.form.dispatchEvent(new Event('submit'));
+      this._nativeButtonNode.form.submit();
     }
   }
 
@@ -239,7 +225,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   __keyupHandler(e) {
     if (this.__isKeyboardClickEvent(e)) {
       // redispatch click
-      this.shadowRoot.querySelector('.click-area').click();
+      this.click();
     }
   }
 
