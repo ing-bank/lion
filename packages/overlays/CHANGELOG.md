@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.4.0...@lion/overlays@0.5.0) (2019-09-26)
+
+
+### Features
+
+* **overlays:** delegate events in DynamicOverlayController ([20037ba](https://github.com/ing-bank/lion/commit/20037ba))
+
+
+
+
+
 # [0.4.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.3.12...@lion/overlays@0.4.0) (2019-09-25)
 
 
