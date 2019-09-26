@@ -1,9 +1,16 @@
-import { expect, fixture, html, aTimeout } from '@open-wc/testing';
-import './keyboardEventShimIE.js';
-
+import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import '@lion/option/lion-option.js';
+import {
+  overlays,
+  LocalOverlayController,
+  GlobalOverlayController,
+  DynamicOverlayController,
+} from '@lion/overlays';
+
+import './keyboardEventShimIE.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
+import { LionSelectRich } from '../index.js';
 
 describe('lion-select-rich', () => {
   it('does not have a tabindex', async () => {
@@ -326,6 +333,53 @@ describe('lion-select-rich', () => {
         amount: 0,
         active: false,
       });
+    });
+  });
+
+  describe('Subclassers', () => {
+    it('allows to override the type of overlays', async () => {
+      const mySelectTagString = defineCE(
+        class MySelect extends LionSelectRich {
+          _defineOverlay({ invokerNode, contentNode }) {
+            // add a DynamicOverlayController
+            const dynamicCtrl = new DynamicOverlayController();
+
+            const localCtrl = overlays.add(
+              new LocalOverlayController({
+                contentNode,
+                invokerNode,
+              }),
+            );
+            dynamicCtrl.add(localCtrl);
+
+            const globalCtrl = overlays.add(
+              new GlobalOverlayController({
+                contentNode,
+                invokerNode,
+              }),
+            );
+            dynamicCtrl.add(globalCtrl);
+
+            return dynamicCtrl;
+          }
+        },
+      );
+
+      const mySelectTag = unsafeStatic(mySelectTagString);
+
+      const el = await fixture(html`
+        <${mySelectTag} label="Favorite color" name="color">
+          <lion-options slot="input">
+            ${Array(2).map(
+              (_, i) => html`
+                <lion-option .modelValue="${{ value: i, checked: false }}">value ${i}</lion-option>
+              `,
+            )}
+          </lion-options>
+        </${mySelectTag}>
+      `);
+
+      expect(el.__overlay).to.be.instanceOf(DynamicOverlayController);
     });
   });
 });

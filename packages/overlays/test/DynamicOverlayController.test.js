@@ -133,4 +133,34 @@ describe('DynamicOverlayController', () => {
     expect(globalOutSpy).to.have.callCount(1);
     expect(localInSpy).to.have.callCount(1);
   });
+
+  describe('API abstraction for active overlay controller', () => {
+    describe('Events', () => {
+      it('delegates "show/hide" event', async () => {
+        const ctrl = new DynamicOverlayController();
+        const global = new FakeGlobalCtrl(defaultOptions);
+        const local = new FakeLocalCtrl(defaultOptions);
+        ctrl.add(global);
+        ctrl.add(local);
+        ctrl.switchTo(local);
+
+        const showSpy = sinon.spy();
+        const hideSpy = sinon.spy();
+
+        ctrl.addEventListener('show', showSpy);
+        ctrl.addEventListener('hide', hideSpy);
+
+        await ctrl.show();
+        expect(showSpy.callCount).to.equal(1);
+        await ctrl.hide();
+        expect(hideSpy.callCount).to.equal(1);
+
+        ctrl.switchTo(global);
+        await ctrl.show();
+        expect(showSpy.callCount).to.equal(2);
+        await ctrl.hide();
+        expect(hideSpy.callCount).to.equal(2);
+      });
+    });
+  });
 });
