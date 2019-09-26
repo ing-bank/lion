@@ -1,6 +1,6 @@
 {
   "name": "@lion/select-rich",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Provides a select with options that can contain html",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -36,7 +36,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/button": "^0.3.17",
+    "@lion/button": "^0.3.18",
     "@lion/core": "^0.2.0",
     "@lion/field": "^0.2.6",
     "@lion/option": "^0.1.13",
