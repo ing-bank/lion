@@ -339,6 +339,20 @@ describe('<lion-calendar>', () => {
         clock.restore();
       });
 
+      it('should set centralDate to the unique valid value when minDate and maxDate are equal', async () => {
+        const clock = sinon.useFakeTimers({ now: new Date('2019/06/03').getTime() });
+
+        const el = await fixture(html`
+          <lion-calendar
+            .minDate="${new Date('2019/07/03')}"
+            .maxDate="${new Date('2019/07/03')}"
+          ></lion-calendar>
+        `);
+        expect(isSameDate(el.centralDate, new Date('2019/07/03')), 'central date').to.be.true;
+
+        clock.restore();
+      });
+
       describe('Normalization', () => {
         it('normalizes all generated dates', async () => {
           function isNormalizedDate(d) {
@@ -504,7 +518,7 @@ describe('<lion-calendar>', () => {
         elObj.previousMonthButtonEl.click();
         await el.updateComplete;
         expect(elObj.activeMonthAndYear).to.equal('November 2000');
-        expect(isSameDate(el.centralDate, new Date('2000/11/21'))).to.be.true;
+        expect(isSameDate(el.centralDate, new Date('2000/11/20'))).to.be.true;
 
         clock.restore();
       });
@@ -527,7 +541,7 @@ describe('<lion-calendar>', () => {
         elObj.nextMonthButtonEl.click();
         await el.updateComplete;
         expect(elObj.activeMonthAndYear).to.equal('January 2001');
-        expect(isSameDate(el.centralDate, new Date('2001/01/09'))).to.be.true;
+        expect(isSameDate(el.centralDate, new Date('2001/01/10'))).to.be.true;
 
         clock.restore();
       });
