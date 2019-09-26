@@ -34,6 +34,8 @@ export class DynamicOverlayController {
     if (!this.content) {
       this.content = document.createElement('div');
     }
+    this.__fakeExtendsEventTarget();
+    this.__delegateEvent = this.__delegateEvent.bind(this);
   }
 
   add(ctrlToAdd) {
@@ -71,9 +73,13 @@ export class DynamicOverlayController {
     if (this.isShown === true) {
       throw new Error('You can not switch overlays while being shown');
     }
+    const prevActive = this.active;
+
     this.active.switchOut();
     ctrlToSwitchTo.switchIn();
     this.__active = ctrlToSwitchTo;
+
+    this._delegateEvents(this.__active, prevActive);
   }
 
   async show() {
@@ -98,5 +104,25 @@ export class DynamicOverlayController {
 
   get invokerNode() {
     return this.active.invokerNode;
+  }
+
+  _delegateEvents(active, prevActive) {
+    ['show', 'hide'].forEach(event => {
+      active.addEventListener(event, this.__delegateEvent);
+      prevActive.removeEventListener(event, this.__delegateEvent);
+    });
+  }
+
+  __delegateEvent(ev) {
+    ev.stopPropagation();
+    this.dispatchEvent(new Event(ev.type));
+  }
+
+  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
+  __fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      this[funcName] = (...args) => delegate[funcName](...args);
+    });
   }
 }
