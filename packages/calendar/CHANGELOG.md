@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.67](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.66...@lion/calendar@0.1.67) (2019-09-26)
+
+
+### Bug Fixes
+
+* **calendar:** render the calendar when min and max date are same date ([b9747ef](https://github.com/ing-bank/lion/commit/b9747ef))
+
+
+
+
+
 ## [0.1.66](https://github.com/ing-bank/lion/compare/@lion/calendar@0.1.65...@lion/calendar@0.1.66) (2019-09-26)
 
 **Note:** Version bump only for package @lion/calendar
