@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.1.21...@lion/select-rich@0.2.0) (2019-09-26)
+
+
+### Features
+
+* **select-rich:** provide generic mechanism for overrifing overlay type ([ac33804](https://github.com/ing-bank/lion/commit/ac33804))
+
+
+
+
+
 ## [0.1.21](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.1.20...@lion/select-rich@0.1.21) (2019-09-26)
 
 **Note:** Version bump only for package @lion/select-rich

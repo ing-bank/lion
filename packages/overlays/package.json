@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Overlays System using lit-html for rendering",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",

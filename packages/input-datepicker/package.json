@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-datepicker",
-  "version": "0.1.71",
+  "version": "0.1.72",
   "description": "Provide a way for users to fill in a date via a calendar overlay",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -41,7 +41,7 @@
     "@lion/field": "^0.2.6",
     "@lion/input-date": "^0.1.54",
     "@lion/localize": "^0.4.16",
-    "@lion/overlays": "^0.4.0",
+    "@lion/overlays": "^0.5.0",
     "@lion/validate": "^0.2.31"
   },
   "devDependencies": {
