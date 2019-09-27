@@ -2,6 +2,5 @@ import en from './en.js';
 
 export default {
   ...en,
-  headerDate: 'en-US: Date & Time',
-  headerNumber: 'en-US: Number formatting',
+  body: 'I am from the USA',
 };
