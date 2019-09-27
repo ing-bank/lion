@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.62](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.1.61...@lion/radio-group@0.1.62) (2019-09-27)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
 ## [0.1.61](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.1.60...@lion/radio-group@0.1.61) (2019-09-25)
 
 **Note:** Version bump only for package @lion/radio-group

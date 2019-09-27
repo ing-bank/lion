@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.32](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.31...@lion/validate@0.2.32) (2019-09-27)
+
+
+### Bug Fixes
+
+* Change CN translation for date format validation ([081a977](https://github.com/ing-bank/lion/commit/081a977))
+
+
+
+
+
 ## [0.2.31](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.30...@lion/validate@0.2.31) (2019-09-25)
 
 **Note:** Version bump only for package @lion/validate
