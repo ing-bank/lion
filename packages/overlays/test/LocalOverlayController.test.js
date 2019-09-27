@@ -49,7 +49,7 @@ describe('LocalOverlayController', () => {
 
     it('renders holders for invoker and content', async () => {
       const invokerNode = await fixture(html`
-        <div role="button" id="invoke">Invoker</div>
+        <div role="button" id="invoker">Invoker</div>
       `);
       const ctrl = new LocalOverlayController({
         contentTemplate: () => html`
@@ -63,7 +63,7 @@ describe('LocalOverlayController', () => {
         </div>
       `);
 
-      expect(el.querySelector('#invoke').textContent.trim()).to.equal('Invoker');
+      expect(el.querySelector('#invoker').textContent.trim()).to.equal('Invoker');
       await ctrl.show();
       expect(el.querySelector('#content').textContent.trim()).to.equal('Content');
     });
@@ -119,6 +119,54 @@ describe('LocalOverlayController', () => {
 
       await ctrl.sync({ data: { text: 'bar' } });
       expect(ctrl.content.textContent.trim()).to.equal('bar');
+    });
+  });
+
+  describe('nodes', () => {
+    it('accepts HTML Elements (contentNode) to render content', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button" id="invoker">Invoker</div>
+      `);
+
+      const node = document.createElement('div');
+      node.innerHTML = '<div id="content">Content</div>';
+
+      const ctrl = new LocalOverlayController({
+        contentNode: node,
+        invokerNode,
+      });
+      const el = await fixture(html`
+        <div>
+          ${ctrl.invoker} ${ctrl.content}
+        </div>
+      `);
+
+      expect(el.querySelector('#invoker').textContent.trim()).to.equal('Invoker');
+      await ctrl.show();
+      expect(el.querySelector('#content').textContent.trim()).to.equal('Content');
+    });
+
+    it('sets display to inline-block for contentNode by default', async () => {
+      const invokerNode = await fixture(html`
+        <div role="button" id="invoker">Invoker</div>
+      `);
+
+      const node = document.createElement('div');
+      node.innerHTML = '<div id="content">Content</div>';
+
+      const ctrl = new LocalOverlayController({
+        contentNode: node,
+        invokerNode,
+      });
+      const el = await fixture(html`
+        <div>
+          ${ctrl.invoker} ${ctrl.content}
+        </div>
+      `);
+
+      await ctrl.show();
+      const contentWrapper = el.querySelector('#content').parentElement;
+      expect(contentWrapper.style.display).to.equal('inline-block');
     });
   });
 

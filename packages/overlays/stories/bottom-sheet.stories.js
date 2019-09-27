@@ -1,24 +1,23 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import { css } from '@lion/core';
-import { overlays, BottomsheetController } from '../index.js';
+import { overlays, BottomSheetController } from '../index.js';
 
-const bottomsheetDemoStyle = css`
+const bottomSheetDemoStyle = css`
   .demo-overlay {
-    width: 100%;
     background-color: white;
     border: 1px solid lightgrey;
     text-align: center;
   }
 `;
 
-storiesOf('Global Overlay System|Bottomsheet', module).add('Default', () => {
-  const bottomsheetCtrl = overlays.add(
-    new BottomsheetController({
+storiesOf('Global Overlay System|BottomSheet', module).add('Default', () => {
+  const bottomSheetCtrl = overlays.add(
+    new BottomSheetController({
       contentTemplate: () => html`
         <div class="demo-overlay">
-          <p>Bottomsheet</p>
-          <button @click="${() => bottomsheetCtrl.hide()}">Close</button>
+          <p>BottomSheet</p>
+          <button @click="${() => bottomSheetCtrl.hide()}">Close</button>
         </div>
       `,
     }),
@@ -26,11 +25,11 @@ storiesOf('Global Overlay System|Bottomsheet', module).add('Default', () => {
 
   return html`
     <style>
-      ${bottomsheetDemoStyle}
+      ${bottomSheetDemoStyle}
     </style>
     <a href="#">Anchor 1</a>
     <button
-      @click="${event => bottomsheetCtrl.show(event.target)}"
+      @click="${event => bottomSheetCtrl.show(event.target)}"
       aria-haspopup="dialog"
       aria-expanded="false"
     >

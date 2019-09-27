@@ -1,6 +1,6 @@
 import { GlobalOverlayController } from './GlobalOverlayController.js';
 
-export class BottomsheetController extends GlobalOverlayController {
+export class BottomSheetController extends GlobalOverlayController {
   constructor(params) {
     super({
       hasBackdrop: true,
@@ -12,5 +12,10 @@ export class BottomsheetController extends GlobalOverlayController {
       },
       ...params,
     });
+  }
+
+  onContentUpdated() {
+    super.onContentUpdated();
+    this.contentNode.classList.add('global-overlays__overlay--bottom-sheet');
   }
 }

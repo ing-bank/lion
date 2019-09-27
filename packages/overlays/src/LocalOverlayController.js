@@ -239,6 +239,18 @@ export class LocalOverlayController extends BaseOverlayController {
     }
   }
 
+  __showHideViaCss() {
+    if (!this.contentNode) {
+      return;
+    }
+
+    if (this.isShown) {
+      this.contentNode.style.display = 'inline-block';
+    } else {
+      this.contentNode.style.display = 'none';
+    }
+  }
+
   // **********************************************************************************************
   // FEATURE - hidesOnOutsideClick
   // **********************************************************************************************
