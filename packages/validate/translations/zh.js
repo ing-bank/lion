@@ -10,7 +10,7 @@ export default {
     minNumber: '請輸入高於{validatorParams}的{fieldName}。',
     maxNumber: '请输入低于{validatorParams}的{fieldName}。',
     minMaxNumber: '请在{validatorParams.min}和{validatorParams.max}之间输入{fieldName}。',
-    isDate: '请输入有效日期（DD / MM / YYYY）。',
+    isDate: '请输入有效日期（YYYY/MM/DD）。',
     minDate: '请在{validatorParams，date，YYYYMMDD}之后输入{fieldName}。',
     maxDate: '请在{validatorParams，date，YYYYMMDD}之前输入{fieldName}。',
     minMaxDate:
@@ -29,7 +29,7 @@ export default {
     minNumber: '請輸入高於{validatorParams}的{fieldName}。',
     maxNumber: '请输入低于{validatorParams}的{fieldName}。',
     minMaxNumber: '请在{validatorParams.min}和{validatorParams.max}之间输入{fieldName}。',
-    isDate: '请输入有效日期（DD / MM / YYYY）。',
+    isDate: '请输入有效日期（YYYY/MM/DD）。',
     minDate: '请在{validatorParams，date，YYYYMMDD}之后输入{fieldName}。',
     maxDate: '请在{validatorParams，date，YYYYMMDD}之前输入{fieldName}。',
     minMaxDate:
