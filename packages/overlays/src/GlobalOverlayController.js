@@ -85,8 +85,27 @@ export class GlobalOverlayController extends BaseOverlayController {
     this.__enableFeatures();
   }
 
-  contentTemplateUpdated() {
+  onContentUpdated() {
     this.contentNode.classList.add('global-overlays__overlay');
+  }
+
+  get contentNode() {
+    return this.__contentNode;
+  }
+
+  set contentNode(node) {
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(node);
+
+    this.__contentNode = node;
+    this.content = wrapper;
+    this.onContentUpdated();
+
+    // setting a contentNode means hide/show with css
+    this.__showHideMode = 'css';
+    if (this.isShown === false) {
+      this.content.style.display = 'none';
+    }
   }
 
   /**
@@ -113,6 +132,18 @@ export class GlobalOverlayController extends BaseOverlayController {
 
   hideDone() {
     this.defaultHideDone();
+  }
+
+  __showHideViaCss() {
+    if (!this.contentNode) {
+      return;
+    }
+
+    if (this.isShown) {
+      this.content.style.display = '';
+    } else {
+      this.content.style.display = 'none';
+    }
   }
 
   /**

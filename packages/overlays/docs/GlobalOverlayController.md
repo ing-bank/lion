@@ -26,12 +26,12 @@ const myCtrl = overlays.add(
 );
 ```
 
-### BottomsheetController
+### BottomSheetController
 
 A specific extension of GlobalOverlayController configured to create accessible dialogs at the bottom of the screen.
 
 ```js
-import { BottomsheetController } from '@lion/overlays';
+import { BottomSheetController } from '@lion/overlays';
 ```
 
 ### ModalDialogController

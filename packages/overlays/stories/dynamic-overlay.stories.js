@@ -5,6 +5,7 @@ import {
   GlobalOverlayController,
   LocalOverlayController,
   DynamicOverlayController,
+  BottomSheetController,
 } from '../index.js';
 import { overlays } from '../src/overlays.js';
 
@@ -17,11 +18,9 @@ const dynamicOverlayDemoStyle = css`
   }
 
   .demo-overlay__global--small {
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 90%;
-    background: #ccc;
+    height: 400px;
+    width: 100%;
+    background: #eee;
   }
 
   .demo-overlay__global--big {
@@ -50,7 +49,7 @@ storiesOf('Dynamic Overlay System|Switching Overlays', module)
     const ctrl = new DynamicOverlayController();
 
     const global1 = overlays.add(
-      new GlobalOverlayController({
+      new BottomSheetController({
         contentTemplate: () => html`
           <div class="demo-overlay demo-overlay__global demo-overlay__global--small">
             <p>I am for small screens < 600px</p>

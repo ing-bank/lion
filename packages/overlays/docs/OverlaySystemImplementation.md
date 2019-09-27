@@ -159,7 +159,7 @@ TODO:
 },
 ```
 
-### Bottomsheet Controller
+### BottomSheetController
 
 ```js
 {

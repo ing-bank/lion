@@ -65,6 +65,10 @@ export const globalOverlaysStyle = css`
     align-items: center;
   }
 
+  .global-overlays__overlay--bottom-sheet {
+    width: 100%;
+  }
+
   .global-overlays.global-overlays--blocking-opened .global-overlays__overlay {
     display: none;
   }

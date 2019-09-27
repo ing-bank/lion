@@ -133,7 +133,7 @@ export class BaseOverlayController {
   switchOut() {}
 
   // eslint-disable-next-line class-methods-use-this
-  contentTemplateUpdated() {}
+  onContentUpdated() {}
 
   __setupContent(params) {
     if (params.contentTemplate && params.contentNode) {
@@ -175,23 +175,15 @@ export class BaseOverlayController {
     if (this.isShown) {
       render(this.contentTemplate(this.contentData), this.content);
       this.__contentNode = this.content.firstElementChild;
-      this.contentTemplateUpdated();
+      this.onContentUpdated();
     } else {
       render(html``, this.content);
       this.__contentNode = undefined;
     }
   }
 
-  __showHideViaCss() {
-    if (!this.contentNode) {
-      return;
-    }
-    if (this.isShown) {
-      this.contentNode.style.display = 'inline-block';
-    } else {
-      this.contentNode.style.display = 'none';
-    }
-  }
+  // eslint-disable-next-line class-methods-use-this
+  __showHideViaCss() {}
 
   // TODO: this method has to be removed when EventTarget polyfill is available on IE11
   __fakeExtendsEventTarget() {
