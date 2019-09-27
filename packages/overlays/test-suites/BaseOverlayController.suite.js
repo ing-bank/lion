@@ -181,21 +181,6 @@ export const runBaseOverlaySuite = createCtrlFn => {
   });
 
   describe('_showHideMode="css" (auto selected with .contentNode)', () => {
-    it('hides .contentNode via css on hide', async () => {
-      const ctrl = createCtrlFn({
-        contentNode: await fixture('<p>direct node</p>'),
-      });
-
-      await ctrl.show();
-      expect(ctrl.contentNode).to.be.displayed;
-
-      await ctrl.hide();
-      expect(ctrl.contentNode).not.to.be.displayed;
-
-      await ctrl.show();
-      expect(ctrl.contentNode).to.be.displayed;
-    });
-
     // do we even want to support contentTemplate?
     it.skip('hides .contentNode from a .contentTemplate via css on hide', async () => {
       const ctrl = createCtrlFn({
