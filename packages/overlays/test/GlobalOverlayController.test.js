@@ -154,6 +154,50 @@ describe('GlobalOverlayController', () => {
       await ctrl.sync({ isShown: false, data: { text: 'goodbye world' } });
       expect(getRenderedContainers().length).to.equal(0);
     });
+
+    describe('contentNode instead of a lit template', () => {
+      it('accepts HTML Element (contentNode) as content', async () => {
+        const contentNode = await fixture(
+          html`
+            <p>my content</p>
+          `,
+        );
+
+        const ctrl = overlays.add(
+          new GlobalOverlayController({
+            contentNode,
+          }),
+        );
+        await ctrl.show();
+
+        // container, which contains only the contentNode and nothing more
+        expect(getRootNode().children.length).to.equal(1);
+        expect(getRootNode().children[0].classList.contains('global-overlays__overlay-container'))
+          .to.be.true;
+        expect(getRootNode().children[0]).to.have.trimmed.text('my content');
+
+        // overlay (the contentNode)
+        expect(getRootNode().children[0].children[0].classList.contains('global-overlays__overlay'))
+          .to.be.true;
+      });
+
+      it('sets contentNode styling to display flex by default', async () => {
+        const contentNode = await fixture(
+          html`
+            <p>my content</p>
+          `,
+        );
+        const ctrl = overlays.add(
+          new GlobalOverlayController({
+            contentNode,
+          }),
+        );
+        await ctrl.show();
+        expect(
+          window.getComputedStyle(getRootNode().children[0]).getPropertyValue('display'),
+        ).to.equal('flex');
+      });
+    });
   });
 
   describe('elementToFocusAfterHide', () => {
