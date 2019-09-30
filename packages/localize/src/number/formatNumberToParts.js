@@ -26,16 +26,12 @@ export function formatNumberToParts(number, options) {
   }
   let formattedParts = [];
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
-  const regexSymbol = /[A-Z.,\s0-9]/;
-  const regexCode = /[A-Z]/;
-
-  // U+002D, Hyphen-Minus, &#45;
-  const regexMinusSign = /[-]/;
-
+  const regexCurrency = /[.,\s0-9]/;
+  const regexMinusSign = /[-]/; // U+002D, Hyphen-Minus, &#45;
   const regexNum = /[0-9]/;
   const regexSeparator = /[.,]/;
   const regexSpace = /[\s]/;
-  let currencyCode = '';
+  let currency = '';
   let numberPart = '';
   let fraction = false;
   for (let i = 0; i < formattedNumber.length; i += 1) {
@@ -47,34 +43,17 @@ export function formatNumberToParts(number, options) {
     if (regexNum.test(formattedNumber[i])) {
       numberPart += formattedNumber[i];
     }
-    // detect currency symbol
-    if (!regexSymbol.test(formattedNumber[i]) && !regexMinusSign.test(formattedNumber[i])) {
-      // Write number grouping
-      if (numberPart && !fraction) {
-        formattedParts.push({ type: 'integer', value: numberPart });
-        numberPart = '';
-      } else if (numberPart) {
-        formattedParts.push({ type: 'fraction', value: numberPart });
-        numberPart = '';
-      }
-      formattedParts.push({ type: 'currency', value: formattedNumber[i] });
+
+    // detect currency (symbol or code)
+    if (!regexCurrency.test(formattedNumber[i]) && !regexMinusSign.test(formattedNumber[i])) {
+      currency += formattedNumber[i];
     }
-    // detect currency code
-    if (regexCode.test(formattedNumber[i])) {
-      currencyCode += formattedNumber[i];
-      // Write number grouping
-      if (numberPart && !fraction) {
-        formattedParts.push({ type: 'integer', value: numberPart });
-        numberPart = '';
-      } else if (numberPart) {
-        formattedParts.push({ type: 'fraction', value: numberPart });
-        numberPart = '';
-      }
-      if (currencyCode.length === 3) {
-        formattedParts.push({ type: 'currency', value: currencyCode });
-        currencyCode = '';
-      }
+    // push when another character then currency or end of loop
+    if ((regexCurrency.test(formattedNumber[i]) || formattedNumber.length === i + 1) && currency) {
+      formattedParts.push({ type: 'currency', value: currency });
+      currency = '';
     }
+
     // detect dot and comma separators
     if (regexSeparator.test(formattedNumber[i])) {
       // Write number grouping

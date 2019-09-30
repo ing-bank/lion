@@ -27,7 +27,7 @@ export function normalizeIntl(formattedParts, options, _locale) {
       normalize = forceSpaceInsteadOfZeroForGroup(normalize);
     }
     // Force space between currency code and number
-    if (_locale === 'en-GB' || _locale === 'en-US' || _locale === 'en-AU') {
+    if (_locale === 'en-GB' || _locale === 'en-US' || _locale === 'en-AU' || _locale === 'en-PH') {
       normalize = forceSpaceBetweenCurrencyCodeAndNumber(normalize, options);
     }
     // Force missing Japanese Yen symbol

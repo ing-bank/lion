@@ -17,7 +17,34 @@ const stringifyParts = parts => parts.map(part => part.value).join('');
 describe('formatNumberToParts', () => {
   afterEach(localizeTearDown);
 
-  describe("style: 'currency'", () => {
+  describe("style: 'currency symbol'", () => {
+    const specs = [
+      ['en-GB', 'EUR', 1234.5, [c('€'), i('1'), g(','), i('234'), d('.'), f('50')]],
+      ['en-GB', 'USD', 1234.5, [c('US$'), i('1'), g(','), i('234'), d('.'), f('50')]],
+      ['nl-NL', 'EUR', 1234.5, [c('€'), l(' '), i('1'), g('.'), i('234'), d(','), f('50')]],
+      ['nl-NL', 'USD', 1234.5, [c('US$'), l(' '), i('1'), g('.'), i('234'), d(','), f('50')]],
+      ['nl-BE', 'EUR', 1234.5, [c('€'), l(' '), i('1'), g('.'), i('234'), d(','), f('50')]],
+      ['nl-BE', 'USD', 1234.5, [c('US$'), l(' '), i('1'), g('.'), i('234'), d(','), f('50')]],
+      ['fr-FR', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('€')]],
+      ['fr-FR', 'USD', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('$US')]],
+      ['fr-BE', 'EUR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('€')]],
+      ['fr-BE', 'USD', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('$US')]],
+    ];
+
+    specs.forEach(([locale, currency, amount, expectedResult]) => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+        localize.locale = locale;
+        expect(
+          formatNumberToParts(amount, {
+            style: 'currency',
+            currency,
+          }),
+        ).to.deep.equal(expectedResult);
+      });
+    });
+  });
+
+  describe("style: 'currency code'", () => {
     const specs = [
       ['en-GB', 'EUR', 1234.5, [c('EUR'), l(' '), i('1'), g(','), i('234'), d('.'), f('50')]],
       ['en-GB', 'EUR', -1234.5, [m, c('EUR'), l(' '), i('1'), g(','), i('234'), d('.'), f('50')]],
