@@ -31,9 +31,6 @@ export class DynamicOverlayController {
     this.__list = [];
     this.__active = undefined;
     this.nextOpen = undefined;
-    if (!this.content) {
-      this.content = document.createElement('div');
-    }
     this.__fakeExtendsEventTarget();
     this.__delegateEvent = this.__delegateEvent.bind(this);
   }
@@ -104,6 +101,20 @@ export class DynamicOverlayController {
 
   get invokerNode() {
     return this.active.invokerNode;
+  }
+
+  get contentNode() {
+    return this.active ? this.active.contentNode : document.createElement('div');
+  }
+
+  get content() {
+    return this.active ? this.active.content : document.createElement('div');
+  }
+
+  set content(value) {
+    if (this.active) {
+      this.active.content = value;
+    }
   }
 
   _delegateEvents(active, prevActive) {

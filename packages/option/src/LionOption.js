@@ -46,7 +46,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   constructor() {
     super();
     this.active = false;
-    this.__registerEventListener();
+    this.__registerEventListeners();
   }
 
   _requestUpdate(name, oldValue) {
@@ -86,7 +86,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     this.__unRegisterEventListeners();
   }
 
-  __registerEventListener() {
+  __registerEventListeners() {
     this.__onClick = () => {
       if (!this.disabled) {
         this.checked = true;

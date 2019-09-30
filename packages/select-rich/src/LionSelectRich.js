@@ -399,6 +399,7 @@ export class LionSelectRich extends FormRegistrarMixin(
         break;
       case 'ArrowDown':
         ev.preventDefault();
+
         this.activeIndex = this.__getNextEnabledOption(this.activeIndex);
         break;
       case 'Home':
