@@ -32,12 +32,12 @@ export class LionAccountSelect extends LionSelectRich {
       }),
     );
 
-    const bottomCtrl = overlays.add(
+    /* const bottomCtrl = overlays.add(
       new BottomSheetController({
         contentNode,
         invokerNode,
       }),
-    );
+    ); */
 
     [modalCtrl].forEach(ctrl => {
       this._dynamicCtrl.add(ctrl);

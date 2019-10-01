@@ -39,6 +39,7 @@ export class DynamicOverlayController {
     if (this.list.find(ctrl => ctrlToAdd === ctrl)) {
       throw new Error('controller instance is already added');
     }
+
     this.list.push(ctrlToAdd);
 
     if (!this.active) {
