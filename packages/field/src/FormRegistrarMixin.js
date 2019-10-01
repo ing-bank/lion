@@ -38,6 +38,7 @@ export const FormRegistrarMixin = dedupeMixin(
           super.connectedCallback();
         }
         formRegistrarManager.add(this);
+        formRegistrarManager.becomesReady(this);
       }
 
       disconnectedCallback() {
