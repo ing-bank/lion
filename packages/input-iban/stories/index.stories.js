@@ -7,19 +7,27 @@ storiesOf('Forms|Input IBAN', module)
   .add(
     'Default',
     () => html`
-      <lion-input-iban name="iban"></lion-input-iban>
+      <lion-input-iban name="iban" label="Label"></lion-input-iban>
     `,
   )
   .add(
     'Prefilled',
     () => html`
-      <lion-input-iban .modelValue=${'NL20INGB0001234567'} name="iban"></lion-input-iban>
+      <lion-input-iban
+        .modelValue=${'NL20INGB0001234567'}
+        name="iban"
+        label="Label"
+      ></lion-input-iban>
     `,
   )
   .add(
     'Faulty prefilled',
     () => html`
-      <lion-input-iban .modelValue=${'NL20INGB0001234567XXXX'} name="iban"></lion-input-iban>
+      <lion-input-iban
+        .modelValue=${'NL20INGB0001234567XXXX'}
+        name="iban"
+        label="Label"
+      ></lion-input-iban>
     `,
   )
   .add(
@@ -29,6 +37,7 @@ storiesOf('Forms|Input IBAN', module)
         .modelValue=${'DE89370400440532013000'}
         .errorValidators=${[isCountryIBANValidator('NL')]}
         name="iban"
+        label="Label"
       ></lion-input-iban>
     `,
   );
