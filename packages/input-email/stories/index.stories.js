@@ -8,13 +8,13 @@ storiesOf('Forms|Input Email', module)
   .add(
     'Default',
     () => html`
-      <lion-input-email></lion-input-email>
+      <lion-input-email label="Label"></lion-input-email>
     `,
   )
   .add(
     'Faulty prefilled',
     () => html`
-      <lion-input-email .modelValue=${'foo'}></lion-input-email>
+      <lion-input-email .modelValue=${'foo'} label="Label"></lion-input-email>
     `,
   )
   .add('Use own validator', () => {
@@ -40,6 +40,7 @@ storiesOf('Forms|Input Email', module)
       <lion-input-email
         .modelValue=${'foo@bar.com'}
         .errorValidators=${[[gmailOnly]]}
+        label="Label"
       ></lion-input-email>
     `;
   });
