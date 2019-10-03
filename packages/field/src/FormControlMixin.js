@@ -139,6 +139,7 @@ export const FormControlMixin = dedupeMixin(
           }
         }
         if (_feedbackNode) {
+          _feedbackNode.setAttribute('aria-live', 'polite');
           _feedbackNode.id = _feedbackNode.id || `feedback-${this._inputId}`;
           const describeIdFeedback = ` ${_feedbackNode.id}`;
           if (this._ariaDescribedby.indexOf(describeIdFeedback) === -1) {
