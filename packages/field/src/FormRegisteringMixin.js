@@ -24,6 +24,10 @@ export const FormRegisteringMixin = dedupeMixin(
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
+        formRegistrarManager.removeEventListener(
+          'all-forms-open-for-registration',
+          this._dispatchRegistration(),
+        );
         this._unregisterFormElement();
       }
 
@@ -31,9 +35,10 @@ export const FormRegisteringMixin = dedupeMixin(
         if (formRegistrarManager.ready) {
           this._dispatchRegistration();
         } else {
-          formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
-            this._dispatchRegistration();
-          });
+          formRegistrarManager.addEventListener(
+            'all-forms-open-for-registration',
+            this._dispatchRegistration(),
+          );
         }
       }
 
