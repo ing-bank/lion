@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { normalizeDateTime } from '@lion/localize';
 import { smokeTestValidator } from '../test-helpers.js';
 
 import {
@@ -134,11 +135,17 @@ describe('LionValidate', () => {
     it('provides minDate() to allow only dates after min', () => {
       expect(minDate(new Date('2018-02-03'), new Date('2018/02/02'))).to.be.true;
       expect(minDate(new Date('2018-02-01'), new Date('2018/02/02'))).to.be.false;
+      const today = new Date();
+      const todayFormatted = normalizeDateTime(today);
+      expect(minDate(todayFormatted, today)).to.be.true;
     });
 
     it('provides maxDate() to allow only dates before max', () => {
       expect(maxDate(new Date('2018-02-01'), new Date('2018/02/02'))).to.be.true;
       expect(maxDate(new Date('2018-02-03'), new Date('2018/02/02'))).to.be.false;
+      const today = new Date();
+      const todayFormatted = normalizeDateTime(today);
+      expect(maxDate(todayFormatted, today)).to.be.true;
     });
 
     it('provides minMaxDate() to allow only dates between min and max', () => {
@@ -149,6 +156,9 @@ describe('LionValidate', () => {
       expect(minMaxDate(new Date('2018/02/03'), minMaxSetting)).to.be.true;
       expect(minMaxDate(new Date('2018/02/01'), minMaxSetting)).to.be.false;
       expect(minMaxDate(new Date('2018/02/05'), minMaxSetting)).to.be.false;
+      const today = new Date();
+      const todayFormatted = normalizeDateTime(today);
+      expect(minMaxDate(todayFormatted, { min: today, max: today })).to.be.true;
     });
 
     it('provides isDateDisabled() to disable dates matching specified condition', () => {

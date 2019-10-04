@@ -1,3 +1,5 @@
+import { normalizeDateTime } from '@lion/localize';
+
 export const isString = value => typeof value === 'string';
 export const isStringValidator = () => [(...params) => ({ isString: isString(...params) })];
 
@@ -61,20 +63,20 @@ export const isDate = value =>
   Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
 export const isDateValidator = () => [(...params) => ({ isDate: isDate(...params) })];
 
-export const minDate = (value, min) => isDate(value) && value >= min;
+export const minDate = (value, min) => isDate(value) && value >= normalizeDateTime(min);
 export const minDateValidator = (...factoryParams) => [
   (...params) => ({ minDate: minDate(...params) }),
   ...factoryParams,
 ];
 
-export const maxDate = (value, max) => isDate(value) && value <= max;
+export const maxDate = (value, max) => isDate(value) && value <= normalizeDateTime(max);
 export const maxDateValidator = (...factoryParams) => [
   (...params) => ({ maxDate: maxDate(...params) }),
   ...factoryParams,
 ];
 
 export const minMaxDate = (value, { min = 0, max = 0 }) =>
-  isDate(value) && value >= min && value <= max;
+  isDate(value) && value >= normalizeDateTime(min) && value <= normalizeDateTime(max);
 export const minMaxDateValidator = (...factoryParams) => [
   (...params) => ({ minMaxDate: minMaxDate(...params) }),
   ...factoryParams,
