@@ -33,6 +33,7 @@ export class LionSelectInvoker extends LionButton {
 
   constructor() {
     super();
+    this.type = 'button';
     this.selectedElement = null;
   }
 
