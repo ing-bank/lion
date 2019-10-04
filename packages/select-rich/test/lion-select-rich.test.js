@@ -12,7 +12,7 @@ import '../lion-options.js';
 import '../lion-select-rich.js';
 import { LionSelectRich } from '../index.js';
 
-describe('lion-select-rich', () => {
+describe.skip('lion-select-rich', () => {
   it('does not have a tabindex', async () => {
     const el = await fixture(html`
       <lion-select-rich>

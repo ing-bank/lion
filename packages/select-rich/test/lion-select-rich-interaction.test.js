@@ -5,7 +5,7 @@ import '@lion/option/lion-option.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
 
-describe('lion-select-rich interactions', () => {
+describe.skip('lion-select-rich interactions', () => {
   describe('values', () => {
     it('registers options', async () => {
       const el = await fixture(html`
