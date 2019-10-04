@@ -25,21 +25,21 @@ export class LionAccountSelect extends LionSelectRich {
 
     // const contentNodeCopy = contentNode.cloneNode(true);
 
-    const modalCtrl = overlays.add(
+    /* const modalCtrl = overlays.add(
       new ModalDialogController({
-        contentNode,
-        invokerNode,
-      }),
-    );
-
-    /* const bottomCtrl = overlays.add(
-      new BottomSheetController({
         contentNode,
         invokerNode,
       }),
     ); */
 
-    [modalCtrl].forEach(ctrl => {
+    const bottomCtrl = overlays.add(
+      new BottomSheetController({
+        contentNode,
+        invokerNode,
+      }),
+    );
+
+    [bottomCtrl].forEach(ctrl => {
       this._dynamicCtrl.add(ctrl);
     });
 
