@@ -26,7 +26,7 @@ export const FormRegisteringMixin = dedupeMixin(
         }
         formRegistrarManager.removeEventListener(
           'all-forms-open-for-registration',
-          this._dispatchRegistration(),
+          this._dispatchRegistration,
         );
         this._unregisterFormElement();
       }
@@ -37,7 +37,7 @@ export const FormRegisteringMixin = dedupeMixin(
         } else {
           formRegistrarManager.addEventListener(
             'all-forms-open-for-registration',
-            this._dispatchRegistration(),
+            this._dispatchRegistration,
           );
         }
       }
