@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
+import { GlobalOverlayController } from '../src/_legacy/GlobalOverlayController.js';
 import { overlays } from '../src/overlays.js';
 import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.js';
 

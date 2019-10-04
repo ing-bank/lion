@@ -1,8 +1,8 @@
 import { expect, html, fixture } from '@open-wc/testing';
 
-import { DynamicOverlayController } from '../src/DynamicOverlayController.js';
-import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { DynamicOverlayController } from '../src/_legacy/DynamicOverlayController.js';
+import { GlobalOverlayController } from '../src/_legacy/GlobalOverlayController.js';
+import { LocalOverlayController } from '../src/_legacy/LocalOverlayController.js';
 import { overlays } from '../src/overlays.js';
 
 function expectGlobalShown(ctrl) {

@@ -144,7 +144,6 @@ export const runRegistrationSuite = customConfig => {
             <${childTag}></${childTag}>
           </${portalTag}>
         `);
-
         expect(el.formElements.length).to.equal(1);
       });
 

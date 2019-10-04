@@ -1,7 +1,7 @@
 import { expect, html } from '@open-wc/testing';
 
-import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
-import { BottomSheetController } from '../src/BottomSheetController.js';
+import { GlobalOverlayController } from '../src/_legacy/GlobalOverlayController.js';
+import { BottomSheetController } from '../src/_legacy/BottomSheetController.js';
 
 describe('BottomSheetController', () => {
   let defaultOptions;

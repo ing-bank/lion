@@ -1,6 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { LocalOverlayController } from '../src/_legacy/LocalOverlayController.js';
 import { overlays } from '../src/overlays.js';
 
 let placement = 'top';

@@ -31,6 +31,11 @@ export const FormRegistrarPortalMixin = dedupeMixin(
         if (super.connectedCallback) {
           super.connectedCallback();
         }
+        this._initRegistrarPortal({ registrationTarget: this.registrationTarget });
+      }
+
+      _initRegistrarPortal({ registrationTarget }) {
+        this.registrationTarget = registrationTarget;
         this.__checkRegistrationTarget();
 
         formRegistrarManager.add(this);

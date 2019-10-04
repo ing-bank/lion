@@ -4,7 +4,7 @@ import Popper from 'popper.js/dist/esm/popper.min.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { LocalOverlayController } from '../src/_legacy/LocalOverlayController.js';
 
 import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.js';
 
