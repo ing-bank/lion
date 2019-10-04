@@ -2,6 +2,7 @@ export { formatDate } from './src/date/formatDate.js';
 export { getDateFormatBasedOnLocale } from './src/date/getDateFormatBasedOnLocale.js';
 export { getMonthNames } from './src/date/getMonthNames.js';
 export { getWeekdayNames } from './src/date/getWeekdayNames.js';
+export { normalizeDateTime } from './src/date/normalizeDateTime.js';
 export { parseDate } from './src/date/parseDate.js';
 export { formatNumber } from './src/number/formatNumber.js';
 export { formatNumberToParts } from './src/number/formatNumberToParts.js';

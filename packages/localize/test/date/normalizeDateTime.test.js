@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { normalizeDateTime } from '../../src/utils/normalizeDateTime.js';
+import { normalizeDateTime } from '../../src/date/normalizeDateTime.js';
 
 describe('normalizeDateTime', () => {
   it('returns a date with hours, minutes and seconds set to 0', () => {
