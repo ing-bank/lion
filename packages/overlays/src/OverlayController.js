@@ -282,9 +282,9 @@ export class OverlayController extends EventTarget {
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
-    if (this._contentNodeWrapper.activeElement) {
-      this.elementToFocusAfterHide.focus();
-    }
+    // if (this._contentNodeWrapper.activeElement) {
+    this.elementToFocusAfterHide.focus();
+    // }
   }
 
   async toggle() {
@@ -468,7 +468,9 @@ export class OverlayController extends EventTarget {
     }
 
     this._contentNodeWrapper[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
-    this.invokerNode[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
+    if (this.invokerNode) {
+      this.invokerNode[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
+    }
     document.documentElement[addOrRemoveListener]('click', this.__onCaptureHtmlClick, true);
   }
 

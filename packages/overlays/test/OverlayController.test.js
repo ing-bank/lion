@@ -1,11 +1,19 @@
 /* eslint-disable no-new */
-import { expect, html, fixture, aTimeout } from '@open-wc/testing';
+import {
+  expect,
+  html,
+  fixture,
+  aTimeout,
+  defineCE,
+  unsafeStatic,
+  nextFrame,
+} from '@open-wc/testing';
 import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
-import { getTopOverlay, renderToNode } from '../test-helpers/global-positioning-helpers.js';
+import { renderToNode } from '../test-helpers/global-positioning-helpers.js';
 import { overlays } from '../src/overlays.js';
 
 const withDefaultGlobalConfig = () => ({
@@ -52,7 +60,6 @@ describe('OverlayController', () => {
   });
 
   describe('Feature Configuration', () => {
-    // FIXME: Broken tests because activeElement is body. Weird, because the demos work just fine.
     describe('trapsKeyboardFocus', () => {
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
@@ -141,43 +148,212 @@ describe('OverlayController', () => {
       });
     });
 
-    describe.skip('elementToFocusAfterHide', () => {
+    describe('hidesOnOutsideClick', () => {
+      it('hides on outside click', async () => {
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withDefaultGlobalConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        document.body.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('doesn\'t hide on "inside" click', async () => {
+        const invokerNode = await fixture('<button>Invoker</button>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withDefaultGlobalConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        await ctrl.show();
+
+        // Don't hide on invoker click
+        ctrl.invokerNode.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Don't hide on inside (content) click
+        ctrl.contentNode.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.hide();
+        expect(ctrl.isShown).to.be.false;
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('doesn\'t hide on "inside sub shadow dom" click', async () => {
+        const invokerNode = await fixture('<button>Invoker</button>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withDefaultGlobalConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        await ctrl.show();
+
+        // Works as well when clicked content element lives in shadow dom
+        const tagString = defineCE(
+          class extends HTMLElement {
+            constructor() {
+              super();
+              this.attachShadow({ mode: 'open' });
+            }
+
+            connectedCallback() {
+              this.shadowRoot.innerHTML = '<div><button>click me</button></div>';
+            }
+          },
+        );
+        const tag = unsafeStatic(tagString);
+        ctrl.contentNode = await fixture(html`
+          <div>
+            <div>Content</div>
+            <${tag}></${tag}>
+          </div>
+        `);
+
+        // Don't hide on inside shadowDom click
+        ctrl.contentNode
+          .querySelector(tagString)
+          .shadowRoot.querySelector('button')
+          .click();
+
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.hide();
+        expect(ctrl.isShown).to.be.false;
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('works with 3rd party code using "event.stopPropagation()" on bubble phase', async () => {
+        const invokerNode = await fixture('<div role="button">Invoker</div>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withDefaultLocalConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        const dom = await fixture(`
+          <div>
+            <div id="popup">${invokerNode}${contentNode}</div>
+            <div
+              id="regular-sibling"
+              @click="${() => {
+                /* propagates */
+              }}"
+            ></div>
+            <third-party-noise @click="${e => e.stopPropagation()}">
+              This element prevents our handlers from reaching the document click handler.
+            </third-party-noise>
+          </div>
+        `);
+
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+
+        dom.querySelector('third-party-noise').click();
+        await aTimeout();
+        expect(ctrl.isShown).to.equal(false);
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+      });
+
+      it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
+        const invokerNode = await fixture(html`
+          <div role="button">Invoker</div>
+        `);
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withDefaultLocalConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        const dom = await fixture(`
+          <div>
+            <div id="popup">${invokerNode}${ctrl.content}</div>
+            <div
+              id="regular-sibling"
+              @click="${() => {
+                /* propagates */
+              }}"
+            ></div>
+            <third-party-noise>
+              This element prevents our handlers from reaching the document click handler.
+            </third-party-noise>
+          </div>
+        `);
+
+        dom.querySelector('third-party-noise').addEventListener(
+          'click',
+          event => {
+            event.stopPropagation();
+          },
+          true,
+        );
+
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+
+        dom.querySelector('third-party-noise').click();
+        await aTimeout();
+        expect(ctrl.isShown).to.equal(false);
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+      });
+    });
+
+    describe('elementToFocusAfterHide', () => {
       it('focuses body when hiding by default', async () => {
+        const contentNode = await fixture('<div><input /></div>');
         const ctrl = new OverlayController({
           ...withDefaultGlobalConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
-          contentNode: renderToNode(html`
-            <div><input />=</div>
-          `),
+          contentNode,
         });
 
         await ctrl.show();
-        const input = getTopOverlay().querySelector('input');
+        const input = contentNode.querySelector('input');
         input.focus();
         expect(document.activeElement).to.equal(input);
 
         await ctrl.hide();
+        await nextFrame(); // moving focus to body takes time?
         expect(document.activeElement).to.equal(document.body);
       });
 
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
-        const input = document.createElement('input');
-
+        const input = await fixture('<input />');
+        const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
           ...withDefaultGlobalConfig(),
           elementToFocusAfterHide: input,
-          viewportConfig: {
-            placement: 'top-left',
-          },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
+          contentNode,
         });
 
         await ctrl.show();
-        const textarea = getTopOverlay().querySelector('textarea');
+        const textarea = contentNode.querySelector('textarea');
         textarea.focus();
         expect(document.activeElement).to.equal(textarea);
 
@@ -186,52 +362,22 @@ describe('OverlayController', () => {
       });
 
       it('allows to set elementToFocusAfterHide on show', async () => {
-        const input = document.createElement('input');
+        const input = await fixture('<input />');
+        const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
           ...withDefaultGlobalConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
+          contentNode,
         });
 
         await ctrl.show(input);
-        const textarea = getTopOverlay().querySelector('textarea');
+        const textarea = contentNode.querySelector('textarea');
         textarea.focus();
         expect(document.activeElement).to.equal(textarea);
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
-      });
-
-      it('allows to set elementToFocusAfterHide on sync', async () => {
-        const input = document.createElement('input');
-        const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
-          viewportConfig: {
-            placement: 'top-left',
-          },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
-        });
-
-        await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
-        const textarea = getTopOverlay().querySelector('textarea');
-        textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
-
-        await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
-
-        await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
-        const textarea2 = getTopOverlay().querySelector('textarea');
-        textarea2.focus();
-        expect(document.activeElement).to.equal(textarea2);
-
-        await ctrl.sync({ isShown: false });
         expect(document.activeElement).to.equal(input);
       });
     });
@@ -384,6 +530,26 @@ describe('OverlayController', () => {
       expect(eventSpy.callCount).to.equal(2);
       await ctrl.hide();
       expect(eventSpy.callCount).to.equal(2);
+    });
+
+    it('can be toggled', async () => {
+      const ctrl = new OverlayController({
+        ...withDefaultGlobalConfig(),
+      });
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.true;
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.false;
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.true;
+
+      // check for hide
+      expect(ctrl.toggle()).to.be.instanceOf(Promise);
+      // check for show
+      expect(ctrl.toggle()).to.be.instanceOf(Promise);
     });
   });
 
