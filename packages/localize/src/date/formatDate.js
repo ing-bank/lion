@@ -1,5 +1,5 @@
 import { getLocale } from './getLocale.js';
-import { normalizeDate } from './normalizeDate.js';
+import { normalizeIntlDate } from './normalizeIntlDate.js';
 
 /**
  * Formats date based on locale and options
@@ -36,5 +36,5 @@ export function formatDate(date, options) {
   } catch (e) {
     formattedDate = '';
   }
-  return normalizeDate(formattedDate);
+  return normalizeIntlDate(formattedDate);
 }
