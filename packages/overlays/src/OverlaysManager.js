@@ -77,11 +77,8 @@ export class OverlaysManager {
    */
   add(ctrlToAdd) {
     if (this.list.find(ctrl => ctrlToAdd === ctrl)) {
-      console.warn('controller instance is already added');
-      return ctrlToAdd;
+      throw new Error('controller instance is already added');
     }
-    // eslint-disable-next-line no-param-reassign
-    ctrlToAdd.manager = this;
     this.list.push(ctrlToAdd);
     return ctrlToAdd;
   }

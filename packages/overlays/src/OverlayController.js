@@ -17,8 +17,9 @@ export class OverlayController extends EventTarget {
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
-  constructor(config = {}) {
+  constructor(config = {}, manager = overlays) {
     super();
+    this.manager = manager;
     this.__sharedConfig = config;
     this._defaultConfig = {
       placementMode: null,
@@ -42,7 +43,7 @@ export class OverlayController extends EventTarget {
       },
     };
 
-    overlays.add(this);
+    this.manager.add(this);
 
     this._contentNodeWrapper = document.createElement('div');
     this._contentId = `overlay-content--${Math.random()
@@ -145,8 +146,7 @@ export class OverlayController extends EventTarget {
     if (this._renderTarget !== this._contentNodeWrapper.parentNode) {
       if (this._renderTarget) {
         this._renderTarget.appendChild(this._contentNodeWrapper);
-      }
-      else if (this.invokerNode) {
+      } else if (this.invokerNode) {
         // When a local overlay is not connected to dom yet (no .__originalContentParent found)
         this.invokerNode.parentElement.insertBefore(
           this._contentNodeWrapper,
@@ -173,8 +173,8 @@ export class OverlayController extends EventTarget {
     //   // node, we need to make sure the new direct descendant (_contentNodeWrapper) stays projected
     //   this._contentNodeWrapper.slot = this.contentNode.slot;
     // } else {
-      // Make sure that your shadow dom contains this outlet, when we are adding to light dom
-      this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
+    // Make sure that your shadow dom contains this outlet, when we are adding to light dom
+    this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
     // }
   }
 
@@ -217,6 +217,9 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    if (this.manager) {
+      this.manager.show(this);
+    }
     if (this.isShown) {
       return;
     }
@@ -232,10 +235,8 @@ export class OverlayController extends EventTarget {
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async transitionShow({ backdropNode, contentNode }) {}
 
-
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
-
       const addOrRemove = phase === 'setup' ? 'add' : 'remove';
       const placementClass = `${GLOBAL_OVERLAYS_CONTAINER_CLASS}--${this.viewportConfig.placement}`;
       this._contentNodeWrapper.classList[addOrRemove](GLOBAL_OVERLAYS_CONTAINER_CLASS);
@@ -259,6 +260,10 @@ export class OverlayController extends EventTarget {
    * @event hide right after the overlay is hidden
    */
   async hide() {
+    if (this.manager) {
+      this.manager.hide(this);
+    }
+
     if (!this.isShown) {
       return;
     }
@@ -283,7 +288,7 @@ export class OverlayController extends EventTarget {
   }
 
   async toggle() {
-    return (this.isShown) ? this.hide() : this.show(); // eslint-disable-line
+    return this.isShown ? this.hide() : this.show();
   }
 
   /**
@@ -364,13 +369,15 @@ export class OverlayController extends EventTarget {
       this.backdropNode = document.createElement('div');
       this.backdropNode.classList.add('global-overlays__backdrop');
       this.backdropNode.slot = '_overlay-shadow-outlet';
-      this._contentNodeWrapper.parentElement.insertBefore(this.backdropNode, this._contentNodeWrapper);
+      this._contentNodeWrapper.parentElement.insertBefore(
+        this.backdropNode,
+        this._contentNodeWrapper,
+      );
 
       if (animation === true) {
         this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
       }
-    }
-    else if (phase === 'teardown') {
+    } else if (phase === 'teardown') {
       const { backdropNode } = this;
       if (!backdropNode) {
         return;
@@ -399,8 +406,7 @@ export class OverlayController extends EventTarget {
       if (this.manager) {
         this.manager.informTrapsKeyboardFocusGotEnabled();
       }
-    }
-    else if (phase === 'teardown') {
+    } else if (phase === 'teardown') {
       if (this._containFocusHandler) {
         this._containFocusHandler.disconnect();
         this._containFocusHandler = undefined;

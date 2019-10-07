@@ -6,6 +6,7 @@ import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { getTopOverlay, renderToNode } from '../test-helpers/global-positioning-helpers.js';
+import { overlays } from '../src/overlays.js';
 
 const withDefaultGlobalConfig = () => ({
   placementMode: 'global',
@@ -19,6 +20,10 @@ const withDefaultLocalConfig = () => ({
   contentNode: renderToNode(html`
     <div>my content</div>
   `),
+});
+
+afterEach(() => {
+  overlays.teardown();
 });
 
 describe('OverlayController', () => {
@@ -60,7 +65,7 @@ describe('OverlayController', () => {
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
         const contentNode = await fixture(html`
-          <div><input id="input1"><input id="input2"></div>
+          <div><input id="input1" /><input id="input2" /></div>
         `);
         const ctrl = new OverlayController({
           ...withDefaultGlobalConfig(),
@@ -87,7 +92,7 @@ describe('OverlayController', () => {
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
         const contentNode = await fixture(html`
-          <div><input></div>
+          <div><input /></div>
         `);
 
         const ctrl = new OverlayController({
@@ -160,18 +165,16 @@ describe('OverlayController', () => {
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
         const input = document.createElement('input');
 
-        const ctrl =
-          new OverlayController({
-            ...withDefaultGlobalConfig(),
-            elementToFocusAfterHide: input,
-            viewportConfig: {
-              placement: 'top-left',
-            },
-            contentNode: renderToNode(html`
-              <div><textarea></textarea></div>
-            `),
+        const ctrl = new OverlayController({
+          ...withDefaultGlobalConfig(),
+          elementToFocusAfterHide: input,
+          viewportConfig: {
+            placement: 'top-left',
           },
-        );
+          contentNode: renderToNode(html`
+            <div><textarea></textarea></div>
+          `),
+        });
 
         await ctrl.show();
         const textarea = getTopOverlay().querySelector('textarea');
