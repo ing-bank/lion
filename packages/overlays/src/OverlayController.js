@@ -225,7 +225,7 @@ export class OverlayController extends EventTarget {
     }
     this.dispatchEvent(new Event('before-show'));
     await this.transitionShow({ backdropNode: this.backdropNode, conentNode: this.contentNode });
-    this._contentNodeWrapper.style.display = '';
+    this._contentNodeWrapper.style.display = 'inline-block';
     await this._handleFeatures({ phase: 'setup' });
     await this._handlePosition({ phase: 'setup' });
     this.elementToFocusAfterHide = elementToFocusAfterHide;
