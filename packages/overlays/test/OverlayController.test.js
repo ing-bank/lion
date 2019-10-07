@@ -13,17 +13,17 @@ import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
-import { renderToNode } from '../test-helpers/global-positioning-helpers.js';
+import { renderToNode, getRenderedOverlay } from '../test-helpers/global-positioning-helpers.js';
 import { overlays } from '../src/overlays.js';
 
-const withDefaultGlobalConfig = () => ({
+const withGlobalTestConfig = () => ({
   placementMode: 'global',
   contentNode: renderToNode(html`
     <div>my content</div>
   `),
 });
 
-const withDefaultLocalConfig = () => ({
+const withLocalTestConfig = () => ({
   placementMode: 'local',
   contentNode: renderToNode(html`
     <div>my content</div>
@@ -44,7 +44,7 @@ describe('OverlayController', () => {
   describe('Node Configuration', () => {
     it('accepts an .contentNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
         contentNode: await fixture('<p>direct node</p>'),
       });
       expect(ctrl.contentNode).to.have.trimmed.text('direct node');
@@ -52,7 +52,7 @@ describe('OverlayController', () => {
 
     it('accepts an .invokerNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
         invokerNode: await fixture('<button>invoke</button>'),
       });
       expect(ctrl.invokerNode).to.have.trimmed.text('invoke');
@@ -63,7 +63,7 @@ describe('OverlayController', () => {
     describe('trapsKeyboardFocus', () => {
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
@@ -75,7 +75,7 @@ describe('OverlayController', () => {
           <div><input id="input1" /><input id="input2" /></div>
         `);
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
           contentNode,
         });
@@ -103,7 +103,7 @@ describe('OverlayController', () => {
         `);
 
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           contentNode,
           trapsKeyboardFocus: true,
         });
@@ -128,7 +128,7 @@ describe('OverlayController', () => {
     describe('hidesOnEsc', () => {
       it('hides when [escape] is pressed', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
@@ -139,7 +139,7 @@ describe('OverlayController', () => {
 
       it('stays shown when [escape] is pressed on outside element', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
@@ -152,7 +152,7 @@ describe('OverlayController', () => {
       it('hides on outside click', async () => {
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
         });
@@ -167,7 +167,7 @@ describe('OverlayController', () => {
         const invokerNode = await fixture('<button>Invoker</button>');
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
           invokerNode,
@@ -195,7 +195,7 @@ describe('OverlayController', () => {
         const invokerNode = await fixture('<button>Invoker</button>');
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
           invokerNode,
@@ -243,7 +243,7 @@ describe('OverlayController', () => {
         const invokerNode = await fixture('<div role="button">Invoker</div>');
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
           invokerNode,
@@ -281,7 +281,7 @@ describe('OverlayController', () => {
         `);
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
           invokerNode,
@@ -326,7 +326,7 @@ describe('OverlayController', () => {
       it('focuses body when hiding by default', async () => {
         const contentNode = await fixture('<div><input /></div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
@@ -347,7 +347,7 @@ describe('OverlayController', () => {
         const input = await fixture('<input />');
         const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           elementToFocusAfterHide: input,
           contentNode,
         });
@@ -365,7 +365,7 @@ describe('OverlayController', () => {
         const input = await fixture('<input />');
         const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
@@ -385,7 +385,7 @@ describe('OverlayController', () => {
     describe('preventsScroll', () => {
       it('prevent scrolling the background', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           preventsScroll: true,
         });
 
@@ -402,7 +402,7 @@ describe('OverlayController', () => {
     describe('hasBackdrop', () => {
       it('has no backdrop by default', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
         });
         await ctrl.show();
         expect(ctrl.backdropNode).to.be.undefined;
@@ -410,7 +410,7 @@ describe('OverlayController', () => {
 
       it('supports a backdrop option', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: false,
         });
         await ctrl.show();
@@ -418,7 +418,7 @@ describe('OverlayController', () => {
         await ctrl.hide();
 
         const controllerWithBackdrop = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: true,
         });
         await controllerWithBackdrop.show();
@@ -427,7 +427,7 @@ describe('OverlayController', () => {
 
       it('reenables the backdrop when shown/hidden/shown', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: true,
         });
         await ctrl.show();
@@ -436,20 +436,103 @@ describe('OverlayController', () => {
         await ctrl.show();
         expect(ctrl.backdropNode).to.have.class('global-overlays__backdrop');
       });
+
+      it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
+        await ctrl0.show();
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: false,
+        });
+        await ctrl1.show();
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl1.backdropNode).to.be.undefined;
+
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
+        await ctrl2.show();
+
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl1.backdropNode).to.be.undefined;
+        expect(ctrl2.backdropNode).to.have.class('global-overlays__backdrop');
+      });
+    });
+
+    describe('isBlocking', () => {
+      it('prevents showing of other overlays', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl0.show();
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl1.show();
+
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: true,
+        });
+        await ctrl2.show();
+
+        const ctrl3 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl3.show();
+
+        expect(getRenderedOverlay(0)).to.not.be.displayed;
+        expect(getRenderedOverlay(1)).to.not.be.displayed;
+        expect(getRenderedOverlay(2)).to.be.displayed;
+        expect(getRenderedOverlay(3)).to.not.be.displayed;
+      });
+
+      it('keeps backdrop status when used in combination with blocking', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          hasBackdrop: true,
+        });
+        await ctrl0.show();
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          hasBackdrop: true,
+        });
+        await ctrl1.show();
+        await ctrl1.hide();
+        expect(ctrl0.hasActiveBackdrop).to.be.true;
+        expect(ctrl1.hasActiveBackdrop).to.be.false;
+
+        await ctrl1.show();
+        expect(ctrl0.hasActiveBackdrop).to.be.true;
+        expect(ctrl1.hasActiveBackdrop).to.be.true;
+      });
     });
   });
 
   describe('Show / Hide / Toggle', () => {
     it('has .isShown which defaults to false', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
       expect(ctrl.isShown).to.be.false;
     });
 
     it('has async show() which shows the overlay', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
       await ctrl.show();
       expect(ctrl.isShown).to.be.true;
@@ -458,7 +541,7 @@ describe('OverlayController', () => {
 
     it('has async hide() which hides the overlay', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       await ctrl.hide();
@@ -469,7 +552,7 @@ describe('OverlayController', () => {
     it('fires "show" event once overlay becomes shown', async () => {
       const showSpy = sinon.spy();
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       ctrl.addEventListener('show', showSpy);
@@ -481,7 +564,7 @@ describe('OverlayController', () => {
 
     it('fires "before-show" event right before overlay becomes shown', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       const eventSpy = sinon.spy();
@@ -501,7 +584,7 @@ describe('OverlayController', () => {
     it('fires "hide" event once overlay becomes hidden', async () => {
       const hideSpy = sinon.spy();
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       ctrl.addEventListener('hide', hideSpy);
@@ -514,7 +597,7 @@ describe('OverlayController', () => {
 
     it('fires "before-hide" event right before overlay becomes hidden', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       const eventSpy = sinon.spy();
@@ -534,7 +617,7 @@ describe('OverlayController', () => {
 
     it('can be toggled', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       await ctrl.toggle();
@@ -563,7 +646,7 @@ describe('OverlayController', () => {
     it('adds and removes [aria-expanded] on invoker', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -576,7 +659,7 @@ describe('OverlayController', () => {
 
     it('creates unique id for content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
       });
       expect(ctrl.contentNode.id).to.contain(ctrl._contentId);
@@ -585,7 +668,7 @@ describe('OverlayController', () => {
     it('preserves content id when present', async () => {
       const contentNode = await fixture('<div id="preserved">content</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         contentNode,
       });
@@ -595,7 +678,7 @@ describe('OverlayController', () => {
     it('adds [aria-controls] on invoker', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -605,7 +688,7 @@ describe('OverlayController', () => {
     it('adds [role=dialog] on content', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -616,7 +699,7 @@ describe('OverlayController', () => {
       it('adds [aria-describedby] on invoker', async () => {
         const invokerNode = await fixture('<div role="button">invoker</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           handlesAccessibility: true,
           isTooltip: true,
           invokerNode,
@@ -627,7 +710,7 @@ describe('OverlayController', () => {
       it('adds [role=tooltip] on content', async () => {
         const invokerNode = await fixture('<div role="button">invoker</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           handlesAccessibility: true,
           isTooltip: true,
           invokerNode,

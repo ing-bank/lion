@@ -355,6 +355,10 @@ export class OverlayController extends EventTarget {
     }
   }
 
+  get hasActiveBackdrop() {
+    return this.__hasActiveBackdrop;
+  }
+
   /**
    * @desc Sets up backdrop on the given overlay. If there was a backdrop on another element
    * it is removed. Otherwise this is the first time displaying a backdrop, so a fade-in
@@ -377,6 +381,7 @@ export class OverlayController extends EventTarget {
       if (animation === true) {
         this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
       }
+      this.__hasActiveBackdrop = true;
     } else if (phase === 'teardown') {
       const { backdropNode } = this;
       if (!backdropNode) {
@@ -393,6 +398,7 @@ export class OverlayController extends EventTarget {
       }
       backdropNode.classList.remove('global-overlays__backdrop--fade-in');
       backdropNode.classList.add('global-overlays__backdrop--fade-out');
+      this.__hasActiveBackdrop = false;
     }
   }
 
