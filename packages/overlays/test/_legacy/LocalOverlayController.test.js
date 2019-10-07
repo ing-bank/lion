@@ -1,12 +1,12 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import Popper from 'popper.js/dist/esm/popper.min.js';
 
-import { keyCodes } from '../src/utils/key-codes.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
+import { keyCodes } from '../../src/utils/key-codes.js';
+import { simulateTab } from '../../src/utils/simulate-tab.js';
 
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
+import { LocalOverlayController } from '../../src/_legacy/LocalOverlayController.js';
 
-import { runBaseOverlaySuite } from '../test-suites/BaseOverlayController.suite.js';
+import { runBaseOverlaySuite } from '../../test-suites/BaseOverlayController.suite.js';
 
 /**
  * @desc Compensates for browsers that use floats in output

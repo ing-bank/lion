@@ -1,13 +1,18 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { css } from '@lion/core';
+import { css, render } from '@lion/core';
 import {
-  GlobalOverlayController,
-  LocalOverlayController,
-  DynamicOverlayController,
-  BottomSheetController,
+  OverlayController,
+  withBottomSheetConfig,
+  withModalDialogConfig,
+  withDropdownConfig,
 } from '../index.js';
-import { overlays } from '../src/overlays.js';
+
+function renderToNode(litHtmlTemplate) {
+  const offlineRenderContainer = document.createElement('div');
+  render(litHtmlTemplate, offlineRenderContainer);
+  return offlineRenderContainer.firstElementChild;
+}
 
 const dynamicOverlayDemoStyle = css`
   .demo-overlay {
@@ -41,211 +46,70 @@ const dynamicOverlayDemoStyle = css`
   }
 `;
 
-storiesOf('Dynamic Overlay System|Switching Overlays', module)
-  .add('Switch global overlays', () => {
+storiesOf('Dynamic Overlay System| Switching Overlays', module).add(
+  'Switch overlays configuration',
+  () => {
     const invokerNode = document.createElement('button');
     invokerNode.innerHTML = 'Invoker Button';
 
-    const ctrl = new DynamicOverlayController();
-
-    const global1 = overlays.add(
-      new BottomSheetController({
-        contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay__global demo-overlay__global--small">
-            <p>I am for small screens < 600px</p>
-            <button @click="${() => ctrl.hide()}">Close</button>
-          </div>
-        `,
-        invokerNode,
-      }),
-    );
-    ctrl.add(global1);
-
-    const global2 = overlays.add(
-      new GlobalOverlayController({
-        contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay__global demo-overlay__global--big">
-            <p>I am for big screens > 600px</p>
-            <button @click="${() => ctrl.hide()}">Close</button>
-          </div>
-        `,
-        invokerNode,
-      }),
-    );
-    ctrl.add(global2);
-
-    invokerNode.addEventListener('click', event => {
-      ctrl.show(event.target);
+    const ctrl = new OverlayController({
+      ...withBottomSheetConfig(),
+      hidesOnOutsideClick: true,
+      trapsKeyboardFocus: true,
+      invokerNode: renderToNode(html`
+        <button @click="${() => ctrl.toggle()}">
+          Invoker
+        </button>
+      `),
+      contentNode: renderToNode(html`
+        <div
+          style="background: #eee;"
+          xclass="demo-overlay demo-overlay__global demo-overlay__global--small"
+        >
+          <p>type: ${ctrlType}</p>
+          <button @click="${() => ctrl.hide()}">Close</button>
+          <button>asdsad</button>
+        </div>
+      `),
     });
 
-    function switchOnMediaChange(x) {
-      if (x.matches) {
-        // <= 600px
-        ctrl.nextOpen = global1;
-      } else {
-        ctrl.nextOpen = global2;
+    let ctrlType = document.createElement('div');
+    function switchTo(type) {
+      ctrlType.innerHTML = type;
+      switch (type) {
+        case 'bottom-sheet':
+          ctrl.updateConfig(withBottomSheetConfig());
+          break;
+        case 'dropdown':
+          ctrl.updateConfig({
+            ...withDropdownConfig(),
+            hasBackdrop: false,
+            viewportConfig: null,
+          });
+          break;
+        default:
+          ctrl.updateConfig(withModalDialogConfig());
       }
     }
-    const matchSmall = window.matchMedia('(max-width: 600px)');
-    switchOnMediaChange(matchSmall); // call once manually to init
-    matchSmall.addListener(switchOnMediaChange);
 
     return html`
       <style>
         ${dynamicOverlayDemoStyle}
       </style>
-      <p>Shows "Bottom Sheet" for small (< 600px) screens and "Dialog" for big (> 600px) screens</p>
 
       ${ctrl.invokerNode}
 
-      <p>
-        You can also
-        <button @click="${() => ctrl.switchTo(ctrl.active === global1 ? global2 : global1)}">
-          force a switch
-        </button>
-        while overlay is hidden.
-      </p>
+      <button @click="${() => switchTo('modal-dialog')}">
+        as modal dialog
+      </button>
+
+      <button @click="${() => switchTo('bottom-sheet')}">
+        as bottom sheet
+      </button>
+
+      <button @click="${() => switchTo('dropdown')}">
+        as dropdown
+      </button>
     `;
-  })
-  .add('Switch local overlays', () => {
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Invoker Button';
-
-    const ctrl = new DynamicOverlayController();
-    const local1 = new LocalOverlayController({
-      contentTemplate: () => html`
-        <div class="demo-overlay demo-overlay__local">
-          <p>Small screen have a read more</p>
-          <ul>
-            <li>Red</li>
-            <li>Green</li>
-          </ul>
-          <a href="">Read more ...</a>
-          <br />
-          <button @click="${() => ctrl.hide()}">Close</button>
-        </div>
-      `,
-      invokerNode,
-    });
-    ctrl.add(local1);
-
-    const local2 = new LocalOverlayController({
-      contentTemplate: () => html`
-        <div class="demo-overlay demo-overlay__local">
-          <p>Big screens see all</p>
-          <ul>
-            <li>Red</li>
-            <li>Green</li>
-            <li>Ornage</li>
-            <li>Blue</li>
-            <li>Yellow</li>
-            <li>Pink</li>
-          </ul>
-          <button @click="${() => ctrl.hide()}">Close</button>
-        </div>
-      `,
-      invokerNode,
-    });
-    ctrl.add(local2);
-
-    invokerNode.addEventListener('click', () => {
-      ctrl.toggle();
-    });
-
-    function switchOnMediaChange(x) {
-      if (x.matches) {
-        // <= 600px
-        ctrl.nextOpen = local1;
-      } else {
-        ctrl.nextOpen = local2;
-      }
-    }
-    const matchSmall = window.matchMedia('(max-width: 600px)');
-    switchOnMediaChange(matchSmall); // call once manually to init
-    matchSmall.addListener(switchOnMediaChange);
-
-    return html`
-      <style>
-        ${dynamicOverlayDemoStyle}
-      </style>
-      <p>Shows "read me..." for small (< 600px) screens and all for big (> 600px) screens</p>
-
-      ${ctrl.invokerNode}${ctrl.content}
-
-      <p>
-        You can also
-        <button @click="${() => ctrl.switchTo(ctrl.active === local1 ? local2 : local1)}">
-          force a switch
-        </button>
-        while overlay is hidden.
-      </p>
-    `;
-  })
-  .add('Global & Local', () => {
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Invoker Button';
-    const ctrl = new DynamicOverlayController();
-
-    const local = new LocalOverlayController({
-      contentTemplate: () => html`
-        <div class="demo-overlay demo-overlay__local">
-          <p>My Local Overlay</p>
-          <button @click="${() => ctrl.hide()}">Close</button>
-        </div>
-      `,
-      invokerNode,
-    });
-    ctrl.add(local);
-
-    const global = overlays.add(
-      new GlobalOverlayController({
-        contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay__global demo-overlay__global--small">
-            <p>My Global Overlay</p>
-            <button @click="${() => ctrl.hide()}">Close</button>
-          </div>
-        `,
-        invokerNode,
-      }),
-    );
-    ctrl.add(global);
-
-    invokerNode.addEventListener('click', () => {
-      ctrl.toggle();
-    });
-
-    function switchOnMediaChange(x) {
-      if (x.matches) {
-        // <= 600px
-        console.log('settig', global);
-        ctrl.nextOpen = global;
-      } else {
-        ctrl.nextOpen = local;
-      }
-    }
-    const matchSmall = window.matchMedia('(max-width: 600px)');
-    switchOnMediaChange(matchSmall); // call once manually to init
-    matchSmall.addListener(switchOnMediaChange);
-
-    return html`
-      <style>
-        ${dynamicOverlayDemoStyle}
-      </style>
-
-      <p>
-        Shows "Buttom Sheet" for small (< 600px) screens and "Dropdown" for big (> 600px) screens
-      </p>
-
-      <p>
-        This button is indented to show the local positioning ${ctrl.invokerNode}${ctrl.content}
-      </p>
-
-      <p>
-        You can also
-        <button @click="${() => ctrl.switchTo(ctrl.active === global ? local : global)}">
-          force a switch
-        </button>
-        while overlay is hidden.
-      </p>
-    `;
-  });
+  },
+);

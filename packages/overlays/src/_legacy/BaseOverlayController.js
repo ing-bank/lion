@@ -1,6 +1,6 @@
 import { render, html } from '@lion/core';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
-import { containFocus } from './utils/contain-focus.js';
+import { containFocus } from '../utils/contain-focus.js';
 
 /**
  * This is the interface for a controller

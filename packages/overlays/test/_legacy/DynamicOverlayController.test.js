@@ -1,8 +1,8 @@
 import { expect, html } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import { DynamicOverlayController } from '../src/DynamicOverlayController.js';
-import { BaseOverlayController } from '../src/BaseOverlayController.js';
+import { DynamicOverlayController } from '../../src/_legacy/DynamicOverlayController.js';
+import { BaseOverlayController } from '../../src/_legacy/BaseOverlayController.js';
 
 describe('DynamicOverlayController', () => {
   class FakeLocalCtrl extends BaseOverlayController {}

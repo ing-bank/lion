@@ -1,0 +1,39 @@
+{
+  "name": "@lion/select-account",
+  "version": "0.1.52",
+  "description": "Provide a set of options where you can select one",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/select"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "select"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "dependencies": {
+    "@lion/button": "^0.3.19",
+    "@lion/core": "^0.2.0",
+    "@lion/field": "^0.2.7",
+    "@lion/option": "^0.1.14",
+    "@lion/overlays": "^0.5.1",
+    "@lion/validate": "^0.2.32"
+  },
+  "devDependencies": {
+    "@lion/form": "^0.1.60",
+    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/testing": "^2.3.4"
+  }
+}

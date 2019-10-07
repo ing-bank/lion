@@ -1,7 +1,7 @@
 import { expect, html } from '@open-wc/testing';
-
 import { OverlaysManager } from '../src/OverlaysManager.js';
-import { BaseOverlayController } from '../src/BaseOverlayController.js';
+import { OverlayController } from '../src/OverlayController.js';
+import { renderToNode } from '../test-helpers/global-positioning-helpers.js';
 
 describe('OverlaysManager', () => {
   let defaultOptions;
@@ -9,9 +9,10 @@ describe('OverlaysManager', () => {
 
   before(() => {
     defaultOptions = {
-      contentTemplate: () => html`
+      placementMode: 'global',
+      contentNode: () => renderToNode(html`
         <p>my content</p>
-      `,
+      `),
     };
   });
 
@@ -44,13 +45,13 @@ describe('OverlaysManager', () => {
   });
 
   it('returns the newly added overlay', () => {
-    const myController = new BaseOverlayController(defaultOptions);
+    const myController = new OverlayController(defaultOptions);
     expect(mngr.add(myController)).to.equal(myController);
   });
 
   it('can add/remove controllers', () => {
-    const dialog = new BaseOverlayController(defaultOptions);
-    const popup = new BaseOverlayController(defaultOptions);
+    const dialog = new OverlayController(defaultOptions);
+    const popup = new OverlayController(defaultOptions);
     mngr.add(dialog);
     mngr.add(popup);
 
@@ -64,26 +65,26 @@ describe('OverlaysManager', () => {
   });
 
   it('throws if you try to add the same controller', () => {
-    const ctrl = new BaseOverlayController(defaultOptions);
+    const ctrl = new OverlayController(defaultOptions);
     mngr.add(ctrl);
     expect(() => mngr.add(ctrl)).to.throw('controller instance is already added');
   });
 
   it('throws if you try to remove a non existing controller', () => {
-    const ctrl = new BaseOverlayController(defaultOptions);
+    const ctrl = new OverlayController(defaultOptions);
     expect(() => mngr.remove(ctrl)).to.throw('could not find controller to remove');
   });
 
   it('adds a reference to the manager to the controller', () => {
-    const dialog = new BaseOverlayController(defaultOptions);
+    const dialog = new OverlayController(defaultOptions);
     mngr.add(dialog);
 
     expect(dialog.manager).to.equal(mngr);
   });
 
   it('has a .shownList which is ordered based on last shown', async () => {
-    const dialog = new BaseOverlayController(defaultOptions);
-    const dialog2 = new BaseOverlayController(defaultOptions);
+    const dialog = new OverlayController(defaultOptions);
+    const dialog2 = new OverlayController(defaultOptions);
     mngr.add(dialog);
     mngr.add(dialog2);
 

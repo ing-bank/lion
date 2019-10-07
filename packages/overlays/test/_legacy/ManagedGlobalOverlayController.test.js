@@ -1,7 +1,7 @@
 import { expect, html } from '@open-wc/testing';
 
-import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
-import { overlays } from '../src/overlays.js';
+import { GlobalOverlayController } from '../../src/_legacy/GlobalOverlayController.js';
+import { overlays } from '../../src/overlays.js';
 
 function getRootNode() {
   return document.querySelector('.global-overlays');

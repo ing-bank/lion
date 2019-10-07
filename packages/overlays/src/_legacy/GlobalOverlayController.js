@@ -57,6 +57,14 @@ export class GlobalOverlayController extends BaseOverlayController {
     }
   }
 
+  _connectContent() {
+    if (!this.content.isConnected) {
+      this.content.classList.add(this.overlayContainerClass);
+      this.content.classList.add(this.overlayContainerPlacementClass);
+      this.manager.globalRootNode.appendChild(this.content);
+    }
+  }
+
   /**
    * Shows the overlay.
    * @param {HTMLElement} [elementToFocusAfterHide] element to return focus when hiding
@@ -73,11 +81,7 @@ export class GlobalOverlayController extends BaseOverlayController {
     if (oldIsShown === true) {
       return;
     }
-    if (!this.content.isConnected) {
-      this.content.classList.add(this.overlayContainerClass);
-      this.content.classList.add(this.overlayContainerPlacementClass);
-      this.manager.globalRootNode.appendChild(this.content);
-    }
+    this._connectContent();
 
     if (elementToFocusAfterHide) {
       this.elementToFocusAfterHide = elementToFocusAfterHide;
@@ -105,6 +109,8 @@ export class GlobalOverlayController extends BaseOverlayController {
     this.__showHideMode = 'css';
     if (this.isShown === false) {
       this.content.style.display = 'none';
+      console.log('zjow heed');
+      this.__showHideViaCss();
     }
   }
 
@@ -138,6 +144,8 @@ export class GlobalOverlayController extends BaseOverlayController {
     if (!this.contentNode) {
       return;
     }
+
+    console.log('show hide via css', this.contentNode, this.isShown);
 
     if (this.isShown) {
       this.content.style.display = '';

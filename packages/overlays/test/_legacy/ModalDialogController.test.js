@@ -1,7 +1,7 @@
 import { expect, html } from '@open-wc/testing';
 
-import { GlobalOverlayController } from '../src/GlobalOverlayController.js';
-import { ModalDialogController } from '../src/ModalDialogController.js';
+import { GlobalOverlayController } from '../../src/_legacy/GlobalOverlayController.js';
+import { ModalDialogController } from '../../src/_legacy/ModalDialogController.js';
 
 describe('ModalDialogController', () => {
   let defaultOptions;

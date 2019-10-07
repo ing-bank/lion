@@ -4,7 +4,7 @@ import { html } from '@lion/core';
 /**
  * LionSelectInvoker: invoker button consuming a selected element
  *
- * @customElement
+ * @customElement lion-select-invoker
  * @extends LionButton
  */
 export class LionSelectInvoker extends LionButton {
