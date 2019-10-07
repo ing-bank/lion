@@ -75,8 +75,6 @@ export function containFocus(rootElement) {
   // Initial focus goes to first element with autofocus, or the root element
   const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
 
-  console.log('initial focus', initialFocus);
-
   // If root element will receive focus, it should have a tabindex of -1.
   // This makes it focusable through js, but it won't appear in the tab order
   if (initialFocus === rootElement) {
@@ -86,8 +84,6 @@ export function containFocus(rootElement) {
 
   // Focus first focusable element
   initialFocus.focus();
-  // in
-  console.log('aE', document.activeElement.tagName);
 
   /**
    * Ensures focus stays inside root element on tab

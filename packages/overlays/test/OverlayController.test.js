@@ -1,21 +1,29 @@
 /* eslint-disable no-new */
-import { expect, html, fixture, aTimeout } from '@open-wc/testing';
+import {
+  expect,
+  html,
+  fixture,
+  aTimeout,
+  defineCE,
+  unsafeStatic,
+  nextFrame,
+} from '@open-wc/testing';
 import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
-import { getTopOverlay, renderToNode } from '../test-helpers/global-positioning-helpers.js';
+import { renderToNode, getRenderedOverlay } from '../test-helpers/global-positioning-helpers.js';
 import { overlays } from '../src/overlays.js';
 
-const withDefaultGlobalConfig = () => ({
+const withGlobalTestConfig = () => ({
   placementMode: 'global',
   contentNode: renderToNode(html`
     <div>my content</div>
   `),
 });
 
-const withDefaultLocalConfig = () => ({
+const withLocalTestConfig = () => ({
   placementMode: 'local',
   contentNode: renderToNode(html`
     <div>my content</div>
@@ -36,7 +44,7 @@ describe('OverlayController', () => {
   describe('Node Configuration', () => {
     it('accepts an .contentNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
         contentNode: await fixture('<p>direct node</p>'),
       });
       expect(ctrl.contentNode).to.have.trimmed.text('direct node');
@@ -44,7 +52,7 @@ describe('OverlayController', () => {
 
     it('accepts an .invokerNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
         invokerNode: await fixture('<button>invoke</button>'),
       });
       expect(ctrl.invokerNode).to.have.trimmed.text('invoke');
@@ -52,11 +60,10 @@ describe('OverlayController', () => {
   });
 
   describe('Feature Configuration', () => {
-    // FIXME: Broken tests because activeElement is body. Weird, because the demos work just fine.
     describe('trapsKeyboardFocus', () => {
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
@@ -68,7 +75,7 @@ describe('OverlayController', () => {
           <div><input id="input1" /><input id="input2" /></div>
         `);
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
           contentNode,
         });
@@ -96,7 +103,7 @@ describe('OverlayController', () => {
         `);
 
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           contentNode,
           trapsKeyboardFocus: true,
         });
@@ -121,7 +128,7 @@ describe('OverlayController', () => {
     describe('hidesOnEsc', () => {
       it('hides when [escape] is pressed', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
@@ -132,7 +139,7 @@ describe('OverlayController', () => {
 
       it('stays shown when [escape] is pressed on outside element', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
@@ -141,43 +148,212 @@ describe('OverlayController', () => {
       });
     });
 
-    describe.skip('elementToFocusAfterHide', () => {
-      it('focuses body when hiding by default', async () => {
+    describe('hidesOnOutsideClick', () => {
+      it('hides on outside click', async () => {
+        const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        document.body.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('doesn\'t hide on "inside" click', async () => {
+        const invokerNode = await fixture('<button>Invoker</button>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        await ctrl.show();
+
+        // Don't hide on invoker click
+        ctrl.invokerNode.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Don't hide on inside (content) click
+        ctrl.contentNode.click();
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.hide();
+        expect(ctrl.isShown).to.be.false;
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('doesn\'t hide on "inside sub shadow dom" click', async () => {
+        const invokerNode = await fixture('<button>Invoker</button>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        await ctrl.show();
+
+        // Works as well when clicked content element lives in shadow dom
+        const tagString = defineCE(
+          class extends HTMLElement {
+            constructor() {
+              super();
+              this.attachShadow({ mode: 'open' });
+            }
+
+            connectedCallback() {
+              this.shadowRoot.innerHTML = '<div><button>click me</button></div>';
+            }
+          },
+        );
+        const tag = unsafeStatic(tagString);
+        ctrl.contentNode = await fixture(html`
+          <div>
+            <div>Content</div>
+            <${tag}></${tag}>
+          </div>
+        `);
+
+        // Don't hide on inside shadowDom click
+        ctrl.contentNode
+          .querySelector(tagString)
+          .shadowRoot.querySelector('button')
+          .click();
+
+        await aTimeout();
+        expect(ctrl.isShown).to.be.true;
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.hide();
+        expect(ctrl.isShown).to.be.false;
+        await ctrl.show();
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('works with 3rd party code using "event.stopPropagation()" on bubble phase', async () => {
+        const invokerNode = await fixture('<div role="button">Invoker</div>');
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        const dom = await fixture(`
+          <div>
+            <div id="popup">${invokerNode}${contentNode}</div>
+            <div
+              id="regular-sibling"
+              @click="${() => {
+                /* propagates */
+              }}"
+            ></div>
+            <third-party-noise @click="${e => e.stopPropagation()}">
+              This element prevents our handlers from reaching the document click handler.
+            </third-party-noise>
+          </div>
+        `);
+
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+
+        dom.querySelector('third-party-noise').click();
+        await aTimeout();
+        expect(ctrl.isShown).to.equal(false);
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+      });
+
+      it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
+        const invokerNode = await fixture(html`
+          <div role="button">Invoker</div>
+        `);
+        const contentNode = await fixture('<div>Content</div>');
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode,
+        });
+        const dom = await fixture(`
+          <div>
+            <div id="popup">${invokerNode}${ctrl.content}</div>
+            <div
+              id="regular-sibling"
+              @click="${() => {
+                /* propagates */
+              }}"
+            ></div>
+            <third-party-noise>
+              This element prevents our handlers from reaching the document click handler.
+            </third-party-noise>
+          </div>
+        `);
+
+        dom.querySelector('third-party-noise').addEventListener(
+          'click',
+          event => {
+            event.stopPropagation();
+          },
+          true,
+        );
+
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+
+        dom.querySelector('third-party-noise').click();
+        await aTimeout();
+        expect(ctrl.isShown).to.equal(false);
+
+        // Important to check if it can be still shown after, because we do some hacks inside
+        await ctrl.show();
+        expect(ctrl.isShown).to.equal(true);
+      });
+    });
+
+    describe('elementToFocusAfterHide', () => {
+      it('focuses body when hiding by default', async () => {
+        const contentNode = await fixture('<div><input /></div>');
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
-          contentNode: renderToNode(html`
-            <div><input />=</div>
-          `),
+          contentNode,
         });
 
         await ctrl.show();
-        const input = getTopOverlay().querySelector('input');
+        const input = contentNode.querySelector('input');
         input.focus();
         expect(document.activeElement).to.equal(input);
 
         await ctrl.hide();
+        await nextFrame(); // moving focus to body takes time?
         expect(document.activeElement).to.equal(document.body);
       });
 
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
-        const input = document.createElement('input');
-
+        const input = await fixture('<input />');
+        const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           elementToFocusAfterHide: input,
-          viewportConfig: {
-            placement: 'top-left',
-          },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
+          contentNode,
         });
 
         await ctrl.show();
-        const textarea = getTopOverlay().querySelector('textarea');
+        const textarea = contentNode.querySelector('textarea');
         textarea.focus();
         expect(document.activeElement).to.equal(textarea);
 
@@ -186,52 +362,22 @@ describe('OverlayController', () => {
       });
 
       it('allows to set elementToFocusAfterHide on show', async () => {
-        const input = document.createElement('input');
+        const input = await fixture('<input />');
+        const contentNode = await fixture('<div><textarea></textarea></div>');
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           viewportConfig: {
             placement: 'top-left',
           },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
+          contentNode,
         });
 
         await ctrl.show(input);
-        const textarea = getTopOverlay().querySelector('textarea');
+        const textarea = contentNode.querySelector('textarea');
         textarea.focus();
         expect(document.activeElement).to.equal(textarea);
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
-      });
-
-      it('allows to set elementToFocusAfterHide on sync', async () => {
-        const input = document.createElement('input');
-        const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
-          viewportConfig: {
-            placement: 'top-left',
-          },
-          contentNode: renderToNode(html`
-            <div><textarea></textarea></div>
-          `),
-        });
-
-        await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
-        const textarea = getTopOverlay().querySelector('textarea');
-        textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
-
-        await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
-
-        await ctrl.sync({ isShown: true, elementToFocusAfterHide: input });
-        const textarea2 = getTopOverlay().querySelector('textarea');
-        textarea2.focus();
-        expect(document.activeElement).to.equal(textarea2);
-
-        await ctrl.sync({ isShown: false });
         expect(document.activeElement).to.equal(input);
       });
     });
@@ -239,7 +385,7 @@ describe('OverlayController', () => {
     describe('preventsScroll', () => {
       it('prevent scrolling the background', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           preventsScroll: true,
         });
 
@@ -256,7 +402,7 @@ describe('OverlayController', () => {
     describe('hasBackdrop', () => {
       it('has no backdrop by default', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
         });
         await ctrl.show();
         expect(ctrl.backdropNode).to.be.undefined;
@@ -264,7 +410,7 @@ describe('OverlayController', () => {
 
       it('supports a backdrop option', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: false,
         });
         await ctrl.show();
@@ -272,7 +418,7 @@ describe('OverlayController', () => {
         await ctrl.hide();
 
         const controllerWithBackdrop = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: true,
         });
         await controllerWithBackdrop.show();
@@ -281,7 +427,7 @@ describe('OverlayController', () => {
 
       it('reenables the backdrop when shown/hidden/shown', async () => {
         const ctrl = new OverlayController({
-          ...withDefaultGlobalConfig(),
+          ...withGlobalTestConfig(),
           hasBackdrop: true,
         });
         await ctrl.show();
@@ -290,20 +436,103 @@ describe('OverlayController', () => {
         await ctrl.show();
         expect(ctrl.backdropNode).to.have.class('global-overlays__backdrop');
       });
+
+      it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
+        await ctrl0.show();
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: false,
+        });
+        await ctrl1.show();
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl1.backdropNode).to.be.undefined;
+
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
+        await ctrl2.show();
+
+        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl1.backdropNode).to.be.undefined;
+        expect(ctrl2.backdropNode).to.have.class('global-overlays__backdrop');
+      });
+    });
+
+    describe('isBlocking', () => {
+      it('prevents showing of other overlays', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl0.show();
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl1.show();
+
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: true,
+        });
+        await ctrl2.show();
+
+        const ctrl3 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        await ctrl3.show();
+
+        expect(getRenderedOverlay(0)).to.not.be.displayed;
+        expect(getRenderedOverlay(1)).to.not.be.displayed;
+        expect(getRenderedOverlay(2)).to.be.displayed;
+        expect(getRenderedOverlay(3)).to.not.be.displayed;
+      });
+
+      it('keeps backdrop status when used in combination with blocking', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          hasBackdrop: true,
+        });
+        await ctrl0.show();
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          hasBackdrop: true,
+        });
+        await ctrl1.show();
+        await ctrl1.hide();
+        expect(ctrl0.hasActiveBackdrop).to.be.true;
+        expect(ctrl1.hasActiveBackdrop).to.be.false;
+
+        await ctrl1.show();
+        expect(ctrl0.hasActiveBackdrop).to.be.true;
+        expect(ctrl1.hasActiveBackdrop).to.be.true;
+      });
     });
   });
 
   describe('Show / Hide / Toggle', () => {
     it('has .isShown which defaults to false', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
       expect(ctrl.isShown).to.be.false;
     });
 
     it('has async show() which shows the overlay', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
       await ctrl.show();
       expect(ctrl.isShown).to.be.true;
@@ -312,7 +541,7 @@ describe('OverlayController', () => {
 
     it('has async hide() which hides the overlay', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       await ctrl.hide();
@@ -323,7 +552,7 @@ describe('OverlayController', () => {
     it('fires "show" event once overlay becomes shown', async () => {
       const showSpy = sinon.spy();
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       ctrl.addEventListener('show', showSpy);
@@ -335,7 +564,7 @@ describe('OverlayController', () => {
 
     it('fires "before-show" event right before overlay becomes shown', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       const eventSpy = sinon.spy();
@@ -355,7 +584,7 @@ describe('OverlayController', () => {
     it('fires "hide" event once overlay becomes hidden', async () => {
       const hideSpy = sinon.spy();
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       ctrl.addEventListener('hide', hideSpy);
@@ -368,7 +597,7 @@ describe('OverlayController', () => {
 
     it('fires "before-hide" event right before overlay becomes hidden', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
+        ...withGlobalTestConfig(),
       });
 
       const eventSpy = sinon.spy();
@@ -385,6 +614,26 @@ describe('OverlayController', () => {
       await ctrl.hide();
       expect(eventSpy.callCount).to.equal(2);
     });
+
+    it('can be toggled', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.true;
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.false;
+
+      await ctrl.toggle();
+      expect(ctrl.isShown).to.be.true;
+
+      // check for hide
+      expect(ctrl.toggle()).to.be.instanceOf(Promise);
+      // check for show
+      expect(ctrl.toggle()).to.be.instanceOf(Promise);
+    });
   });
 
   describe('Update Configuration', () => {
@@ -397,7 +646,7 @@ describe('OverlayController', () => {
     it('adds and removes [aria-expanded] on invoker', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -410,7 +659,7 @@ describe('OverlayController', () => {
 
     it('creates unique id for content', async () => {
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
       });
       expect(ctrl.contentNode.id).to.contain(ctrl._contentId);
@@ -419,7 +668,7 @@ describe('OverlayController', () => {
     it('preserves content id when present', async () => {
       const contentNode = await fixture('<div id="preserved">content</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         contentNode,
       });
@@ -429,7 +678,7 @@ describe('OverlayController', () => {
     it('adds [aria-controls] on invoker', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -439,7 +688,7 @@ describe('OverlayController', () => {
     it('adds [role=dialog] on content', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
-        ...withDefaultLocalConfig(),
+        ...withLocalTestConfig(),
         handlesAccessibility: true,
         invokerNode,
       });
@@ -450,7 +699,7 @@ describe('OverlayController', () => {
       it('adds [aria-describedby] on invoker', async () => {
         const invokerNode = await fixture('<div role="button">invoker</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           handlesAccessibility: true,
           isTooltip: true,
           invokerNode,
@@ -461,7 +710,7 @@ describe('OverlayController', () => {
       it('adds [role=tooltip] on content', async () => {
         const invokerNode = await fixture('<div role="button">invoker</div>');
         const ctrl = new OverlayController({
-          ...withDefaultLocalConfig(),
+          ...withLocalTestConfig(),
           handlesAccessibility: true,
           isTooltip: true,
           invokerNode,

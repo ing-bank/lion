@@ -282,9 +282,9 @@ export class OverlayController extends EventTarget {
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
-    if (this._contentNodeWrapper.activeElement) {
-      this.elementToFocusAfterHide.focus();
-    }
+    // if (this._contentNodeWrapper.activeElement) {
+    this.elementToFocusAfterHide.focus();
+    // }
   }
 
   async toggle() {
@@ -355,6 +355,10 @@ export class OverlayController extends EventTarget {
     }
   }
 
+  get hasActiveBackdrop() {
+    return this.__hasActiveBackdrop;
+  }
+
   /**
    * @desc Sets up backdrop on the given overlay. If there was a backdrop on another element
    * it is removed. Otherwise this is the first time displaying a backdrop, so a fade-in
@@ -377,6 +381,7 @@ export class OverlayController extends EventTarget {
       if (animation === true) {
         this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
       }
+      this.__hasActiveBackdrop = true;
     } else if (phase === 'teardown') {
       const { backdropNode } = this;
       if (!backdropNode) {
@@ -393,6 +398,7 @@ export class OverlayController extends EventTarget {
       }
       backdropNode.classList.remove('global-overlays__backdrop--fade-in');
       backdropNode.classList.add('global-overlays__backdrop--fade-out');
+      this.__hasActiveBackdrop = false;
     }
   }
 
@@ -468,7 +474,9 @@ export class OverlayController extends EventTarget {
     }
 
     this._contentNodeWrapper[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
-    this.invokerNode[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
+    if (this.invokerNode) {
+      this.invokerNode[addOrRemoveListener]('click', this.__preventCloseOutsideClick, true);
+    }
     document.documentElement[addOrRemoveListener]('click', this.__onCaptureHtmlClick, true);
   }
 
