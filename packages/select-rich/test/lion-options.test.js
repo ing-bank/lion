@@ -4,8 +4,9 @@ import '../lion-options.js';
 
 describe('lion-options', () => {
   it('should have role="listbox"', async () => {
+    const registrationTargetEl = document.createElement('div');
     const el = await fixture(html`
-      <lion-options></lion-options>
+      <lion-options .registrationTarget=${registrationTargetEl}></lion-options>
     `);
     expect(el.role).to.equal('listbox');
   });

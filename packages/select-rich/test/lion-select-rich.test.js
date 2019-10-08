@@ -1,11 +1,6 @@
 import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
 import '@lion/option/lion-option.js';
-import {
-  overlays,
-  LocalOverlayController,
-  GlobalOverlayController,
-  DynamicOverlayController,
-} from '@lion/overlays';
+import { OverlayController } from '@lion/overlays';
 
 import './keyboardEventShimIE.js';
 import '../lion-options.js';
@@ -69,16 +64,16 @@ describe('lion-select-rich', () => {
       `);
       el.opened = true;
       await el.updateComplete;
-      expect(el._listboxNode.style.display).to.be.equal('inline-block');
+      expect(el._overlayCtrl.isShown).to.be.true;
 
       el.opened = false;
       await el.updateComplete;
-      expect(el._listboxNode.style.display).to.be.equal('none');
+      expect(el._overlayCtrl.isShown).to.be.false;
     });
 
     it('syncs opened state with overlay shown', async () => {
       const el = await fixture(html`
-        <lion-select-rich opened>
+        <lion-select-rich .opened=${true}>
           <lion-options slot="input"></lion-options>
         </lion-select-rich>
       `);
@@ -98,7 +93,7 @@ describe('lion-select-rich', () => {
           <lion-options slot="input"></lion-options>
         </lion-select-rich>
       `);
-      el.opened = true;
+      await el._overlayCtrl.show();
       await el.updateComplete;
       expect(document.activeElement === el._listboxNode).to.be.true;
       expect(document.activeElement === el._invokerNode).to.be.false;
@@ -118,7 +113,7 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      el.opened = true;
+      await el._overlayCtrl.show();
       await el.updateComplete;
       const options = Array.from(el.querySelectorAll('lion-option'));
 
@@ -193,7 +188,7 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
       expect(el.opened).to.be.false;
-      el._invokerNode.click();
+      await el._invokerNode.click();
       expect(el.opened).to.be.true;
     });
 
@@ -337,30 +332,20 @@ describe('lion-select-rich', () => {
   });
 
   describe('Subclassers', () => {
-    it('allows to override the type of overlays', async () => {
+    it('allows to override the type of overlay', async () => {
       const mySelectTagString = defineCE(
         class MySelect extends LionSelectRich {
           _defineOverlay({ invokerNode, contentNode }) {
-            // add a DynamicOverlayController
-            const dynamicCtrl = new DynamicOverlayController();
+            const ctrl = new OverlayController({
+              placementMode: 'global',
+              contentNode,
+              invokerNode,
+            });
 
-            const localCtrl = overlays.add(
-              new LocalOverlayController({
-                contentNode,
-                invokerNode,
-              }),
-            );
-            dynamicCtrl.add(localCtrl);
-
-            const globalCtrl = overlays.add(
-              new GlobalOverlayController({
-                contentNode,
-                invokerNode,
-              }),
-            );
-            dynamicCtrl.add(globalCtrl);
-
-            return dynamicCtrl;
+            this.addEventListener('switch', () => {
+              ctrl.updateConfig({ placementMode: 'local' });
+            });
+            return ctrl;
           }
         },
       );
@@ -379,7 +364,9 @@ describe('lion-select-rich', () => {
         </${mySelectTag}>
       `);
 
-      expect(el.__overlay).to.be.instanceOf(DynamicOverlayController);
+      expect(el._overlayCtrl.placementMode).to.equal('global');
+      el.dispatchEvent(new Event('switch'));
+      expect(el._overlayCtrl.placementMode).to.equal('local');
     });
   });
 });
