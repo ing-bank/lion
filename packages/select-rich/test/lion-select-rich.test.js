@@ -44,6 +44,24 @@ describe('lion-select-rich', () => {
       el.checkedIndex = 1;
       expect(el._invokerNode.selectedElement).to.equal(el.querySelectorAll('lion-option')[1]);
     });
+
+    it('delegates readonly to the invoker, where disabled is added on top of this to disable opening', async () => {
+      const el = await fixture(html`
+        <lion-select-rich readonly>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20}>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      expect(el.hasAttribute('readonly')).to.be.true;
+      // rich select is not disabled, so value is still serialized in forms when readonly
+      expect(el.hasAttribute('disabled')).to.be.false;
+      expect(el._invokerNode.hasAttribute('readonly')).to.be.true;
+      // invoker node has disabled, to disable it from being clicked
+      expect(el._invokerNode.hasAttribute('disabled')).to.be.true;
+    });
   });
 
   describe('overlay', () => {
