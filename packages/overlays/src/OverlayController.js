@@ -143,17 +143,8 @@ export class OverlayController {
     if (this.contentNode !== this.__prevConfig.contentNode) {
       this._contentNodeWrapper.appendChild(this.contentNode);
     }
-    if (this._renderTarget !== this._contentNodeWrapper.parentNode) {
-      if (this._renderTarget) {
-        this._renderTarget.appendChild(this._contentNodeWrapper);
-      }
-      // else if (this.invokerNode) {
-      //   // When a local overlay is not connected to dom yet (no .__originalContentParent found)
-      //   this.invokerNode.parentElement.insertBefore(
-      //     this._contentNodeWrapper,
-      //     this.invokerNode.nextSibling,
-      //   );
-      // }
+    if (this._renderTarget && this._renderTarget !== this._contentNodeWrapper.parentNode) {
+      this._renderTarget.appendChild(this._contentNodeWrapper);
     }
   }
 
@@ -171,7 +162,7 @@ export class OverlayController {
     // Make sure that your shadow dom contains this outlet, when we are adding to light dom
     this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
 
-    if (this.contentNode.style.position === 'absolute') {
+    if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...
       this.contentNode.style.position = 'static';

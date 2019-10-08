@@ -91,6 +91,10 @@ export const globalOverlaysStyle = css`
     opacity: 0.3;
   }
 
+  .global-overlays .global-overlays__overlay--blocking .global-overlays__overlay {
+    display: block;
+  }
+
   .global-overlays .global-overlays__backdrop--fade-in {
     animation: global-overlays-backdrop-fade-in 300ms;
   }

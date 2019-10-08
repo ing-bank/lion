@@ -1,7 +1,14 @@
-import { LitElement } from '@lion/core';
+import { LitElement, html } from '@lion/core';
 import { OverlayMixin, OverlayController } from '@lion/overlays';
 
 export class LionPopup extends OverlayMixin(LitElement) {
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+    `;
+  }
+
   get _overlayContentNode() {
     return this.querySelector('[slot=content]');
   }

@@ -216,6 +216,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     });
 
     const normalOverlayCtrl = new OverlayController({
+      placementMode: 'global',
       contentNode: renderAsNode(html`
         <div class="demo-overlay">
           <p>Normal overlay</p>

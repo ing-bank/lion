@@ -5,11 +5,9 @@ import { render, dedupeMixin } from '@lion/core';
  * @polymerMixin
  * @mixinFunction
  */
-export const OverlayMixin = dedupeMixin(
-  (
-    superclass, // eslint-disable-next-line no-shadow
-  ) =>
-    class OverlayMixin extends superclass {
+export const OverlayMixin = dedupeMixin(superclass =>
+  // eslint-disable-next-line no-shadow
+  class OverlayMixin extends superclass {
       static get properties() {
         return {
           opened: {
@@ -48,8 +46,11 @@ export const OverlayMixin = dedupeMixin(
           ...this._popperConfig,
           ...config,
         };
+        this.__syncPopper();
+      }
 
-        if (this._overlayCtrl && this._overlayCtrl._popper) {
+      __syncPopper() {
+        if (this._overlayCtrl) {
           this._overlayCtrl.updatePopperConfig(this._popperConfig);
         }
       }
@@ -60,6 +61,7 @@ export const OverlayMixin = dedupeMixin(
         }
         this._createOverlay();
         this.__syncOpened();
+        this.__syncPopper();
       }
 
       firstUpdated(c) {
