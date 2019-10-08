@@ -28,7 +28,8 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
           padding: 4px;
         }
 
-        :host([active]) {
+        :host([active]),
+        :host(:hover) {
           background-color: #ddd;
         }
 
@@ -46,6 +47,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   constructor() {
     super();
     this.active = false;
+    this.__registerEventListeners();
   }
 
   _requestUpdate(name, oldValue) {
@@ -78,12 +80,6 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'option');
-    this.__registerEventListeners();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__unRegisterEventListeners();
   }
 
   __registerEventListeners() {
@@ -92,24 +88,10 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
         this.checked = true;
       }
     };
-    this.__onMouseEnter = () => {
-      if (!this.disabled) {
-        this.active = true;
-      }
-    };
-    this.__onMouseLeave = () => {
-      if (!this.disabled) {
-        this.active = false;
-      }
-    };
     this.addEventListener('click', this.__onClick);
-    this.addEventListener('mouseenter', this.__onMouseEnter);
-    this.addEventListener('mouseleave', this.__onMouseLeave);
   }
 
   __unRegisterEventListeners() {
     this.removeEventListener('click', this.__onClick);
-    this.removeEventListener('mouseenter', this.__onMouseEnter);
-    this.removeEventListener('mouseleave', this.__onMouseLeave);
   }
 }

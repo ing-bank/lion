@@ -39,6 +39,12 @@ export class LionSelectRich extends OverlayMixin(
         reflect: true,
       },
 
+      readOnly: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'readonly',
+      },
+
       interactionMode: {
         type: String,
         attribute: 'interaction-mode',
@@ -162,6 +168,11 @@ export class LionSelectRich extends OverlayMixin(
     this.__teardownListboxNode();
   }
 
+  firstUpdated(c) {
+    super.firstUpdated(c);
+    this.__toggleInvokerDisabled();
+  }
+
   _requestUpdate(name, oldValue) {
     super._requestUpdate(name, oldValue);
     if (
@@ -184,6 +195,10 @@ export class LionSelectRich extends OverlayMixin(
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();
       }
+    }
+
+    if (name === 'disabled' || name === 'readOnly') {
+      this.__toggleInvokerDisabled();
     }
   }
 
@@ -314,6 +329,13 @@ export class LionSelectRich extends OverlayMixin(
     this._listboxNode.removeEventListener('active-changed', this.__onChildActiveChanged);
     this._listboxNode.removeEventListener('model-value-changed', this.__onChildModelValueChanged);
     this._listboxNode.removeEventListener('keyup', this.__onKeyUp);
+  }
+
+  __toggleInvokerDisabled() {
+    if (this._invokerNode) {
+      this._invokerNode.disabled = this.disabled;
+      this._invokerNode.readOnly = this.readOnly;
+    }
   }
 
   __onChildActiveChanged({ target }) {

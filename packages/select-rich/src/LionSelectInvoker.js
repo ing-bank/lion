@@ -13,6 +13,11 @@ export class LionSelectInvoker extends LionButton {
       selectedElement: {
         type: Object,
       },
+      readOnly: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'readonly',
+      },
     };
   }
 
@@ -34,6 +39,14 @@ export class LionSelectInvoker extends LionButton {
   constructor() {
     super();
     this.selectedElement = null;
+    this.type = 'button';
+  }
+
+  _requestUpdate(name, oldValue) {
+    super._requestUpdate(name, oldValue);
+    if (name === 'readOnly') {
+      this.disabled = this.readOnly;
+    }
   }
 
   _contentTemplate() {

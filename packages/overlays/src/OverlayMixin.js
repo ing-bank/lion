@@ -1,4 +1,4 @@
-import { render, dedupeMixin } from '@lion/core';
+ import { render, dedupeMixin } from '@lion/core';
 
 /**
  * @type {Function()}

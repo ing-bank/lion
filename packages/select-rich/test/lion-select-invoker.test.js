@@ -48,6 +48,13 @@ describe('lion-select-invoker', () => {
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
+  it('delegates the readonly attribute to disabled', async () => {
+    const el = await fixture(html`
+      <lion-select-invoker readonly></lion-select-invoker>
+    `);
+    expect(el.hasAttribute('disabled')).to.be.true;
+  });
+
   describe('Subclassers', () => {
     it('supports a custom _contentTemplate', async () => {
       const myTag = defineCE(
