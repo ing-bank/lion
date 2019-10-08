@@ -185,13 +185,14 @@ export class OverlayController {
     }
     if (this.isTooltip) {
       // TODO: this could also be labelledby
-      this.invokerNode.setAttribute('aria-describedby', this._contentId);
+      if (this.invokerNode) {
+        this.invokerNode.setAttribute('aria-describedby', this._contentId);
+      }
       this.contentNode.setAttribute('role', 'tooltip');
     } else {
-      this.invokerNode.setAttribute('aria-expanded', this.isShown);
-      // aria-controls currently doesn't work perfectly
-      this.invokerNode.setAttribute('aria-controls', this._contentId);
-      // this.invokerNode[setOrRemoveAttr]('aria-haspopup', 'true');
+      if (this.invokerNode) {
+        this.invokerNode.setAttribute('aria-expanded', this.isShown);
+      }
       if (!this.contentNode.hasAttribute('role')) {
         this.contentNode.setAttribute('role', 'dialog');
       }
@@ -215,16 +216,12 @@ export class OverlayController {
       return;
     }
     this.dispatchEvent(new Event('before-show'));
-    await this.transitionShow({ backdropNode: this.backdropNode, conentNode: this.contentNode });
     this._contentNodeWrapper.style.display = this.placementMode === 'local' ? 'inline-block' : '';
     await this._handleFeatures({ phase: 'setup' });
     await this._handlePosition({ phase: 'setup' });
     this.elementToFocusAfterHide = elementToFocusAfterHide;
     this.dispatchEvent(new Event('show'));
   }
-
-  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionShow({ backdropNode, contentNode }) {}
 
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
@@ -472,7 +469,7 @@ export class OverlayController {
   }
 
   _handleAccessibility({ phase }) {
-    if (!this.isTooltip) {
+    if (this.invokerNode && !this.isTooltip) {
       this.invokerNode.setAttribute('aria-expanded', phase === 'setup');
     }
   }

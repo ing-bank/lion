@@ -14,6 +14,9 @@ storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
     const nestedDialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
+      viewportConfig: {
+        placement: 'top',
+      },
       contentNode: renderAsNode(html`
         <div class="demo-overlay">
           <p>Nested modal dialog</p>

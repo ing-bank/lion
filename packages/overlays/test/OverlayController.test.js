@@ -767,16 +767,6 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode.id).to.contain('preserved');
     });
 
-    it('adds [aria-controls] on invoker', async () => {
-      const invokerNode = await fixture('<div role="button">invoker</div>');
-      const ctrl = new OverlayController({
-        ...withLocalTestConfig(),
-        handlesAccessibility: true,
-        invokerNode,
-      });
-      expect(ctrl.invokerNode.getAttribute('aria-controls')).to.contain(ctrl.contentNode.id);
-    });
-
     it('adds [role=dialog] on content', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
