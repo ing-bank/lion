@@ -1,7 +1,7 @@
-import { html, render, ifDefined } from '@lion/core';
+import { html, ifDefined, renderAsNode } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
-import { overlays, ModalDialogController } from '@lion/overlays';
-import { Unparseable, isValidatorApplied } from '@lion/validate';
+import { OverlayController, withModalDialogConfig, OverlayMixin } from '@lion/overlays';
+import { isValidatorApplied } from '@lion/validate';
 import '@lion/calendar/lion-calendar.js';
 import './lion-calendar-overlay-frame.js';
 
@@ -9,7 +9,7 @@ import './lion-calendar-overlay-frame.js';
  * @customElement lion-input-datepicker
  * @extends {LionInputDate}
  */
-export class LionInputDatepicker extends LionInputDate {
+export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   static get properties() {
     return {
       /**
@@ -46,7 +46,7 @@ export class LionInputDatepicker extends LionInputDate {
   get slots() {
     return {
       ...super.slots,
-      [this._calendarInvokerSlot]: () => this.__createPickerAndReturnInvokerNode(),
+      [this._calendarInvokerSlot]: () => renderAsNode(this._invokerTemplate()),
     };
   }
 
@@ -137,12 +137,8 @@ export class LionInputDatepicker extends LionInputDate {
     return this.querySelector(`#${this.__invokerId}`);
   }
 
-  get _calendarOverlayElement() {
-    return this._overlayCtrl.contentNode;
-  }
-
   get _calendarElement() {
-    return this._calendarOverlayElement.querySelector('#calendar');
+    return this._overlayCtrl.contentNode.querySelector('#calendar');
   }
 
   constructor() {
@@ -200,7 +196,12 @@ export class LionInputDatepicker extends LionInputDate {
     }
   }
 
-  _calendarOverlayTemplate() {
+  /**
+   * Defining this overlay as a templates lets OverlayInteraceMixin
+   * this is our source to give as .contentNode to OverlayController.
+   * Important: do not change the name of this method.
+   */
+  _overlayTemplate() {
     return html`
       <lion-calendar-overlay-frame @dialog-close=${() => this._overlayCtrl.hide()}>
         <span slot="heading">${this.calendarHeading}</span>
@@ -240,8 +241,6 @@ export class LionInputDatepicker extends LionInputDate {
         type="button"
         @click="${this.__openCalendarOverlay}"
         id="${this.__invokerId}"
-        aria-haspopup="dialog"
-        aria-expanded="false"
         aria-label="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
         title="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
       >
@@ -250,27 +249,26 @@ export class LionInputDatepicker extends LionInputDate {
     `;
   }
 
-  __createPickerAndReturnInvokerNode() {
-    const renderParent = document.createElement('div');
-    render(this._invokerTemplate(), renderParent);
-    const invokerNode = renderParent.firstElementChild;
-
-    // TODO: ModalDialogController could be replaced by a more flexible
-    // overlay, allowing the overlay to switch on smaller screens, for instance from dropdown to
-    // bottom sheet via DynamicOverlayController
-    this._overlayCtrl = overlays.add(
-      new ModalDialogController({
-        contentTemplate: () => this._calendarOverlayTemplate(),
-        elementToFocusAfterHide: invokerNode,
-      }),
-    );
-    return invokerNode;
+  /**
+   * @override Configures OverlayMixin
+   * @desc returns an instance of a (dynamic) overlay controller
+   * @returns {OverlayController}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _defineOverlay({ contentNode, invokerNode }) {
+    const ctrl = new OverlayController({
+      ...withModalDialogConfig(),
+      contentNode,
+      invokerNode,
+      elementToFocusAfterHide: invokerNode,
+    });
+    return ctrl;
   }
 
   async __openCalendarOverlay() {
     this._overlayCtrl.show();
     await Promise.all([
-      this._calendarOverlayElement.updateComplete,
+      this._overlayCtrl.contentNode.updateComplete,
       this._calendarElement.updateComplete,
     ]);
     this._onCalendarOverlayOpened();
@@ -301,7 +299,7 @@ export class LionInputDatepicker extends LionInputDate {
    * @returns {Date|undefined} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {
-    return modelValue instanceof Unparseable ? undefined : modelValue;
+    return modelValue instanceof Date ? modelValue : undefined;
   }
 
   /**
@@ -326,5 +324,12 @@ export class LionInputDatepicker extends LionInputDate {
         this.__calendarDisableDates = param;
       }
     });
+  }
+
+  /**
+   * @override Configures OverlayMixin
+   */
+  get _overlayInvokerNode() {
+    return this._invokerElement;
   }
 }

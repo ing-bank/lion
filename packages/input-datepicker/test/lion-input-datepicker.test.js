@@ -1,6 +1,5 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
+import { expect, fixture, defineCE, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { html, LitElement } from '@lion/core';
 import {
   maxDateValidator,
@@ -15,10 +14,6 @@ import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
 import '../lion-input-datepicker.js';
 
 describe('<lion-input-datepicker>', () => {
-  beforeEach(() => {
-    localizeTearDown();
-  });
-
   describe('Calendar Overlay', () => {
     it('implements calendar-overlay Style component', async () => {
       const el = await fixture(html`
@@ -63,6 +58,7 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
+      await aTimeout(100);
       expect(
         elObj.overlayHeadingEl.querySelector('slot[name="heading"]').assignedNodes()[0],
       ).lightDom.to.equal('Pick your date');
@@ -94,6 +90,7 @@ describe('<lion-input-datepicker>', () => {
       elObj.overlayController.contentNode.dispatchEvent(
         new KeyboardEvent('keyup', { key: 'Escape' }),
       );
+      await aTimeout(100);
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
@@ -287,14 +284,16 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.invokerEl.getAttribute('aria-label')).to.equal('Open date picker');
     });
 
-    // TODO: move this functionality to GlobalOverlay
-    it('adds aria-haspopup="dialog" and aria-expanded="true" to invoker button', async () => {
+    it('adds [aria-expanded] to invoker button', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
       `);
       const elObj = new DatepickerInputObject(el);
 
-      expect(elObj.invokerEl.getAttribute('aria-haspopup')).to.equal('dialog');
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
+      await elObj.openCalendar();
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('true');
+      await elObj.closeCalendar();
       expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
     });
   });
