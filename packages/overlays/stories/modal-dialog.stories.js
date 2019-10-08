@@ -1,7 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import { css } from '@lion/core';
-import { overlays, ModalDialogController } from '../index.js';
+import { css, renderAsNode } from '@lion/core';
+import { OverlayController, withModalDialogConfig } from '../index.js';
 
 const modalDialogDemoStyle = css`
   .demo-overlay {
@@ -13,34 +12,32 @@ const modalDialogDemoStyle = css`
 
 storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
-    const nestedDialogCtrl = overlays.add(
-      new ModalDialogController({
-        contentTemplate: () => html`
-          <div class="demo-overlay">
-            <p>Nested modal dialog</p>
-            <button @click="${() => nestedDialogCtrl.hide()}">Close</button>
-          </div>
-        `,
-      }),
-    );
+    const nestedDialogCtrl = new OverlayController({
+      ...withModalDialogConfig(),
+      contentNode: renderAsNode(html`
+        <div class="demo-overlay">
+          <p>Nested modal dialog</p>
+          <button @click="${() => nestedDialogCtrl.hide()}">Close</button>
+        </div>
+      `),
+    });
 
-    const dialogCtrl = overlays.add(
-      new ModalDialogController({
-        contentTemplate: () => html`
-          <div class="demo-overlay">
-            <p>Modal dialog</p>
-            <button @click="${() => dialogCtrl.hide()}">Close</button>
-            <button
-              @click="${event => nestedDialogCtrl.show(event.target)}"
-              aria-haspopup="dialog"
-              aria-expanded="false"
-            >
-              Open nested dialog
-            </button>
-          </div>
-        `,
-      }),
-    );
+    const dialogCtrl = new OverlayController({
+      ...withModalDialogConfig(),
+      contentNode: renderAsNode(html`
+        <div class="demo-overlay">
+          <p>Modal dialog</p>
+          <button @click="${() => dialogCtrl.hide()}">Close</button>
+          <button
+            @click="${event => nestedDialogCtrl.show(event.target)}"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
+            Open nested dialog
+          </button>
+        </div>
+      `),
+    });
 
     return html`
       <style>
@@ -63,35 +60,33 @@ storiesOf('Global Overlay System|Modal Dialog', module)
     `;
   })
   .add('Option "isBlocking"', () => {
-    const blockingDialogCtrl = overlays.add(
-      new ModalDialogController({
-        isBlocking: true,
-        contentTemplate: () => html`
-          <div class="demo-overlay demo-overlay--2">
-            <p>Hides other dialogs</p>
-            <button @click="${() => blockingDialogCtrl.hide()}">Close</button>
-          </div>
-        `,
-      }),
-    );
+    const blockingDialogCtrl = new OverlayController({
+      ...withModalDialogConfig(),
+      isBlocking: true,
+      contentNode: renderAsNode(html`
+        <div class="demo-overlay demo-overlay--2">
+          <p>Hides other dialogs</p>
+          <button @click="${() => blockingDialogCtrl.hide()}">Close</button>
+        </div>
+      `),
+    });
 
-    const normalDialogCtrl = overlays.add(
-      new ModalDialogController({
-        contentTemplate: () => html`
-          <div class="demo-overlay">
-            <p>Normal dialog</p>
-            <button
-              @click="${event => blockingDialogCtrl.show(event.target)}"
-              aria-haspopup="dialog"
-              aria-expanded="false"
-            >
-              Open blocking dialog
-            </button>
-            <button @click="${() => normalDialogCtrl.hide()}">Close</button>
-          </div>
-        `,
-      }),
-    );
+    const normalDialogCtrl = new OverlayController({
+      ...withModalDialogConfig(),
+      contentNode: renderAsNode(html`
+        <div class="demo-overlay">
+          <p>Normal dialog</p>
+          <button
+            @click="${event => blockingDialogCtrl.show(event.target)}"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
+            Open blocking dialog
+          </button>
+          <button @click="${() => normalDialogCtrl.hide()}">Close</button>
+        </div>
+      `),
+    });
 
     return html`
       <style>

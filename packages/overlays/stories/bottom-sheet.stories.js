@@ -1,7 +1,7 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { css } from '@lion/core';
-import { overlays, BottomSheetController } from '../index.js';
+import { css, renderAsNode } from '@lion/core';
+import { OverlayController, withBottomSheetConfig } from '../index.js';
 
 const bottomSheetDemoStyle = css`
   .demo-overlay {
@@ -12,16 +12,15 @@ const bottomSheetDemoStyle = css`
 `;
 
 storiesOf('Global Overlay System|BottomSheet', module).add('Default', () => {
-  const bottomSheetCtrl = overlays.add(
-    new BottomSheetController({
-      contentTemplate: () => html`
-        <div class="demo-overlay">
-          <p>BottomSheet</p>
-          <button @click="${() => bottomSheetCtrl.hide()}">Close</button>
-        </div>
-      `,
-    }),
-  );
+  const bottomSheetCtrl = new OverlayController({
+    ...withBottomSheetConfig(),
+    contentNode: renderAsNode(html`
+      <div class="demo-overlay">
+        <p>BottomSheet</p>
+        <button @click="${() => bottomSheetCtrl.hide()}">Close</button>
+      </div>
+    `),
+  });
 
   return html`
     <style>

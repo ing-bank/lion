@@ -1,7 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css } from '@lion/core';
-import { LocalOverlayController } from '../src/LocalOverlayController.js';
-import { overlays } from '../src/overlays.js';
+import { css, renderAsNode } from '@lion/core';
+import { OverlayController } from '../index.js';
 
 let placement = 'top';
 const togglePlacement = popupController => {
@@ -46,20 +45,16 @@ const popupPlacementDemoStyle = css`
 storiesOf('Local Overlay System|Local Overlay Placement', module)
   .addParameters({ options: { selectedPanel: 'storybook/actions/actions-panel' } })
   .add('Preferred placement overlay absolute', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'UK';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    popup = overlays.add(
-      new LocalOverlayController({
-        hidesOnEsc: true,
-        contentTemplate: () => html`
-          <div class="demo-popup">United Kingdom</div>
-        `,
-        invokerNode,
-      }),
-    );
+    const popup = new OverlayController({
+      placementMode: 'local',
+      hidesOnEsc: true,
+      contentNode: renderAsNode(html`
+        <div class="demo-popup">United Kingdom</div>
+      `),
+      invokerNode: renderAsNode(html`
+        <button @click="${() => popup.toggle()}">UK</button>
+      `),
+    });
 
     return html`
       <style>
@@ -67,48 +62,43 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       </style>
       <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${invokerNode} ${popup.content}
+        ${popup.invokerNode}${popup.content}
       </div>
     `;
   })
   .add('Override the popper config', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'UK';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    popup = overlays.add(
-      new LocalOverlayController({
-        hidesOnEsc: true,
-        popperConfig: {
-          placement: 'bottom-start',
-          positionFixed: true,
-          modifiers: {
-            keepTogether: {
-              enabled: true /* Prevents detachment of content element from reference element */,
-            },
-            preventOverflow: {
-              enabled: false /* disables shifting/sliding behavior on secondary axis */,
-              boundariesElement: 'viewport',
-              padding: 32 /* when enabled, this is the viewport-margin for shifting/sliding */,
-            },
-            flip: {
-              boundariesElement: 'viewport',
-              padding: 16 /* viewport-margin for flipping on primary axis */,
-            },
-            offset: {
-              enabled: true,
-              offset: `0, 16px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
-            },
+    const popup = new OverlayController({
+      placementMode: 'local',
+      hidesOnEsc: true,
+      popperConfig: {
+        placement: 'bottom-start',
+        positionFixed: true,
+        modifiers: {
+          keepTogether: {
+            enabled: true /* Prevents detachment of content element from reference element */,
+          },
+          preventOverflow: {
+            enabled: false /* disables shifting/sliding behavior on secondary axis */,
+            boundariesElement: 'viewport',
+            padding: 32 /* when enabled, this is the viewport-margin for shifting/sliding */,
+          },
+          flip: {
+            boundariesElement: 'viewport',
+            padding: 16 /* viewport-margin for flipping on primary axis */,
+          },
+          offset: {
+            enabled: true,
+            offset: `0, 16px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
           },
         },
-        contentTemplate: () =>
-          html`
-            <div class="demo-popup">United Kingdom</div>
-          `,
-        invokerNode,
-      }),
-    );
+      },
+      contentNode: renderAsNode(html`
+        <div class="demo-popup">United Kingdom</div>
+      `),
+      invokerNode: renderAsNode(html`
+        <button @click="${() => popup.toggle()}">UK</button>
+      `),
+    });
 
     return html`
       <style>
@@ -120,7 +110,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       </div>
       <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${invokerNode} ${popup.content}
+        ${popup.invokerNode} ${popup.content}
       </div>
     `;
   });
