@@ -6,9 +6,8 @@ import { render, dedupeMixin } from '@lion/core';
  * @mixinFunction
  */
 export const OverlayMixin = dedupeMixin(
-  (
-    superclass, // eslint-disable-next-line no-shadow
-  ) =>
+  superclass =>
+    // eslint-disable-next-line no-shadow
     class OverlayMixin extends superclass {
       static get properties() {
         return {
