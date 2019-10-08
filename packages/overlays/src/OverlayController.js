@@ -51,6 +51,9 @@ export class OverlayController {
       .substr(2, 10)}`;
 
     this.updateConfig(config);
+
+    this.__hasActiveTrapsKeyboardFocus = false;
+    this.__hasActiveBackdrop = true;
   }
 
   get content() {
@@ -390,6 +393,10 @@ export class OverlayController {
     }
   }
 
+  get hasActiveTrapsKeyboardFocus() {
+    return this.__hasActiveTrapsKeyboardFocus;
+  }
+
   _handleTrapsKeyboardFocus({ phase, findNewTrap = true }) {
     if (phase === 'setup') {
       if (this.manager) {
@@ -400,6 +407,7 @@ export class OverlayController {
       if (this.manager) {
         this.manager.informTrapsKeyboardFocusGotEnabled();
       }
+      this.__hasActiveTrapsKeyboardFocus = true;
     } else if (phase === 'teardown') {
       if (this._containFocusHandler) {
         this._containFocusHandler.disconnect();
@@ -409,6 +417,7 @@ export class OverlayController {
       if (this.manager) {
         this.manager.informTrapsKeyboardFocusGotDisabled({ disabledCtrl: this, findNewTrap });
       }
+      this.__hasActiveTrapsKeyboardFocus = false;
     }
   }
 

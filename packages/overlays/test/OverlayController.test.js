@@ -15,7 +15,7 @@ import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
-import { getRenderedOverlay } from '../test-helpers/global-positioning-helpers.js';
+import { getRenderedOverlay, getTopOverlay } from '../test-helpers/global-positioning-helpers.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
@@ -40,7 +40,6 @@ afterEach(() => {
 
 describe('OverlayController', () => {
   describe('Init', () => {
-    // adds OverlayController instance to OverlayManager
     it('adds OverlayController instance to OverlayManager', async () => {
       const ctrl = new OverlayController({
         ...withGlobalTestConfig(),
@@ -112,6 +111,17 @@ describe('OverlayController', () => {
 
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
+      it('offers an hasActiveTrapsKeyboardFocus flag', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
+        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.false;
+
+        await ctrl.show();
+        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.true;
+      });
+
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -173,6 +183,27 @@ describe('OverlayController', () => {
         simulateTab();
 
         expect(elOutside).to.equal(document.activeElement);
+      });
+
+      it('keeps focus within overlay with multiple overlays with all traps on true', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
+
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
+
+        await ctrl0.show();
+        await ctrl1.show();
+        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.false;
+        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.true;
+
+        await ctrl1.hide();
+        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.true;
+        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.false;
       });
     });
 
@@ -441,12 +472,26 @@ describe('OverlayController', () => {
         });
 
         await ctrl.show();
-        ctrl.updateComplete;
         expect(getComputedStyle(document.body).overflow).to.equal('hidden');
 
         await ctrl.hide();
-        ctrl.updateComplete;
         expect(getComputedStyle(document.body).overflow).to.equal('visible');
+      });
+
+      it('keeps preventing of scrolling when multiple overlays are opened and closed', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        await ctrl0.show();
+        await ctrl1.show();
+        await ctrl1.hide();
+        expect(getComputedStyle(document.body).overflow).to.equal('hidden');
       });
     });
 
@@ -685,6 +730,23 @@ describe('OverlayController', () => {
       // check for show
       expect(ctrl.toggle()).to.be.instanceOf(Promise);
     });
+
+    it('makes sure the latest shown overlay is visible', async () => {
+      const ctrl0 = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      const ctrl1 = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      await ctrl0.show();
+      expect(getTopOverlay()).to.equal(ctrl0.contentNode);
+
+      await ctrl1.show();
+      expect(getTopOverlay()).to.equal(ctrl1.contentNode);
+
+      await ctrl1.hide();
+      expect(getTopOverlay()).to.equal(ctrl0.contentNode);
+    });
   });
 
   describe('Update Configuration', () => {
@@ -775,6 +837,90 @@ describe('OverlayController', () => {
         invokerNode,
       });
       expect(ctrl.contentNode.getAttribute('role')).to.equal('dialog');
+    });
+
+    it('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      const sibling1 = document.createElement('div');
+      const sibling2 = document.createElement('div');
+      document.body.insertBefore(sibling1, ctrl.manager.globalRootNode);
+      document.body.appendChild(sibling2);
+
+      await ctrl.show();
+
+      [sibling1, sibling2].forEach(sibling => {
+        expect(sibling).to.have.attribute('aria-hidden', 'true');
+        expect(sibling).to.have.attribute('inert');
+      });
+      expect(getRenderedOverlay(0).hasAttribute('aria-hidden')).to.be.false;
+      expect(getRenderedOverlay(0).hasAttribute('inert')).to.be.false;
+
+      await ctrl.hide();
+
+      [sibling1, sibling2].forEach(sibling => {
+        expect(sibling).to.not.have.attribute('aria-hidden');
+        expect(sibling).to.not.have.attribute('inert');
+      });
+
+      // cleanup
+      document.body.removeChild(sibling1);
+      document.body.removeChild(sibling2);
+    });
+
+    /**
+     * style.userSelect:
+     *   - chrome: 'none'
+     *   - rest: undefined
+     *
+     * style.pointerEvents:
+     *   - chrome: auto
+     *   - IE11: visiblePainted
+     */
+    it('disables pointer events and selection on inert elements', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      // show+hide are needed to create a root node
+      await ctrl.show();
+      await ctrl.hide();
+
+      const sibling1 = document.createElement('div');
+      const sibling2 = document.createElement('div');
+      document.body.insertBefore(sibling1, ctrl.manager.globalRootNode);
+      document.body.appendChild(sibling2);
+
+      await ctrl.show();
+
+      [sibling1, sibling2].forEach(sibling => {
+        expect(window.getComputedStyle(sibling).userSelect).to.be.oneOf(['none', undefined]);
+        expect(window.getComputedStyle(sibling).pointerEvents).to.equal('none');
+      });
+      expect(window.getComputedStyle(getRenderedOverlay(0)).userSelect).to.be.oneOf([
+        'auto',
+        undefined,
+      ]);
+      expect(window.getComputedStyle(getRenderedOverlay(0)).pointerEvents).to.be.oneOf([
+        'auto',
+        'visiblePainted',
+      ]);
+
+      await ctrl.hide();
+
+      [sibling1, sibling2].forEach(sibling => {
+        expect(window.getComputedStyle(sibling).userSelect).to.be.oneOf(['auto', undefined]);
+        expect(window.getComputedStyle(sibling).pointerEvents).to.be.oneOf([
+          'auto',
+          'visiblePainted',
+        ]);
+      });
+
+      // cleanup
+      document.body.removeChild(sibling1);
+      document.body.removeChild(sibling2);
     });
 
     describe('Tooltip', () => {
