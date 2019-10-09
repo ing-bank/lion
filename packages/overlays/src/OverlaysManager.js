@@ -187,7 +187,6 @@ export class OverlaysManager {
 
   requestToEnableScroll() {
     if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
-      console.log('remove');
       document.body.classList.remove('global-overlays-scroll-lock');
       if (isIOS) {
         // iOS has issues with overlays with input fields. This is fixed by applying
