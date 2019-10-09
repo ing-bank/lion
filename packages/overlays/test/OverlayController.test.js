@@ -921,6 +921,7 @@ describe('OverlayController', () => {
     it('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {
       const ctrl = new OverlayController({
         ...withGlobalTestConfig(),
+        trapsKeyboardFocus: true,
       });
 
       const sibling1 = document.createElement('div');
