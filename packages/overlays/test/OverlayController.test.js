@@ -58,9 +58,6 @@ describe('OverlayController', () => {
 
     describe('Z-index on local overlays', () => {
       let contentNode;
-      // add to dom (please be awara it needs a parentNode)
-      // const wrapper = fixture(html`<div>{contentNode}</div>`);
-
       async function createZNode(zIndexVal, { mode } = {}) {
         if (mode === 'global') {
           contentNode = await fixture(html`
@@ -348,7 +345,7 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.be.true;
       });
 
-      it.skip('doesn\'t hide on "inside sub shadow dom" click', async () => {
+      it('doesn\'t hide on "inside sub shadow dom" click', async () => {
         const invokerNode = await fixture('<button>Invoker</button>');
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
@@ -373,12 +370,15 @@ describe('OverlayController', () => {
           },
         );
         const tag = unsafeStatic(tagString);
-        ctrl.contentNode = await fixture(html`
+        ctrl.updateConfig({
+          contentNode: await fixture(html`
           <div>
             <div>Content</div>
             <${tag}></${tag}>
           </div>
-        `);
+        `),
+        });
+        await ctrl.show();
 
         // Don't hide on inside shadowDom click
         ctrl.contentNode

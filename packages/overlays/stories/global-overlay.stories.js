@@ -298,4 +298,36 @@ storiesOf('Global Overlay System|Global Overlay', module)
         Open overlay
       </button>
     `;
+  })
+  .add('Option "hidesOnOutsideClick"', () => {
+    const shadowContent = document.createElement('div');
+    shadowContent.attachShadow({ mode: 'open' });
+    shadowContent.shadowRoot.appendChild(
+      renderAsNode(html`
+        <div style="width: 100px; padding: 10px; background: black; color: white;">
+          Shadow area
+        </div>
+      `),
+    );
+
+    const ctrl = new OverlayController({
+      placementMode: 'global',
+      hidesOnOutsideClick: true,
+      contentNode: renderAsNode(html`
+        <div class="demo-overlay">
+          <p>Hides when clicked outside</p>
+          ${shadowContent}
+          <button @click="${() => ctrl.hide()}">Close</button>
+        </div>
+      `),
+    });
+
+    return html`
+      <style>
+        ${globalOverlayDemoStyle}
+      </style>
+      <button @click="${event => ctrl.show(event.target)}">
+        Open overlay
+      </button>
+    `;
   });
