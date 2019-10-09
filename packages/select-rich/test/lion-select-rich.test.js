@@ -400,6 +400,34 @@ describe('lion-select-rich', () => {
 
       expect(el._invokerNode.getAttribute('aria-expanded')).to.equal('true');
     });
+
+    it('is accessible when closed', async () => {
+      const el = await fixture(html`
+        <lion-select-rich label="age">
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20}>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible when opened', async () => {
+      const el = await fixture(html`
+        <lion-select-rich label="age">
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20}>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+      el.opened = true;
+      await el.updateComplete;
+      await el.updateComplete; // need 2 awaits as overlay.show is an async function
+
+      await expect(el).to.be.accessible();
+    });
   });
 
   describe('Use cases', () => {

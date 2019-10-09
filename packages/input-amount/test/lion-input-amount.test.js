@@ -118,4 +118,25 @@ describe('<lion-input-amount>', () => {
       expect(el._currencyDisplayNode.getAttribute('aria-label')).to.equal('Philippine pisos');
     });
   });
+
+  it('is accessible', async () => {
+    const el = await fixture(
+      `<lion-input-amount><label slot="label">Label</label></lion-input-amount>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when readonly', async () => {
+    const el = await fixture(
+      `<lion-input-amount readonly .modelValue=${'123'}><label slot="label">Label</label></lion-input-amount>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(
+      `<lion-input-amount disabled><label slot="label">Label</label></lion-input-amount>`,
+    );
+    await expect(el).to.be.accessible();
+  });
 });

@@ -41,4 +41,21 @@ describe('<lion-input>', () => {
     expect(el.getAttribute('placeholder')).to.equal('foo');
     expect(el._inputNode.getAttribute('placeholder')).to.equal('foo');
   });
+
+  it('is accessible', async () => {
+    const el = await fixture(`<lion-input><label slot="label">Label</label></lion-input>`);
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when readonly', async () => {
+    const el = await fixture(
+      `<lion-input readonly .modelValue=${'read only'}><label slot="label">Label</label></lion-input>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(`<lion-input disabled><label slot="label">Label</label></lion-input>`);
+    await expect(el).to.be.accessible();
+  });
 });

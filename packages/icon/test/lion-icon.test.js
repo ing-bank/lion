@@ -71,6 +71,24 @@ describe('lion-icon', () => {
     expect(el.hasAttribute('aria-label')).to.equal(false);
   });
 
+  it('is accessible with an aria label', async () => {
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
+      `,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible without an aria label', async () => {
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${heartSvg}></lion-icon>
+      `,
+    );
+    await expect(el).to.be.accessible();
+  });
+
   it('expects svg-icons to have the attribute `focusable="false"` so the icon doesn\'t appear in tab-order in IE/Edge', async () => {
     const icon = await fixture(
       html`
