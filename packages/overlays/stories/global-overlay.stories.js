@@ -1,5 +1,5 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css, renderAsNode } from '@lion/core';
+import { css, renderAsNode, LitElement } from '@lion/core';
 import { OverlayController } from '../index.js';
 
 const globalOverlayDemoStyle = css`
@@ -9,24 +9,6 @@ const globalOverlayDemoStyle = css`
     border: 1px solid lightgrey;
   }
 `;
-
-let placement = 'center';
-const togglePlacement = overlayCtrl => {
-  const placements = [
-    'top-left',
-    'top',
-    'top-right',
-    'right',
-    'bottom-left',
-    'bottom',
-    'bottom-right',
-    'left',
-    'center',
-  ];
-  placement = placements[(placements.indexOf(placement) + 1) % placements.length];
-  // eslint-disable-next-line no-param-reassign
-  overlayCtrl.overlayContainerPlacementClass = `${overlayCtrl.overlayContainerClass}--${placement}`;
-};
 
 storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
@@ -246,190 +228,74 @@ storiesOf('Global Overlay System|Global Overlay', module)
     `;
   })
   .add('Option "viewportConfig:placement"', () => {
+    const tagName = 'lion-overlay-placement-demo';
+    if (!customElements.get(tagName)) {
+      customElements.define(
+        tagName,
+        class extends LitElement {
+          static get properties() {
+            return {
+              // controller: { type: Object },
+              placement: { type: String },
+            };
+          }
+
+          render() {
+            return html`
+              <p>Overlay placement: ${this.placement}</p>
+              <button @click="${this._togglePlacement}">
+                Toggle ${this.placement} position
+              </button>
+              <button @click="${() => this.dispatchEvent(new CustomEvent('close'))}">Close</button>
+            `;
+          }
+
+          _togglePlacement() {
+            const options = [
+              'top',
+              'top-right',
+              'right',
+              'bottom-right',
+              'bottom',
+              'bottom-left',
+              'left',
+              'top-left',
+              'center',
+            ];
+            this.placement = options[(options.indexOf(this.placement) + 1) % options.length];
+            this.dispatchEvent(
+              new CustomEvent('toggle-placement', {
+                detail: this.placement,
+              }),
+            );
+          }
+        },
+      );
+    }
+    const initialPlacement = 'center';
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       viewportConfig: {
-        placement: 'center',
+        placement: initialPlacement,
       },
-      hasBackdrop: true,
-      trapsKeyboardFocus: true,
       contentNode: renderAsNode(html`
-        <div class="demo-overlay">
-          <p>Overlay placement: ${placement}</p>
-          <button @click="${() => overlayCtrl.hide()}">Close</button>
-        </div>
+        <lion-overlay-placement-demo class="demo-overlay"> </lion-overlay-placement-demo>
       `),
     });
-
+    const element = overlayCtrl.content.querySelector(tagName);
+    element.placement = initialPlacement;
+    element.addEventListener('toggle-placement', e => {
+      overlayCtrl.updateConfig({ viewportConfig: { placement: e.detail } });
+    });
+    element.addEventListener('close', () => {
+      overlayCtrl.hide();
+    });
     return html`
       <style>
         ${globalOverlayDemoStyle}
       </style>
-      <button @click=${() => togglePlacement(overlayCtrl)}>Change placement</button>
-      <button
-        @click="${event => overlayCtrl.show(event.target)}"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-      >
+      <button @click="${e => overlayCtrl.show(e.target)}">
         Open overlay
       </button>
     `;
   });
-// .add('Sync', () => {
-//   const overlayCtrl = new OverlayController({
-//       contentTemplate: ({ title = 'default' } = {}) => html`
-//         <div class="demo-overlay">
-//           <p>${title}</p>
-//           <label>Edit title:</label>
-//           <input
-//             value="${title}"
-//             @input="${e => overlayCtrl.sync({ isShown: true, data: { title: e.target.value } })}"
-//           />
-//           <button @click="${() => overlayCtrl.hide()}">Close</button>
-//         </div>
-//       `,
-//     }),
-//   );
-
-//   return html`
-//     <style>
-//       ${globalOverlayDemoStyle}
-//     </style>
-//     <button
-//       @click="${() => overlayCtrl.sync({ isShown: true, data: { title: 'My title' } })}"
-//       aria-haspopup="dialog"
-//       aria-expanded="false"
-//     >
-//       Open overlay
-//     </button>
-//   `;
-// })
-// .add('In web components', () => {
-//   class EditUsernameOverlay extends LionLitElement {
-//     static get properties() {
-//       return {
-//         username: { type: String },
-//       };
-//     }
-
-//     static get styles() {
-//       return css`
-//         :host {
-//           position: fixed;
-//           left: 20px;
-//           top: 20px;
-//           display: block;
-//           width: 300px;
-//           padding: 24px;
-//           background-color: white;
-//           border: 1px solid blue;
-//         }
-
-//         .close-button {
-//           position: absolute;
-//           top: 8px;
-//           right: 8px;
-//         }
-//       `;
-//     }
-
-//     render() {
-//       return html`
-//         <div>
-//           <button class="close-button" @click="${this._onClose}">X</button>
-//           <label for="usernameInput">Edit Username</label>
-//           <input id="usernameInput" value="${this.username}" />
-//           <button @click="${this._onUsernameEdited}">
-//             Save
-//           </button>
-//         </div>
-//       `;
-//     }
-
-//     _onUsernameEdited() {
-//       this.dispatchEvent(
-//         new CustomEvent('edit-username-submitted', {
-//           detail: this.$id('usernameInput').value,
-//         }),
-//       );
-//     }
-
-//     _onClose() {
-//       this.dispatchEvent(new CustomEvent('edit-username-closed'));
-//     }
-//   }
-//   if (!customElements.get('edit-username-overlay')) {
-//     customElements.define('edit-username-overlay', EditUsernameOverlay);
-//   }
-//   class MyComponent extends LionLitElement {
-//     static get properties() {
-//       return {
-//         username: { type: String },
-//         _editingUsername: { type: Boolean },
-//       };
-//     }
-
-//     constructor() {
-//       super();
-
-//       this.username = 'Steve';
-//       this._editingUsername = false;
-//     }
-
-//     disconnectedCallback() {
-//       super.disconnectedCallback();
-//       this._editOverlay.hide();
-//     }
-
-//     render() {
-//       return html`
-//         <p>Your username is: ${this.username}</p>
-//         <button @click=${this._onStartEditUsername} aria-haspopup="dialog" aria-expanded="false">
-//           Edit username
-//         </button>
-//       `;
-//     }
-
-//     firstUpdated() {
-//       this._editOverlay = new OverlayController({
-//           placementMode: 'global',
-//           elementToFocusAfterHide: this.shadowRoot.querySelector('button'),
-//           contentNode: ({ username = 'standard' } = {}) => html`
-//             <edit-username-overlay
-//               username="${username}"
-//               @edit-username-submitted="${e => this._onEditSubmitted(e)}"
-//               @edit-username-closed="${() => this._onEditClosed()}"
-//             >
-//             </edit-username-overlay>
-//           `,
-//         }),
-//       );
-//     }
-
-//     updated() {
-//       this._editOverlay.sync({
-//         isShown: this._editingUsername,
-//         data: { username: this.username },
-//       });
-//     }
-
-//     _onEditSubmitted(e) {
-//       this.username = e.detail;
-//       this._editingUsername = false;
-//     }
-
-//     _onEditClosed() {
-//       this._editingUsername = false;
-//     }
-
-//     _onStartEditUsername() {
-//       this._editingUsername = true;
-//     }
-//   }
-//   if (!customElements.get('my-component')) {
-//     customElements.define('my-component', MyComponent);
-//   }
-//   return html`
-//     <my-component></my-component>
-//   `;
-// });
