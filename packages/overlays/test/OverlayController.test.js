@@ -125,9 +125,9 @@ describe('OverlayController', () => {
       it("doesn't touch the value of .contentNode", async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
-          contentNode: await createZNode('auto'),
+          contentNode: await createZNode('auto', { mode: 'global' }),
         });
-        expect(ctrl.contentNode.style.zIndex).to.equal(undefined);
+        expect(ctrl.contentNode.style.zIndex).to.equal('');
       });
     });
 
