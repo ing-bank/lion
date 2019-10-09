@@ -79,6 +79,19 @@ export class OverlayController {
     return this.referenceNode || this.invokerNode;
   }
 
+  set elevation(value) {
+    if (this._contentNodeWrapper) {
+      this._contentNodeWrapper.style.zIndex = value;
+    }
+    if (this.backdropNode) {
+      this.backdropNode.style.zIndex = value;
+    }
+  }
+
+  get elevation() {
+    return this._contentNodeWrapper.zIndex;
+  }
+
   /**
    * @desc Allows to dynamically change the overlay configuration. Needed in case the
    * presentation of the overlay changes depending on screen size.
@@ -138,6 +151,7 @@ export class OverlayController {
       }
       this.__mergePopperConfigs(this.popperConfig || {});
     }
+    this._handleFeatures({ phase: 'init' });
   }
 
   __initConnectionTarget() {
@@ -221,25 +235,26 @@ export class OverlayController {
     if (this.manager) {
       this.manager.show(this);
     }
+
     if (this.isShown) {
       return;
     }
     this.dispatchEvent(new Event('before-show'));
     this._contentNodeWrapper.style.display = this.placementMode === 'local' ? 'inline-block' : '';
-    await this._handleFeatures({ phase: 'setup' });
-    await this._handlePosition({ phase: 'setup' });
+    await this._handleFeatures({ phase: 'show' });
+    await this._handlePosition({ phase: 'show' });
     this.elementToFocusAfterHide = elementToFocusAfterHide;
     this.dispatchEvent(new Event('show'));
   }
 
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
-      const addOrRemove = phase === 'setup' ? 'add' : 'remove';
+      const addOrRemove = phase === 'show' ? 'add' : 'remove';
       const placementClass = `${GLOBAL_OVERLAYS_CONTAINER_CLASS}--${this.viewportConfig.placement}`;
       this._contentNodeWrapper.classList[addOrRemove](GLOBAL_OVERLAYS_CONTAINER_CLASS);
       this._contentNodeWrapper.classList[addOrRemove](placementClass);
       this.contentNode.classList[addOrRemove](GLOBAL_OVERLAYS_CLASS);
-    } else if (this.placementMode === 'local' && phase === 'setup') {
+    } else if (this.placementMode === 'local' && phase === 'show') {
       /**
        * Popper is weird about properly positioning the popper element when it is recreated so
        * we just recreate the popper instance to make it behave like it should.
@@ -268,7 +283,7 @@ export class OverlayController {
     this.dispatchEvent(new Event('before-hide'));
     // await this.transitionHide({ backdropNode: this.backdropNode, conentNode: this.contentNode });
     this._contentNodeWrapper.style.display = 'none';
-    this._handleFeatures({ phase: 'teardown' });
+    this._handleFeatures({ phase: 'hide' });
     this.dispatchEvent(new Event('hide'));
     this._restoreFocus();
   }
@@ -292,7 +307,7 @@ export class OverlayController {
    * @desc All features are handled here. Every feature is set up on show
    * and torn
    * @param {object} config
-   * @param {'setup'|'teardown'} config.phase
+   * @param {'init'|'show'|'hide'|'teardown'} config.phase
    */
   async _handleFeatures({ phase }) {
     this._handleZIndex({ phase });
@@ -325,31 +340,35 @@ export class OverlayController {
 
   // eslint-disable-next-line class-methods-use-this
   _handlePreventsScroll({ phase }) {
-    const addOrRemove = phase === 'setup' ? 'add' : 'remove';
-    document.body.classList[addOrRemove]('global-overlays-scroll-lock');
-    if (isIOS) {
-      // iOS has issues with overlays with input fields. This is fixed by applying
-      // position: fixed to the body. As a side effect, this will scroll the body to the top.
-      document.body.classList[addOrRemove]('global-overlays-scroll-lock-ios-fix');
+    if (phase === 'show' || phase === 'hide') {
+      const addOrRemove = phase === 'show' ? 'add' : 'remove';
+      document.body.classList[addOrRemove]('global-overlays-scroll-lock');
+      if (isIOS) {
+        // iOS has issues with overlays with input fields. This is fixed by applying
+        // position: fixed to the body. As a side effect, this will scroll the body to the top.
+        document.body.classList[addOrRemove]('global-overlays-scroll-lock-ios-fix');
+      }
     }
   }
 
   _handleBlocking({ phase }) {
-    const addOrRemove = phase === 'setup' ? 'add' : 'remove';
-    this._contentNodeWrapper.classList[addOrRemove]('global-overlays__overlay--blocking');
-    if (this.backdropNode) {
-      this.backdropNode.classList[addOrRemove]('global-overlays__backdrop--blocking');
-    }
+    if (phase === 'show' || phase === 'hide') {
+      const addOrRemove = phase === 'show' ? 'add' : 'remove';
+      this._contentNodeWrapper.classList[addOrRemove]('global-overlays__overlay--blocking');
+      if (this.backdropNode) {
+        this.backdropNode.classList[addOrRemove]('global-overlays__backdrop--blocking');
+      }
 
-    if (phase === 'setup') {
-      this.manager.globalRootNode.classList.add('global-overlays--blocking-opened');
-    } else if (phase === 'teardown') {
-      const blockingController = this.manager.shownList.find(
-        ctrl => ctrl !== this && ctrl.isBlocking === true,
-      );
-      // If there are no other blocking overlays remaining, stop hiding regular overlays
-      if (!blockingController) {
-        this.manager.globalRootNode.classList.remove('global-overlays--blocking-opened');
+      if (phase === 'show') {
+        this.manager.globalRootNode.classList.add('global-overlays--blocking-opened');
+      } else if (phase === 'hide') {
+        const blockingController = this.manager.shownList.find(
+          ctrl => ctrl !== this && ctrl.isBlocking === true,
+        );
+        // If there are no other blocking overlays remaining, stop hiding regular overlays
+        if (!blockingController) {
+          this.manager.globalRootNode.classList.remove('global-overlays--blocking-opened');
+        }
       }
     }
   }
@@ -367,37 +386,61 @@ export class OverlayController {
     if (this.placementMode === 'local') {
       return; // coming soon...
     }
+    const { backdropNode } = this;
 
-    if (phase === 'setup') {
-      this.backdropNode = document.createElement('div');
-      this.backdropNode.classList.add('global-overlays__backdrop');
-      this.backdropNode.slot = '_overlay-shadow-outlet';
-      this._contentNodeWrapper.parentElement.insertBefore(
-        this.backdropNode,
-        this._contentNodeWrapper,
-      );
+    switch (phase) {
+      case 'init':
+        this.backdropNode = document.createElement('div');
+        this.backdropNode.classList.add('global-overlays__backdrop');
+        this.backdropNode.slot = '_overlay-shadow-outlet';
+        this._contentNodeWrapper.parentElement.insertBefore(
+          this.backdropNode,
+          this._contentNodeWrapper,
+        );
+        break;
+      case 'show':
+        backdropNode.classList.add('global-overlays__backdrop--visible');
+        if (animation === true) {
+          backdropNode.classList.add('global-overlays__backdrop--fade-in');
+        }
+        this.__hasActiveBackdrop = true;
+        break;
+      case 'hide':
+        if (!backdropNode) {
+          return;
+        }
+        backdropNode.classList.remove('global-overlays__backdrop--fade-in');
 
-      if (animation === true) {
-        this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
-      }
-      this.__hasActiveBackdrop = true;
-    } else if (phase === 'teardown') {
-      const { backdropNode } = this;
-      if (!backdropNode) {
-        return;
-      }
-
-      if (animation) {
-        this.__removeFadeOut = () => {
-          backdropNode.classList.remove('global-overlays__backdrop--fade-out');
-          backdropNode.removeEventListener('animationend', this.__removeFadeOut);
+        if (animation) {
+          let afterFadeOut;
+          backdropNode.classList.add('global-overlays__backdrop--fade-out');
+          this.__backDropAnimation = new Promise(resolve => {
+            afterFadeOut = () => {
+              backdropNode.classList.remove('global-overlays__backdrop--fade-out');
+              backdropNode.classList.remove('global-overlays__backdrop--visible');
+              backdropNode.removeEventListener('animationend', afterFadeOut);
+              resolve();
+            };
+          });
+          backdropNode.addEventListener('animationend', afterFadeOut);
+        } else {
+          backdropNode.classList.remove('global-overlays__backdrop--visible');
+        }
+        this.__hasActiveBackdrop = false;
+        break;
+      case 'teardown':
+        if (!backdropNode) {
+          return;
+        }
+        if (animation) {
+          this.__backDropAnimation.then(() => {
+            backdropNode.parentNode.removeChild(backdropNode);
+          });
+        } else {
           backdropNode.parentNode.removeChild(backdropNode);
-        };
-        backdropNode.addEventListener('animationend', this.__removeFadeOut);
-      }
-      backdropNode.classList.remove('global-overlays__backdrop--fade-in');
-      backdropNode.classList.add('global-overlays__backdrop--fade-out');
-      this.__hasActiveBackdrop = false;
+        }
+        break;
+      /* no default */
     }
   }
 
@@ -442,10 +485,10 @@ export class OverlayController {
   }
 
   _handleHidesOnEsc({ phase }) {
-    if (phase === 'setup') {
+    if (phase === 'show') {
       this.__escKeyHandler = ev => ev.key === 'Escape' && this.hide();
       this.contentNode.addEventListener('keyup', this.__escKeyHandler);
-    } else if (phase === 'teardown') {
+    } else if (phase === 'hide') {
       this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
     }
   }
@@ -469,9 +512,9 @@ export class OverlayController {
   }
 
   _handleHidesOnOutsideClick({ phase }) {
-    const addOrRemoveListener = phase === 'setup' ? 'addEventListener' : 'removeEventListener';
+    const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
 
-    if (phase === 'setup') {
+    if (phase === 'show') {
       let wasClickInside = false;
       // handle on capture phase and remember till the next task that there was an inside click
       this.__preventCloseOutsideClick = () => {
@@ -499,7 +542,7 @@ export class OverlayController {
 
   _handleAccessibility({ phase }) {
     if (this.invokerNode && !this.isTooltip) {
-      this.invokerNode.setAttribute('aria-expanded', phase === 'setup');
+      this.invokerNode.setAttribute('aria-expanded', phase === 'show');
     }
   }
 
@@ -511,6 +554,10 @@ export class OverlayController {
       await this.__createPopperInstance();
       this._popper.update();
     }
+  }
+
+  teardown() {
+    this._handleFeatures({ phase: 'teardown' });
   }
 
   /**

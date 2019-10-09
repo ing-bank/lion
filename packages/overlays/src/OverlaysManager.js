@@ -101,7 +101,7 @@ export class OverlaysManager {
       .reverse()
       .forEach((ctrl, i) => {
         // eslint-disable-next-line no-param-reassign
-        ctrl._contentNodeWrapper.style.zIndex = i + 1;
+        ctrl.elevation = i + 1;
       });
   }
 

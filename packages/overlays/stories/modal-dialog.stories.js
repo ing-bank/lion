@@ -14,11 +14,8 @@ storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
     const nestedDialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
-      viewportConfig: {
-        placement: 'top',
-      },
       contentNode: renderAsNode(html`
-        <div class="demo-overlay">
+        <div class="demo-overlay" style="margin-top: -100px;">
           <p>Nested modal dialog</p>
           <button @click="${() => nestedDialogCtrl.hide()}">Close</button>
         </div>

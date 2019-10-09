@@ -89,6 +89,11 @@ export const globalOverlaysStyle = css`
     z-index: -1;
     background-color: #333333;
     opacity: 0.3;
+    display: none;
+  }
+
+  .global-overlays .global-overlays__backdrop--visible {
+    display: block;
   }
 
   .global-overlays .global-overlays__overlay--blocking .global-overlays__overlay {
