@@ -23,8 +23,8 @@ const dynamicOverlayDemoStyle = css`
   }
 
   .demo-overlay__global--small {
-    height: 400px;
-    width: 100%;
+    height: 100px;
+    width: 100px;
     background: #eee;
   }
 
@@ -64,7 +64,7 @@ storiesOf('Dynamic Overlay System| Switching Overlays', module).add(
       contentNode: renderToNode(html`
         <div
           style="background: #eee;"
-          xclass="demo-overlay demo-overlay__global demo-overlay__global--small"
+          class="demo-overlay demo-overlay__global demo-overlay__global--small"
         >
           Content
           <button @click="${() => ctrl.hide()}">Close</button>
