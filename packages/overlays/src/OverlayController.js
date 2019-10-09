@@ -125,7 +125,6 @@ export class OverlayController {
   async _init({ cfgToAdd }) {
     this.__initContentNodeWrapper();
     this.__initConnectionTarget();
-    this.__initZIndex();
     if (this.handlesAccessibility) {
       this.__initAccessibility({ cfgToAdd });
     }
@@ -175,9 +174,16 @@ export class OverlayController {
   /**
    * @desc Display local overlays on top of elements with no z-index that appear later in the DOM
    */
-  __initZIndex() {
-    if (this.placementMode === 'local' && !getComputedStyle(this.contentNode).zIndex) {
-      this._contentNodeWrapper.style.zIndex = 1;
+  _handleZIndex({ phase }) {
+    if (this.placementMode !== 'local') {
+      return;
+    }
+
+    if (phase === 'setup') {
+      const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
+      if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
+        this._contentNodeWrapper.style.zIndex = 1;
+      }
     }
   }
 
@@ -289,6 +295,8 @@ export class OverlayController {
    * @param {'setup'|'teardown'} config.phase
    */
   async _handleFeatures({ phase }) {
+    this._handleZIndex({ phase });
+
     if (this.preventsScroll) {
       this._handlePreventsScroll({ phase });
     }

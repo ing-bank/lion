@@ -56,6 +56,81 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode.parentElement).to.equal(ctrl._contentNodeWrapper);
     });
 
+    describe('Z-index on local overlays', () => {
+      let contentNode;
+      // add to dom (please be awara it needs a parentNode)
+      // const wrapper = fixture(html`<div>{contentNode}</div>`);
+
+      async function createZNode(zIndexVal, { mode } = {}) {
+        if (mode === 'global') {
+          contentNode = await fixture(html`
+            <div class="z-index--${zIndexVal}">
+              <style>
+                .z-index--${zIndexVal} {
+                  z-index: ${zIndexVal};
+                }
+              </style>
+              I should be on top
+            </div>
+          `);
+        }
+        if (mode === 'inline') {
+          contentNode = await fixture(html`
+            <div style="z-index:${zIndexVal};">
+              I should be on top
+            </div>
+          `);
+        }
+        return contentNode;
+      }
+
+      it('sets a z-index to make sure overlay is painted on top of siblings', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('auto', { mode: 'global' }),
+        });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+
+        ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+      });
+
+      it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('1', { mode: 'global' }),
+        });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+
+        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
+        await ctrl.show();
+        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+      });
+
+      it("doesn't touch the value of .contentNode", async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('auto'),
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal(undefined);
+      });
+    });
+
     describe('Render target', () => {
       it('creates global target for placement mode "global"', async () => {
         const ctrl = new OverlayController({
