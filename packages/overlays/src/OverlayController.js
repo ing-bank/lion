@@ -9,7 +9,6 @@ async function preloadPopper() {
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
 const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
-const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
 export class OverlayController {
   /**
@@ -338,16 +337,15 @@ export class OverlayController {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   _handlePreventsScroll({ phase }) {
-    if (phase === 'show' || phase === 'hide') {
-      const addOrRemove = phase === 'show' ? 'add' : 'remove';
-      document.body.classList[addOrRemove]('global-overlays-scroll-lock');
-      if (isIOS) {
-        // iOS has issues with overlays with input fields. This is fixed by applying
-        // position: fixed to the body. As a side effect, this will scroll the body to the top.
-        document.body.classList[addOrRemove]('global-overlays-scroll-lock-ios-fix');
-      }
+    switch (phase) {
+      case 'show':
+        this.manager.requestToPreventScroll();
+        break;
+      case 'hide':
+        this.manager.requestToEnableScroll();
+        break;
+      /* no default */
     }
   }
 
