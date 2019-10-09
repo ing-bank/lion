@@ -962,6 +962,7 @@ describe('OverlayController', () => {
     it('disables pointer events and selection on inert elements', async () => {
       const ctrl = new OverlayController({
         ...withGlobalTestConfig(),
+        trapsKeyboardFocus: true,
       });
 
       // show+hide are needed to create a root node
