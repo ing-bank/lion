@@ -39,7 +39,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .list is inteded to be read-only
+   * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
   get globalRootNode() {
@@ -51,7 +51,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .list is inteded to be read-only
+   * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
   get list() {
@@ -59,7 +59,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .shownList is inteded to be read-only
+   * no setter as .shownList is intended to be read-only
    * You can use .show or .hide on individual controllers to modify
    */
   get shownList() {
@@ -70,6 +70,7 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
+    this.__blockingMap = new Map();
   }
 
   /**
@@ -189,10 +190,23 @@ export class OverlaysManager {
     if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
       document.body.classList.remove('global-overlays-scroll-lock');
       if (isIOS) {
-        // iOS has issues with overlays with input fields. This is fixed by applying
-        // position: fixed to the body. As a side effect, this will scroll the body to the top.
         document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
       }
+    }
+  }
+
+  /** Blocking */
+  requestToShowOnly(blockingCtrl) {
+    const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
+
+    controllersToHide.map(ctrl => ctrl.hide());
+    this.__blockingMap.set(blockingCtrl, controllersToHide);
+  }
+
+  retractRequestToShowOnly(blockingCtrl) {
+    if (this.__blockingMap.has(blockingCtrl)) {
+      const controllersWhichGotHidden = this.__blockingMap.get(blockingCtrl);
+      controllersWhichGotHidden.map(ctrl => ctrl.show());
     }
   }
 }

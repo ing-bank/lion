@@ -6,8 +6,7 @@ export const globalOverlaysStyle = css`
     z-index: 200;
   }
 
-  .global-overlays__overlay,
-  .global-overlays__overlay--blocking {
+  .global-overlays__overlay {
     pointer-events: auto;
   }
 
@@ -69,17 +68,7 @@ export const globalOverlaysStyle = css`
     width: 100%;
   }
 
-  .global-overlays.global-overlays--blocking-opened .global-overlays__overlay {
-    display: none;
-  }
-
-  .global-overlays.global-overlays--blocking-opened .global-overlays__backdrop {
-    animation: global-overlays-backdrop-fade-out 300ms;
-    opacity: 0;
-  }
-
-  .global-overlays .global-overlays__backdrop,
-  .global-overlays .global-overlays__backdrop--blocking {
+  .global-overlays .global-overlays__backdrop {
     content: '';
     position: fixed;
     top: 0;
@@ -93,10 +82,6 @@ export const globalOverlaysStyle = css`
   }
 
   .global-overlays .global-overlays__backdrop--visible {
-    display: block;
-  }
-
-  .global-overlays .global-overlays__overlay--blocking .global-overlays__overlay {
     display: block;
   }
 

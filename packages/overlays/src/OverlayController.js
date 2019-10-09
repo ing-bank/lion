@@ -350,24 +350,14 @@ export class OverlayController {
   }
 
   _handleBlocking({ phase }) {
-    if (phase === 'show' || phase === 'hide') {
-      const addOrRemove = phase === 'show' ? 'add' : 'remove';
-      this._contentNodeWrapper.classList[addOrRemove]('global-overlays__overlay--blocking');
-      if (this.backdropNode) {
-        this.backdropNode.classList[addOrRemove]('global-overlays__backdrop--blocking');
-      }
-
-      if (phase === 'show') {
-        this.manager.globalRootNode.classList.add('global-overlays--blocking-opened');
-      } else if (phase === 'hide') {
-        const blockingController = this.manager.shownList.find(
-          ctrl => ctrl !== this && ctrl.isBlocking === true,
-        );
-        // If there are no other blocking overlays remaining, stop hiding regular overlays
-        if (!blockingController) {
-          this.manager.globalRootNode.classList.remove('global-overlays--blocking-opened');
-        }
-      }
+    switch (phase) {
+      case 'show':
+        this.manager.requestToShowOnly(this);
+        break;
+      case 'hide':
+        this.manager.retractRequestToShowOnly(this);
+        break;
+      /* no default */
     }
   }
 

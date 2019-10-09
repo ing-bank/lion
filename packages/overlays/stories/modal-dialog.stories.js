@@ -63,6 +63,9 @@ storiesOf('Global Overlay System|Modal Dialog', module)
     const blockingDialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
       isBlocking: true,
+      viewportConfig: {
+        placement: 'top',
+      },
       contentNode: renderAsNode(html`
         <div class="demo-overlay demo-overlay--2">
           <p>Hides other dialogs</p>
