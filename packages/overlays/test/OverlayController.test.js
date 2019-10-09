@@ -15,7 +15,7 @@ import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
-import { getRenderedOverlay, getTopOverlay } from '../test-helpers/global-positioning-helpers.js';
+import { getRenderedOverlay } from '../test-helpers/global-positioning-helpers.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
@@ -739,13 +739,17 @@ describe('OverlayController', () => {
         ...withGlobalTestConfig(),
       });
       await ctrl0.show();
-      expect(getTopOverlay()).to.equal(ctrl0.contentNode);
+      const rect = ctrl0.contentNode.getBoundingClientRect();
+      const getTopEl = () => document.elementFromPoint(Math.ceil(rect.left), Math.ceil(rect.top));
+
+      await ctrl0.show();
+      expect(getTopEl()).to.equal(ctrl0.contentNode);
 
       await ctrl1.show();
-      expect(getTopOverlay()).to.equal(ctrl1.contentNode);
+      expect(getTopEl()).to.equal(ctrl1.contentNode);
 
-      await ctrl1.hide();
-      expect(getTopOverlay()).to.equal(ctrl0.contentNode);
+      await ctrl0.show();
+      expect(getTopEl()).to.equal(ctrl0.contentNode);
     });
   });
 

@@ -95,6 +95,14 @@ export class OverlaysManager {
       this.hide(ctrlToShow);
     }
     this.__shownList.unshift(ctrlToShow);
+
+    // make sure latest shown ctrl is visible
+    Array.from(this.__shownList)
+      .reverse()
+      .forEach((ctrl, i) => {
+        // eslint-disable-next-line no-param-reassign
+        ctrl._contentNodeWrapper.style.zIndex = i + 1;
+      });
   }
 
   hide(ctrlToHide) {
