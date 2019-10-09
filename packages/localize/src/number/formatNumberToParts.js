@@ -61,7 +61,7 @@ export function formatNumberToParts(number, options) {
         formattedParts.push({ type: 'integer', value: numberPart });
         numberPart = '';
       }
-      const decimal = getDecimalSeparator();
+      const decimal = getDecimalSeparator(computedLocale);
       if (formattedNumber[i] === decimal) {
         formattedParts.push({ type: 'decimal', value: formattedNumber[i] });
         fraction = true;
@@ -71,7 +71,7 @@ export function formatNumberToParts(number, options) {
     }
     // detect literals (empty spaces) or space group separator
     if (regexSpace.test(formattedNumber[i])) {
-      const group = getGroupSeparator();
+      const group = getGroupSeparator(computedLocale);
       const hasNumberPart = !!numberPart;
       // Write number grouping
       if (numberPart && !fraction) {

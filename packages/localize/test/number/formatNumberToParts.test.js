@@ -33,9 +33,9 @@ describe('formatNumberToParts', () => {
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
       it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
-        localize.locale = locale;
         expect(
           formatNumberToParts(amount, {
+            locale,
             style: 'currency',
             currency,
           }),
@@ -60,9 +60,9 @@ describe('formatNumberToParts', () => {
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
       it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
-        localize.locale = locale;
         expect(
           formatNumberToParts(amount, {
+            locale,
             style: 'currency',
             currencyDisplay: 'code',
             currency,
