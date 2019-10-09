@@ -405,27 +405,39 @@ export class OverlayController {
     return this.__hasActiveTrapsKeyboardFocus;
   }
 
-  _handleTrapsKeyboardFocus({ phase, findNewTrap = true }) {
+  _handleTrapsKeyboardFocus({ phase }) {
     if (phase === 'setup') {
-      if (this.manager) {
-        this.manager.disableTrapsKeyboardFocusForAll();
-      }
-      this._containFocusHandler = containFocus(this.contentNode);
-
-      if (this.manager) {
-        this.manager.informTrapsKeyboardFocusGotEnabled();
-      }
-      this.__hasActiveTrapsKeyboardFocus = true;
+      this.enableTrapsKeyboardFocus();
     } else if (phase === 'teardown') {
-      if (this._containFocusHandler) {
-        this._containFocusHandler.disconnect();
-        this._containFocusHandler = undefined;
-      }
+      this.disableTrapsKeyboardFocus();
+    }
+  }
 
-      if (this.manager) {
-        this.manager.informTrapsKeyboardFocusGotDisabled({ disabledCtrl: this, findNewTrap });
-      }
-      this.__hasActiveTrapsKeyboardFocus = false;
+  enableTrapsKeyboardFocus() {
+    if (this.__hasActiveTrapsKeyboardFocus) {
+      return;
+    }
+    if (this.manager) {
+      this.manager.disableTrapsKeyboardFocusForAll();
+    }
+    this._containFocusHandler = containFocus(this.contentNode);
+    this.__hasActiveTrapsKeyboardFocus = true;
+    if (this.manager) {
+      this.manager.informTrapsKeyboardFocusGotEnabled();
+    }
+  }
+
+  disableTrapsKeyboardFocus({ findNewTrap = true } = {}) {
+    if (!this.__hasActiveTrapsKeyboardFocus) {
+      return;
+    }
+    if (this._containFocusHandler) {
+      this._containFocusHandler.disconnect();
+      this._containFocusHandler = undefined;
+    }
+    this.__hasActiveTrapsKeyboardFocus = false;
+    if (this.manager) {
+      this.manager.informTrapsKeyboardFocusGotDisabled({ disabledCtrl: this, findNewTrap });
     }
   }
 
