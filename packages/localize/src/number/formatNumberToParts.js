@@ -48,8 +48,8 @@ export function formatNumberToParts(number, options) {
     if (!regexCurrency.test(formattedNumber[i]) && !regexMinusSign.test(formattedNumber[i])) {
       currency += formattedNumber[i];
     }
-    // push when another character then currency or end of loop
-    if ((regexCurrency.test(formattedNumber[i]) || formattedNumber.length === i + 1) && currency) {
+    // push when another character then currency
+    if (regexCurrency.test(formattedNumber[i]) && currency) {
       formattedParts.push({ type: 'currency', value: currency });
       currency = '';
     }
@@ -98,6 +98,11 @@ export function formatNumberToParts(number, options) {
       // If there are no fractions but we reached the end write the numberpart as integer
     } else if (i === formattedNumber.length - 1 && numberPart) {
       formattedParts.push({ type: 'integer', value: numberPart });
+    }
+    // push currency on end of loop
+    if (i === formattedNumber.length - 1 && currency) {
+      formattedParts.push({ type: 'currency', value: currency });
+      currency = '';
     }
   }
   formattedParts = normalizeIntl(formattedParts, options, computedLocale);

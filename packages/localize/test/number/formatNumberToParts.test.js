@@ -126,4 +126,31 @@ describe('formatNumberToParts', () => {
       });
     });
   });
+
+  describe("style: 'percent'", () => {
+    const specs = [
+      ['en-GB', 1234.5, [i('1'), g(','), i('234'), d('.'), f('50'), c('%')]],
+      ['en-GB', -1234.5, [m, i('1'), g(','), i('234'), d('.'), f('50'), c('%')]],
+      ['nl-NL', 1234.5, [i('1'), g('.'), i('234'), d(','), f('50'), c('%')]],
+      ['nl-NL', -1234.5, [m, i('1'), g('.'), i('234'), d(','), f('50'), c('%')]],
+      ['nl-BE', 1234.5, [i('1'), g('.'), i('234'), d(','), f('50'), c('%')]],
+      ['nl-BE', -1234.5, [m, i('1'), g('.'), i('234'), d(','), f('50'), c('%')]],
+      ['fr-FR', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
+      ['fr-FR', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
+      ['fr-BE', 1234.5, [i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
+      ['fr-BE', -1234.5, [m, i('1'), g(' '), i('234'), d(','), f('50'), l(' '), c('%')]],
+    ];
+
+    specs.forEach(([locale, amount, expectedResult]) => {
+      it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+        expect(
+          formatNumberToParts(amount / 100, {
+            locale,
+            style: 'percent',
+            minimumFractionDigits: 2,
+          }),
+        ).to.deep.equal(expectedResult);
+      });
+    });
+  });
 });
