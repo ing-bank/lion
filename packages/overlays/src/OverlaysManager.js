@@ -1,6 +1,8 @@
 import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
+const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
 /**
  * @typedef {object} OverlayController
  * @param {(object) => TemplateResult} contentTemplate the template function
@@ -113,6 +115,10 @@ export class OverlaysManager {
   }
 
   teardown() {
+    this.list.forEach(ctrl => {
+      ctrl.teardown();
+    });
+
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
@@ -163,6 +169,30 @@ export class OverlaysManager {
         unsetSiblingsInert(this.globalRootNode);
       }
       this.__siblingsInert = false;
+    }
+  }
+
+  /** PreventsScroll */
+
+  // eslint-disable-next-line class-methods-use-this
+  requestToPreventScroll() {
+    // no check as classList will dedupe it anyways
+    document.body.classList.add('global-overlays-scroll-lock');
+    if (isIOS) {
+      // iOS has issues with overlays with input fields. This is fixed by applying
+      // position: fixed to the body. As a side effect, this will scroll the body to the top.
+      document.body.classList.add('global-overlays-scroll-lock-ios-fix');
+    }
+  }
+
+  requestToEnableScroll() {
+    if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
+      document.body.classList.remove('global-overlays-scroll-lock');
+      if (isIOS) {
+        // iOS has issues with overlays with input fields. This is fixed by applying
+        // position: fixed to the body. As a side effect, this will scroll the body to the top.
+        document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
+      }
     }
   }
 }
