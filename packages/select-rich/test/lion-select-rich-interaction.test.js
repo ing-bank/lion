@@ -181,7 +181,7 @@ describe('lion-select-rich interactions', () => {
   });
 
   describe('Keyboard navigation Windows', () => {
-    it('navigates through list with [ArrowDown] [ArrowUp] keys activates and checks the option', async () => {
+    it('navigates through list with [ArrowDown] [ArrowUp] [ArrowLeft] [ArrowRight] keys activates and checks the option', async () => {
       function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
         options.forEach((option, i) => {
           if (i === selectedIndex) {
@@ -213,6 +213,16 @@ describe('lion-select-rich interactions', () => {
       expectOnlyGivenOneOptionToBeChecked(options, 1);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(el.activeIndex).to.equal(0);
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.activeIndex).to.equal(1);
+      expect(el.checkedIndex).to.equal(1);
+      expectOnlyGivenOneOptionToBeChecked(options, 1);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
       expect(el.activeIndex).to.equal(0);
       expect(el.checkedIndex).to.equal(0);
       expectOnlyGivenOneOptionToBeChecked(options, 0);
@@ -250,11 +260,19 @@ describe('lion-select-rich interactions', () => {
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(el.checkedIndex).to.equal(0);
       expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.checkedIndex).to.equal(1);
+      expectOnlyGivenOneOptionToBeChecked(options, 1);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
     });
   });
 
   describe('Keyboard navigation Mac', () => {
-    it('navigates through open list with [ArrowDown] [ArrowUp] keys activates the option', async () => {
+    it('navigates through open list with [ArrowDown] [ArrowUp] [ArrowRight] [ArrowLeft] keys activates the option', async () => {
       const el = await fixture(html`
         <lion-select-rich opened interaction-mode="mac">
           <lion-options slot="input">
@@ -272,6 +290,14 @@ describe('lion-select-rich interactions', () => {
       expect(el.checkedIndex).to.equal(0);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(el.activeIndex).to.equal(0);
+      expect(el.checkedIndex).to.equal(0);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.activeIndex).to.equal(1);
+      expect(el.checkedIndex).to.equal(0);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
       expect(el.activeIndex).to.equal(0);
       expect(el.checkedIndex).to.equal(0);
     });
@@ -334,7 +360,7 @@ describe('lion-select-rich interactions', () => {
       expect(el._invokerNode.hasAttribute('disabled')).to.be.false;
     });
 
-    it('skips disabled options while navigating through list with [ArrowDown] [ArrowUp] keys', async () => {
+    it('skips disabled options while navigating through list with [ArrowDown] [ArrowUp] [ArrowRight] [ArrowLeft] keys', async () => {
       const el = await fixture(html`
         <lion-select-rich opened>
           <lion-options slot="input">
@@ -348,6 +374,12 @@ describe('lion-select-rich interactions', () => {
       expect(el.activeIndex).to.equal(2);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(el.activeIndex).to.equal(0);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.activeIndex).to.equal(2);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
       expect(el.activeIndex).to.equal(0);
     });
 

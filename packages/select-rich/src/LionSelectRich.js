@@ -401,6 +401,14 @@ export class LionSelectRich extends FormRegistrarMixin(
         ev.preventDefault();
         this.activeIndex = this.__getNextEnabledOption(this.activeIndex);
         break;
+      case 'ArrowLeft':
+        ev.preventDefault();
+        this.activeIndex = this.__getPreviousEnabledOption(this.activeIndex);
+        break;
+      case 'ArrowRight':
+        ev.preventDefault();
+        this.activeIndex = this.__getNextEnabledOption(this.activeIndex);
+        break;
       case 'Home':
         ev.preventDefault();
         this.activeIndex = this.__getNextEnabledOption(0, 0);
@@ -412,7 +420,7 @@ export class LionSelectRich extends FormRegistrarMixin(
       /* no default */
     }
 
-    const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+    const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
     if (keys.includes(key) && this.interactionMode === 'windows/linux') {
       this.checkedIndex = this.activeIndex;
     }
@@ -460,6 +468,18 @@ export class LionSelectRich extends FormRegistrarMixin(
           this.opened = true;
         } else {
           this.checkedIndex = this.__getNextEnabledOption(this.checkedIndex);
+        }
+        break;
+      case 'ArrowRight':
+        ev.preventDefault();
+        if (this.interactionMode !== 'mac') {
+          this.checkedIndex = this.__getNextEnabledOption(this.checkedIndex);
+        }
+        break;
+      case 'ArrowLeft':
+        ev.preventDefault();
+        if (this.interactionMode !== 'mac') {
+          this.checkedIndex = this.__getPreviousEnabledOption(this.checkedIndex);
         }
         break;
       /* no default */
