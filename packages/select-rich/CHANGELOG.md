@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.2.5...@lion/select-rich@0.3.0) (2019-10-10)
+
+
+### Features
+
+* update to latest overlay system ([4c26bef](https://github.com/ing-bank/lion/commit/4c26bef))
+
+
+
+
+
 ## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.2.4...@lion/select-rich@0.2.5) (2019-10-09)
 
 **Note:** Version bump only for package @lion/select-rich
