@@ -1,6 +1,8 @@
 import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
+const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
 /**
  * @typedef {object} OverlayController
  * @param {(object) => TemplateResult} contentTemplate the template function
@@ -37,7 +39,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .list is inteded to be read-only
+   * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
   get globalRootNode() {
@@ -49,7 +51,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .list is inteded to be read-only
+   * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
   get list() {
@@ -57,7 +59,7 @@ export class OverlaysManager {
   }
 
   /**
-   * no setter as .shownList is inteded to be read-only
+   * no setter as .shownList is intended to be read-only
    * You can use .show or .hide on individual controllers to modify
    */
   get shownList() {
@@ -68,6 +70,7 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
+    this.__blockingMap = new WeakMap();
   }
 
   /**
@@ -79,8 +82,6 @@ export class OverlaysManager {
     if (this.list.find(ctrl => ctrlToAdd === ctrl)) {
       throw new Error('controller instance is already added');
     }
-    // eslint-disable-next-line no-param-reassign
-    ctrlToAdd.manager = this;
     this.list.push(ctrlToAdd);
     return ctrlToAdd;
   }
@@ -97,6 +98,14 @@ export class OverlaysManager {
       this.hide(ctrlToShow);
     }
     this.__shownList.unshift(ctrlToShow);
+
+    // make sure latest shown ctrl is visible
+    Array.from(this.__shownList)
+      .reverse()
+      .forEach((ctrl, i) => {
+        // eslint-disable-next-line no-param-reassign
+        ctrl.elevation = i + 1;
+      });
   }
 
   hide(ctrlToHide) {
@@ -107,6 +116,10 @@ export class OverlaysManager {
   }
 
   teardown() {
+    this.list.forEach(ctrl => {
+      ctrl.teardown();
+    });
+
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
@@ -157,6 +170,43 @@ export class OverlaysManager {
         unsetSiblingsInert(this.globalRootNode);
       }
       this.__siblingsInert = false;
+    }
+  }
+
+  /** PreventsScroll */
+
+  // eslint-disable-next-line class-methods-use-this
+  requestToPreventScroll() {
+    // no check as classList will dedupe it anyways
+    document.body.classList.add('global-overlays-scroll-lock');
+    if (isIOS) {
+      // iOS has issues with overlays with input fields. This is fixed by applying
+      // position: fixed to the body. As a side effect, this will scroll the body to the top.
+      document.body.classList.add('global-overlays-scroll-lock-ios-fix');
+    }
+  }
+
+  requestToEnableScroll() {
+    if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
+      document.body.classList.remove('global-overlays-scroll-lock');
+      if (isIOS) {
+        document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
+      }
+    }
+  }
+
+  /** Blocking */
+  requestToShowOnly(blockingCtrl) {
+    const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
+
+    controllersToHide.map(ctrl => ctrl.hide());
+    this.__blockingMap.set(blockingCtrl, controllersToHide);
+  }
+
+  retractRequestToShowOnly(blockingCtrl) {
+    if (this.__blockingMap.has(blockingCtrl)) {
+      const controllersWhichGotHidden = this.__blockingMap.get(blockingCtrl);
+      controllersWhichGotHidden.map(ctrl => ctrl.show());
     }
   }
 }
