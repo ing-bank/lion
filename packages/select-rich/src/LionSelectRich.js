@@ -135,7 +135,6 @@ export class LionSelectRich extends OverlayMixin(
     super();
     this.interactionMode = 'auto';
     this.disabled = false;
-    // this.opened = false;
     // for interaction states
     // we use a different event as 'model-value-changed' would bubble up from all options
     this._valueChangedEvent = 'select-model-value-changed';
@@ -202,27 +201,8 @@ export class LionSelectRich extends OverlayMixin(
     }
   }
 
-  // get opened() {
-  //   return this._overlayCtrl.isShown;
-  // }
-
-  // set opened(show) {
-  //   if (show) {
-  //     this._overlayCtrl.show();
-  //   } else {
-  //     this._overlayCtrl.hide();
-  //   }
-  // }
-
   updated(changedProps) {
     super.updated(changedProps);
-    // if (changedProps.has('opened')) {
-    //   if (this.opened) {
-    //     this._overlayCtrl.show();
-    //   } else {
-    //     this._overlayCtrl.hide();
-    //   }
-    // }
 
     if (changedProps.has('disabled')) {
       if (this.disabled) {
@@ -587,21 +567,8 @@ export class LionSelectRich extends OverlayMixin(
   _defineOverlay({ invokerNode, contentNode } = {}) {
     return new OverlayController({
       ...withDropdownConfig(),
-      // placementMode: 'local',
       contentNode,
       invokerNode,
-      // hidesOnEsc: false,
-      // hidesOnOutsideClick: true,
-      // inheritsReferenceWidth: true,
-      // handlesUserInteraction: true,
-      // popperConfig: {
-      //   placement: 'bottom-start',
-      //   modifiers: {
-      //     offset: {
-      //       enabled: false,
-      //     },
-      //   },
-      // },
     });
   }
 
@@ -615,7 +582,6 @@ export class LionSelectRich extends OverlayMixin(
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
 
     this.__overlayOnHide = () => {
-      // this.opened = false;
       this._invokerNode.focus();
     };
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);

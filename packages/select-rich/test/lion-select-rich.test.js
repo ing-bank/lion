@@ -1,4 +1,12 @@
-import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  html,
+  aTimeout,
+  defineCE,
+  unsafeStatic,
+  nextFrame,
+} from '@open-wc/testing';
 import '@lion/option/lion-option.js';
 import { OverlayController } from '@lion/overlays';
 
@@ -206,7 +214,8 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
       expect(el.opened).to.be.false;
-      await el._invokerNode.click();
+      el._invokerNode.click();
+      await nextFrame();
       expect(el.opened).to.be.true;
     });
 
