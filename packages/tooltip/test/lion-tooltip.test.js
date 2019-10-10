@@ -112,16 +112,5 @@ describe('lion-tooltip', () => {
       const invoker = el.querySelector('[slot="content"]');
       expect(invoker.getAttribute('role')).to.be.equal('tooltip');
     });
-
-    it('should have aria-controls attribute set to the invoker', async () => {
-      const el = await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
-        </lion-tooltip>
-      `);
-      const invoker = el.querySelector('[slot="invoker"]');
-      expect(invoker.getAttribute('aria-controls')).to.not.be.null;
-    });
   });
 });
