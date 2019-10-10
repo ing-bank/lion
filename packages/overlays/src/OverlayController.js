@@ -55,6 +55,10 @@ export class OverlayController {
     this.__hasActiveBackdrop = true;
   }
 
+  get invoker() {
+    return this.invokerNode;
+  }
+
   get content() {
     return this._contentNodeWrapper;
   }

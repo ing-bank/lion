@@ -63,7 +63,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       </style>
       <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${popup.invokerNode}${popup.content}
+        ${popup.invoker}${popup.content}
       </div>
     `;
   })
@@ -111,7 +111,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
       </div>
       <button @click=${() => togglePlacement(popup)}>Toggle placement</button>
       <div class="demo-box">
-        ${popup.invokerNode} ${popup.content}
+        ${popup.invoker} ${popup.content}
       </div>
     `;
   });
@@ -145,7 +145,7 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
         <button @click=${() => popup.hide()}>Close popup</button>
       </div>
       <div class="demo-box">
-        ${invokerNode} ${popup.content}
+        ${invoker} ${popup.content}
       </div>
     `;
   }); */

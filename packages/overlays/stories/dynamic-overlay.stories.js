@@ -1,18 +1,13 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
+import { fixtureSync } from '@open-wc/testing-helpers';
 
-import { css, render } from '@lion/core';
+import { css } from '@lion/core';
 import {
   OverlayController,
   withBottomSheetConfig,
   withModalDialogConfig,
   withDropdownConfig,
 } from '../index.js';
-
-function renderToNode(litHtmlTemplate) {
-  const offlineRenderContainer = document.createElement('div');
-  render(litHtmlTemplate, offlineRenderContainer);
-  return offlineRenderContainer.firstElementChild;
-}
 
 const dynamicOverlayDemoStyle = css`
   .demo-overlay {
@@ -49,19 +44,16 @@ const dynamicOverlayDemoStyle = css`
 storiesOf('Dynamic Overlay System| Switching Overlays', module).add(
   'Switch overlays configuration',
   () => {
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Invoker Button';
-
     const ctrl = new OverlayController({
       ...withBottomSheetConfig(),
       hidesOnOutsideClick: true,
       trapsKeyboardFocus: true,
-      invokerNode: renderToNode(html`
+      invokerNode: fixtureSync(html`
         <button @click="${() => ctrl.toggle()}">
           Invoker
         </button>
       `),
-      contentNode: renderToNode(html`
+      contentNode: fixtureSync(html`
         <div
           style="background: #eee;"
           class="demo-overlay demo-overlay__global demo-overlay__global--small"
@@ -96,7 +88,7 @@ storiesOf('Dynamic Overlay System| Switching Overlays', module).add(
         ${dynamicOverlayDemoStyle}
       </style>
 
-      ${ctrl.invokerNode}
+      ${ctrl.invoker}
 
       <button @click="${() => switchTo('modal-dialog')}">
         as modal dialog

@@ -17,7 +17,6 @@ const popupDemoStyle = css`
   .demo-popup {
     display: block;
     max-width: 250px;
-    /* position: absolute; */
     background-color: white;
     border-radius: 2px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.12), 0 6px 6px 0 rgba(0, 0, 0, 0.24);
@@ -27,53 +26,29 @@ const popupDemoStyle = css`
 
 storiesOf('Local Overlay System|Local Overlay', module)
   .add('Basic', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'UK';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    const contentNode = fixtureSync(html`
-      <div class="demo-popup">United Kingdom</div>
-    `);
-    const wrapper = fixtureSync(html`
-      <div>
-        <style>
-          ${popupDemoStyle}
-        </style>
-        <div class="demo-box">
-          In the ${invokerNode}${contentNode} the weather is nice.
-        </div>
-      </div>
-    `);
-
-    document.body.appendChild(wrapper);
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
-      contentNode,
-      invokerNode,
+      contentNode: fixtureSync(html`
+        <div class="demo-popup">United Kingdom</div>
+      `),
+      invokerNode: fixtureSync(html`
+        <button @click=${() => popup.toggle()}>UK</button>
+      `),
     });
 
-    return wrapper;
-
-    // html`
-    //   <style>
-    //     ${popupDemoStyle}
-    //   </style>
-    //   <div class="demo-box">
-    //     In the ${invokerNode}${contentNode.parentNode} the weather is nice.
-    //   </div>
-    // `;
+    return html`
+      <style>
+        ${popupDemoStyle}
+      </style>
+      <div class="demo-box">
+        In the ${popup.invoker}${popup.content} the weather is nice.
+      </div>
+    `;
   })
   .add('Change preferred position', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'UK';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
@@ -83,7 +58,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
-      invokerNode,
+      invokerNode: fixtureSync(html`
+        <button @click=${() => popup.toggle()}>UK</button>
+      `),
     });
 
     return html`
@@ -91,17 +68,12 @@ storiesOf('Local Overlay System|Local Overlay', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        In the ${invokerNode}${popup.content} the weather is nice.
+        In the ${popup.invoker}${popup.content} the weather is nice.
       </div>
     `;
   })
   .add('Single placement parameter', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Click me';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
@@ -113,7 +85,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
           Supplying placement with a single parameter will assume 'center' for the other.
         </div>
       `),
-      invokerNode,
+      invokerNode: fixtureSync(html`
+        <button @click=${() => popup.toggle()}>UK</button>
+      `),
     });
 
     return html`
@@ -121,18 +95,12 @@ storiesOf('Local Overlay System|Local Overlay', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        ${invokerNode}${popup.content}
+        ${popup.invoker}${popup.content}
       </div>
     `;
   })
   .add('On hover', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'UK';
-    invokerNode.addEventListener('mouseenter', () => popup.show());
-    invokerNode.addEventListener('mouseleave', () => popup.hide());
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
@@ -142,7 +110,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
       contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
-      invokerNode,
+      invokerNode: fixtureSync(html`
+        <button @mouseenter=${() => popup.show()} @mouseleave=${() => popup.hide()}>UK</button>
+      `),
     });
 
     return html`
@@ -150,24 +120,24 @@ storiesOf('Local Overlay System|Local Overlay', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        In the beautiful ${invokerNode}${popup.content} the weather is nice.
+        In the beautiful ${popup.invoker}${popup.content} the weather is nice.
       </div>
     `;
   })
   .add('On an input', () => {
-    let popup;
-    const invokerNode = document.createElement('input');
-    invokerNode.id = 'input';
-    invokerNode.type = 'text';
-    invokerNode.addEventListener('focusin', () => popup.show());
-    invokerNode.addEventListener('focusout', () => popup.hide());
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
-      invokerNode,
+      invokerNode: fixtureSync(html`
+        <input
+          id="input"
+          type="text"
+          @focusin=${() => popup.show()}
+          @focusout=${() => popup.hide()}
+        />
+      `),
     });
 
     return html`
@@ -176,17 +146,12 @@ storiesOf('Local Overlay System|Local Overlay', module)
       </style>
       <div class="demo-box">
         <label for="input">Input with a dropdown</label>
-        ${invokerNode}${popup.content}
+        ${popup.invoker}${popup.content}
       </div>
     `;
   })
   .add('trapsKeyboardFocus', () => {
-    let popup;
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Click me';
-    invokerNode.addEventListener('click', () => popup.toggle());
-
-    popup = new OverlayController({
+    const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
@@ -204,7 +169,9 @@ storiesOf('Local Overlay System|Local Overlay', module)
           </select>
         </div>
       `),
-      invokerNode,
+      invokerNode: fixtureSync(html`
+        <button @click=${() => popup.toggle()}>UK</button>
+      `),
     });
 
     return html`
@@ -212,40 +179,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
         ${popupDemoStyle}
       </style>
       <div class="demo-box">
-        ${invokerNode}${popup.content}
-      </div>
-    `;
-  })
-  .add('trapsKeyboardFocus with nodes', () => {
-    const invokerNode = document.createElement('button');
-    invokerNode.innerHTML = 'Invoker Button';
-
-    const contentNode = document.createElement('div');
-    contentNode.classList.add('demo-popup');
-    const contentButton = document.createElement('button');
-    contentButton.innerHTML = 'Content Button';
-    const contentInput = document.createElement('input');
-    contentNode.appendChild(contentButton);
-    contentNode.appendChild(contentInput);
-
-    const popup = new OverlayController({
-      placementMode: 'local',
-      hidesOnEsc: true,
-      hidesOnOutsideClick: true,
-      trapsKeyboardFocus: true,
-      contentNode,
-      invokerNode,
-    });
-
-    invokerNode.addEventListener('click', () => {
-      popup.toggle();
-    });
-    return html`
-      <style>
-        ${popupDemoStyle}
-      </style>
-      <div class="demo-box">
-        ${invokerNode}${popup.content}
+        ${popup.invoker}${popup.content}
       </div>
     `;
   });

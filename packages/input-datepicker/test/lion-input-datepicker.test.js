@@ -1,4 +1,4 @@
-import { expect, fixture, defineCE, aTimeout } from '@open-wc/testing';
+import { expect, fixture, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { html, LitElement } from '@lion/core';
 import {
@@ -58,7 +58,6 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      await aTimeout(100);
       expect(
         elObj.overlayHeadingEl.querySelector('slot[name="heading"]').assignedNodes()[0],
       ).lightDom.to.equal('Pick your date');
@@ -90,7 +89,6 @@ describe('<lion-input-datepicker>', () => {
       elObj.overlayController.contentNode.dispatchEvent(
         new KeyboardEvent('keyup', { key: 'Escape' }),
       );
-      await aTimeout(100);
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
