@@ -637,35 +637,43 @@ describe('OverlayController', () => {
     });
 
     describe('isBlocking', () => {
-      it.skip('prevents showing of other overlays', async () => {
+      it('prevents showing of other overlays', async () => {
         const ctrl0 = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
         });
-        await ctrl0.show();
-
         const ctrl1 = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
         });
-        await ctrl1.show();
-
         const ctrl2 = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: true,
         });
-        await ctrl2.show();
-
         const ctrl3 = new OverlayController({
           ...withGlobalTestConfig(),
           isBlocking: false,
         });
-        await ctrl3.show();
 
-        expect(getRenderedOverlay(0)).to.not.be.displayed;
-        expect(getRenderedOverlay(1)).to.not.be.displayed;
-        expect(getRenderedOverlay(2)).to.be.displayed;
-        expect(getRenderedOverlay(3)).to.not.be.displayed;
+        await ctrl0.show();
+        await ctrl1.show();
+        await ctrl2.show(); // blocking
+        expect(ctrl0.content).to.not.be.displayed;
+        expect(ctrl1.content).to.not.be.displayed;
+        expect(ctrl2.content).to.be.displayed;
+
+        await ctrl3.show();
+        expect(ctrl3.content).to.be.displayed;
+
+        await ctrl2.hide();
+        expect(ctrl0.content).to.be.displayed;
+        expect(ctrl1.content).to.be.displayed;
+
+        await ctrl2.show(); // blocking
+        expect(ctrl0.content).to.not.be.displayed;
+        expect(ctrl1.content).to.not.be.displayed;
+        expect(ctrl2.content).to.be.displayed;
+        expect(ctrl3.content).to.not.be.displayed;
       });
 
       it('keeps backdrop status when used in combination with blocking', async () => {
