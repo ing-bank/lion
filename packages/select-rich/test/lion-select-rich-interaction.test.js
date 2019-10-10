@@ -362,13 +362,13 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      expect(el.activeIndex).to.equal(2);
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
       expect(el.activeIndex).to.equal(1);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
       expect(el.activeIndex).to.equal(2);
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
+      expect(el.activeIndex).to.equal(1);
     });
 
     it('checks the first enabled option', async () => {

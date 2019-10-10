@@ -80,24 +80,6 @@ describe('lion-option', () => {
       expect(el.hasAttribute('active')).to.be.false;
     });
 
-    it('does become active on [mouseenter]', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10}></lion-option>
-      `);
-      expect(el.active).to.be.false;
-      el.dispatchEvent(new Event('mouseenter'));
-      expect(el.active).to.be.true;
-    });
-
-    it('does become un-active on [mouseleave]', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10} active></lion-option>
-      `);
-      expect(el.active).to.be.true;
-      el.dispatchEvent(new Event('mouseleave'));
-      expect(el.active).to.be.false;
-    });
-
     it('does become checked on [click]', async () => {
       const el = await fixture(html`
         <lion-option .choiceValue=${10}></lion-option>

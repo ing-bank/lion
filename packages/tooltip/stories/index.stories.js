@@ -123,7 +123,7 @@ storiesOf('Local Overlay System|Tooltip', module)
             },
           })}"
         >
-          <lion-button slot="invoker">${text('Invoker text', 'Click me!')}</lion-button>
+          <lion-button slot="invoker">${text('Invoker text', 'Hover me!')}</lion-button>
           <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>
         </lion-tooltip>
       </div>
