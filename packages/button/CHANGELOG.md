@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.23](https://github.com/ing-bank/lion/compare/@lion/button@0.3.22...@lion/button@0.3.23) (2019-10-10)
+
+
+### Bug Fixes
+
+* **button:** guard against _nativeButton not defined ([1a22c9b](https://github.com/ing-bank/lion/commit/1a22c9b))
+
+
+
+
+
+## [0.3.22](https://github.com/ing-bank/lion/compare/@lion/button@0.3.21...@lion/button@0.3.22) (2019-10-09)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
+## [0.3.21](https://github.com/ing-bank/lion/compare/@lion/button@0.3.20...@lion/button@0.3.21) (2019-10-07)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
 ## [0.3.20](https://github.com/ing-bank/lion/compare/@lion/button@0.3.19...@lion/button@0.3.20) (2019-09-30)
 
 **Note:** Version bump only for package @lion/button

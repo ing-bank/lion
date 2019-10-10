@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.52...@lion/tooltip@0.3.0) (2019-10-10)
+
+
+### Features
+
+* update to latest overlay system ([4c26bef](https://github.com/ing-bank/lion/commit/4c26bef))
+
+
+
+
+
+## [0.2.52](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.51...@lion/tooltip@0.2.52) (2019-10-09)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
+## [0.2.51](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.50...@lion/tooltip@0.2.51) (2019-10-07)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
 ## [0.2.50](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.2.49...@lion/tooltip@0.2.50) (2019-09-30)
 
 **Note:** Version bump only for package @lion/tooltip

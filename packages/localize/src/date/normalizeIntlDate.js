@@ -4,7 +4,7 @@
  * @param str
  * @returns {string}
  */
-export function normalizeDate(str) {
+export function normalizeIntlDate(str) {
   const dateString = [];
   for (let i = 0, n = str.length; i < n; i += 1) {
     // remove unicode 160

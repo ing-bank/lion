@@ -1,4 +1,4 @@
-import { normalizeDate } from './normalizeDate.js';
+import { normalizeIntlDate } from './normalizeIntlDate.js';
 
 const monthsLocaleCache = {};
 
@@ -6,7 +6,7 @@ const monthsLocaleCache = {};
  * @desc Returns month names for locale
  * @param {string} options.locale locale
  * @param {string} [options.style=long] long, short or narrow
- * @returns {Array} like: ['Januray', 'February', ...etc].
+ * @returns {Array} like: ['January', 'February', ...etc].
  */
 export function getMonthNames({ locale, style = 'long' } = {}) {
   let months = monthsLocaleCache[locale] && monthsLocaleCache[locale][style];
@@ -21,7 +21,7 @@ export function getMonthNames({ locale, style = 'long' } = {}) {
   for (let i = 0; i < 12; i += 1) {
     const date = new Date(2019, i, 1);
     const formattedDate = formatter.format(date);
-    const normalizedDate = normalizeDate(formattedDate);
+    const normalizedDate = normalizeIntlDate(formattedDate);
     months.push(normalizedDate);
   }
 

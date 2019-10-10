@@ -175,7 +175,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * Dispatch submit event and invoke submit on the native form when clicked
    */
   __clickDelegationHandler() {
-    if (this.type === 'submit' && this._nativeButtonNode.form) {
+    if (this.type === 'submit' && this._nativeButtonNode && this._nativeButtonNode.form) {
       this._nativeButtonNode.form.dispatchEvent(new Event('submit'));
       this._nativeButtonNode.form.submit();
     }

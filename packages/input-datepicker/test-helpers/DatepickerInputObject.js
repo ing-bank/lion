@@ -24,6 +24,10 @@ export class DatepickerInputObject {
     return Promise.all(completePromises);
   }
 
+  async closeCalendar() {
+    this.overlayCloseButtonEl.click();
+  }
+
   async selectMonthDay(day) {
     this.overlayController.show();
     await this.calendarEl.updateComplete;

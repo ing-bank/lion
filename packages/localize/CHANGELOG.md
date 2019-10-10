@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.19](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.18...@lion/localize@0.4.19) (2019-10-09)
+
+
+### Bug Fixes
+
+* **localize:** add tests for percent in formatNumberToParts ([1f40250](https://github.com/ing-bank/lion/commit/1f40250))
+* **localize:** use option.locale to get separator in formatNumberToParts ([093cfa0](https://github.com/ing-bank/lion/commit/093cfa0))
+
+
+
+
+
+## [0.4.18](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.17...@lion/localize@0.4.18) (2019-10-07)
+
+**Note:** Version bump only for package @lion/localize
+
+
+
+
+
 ## [0.4.17](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.16...@lion/localize@0.4.17) (2019-09-30)
 
 

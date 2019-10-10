@@ -1,12 +1,13 @@
 import { LitElement } from '@lion/core';
+import { FormRegistrarPortalMixin } from '@lion/field';
 
 /**
  * LionOptions
  *
- * @customElement
+ * @customElement lion-options
  * @extends LitElement
  */
-export class LionOptions extends LitElement {
+export class LionOptions extends FormRegistrarPortalMixin(LitElement) {
   static get properties() {
     return {
       role: {
