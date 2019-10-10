@@ -226,7 +226,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   firstUpdated() {
     super.firstUpdated();
     this.__contentWrapperElement = this.shadowRoot.getElementById('js-content-wrapper');
-
     this.__addEventDelegationForClickDate();
     this.__addEventDelegationForFocusDate();
     this.__addEventDelegationForBlurDate();
@@ -506,6 +505,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   __removeEventDelegations() {
+    if (!this.__contentWrapperElement) {
+      return;
+    }
     this.__contentWrapperElement.removeEventListener('click', this.__clickDateDelegation);
     this.__contentWrapperElement.removeEventListener('focus', this.__focusDateDelegation);
     this.__contentWrapperElement.removeEventListener('blur', this.__blurDateDelegation);
