@@ -4,7 +4,7 @@ import { html } from '@lion/core';
 /**
  * LionSelectInvoker: invoker button consuming a selected element
  *
- * @customElement
+ * @customElement lion-select-invoker
  * @extends LionButton
  */
 export class LionSelectInvoker extends LionButton {
@@ -12,6 +12,11 @@ export class LionSelectInvoker extends LionButton {
     return {
       selectedElement: {
         type: Object,
+      },
+      readOnly: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'readonly',
       },
     };
   }
@@ -34,6 +39,14 @@ export class LionSelectInvoker extends LionButton {
   constructor() {
     super();
     this.selectedElement = null;
+    this.type = 'button';
+  }
+
+  _requestUpdate(name, oldValue) {
+    super._requestUpdate(name, oldValue);
+    if (name === 'readOnly') {
+      this.disabled = this.readOnly;
+    }
   }
 
   _contentTemplate() {
