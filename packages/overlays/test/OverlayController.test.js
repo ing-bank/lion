@@ -15,7 +15,6 @@ import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
-import { getRenderedOverlay } from '../test-helpers/global-positioning-helpers.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
@@ -943,8 +942,8 @@ describe('OverlayController', () => {
         expect(sibling).to.have.attribute('aria-hidden', 'true');
         expect(sibling).to.have.attribute('inert');
       });
-      expect(getRenderedOverlay(0).hasAttribute('aria-hidden')).to.be.false;
-      expect(getRenderedOverlay(0).hasAttribute('inert')).to.be.false;
+      expect(ctrl.content.hasAttribute('aria-hidden')).to.be.false;
+      expect(ctrl.content.hasAttribute('inert')).to.be.false;
 
       await ctrl.hide();
 
@@ -988,11 +987,9 @@ describe('OverlayController', () => {
         expect(window.getComputedStyle(sibling).userSelect).to.be.oneOf(['none', undefined]);
         expect(window.getComputedStyle(sibling).pointerEvents).to.equal('none');
       });
-      expect(window.getComputedStyle(getRenderedOverlay(0)).userSelect).to.be.oneOf([
-        'auto',
-        undefined,
-      ]);
-      expect(window.getComputedStyle(getRenderedOverlay(0)).pointerEvents).to.be.oneOf([
+
+      expect(window.getComputedStyle(ctrl.contentNode).userSelect).to.be.oneOf(['auto', undefined]);
+      expect(window.getComputedStyle(ctrl.contentNode).pointerEvents).to.be.oneOf([
         'auto',
         'visiblePainted',
       ]);

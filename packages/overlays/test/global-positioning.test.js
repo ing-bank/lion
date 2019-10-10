@@ -1,8 +1,7 @@
 import { expect, html } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../src/OverlayController.js';
-
-import { getRootNode, cleanup } from '../test-helpers/global-positioning-helpers.js';
+import { overlays } from '../src/overlays.js';
 
 const withDefaultGlobalConfig = () => ({
   placementMode: 'global',
@@ -12,7 +11,9 @@ const withDefaultGlobalConfig = () => ({
 });
 
 describe('Global Positioning', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    overlays.teardown();
+  });
 
   describe('Basics', () => {
     it('puts ".contentNode" in the body of the page', async () => {
@@ -20,8 +21,8 @@ describe('Global Positioning', () => {
         ...withDefaultGlobalConfig(),
       });
       await ctrl.show();
-      expect(getRootNode().children.length).to.equal(1);
-      expect(getRootNode().children[0]).to.have.trimmed.text('my content');
+      expect(overlays.globalRootNode.children.length).to.equal(1);
+      expect(overlays.globalRootNode.children[0]).to.have.trimmed.text('my content');
     });
 
     // TODO: not implemented atm. Is this needed? If so, it should be covered in a css class
@@ -32,7 +33,7 @@ describe('Global Positioning', () => {
       });
       await ctrl.show();
       expect(
-        window.getComputedStyle(getRootNode().children[0]).getPropertyValue('display'),
+        window.getComputedStyle(overlays.globalRootNode.children[0]).getPropertyValue('display'),
       ).to.equal('flex');
     });
   });
