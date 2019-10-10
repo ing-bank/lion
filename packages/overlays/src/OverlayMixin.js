@@ -1,13 +1,14 @@
- import { render, dedupeMixin } from '@lion/core';
+import { render, dedupeMixin } from '@lion/core';
 
 /**
  * @type {Function()}
  * @polymerMixin
  * @mixinFunction
  */
-export const OverlayMixin = dedupeMixin(superclass =>
-  // eslint-disable-next-line no-shadow
-  class OverlayMixin extends superclass {
+export const OverlayMixin = dedupeMixin(
+  superclass =>
+    // eslint-disable-next-line no-shadow
+    class OverlayMixin extends superclass {
       static get properties() {
         return {
           opened: {
