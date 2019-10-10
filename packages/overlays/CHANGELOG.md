@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.5.1...@lion/overlays@0.6.0) (2019-10-10)
+
+
+### Features
+
+* **overlays:** release new overlay system ([364f185](https://github.com/ing-bank/lion/commit/364f185))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.5.0...@lion/overlays@0.5.1) (2019-09-27)
 
 
