@@ -70,7 +70,7 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
-    this.__blockingMap = new Map();
+    this.__blockingMap = new WeakMap();
   }
 
   /**
