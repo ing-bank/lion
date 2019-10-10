@@ -420,7 +420,7 @@ export class OverlayController {
         if (!backdropNode) {
           return;
         }
-        if (animation) {
+        if (animation && this.__backDropAnimation) {
           this.__backDropAnimation.then(() => {
             backdropNode.parentNode.removeChild(backdropNode);
           });

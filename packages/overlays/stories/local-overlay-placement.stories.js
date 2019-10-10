@@ -1,5 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css, renderAsNode } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { css } from '@lion/core';
 import { OverlayController } from '../index.js';
 
 let placement = 'top';
@@ -48,10 +49,10 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
     const popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
-      invokerNode: renderAsNode(html`
+      invokerNode: fixtureSync(html`
         <button @click="${() => popup.toggle()}">UK</button>
       `),
     });
@@ -92,10 +93,10 @@ storiesOf('Local Overlay System|Local Overlay Placement', module)
           },
         },
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
-      invokerNode: renderAsNode(html`
+      invokerNode: fixtureSync(html`
         <button @click="${() => popup.toggle()}">UK</button>
       `),
     });

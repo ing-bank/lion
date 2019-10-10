@@ -1,6 +1,7 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { css, renderAsNode } from '@lion/core';
+import { css } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController, withBottomSheetConfig } from '../index.js';
 
 const bottomSheetDemoStyle = css`
@@ -14,7 +15,7 @@ const bottomSheetDemoStyle = css`
 storiesOf('Global Overlay System|BottomSheet', module).add('Default', () => {
   const bottomSheetCtrl = new OverlayController({
     ...withBottomSheetConfig(),
-    contentNode: renderAsNode(html`
+    contentNode: fixtureSync(html`
       <div class="demo-overlay">
         <p>BottomSheet</p>
         <button @click="${() => bottomSheetCtrl.hide()}">Close</button>

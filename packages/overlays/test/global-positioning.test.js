@@ -1,12 +1,12 @@
 import { expect, html } from '@open-wc/testing';
-import { renderAsNode } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../src/OverlayController.js';
 
 import { getRootNode, cleanup } from '../test-helpers/global-positioning-helpers.js';
 
 const withDefaultGlobalConfig = () => ({
   placementMode: 'global',
-  contentNode: renderAsNode(html`
+  contentNode: fixtureSync(html`
     <p>my content</p>
   `),
 });
@@ -43,9 +43,8 @@ describe('Global Positioning', () => {
         ...withDefaultGlobalConfig(),
       });
       await ctrl.show();
-      expect(
-        ctrl._contentNodeWrapper.classList.contains('global-overlays__overlay-container--center'),
-      ).to.be.true;
+      expect(ctrl.content.classList.contains('global-overlays__overlay-container--center')).to.be
+        .true;
     });
 
     it('positions relative to the viewport ', async () => {
@@ -69,7 +68,7 @@ describe('Global Positioning', () => {
         });
         await ctrl.show();
         expect(
-          ctrl._contentNodeWrapper.classList.contains(
+          ctrl.content.classList.contains(
             `global-overlays__overlay-container--${viewportPlacement}`,
           ),
         ).to.be.true;

@@ -1,4 +1,4 @@
-import { html, ifDefined, renderAsNode } from '@lion/core';
+import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import { OverlayController, withModalDialogConfig, OverlayMixin } from '@lion/overlays';
 import { isValidatorApplied } from '@lion/validate';
@@ -46,7 +46,11 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   get slots() {
     return {
       ...super.slots,
-      [this._calendarInvokerSlot]: () => renderAsNode(this._invokerTemplate()),
+      [this._calendarInvokerSlot]: () => {
+        const renderParent = document.createElement('div');
+        render(this._invokerTemplate(), renderParent);
+        return renderParent.firstElementChild;
+      },
     };
   }
 

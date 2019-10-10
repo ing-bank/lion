@@ -1,5 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css, renderAsNode } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { css } from '@lion/core';
 import { OverlayController } from '../index.js';
 
 const popupDemoStyle = css`
@@ -31,24 +32,40 @@ storiesOf('Local Overlay System|Local Overlay', module)
     invokerNode.innerHTML = 'UK';
     invokerNode.addEventListener('click', () => popup.toggle());
 
+    const contentNode = fixtureSync(html`
+      <div class="demo-popup">United Kingdom</div>
+    `);
+    const wrapper = fixtureSync(html`
+      <div>
+        <style>
+          ${popupDemoStyle}
+        </style>
+        <div class="demo-box">
+          In the ${invokerNode}${contentNode} the weather is nice.
+        </div>
+      </div>
+    `);
+
+    document.body.appendChild(wrapper);
+
     popup = new OverlayController({
       placementMode: 'local',
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
-      contentNode: renderAsNode(html`
-        <div class="demo-popup">United Kingdom</div>
-      `),
+      contentNode,
       invokerNode,
     });
 
-    return html`
-      <style>
-        ${popupDemoStyle}
-      </style>
-      <div class="demo-box">
-        In the ${invokerNode}${popup.content} the weather is nice.
-      </div>
-    `;
+    return wrapper;
+
+    // html`
+    //   <style>
+    //     ${popupDemoStyle}
+    //   </style>
+    //   <div class="demo-box">
+    //     In the ${invokerNode}${contentNode.parentNode} the weather is nice.
+    //   </div>
+    // `;
   })
   .add('Change preferred position', () => {
     let popup;
@@ -63,7 +80,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
       popperConfig: {
         placement: 'top-end',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
       invokerNode,
@@ -91,7 +108,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
       popperConfig: {
         placement: 'bottom',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">
           Supplying placement with a single parameter will assume 'center' for the other.
         </div>
@@ -122,7 +139,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
       popperConfig: {
         placement: 'bottom',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
       invokerNode,
@@ -147,7 +164,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
 
     popup = new OverlayController({
       placementMode: 'local',
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">United Kingdom</div>
       `),
       invokerNode,
@@ -174,7 +191,7 @@ storiesOf('Local Overlay System|Local Overlay', module)
       hidesOnEsc: true,
       hidesOnOutsideClick: true,
       trapsKeyboardFocus: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-popup">
           <button id="el1">Button</button>
           <a id="el2" href="#">Anchor</a>

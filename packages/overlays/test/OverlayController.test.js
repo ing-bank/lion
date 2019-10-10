@@ -8,7 +8,7 @@ import {
   unsafeStatic,
   nextFrame,
 } from '@open-wc/testing';
-import { renderAsNode } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
 import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
 import { keyCodes } from '../src/utils/key-codes.js';
@@ -19,17 +19,17 @@ import { getRenderedOverlay } from '../test-helpers/global-positioning-helpers.j
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
-  contentNode: renderAsNode(html`
+  contentNode: fixtureSync(html`
     <div>my content</div>
   `),
 });
 
 const withLocalTestConfig = () => ({
   placementMode: 'local',
-  contentNode: renderAsNode(html`
+  contentNode: fixtureSync(html`
     <div>my content</div>
   `),
-  invokerNode: renderAsNode(html`
+  invokerNode: fixtureSync(html`
     <div role="button" style="width: 100px; height: 20px;">Invoker</div>
   `),
 });
@@ -52,8 +52,8 @@ describe('OverlayController', () => {
       const ctrl = new OverlayController({
         ...withGlobalTestConfig(),
       });
-      expect(ctrl._contentNodeWrapper).not.to.be.undefined;
-      expect(ctrl.contentNode.parentElement).to.equal(ctrl._contentNodeWrapper);
+      expect(ctrl.content).not.to.be.undefined;
+      expect(ctrl.contentNode.parentElement).to.equal(ctrl.content);
     });
 
     describe('Z-index on local overlays', () => {
@@ -87,17 +87,17 @@ describe('OverlayController', () => {
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        expect(ctrl.content.style.zIndex).to.equal('1');
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        expect(ctrl.content.style.zIndex).to.equal('1');
 
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        expect(ctrl.content.style.zIndex).to.equal('1');
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('1');
+        expect(ctrl.content.style.zIndex).to.equal('1');
       });
 
       it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
@@ -106,17 +106,17 @@ describe('OverlayController', () => {
           contentNode: await createZNode('1', { mode: 'global' }),
         });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('');
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('');
 
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('');
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl._contentNodeWrapper.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('');
       });
 
       it("doesn't touch the value of .contentNode", async () => {
@@ -144,7 +144,7 @@ describe('OverlayController', () => {
           `),
         });
         expect(ctrl._renderTarget).to.be.undefined;
-        expect(ctrl._contentNodeWrapper).to.equal(ctrl.invokerNode.nextElementSibling);
+        expect(ctrl.content).to.equal(ctrl.invokerNode.nextElementSibling);
       });
 
       it('keeps local target for placement mode "local" when already connected', async () => {
@@ -839,7 +839,7 @@ describe('OverlayController', () => {
         ),
       });
       await ctrl.show(); // Popper adds inline styles
-      expect(ctrl._contentNodeWrapper.style.transform).not.to.be.undefined;
+      expect(ctrl.content.style.transform).not.to.be.undefined;
       expect(ctrl.contentNode.textContent).to.include('content1');
 
       ctrl.updateConfig({
@@ -854,7 +854,7 @@ describe('OverlayController', () => {
     });
 
     it('respects the inital config provided to new OverlayController(initialConfig)', async () => {
-      const contentNode = renderAsNode(html`
+      const contentNode = fixtureSync(html`
         <div>my content</div>
       `);
 

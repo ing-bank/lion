@@ -1,5 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css, renderAsNode } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { css } from '@lion/core';
 import { OverlayController, withModalDialogConfig } from '../index.js';
 
 const modalDialogDemoStyle = css`
@@ -14,7 +15,7 @@ storiesOf('Global Overlay System|Modal Dialog', module)
   .add('Default', () => {
     const nestedDialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay" style="margin-top: -100px;">
           <p>Nested modal dialog</p>
           <button @click="${() => nestedDialogCtrl.hide()}">Close</button>
@@ -24,7 +25,7 @@ storiesOf('Global Overlay System|Modal Dialog', module)
 
     const dialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Modal dialog</p>
           <button @click="${() => dialogCtrl.hide()}">Close</button>
@@ -66,7 +67,7 @@ storiesOf('Global Overlay System|Modal Dialog', module)
       viewportConfig: {
         placement: 'top',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay demo-overlay--2">
           <p>Hides other dialogs</p>
           <button @click="${() => blockingDialogCtrl.hide()}">Close</button>
@@ -76,7 +77,7 @@ storiesOf('Global Overlay System|Modal Dialog', module)
 
     const normalDialogCtrl = new OverlayController({
       ...withModalDialogConfig(),
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Normal dialog</p>
           <button

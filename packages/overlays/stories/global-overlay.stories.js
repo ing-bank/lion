@@ -1,5 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css, renderAsNode, LitElement } from '@lion/core';
+import { css, LitElement } from '@lion/core';
+import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../index.js';
 
 const globalOverlayDemoStyle = css`
@@ -14,7 +15,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
   .add('Default', () => {
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Simple overlay</p>
           <button @click="${() => overlayCtrl.hide()}">Close</button>
@@ -46,7 +47,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       preventsScroll: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Scrolling the body is blocked</p>
           <button @click="${() => overlayCtrl.hide()}">Close</button>
@@ -76,7 +77,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       hasBackdrop: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>There is a backdrop</p>
           <button @click="${() => overlayCtrl.hide()}">Close</button>
@@ -101,7 +102,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       trapsKeyboardFocus: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Tab key is trapped within the overlay</p>
 
@@ -141,7 +142,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       viewportConfig: {
         placement: 'left',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Overlay 2. Tab key is trapped within the overlay</p>
           <button @click="${() => overlayCtrl2.hide()}">Close</button>
@@ -152,7 +153,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const overlayCtrl1 = new OverlayController({
       placementMode: 'global',
       trapsKeyboardFocus: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Overlay 1. Tab key is trapped within the overlay</p>
           <button
@@ -189,7 +190,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       viewportConfig: {
         placement: 'left',
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Hides other overlays</p>
           <button @click="${() => blockingOverlayCtrl.hide()}">Close</button>
@@ -199,7 +200,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
 
     const normalOverlayCtrl = new OverlayController({
       placementMode: 'global',
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Normal overlay</p>
           <button
@@ -278,7 +279,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       viewportConfig: {
         placement: initialPlacement,
       },
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <lion-overlay-placement-demo class="demo-overlay"> </lion-overlay-placement-demo>
       `),
     });
@@ -303,7 +304,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const shadowContent = document.createElement('div');
     shadowContent.attachShadow({ mode: 'open' });
     shadowContent.shadowRoot.appendChild(
-      renderAsNode(html`
+      fixtureSync(html`
         <div style="width: 100px; padding: 10px; background: black; color: white;">
           Shadow area
         </div>
@@ -313,7 +314,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
     const ctrl = new OverlayController({
       placementMode: 'global',
       hidesOnOutsideClick: true,
-      contentNode: renderAsNode(html`
+      contentNode: fixtureSync(html`
         <div class="demo-overlay">
           <p>Hides when clicked outside</p>
           ${shadowContent}
