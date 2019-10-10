@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.35](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.34...@lion/validate@0.2.35) (2019-10-09)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
+## [0.2.34](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.33...@lion/validate@0.2.34) (2019-10-07)
+
+
+### Bug Fixes
+
+* **validate:** normalizeDateTime of min/max dates ([9945f91](https://github.com/ing-bank/lion/commit/9945f91))
+
+
+
+
+
 ## [0.2.33](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.32...@lion/validate@0.2.33) (2019-09-30)
 
 **Note:** Version bump only for package @lion/validate

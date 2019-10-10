@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/option@0.1.17...@lion/option@0.2.0) (2019-10-10)
+
+
+### Features
+
+* update to latest overlay system ([4c26bef](https://github.com/ing-bank/lion/commit/4c26bef))
+
+
+
+
+
+## [0.1.17](https://github.com/ing-bank/lion/compare/@lion/option@0.1.16...@lion/option@0.1.17) (2019-10-09)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+## [0.1.16](https://github.com/ing-bank/lion/compare/@lion/option@0.1.15...@lion/option@0.1.16) (2019-10-07)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
 ## [0.1.15](https://github.com/ing-bank/lion/compare/@lion/option@0.1.14...@lion/option@0.1.15) (2019-09-30)
 
 **Note:** Version bump only for package @lion/option

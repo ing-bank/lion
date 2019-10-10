@@ -11,7 +11,7 @@ describe('lion-popup', () => {
           <lion-button slot="invoker">Popup button</lion-button>
         </lion-popup>
       `);
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+      expect(el._overlayCtrl.isShown).to.be.false;
     });
 
     it('should toggle to show content on click', async () => {
@@ -25,10 +25,10 @@ describe('lion-popup', () => {
       invoker.click();
       await el.updateComplete;
 
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('inline-block');
+      expect(el._overlayCtrl.isShown).to.be.true;
       invoker.click();
       await el.updateComplete;
-      expect(el.querySelector('[slot="content"]').style.display).to.be.equal('none');
+      expect(el._overlayCtrl.isShown).to.be.false;
     });
 
     it('should support popup containing html when specified in popup content body', async () => {
@@ -52,25 +52,12 @@ describe('lion-popup', () => {
           <lion-button slot="invoker">Popup button</lion-button>
         </lion-popup>
       `);
-      await el._controller.show();
-      expect(el._controller._popper.options.placement).to.equal('top');
+      await el._overlayCtrl.show();
+      expect(el._overlayCtrl._popper.options.placement).to.equal('top');
 
       el.popperConfig = { placement: 'left' };
-      await el._controller.show();
-      expect(el._controller._popper.options.placement).to.equal('left');
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('should have aria-controls attribute set to the invoker', async () => {
-      const el = await fixture(html`
-        <lion-popup>
-          <div slot="content" class="popup">Hey there</div>
-          <lion-button slot="invoker">Popup button</lion-button>
-        </lion-popup>
-      `);
-      const invoker = el.querySelector('[slot="invoker"]');
-      expect(invoker.getAttribute('aria-controls')).to.not.be.null;
+      await el._overlayCtrl.show();
+      expect(el._overlayCtrl._popper.options.placement).to.equal('left');
     });
   });
 });

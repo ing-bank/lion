@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.77...@lion/input-datepicker@0.2.0) (2019-10-10)
+
+
+### Features
+
+* update to latest overlay system ([4c26bef](https://github.com/ing-bank/lion/commit/4c26bef))
+
+
+
+
+
+## [0.1.77](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.76...@lion/input-datepicker@0.1.77) (2019-10-09)
+
+**Note:** Version bump only for package @lion/input-datepicker
+
+
+
+
+
+## [0.1.76](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.75...@lion/input-datepicker@0.1.76) (2019-10-07)
+
+**Note:** Version bump only for package @lion/input-datepicker
+
+
+
+
+
 ## [0.1.75](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.1.74...@lion/input-datepicker@0.1.75) (2019-09-30)
 
 **Note:** Version bump only for package @lion/input-datepicker

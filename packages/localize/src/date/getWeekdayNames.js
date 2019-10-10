@@ -1,4 +1,4 @@
-import { normalizeDate } from './normalizeDate.js';
+import { normalizeIntlDate } from './normalizeIntlDate.js';
 
 const weekdayNamesCache = {};
 
@@ -23,7 +23,7 @@ function getCachedWeekdayNames(locale) {
     const date = new Date('2019/04/07'); // start from Sunday
     for (let i = 0; i < 7; i += 1) {
       const weekday = formatter.format(date);
-      const normalizedWeekday = normalizeDate(weekday);
+      const normalizedWeekday = normalizeIntlDate(weekday);
       weekdays.push(normalizedWeekday);
       date.setDate(date.getDate() + 1);
     }

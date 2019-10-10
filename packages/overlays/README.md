@@ -33,3 +33,8 @@ const myCtrl = overlays.add(
 // name OverlayTypeController is for illustration purpose only
 // please read below about existing classes for different types of overlays
 ```
+
+## Rationals
+
+- No `aria-controls`: as support for it is not quite there yet
+- No `aria-haspopup` People knowing the haspop up and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.

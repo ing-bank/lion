@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Overlays System using lit-html for rendering",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -28,6 +28,7 @@
     "src",
     "stories",
     "test",
+    "test-helpers",
     "translations",
     "*.js"
   ],
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4",
+    "@open-wc/testing-helpers": "^1.0.0",
     "sinon": "^7.2.2"
   }
 }
