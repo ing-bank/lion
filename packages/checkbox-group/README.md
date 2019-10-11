@@ -28,13 +28,13 @@ import '@lion/checkbox-group/lion-checkbox-group.js';
 ```html
 <lion-form><form>
   <lion-checkbox-group
-    name="scientistsGroup"
+    name="scientists"
     label="Who are your favorite scientists?"
     .errorValidators=${[['required']]}
   >
-    <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-    <lion-checkbox name="scientists[]" label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-    <lion-checkbox name="scientists[]" label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+    <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+    <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
   </lion-checkbox-group>
 </form></lion-form>
 ```

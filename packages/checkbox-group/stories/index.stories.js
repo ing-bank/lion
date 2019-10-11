@@ -10,22 +10,10 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group name="scientistsGroup" label="Who are your favorite scientists?">
-            <lion-checkbox
-              name="scientists[]"
-              label="Archimedes"
-              .choiceValue=${'Archimedes'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
-              label="Francis Bacon"
-              .choiceValue=${'Francis Bacon'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
-              label="Marie Curie"
-              .choiceValue=${'Marie Curie'}
-            ></lion-checkbox>
+          <lion-checkbox-group name="scientists" label="Who are your favorite scientists?">
+            <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+            <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+            <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
           </lion-checkbox-group>
         </form>
       </lion-form>
@@ -36,20 +24,14 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group name="scientistsGroup" label="Who are your favorite scientists?">
+          <lion-checkbox-group name="scientists" label="Who are your favorite scientists?">
+            <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
             <lion-checkbox
-              name="scientists[]"
-              label="Archimedes"
-              .choiceValue=${'Archimedes'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
               label="Francis Bacon"
               .choiceValue=${'Francis Bacon'}
               .choiceChecked=${true}
             ></lion-checkbox>
             <lion-checkbox
-              name="scientists[]"
               label="Marie Curie"
               .modelValue=${{ value: 'Marie Curie', checked: true }}
             ></lion-checkbox>
@@ -63,23 +45,10 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group
-            name="scientistsGroup"
-            label="Who are your favorite scientists?"
-            disabled
-          >
+          <lion-checkbox-group name="scientists" label="Who are your favorite scientists?" disabled>
+            <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+            <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
             <lion-checkbox
-              name="scientists[]"
-              label="Archimedes"
-              .choiceValue=${'Archimedes'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
-              label="Francis Bacon"
-              .choiceValue=${'Francis Bacon'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
               label="Marie Curie"
               .modelValue=${{ value: 'Marie Curie', checked: true }}
             ></lion-checkbox>
@@ -99,25 +68,13 @@ storiesOf('Forms|Checkbox Group', module)
       <lion-form id="form" @submit="${submit}"
         ><form>
           <lion-checkbox-group
-            name="scientistsGroup"
+            name="scientists"
             label="Who are your favorite scientists?"
             .errorValidators=${[['required']]}
           >
-            <lion-checkbox
-              name="scientists[]"
-              label="Archimedes"
-              .choiceValue=${'Archimedes'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
-              label="Francis Bacon"
-              .choiceValue=${'Francis Bacon'}
-            ></lion-checkbox>
-            <lion-checkbox
-              name="scientists[]"
-              label="Marie Curie"
-              .choiceValue=${'Marie Curie'}
-            ></lion-checkbox>
+            <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+            <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+            <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
           </lion-checkbox-group>
           <button type="submit">Submit</button>
         </form></lion-form

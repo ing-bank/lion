@@ -11,6 +11,7 @@ export class LionCheckboxGroup extends LionFieldset {
 
   connectedCallback() {
     super.connectedCallback();
+    this.__setChildrenNameAttribute();
     // We listen for focusin(instead of foxus), because it bubbles and gives the right event order
     window.addEventListener('focusin', this._setTouchedAndPrefilled);
 
@@ -84,5 +85,19 @@ export class LionCheckboxGroup extends LionFieldset {
       };
     }
     return { required: false };
+  }
+
+  /**
+   * When children lion-checkbox elements are found without a 'name',
+   * set one dynamically.
+   */
+  __setChildrenNameAttribute() {
+    const childCheckboxes = this.querySelectorAll('lion-checkbox');
+    childCheckboxes.forEach(box => {
+      if (!box.name) {
+        // eslint-disable-next-line no-param-reassign
+        box.name = `${this.name}[]`;
+      }
+    });
   }
 }

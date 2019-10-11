@@ -105,4 +105,19 @@ describe('<lion-checkbox-group>', () => {
     el.formElements['sports[]'][0].choiceChecked = true;
     expect(el.error.required).to.be.undefined;
   });
+
+  it('delegates the name attribute to its children boxes', async () => {
+    const el = await fixture(html`
+      <lion-checkbox-group name="dinos">
+        <lion-checkbox .choiceValue=${'allosauraus'}></lion-checkbox>
+        <lion-checkbox .choiceValue=${'brontosauras'} .choiceChecked=${true}></lion-checkbox>
+      </lion-checkbox-group>
+    `);
+
+    const optOne = el.querySelectorAll('lion-checkbox')[0];
+    const optTwo = el.querySelectorAll('lion-checkbox')[1];
+
+    expect(optOne.name).to.equal('dinos[]');
+    expect(optTwo.name).to.equal('dinos[]');
+  });
 });
