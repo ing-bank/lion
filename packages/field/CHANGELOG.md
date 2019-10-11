@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/field@0.2.10...@lion/field@0.3.0) (2019-10-11)
+
+
+### Features
+
+* **field:** add aria-live attribute to feedback slot ([158c070](https://github.com/ing-bank/lion/commit/158c070))
+
+
+
+
+
 ## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/field@0.2.9...@lion/field@0.2.10) (2019-10-09)
 
 **Note:** Version bump only for package @lion/field
