@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-email",
-  "version": "0.1.58",
+  "version": "0.1.59",
   "description": "Provide a way for users to fill in an email",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
