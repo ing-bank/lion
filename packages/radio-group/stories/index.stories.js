@@ -10,14 +10,10 @@ storiesOf('Forms|Radio Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
-            <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-            <lion-radio
-              name="dinos[]"
-              label="brontosaurus"
-              .choiceValue=${'brontosaurus'}
-            ></lion-radio>
-            <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+          <lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+            <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+            <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+            <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
           </lion-radio-group>
         </form>
       </lion-form>
@@ -28,15 +24,10 @@ storiesOf('Forms|Radio Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
-            <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+          <lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+            <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+            <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
             <lion-radio
-              name="dinos[]"
-              label="brontosaurus"
-              .choiceValue=${'brontosaurus'}
-            ></lion-radio>
-            <lion-radio
-              name="dinos[]"
               label="diplodocus"
               .modelValue=${{ value: 'diplodocus', checked: true }}
             ></lion-radio>
@@ -50,15 +41,10 @@ storiesOf('Forms|Radio Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?" disabled>
-            <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+          <lion-radio-group name="dinos" label="What are your favourite dinosaurs?" disabled>
+            <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+            <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
             <lion-radio
-              name="dinos[]"
-              label="brontosaurus"
-              .choiceValue=${'brontosaurus'}
-            ></lion-radio>
-            <lion-radio
-              name="dinos[]"
               label="diplodocus"
               .modelValue=${{ value: 'diplodocus', checked: true }}
             ></lion-radio>
@@ -78,21 +64,13 @@ storiesOf('Forms|Radio Group', module)
       <lion-form id="form" @submit="${submit}"
         ><form>
           <lion-radio-group
-            name="dinosGroup"
+            name="dinos"
             label="What are your favourite dinosaurs?"
             .errorValidators=${[['required']]}
           >
-            <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-            <lion-radio
-              name="dinos[]"
-              label="brontosaurus"
-              .choiceValue=${'brontosaurus'}
-            ></lion-radio>
-            <lion-radio
-              name="dinos[]"
-              label="diplodocus"
-              .choiceValue="${'diplodocus'}}"
-            ></lion-radio>
+            <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+            <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+            <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}}"></lion-radio>
           </lion-radio-group>
           <button type="submit">Submit</button>
         </form></lion-form

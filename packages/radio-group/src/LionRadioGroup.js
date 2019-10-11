@@ -54,6 +54,7 @@ export class LionRadioGroup extends LionFieldset {
 
   connectedCallback() {
     super.connectedCallback();
+    this.__setChildrenNameAttribute();
     this.addEventListener('model-value-changed', this._checkRadioElements);
     this._setRole('radiogroup');
   }
@@ -112,5 +113,19 @@ export class LionRadioGroup extends LionFieldset {
         (typeof value === 'string' && value !== '') ||
         (typeof value !== 'string' && typeof value !== 'undefined'), // TODO: && value !== null ?
     };
+  }
+
+  /**
+   * When children lion-checkbox elements are found without a 'name',
+   * set one dynamically.
+   */
+  __setChildrenNameAttribute() {
+    const childCheckboxes = this.querySelectorAll('lion-radio');
+    childCheckboxes.forEach(box => {
+      if (!box.name) {
+        // eslint-disable-next-line no-param-reassign
+        box.name = `${this.name}[]`;
+      }
+    });
   }
 }

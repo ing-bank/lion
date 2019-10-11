@@ -54,6 +54,21 @@ describe('<lion-radio-group>', () => {
     });
   });
 
+  it('delegates the name attribute to its children radios', async () => {
+    const el = await fixture(html`
+      <lion-radio-group name="gender">
+        <lion-radio .choiceValue=${'male'}></lion-radio>
+        <lion-radio .choiceValue=${'female'} .choiceChecked=${true}></lion-radio>
+      </lion-radio-group>
+    `);
+
+    const optOne = el.querySelectorAll('lion-radio')[0];
+    const optTwo = el.querySelectorAll('lion-radio')[1];
+
+    expect(optOne.name).to.equal('gender[]');
+    expect(optTwo.name).to.equal('gender[]');
+  });
+
   it('can check a radio by supplying an available checkedValue', async () => {
     const el = await fixture(html`
       <lion-radio-group>

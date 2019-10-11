@@ -33,13 +33,13 @@ import '@lion/radio-group/lion-radio-group.js';
 ```html
 <lion-form><form>
   <lion-radio-group
-    name="dinosGroup"
+    name="dinos"
     label="What are your favourite dinosaurs?"
     .errorValidators=${[['required']]}
   >
-    <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-    <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
-    <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'} checked></lion-radio>
+    <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+    <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+    <lion-radio label="diplodocus" .choiceValue=${'diplodocus'} checked></lion-radio>
   </lion-radio-group>
 </form></lion-form>
 ```
