@@ -58,6 +58,23 @@ storiesOf('Forms|Select Rich', module)
     `,
   )
   .add(
+    'Read-only prefilled',
+    () => html`
+      <style>
+        ${selectRichDemoStyle}
+      </style>
+      <div class="demo-area">
+        <lion-select-rich label="Read-only select" readonly name="color">
+          <lion-options slot="input">
+            <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+            <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+            <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      </div>
+    `,
+  )
+  .add(
     'Disabled',
     () => html`
       <style>

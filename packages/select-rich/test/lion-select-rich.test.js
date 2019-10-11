@@ -159,6 +159,34 @@ describe('lion-select-rich', () => {
       expect(options[1].active).to.be.true;
       expect(options[1].checked).to.be.true;
     });
+
+    it('stays closed on click if it disabled or readonly', async () => {
+      const elReadOnly = await fixture(html`
+        <lion-select-rich readonly>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      const elDisabled = await fixture(html`
+        <lion-select-rich disabled>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      elReadOnly._invokerNode.click();
+      await elReadOnly.updateComplete;
+      expect(elReadOnly.opened).to.be.false;
+
+      elDisabled._invokerNode.click();
+      await elDisabled.updateComplete;
+      expect(elDisabled.opened).to.be.false;
+    });
   });
 
   describe('interaction-mode', () => {

@@ -511,7 +511,7 @@ export class LionSelectRich extends OverlayMixin(
 
   __setupInvokerNodeEventListener() {
     this.__invokerOnClick = () => {
-      if (!this.disabled) {
+      if (!this.disabled && !this.readOnly) {
         this._overlayCtrl.toggle();
       }
     };
