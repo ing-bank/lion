@@ -42,13 +42,6 @@ export class LionSelectInvoker extends LionButton {
     this.type = 'button';
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
-    if (name === 'readOnly') {
-      this.disabled = this.readOnly;
-    }
-  }
-
   _contentTemplate() {
     if (this.selectedElement) {
       const labelNodes = Array.from(this.selectedElement.querySelectorAll('*'));
