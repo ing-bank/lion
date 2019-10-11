@@ -62,4 +62,15 @@ describe('FormControlMixin', () => {
       expect(hasDuplicate).to.be.false;
     });
   });
+
+  it('adds aria-live="politie" to the feedback slot', async () => {
+    const lionField = await fixture(html`
+      <${tag}>
+        ${inputSlot}
+        <div slot="feedback">Added to see attributes</div>
+      </${tag}>
+    `);
+
+    expect(lionField.$$slot('feedback').getAttribute('aria-live')).to.equal('polite');
+  });
 });
