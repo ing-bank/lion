@@ -238,7 +238,12 @@ export class LionSelectRich extends OverlayMixin(
    * @override
    * @param {*} child
    */
-  addFormElement(child) {
+  addFormElement(passedChild) {
+    const child = passedChild;
+
+    // Set the name property on the option elements ourselves, for form serialization
+    child.name = `${this.name}[]`;
+
     super.addFormElement(child);
     // we need to adjust the elements being registered
     /* eslint-disable no-param-reassign */
