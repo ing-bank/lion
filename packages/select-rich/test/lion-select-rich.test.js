@@ -25,6 +25,23 @@ describe('lion-select-rich', () => {
     expect(el.hasAttribute('tabindex')).to.be.false;
   });
 
+  it('delegates the name attribute to its children options', async () => {
+    const el = await fixture(html`
+      <lion-select-rich name="foo">
+        <lion-options slot="input">
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    const optOne = el.querySelectorAll('lion-option')[0];
+    const optTwo = el.querySelectorAll('lion-option')[1];
+
+    expect(optOne.name).to.equal('foo[]');
+    expect(optTwo.name).to.equal('foo[]');
+  });
+
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
       const el = await fixture(html`
