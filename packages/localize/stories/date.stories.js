@@ -62,6 +62,51 @@ storiesOf('Localize System|Date', module).add(
           </td>
         </tr>
         <tr>
+          <td>Date without year</td>
+          <td>
+            <code>
+              formatDate(new Date(), {weekday:'long',month:'long',day:'2-digit'})
+            </code>
+          </td>
+          <td>
+            ${formatDate(new Date(), {
+              weekday: 'long',
+              month: 'long',
+              day: '2-digit',
+            })}
+          </td>
+        </tr>
+        <tr>
+          <td>Date without month</td>
+          <td>
+            <code>
+              formatDate(new Date(), {weekday:'long',year:'numeric',day:'2-digit'})
+            </code>
+          </td>
+          <td>
+            ${formatDate(new Date(), {
+              weekday: 'long',
+              year: 'numeric',
+              day: '2-digit',
+            })}
+          </td>
+        </tr>
+        <tr>
+          <td>Date without day</td>
+          <td>
+            <code>
+              formatDate(new Date(), {weekday:'long',year:'numeric',month:'long'})
+            </code>
+          </td>
+          <td>
+            ${formatDate(new Date(), {
+              weekday: 'long',
+              month: 'long',
+              year: 'numeric',
+            })}
+          </td>
+        </tr>
+        <tr>
           <td>Locale</td>
           <td><code>formatDate(new Date(){locale:'nl-NL'})</code></td>
           <td>${formatDate(new Date(), { locale: 'nl-NL' })}</td>
