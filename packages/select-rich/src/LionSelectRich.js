@@ -360,8 +360,10 @@ export class LionSelectRich extends OverlayMixin(
     const foundChecked = this.modelValue.find(subModelValue => subModelValue.checked);
     if (foundChecked && foundChecked.value !== this.checkedValue) {
       this.checkedValue = foundChecked.value;
+    }
 
-      // sync to invoker
+    // sync to invoker
+    if (this._invokerNode) {
       this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     }
 
