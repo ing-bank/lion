@@ -7,6 +7,7 @@ import {
   unsafeStatic,
   nextFrame,
 } from '@open-wc/testing';
+import { LitElement } from '@lion/core';
 import '@lion/option/lion-option.js';
 import { OverlayController } from '@lion/overlays';
 
@@ -434,6 +435,90 @@ describe('lion-select-rich', () => {
         amount: 0,
         active: false,
       });
+    });
+
+    it('keeps showing the selected item after a new item has been added in the selectedIndex position', async () => {
+      const mySelectContainerTagString = defineCE(
+        class extends LitElement {
+          static get properties() {
+            return {
+              colorList: Array,
+            };
+          }
+
+          constructor() {
+            super();
+            this.colorList = [];
+          }
+
+          render() {
+            return html`
+              <lion-select-rich label="Favorite color" name="color">
+                <lion-options slot="input">
+                  ${this.colorList.map(
+                    colorObj => html`
+                      <lion-option
+                        .modelValue=${{ value: colorObj.value, checked: colorObj.checked }}
+                        >${colorObj.label}</lion-option
+                      >
+                    `,
+                  )}
+                </lion-options>
+              </lion-select-rich>
+            `;
+          }
+        },
+      );
+      const mySelectContainerTag = unsafeStatic(mySelectContainerTagString);
+      const el = await fixture(html`
+        <${mySelectContainerTag}></${mySelectContainerTag}>
+      `);
+
+      const colorList = [
+        {
+          label: 'Red',
+          value: 'red',
+          checked: false,
+        },
+        {
+          label: 'Hotpink',
+          value: 'hotpink',
+          checked: true,
+        },
+        {
+          label: 'Teal',
+          value: 'teal',
+          checked: false,
+        },
+      ];
+
+      el.colorList = colorList;
+      el.requestUpdate();
+      await el.updateComplete;
+
+      const selectRich = el.shadowRoot.querySelector('lion-select-rich');
+      const invoker = selectRich._invokerNode;
+
+      // needed to properly set the checkedIndex and checkedValue
+      selectRich.requestUpdate();
+      await selectRich.updateComplete;
+
+      expect(selectRich.checkedIndex).to.equal(1);
+      expect(selectRich.checkedValue).to.equal('hotpink');
+      expect(invoker.selectedElement.value).to.equal('hotpink');
+
+      colorList.splice(1, 0, {
+        label: 'Blue',
+        value: 'blue',
+        checked: false,
+      });
+
+      el.requestUpdate();
+      await el.updateComplete;
+
+      expect(selectRich.checkedIndex).to.equal(2);
+      expect(selectRich.checkedValue).to.equal('hotpink');
+      expect(invoker.selectedElement.value).to.equal('hotpink');
     });
   });
 
