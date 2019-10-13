@@ -25,7 +25,7 @@ export const FormRegistrarMixin = dedupeMixin(
         super();
         this.formElements = [];
         this.__readyForRegistration = false;
-        this.__hasBeenRenedered = false;
+        this.__hasBeenRendered = false;
         this.registrationReady = new Promise(resolve => {
           this.__resolveRegistrationReady = resolve;
         });
@@ -39,8 +39,8 @@ export const FormRegistrarMixin = dedupeMixin(
           super.connectedCallback();
         }
         formRegistrarManager.add(this);
-        if (this.__hasBeenRenedered) {
-          formRegistrarManager.becomesReady(this);
+        if (this.__hasBeenRendered) {
+          formRegistrarManager.becomesReady();
         }
       }
 
@@ -59,8 +59,8 @@ export const FormRegistrarMixin = dedupeMixin(
         super.firstUpdated(changedProperties);
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
-        formRegistrarManager.becomesReady(this);
-        this.__hasBeenRenedered = true;
+        formRegistrarManager.becomesReady();
+        this.__hasBeenRendered = true;
       }
 
       addFormElement(child) {
