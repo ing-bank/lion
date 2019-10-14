@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/field@0.3.0...@lion/field@0.3.1) (2019-10-14)
+
+
+### Bug Fixes
+
+* **form-registrar-mixin:** call becomesReady on connectedCallback ([75b3e2c](https://github.com/ing-bank/lion/commit/75b3e2c))
+* **form-registrar-mixin:** ensure becomesReady called only once ([991af25](https://github.com/ing-bank/lion/commit/991af25))
+* **form-registrar-mixin:** fix typo ([2d45e65](https://github.com/ing-bank/lion/commit/2d45e65))
+
+
+
+
+
 # [0.3.0](https://github.com/ing-bank/lion/compare/@lion/field@0.2.10...@lion/field@0.3.0) (2019-10-11)
 
 
