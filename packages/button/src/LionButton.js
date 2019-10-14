@@ -176,8 +176,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    */
   __clickDelegationHandler() {
     if (this.type === 'submit' && this._nativeButtonNode && this._nativeButtonNode.form) {
-      this._nativeButtonNode.form.dispatchEvent(new Event('submit'));
-      this._nativeButtonNode.form.submit();
+      this._nativeButtonNode.click();
     }
   }
 
@@ -191,12 +190,14 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.addEventListener('mousedown', this.__mousedownHandler);
     this.addEventListener('keydown', this.__keydownHandler);
     this.addEventListener('keyup', this.__keyupHandler);
+    this._nativeButtonNode.addEventListener('click', this.__nativeButtonHandler);
   }
 
   __teardownEvents() {
     this.removeEventListener('mousedown', this.__mousedownHandler);
     this.removeEventListener('keydown', this.__keydownHandler);
     this.removeEventListener('keyup', this.__keyupHandler);
+    this._nativeButtonNode.removeEventListener('click', this.__nativeButtonHandler);
   }
 
   __mousedownHandler() {
@@ -227,6 +228,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       // redispatch click
       this.click();
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  __nativeButtonHandler(event) {
+    event.stopPropagation();
   }
 
   // eslint-disable-next-line class-methods-use-this
