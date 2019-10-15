@@ -30,3 +30,4 @@ import '../packages/calendar/stories/index.stories.js';
 
 import '../packages/option/stories/index.stories.js';
 import '../packages/select-rich/stories/index.stories.js';
+import '../packages/switch/stories/index.stories.js';
