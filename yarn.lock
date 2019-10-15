@@ -2012,7 +2012,7 @@
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.14.2.tgz#4ad2a6fedc22992c6048729fbf7104e472f590d3"
   integrity sha512-+ENGbkgoruTtuNGUVLi9hCC6+IJVBM/lnFDGjKBUt7T6RyAgidBTV+GPMzpQtfHhLRasVJmcjRW8D2him8HvAA==
 
-"@open-wc/testing-helpers@^1.2.1":
+"@open-wc/testing-helpers@^1.0.0", "@open-wc/testing-helpers@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.2.1.tgz#eecba5ccfe808f9667caf149e68cd80d781f28e0"
   integrity sha512-FZBjqM81GQc+Q8W4YdWNwwk64+PW6frCvHyeov5ivCR2K7SJXwTPRcQIi0qU/6VVRVDlQeQ39PH8oSnjnIYpvQ==
