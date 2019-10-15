@@ -1,5 +1,8 @@
 import { css, html, SlotMixin, DisabledWithTabIndexMixin, LitElement } from '@lion/core';
 
+// eslint-disable-next-line class-methods-use-this
+const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
+
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
     return {
@@ -119,6 +122,14 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     ];
   }
 
+  get _nativeButtonNode() {
+    return this.querySelector('[slot=_button]');
+  }
+
+  get _form() {
+    return this._nativeButtonNode.form;
+  }
+
   get slots() {
     return {
       ...super.slots,
@@ -130,10 +141,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         return this.constructor._button.cloneNode();
       },
     };
-  }
-
-  get _nativeButtonNode() {
-    return this.querySelector('[slot=_button]');
   }
 
   constructor() {
@@ -172,12 +179,22 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   /**
-   * Dispatch submit event and invoke submit on the native form when clicked
+   * Delegate click, by flashing a native button as a direct child
+   * of the form, and firing click on this button. This will fire the form submit
+   * without side effects caused by the click bubbling back up to lion-button.
    */
-  __clickDelegationHandler() {
-    if (this.type === 'submit' && this._nativeButtonNode && this._nativeButtonNode.form) {
-      this._nativeButtonNode.form.dispatchEvent(new Event('submit'));
-      this._nativeButtonNode.form.submit();
+  __clickDelegationHandler(e) {
+    if (this.constructor.__isIE11()) {
+      e.stopPropagation();
+    }
+
+    if (this.type === 'submit' && e.target === this) {
+      if (this._form) {
+        const nativeButton = document.createElement('button');
+        this._form.appendChild(nativeButton);
+        nativeButton.click();
+        this._form.removeChild(nativeButton);
+      }
     }
   }
 
@@ -209,12 +226,13 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   __keydownHandler(e) {
-    if (this.active || !this.__isKeyboardClickEvent(e)) {
+    if (this.active || !isKeyboardClickEvent(e)) {
       return;
     }
+    // FIXME: In Edge & IE11, this toggling the active state to prevent bounce, does not work.
     this.active = true;
     const keyupHandler = keyupEvent => {
-      if (this.__isKeyboardClickEvent(keyupEvent)) {
+      if (isKeyboardClickEvent(keyupEvent)) {
         this.active = false;
         document.removeEventListener('keyup', keyupHandler, true);
       }
@@ -223,15 +241,14 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   __keyupHandler(e) {
-    if (this.__isKeyboardClickEvent(e)) {
-      // redispatch click
+    if (isKeyboardClickEvent(e)) {
+      // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>
+      if (e.srcElement && e.srcElement !== this) {
+        return;
+      }
+      // dispatch click
       this.click();
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  __isKeyboardClickEvent(e) {
-    return e.keyCode === 32 /* space */ || e.keyCode === 13 /* enter */;
   }
 
   static __isIE11() {
