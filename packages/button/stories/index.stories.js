@@ -33,16 +33,56 @@ storiesOf('Buttons|Button', module)
     `,
   )
   .add(
-    'Within a form',
+    'Within a native form',
     () => html`
-      <form @submit=${() => console.log('native form submitted')}>
-        <input name="foo" label="Foo" .modelValue=${'bar'} />
-        <input name="foo2" label="Foo2" .modelValue=${'bar'} />
-        <lion-button
-          type="submit"
-          @click=${() => console.log(document.querySelector('#form').serializeGroup())}
-          >Submit</lion-button
-        >
+      <form
+        @submit=${ev => {
+          ev.preventDefault();
+          console.log('submit handler');
+        }}
+      >
+        <label>First name</label>
+        <input name="firstName" />
+        <label>Last name</label>
+        <input name="lastName" />
+        <lion-button @click=${() => console.log('click handler')}>Submit</lion-button>
       </form>
+      <p>
+        Supports the following use cases:
+      </p>
+      <ul>
+        <li>
+          Submit on button click
+        </li>
+        <li>
+          Submit on button enter or space keypress
+        </li>
+        <li>
+          Submit on enter keypress inside an input
+        </li>
+      </ul>
+      <p>Important notes:</p>
+      <ul>
+        <li>
+          A (lion)-button of type submit is mandatory for the last use case, if you have multiple
+          inputs. This is native behavior.
+        </li>
+        <li>
+          <span style="background-color: azure">
+            <code>@click</code> on <code>lion-button</code>
+          </span>
+          and
+          <span style="background-color: seashell">
+            <code>@submit</code> on <code>form</code>
+          </span>
+          are triggered by these use cases. We strongly encourage you to listen to the submit
+          handler if your goal is to do something on form-submit
+        </li>
+        <li>
+          To prevent form submission full page reloads, add a <b>submit handler on the form</b>
+          <code>@submit</code> with <code>event.preventDefault()</code>. Adding it on the
+          <code>lion-button</code> is not enough.
+        </li>
+      </ul>
     `,
   );

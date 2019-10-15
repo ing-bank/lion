@@ -225,74 +225,132 @@ describe('lion-button', () => {
   });
 
   describe('form integration', () => {
-    it('behaves like native `button` when clicked', async () => {
-      const formSubmitSpy = sinon.spy(e => e.preventDefault());
-      const form = await fixture(html`
-        <form @submit="${formSubmitSpy}">
-          <lion-button type="submit">foo</lion-button>
-        </form>
-      `);
-      // Prevent page refresh
-      form.submit = () => {};
+    describe('with submit event', () => {
+      it('behaves like native `button` when clicked', async () => {
+        const formSubmitSpy = sinon.spy(e => e.preventDefault());
+        const form = await fixture(html`
+          <form @submit="${formSubmitSpy}">
+            <lion-button type="submit">foo</lion-button>
+          </form>
+        `);
 
-      const button = form.querySelector('lion-button');
-      getTopElement(button).click();
+        const button = form.querySelector('lion-button');
+        getTopElement(button).click();
 
-      expect(formSubmitSpy.called).to.be.true;
+        expect(formSubmitSpy.callCount).to.equal(1);
+      });
+
+      it('behaves like native `button` when interacted with keyboard space', async () => {
+        const formSubmitSpy = sinon.spy(e => e.preventDefault());
+        const form = await fixture(html`
+          <form @submit="${formSubmitSpy}">
+            <lion-button type="submit">foo</lion-button>
+          </form>
+        `);
+
+        pressSpace(form.querySelector('lion-button'));
+        await aTimeout();
+        await aTimeout();
+
+        expect(formSubmitSpy.callCount).to.equal(1);
+      });
+
+      it('behaves like native `button` when interacted with keyboard enter', async () => {
+        const formSubmitSpy = sinon.spy(e => e.preventDefault());
+        const form = await fixture(html`
+          <form @submit="${formSubmitSpy}">
+            <lion-button type="submit">foo</lion-button>
+          </form>
+        `);
+
+        pressEnter(form.querySelector('lion-button'));
+        await aTimeout();
+        await aTimeout();
+
+        expect(formSubmitSpy.callCount).to.equal(1);
+      });
+
+      // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
+      it.skip('works with implicit form submission on-enter inside an input', async () => {
+        const formSubmitSpy = sinon.spy(e => e.preventDefault());
+        const form = await fixture(html`
+          <form @submit="${formSubmitSpy}">
+            <input name="foo" />
+            <input name="foo2" />
+            <lion-button type="submit">foo</lion-button>
+          </form>
+        `);
+
+        pressEnter(form.querySelector('input[name="foo2"]'));
+        await aTimeout();
+        await aTimeout();
+
+        expect(formSubmitSpy.callCount).to.equal(1);
+      });
     });
 
-    it('behaves like native `button` when interected with keyboard space', async () => {
-      const formSubmitSpy = sinon.spy(e => e.preventDefault());
-      const form = await fixture(html`
-        <form @submit="${formSubmitSpy}">
-          <lion-button type="submit">foo</lion-button>
-        </form>
-      `);
-      // Prevent page refresh
-      form.submit = () => {};
+    describe('with click event', () => {
+      it('behaves like native `button` when clicked', async () => {
+        const formButtonClickedSpy = sinon.spy();
+        const form = await fixture(html`
+          <form @submit=${ev => ev.preventDefault()}>
+            <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
+          </form>
+        `);
 
-      pressSpace(form.querySelector('lion-button'));
-      await aTimeout();
-      await aTimeout();
+        const button = form.querySelector('lion-button');
+        getTopElement(button).click();
 
-      expect(formSubmitSpy.called).to.be.true;
-    });
+        expect(formButtonClickedSpy.callCount).to.equal(1);
+      });
 
-    it('behaves like native `button` when interected with keyboard enter', async () => {
-      const formSubmitSpy = sinon.spy(e => e.preventDefault());
-      const form = await fixture(html`
-        <form @submit="${formSubmitSpy}">
-          <lion-button type="submit">foo</lion-button>
-        </form>
-      `);
-      // Prevent page refresh
-      form.submit = () => {};
+      it('behaves like native `button` when interacted with keyboard space', async () => {
+        const formButtonClickedSpy = sinon.spy();
+        const form = await fixture(html`
+          <form @submit=${ev => ev.preventDefault()}>
+            <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
+          </form>
+        `);
 
-      pressEnter(form.querySelector('lion-button'));
-      await aTimeout();
-      await aTimeout();
+        pressSpace(form.querySelector('lion-button'));
+        await aTimeout();
+        await aTimeout();
 
-      expect(formSubmitSpy.called).to.be.true;
-    });
+        expect(formButtonClickedSpy.callCount).to.equal(1);
+      });
 
-    // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
-    it.skip('works with implicit form submission on-enter inside an input', async () => {
-      const formSubmitSpy = sinon.spy(e => e.preventDefault());
-      const form = await fixture(html`
-        <form @submit="${formSubmitSpy}">
-          <input name="foo" />
-          <input name="foo2" />
-          <lion-button type="submit">foo</lion-button>
-        </form>
-      `);
-      // Prevent page refresh
-      form.submit = () => {};
+      it('behaves like native `button` when interacted with keyboard enter', async () => {
+        const formButtonClickedSpy = sinon.spy();
+        const form = await fixture(html`
+          <form @submit=${ev => ev.preventDefault()}>
+            <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
+          </form>
+        `);
 
-      pressEnter(form.querySelector('input[name="foo2"]'));
-      await aTimeout();
-      await aTimeout();
+        pressEnter(form.querySelector('lion-button'));
+        await aTimeout();
+        await aTimeout();
 
-      expect(formSubmitSpy.called).to.be.true;
+        expect(formButtonClickedSpy.callCount).to.equal(1);
+      });
+
+      // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
+      it.skip('works with implicit form submission on-enter inside an input', async () => {
+        const formButtonClickedSpy = sinon.spy();
+        const form = await fixture(html`
+          <form @submit=${ev => ev.preventDefault()}>
+            <input name="foo" />
+            <input name="foo2" />
+            <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
+          </form>
+        `);
+
+        pressEnter(form.querySelector('input[name="foo2"]'));
+        await aTimeout();
+        await aTimeout();
+
+        expect(formButtonClickedSpy.callCount).to.equal(1);
+      });
     });
   });
 
