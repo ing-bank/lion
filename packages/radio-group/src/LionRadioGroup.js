@@ -94,7 +94,7 @@ export class LionRadioGroup extends LionFieldset {
 
   __triggerCheckedValueChanged() {
     const value = this.checkedValue;
-    if (value && value !== this.__previousCheckedValue) {
+    if (value != null && value !== this.__previousCheckedValue) {
       this.dispatchEvent(
         new CustomEvent('checked-value-changed', { bubbles: true, composed: true }),
       );
