@@ -19,38 +19,22 @@ class IsCat extends Validator {
 }
 
 describe('Validator', () => {
-  it('supports customized types', async () => {
-    // This test shows the best practice of adding custom types
-    class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.type = 'my-type';
-      }
-    }
-    expect(new MyValidator().type).to.equal('my-type');
-  });
-
-  it('has type "error" by default', async () => {
-    expect(new Validator().type).to.equal('error');
-  });
-
-  it('has an "execute" function returning active state', async () => {
-    // This test shows the best practice of adding custom types
+  it('has an "execute" function returning "shown" state', async () => {
     class MyValidator extends Validator {
       execute(modelValue, param) {
         const showError = modelValue === 'test' && param === 'me';
         return showError;
       }
     }
-    expect(new MyValidator().execute('test', 'me')).to.equal(true);
+    expect(new MyValidator().execute('test', 'me')).to.be.true;
   });
 
-  it('receives a param on instantiation', async () => {
+  it('receives a "param" as a first argument on instantiation', async () => {
     const vali = new Validator('myParam');
     expect(vali.param).to.equal('myParam');
   });
 
-  it('receives a config object on instantiation', async () => {
+  it('receives a config object (optionally) as a second argument on instantiation', async () => {
     const vali = new Validator('myParam', { my: 'config' });
     expect(vali.config).to.eql({ my: 'config' });
   });
@@ -63,7 +47,7 @@ describe('Validator', () => {
     expect(cb.callCount).to.equal(1);
   });
 
-  it('fires "config-changed" event on param change', async () => {
+  it('fires "config-changed" event on config change', async () => {
     const vali = new Validator('foo', { foo: 'bar' });
     const cb = sinon.spy(() => {});
     vali.addEventListener('config-changed', cb);
@@ -71,18 +55,7 @@ describe('Validator', () => {
     expect(cb.callCount).to.equal(1);
   });
 
-  it('has an "execute" function returning active state', async () => {
-    // This test shows the best practice of adding custom types
-    class MyValidator extends Validator {
-      execute(modelValue, param) {
-        const showError = modelValue === 'forbidden' && param === 'values';
-        return showError;
-      }
-    }
-    expect(new MyValidator().execute('forbidden', 'values')).to.equal(true);
-  });
-
-  it('have access to FormControl', async () => {
+  it('has access to FormControl', async () => {
     const lightDom = '';
     const tagString = defineCE(
       class extends ValidateCoreMixin(LitElement) {
@@ -99,15 +72,15 @@ describe('Validator', () => {
         return showError;
       }
 
+      // eslint-disable-next-line
       onFormControlConnect(formControl) {
-        // eslint-disable-line
         // I could do something like:
         // - add aria-required="true"
         // - add type restriction for MaxLength(3, { isBlocking: true })
       }
 
+      // eslint-disable-next-line
       onFormControlDisconnect(formControl) {
-        // eslint-disable-line
         // I will cleanup what I did in connect
       }
     }
@@ -129,11 +102,21 @@ describe('Validator', () => {
     expect(disconnectSpy.calledWith(el)).to.equal(true);
   });
 
-  it('contains "execute" function returning true when Validator is "active"', async () => {
-    const isCatFn = new IsCat().execute;
-    expect(typeof fn).to.equal('function');
-    expect(isCatFn('cat')).to.be.false;
-    expect(isCatFn('dog')).to.be.true;
+  describe('Types', () => {
+    it('has type "error" by default', async () => {
+      expect(new Validator().type).to.equal('error');
+    });
+
+    it('supports customized types', async () => {
+      // This test shows the best practice of adding custom types
+      class MyValidator extends Validator {
+        constructor(...args) {
+          super(...args);
+          this.type = 'my-type';
+        }
+      }
+      expect(new MyValidator().type).to.equal('my-type');
+    });
   });
 });
 
@@ -151,6 +134,6 @@ describe('ResultValidator', () => {
         regularValidarionResult: [new Required(), new MinLength(3)],
         prevValidationResult: [],
       }),
-    ).to.equal(true);
+    ).to.be.true;
   });
 });

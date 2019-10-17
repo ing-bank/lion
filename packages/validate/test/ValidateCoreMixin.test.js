@@ -55,7 +55,7 @@ describe.only('ValidateCoreMixin', () => {
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `);
-      expect(el.errorState).to.be.true;
+      expect(el.hasError).to.be.true;
     });
 
     it('revalidates when ".modelValue" changes', async () => {
@@ -190,7 +190,7 @@ describe.only('ValidateCoreMixin', () => {
       }
     }
 
-    it('Validators will be called with modelValue as first argument', async () => {
+    it('Validators will be called with ".modelValue" as first argument', async () => {
       const otherValidator = new OtherValidator();
       const otherValidatorSpy = sinon.spy(otherValidator, 'execute');
       await fixture(html`
@@ -299,12 +299,12 @@ describe.only('ValidateCoreMixin', () => {
         </${tag}>
       `);
 
-      const validator = el.errorValidators[0];
+      const validator = el.validators[0];
       expect(validator instanceof Validator).to.be.true;
-      expect(el.errorState).to.be.false;
+      expect(el.hasError).to.be.false;
       asyncVResolve();
       await aTimeout();
-      expect(el.errorState).to.be.true;
+      expect(el.hasError).to.be.true;
     });
 
     it('sets ".isPending/[is-pending]" when validation is in progress', async () => {
@@ -324,7 +324,7 @@ describe.only('ValidateCoreMixin', () => {
       expect(el.hasAttribute('is-pending')).to.be.false;
     });
 
-    // TODO: run these methods without actually waiting debounce time?
+    // TODO: 'mock' these methods without actually waiting for debounce?
     it('debounces async validation for performance', async () => {
       const asyncV = new IsAsyncCat();
       const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
@@ -337,7 +337,7 @@ describe.only('ValidateCoreMixin', () => {
       // debounce started
       el.validators = [asyncV];
       expect(asyncVExecuteSpy.called).to.equal(0);
-      // TODO: consider wrapping debounce in instance/ctor function to make spying possibles
+      // TODO: consider wrapping debounce in instance/ctor function to make spying possible
       // await debounceFinish
       expect(asyncVExecuteSpy.called).to.equal(1);
 
@@ -372,7 +372,8 @@ describe.only('ValidateCoreMixin', () => {
       expect(asyncVAbortSpy.called).to.equal(1);
     });
 
-    it('developer can configure condition for asynchronous validation', async () => {
+    // TODO: nice to have
+    it.skip('developer can configure condition for asynchronous validation', async () => {
       const asyncV = new IsAsyncCat();
       const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
 
@@ -477,7 +478,7 @@ describe.only('ValidateCoreMixin', () => {
   });
 
   describe('Required Validator integration', () => {
-    it('will be reflected in ".errorStates" when form control is empty', async () => {
+    it('will be reflected in ".hasError" when form control is empty', async () => {
       const el = await fixture(html`
         <${tag}
           .validators=${[new Required()]}
@@ -616,11 +617,11 @@ describe.only('ValidateCoreMixin', () => {
       expect(el.hasAttribute('has-error')).to.be.false;
 
       el.modelValue = 'abcde';
-      expect(el.errorState).to.be.false;
+      expect(el.hasError).to.be.false;
       expect(el.hasAttribute('has-error')).to.be.false;
 
       el.modelValue = 'abcdefg';
-      expect(el.errorState).to.be.false;
+      expect(el.hasError).to.be.false;
       expect(el.hasAttribute('has-error')).to.be.false;
     });
 
