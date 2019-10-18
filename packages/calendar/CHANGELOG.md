@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/calendar@0.2.3...@lion/calendar@0.2.4) (2019-10-18)
+
+
+### Bug Fixes
+
+* **calendar:** issue 302 part 2 - skipped month ([f04256c](https://github.com/ing-bank/lion/commit/f04256c))
+
+
+
+
+
 ## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/calendar@0.2.2...@lion/calendar@0.2.3) (2019-10-14)
 
 **Note:** Version bump only for package @lion/calendar
