@@ -546,6 +546,31 @@ describe('<lion-calendar>', () => {
         clock.restore();
       });
 
+      it('supports navigating from larger months to smaller ones (day counts)', async () => {
+        // given
+        const inputDate = new Date('2019/08/31');
+        const element = await fixture(html`
+          <lion-calendar .centralDate="${inputDate}"> </lion-calendar>
+        `);
+        // when
+        const remote = new CalendarObject(element);
+        remote.nextMonthButtonEl.click();
+        await element.updateComplete;
+        // then
+        expect(remote.activeMonthAndYear).to.equal('September 2019');
+        expect(remote.centralDayObj.el).dom.to.equal(`
+          <button
+            class="calendar__day-button"
+            tabindex="0"
+            aria-label="30 September 2019 Monday"
+            aria-selected="false"
+            past=""
+            current-month="">
+            30
+          </button>
+        `);
+      });
+
       describe('Accessibility', () => {
         it('navigate buttons have a aria-label and title attribute with accessible label', async () => {
           const el = await fixture(html`
