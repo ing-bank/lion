@@ -38,7 +38,10 @@ export const isEmailValidator = () => [(...params) => ({ isEmail: isEmail(...par
  * @param {number} value to check
  */
 export const isNumber = value => value === value && typeof value === 'number'; // eslint-disable-line no-self-compare
-export const isNumberValidator = () => [(...params) => ({ isNumber: isNumber(...params) })];
+export const isNumberValidator = (...factoryParams) => [
+  (...params) => ({ isNumber: isNumber(...params) }),
+  ...factoryParams,
+];
 
 export const minNumber = (value, min) => isNumber(value) && value >= min;
 export const minNumberValidator = (...factoryParams) => [
