@@ -270,6 +270,29 @@ describe('lion-button', () => {
         expect(formSubmitSpy.callCount).to.equal(1);
       });
 
+      it('supports resetting form inputs in a native form', async () => {
+        const form = await fixture(html`
+          <form>
+            <input name="firstName" />
+            <input name="lastName" />
+            <lion-button type="reset">reset</lion-button>
+          </form>
+        `);
+        const btn = form.querySelector('lion-button');
+        const firstName = form.querySelector('input[name=firstName]');
+        const lastName = form.querySelector('input[name=lastName]');
+        firstName.value = 'Foo';
+        lastName.value = 'Bar';
+
+        expect(firstName.value).to.equal('Foo');
+        expect(lastName.value).to.equal('Bar');
+
+        btn.click();
+
+        expect(firstName.value).to.be.empty;
+        expect(lastName.value).to.be.empty;
+      });
+
       // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
       it.skip('works with implicit form submission on-enter inside an input', async () => {
         const formSubmitSpy = sinon.spy(e => e.preventDefault());

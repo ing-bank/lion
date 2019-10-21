@@ -55,6 +55,9 @@ storiesOf('Buttons|Button', module)
           Submit on button click
         </li>
         <li>
+          Reset native form fields when using type="reset"
+        </li>
+        <li>
           Submit on button enter or space keypress
         </li>
         <li>
