@@ -250,15 +250,6 @@ export const ValidateCoreMixin = dedupeMixin(
           return;
         }
 
-        console.log('validate ', this.modelValue);
-
-        // TODO: find a better way to do this. It might block required validation.
-        // Also, we should think about falsy values like '' and null (see __isEmpty and __isRequired)
-        // if (this.modelValue === undefined) {
-          // this.__resetInstanceValidationStates();
-        // }
-
-
         this.__storePrevResult();
         if (clearCurrentResult) {
           // Clear ('invalidate') all pending and existing validation results.
@@ -323,6 +314,7 @@ export const ValidateCoreMixin = dedupeMixin(
        * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
        */
       __executeSyncValidators(filteredValidators, value) {
+        console.log('komt ie hier?', filteredValidators);
         /** @type {Validator[]} */
         const syncValidators = filteredValidators.filter(v => !v.async);
 
@@ -402,7 +394,6 @@ export const ValidateCoreMixin = dedupeMixin(
        * @param {Validator[]} valResult
        */
       _storeResultsOnInstance(valResult) {
-        console.log('_storeResultsOnInstance ');
         const instanceResult = {};
         this.__resetInstanceValidationStates();
 

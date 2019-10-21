@@ -86,7 +86,7 @@ describe.only('ValidateCoreMixin', () => {
   });
 
   describe.only('Validation internal flow', () => {
-    it('first checks for empty values', async () => {
+    it('firstly checks for empty values', async () => {
       const alwaysValid = new AlwaysValid();
       const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');
       const el = await fixture(html`
@@ -105,17 +105,17 @@ describe.only('ValidateCoreMixin', () => {
       expect(isEmptySpy.callCount).to.equal(2);
     });
 
-    it('second checks for synchronous Validators: creates RegularValidationResult', async () => {
+    it('secondly checks for synchronous Validators: creates RegularValidationResult', async () => {
       const el = await fixture(html`
         <${tag} .validators=${[new AlwaysValid()]}>${lightDom}</${tag}>
       `);
       const isEmptySpy = sinon.spy(el, '__isEmpty');
       const syncSpy = sinon.spy(el, '__executeSyncValidators');
       el.modelValue = 'nonEmpty';
-      expect(isEmptySpy).to.be.calledBefore(syncSpy);
+      expect(isEmptySpy.calledBefore(syncSpy)).to.be.true;
     });
 
-    it('third schedules asynchronous Validators: creates RegularValidationResult', async () => {
+    it('thirdly schedules asynchronous Validators: creates RegularValidationResult', async () => {
       const el = await fixture(html`
         <${tag} .validators=${[new AlwaysValid(), new AlwaysValid(null, { async: true })]}>
           ${lightDom}
@@ -124,7 +124,7 @@ describe.only('ValidateCoreMixin', () => {
       const syncSpy = sinon.spy(el, '__executeSyncValidators');
       const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
       el.modelValue = 'nonEmpty';
-      expect(syncSpy).to.be.calledBefore(asyncSpy);
+      expect(syncSpy.calledBefore(asyncSpy)).to.be.true;
     });
 
     it('finally checks for ResultValidators: creates TotalValidationResult', async () => {
@@ -135,9 +135,16 @@ describe.only('ValidateCoreMixin', () => {
         }
       }
 
+      class AsyncAlwaysValid extends AlwaysValid {
+        constructor(...args) {
+          super(...args);
+          this.async = true;
+        }
+      }
+
       const el = await fixture(html`
         <${tag}
-          .validators=${[new AlwaysValid(null, { async: true }), new MyResult()]}>
+          .validators=${[new AsyncAlwaysValid(), new MyResult()]}>
           ${lightDom}
         </${tag}>
       `);
@@ -146,7 +153,7 @@ describe.only('ValidateCoreMixin', () => {
       const resultSpy = sinon.spy(el, '__executeResultValidators');
 
       el.modelValue = 'nonEmpty';
-      expect(asyncSpy).to.be.calledBefore(resultSpy);
+      expect(asyncSpy.calledBefore(resultSpy)).to.be.true;
 
       const el2 = await fixture(html`
         <${tag}
@@ -159,7 +166,7 @@ describe.only('ValidateCoreMixin', () => {
       const resultSpy2 = sinon.spy(el2, '__executeResultValidators');
 
       el2.modelValue = 'nonEmpty';
-      expect(syncSpy).to.be.calledBefore(resultSpy2);
+      expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
     });
 
     describe('Finalization', () => {
