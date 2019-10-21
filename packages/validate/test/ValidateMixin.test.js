@@ -2,7 +2,7 @@
 import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LitElement } from '@lion/core';
-import { ValidateCoreMixin } from '../src/ValidateCoreMixin.js';
+import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Unparseable } from '../src/Unparseable.js';
 import { Validator } from '../src/Validator.js';
 import { ResultValidator } from '../src/ResultValidator.js';
@@ -17,7 +17,7 @@ const externalVariables = {};
 const lightDom = '';
 
 const tagString = defineCE(
-  class extends ValidateCoreMixin(LitElement) {
+  class extends ValidateMixin(LitElement) {
     static get properties() {
       return { modelValue: String };
     }
@@ -25,7 +25,7 @@ const tagString = defineCE(
 );
 const tag = unsafeStatic(tagString);
 
-describe.only('ValidateCoreMixin', () => {
+describe.only('ValidateMixin', () => {
   /**
    *   Terminology
    *
@@ -507,7 +507,7 @@ describe.only('ValidateCoreMixin', () => {
 
     it('calls "._isEmpty" when provided, for different modelValues', async () => {
       const customRequiredTagString = defineCE(
-        class extends ValidateCoreMixin(LitElement) {
+        class extends ValidateMixin(LitElement) {
           _isEmpty(modelValue) {
             return modelValue.model === '';
           }
@@ -559,7 +559,7 @@ describe.only('ValidateCoreMixin', () => {
   describe('Preconfigured Validators', () => {
     it('Can store preconfigured Validators for custom inputs', async () => {
       const defaultRequiredTagString = defineCE(
-        class extends ValidateCoreMixin(LitElement) {
+        class extends ValidateMixin(LitElement) {
           constructor() {
             super();
             this._preconfiguredValidators = [new Required()];
@@ -763,7 +763,7 @@ describe.only('ValidateCoreMixin', () => {
 
   describe('Extensibility: Custom Validator types', () => {
     const customTypeTagString = defineCE(
-      class extends ValidateCoreMixin(LitElement) {
+      class extends ValidateMixin(LitElement) {
         static get validationTypes() {
           return [...super.validationTypes, 'type1', 'type2'];
         }

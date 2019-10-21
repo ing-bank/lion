@@ -10,16 +10,15 @@ import { Required } from './validators.js';
 // import { Validator } from './Validator.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
-import './validation-feedback/lion-validation-feedback.js';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
  * @event error-changed fires when the Validator(s) leading to the error state, change
  */
-export const ValidateCoreMixin = dedupeMixin(
+export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateCoreMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
+    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
       static get properties() {
         return {
           /**
@@ -255,9 +254,8 @@ export const ValidateCoreMixin = dedupeMixin(
         // TODO: find a better way to do this. It might block required validation.
         // Also, we should think about falsy values like '' and null (see __isEmpty and __isRequired)
         // if (this.modelValue === undefined) {
-          // this.__resetInstanceValidationStates();
+        // this.__resetInstanceValidationStates();
         // }
-
 
         this.__storePrevResult();
         if (clearCurrentResult) {

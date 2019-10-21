@@ -1,22 +1,10 @@
 import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
 import { LitElement } from '@lion/core';
 import sinon from 'sinon';
-import { ValidateCoreMixin } from '../src/ValidateCoreMixin.js';
+import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Validator } from '../src/Validator.js';
 import { ResultValidator } from '../src/ResultValidator.js';
 import { Required, MinLength } from '../src/validators.js';
-
-class IsCat extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'isCat';
-    this.execute = (modelValue, param) => {
-      const validateString = param && param.number ? `cat${param.number}` : 'cat';
-      const showError = modelValue !== validateString;
-      return showError;
-    };
-  }
-}
 
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
@@ -58,7 +46,7 @@ describe('Validator', () => {
   it('has access to FormControl', async () => {
     const lightDom = '';
     const tagString = defineCE(
-      class extends ValidateCoreMixin(LitElement) {
+      class extends ValidateMixin(LitElement) {
         static get properties() {
           return { modelValue: String };
         }
@@ -124,14 +112,14 @@ describe('ResultValidator', () => {
   it('has an "executeOnResults" function returning active state', async () => {
     // This test shows the best practice of creating executeOnResults method
     class MyResultValidator extends ResultValidator {
-      executeOnResults({ regularValidarionResult, prevValidationResult }) {
-        const showMessage = regularValidarionResult.length && !prevValidationResult.length;
+      executeOnResults({ regularValidateResult, prevValidationResult }) {
+        const showMessage = regularValidateResult.length && !prevValidationResult.length;
         return showMessage;
       }
     }
     expect(
       new MyResultValidator().executeOnResults({
-        regularValidarionResult: [new Required(), new MinLength(3)],
+        regularValidateResult: [new Required(), new MinLength(3)],
         prevValidationResult: [],
       }),
     ).to.be.true;
