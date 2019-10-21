@@ -188,9 +188,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       e.stopPropagation();
     }
 
-    if (this.type === 'submit' && e.target === this) {
+    if ((this.type === 'submit' || this.type === 'reset') && e.target === this) {
       if (this._form) {
         const nativeButton = document.createElement('button');
+        nativeButton.type = this.type;
         this._form.appendChild(nativeButton);
         nativeButton.click();
         this._form.removeChild(nativeButton);
