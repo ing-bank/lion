@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.58](https://github.com/ing-bank/lion/compare/@lion/select@0.1.57...@lion/select@0.1.58) (2019-10-21)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
 ## [0.1.57](https://github.com/ing-bank/lion/compare/@lion/select@0.1.56...@lion/select@0.1.57) (2019-10-14)
 
 **Note:** Version bump only for package @lion/select
