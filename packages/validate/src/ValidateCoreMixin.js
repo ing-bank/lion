@@ -334,10 +334,10 @@ export const ValidateCoreMixin = dedupeMixin(
         if (asyncValidators.length) {
           this.isPending = true;
           const resultPromises = asyncValidators.map(v => v.execute(value, v.param));
-          const results = await Promise.all(resultPromises);
-          this.__asyncValidationResult = results
-            .map((r, i) => asyncValidators[i])
-            .filter((v, i) => results[i]);
+          const booleanResults = await Promise.all(resultPromises);
+          this.__asyncValidationResult = booleanResults
+            .map((r, i) => asyncValidators[i]) // Create an array of Validators
+            .filter((v, i) => booleanResults[i]); // Only leave the ones returning true
           this.__finishValidation();
           this.isPending = false;
         }

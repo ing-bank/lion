@@ -256,7 +256,7 @@ storiesOf('Forms|Input String Validation', module)
         console.log('async pending...');
         await aTimeout(2000);
         console.log('async done...');
-        return false;
+        return true;
       }
 
       static getMessage({ modelValue }) {
