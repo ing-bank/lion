@@ -16,10 +16,11 @@ describe('<lion-textarea>', () => {
     expect(el.querySelector('textarea').nodeName).to.equal('TEXTAREA');
   });
 
-  it('has .rows=2 and .maxRows=6', async () => {
+  it('has .readOnly=false, .rows=2 and .maxRows=6', async () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
     expect(el.rows).to.equal(2);
     expect(el.maxRows).to.equal(6);
+    expect(el.readOnly).to.equal(false);
   });
 
   it('has .rows=2 and rows="2" by default', async () => {
@@ -36,6 +37,11 @@ describe('<lion-textarea>', () => {
     expect(el.getAttribute('rows')).to.be.equal('8');
     expect(el.inputElement.rows).to.equal(8);
     expect(el.inputElement.getAttribute('rows')).to.be.equal('8');
+  });
+
+  it('sync readOnly to the native textarea', async () => {
+    const el = await fixture(`<lion-textarea readOnly>foo</lion-textarea>`);
+    expect(el.readOnly).to.equal(true);
   });
 
   it('disables user resize behavior', async () => {
