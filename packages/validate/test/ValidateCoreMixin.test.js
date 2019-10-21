@@ -48,11 +48,11 @@ describe.only('ValidateCoreMixin', () => {
    *   feedback for the particular validation type should be shown to the end user.
    */
 
-  describe.only('Validation initiation', () => {
+  describe('Validation initiation', () => {
     it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
       const el = await fixture(html`
         <${tag}
-          .validators=${[new AlwaysInvalid()]}
+          .validators=${[new Required()]}
         >${lightDom}</${tag}>
       `);
       expect(el.hasError).to.be.true;
@@ -85,7 +85,7 @@ describe.only('ValidateCoreMixin', () => {
     });
   });
 
-  describe('Validation internal flow', () => {
+  describe.only('Validation internal flow', () => {
     it('first checks for empty values', async () => {
       const alwaysValid = new AlwaysValid();
       const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');

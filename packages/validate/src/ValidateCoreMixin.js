@@ -162,6 +162,9 @@ export const ValidateCoreMixin = dedupeMixin(
       connectedCallback() {
         super.connectedCallback();
         localize.addEventListener('localeChanged', this._renderFeedback);
+
+        this.__validateInitialized = true;
+        this.validate();
       }
 
       disconnectedCallback() {
@@ -243,14 +246,19 @@ export const ValidateCoreMixin = dedupeMixin(
        * call. Situation B will occur after every call.
        */
       async validate({ clearCurrentResult } = {}) {
+        if (!this.__validateInitialized) {
+          return;
+        }
+
         console.log('validate ', this.modelValue);
 
         // TODO: find a better way to do this. It might block required validation.
         // Also, we should think about falsy values like '' and null (see __isEmpty and __isRequired)
-        if (this.modelValue === undefined) {
-          this.__resetInstanceValidationStates();
-          return;
-        }
+        // if (this.modelValue === undefined) {
+          // this.__resetInstanceValidationStates();
+        // }
+
+
         this.__storePrevResult();
         if (clearCurrentResult) {
           // Clear ('invalidate') all pending and existing validation results.
