@@ -1,7 +1,7 @@
 import { localize } from '@lion/localize';
 import { Validator } from '../Validator.js';
 import { Required } from '../validators.js';
-import { validateNamespace } from '../../provision-feedback-messages.js';
+import { validateNamespace } from '../loadDefaultFeedbackMessages.js/index.js';
 
 /**
  * Converts old Validator syntax to new class syntax
@@ -24,15 +24,15 @@ export function toValidatorClass(v, type = 'error') {
   result.execute = (modelValue, prm) => {
     const [key, val] = Object.entries(keyReturningFn(modelValue, prm))[0];
     result.name = key;
-    result.getMessage = async (data) => {
+    result.getMessage = async data => {
       console.log('213NDS');
 
       await validateNamespace;
       console.log('adadMNDS');
       return localize.msg(`lion-validate:${type}.${key}`, data);
-    }
+    };
     return !val; // In our new Validators, we return true when a Validator is 'active'
-  }
+  };
   return result;
 }
 

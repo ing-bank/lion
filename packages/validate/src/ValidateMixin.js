@@ -6,20 +6,19 @@ import { Unparseable } from './Unparseable.js';
 // import { debounce } from './utils/debounce.js';
 import { pascalCase } from './utils/pascal-case.js';
 
-import { Required } from './validators.js';
+import { Required } from './validators/Required.js';
 // import { Validator } from './Validator.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
-import './validation-feedback/lion-validation-feedback.js';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
  * @event error-changed fires when the Validator(s) leading to the error state, change
  */
-export const ValidateCoreMixin = dedupeMixin(
+export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateCoreMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
+    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
       static get properties() {
         return {
           /**
@@ -314,7 +313,6 @@ export const ValidateCoreMixin = dedupeMixin(
        * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
        */
       __executeSyncValidators(filteredValidators, value) {
-        console.log('komt ie hier?', filteredValidators);
         /** @type {Validator[]} */
         const syncValidators = filteredValidators.filter(v => !v.async);
 

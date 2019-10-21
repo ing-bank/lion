@@ -1,5 +1,6 @@
 import './utils/event-target-polyfill.js';
 
+// TODO: revert to use "old" way of EventTarget and check in IE
 export class Validator extends EventTarget {
   constructor(param, config) {
     super();
