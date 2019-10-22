@@ -6,16 +6,16 @@ const isString = value => typeof value === 'string';
 export class IsString extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'isString';
+    this.name = 'IsString';
   }
 
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
-    let isEnabled = false;
+    let hasError = false;
     if (!isString(value)) {
-      isEnabled = true;
+      hasError = true;
     }
-    return isEnabled;
+    return hasError;
   }
 }
 
@@ -26,11 +26,11 @@ export class EqualsLength extends Validator {
   }
 
   execute(value, length = this.param) {
-    let isEnabled = false;
+    let hasError = false;
     if (!isString(value) || value.length !== length) {
-      isEnabled = true;
+      hasError = true;
     }
-    return isEnabled;
+    return hasError;
   }
 }
 

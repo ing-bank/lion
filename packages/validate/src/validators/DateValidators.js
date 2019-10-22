@@ -1,34 +1,86 @@
 /* eslint-disable max-classes-per-file */
+import { normalizeDateTime } from '@lion/localize';
 import { Validator } from '../Validator.js';
 
-export class EqualsLength extends Validator {
+
+export const isDate = value =>
+  Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
+
+
+export class IsDate extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'equalsLength';
-    this.execute = (...arg) => !equalsLength(...arg);
+    this.name = 'IsDate';
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  execute(value) {
+    let hasError = false;
+    if (!isDate(value)) {
+      hasError = true;
+    }
+    return hasError;
   }
 }
 
-export class MaxLength extends Validator {
+
+export class MinDate extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'maxLength';
-    this.execute = (...arg) => !maxLength(...arg);
+    this.name = 'MinDate';
+  }
+
+  execute(value, min = this.param) {
+    let hasError = false;
+    if (!isDate(value) || value < normalizeDateTime(min)) {
+      hasError = true;
+    }
+    return hasError;
   }
 }
 
-export class MinLength extends Validator {
+export class MaxDate extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'minLength';
-    this.execute = (...arg) => minLength(...arg);
+    this.name = 'MaxDate';
+  }
+
+  execute(value, max = this.param) {
+    let hasError = false;
+    if (!isDate(value) || value > normalizeDateTime(max)) {
+      hasError = true;
+    }
+    return hasError;
   }
 }
 
-export class MinMaxLength extends Validator {
+
+export class MinMaxDate extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'minMaxLength';
-    this.execute = (...arg) => !minMaxLength(...arg);
+    this.name = 'MinMaxDate';
+  }
+
+  execute(value, { min = 0, max = 0 } = this.param) {
+    let hasError = false;
+    if (!isDate(value) || value < normalizeDateTime(min) || value > normalizeDateTime(max)) {
+      hasError = true;
+    }
+    return hasError;
+  }
+}
+
+export class IsDateDisabled extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'IsDateDisabled';
+  }
+
+  execute(value, isDisabledFn = this.param) {
+    let hasError = false;
+    if (!isDate(value) || isDisabledFn(value)) {
+      hasError = true;
+    }
+    return hasError;
   }
 }

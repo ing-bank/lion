@@ -1,7 +1,7 @@
 import { localize } from '@lion/localize';
 import { Validator } from '../Validator.js';
 import { Required } from '../validators.js';
-import { validateNamespace } from '../loadDefaultFeedbackMessages.js/index.js';
+import { validateNamespace } from '../loadDefaultFeedbackMessages.js';
 
 /**
  * Converts old Validator syntax to new class syntax
