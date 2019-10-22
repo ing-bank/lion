@@ -17,6 +17,7 @@ storiesOf('Form Fundaments|Formatting and Parsing', module)
         this functionality!
       </p>
       <lion-input
+        label="My input"
         help-text="Uses model value for data synchronisation"
         .modelValue="${'myValue'}"
         @model-value-changed="${({ target }) => {
