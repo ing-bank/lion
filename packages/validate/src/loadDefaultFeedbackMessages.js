@@ -1,5 +1,7 @@
 import { localize } from '@lion/localize';
-import { Required, EqualsLength, MaxLength, DefaultSuccess } from './validators.js';
+import { Required } from './validators/Required.js';
+import { EqualsLength, MaxLength } from './validators/StringValidators.js';
+import { DefaultSuccess } from './resultValidators/DefaultSuccess.js';
 
 let loaded = false;
 

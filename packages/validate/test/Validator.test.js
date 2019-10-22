@@ -4,7 +4,8 @@ import sinon from 'sinon';
 import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Validator } from '../src/Validator.js';
 import { ResultValidator } from '../src/ResultValidator.js';
-import { Required, MinLength } from '../src/validators.js';
+import { Required } from '../src/validators/Required.js';
+import { MinLength } from '../src/validators/StringValidators.js';
 
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
