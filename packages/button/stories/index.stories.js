@@ -41,10 +41,10 @@ storiesOf('Buttons|Button', module)
           console.log('submit handler');
         }}
       >
-        <label>First name</label>
-        <input name="firstName" />
-        <label>Last name</label>
-        <input name="lastName" />
+        <label for="firstNameId">First name</label>
+        <input id="firstNameId" name="firstName" />
+        <label for="lastNameId">Last name</label>
+        <input id="lastNameId" name="lastName" />
         <lion-button @click=${() => console.log('click handler')}>Submit</lion-button>
       </form>
       <p>
