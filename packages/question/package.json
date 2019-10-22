@@ -1,0 +1,47 @@
+{
+  "name": "@lion/question",
+  "version": "0.0.0",
+  "description": "Allows to groups multiple input fields or other fieldsets together",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/question"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "fieldset"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.2.0",
+    "@lion/field": "^0.3.1",
+    "@lion/radio": "^0.1.60",
+    "@lion/radio-group": "^0.1.68"
+  },
+  "devDependencies": {
+    "@lion/input": "^0.1.60",
+    "@lion/input-iban": "^0.1.63",
+    "@lion/textarea": "^0.1.63",
+    "@lion/validate": "^0.2.36",
+    "@open-wc/demoing-storybook": "^0.2.0"
+  }
+}
