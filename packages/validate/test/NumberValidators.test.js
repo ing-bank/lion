@@ -14,10 +14,10 @@ describe('Number Validation', () => {
     expect(validator.name).to.equal('IsNumber');
 
     isEnabled = validator.execute(4);
-    expect(validator.execute(4)).to.be.false;
+    expect(isEnabled).to.be.false;
 
     isEnabled = validator.execute(NaN);
-    expect(validator.execute(NaN)).to.be.true;
+    expect(isEnabled).to.be.true;
 
     isEnabled = validator.execute('4');
     expect(isEnabled).to.be.true;

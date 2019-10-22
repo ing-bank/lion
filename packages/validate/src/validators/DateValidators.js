@@ -2,10 +2,11 @@
 import { normalizeDateTime } from '@lion/localize';
 import { Validator } from '../Validator.js';
 
-
-export const isDate = value =>
-  Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime());
-
+function isDate(value) {
+  return (
+    Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime())
+  );
+}
 
 export class IsDate extends Validator {
   constructor(...args) {
@@ -22,7 +23,6 @@ export class IsDate extends Validator {
     return hasError;
   }
 }
-
 
 export class MinDate extends Validator {
   constructor(...args) {
@@ -53,7 +53,6 @@ export class MaxDate extends Validator {
     return hasError;
   }
 }
-
 
 export class MinMaxDate extends Validator {
   constructor(...args) {
