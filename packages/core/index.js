@@ -4,17 +4,7 @@
  */
 
 // lit-html
-export {
-  html,
-  svg,
-  render,
-  noChange,
-  nothing,
-  directive,
-  isDirective,
-  TemplateResult,
-  SVGTemplateResult,
-} from 'lit-html';
+export * from 'lit-html';
 export { render as renderShady } from 'lit-html/lib/shady-render.js';
 export { asyncAppend } from 'lit-html/directives/async-append.js';
 export { asyncReplace } from 'lit-html/directives/async-replace.js';
@@ -27,24 +17,7 @@ export { styleMap } from 'lit-html/directives/style-map.js';
 export { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export { until } from 'lit-html/directives/until.js';
 // lit-element
-export {
-  LitElement,
-  // css-tag.js
-  supportsAdoptingStyleSheets,
-  CSSResult,
-  unsafeCSS,
-  css,
-  // updating-element.js
-  defaultConverter,
-  notEqual,
-  UpdatingElement,
-  // decorators.js
-  customElement,
-  property,
-  query,
-  queryAll,
-  eventOptions,
-} from 'lit-element';
+export * from 'lit-element';
 // ours
 export { dedupeMixin } from './src/dedupeMixin.js';
 export { DelegateMixin } from './src/DelegateMixin.js';

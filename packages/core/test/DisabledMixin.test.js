@@ -1,5 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
+/* eslint-disable import/named */
 import { LitElement } from '../index.js';
 import { DisabledMixin } from '../src/DisabledMixin.js';
 
