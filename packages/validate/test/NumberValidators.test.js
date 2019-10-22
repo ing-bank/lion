@@ -11,6 +11,7 @@ describe('Number Validation', () => {
   it('provides new IsNumber() to allow only numbers', () => {
     let isEnabled;
     const validator = new IsNumber();
+    expect(validator.name).to.equal('IsNumber');
 
     isEnabled = validator.execute(4);
     expect(validator.execute(4)).to.be.false;
@@ -22,9 +23,10 @@ describe('Number Validation', () => {
     expect(isEnabled).to.be.true;
   });
 
-  it('provides new MinNumber() to allow only numbers longer then min', () => {
+  it('provides new MinNumber(x) to allow only numbers longer then min', () => {
     let isEnabled;
     const validator = new MinNumber(3);
+    expect(validator.name).to.equal('MinNumber');
 
     isEnabled = validator.execute(3);
     expect(isEnabled).to.be.false;
@@ -33,9 +35,10 @@ describe('Number Validation', () => {
     expect(isEnabled).to.be.true;
   });
 
-  it('provides new MaxNumber() to allow only number shorter then max', () => {
+  it('provides new MaxNumber(x) to allow only number shorter then max', () => {
     let isEnabled;
     const validator = new MaxNumber(3);
+    expect(validator.name).to.equal('MaxNumber');
 
     isEnabled = validator.execute(3);
     expect(isEnabled).to.be.false;
@@ -44,9 +47,10 @@ describe('Number Validation', () => {
     expect(isEnabled).to.be.true;
   });
 
-  it('provides new MinMaxNumber() to allow only numbers between min and max', () => {
+  it('provides new MinMaxNumber({ min: x, max: y}) to allow only numbers between min and max', () => {
     let isEnabled;
     const validator = new MinMaxNumber({ min: 2, max: 4 });
+    expect(validator.name).to.equal('MinMaxNumber');
 
     isEnabled = validator.execute(2);
     expect(isEnabled).to.be.false;
