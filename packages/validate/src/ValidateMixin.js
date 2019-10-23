@@ -355,7 +355,6 @@ export const ValidateMixin = dedupeMixin(
           v.executeOnResults({
             regularValidationResult,
             prevValidationResult: this.__prevValidationResult,
-            validator: this.validators,
           }),
         );
       }

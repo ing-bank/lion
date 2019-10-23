@@ -406,7 +406,7 @@ describe.only('ValidateMixin', () => {
     });
   });
 
-  describe('ResultValidator Integration', () => {
+  describe.only('ResultValidator Integration', () => {
     class MySuccessResultValidator extends ResultValidator {
       constructor(...args) {
         super(...args);
@@ -428,30 +428,30 @@ describe.only('ValidateMixin', () => {
       const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
 
       // After regular sync Validators
-      const regularValidatorSync = new MinLength(3);
-      const regularValidateSyncSpy = sinon.spy(regularValidatorSync, 'executeOnResults');
+      const validator = new MinLength(3);
+      const validateSpy = sinon.spy(validator, 'execute');
       await fixture(html`
         <${tag}
-          .validators=${[resultValidator, regularValidatorSync]}
+          .validators=${[resultValidator, validator]}
           .modelValue=${'myValue'}
         >${lightDom}</${tag}>
       `);
-      expect(regularValidateSyncSpy).calledBefore(resultValidateSpy);
+      expect(validateSpy.calledBefore(resultValidateSpy)).to.be.true;
 
       // Also after regular async Validators
-      const regularValidatorAsync = new MinLength(3, { async: true });
-      const regularValidateAsyncSpy = sinon.spy(regularValidatorAsync, 'executeOnResults');
+      const validatorAsync = new MinLength(3, { async: true });
+      const validateAsyncSpy = sinon.spy(validatorAsync, 'execute');
       await fixture(html`
       <${tag}
-        .validators=${[resultValidator, regularValidatorAsync]}
+        .validators=${[resultValidator, validatorAsync]}
         .modelValue=${'myValue'}
       >${lightDom}</${tag}>
     `);
-      expect(regularValidateAsyncSpy).calledBefore(resultValidateSpy);
+      expect(validateAsyncSpy.calledBefore(resultValidateSpy)).to.be.true;
     });
 
     it(`provides "regular" ValidationResult and previous FinalValidationResult as input to
-      "executeOnResult" function`, async () => {
+      "executeOnResults" function`, async () => {
       const resultValidator = new MySuccessResultValidator();
       const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
 
@@ -461,30 +461,36 @@ describe.only('ValidateMixin', () => {
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
         `);
-      const regularValidationResult = [...el.__syncValidationResult, ...el.__asyncValidationResult];
       const prevValidationResult = el.__prevValidationResult;
+      const regularValidationResult = [...el.__syncValidationResult, ...el.__asyncValidationResult];
 
-      expect(
-        resultValidateSpy.calledWith({
-          regularValidationResult,
-          prevValidationResult,
-        }),
-      ).to.be.true;
+      expect(resultValidateSpy.args[0][0]).to.eql({
+        prevValidationResult,
+        regularValidationResult,
+      });
     });
 
     it('adds ResultValidator outcome as highest prio result to the FinalValidationResult', async () => {
-      const regularV = new MinLength(3);
-      const resultV = new MySuccessResultValidator();
+      class AlwaysInvalidResult extends ResultValidator {
+        // eslint-disable-next-line class-methods-use-this
+        executeOnResults() {
+          const hasError = true;
+          return hasError;
+        }
+      }
+
+      const validator = new AlwaysInvalid();
+      const resultV = new AlwaysInvalidResult();
 
       const el = await fixture(html`
         <${tag}
-          .validators=${[regularV, resultV]}
+          .validators=${[validator, resultV]}
           .modelValue=${'myValue'}
         >${lightDom}</${tag}>
       `);
 
       const /** @type {TotalValidationResult} */ totalValidationResult = el.__validationResult;
-      expect(totalValidationResult).to.eql([resultV, regularV]);
+      expect(totalValidationResult).to.eql([resultV, validator]);
     });
   });
 
