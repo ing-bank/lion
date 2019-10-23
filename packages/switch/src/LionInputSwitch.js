@@ -26,11 +26,9 @@ export class LionInputSwitch extends ChoiceInputMixin(LionField) {
   render() {
     return html`
       <div class="input-switch__container">
-        <slot name="label"></slot>
-        <slot name="help-text"></slot>
-        <slot name="feedback"></slot>
+        ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.feedbackTemplate()}
       </div>
-      <slot name="input"></slot>
+      ${this.inputGroupTemplate()}
     `;
   }
 
