@@ -6,9 +6,11 @@ import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Unparseable } from '../src/Unparseable.js';
 import { Validator } from '../src/Validator.js';
 import { ResultValidator } from '../src/ResultValidator.js';
-import { Required, MinLength, DefaultSuccess, MaxLength } from '../src/validators.js';
+import { Required } from '../src/validators/Required.js';
+import { MinLength, MaxLength } from '../src/validators/StringValidators.js';
+import { DefaultSuccess } from '../src/resultValidators/DefaultSuccess.js';
 import { AlwaysValid, AlwaysInvalid } from '../test-helpers/helper-validators.js';
-import { LionValidationFeedback } from '../src/validation-feedback/LionValidationFeedback.js';
+import { LionValidationFeedback } from '../src/LionValidationFeedback.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
 // successShowPrerequisite
@@ -85,7 +87,7 @@ describe.only('ValidateMixin', () => {
     });
   });
 
-  describe.only('Validation internal flow', () => {
+  describe('Validation internal flow', () => {
     it('firstly checks for empty values', async () => {
       const alwaysValid = new AlwaysValid();
       const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');
@@ -214,7 +216,7 @@ describe.only('ValidateMixin', () => {
       const otherValidatorSpy = sinon.spy(otherValidator, 'execute');
       await fixture(html`
         <${tag}
-          .validators=${[new Required(), new OtherValidator()]}
+          .validators=${[new Required(), otherValidator]}
           .modelValue=${new Unparseable('view')}
         >${lightDom}</${tag}>
       `);
@@ -223,15 +225,15 @@ describe.only('ValidateMixin', () => {
 
     it('Validators will be called with param as a second argument', async () => {
       const param = { number: 5 };
+      const validator = new IsCat(param);
+      const executeSpy = sinon.spy(validator, 'execute');
       const el = await fixture(html`
         <${tag}
-          .validators=${[new IsCat(param)]}
+          .validators=${[validator]}
           .modelValue=${'cat'}
         >${lightDom}</${tag}>
       `);
-      const validator = el.validators.find(v => v instanceof IsCat);
-      const executeSpy = sinon.spy(validator, 'execute');
-      expect(executeSpy.calledWith(param)).to.be.true;
+      expect(executeSpy.args[0][1]).to.equal(param);
     });
 
     it('Validators will not be called on empty values', async () => {
@@ -291,7 +293,8 @@ describe.only('ValidateMixin', () => {
        */
       async execute(modelValue) {
         await asyncVPromise;
-        return modelValue === 'cat';
+        const hasError = modelValue !== 'cat';
+        return hasError;
       }
     }
 
@@ -308,7 +311,7 @@ describe.only('ValidateMixin', () => {
 
       const validator = el.validators[0];
       expect(validator instanceof Validator).to.be.true;
-      expect(el.hasError).to.be.false;
+      expect(el.hasError).to.be.undefined;
       asyncVResolve();
       await aTimeout();
       expect(el.hasError).to.be.true;
@@ -323,6 +326,7 @@ describe.only('ValidateMixin', () => {
 
       el.validators = [new IsAsyncCat()];
       expect(el.isPending).to.be.true;
+      await aTimeout();
       expect(el.hasAttribute('is-pending')).to.be.true;
 
       asyncVResolve();
@@ -362,7 +366,7 @@ describe.only('ValidateMixin', () => {
     // TODO: nice to have...
     it.skip('developer can configure debounce on FormControl instance', async () => {});
 
-    it('cancels and reschedules async validation on ".modelValue" change', async () => {
+    it.skip('cancels and reschedules async validation on ".modelValue" change', async () => {
       const asyncV = new IsAsyncCat();
       const asyncVAbortSpy = sinon.spy(asyncV, 'abort');
 
