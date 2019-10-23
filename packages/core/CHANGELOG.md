@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/ing-bank/lion/compare/@lion/core@0.2.0...@lion/core@0.2.1) (2019-10-23)
+
+
+### Bug Fixes
+
+* **core:** export Part classes from lit-html ([#340](https://github.com/ing-bank/lion/issues/340)) ([9a8f45b](https://github.com/ing-bank/lion/commit/9a8f45b))
+
+
+
+
+
 # [0.2.0](https://github.com/ing-bank/lion/compare/@lion/core@0.1.13...@lion/core@0.2.0) (2019-09-25)
 
 
