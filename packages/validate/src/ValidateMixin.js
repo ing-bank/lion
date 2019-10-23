@@ -102,29 +102,10 @@ export const ValidateMixin = dedupeMixin(
         };
       }
 
-      get _inputNode() {
-
-      }
+      get _inputNode() {}
 
       get _feedbackNode() {
         return this.querySelector('[slot=feedback]');
-      }
-
-      /**
-       * @overridable
-       */
-      getFieldName(validatorConfig) {
-        const labelNode = this.querySelector('[slot=label]');
-        const label = this.label || labelNode.textContent;
-
-        // TODO: lowest level config should always win
-        if (validatorConfig && validatorConfig.fieldName) {
-          return validatorConfig.fieldName;
-        }
-        if (label) {
-          return label;
-        }
-        return this.name;
       }
 
       constructor() {
@@ -216,12 +197,6 @@ export const ValidateMixin = dedupeMixin(
           this.__handleA11yPendingValidator();
         }
 
-        if (c.has('label')) {
-          // Since this can affect the outcome of `getFieldName()`, which is
-          // passed down to the `getMessage` function of all Validators
-          this._renderFeedback();
-        }
-
         // TODO: Interaction state knowledge should be moved to FormControl...
         ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
           if (c.has(iState)) {
@@ -266,7 +241,7 @@ export const ValidateMixin = dedupeMixin(
           // need to be merged with those of sync validators and vice versa.
           this.__clearValidationResults();
         }
-        this.__executeValidators();
+        await this.__executeValidators();
       }
 
       __storePrevResult() {
@@ -315,7 +290,7 @@ export const ValidateMixin = dedupeMixin(
         /**
          * 3. Asynchronous validators
          */
-        this.__executeAsyncValidators(filteredValidators, value);
+        await this.__executeAsyncValidators(filteredValidators, value);
       }
 
       /**
@@ -497,7 +472,6 @@ export const ValidateMixin = dedupeMixin(
         return Promise.all(
           validators.map(async validator => {
             const message = await validator.getMessage({
-              fieldName: this.getFieldName(validator.config),
               validatorParams: validator.param,
               modelValue: this.modelValue,
             });
@@ -525,6 +499,11 @@ export const ValidateMixin = dedupeMixin(
        * - we set aria-invalid="true" in case errorShow is true
        */
       async _renderFeedback() {
+        let feedbackCompleteResolve;
+        this.feedbackComplete = new Promise(resolve => {
+          feedbackCompleteResolve = resolve;
+        });
+
         /** @type {Validator[]} */
         this.__prioritizedResult = this._prioritizeAndFilterFeedback();
         // Will be used for synchronization with "._inputNode"
@@ -536,7 +515,16 @@ export const ValidateMixin = dedupeMixin(
 
           // Set type, message, validator
           Object.assign(this._feedbackNode, messageMap[0]);
+        } else {
+          // reset states
+          Object.assign(this._feedbackNode, {
+            message: '',
+            type: '',
+            validator: undefined,
+          });
         }
+
+        feedbackCompleteResolve();
 
         // const hasCustomFeedbackNode = typeof this._feedbackNode.renderFeedback === 'function';
         // if (!hasCustomFeedbackNode) {

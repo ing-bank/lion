@@ -12,6 +12,8 @@ import { DefaultSuccess } from '../src/resultValidators/DefaultSuccess.js';
 import { AlwaysValid, AlwaysInvalid } from '../test-helpers/helper-validators.js';
 import { LionValidationFeedback } from '../src/LionValidationFeedback.js';
 
+import '../lion-validation-feedback.js';
+
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
 // successShowPrerequisite
 
@@ -957,7 +959,7 @@ describe.only('ValidateMixin', () => {
      */
   });
 
-  describe('Validity Feedback', () => {
+  describe.only('Validity Feedback', () => {
     class ContainsLowercaseA extends Validator {
       constructor(...args) {
         super(...args);
@@ -979,19 +981,31 @@ describe.only('ValidateMixin', () => {
     ContainsLowercaseA.getMessage = () => 'Message for containsLowercaseA';
     ContainsCat.getMessage = () => 'Message for containsCat';
 
+    it('passes a message to the "._feedbackNode"', async () => {
+      const el = await fixture(html`
+        <${tag}
+          .modelValue=${'cat'}
+        >${lightDom}</${tag}>
+      `);
+      expect(el._feedbackNode.message).to.equal('');
+      el.validators = [new AlwaysInvalid()];
+      await el.feedbackComplete;
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
+    });
+
     it('has configurable feedback visibility hook', async () => {
       const el = await fixture(html`
         <${tag}
-          ._prioritizeAndFilterFeedback=${() => []}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `);
-      expect(el._feedbackNode.innerText).to.equal('');
-      el._prioritizeAndFilterFeedback = ({ validationResults }) => validationResults;
-      el.validate();
-      await el.updateComplete;
-      expect(el._feedbackNode.innerText).to.equal('Message for alwaysInvalid');
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
+
+      el._prioritizeAndFilterFeedback = () => []; // filter out all errors
+      await el.validate();
+
+      expect(el._feedbackNode.message).to.equal('');
     });
 
     it('writes prioritized result to "._feedbackNode" based on Validator order', async () => {
@@ -1001,7 +1015,7 @@ describe.only('ValidateMixin', () => {
           .validators=${[new AlwaysInvalid(), new MinLength(4)]}
         >${lightDom}</${tag}>
       `);
-      expect(el._feedbackNode.innerText).to.equal('Message for alwaysInvalid');
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
     });
 
     it('renders validation result to "._feedbackNode" when async messages are resolved', async () => {
@@ -1022,11 +1036,11 @@ describe.only('ValidateMixin', () => {
         >${lightDom}</${tag}>
       `);
 
-      expect(el._feedbackNode.innerText).to.equal('');
+      expect(el._feedbackNode.message).to.equal('');
       unlockMessage();
       await el.updateComplete;
       await aTimeout();
-      expect(el._feedbackNode.innerText).to.equal('this ends up in "._feedbackNode"');
+      expect(el._feedbackNode.message).to.equal('this ends up in "._feedbackNode"');
     });
 
     // N.B. this replaces the 'config.hideFeedback' option we had before...

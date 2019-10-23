@@ -22,7 +22,12 @@ export class LionValidationFeedback extends LitElement {
        * @property {Validator} validator
        */
       validator: Object,
-    }
+    };
+  }
+
+  constructor() {
+    super();
+    this.message = '';
   }
 
   connectedCallback() {
@@ -31,7 +36,9 @@ export class LionValidationFeedback extends LitElement {
   }
 
   render() {
-    return html`${this.message}`;
+    return html`
+      ${this.message}
+    `;
   }
 }
 
