@@ -108,6 +108,36 @@ describe('formatDate', () => {
     expect(formatDate(parsedDate, options)).to.equal('maandag 01 januari 1940');
   });
 
+  it('handles options without year', async () => {
+    const options = {
+      weekday: 'long',
+      month: 'long',
+      day: '2-digit',
+    };
+    const parsedDate = parseDate('12.10.2019');
+    expect(formatDate(parsedDate, options)).to.equal('Saturday, 12 October');
+  });
+
+  it('handles options without month', async () => {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      day: '2-digit',
+    };
+    const parsedDate = parseDate('12.10.2019');
+    expect(formatDate(parsedDate, options)).to.equal('Saturday 12 2019');
+  });
+
+  it('handles options without day', async () => {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+    };
+    const parsedDate = parseDate('12.10.2019');
+    expect(formatDate(parsedDate, options)).to.equal('October 2019 Saturday');
+  });
+
   it('returns empty string when input is not a Date object', async () => {
     const date = '1-1-2016';
     expect(formatDate(date)).to.equal('');
