@@ -14,15 +14,16 @@ export class Required extends Validator {
 
   // eslint-disable-next-line class-methods-use-this
   onFormControlConnect(formControl) {
-    if (formControl.inputElement) {
-      formControl.inputElement.setAttribute('aria-required', 'true');
+    console.log('formControl._inputNode', formControl._inputNode);
+    if (formControl._inputNode) {
+      formControl._inputNode.setAttribute('aria-required', 'true');
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
   onFormControlDisconnect(formControl) {
-    if (formControl.inputElement) {
-      formControl.inputElement.removeAttribute('aria-required');
+    if (formControl._inputNode) {
+      formControl._inputNode.removeAttribute('aria-required');
     }
   }
 }

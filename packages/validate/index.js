@@ -15,6 +15,15 @@ export {
   IsEmail,
 } from './src/validators/StringValidators.js';
 
+export {
+  IsDate,
+  MinDate,
+  MaxDate,
+  MinMaxDate,
+  IsDateDisabled
+} from './src/validators/DateValidators.js';
+
+
 // export {
 //   defaultOk,
 //   defaultOkValidator,

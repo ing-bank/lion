@@ -406,7 +406,7 @@ describe.only('ValidateMixin', () => {
     });
   });
 
-  describe.only('ResultValidator Integration', () => {
+  describe('ResultValidator Integration', () => {
     class MySuccessResultValidator extends ResultValidator {
       constructor(...args) {
         super(...args);
@@ -494,17 +494,19 @@ describe.only('ValidateMixin', () => {
     });
   });
 
-  describe('Required Validator integration', () => {
-    it('will be reflected in ".hasError" when form control is empty', async () => {
+  describe.only('Required Validator integration', () => {
+    it('will result in erroneous state when form control is empty', async () => {
       const el = await fixture(html`
         <${tag}
           .validators=${[new Required()]}
           .modelValue=${''}
         >${lightDom}</${tag}>
       `);
-      expect(el.errorStates.required).to.be.true;
+      expect(el.errorStates.Required).to.be.true;
+      expect(el.hasError).to.be.true;
       el.modelValue = 'foo';
-      expect(el.errorStates.required).to.be.false;
+      expect(el.errorStates.Required).to.be.undefined;
+      expect(el.hasError).to.be.false;
     });
 
     // TODO: should we combine this with ._isPrefilled...?
@@ -515,14 +517,15 @@ describe.only('ValidateMixin', () => {
           .modelValue=${''}
         >${lightDom}</${tag}>
       `);
-      const validator = el.validators.filter(v => v instanceof Required);
+      const validator = el.validators.find(v => v instanceof Required);
       const executeSpy = sinon.spy(validator, 'execute');
       const privateIsEmptySpy = sinon.spy(el, '__isEmpty');
+      el.modelValue = null;
       expect(executeSpy.callCount).to.equal(0);
       expect(privateIsEmptySpy.callCount).to.equal(1);
     });
 
-    it('calls "._isEmpty" when provided, for different modelValues', async () => {
+    it('calls "._isEmpty" when provided (useful for different modelValues)', async () => {
       const customRequiredTagString = defineCE(
         class extends ValidateMixin(LitElement) {
           _isEmpty(modelValue) {
@@ -542,7 +545,7 @@ describe.only('ValidateMixin', () => {
       const providedIsEmptySpy = sinon.spy(el, '_isEmpty');
       el.modelValue = { model: '' };
       expect(providedIsEmptySpy.callCount).to.equal(1);
-      expect(el.errorStates.required).to.be.true;
+      expect(el.errorStates.Required).to.be.true;
     });
 
     it('prevents other Validators from being called when input is empty', async () => {
@@ -559,17 +562,37 @@ describe.only('ValidateMixin', () => {
       expect(alwaysInvalidSpy.callCount).to.equal(1); // __isRequired returned true (valid)
     });
 
-    it('adds [aria-required="true"] to "._inputNode"', async () => {
+    it.only('adds [aria-required="true"] to "._inputNode"', async () => {
+      const withInputTagString = defineCE(
+        class extends ValidateMixin(LitElement) {
+          connectedCallback() {
+            super.connectedCallback();
+            this.appendChild(document.createElement('input'));
+          }
+
+          render() {
+            return html`<slot></slot>`;
+          }
+
+          get _inputNode() {
+            console.log('nu',this.querySelector('input'));
+
+            return this.querySelector('input');
+          }
+        },
+      );
+      const withInputTag = unsafeStatic(withInputTagString);
+
       const el = await fixture(html`
-        <${tag}
+        <${withInputTag}
           .validators=${[new Required()]}
           .modelValue=${''}
-        >${lightDom}</${tag}>
+        >${lightDom}</${withInputTag}>
       `);
-
-      expect(el.getAttribute('aria-required')).to.equal('true');
-      el.modelValue = 'foo';
-      expect(el.getAttribute('aria-required')).to.equal('false');
+      console.log(el.hasError);
+      expect(el._inputNode.getAttribute('aria-required')).to.equal('true');
+      el.validators = [];
+      expect(el._inputNode.getAttribute('aria-required')).to.be.null;
     });
   });
 

@@ -79,6 +79,12 @@ export const ValidateMixin = dedupeMixin(
             attribute: 'is-pending',
             reflect: true,
           },
+
+          /**
+           * @desc value that al validation revolves around: once changed, will
+           * automatically trigger validation
+           */
+          modelValue: Object,
         };
       }
 
@@ -94,6 +100,10 @@ export const ValidateMixin = dedupeMixin(
           ...super.slots,
           feedback: () => document.createElement('lion-validation-feedback'),
         };
+      }
+
+      get _inputNode() {
+
       }
 
       get _feedbackNode() {
@@ -278,10 +288,10 @@ export const ValidateMixin = dedupeMixin(
         /**
          * 1. Handle the 'exceptional' Required validator:
          * - the validatity is dependent on the formControl type and therefore determined
-         * by the formControl.__isRequired method. Basically, the Required Validator is a means
-         * to trigger formControl.__isRequired.
-         * - when __isRequired returns false, the input was empty. This means we need to stop
-         * validation here, because all Validators' execute functions assume the
+         * by the formControl.__isEmpty method. Basically, the Required Validator is a means
+         * to trigger formControl.__isEmpty.
+         * - when __isEmpty returns false, the input was empty. This means we need to stop
+         * validation here, because all other Validators' execute functions assume the
          * value is not empty (there would be nothing to validate).
          */
         const isEmpty = this.__isEmpty(value);
@@ -318,8 +328,8 @@ export const ValidateMixin = dedupeMixin(
 
         if (syncValidators.length) {
           this.__syncValidationResult = syncValidators.filter(v => v.execute(value, v.param));
-          this.__finishValidation();
         }
+        this.__finishValidation();
       }
 
       /**
@@ -568,15 +578,15 @@ export const ValidateMixin = dedupeMixin(
 
       __handleA11yErrorVisible() {
         // Screen reader output should be in sync with visibility of error messages
-        if (this.inputElement) {
-          this.inputElement.setAttribute('aria-invalid', this.hasErrorVisible);
-          // this.inputElement.setCustomValidity(this._validationMessage || '');
+        if (this._inputNode) {
+          this._inputNode.setAttribute('aria-invalid', this.hasErrorVisible);
+          // this._inputNode.setCustomValidity(this._validationMessage || '');
         }
       }
 
       __handleA11yPendingValidator() {
-        if (this.inputElement) {
-          this.inputElement.setAttribute('aria-busy', this.isPending);
+        if (this._inputNode) {
+          this._inputNode.setAttribute('aria-busy', this.isPending);
         }
       }
 
