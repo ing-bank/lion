@@ -14,6 +14,12 @@ export {
   isDirective,
   TemplateResult,
   SVGTemplateResult,
+  AttributePart,
+  BooleanAttributePart,
+  EventPart,
+  NodePart,
+  PropertyPart,
+  isPrimitive,
 } from 'lit-html';
 export { render as renderShady } from 'lit-html/lib/shady-render.js';
 export { asyncAppend } from 'lit-html/directives/async-append.js';
