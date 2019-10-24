@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/ing-bank/lion/compare/@lion/switch@0.1.0...@lion/switch@0.1.1) (2019-10-24)
+
+
+### Bug Fixes
+
+* **switch:** render function methods not slots ([40394bc](https://github.com/ing-bank/lion/commit/40394bc))
+
+
+
+
+
 # 0.1.0 (2019-10-23)
 
 
