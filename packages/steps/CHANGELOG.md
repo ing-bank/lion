@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.18](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.17...@lion/steps@0.1.18) (2019-10-24)
+
+
+### Bug Fixes
+
+* **steps:** always fire [@enter](https://github.com/enter) only once ([8c724fa](https://github.com/ing-bank/lion/commit/8c724fa))
+* **steps:** steps.current should be update before [@enter](https://github.com/enter) ([ebe2bc1](https://github.com/ing-bank/lion/commit/ebe2bc1))
+
+
+
+
+
 ## [0.1.17](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.16...@lion/steps@0.1.17) (2019-10-23)
 
 **Note:** Version bump only for package @lion/steps
