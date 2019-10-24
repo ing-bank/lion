@@ -23,8 +23,8 @@ export const SyncUpdatableMixin = dedupeMixin(
         this.__SyncUpdatableNamespace = {};
       }
 
-      connectedCallback() {
-        super.connectedCallback();
+      firstUpdated(c) {
+        super.firstUpdated(c);
         this.__SyncUpdatableNamespace.connected = true;
         this.__syncUpdatableInitialize();
       }

@@ -14,7 +14,6 @@ export class Required extends Validator {
 
   // eslint-disable-next-line class-methods-use-this
   onFormControlConnect(formControl) {
-    console.log('formControl._inputNode', formControl._inputNode);
     if (formControl._inputNode) {
       formControl._inputNode.setAttribute('aria-required', 'true');
     }

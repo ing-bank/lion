@@ -10,6 +10,7 @@ import { Required } from './validators/Required.js';
 // import { Validator } from './Validator.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+import { setUseProxies } from 'immer';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
@@ -85,6 +86,8 @@ export const ValidateMixin = dedupeMixin(
            * automatically trigger validation
            */
           modelValue: Object,
+
+          defaultValidators: Array,
         };
       }
 
@@ -102,9 +105,10 @@ export const ValidateMixin = dedupeMixin(
         };
       }
 
-      get _inputNode() {
-
-      }
+      /**
+       * @abstract
+       * get _inputNode()
+       */
 
       get _feedbackNode() {
         return this.querySelector('[slot=feedback]');
@@ -154,24 +158,21 @@ export const ValidateMixin = dedupeMixin(
 
         this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
 
-        this.__validators = [];
-        this._defaultValidators = [];
+        this.validators = [];
+        this.defaultValidators = [];
       }
 
-      set validators(v) {
-        const oldValue = this.validators;
-        this.__validators = v;
-        this.requestUpdate('validators', oldValue);
-      }
-
-      get validators() {
-        return [...this.__validators, ...this._defaultValidators];
+      get _allValidators() {
+        return [...this.validators, ...this.defaultValidators];
       }
 
       connectedCallback() {
         super.connectedCallback();
         localize.addEventListener('localeChanged', this._renderFeedback);
+      }
 
+      firstUpdated(c) {
+        super.firstUpdated(c);
         this.__validateInitialized = true;
         this.validate();
       }
@@ -283,7 +284,7 @@ export const ValidateMixin = dedupeMixin(
           this.modelValue instanceof Unparseable ? this.modelValue.viewValue : this.modelValue;
 
         /** @type {Validator} */
-        const requiredValidator = this.validators.find(v => v instanceof Required);
+        const requiredValidator = this._allValidators.find(v => v instanceof Required);
 
         /**
          * 1. Handle the 'exceptional' Required validator:
@@ -303,7 +304,7 @@ export const ValidateMixin = dedupeMixin(
           return;
         }
 
-        const filteredValidators = this.validators.filter(
+        const filteredValidators = this._allValidators.filter(
           v => !(v instanceof ResultValidator) && !(v instanceof Required),
         );
 
@@ -328,8 +329,8 @@ export const ValidateMixin = dedupeMixin(
 
         if (syncValidators.length) {
           this.__syncValidationResult = syncValidators.filter(v => v.execute(value, v.param));
+          this.__finishValidation();
         }
-        this.__finishValidation();
       }
 
       /**
@@ -337,6 +338,8 @@ export const ValidateMixin = dedupeMixin(
        * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
        */
       async __executeAsyncValidators(filteredValidators, value) {
+        console.log('__executeAsyncValidators');
+
         const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
 
         if (asyncValidators.length) {
@@ -356,8 +359,10 @@ export const ValidateMixin = dedupeMixin(
        * @param {Validator[]} regularValidationResult result of steps 1-3
        */
       __executeResultValidators(regularValidationResult) {
+        console.log('__executeResultValidators');
+
         /** @type {ResultValidator[]} */
-        const resultValidators = this.validators.filter(
+        const resultValidators = this._allValidators.filter(
           v => !v.async && v instanceof ResultValidator,
         );
 
@@ -427,7 +432,7 @@ export const ValidateMixin = dedupeMixin(
       __clearValidationResults() {
         this.__syncValidationResult = [];
         this.__asyncValidationResult = [];
-        // this._storeResultsOnInstance();
+        this._storeResultsOnInstance([]);
       }
 
       __onValidatorUpdated(e) {
@@ -444,11 +449,11 @@ export const ValidateMixin = dedupeMixin(
             v.onFormControlDisconnect(this);
           });
         }
-        this.validators.forEach(v => {
+        this._allValidators.forEach(v => {
           events.forEach(e => v.addEventListener(e, this.__onValidatorUpdated));
           v.onFormControlConnect(this);
         });
-        this.__prevValidators = this.validators;
+        this.__prevValidators = this._allValidators;
       }
 
       /**
