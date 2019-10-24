@@ -10,7 +10,6 @@ import { Required } from './validators/Required.js';
 // import { Validator } from './Validator.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
-import { setUseProxies } from 'immer';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
@@ -55,6 +54,10 @@ export const ValidateMixin = dedupeMixin(
             type: Boolean,
             attribute: 'has-error',
             reflect: true,
+            hasChanged: (result, prevResult) => {
+              console.log('result, prevResult', result, prevResult);
+              return result !== prevResult;
+            },
           },
 
           /**
@@ -112,23 +115,6 @@ export const ValidateMixin = dedupeMixin(
 
       get _feedbackNode() {
         return this.querySelector('[slot=feedback]');
-      }
-
-      /**
-       * @overridable
-       */
-      getFieldName(validatorConfig) {
-        const labelNode = this.querySelector('[slot=label]');
-        const label = this.label || labelNode.textContent;
-
-        // TODO: lowest level config should always win
-        if (validatorConfig && validatorConfig.fieldName) {
-          return validatorConfig.fieldName;
-        }
-        if (label) {
-          return label;
-        }
-        return this.name;
       }
 
       constructor() {
@@ -217,12 +203,6 @@ export const ValidateMixin = dedupeMixin(
           this.__handleA11yPendingValidator();
         }
 
-        if (c.has('label')) {
-          // Since this can affect the outcome of `getFieldName()`, which is
-          // passed down to the `getMessage` function of all Validators
-          this._renderFeedback();
-        }
-
         // TODO: Interaction state knowledge should be moved to FormControl...
         ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
           if (c.has(iState)) {
@@ -267,7 +247,7 @@ export const ValidateMixin = dedupeMixin(
           // need to be merged with those of sync validators and vice versa.
           this.__clearValidationResults();
         }
-        this.__executeValidators();
+        await this.__executeValidators();
       }
 
       __storePrevResult() {
@@ -278,6 +258,10 @@ export const ValidateMixin = dedupeMixin(
        * @desc step 1-3
        */
       async __executeValidators() {
+        this.validateComplete = new Promise(resolve => {
+          this.__validateCompleteResolve = resolve;
+        });
+
         // When the modelValue can't be created by FormatMixin.parser, still allow all validators
         // to give valuable feedback to the user based on the current viewValue.
         const value =
@@ -300,48 +284,46 @@ export const ValidateMixin = dedupeMixin(
           if (requiredValidator) {
             this.__syncValidationResult = [requiredValidator];
           }
-          this.__finishValidation();
+          this.__finishValidation({ source: 'sync' });
           return;
         }
 
-        const filteredValidators = this._allValidators.filter(
-          v => !(v instanceof ResultValidator) && !(v instanceof Required),
-        );
+        // Separate Validators in sync and async
+        const /** @type {Validator[]} */ filteredValidators = this._allValidators.filter(
+            v => !(v instanceof ResultValidator) && !(v instanceof Required),
+          );
+        const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(v => !v.async);
+        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
 
         /**
          * 2. Synchronous validators
          */
-        this.__executeSyncValidators(filteredValidators, value);
+        this.__executeSyncValidators(syncValidators, value, {
+          hasAsync: Boolean(asyncValidators.length),
+        });
 
         /**
          * 3. Asynchronous validators
          */
-        this.__executeAsyncValidators(filteredValidators, value);
+        await this.__executeAsyncValidators(asyncValidators, value);
       }
 
       /**
        * @desc step 2, calls __finishValidation
-       * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
+       * @param {Validator[]} syncValidators
        */
-      __executeSyncValidators(filteredValidators, value) {
-        /** @type {Validator[]} */
-        const syncValidators = filteredValidators.filter(v => !v.async);
-
+      __executeSyncValidators(syncValidators, value, { hasAsync }) {
         if (syncValidators.length) {
           this.__syncValidationResult = syncValidators.filter(v => v.execute(value, v.param));
-          this.__finishValidation();
         }
+        this.__finishValidation({ source: 'sync', hasAsync });
       }
 
       /**
        * @desc step 3, calls __finishValidation
        * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
        */
-      async __executeAsyncValidators(filteredValidators, value) {
-        console.log('__executeAsyncValidators');
-
-        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
-
+      async __executeAsyncValidators(asyncValidators, value) {
         if (asyncValidators.length) {
           this.isPending = true;
           const resultPromises = asyncValidators.map(v => v.execute(value, v.param));
@@ -349,7 +331,7 @@ export const ValidateMixin = dedupeMixin(
           this.__asyncValidationResult = booleanResults
             .map((r, i) => asyncValidators[i]) // Create an array of Validators
             .filter((v, i) => booleanResults[i]); // Only leave the ones returning true
-          this.__finishValidation();
+          this.__finishValidation({ source: 'async' });
           this.isPending = false;
         }
       }
@@ -359,8 +341,6 @@ export const ValidateMixin = dedupeMixin(
        * @param {Validator[]} regularValidationResult result of steps 1-3
        */
       __executeResultValidators(regularValidationResult) {
-        console.log('__executeResultValidators');
-
         /** @type {ResultValidator[]} */
         const resultValidators = this._allValidators.filter(
           v => !v.async && v instanceof ResultValidator,
@@ -374,22 +354,34 @@ export const ValidateMixin = dedupeMixin(
         );
       }
 
-      __finishValidation() {
+      /**
+       *
+       * @param {object} options
+       * @param {'sync'|'async'} options.source
+       * @param {boolean} [options.hasAsync] whether async validators are configured in this run.
+       * If not, we have nothing left to wait for.
+       */
+      __finishValidation({ source, hasAsync }) {
         /** @typedef {Validator[]} RegularValidationResult */
-        const combinedResult = [...this.__syncValidationResult, ...this.__asyncValidationResult];
-        // if we have any ResultValidators left, now is the time to run them...
-        const holisticResult = this.__executeResultValidators(combinedResult);
-
-        /** @typedef {Validator[]} TotalValidationResult */
-        this.__validationResult = [
-          ...holisticResult,
+        const syncAndAsyncOutcome = [
           ...this.__syncValidationResult,
           ...this.__asyncValidationResult,
         ];
+        // if we have any ResultValidators left, now is the time to run them...
+        const resultOutCome = this.__executeResultValidators(syncAndAsyncOutcome);
+
+        /** @typedef {Validator[]} TotalValidationResult */
+        this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
 
         this._storeResultsOnInstance(this.__validationResult);
-        /** @event validation-done inform the outside world (LionFieldset amongst others) */
-        this.dispatchEvent(new Event('validation-done', { bubbles: true, composed: true }));
+
+        /** private event that should be listened to by LionFieldSet */
+        this.dispatchEvent(new Event('validate-performed', { bubbles: true, composed: true }));
+
+        if (source === 'async' || !hasAsync) {
+          this.__validateCompleteResolve();
+        }
+
         this._renderFeedback();
       }
 
@@ -407,7 +399,7 @@ export const ValidateMixin = dedupeMixin(
        */
       _storeResultsOnInstance(valResult) {
         const instanceResult = {};
-        this.__resetInstanceValidationStates();
+        this.__resetInstanceValidationStates(instanceResult);
 
         valResult.forEach(validator => {
           // By default, this will be reflected to attr 'error-state' in case of
@@ -422,17 +414,19 @@ export const ValidateMixin = dedupeMixin(
         Object.assign(this, instanceResult);
       }
 
-      __resetInstanceValidationStates() {
+      __resetInstanceValidationStates(instanceResult) {
         this.__validatorTypeHistoryCache.forEach(previouslyStoredType => {
-          this[`has${pascalCase(previouslyStoredType)}`] = false;
-          this[`${previouslyStoredType}States`] = {};
+          instanceResult[`has${pascalCase(previouslyStoredType)}`] = false;
+          instanceResult[`${previouslyStoredType}States`] = {};
         });
       }
 
       __clearValidationResults() {
+        console.log('__clearValidationResults');
+
         this.__syncValidationResult = [];
         this.__asyncValidationResult = [];
-        this._storeResultsOnInstance([]);
+        // this._storeResultsOnInstance([]);
       }
 
       __onValidatorUpdated(e) {
@@ -502,7 +496,6 @@ export const ValidateMixin = dedupeMixin(
         return Promise.all(
           validators.map(async validator => {
             const message = await validator.getMessage({
-              fieldName: this.getFieldName(validator.config),
               validatorParams: validator.param,
               modelValue: this.modelValue,
             });
@@ -530,6 +523,11 @@ export const ValidateMixin = dedupeMixin(
        * - we set aria-invalid="true" in case errorShow is true
        */
       async _renderFeedback() {
+        let feedbackCompleteResolve;
+        this.feedbackComplete = new Promise(resolve => {
+          feedbackCompleteResolve = resolve;
+        });
+
         /** @type {Validator[]} */
         this.__prioritizedResult = this._prioritizeAndFilterFeedback();
         // Will be used for synchronization with "._inputNode"
@@ -541,7 +539,17 @@ export const ValidateMixin = dedupeMixin(
 
           // Set type, message, validator
           Object.assign(this._feedbackNode, messageMap[0]);
+        } else {
+          // reset states
+          Object.assign(this._feedbackNode, {
+            message: '',
+            type: '',
+            validator: undefined,
+          });
         }
+        this.__storeTypeVisibilityOnInstance(this.__prioritizedResult.slice(0, 1));
+
+        feedbackCompleteResolve();
 
         // const hasCustomFeedbackNode = typeof this._feedbackNode.renderFeedback === 'function';
         // if (!hasCustomFeedbackNode) {
@@ -565,7 +573,7 @@ export const ValidateMixin = dedupeMixin(
           result[`has${pascalCase(v.type)}Visible`] = true;
         });
 
-        Object.assign(result, this);
+        Object.assign(this, result);
       }
 
       /**

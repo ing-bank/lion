@@ -9,13 +9,20 @@ import { ResultValidator } from '../src/ResultValidator.js';
 import { Required } from '../src/validators/Required.js';
 import { MinLength, MaxLength } from '../src/validators/StringValidators.js';
 import { DefaultSuccess } from '../src/resultValidators/DefaultSuccess.js';
-import { AlwaysValid, AlwaysInvalid } from '../test-helpers/helper-validators.js';
+import {
+  AlwaysValid,
+  AlwaysInvalid,
+  AsyncAlwaysValid,
+  AsyncAlwaysInvalid,
+} from '../test-helpers/helper-validators.js';
 import { LionValidationFeedback } from '../src/LionValidationFeedback.js';
+
+import '../lion-validation-feedback.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
 // successShowPrerequisite
 
-const externalVariables = {};
+const cfg = {};
 const lightDom = '';
 
 const tagString = defineCE(
@@ -122,10 +129,10 @@ describe.only('ValidateMixin', () => {
       expect(alwaysValidExecuteSpy.callCount).to.equal(0);
       expect(isEmptySpy.callCount).to.equal(1);
 
-      // el.modelValue = 'nonEmpty';
-      // expect(validateSpy.callCount).to.equal(2);
-      // expect(alwaysValidExecuteSpy.callCount).to.equal(1);
-      // expect(isEmptySpy.callCount).to.equal(2);
+      el.modelValue = 'nonEmpty';
+      expect(validateSpy.callCount).to.equal(2);
+      expect(alwaysValidExecuteSpy.callCount).to.equal(1);
+      expect(isEmptySpy.callCount).to.equal(2);
     });
 
     it('secondly checks for synchronous Validators: creates RegularValidationResult', async () => {
@@ -140,7 +147,7 @@ describe.only('ValidateMixin', () => {
 
     it('thirdly schedules asynchronous Validators: creates RegularValidationResult', async () => {
       const el = await fixture(html`
-        <${tag} .validators=${[new AlwaysValid(), new AlwaysValid(null, { async: true })]}>
+        <${tag} .validators=${[new AlwaysValid(), new AsyncAlwaysValid()]}>
           ${lightDom}
         </${tag}>
       `);
@@ -158,14 +165,20 @@ describe.only('ValidateMixin', () => {
         }
       }
 
-      class AsyncAlwaysValid extends AlwaysValid {
-        constructor(...args) {
-          super(...args);
-          this.async = true;
-        }
-      }
+      let el = await fixture(html`
+        <${tag}
+          .validators=${[new AlwaysValid(), new MyResult()]}>
+          ${lightDom}
+        </${tag}>
+      `);
 
-      const el = await fixture(html`
+      const syncSpy = sinon.spy(el, '__executeSyncValidators');
+      const resultSpy2 = sinon.spy(el, '__executeResultValidators');
+
+      el.modelValue = 'nonEmpty';
+      expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
+
+      el = await fixture(html`
         <${tag}
           .validators=${[new AsyncAlwaysValid(), new MyResult()]}>
           ${lightDom}
@@ -174,28 +187,50 @@ describe.only('ValidateMixin', () => {
 
       const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
       const resultSpy = sinon.spy(el, '__executeResultValidators');
-      console.log('trigger');
+
       el.modelValue = 'nonEmpty';
-      expect(asyncSpy.calledBefore(resultSpy)).to.be.true;
-
-      const el2 = await fixture(html`
-        <${tag}
-          .validators=${[new AlwaysValid(), new MyResult()]}>
-          ${lightDom}
-        </${tag}>
-      `);
-
-      const syncSpy = sinon.spy(el2, '__executeSyncValidators');
-      const resultSpy2 = sinon.spy(el2, '__executeResultValidators');
-
-      el2.modelValue = 'nonEmpty';
-      expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
+      expect(resultSpy.callCount).to.equal(1);
+      expect(asyncSpy.callCount).to.equal(1);
+      await el.validateComplete;
+      expect(resultSpy.callCount).to.equal(2);
     });
 
     describe('Finalization', () => {
-      it('fires "validation-done" event', async () => {});
+      it('fires private "validate-performed" event on every cycle', async () => {
+        const el = await fixture(html`
+          <${tag} .validators=${[new AlwaysValid(), new AsyncAlwaysInvalid()]}>
+            ${lightDom}
+          </${tag}>
+        `);
+        const cbSpy = sinon.spy();
+        el.addEventListener('validate-performed', cbSpy);
+        el.modelValue = 'nonEmpty';
+        expect(cbSpy.callCount).to.equal(1);
+      });
 
-      it('renders feedback', async () => {});
+      it('resolves ".validateComplete" Promise', async () => {
+        const el = await fixture(html`
+          <${tag} .validators=${[new AsyncAlwaysInvalid()]}>
+            ${lightDom}
+          </${tag}>
+        `);
+        el.modelValue = 'nonEmpty';
+        const validateResolveSpy = sinon.spy(el, '__validateCompleteResolve');
+        await el.validateComplete;
+        expect(validateResolveSpy.callCount).to.equal(1);
+      });
+
+      it('renders feedback', async () => {
+        const el = await fixture(html`
+          <${tag} .validators=${[new AlwaysValid()]}>
+            ${lightDom}
+          </${tag}>
+        `);
+        const renderSpy = sinon.spy(el, '_renderFeedback');
+        el.modelValue = 'nonEmpty';
+        await el.feedbackComplete;
+        expect(renderSpy.callCount).to.equal(1);
+      });
     });
   });
 
@@ -281,8 +316,8 @@ describe.only('ValidateMixin', () => {
       `);
       el.modelValue = 'cat';
       expect(catSpy.callCount).to.equal(1);
-      // isCatValidator.param = 'Garfield';
-      // expect(catSpy.callCount).to.equal(2);
+      isCatValidator.param = 'Garfield';
+      expect(catSpy.callCount).to.equal(2);
     });
 
     // it(`replaces native validators (required, minlength, maxlength, min, max, pattern, step,
@@ -334,7 +369,7 @@ describe.only('ValidateMixin', () => {
 
       const validator = el.validators[0];
       expect(validator instanceof Validator).to.be.true;
-      expect(el.hasError).to.be.undefined;
+      expect(el.hasError).to.be.false;
       asyncVResolve();
       await aTimeout();
       expect(el.hasError).to.be.true;
@@ -462,7 +497,7 @@ describe.only('ValidateMixin', () => {
       expect(validateSpy.calledBefore(resultValidateSpy)).to.be.true;
 
       // Also after regular async Validators
-      const validatorAsync = new MinLength(3, { async: true });
+      const validatorAsync = new AsyncAlwaysInvalid();
       const validateAsyncSpy = sinon.spy(validatorAsync, 'execute');
       await fixture(html`
       <${tag}
@@ -529,7 +564,7 @@ describe.only('ValidateMixin', () => {
       expect(el.hasError).to.be.true;
       el.modelValue = 'foo';
       expect(el.errorStates.Required).to.be.undefined;
-      // expect(el.hasError).to.be.false;
+      expect(el.hasError).to.be.false;
     });
 
     // TODO: should we combine this with ._isPrefilled...?
@@ -635,24 +670,24 @@ describe.only('ValidateMixin', () => {
     });
 
     it('can be altered by App Developers', async () => {
-        const altPreconfTagString = defineCE(
-          class extends ValidateMixin(LitElement) {
-            constructor() {
-              super();
-              this.defaultValidators = [new MinLength(3)];
-            }
-          },
-        );
-        const altPreconfTag = unsafeStatic(altPreconfTagString);
+      const altPreconfTagString = defineCE(
+        class extends ValidateMixin(LitElement) {
+          constructor() {
+            super();
+            this.defaultValidators = [new MinLength(3)];
+          }
+        },
+      );
+      const altPreconfTag = unsafeStatic(altPreconfTagString);
 
-        const el = await fixture(html`
+      const el = await fixture(html`
         <${altPreconfTag}
           .modelValue=${'12'}
         ></${altPreconfTag}>`);
 
-        expect(el.errorStates.MinLength).to.be.true;
-        el.defaultValidators[0].param = 2;
-        expect(el.errorStates.MinLength).to.be.undefined;
+      expect(el.errorStates.MinLength).to.be.true;
+      el.defaultValidators[0].param = 2;
+      expect(el.errorStates.MinLength).to.be.undefined;
     });
 
     it('can be requested via "._allValidators" getter', async () => {
@@ -674,7 +709,7 @@ describe.only('ValidateMixin', () => {
     });
   });
 
-  describe.skip('State storage and reflection', () => {
+  describe('State storage and reflection', () => {
     class ContainsLowercaseA extends Validator {
       constructor(...args) {
         super(...args);
@@ -699,42 +734,24 @@ describe.only('ValidateMixin', () => {
       `);
 
       el.modelValue = 'a';
-
       expect(el.hasError).to.be.true;
+      await el.updateComplete;
       expect(el.hasAttribute('has-error')).to.be.true;
 
       el.modelValue = 'abc';
       expect(el.hasError).to.be.false;
+      await el.updateComplete;
       expect(el.hasAttribute('has-error')).to.be.false;
 
       el.modelValue = 'abcde';
       expect(el.hasError).to.be.false;
+      await el.updateComplete;
       expect(el.hasAttribute('has-error')).to.be.false;
 
       el.modelValue = 'abcdefg';
       expect(el.hasError).to.be.false;
+      await el.updateComplete;
       expect(el.hasAttribute('has-error')).to.be.false;
-    });
-
-    it('sets ".hasErrorVisible"/[has-error-visible] when visibility condition is met', async () => {
-      const el = await fixture(html`
-        <${tag} .validators=${[new MinLength(3)]}>${lightDom}</${tag}>`);
-
-      if (externalVariables.hasErrorVisiblePrerequisite) {
-        externalVariables.hasErrorVisiblePrerequisite(el);
-      }
-
-      el.modelValue = 'a';
-      await el.updateComplete;
-
-      expect(el.hasErrorVisible).to.be.true;
-      await el.updateComplete;
-      expect(el.hasAttribute('has-error-visible')).to.be.true;
-
-      el.modelValue = 'abc';
-      expect(el.hasErrorVisible).to.be.false;
-      await el.updateComplete;
-      expect(el.hasAttribute('has-error-visible')).to.be.false;
     });
 
     it('stores validity of individual Validators in ".errorStates[validator.name]"', async () => {
@@ -744,13 +761,13 @@ describe.only('ValidateMixin', () => {
           .validators=${[new MinLength(3), new AlwaysInvalid()]}
         >${lightDom}</${tag}>`);
 
-      expect(el.errorStates.minLength).to.be.true;
-      expect(el.errorStates.alwaysInvalid).to.be.true;
+      expect(el.errorStates.MinLength).to.be.true;
+      expect(el.errorStates.AlwaysInvalid).to.be.true;
 
       el.modelValue = 'abc';
 
-      expect(el.errorStates.minLength).to.equal(undefined);
-      expect(el.errorStates.alwaysInvalid).to.be.true;
+      expect(el.errorStates.MinLength).to.equal(undefined);
+      expect(el.errorStates.AlwaysInvalid).to.be.true;
     });
 
     it('removes "non active" states whenever modelValue becomes undefined', async () => {
@@ -781,15 +798,19 @@ describe.only('ValidateMixin', () => {
         el.addEventListener('has-error-changed', cbError);
 
         el.modelValue = 'a';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(1);
 
         el.modelValue = 'abc';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(1);
 
         el.modelValue = 'abcde';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(1);
 
         el.modelValue = 'abcdefg';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(2);
       });
 
@@ -805,15 +826,19 @@ describe.only('ValidateMixin', () => {
         el.addEventListener('error-states-changed', cbError);
 
         el.modelValue = 'a';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(1);
 
         el.modelValue = 'aa';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(1);
 
         el.modelValue = 'aaa';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(2);
 
         el.modelValue = 'aba';
+        await el.updateComplete;
         expect(cbError.callCount).to.equal(3);
       });
     });
@@ -1030,19 +1055,50 @@ describe.only('ValidateMixin', () => {
     ContainsLowercaseA.getMessage = () => 'Message for containsLowercaseA';
     ContainsCat.getMessage = () => 'Message for containsCat';
 
+    it('sets ".hasErrorVisible"/[has-error-visible] when visibility condition is met', async () => {
+      const el = await fixture(html`
+        <${tag} .validators=${[new MinLength(3)]}>${lightDom}</${tag}>`);
+
+      if (cfg.enableFeedbackVisible) {
+        cfg.enableFeedbackVisible(el);
+      }
+
+      el.modelValue = 'a';
+      await el.feedbackComplete;
+      expect(el.hasErrorVisible).to.be.true;
+      expect(el.hasAttribute('has-error-visible')).to.be.true;
+
+      el.modelValue = 'abc';
+      await el.feedbackComplete;
+      expect(el.hasErrorVisible).to.be.false;
+      expect(el.hasAttribute('has-error-visible')).to.be.false;
+    });
+
+    it('passes a message to the "._feedbackNode"', async () => {
+      const el = await fixture(html`
+        <${tag}
+          .modelValue=${'cat'}
+        >${lightDom}</${tag}>
+      `);
+      expect(el._feedbackNode.message).to.equal('');
+      el.validators = [new AlwaysInvalid()];
+      await el.feedbackComplete;
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
+    });
+
     it('has configurable feedback visibility hook', async () => {
       const el = await fixture(html`
         <${tag}
-          ._prioritizeAndFilterFeedback=${() => []}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `);
-      expect(el._feedbackNode.innerText).to.equal('');
-      el._prioritizeAndFilterFeedback = ({ validationResults }) => validationResults;
-      el.validate();
-      await el.updateComplete;
-      expect(el._feedbackNode.innerText).to.equal('Message for alwaysInvalid');
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
+
+      el._prioritizeAndFilterFeedback = () => []; // filter out all errors
+      await el.validate();
+
+      expect(el._feedbackNode.message).to.equal('');
     });
 
     it('writes prioritized result to "._feedbackNode" based on Validator order', async () => {
@@ -1052,7 +1108,7 @@ describe.only('ValidateMixin', () => {
           .validators=${[new AlwaysInvalid(), new MinLength(4)]}
         >${lightDom}</${tag}>
       `);
-      expect(el._feedbackNode.innerText).to.equal('Message for alwaysInvalid');
+      expect(el._feedbackNode.message).to.equal('Message for alwaysInvalid');
     });
 
     it('renders validation result to "._feedbackNode" when async messages are resolved', async () => {
@@ -1073,11 +1129,11 @@ describe.only('ValidateMixin', () => {
         >${lightDom}</${tag}>
       `);
 
-      expect(el._feedbackNode.innerText).to.equal('');
+      expect(el._feedbackNode.message).to.equal('');
       unlockMessage();
       await el.updateComplete;
       await aTimeout();
-      expect(el._feedbackNode.innerText).to.equal('this ends up in "._feedbackNode"');
+      expect(el._feedbackNode.message).to.equal('this ends up in "._feedbackNode"');
     });
 
     // N.B. this replaces the 'config.hideFeedback' option we had before...
