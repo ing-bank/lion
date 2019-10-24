@@ -67,4 +67,23 @@ storiesOf('Forms|Input Amount', module)
       >
       </lion-input-amount>
     `,
+  )
+  .add(
+    'Show no fractions',
+    () => html`
+      <lion-input-amount
+        label="Amount"
+        help-text="Prefilled and formatted"
+        .formatOptions=${{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }}
+        .modelValue=${20}
+      >
+      </lion-input-amount>
+      <p>
+        Make sure to set the modelValue last as otherwise formatOptions will not be taken into
+        account
+      </p>
+    `,
   );
