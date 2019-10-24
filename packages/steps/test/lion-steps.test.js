@@ -158,6 +158,40 @@ describe('lion-steps', () => {
     });
   });
 
+  describe('events', () => {
+    it('will trigger lion-step @leave event before changing .current', async () => {
+      let currentInLeaveEvent;
+      const onLeave = ev => {
+        currentInLeaveEvent = ev.target.controller.current;
+      };
+      const el = await fixture(html`
+        <lion-steps>
+          <lion-step @leave=${onLeave}>Step 0</lion-step>
+          <lion-step>Step 1</lion-step>
+          <lion-step>Step 2</lion-step>
+        </lion-steps>
+      `);
+      el.next();
+      expect(currentInLeaveEvent).to.equal(0);
+    });
+
+    it('will trigger lion-step @enter event after changing .current', async () => {
+      let currentInEnterEvent;
+      const onEnter = ev => {
+        currentInEnterEvent = ev.target.controller.current;
+      };
+      const el = await fixture(html`
+        <lion-steps>
+          <lion-step>Step 0</lion-step>
+          <lion-step @enter=${onEnter}> Step 1</lion-step>
+          <lion-step>Step 2</lion-step>
+        </lion-steps>
+      `);
+      el.next();
+      expect(currentInEnterEvent).to.equal(1);
+    });
+  });
+
   describe('workflow with data and conditions', () => {
     it('navigates to the next step which passes the condition', async () => {
       const el = await fixture(html`

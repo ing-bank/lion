@@ -110,12 +110,13 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     const toStep = { number: newCurrent, element: newStepElement };
 
     oldStepElement.leave();
-    newStepElement.enter();
 
     if (this.current !== newCurrent) {
       this._internalCurrentSync = true;
       this.current = newCurrent;
     }
+
+    newStepElement.enter();
 
     this._dispatchTransitionEvent(fromStep, toStep);
   }
