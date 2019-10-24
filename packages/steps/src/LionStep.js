@@ -119,8 +119,10 @@ export class LionStep extends LionLitElement {
     this.status = 'entered';
     if (updateController === true) {
       this.controller.current = this.getControllerIndex();
+      // controller will trigger enter() again which will dispatch the enter event
+    } else {
+      this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
     }
-    this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
   }
 
   leave() {
