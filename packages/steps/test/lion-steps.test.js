@@ -159,7 +159,7 @@ describe('lion-steps', () => {
   });
 
   describe('events', () => {
-    it('will trigger lion-step @leave event before changing .current', async () => {
+    it('will fire lion-step @leave event before changing .current', async () => {
       let currentInLeaveEvent;
       const onLeave = ev => {
         currentInLeaveEvent = ev.target.controller.current;
@@ -175,7 +175,7 @@ describe('lion-steps', () => {
       expect(currentInLeaveEvent).to.equal(0);
     });
 
-    it('will trigger lion-step @enter event after changing .current', async () => {
+    it('will fire lion-step @enter event after changing .current', async () => {
       let currentInEnterEvent;
       const onEnter = ev => {
         currentInEnterEvent = ev.target.controller.current;
@@ -189,6 +189,23 @@ describe('lion-steps', () => {
       `);
       el.next();
       expect(currentInEnterEvent).to.equal(1);
+    });
+
+    it('will fire initial @enter event only once if [initial-step] is not on first step', async () => {
+      const firstEnterSpy = sinon.spy();
+      const secondEnterSpy = sinon.spy();
+      await fixture(html`
+        <lion-steps>
+          <lion-step @enter=${firstEnterSpy}>
+            <div>test1</div>
+          </lion-step>
+          <lion-step initial-step @enter=${secondEnterSpy}>
+            <div>test2</div>
+          </lion-step>
+        </lion-steps>
+      `);
+      expect(firstEnterSpy).to.not.have.been.called;
+      expect(secondEnterSpy).to.have.been.calledOnce;
     });
   });
 
