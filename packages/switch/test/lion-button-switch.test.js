@@ -1,8 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import { LionButton } from '@lion/button';
-
 import '../lion-button-switch.js';
 
 describe('lion-button-switch', () => {
@@ -11,10 +9,6 @@ describe('lion-button-switch', () => {
     el = await fixture(html`
       <lion-button-switch></lion-button-switch>
     `);
-  });
-
-  it('should behave like a button', () => {
-    expect(el instanceof LionButton).to.be.true;
   });
 
   it('should be focusable', () => {
