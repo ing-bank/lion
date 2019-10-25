@@ -20,6 +20,7 @@ export class LionInput extends LionField {
       readOnly: {
         type: Boolean,
         attribute: 'readonly',
+        reflect: true,
       },
       type: {
         type: String,
