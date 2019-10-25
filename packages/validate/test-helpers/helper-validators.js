@@ -7,8 +7,8 @@ export class AlwaysInvalid extends Validator {
     this.name = 'AlwaysInvalid';
   }
 
+  // eslint-disable-next-line class-methods-use-this
   execute() {
-    // eslint-disable-line class-methods-use-this
     const showMessage = true;
     return showMessage;
   }
@@ -20,8 +20,8 @@ export class AlwaysValid extends Validator {
     this.name = 'AlwaysValid';
   }
 
+  // eslint-disable-next-line class-methods-use-this
   execute() {
-    // eslint-disable-line class-methods-use-this
     const showMessage = false;
     return showMessage;
   }

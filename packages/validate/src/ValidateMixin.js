@@ -7,9 +7,11 @@ import { Unparseable } from './Unparseable.js';
 import { pascalCase } from './utils/pascal-case.js';
 
 import { Required } from './validators/Required.js';
-// import { Validator } from './Validator.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+
+// TODO: move all feedback interaction to a different layer (?)
+import '../lion-validation-feedback.js';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
@@ -54,10 +56,6 @@ export const ValidateMixin = dedupeMixin(
             type: Boolean,
             attribute: 'has-error',
             reflect: true,
-            hasChanged: (result, prevResult) => {
-              console.log('result, prevResult', result, prevResult);
-              return result !== prevResult;
-            },
           },
 
           /**
@@ -146,6 +144,11 @@ export const ValidateMixin = dedupeMixin(
 
         this.validators = [];
         this.defaultValidators = [];
+
+        this.hasErrorVisible = false;
+
+        // Subclassers can enable this to show multiple feedback messages at the same time
+        this._hasAllFeedbackVisible = false;
       }
 
       get _allValidators() {
@@ -154,6 +157,7 @@ export const ValidateMixin = dedupeMixin(
 
       connectedCallback() {
         super.connectedCallback();
+        // TODO: move to extending layer
         localize.addEventListener('localeChanged', this._renderFeedback);
       }
 
@@ -161,10 +165,12 @@ export const ValidateMixin = dedupeMixin(
         super.firstUpdated(c);
         this.__validateInitialized = true;
         this.validate();
+        this.__handleA11yErrorVisible();
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
+        // TODO: move to extending layer
         localize.removeEventListener('localeChanged', this._renderFeedback);
       }
 
@@ -182,7 +188,6 @@ export const ValidateMixin = dedupeMixin(
 
       updated(c) {
         super.updated(c);
-
         this.constructor.validationTypes.forEach(type => {
           if (c.has(`${type}States`)) {
             this.dispatchEvent(
@@ -372,7 +377,6 @@ export const ValidateMixin = dedupeMixin(
 
         /** @typedef {Validator[]} TotalValidationResult */
         this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
-
         this._storeResultsOnInstance(this.__validationResult);
 
         /** private event that should be listened to by LionFieldSet */
@@ -422,11 +426,8 @@ export const ValidateMixin = dedupeMixin(
       }
 
       __clearValidationResults() {
-        console.log('__clearValidationResults');
-
         this.__syncValidationResult = [];
         this.__asyncValidationResult = [];
-        // this._storeResultsOnInstance([]);
       }
 
       __onValidatorUpdated(e) {
@@ -488,16 +489,16 @@ export const ValidateMixin = dedupeMixin(
        */
 
       /**
-       * @param {Validator[]} validators list of object having a .getMessage method (could
-       * either be Validators or objects returned )
-       * @return {FeedbackMessage[]}
+       * @param {Validator[]} validators list of objects having a .getMessage method
+       * @return {Feedback[]}
        */
       async __getMessageMap(validators) {
         return Promise.all(
           validators.map(async validator => {
-            const message = await validator.getMessage({
+            const message = await validator._getMessage({
               validatorParams: validator.param,
               modelValue: this.modelValue,
+              formControl: this,
             });
             return { message, type: validator.type, validator };
           }),
@@ -508,19 +509,15 @@ export const ValidateMixin = dedupeMixin(
        * @desc Responsible for retrieving messages from Validators and
        * (delegation of) rendering them.
        *
-       * Two scenarios thinkable:
-       * 1. We have no custom `._feedbackNode` defined:
-       * - retrieve message from the highest prio Validator
-       * - render the highest prio message to the feedback node
-       * 2. We have a custom `._feedbackNode` defined:
+       * For`._feedbackNode` (extension of LionValidationFeedback):
        * - retrieve messages from highest prio Validators
        * - provide the result to custom feedback node and let the
        * custom node decide on their renderings
        *
        * In both cases:
-       * - we compute the 'show' flag (like 'errorShow') for all types
+       * - we compute the 'show' flag (like 'hasErrorVisible') for all types
        * - we set the customValidity message of the highest prio Validator
-       * - we set aria-invalid="true" in case errorShow is true
+       * - we set aria-invalid="true" in case hasErrorVisible is true
        */
       async _renderFeedback() {
         let feedbackCompleteResolve;
@@ -529,38 +526,23 @@ export const ValidateMixin = dedupeMixin(
         });
 
         /** @type {Validator[]} */
-        this.__prioritizedResult = this._prioritizeAndFilterFeedback();
+        this.__prioritizedResult = this._prioritizeAndFilterFeedback({
+          validationResult: this.__validationResult,
+        });
+
         // Will be used for synchronization with "._inputNode"
         this._validationMessage = '';
         const messageMap = await this.__getMessageMap(this.__prioritizedResult);
 
         if (messageMap.length) {
           this._validationMessage = messageMap[0].message;
-
           // Set type, message, validator
-          Object.assign(this._feedbackNode, messageMap[0]);
+          this._feedbackNode.feedbackData = messageMap;
         } else {
-          // reset states
-          Object.assign(this._feedbackNode, {
-            message: '',
-            type: '',
-            validator: undefined,
-          });
+          this._feedbackNode.feedbackData = undefined;
         }
-        this.__storeTypeVisibilityOnInstance(this.__prioritizedResult.slice(0, 1));
-
+        this.__storeTypeVisibilityOnInstance(this.__prioritizedResult);
         feedbackCompleteResolve();
-
-        // const hasCustomFeedbackNode = typeof this._feedbackNode.renderFeedback === 'function';
-        // if (!hasCustomFeedbackNode) {
-        //   // Just like the platform, show one message at a time
-        //   this.__storeTypeVisibilityOnInstance(this.__prioritizedResult.slice(0,1));
-        //   this._feedbackNode.textContent = this._validationMessage;
-        // } else {
-        //   // Show multiple messages, depending on the outcome of _prioritizeAndFilterFeedback
-        //   this.__storeTypeVisibilityOnInstance(this.__prioritizedResult);
-        //   this._feedbackNode.renderFeedback(messageMap);
-        // }
       }
 
       __storeTypeVisibilityOnInstance(prioritizedValidators) {
@@ -580,13 +562,19 @@ export const ValidateMixin = dedupeMixin(
        * Orders all active validators in this.__validationResult. Can
        * also filter out occurrences (based on interaction states)
        * @overridable
-       * @returns {Validator[]}
+       * @returns {Validator[]} ordered list of Validators with feedback messages visible to the
+       * end user
        */
-      _prioritizeAndFilterFeedback(
-        { validationResult } = { validationResult: this.__validationResult },
-      ) {
+      _prioritizeAndFilterFeedback({ validationResult }) {
         const types = this.constructor.validationTypes;
-        return validationResult.sort((a, b) => types.indexOf(b.type) - types.indexOf(a.type));
+        // Sort all validators based on the type provided.
+        const res = validationResult.sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
+        if (this._hasAllFeedbackVisible) {
+          // If a Subclasser configured this, show all the ordered messages
+          return res;
+        }
+        // By default, just like the platform, only show one message with highest prio.
+        return res.slice(0,1);
       }
 
       __handleA11yErrorVisible() {

@@ -8,56 +8,22 @@ export class LionValidationFeedback extends LitElement {
   static get properties() {
     return {
       /**
-       * @desc The message that should be displayed to the end user
-       * @property {string} message
+       * @property {FeedbackData} feedbackData
        */
-      message: String,
-      /**
-       * @desc The type of feedback(e.g, 'error'/'warning') that will be displayed
-       * @property {string} type
-       */
-      type: String,
-      /**
-       * @desc
-       * @property {Validator} validator
-       */
-      validator: Object,
-    };
+      feedbackData: Array,
+    }
   }
 
-  constructor() {
-    super();
-    this.message = '';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.setAttribute('aria-live', 'polite');
+  // eslint-disable-next-line class-methods-use-this
+  _messageTemplate({ message }) {
+    return html`${message}`;
   }
 
   render() {
     return html`
-      ${this.message}
+      ${this.feedbackData.map(({ message, type, validator }) => html`
+        ${this._messageTemplate({ message, type, validator })}
+      `)}
     `;
   }
 }
-
-// class LionMultiValidationFeedback extends LionValidationFeedback {
-//   static get properties() {
-//     return {
-//       feedbackData: Array,
-//     }
-//   }
-
-//   _messageTemplate({ message }) {
-//     return html`${message}`;
-//   }
-
-//   render() {
-//     return html`
-//       ${this.feedbackData.map(({ message, type, validator }) => html`
-//         ${this._messageTemplate({ message, type, validator })}
-//       `)}
-//     `;
-//   }
-// }

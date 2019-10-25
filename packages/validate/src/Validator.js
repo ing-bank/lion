@@ -45,12 +45,9 @@ export class Validator extends EventTarget {
    * @param {*} data.validatorParams
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
-  async getMessage(data) {
-    if (typeof this.config.message === 'string') {
-      return this.config.message;
-    }
-    if (typeof this.config.message === 'function') {
-      return this.config.message(data);
+  async _getMessage(data) {
+    if (typeof this.config.getMessage === 'function') {
+      return this.config.getMessage(data);
     }
     return this.constructor.getMessage(data);
   }
