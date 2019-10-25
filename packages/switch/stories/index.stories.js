@@ -4,6 +4,7 @@ import { LitElement } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
 import '../lion-input-switch.js';
+import '../lion-button-switch.js';
 import '@lion/form/lion-form.js';
 
 storiesOf('Forms|Switch', module)
@@ -83,4 +84,10 @@ storiesOf('Forms|Switch', module)
     return html`
       <lion-switch-validation-demo></lion-switch-validation-demo>
     `;
-  });
+  })
+  .add(
+    'Button',
+    () => html`
+      <lion-button-switch></lion-button-switch>
+    `,
+  );
