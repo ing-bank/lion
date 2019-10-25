@@ -19,6 +19,11 @@ export class LionTextarea extends LionField {
         type: Number,
         reflect: true,
       },
+      readOnly: {
+        type: Boolean,
+        attribute: 'readonly',
+        reflect: true,
+      },
     };
   }
 
@@ -42,6 +47,7 @@ export class LionTextarea extends LionField {
     super();
     this.rows = 2;
     this.maxRows = 6;
+    this.readOnly = false;
   }
 
   connectedCallback() {
@@ -60,6 +66,13 @@ export class LionTextarea extends LionField {
       const native = this.inputElement;
       if (native) {
         native.rows = this.rows;
+      }
+    }
+
+    if (changedProperties.has('readOnly')) {
+      const native = this.inputElement;
+      if (native) {
+        native.readOnly = this.readOnly;
       }
     }
 
