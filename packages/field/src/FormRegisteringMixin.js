@@ -13,6 +13,11 @@ export const FormRegisteringMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow, no-unused-vars
     class FormRegisteringMixin extends superclass {
+      constructor() {
+        super();
+        this.__boundDispatchRegistration = this._dispatchRegistration.bind(this);
+      }
+
       connectedCallback() {
         if (super.connectedCallback) {
           super.connectedCallback();
@@ -31,9 +36,10 @@ export const FormRegisteringMixin = dedupeMixin(
         if (formRegistrarManager.ready) {
           this._dispatchRegistration();
         } else {
-          formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
-            this._dispatchRegistration();
-          });
+          formRegistrarManager.addEventListener(
+            'all-forms-open-for-registration',
+            this.__boundDispatchRegistration,
+          );
         }
       }
 
@@ -43,6 +49,10 @@ export const FormRegisteringMixin = dedupeMixin(
             detail: { element: this },
             bubbles: true,
           }),
+        );
+        formRegistrarManager.removeEventListener(
+          'all-forms-open-for-registration',
+          this.__boundDispatchRegistration,
         );
       }
 

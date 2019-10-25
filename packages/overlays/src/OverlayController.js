@@ -26,7 +26,7 @@ export class OverlayController {
       invokerNode: config.invokerNode,
       referenceNode: null,
       elementToFocusAfterHide: document.body,
-      inheritsReferenceWidth: 'min',
+      inheritsReferenceWidth: '',
       hasBackdrop: false,
       isBlocking: false,
       preventsScroll: false,
@@ -498,8 +498,10 @@ export class OverlayController {
       case 'full':
         this._contentNodeWrapper.style.width = referenceWidth;
         break;
-      default:
+      case 'min':
         this._contentNodeWrapper.style.minWidth = referenceWidth;
+        break;
+      /* no default */
     }
   }
 

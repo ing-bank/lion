@@ -202,14 +202,14 @@ describe('Local Positioning', () => {
       `);
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -28px, 0px)',
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values',
       );
 
       await ctrl.hide();
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -28px, 0px)',
+        'translate3d(10px, -28px, 0px)',
         'Popper positioning values should be identical after hiding and showing',
       );
     });
@@ -242,7 +242,7 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -30px, 0px)',
+        'translate3d(10px, -30px, 0px)',
         'Popper positioning values',
       );
 
@@ -258,7 +258,7 @@ describe('Local Positioning', () => {
       await ctrl.show();
       expect(ctrl._popper.options.modifiers.offset.offset).to.equal('0, 20px');
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -40px, 0px)',
+        'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
@@ -292,7 +292,7 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -30px, 0px)',
+        'translate3d(10px, -30px, 0px)',
         'Popper positioning values',
       );
 
@@ -305,7 +305,7 @@ describe('Local Positioning', () => {
         },
       });
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(0px, -40px, 0px)',
+        'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
