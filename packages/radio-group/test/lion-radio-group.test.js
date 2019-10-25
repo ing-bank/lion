@@ -36,6 +36,20 @@ describe('<lion-radio-group>', () => {
     expect(el.checkedValue).to.deep.equal({ some: 'data' });
   });
 
+  it('can handle 0 and empty string as valid values ', async () => {
+    const el = await fixture(html`
+      <lion-radio-group>
+        <lion-radio name="data[]" .choiceValue=${0} .choiceChecked=${true}></lion-radio>
+        <lion-radio name="data[]" .choiceValue=${''}></lion-radio>
+      </lion-radio-group>
+    `);
+    await nextFrame();
+
+    expect(el.checkedValue).to.equal(0);
+    el.formElementsArray[1].choiceChecked = true;
+    expect(el.checkedValue).to.equal('');
+  });
+
   it('still has a full modelValue ', async () => {
     const el = await fixture(html`
       <lion-radio-group>
