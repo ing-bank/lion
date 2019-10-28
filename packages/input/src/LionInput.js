@@ -30,6 +30,9 @@ export class LionInput extends LionField {
         type: Number,
         reflect: true,
       },
+      placeholder: {
+        type: String,
+      },
     };
   }
 
@@ -42,6 +45,9 @@ export class LionInput extends LionField {
           native.setAttribute('value', this.__dataInstanceProps.modelValue);
         } else if (this.hasAttribute('value')) {
           native.setAttribute('value', this.getAttribute('value'));
+        }
+        if (this.placeholder) {
+          native.setAttribute('placeholder', this.placeholder);
         }
         return native;
       },

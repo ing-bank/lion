@@ -38,4 +38,10 @@ describe('<lion-input>', () => {
     expect(el.getAttribute('type')).to.equal('foo');
     expect(el.inputElement.getAttribute('type')).to.equal('foo');
   });
+
+  it('has an attribute that can be used to set the placeholder text of the input', async () => {
+    const el = await fixture(`<lion-input placeholder="text"></lion-input>`);
+    expect(el.getAttribute('placeholder')).to.equal('text');
+    expect(el.inputElement.getAttribute('placeholder')).to.equal('text');
+  });
 });
