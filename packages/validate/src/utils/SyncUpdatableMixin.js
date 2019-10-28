@@ -1,5 +1,7 @@
 import { dedupeMixin } from '@lion/core';
 
+// TODO: will be moved to @Lion/core later
+
 /**
  * @desc Why this mixin?
  * - it adheres to the "Member Order Independence" web components standard:

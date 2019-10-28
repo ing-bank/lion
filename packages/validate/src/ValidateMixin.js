@@ -204,10 +204,6 @@ export const ValidateMixin = dedupeMixin(
           this.__handleA11yErrorVisible();
         }
 
-        if (c.has('isPending')) {
-          this.__handleA11yPendingValidator();
-        }
-
         // TODO: Interaction state knowledge should be moved to FormControl...
         ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
           if (c.has(iState)) {
@@ -582,12 +578,6 @@ export const ValidateMixin = dedupeMixin(
         if (this._inputNode) {
           this._inputNode.setAttribute('aria-invalid', this.hasErrorVisible);
           // this._inputNode.setCustomValidity(this._validationMessage || '');
-        }
-      }
-
-      __handleA11yPendingValidator() {
-        if (this._inputNode) {
-          this._inputNode.setAttribute('aria-busy', this.isPending);
         }
       }
 

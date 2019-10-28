@@ -407,24 +407,6 @@ describe.only('ValidateMixin', () => {
       expect(el.hasAttribute('is-pending')).to.be.false;
     });
 
-    describe('Accessibility', () => {
-      it.only('sets "[aria-busy=true]" when validation is in progress', async () => {
-        const el = await fixture(html`
-          <${tag} .modelValue=${'dog'}>${lightDom}</${tag}>
-        `);
-        el._inputNode = document.createElement('input');
-
-        el.isPending = true;
-        await el.updateComplete;
-        expect(el._inputNode.hasAttribute('aria-busy')).to.equal('true');
-
-        el.isPending = false;
-        await el.updateComplete;
-        expect(el._inputNode.hasAttribute('aria-busy')).to.equal('false');
-      });
-    })
-
-
     // TODO: 'mock' these methods without actually waiting for debounce?
     it.skip('debounces async validation for performance', async () => {
       const asyncV = new IsAsyncCat();
