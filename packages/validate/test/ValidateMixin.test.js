@@ -15,8 +15,6 @@ import {
   AsyncAlwaysValid,
   AsyncAlwaysInvalid,
 } from '../test-helpers/helper-validators.js';
-import { LionValidationFeedback } from '../src/LionValidationFeedback.js';
-
 import '../lion-validation-feedback.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
@@ -713,7 +711,7 @@ describe('ValidateMixin', () => {
     class ContainsLowercaseA extends Validator {
       constructor(...args) {
         super(...args);
-        this.name = 'containsLowercaseA';
+        this.name = 'ContainsLowercaseA';
         this.execute = modelValue => !modelValue.includes('a');
       }
     }
@@ -889,7 +887,7 @@ describe('ValidateMixin', () => {
     class ContainsLowercaseA extends Validator {
       constructor(...args) {
         super(...args);
-        this.name = 'containsLowercaseA';
+        this.name = 'ContainsLowercaseA';
         this.execute = modelValue => !modelValue.includes('a');
       }
     }
@@ -1011,7 +1009,7 @@ describe('ValidateMixin', () => {
       expect(el._feedbackNode.feedbackData[0].message).to.equal('this ends up in "._feedbackNode"');
     });
 
-    it.skip('supports custom element to render feedback', async () => {
+    it('supports custom element to render feedback', async () => {
       const customFeedbackTagString = defineCE(
         class extends LitElement {
           static get properties() {
@@ -1041,11 +1039,11 @@ describe('ValidateMixin', () => {
       el.modelValue = 'dog';
       await el.feedbackComplete;
       await el._feedbackNode.updateComplete;
-      expect(el._feedbackNode.textContent.trim()).to.include('Custom for ContainsLowercaseA');
+      expect(el._feedbackNode).shadowDom.to.equal('Custom for ContainsLowercaseA');
 
       el.modelValue = 'cat';
       await el.feedbackComplete;
-      expect(el._feedbackNode.textContent.trim()).to.include('Custom for AlwaysInvalid');
+      expect(el._feedbackNode).shadowDom.to.equal('Custom for AlwaysInvalid');
     });
 
     it('supports custom messages in Validator instance configuration object', async () => {

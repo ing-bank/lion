@@ -14,14 +14,17 @@ export class LionValidationFeedback extends LitElement {
     }
   }
 
+  /**
+   * @overridable
+   */
   // eslint-disable-next-line class-methods-use-this
   _messageTemplate({ message }) {
-    return html`${message}`;
+    return message;
   }
 
   render() {
     return html`
-      ${this.feedbackData.map(({ message, type, validator }) => html`
+      ${this.feedbackData && this.feedbackData.map(({ message, type, validator }) => html`
         ${this._messageTemplate({ message, type, validator })}
       `)}
     `;

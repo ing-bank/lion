@@ -113,9 +113,7 @@ describe('SyncUpdatableMixin', () => {
 
           constructor() {
             super();
-            console.log('dingen etceteraaaahhhh');
             this.prop = 'a';
-            console.log('dingen etceterbeeeh');
           }
 
           _requestUpdate(name, oldValue) {
@@ -127,7 +125,6 @@ describe('SyncUpdatableMixin', () => {
 
           updateSync(name, oldValue) {
             super.updateSync(name, oldValue);
-            console.log('updateSync');
             if (name === 'prop') {
               propUpdateSyncCount += 1;
             }
