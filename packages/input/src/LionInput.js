@@ -32,6 +32,7 @@ export class LionInput extends LionField {
       },
       placeholder: {
         type: String,
+        reflect: true,
       },
     };
   }

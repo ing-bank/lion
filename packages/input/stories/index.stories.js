@@ -16,12 +16,6 @@ storiesOf('Forms|Input', module)
     `,
   )
   .add(
-    'Placeholder Text',
-    () => html`
-      <lion-input label="Label" placeholder="Placeholder text"></lion-input>
-    `,
-  )
-  .add(
     'Help text using html',
     () => html`
       <lion-input>
