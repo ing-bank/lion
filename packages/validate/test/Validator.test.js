@@ -11,8 +11,8 @@ describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
     class MyValidator extends Validator {
       execute(modelValue, param) {
-        const showError = modelValue === 'test' && param === 'me';
-        return showError;
+        const hasError = modelValue === 'test' && param === 'me';
+        return hasError;
       }
     }
     expect(new MyValidator().execute('test', 'me')).to.be.true;
@@ -114,8 +114,8 @@ describe('ResultValidator', () => {
     // This test shows the best practice of creating executeOnResults method
     class MyResultValidator extends ResultValidator {
       executeOnResults({ regularValidateResult, prevValidationResult }) {
-        const showMessage = regularValidateResult.length && !prevValidationResult.length;
-        return showMessage;
+        const hasSuccess = regularValidateResult.length && !prevValidationResult.length;
+        return hasSuccess;
       }
     }
     expect(
