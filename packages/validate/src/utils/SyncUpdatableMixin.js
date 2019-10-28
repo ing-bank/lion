@@ -56,9 +56,9 @@ export const SyncUpdatableMixin = dedupeMixin(
         ns.initialized = true;
         // Empty queue...
         if (ns.queue) {
-          ns.queue.forEach(({ name, oldValue }) => {
-            if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
-              this.updateSync(name, oldValue);
+          Array.from(ns.queue).forEach((name) => {
+            if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
+              this.updateSync(name, undefined);
             }
           });
         }
@@ -73,8 +73,9 @@ export const SyncUpdatableMixin = dedupeMixin(
 
         // Before connectedCallback: queue
         if (!ns.connected) {
-          ns.queue = ns.queue || [];
-          ns.queue.push({ name, oldValue });
+          ns.queue = ns.queue || new Set();
+          // Makes sure that we only initialize one time, with most up to date value
+          ns.queue.add(name);
         } // After connectedCallback: guarded proxy to updateSync
         else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
           this.updateSync(name, oldValue);

@@ -57,8 +57,8 @@ describe('Validator', () => {
 
     class MyValidator extends Validator {
       execute(modelValue, param) {
-        const showError = modelValue === 'forbidden' && param === 'values';
-        return showError;
+        const hasError = modelValue === 'forbidden' && param === 'values';
+        return hasError;
       }
 
       // eslint-disable-next-line

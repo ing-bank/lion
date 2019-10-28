@@ -176,7 +176,7 @@ export const ValidateMixin = dedupeMixin(
 
       updateSync(name, oldValue) {
         super.updateSync(name, oldValue);
-
+        console.log('updateSync', name, oldValue);
         if (name === 'validators') {
           // trigger validation (ideally only for the new or changed validator)
           this.__setupValidators();
@@ -433,6 +433,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       __setupValidators() {
+        console.log('__setupValidators');
         const events = ['param-changed', 'config-changed'];
         if (this.__prevValidators) {
           this.__prevValidators.forEach(v => {

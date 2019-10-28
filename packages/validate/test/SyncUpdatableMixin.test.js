@@ -4,7 +4,7 @@ import { UpdatingElement } from '@lion/core';
 import { SyncUpdatableMixin } from '../src/utils/SyncUpdatableMixin.js';
 
 describe('SyncUpdatableMixin', () => {
-  describe('Before firstUpdated', () => {
+  describe('Until firstUpdated', () => {
     it('initializes all properties', async () => {
       let hasCalledFirstUpdated = false;
       let hasCalledUpdateSync = false;
@@ -97,6 +97,52 @@ describe('SyncUpdatableMixin', () => {
       await el.updateComplete;
       expect(el.derived).to.equal('ab');
       expect(hasCalledRunPropertyEffect).to.be.true;
+    });
+
+    it('runs "updateSync" once per property with most current value', async () => {
+      let propChangedCount = 0;
+      let propUpdateSyncCount = 0;
+
+      const tag = defineCE(
+        class extends SyncUpdatableMixin(UpdatingElement) {
+          static get properties() {
+            return {
+              prop: String,
+            };
+          }
+
+          constructor() {
+            super();
+            console.log('dingen etceteraaaahhhh');
+            this.prop = 'a';
+            console.log('dingen etceterbeeeh');
+          }
+
+          _requestUpdate(name, oldValue) {
+            super._requestUpdate(name, oldValue);
+            if (name === 'prop') {
+              propChangedCount += 1;
+            }
+          }
+
+          updateSync(name, oldValue) {
+            super.updateSync(name, oldValue);
+            console.log('updateSync');
+            if (name === 'prop') {
+              propUpdateSyncCount += 1;
+            }
+          }
+        },
+      );
+      const el = fixtureSync(`<${tag}></${tag}>`);
+      el.prop = 'a';
+      // Getters setters work as expected, without running property effects
+      expect(propChangedCount).to.equal(2);
+      expect(propUpdateSyncCount).to.equal(0);
+
+      await el.updateComplete;
+      expect(propChangedCount).to.equal(2);
+      expect(propUpdateSyncCount).to.equal(1);
     });
   });
 
