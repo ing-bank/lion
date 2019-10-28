@@ -55,11 +55,13 @@ export const SyncUpdatableMixin = dedupeMixin(
 
         ns.initialized = true;
         // Empty queue...
-        ns.queue.forEach(({ name, oldValue }) => {
-          if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
-            this.updateSync(name, oldValue);
-          }
-        });
+        if (ns.queue) {
+          ns.queue.forEach(({ name, oldValue }) => {
+            if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
+              this.updateSync(name, oldValue);
+            }
+          });
+        }
       }
 
       _requestUpdate(name, oldValue) {

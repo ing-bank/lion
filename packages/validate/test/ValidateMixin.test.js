@@ -48,7 +48,7 @@ const withInputTagString = defineCE(
 );
 const withInputTag = unsafeStatic(withInputTagString);
 
-describe.only('ValidateMixin', () => {
+describe('ValidateMixin', () => {
   /**
    *   Terminology
    *
@@ -1017,7 +1017,7 @@ describe.only('ValidateMixin', () => {
           static get properties() {
             return {
               feedbackData: Array,
-            }
+            };
           }
 
           render() {
@@ -1050,7 +1050,7 @@ describe.only('ValidateMixin', () => {
 
     it('supports custom messages in Validator instance configuration object', async () => {
       const el = await fixture(html`
-        <${tag} .validators=${[new MinLength(3, { getMessage: () => 'custom via config'})]}
+        <${tag} .validators=${[new MinLength(3, { getMessage: () => 'custom via config' })]}
         >${lightDom}</${tag}>
       `);
 
@@ -1064,7 +1064,7 @@ describe.only('ValidateMixin', () => {
         <${tag}
           .validators=${[
             new MinLength(3),
-            new DefaultSuccess(null, { getMessage: () => 'This is a success message'}),
+            new DefaultSuccess(null, { getMessage: () => 'This is a success message' }),
           ]}
         >${lightDom}</${tag}>
       `);
@@ -1091,7 +1091,11 @@ describe.only('ValidateMixin', () => {
           >${lightDom}</${tag}>
         `);
         await el.feedbackComplete;
-        expect(constructorMessageSpy.args[0][0]).to.eql({ validatorParams: 4, modelValue: 'cat', formControl: el});
+        expect(constructorMessageSpy.args[0][0]).to.eql({
+          validatorParams: 4,
+          modelValue: 'cat',
+          formControl: el,
+        });
 
         const instanceMessageSpy = sinon.spy();
         const instanceValidator = new MinLength(4, { getMessage: instanceMessageSpy });
@@ -1102,8 +1106,12 @@ describe.only('ValidateMixin', () => {
           .modelValue=${'cat'}
         >${lightDom}</${tag}>
       `);
-      await el.feedbackComplete;
-        expect(instanceMessageSpy.args[0][0]).to.eql({ validatorParams: 4, modelValue: 'cat', formControl: el});
+        await el.feedbackComplete;
+        expect(instanceMessageSpy.args[0][0]).to.eql({
+          validatorParams: 4,
+          modelValue: 'cat',
+          formControl: el,
+        });
       });
 
       // TODO: add this in extending layer: don't have a fallback to label (maybe a generic term like 'value'?),
@@ -1333,8 +1341,8 @@ describe.only('ValidateMixin', () => {
                   type: Boolean,
                   attribute: 'has-y-visible',
                   reflect: true,
-                }
-              }
+                },
+              };
             }
           },
         );
@@ -1382,7 +1390,6 @@ describe.only('ValidateMixin', () => {
     describe('Changing feedback visibility conditions', () => {
       // TODO: add this test on LionField layer
       it('reconsiders feedback visibility when interaction states changed', async () => {
-
         const interactionTagString = defineCE(
           class extends ValidateMixin(LitElement) {
             static get properties() {
@@ -1415,7 +1422,7 @@ describe.only('ValidateMixin', () => {
 
         const feedbackSpy = sinon.spy(el, '_renderFeedback');
         let counter = 0;
-        await asyncForEach(['dirty', 'touched', 'prefilled', 'submitted'], async (state) => {
+        await asyncForEach(['dirty', 'touched', 'prefilled', 'submitted'], async state => {
           counter += 1;
           el[state] = false;
           await el.updateComplete;
@@ -1469,8 +1476,6 @@ describe.only('ValidateMixin', () => {
     });
 
     // TODO: see how we can combine this functionality with the way to
-    describe.skip('Changing feedback messages per form (control)', () => {
-
-    });
+    describe.skip('Changing feedback messages per form (control)', () => {});
   });
 });
