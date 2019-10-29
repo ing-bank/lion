@@ -1,16 +1,11 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import {
-  // equalsLengthValidator,
-  // minLengthValidator,
-  // maxLengthValidator,
-  // minMaxLengthValidator,
-  // isEmailValidator,
   Required, EqualsLength, MinDate, MinLength, MaxLength, MinMaxLength, IsEmail,
   Validator,
   loadDefaultFeedbackMessages,
 } from '@lion/validate';
 // import { LocalizeMixin } from '@lion/localize';
-// import '@lion/input-date/lion-input-date.js';
+import '@lion/input-date/lion-input-date.js';
 // import { aTimeout } from '@open-wc/testing';
 import { LionInput } from '../index.js';
 import '@lion/input/lion-input.js';
