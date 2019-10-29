@@ -230,18 +230,9 @@ export class LionField extends FormControlMixin(
     };
   }
 
-  // TODO: keep label and name fallback until we have a proper solution
-  // (for instance, a default of 'value')
-  async getFieldName(validatorParams) {
-    const label =
-      this.label || (this.$$slot && this.$$slot('label') && this.$$slot('label').textContent);
-
-    if (validatorParams && validatorParams.fieldName) {
-      return validatorParams.fieldName;
-    }
-    if (label) {
-      return label;
-    }
-    return this.name;
+  get fieldName() {
+    const label =  this.label ||
+      this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent;
+    return label || this.name;
   }
 }

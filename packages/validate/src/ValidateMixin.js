@@ -8,6 +8,9 @@ import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
 
 /**
+ * @desc Handles all validation, based on modelValue changes. It has no knowledge about dom and
+ * UI. All error visibility, dom interaction and accessibility are handled in FeedbackMixin.
+ *
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
  * @event error-changed fires when the Validator(s) leading to the error state, change
  */
@@ -53,21 +56,6 @@ export const ValidateMixin = dedupeMixin(
           },
 
           /**
-           * @desc Derived from the result of _prioritizeAndFilterFeedback
-           * @type {boolean}
-           * @example
-           * FormControl.hasError; // => true
-           * FormControl.hasErrorVisible; // => false
-           * // Interaction state changes (for instance: user blurs the field)
-           * FormControl.hasErrorVisible; // => true
-           */
-          hasErrorVisible: {
-            type: Boolean,
-            attribute: 'has-error-visible',
-            reflect: true,
-          },
-
-          /**
            * @desc flag that indicates whether async validation is pending
            */
           isPending: {
@@ -96,10 +84,6 @@ export const ValidateMixin = dedupeMixin(
       static get validationTypes() {
         return ['error'];
       }
-
-      /**
-       * @abstract get _inputNode()
-       */
 
       get _allValidators() {
         return [...this.validators, ...this.defaultValidators];

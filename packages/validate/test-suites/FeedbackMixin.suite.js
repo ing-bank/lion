@@ -24,6 +24,10 @@ export function runFeedbackMixinSuite(customConfig) {
   const lightDom = cfg.lightDom || '';
 
   describe('Validity Feedback', () => {
+    afterEach(() => {
+      sinon.restore();
+    });
+
     // eslint-disable-next-line no-shadow
     const tagString = defineCE(
       class extends FeedbackMixin(ValidateMixin(LitElement)) {
@@ -103,11 +107,11 @@ export function runFeedbackMixinSuite(customConfig) {
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `);
+      await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('Message for AlwaysInvalid');
-
       el._prioritizeAndFilterFeedback = () => []; // filter out all errors
       await el.validate();
-
+      await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData).to.be.undefined;
     });
 
@@ -118,6 +122,7 @@ export function runFeedbackMixinSuite(customConfig) {
           .validators=${[new AlwaysInvalid(), new MinLength(4)]}
         >${lightDom}</${tag}>
       `);
+      await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('Message for AlwaysInvalid');
     });
 
@@ -270,7 +275,12 @@ export function runFeedbackMixinSuite(customConfig) {
           >${lightDom}</${tag}>
         `);
         await el.feedbackComplete;
-        expect(constructorMessageSpy.args[0][0]).to.eql({ validatorParams: 4, modelValue: 'cat', formControl: el});
+        expect(constructorMessageSpy.args[0][0]).to.eql({
+          validatorParams: 4,
+          modelValue: 'cat',
+          formControl: el,
+          fieldName: undefined,
+        });
 
         const instanceMessageSpy = sinon.spy();
         const instanceValidator = new MinLength(4, { getMessage: instanceMessageSpy });
@@ -282,7 +292,32 @@ export function runFeedbackMixinSuite(customConfig) {
         >${lightDom}</${tag}>
       `);
       await el.feedbackComplete;
-        expect(instanceMessageSpy.args[0][0]).to.eql({ validatorParams: 4, modelValue: 'cat', formControl: el});
+        expect(instanceMessageSpy.args[0][0]).to.eql({
+          validatorParams: 4,
+          modelValue: 'cat',
+          formControl: el,
+          fieldName: undefined,
+        });
+      });
+
+    it('".getMessage()" gets a .fieldName', async () => {
+        const constructorValidator = new MinLength(4, { type: 'x' }); // type to prevent duplicates
+        const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
+
+        const el = await fixture(html`
+          <${tag}
+            .validators=${[new MinLength(4, { type: 'x' })]}
+            .modelValue=${'cat'}
+            .fieldName=${new Promise((resolve) => resolve('myField'))}
+          >${lightDom}</${tag}>
+        `);
+        await el.feedbackComplete;
+          expect(spy.args[0][0]).to.eql({
+            validatorParams: 4,
+            modelValue: 'cat',
+            formControl: el,
+            fieldName: 'myField',
+          });
       });
     });
   });

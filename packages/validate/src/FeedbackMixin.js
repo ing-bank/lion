@@ -4,10 +4,13 @@ import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
 import { pascalCase } from './utils/pascal-case.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
-
-// TODO: move all feedback interaction to a different layer (?)
 import '../lion-validation-feedback.js';
 
+/*
+ * @desc Handles all UI/dom integration with regard to validation reporting,
+ * feedback visibility and accessibility.
+ * Should be used on top of ValidateMixin.
+ */
 export const FeedbackMixin = dedupeMixin(superclass =>
   // eslint-disable-next-line no-unused-vars, no-shadow
   class FeedbackMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
@@ -32,6 +35,13 @@ export const FeedbackMixin = dedupeMixin(superclass =>
          * By default, just like the platform, only one message (with highest prio) is visible.
          */
         _visibleMessagesAmount: Number,
+
+        /**
+         * @type {Promise<string>|string} will be passed as an argument to the `.getMessage`
+         * method of a Validator. When filled in, this field namme can be used to enhance
+         * error messages.
+         */
+        fieldName: String,
       };
     }
 
@@ -68,6 +78,10 @@ export const FeedbackMixin = dedupeMixin(superclass =>
     get _feedbackNode() {
       return this.querySelector('[slot=feedback]');
     }
+
+    /**
+     * @abstract get _inputNode()
+     */
 
     constructor() {
       super();
@@ -118,13 +132,16 @@ export const FeedbackMixin = dedupeMixin(superclass =>
      * @param {Validator[]} validators list of objects having a .getMessage method
      * @return {FeedbackMessage[]}
      */
-    async __getMessageMap(validators) {
+    async __getFeedbackMessages(validators) {
+      const fieldName = await this.fieldName;
+
       return Promise.all(
         validators.map(async validator => {
           const message = await validator._getMessage({
             validatorParams: validator.param,
             modelValue: this.modelValue,
             formControl: this,
+            fieldName,
           });
           return { message, type: validator.type, validator };
         }),
@@ -156,20 +173,10 @@ export const FeedbackMixin = dedupeMixin(superclass =>
         validationResult: this.__validationResult,
       });
 
-      // Will be used for synchronization with "._inputNode"
-      this._validationMessage = '';
+      const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
 
-      const messageMap = await this.__getMessageMap(this.__prioritizedResult);
-
-      if (messageMap.length) {
-        this._validationMessage = messageMap[0].message;
-        // Set type, message, validator
-        this._feedbackNode.feedbackData = messageMap;
-      } else {
-        this._feedbackNode.feedbackData = undefined;
-      }
+      this._feedbackNode.feedbackData = messageMap.length ? messageMap : undefined;
       this.__storeTypeVisibilityOnInstance(this.__prioritizedResult);
-
       feedbackCompleteResolve();
     }
 
