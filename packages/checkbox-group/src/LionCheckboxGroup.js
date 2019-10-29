@@ -1,6 +1,15 @@
 import { LionFieldset } from '@lion/fieldset';
 
 export class LionCheckboxGroup extends LionFieldset {
+  get checkedValues() {
+    const el = this._getCheckedCheckboxElements();
+    return el ? el.map(x => x.modelValue.value) : undefined;
+  }
+
+  set checkedValues(valueArray) {
+    this._setCheckedCheckboxElements(valueArray, (el, val) => val.includes(el.modelValue.value));
+  }
+
   constructor() {
     super();
     this._checkboxGroupTouched = false;
@@ -16,6 +25,7 @@ export class LionCheckboxGroup extends LionFieldset {
 
     document.addEventListener('click', this._checkForOutsideClick);
     this.addEventListener('click', this._checkForChildrenClick);
+    this.addEventListener('model-value-changed', this._checkCheckboxElements);
 
     // checks for any of the children to be prefilled
     this._checkboxGroupPrefilled = super.prefilled;
@@ -26,6 +36,7 @@ export class LionCheckboxGroup extends LionFieldset {
     window.removeEventListener('focusin', this._setTouchedAndPrefilled);
     document.removeEventListener('click', this._checkForOutsideClick);
     this.removeEventListener('click', this._checkForChildrenClick);
+    this.removeEventListener('model-value-changed', this._checkCheckboxElements);
   }
 
   get touched() {
@@ -56,6 +67,7 @@ export class LionCheckboxGroup extends LionFieldset {
   // Whenever a user clicks a checkbox, error messages should become visible
   _checkForChildrenClick(event) {
     const childClicked = this._childArray.some(c => c === event.target || c.contains(event.target));
+
     if (childClicked) {
       this._checkboxGroupTouched = true;
     }
@@ -84,5 +96,32 @@ export class LionCheckboxGroup extends LionFieldset {
       };
     }
     return { required: false };
+  }
+
+  _checkCheckboxElements() {
+    this._triggerChecked();
+  }
+
+  _triggerChecked() {
+    const values = this.checkedValues;
+    if (values && values !== this.__previousCheckedValues) {
+      this.dispatchEvent(
+        new CustomEvent('checked-value-changed', { bubbles: true, composed: true }),
+      );
+      this.__previousCheckedValues = values;
+    }
+  }
+
+  _getCheckedCheckboxElements() {
+    const filtered = this.formElementsArray.filter(el => el.checked === true);
+    return filtered.length > 0 ? filtered : undefined;
+  }
+
+  _setCheckedCheckboxElements(value, check) {
+    for (let i = 0; i < this.formElementsArray.length; i += 1) {
+      if (check(this.formElementsArray[i], value)) {
+        this.formElementsArray[i].checked = true;
+      }
+    }
   }
 }
