@@ -1,5 +1,4 @@
-import { SlotMixin, html } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { SlotMixin, html, LitElement } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
@@ -15,7 +14,7 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormRegistrarMixin(
-  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LionLitElement))))),
+  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
 ) {
   static get properties() {
     return {
@@ -24,9 +23,31 @@ export class LionFieldset extends FormRegistrarMixin(
       },
       submitted: {
         type: Boolean,
-        nonEmptyToClass: 'state-submitted',
+        reflect: true,
+      },
+      focused: {
+        type: Boolean,
+        reflect: true,
+      },
+      dirty: {
+        type: Boolean,
+        reflect: true,
+      },
+      touched: {
+        type: Boolean,
+        reflect: true,
       },
     };
+  }
+
+  get touched() {
+    return this.__touched;
+  }
+
+  set touched(value) {
+    const oldVal = this.__touched;
+    this.__touched = value;
+    this.requestUpdate('touched', oldVal);
   }
 
   get inputElement() {
@@ -57,20 +78,8 @@ export class LionFieldset extends FormRegistrarMixin(
     this._setValueMapForAllFormElements('formattedValue', values);
   }
 
-  get touched() {
-    return this._anyFormElementHas('touched');
-  }
-
-  get dirty() {
-    return this._anyFormElementHas('dirty');
-  }
-
   get prefilled() {
-    return this._anyFormElementHas('prefilled');
-  }
-
-  get focused() {
-    return this._anyFormElementHas('focused');
+    return this._everyFormElementHas('prefilled');
   }
 
   get formElementsArray() {
@@ -84,28 +93,46 @@ export class LionFieldset extends FormRegistrarMixin(
     super();
     this.disabled = false;
     this.submitted = false;
+    this.dirty = false;
+    this.touched = false;
+    this.focused = false;
     this.formElements = {};
     this.__addedSubValidators = false;
     this.__createTypeAbsenceValidators();
+
+    this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
   }
 
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
+
+    this.addEventListener('focusin', this._updateTouchedClass);
+    this.addEventListener('focusout', this._onFocusOut);
+    this.addEventListener('focusin', this._syncFocused);
+
     this.addEventListener('validation-done', this.__validate);
-    this.addEventListener('focused-changed', this._updateFocusedClass);
-    this.addEventListener('touched-changed', this._updateTouchedClass);
-    this.addEventListener('dirty-changed', this._updateDirtyClass);
+    this.addEventListener('dirty-changed', this._syncDirty);
+
     this._setRole();
+    document.addEventListener('click', this._checkForOutsideClick);
+  }
+
+  _checkForOutsideClick(event) {
+    const outsideGroupClicked = !this.contains(event.target);
+    if (outsideGroupClicked) {
+      this.touched = true;
+    }
   }
 
   disconnectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.disconnectedCallback();
     this.removeEventListener('validation-done', this.__validate);
-    this.removeEventListener('focused-changed', this._updateFocusedClass);
-    this.removeEventListener('touched-changed', this._updateTouchedClass);
-    this.removeEventListener('dirty-changed', this._updateDirtyClass);
+    this.removeEventListener('touched-changed', this._updateTouched);
+    this.removeEventListener('dirty-changed', this._syncDirty);
+
+    document.removeEventListener('click', this._checkForOutsideClick);
   }
 
   updated(changedProps) {
@@ -114,11 +141,27 @@ export class LionFieldset extends FormRegistrarMixin(
     if (changedProps.has('disabled')) {
       if (this.disabled) {
         this.__requestChildrenToBeDisabled();
+        /** @deprecated use disabled attribute instead */
         this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
       } else {
         this.__retractRequestChildrenToBeDisabled();
+        /** @deprecated use disabled attribute instead */
         this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
       }
+    }
+    if (changedProps.has('touched')) {
+      /** @deprecated use touched attribute instead */
+      this.classList[this.touched ? 'add' : 'remove']('state-touched');
+    }
+
+    if (changedProps.has('dirty')) {
+      /** @deprecated use dirty attribute instead */
+      this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
+    }
+
+    if (changedProps.has('focused')) {
+      /** @deprecated use touched attribute instead */
+      this.classList[this.focused ? 'add' : 'remove']('state-focused');
     }
   }
 
@@ -190,6 +233,8 @@ export class LionFieldset extends FormRegistrarMixin(
   resetInteractionState() {
     // TODO: add submitted prop to InteractionStateMixin
     this.submitted = false;
+    this.touched = false;
+    this.dirty = false;
     this.formElementsArray.forEach(formElement => {
       if (typeof formElement.resetInteractionState === 'function') {
         formElement.resetInteractionState();
@@ -251,6 +296,15 @@ export class LionFieldset extends FormRegistrarMixin(
     });
   }
 
+  _everyFormElementHas(property) {
+    return Object.keys(this.formElements).every(name => {
+      if (Array.isArray(this.formElements[name])) {
+        return this.formElements[name].every(el => !!el[property]);
+      }
+      return !!this.formElements[name][property];
+    });
+  }
+
   /**
    * Gets triggered by event 'validation-done' which enabled us to handle 2 different situations
    *   - react on modelValue change, which says something about the validity as a whole
@@ -263,16 +317,20 @@ export class LionFieldset extends FormRegistrarMixin(
     }
   }
 
-  _updateFocusedClass() {
-    this.classList[this.touched ? 'add' : 'remove']('state-focused');
+  _syncFocused() {
+    this.focused = this._anyFormElementHas('focused');
   }
 
-  _updateTouchedClass() {
-    this.classList[this.touched ? 'add' : 'remove']('state-touched');
+  _onFocusOut(ev) {
+    const lastEl = this.formElementsArray[this.formElementsArray.length - 1];
+    if (ev.target === lastEl) {
+      this.touched = true;
+    }
+    this.focused = false;
   }
 
-  _updateDirtyClass() {
-    this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
+  _syncDirty() {
+    this.dirty = this._anyFormElementHas('dirty');
   }
 
   _setRole(role) {
