@@ -1,6 +1,10 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
 import '../lion-fieldset.js';
+import { localize } from '@lion/localize';
+import { minLengthValidator } from '@lion/validate';
+
+import '../../form-system/stories/helper-wc/h-output.js';
 
 storiesOf('Forms|Fieldset', module)
   .add(
@@ -79,4 +83,75 @@ storiesOf('Forms|Fieldset', module)
         </button>
       </lion-fieldset>
     `,
-  );
+  )
+  .add('Validation 2 inputs', () => {
+    const input1IsTen = value => ({
+      input1IsTen: value.input1 === 'cats' && value.input2 === 'dogs',
+    });
+    localize.locale = 'en-GB';
+    try {
+      localize.addData('en-GB', 'lion-validate+input1IsTen', {
+        error: {
+          input1IsTen: 'Input 1 needs to be "cats" and Input 2 needs to be "dogs"',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    return html`
+      <lion-fieldset .errorValidators=${[[input1IsTen]]}>
+        <lion-input
+          label="An all time YouTube favorite"
+          name="input1"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+        <lion-input
+          label="Another all time YouTube favorite"
+          name="input2"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+      </lion-fieldset>
+    `;
+  })
+  .add('Validation', () => {
+    function isFakeValidator() {
+      return false;
+    }
+
+    const fakeValidator = (...factoryParams) => [
+      (...params) => ({ validator: isFakeValidator(...params) }),
+      ...factoryParams,
+    ];
+
+    try {
+      localize.addData('en-GB', 'lion-validate+validator', {
+        error: {
+          validator: 'Fake error message',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    return html`
+      <lion-fieldset id="someId" .errorValidators=${[fakeValidator()]}>
+        <lion-input name="input1" label="Label"></lion-input>
+        <button
+          @click=${() => {
+            document.getElementById('someId').serializeGroup();
+          }}
+        >
+          Submit
+        </button>
+      </lion-fieldset>
+
+      <br />
+      <br />
+      <button>
+        Tab-able
+      </button>
+    `;
+  });

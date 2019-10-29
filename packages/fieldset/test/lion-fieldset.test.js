@@ -1,12 +1,4 @@
-import {
-  expect,
-  fixture,
-  html,
-  unsafeStatic,
-  triggerFocusFor,
-  triggerBlurFor,
-  nextFrame,
-} from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic, triggerFocusFor, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import '@lion/input/lion-input.js';
@@ -23,8 +15,6 @@ const inputSlots = html`
   <${childTag} name="hobbies[]"></${childTag}>
   <${childTag} name="hobbies[]"></${childTag}>
 `;
-const nonPrefilledModelValue = '';
-const prefilledModelValue = 'prefill';
 
 beforeEach(() => {
   localizeTearDown();
@@ -342,66 +332,151 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.dirty).to.equal(true);
     });
 
-    it('sets touched when field left after focus', async () => {
+    it('sets touched when last field in fieldset left after focus', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-      await nextFrame();
-      await triggerFocusFor(fieldset.formElements['gender[]'][0].inputElement);
-      await triggerBlurFor(fieldset.formElements['gender[]'][0].inputElement);
-      expect(fieldset.touched).to.equal(true);
-    });
-
-    it('sets a class "state-(touched|dirty)"', async () => {
-      const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-      await nextFrame();
-      fieldset.formElements.color.touched = true;
-      await fieldset.updateComplete;
-      expect(fieldset.classList.contains('state-touched')).to.equal(
-        true,
-        'has class "state-touched"',
+      await triggerFocusFor(fieldset.formElements['hobbies[]'][0].inputElement);
+      await triggerFocusFor(
+        fieldset.formElements['hobbies[]'][fieldset.formElements['gender[]'].length - 1]
+          .inputElement,
       );
+      const el = await fixture(html`
+        <button></button>
+      `);
+      el.focus();
 
-      fieldset.formElements.color.dirty = true;
-      await fieldset.updateComplete;
-      expect(fieldset.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+      expect(fieldset.touched).to.be.true;
     });
 
-    it('sets prefilled when field left and value non-empty', async () => {
-      const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-      await nextFrame();
-      fieldset.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
-      fieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'football' };
-      fieldset.formElements['gender[]'][0].modelValue = { checked: false, value: 'male' };
-      fieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
+    it('sets attributes [touched][dirty]', async () => {
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.touched = true;
+      await el.updateComplete;
+      expect(el).to.have.attribute('touched');
 
-      fieldset.formElements.color.modelValue = nonPrefilledModelValue;
-      await triggerFocusFor(fieldset.formElements.color.inputElement);
-      fieldset.formElements.color.modelValue = prefilledModelValue;
-      await triggerBlurFor(fieldset.formElements.color.inputElement);
-      expect(fieldset.prefilled).to.equal(true, 'sets prefilled when left non empty');
-
-      await triggerFocusFor(fieldset.formElements.color.inputElement);
-      fieldset.formElements.color.modelValue = nonPrefilledModelValue;
-      await triggerBlurFor(fieldset.formElements.color.inputElement);
-      expect(fieldset.prefilled).to.equal(false, 'unsets prefilled when left empty');
+      el.dirty = true;
+      await el.updateComplete;
+      expect(el).to.have.attribute('dirty');
     });
 
-    it('sets prefilled once instantiated', async () => {
-      // no prefilled when nothing has value
-      const fieldsetNotPrefilled = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-      expect(fieldsetNotPrefilled.prefilled).to.equal(false, 'not prefilled on init');
+    it('[deprecated] sets a class "state-(touched|dirty)"', async () => {
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.touched = true;
+      await el.updateComplete;
+      expect(el.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
 
-      // prefilled when at least one child has value
-      const fieldsetPrefilled = await fixture(html`
+      el.dirty = true;
+      await el.updateComplete;
+      expect(el.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
+    });
+
+    it('becomes prefilled if all form elements are prefilled', async () => {
+      const el = await fixture(html`
         <${tag}>
-          <${childTag} name="gender[]" .modelValue=${prefilledModelValue}></${childTag}>
-          <${childTag} name="gender[]"></${childTag}>
-          <${childTag} name="color"></${childTag}>
-          <${childTag} name="hobbies[]"></${childTag}>
-          <${childTag} name="hobbies[]"></${childTag}>
+          <${childTag} name="input1" prefilled></${childTag}>
+          <${childTag} name="input2"></${childTag}>
         </${tag}>
       `);
       await nextFrame();
-      expect(fieldsetPrefilled.prefilled).to.equal(true, 'prefilled on init');
+      expect(el.prefilled).to.be.false;
+
+      const el2 = await fixture(html`
+        <${tag}>
+          <${childTag} name="input1" prefilled></${childTag}>
+          <${childTag} name="input2" prefilled></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      expect(el2.prefilled).to.be.true;
+    });
+
+    it(`becomes "touched" once the last element of a group becomes blurred by keyboard
+      interaction (e.g. tabbing through the checkbox-group)`, async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <label slot="label">My group</label>
+          <${childTag} name="myGroup[]" label="Option 1" value="1"></${childTag}>
+          <${childTag} name="myGroup[]" label="Option 2" value="2"></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+
+      const button = await fixture(`<button>Blur</button>`);
+
+      expect(el.touched).to.equal(false, 'initially, touched state is false');
+      el.children[2].focus();
+      expect(el.touched).to.equal(false, 'focus is on second checkbox');
+      button.focus();
+      expect(el.touched).to.equal(
+        true,
+        `focus is on element behind second checkbox (group has blurred)`,
+      );
+    });
+
+    it(`becomes "touched" once the group as a whole becomes blurred via mouse interaction after
+      keyboard interaction (e.g. focus is moved inside the group and user clicks somewhere outside
+      the group)`, async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <${childTag} name="input1"></${childTag}>
+          <${childTag} name="input2"></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      const outside = await fixture(html`
+        <button>outside</button>
+      `);
+
+      el.children[1].focus();
+      el.children[2].focus();
+      expect(el.touched).to.be.false;
+
+      outside.click(); // blur the group via a click
+      expect(el.touched).to.be.true;
+    });
+
+    it('potentially shows fieldset error message on interaction change', async () => {
+      const input1IsTen = value => ({ input1IsTen: value.input1 === 10 });
+      const isNumber = value => ({ isNumber: typeof value === 'number' });
+      const outSideButton = await fixture(html`
+        <button>outside</button>
+      `);
+      const el = await fixture(html`
+        <${tag} .errorValidators=${[[input1IsTen]]}>
+          <${childTag} name="input1" .errorValidators=${[[isNumber]]}></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      const input1 = el.querySelector(childTagString);
+      input1.modelValue = 2;
+      input1.focus();
+      outSideButton.focus();
+
+      await el.updateComplete;
+      expect(el.error.input1IsTen).to.be.true;
+      expect(el.errorShow).to.be.true;
+    });
+
+    it('show error if tabbing "out" of last ', async () => {
+      const input1IsTen = value => ({ input1IsTen: value.input1 === 10 });
+      const isNumber = value => ({ isNumber: typeof value === 'number' });
+      const outSideButton = await fixture(html`
+        <button>outside</button>
+      `);
+      const el = await fixture(html`
+        <${tag} .errorValidators=${[[input1IsTen]]}>
+          <${childTag} name="input1" .errorValidators=${[[isNumber]]}></${childTag}>
+          <${childTag} name="input2" .errorValidators=${[[isNumber]]}></${childTag}>
+        </${tag}>
+      `);
+      const inputs = el.querySelectorAll(childTagString);
+      inputs[1].modelValue = 2; // make it dirty
+      inputs[1].focus();
+
+      outSideButton.focus();
+      await nextFrame();
+
+      expect(el.error.input1IsTen).to.be.true;
+      expect(el.errorShow).to.be.true;
     });
   });
 
@@ -609,32 +684,28 @@ describe('<lion-fieldset>', () => {
     });
 
     it('clears interaction state', async () => {
-      const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
+      const el = await fixture(html`<${tag} touched dirty>${inputSlots}</${tag}>`);
       await nextFrame();
       // Safety check initially
-      fieldset._setValueForAllFormElements('dirty', true);
-      fieldset._setValueForAllFormElements('touched', true);
-      fieldset._setValueForAllFormElements('prefilled', true);
-      expect(fieldset.dirty).to.equal(true, '"dirty" initially');
-      expect(fieldset.touched).to.equal(true, '"touched" initially');
-      expect(fieldset.prefilled).to.equal(true, '"prefilled" initially');
+      el._setValueForAllFormElements('prefilled', true);
+      expect(el.dirty).to.equal(true, '"dirty" initially');
+      expect(el.touched).to.equal(true, '"touched" initially');
+      expect(el.prefilled).to.equal(true, '"prefilled" initially');
 
       // Reset all children states, with prefilled false
-      fieldset._setValueForAllFormElements('modelValue', {});
-      fieldset.resetInteractionState();
-      expect(fieldset.dirty).to.equal(false, 'not "dirty" after reset');
-      expect(fieldset.touched).to.equal(false, 'not "touched" after reset');
-      expect(fieldset.prefilled).to.equal(false, 'not "prefilled" after reset');
+      el._setValueForAllFormElements('modelValue', {});
+      el.resetInteractionState();
+      expect(el.dirty).to.equal(false, 'not "dirty" after reset');
+      expect(el.touched).to.equal(false, 'not "touched" after reset');
+      expect(el.prefilled).to.equal(false, 'not "prefilled" after reset');
 
       // Reset all children states with prefilled true
-      fieldset._setValueForAllFormElements('dirty', true);
-      fieldset._setValueForAllFormElements('touched', true);
-      fieldset._setValueForAllFormElements('modelValue', { checked: true }); // not prefilled
-      fieldset.resetInteractionState();
-      expect(fieldset.dirty).to.equal(false, 'not "dirty" after 2nd reset');
-      expect(fieldset.touched).to.equal(false, 'not "touched" after 2nd reset');
+      el._setValueForAllFormElements('modelValue', { checked: true }); // not prefilled
+      el.resetInteractionState();
+      expect(el.dirty).to.equal(false, 'not "dirty" after 2nd reset');
+      expect(el.touched).to.equal(false, 'not "touched" after 2nd reset');
       // prefilled state is dependant on value
-      expect(fieldset.prefilled).to.equal(true, '"prefilled" after 2nd reset');
+      expect(el.prefilled).to.equal(true, '"prefilled" after 2nd reset');
     });
 
     it('clears submitted state', async () => {
