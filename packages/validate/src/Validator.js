@@ -1,9 +1,10 @@
-import './utils/event-target-polyfill.js';
+import { fakeExtendsEventTarget } from './utils/fake-extends-event-target.js';
 
 // TODO: revert to use "old" way of EventTarget and check in IE
-export class Validator extends EventTarget {
+export class Validator {
   constructor(param, config) {
-    super();
+    fakeExtendsEventTarget(this);
+
     this.name = '';
     this.async = false;
     this.__param = param;

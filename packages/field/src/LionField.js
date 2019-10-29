@@ -2,7 +2,7 @@ import { SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { ValidateMixin } from '@lion/validate';
+import { ValidateMixin, FeedbackMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
 import { FormatMixin } from './FormatMixin.js';
@@ -30,12 +30,12 @@ import { FocusMixin } from './FocusMixin.js';
  *   <input type="text" slot="input">
  * </lion-field>
  *
- * @customElement
+ * @customElement lion-field
  */
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
     FocusMixin(
-      FormatMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement)))))),
+      FormatMixin(FeedbackMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement))))))),
     ),
   ),
 ) {
@@ -228,5 +228,20 @@ export class LionField extends FormControlMixin(
         (typeof modelValue === 'string' && modelValue !== '') ||
         (typeof modelValue !== 'string' && typeof modelValue !== 'undefined'), // TODO: && modelValue !== null ?
     };
+  }
+
+  // TODO: keep label and name fallback until we have a proper solution
+  // (for instance, a default of 'value')
+  async getFieldName(validatorParams) {
+    const label =
+      this.label || (this.$$slot && this.$$slot('label') && this.$$slot('label').textContent);
+
+    if (validatorParams && validatorParams.fieldName) {
+      return validatorParams.fieldName;
+    }
+    if (label) {
+      return label;
+    }
+    return this.name;
   }
 }

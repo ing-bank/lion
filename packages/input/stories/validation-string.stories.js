@@ -5,7 +5,7 @@ import {
   // maxLengthValidator,
   // minMaxLengthValidator,
   // isEmailValidator,
-  Required, EqualsLength, MinDate, MaxLength,
+  Required, EqualsLength, MinDate, MinLength, MaxLength, MinMaxLength, IsEmail,
   Validator,
   loadDefaultFeedbackMessages,
 } from '@lion/validate';
@@ -14,193 +14,72 @@ import {
 // import { aTimeout } from '@open-wc/testing';
 import { LionInput } from '../index.js';
 import '@lion/input/lion-input.js';
+import { DefaultSuccess } from '@lion/validate/src/resultValidators/DefaultSuccess';
 
 loadDefaultFeedbackMessages();
 
 storiesOf('Forms|Input String Validation', module)
   // .add(
-  //   'equalsLength',
-  //   () => html`
-  //     <lion-input
-  //       .errorValidators=${[equalsLengthValidator(7)]}
-  //       .modelValue=${'not exactly'}
-  //       label="equalsLengthValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[equalsLengthValidator(7)]}
-  //       .modelValue=${'exactly'}
-  //       label="equalsLengthValidator"
-  //     ></lion-input>
-  //   `,
-  // )
-  // .add(
-  //   'minLength',
-  //   () => html`
-  //     <lion-input
-  //       .errorValidators=${[minLengthValidator(10)]}
-  //       .modelValue=${'too short'}
-  //       label="minLengthValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[minLengthValidator(10)]}
-  //       .modelValue=${'that should be enough'}
-  //       label="minLengthValidator"
-  //     ></lion-input>
-  //   `,
-  // )
-  // .add(
-  //   'maxLength',
-  //   () => html`
-  //     <lion-input
-  //       .errorValidators=${[maxLengthValidator(13)]}
-  //       .modelValue=${'too long it seems'}
-  //       label="maxLengthValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[maxLengthValidator(13)]}
-  //       .modelValue=${'just perfect'}
-  //       label="maxLengthValidator"
-  //     ></lion-input>
-  //   `,
-  // )
-  // .add(
-  //   'minMaxLength',
-  //   () => html`
-  //     <lion-input
-  //       .errorValidators=${[minMaxLengthValidator({ min: 10, max: 13 })]}
-  //       .modelValue=${'too short'}
-  //       label="minMaxLengthValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[minMaxLengthValidator({ min: 10, max: 13 })]}
-  //       .modelValue=${'too long it seems'}
-  //       label="minMaxLengthValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[minMaxLengthValidator({ min: 10, max: 13 })]}
-  //       .modelValue=${'just perfect'}
-  //       label="minMaxLengthValidator"
-  //     ></lion-input>
-  //   `,
-  // )
-  // .add(
   //   'isEmail',
   //   () => html`
   //     <lion-input
-  //       .errorValidators=${[isEmailValidator()]}
-  //       .modelValue=${'foo'}
-  //       label="isEmailValidator"
-  //     ></lion-input>
-  //     <lion-input
-  //       .errorValidators=${[isEmailValidator()]}
+  //       .validators=${[IsEmail]}
   //       .modelValue=${'foo@bar.com'}
-  //       label="isEmailValidator"
+  //       label="IsEmailValidator"
   //     ></lion-input>
   //   `,
   // )
-  // .add('error/warning/info/success states', () => {
-  //   class InputValidationExample extends LocalizeMixin(LionInput) {
-  //     static get localizeNamespaces() {
-  //       return [
-  //         { 'input-validation-example': locale => import(`./translations/${locale}.js`) },
-  //         ...super.localizeNamespaces,
-  //       ];
-  //     }
-  //   }
-  //   if (!customElements.get('input-validation-example')) {
-  //     customElements.define('input-validation-example', InputValidationExample);
-  //   }
-
-  //   const notEqualsString = (value, stringValue) => stringValue.toString() !== value;
-  //   const notEqualsStringValidator = (...factoryParams) => [
-  //     (...params) => ({ notEqualsString: notEqualsString(...params) }),
-  //     factoryParams,
-  //   ];
-  //   const equalsStringFixedValidator = () => [() => ({ notEqualsStringFixed: false })];
-  //   return html`
-  //     <input-validation-example
-  //       .errorValidators=${[notEqualsStringValidator('error')]}
-  //       .successValidators=${[equalsStringFixedValidator()]}
-  //       .modelValue=${'error'}
-  //       label="Error"
-  //       help-text="Clearing the error (add a character) will show a success message"
-  //     ></input-validation-example>
-  //     <input-validation-example
-  //       .warningValidators=${[notEqualsStringValidator('warning')]}
-  //       .modelValue=${'warning'}
-  //       label="Warning"
-  //     ></input-validation-example>
-  //     <input-validation-example
-  //       .infoValidators=${[notEqualsStringValidator('info')]}
-  //       .modelValue=${'info'}
-  //       label="Info"
-  //     ></input-validation-example>
-  //   `;
-  // })
-  // .add('error/warning/info/success states', () => {
-  //   class InputValidationExample extends LocalizeMixin(LionInput) {
-  //     static get localizeNamespaces() {
-  //       return [
-  //         { 'input-validation-example': locale => import(`./translations/${locale}.js`) },
-  //         ...super.localizeNamespaces,
-  //       ];
-  //     }
-  //   }
-  //   if (!customElements.get('input-validation-example')) {
-  //     customElements.define('input-validation-example', InputValidationExample);
-  //   }
-
-  //   const notEqualsString = (value, stringValue) => stringValue.toString() !== value;
-  //   const notEqualsStringValidator = (...factoryParams) => [
-  //     (...params) => ({ notEqualsString: notEqualsString(...params) }),
-  //     factoryParams,
-  //   ];
-  //   const equalsStringFixedValidator = () => [() => ({ notEqualsStringFixed: false })];
-  //   return html`
-  //     <input-validation-example
-  //       .errorValidators=${[notEqualsStringValidator('error')]}
-  //       .successValidators=${[equalsStringFixedValidator()]}
-  //       .modelValue=${'error'}
-  //       label="Error"
-  //       help-text="Clearing the error (add a character) will show a success message"
-  //     ></input-validation-example>
-  //     <input-validation-example
-  //       .warningValidators=${[notEqualsStringValidator('warning')]}
-  //       .modelValue=${'warning'}
-  //       label="Warning"
-  //     ></input-validation-example>
-  //     <input-validation-example
-  //       .infoValidators=${[notEqualsStringValidator('info')]}
-  //       .modelValue=${'info'}
-  //       label="Info"
-  //     ></input-validation-example>
-  //   `;
-  // })
-  .add('New(!!):', () => html`
-      <style>
-        lion-input[success-state] input {
-          outline: 2px solid green;
-        }
-        lion-input[error-state] input {
-          outline: 2px solid red;
-        }
-        lion-input[warning-state] input {
-          outline: 2px solid orange;
-        }
-      </style>
+  .add('String Validators', () => html`
       <lion-input
         .validators="${[new EqualsLength(7)]}"
         .modelValue="${'not exactly'}"
         label="EqualsLength"
       ></lion-input>
       <lion-input
-        .validators="${[new Required(), new MaxLength(7, { type: 'warning' })]}"
+        .validators="${[new MaxLength(7)]}"
         .modelValue="${'exactly'}"
         label="MaxLength"
       ></lion-input>
+
+      <lion-input
+        .validators=${[new MinLength(10)]}
+        .modelValue=${'too short'}
+        label="MinLength"
+      ></lion-input>
+      <lion-input
+        .validators=${[new MinMaxLength(10, 20)]}
+        .modelValue=${'that should be enough'}
+        label="MinMaxLength"
+      ></lion-input>
     `,
   )
-  .add('New(!!): Custom Validator', () => {
+  // TODO: add Number validators
+  // TODO: fix input-date and add Date Validators
+  .add('Types', () => html`
+    <style>
+      lion-input[has-success] input {
+        outline: 2px solid green;
+      }
+      lion-input[has-error] input {
+        outline: 2px solid red;
+      }
+      lion-input[has-warning] input {
+        outline: 2px solid orange;
+      }
+    </style>
+    <lion-input
+      .validators="${[
+        new Required(),
+        new MinLength(7, { type: 'warning' }),
+        new MaxLength(10, { type: 'info' }),
+        new DefaultSuccess(),
+        ]}"
+      .modelValue="${'exactly'}"
+      label="MaxLength"
+    ></lion-input>
+`,
+)
+  .add('Custom Validator', () => {
     class MyValidator extends Validator {
       constructor(...args) {
         super(...args);
@@ -228,15 +107,15 @@ storiesOf('Forms|Input String Validation', module)
       ></lion-input>
     `;
   })
-  .add('New(!!): Override Messages per instance', () => html`
+  .add('Override default messages', () => html`
       <lion-input
-        .validators="${[new EqualsLength(4, { message: '4 chars please...' })]}"
+        .validators="${[new EqualsLength(4, { getMessage: () => '4 chars please...' })]}"
         .modelValue="${'123'}"
         label="Custom message for validator instance"
       ></lion-input>
       <lion-input
         .validators="${[new EqualsLength(4, {
-          message: ({ modelValue, validatorParams: param }) => {
+          getMessage: ({ modelValue, validatorParams: param }) => {
             const diff = modelValue.length - param;
             return `${Math.abs(diff)} too ${diff > 0 ? 'much' : 'little'}...`;
           }
@@ -245,7 +124,15 @@ storiesOf('Forms|Input String Validation', module)
         label="Dynamic message for validator instance"
       ></lion-input>
   `)
-  .add('New(!!): Async', () => {
+  .add('Asynchronous validation', () => {
+    function pause(ms = 0) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, ms);
+      });
+    }
+
     class AsyncValidator extends Validator {
       constructor(...args) {
         super(...args);
@@ -255,7 +142,7 @@ storiesOf('Forms|Input String Validation', module)
 
       async execute() {
         console.log('async pending...');
-        await aTimeout(2000);
+        await pause(2000);
         console.log('async done...');
         return true;
       }
@@ -278,7 +165,7 @@ storiesOf('Forms|Input String Validation', module)
       ></lion-input>
     `;
   })
-  .add('New(!!): Dynamic parameter changes', () => {
+  .add('Dynamic parameter changes', () => {
     const beginDate = new Date('09/09/1990');
     const minDateValidatorRef = new MinDate(beginDate, {
       message: 'Fill in a date after your birth date',

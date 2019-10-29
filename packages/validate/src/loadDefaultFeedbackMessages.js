@@ -9,10 +9,11 @@ let loaded = false;
  * @desc bridges between ValidateMixin (that only supplies formControl) and translations
  * (that know about less technical concepts)
  */
-function transformData(data) {
+async function transformData(data) {
+  const fieldName = await data.formControl.getFieldName();
   return {
     validatorParams: data.validatorParams,
-    fieldName: data.formControl.fieldName,
+    fieldName,
     value: data.modelValue,
   };
 }
@@ -100,24 +101,24 @@ export function loadDefaultFeedbackMessages() {
 
   Required.getMessage = async data => {
     await validateNamespace;
-    return localize.msg('lion-validate:error.required', transformData(data));
+    return localize.msg('lion-validate:error.required', await transformData(data));
   };
 
   EqualsLength.getMessage = async data => {
     await validateNamespace;
-    return localize.msg('lion-validate:error.equalsLength', transformData(data));
+    return localize.msg('lion-validate:error.equalsLength', await transformData(data));
   };
 
   MaxLength.getMessage = async data => {
     await validateNamespace;
-    return localize.msg('lion-validate:error.maxLength', transformData(data));
+    return localize.msg('lion-validate:error.maxLength', await transformData(data));
   };
 
   DefaultSuccess.getMessage = async data => {
     await validateNamespace;
     const randomKeys = localize.msg('lion-validate:success.randomOk').split(',');
     const key = randomKeys[Math.floor(Math.random() * randomKeys.length)].trim();
-    return localize.msg(`lion-validate:${key}`, transformData(data));
+    return localize.msg(`lion-validate:${key}`, await transformData(data));
   };
 
   loaded = true;

@@ -1,6 +1,8 @@
 export { ValidateMixin } from './src/ValidateMixin.js';
+export { FeedbackMixin } from './src/FeedbackMixin.js';
 export { Unparseable } from './src/Unparseable.js';
 export { Validator } from './src/Validator.js';
+export { ResultValidator } from './src/ResultValidator.js';
 
 export { loadDefaultFeedbackMessages } from './src/loadDefaultFeedbackMessages.js';
 
@@ -22,41 +24,3 @@ export {
   MinMaxDate,
   IsDateDisabled
 } from './src/validators/DateValidators.js';
-
-
-// export {
-//   defaultOk,
-//   defaultOkValidator,
-//   isDateDisabled,
-//   isDateDisabledValidator,
-//   equalsLength,
-//   equalsLengthValidator,
-//   isDate,
-//   isDateValidator,
-//   isEmail,
-//   isEmailValidator,
-//   isNumber,
-//   isNumberValidator,
-//   isString,
-//   isStringValidator,
-//   maxDate,
-//   maxDateValidator,
-//   maxLength,
-//   maxLengthValidator,
-//   maxNumber,
-//   maxNumberValidator,
-//   minDate,
-//   minDateValidator,
-//   minLength,
-//   minLengthValidator,
-//   minMaxDate,
-//   minMaxDateValidator,
-//   minMaxLength,
-//   minMaxLengthValidator,
-//   minMaxNumber,
-//   minMaxNumberValidator,
-//   minNumber,
-//   minNumberValidator,
-//   randomOk,
-//   randomOkValidator,
-// } from './_legacy/src/legacy-validators.js/index.js';

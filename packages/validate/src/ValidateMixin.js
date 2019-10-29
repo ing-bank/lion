@@ -1,17 +1,11 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 
-import { dedupeMixin, SlotMixin } from '@lion/core';
-import { localize } from '@lion/localize';
+import { dedupeMixin } from '@lion/core';
 import { Unparseable } from './Unparseable.js';
-// import { debounce } from './utils/debounce.js';
 import { pascalCase } from './utils/pascal-case.js';
-
 import { Required } from './validators/Required.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
-
-// TODO: move all feedback interaction to a different layer (?)
-import '../lion-validation-feedback.js';
 
 /**
  * @event error-state-changed fires when FormControl goes from non-error to error state and vice versa
@@ -20,7 +14,7 @@ import '../lion-validation-feedback.js';
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
+    class ValidateMixin extends SyncUpdatableMixin(superclass) {
       static get properties() {
         return {
           /**
@@ -83,11 +77,15 @@ export const ValidateMixin = dedupeMixin(
           },
 
           /**
-           * @desc value that al validation revolves around: once changed, will
-           * automatically trigger validation
+           * @desc value that al validation revolves around: once changed (usually triggered by
+           * end user entering input), it will automatically trigger validation.
            */
           modelValue: Object,
 
+          /**
+           * @desc specialized fields (think of input-date and input-email) can have preconfigured
+           * validators.
+           */
           defaultValidators: Array,
         };
       }
@@ -99,34 +97,29 @@ export const ValidateMixin = dedupeMixin(
         return ['error'];
       }
 
-      get slots() {
-        return {
-          ...super.slots,
-          feedback: () => document.createElement('lion-validation-feedback'),
-        };
-      }
-
       /**
-       * @abstract
-       * get _inputNode()
+       * @abstract get _inputNode()
        */
 
-      get _feedbackNode() {
-        return this.querySelector('[slot=feedback]');
+      get _allValidators() {
+        return [...this.validators, ...this.defaultValidators];
       }
 
       constructor() {
         super();
 
         this.isPending = false;
-        /**
-         * @type {Validator[]}
-         */
+        /** @type {Validator[]} */
+        this.validators = [];
+        /** @type {Validator[]} */
+        this.defaultValidators = [];
+
+        /** @type {Validator[]} */
         this.__syncValidationResult = [];
-        /**
-         * @type {Validator[]}
-         */
+
+        /** @type {Validator[]} */
         this.__asyncValidationResult = [];
+
         /**
          * @desc contains results from sync Validators, async Validators and ResultValidators
          * @type {Validator[]}
@@ -141,37 +134,12 @@ export const ValidateMixin = dedupeMixin(
         this.constructor.validationTypes.forEach(t => this.__validatorTypeHistoryCache.add(t));
 
         this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
-
-        this.validators = [];
-        this.defaultValidators = [];
-
-        this.hasErrorVisible = false;
-
-        // Subclassers can enable this to show multiple feedback messages at the same time
-        this._hasAllFeedbackVisible = false;
-      }
-
-      get _allValidators() {
-        return [...this.validators, ...this.defaultValidators];
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-        // TODO: move to extending layer
-        localize.addEventListener('localeChanged', this._renderFeedback);
       }
 
       firstUpdated(c) {
         super.firstUpdated(c);
         this.__validateInitialized = true;
         this.validate();
-        this.__handleA11yErrorVisible();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        // TODO: move to extending layer
-        localize.removeEventListener('localeChanged', this._renderFeedback);
       }
 
       updateSync(name, oldValue) {
@@ -196,17 +164,6 @@ export const ValidateMixin = dedupeMixin(
 
           if (c.has(`has${pascalCase(type)}`)) {
             this.dispatchEvent(new Event(`has-${type}-changed`, { bubbles: true, composed: true }));
-          }
-        });
-
-        if (c.has('hasErrorVisible')) {
-          this.__handleA11yErrorVisible();
-        }
-
-        // TODO: Interaction state knowledge should be moved to FormControl...
-        ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
-          if (c.has(iState)) {
-            this._renderFeedback();
           }
         });
       }
@@ -255,7 +212,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       /**
-       * @desc step 1-3
+       * @desc step A1-3 + B (as explained in 'validate')
        */
       async __executeValidators() {
         this.validateComplete = new Promise(resolve => {
@@ -309,7 +266,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       /**
-       * @desc step 2, calls __finishValidation
+       * @desc step A2, calls __finishValidation
        * @param {Validator[]} syncValidators
        */
       __executeSyncValidators(syncValidators, value, { hasAsync }) {
@@ -320,7 +277,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       /**
-       * @desc step 3, calls __finishValidation
+       * @desc step A3, calls __finishValidation
        * @param {Validator[]} filteredValidators all Validators except required and ResultValidators
        */
       async __executeAsyncValidators(asyncValidators, value) {
@@ -337,7 +294,7 @@ export const ValidateMixin = dedupeMixin(
       }
 
       /**
-       * @desc step 4, called by __finishValidation
+       * @desc step B, called by __finishValidation
        * @param {Validator[]} regularValidationResult result of steps 1-3
        */
       __executeResultValidators(regularValidationResult) {
@@ -355,15 +312,13 @@ export const ValidateMixin = dedupeMixin(
       }
 
       /**
-       *
        * @param {object} options
        * @param {'sync'|'async'} options.source
        * @param {boolean} [options.hasAsync] whether async validators are configured in this run.
        * If not, we have nothing left to wait for.
        */
       __finishValidation({ source, hasAsync }) {
-        /** @typedef {Validator[]} RegularValidationResult */
-        const syncAndAsyncOutcome = [
+        const /** @type {Validator[]} */ syncAndAsyncOutcome = [
           ...this.__syncValidationResult,
           ...this.__asyncValidationResult,
         ];
@@ -374,14 +329,11 @@ export const ValidateMixin = dedupeMixin(
         this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
         this._storeResultsOnInstance(this.__validationResult);
 
-        /** private event that should be listened to by LionFieldSet */
+        /** private event that should be listened to by FeedbackMixin / LionFieldSet */
         this.dispatchEvent(new Event('validate-performed', { bubbles: true, composed: true }));
-
         if (source === 'async' || !hasAsync) {
           this.__validateCompleteResolve();
         }
-
-        this._renderFeedback();
       }
 
       /**
@@ -446,143 +398,8 @@ export const ValidateMixin = dedupeMixin(
         this.__prevValidators = this._allValidators;
       }
 
-      /**
-       * @type {Element} FeedbackNode:
-       * Gets a `FeedbackData` object as its input.
-       * This element can be a custom made (web) component that renders messages in accordance with
-       * the implemented Design System. For instance, it could add an icon in front of a message.
-       * The FeedbackNode is only responsible for the visual rendering part, it should NOT contain
-       * state. All state will be determined by the outcome of `FormControl.filterFeeback()`.
-       * FormControl delegates to individual sub elements and decides who renders what.
-       * For instance, FormControl itself is responsible for reflecting error-state and error-show
-       * to its host element.
-       * This means filtering out messages should happen in FormControl and NOT in `FeedbackNode`
-       *
-       * - gets a FeedbackData object as input
-       * - should know about the FeedbackMessage types('error', 'success' etc.) that the FormControl
-       * (having ValidateMixin applied) returns
-       * -
-       *
-       */
-
-      /**
-       * @typedef {object} FeedbackMessage
-       * @property {string} message this
-       * @property {string} type will be 'error' for messages from default Validators. Could be
-       * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
-       * feedbackNode how to render a message of a certain type
-       * @property {Validator} [validator] when the message is directly coupled to a Validator
-       * (in most cases), this property is filled. When a message is not coupled to a Validator
-       * (in case of success feedback which is based on a diff or current and previous validation
-       * results), this property can be left empty.
-       */
-
-      /**
-       * @typedef FeedbackData
-       * @property {FeedbackMessage[]} messages
-       * @property {FeedbackMeta} meta
-       */
-
-      /**
-       * @param {Validator[]} validators list of objects having a .getMessage method
-       * @return {Feedback[]}
-       */
-      async __getMessageMap(validators) {
-        return Promise.all(
-          validators.map(async validator => {
-            const message = await validator._getMessage({
-              validatorParams: validator.param,
-              modelValue: this.modelValue,
-              formControl: this,
-            });
-            return { message, type: validator.type, validator };
-          }),
-        );
-      }
-
-      /**
-       * @desc Responsible for retrieving messages from Validators and
-       * (delegation of) rendering them.
-       *
-       * For`._feedbackNode` (extension of LionValidationFeedback):
-       * - retrieve messages from highest prio Validators
-       * - provide the result to custom feedback node and let the
-       * custom node decide on their renderings
-       *
-       * In both cases:
-       * - we compute the 'show' flag (like 'hasErrorVisible') for all types
-       * - we set the customValidity message of the highest prio Validator
-       * - we set aria-invalid="true" in case hasErrorVisible is true
-       */
-      async _renderFeedback() {
-        let feedbackCompleteResolve;
-        this.feedbackComplete = new Promise(resolve => {
-          feedbackCompleteResolve = resolve;
-        });
-
-        /** @type {Validator[]} */
-        this.__prioritizedResult = this._prioritizeAndFilterFeedback({
-          validationResult: this.__validationResult,
-        });
-
-        // Will be used for synchronization with "._inputNode"
-        this._validationMessage = '';
-        const messageMap = await this.__getMessageMap(this.__prioritizedResult);
-
-        if (messageMap.length) {
-          this._validationMessage = messageMap[0].message;
-          // Set type, message, validator
-          this._feedbackNode.feedbackData = messageMap;
-        } else {
-          this._feedbackNode.feedbackData = undefined;
-        }
-        this.__storeTypeVisibilityOnInstance(this.__prioritizedResult);
-        feedbackCompleteResolve();
-      }
-
-      __storeTypeVisibilityOnInstance(prioritizedValidators) {
-        const result = {};
-        this.__validatorTypeHistoryCache.forEach(previouslyStoredType => {
-          result[`has${pascalCase(previouslyStoredType)}Visible`] = false;
-        });
-
-        prioritizedValidators.forEach(v => {
-          result[`has${pascalCase(v.type)}Visible`] = true;
-        });
-
-        Object.assign(this, result);
-      }
-
-      /**
-       * Orders all active validators in this.__validationResult. Can
-       * also filter out occurrences (based on interaction states)
-       * @overridable
-       * @returns {Validator[]} ordered list of Validators with feedback messages visible to the
-       * end user
-       */
-      _prioritizeAndFilterFeedback({ validationResult }) {
-        const types = this.constructor.validationTypes;
-        // Sort all validators based on the type provided.
-        const res = validationResult.sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
-        if (this._hasAllFeedbackVisible) {
-          // If a Subclasser configured this, show all the ordered messages
-          return res;
-        }
-        // By default, just like the platform, only show one message with highest prio.
-        return res.slice(0,1);
-      }
-
-      __handleA11yErrorVisible() {
-        // Screen reader output should be in sync with visibility of error messages
-        if (this._inputNode) {
-          this._inputNode.setAttribute('aria-invalid', this.hasErrorVisible);
-          // this._inputNode.setCustomValidity(this._validationMessage || '');
-        }
-      }
-
       static _hasObjectChanged(result, prevResult) {
-        if (!prevResult) return true;
-        return Object.keys(result).join('') !== Object.keys(prevResult).join('');
+        return JSON.stringify(result) !== JSON.stringify(prevResult);
       }
 
       __isEmpty(v) {

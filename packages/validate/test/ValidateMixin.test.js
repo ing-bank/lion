@@ -16,6 +16,7 @@ import {
   AsyncAlwaysInvalid,
 } from '../test-helpers/helper-validators.js';
 import '../lion-validation-feedback.js';
+import { FeedbackMixin } from '../src/FeedbackMixin.js';
 
 // element, lightDom, errorShowPrerequisite, warningShowPrerequisite, infoShowPrerequisite,
 // successShowPrerequisite
@@ -231,18 +232,6 @@ describe('ValidateMixin', () => {
         await el.validateComplete;
         expect(validateResolveSpy.callCount).to.equal(1);
       });
-
-      it('renders feedback', async () => {
-        const el = await fixture(html`
-          <${tag} .validators=${[new AlwaysValid()]}>
-            ${lightDom}
-          </${tag}>
-        `);
-        const renderSpy = sinon.spy(el, '_renderFeedback');
-        el.modelValue = 'nonEmpty';
-        await el.feedbackComplete;
-        expect(renderSpy.callCount).to.equal(1);
-      });
     });
   });
 
@@ -331,12 +320,6 @@ describe('ValidateMixin', () => {
       isCatValidator.param = 'Garfield';
       expect(catSpy.callCount).to.equal(2);
     });
-
-    // it(`replaces native validators (required, minlength, maxlength, min, max, pattern, step,
-    //     type(email/date/number/...) etc.) [to-be-investigated]`, async () => {
-    //   // TODO: this could also become: "can be used in conjunction with"
-
-    // });
   });
 
   describe('Async Validator Integration', () => {
@@ -492,7 +475,6 @@ describe('ValidateMixin', () => {
       }
     }
 
-    // TODO: ".calledBefore" is pseudo code... mplement in other way
     it('calls ResultValidators after regular validators', async () => {
       const resultValidator = new MySuccessResultValidator();
       const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
@@ -579,7 +561,6 @@ describe('ValidateMixin', () => {
       expect(el.hasError).to.be.false;
     });
 
-    // TODO: should we combine this with ._isPrefilled...?
     it('calls private ".__isEmpty" by default', async () => {
       const el = await fixture(html`
         <${tag}
@@ -843,25 +824,6 @@ describe('ValidateMixin', () => {
   });
 
   describe('Accessibility', () => {
-    it('sets [aria-invalid="true"] to "._inputNode" when ".hasError" is true', async () => {
-      const el = await fixture(html`
-      <${withInputTag}
-        .validators=${[new Required()]}
-        .modelValue=${'a'}
-      >${lightDom}</${withInputTag}>
-    `);
-      const inputNode = el._inputNode;
-
-      expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
-
-      el.modelValue = '';
-      await el.feedbackComplete;
-      expect(inputNode.getAttribute('aria-invalid')).to.equal('true');
-      el.modelValue = 'a';
-      await el.feedbackComplete;
-      expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
-    });
-
     it.skip('calls "._inputNode.setCustomValidity(errorMessage)"', async () => {
       const el = await fixture(html`
         <${tag}
@@ -884,6 +846,26 @@ describe('ValidateMixin', () => {
   });
 
   describe('Validity Feedback', () => {
+    // eslint-disable-next-line no-shadow
+    const tagString = defineCE(
+      class extends FeedbackMixin(ValidateMixin(LitElement)) {
+        static get properties() {
+          return { modelValue: String };
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this.appendChild(document.createElement('input'));
+        }
+
+        get _inputNode() {
+          return this.querySelector('input');
+        }
+      },
+    );
+    // eslint-disable-next-line no-shadow
+    const tag = unsafeStatic(tagString);
+
     class ContainsLowercaseA extends Validator {
       constructor(...args) {
         super(...args);
@@ -1026,7 +1008,6 @@ describe('ValidateMixin', () => {
         },
       );
       const customFeedbackTag = unsafeStatic(customFeedbackTagString);
-      // TODO: refactor to support integration via externalDependencies.element
       const el = await fixture(html`
         <${tag}
           .validators=${[new ContainsLowercaseA(), new AlwaysInvalid()]}>
@@ -1076,6 +1057,27 @@ describe('ValidateMixin', () => {
       expect(el._feedbackNode.feedbackData[0].message).to.equal('This is a success message');
     });
 
+    describe('Accessibility', () => {
+      it('sets [aria-invalid="true"] to "._inputNode" when ".hasError" is true', async () => {
+        const el = await fixture(html`
+        <${tag}
+          .validators=${[new Required()]}
+          .modelValue=${'a'}
+        >${lightDom}</${tag}>
+      `);
+        const inputNode = el._inputNode;
+
+        expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
+
+        el.modelValue = '';
+        await el.feedbackComplete;
+        expect(inputNode.getAttribute('aria-invalid')).to.equal('true');
+        el.modelValue = 'a';
+        await el.feedbackComplete;
+        expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
+      });
+    });
+
     describe('Meta data', () => {
       it('".getMessage()" gets a reference to formControl, validatorParams and modelValue', async () => {
         let el;
@@ -1103,67 +1105,12 @@ describe('ValidateMixin', () => {
       await el.feedbackComplete;
         expect(instanceMessageSpy.args[0][0]).to.eql({ validatorParams: 4, modelValue: 'cat', formControl: el});
       });
-
-      // TODO: add this in extending layer: don't have a fallback to label (maybe a generic term like 'value'?),
-      // but always require a fieldName on
-      // FormControl level
-      describe.skip('Field name construction', () => {
-        it('allows to configure field name via ".getFieldName()"', async () => {
-          const getName = sinon.spy(() => 'myFunction');
-          const el = await fixture(html`
-            <${tag}
-              .getFieldName=${getName}
-              .label="${'myLabel'}"
-              .name="${'myName'}"
-              .validators=${[new MinLength(4)]}
-              .modelValue=${'cat'}
-              >${lightDom}
-            </${tag}>`);
-          expect(getName.callCount).to.equal(1);
-          expect(el._feedbackNode.innerText).to.equal('myFunction needs more characters');
-        });
-
-        it('allows to configure field name for every validator message', async () => {
-          const el = await fixture(html`
-            <${tag}
-              .getFieldName=${() => 'myFunction'}
-              .label="${'myField'}"
-              .name="${'myName'}"
-              .validators=${[new MinLength(4, { fieldName: 'overrideName' })]}
-              .modelValue=${'cat'}
-              >${lightDom}
-            </${tag}>`);
-          expect(el._feedbackNode.innerText).to.equal('overrideName needs more characters');
-        });
-
-        it('falls back to label or name (in this priority order)', async () => {
-          // As seen in test above, configuring fieldName on validator level takes highest precedence
-          const el = await fixture(html`
-            <${tag}
-              .label="${'myField'}"
-              .name="${'myName'}"
-              .validators=${[new MinLength(4)]}
-              .modelValue=${'cat'}
-              >${lightDom}
-            </${tag}>`);
-          expect(el._feedbackNode.innerText).to.equal('myField needs more characters');
-
-          const el2 = await fixture(html`
-          <${tag}
-            .name="${'myName'}"
-            .errorValidators=${[new MinLength(4)]}
-            .modelValue=${'cat'}
-            >${lightDom}
-          </${tag}>`);
-          expect(el2._feedbackNode.innerText).to.equal('myName needs more characters');
-        });
-      });
     });
   });
 
   describe('Extensibility: Custom Validator types', () => {
     const customTypeTagString = defineCE(
-      class extends ValidateMixin(LitElement) {
+      class extends FeedbackMixin(ValidateMixin(LitElement)) {
         static get validationTypes() {
           return [...super.validationTypes, 'x', 'y'];
         }
@@ -1263,7 +1210,7 @@ describe('ValidateMixin', () => {
 
       const el = await fixture(html`
         <${customTypeTag}
-          ._hasAllFeedbackVisible=${true}
+          ._visibleMessagesAmount=${Infinity}
           .validators=${[xMinLength, errorMinLength, yMinLength]}
           .modelValue=${''}
         >${lightDom}</${customTypeTag}>
@@ -1283,21 +1230,16 @@ describe('ValidateMixin', () => {
 
     /**
      * Out of scope:
-     * - automatic reflection of attrs (we would need to add to constructor.properties )
+     * - automatic reflection of attrs (we would need to add to constructor.properties). See
+     * 'Subclassers' for an example on how to do this
      */
   });
 
-  // TODO: consider moving to its own file
   describe('Subclassers', () => {
-    // Below a journey is described with which steps to take for:
-    // - adding types "warning", "info" and "success"
-    // - show validation based on Interaction States
-    // - perform async validation only on blur
-
     describe('Adding new Validator types', () => {
       it('sends out events for custom types', async () => {
         const customEventsTagString = defineCE(
-          class extends ValidateMixin(LitElement) {
+          class extends FeedbackMixin(ValidateMixin(LitElement)) {
             static get validationTypes() {
               return [...super.validationTypes, 'x', 'y'];
             }
@@ -1375,14 +1317,12 @@ describe('ValidateMixin', () => {
       });
     });
 
-    describe('Adding new validation triggers', () => {});
-
     describe('Changing feedback visibility conditions', () => {
-      // TODO: add this test on LionField layer
+      // TODO: add this test on FormControl layer
       it('reconsiders feedback visibility when interaction states changed', async () => {
 
         const interactionTagString = defineCE(
-          class extends ValidateMixin(LitElement) {
+          class extends FeedbackMixin(ValidateMixin(LitElement)) {
             static get properties() {
               return {
                 modelValue: String,
@@ -1427,14 +1367,14 @@ describe('ValidateMixin', () => {
 
       it('supports multiple "has{Type}Visible" flags', async () => {
         const customTypeTagString = defineCE(
-          class extends ValidateMixin(LitElement) {
+          class extends FeedbackMixin(ValidateMixin(LitElement)) {
             static get validationTypes() {
               return [...super.validationTypes, 'x', 'y'];
             }
 
             constructor() {
               super();
-              this._hasAllFeedbackVisible = true;
+              this._visibleMessagesAmount = Infinity;
             }
           },
         );
@@ -1464,11 +1404,6 @@ describe('ValidateMixin', () => {
 
     describe('Changing feedback messages globally', () => {
       // Please see tests of Validatiob Feedback
-    });
-
-    // TODO: see how we can combine this functionality with the way to
-    describe.skip('Changing feedback messages per form (control)', () => {
-
     });
   });
 });
