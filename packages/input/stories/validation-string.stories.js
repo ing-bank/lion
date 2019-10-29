@@ -112,7 +112,7 @@ storiesOf('Forms|Input String Validation', module)
         .validators="${[new EqualsLength(4, {
           getMessage: ({ modelValue, validatorParams: param }) => {
             const diff = modelValue.length - param;
-            return `${Math.abs(diff)} too ${diff > 0 ? 'much' : 'little'}...`;
+            return `${Math.abs(diff)} too ${diff > 0 ? 'much' : 'few'}...`;
           }
         })]}"
         .modelValue="${'way too much'}"

@@ -202,6 +202,7 @@ export function runFeedbackMixinSuite(customConfig) {
 
       el.modelValue = 'cat';
       await el.feedbackComplete;
+      await el._feedbackNode.updateComplete;
       expect(el._feedbackNode).shadowDom.to.equal('Custom for AlwaysInvalid');
     });
 

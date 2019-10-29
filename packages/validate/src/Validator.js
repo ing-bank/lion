@@ -1,6 +1,5 @@
 import { fakeExtendsEventTarget } from './utils/fake-extends-event-target.js';
 
-// TODO: revert to use "old" way of EventTarget and check in IE
 export class Validator {
   constructor(param, config) {
     fakeExtendsEventTarget(this);

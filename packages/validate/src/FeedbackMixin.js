@@ -3,12 +3,14 @@
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
 import { pascalCase } from './utils/pascal-case.js';
+import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+
 // TODO: move all feedback interaction to a different layer (?)
 import '../lion-validation-feedback.js';
 
 export const FeedbackMixin = dedupeMixin(superclass =>
   // eslint-disable-next-line no-unused-vars, no-shadow
-  class FeedbackMixin extends SlotMixin(superclass) {
+  class FeedbackMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
     static get properties() {
       return {
         /**
@@ -79,16 +81,19 @@ export const FeedbackMixin = dedupeMixin(superclass =>
       localize.addEventListener('localeChanged', this._renderFeedback);
     }
 
-    firstUpdated(c) {
-      super.firstUpdated(c);
-      this.__handleA11yErrorVisible();
+    updateSync(name, oldValue) {
+      super.updateSync(name, oldValue);
+
+      if (name === 'hasErrorVisible') {
+        // This can't be reflected asynchronously in Safari
+        this.__handleA11yErrorVisible();
+        this[this.hasErrorVisible ? 'setAttribute' : 'removeAttribute']('has-error-visible', '');
+      }
     }
 
     updated(c) {
       super.updated(c);
-      if (c.has('hasErrorVisible')) {
-        this.__handleA11yErrorVisible();
-      }
+
       // TODO: Interaction state knowledge should be moved to FormControl...
       ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
         if (c.has(iState)) {

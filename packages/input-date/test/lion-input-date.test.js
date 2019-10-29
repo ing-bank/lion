@@ -30,7 +30,7 @@ describe.only('<lion-input-date>', () => {
     expect(el.hasError).to.equal(false);
   });
 
-  it('gets validated by "maxDate" correctly', async () => {
+  it('gets validated by "MaxDate" correctly', async () => {
     const el = await fixture(html`
       <lion-input-date
         .modelValue=${new Date('2017/06/15')}
