@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.41](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.40...@lion/choice-input@0.2.41) (2019-10-25)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.2.40](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.39...@lion/choice-input@0.2.40) (2019-10-23)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.2.39](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.38...@lion/choice-input@0.2.39) (2019-10-23)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.2.38](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.37...@lion/choice-input@0.2.38) (2019-10-21)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
 ## [0.2.37](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.2.36...@lion/choice-input@0.2.37) (2019-10-14)
 
 **Note:** Version bump only for package @lion/choice-input

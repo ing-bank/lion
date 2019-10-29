@@ -13,22 +13,16 @@ export function formatDate(date, options) {
     return '';
   }
   const formatOptions = options || {};
-  // make sure months and days are always 2-digits
-  if (!options) {
+  /**
+   * Set smart defaults if:
+   * 1) no options object is passed
+   * 2) options object is passed, but none of the following props on it: day, month, year.
+   */
+  if (!options || (options && !options.day && !options.month && !options.year)) {
     formatOptions.year = 'numeric';
     formatOptions.month = '2-digit';
     formatOptions.day = '2-digit';
   }
-  if (options && !(options && options.year)) {
-    formatOptions.year = 'numeric';
-  }
-  if (options && !(options && options.month)) {
-    formatOptions.month = '2-digit';
-  }
-  if (options && !(options && options.day)) {
-    formatOptions.day = '2-digit';
-  }
-
   const computedLocale = getLocale(formatOptions && formatOptions.locale);
   let formattedDate = '';
   try {

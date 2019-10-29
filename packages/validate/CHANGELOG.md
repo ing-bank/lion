@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.38](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.37...@lion/validate@0.2.38) (2019-10-23)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
+## [0.2.37](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.36...@lion/validate@0.2.37) (2019-10-23)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
+## [0.2.36](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.35...@lion/validate@0.2.36) (2019-10-21)
+
+
+### Bug Fixes
+
+* issue [#329](https://github.com/ing-bank/lion/issues/329) ([93206e7](https://github.com/ing-bank/lion/commit/93206e7))
+
+
+
+
+
 ## [0.2.35](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.34...@lion/validate@0.2.35) (2019-10-09)
 
 **Note:** Version bump only for package @lion/validate

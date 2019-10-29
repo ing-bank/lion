@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/field@0.3.4...@lion/field@0.3.5) (2019-10-25)
+
+
+### Bug Fixes
+
+* **field:** teardown registrarmanager listener on field after register ([88e75a2](https://github.com/ing-bank/lion/commit/88e75a2))
+
+
+
+
+
+## [0.3.4](https://github.com/ing-bank/lion/compare/@lion/field@0.3.3...@lion/field@0.3.4) (2019-10-23)
+
+**Note:** Version bump only for package @lion/field
+
+
+
+
+
+## [0.3.3](https://github.com/ing-bank/lion/compare/@lion/field@0.3.2...@lion/field@0.3.3) (2019-10-23)
+
+**Note:** Version bump only for package @lion/field
+
+
+
+
+
+## [0.3.2](https://github.com/ing-bank/lion/compare/@lion/field@0.3.1...@lion/field@0.3.2) (2019-10-21)
+
+**Note:** Version bump only for package @lion/field
+
+
+
+
+
 ## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/field@0.3.0...@lion/field@0.3.1) (2019-10-14)
 
 

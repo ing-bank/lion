@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/ing-bank/lion/compare/@lion/option@0.2.5...@lion/option@0.2.6) (2019-10-25)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/option@0.2.4...@lion/option@0.2.5) (2019-10-23)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/option@0.2.3...@lion/option@0.2.4) (2019-10-23)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/option@0.2.2...@lion/option@0.2.3) (2019-10-21)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
 ## [0.2.2](https://github.com/ing-bank/lion/compare/@lion/option@0.2.1...@lion/option@0.2.2) (2019-10-14)
 
 **Note:** Version bump only for package @lion/option

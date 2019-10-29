@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.67](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.66...@lion/input-amount@0.1.67) (2019-10-25)
+
+**Note:** Version bump only for package @lion/input-amount
+
+
+
+
+
+## [0.1.66](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.65...@lion/input-amount@0.1.66) (2019-10-24)
+
+
+### Bug Fixes
+
+* **input-amount:** add demo how to show no fractions ([3e0b941](https://github.com/ing-bank/lion/commit/3e0b941))
+
+
+
+
+
+## [0.1.65](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.64...@lion/input-amount@0.1.65) (2019-10-23)
+
+**Note:** Version bump only for package @lion/input-amount
+
+
+
+
+
+## [0.1.64](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.63...@lion/input-amount@0.1.64) (2019-10-23)
+
+**Note:** Version bump only for package @lion/input-amount
+
+
+
+
+
+## [0.1.63](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.62...@lion/input-amount@0.1.63) (2019-10-21)
+
+**Note:** Version bump only for package @lion/input-amount
+
+
+
+
+
 ## [0.1.62](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.1.61...@lion/input-amount@0.1.62) (2019-10-14)
 
 **Note:** Version bump only for package @lion/input-amount

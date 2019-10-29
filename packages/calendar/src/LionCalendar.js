@@ -553,12 +553,21 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   __modifyDate(modify, { dateType, type, mode } = {}) {
     let tmpDate = new Date(this.centralDate);
+    // if we're not working with days, reset
+    // day count to first day of the month
+    if (type !== 'Date') {
+      tmpDate.setDate(1);
+    }
     tmpDate[`set${type}`](tmpDate[`get${type}`]() + modify);
-
+    // if we've reset the day count,
+    // restore day count as best we can
+    if (type !== 'Date') {
+      const maxDays = new Date(tmpDate.getFullYear(), tmpDate.getMonth() + 1, 0).getDate();
+      tmpDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
+    }
     if (!this.__isEnabledDate(tmpDate)) {
       tmpDate = this.__findBestEnabledDateFor(tmpDate, { mode });
     }
-
     this[dateType] = tmpDate;
   }
 

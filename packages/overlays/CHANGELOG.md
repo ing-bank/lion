@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/overlays@0.6.1...@lion/overlays@0.6.2) (2019-10-25)
+
+
+### Bug Fixes
+
+* **overlays:** remove setting inheritsReferenceWidth by default ([8237b64](https://github.com/ing-bank/lion/commit/8237b64))
+
+
+
+
+
+## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.6.0...@lion/overlays@0.6.1) (2019-10-23)
+
+**Note:** Version bump only for package @lion/overlays
+
+
+
+
+
 # [0.6.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.5.1...@lion/overlays@0.6.0) (2019-10-10)
 
 

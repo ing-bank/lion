@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.31](https://github.com/ing-bank/lion/compare/@lion/button@0.3.30...@lion/button@0.3.31) (2019-10-25)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
+## [0.3.30](https://github.com/ing-bank/lion/compare/@lion/button@0.3.29...@lion/button@0.3.30) (2019-10-23)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
+## [0.3.29](https://github.com/ing-bank/lion/compare/@lion/button@0.3.28...@lion/button@0.3.29) (2019-10-23)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
+## [0.3.28](https://github.com/ing-bank/lion/compare/@lion/button@0.3.27...@lion/button@0.3.28) (2019-10-21)
+
+**Note:** Version bump only for package @lion/button
+
+
+
+
+
+## [0.3.27](https://github.com/ing-bank/lion/compare/@lion/button@0.3.26...@lion/button@0.3.27) (2019-10-21)
+
+
+### Bug Fixes
+
+* **button:** fix form integration, fires only once, submit preventable ([d19ca7c](https://github.com/ing-bank/lion/commit/d19ca7c))
+
+
+
+
+
 ## [0.3.26](https://github.com/ing-bank/lion/compare/@lion/button@0.3.25...@lion/button@0.3.26) (2019-10-14)
 
 **Note:** Version bump only for package @lion/button
