@@ -1,40 +1,26 @@
 export { ValidateMixin } from './src/ValidateMixin.js';
+export { FeedbackMixin } from './src/FeedbackMixin.js';
 export { Unparseable } from './src/Unparseable.js';
-export { isValidatorApplied } from './src/isValidatorApplied.js';
+export { Validator } from './src/Validator.js';
+export { ResultValidator } from './src/ResultValidator.js';
+
+export { loadDefaultFeedbackMessages } from './src/loadDefaultFeedbackMessages.js';
+
+export { Required } from './src/validators/Required.js';
 
 export {
-  defaultOk,
-  defaultOkValidator,
-  isDateDisabled,
-  isDateDisabledValidator,
-  equalsLength,
-  equalsLengthValidator,
-  isDate,
-  isDateValidator,
-  isEmail,
-  isEmailValidator,
-  isNumber,
-  isNumberValidator,
-  isString,
-  isStringValidator,
-  maxDate,
-  maxDateValidator,
-  maxLength,
-  maxLengthValidator,
-  maxNumber,
-  maxNumberValidator,
-  minDate,
-  minDateValidator,
-  minLength,
-  minLengthValidator,
-  minMaxDate,
-  minMaxDateValidator,
-  minMaxLength,
-  minMaxLengthValidator,
-  minMaxNumber,
-  minMaxNumberValidator,
-  minNumber,
-  minNumberValidator,
-  randomOk,
-  randomOkValidator,
-} from './src/validators.js';
+  IsString,
+  EqualsLength,
+  MinLength,
+  MaxLength,
+  MinMaxLength,
+  IsEmail,
+} from './src/validators/StringValidators.js';
+
+export {
+  IsDate,
+  MinDate,
+  MaxDate,
+  MinMaxDate,
+  IsDateDisabled,
+} from './src/validators/DateValidators.js';
