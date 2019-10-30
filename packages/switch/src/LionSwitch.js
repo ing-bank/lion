@@ -2,9 +2,9 @@ import { html, css } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
 
-import '../lion-button-switch.js';
+import '../lion-switch-button.js';
 
-export class LionInputSwitch extends ChoiceInputMixin(LionField) {
+export class LionSwitch extends ChoiceInputMixin(LionField) {
   static get styles() {
     return [
       super.styles,
@@ -19,7 +19,7 @@ export class LionInputSwitch extends ChoiceInputMixin(LionField) {
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('lion-button-switch'),
+      input: () => document.createElement('lion-switch-button'),
     };
   }
 

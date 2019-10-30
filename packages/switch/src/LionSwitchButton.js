@@ -1,6 +1,6 @@
 import { html, css, LitElement, DisabledWithTabIndexMixin } from '@lion/core';
 
-export class LionButtonSwitch extends DisabledWithTabIndexMixin(LitElement) {
+export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {
       role: {
@@ -36,13 +36,13 @@ export class LionButtonSwitch extends DisabledWithTabIndexMixin(LitElement) {
           outline: 2px solid #bde4ff;
         }
 
-        .button-switch__track {
+        .switch-button__track {
           background: #eee;
           width: 100%;
           height: 100%;
         }
 
-        .button-switch__thumb {
+        .switch-button__thumb {
           background: #ccc;
           width: 50%;
           height: 100%;
@@ -50,7 +50,7 @@ export class LionButtonSwitch extends DisabledWithTabIndexMixin(LitElement) {
           top: 0;
         }
 
-        :host([checked]) .button-switch__thumb {
+        :host([checked]) .switch-button__thumb {
           right: 0;
         }
       `,
@@ -60,8 +60,8 @@ export class LionButtonSwitch extends DisabledWithTabIndexMixin(LitElement) {
   render() {
     return html`
       <div class="btn">
-        <div class="button-switch__track"></div>
-        <div class="button-switch__thumb"></div>
+        <div class="switch-button__track"></div>
+        <div class="switch-button__thumb"></div>
       </div>
     `;
   }
