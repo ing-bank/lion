@@ -36,8 +36,8 @@
     "@lion/fieldset": "^0.2.1"
   },
   "devDependencies": {
-    "@lion/form": "^0.2.1",
     "@lion/radio": "^0.2.1",
+    "@lion/validate": "^0.3.1",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

@@ -1,12 +1,7 @@
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { html, LitElement } from '@lion/core';
-import {
-  maxDateValidator,
-  minDateValidator,
-  minMaxDateValidator,
-  isDateDisabledValidator,
-} from '@lion/validate';
+import { MaxDate, MinDate, MinMaxDate, IsDateDisabled } from '@lion/validate';
 import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
 import { DatepickerInputObject } from '../test-helpers.js';
@@ -196,12 +191,12 @@ describe('<lion-input-datepicker>', () => {
        * - all validators will be translated under the hood to enabledDates and passed to
        *   lion-calendar
        */
-      it('converts isDateDisabledValidator to "disableDates" property', async () => {
+      it('converts IsDateDisabled validator to "disableDates" property', async () => {
         const no15th = d => d.getDate() !== 15;
         const no16th = d => d.getDate() !== 16;
         const no15thOr16th = d => no15th(d) && no16th(d);
         const el = await fixture(html`
-          <lion-input-datepicker .errorValidators="${[isDateDisabledValidator(no15thOr16th)]}">
+          <lion-input-datepicker .validators="${[new IsDateDisabled(no15thOr16th)]}">
           </lion-input-datepicker>
         `);
         const elObj = new DatepickerInputObject(el);
@@ -210,10 +205,10 @@ describe('<lion-input-datepicker>', () => {
         expect(elObj.calendarEl.disableDates).to.equal(no15thOr16th);
       });
 
-      it('converts minDateValidator to "minDate" property', async () => {
+      it('converts MinDate validator to "minDate" property', async () => {
         const myMinDate = new Date('2019/06/15');
         const el = await fixture(html`
-          <lion-input-datepicker .errorValidators=${[minDateValidator(myMinDate)]}>
+          <lion-input-datepicker .validators="${[new MinDate(myMinDate)]}">
           </lion-input-date>`);
         const elObj = new DatepickerInputObject(el);
         await elObj.openCalendar();
@@ -221,11 +216,10 @@ describe('<lion-input-datepicker>', () => {
         expect(elObj.calendarEl.minDate).to.equal(myMinDate);
       });
 
-      it('converts maxDateValidator to "maxDate" property', async () => {
+      it('converts MaxDate validator to "maxDate" property', async () => {
         const myMaxDate = new Date('2030/06/15');
         const el = await fixture(html`
-          <lion-input-datepicker .errorValidators=${[maxDateValidator(myMaxDate)]}>
-          </lion-input-datepicker>
+          <lion-input-datepicker .validators=${[new MaxDate(myMaxDate)]}> </lion-input-datepicker>
         `);
         const elObj = new DatepickerInputObject(el);
         await elObj.openCalendar();
@@ -233,12 +227,12 @@ describe('<lion-input-datepicker>', () => {
         expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
       });
 
-      it('converts minMaxDateValidator to "minDate" and "maxDate" property', async () => {
+      it('converts MinMaxDate validator to "minDate" and "maxDate" property', async () => {
         const myMinDate = new Date('2019/06/15');
         const myMaxDate = new Date('2030/06/15');
         const el = await fixture(html`
           <lion-input-datepicker
-            .errorValidators=${[minMaxDateValidator({ min: myMinDate, max: myMaxDate })]}
+            .validators=${[new MinMaxDate({ min: myMinDate, max: myMaxDate })]}
           >
           </lion-input-datepicker>
         `);

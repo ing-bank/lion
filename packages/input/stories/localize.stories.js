@@ -1,7 +1,9 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { maxLengthValidator } from '@lion/validate';
+import { MaxLength, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { LionInput } from '../index.js';
+
+loadDefaultFeedbackMessages();
 
 storiesOf('Forms|Input Localize', module).add('localize', () => {
   class InputValidationExample extends LocalizeMixin(LionInput) {
@@ -23,19 +25,29 @@ storiesOf('Forms|Input Localize', module).add('localize', () => {
     customElements.define('input-localize-example', InputValidationExample);
   }
 
-  const notEqualsString = (value, stringValue) => stringValue.toString() !== value;
-  const notEqualsStringValidator = (...factoryParams) => [
-    (...params) => ({ notEqualsString: notEqualsString(...params) }),
-    factoryParams,
-  ];
+  class NotEqualsString extends Validator {
+    constructor(...args) {
+      super(...args);
+      this.name = 'NotEqualsString';
+    }
+
+    execute(value, param) {
+      const hasError = value === param;
+      return hasError;
+    }
+
+    static async getMessage() {
+      return localize.msg(`input-localize-example:error.notEqualsString`);
+    }
+  }
 
   return html`
     <input-localize-example
-      .errorValidators=${[maxLengthValidator(5)]}
+      .validators=${[new MaxLength(5)]}
       .modelValue=${'default validator'}
     ></input-localize-example>
     <input-localize-example
-      .errorValidators=${[notEqualsStringValidator('custom validator')]}
+      .validators=${[new NotEqualsString('custom validator')]}
       .modelValue=${'custom validator'}
     ></input-localize-example>
     <p>

@@ -1,55 +1,51 @@
 export default {
   error: {
-    required: 'Introduceți un/o {fieldName}.',
-    equalsLength:
-      'Introduceți un/o {fieldName} corect(ă) de exact {validatorParams} (de) caractere.',
-    minLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {validatorParams}).',
-    maxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {validatorParams} (de) caractere).',
-    minMaxLength:
-      'Introduceți un/o {fieldName} corect(ă) (între {validatorParams.min} și {validatorParams.max} (de) caractere).',
-    isNumber: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
-    minNumber: 'Introduceți un/o {fieldName} mai mare decât {validatorParams}.',
-    maxNumber: 'Introduceți un/o {fieldName} mai mic(ă) decât {validatorParams}.',
-    minMaxNumber:
-      'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min} și {validatorParams.max}.',
-    isDate: 'Introduceţi data (ZZ LL AAAA).',
-    minDate: 'Introduceți un/o {fieldName} după {validatorParams, date, YYYYMMDD}.',
-    maxDate: 'Introduceți un/o {fieldName} înainte de {validatorParams, date, YYYYMMDD}.',
-    minMaxDate:
-      'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min, date, YYYYMMDD} și {validatorParams.max, date, YYYYMMDD}.',
-    isDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
-    isEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
+    Required: 'Introduceți un/o {fieldName}.',
+    EqualsLength: 'Introduceți un/o {fieldName} corect(ă) de exact {params} (de) caractere.',
+    MinLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {params}).',
+    MaxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {params} (de) caractere).',
+    MinMaxLength:
+      'Introduceți un/o {fieldName} corect(ă) (între {params.min} și {params.max} (de) caractere).',
+    IsNumber: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
+    MinNumber: 'Introduceți un/o {fieldName} mai mare decât {params}.',
+    MaxNumber: 'Introduceți un/o {fieldName} mai mic(ă) decât {params}.',
+    MinMaxNumber: 'Introduceți un/o {fieldName} cuprins(ă) între {params.min} și {params.max}.',
+    IsDate: 'Introduceţi data (ZZ LL AAAA).',
+    MinDate: 'Introduceți un/o {fieldName} după {params, date, YYYYMMDD}.',
+    MaxDate: 'Introduceți un/o {fieldName} înainte de {params, date, YYYYMMDD}.',
+    MinMaxDate:
+      'Introduceți un/o {fieldName} cuprins(ă) între {params.min, date, YYYYMMDD} și {params.max, date, YYYYMMDD}.',
+    IsDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
+    IsEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
   },
   warning: {
-    required: 'Introduceți un/o {fieldName}.',
-    equalsLength:
-      'Introduceți un/o {fieldName} corect(ă) de exact {validatorParams} (de) caractere.',
-    minLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {validatorParams}).',
-    maxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {validatorParams} (de) caractere).',
-    minMaxLength:
-      'Introduceți un/o {fieldName} corect(ă) (între {validatorParams.min} și {validatorParams.max} (de) caractere).',
-    isNumber: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
-    minNumber: 'Introduceți un/o {fieldName} mai mare decât {validatorParams}.',
-    maxNumber: 'Introduceți un/o {fieldName} mai mic(ă) decât {validatorParams}.',
-    minMaxNumber:
-      'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min} și {validatorParams.max}.',
-    isDate: 'Introduceţi data (ZZ LL AAAA).',
-    minDate: 'Introduceți un/o {fieldName} după {validatorParams, date, YYYYMMDD}.',
-    maxDate: 'Introduceți un/o {fieldName} înainte de {validatorParams, date, YYYYMMDD}.',
-    minMaxDate:
-      'Introduceți un/o {fieldName} cuprins(ă) între {validatorParams.min, date, YYYYMMDD} și {validatorParams.max, date, YYYYMMDD}.',
-    isDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
-    isEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
+    Required: 'Introduceți un/o {fieldName}.',
+    EqualsLength: 'Introduceți un/o {fieldName} corect(ă) de exact {params} (de) caractere.',
+    MinLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {params}).',
+    MaxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {params} (de) caractere).',
+    MinMaxLength:
+      'Introduceți un/o {fieldName} corect(ă) (între {params.min} și {params.max} (de) caractere).',
+    IsNumber: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
+    MinNumber: 'Introduceți un/o {fieldName} mai mare decât {params}.',
+    MaxNumber: 'Introduceți un/o {fieldName} mai mic(ă) decât {params}.',
+    MinMaxNumber: 'Introduceți un/o {fieldName} cuprins(ă) între {params.min} și {params.max}.',
+    IsDate: 'Introduceţi data (ZZ LL AAAA).',
+    MinDate: 'Introduceți un/o {fieldName} după {params, date, YYYYMMDD}.',
+    MaxDate: 'Introduceți un/o {fieldName} înainte de {params, date, YYYYMMDD}.',
+    MinMaxDate:
+      'Introduceți un/o {fieldName} cuprins(ă) între {params.min, date, YYYYMMDD} și {params.max, date, YYYYMMDD}.',
+    IsDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
+    IsEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
   },
   success: {
-    defaultOk: 'În regulă',
-    randomOk:
-      'success.defaultOk,success.correct,success.succeeded,success.ok,success.thisIsRight,success.changed,success.okCorrect',
-    correct: 'Corect',
-    succeeded: 'Acțiune finalizată cu succes',
-    ok: 'OK!',
-    thisIsRight: 'Este perfect.',
-    changed: 'Modificat!',
-    okCorrect: 'OK, corect.',
+    DefaultOk: 'În regulă',
+    RandomOk:
+      'success.DefaultOk,success.Correct,success.Succeeded,success.Ok,success.ThisIsRight,success.Changed,success.OkCorrect',
+    Correct: 'Corect',
+    Succeeded: 'Acțiune finalizată cu succes',
+    Ok: 'OK!',
+    ThisIsRight: 'Este perfect.',
+    Changed: 'Modificat!',
+    OkCorrect: 'OK, corect.',
   },
 };

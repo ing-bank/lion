@@ -72,7 +72,7 @@ export class MinMaxLength extends Validator {
 
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
-    if (!isString(value) || value.length <= min || value.length >= max) {
+    if (!isString(value) || value.length < min || value.length > max) {
       hasError = true;
     }
     return hasError;

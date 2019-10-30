@@ -1,4 +1,5 @@
 import { expect, fixture, nextFrame, html } from '@open-wc/testing';
+import { Required } from '@lion/validate';
 import '@lion/radio/lion-radio.js';
 
 import '../lion-radio-group.js';
@@ -90,7 +91,6 @@ describe('<lion-radio-group>', () => {
 
   it('fires checked-value-changed event only once per checked change', async () => {
     let counter = 0;
-    /* eslint-disable indent */
     const el = await fixture(html`
       <lion-radio-group
         @checked-value-changed=${() => {
@@ -103,7 +103,6 @@ describe('<lion-radio-group>', () => {
       </lion-radio-group>
     `);
     await nextFrame();
-    /* eslint-enable indent */
     expect(counter).to.equal(0);
 
     el.formElementsArray[0].checked = true;
@@ -126,7 +125,6 @@ describe('<lion-radio-group>', () => {
 
   it('expect child nodes to only fire one model-value-changed event per instance', async () => {
     let counter = 0;
-    /* eslint-disable indent */
     const el = await fixture(html`
       <lion-radio-group
         @model-value-changed=${() => {
@@ -139,7 +137,6 @@ describe('<lion-radio-group>', () => {
       </lion-radio-group>
     `);
     await nextFrame();
-    /* eslint-enable indent */
     counter = 0; // reset after setup which may result in different results
 
     el.formElementsArray[0].checked = true;
@@ -191,7 +188,7 @@ describe('<lion-radio-group>', () => {
   });
 
   it('should have role = radiogroup', async () => {
-    const el = await fixture(`
+    const el = await fixture(html`
       <lion-radio-group>
         <label slot="label">My group</label>
         <lion-radio name="gender[]" value="male">
@@ -208,41 +205,50 @@ describe('<lion-radio-group>', () => {
 
   it('can be required', async () => {
     const el = await fixture(html`
-      <lion-radio-group .errorValidators="${[['required']]}">
+      <lion-radio-group .validators=${[new Required()]}>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
-        <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
+        <lion-radio
+          name="gender[]"
+          .choiceValue=${{ subObject: 'satisfies required' }}
+        ></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
+    expect(el.hasFeedbackFor).to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).to.have.a.property('Required');
 
-    expect(el.error.required).to.be.true;
     el.formElements['gender[]'][0].checked = true;
-    expect(el.error.required).to.be.undefined;
+    expect(el.hasFeedbackFor).not.to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).not.to.have.a.property('Required');
+
+    el.formElements['gender[]'][1].checked = true;
+    expect(el.hasFeedbackFor).not.to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).not.to.have.a.property('Required');
   });
 
   it('returns serialized value', async () => {
-    const group = await fixture(html`
-      <lion-radio-group .errorValidators="${[['required']]}">
+    const el = await fixture(html`
+      <lion-radio-group>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
         <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
       </lion-radio-group>
     `);
-
-    group.formElements['gender[]'][0].checked = true;
-    expect(group.serializedValue).to.deep.equal({ checked: true, value: 'male' });
+    el.formElements['gender[]'][0].checked = true;
+    expect(el.serializedValue).to.deep.equal({ checked: true, value: 'male' });
   });
 
   it('returns serialized value on unchecked state', async () => {
-    const group = await fixture(html`
-      <lion-radio-group .errorValidators="${[['required']]}">
+    const el = await fixture(html`
+      <lion-radio-group>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
         <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
       </lion-radio-group>
     `);
-
     await nextFrame();
 
-    expect(group.serializedValue).to.deep.equal('');
+    expect(el.serializedValue).to.deep.equal('');
   });
 
   it(`becomes "touched" once a single element of the group changes`, async () => {

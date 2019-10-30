@@ -1,8 +1,8 @@
 export default {
   error: {
-    isIBAN: 'Indiquez un(e) {fieldName} valide.',
-    isCountryIBAN:
-      'Veuillez saisir un(e) {fieldName} {validatorParams, select,\n' +
+    IsIBAN: 'Indiquez un(e) {fieldName} valide.',
+    IsCountryIBAN:
+      'Veuillez saisir un(e) {fieldName} {params, select,\n' +
       'AT {autrichien}\n' +
       'BE {belge}\n' +
       'CZ {tchèque}\n' +
@@ -14,7 +14,7 @@ export default {
       'NL {néerlandais}\n' +
       'PL {polonais}\n' +
       'RO {roumain}\n' +
-      'other {{validatorParams}}\n' +
+      'other {{params}}\n' +
       '} valide.',
   },
 };

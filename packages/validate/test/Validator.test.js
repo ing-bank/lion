@@ -3,9 +3,6 @@ import { LitElement } from '@lion/core';
 import sinon from 'sinon';
 import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Validator } from '../src/Validator.js';
-import { ResultValidator } from '../src/ResultValidator.js';
-import { Required } from '../src/validators/Required.js';
-import { MinLength } from '../src/validators/StringValidators.js';
 
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
@@ -16,6 +13,13 @@ describe('Validator', () => {
       }
     }
     expect(new MyValidator().execute('test', 'me')).to.be.true;
+  });
+
+  it('throws when executing a Validator without a name', async () => {
+    class MyValidator extends Validator {}
+    expect(() => {
+      new MyValidator().execute();
+    }).to.throw('You must provide a name like "this.name = \'IsCat\'" for your Validator');
   });
 
   it('receives a "param" as a first argument on instantiation', async () => {
@@ -106,23 +110,5 @@ describe('Validator', () => {
       }
       expect(new MyValidator().type).to.equal('my-type');
     });
-  });
-});
-
-describe('ResultValidator', () => {
-  it('has an "executeOnResults" function returning active state', async () => {
-    // This test shows the best practice of creating executeOnResults method
-    class MyResultValidator extends ResultValidator {
-      executeOnResults({ regularValidateResult, prevValidationResult }) {
-        const hasSuccess = regularValidateResult.length && !prevValidationResult.length;
-        return hasSuccess;
-      }
-    }
-    expect(
-      new MyResultValidator().executeOnResults({
-        regularValidateResult: [new Required(), new MinLength(3)],
-        prevValidationResult: [],
-      }),
-    ).to.be.true;
   });
 });

@@ -61,8 +61,8 @@ In order to check whether the input is correct, an Application Developer can do 
 ```
 
 ```js
-function handleChange({ target: { modelValue, errorState } }) {
-  if (!(modelValue instanceof Unparseable) && !errorState) {
+function handleChange({ target: { modelValue, hasFeedbackFor } }) {
+  if (!(modelValue instanceof Unparseable) && !(hasFeedbackFor.include('error))) {
     // do my thing
   }
 }

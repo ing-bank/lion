@@ -35,7 +35,7 @@ import '@lion/input/lion-input.js';
 ```html
 <lion-fieldset name="personalia" label="personalia">
   <lion-input name="title" label="Title"></lion-input>
-  <lion-fieldset name="fullName" label="Full name" .errorValidations="${[['required]]}">
+  <lion-fieldset name="fullName" label="Full name" .validations="${[new Required()]}">
     <lion-input name="firstName" label="First name"></lion-input>
     <lion-input name="lastName" label="Last name"></lion-input>
   </lion-fieldset>

@@ -7,9 +7,8 @@
 ## Features
 
 - based on [lion-input](../input)
-- default label in different languages
-- makes use of email [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
-  - isEmail (default)
+- makes use of email [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
+  - IsEmail (default)
 
 ## How to use
 
@@ -21,10 +20,13 @@ npm i --save @lion/input-email
 
 ```js
 import '@lion/input-email/lion-input-email.js';
+
+// validator import example
+import { Required } from '@lion/validate';
 ```
 
 ### Example
 
 ```html
-<lion-input-email name="email" .errorValidators="${[['required']]}"></lion-input-email>
+<lion-input-email label="email" name="email" .validators="${['new Required()]}"></lion-input-email>
 ```

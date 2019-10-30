@@ -30,6 +30,9 @@ npm i --save @lion/select-rich
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/select-rich/lion-options.js';
 import '@lion/option/lion-option.js';
+
+// validator import example
+import { Requred } from '@lion/validate';
 ```
 
 ### Example
@@ -38,7 +41,7 @@ import '@lion/option/lion-option.js';
 <lion-select-rich
   name="favoriteColor"
   label="Favorite color"
-  .errorValidators=${[['required']]}
+  .validators=${[new Required()]}
 >
   <lion-options slot="input">
     <lion-option .choiceValue=${'red'}>Red</lion-option>
