@@ -1,13 +1,13 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import '../lion-button-switch.js';
+import '../lion-switch-button.js';
 
-describe('lion-button-switch', () => {
+describe('lion-switch-button', () => {
   let el;
   beforeEach(async () => {
     el = await fixture(html`
-      <lion-button-switch></lion-button-switch>
+      <lion-switch-button></lion-switch-button>
     `);
   });
 
