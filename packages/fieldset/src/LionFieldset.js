@@ -104,12 +104,13 @@ export class LionFieldset extends FormRegistrarMixin(
 
     this.addEventListener('focusin', this._syncFocused);
     this.addEventListener('focusout', this._onFocusOut);
-    this.addEventListener('validation-done', this.__validate);
     this.addEventListener('dirty-changed', this._syncDirty);
+    this.addEventListener('validate-performed', this.__validate);
   }
 
   connectedCallback() {
-    super.connectedCallback(); // eslint-disable-line wc/guard-super-call
+    // eslint-disable-next-line wc/guard-super-call
+    super.connectedCallback();
     this._setRole();
   }
 
@@ -310,7 +311,7 @@ export class LionFieldset extends FormRegistrarMixin(
   }
 
   /**
-   * Gets triggered by event 'validation-done' which enabled us to handle 2 different situations
+   * Gets triggered by event 'validate-performed' which enabled us to handle 2 different situations
    *   - react on modelValue change, which says something about the validity as a whole
    *       (at least two checkboxes for instance) and nothing about the children's values
    *   - children validatity states have changed, so fieldset needs to update itself based on that
