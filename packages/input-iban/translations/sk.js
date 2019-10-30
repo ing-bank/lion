@@ -1,8 +1,8 @@
 export default {
   error: {
-    isIBAN: 'Zadajte platnú hodnotu do poľa {fieldName}.',
-    isCountryIBAN:
-      'Zadajte platný {validatorParams, select,\n' +
+    IsIBAN: 'Zadajte platnú hodnotu do poľa {fieldName}.',
+    IsCountryIBAN:
+      'Zadajte platný {params, select,\n' +
       'AT {rakúsky}\n' +
       'BE {belgický}\n' +
       'CZ {český}\n' +
@@ -14,7 +14,7 @@ export default {
       'NL {holandský}\n' +
       'PL {poľský}\n' +
       'RO {rumunský}\n' +
-      'other {{validatorParams}}\n' +
+      'other {{params}}\n' +
       '} kód {fieldName}.',
   },
 };

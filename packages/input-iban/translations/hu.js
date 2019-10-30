@@ -1,8 +1,8 @@
 export default {
   error: {
-    isIBAN: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
-    isCountryIBAN:
-      'Kérjük, adjon meg érvényes {validatorParams, select,\n' +
+    IsIBAN: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
+    IsCountryIBAN:
+      'Kérjük, adjon meg érvényes {params, select,\n' +
       'AT {Osztrák}\n' +
       'BE {Belga}\n' +
       'CZ {Cseh}\n' +
@@ -14,7 +14,7 @@ export default {
       'NL {Holland}\n' +
       'PL {Lengyel}\n' +
       'RO {Román}\n' +
-      'other {{validatorParams}}\n' +
+      'other {{params}}\n' +
       '} {fieldName} értéket.',
   },
 };

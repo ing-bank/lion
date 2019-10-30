@@ -16,6 +16,44 @@ import '../lion-select-rich.js';
 import { LionSelectRich } from '../index.js';
 
 describe('lion-select-rich', () => {
+  it(`has a fieldName based on the label`, async () => {
+    const el1 = await fixture(
+      html`
+        <lion-select-rich label="foo"><lion-options slot="input"></lion-options></lion-select-rich>
+      `,
+    );
+    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+
+    const el2 = await fixture(
+      html`
+        <lion-select-rich
+          ><label slot="label">bar</label><lion-options slot="input"></lion-options
+        ></lion-select-rich>
+      `,
+    );
+    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it(`has a fieldName based on the name if no label exists`, async () => {
+    const el = await fixture(
+      html`
+        <lion-select-rich name="foo"><lion-options slot="input"></lion-options></lion-select-rich>
+      `,
+    );
+    expect(el.fieldName).to.equal(el.name);
+  });
+
+  it(`can override fieldName`, async () => {
+    const el = await fixture(
+      html`
+        <lion-select-rich label="foo" .fieldName="${'bar'}"
+          ><lion-options slot="input"></lion-options
+        ></lion-select-rich>
+      `,
+    );
+    expect(el.__fieldName).to.equal(el.fieldName);
+  });
+
   it('does not have a tabindex', async () => {
     const el = await fixture(html`
       <lion-select-rich>

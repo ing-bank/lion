@@ -1,1 +1,6 @@
-export { smokeTestValidator } from './test-helpers/smokeTestValidator.js';
+export {
+  AlwaysInvalid,
+  AlwaysValid,
+  AsyncAlwaysValid,
+  AsyncAlwaysInvalid,
+} from './test-helpers/ExampleValidators.js';

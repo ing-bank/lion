@@ -3,7 +3,7 @@
 Our validation system is designed to:
 
 - allow for advanced UX scenarios by updating validation state on every value change
-- provide a powerful way of writing validations via pure functions
+- provide a powerful way of writing validations via classes
 
 ## When validation happens
 
@@ -20,75 +20,101 @@ a validation message should be shown along the input field.
 
 ## Validators
 
-All validators are provided via pure functions. They should be applied to the element implementing
+All validators are extensions of the `Validator` class. They should be applied to the element implementing
 `ValidateMixin` as follows:
 
 ```html
 <validatable-el
-  .errorValidators="${[[ myValidatorFunction, { myParam: 'foo' }, { extra: 'options' } ]]}"
+  .validators="${[new MyValidator({ myParam: 'foo' }), { extra: 'options' } ]]}"
 ></validatable-el>
 ```
 
-As you can see the 'errorValidators' property expects a map (an array of arrays).
-So, every Validator is an array consisting of:
+As you can see the 'validators' property expects a map (an array of arrays).
+So, every Validator is a class consisting of:
 
 - validator function
 - validator parameters (optional)
 - validator config (optional)
 
-### Factory functions
+### Validator classes
 
-A more readable and therefore recommended notation is the factory function, which is described in
-detail here: [Custom Validator Tutorial](./tutorials/CustomValidatorsTutorial.md).
-When we talk about validators, we usually refer to factory functions.
+All validators extend from the default `Validator` class. Below example is an example of a validator could look like:
 
-Below example has two validators (as factory functions) applied:
+```js
+class MyValidator extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'MyValidator';
+  }
+
+  execute(modelValue, param) {
+    const hasError = false;
+    if (modelValue === param) {
+      hasError = true;
+    }
+    return hasError;
+  }
+
+  static getMessage({ fieldName }) {
+    return `Please fill in ${fieldName}`;
+  }
+}
+```
 
 ```html
-<validatable-el
-  .errorValidators="${[minLengthValidator({ min: 3 }), isZipCodeValidator()]}"
-></validatable-el>
+<validatable-el .validators="${[new MyValidator('foo')]}"></validatable-el>
 ```
 
 ### Default Validators
 
 By default, the validate system ships with the following validators:
 
-- 'required'
-- isStringValidator
-- equalsLengthValidator, minLengthValidator, maxLengthValidator, minMaxLengthValidator
-- isNumberValidator, minNumberValidator, maxNumberValidator, minMaxNumberValidator
-- isDateValidator, minDateValidator, maxDateValidator, minMaxDateValidator, isDateDisabled
-- isEmailValidator
+- Required
+- IsString, EqualsLength, MinLength, MaxLength, MinMaxLength, IsEmail
+- IsNumber, MinNumber, MaxNumber, MinMaxNumber
+- IsDate, MinDate, MaxDate, MinMaxDate, IsDateDisabled
+- DefaultSuccess
 
-All validators return `true` if the required validity state is met.
+All validators return `false` if the required validity state is met.
 
-As you can see, 'required' is placed in a string notation. It is the exception to the rule,
-since the implementation of required is context dependent: it will be different for a regular input
-than for a (multi)select and therefore not rely on one external function.
-
-All other validators are considered self explanatory due to their explicit namings.
+All validators are considered self explanatory due to their explicit namings.
 
 ### Custom Validators
 
-On top of default validators, application developers can write their own.
-See [Custom Validator Tutorial](./tutorials/CustomValidatorsTutorial.md) for an example of writing a
-custom validator.
+On top of default validators, application developers can write their own by extending the `Validator` class.
 
 ### Localization
 
 The `ValidateMixin` supports localization out of the box via the [localize system](../../localize/).
-By default, all error messages are translated in the following languages (depicted by iso code):
-bg, cs, de, en, es, fr, hu, it, nl, pl, ro ,ru, sk and uk.
+All default validation messages are translated in the following languages (depicted by iso code):
+bg, cs, de, en, es, fr, hu, it, nl, pl, ro ,ru, sk, uk and zh.
 
 ## Asynchronous validation
 
-By default, all validations are run synchronously. However, for instance when validation can only
-take place on server level, asynchronous validation will be needed
+By default, all validations are run synchronously. However, for instance when validation can only take place on server level, asynchronous validation will be needed
 
-Asynchronous validators are not yet supported. Please create a feature request if you need them in
-your application: it is quite vital this will be handled inside lion-web at `FormControl` level,
-in order to create the best UX and accessibility (via (audio)visual feedback.
+You can make your async validators as follows:
+
+```js
+class AsyncValidator extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'AsyncValidator';
+    this.async = true;
+  }
+
+  async execute() {
+    console.log('async pending...');
+    await pause(2000);
+    console.log('async done...');
+    return true;
+  }
+
+  static getMessage({ modelValue }) {
+    return `Validated for modelValue: ${modelValue}`;
+  }
+}
+```
 
 ## Types of validators
 
@@ -111,20 +137,25 @@ The api for warning validators and info validators are as follows:
 
 ```html
 <validatable-field
-  .warningValidators="${[myWarningValidator()]}"
-  .infoValidators="${[myInfoValidator()]}"
+  .validators="${[new WarningExample(null, { type: 'warning' }), new InfoExample(null, { type: 'info' })]}"
 ></validatable-field>
 ```
 
 ### Success validators
 
-Success validators work a bit differently. Their success state is defined by the lack of a
-previously existing erroneous state (which can be an error or warning state).
+Success validators work a bit differently. Their success state is defined by the lack of a previously existing erroneous state (which can be an error or warning state).
 
-So, an error validator going from invalid (true) state to invalid(false) state, will trigger the
-success validator. `ValidateMixin` has applied the `randomOkValidator`.
+So, an error validator going from invalid (true) state to invalid(false) state, will trigger the success validator.
 
-If we take a look at the translations file belonging to `ValidateMixin`:
+```html
+<validatable-field .validators="${[new MinLength(10), new DefaultSuccess()]}"></validatable-field>
+```
+
+<!-- TODO (nice to have)
+
+#### Random Ok
+
+If we take a look at the translations file belonging to `Validators`:
 
 ```js
 ...
@@ -141,11 +172,7 @@ If we take a look at the translations file belonging to `ValidateMixin`:
 ...
 ```
 
-You an see that the translation message of `randomOk` references the other success translation
-keys. Every time the randomOkValidator is triggered, one of those messages will be randomly
-displayed.
-
-<!-- TODO (nice to have)
+You an see that the translation message of `randomOk` references the other success translation keys. Every time the randomOkValidator is triggered, one of those messages will be randomly displayed.
 
 ## Retrieving validity states imperatively
 

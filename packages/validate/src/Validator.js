@@ -17,7 +17,11 @@ export class Validator {
    * @param {object} param
    * @returns {Boolean|Promise<Boolean>}
    */
-  execute(modelValue, param) {} // eslint-disable-line
+  execute(/* modelValue, param */) {
+    if (!this.name) {
+      throw new Error('You must provide a name like "this.name = \'IsCat\'" for your Validator');
+    }
+  }
 
   set param(p) {
     this.__param = p;
@@ -42,14 +46,21 @@ export class Validator {
    * @param {object} data
    * @param {*} data.modelValue
    * @param {string} data.fieldName
-   * @param {*} data.validatorParams
+   * @param {*} data.params
+   * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   async _getMessage(data) {
+    const composedData = {
+      name: this.name,
+      type: this.type,
+      params: this.param,
+      ...data,
+    };
     if (typeof this.config.getMessage === 'function') {
-      return this.config.getMessage(data);
+      return this.config.getMessage(composedData);
     }
-    return this.constructor.getMessage(data);
+    return this.constructor.getMessage(composedData);
   }
 
   /**
@@ -57,10 +68,13 @@ export class Validator {
    * @param {object} data
    * @param {*} data.modelValue
    * @param {string} data.fieldName
-   * @param {*} data.validatorParams
+   * @param {*} data.params
+   * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
-  static async getMessage(data) {} // eslint-disable-line no-unused-vars, no-empty-function
+  static async getMessage(/* data */) {
+    return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
+  }
 
   /**
    * @param {FormControl} formControl

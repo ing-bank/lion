@@ -67,4 +67,11 @@ describe('lion-switch', () => {
       value: 'foo',
     });
   });
+
+  it('is submitted by default', async () => {
+    const el = await fixture(html`
+      <lion-switch></lion-switch>
+    `);
+    expect(el.submitted).to.be.true;
+  });
 });

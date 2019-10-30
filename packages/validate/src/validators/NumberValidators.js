@@ -6,9 +6,9 @@ import { Validator } from '../Validator.js';
  *
  * @param {number} value to check
  */
-function isNumber(value) {
-  return value === value && typeof value === 'number'; // eslint-disable-line no-self-compare
-}
+const isNumber = value =>
+  // eslint-disable-next-line no-self-compare
+  value === value && typeof value === 'number';
 
 export class IsNumber extends Validator {
   constructor(...args) {

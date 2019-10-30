@@ -108,15 +108,14 @@ export class LionRadioGroup extends LionFieldset {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  __isRequired(modelValue) {
-    const groupName = Object.keys(modelValue)[0];
-    const filtered = modelValue[groupName].filter(node => node.checked === true);
-    const value = filtered.length > 0 ? filtered[0] : undefined;
-    return {
-      required:
-        (typeof value === 'string' && value !== '') ||
-        (typeof value !== 'string' && typeof value !== 'undefined'), // TODO: && value !== null ?
-    };
+  _isEmpty() {
+    const value = this.checkedValue;
+    if (typeof value === 'string' && value === '') {
+      return true;
+    }
+    if (value === undefined || value === null) {
+      return true;
+    }
+    return false;
   }
 }
