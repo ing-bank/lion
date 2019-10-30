@@ -1,10 +1,10 @@
 import { Validator } from './Validator.js';
 
 /**
- * @desc Instead of evaluating the result of a regular validator, a HolisticValidator looks
+ * @desc Instead of evaluating the result of a regular validator, a ResultValidator looks
  * at the total result of regular Validators. Instead of an execute function, it uses a
  * 'executeOnResults' Validator.
- * ResultValidators cannot be async, and should noy contain an execute method.
+ * ResultValidators cannot be async, and should not contain an execute method.
  */
 export class ResultValidator extends Validator {
   /**

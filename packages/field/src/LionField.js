@@ -225,12 +225,10 @@ export class LionField extends FormControlMixin(
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  __isRequired(modelValue) {
-    return {
-      required:
-        (typeof modelValue === 'string' && modelValue !== '') ||
-        (typeof modelValue !== 'string' && typeof modelValue !== 'undefined'), // TODO: && modelValue !== null ?
-    };
+  get fieldName() {
+    const label =
+      this.label ||
+      (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
+    return label || this.name;
   }
 }

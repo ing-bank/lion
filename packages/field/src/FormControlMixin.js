@@ -464,48 +464,6 @@ export const FormControlMixin = dedupeMixin(
         ];
       }
 
-      // Extend validity showing conditions of ValidateMixin
-      showErrorCondition(newStates) {
-        return super.showErrorCondition(newStates) && this._interactionStateFeedbackCondition();
-      }
-
-      showWarningCondition(newStates) {
-        return super.showWarningCondition(newStates) && this._interactionStateFeedbackCondition();
-      }
-
-      showInfoCondition(newStates) {
-        return super.showInfoCondition(newStates) && this._interactionStateFeedbackCondition();
-      }
-
-      showSuccessCondition(newStates, oldStates) {
-        return (
-          super.showSuccessCondition(newStates, oldStates) &&
-          this._interactionStateFeedbackCondition()
-        );
-      }
-
-      _interactionStateFeedbackCondition() {
-        /**
-         *   Show the validity feedback when one of the following conditions is met:
-         *
-         * - submitted
-         *   If the form is submitted, always show the error message.
-         *
-         * - prefilled
-         *   the user already filled in something, or the value is prefilled
-         *   when the form is initially rendered.
-         *
-         * - touched && dirty && !prefilled
-         *   When a user starts typing for the first time in a field with for instance `required`
-         *   validation, error message should not be shown until a field becomes `touched`
-         *   (a user leaves(blurs) a field).
-         *   When a user enters a field without altering the value(making it `dirty`),
-         *   an error message shouldn't be shown either.
-         *
-         */
-        return (this.touched && this.dirty) || this.prefilled || this.submitted;
-      }
-
       // aria-labelledby and aria-describedby helpers
       // TODO: consider extracting to generic ariaLabel helper mixin
 

@@ -22,6 +22,15 @@ export class LionValidationFeedback extends LitElement {
     return message;
   }
 
+  updated() {
+    super.updated();
+    if (this.feedbackData && this.feedbackData[0]) {
+      this.setAttribute('type', this.feedbackData[0].type);
+    } else {
+      this.removeAttribute('type');
+    }
+  }
+
   render() {
     return html`
       ${this.feedbackData &&

@@ -1,8 +1,8 @@
 export default {
   error: {
-    isIBAN: 'Vul een geldig(e) {fieldName} in.',
-    isCountryIBAN:
-      'Vul een geldig(e) {validatorParams, select,\n' +
+    IsIBAN: 'Vul een geldig(e) {fieldName} in.',
+    IsCountryIBAN:
+      'Vul een geldig(e) {params, select,\n' +
       'AT {Oostenrijkse}\n' +
       'BE {Belgische}\n' +
       'CZ {Tsjechische}\n' +
@@ -14,7 +14,7 @@ export default {
       'NL {Nederlandse}\n' +
       'PL {Poolse}\n' +
       'RO {Roemeense}\n' +
-      'other {{validatorParams}}\n' +
+      'other {{params}}\n' +
       '} {fieldName} in.',
   },
 };

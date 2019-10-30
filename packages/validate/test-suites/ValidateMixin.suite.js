@@ -1,23 +1,22 @@
-/* eslint-disable max-classes-per-file, no-param-reassign */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
 import { LitElement } from '@lion/core';
-import { ValidateMixin } from '../src/ValidateMixin.js';
-import { Unparseable } from '../src/Unparseable.js';
-import { Validator } from '../src/Validator.js';
-import { ResultValidator } from '../src/ResultValidator.js';
-import { Required } from '../src/validators/Required.js';
-import { MinLength, MaxLength } from '../src/validators/StringValidators.js';
 import {
   AlwaysValid,
   AlwaysInvalid,
   AsyncAlwaysValid,
   AsyncAlwaysInvalid,
-} from '../test-helpers/helper-validators.js';
-import '../lion-validation-feedback.js';
-import { FeedbackMixin } from '../src/FeedbackMixin.js';
+} from '../test-helpers.js';
+
+import {
+  ValidateMixin,
+  Unparseable,
+  Validator,
+  ResultValidator,
+  Required,
+  MinLength,
+  MaxLength,
+} from '../index.js';
 
 export function runValidateMixinSuite(customConfig) {
   const cfg = {
@@ -77,13 +76,43 @@ export function runValidateMixinSuite(customConfig) {
      */
 
     describe('Validation initiation', () => {
+      it('throws if adding not Validator instances to the validators array', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        expect(() => {
+          el.validators = [[new Required()]];
+        }).to.throw(
+          'The validators array may only contain class instances of Validator. Type "array" found.',
+        );
+        expect(() => {
+          el.validators = ['required'];
+        }).to.throw(
+          'The validators array may only contain class instances of Validator. Type "string" found.',
+        );
+      });
+
+      it('throws if adding a not supported Validator type', async () => {
+        class MajorValidator extends Validator {
+          constructor() {
+            super();
+            this.name = 'MajorValidator';
+            this.type = 'major error';
+          }
+        }
+        const el = await fixture(html`<${tag}></${tag}>`);
+        expect(() => {
+          el.validators = [new MajorValidator()];
+        }).to.throw(
+          `The component "${el.tagName.toLowerCase()}" does not support the validator type "major error" used in "MajorValidator". You may change your validators type or add it to the components "static get validationTypes() {}".`,
+        );
+      });
+
       it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
         const el = await fixture(html`
           <${tag}
             .validators=${[new Required()]}
           >${lightDom}</${tag}>
         `);
-        expect(el.hasError).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
       it('revalidates when ".modelValue" changes', async () => {
@@ -299,17 +328,29 @@ export function runValidateMixinSuite(customConfig) {
         expect(executeSpy.args[0][1]).to.equal(param);
       });
 
+      it('Validators will be called with a config that has { node } as a third argument', async () => {
+        const validator = new IsCat();
+        const executeSpy = sinon.spy(validator, 'execute');
+        const el = await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'cat'}
+          >${lightDom}</${tag}>
+        `);
+        expect(executeSpy.args[0][2].node).to.equal(el);
+      });
+
       it('Validators will not be called on empty values', async () => {
         const el = await fixture(html`
           <${tag} .validators=${[new IsCat()]}>${lightDom}</${tag}>
         `);
 
         el.modelValue = 'cat';
-        expect(el.errorStates.isCat).to.be.undefined;
+        expect(el.validationStates.error.isCat).to.be.undefined;
         el.modelValue = 'dog';
-        expect(el.errorStates.isCat).to.be.true;
+        expect(el.validationStates.error.isCat).to.be.true;
         el.modelValue = '';
-        expect(el.errorStates.isCat).to.be.undefined;
+        expect(el.validationStates.error.isCat).to.be.undefined;
       });
 
       it('Validators get retriggered on parameter change', async () => {
@@ -370,10 +411,10 @@ export function runValidateMixinSuite(customConfig) {
 
         const validator = el.validators[0];
         expect(validator instanceof Validator).to.be.true;
-        expect(el.hasError).to.be.false;
+        expect(el.hasFeedbackFor).to.deep.equal([]);
         asyncVResolve();
         await aTimeout();
-        expect(el.hasError).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
       it('sets ".isPending/[is-pending]" when validation is in progress', async () => {
@@ -466,20 +507,35 @@ export function runValidateMixinSuite(customConfig) {
     });
 
     describe('ResultValidator Integration', () => {
-      class MySuccessResultValidator extends ResultValidator {
-        constructor(...args) {
-          super(...args);
-          this.type = 'success';
-        }
+      let MySuccessResultValidator;
+      let withSuccessTagString;
+      let withSuccessTag;
 
-        // eslint-disable-next-line class-methods-use-this
-        executeOnResults({ regularValidationResult, prevValidationResult }) {
-          const errorOrWarning = v => v.type === 'error' || v.type === 'warning';
-          const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
-          const prevHadErrorOrWarning = !!prevValidationResult.filter(errorOrWarning).length;
-          return !hasErrorOrWarning && prevHadErrorOrWarning;
-        }
-      }
+      before(() => {
+        MySuccessResultValidator = class extends ResultValidator {
+          constructor(...args) {
+            super(...args);
+            this.type = 'success';
+          }
+
+          // eslint-disable-next-line class-methods-use-this
+          executeOnResults({ regularValidationResult, prevValidationResult }) {
+            const errorOrWarning = v => v.type === 'error' || v.type === 'warning';
+            const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
+            const prevHadErrorOrWarning = !!prevValidationResult.filter(errorOrWarning).length;
+            return !hasErrorOrWarning && prevHadErrorOrWarning;
+          }
+        };
+
+        withSuccessTagString = defineCE(
+          class extends ValidateMixin(LitElement) {
+            static get validationTypes() {
+              return [...super.validationTypes, 'success'];
+            }
+          },
+        );
+        withSuccessTag = unsafeStatic(withSuccessTagString);
+      });
 
       it('calls ResultValidators after regular validators', async () => {
         const resultValidator = new MySuccessResultValidator();
@@ -489,10 +545,10 @@ export function runValidateMixinSuite(customConfig) {
         const validator = new MinLength(3);
         const validateSpy = sinon.spy(validator, 'execute');
         await fixture(html`
-          <${tag}
+          <${withSuccessTag}
             .validators=${[resultValidator, validator]}
             .modelValue=${'myValue'}
-          >${lightDom}</${tag}>
+          >${lightDom}</${withSuccessTag}>
         `);
         expect(validateSpy.calledBefore(resultValidateSpy)).to.be.true;
 
@@ -500,10 +556,10 @@ export function runValidateMixinSuite(customConfig) {
         const validatorAsync = new AsyncAlwaysInvalid();
         const validateAsyncSpy = sinon.spy(validatorAsync, 'execute');
         await fixture(html`
-        <${tag}
+        <${withSuccessTag}
           .validators=${[resultValidator, validatorAsync]}
           .modelValue=${'myValue'}
-        >${lightDom}</${tag}>
+        >${lightDom}</${withSuccessTag}>
       `);
         expect(validateAsyncSpy.calledBefore(resultValidateSpy)).to.be.true;
       });
@@ -514,10 +570,10 @@ export function runValidateMixinSuite(customConfig) {
         const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
 
         const el = await fixture(html`
-            <${tag}
+            <${withSuccessTag}
               .validators=${[new MinLength(3), resultValidator]}
               .modelValue=${'myValue'}
-            >${lightDom}</${tag}>
+            >${lightDom}</${withSuccessTag}>
           `);
         const prevValidationResult = el.__prevValidationResult;
         const regularValidationResult = [
@@ -563,11 +619,12 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${''}
           >${lightDom}</${tag}>
         `);
-        expect(el.errorStates.Required).to.be.true;
-        expect(el.hasError).to.be.true;
+        expect(el.validationStates.error.Required).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+
         el.modelValue = 'foo';
-        expect(el.errorStates.Required).to.be.undefined;
-        expect(el.hasError).to.be.false;
+        expect(el.validationStates.error.Required).to.be.undefined;
+        expect(el.hasFeedbackFor).to.deep.equal([]);
       });
 
       it('calls private ".__isEmpty" by default', async () => {
@@ -605,7 +662,7 @@ export function runValidateMixinSuite(customConfig) {
         const providedIsEmptySpy = sinon.spy(el, '_isEmpty');
         el.modelValue = { model: '' };
         expect(providedIsEmptySpy.callCount).to.equal(1);
-        expect(el.errorStates.Required).to.be.true;
+        expect(el.validationStates.error.Required).to.be.true;
       });
 
       it('prevents other Validators from being called when input is empty', async () => {
@@ -653,8 +710,8 @@ export function runValidateMixinSuite(customConfig) {
           .modelValue=${'12'}
         ></${preconfTag}>`);
 
-        expect(el.errorStates.AlwaysInvalid).to.be.true;
-        expect(el.errorStates.MinLength).to.be.true;
+        expect(el.validationStates.error.AlwaysInvalid).to.be.true;
+        expect(el.validationStates.error.MinLength).to.be.true;
       });
 
       it('can be altered by App Developers', async () => {
@@ -673,9 +730,9 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'12'}
           ></${altPreconfTag}>`);
 
-        expect(el.errorStates.MinLength).to.be.true;
+        expect(el.validationStates.error.MinLength).to.be.true;
         el.defaultValidators[0].param = 2;
-        expect(el.errorStates.MinLength).to.be.undefined;
+        expect(el.validationStates.error.MinLength).to.be.undefined;
       });
 
       it('can be requested via "._allValidators" getter', async () => {
@@ -714,48 +771,19 @@ export function runValidateMixinSuite(customConfig) {
         }
       }
 
-      it('stores active state in ".hasError"/[has-error] flag', async () => {
-        const el = await fixture(html`
-          <${tag}
-            .validators=${[new MinLength(3)]}
-          >${lightDom}</${tag}>
-        `);
-
-        el.modelValue = 'a';
-        expect(el.hasError).to.be.true;
-        await el.updateComplete;
-        expect(el.hasAttribute('has-error')).to.be.true;
-
-        el.modelValue = 'abc';
-        expect(el.hasError).to.be.false;
-        await el.updateComplete;
-        expect(el.hasAttribute('has-error')).to.be.false;
-
-        el.modelValue = 'abcde';
-        expect(el.hasError).to.be.false;
-        await el.updateComplete;
-        expect(el.hasAttribute('has-error')).to.be.false;
-
-        el.modelValue = 'abcdefg';
-        expect(el.hasError).to.be.false;
-        await el.updateComplete;
-        expect(el.hasAttribute('has-error')).to.be.false;
-      });
-
-      it('stores validity of individual Validators in ".errorStates[validator.name]"', async () => {
+      it('stores validity of individual Validators in ".validationStates.error[validator.name]"', async () => {
         const el = await fixture(html`
           <${tag}
             .modelValue=${'a'}
             .validators=${[new MinLength(3), new AlwaysInvalid()]}
           >${lightDom}</${tag}>`);
 
-        expect(el.errorStates.MinLength).to.be.true;
-        expect(el.errorStates.AlwaysInvalid).to.be.true;
+        expect(el.validationStates.error.MinLength).to.be.true;
+        expect(el.validationStates.error.AlwaysInvalid).to.be.true;
 
         el.modelValue = 'abc';
-
-        expect(el.errorStates.MinLength).to.equal(undefined);
-        expect(el.errorStates.AlwaysInvalid).to.be.true;
+        expect(el.validationStates.error.MinLength).to.equal(undefined);
+        expect(el.validationStates.error.AlwaysInvalid).to.be.true;
       });
 
       it('removes "non active" states whenever modelValue becomes undefined', async () => {
@@ -764,45 +792,62 @@ export function runValidateMixinSuite(customConfig) {
             .validators=${[new MinLength(3)]}
           >${lightDom}</${tag}>
         `);
-
         el.modelValue = 'a';
-        expect(el.hasError).to.be.true;
-
-        expect(el.errorStates).to.not.eql({});
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        expect(el.validationStates.error).to.not.eql({});
 
         el.modelValue = undefined;
-        expect(el.hasError).to.be.false;
-        expect(el.errorStates).to.eql({});
+        expect(el.hasFeedbackFor).to.deep.equal([]);
+        expect(el.validationStates.error).to.eql({});
       });
 
       describe('Events', () => {
-        it('fires "has-error-changed" event when state changes', async () => {
+        it('fires "showsFeedbackForChanged" event async after feedbackData got synced to feedbackElement', async () => {
+          const spy = sinon.spy();
           const el = await fixture(html`
             <${tag}
+              .submitted=${true}
               .validators=${[new MinLength(7)]}
+              @showsFeedbackForChanged=${spy};
             >${lightDom}</${tag}>
           `);
-          const cbError = sinon.spy();
-          el.addEventListener('has-error-changed', cbError);
-
           el.modelValue = 'a';
           await el.updateComplete;
-          expect(cbError.callCount).to.equal(1);
+          expect(spy).to.have.callCount(1);
 
           el.modelValue = 'abc';
           await el.updateComplete;
-          expect(cbError.callCount).to.equal(1);
-
-          el.modelValue = 'abcde';
-          await el.updateComplete;
-          expect(cbError.callCount).to.equal(1);
+          expect(spy).to.have.callCount(1);
 
           el.modelValue = 'abcdefg';
           await el.updateComplete;
-          expect(cbError.callCount).to.equal(2);
+          expect(spy).to.have.callCount(2);
         });
 
-        it('fires "error-states-changed" event when "internal" state changes', async () => {
+        it('fires "showsFeedbackFor{type}Changed" event async when type visibility changed', async () => {
+          const spy = sinon.spy();
+          const el = await fixture(html`
+            <${tag}
+              .submitted=${true}
+              .validators=${[new MinLength(7)]}
+              @showsFeedbackForErrorChanged=${spy};
+            >${lightDom}</${tag}>
+          `);
+          el.modelValue = 'a';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(1);
+
+          el.modelValue = 'abc';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(1);
+
+          el.modelValue = 'abcdefg';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(2);
+        });
+
+        // TODO: what is it used for?
+        it.skip('fires "error-states-changed" event when "internal" state changes', async () => {
           const el = await fixture(html`
             <${tag}
               .validators=${[new MinLength(3), new ContainsLowercaseA(), new ContainsLowercaseB()]}
@@ -856,7 +901,7 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Extensibility: Custom Validator types', () => {
       const customTypeTagString = defineCE(
-        class extends FeedbackMixin(ValidateMixin(LitElement)) {
+        class extends ValidateMixin(LitElement) {
           static get validationTypes() {
             return [...super.validationTypes, 'x', 'y'];
           }
@@ -864,7 +909,7 @@ export function runValidateMixinSuite(customConfig) {
       );
       const customTypeTag = unsafeStatic(customTypeTagString);
 
-      it('supports multiple "has{Type}" flags', async () => {
+      it('supports additional validationTypes in .hasFeedbackFor', async () => {
         const el = await fixture(html`
           <${customTypeTag}
             .validators=${[
@@ -875,27 +920,19 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'1234'}
           >${lightDom}</${customTypeTag}>
         `);
-        expect(el.hasY).to.be.false;
-        expect(el.hasError).to.be.false;
-        expect(el.hasX).to.be.false;
+        expect(el.hasFeedbackFor).to.deep.equal([]);
 
         el.modelValue = '123'; // triggers y
-        expect(el.hasY).to.be.true;
-        expect(el.hasError).to.be.false;
-        expect(el.hasX).to.be.false;
+        expect(el.hasFeedbackFor).to.deep.equal(['y']);
 
         el.modelValue = '12'; // triggers error and y
-        expect(el.hasY).to.be.true;
-        expect(el.hasError).to.be.true;
-        expect(el.hasX).to.be.false;
+        expect(el.hasFeedbackFor).to.deep.equal(['error', 'y']);
 
         el.modelValue = '1'; // triggers x, error and y
-        expect(el.hasY).to.be.true;
-        expect(el.hasError).to.be.true;
-        expect(el.hasX).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['x', 'error', 'y']);
       });
 
-      it('supports multiple "{type}States" objects', async () => {
+      it('supports additional validationTypes in .validationStates', async () => {
         const el = await fixture(html`
           <${customTypeTag}
             .validators=${[
@@ -906,27 +943,36 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'1234'}
           >${lightDom}</${customTypeTag}>
         `);
-        expect(el.yStates).to.eql({});
-        expect(el.errorStates).to.eql({});
-        expect(el.xStates).to.eql({});
+        expect(el.validationStates).to.eql({
+          x: {},
+          error: {},
+          y: {},
+        });
 
-        el.modelValue = '123'; // triggers type1
-        expect(el.yStates).to.eql({ MinLength: true });
-        expect(el.errorStates).to.eql({});
-        expect(el.xStates).to.eql({});
+        el.modelValue = '123'; // triggers y
+        expect(el.validationStates).to.eql({
+          x: {},
+          error: {},
+          y: { MinLength: true },
+        });
 
-        el.modelValue = '12'; // triggers error
-        expect(el.yStates).to.eql({ MinLength: true });
-        expect(el.errorStates).to.eql({ MinLength: true });
-        expect(el.xStates).to.eql({});
+        el.modelValue = '12'; // triggers error and y
+        expect(el.validationStates).to.eql({
+          x: {},
+          error: { MinLength: true },
+          y: { MinLength: true },
+        });
 
-        el.modelValue = '1'; // triggers y
-        expect(el.yStates).to.eql({ MinLength: true });
-        expect(el.errorStates).to.eql({ MinLength: true });
-        expect(el.xStates).to.eql({ MinLength: true });
+        el.modelValue = '1'; // triggers x, error and y
+        expect(el.validationStates).to.eql({
+          x: { MinLength: true },
+          error: { MinLength: true },
+          y: { MinLength: true },
+        });
       });
 
-      it('only shows highest prio "has{Type}Visible" flag by default', async () => {
+      // we no longer have a flag for when the error message got displayed - not really useful right?
+      it.skip('only shows highest prio "has{Type}Visible" flag by default', async () => {
         const el = await fixture(html`
           <${customTypeTag}
             .validators=${[
@@ -950,28 +996,29 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('orders feedback based on provided "validationTypes"', async () => {
-        const xMinLength = new MinLength(2, { type: 'x' });
-        const errorMinLength = new MinLength(3, { type: 'error' });
-        const yMinLength = new MinLength(4, { type: 'y' });
-
+        // we set submitted to always show error message in the test
         const el = await fixture(html`
           <${customTypeTag}
+            .submitted=${true}
             ._visibleMessagesAmount=${Infinity}
-            .validators=${[xMinLength, errorMinLength, yMinLength]}
-            .modelValue=${''}
+            .validators=${[
+              new MinLength(2, { type: 'x' }),
+              new MinLength(3, { type: 'error' }),
+              new MinLength(4, { type: 'y' }),
+            ]}
+            .modelValue=${'1'}
           >${lightDom}</${customTypeTag}>
         `);
-        const prioSpy = sinon.spy(el, '_prioritizeAndFilterFeedback');
-        el.modelValue = '1';
+        await el.feedbackComplete;
 
-        expect(prioSpy.callCount).to.equal(1);
-        const configuredTypes = el.constructor.validationTypes; // => ['error', 'x', 'y'];
-        const orderedResulTypes = el.__prioritizedResult.map(v => v.type);
-        expect(orderedResulTypes).to.eql(configuredTypes);
+        const resultOrder = el._feedbackNode.feedbackData.map(v => v.type);
+        expect(resultOrder).to.deep.equal(['error', 'x', 'y']);
 
         el.modelValue = '12';
-        const orderedResulTypes2 = el.__prioritizedResult.map(v => v.type);
-        expect(orderedResulTypes2).to.eql(['error', 'y']);
+        await el.updateComplete;
+        await el.feedbackComplete;
+        const resultOrder2 = el._feedbackNode.feedbackData.map(v => v.type);
+        expect(resultOrder2).to.deep.equal(['error', 'y']);
       });
 
       /**
@@ -983,91 +1030,95 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Subclassers', () => {
       describe('Adding new Validator types', () => {
-        it('sends out events for custom types', async () => {
-          const customEventsTagString = defineCE(
-            class extends FeedbackMixin(ValidateMixin(LitElement)) {
+        it('can add helpers for validation types', async () => {
+          const elTagString = defineCE(
+            class extends ValidateMixin(LitElement) {
               static get validationTypes() {
-                return [...super.validationTypes, 'x', 'y'];
+                return [...super.validationTypes, 'x'];
               }
 
-              static get properties() {
-                return {
-                  xStates: {
-                    type: Object,
-                    hasChanged: this._hasObjectChanged,
-                  },
-                  hasX: {
-                    type: Boolean,
-                    attribute: 'has-x',
-                    reflect: true,
-                  },
-                  hasXVisible: {
-                    type: Boolean,
-                    attribute: 'has-x-visible',
-                    reflect: true,
-                  },
-                  yStates: {
-                    type: Object,
-                    hasChanged: this._hasObjectChanged,
-                  },
-                  hasY: {
-                    type: Boolean,
-                    attribute: 'has-y',
-                    reflect: true,
-                  },
-                  hasYVisible: {
-                    type: Boolean,
-                    attribute: 'has-y-visible',
-                    reflect: true,
-                  },
-                };
+              get hasX() {
+                return this.hasFeedbackFor.includes('x');
+              }
+
+              get hasXVisible() {
+                return this.showsFeedbackFor.includes('x');
               }
             },
           );
-          const customEventsTag = unsafeStatic(customEventsTagString);
+          const elTag = unsafeStatic(elTagString);
 
-          const xMinLength = new MinLength(2, { type: 'x' });
-          const yMinLength = new MinLength(3, { type: 'y' });
-
+          // we set submitted to always show errors
           const el = await fixture(html`
-          <${customEventsTag}
-            .validators=${[xMinLength, yMinLength]}
-          >${lightDom}</${customEventsTag}>
-        `);
-          const xChangedSpy = sinon.spy();
-          const hasXChangedSpy = sinon.spy();
-          el.addEventListener('x-states-changed', xChangedSpy);
-          el.addEventListener('has-x-changed', hasXChangedSpy);
+            <${elTag}
+              .submitted=${true}
+              .validators=${[new MinLength(2, { type: 'x' })]}
+              .modelValue=${'1'}
+            >${lightDom}</${elTag}>
+          `);
+          await el.feedbackComplete;
+          expect(el.hasX).to.be.true;
+          expect(el.hasXVisible).to.be.true;
 
-          const yChangedSpy = sinon.spy();
-          const hasYChangedSpy = sinon.spy();
-          el.addEventListener('y-states-changed', yChangedSpy);
-          el.addEventListener('has-y-changed', hasYChangedSpy);
+          el.modelValue = '12';
+          expect(el.hasX).to.be.false;
+          await el.updateComplete;
+          await el.feedbackComplete;
+          expect(el.hasXVisible).to.be.false;
+        });
 
+        it('can fire custom events if needed', async () => {
+          function arrayDiff(array1 = [], array2 = []) {
+            return array1
+              .filter(x => !array2.includes(x))
+              .concat(array2.filter(x => !array1.includes(x)));
+          }
+          const elTagString = defineCE(
+            class extends ValidateMixin(LitElement) {
+              static get validationTypes() {
+                return [...super.validationTypes, 'x'];
+              }
+
+              updateSync(name, oldValue) {
+                super.updateSync(name, oldValue);
+                if (name === 'hasFeedbackFor') {
+                  const diff = arrayDiff(this.hasFeedbackFor, oldValue);
+                  if (diff.length > 0 && diff.includes('x')) {
+                    this.dispatchEvent(new Event(`hasFeedbackForXChanged`, { bubbles: true }));
+                  }
+                }
+              }
+            },
+          );
+          const elTag = unsafeStatic(elTagString);
+
+          const spy = sinon.spy();
+          // we set prefilled to always show errors
+          const el = await fixture(html`
+            <${elTag}
+              .prefilled=${true}
+              @hasFeedbackForXChanged=${spy}
+              .validators=${[new MinLength(2, { type: 'x' })]}
+              .modelValue=${'1'}
+            >${lightDom}</${elTag}>
+          `);
+          expect(spy).to.have.callCount(1);
           el.modelValue = '1';
-          await el.updateComplete;
-
-          expect(xChangedSpy.callCount).to.equal(1);
-          expect(hasXChangedSpy.callCount).to.equal(1);
-          expect(yChangedSpy.callCount).to.equal(1);
-          expect(hasYChangedSpy.callCount).to.equal(1);
-
-          const yAlwaysInvalid = new AlwaysInvalid(null, { type: 'y' });
-          el.validators = [...el.validators, yAlwaysInvalid];
-          await el.updateComplete;
-
-          expect(xChangedSpy.callCount).to.equal(1);
-          expect(hasXChangedSpy.callCount).to.equal(1);
-          expect(yChangedSpy.callCount).to.equal(2); // Change within y, since it went from 1 validator to two
-          expect(hasYChangedSpy.callCount).to.equal(1);
+          expect(spy).to.have.callCount(1);
+          el.modelValue = '12';
+          expect(spy).to.have.callCount(2);
+          el.modelValue = '123';
+          expect(spy).to.have.callCount(2);
+          el.modelValue = '1';
+          expect(spy).to.have.callCount(3);
         });
       });
 
       describe('Changing feedback visibility conditions', () => {
         // TODO: add this test on FormControl layer
         it('reconsiders feedback visibility when interaction states changed', async () => {
-          const interactionTagString = defineCE(
-            class extends FeedbackMixin(ValidateMixin(LitElement)) {
+          const elTagString = defineCE(
+            class extends ValidateMixin(LitElement) {
               static get properties() {
                 return {
                   modelValue: String,
@@ -1077,42 +1128,42 @@ export function runValidateMixinSuite(customConfig) {
                   submitted: Boolean,
                 };
               }
+
+              _showFeedbackConditionFor() {
+                return true;
+              }
             },
           );
-          const interactionTag = unsafeStatic(interactionTagString);
-
-          // see https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
-          async function asyncForEach(array, callback) {
-            for (let i = 0; i < array.length; i += 1) {
-              // we explicitly want to run it one after each other
-              await callback(array[i], i, array); // eslint-disable-line no-await-in-loop
-            }
-          }
-
+          const elTag = unsafeStatic(elTagString);
           const el = await fixture(html`
-            <${interactionTag}
-              .validators=${[new AlwaysValid()]}
+            <${elTag}
+              .validators=${[new AlwaysInvalid()]}
               .modelValue=${'myValue'}
-            >${lightDom}</${interactionTag}>
+            >${lightDom}</${elTag}>
           `);
 
-          const feedbackSpy = sinon.spy(el, '_renderFeedback');
+          const spy = sinon.spy(el, '_updateFeedbackComponent');
           let counter = 0;
-          await asyncForEach(['dirty', 'touched', 'prefilled', 'submitted'], async state => {
+          // for ... of is already allowed we should update eslint...
+          // eslint-disable-next-line no-restricted-syntax
+          for (const state of ['dirty', 'touched', 'prefilled', 'submitted']) {
             counter += 1;
             el[state] = false;
+            // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
-            expect(feedbackSpy.callCount).to.equal(counter);
+            expect(spy.callCount).to.equal(counter);
             counter += 1;
             el[state] = true;
+            // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
-            expect(feedbackSpy.callCount).to.equal(counter);
-          });
+            expect(spy.callCount).to.equal(counter);
+          }
         });
 
-        it('supports multiple "has{Type}Visible" flags', async () => {
-          const customTypeTagString = defineCE(
-            class extends FeedbackMixin(ValidateMixin(LitElement)) {
+        // already shown how to add it yourself
+        it.skip('supports multiple "has{Type}Visible" flags', async () => {
+          const elTagString = defineCE(
+            class extends ValidateMixin(LitElement) {
               static get validationTypes() {
                 return [...super.validationTypes, 'x', 'y'];
               }
@@ -1123,17 +1174,17 @@ export function runValidateMixinSuite(customConfig) {
               }
             },
           );
-          const customTypeTag = unsafeStatic(customTypeTagString);
+          const elTag = unsafeStatic(elTagString);
 
           const el = await fixture(html`
-            <${customTypeTag}
+            <${elTag}
               .validators=${[
                 new MinLength(2, { type: 'x' }),
                 new MinLength(3), // implicit 'error type'
                 new MinLength(4, { type: 'y' }),
               ]}
               .modelValue=${'1234'}
-            >${lightDom}</${customTypeTag}>
+            >${lightDom}</${elTag}>
           `);
           expect(el.hasYVisible).to.be.false;
           expect(el.hasErrorVisible).to.be.false;

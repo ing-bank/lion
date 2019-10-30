@@ -9,6 +9,7 @@ import {
 } from '@open-wc/testing';
 import { unsafeHTML } from '@lion/core';
 import sinon from 'sinon';
+import { Validator, Required } from '@lion/validate';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
@@ -33,6 +34,19 @@ describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(Array.from(el.children).find(child => child.slot === 'input').id).to.equal(el._inputId);
+  });
+
+  it(`has a fieldName based on the label`, async () => {
+    const el1 = await fixture(html`<${tag} label="foo">${inputSlot}</${tag}>`);
+    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+
+    const el2 = await fixture(html`<${tag}><label slot="label">bar</label>${inputSlot}</${tag}>`);
+    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it(`has a fieldName based on the name if no label exists`, async () => {
+    const el = await fixture(html`<${tag} name="foo">${inputSlot}</${tag}>`);
+    expect(el.fieldName).to.equal(el.name);
   });
 
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
@@ -284,66 +298,101 @@ describe('<lion-field>', () => {
       });
     });
 
-    it('shows validity states(error|warning|info|success) when interaction criteria met ', async () => {
-      // TODO: in order to make this test work as an integration test, we chose a modelValue
-      // that is compatible with lion-input-email.
-      // However, when we can put priorities to validators (making sure error message of hasX is
-      // shown instead of a predefined validator like isEmail), we should fix this.
-      function hasX(str) {
-        return { hasX: str.indexOf('x') > -1 };
-      }
-      const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-      const feedbackEl = el._feedbackElement;
+    it('should conditionally show error', async () => {
+      const HasX = class extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasX';
+        }
 
-      el.modelValue = 'a@b.nl';
-      el.errorValidators = [[hasX]];
+        execute(value) {
+          const result = value.indexOf('x') === -1;
+          return result;
+        }
+      };
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
 
-      expect(el.error.hasX).to.equal(true);
-      expect(feedbackEl.innerText.trim()).to.equal(
-        '',
-        'shows no feedback, although the element has an error',
-      );
-      el.dirty = true;
-      el.touched = true;
-      el.modelValue = 'ab@c.nl'; // retrigger validation
-      await el.updateComplete;
+      const executeScenario = async (_sceneEl, scenario) => {
+        const sceneEl = _sceneEl;
+        sceneEl.resetInteractionState();
+        sceneEl.touched = scenario.el.touched;
+        sceneEl.dirty = scenario.el.dirty;
+        sceneEl.prefilled = scenario.el.prefilled;
+        sceneEl.submitted = scenario.el.submitted;
 
-      expect(feedbackEl.innerText.trim()).to.equal(
-        'This is error message for hasX',
-        'shows feedback, because touched=true and dirty=true',
-      );
+        await sceneEl.updateComplete;
+        await sceneEl.feedbackComplete;
+        expect(sceneEl.showsFeedbackFor).to.deep.equal(scenario.wantedShowsFeedbackFor);
+      };
 
-      el.touched = false;
-      el.dirty = false;
-      el.prefilled = true;
-      await el.updateComplete;
-      expect(feedbackEl.innerText.trim()).to.equal(
-        'This is error message for hasX',
-        'shows feedback, because prefilled=true',
-      );
+      await executeScenario(el, {
+        index: 0,
+        el: { touched: true, dirty: true, prefilled: false, submitted: false },
+        wantedShowsFeedbackFor: ['error'],
+      });
+      await executeScenario(el, {
+        index: 1,
+        el: { touched: false, dirty: false, prefilled: true, submitted: false },
+        wantedShowsFeedbackFor: ['error'],
+      });
+
+      await executeScenario(el, {
+        index: 2,
+        el: { touched: false, dirty: false, prefilled: false, submitted: true },
+        wantedShowsFeedbackFor: ['error'],
+      });
+
+      await executeScenario(el, {
+        index: 3,
+        el: { touched: false, dirty: true, prefilled: false, submitted: false },
+        wantedShowsFeedbackFor: [],
+      });
+
+      await executeScenario(el, {
+        index: 4,
+        el: { touched: true, dirty: false, prefilled: false, submitted: false },
+        wantedShowsFeedbackFor: [],
+      });
     });
 
     it('can be required', async () => {
       const el = await fixture(html`
         <${tag}
-          .errorValidators=${[['required']]}
+          .validators=${[new Required()]}
         >${inputSlot}</${tag}>
       `);
-      expect(el.error.required).to.be.true;
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error).to.have.a.property('Required');
       el.modelValue = 'cat';
-      expect(el.error.required).to.be.undefined;
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+      expect(el.validationStates.error).not.to.have.a.property('Required');
     });
 
     it('will only update formattedValue when valid on `user-input-changed`', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
-      function isBarValidator(value) {
-        return { isBar: value === 'bar' };
-      }
+      const Bar = class extends Validator {
+        constructor(...args) {
+          super(...args);
+          this.name = 'Bar';
+        }
+
+        execute(value) {
+          const hasError = value !== 'bar';
+          return hasError;
+        }
+      };
       const el = await fixture(html`
         <${tag}
           .modelValue=${'init-string'}
           .formatter=${formatterSpy}
-          .errorValidators=${[[isBarValidator]]}
+          .validators=${[new Bar()]}
         >${inputSlot}</${tag}>
       `);
 

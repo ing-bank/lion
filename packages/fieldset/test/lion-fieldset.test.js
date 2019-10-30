@@ -1,5 +1,6 @@
 import { expect, fixture, html, unsafeStatic, triggerFocusFor, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
+import { Validator, IsNumber } from '@lion/validate';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import '@lion/input/lion-input.js';
 import '../lion-fieldset.js';
@@ -21,14 +22,27 @@ beforeEach(() => {
 });
 
 describe('<lion-fieldset>', () => {
+  it(`has a fieldName based on the label`, async () => {
+    const el1 = await fixture(html`<${tag} label="foo">${inputSlots}</${tag}>`);
+    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+
+    const el2 = await fixture(html`<${tag}><label slot="label">bar</label>${inputSlots}</${tag}>`);
+    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it(`has a fieldName based on the name if no label exists`, async () => {
+    const el = await fixture(html`<${tag} name="foo">${inputSlots}</${tag}>`);
+    expect(el.fieldName).to.equal(el.name);
+  });
+
   it(`${tagString} has an up to date list of every form element in #formElements`, async () => {
-    const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
+    const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();
-    expect(Object.keys(fieldset.formElements).length).to.equal(3);
-    expect(fieldset.formElements['hobbies[]'].length).to.equal(2);
-    fieldset.removeChild(fieldset.formElements['hobbies[]'][0]);
-    expect(Object.keys(fieldset.formElements).length).to.equal(3);
-    expect(fieldset.formElements['hobbies[]'].length).to.equal(1);
+    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements['hobbies[]'].length).to.equal(2);
+    el.removeChild(el.formElements['hobbies[]'][0]);
+    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements['hobbies[]'].length).to.equal(1);
   });
 
   it(`supports in html wrapped form elements`, async () => {
@@ -46,17 +60,17 @@ describe('<lion-fieldset>', () => {
   });
 
   it('handles names with ending [] as an array', async () => {
-    const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
+    const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();
-    fieldset.formElements['gender[]'][0].modelValue = { value: 'male' };
-    fieldset.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
-    fieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
+    el.formElements['gender[]'][0].modelValue = { value: 'male' };
+    el.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
+    el.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
 
-    expect(Object.keys(fieldset.formElements).length).to.equal(3);
-    expect(fieldset.formElements['hobbies[]'].length).to.equal(2);
-    expect(fieldset.formElements['hobbies[]'][0].modelValue.value).to.equal('chess');
-    expect(fieldset.formElements['gender[]'][0].modelValue.value).to.equal('male');
-    expect(fieldset.modelValue['hobbies[]']).to.deep.equal([
+    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements['hobbies[]'].length).to.equal(2);
+    expect(el.formElements['hobbies[]'][0].modelValue.value).to.equal('chess');
+    expect(el.formElements['gender[]'][0].modelValue.value).to.equal('male');
+    expect(el.modelValue['hobbies[]']).to.deep.equal([
       { checked: false, value: 'chess' },
       { checked: false, value: 'rugby' },
     ]);
@@ -124,36 +138,36 @@ describe('<lion-fieldset>', () => {
   /* eslint-enable no-console */
 
   it('can dynamically add/remove elements', async () => {
-    const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
+    const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     const newField = await fixture(html`<${childTag} name="lastName"></${childTag}>`);
 
-    expect(Object.keys(fieldset.formElements).length).to.equal(3);
+    expect(Object.keys(el.formElements).length).to.equal(3);
 
-    fieldset.appendChild(newField);
-    expect(Object.keys(fieldset.formElements).length).to.equal(4);
+    el.appendChild(newField);
+    expect(Object.keys(el.formElements).length).to.equal(4);
 
-    fieldset._inputNode.removeChild(newField);
-    expect(Object.keys(fieldset.formElements).length).to.equal(3);
+    el._inputNode.removeChild(newField);
+    expect(Object.keys(el.formElements).length).to.equal(3);
   });
 
   it('can read/write all values (of every input) via this.modelValue', async () => {
-    const fieldset = await fixture(html`
+    const el = await fixture(html`
       <${tag}>
         <${childTag} name="lastName"></${childTag}>
         <${tag} name="newfieldset">${inputSlots}</${tag}>
       </${tag}>
     `);
-    await fieldset.registrationReady;
-    const newFieldset = fieldset.querySelector('lion-fieldset');
+    await el.registrationReady;
+    const newFieldset = el.querySelector('lion-fieldset');
     await newFieldset.registrationReady;
-    fieldset.formElements.lastName.modelValue = 'Bar';
+    el.formElements.lastName.modelValue = 'Bar';
     newFieldset.formElements['hobbies[]'][0].modelValue = { checked: true, value: 'chess' };
     newFieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'football' };
     newFieldset.formElements['gender[]'][0].modelValue = { checked: false, value: 'male' };
     newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
     newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
 
-    expect(fieldset.modelValue).to.deep.equal({
+    expect(el.modelValue).to.deep.equal({
       lastName: 'Bar',
       newfieldset: {
         'hobbies[]': [{ checked: true, value: 'chess' }, { checked: false, value: 'football' }],
@@ -161,7 +175,7 @@ describe('<lion-fieldset>', () => {
         color: { checked: false, value: 'blue' },
       },
     });
-    fieldset.modelValue = {
+    el.modelValue = {
       lastName: 2,
       newfieldset: {
         'hobbies[]': [{ checked: true, value: 'chess' }, { checked: false, value: 'baseball' }],
@@ -177,7 +191,7 @@ describe('<lion-fieldset>', () => {
       checked: false,
       value: 'baseball',
     });
-    expect(fieldset.formElements.lastName.modelValue).to.equal(2);
+    expect(el.formElements.lastName.modelValue).to.equal(2);
   });
 
   it('does not throw if setter data of this.modelValue can not be handled', async () => {
@@ -204,9 +218,9 @@ describe('<lion-fieldset>', () => {
   it('disables/enables all its formElements if it becomes disabled/enabled', async () => {
     const el = await fixture(html`<${tag} disabled>${inputSlots}</${tag}>`);
     await nextFrame();
-    expect(el.formElements.color.disabled).to.equal(true);
-    expect(el.formElements['hobbies[]'][0].disabled).to.equal(true);
-    expect(el.formElements['hobbies[]'][1].disabled).to.equal(true);
+    expect(el.formElements.color.disabled).to.be.true;
+    expect(el.formElements['hobbies[]'][0].disabled).to.be.true;
+    expect(el.formElements['hobbies[]'][1].disabled).to.be.true;
 
     el.disabled = false;
     await el.updateComplete;
@@ -221,27 +235,36 @@ describe('<lion-fieldset>', () => {
     );
     await el.updateComplete;
     expect(el.disabled).to.equal(false);
-    expect(el.formElements.sub.disabled).to.equal(true);
-    expect(el.formElements.sub.formElements.color.disabled).to.equal(true);
-    expect(el.formElements.sub.formElements['hobbies[]'][0].disabled).to.equal(true);
-    expect(el.formElements.sub.formElements['hobbies[]'][1].disabled).to.equal(true);
+    expect(el.formElements.sub.disabled).to.be.true;
+    expect(el.formElements.sub.formElements.color.disabled).to.be.true;
+    expect(el.formElements.sub.formElements['hobbies[]'][0].disabled).to.be.true;
+    expect(el.formElements.sub.formElements['hobbies[]'][1].disabled).to.be.true;
   });
 
   describe('validation', () => {
     it('validates on init', async () => {
-      function isCat(value) {
-        return { isCat: value === 'cat' };
+      class IsCat extends Validator {
+        constructor() {
+          super();
+          this.name = 'IsCat';
+        }
+
+        execute(value) {
+          const hasError = value !== 'cat';
+          return hasError;
+        }
       }
+
       const el = await fixture(html`
         <${tag}>
           <${childTag} name="color"
-            .errorValidators=${[[isCat]]}
+            .validators=${[new IsCat()]}
             .modelValue=${'blue'}
           ></${childTag}>
         </${tag}>
       `);
       await nextFrame();
-      expect(el.formElements.color.error.isCat).to.equal(true);
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
     });
 
     it('validates when a value changes', async () => {
@@ -252,57 +275,70 @@ describe('<lion-fieldset>', () => {
       expect(spy.callCount).to.equal(1);
     });
 
-    it('has a special {error, warning, info, success} validator for all children - can be checked via this.error.formElementsHaveNoError', async () => {
-      function isCat(value) {
-        return { isCat: value === 'cat' };
+    it('has a special validator for all children - can be checked via this.error.FormElementsHaveNoError', async () => {
+      class IsCat extends Validator {
+        constructor() {
+          super();
+          this.name = 'IsCat';
+        }
+
+        execute(value) {
+          const hasError = value !== 'cat';
+          return hasError;
+        }
       }
 
       const el = await fixture(html`
         <${tag}>
           <${childTag} name="color"
-            .errorValidators=${[[isCat]]}
+            .validators=${[new IsCat()]}
             .modelValue=${'blue'}
           ></${childTag}>
         </${tag}>
       `);
       await nextFrame();
 
-      expect(el.error.formElementsHaveNoError).to.equal(true);
-      expect(el.formElements.color.error.isCat).to.equal(true);
+      expect(el.validationStates.error.FormElementsHaveNoError).to.be.true;
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
       el.formElements.color.modelValue = 'cat';
-      expect(el.error).to.deep.equal({});
+      expect(el.validationStates.error).to.deep.equal({});
     });
 
     it('validates on children (de)registration', async () => {
-      function hasEvenNumberOfChildren(modelValue) {
-        return { even: Object.keys(modelValue).length % 2 === 0 };
+      class HasEvenNumberOfChildren extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasEvenNumberOfChildren';
+        }
+
+        execute(value) {
+          const hasError = Object.keys(value).length % 2 !== 0;
+          return hasError;
+        }
       }
       const el = await fixture(html`
-        <${tag} .errorValidators=${[[hasEvenNumberOfChildren]]}>
+        <${tag} .validators=${[new HasEvenNumberOfChildren()]}>
           <${childTag} id="c1" name="c1"></${childTag}>
         </${tag}>
       `);
-      const child2 = await fixture(
-        html`
-          <${childTag} name="c2"></${childTag}>
-        `,
-      );
-
+      const child2 = await fixture(html`
+        <${childTag} name="c2"></${childTag}>
+      `);
       await nextFrame();
-      expect(el.error.even).to.equal(true);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
       el.appendChild(child2);
       await nextFrame();
-      expect(el.error.even).to.equal(undefined);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
 
       el.removeChild(child2);
       await nextFrame();
-      expect(el.error.even).to.equal(true);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
       // Edge case: remove all children
       el.removeChild(el.querySelector('[id=c1]'));
       await nextFrame();
-      expect(el.error.even).to.equal(undefined);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
     });
   });
 
@@ -319,7 +355,7 @@ describe('<lion-fieldset>', () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
       fieldset.formElements['hobbies[]'][0].modelValue = { checked: true, value: 'football' };
-      expect(fieldset.dirty).to.equal(true);
+      expect(fieldset.dirty).to.be.true;
     });
 
     it('sets touched when last field in fieldset left after focus', async () => {
@@ -426,14 +462,24 @@ describe('<lion-fieldset>', () => {
     });
 
     it('potentially shows fieldset error message on interaction change', async () => {
-      const input1IsTen = value => ({ input1IsTen: value.input1 === 10 });
-      const isNumber = value => ({ isNumber: typeof value === 'number' });
+      class Input1IsTen extends Validator {
+        constructor() {
+          super();
+          this.name = 'Input1IsTen';
+        }
+
+        execute(value) {
+          const hasError = value.input1 !== 10;
+          return hasError;
+        }
+      }
+
       const outSideButton = await fixture(html`
         <button>outside</button>
       `);
       const el = await fixture(html`
-        <${tag} .errorValidators=${[[input1IsTen]]}>
-          <${childTag} name="input1" .errorValidators=${[[isNumber]]}></${childTag}>
+        <${tag} .validators=${[new Input1IsTen()]}>
+          <${childTag} name="input1" .validators=${[new IsNumber()]}></${childTag}>
         </${tag}>
       `);
       await nextFrame();
@@ -443,20 +489,29 @@ describe('<lion-fieldset>', () => {
       outSideButton.focus();
 
       await el.updateComplete;
-      expect(el.error.input1IsTen).to.be.true;
-      expect(el.errorShow).to.be.true;
+      expect(el.validationStates.error.Input1IsTen).to.be.true;
+      expect(el.showsFeedbackFor).to.deep.equal(['error']);
     });
 
     it('show error if tabbing "out" of last ', async () => {
-      const input1IsTen = value => ({ input1IsTen: value.input1 === 10 });
-      const isNumber = value => ({ isNumber: typeof value === 'number' });
+      class Input1IsTen extends Validator {
+        constructor() {
+          super();
+          this.name = 'Input1IsTen';
+        }
+
+        execute(value) {
+          const hasError = value.input1 !== 10;
+          return hasError;
+        }
+      }
       const outSideButton = await fixture(html`
         <button>outside</button>
       `);
       const el = await fixture(html`
-        <${tag} .errorValidators=${[[input1IsTen]]}>
-          <${childTag} name="input1" .errorValidators=${[[isNumber]]}></${childTag}>
-          <${childTag} name="input2" .errorValidators=${[[isNumber]]}></${childTag}>
+        <${tag} .validators=${[new Input1IsTen()]}>
+          <${childTag} name="input1" .validators=${[new IsNumber()]}></${childTag}>
+          <${childTag} name="input2" .validators=${[new IsNumber()]}></${childTag}>
         </${tag}>
       `);
       const inputs = el.querySelectorAll(childTagString);
@@ -466,8 +521,8 @@ describe('<lion-fieldset>', () => {
       outSideButton.focus();
       await nextFrame();
 
-      expect(el.error.input1IsTen).to.be.true;
-      expect(el.errorShow).to.be.true;
+      expect(el.validationStates.error.Input1IsTen).to.be.true;
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
     });
   });
 
@@ -711,34 +766,52 @@ describe('<lion-fieldset>', () => {
     });
 
     it('has correct validation afterwards', async () => {
-      const isCat = modelValue => ({ isCat: modelValue === 'cat' });
-      const containsA = modelValues => ({
-        containsA: modelValues.color ? modelValues.color.indexOf('a') > -1 : false,
-      });
+      class IsCat extends Validator {
+        constructor() {
+          super();
+          this.name = 'IsCat';
+        }
+
+        execute(value) {
+          const hasError = value !== 'cat';
+          return hasError;
+        }
+      }
+      class ColorContainsA extends Validator {
+        constructor() {
+          super();
+          this.name = 'ColorContainsA';
+        }
+
+        execute(value) {
+          const hasError = value.color.indexOf('a') === -1;
+          return hasError;
+        }
+      }
 
       const el = await fixture(html`
-        <${tag} .errorValidators=${[[containsA]]}>
-          <${childTag} name="color" .errorValidators=${[[isCat]]}></${childTag}>
+        <${tag} .validators=${[new ColorContainsA()]}>
+          <${childTag} name="color" .validators=${[new IsCat()]}></${childTag}>
           <${childTag} name="color2"></${childTag}>
         </${tag}>
       `);
       await el.registrationReady;
-      expect(el.errorState).to.be.true;
-      expect(el.error.containsA).to.be.true;
-      expect(el.formElements.color.errorState).to.be.false;
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
+      expect(el.formElements.color.hasFeedbackFor).to.deep.equal([]);
 
       el.formElements.color.modelValue = 'onlyb';
-      expect(el.errorState).to.be.true;
-      expect(el.error.containsA).to.be.true;
-      expect(el.formElements.color.error.isCat).to.be.true;
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
 
       el.formElements.color.modelValue = 'cat';
-      expect(el.errorState).to.be.false;
+      expect(el.hasFeedbackFor).to.deep.equal([]);
 
       el.resetGroup();
-      expect(el.errorState).to.be.true;
-      expect(el.error.containsA).to.be.true;
-      expect(el.formElements.color.errorState).to.be.false;
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
+      expect(el.formElements.color.hasFeedbackFor).to.deep.equal([]);
     });
 
     it('has access to `_initialModelValue` based on initial children states', async () => {
@@ -817,7 +890,7 @@ describe('<lion-fieldset>', () => {
       fieldset.formElements['gender[]'][0].modelValue = { checked: false, value: 'male' };
       fieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       fieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
-      expect(fieldset.hasAttribute('role')).to.equal(true);
+      expect(fieldset.hasAttribute('role')).to.be.true;
       expect(fieldset.getAttribute('role')).to.contain('group');
     });
 

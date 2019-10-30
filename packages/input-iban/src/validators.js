@@ -1,12 +1,59 @@
+/* eslint-disable max-classes-per-file  */
+
 import { isValidIBAN } from '@bundled-es-modules/ibantools/ibantools.js';
+import { Validator } from '@lion/validate';
+import { localize } from '@lion/localize';
 
-export const isIBAN = value => isValidIBAN(value);
+let loaded = false;
+const loadTranslations = async () => {
+  if (loaded) {
+    return;
+  }
+  await localize.loadNamespace(
+    {
+      'lion-validate+iban': locale => import(`../translations/${locale}.js`),
+    },
+    { locale: localize.localize },
+  );
+  loaded = true;
+};
 
-export const isIBANValidator = () => [(...params) => ({ isIBAN: isIBAN(...params) })];
+export class IsIBAN extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'IsIBAN';
+  }
 
-export const isCountryIBAN = (value, country = '') =>
-  isIBAN(value) && value.slice(0, 2) === country;
-export const isCountryIBANValidator = (...factoryParams) => [
-  (...params) => ({ isCountryIBAN: isCountryIBAN(...params) }),
-  ...factoryParams,
-];
+  // eslint-disable-next-line class-methods-use-this
+  execute(value) {
+    return !isValidIBAN(value);
+  }
+
+  static async getMessage(data) {
+    await loadTranslations();
+    return localize.msg('lion-validate+iban:error.IsIBAN', data);
+  }
+}
+
+export class IsCountryIBAN extends IsIBAN {
+  constructor(...args) {
+    super(...args);
+    this.name = 'IsCountryIBAN';
+  }
+
+  execute(value) {
+    const notIBAN = super.execute(value);
+    if (value.slice(0, 2) !== this.param) {
+      return true;
+    }
+    if (notIBAN) {
+      return true;
+    }
+    return false;
+  }
+
+  static async getMessage(data) {
+    await loadTranslations();
+    return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+  }
+}

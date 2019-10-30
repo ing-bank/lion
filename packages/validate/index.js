@@ -1,5 +1,4 @@
 export { ValidateMixin } from './src/ValidateMixin.js';
-export { FeedbackMixin } from './src/FeedbackMixin.js';
 export { Unparseable } from './src/Unparseable.js';
 export { Validator } from './src/Validator.js';
 export { ResultValidator } from './src/ResultValidator.js';
@@ -17,6 +16,8 @@ export {
   IsEmail,
 } from './src/validators/StringValidators.js';
 
+export { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './src/validators/NumberValidators.js';
+
 export {
   IsDate,
   MinDate,
@@ -24,3 +25,5 @@ export {
   MinMaxDate,
   IsDateDisabled,
 } from './src/validators/DateValidators.js';
+
+export { DefaultSuccess } from './src/resultValidators/DefaultSuccess.js';

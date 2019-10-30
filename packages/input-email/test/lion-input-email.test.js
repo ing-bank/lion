@@ -4,14 +4,15 @@ import '../lion-input-email.js';
 
 describe('<lion-input-email>', () => {
   it('has a type = text', async () => {
-    const lionInputEmail = await fixture(`<lion-input-email></lion-input-email>`);
-    expect(lionInputEmail._inputNode.type).to.equal('text');
+    const el = await fixture(`<lion-input-email></lion-input-email>`);
+    expect(el._inputNode.type).to.equal('text');
   });
 
-  it('has validator "isEmail" applied by default', async () => {
-    // More eloborate tests can be found in lion-validate/validators.js
-    const lionInputEmail = await fixture(`<lion-input-email></lion-input-email>`);
-    lionInputEmail.modelValue = 'foo@bar@example.com';
-    expect(lionInputEmail.errorState).to.equal(true);
+  it('has validator "IsEmail" applied by default', async () => {
+    // More elaborate tests can be found in lion-validate/test/StringValidators.test.js
+    const el = await fixture(`<lion-input-email></lion-input-email>`);
+    el.modelValue = 'foo@bar@example.com';
+    expect(el.hasFeedbackFor).to.deep.equal(['error']);
+    expect(el.validationStates.error.IsEmail).to.be.true;
   });
 });
