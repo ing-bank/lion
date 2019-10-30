@@ -300,13 +300,13 @@ export function runFeedbackMixinSuite(customConfig) {
         });
       });
 
-    it('".getMessage()" gets a .fieldName', async () => {
+    it('".getMessage()" gets .fieldName defined on instance', async () => {
         const constructorValidator = new MinLength(4, { type: 'x' }); // type to prevent duplicates
         const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
 
         const el = await fixture(html`
           <${tag}
-            .validators=${[new MinLength(4, { type: 'x' })]}
+            .validators=${[constructorValidator]}
             .modelValue=${'cat'}
             .fieldName=${new Promise((resolve) => resolve('myField'))}
           >${lightDom}</${tag}>
@@ -318,6 +318,28 @@ export function runFeedbackMixinSuite(customConfig) {
             formControl: el,
             fieldName: 'myField',
           });
+      });
+    });
+
+    it('".getMessage()" gets .fieldName defined on Validator config', async () => {
+      const constructorValidator = new MinLength(4, {
+        fieldName: new Promise((resolve) => resolve('myFieldViaCfg'))
+      });
+      const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
+
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[constructorValidator]}
+          .modelValue=${'cat'}
+          .fieldName=${new Promise((resolve) => resolve('myField'))}
+        >${lightDom}</${tag}>
+      `);
+      await el.feedbackComplete;
+      expect(spy.args[0][0]).to.eql({
+        validatorParams: 4,
+        modelValue: 'cat',
+        formControl: el,
+        fieldName: 'myFieldViaCfg',
       });
     });
   });

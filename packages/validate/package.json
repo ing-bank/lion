@@ -29,6 +29,7 @@
     "stories",
     "test",
     "test-helpers",
+    "test-suites",
     "translations",
     "*.js"
   ],

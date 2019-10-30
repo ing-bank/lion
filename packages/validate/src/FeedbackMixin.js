@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
+/* eslint-disable class-methods-use-this, camelcase, no-param-reassign */
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
@@ -89,10 +89,19 @@ export const FeedbackMixin = dedupeMixin(superclass =>
       this._visibleMessagesAmount = 1;
 
       this._renderFeedback = this._renderFeedback.bind(this);
-
       this.addEventListener('validate-performed', this._renderFeedback);
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
       // TODO: move to extending layer
       localize.addEventListener('localeChanged', this._renderFeedback);
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      // TODO: move to extending layer
+      localize.removeEventListener('localeChanged', this._renderFeedback);
     }
 
     updateSync(name, oldValue) {
@@ -133,10 +142,12 @@ export const FeedbackMixin = dedupeMixin(superclass =>
      * @return {FeedbackMessage[]}
      */
     async __getFeedbackMessages(validators) {
-      const fieldName = await this.fieldName;
-
+      let fieldName = await this.fieldName;
       return Promise.all(
         validators.map(async validator => {
+          if (validator.config.fieldName) {
+            fieldName = await validator.config.fieldName;
+          }
           const message = await validator._getMessage({
             validatorParams: validator.param,
             modelValue: this.modelValue,
