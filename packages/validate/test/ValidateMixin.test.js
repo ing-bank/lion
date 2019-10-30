@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* eslint-disable no-unused-vars, no-param-reassign */
 import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -1341,3 +1342,8 @@ describe('ValidateMixin', () => {
     });
   });
 });
+=======
+import { runValidateMixinSuite } from '../test-suites/ValidateMixin.suite.js';
+
+runValidateMixinSuite();
+>>>>>>> feat(validate): new validation api, async validation and more
