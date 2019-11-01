@@ -84,52 +84,20 @@ storiesOf('Forms|Fieldset', module)
       </lion-fieldset>
     `,
   )
-  .add('Validation 2 inputs', () => {
-    const input1IsTen = value => ({
-      input1IsTen: value.input1 === 'cats' && value.input2 === 'dogs',
-    });
-    localize.locale = 'en-GB';
-    try {
-      localize.addData('en-GB', 'lion-validate+input1IsTen', {
-        error: {
-          input1IsTen: 'Input 1 needs to be "cats" and Input 2 needs to be "dogs"',
-        },
-      });
-    } catch (error) {
-      // expected as it's a demo
-    }
-
-    return html`
-      <lion-fieldset .errorValidators=${[[input1IsTen]]}>
-        <lion-input
-          label="An all time YouTube favorite"
-          name="input1"
-          help-text="longer then 2 characters"
-          .errorValidators=${[minLengthValidator(3)]}
-        ></lion-input>
-        <lion-input
-          label="Another all time YouTube favorite"
-          name="input2"
-          help-text="longer then 2 characters"
-          .errorValidators=${[minLengthValidator(3)]}
-        ></lion-input>
-      </lion-fieldset>
-    `;
-  })
   .add('Validation', () => {
-    function isFakeValidator() {
+    function isDemoValidator() {
       return false;
     }
 
-    const fakeValidator = (...factoryParams) => [
-      (...params) => ({ validator: isFakeValidator(...params) }),
+    const demoValidator = (...factoryParams) => [
+      (...params) => ({ validator: isDemoValidator(...params) }),
       ...factoryParams,
     ];
 
     try {
       localize.addData('en-GB', 'lion-validate+validator', {
         error: {
-          validator: 'Fake error message',
+          validator: 'Demo error message',
         },
       });
     } catch (error) {
@@ -137,7 +105,7 @@ storiesOf('Forms|Fieldset', module)
     }
 
     return html`
-      <lion-fieldset id="someId" .errorValidators=${[fakeValidator()]}>
+      <lion-fieldset id="someId" .errorValidators=${[demoValidator()]}>
         <lion-input name="input1" label="Label"></lion-input>
         <button
           @click=${() => {
@@ -153,5 +121,91 @@ storiesOf('Forms|Fieldset', module)
       <button>
         Tab-able
       </button>
+    `;
+  })
+  .add('Validation 2 inputs', () => {
+    const isCatsAndDogs = value => ({
+      isCatsAndDogs: value.input1 === 'cats' && value.input2 === 'dogs',
+    });
+    localize.locale = 'en-GB';
+    try {
+      localize.addData('en-GB', 'lion-validate+isCatsAndDogs', {
+        error: {
+          isCatsAndDogs:
+            '[Fieldset Error] Input 1 needs to be "cats" and Input 2 needs to be "dogs"',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    return html`
+      <lion-fieldset .errorValidators=${[[isCatsAndDogs]]}>
+        <lion-input
+          label="An all time YouTube favorite"
+          name="input1"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+        <lion-input
+          label="Another all time YouTube favorite"
+          name="input2"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+      </lion-fieldset>
+    `;
+  })
+  .add('Validation 2 fieldsets', () => {
+    const isCats = value => ({
+      isCats: value.input1 === 'cats',
+    });
+    localize.locale = 'en-GB';
+    try {
+      localize.addData('en-GB', 'lion-validate+isCats', {
+        error: {
+          isCats: '[Fieldset Nr. 1 Error] Input 1 needs to be "cats"',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    const isDogs = value => ({
+      isDogs: value.input1 === 'dogs',
+    });
+    localize.locale = 'en-GB';
+    try {
+      localize.addData('en-GB', 'lion-validate+isDogs', {
+        error: {
+          isDogs: '[Fieldset Nr. 2 Error] Input 1 needs to be "dogs"',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    return html`
+      <lion-fieldset .errorValidators=${[[isCats]]}>
+        <label slot="label">Fieldset Nr. 1</label>
+        <lion-input
+          label="An all time YouTube favorite"
+          name="input1"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+      </lion-fieldset>
+      <br />
+      <hr />
+      <br />
+      <lion-fieldset .errorValidators=${[[isDogs]]}>
+        <label slot="label">Fieldset Nr. 2</label>
+        <lion-input
+          label="An all time YouTube favorite"
+          name="input1"
+          help-text="longer then 2 characters"
+          .errorValidators=${[minLengthValidator(3)]}
+        ></lion-input>
+      </lion-fieldset>
     `;
   });

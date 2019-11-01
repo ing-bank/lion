@@ -101,38 +101,25 @@ export class LionFieldset extends FormRegistrarMixin(
     this.__createTypeAbsenceValidators();
 
     this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
+
+    this.addEventListener('focusin', this._syncFocused);
+    this.addEventListener('focusout', this._onFocusOut);
+    this.addEventListener('validation-done', this.__validate);
+    this.addEventListener('dirty-changed', this._syncDirty);
   }
 
   connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.connectedCallback();
-
-    this.addEventListener('focusin', this._updateTouchedClass);
-    this.addEventListener('focusout', this._onFocusOut);
-    this.addEventListener('focusin', this._syncFocused);
-
-    this.addEventListener('validation-done', this.__validate);
-    this.addEventListener('dirty-changed', this._syncDirty);
-
+    super.connectedCallback(); // eslint-disable-line wc/guard-super-call
     this._setRole();
-    document.addEventListener('click', this._checkForOutsideClick);
-  }
-
-  _checkForOutsideClick(event) {
-    const outsideGroupClicked = !this.contains(event.target);
-    if (outsideGroupClicked) {
-      this.touched = true;
-    }
   }
 
   disconnectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.disconnectedCallback();
-    this.removeEventListener('validation-done', this.__validate);
-    this.removeEventListener('touched-changed', this._updateTouched);
-    this.removeEventListener('dirty-changed', this._syncDirty);
+    super.disconnectedCallback(); // eslint-disable-line wc/guard-super-call
 
-    document.removeEventListener('click', this._checkForOutsideClick);
+    if (this.__hasActiveOutsideClickHandling) {
+      document.removeEventListener('click', this._checkForOutsideClick);
+      this.__hasActiveOutsideClickHandling = false;
+    }
   }
 
   updated(changedProps) {
@@ -162,6 +149,23 @@ export class LionFieldset extends FormRegistrarMixin(
     if (changedProps.has('focused')) {
       /** @deprecated use touched attribute instead */
       this.classList[this.focused ? 'add' : 'remove']('state-focused');
+      if (this.focused === true) {
+        this.__setupOutsideClickHandling();
+      }
+    }
+  }
+
+  __setupOutsideClickHandling() {
+    if (!this.__hasActiveOutsideClickHandling) {
+      document.addEventListener('click', this._checkForOutsideClick);
+      this.__hasActiveOutsideClickHandling = true;
+    }
+  }
+
+  _checkForOutsideClick(event) {
+    const outsideGroupClicked = !this.contains(event.target);
+    if (outsideGroupClicked) {
+      this.touched = true;
     }
   }
 
