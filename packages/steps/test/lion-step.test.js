@@ -1,4 +1,4 @@
-import { expect, fixture, fixtureSync, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 
 import '../lion-step.js';
 
@@ -33,30 +33,6 @@ describe('lion-step', () => {
     el.children[0].invertCondition = true;
     expect(el.children[0].condition()).to.equal(true);
     expect(el.children[0].passesCondition()).to.equal(false);
-  });
-
-  it('allows to define it as the initial-step', async () => {
-    const el = fixtureSync(html`
-      <fake-lion-steps>
-        <lion-step initial-step>Step 1</lion-step>
-      </fake-lion-steps>
-    `);
-    el.steps = [el.children[0]];
-    await el.updateComplete;
-    expect(el.current).to.equal(0);
-    expect(el.children[0].status).to.equal('entered');
-
-    const el2 = fixtureSync(html`
-      <fake-lion-steps>
-        <lion-step>Step 1</lion-step>
-        <lion-step initial-step>Step 2</lion-step>
-      </fake-lion-steps>
-    `);
-    el2.steps = [el2.children[0], el2.children[1]];
-    await el2.updateComplete;
-    expect(el2.current).to.equal(1);
-    expect(el2.children[0].status).to.equal('untouched');
-    expect(el2.children[1].status).to.equal('entered');
   });
 
   it('has "untouched" status by default', async () => {
