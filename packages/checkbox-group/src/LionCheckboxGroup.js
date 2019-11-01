@@ -121,6 +121,8 @@ export class LionCheckboxGroup extends LionFieldset {
     for (let i = 0; i < this.formElementsArray.length; i += 1) {
       if (check(this.formElementsArray[i], value)) {
         this.formElementsArray[i].checked = true;
+      } else {
+        this.formElementsArray[i].checked = false;
       }
     }
   }

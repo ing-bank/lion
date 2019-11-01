@@ -105,4 +105,44 @@ describe('<lion-checkbox-group>', () => {
     el.formElements['sports[]'][0].choiceChecked = true;
     expect(el.error.required).to.be.undefined;
   });
+
+  it('has checkedValues representing the 2 (two) currently checked checkbox values', async () => {
+    const el = await fixture(html`
+      <lion-checkbox-group>
+        <lion-checkbox name="fruits[]" .choiceValue=${'orange'}></lion-checkbox>
+        <lion-checkbox
+          name="fruits[]"
+          .choiceValue=${'banana'}
+          .choiceChecked=${true}
+        ></lion-checkbox>
+        <lion-checkbox
+          name="fruits[]"
+          .choiceValue=${'apple'}
+          .choiceChecked=${true}
+        ></lion-checkbox>
+      </lion-checkbox-group>
+    `);
+    await nextFrame();
+    expect(el.checkedValues).to.eql(['banana', 'apple']);
+    el.formElementsArray[1].checked = false;
+    expect(el.checkedValues).to.eql(['apple']);
+    el.formElementsArray[2].checked = false;
+    expect(el.checkedValues).to.eql(undefined);
+  });
+
+  it('can check a checkbox group by supplying an available checkedValues array', async () => {
+    const el = await fixture(html`
+      <lion-checkbox-group>
+        <lion-checkbox name="fruits[]" .choiceValue=${'orange'}></lion-checkbox>
+        <lion-checkbox name="fruits[]" .choiceValue=${'banana'}></lion-checkbox>
+        <lion-checkbox name="fruits[]" .choiceValue=${'apple'}></lion-checkbox>
+      </lion-checkbox-group>
+    `);
+    await nextFrame();
+    el.checkedValues = ['apple'];
+    expect(el.formElementsArray[2].checked).to.be.true;
+    el.checkedValues = ['orange', 'banana'];
+    expect(el.formElementsArray[2].checked).to.be.false;
+    expect(el.checkedValues).to.eql(['orange', 'banana']);
+  });
 });
