@@ -63,12 +63,16 @@ export const FormRegistrarMixin = dedupeMixin(
         this.__hasBeenRendered = true;
       }
 
-      addFormElement(child) {
+      addFormElement(child, index) {
         // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
         // eslint-disable-next-line no-param-reassign
         child.__parentFormGroup = this;
 
-        this.formElements.push(child);
+        if (index > 0) {
+          this.formElements.splice(index, 0, child);
+        } else {
+          this.formElements.push(child);
+        }
       }
 
       removeFormElement(child) {
@@ -89,7 +93,14 @@ export const FormRegistrarMixin = dedupeMixin(
           return;
         }
         ev.stopPropagation();
-        this.addFormElement(child);
+
+        // Check for siblings to determine the right order to insert into formElements
+        // If there is no next sibling, index is -1
+        let indexToInsertAt = -1;
+        if (this.formElements && Array.isArray(this.formElements)) {
+          indexToInsertAt = this.formElements.indexOf(child.nextElementSibling);
+        }
+        this.addFormElement(child, indexToInsertAt);
       }
 
       _onRequestToRemoveFormElement(ev) {

@@ -1,5 +1,6 @@
 import { LitElement, html, css } from '@lion/core';
 import { LionField } from '@lion/field';
+import { LionFieldset } from '@lion/fieldset';
 
 export class HelperOutput extends LitElement {
   static get properties() {
@@ -41,7 +42,7 @@ export class HelperOutput extends LitElement {
     if (!this.field) {
       // Fuzzy logic, but... practical
       const prev = this.previousElementSibling;
-      if (prev instanceof LionField) {
+      if (prev instanceof LionField || prev instanceof LionFieldset) {
         this.field = prev;
       }
     }

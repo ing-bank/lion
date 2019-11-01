@@ -49,6 +49,10 @@ export class LionField extends FormControlMixin(
         type: String,
         reflect: true,
       },
+      autocomplete: {
+        type: String,
+        reflect: true,
+      },
     };
   }
 
@@ -140,6 +144,10 @@ export class LionField extends FormControlMixin(
 
     if (changedProps.has('name')) {
       this.inputElement.name = this.name;
+    }
+
+    if (changedProps.has('autocomplete')) {
+      this.inputElement.autocomplete = this.autocomplete;
     }
   }
 
