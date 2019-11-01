@@ -72,7 +72,7 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
         hasInitial = true;
       }
     });
-    if (!hasInitial) {
+    if (!hasInitial && this.steps[0]) {
       this.steps[0].enter();
     }
   }
