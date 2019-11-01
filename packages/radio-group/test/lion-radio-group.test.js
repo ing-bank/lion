@@ -252,4 +252,19 @@ describe('<lion-radio-group>', () => {
 
     expect(group.serializedValue).to.deep.equal('');
   });
+
+  it(`becomes "touched" once a single element of the group changes`, async () => {
+    const el = await fixture(html`
+      <lion-radio-group>
+        <lion-radio name="myGroup[]"></lion-radio>
+        <lion-radio name="myGroup[]"></lion-radio>
+      </lion-radio-group>
+    `);
+    await nextFrame();
+
+    el.children[1].focus();
+    expect(el.touched).to.equal(false, 'initially, touched state is false');
+    el.children[1].checked = true;
+    expect(el.touched, `focused via a mouse click, group should be touched`).to.be.true;
+  });
 });
