@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign */
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { localize, LocalizeMixin } from '@lion/localize';
 import { Unparseable } from './Unparseable.js';
 import { randomOk } from './validators.js';
@@ -14,9 +13,14 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow, max-len
-    class ValidateMixin extends ObserverMixin(LocalizeMixin(SlotMixin(superclass))) {
+    class ValidateMixin extends LocalizeMixin(SlotMixin(superclass)) {
       /* * * * * * * * * *
     Configuration  */
+
+      constructor() {
+        super();
+        this.__oldValues = {};
+      }
 
       get slots() {
         return {
@@ -196,12 +200,11 @@ export const ValidateMixin = dedupeMixin(
         };
       }
 
-      static get asyncObservers() {
-        return {
-          ...super.asyncObservers,
-          // TODO: consider adding 'touched', 'dirty', 'submitted', 'prefilled' on LionFieldFundament
-          // level, since ValidateMixin doesn't have a direct dependency on interactionState
-          _createMessageAndRenderFeedback: [
+      updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (
+          [
             'error',
             'warning',
             'info',
@@ -211,30 +214,79 @@ export const ValidateMixin = dedupeMixin(
             'submitted',
             'prefilled',
             'label',
-          ],
-          _onErrorShowChangedAsync: ['errorShow'],
-        };
+          ].some(key => changedProperties.has(key))
+        ) {
+          this._createMessageAndRenderFeedback();
+        }
+
+        if (changedProperties.has('errorShow')) {
+          this._onErrorShowChangedAsync();
+        }
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          validate: [
+      _requestUpdate(name, oldVal) {
+        super._requestUpdate(name, oldVal);
+
+        /**
+         * Validation needs to happen before other updates
+         * E.g. formatting should not happen before we know the updated errorState
+         */
+        if (
+          [
             'errorValidators',
             'warningValidators',
             'infoValidators',
             'successValidators',
             'modelValue',
-          ],
-          _onErrorChanged: ['error'],
-          _onWarningChanged: ['warning'],
-          _onInfoChanged: ['info'],
-          _onSuccessChanged: ['success'],
-          _onErrorStateChanged: ['errorState'],
-          _onWarningStateChanged: ['warningState'],
-          _onInfoStateChanged: ['infoState'],
-          _onSuccessStateChanged: ['successState'],
-        };
+          ].some(key => name === key)
+        ) {
+          this.validate();
+        }
+
+        // @deprecated adding css classes for backwards compatibility
+        this.constructor.validationTypes.forEach(type => {
+          if (name === `${type}State`) {
+            this.classList[this[`${type}State`] ? 'add' : 'remove'](`state-${type}`);
+          }
+          if (name === `${type}Show`) {
+            this.classList[this[`${type}Show`] ? 'add' : 'remove'](`state-${type}-show`);
+          }
+        });
+        if (name === 'invalid') {
+          this.classList[this.invalid ? 'add' : 'remove'](`state-invalid`);
+        }
+
+        if (name === 'error' && this.error !== oldVal) {
+          this._onErrorChanged();
+        }
+
+        if (name === 'warning' && this.warning !== oldVal) {
+          this._onWarningChanged();
+        }
+
+        if (name === 'info' && this.info !== oldVal) {
+          this._onInfoChanged();
+        }
+
+        if (name === 'success' && this.success !== oldVal) {
+          this._onSuccessChanged();
+        }
+
+        if (name === 'errorState' && this.errorState !== oldVal) {
+          this._onErrorStateChanged();
+        }
+
+        if (name === 'warningState' && this.warningState !== oldVal) {
+          this._onWarningStateChanged();
+        }
+
+        if (name === 'infoState' && this.infoState !== oldVal) {
+          this._onInfoStateChanged();
+        }
+
+        if (name === 'successState' && this.successState !== oldVal) {
+          this._onSuccessStateChanged();
+        }
       }
 
       static get validationTypes() {
@@ -243,23 +295,6 @@ export const ValidateMixin = dedupeMixin(
 
       get _feedbackElement() {
         return (this.$$slot && this.$$slot('feedback')) || this.querySelector('[slot="feedback"]');
-      }
-
-      updated(changedProperties) {
-        super.updated(changedProperties);
-
-        // @deprecated adding css classes for backwards compatibility
-        this.constructor.validationTypes.forEach(name => {
-          if (changedProperties.has(`${name}State`)) {
-            this.classList[this[`${name}State`] ? 'add' : 'remove'](`state-${name}`);
-          }
-          if (changedProperties.has(`${name}Show`)) {
-            this.classList[this[`${name}Show`] ? 'add' : 'remove'](`state-${name}-show`);
-          }
-        });
-        if (changedProperties.has('invalid')) {
-          this.classList[this.invalid ? 'add' : 'remove'](`state-invalid`);
-        }
       }
 
       getFieldName(validatorParams) {
@@ -327,26 +362,26 @@ export const ValidateMixin = dedupeMixin(
         }
       }
 
-      _onErrorChanged(newValues, oldValues) {
-        if (!this.constructor._objectEquals(newValues.error, oldValues.error)) {
+      _onErrorChanged() {
+        if (!this.constructor._objectEquals(this.error, this.__oldValues.error)) {
           this.dispatchEvent(new CustomEvent('error-changed', { bubbles: true, composed: true }));
         }
       }
 
-      _onWarningChanged(newValues, oldValues) {
-        if (!this.constructor._objectEquals(newValues.warning, oldValues.warning)) {
+      _onWarningChanged() {
+        if (!this.constructor._objectEquals(this.warning, this.__oldValues.warning)) {
           this.dispatchEvent(new CustomEvent('warning-changed', { bubbles: true, composed: true }));
         }
       }
 
-      _onInfoChanged(newValues, oldValues) {
-        if (!this.constructor._objectEquals(newValues.info, oldValues.info)) {
+      _onInfoChanged() {
+        if (!this.constructor._objectEquals(this.info, this.__oldValues.info)) {
           this.dispatchEvent(new CustomEvent('info-changed', { bubbles: true, composed: true }));
         }
       }
 
-      _onSuccessChanged(newValues, oldValues) {
-        if (!this.constructor._objectEquals(newValues.success, oldValues.success)) {
+      _onSuccessChanged() {
+        if (!this.constructor._objectEquals(this.success, this.__oldValues.success)) {
           this.dispatchEvent(new CustomEvent('success-changed', { bubbles: true, composed: true }));
         }
       }
@@ -385,10 +420,10 @@ export const ValidateMixin = dedupeMixin(
         }
       }
 
-      _onErrorShowChangedAsync({ errorShow }) {
+      _onErrorShowChangedAsync() {
         // Screen reader output should be in sync with visibility of error messages
         if (this.inputElement) {
-          this.inputElement.setAttribute('aria-invalid', errorShow);
+          this.inputElement.setAttribute('aria-invalid', this.errorShow);
           // TODO: test and see if needed for a11y
           // this.inputElement.setCustomValidity(this._validationMessage || '');
         }
@@ -602,6 +637,7 @@ export const ValidateMixin = dedupeMixin(
         }
 
         this[`${type}State`] = resultList.length > 0;
+        this.__oldValues[type] = this[type];
         this[type] = result;
       }
 

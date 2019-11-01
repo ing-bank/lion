@@ -1,5 +1,4 @@
 import { dedupeMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { Unparseable } from '@lion/validate';
 
 /**
@@ -15,7 +14,7 @@ import { Unparseable } from '@lion/validate';
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class InteractionStateMixin extends ObserverMixin(superclass) {
+    class InteractionStateMixin extends superclass {
       static get properties() {
         return {
           /**
@@ -45,12 +44,15 @@ export const InteractionStateMixin = dedupeMixin(
         };
       }
 
-      static get syncObservers() {
-        return {
-          ...super.syncObservers,
-          _onTouchedChanged: ['touched'],
-          _onDirtyChanged: ['dirty'],
-        };
+      _requestUpdate(name, oldVal) {
+        super._requestUpdate(name, oldVal);
+        if (name === 'touched' && this.touched !== oldVal) {
+          this._onTouchedChanged();
+        }
+
+        if (name === 'dirty' && this.dirty !== oldVal) {
+          this._onDirtyChanged();
+        }
       }
 
       static _isPrefilled(modelValue) {

@@ -168,6 +168,44 @@ export const runRegistrationSuite = customConfig => {
         expect(el.formElements.length).to.equal(1);
       });
 
+      it('adds elements to formElements in the right order', async () => {
+        const el = await fixture(html`
+          <${parentTag}>
+            <${childTag}></${childTag}>
+            <${childTag}></${childTag}>
+            <${childTag}></${childTag}>
+          </${parentTag}>
+        `);
+
+        expect(el.formElements.length).to.equal(3);
+
+        // In the middle
+        const secondChild = el.firstElementChild.nextElementSibling;
+        const newField = await fixture(html`
+          <${childTag}></${childTag}>
+        `);
+        secondChild.insertAdjacentElement('beforebegin', newField);
+
+        expect(el.formElements.length).to.equal(4);
+        expect(el.formElements[1]).dom.to.equal(newField);
+
+        // Prepending
+        const anotherField = await fixture(html`
+          <${childTag}></${childTag}>
+        `);
+        el.prepend(anotherField);
+        expect(el.formElements.length).to.equal(5);
+        expect(el.formElements[0]).dom.to.equal(anotherField);
+
+        // Appending
+        const yetAnotherField = await fixture(html`
+          <${childTag}></${childTag}>
+        `);
+        el.appendChild(yetAnotherField);
+        expect(el.formElements.length).to.equal(6);
+        expect(el.formElements[5]).dom.to.equal(anotherField);
+      });
+
       // find a proper way to do this on polyfilled browsers
       it.skip('fires event "form-element-register" with the child as ev.target', async () => {
         const registerSpy = sinon.spy();

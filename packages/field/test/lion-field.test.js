@@ -124,6 +124,17 @@ describe('<lion-field>', () => {
     expect(el.$$slot('input').value).to.equal('one');
   });
 
+  // This is necessary for security, so that inputElements autocomplete can be set to 'off'
+  it('delegates autocomplete property', async () => {
+    const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
+    expect(el.inputElement.autocomplete).to.equal('');
+    expect(el.inputElement.hasAttribute('autocomplete')).to.be.false;
+    el.autocomplete = 'off';
+    await el.updateComplete;
+    expect(el.inputElement.autocomplete).to.equal('off');
+    expect(el.inputElement.getAttribute('autocomplete')).to.equal('off');
+  });
+
   // TODO: find out if we could put all listeners on this.value (instead of this.inputElement.value)
   // and make it act on this.value again
   it('has a class "state-filled" if this.value is filled', async () => {

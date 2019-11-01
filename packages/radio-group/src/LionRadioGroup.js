@@ -92,12 +92,18 @@ export class LionRadioGroup extends LionFieldset {
     }
   }
 
+  _onFocusOut() {
+    this.touched = true;
+    this.focused = false;
+  }
+
   __triggerCheckedValueChanged() {
     const value = this.checkedValue;
     if (value != null && value !== this.__previousCheckedValue) {
       this.dispatchEvent(
         new CustomEvent('checked-value-changed', { bubbles: true, composed: true }),
       );
+      this.touched = true;
       this.__previousCheckedValue = value;
     }
   }
