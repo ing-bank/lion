@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.80](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.79...@lion/form-system@0.0.80) (2019-11-01)
+
+
+### Bug Fixes
+
+* **fieldset:** manage when to show error messages ([c984a66](https://github.com/ing-bank/lion/commit/c984a66))
+
+
+
+
+
 ## [0.0.79](https://github.com/ing-bank/lion/compare/@lion/form-system@0.0.78...@lion/form-system@0.0.79) (2019-10-25)
 
 **Note:** Version bump only for package @lion/form-system

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.64](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.63...@lion/fieldset@0.1.64) (2019-11-01)
+
+
+### Bug Fixes
+
+* **fieldset:** manage when to show error messages ([c984a66](https://github.com/ing-bank/lion/commit/c984a66))
+* **fieldset:** outside click only effects focused groups ([378e940](https://github.com/ing-bank/lion/commit/378e940))
+
+
+
+
+
 ## [0.1.63](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.62...@lion/fieldset@0.1.63) (2019-10-25)
 
 **Note:** Version bump only for package @lion/fieldset
