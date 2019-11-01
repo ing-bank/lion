@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.20](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.19...@lion/steps@0.1.20) (2019-11-01)
+
+
+### Bug Fixes
+
+* **steps:** do not throw if there is no step ([332c167](https://github.com/ing-bank/lion/commit/332c167))
+
+
+
+
+
 ## [0.1.19](https://github.com/ing-bank/lion/compare/@lion/steps@0.1.18...@lion/steps@0.1.19) (2019-11-01)
 
 
