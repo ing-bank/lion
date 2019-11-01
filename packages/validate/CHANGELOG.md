@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.39](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.38...@lion/validate@0.2.39) (2019-11-01)
+
+
+### Bug Fixes
+
+* **fieldset:** manage when to show error messages ([c984a66](https://github.com/ing-bank/lion/commit/c984a66))
+
+
+
+
+
 ## [0.2.38](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.37...@lion/validate@0.2.38) (2019-10-23)
 
 **Note:** Version bump only for package @lion/validate

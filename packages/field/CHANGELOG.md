@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/field@0.3.5...@lion/field@0.3.6) (2019-11-01)
+
+
+### Bug Fixes
+
+* **field:** add form elements in the correct order ([bda9042](https://github.com/ing-bank/lion/commit/bda9042))
+* **field:** delegate autocomplete to inputElement for security ([8a4dd7e](https://github.com/ing-bank/lion/commit/8a4dd7e))
+* **fieldset:** manage when to show error messages ([c984a66](https://github.com/ing-bank/lion/commit/c984a66))
+
+
+
+
+
 ## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/field@0.3.4...@lion/field@0.3.5) (2019-10-25)
 
 
