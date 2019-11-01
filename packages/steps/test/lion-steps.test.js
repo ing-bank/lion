@@ -27,6 +27,13 @@ async function checkWorkflow(steps, expected) {
 }
 
 describe('lion-steps', () => {
+  it('can be instantiated', async () => {
+    const el = await fixture(html`
+      <lion-steps> </lion-steps>
+    `);
+    expect(el).to.be.a('HTMLElement');
+  });
+
   it('has "steps" getter that returns default slot elements', async () => {
     const el = await fixture(html`
       <lion-steps>
