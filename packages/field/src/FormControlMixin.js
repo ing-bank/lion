@@ -495,7 +495,7 @@ export const FormControlMixin = dedupeMixin(
          *   an error message shouldn't be shown either.
          *
          */
-        return (this.touched && this.dirty && !this.prefilled) || this.prefilled || this.submitted;
+        return (this.touched && this.dirty) || this.prefilled || this.submitted;
       }
 
       // aria-labelledby and aria-describedby helpers
