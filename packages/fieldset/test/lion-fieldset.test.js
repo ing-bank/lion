@@ -421,17 +421,30 @@ describe('<lion-fieldset>', () => {
           <${childTag} name="input2"></${childTag}>
         </${tag}>
       `);
+      const el2 = await fixture(html`
+        <${tag}>
+          <${childTag} name="input1"></${childTag}>
+          <${childTag} name="input2"></${childTag}>
+        </${tag}>
+      `);
+
       await nextFrame();
       const outside = await fixture(html`
         <button>outside</button>
       `);
+
+      outside.click();
+      expect(el.touched, 'unfocused fieldset should stays untouched').to.be.false;
 
       el.children[1].focus();
       el.children[2].focus();
       expect(el.touched).to.be.false;
 
       outside.click(); // blur the group via a click
+      outside.focus(); // a real mouse click moves focus as well
       expect(el.touched).to.be.true;
+
+      expect(el2.touched).to.be.false;
     });
 
     it('potentially shows fieldset error message on interaction change', async () => {
