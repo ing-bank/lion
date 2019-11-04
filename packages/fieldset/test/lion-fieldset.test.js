@@ -646,6 +646,7 @@ describe('<lion-fieldset>', () => {
       expect(input.modelValue).to.equal('Bar');
 
       el.resetGroup();
+      await nextFrame();
       expect(el.modelValue).to.deep.equal({ firstName: 'Foo' });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -665,6 +666,7 @@ describe('<lion-fieldset>', () => {
       expect(input.modelValue).to.equal('Bar');
 
       el.resetGroup();
+      await nextFrame();
       expect(el.modelValue).to.deep.equal({ 'firstName[]': ['Foo'] });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -691,6 +693,7 @@ describe('<lion-fieldset>', () => {
       expect(input.modelValue).to.equal('Bar');
 
       el.resetGroup();
+      await nextFrame();
       expect(el.modelValue).to.deep.equal({ 'name[]': [{ firstName: 'Foo' }] });
       expect(nestedFieldset.modelValue).to.deep.equal({ firstName: 'Foo' });
       expect(input.modelValue).to.equal('Foo');
@@ -758,6 +761,7 @@ describe('<lion-fieldset>', () => {
       expect(el.errorState).to.be.false;
 
       el.resetGroup();
+      await nextFrame();
       expect(el.errorState).to.be.true;
       expect(el.error.containsA).to.be.true;
       expect(el.formElements.color.errorState).to.be.false;
@@ -806,6 +810,7 @@ describe('<lion-fieldset>', () => {
         const childFieldsetEl = el.querySelector(tagString);
         const resetGroupSpy = sinon.spy(childFieldsetEl, 'resetGroup');
         el.resetGroup();
+        await nextFrame();
         expect(resetGroupSpy.callCount).to.equal(1);
       });
 
@@ -821,6 +826,7 @@ describe('<lion-fieldset>', () => {
         const childFieldsetEl = el.querySelector(childTagString);
         const resetSpy = sinon.spy(childFieldsetEl, 'reset');
         el.resetGroup();
+        await nextFrame();
         expect(resetSpy.callCount).to.equal(1);
       });
     });

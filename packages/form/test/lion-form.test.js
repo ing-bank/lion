@@ -1,4 +1,4 @@
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent, nextFrame } from '@open-wc/testing';
 import { spy } from 'sinon';
 
 import '@lion/input/lion-input.js';
@@ -23,6 +23,7 @@ describe('<lion-form>', () => {
     });
 
     withDefaults.reset();
+    await nextFrame();
     expect(withDefaults.modelValue).to.deep.equal({
       firstName: 'Foo',
     });
@@ -34,6 +35,7 @@ describe('<lion-form>', () => {
     });
 
     resetButton.click();
+    await nextFrame();
     expect(withDefaults.modelValue).to.deep.equal({
       firstName: 'Foo',
     });
