@@ -222,7 +222,10 @@ export class LionFieldset extends FormRegistrarMixin(
     return serializedValues;
   }
 
-  resetGroup() {
+  async resetGroup() {
+    if (!this.submitted) {
+      await this.updateComplete;
+    }
     this.formElementsArray.forEach(child => {
       if (typeof child.resetGroup === 'function') {
         child.resetGroup();
