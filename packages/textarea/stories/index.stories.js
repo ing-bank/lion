@@ -45,7 +45,7 @@ storiesOf('Forms|Textarea', module)
     `,
   )
   .add(
-    'Validators',
+    'Validation',
     () => html`
       <lion-textarea
         .validators="${[new Required(), new MinLength(10), new MaxLength(400)]}"

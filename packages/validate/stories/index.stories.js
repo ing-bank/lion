@@ -3,20 +3,36 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 import {
   Required,
   EqualsLength,
-  MinDate,
   MinLength,
   MaxLength,
   MinMaxLength,
+  IsNumber,
+  MinNumber,
+  MaxNumber,
+  MinMaxNumber,
+  IsDate,
+  MinDate,
+  MaxDate,
+  MinMaxDate,
   Validator,
   loadDefaultFeedbackMessages,
-} from '@lion/validate';
-import '@lion/input-date/lion-input-date.js';
+  DefaultSuccess
+} from '../index.js';
 import '@lion/input/lion-input.js';
+import '@lion/input-amount/lion-input-amount.js';
+import '@lion/input-date/lion-input-date.js';
+
 import { DefaultSuccess } from '@lion/validate/src/resultValidators/DefaultSuccess.js';
 
 loadDefaultFeedbackMessages();
 
-storiesOf('Forms|Input String Validation', module)
+storiesOf('Forms|Validation', module)
+  .add(
+    'Required Validator',
+    () => html`
+      <lion-input .validators="${[new Required()]}" label="Required"></lion-input>
+    `,
+  )
   .add(
     'String Validators',
     () => html`
@@ -26,25 +42,111 @@ storiesOf('Forms|Input String Validation', module)
         label="EqualsLength"
       ></lion-input>
       <lion-input
-        .validators="${[new MaxLength(7)]}"
-        .modelValue="${'exactly'}"
-        label="MaxLength"
-      ></lion-input>
-
-      <lion-input
-        .validators=${[new MinLength(10)]}
-        .modelValue=${'too short'}
+        .validators="${[new MinLength(10)]}"
+        .modelValue="${'too short'}"
         label="MinLength"
       ></lion-input>
       <lion-input
-        .validators=${[new MinMaxLength(10, 20)]}
-        .modelValue=${'that should be enough'}
+        .validators="${[new MaxLength(7)]}"
+        .modelValue="${'too long'}"
+        label="MaxLength"
+      ></lion-input>
+      <lion-input
+        .validators="${[new MinMaxLength({ min: 10, max: 20 })]}"
+        .modelValue="${'that should be enough'}"
         label="MinMaxLength"
       ></lion-input>
     `,
   )
-  // TODO: add Number validators
-  // TODO: fix input-date and add Date Validators
+  .add(
+    'Number Validators',
+    () => html`
+      <lion-input-amount
+        .validators="${[new IsNumber()]}"
+        .modelValue="${'foo'}"
+        label="IsNumber"
+      ></lion-input-amount>
+      <lion-input-amount
+        .validators="${[new MinNumber(7)]}"
+        .modelValue="${5}"
+        label="MinNumber"
+      ></lion-input-amount>
+      <lion-input-amount
+        .validators="${[new MaxNumber(7)]}"
+        .modelValue="${9}"
+        label="MaxNumber"
+      ></lion-input-amount>
+      <lion-input-amount
+        .validators="${[new MinMaxNumber({ min: 10, max: 20 })]}"
+        .modelValue="${5}"
+        label="MinMaxNumber"
+      ></lion-input-amount>
+    `,
+  )
+  .add(
+    'Date Validators', () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+    const yesterday = new Date(year, month, day - 1);
+    const tomorrow = new Date(year, month, day + 1);
+
+    return html`
+      <lion-input-date
+        .validators="${[new IsDate()]}"
+        .modelValue="${'foo'}"
+        label="IsDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MinDate(today)]}"
+        .modelValue="${new Date(yesterday)}"
+        label="MinDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MaxDate(today)]}"
+        .modelValue="${new Date(tomorrow)}"
+        label="MaxDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MinMaxDate({ min: new Date(yesterday), max: new Date(tomorrow) })]}"
+        .modelValue="${new Date(today)}"
+        label="MinMaxDate"
+      ></lion-input-date>
+    `
+  })
+  .add(
+    'Email Validators', () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+    const yesterday = new Date(year, month, day - 1);
+    const tomorrow = new Date(year, month, day + 1);
+
+    return html`
+      <lion-input-date
+        .validators="${[new IsDate()]}"
+        .modelValue="${'foo'}"
+        label="IsDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MinDate(today)]}"
+        .modelValue="${yesterday}"
+        label="MinDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MaxDate(today)]}"
+        .modelValue="${tomorrow}"
+        label="MaxDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators="${[new MinMaxDate({ min: yesterday, max: tomorrow })]}"
+        .modelValue="${today}"
+        label="MinMaxDate"
+      ></lion-input-date>
+    `
+  })
   .add(
     'Types',
     () => html`
