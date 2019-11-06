@@ -1,7 +1,23 @@
 import { localize } from '@lion/localize';
 import { Required } from './validators/Required.js';
-import { EqualsLength, MaxLength } from './validators/StringValidators.js';
+import {
+  EqualsLength,
+  MinLength,
+  MaxLength,
+  MinMaxLength,
+  IsEmail,
+} from './validators/StringValidators.js';
+
+import {
+  IsDate,
+  MinDate,
+  MaxDate,
+  MinMaxDate,
+  IsDateDisabled,
+} from './validators/DateValidators.js';
 import { DefaultSuccess } from './resultValidators/DefaultSuccess.js';
+
+export { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './validators/NumberValidators.js';
 
 let loaded = false;
 
@@ -96,9 +112,69 @@ export function loadDefaultFeedbackMessages() {
     return localize.msg('lion-validate:error.equalsLength', data);
   };
 
+  MinLength.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.minLength', data);
+  };
+
   MaxLength.getMessage = async data => {
     await validateNamespace;
     return localize.msg('lion-validate:error.maxLength', data);
+  };
+
+  MinMaxLength.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.minMaxLength', data);
+  };
+
+  IsEmail.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.isEmail', data);
+  };
+
+  // IsNumber.getMessage = async data => {
+  //   await validateNamespace;
+  //   return localize.msg('lion-validate:error.isNumber', data);
+  // };
+
+  // MinNumber.getMessage = async data => {
+  //   await validateNamespace;
+  //   return localize.msg('lion-validate:error.minNumber', data);
+  // };
+
+  // MaxNumber.getMessage = async data => {
+  //   await validateNamespace;
+  //   return localize.msg('lion-validate:error.maxNumber', data);
+  // };
+
+  // MinMaxNumber.getMessage = async data => {
+  //   await validateNamespace;
+  //   return localize.msg('lion-validate:error.minMaxNumber', data);
+  // };
+
+  IsDate.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.isDate', data);
+  };
+
+  MinDate.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.minDate', data);
+  };
+
+  MaxDate.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.maxDate', data);
+  };
+
+  MinMaxDate.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.minMaxDate', data);
+  };
+
+  IsDateDisabled.getMessage = async data => {
+    await validateNamespace;
+    return localize.msg('lion-validate:error.isDateDisabled', data);
   };
 
   DefaultSuccess.getMessage = async data => {
