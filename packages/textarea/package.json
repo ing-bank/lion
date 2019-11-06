@@ -37,6 +37,7 @@
     "autosize": "4.0.2"
   },
   "devDependencies": {
+    "@lion/validate": "^0.2.38",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }
