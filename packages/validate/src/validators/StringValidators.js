@@ -45,7 +45,6 @@ export class MinLength extends Validator {
     if (!isString(value) || value.length < min) {
       hasError = true;
     }
-    console.log(hasError);
     return hasError;
   }
 }

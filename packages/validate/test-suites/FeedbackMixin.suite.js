@@ -261,7 +261,7 @@ export function runFeedbackMixinSuite(customConfig) {
     });
 
     describe('Meta data', () => {
-      it('".getMessage()" gets a reference to formControl, validatorParams and modelValue', async () => {
+      it('".getMessage()" gets a reference to formControl, validatorParams, modelValue and type', async () => {
         let el;
         const constructorValidator = new MinLength(4, { type: 'x' }); // type to prevent duplicates
         const constructorMessageSpy = sinon.spy(constructorValidator.constructor, 'getMessage');
@@ -278,6 +278,7 @@ export function runFeedbackMixinSuite(customConfig) {
           modelValue: 'cat',
           formControl: el,
           fieldName: undefined,
+          type: 'x',
         });
 
         const instanceMessageSpy = sinon.spy();
@@ -295,11 +296,12 @@ export function runFeedbackMixinSuite(customConfig) {
           modelValue: 'cat',
           formControl: el,
           fieldName: undefined,
+          type: 'error',
         });
       });
 
       it('".getMessage()" gets .fieldName defined on instance', async () => {
-        const constructorValidator = new MinLength(4, { type: 'x' }); // type to prevent duplicates
+        const constructorValidator = new MinLength(4);
         const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
 
         const el = await fixture(html`
@@ -315,6 +317,7 @@ export function runFeedbackMixinSuite(customConfig) {
           modelValue: 'cat',
           formControl: el,
           fieldName: 'myField',
+          type: 'error',
         });
       });
     });
@@ -338,6 +341,7 @@ export function runFeedbackMixinSuite(customConfig) {
         modelValue: 'cat',
         formControl: el,
         fieldName: 'myFieldViaCfg',
+        type: 'error',
       });
     });
   });

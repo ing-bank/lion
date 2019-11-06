@@ -21,7 +21,7 @@ export default {
   },
   warning: {
     required: 'Please enter a(n) {fieldName}.',
-    equalsLength: 'EQ Please enter a correct {fieldName} of exactly {validatorParams} characters.',
+    equalsLength: 'Please enter a correct {fieldName} of exactly {validatorParams} characters.',
     minLength: 'Please enter a correct {fieldName} (at least {validatorParams}).',
     maxLength: 'Please enter a correct {fieldName} (up to {validatorParams} characters).',
     minMaxLength:
