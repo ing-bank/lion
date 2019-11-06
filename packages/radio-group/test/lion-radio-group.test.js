@@ -8,15 +8,15 @@ describe('<lion-radio-group>', () => {
     const el = await fixture(html`
       <lion-radio-group>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
-        <lion-radio name="gender[]" .choiceValue=${'female'} .choiceChecked=${true}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'female'} checked></lion-radio>
         <lion-radio name="gender[]" .choiceValue=${'alien'}></lion-radio>
       </lion-radio-group>
     `);
     await nextFrame();
     expect(el.checkedValue).to.equal('female');
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(el.checkedValue).to.equal('male');
-    el.formElementsArray[2].choiceChecked = true;
+    el.formElementsArray[2].checked = true;
     expect(el.checkedValue).to.equal('alien');
   });
 
@@ -26,27 +26,27 @@ describe('<lion-radio-group>', () => {
     const el = await fixture(html`
       <lion-radio-group>
         <lion-radio name="data[]" .choiceValue=${{ some: 'data' }}></lion-radio>
-        <lion-radio name="data[]" .choiceValue=${date} .choiceChecked=${true}></lion-radio>
+        <lion-radio name="data[]" .choiceValue=${date} checked></lion-radio>
       </lion-radio-group>
     `);
     await nextFrame();
 
     expect(el.checkedValue).to.equal(date);
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(el.checkedValue).to.deep.equal({ some: 'data' });
   });
 
   it('can handle 0 and empty string as valid values ', async () => {
     const el = await fixture(html`
       <lion-radio-group>
-        <lion-radio name="data[]" .choiceValue=${0} .choiceChecked=${true}></lion-radio>
+        <lion-radio name="data[]" .choiceValue=${0} checked></lion-radio>
         <lion-radio name="data[]" .choiceValue=${''}></lion-radio>
       </lion-radio-group>
     `);
     await nextFrame();
 
     expect(el.checkedValue).to.equal(0);
-    el.formElementsArray[1].choiceChecked = true;
+    el.formElementsArray[1].checked = true;
     expect(el.checkedValue).to.equal('');
   });
 
@@ -54,7 +54,7 @@ describe('<lion-radio-group>', () => {
     const el = await fixture(html`
       <lion-radio-group>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
-        <lion-radio name="gender[]" .choiceValue=${'female'} .choiceChecked=${true}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'female'} checked></lion-radio>
         <lion-radio name="gender[]" .choiceValue=${'alien'}></lion-radio>
       </lion-radio-group>
     `);
@@ -85,7 +85,7 @@ describe('<lion-radio-group>', () => {
     await nextFrame();
     expect(el.checkedValue).to.equal('female');
     el.checkedValue = 'alien';
-    expect(el.formElementsArray[2].choiceChecked).to.be.true;
+    expect(el.formElementsArray[2].checked).to.be.true;
   });
 
   it('fires checked-value-changed event only once per checked change', async () => {
@@ -106,14 +106,14 @@ describe('<lion-radio-group>', () => {
     /* eslint-enable indent */
     expect(counter).to.equal(0);
 
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(counter).to.equal(1);
 
     // not changed values trigger no event
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(counter).to.equal(1);
 
-    el.formElementsArray[2].choiceChecked = true;
+    el.formElementsArray[2].checked = true;
     expect(counter).to.equal(2);
 
     // not found values trigger no event
@@ -142,14 +142,14 @@ describe('<lion-radio-group>', () => {
     /* eslint-enable indent */
     counter = 0; // reset after setup which may result in different results
 
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(counter).to.equal(2); // male becomes checked, female becomes unchecked
 
     // not changed values trigger no event
-    el.formElementsArray[0].choiceChecked = true;
+    el.formElementsArray[0].checked = true;
     expect(counter).to.equal(2);
 
-    el.formElementsArray[2].choiceChecked = true;
+    el.formElementsArray[2].checked = true;
     expect(counter).to.equal(4); // alien becomes checked, male becomes unchecked
 
     // not found values trigger no event
@@ -176,24 +176,18 @@ describe('<lion-radio-group>', () => {
     const female = el.formElements['gender[]'][1];
     const femaleInput = female.querySelector('input');
 
-    expect(male.choiceChecked).to.equal(false);
-    expect(female.choiceChecked).to.equal(false);
+    expect(male.checked).to.equal(false);
+    expect(female.checked).to.equal(false);
 
     maleInput.focus();
     maleInput.click();
-    expect(male.choiceChecked).to.equal(true);
-    expect(female.choiceChecked).to.equal(false);
-    await el.updateComplete;
-    expect(Array.from(male.classList)).to.contain('state-checked');
-    expect(Array.from(female.classList)).to.not.contain('state-checked');
+    expect(male.checked).to.equal(true);
+    expect(female.checked).to.equal(false);
 
     femaleInput.focus();
     femaleInput.click();
-    expect(male.choiceChecked).to.equal(false);
-    expect(female.choiceChecked).to.equal(true);
-    await el.updateComplete;
-    expect(Array.from(male.classList)).to.not.contain('state-checked');
-    expect(Array.from(female.classList)).to.contain('state-checked');
+    expect(male.checked).to.equal(false);
+    expect(female.checked).to.equal(true);
   });
 
   it('should have role = radiogroup', async () => {
@@ -222,7 +216,7 @@ describe('<lion-radio-group>', () => {
     await nextFrame();
 
     expect(el.error.required).to.be.true;
-    el.formElements['gender[]'][0].choiceChecked = true;
+    el.formElements['gender[]'][0].checked = true;
     expect(el.error.required).to.be.undefined;
   });
 
@@ -234,9 +228,7 @@ describe('<lion-radio-group>', () => {
       </lion-radio-group>
     `);
 
-    await nextFrame();
-    group.formElements['gender[]'][0].choiceChecked = true;
-
+    group.formElements['gender[]'][0].checked = true;
     expect(group.serializedValue).to.deep.equal({ checked: true, value: 'male' });
   });
 

@@ -34,7 +34,7 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.inputElement.addEventListener(
+    this._inputNode.addEventListener(
       'checked-changed',
       this.__handleButtonSwitchCheckedChanged.bind(this),
     );
@@ -49,11 +49,11 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
   __handleButtonSwitchCheckedChanged() {
     // TODO: should be replaced by "_inputNode" after the next breaking change
     // https://github.com/ing-bank/lion/blob/master/packages/field/src/FormControlMixin.js#L78
-    this.checked = this.inputElement.checked;
+    this.checked = this._inputNode.checked;
   }
 
   _syncButtonSwitch() {
-    this.inputElement.checked = this.checked;
-    this.inputElement.disabled = this.disabled;
+    this._inputNode.checked = this.checked;
+    this._inputNode.disabled = this.disabled;
   }
 }

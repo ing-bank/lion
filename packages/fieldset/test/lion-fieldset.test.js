@@ -132,7 +132,7 @@ describe('<lion-fieldset>', () => {
     fieldset.appendChild(newField);
     expect(Object.keys(fieldset.formElements).length).to.equal(4);
 
-    fieldset.inputElement.removeChild(newField);
+    fieldset._inputNode.removeChild(newField);
     expect(Object.keys(fieldset.formElements).length).to.equal(3);
   });
 
@@ -225,16 +225,6 @@ describe('<lion-fieldset>', () => {
     expect(el.formElements.sub.formElements.color.disabled).to.equal(true);
     expect(el.formElements.sub.formElements['hobbies[]'][0].disabled).to.equal(true);
     expect(el.formElements.sub.formElements['hobbies[]'][1].disabled).to.equal(true);
-  });
-
-  // classes are added only for backward compatibility - they are deprecated
-  it('sets a state-disabled class when disabled', async () => {
-    const el = await fixture(html`<${tag} disabled>${inputSlots}</${tag}>`);
-    await nextFrame();
-    expect(el.classList.contains('state-disabled')).to.equal(true);
-    el.disabled = false;
-    await nextFrame();
-    expect(el.classList.contains('state-disabled')).to.equal(false);
   });
 
   describe('validation', () => {
@@ -334,10 +324,9 @@ describe('<lion-fieldset>', () => {
 
     it('sets touched when last field in fieldset left after focus', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-      await triggerFocusFor(fieldset.formElements['hobbies[]'][0].inputElement);
+      await triggerFocusFor(fieldset.formElements['hobbies[]'][0]._inputNode);
       await triggerFocusFor(
-        fieldset.formElements['hobbies[]'][fieldset.formElements['gender[]'].length - 1]
-          .inputElement,
+        fieldset.formElements['hobbies[]'][fieldset.formElements['gender[]'].length - 1]._inputNode,
       );
       const el = await fixture(html`
         <button></button>
@@ -356,17 +345,6 @@ describe('<lion-fieldset>', () => {
       el.dirty = true;
       await el.updateComplete;
       expect(el).to.have.attribute('dirty');
-    });
-
-    it('[deprecated] sets a class "state-(touched|dirty)"', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
-      el.touched = true;
-      await el.updateComplete;
-      expect(el.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
-
-      el.dirty = true;
-      await el.updateComplete;
-      expect(el.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
     });
 
     it('becomes prefilled if all form elements are prefilled', async () => {

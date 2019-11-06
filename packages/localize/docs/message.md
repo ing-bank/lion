@@ -29,7 +29,7 @@ Below, we show a common and easy example, it assumes you have your translation f
 ```js
 import { LocalizeMixin } from '@lion/localize';
 
-class MyHelloComponent extends LocalizeMixin(LionLitElement) {
+class MyHelloComponent extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     // using an explicit loader function
     return [
@@ -63,7 +63,7 @@ static get localizeNamespaces() {
 If you don't want your rendering to wait for localize namespaces to have loaded, this is how you override it. If you use `performUpdate()`, this will now also not wait for localize namespaces to have loaded.
 
 ```js
-class MyHelloComponent extends LocalizeMixin(LionLitElement) {
+class MyHelloComponent extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     // using an explicit loader function
     return [

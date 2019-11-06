@@ -19,7 +19,7 @@ describe('<lion-input-date>', () => {
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
     const el = await fixture(`<lion-input-date></lion-input-date>`);
-    expect(el.inputElement.type).to.equal('text');
+    expect(el._inputNode.type).to.equal('text');
   });
 
   it('has validator "isDate" applied by default', async () => {

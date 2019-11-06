@@ -1,14 +1,10 @@
 /* global ShadyCSS */
 import { dedupeMixin } from './dedupeMixin.js';
-import { DomHelpersMixin } from './DomHelpersMixin.js';
 
-/**
- * @deprecated please apply DomHelpersMixin and UpdateStylesMixin if needed yourself
- */
-export const ElementMixin = dedupeMixin(
+export const UpdateStylesMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow
-    class ElementMixin extends DomHelpersMixin(superclass) {
+    class UpdateStylesMixin extends superclass {
       /**
        * @example
        * <my-element>

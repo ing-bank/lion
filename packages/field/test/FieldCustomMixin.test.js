@@ -24,6 +24,6 @@ describe('FieldCustomMixin', () => {
     const lionField = await fixture(`
       <${elem} disable-help-text>${inputSlot}</${elem}>
     `);
-    expect(lionField.$$slot('help-text')).to.equal(undefined);
+    expect(lionField.querySelector('[slot=help-text]')).to.equal(null);
   });
 });

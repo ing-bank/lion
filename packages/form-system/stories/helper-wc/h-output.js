@@ -53,8 +53,8 @@ export class HelperOutput extends LitElement {
     this.field.addEventListener('focusin', this.__rerender);
     this.field.addEventListener('focusout', this.__rerender);
 
-    if (this.field.inputElement.form) {
-      this.field.inputElement.form.addEventListener('submit', this.__rerender);
+    if (this.field._inputNode.form) {
+      this.field._inputNode.form.addEventListener('submit', this.__rerender);
     }
   }
 

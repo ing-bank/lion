@@ -20,7 +20,7 @@ describe('<lion-input-iban>', () => {
 
   it('has a type = text', async () => {
     const el = await fixture(`<lion-input-iban></lion-input-iban>`);
-    expect(el.inputElement.type).to.equal('text');
+    expect(el._inputNode.type).to.equal('text');
   });
 
   it('has validator "isIBAN" applied by default', async () => {

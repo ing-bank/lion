@@ -1,6 +1,5 @@
 import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
-import { SlotMixin } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement, SlotMixin } from '@lion/core';
 
 import { FormControlMixin } from '../src/FormControlMixin.js';
 
@@ -10,7 +9,7 @@ describe('FormControlMixin', () => {
   let tag;
 
   before(async () => {
-    const FormControlMixinClass = class extends FormControlMixin(SlotMixin(LionLitElement)) {
+    const FormControlMixinClass = class extends FormControlMixin(SlotMixin(LitElement)) {
       static get properties() {
         return {
           modelValue: {
@@ -28,7 +27,7 @@ describe('FormControlMixin', () => {
     const lionFieldAttr = await fixture(html`
       <${tag} help-text="This email address is already taken">${inputSlot}</${tag}>
     `);
-    expect(lionFieldAttr.$$slot('help-text').textContent).to.contain(
+    expect(lionFieldAttr.querySelector('[slot=help-text]').textContent).to.contain(
       'This email address is already taken',
     );
     const lionFieldProp = await fixture(html`
@@ -37,7 +36,7 @@ describe('FormControlMixin', () => {
       >${inputSlot}
       </${tag}>`);
 
-    expect(lionFieldProp.$$slot('help-text').textContent).to.contain(
+    expect(lionFieldProp.querySelector('[slot=help-text]').textContent).to.contain(
       'This email address is already taken',
     );
   });
@@ -54,7 +53,7 @@ describe('FormControlMixin', () => {
 
     ['aria-describedby', 'aria-labelledby'].forEach(ariaAttributeName => {
       const ariaAttribute = lionField
-        .$$slot('input')
+        .querySelector('[slot=input]')
         .getAttribute(ariaAttributeName)
         .trim()
         .split(' ');
@@ -71,6 +70,6 @@ describe('FormControlMixin', () => {
       </${tag}>
     `);
 
-    expect(lionField.$$slot('feedback').getAttribute('aria-live')).to.equal('polite');
+    expect(lionField.querySelector('[slot=feedback]').getAttribute('aria-live')).to.equal('polite');
   });
 });

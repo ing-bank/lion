@@ -1,9 +1,9 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement } from '@lion/core';
 import { localize, LocalizeMixin } from '../index.js';
 
 storiesOf('Localize System|Message', module).add('locale', () => {
-  class messageExample extends LocalizeMixin(LionLitElement) {
+  class messageExample extends LocalizeMixin(LitElement) {
     static get localizeNamespaces() {
       return [
         { 'lit-html-example': locale => import(`./translations/${locale}.js`) },

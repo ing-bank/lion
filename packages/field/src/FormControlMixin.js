@@ -1,5 +1,4 @@
 import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
@@ -15,18 +14,18 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 export const FormControlMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormControlMixin extends FormRegisteringMixin(ObserverMixin(SlotMixin(superclass))) {
+    class FormControlMixin extends FormRegisteringMixin(SlotMixin(superclass)) {
       static get properties() {
         return {
           /**
-           * A list of ids that will be put on the inputElement as a serialized string
+           * A list of ids that will be put on the _inputNode as a serialized string
            */
           _ariaDescribedby: {
             type: String,
           },
 
           /**
-           * A list of ids that will be put on the inputElement as a serialized string
+           * A list of ids that will be put on the _inputNode as a serialized string
            */
           _ariaLabelledby: {
             type: String,
@@ -65,18 +64,27 @@ export const FormControlMixin = dedupeMixin(
         };
       }
 
-      static get asyncObservers() {
-        return {
-          ...super.asyncObservers,
-          _onAriaLabelledbyChanged: ['_ariaLabelledby'],
-          _onAriaDescribedbyChanged: ['_ariaDescribedby'],
-          _onLabelChanged: ['label'],
-          _onHelpTextChanged: ['helpText'],
-        };
+      updated(changedProps) {
+        super.updated(changedProps);
+
+        if (changedProps.has('_ariaLabelledby')) {
+          this._onAriaLabelledbyChanged({ _ariaLabelledby: this._ariaLabelledby });
+        }
+
+        if (changedProps.has('_ariaDescribedby')) {
+          this._onAriaDescribedbyChanged({ _ariaDescribedby: this._ariaDescribedby });
+        }
+
+        if (changedProps.has('label')) {
+          this._onLabelChanged({ label: this.label });
+        }
+
+        if (changedProps.has('helpText')) {
+          this._onHelpTextChanged({ helpText: this.helpText });
+        }
       }
 
-      /** @deprecated will be this._inputNode in next breaking release */
-      get inputElement() {
+      get _inputNode() {
         return this.__getDirectSlotChild('input');
       }
 
@@ -112,16 +120,16 @@ export const FormControlMixin = dedupeMixin(
        */
 
       _enhanceLightDomClasses() {
-        if (this.inputElement) {
-          this.inputElement.classList.add('form-control');
+        if (this._inputNode) {
+          this._inputNode.classList.add('form-control');
         }
       }
 
       _enhanceLightDomA11y() {
-        const { inputElement, _labelNode, _helpTextNode, _feedbackNode } = this;
+        const { _inputNode, _labelNode, _helpTextNode, _feedbackNode } = this;
 
-        if (inputElement) {
-          inputElement.id = inputElement.id || this._inputId;
+        if (_inputNode) {
+          _inputNode.id = _inputNode.id || this._inputId;
         }
         if (_labelNode) {
           _labelNode.setAttribute('for', this._inputId);
@@ -178,8 +186,8 @@ export const FormControlMixin = dedupeMixin(
        * from an external context, will be read by a screen reader.
        */
       _onAriaLabelledbyChanged({ _ariaLabelledby }) {
-        if (this.inputElement) {
-          this.inputElement.setAttribute('aria-labelledby', _ariaLabelledby);
+        if (this._inputNode) {
+          this._inputNode.setAttribute('aria-labelledby', _ariaLabelledby);
         }
       }
 
@@ -190,8 +198,8 @@ export const FormControlMixin = dedupeMixin(
        * from an external context, will be read by a screen reader.
        */
       _onAriaDescribedbyChanged({ _ariaDescribedby }) {
-        if (this.inputElement) {
-          this.inputElement.setAttribute('aria-describedby', _ariaDescribedby);
+        if (this._inputNode) {
+          this._inputNode.setAttribute('aria-describedby', _ariaDescribedby);
         }
       }
 
@@ -287,7 +295,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       inputGroupPrefixTemplate() {
-        return !this.$$slot('prefix')
+        return !this.querySelector('[slot=prefix]')
           ? nothing
           : html`
               <div class="input-group__prefix">
@@ -306,7 +314,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       inputGroupSuffixTemplate() {
-        return !this.$$slot('suffix')
+        return !this.querySelector('[slot=suffix]')
           ? nothing
           : html`
               <div class="input-group__suffix">

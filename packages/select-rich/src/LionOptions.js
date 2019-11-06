@@ -5,7 +5,7 @@ import { FormRegistrarPortalMixin } from '@lion/field';
  * LionOptions
  *
  * @customElement lion-options
- * @extends LitElement
+ * @extends {LitElement}
  */
 export class LionOptions extends FormRegistrarPortalMixin(LitElement) {
   static get properties() {

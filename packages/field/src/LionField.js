@@ -1,7 +1,5 @@
 import { SlotMixin, LitElement } from '@lion/core';
-import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
@@ -30,13 +28,11 @@ import { FocusMixin } from './FocusMixin.js';
  *   <input type="text" slot="input">
  * </lion-field>
  *
- * @customElement
+ * @customElement lion-field
  */
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
-    FocusMixin(
-      FormatMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement)))))),
-    ),
+    FocusMixin(FormatMixin(ValidateMixin(DisabledMixin(SlotMixin(LitElement))))),
   ),
 ) {
   static get properties() {
@@ -57,7 +53,7 @@ export class LionField extends FormControlMixin(
   }
 
   get selectionStart() {
-    const native = this.inputElement;
+    const native = this._inputNode;
     if (native && native.selectionStart) {
       return native.selectionStart;
     }
@@ -65,14 +61,14 @@ export class LionField extends FormControlMixin(
   }
 
   set selectionStart(value) {
-    const native = this.inputElement;
+    const native = this._inputNode;
     if (native && native.selectionStart) {
       native.selectionStart = value;
     }
   }
 
   get selectionEnd() {
-    const native = this.inputElement;
+    const native = this._inputNode;
     if (native && native.selectionEnd) {
       return native.selectionEnd;
     }
@@ -80,7 +76,7 @@ export class LionField extends FormControlMixin(
   }
 
   set selectionEnd(value) {
-    const native = this.inputElement;
+    const native = this._inputNode;
     if (native && native.selectionEnd) {
       native.selectionEnd = value;
     }
@@ -89,14 +85,14 @@ export class LionField extends FormControlMixin(
   // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
   set value(value) {
     // if not yet connected to dom can't change the value
-    if (this.inputElement) {
+    if (this._inputNode) {
       this._setValueAndPreserveCaret(value);
     }
     this._onValueChanged({ value });
   }
 
   get value() {
-    return (this.inputElement && this.inputElement.value) || '';
+    return (this._inputNode && this._inputNode.value) || '';
   }
 
   constructor() {
@@ -120,13 +116,13 @@ export class LionField extends FormControlMixin(
     super.connectedCallback();
 
     this._onChange = this._onChange.bind(this);
-    this.inputElement.addEventListener('change', this._onChange);
+    this._inputNode.addEventListener('change', this._onChange);
     this.classList.add('form-field'); // eslint-disable-line
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.inputElement.removeEventListener('change', this._onChange);
+    this._inputNode.removeEventListener('change', this._onChange);
   }
 
   updated(changedProps) {
@@ -134,25 +130,25 @@ export class LionField extends FormControlMixin(
 
     if (changedProps.has('disabled')) {
       if (this.disabled) {
-        this.inputElement.disabled = true;
+        this._inputNode.disabled = true;
         this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
       } else {
-        this.inputElement.disabled = false;
+        this._inputNode.disabled = false;
         this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
       }
     }
 
     if (changedProps.has('name')) {
-      this.inputElement.name = this.name;
+      this._inputNode.name = this.name;
     }
 
     if (changedProps.has('autocomplete')) {
-      this.inputElement.autocomplete = this.autocomplete;
+      this._inputNode.autocomplete = this.autocomplete;
     }
   }
 
   /**
-   * This is not done via 'get delegations', because this.inputElement.setAttribute('value')
+   * This is not done via 'get delegations', because this._inputNode.setAttribute('value')
    * does not trigger a value change
    */
   _delegateInitialValueAttr() {
@@ -214,18 +210,18 @@ export class LionField extends FormControlMixin(
       // right properties, accessing them might throw an exception (like for
       // <input type=number>)
       try {
-        const start = this.inputElement.selectionStart;
-        this.inputElement.value = newValue;
+        const start = this._inputNode.selectionStart;
+        this._inputNode.value = newValue;
         // The cursor automatically jumps to the end after re-setting the value,
         // so restore it to its original position.
-        this.inputElement.selectionStart = start;
-        this.inputElement.selectionEnd = start;
+        this._inputNode.selectionStart = start;
+        this._inputNode.selectionEnd = start;
       } catch (error) {
         // Just set the value and give up on the caret.
-        this.inputElement.value = newValue;
+        this._inputNode.value = newValue;
       }
     } else {
-      this.inputElement.value = newValue;
+      this._inputNode.value = newValue;
     }
   }
 

@@ -7,7 +7,7 @@ import { FormatMixin } from '../src/FormatMixin.js';
 
 function mimicUserInput(formControl, newViewValue) {
   formControl.value = newViewValue; // eslint-disable-line no-param-reassign
-  formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
+  formControl._inputNode.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
 export function runFormatMixinSuite(customConfig) {
@@ -74,14 +74,14 @@ export function runFormatMixinSuite(customConfig) {
             }
 
             set value(newValue) {
-              this.inputElement.value = newValue;
+              this._inputNode.value = newValue;
             }
 
             get value() {
-              return this.inputElement.value;
+              return this._inputNode.value;
             }
 
-            get inputElement() {
+            get _inputNode() {
               return this.querySelector('input');
             }
           },
@@ -164,7 +164,7 @@ export function runFormatMixinSuite(customConfig) {
       fooFormat.modelValue = 'string';
       expect(fooFormat.formattedValue).to.equal('foo: string');
       expect(fooFormat.value).to.equal('foo: string');
-      expect(fooFormat.inputElement.value).to.equal('foo: string');
+      expect(fooFormat._inputNode.value).to.equal('foo: string');
     });
 
     it('converts modelValue => formattedValue (via this.formatter)', async () => {
@@ -188,7 +188,7 @@ export function runFormatMixinSuite(customConfig) {
       expect(fooFormat.modelValue).to.equal('string');
     });
 
-    it('synchronizes inputElement.value as a fallback mechanism', async () => {
+    it('synchronizes _inputNode.value as a fallback mechanism', async () => {
       // Note that in lion-field, the attribute would be put on <lion-field>, not on <input>
       const formatElem = await fixture(html`
         <${elem}
@@ -202,7 +202,7 @@ export function runFormatMixinSuite(customConfig) {
       await formatElem.updateComplete;
       expect(formatElem.formattedValue).to.equal('foo: string');
 
-      expect(formatElem.inputElement.value).to.equal('foo: string');
+      expect(formatElem._inputNode.value).to.equal('foo: string');
 
       expect(formatElem.serializedValue).to.equal('[foo] string');
       expect(formatElem.modelValue).to.equal('string');
@@ -218,12 +218,12 @@ export function runFormatMixinSuite(customConfig) {
       const generatedViewValue = generateValueBasedOnType({ viewValue: true });
       const generatedModelValue = generateValueBasedOnType();
       mimicUserInput(formatEl, generatedViewValue);
-      expect(formatEl.inputElement.value).to.not.equal(`foo: ${generatedModelValue}`);
+      expect(formatEl._inputNode.value).to.not.equal(`foo: ${generatedModelValue}`);
 
       // user leaves field
-      formatEl.inputElement.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
+      formatEl._inputNode.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
       await aTimeout();
-      expect(formatEl.inputElement.value).to.equal(`foo: ${generatedModelValue}`);
+      expect(formatEl._inputNode.value).to.equal(`foo: ${generatedModelValue}`);
     });
 
     it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
@@ -238,14 +238,14 @@ export function runFormatMixinSuite(customConfig) {
 
       // users types value 'test'
       mimicUserInput(el, 'test');
-      expect(el.inputElement.value).to.not.equal('foo: test');
+      expect(el._inputNode.value).to.not.equal('foo: test');
 
       // Now see the difference for an imperative change
       el.modelValue = 'test2';
-      expect(el.inputElement.value).to.equal('foo: test2');
+      expect(el._inputNode.value).to.equal('foo: test2');
     });
 
-    it('works if there is no underlying inputElement', async () => {
+    it('works if there is no underlying _inputNode', async () => {
       const tagNoInputString = defineCE(class extends FormatMixin(LitElement) {});
       const tagNoInput = unsafeStatic(tagNoInputString);
       expect(async () => {
