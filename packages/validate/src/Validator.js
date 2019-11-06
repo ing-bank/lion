@@ -17,7 +17,11 @@ export class Validator {
    * @param {object} param
    * @returns {Boolean|Promise<Boolean>}
    */
-  execute(modelValue, param) {} // eslint-disable-line
+  execute(/* modelValue, param */) {
+    if (!this.name) {
+      throw new Error('You must provide a name like "this.name = \'IsCat\'" for your Validator');
+    }
+  }
 
   set param(p) {
     this.__param = p;
