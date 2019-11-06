@@ -8,7 +8,7 @@ const fieldTagString = defineCE(
     get slots() {
       return {
         ...super.slots,
-        // LionField needs to have an inputElement defined in order to work...
+        // LionField needs to have an _inputNode defined in order to work...
         input: () => document.createElement('input'),
       };
     }

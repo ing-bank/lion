@@ -303,23 +303,22 @@ describe('LocalizeManager', () => {
         throw new Error('did not throw');
       });
 
-      it('throws a warning if the locale set by the user is not a full language locale', async () => {
-        const spy = sinon.spy(console, 'warn');
+      it('throws an error if the locale set by the user is not a full language locale', async () => {
         manager = new LocalizeManager();
-        manager.locale = 'nl';
-
-        expect(spy.callCount).to.equal(1);
-        console.warn.restore();
+        expect(() => {
+          manager.locale = 'nl';
+        }).to.throw(`
+      Locale was set to nl.
+      Language only locales are not allowed, please use the full language locale e.g. 'en-GB' instead of 'en'.
+      See https://github.com/ing-bank/lion/issues/187 for more information.
+    `);
       });
 
-      it('does not throw a warning if locale was set through the html lang attribute', async () => {
-        const spy = sinon.spy(console, 'warn');
+      it('does not throw an error if locale was set through the html lang attribute', async () => {
         manager = new LocalizeManager();
-        document.documentElement.lang = 'nl';
-        await aTimeout(50); // wait for mutation observer to be called
-
-        expect(spy.callCount).to.equal(0);
-        console.warn.restore();
+        expect(() => {
+          document.documentElement.lang = 'nl';
+        }).to.not.throw();
       });
     });
   });

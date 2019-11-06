@@ -26,18 +26,18 @@ describe('<lion-textarea>', () => {
     const el = await fixture(`<lion-textarea>foo</lion-textarea>`);
     expect(el.rows).to.equal(2);
     expect(el.getAttribute('rows')).to.be.equal('2');
-    expect(el.inputElement.rows).to.equal(2);
-    expect(el.inputElement.getAttribute('rows')).to.be.equal('2');
+    expect(el._inputNode.rows).to.equal(2);
+    expect(el._inputNode.getAttribute('rows')).to.be.equal('2');
     expect(el.readOnly).to.be.false;
-    expect(el.inputElement.hasAttribute('readonly')).to.be.false;
+    expect(el._inputNode.hasAttribute('readonly')).to.be.false;
   });
 
   it('sync rows down to the native textarea', async () => {
     const el = await fixture(`<lion-textarea rows="8">foo</lion-textarea>`);
     expect(el.rows).to.equal(8);
     expect(el.getAttribute('rows')).to.be.equal('8');
-    expect(el.inputElement.rows).to.equal(8);
-    expect(el.inputElement.getAttribute('rows')).to.be.equal('8');
+    expect(el._inputNode.rows).to.equal(8);
+    expect(el._inputNode.getAttribute('rows')).to.be.equal('8');
   });
 
   it('sync readOnly to the native textarea', async () => {
@@ -52,7 +52,7 @@ describe('<lion-textarea>', () => {
     }
 
     const el = await fixture(`<lion-textarea></lion-textarea>`);
-    const computedStyle = window.getComputedStyle(el.inputElement);
+    const computedStyle = window.getComputedStyle(el._inputNode);
     expect(computedStyle.resize).to.equal('none');
   });
 

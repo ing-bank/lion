@@ -39,7 +39,7 @@ describe('ChoiceInputMixin', () => {
     expect(el.modelValue.value).to.equal(date);
   });
 
-  it('fires one "model-value-changed" event if choiceValue or choiceChecked or modelValue changed', async () => {
+  it('fires one "model-value-changed" event if choiceValue or checked state or modelValue changed', async () => {
     let counter = 0;
     const el = await fixture(html`
       <choice-input
@@ -77,7 +77,7 @@ describe('ChoiceInputMixin', () => {
     `);
     expect(counter).to.equal(0);
     // Here we try to mimic user interaction by firing browser events
-    const nativeInput = el.inputElement;
+    const nativeInput = el._inputNode;
     nativeInput.dispatchEvent(new CustomEvent('input', { bubbles: true })); // fired by (at least) Chrome
     expect(counter).to.equal(0);
     nativeInput.dispatchEvent(new CustomEvent('change', { bubbles: true }));
@@ -112,14 +112,14 @@ describe('ChoiceInputMixin', () => {
       expect(el.checked).to.be.true;
 
       await el.updateComplete;
-      expect(el.inputElement.checked).to.be.true;
+      expect(el._inputNode.checked).to.be.true;
     });
 
     it('can be checked and unchecked via user interaction', async () => {
       const el = await fixture(`<choice-input></choice-input>`);
-      el.inputElement.click();
+      el._inputNode.click();
       expect(el.checked).to.be.true;
-      el.inputElement.click();
+      el._inputNode.click();
       expect(el.checked).to.be.false;
     });
 
@@ -193,8 +193,8 @@ describe('ChoiceInputMixin', () => {
       elChecked.checked = true;
 
       // Via user interaction
-      el.inputElement.click();
-      elChecked.inputElement.click();
+      el._inputNode.click();
+      elChecked._inputNode.click();
       await el.updateComplete;
       expect(hasAttr(el)).to.equal(true, 'user click checked');
       expect(hasAttr(elChecked)).to.equal(false, 'user click unchecked');
@@ -209,65 +209,6 @@ describe('ChoiceInputMixin', () => {
       await el.updateComplete;
       expect(hasAttr(el)).to.equal(true, 'modelValue checked');
       expect(hasAttr(elChecked)).to.equal(false, 'modelValue unchecked');
-    });
-
-    it('[deprecated] synchronizes checked state to class "state-checked" for styling purposes', async () => {
-      const hasClass = el => [].slice.call(el.classList).indexOf('state-checked') > -1;
-      const el = await fixture(`<choice-input></choice-input>`);
-      const elChecked = await fixture(html`
-        <choice-input .checked=${true}>
-          <input slot="input" />
-        </choice-input>
-      `);
-
-      // Initial values
-      expect(hasClass(el)).to.equal(false, 'inital unchecked element');
-      expect(hasClass(elChecked)).to.equal(true, 'inital checked element');
-
-      // Programmatically via checked
-      el.checked = true;
-      elChecked.checked = false;
-
-      await el.updateComplete;
-      expect(hasClass(el)).to.equal(true, 'programmatically checked');
-      expect(hasClass(elChecked)).to.equal(false, 'programmatically unchecked');
-
-      // reset
-      el.checked = false;
-      elChecked.checked = true;
-
-      // Via user interaction
-      el.inputElement.click();
-      elChecked.inputElement.click();
-      await el.updateComplete;
-      expect(hasClass(el)).to.equal(true, 'user click checked');
-      expect(hasClass(elChecked)).to.equal(false, 'user click unchecked');
-
-      // reset
-      el.checked = false;
-      elChecked.checked = true;
-
-      // Programmatically via modelValue
-      el.modelValue = { value: '', checked: true };
-      elChecked.modelValue = { value: '', checked: false };
-      await el.updateComplete;
-      expect(hasClass(el)).to.equal(true, 'modelValue checked');
-      expect(hasClass(elChecked)).to.equal(false, 'modelValue unchecked');
-    });
-
-    it('[deprecated] uses choiceChecked to set checked state', async () => {
-      const el = await fixture(html`
-        <choice-input .choiceValue=${'foo'}></choice-input>
-      `);
-      expect(el.choiceChecked).to.be.false;
-      el.choiceChecked = true;
-      expect(el.checked).to.be.true;
-      expect(el.modelValue).to.deep.equal({
-        checked: true,
-        value: 'foo',
-      });
-      await el.updateComplete;
-      expect(el.inputElement.checked).to.be.true;
     });
   });
 

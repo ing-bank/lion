@@ -16,6 +16,6 @@ describe('<lion-radio>', () => {
       </lion-radio-group>
     `);
     await nextFrame();
-    expect(el.children[1].inputElement.getAttribute('type')).to.equal('radio');
+    expect(el.children[1]._inputNode.getAttribute('type')).to.equal('radio');
   });
 });

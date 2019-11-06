@@ -19,8 +19,8 @@ import { ChoiceInputMixin } from '@lion/choice-input';
  *   <lion-radio name="name[]" checked>
  *
  *
- * @customElement
- * @extends ChoiceInputMixin(LionInput)
+ * @customElement lion-radio
+ * @extends {LionInput}
  */
 export class LionRadio extends ChoiceInputMixin(LionInput) {
   connectedCallback() {

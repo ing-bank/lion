@@ -20,7 +20,7 @@ describe('<lion-checkbox-group>', () => {
     await nextFrame();
 
     expect(el.error.required).to.be.true;
-    el.formElements['sports[]'][0].choiceChecked = true;
+    el.formElements['sports[]'][0].checked = true;
     expect(el.error.required).to.be.undefined;
   });
 });

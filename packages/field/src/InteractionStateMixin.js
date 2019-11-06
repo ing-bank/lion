@@ -104,17 +104,6 @@ export const InteractionStateMixin = dedupeMixin(
         this.removeEventListener(this._valueChangedEvent, this._iStateOnValueChange);
       }
 
-      updated(changedProperties) {
-        super.updated(changedProperties);
-        // classes are added only for backward compatibility - they are deprecated
-        if (changedProperties.has('touched')) {
-          this.classList[this.touched ? 'add' : 'remove']('state-touched');
-        }
-        if (changedProperties.has('dirty')) {
-          this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
-        }
-      }
-
       /**
        * Evaluations performed on connectedCallback. Since some components can be out of sync
        * (due to interdependence on light children that can only be processed
@@ -162,20 +151,6 @@ export const InteractionStateMixin = dedupeMixin(
 
       _onDirtyChanged() {
         this.dispatchEvent(new CustomEvent('dirty-changed', { bubbles: true, composed: true }));
-      }
-
-      /**
-       * @deprecated
-       */
-      get leaveEvent() {
-        return this._leaveEvent;
-      }
-
-      /**
-       * @deprecated
-       */
-      set leaveEvent(eventName) {
-        this._leaveEvent = eventName;
       }
     },
 );

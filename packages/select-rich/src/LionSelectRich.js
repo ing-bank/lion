@@ -23,7 +23,7 @@ function detectInteractionMode() {
  * LionSelectRich: wraps the <lion-listbox> element
  *
  * @customElement lion-select-rich
- * @extends LionField
+ * @extends {LitElement}
  */
 export class LionSelectRich extends OverlayMixin(
   FormRegistrarMixin(InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement))))),
@@ -272,12 +272,12 @@ export class LionSelectRich extends OverlayMixin(
   }
 
   /**
-   * add same aria-label to invokerNode as inputElement
+   * add same aria-label to invokerNode as _inputNode
    * @override
    */
   _onAriaLabelledbyChanged({ _ariaLabelledby }) {
-    if (this.inputElement) {
-      this.inputElement.setAttribute('aria-labelledby', _ariaLabelledby);
+    if (this._inputNode) {
+      this._inputNode.setAttribute('aria-labelledby', _ariaLabelledby);
     }
     if (this._invokerNode) {
       this._invokerNode.setAttribute(
@@ -288,12 +288,12 @@ export class LionSelectRich extends OverlayMixin(
   }
 
   /**
-   * add same aria-label to invokerNode as inputElement
+   * add same aria-label to invokerNode as _inputNode
    * @override
    */
   _onAriaDescribedbyChanged({ _ariaDescribedby }) {
-    if (this.inputElement) {
-      this.inputElement.setAttribute('aria-describedby', _ariaDescribedby);
+    if (this._inputNode) {
+      this._inputNode.setAttribute('aria-describedby', _ariaDescribedby);
     }
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-describedby', _ariaDescribedby);
