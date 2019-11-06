@@ -255,7 +255,9 @@ export const ValidateMixin = dedupeMixin(
        */
       __executeSyncValidators(syncValidators, value, { hasAsync }) {
         if (syncValidators.length) {
-          this.__syncValidationResult = syncValidators.filter(v => v.execute(value, v.param));
+          this.__syncValidationResult = syncValidators.filter(v =>
+            v.execute(value, v.param, { node: this }),
+          );
         }
         this.__finishValidation({ source: 'sync', hasAsync });
       }

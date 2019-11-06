@@ -299,6 +299,18 @@ export function runValidateMixinSuite(customConfig) {
         expect(executeSpy.args[0][1]).to.equal(param);
       });
 
+      it('Validators will be called with a config that has { node } as a third argument', async () => {
+        const validator = new IsCat();
+        const executeSpy = sinon.spy(validator, 'execute');
+        const el = await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'cat'}
+          >${lightDom}</${tag}>
+        `);
+        expect(executeSpy.args[0][2].node).to.equal(el);
+      });
+
       it('Validators will not be called on empty values', async () => {
         const el = await fixture(html`
           <${tag} .validators=${[new IsCat()]}>${lightDom}</${tag}>
