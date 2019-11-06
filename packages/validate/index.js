@@ -17,6 +17,8 @@ export {
   IsEmail,
 } from './src/validators/StringValidators.js';
 
+export { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './src/validators/NumberValidators.js';
+
 export {
   IsDate,
   MinDate,
