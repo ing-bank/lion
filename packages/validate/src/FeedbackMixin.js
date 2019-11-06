@@ -154,6 +154,7 @@ export const FeedbackMixin = dedupeMixin(
               modelValue: this.modelValue,
               formControl: this,
               fieldName,
+              type: validator.type,
             });
             return { message, type: validator.type, validator };
           }),

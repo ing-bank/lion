@@ -47,6 +47,7 @@ export class Validator {
    * @param {*} data.modelValue
    * @param {string} data.fieldName
    * @param {*} data.validatorParams
+   * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   async _getMessage(data) {
@@ -62,6 +63,7 @@ export class Validator {
    * @param {*} data.modelValue
    * @param {string} data.fieldName
    * @param {*} data.validatorParams
+   * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   static async getMessage(data) {} // eslint-disable-line no-unused-vars, no-empty-function
