@@ -43,14 +43,19 @@ export class LocalizeManager extends LionSingleton {
     this._setupHtmlLangAttributeObserver();
 
     if (!value.includes('-')) {
-      console.warn(`
-        Locale was set to ${value}.
-        Language only locales are deprecated, please use the full language locale e.g. 'en-GB' instead of 'en'.
-        See https://github.com/ing-bank/lion/issues/187 for more information.
-      `);
+      this.__handleLanguageOnly(value);
     }
 
     this._onLocaleChanged(value, oldLocale);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  __handleLanguageOnly(value) {
+    throw new Error(`
+      Locale was set to ${value}.
+      Language only locales are not allowed, please use the full language locale e.g. 'en-GB' instead of 'en'.
+      See https://github.com/ing-bank/lion/issues/187 for more information.
+    `);
   }
 
   get loadingComplete() {

@@ -1,13 +1,12 @@
-import { html, css } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
+import { LitElement, html, css } from '@lion/core';
 
 /**
  * `LionSteps` is a controller for a multi step system.
  *
- * @customElement
+ * @customElement lion-steps
+ * @extends {LitElement}
  */
-export class LionSteps extends ObserverMixin(LionLitElement) {
+export class LionSteps extends LitElement {
   static get properties() {
     /**
      * Fired when a transition between steps happens.
@@ -32,10 +31,11 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     };
   }
 
-  static get asyncObservers() {
-    return {
-      _onCurrentChanged: ['current'],
-    };
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('current')) {
+      this._onCurrentChanged({ current: this.current }, { current: changedProps.get('current') });
+    }
   }
 
   constructor() {

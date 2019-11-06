@@ -6,8 +6,8 @@ import { isEmailValidator } from '@lion/validate';
 /**
  * LionInputEmail: extension of lion-input
  *
- * @customElement
- * @extends LionInput
+ * @customElement lion-input-email
+ * @extends {LionInput}
  */
 export class LionInputEmail extends FieldCustomMixin(LocalizeMixin(LionInput)) {
   getValidatorsForType(type) {

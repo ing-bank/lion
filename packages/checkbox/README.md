@@ -6,9 +6,9 @@
 
 ## Features
 
-- Get or set the checked state (boolean) - `choiceChecked()`
-- Get or set the value of the choice - `choiceValue()`
+- Get the checked state (boolean) - `checked` boolean attribute
 - Pre-select an option by setting the `checked` boolean attribute
+- Get or set the value of the choice - `choiceValue()`
 
 ## How to use
 

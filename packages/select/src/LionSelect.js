@@ -24,8 +24,8 @@ import { LionField } from '@lion/field';
  * where each option name starts with the same word or phrase can also significantly degrade
  * usability for keyboard and screen reader users.
  *
- * @customElement
- * @extends LionField
+ * @customElement lion-select
+ * @extends {LionField}
  */
 
 // eslint-disable-next-line no-unused-vars
@@ -41,7 +41,7 @@ export class LionSelect extends LionField {
   }
 
   _proxyChangeEvent() {
-    this.inputElement.dispatchEvent(
+    this._inputNode.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
         composed: true,

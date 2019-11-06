@@ -67,18 +67,6 @@ export function runInteractionStateMixinSuite(customConfig) {
       expect(el.touched).to.be.true;
     });
 
-    // classes are added only for backward compatibility - they are deprecated
-    it('sets a class "state-(touched|dirty)"', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
-      el.touched = true;
-      await el.updateComplete;
-      expect(el.classList.contains('state-touched')).to.equal(true, 'has class "state-touched"');
-
-      el.dirty = true;
-      await el.updateComplete;
-      expect(el.classList.contains('state-dirty')).to.equal(true, 'has class "state-dirty"');
-    });
-
     it('sets an attribute "touched', async () => {
       const el = await fixture(html`<${tag}></${tag}>`);
       el.touched = true;
@@ -125,7 +113,7 @@ export function runInteractionStateMixinSuite(customConfig) {
       const el = await fixture(html`<${tag}></${tag}>`);
 
       const changeModelValueAndLeave = modelValue => {
-        const targetEl = el.inputElement || el;
+        const targetEl = el._inputNode || el;
         targetEl.dispatchEvent(new Event('focus', { bubbles: true }));
         el.modelValue = modelValue;
         targetEl.dispatchEvent(new Event(el._leaveEvent, { bubbles: true }));
@@ -200,11 +188,6 @@ export function runInteractionStateMixinSuite(customConfig) {
         const el = await fixture(html`<${tagLeave}></${tagLeave}>`);
         el.dispatchEvent(new Event('custom-blur'));
         expect(el.touched).to.be.true;
-      });
-
-      it('can override the deprecated `leaveEvent`', async () => {
-        const el = await fixture(html`<${tag} .leaveEvent=${'custom-blur'}></${tag}>`);
-        expect(el._leaveEvent).to.equal('custom-blur');
       });
     });
   });

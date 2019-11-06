@@ -1,12 +1,12 @@
-import { html, css } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement, html, css } from '@lion/core';
 
 /**
  * `LionStep` is one of many in a LionSteps Controller
  *
- * @customElement
+ * @customElement lion-step
+ * @extends {LitElement}
  */
-export class LionStep extends LionLitElement {
+export class LionStep extends LitElement {
   static get properties() {
     /**
      * Fired when the step is entered.

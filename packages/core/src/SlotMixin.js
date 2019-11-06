@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from './dedupeMixin.js';
-import { DomHelpersMixin } from './DomHelpersMixin.js';
 
 /**
  * # SlotMixin
@@ -28,7 +27,7 @@ import { DomHelpersMixin } from './DomHelpersMixin.js';
 export const SlotMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class SlotMixin extends DomHelpersMixin(superclass) {
+    class SlotMixin extends superclass {
       /**
        * @returns {{}}
        */
@@ -54,7 +53,7 @@ export const SlotMixin = dedupeMixin(
       _connectSlotMixin() {
         if (!this.__isConnectedSlotMixin) {
           Object.keys(this.slots).forEach(slotName => {
-            if (!this.$$slot(slotName)) {
+            if (!this.querySelector(`[slot=${slotName}]`)) {
               const slotFactory = this.slots[slotName];
               const slotContent = slotFactory();
               if (slotContent instanceof Element) {
