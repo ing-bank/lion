@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.40](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.39...@lion/validate@0.2.40) (2019-11-06)
+
+
+### Bug Fixes
+
+* **validate:** en-US translations ([cb8c3cb](https://github.com/ing-bank/lion/commit/cb8c3cb))
+
+
+
+
+
 ## [0.2.39](https://github.com/ing-bank/lion/compare/@lion/validate@0.2.38...@lion/validate@0.2.39) (2019-11-01)
 
 
