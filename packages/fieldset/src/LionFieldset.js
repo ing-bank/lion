@@ -223,9 +223,8 @@ export class LionFieldset extends FormRegistrarMixin(
   }
 
   async resetGroup() {
-    if (!this.submitted) {
-      await this.updateComplete;
-    }
+    // To ensure resetting happens after submission process, in case it was fired right before reset
+    await this.updateComplete;
     this.formElementsArray.forEach(child => {
       if (typeof child.resetGroup === 'function') {
         child.resetGroup();

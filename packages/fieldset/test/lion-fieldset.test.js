@@ -645,8 +645,7 @@ describe('<lion-fieldset>', () => {
       expect(el.modelValue).to.deep.equal({ firstName: 'Bar' });
       expect(input.modelValue).to.equal('Bar');
 
-      el.resetGroup();
-      await nextFrame();
+      await el.resetGroup();
       expect(el.modelValue).to.deep.equal({ firstName: 'Foo' });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -665,8 +664,7 @@ describe('<lion-fieldset>', () => {
       expect(el.modelValue).to.deep.equal({ 'firstName[]': ['Bar'] });
       expect(input.modelValue).to.equal('Bar');
 
-      el.resetGroup();
-      await nextFrame();
+      await el.resetGroup();
       expect(el.modelValue).to.deep.equal({ 'firstName[]': ['Foo'] });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -692,7 +690,7 @@ describe('<lion-fieldset>', () => {
       expect(nestedFieldset.modelValue).to.deep.equal({ firstName: 'Bar' });
       expect(input.modelValue).to.equal('Bar');
 
-      el.resetGroup();
+      await el.resetGroup();
       await nextFrame();
       expect(el.modelValue).to.deep.equal({ 'name[]': [{ firstName: 'Foo' }] });
       expect(nestedFieldset.modelValue).to.deep.equal({ firstName: 'Foo' });
@@ -724,11 +722,43 @@ describe('<lion-fieldset>', () => {
       expect(el.prefilled).to.equal(true, '"prefilled" after 2nd reset');
     });
 
+    describe('Wait for submit/updateComplete', async () => {
+      let sandbox;
+      let resolve;
+      let fieldset;
+      before(async () => {
+        sandbox = sinon.createSandbox();
+        fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
+        const promise = new Promise(_resolve => {
+          resolve = _resolve;
+        });
+        sandbox.stub(fieldset, '_updatePromise').callsFake(() => promise);
+      });
+      after(() => {
+        sandbox.restore();
+      });
+
+      it('to reset interaction state', async () => {
+        const resetGroupPromise = fieldset
+          .resetGroup()
+          .then(() => expect(fieldset.submitted).to.equal(false));
+        fieldset.submitted = true;
+
+        const resolveUpdatePromise = async () => {
+          resolve();
+        };
+
+        await resolveUpdatePromise();
+
+        return resetGroupPromise;
+      });
+    });
+
     it('clears submitted state', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
       fieldset.submitted = true;
-      fieldset.resetGroup();
+      await fieldset.resetGroup();
       expect(fieldset.submitted).to.equal(false);
       fieldset.formElementsArray.forEach(el => {
         expect(el.submitted).to.equal(false);
@@ -760,8 +790,7 @@ describe('<lion-fieldset>', () => {
       el.formElements.color.modelValue = 'cat';
       expect(el.errorState).to.be.false;
 
-      el.resetGroup();
-      await nextFrame();
+      await el.resetGroup();
       expect(el.errorState).to.be.true;
       expect(el.error.containsA).to.be.true;
       expect(el.formElements.color.errorState).to.be.false;
@@ -809,8 +838,7 @@ describe('<lion-fieldset>', () => {
         `);
         const childFieldsetEl = el.querySelector(tagString);
         const resetGroupSpy = sinon.spy(childFieldsetEl, 'resetGroup');
-        el.resetGroup();
-        await nextFrame();
+        await el.resetGroup();
         expect(resetGroupSpy.callCount).to.equal(1);
       });
 
@@ -825,8 +853,7 @@ describe('<lion-fieldset>', () => {
         `);
         const childFieldsetEl = el.querySelector(childTagString);
         const resetSpy = sinon.spy(childFieldsetEl, 'reset');
-        el.resetGroup();
-        await nextFrame();
+        await el.resetGroup();
         expect(resetSpy.callCount).to.equal(1);
       });
     });
