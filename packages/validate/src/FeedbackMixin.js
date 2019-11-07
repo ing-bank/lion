@@ -118,6 +118,10 @@ export const FeedbackMixin = dedupeMixin(
       updated(c) {
         super.updated(c);
 
+        this._conditionallyRenderFeedback(c);
+      }
+
+      _conditionallyRenderFeedback(c) {
         // TODO: Interaction state knowledge should be moved to FormControl...
         ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
           if (c.has(iState)) {
@@ -204,6 +208,15 @@ export const FeedbackMixin = dedupeMixin(
         });
 
         Object.assign(this, result);
+      }
+
+      _resetTypeVisibilityOnInstance() {
+        if (this.__prioritizedResult) {
+          this.__prioritizedResult.forEach(v => {
+            this[`has${pascalCase(v.type)}Visible`] = false;
+          });
+        }
+
       }
 
       /**

@@ -9,6 +9,7 @@ import {
 } from '@open-wc/testing';
 import { unsafeHTML } from '@lion/core';
 import sinon from 'sinon';
+import { Validator, Required } from '@lion/validate';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
@@ -284,66 +285,115 @@ describe('<lion-field>', () => {
       });
     });
 
-    it('shows validity states(error|warning|info|success) when interaction criteria met ', async () => {
-      // TODO: in order to make this test work as an integration test, we chose a modelValue
-      // that is compatible with lion-input-email.
-      // However, when we can put priorities to validators (making sure error message of hasX is
-      // shown instead of a predefined validator like isEmail), we should fix this.
-      function hasX(str) {
-        return { hasX: str.indexOf('x') > -1 };
+    it('should conditionally show error', async () => {
+      const HasX = class extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasX';
+        }
+        execute(value) {
+          const result = value.indexOf('x') === -1;
+          return result;
+        }
       }
-      const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-      const feedbackEl = el._feedbackElement;
-
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[new HasX()]}>
+          ${inputSlot}
+        </${tag}>
+      `);
       el.modelValue = 'a@b.nl';
-      el.errorValidators = [[hasX]];
 
-      expect(el.error.hasX).to.equal(true);
-      expect(feedbackEl.innerText.trim()).to.equal(
-        '',
-        'shows no feedback, although the element has an error',
-      );
-      el.dirty = true;
-      el.touched = true;
-      el.modelValue = 'ab@c.nl'; // retrigger validation
-      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(el.hasErrorVisible).to.be.true;
 
-      expect(feedbackEl.innerText.trim()).to.equal(
-        'This is error message for hasX',
-        'shows feedback, because touched=true and dirty=true',
-      );
+    const executeScenario = async (el, scenario) => {
+        el.resetInteractionState();
+        el.touched = scenario.el.touched;
+        el.dirty = scenario.el.dirty;
+        el.prefilled = scenario.el.prefilled;
+        el.submitted = scenario.el.submitted;
 
-      el.touched = false;
-      el.dirty = false;
-      el.prefilled = true;
-      await el.updateComplete;
-      expect(feedbackEl.innerText.trim()).to.equal(
-        'This is error message for hasX',
-        'shows feedback, because prefilled=true',
-      );
-    });
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el.hasErrorVisible).to.equal(scenario.wantErrorVisible);
+      }
+
+      await executeScenario(el, {
+        index: 0,
+        el: { touched: true, dirty: true, prefilled: false, submitted: false },
+        wantErrorVisible: true,
+      });
+
+      await executeScenario(el, {
+        index: 1,
+        el: { touched: false, dirty: true, prefilled: false, submitted: false },
+        wantErrorVisible: false,
+      });
+
+      /*
+      await Promise.all([
+        {
+          el: { touched: true, dirty: true, prefilled: false, submitted: false },
+          wantErrorVisible: true,
+        },
+        {
+          el: { touched: false, dirty: false, prefilled: true, submitted: false },
+          wantErrorVisible: true,
+        },
+        {
+          el: { touched: false, dirty: false, prefilled: false, submitted: true },
+          wantErrorVisible: true,
+        },
+        {
+          el: { touched: false, dirty: true, prefilled: false, submitted: false },
+          wantErrorVisible: false,
+        },
+        {
+          el: { touched: true, dirty: false, prefilled: false, submitted: false },
+          wantErrorVisible: false,
+        }
+      ].map(async (scenario, index) => {
+        el.touched = scenario.el.touched;
+        el.dirty = scenario.el.dirty;
+        el.prefilled = scenario.el.prefilled;
+        el.submitted = scenario.el.submitted;
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el.hasErrorVisible).to.equal(scenario.wantErrorVisible);
+      }));
+      */
+    })
 
     it('can be required', async () => {
       const el = await fixture(html`
         <${tag}
-          .errorValidators=${[['required']]}
+          .validators=${[new Required()]}
         >${inputSlot}</${tag}>
       `);
-      expect(el.error.required).to.be.true;
+      expect(el.hasError).to.be.true;
+      expect(el.errorStates).to.have.a.property('Required');
       el.modelValue = 'cat';
-      expect(el.error.required).to.be.undefined;
+      expect(el.hasError).to.be.false;
+      expect(el.errorStates).not.to.have.a.property('Required');
     });
 
     it('will only update formattedValue when valid on `user-input-changed`', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
-      function isBarValidator(value) {
-        return { isBar: value === 'bar' };
+      const Bar = class extends Validator {
+        constructor(...args) {
+          super(...args);
+          this.name = 'Bar';
+        }
+        execute(value) {
+          return value !== 'bar';
+        }
       }
       const el = await fixture(html`
         <${tag}
           .modelValue=${'init-string'}
           .formatter=${formatterSpy}
-          .errorValidators=${[[isBarValidator]]}
+          .validators=${[new Bar()]}
         >${inputSlot}</${tag}>
       `);
 
