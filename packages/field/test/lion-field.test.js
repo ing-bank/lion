@@ -307,7 +307,7 @@ describe('<lion-field>', () => {
       await el.feedbackComplete;
       expect(el.hasErrorVisible).to.be.true;
 
-    const executeScenario = async (el, scenario) => {
+      const executeScenario = async (el, scenario) => {
         el.resetInteractionState();
         el.touched = scenario.el.touched;
         el.dirty = scenario.el.dirty;
@@ -324,45 +324,29 @@ describe('<lion-field>', () => {
         el: { touched: true, dirty: true, prefilled: false, submitted: false },
         wantErrorVisible: true,
       });
-
       await executeScenario(el, {
         index: 1,
+        el: { touched: false, dirty: false, prefilled: true, submitted: false },
+        wantErrorVisible: true,
+      });
+
+      await executeScenario(el, {
+        index: 2,
+        el: { touched: false, dirty: false, prefilled: false, submitted: true },
+        wantErrorVisible: true,
+      });
+
+      await executeScenario(el, {
+        index: 3,
         el: { touched: false, dirty: true, prefilled: false, submitted: false },
         wantErrorVisible: false,
       });
 
-      /*
-      await Promise.all([
-        {
-          el: { touched: true, dirty: true, prefilled: false, submitted: false },
-          wantErrorVisible: true,
-        },
-        {
-          el: { touched: false, dirty: false, prefilled: true, submitted: false },
-          wantErrorVisible: true,
-        },
-        {
-          el: { touched: false, dirty: false, prefilled: false, submitted: true },
-          wantErrorVisible: true,
-        },
-        {
-          el: { touched: false, dirty: true, prefilled: false, submitted: false },
-          wantErrorVisible: false,
-        },
-        {
-          el: { touched: true, dirty: false, prefilled: false, submitted: false },
-          wantErrorVisible: false,
-        }
-      ].map(async (scenario, index) => {
-        el.touched = scenario.el.touched;
-        el.dirty = scenario.el.dirty;
-        el.prefilled = scenario.el.prefilled;
-        el.submitted = scenario.el.submitted;
-        await el.updateComplete;
-        await el.feedbackComplete;
-        expect(el.hasErrorVisible).to.equal(scenario.wantErrorVisible);
-      }));
-      */
+      await executeScenario(el, {
+        index: 4,
+        el: { touched: true, dirty: false, prefilled: false, submitted: false },
+        wantErrorVisible: false,
+      });
     })
 
     it('can be required', async () => {

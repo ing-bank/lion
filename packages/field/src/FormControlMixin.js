@@ -456,13 +456,25 @@ export const FormControlMixin = dedupeMixin(
         ];
       }
 
-      _conditionallyRenderFeedback() {
-        if ((this.touched && this.dirty) || this.prefilled || this.submitted) {
-          this._renderFeedback();
-        } else {
-          this._resetTypeVisibilityOnInstance();
+      _conditionallyRenderFeedback(c) {
+        let found = false;
+        ['touched', 'dirty', 'submitted', 'prefilled'].forEach(iState => {
+          if (found) {
+            return;
+          }
+          if (c.has(iState)) {
+            found = true;
+          }
+        });
+        if (found) {
+          if ((this.touched && this.dirty) || this.prefilled || this.submitted) {
+            this._renderFeedback();
+          } else {
+            this._resetTypeVisibilityOnInstance();
+          }
         }
       }
+
 
       // // Extend validity showing conditions of ValidateMixin
       // showErrorCondition(newStates) {
