@@ -6,6 +6,7 @@ import { pascalCase } from './utils/pascal-case.js';
 import { Required } from './validators/Required.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+import { Validator } from './Validator.js';
 
 /**
  * @desc Handles all validation, based on modelValue changes. It has no knowledge about dom and
@@ -378,6 +379,12 @@ export const ValidateMixin = dedupeMixin(
           });
         }
         this._allValidators.forEach(v => {
+          if (!(v instanceof Validator)) {
+            const errorType = Array.isArray(v) ? 'array' : typeof v;
+            throw new Error(
+              `The validators array may only contain class instances of Validator. Type "${errorType}" found.`,
+            );
+          }
           events.forEach(e => v.addEventListener(e, this.__onValidatorUpdated));
           v.onFormControlConnect(this);
         });

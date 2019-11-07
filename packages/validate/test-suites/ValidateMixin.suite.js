@@ -77,6 +77,20 @@ export function runValidateMixinSuite(customConfig) {
      */
 
     describe('Validation initiation', () => {
+      it('throws if adding not Validator instances to the validators array', async () => {
+        const el = await fixture(html`<${tag}></${tag}>`);
+        expect(() => {
+          el.validators = [[new Required()]];
+        }).to.throw(
+          'The validators array may only contain class instances of Validator. Type "array" found.',
+        );
+        expect(() => {
+          el.validators = ['required'];
+        }).to.throw(
+          'The validators array may only contain class instances of Validator. Type "string" found.',
+        );
+      });
+
       it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
         const el = await fixture(html`
           <${tag}
