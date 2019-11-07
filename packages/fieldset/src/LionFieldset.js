@@ -1,11 +1,9 @@
 import { SlotMixin, html, LitElement } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { ValidateMixin } from '@lion/validate';
+import { ValidateMixin, FeedbackMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
-
-// TODO: extract from module like import { pascalCase } from 'lion-element/CaseMapUtils.js'
-const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
+import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
  * LionFieldset: fieldset wrapper providing extra features and integration with lion-field elements.
@@ -14,7 +12,9 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @extends LionLitElement
  */
 export class LionFieldset extends FormRegistrarMixin(
-  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
+  FormControlMixin(
+    FeedbackMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
+  ),
 ) {
   static get properties() {
     return {
@@ -98,7 +98,6 @@ export class LionFieldset extends FormRegistrarMixin(
     this.focused = false;
     this.formElements = {};
     this.__addedSubValidators = false;
-    this.__createTypeAbsenceValidators();
 
     this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
 
@@ -106,6 +105,8 @@ export class LionFieldset extends FormRegistrarMixin(
     this.addEventListener('focusout', this._onFocusOut);
     this.addEventListener('dirty-changed', this._syncDirty);
     this.addEventListener('validate-performed', this.__validate);
+
+    this.defaultValidators = [new FormElementsHaveNoError()];
   }
 
   connectedCallback() {
@@ -129,27 +130,11 @@ export class LionFieldset extends FormRegistrarMixin(
     if (changedProps.has('disabled')) {
       if (this.disabled) {
         this.__requestChildrenToBeDisabled();
-        /** @deprecated use disabled attribute instead */
-        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
       } else {
         this.__retractRequestChildrenToBeDisabled();
-        /** @deprecated use disabled attribute instead */
-        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
       }
     }
-    if (changedProps.has('touched')) {
-      /** @deprecated use touched attribute instead */
-      this.classList[this.touched ? 'add' : 'remove']('state-touched');
-    }
-
-    if (changedProps.has('dirty')) {
-      /** @deprecated use dirty attribute instead */
-      this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
-    }
-
     if (changedProps.has('focused')) {
-      /** @deprecated use touched attribute instead */
-      this.classList[this.focused ? 'add' : 'remove']('state-focused');
       if (this.focused === true) {
         this.__setupOutsideClickHandling();
       }
@@ -247,20 +232,12 @@ export class LionFieldset extends FormRegistrarMixin(
     });
   }
 
-  getValidatorsForType(type) {
-    const validators = super.getValidatorsForType(type) || [];
-    return [
-      ...validators,
-      [this[`__formElementsHaveNo${pascalCase(type)}`], {}, { hideFeedback: true }],
-    ];
-  }
-
   _getFromAllFormElements(property) {
     if (!this.formElements) {
       return undefined;
     }
     const childrenNames = Object.keys(this.formElements);
-    const values = childrenNames.length > 0 ? {} : undefined;
+    const values = {};
     childrenNames.forEach(name => {
       if (Array.isArray(this.formElements[name])) {
         // grouped via myName[]
@@ -469,23 +446,9 @@ export class LionFieldset extends FormRegistrarMixin(
     this.validate();
   }
 
-  /**
-   * Creates a validator for every type indicating whether all of the children formElements
-   * are not in the condition of {type} : i.e. __formElementsHaveNoError would be true if
-   * none of the children of the fieldset is in error state.
-   */
-  __createTypeAbsenceValidators() {
-    this.constructor.validationTypes.forEach(type => {
-      this[`__formElementsHaveNo${pascalCase(type)}`] = () => ({
-        [`formElementsHaveNo${pascalCase(type)}`]: !this._anyFormElementHas(`${type}State`),
-      });
-    });
-  }
-
   // eslint-disable-next-line class-methods-use-this
   __isRequired() {
-    // eslint-disable-next-line no-console
-    console.warn(`Default "required" validator is not supported on fieldsets. If you have a valid
+    throw new Error(`Default "required" validator is not supported on fieldsets. If you have a valid
       use case please let us know.`);
   }
 }
