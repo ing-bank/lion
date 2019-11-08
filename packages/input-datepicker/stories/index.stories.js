@@ -1,5 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { isDateDisabledValidator, minMaxDateValidator } from '@lion/validate';
+import { formatDate } from '@lion/localize';
+import { IsDateDisabled, MinMaxDate } from '@lion/validate';
 import '../lion-input-datepicker.js';
 
 storiesOf('Forms|Input Datepicker', module)
@@ -11,26 +12,25 @@ storiesOf('Forms|Input Datepicker', module)
     `,
   )
   .add(
-    'minMaxDateValidator',
+    'Validation',
     () => html`
       <lion-input-datepicker
         label="MinMaxDate"
-        help-text="Enter a date between '2018/05/24' and '2018/06/24'"
         .modelValue=${new Date('2018/05/30')}
-        .errorValidators=${[
-          minMaxDateValidator({ min: new Date('2018/05/24'), max: new Date('2018/06/24') }),
+        .validators=${[
+          new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') }),
         ]}
       >
+        <div slot="help-text">
+          Enter a date between ${formatDate(new Date('2018/05/24'))} and
+          ${formatDate(new Date('2018/06/24'))}.
+        </div>
       </lion-input-datepicker>
-    `,
-  )
-  .add(
-    'isDateDisabledValidator',
-    () => html`
+
       <lion-input-datepicker
-        label="isDateDisabled"
-        help-text="You're not allowed to choose the 15th"
-        .errorValidators=${[isDateDisabledValidator(d => d.getDate() === 15)]}
+        label="IsDateDisabled"
+        help-text="You're not allowed to choose any 15th."
+        .validators=${[new IsDateDisabled(d => d.getDate() === 15)]}
       >
       </lion-input-datepicker>
     `,
