@@ -7,7 +7,9 @@ import { Required } from '../src/validators/Required.js';
 describe('loadDefaultFeedbackMessages', () => {
   it('will set default feedback message for Required', async () => {
     const el = new Required();
-    expect(await el._getMessage()).to.be.undefined;
+    expect(await el._getMessage()).to.equals(
+      'Please configure an error message for "Required" by overriding "static async getMessage()"',
+    );
 
     loadDefaultFeedbackMessages();
     expect(await el._getMessage({ fieldName: 'password' })).to.equal('Please enter a(n) password.');

@@ -71,7 +71,9 @@ export class Validator {
    * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
-  static async getMessage(data) {} // eslint-disable-line no-unused-vars, no-empty-function
+  static async getMessage(/* data */) {
+    return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
+  }
 
   /**
    * @param {FormControl} formControl

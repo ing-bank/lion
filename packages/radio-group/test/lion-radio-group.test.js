@@ -213,13 +213,18 @@ describe('<lion-radio-group>', () => {
     const el = await fixture(html`
       <lion-radio-group .validators=${[new Required()]}>
         <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
-        <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
+        <lion-radio
+          name="gender[]"
+          .choiceValue=${{ subObject: 'satisfies required' }}
+        ></lion-radio>
       </lion-radio-group>
     `);
     await nextFrame();
 
     expect(el.errorStates.Required).to.be.true;
     el.formElements['gender[]'][0].choiceChecked = true;
+    expect(el.errorStates.Required).to.be.undefined;
+    el.formElements['gender[]'][1].choiceChecked = true;
     expect(el.errorStates.Required).to.be.undefined;
   });
 

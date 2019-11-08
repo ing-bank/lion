@@ -110,9 +110,12 @@ export class LionRadioGroup extends LionFieldset {
 
   _isEmpty() {
     const value = this.checkedValue;
-    if (typeof value === 'string' && value !== '') {
-      return false;
+    if (typeof value === 'string' && value === '') {
+      return true;
     }
-    return true;
+    if (value === undefined || value === null) {
+      return true;
+    }
+    return false;
   }
 }
