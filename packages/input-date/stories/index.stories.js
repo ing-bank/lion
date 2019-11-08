@@ -1,4 +1,5 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
+import { formatDate } from '@lion/localize';
 import { MaxDate, MinDate, MinMaxDate } from '@lion/validate';
 
 import '../lion-input-date.js';
@@ -11,38 +12,37 @@ storiesOf('Forms|Input Date', module)
     `,
   )
   .add(
-    'minDateValidator',
+    'Validation',
     () => html`
+      <lion-input-date label="IsDate" .modelValue=${new Date('foo')}> </lion-input-date>
+
       <lion-input-date
         label="MinDate"
-        help-text="Enter a date greater than or equal to today"
+        help-text="Enter a date greater than or equal to today."
+        .modelValue=${new Date('2018/05/30')}
         .validators=${[new MinDate(new Date())]}
       >
       </lion-input-date>
-    `,
-  )
-  .add(
-    'maxDateValidator',
-    () => html`
+
       <lion-input-date
         label="MaxDate"
-        help-text="Enter a date smaller than or equal to today"
+        help-text="Enter a date smaller than or equal to today."
+        .modelValue=${new Date('2100/05/30')}
         .validators=${[new MaxDate(new Date())]}
       >
       </lion-input-date>
-    `,
-  )
-  .add(
-    'minMaxDateValidator',
-    () => html`
+
       <lion-input-date
         label="MinMaxDate"
-        help-text="Enter a date between '2018/05/24' and '2018/06/24'"
         .modelValue=${new Date('2018/05/30')}
         .validators=${[
           new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') }),
         ]}
       >
+        <div slot="help-text">
+          Enter a date between ${formatDate(new Date('2018/05/24'))} and
+          ${formatDate(new Date('2018/06/24'))}.
+        </div>
       </lion-input-date>
     `,
   )
