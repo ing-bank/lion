@@ -30,7 +30,7 @@ npm i --save @lion/input-amount
 import '@lion/input-amount/lion-input-amount.js';
 
 // validator import example
-import { minNumberValidator } from '@lion/validate';
+import { Required, MinNumber } from '@lion/validate';
 ```
 
 ### Example
@@ -39,6 +39,6 @@ import { minNumberValidator } from '@lion/validate';
 <lion-input-amount
   name="amount"
   currency="USD"
-  .errorValidators="${[['required'], minNumberValidator(100)]}"
+  .validators="${[new Required(), new MinNumber(100)]}"
 ></lion-input-amount>
 ```

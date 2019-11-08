@@ -104,7 +104,7 @@ storiesOf('Forms|Fieldset', module)
       }
 
       static async getMessage() {
-        return Promise.resolve('Demo error message');
+        return 'Demo error message';
       }
     };
 
@@ -139,9 +139,7 @@ storiesOf('Forms|Fieldset', module)
       }
 
       static async getMessage() {
-        return Promise.resolve(
-          '[Fieldset Error] Input 1 needs to be "cats" and Input 2 needs to be "dogs"',
-        );
+        return '[Fieldset Error] Input 1 needs to be "cats" and Input 2 needs to be "dogs"';
       }
     };
     return html`
@@ -175,7 +173,7 @@ storiesOf('Forms|Fieldset', module)
       }
 
       static async getMessage() {
-        return Promise.resolve('[Fieldset Nr. 1 Error] Input 1 needs to be "cats"');
+        return '[Fieldset Nr. 1 Error] Input 1 needs to be "cats"';
       }
     };
 
@@ -190,7 +188,7 @@ storiesOf('Forms|Fieldset', module)
       }
 
       static async getMessage() {
-        return Promise.resolve('[Fieldset Nr. 2 Error] Input 1 needs to be "dogs"');
+        return '[Fieldset Nr. 2 Error] Input 1 needs to be "dogs"';
       }
     };
     return html`
