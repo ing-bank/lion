@@ -51,10 +51,15 @@ export class Validator {
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   async _getMessage(data) {
+    const composedData = {
+      validatorParams: this.param,
+      type: this.type,
+      ...data,
+    };
     if (typeof this.config.getMessage === 'function') {
-      return this.config.getMessage(data);
+      return this.config.getMessage(composedData);
     }
-    return this.constructor.getMessage(data);
+    return this.constructor.getMessage(composedData);
   }
 
   /**

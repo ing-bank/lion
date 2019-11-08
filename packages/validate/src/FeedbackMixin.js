@@ -154,11 +154,9 @@ export const FeedbackMixin = dedupeMixin(
               fieldName = await validator.config.fieldName;
             }
             const message = await validator._getMessage({
-              validatorParams: validator.param,
               modelValue: this.modelValue,
               formControl: this,
               fieldName,
-              type: validator.type,
             });
             return { message, type: validator.type, validator };
           }),
@@ -216,7 +214,6 @@ export const FeedbackMixin = dedupeMixin(
             this[`has${pascalCase(v.type)}Visible`] = false;
           });
         }
-
       }
 
       /**
