@@ -1,10 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { localize } from '@lion/localize';
 
 import '@lion/radio/lion-radio.js';
 import '@lion/form/lion-form.js';
 import '../lion-radio-group.js';
+import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
+
+loadDefaultFeedbackMessages();
 
 storiesOf('Forms|Radio Group', module)
   .add(
@@ -82,7 +84,7 @@ storiesOf('Forms|Radio Group', module)
           <lion-radio-group
             name="dinosGroup"
             label="What are your favourite dinosaurs?"
-            .errorValidators=${[['required']]}
+            .validators=${[new Required()]}
           >
             <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
             <lion-radio
@@ -102,28 +104,28 @@ storiesOf('Forms|Radio Group', module)
     `;
   })
   .add('Validation Item', () => {
-    const isBrontosaurus = value => {
-      const selectedValue = value['dinos[]'].find(v => v.checked === true);
-      return {
-        isBrontosaurus: selectedValue ? selectedValue.value === 'brontosaurus' : false,
-      };
-    };
-    localize.locale = 'en-GB';
-    try {
-      localize.addData('en-GB', 'lion-validate+isBrontosaurus', {
-        error: {
-          isBrontosaurus: 'You need to select "brontosaurus"',
-        },
-      });
-    } catch (error) {
-      // expected as it's a demo
+    class IsBrontosaurus extends Validator {
+      constructor() {
+        super();
+        this.name = 'IsBrontosaurus';
+      }
+
+      execute(value) {
+        const selectedValue = value['dinos[]'].find(v => v.checked === true);
+        const hasError = selectedValue ? selectedValue.value !== 'brontosaurus' : false;
+        return hasError;
+      }
+
+      static async getMessage() {
+        return 'You need to select "brontosaurus"';
+      }
     }
 
     return html`
       <lion-radio-group
         name="dinosGroup"
         label="What are your favourite dinosaurs?"
-        .errorValidators=${[['required'], [isBrontosaurus]]}
+        .validators=${[new Required(), new IsBrontosaurus()]}
       >
         <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
         <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>

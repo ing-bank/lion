@@ -38,6 +38,7 @@
   "devDependencies": {
     "@lion/form": "^0.1.71",
     "@lion/radio": "^0.1.65",
+    "@lion/validate": "^0.2.39",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

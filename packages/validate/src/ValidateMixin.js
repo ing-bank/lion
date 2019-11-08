@@ -270,7 +270,9 @@ export const ValidateMixin = dedupeMixin(
       async __executeAsyncValidators(asyncValidators, value) {
         if (asyncValidators.length) {
           this.isPending = true;
-          const resultPromises = asyncValidators.map(v => v.execute(value, v.param));
+          const resultPromises = asyncValidators.map(v =>
+            v.execute(value, v.param, { node: this }),
+          );
           const booleanResults = await Promise.all(resultPromises);
           this.__asyncValidationResult = booleanResults
             .map((r, i) => asyncValidators[i]) // Create an array of Validators

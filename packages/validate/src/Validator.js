@@ -51,10 +51,15 @@ export class Validator {
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   async _getMessage(data) {
+    const composedData = {
+      validatorParams: this.param,
+      type: this.type,
+      ...data,
+    };
     if (typeof this.config.getMessage === 'function') {
-      return this.config.getMessage(data);
+      return this.config.getMessage(composedData);
     }
-    return this.constructor.getMessage(data);
+    return this.constructor.getMessage(composedData);
   }
 
   /**
@@ -66,7 +71,9 @@ export class Validator {
    * @param {string} data.type
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
-  static async getMessage(data) {} // eslint-disable-line no-unused-vars, no-empty-function
+  static async getMessage(/* data */) {
+    return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
+  }
 
   /**
    * @param {FormControl} formControl

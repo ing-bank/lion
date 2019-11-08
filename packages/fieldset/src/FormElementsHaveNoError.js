@@ -11,4 +11,8 @@ export class FormElementsHaveNoError extends Validator {
     const hasError = config.node._anyFormElementHas(`hasError`);
     return hasError;
   }
+
+  static async getMessage() {
+    return '';
+  }
 }
