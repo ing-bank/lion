@@ -36,6 +36,6 @@ import { Required, MinDate } from '@lion/validate';
 ```html
 <lion-input-date
   name="date"
-  .validators="${[new Required()), new MinDate(new Date('2018/05/24'))]}"
+  .validators="${[new Required(), new MinDate(new Date('2018/05/24'))]}"
 ></lion-input-date>
 ```

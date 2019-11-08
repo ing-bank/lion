@@ -13,10 +13,10 @@
 - option to provide additional format options overrides
 - default label in different languages
 - can make use of number specific [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
-  - isNumber (default)
-  - minNumber
-  - maxNumber
-  - minMaxNumber
+  - IsNumber (default)
+  - MinNumber
+  - MaxNumber
+  - MinMaxNumber
 
 ## How to use
 
