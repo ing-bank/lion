@@ -15,4 +15,19 @@ describe('lion-validation-feedback', () => {
     await el.updateComplete;
     expect(el).shadowDom.to.equal('hello');
   });
+
+  it('renders the validation type attribute', async () => {
+    const el = await fixture(
+      html`
+        <lion-validation-feedback></lion-validation-feedback>
+      `,
+    );
+    el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('error');
+
+    el.feedbackData = [{ message: 'hello', type: 'warning', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('warning');
+  });
 });

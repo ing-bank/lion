@@ -26,3 +26,5 @@ export {
   MinMaxDate,
   IsDateDisabled,
 } from './src/validators/DateValidators.js';
+
+export { DefaultSuccess } from './src/resultValidators/DefaultSuccess.js';

@@ -14,15 +14,15 @@ import {
   MinDate,
   MaxDate,
   MinMaxDate,
+  IsEmail,
   Validator,
   loadDefaultFeedbackMessages,
-  DefaultSuccess
+  DefaultSuccess,
 } from '../index.js';
 import '@lion/input/lion-input.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
-
-import { DefaultSuccess } from '@lion/validate/src/resultValidators/DefaultSuccess.js';
+import '@lion/input-email/lion-input-email.js';
 
 loadDefaultFeedbackMessages();
 
@@ -83,8 +83,7 @@ storiesOf('Forms|Validation', module)
       ></lion-input-amount>
     `,
   )
-  .add(
-    'Date Validators', () => {
+  .add('Date Validators', () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
@@ -113,63 +112,50 @@ storiesOf('Forms|Validation', module)
         .modelValue="${new Date(today)}"
         label="MinMaxDate"
       ></lion-input-date>
-    `
+    `;
   })
   .add(
-    'Email Validators', () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const day = today.getDate();
-    const yesterday = new Date(year, month, day - 1);
-    const tomorrow = new Date(year, month, day + 1);
-
-    return html`
-      <lion-input-date
-        .validators="${[new IsDate()]}"
+    'Email Validator',
+    () => html`
+      <lion-input-email
+        .validators="${[new IsEmail()]}"
         .modelValue="${'foo'}"
-        label="IsDate"
-      ></lion-input-date>
-      <lion-input-date
-        .validators="${[new MinDate(today)]}"
-        .modelValue="${yesterday}"
-        label="MinDate"
-      ></lion-input-date>
-      <lion-input-date
-        .validators="${[new MaxDate(today)]}"
-        .modelValue="${tomorrow}"
-        label="MaxDate"
-      ></lion-input-date>
-      <lion-input-date
-        .validators="${[new MinMaxDate({ min: yesterday, max: tomorrow })]}"
-        .modelValue="${today}"
-        label="MinMaxDate"
-      ></lion-input-date>
-    `
-  })
+        label="IsEmail"
+      ></lion-input-email>
+    `,
+  )
   .add(
-    'Types',
+    'Validation Types',
     () => html`
       <style>
-        lion-input[has-success] input {
-          outline: 2px solid green;
-        }
         lion-input[has-error] input {
           outline: 2px solid red;
         }
-        lion-input[has-warning] input {
-          outline: 2px solid orange;
+        lion-validation-feedback[type='success'] {
+          color: green;
+        }
+        lion-validation-feedback[type='error'] {
+          color: red;
+        }
+        lion-validation-feedback[type='warning'] {
+          color: orange;
+        }
+        lion-validation-feedback[type='info'] {
+          color: blue;
         }
       </style>
       <lion-input
         .validators="${[
           new Required(),
           new MinLength(7, { type: 'warning' }),
-          new MaxLength(10, { type: 'info' }),
+          new MaxLength(10, {
+            type: 'info',
+            getMessage: () => `Please, keep the length below the 10 characters.`,
+          }),
           new DefaultSuccess(),
         ]}"
         .modelValue="${'exactly'}"
-        label="MaxLength"
+        label="Validation Types"
       ></lion-input>
     `,
   )
