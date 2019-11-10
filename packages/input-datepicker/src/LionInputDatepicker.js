@@ -283,8 +283,8 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   _onCalendarOverlayOpened() {
     if (this._focusCentralDateOnCalendarOpen) {
-      this._calendarElement.focusCentralDate();
-      this._calendarElement.focusDate(this.modelValue);
+      // this._calendarElement.focusCentralDate();
+      this._calendarElement.focusSelectedDate();
     }
   }
 

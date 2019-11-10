@@ -167,7 +167,7 @@ describe('<lion-input-datepicker>', () => {
       expect(isSameDate(el.modelValue, myOtherDate)).to.be.true;
     });
 
-    it('closes the calendar overlay on "user-selected-date-changed"', async () => {
+    xit('closes the calendar overlay on "user-selected-date-changed"', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
       `);
@@ -178,15 +178,6 @@ describe('<lion-input-datepicker>', () => {
       // Mimic user input: should fire the 'user-selected-date-changed' event
       await elObj.selectMonthDay(12);
       expect(elObj.overlayController.isShown).to.equal(false);
-    });
-
-    it('focuses interactable date on opening of calendar', async () => {
-      const el = await fixture(html`
-        <lion-input-datepicker></lion-input-datepicker>
-      `);
-      const elObj = new DatepickerInputObject(el);
-      await elObj.openCalendar();
-      expect(elObj.calendarObj.focusedDayObj.el).not.to.equal(null);
     });
 
     describe('Validators', () => {
