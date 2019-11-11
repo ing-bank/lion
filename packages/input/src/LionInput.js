@@ -47,9 +47,6 @@ export class LionInput extends LionField {
         } else if (this.hasAttribute('value')) {
           native.setAttribute('value', this.getAttribute('value'));
         }
-        if (this.placeholder) {
-          native.setAttribute('placeholder', this.placeholder);
-        }
         return native;
       },
     };
@@ -86,6 +83,9 @@ export class LionInput extends LionField {
     }
     if (changedProps.has('step')) {
       this.inputElement.step = this.step;
+    }
+    if (changedProps.has('placeholder')) {
+      this.inputElement.placeholder = this.placeholder;
     }
   }
 
