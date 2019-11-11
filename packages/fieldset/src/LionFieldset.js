@@ -445,10 +445,4 @@ export class LionFieldset extends FormRegistrarMixin(
 
     this.validate();
   }
-
-  // eslint-disable-next-line class-methods-use-this
-  __isRequired() {
-    throw new Error(`Default "required" validator is not supported on fieldsets. If you have a valid
-      use case please let us know.`);
-  }
 }
