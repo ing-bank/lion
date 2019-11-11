@@ -8,10 +8,10 @@ describe('<lion-input-email>', () => {
     expect(lionInputEmail.inputElement.type).to.equal('text');
   });
 
-  it('has validator "isEmail" applied by default', async () => {
-    // More eloborate tests can be found in lion-validate/validators.js
+  it('has validator "IsEmail" applied by default', async () => {
+    // More elaborate tests can be found in lion-validate/test/StringValidators.test.js
     const lionInputEmail = await fixture(`<lion-input-email></lion-input-email>`);
     lionInputEmail.modelValue = 'foo@bar@example.com';
-    expect(lionInputEmail.errorState).to.equal(true);
+    expect(lionInputEmail.hasError).to.equal(true);
   });
 });
