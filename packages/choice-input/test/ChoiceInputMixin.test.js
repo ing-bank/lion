@@ -1,6 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
 import sinon from 'sinon';
+import { Required } from '@lion/validate';
 
 import { LionInput } from '@lion/input';
 import { ChoiceInputMixin } from '../src/ChoiceInputMixin.js';
@@ -86,12 +87,12 @@ describe('ChoiceInputMixin', () => {
 
   it('can be required', async () => {
     const el = await fixture(html`
-      <choice-input .choiceValue=${'foo'} .errorValidators=${[['required']]}></choice-input>
+      <choice-input .choiceValue=${'foo'} .validators=${[new Required()]}></choice-input>
     `);
-
-    expect(el.error.required).to.be.true;
+    expect(el.hasError).to.be.true;
+    expect(el.errorStates.Required).to.be.true;
     el.checked = true;
-    expect(el.error.required).to.be.undefined;
+    expect(el.hasError).to.be.false;
   });
 
   describe('Checked state synchronization', () => {
@@ -160,7 +161,7 @@ describe('ChoiceInputMixin', () => {
       expect(spyModelCheckedToChecked.callCount).to.equal(1);
       expect(spyCheckedToModel.callCount).to.equal(1);
 
-      // not changeing values should not trigger any updates
+      // not changing values should not trigger any updates
       el.checked = false;
       el.modelValue = { value: 'foo', checked: false };
       expect(spyModelCheckedToChecked.callCount).to.equal(1);
@@ -177,8 +178,8 @@ describe('ChoiceInputMixin', () => {
       `);
 
       // Initial values
-      expect(hasAttr(el)).to.equal(false, 'inital unchecked element');
-      expect(hasAttr(elChecked)).to.equal(true, 'inital checked element');
+      expect(hasAttr(el)).to.equal(false, 'initial unchecked element');
+      expect(hasAttr(elChecked)).to.equal(true, 'initial checked element');
 
       // Programmatically via checked
       el.checked = true;
@@ -221,8 +222,8 @@ describe('ChoiceInputMixin', () => {
       `);
 
       // Initial values
-      expect(hasClass(el)).to.equal(false, 'inital unchecked element');
-      expect(hasClass(elChecked)).to.equal(true, 'inital checked element');
+      expect(hasClass(el)).to.equal(false, 'initial unchecked element');
+      expect(hasClass(elChecked)).to.equal(true, 'initial checked element');
 
       // Programmatically via checked
       el.checked = true;
