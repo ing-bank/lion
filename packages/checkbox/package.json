@@ -1,6 +1,6 @@
 {
   "name": "@lion/checkbox",
-  "version": "0.1.64",
+  "version": "0.1.66",
   "description": "A single styleable and accessible checkbox",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,9 +32,9 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "^0.2.41",
+    "@lion/choice-input": "^0.2.43",
     "@lion/core": "^0.2.1",
-    "@lion/input": "^0.1.63"
+    "@lion/input": "^0.1.65"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.75](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.1.74...@lion/radio-group@0.1.75) (2019-11-06)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+## [0.1.74](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.1.73...@lion/radio-group@0.1.74) (2019-11-01)
+
+
+### Bug Fixes
+
+* **fieldset:** manage when to show error messages ([c984a66](https://github.com/ing-bank/lion/commit/c984a66))
+
+
+
+
+
 ## [0.1.73](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.1.72...@lion/radio-group@0.1.73) (2019-10-25)
 
 

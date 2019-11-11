@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { storiesOf, html } from '@open-wc/demoing-storybook';
+import { localize } from '@lion/localize';
 
-import '../lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
 import '@lion/form/lion-form.js';
+import '../lion-radio-group.js';
 
 storiesOf('Forms|Radio Group', module)
   .add(
@@ -97,5 +99,35 @@ storiesOf('Forms|Radio Group', module)
           <button type="submit">Submit</button>
         </form></lion-form
       >
+    `;
+  })
+  .add('Validation Item', () => {
+    const isBrontosaurus = value => {
+      const selectedValue = value['dinos[]'].find(v => v.checked === true);
+      return {
+        isBrontosaurus: selectedValue ? selectedValue.value === 'brontosaurus' : false,
+      };
+    };
+    localize.locale = 'en-GB';
+    try {
+      localize.addData('en-GB', 'lion-validate+isBrontosaurus', {
+        error: {
+          isBrontosaurus: 'You need to select "brontosaurus"',
+        },
+      });
+    } catch (error) {
+      // expected as it's a demo
+    }
+
+    return html`
+      <lion-radio-group
+        name="dinosGroup"
+        label="What are your favourite dinosaurs?"
+        .errorValidators=${[['required'], [isBrontosaurus]]}
+      >
+        <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+      </lion-radio-group>
     `;
   });

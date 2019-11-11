@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent, nextFrame } from '@open-wc/testing';
 
 import '../lion-steps.js';
 import '../lion-step.js';
@@ -27,6 +27,13 @@ async function checkWorkflow(steps, expected) {
 }
 
 describe('lion-steps', () => {
+  it('can be instantiated', async () => {
+    const el = await fixture(html`
+      <lion-steps> </lion-steps>
+    `);
+    expect(el).to.be.a('HTMLElement');
+  });
+
   it('has "steps" getter that returns default slot elements', async () => {
     const el = await fixture(html`
       <lion-steps>
@@ -130,6 +137,7 @@ describe('lion-steps', () => {
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
+      await nextFrame();
 
       el.current = 2;
       await checkWorkflow(el, {
@@ -189,6 +197,30 @@ describe('lion-steps', () => {
       `);
       el.next();
       expect(currentInEnterEvent).to.equal(1);
+    });
+
+    it('will fire initial @enter event on first step with or with [initial-step] attribute', async () => {
+      const firstEnterSpy = sinon.spy();
+      await fixture(html`
+        <lion-steps>
+          <lion-step @enter=${firstEnterSpy}>
+            <div>test1</div>
+          </lion-step>
+        </lion-steps>
+      `);
+      await nextFrame();
+      expect(firstEnterSpy).to.have.been.calledOnce;
+
+      const firstEnterSpyWithInitial = sinon.spy();
+      await fixture(html`
+        <lion-steps>
+          <lion-step initial-step @enter=${firstEnterSpyWithInitial}>
+            <div>test1</div>
+          </lion-step>
+        </lion-steps>
+      `);
+      await nextFrame();
+      expect(firstEnterSpyWithInitial).to.have.been.calledOnce;
     });
 
     it('will fire initial @enter event only once if [initial-step] is not on first step', async () => {

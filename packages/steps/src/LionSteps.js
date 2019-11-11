@@ -64,6 +64,17 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
   firstUpdated() {
     super.firstUpdated();
     this._max = this.steps.length - 1;
+
+    let hasInitial = false;
+    this.steps.forEach((step, i) => {
+      if (step.initialStep && i !== 0) {
+        this.current = i;
+        hasInitial = true;
+      }
+    });
+    if (!hasInitial && this.steps[0]) {
+      this.steps[0].enter();
+    }
   }
 
   next() {

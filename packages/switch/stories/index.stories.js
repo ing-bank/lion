@@ -3,20 +3,21 @@ import { LitElement } from '@lion/core';
 
 import { LocalizeMixin } from '@lion/localize';
 
-import '../lion-input-switch.js';
+import '../lion-switch.js';
+import '../lion-switch-button.js';
 import '@lion/form/lion-form.js';
 
-storiesOf('Forms|Switch', module)
+storiesOf('Buttons|Switch', module)
   .add(
     'All text slots',
     () => html`
-      <lion-input-switch label="Label" help-text="Help text"> </lion-input-switch>
+      <lion-switch label="Label" help-text="Help text"> </lion-switch>
     `,
   )
   .add(
     'Disabled',
     () => html`
-      <lion-input-switch label="Disabled label" disabled> </lion-input-switch>
+      <lion-switch label="Disabled label" disabled> </lion-switch>
     `,
   )
   .add('Validation', () => {
@@ -51,18 +52,16 @@ storiesOf('Forms|Switch', module)
             return html`
               <lion-form id="postsForm" @submit="${this.submit}">
                 <form>
-                  <lion-input-switch name="emailAddress" label="Share email address">
-                  </lion-input-switch>
-                  <lion-input-switch name="subjectField" label="Show subject field" checked>
-                  </lion-input-switch>
-                  <lion-input-switch name="characterCount" label="Character count">
-                  </lion-input-switch>
-                  <lion-input-switch
+                  <lion-switch name="emailAddress" label="Share email address"> </lion-switch>
+                  <lion-switch name="subjectField" label="Show subject field" checked>
+                  </lion-switch>
+                  <lion-switch name="characterCount" label="Character count"> </lion-switch>
+                  <lion-switch
                     name="newsletterCheck"
                     label="* Subscribe to newsletter"
                     .infoValidators="${[isTrueValidator()]}"
                   >
-                  </lion-input-switch>
+                  </lion-switch>
                   <button type="submit">
                     Submit
                   </button>
@@ -83,4 +82,10 @@ storiesOf('Forms|Switch', module)
     return html`
       <lion-switch-validation-demo></lion-switch-validation-demo>
     `;
-  });
+  })
+  .add(
+    'Button',
+    () => html`
+      <lion-switch-button></lion-switch-button>
+    `,
+  );

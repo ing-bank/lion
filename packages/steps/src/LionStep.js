@@ -100,29 +100,11 @@ export class LionStep extends LionLitElement {
   firstUpdated() {
     super.firstUpdated();
     this.controller = this.parentNode;
-    if (this.initialStep === true) {
-      this.enter(true);
-    }
   }
 
-  getControllerIndex() {
-    const { steps } = this.controller;
-    for (let i = 0; i < steps.length; i += 1) {
-      if (steps[i] === this) {
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  enter(updateController) {
+  enter() {
     this.status = 'entered';
-    if (updateController === true) {
-      this.controller.current = this.getControllerIndex();
-      // controller will trigger enter() again which will dispatch the enter event
-    } else {
-      this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
-    }
+    this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
   }
 
   leave() {
