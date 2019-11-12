@@ -43,5 +43,10 @@ describe('<lion-input>', () => {
     const el = await fixture(`<lion-input placeholder="text"></lion-input>`);
     expect(el.getAttribute('placeholder')).to.equal('text');
     expect(el.inputElement.getAttribute('placeholder')).to.equal('text');
+    
+    el.placeholder = 'foo';
+    await el.updateComplete;
+    expect(el.getAttribute('placeholder')).to.equal('foo');
+    expect(el.inputElement.getAttribute('placeholder')).to.equal('foo');
   });
 });
