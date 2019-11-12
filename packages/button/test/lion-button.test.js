@@ -222,6 +222,12 @@ describe('lion-button', () => {
       );
       restoreMockIsIE11();
     });
+
+    it.only('has a native button node with aria-hidden set to true', async () => {
+      const el = await fixture('<lion-button></lion-button>');
+
+      expect(el._nativeButtonNode.getAttribute('aria-hidden')).to.equal('true');
+    });
   });
 
   describe('form integration', () => {
