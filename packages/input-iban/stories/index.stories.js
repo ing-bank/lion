@@ -1,6 +1,6 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
-import { isCountryIBANValidator } from '../index.js';
+import { IsCountryIBAN } from '../index.js';
 import '../lion-input-iban.js';
 
 storiesOf('Forms|Input IBAN', module)
@@ -35,7 +35,7 @@ storiesOf('Forms|Input IBAN', module)
     () => html`
       <lion-input-iban
         .modelValue=${'DE89370400440532013000'}
-        .errorValidators=${[isCountryIBANValidator('NL')]}
+        .validators=${[new IsCountryIBAN('NL')]}
         name="iban"
         label="Label"
       ></lion-input-iban>

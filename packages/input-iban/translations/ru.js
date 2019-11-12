@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: 'Введите действительное значение поля {fieldName}.',
-    isCountryIBAN:
+    IsIBAN: 'Введите действительное значение поля {fieldName}.',
+    IsCountryIBAN:
       'Введите действительное значение поля {validatorParams, select,\n' +
       'AT {Австрийский}\n' +
       'BE {Бельгийский}\n' +

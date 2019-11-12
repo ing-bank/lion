@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: 'Please enter a valid {fieldName}.',
-    isCountryIBAN:
+    IsIBAN: 'Please enter a valid {fieldName}.',
+    IsCountryIBAN:
       'Please enter a valid {validatorParams, select,\n' +
       'AT {Austrian}\n' +
       'BE {Belgian}\n' +

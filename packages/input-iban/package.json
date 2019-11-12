@@ -36,10 +36,10 @@
     "@lion/core": "^0.2.1",
     "@lion/field": "^0.3.6",
     "@lion/input": "^0.1.64",
-    "@lion/localize": "^0.4.21"
+    "@lion/localize": "^0.4.21",
+    "@lion/validate": "^0.2.39"
   },
   "devDependencies": {
-    "@lion/validate": "^0.2.39",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

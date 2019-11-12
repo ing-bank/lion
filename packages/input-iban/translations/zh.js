@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: '請輸入有效的{fieldName}。',
-    isCountryIBAN:
+    IsIBAN: '請輸入有效的{fieldName}。',
+    IsCountryIBAN:
       '請輸入有效的{validatorParams, select,\n' +
       'AT {奥}\n' +
       'BE {比利时的}\n' +

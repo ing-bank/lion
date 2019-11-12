@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
-    isCountryIBAN:
+    IsIBAN: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
+    IsCountryIBAN:
       'Kérjük, adjon meg érvényes {validatorParams, select,\n' +
       'AT {Osztrák}\n' +
       'BE {Belga}\n' +

@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: 'Vul een geldig(e) {fieldName} in.',
-    isCountryIBAN:
+    IsIBAN: 'Vul een geldig(e) {fieldName} in.',
+    IsCountryIBAN:
       'Vul een geldig(e) {validatorParams, select,\n' +
       'AT {Oostenrijkse}\n' +
       'BE {Belgische}\n' +

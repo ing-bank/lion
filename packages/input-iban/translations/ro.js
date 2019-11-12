@@ -1,7 +1,7 @@
 export default {
   error: {
-    isIBAN: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
-    isCountryIBAN:
+    IsIBAN: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
+    IsCountryIBAN:
       'Vă rugăm să introduceți un/o {fieldName} {validatorParams, select,\n' +
       'AT {austriac}\n' +
       'BE {belgian}\n' +
