@@ -87,20 +87,25 @@ storiesOf('Icon System|Icon', module)
       </div>
       <br />
       <dl>
-        <dt class="big-para"><lion-icon .svg=${night}></lion-icon></dt>
-        <dd class="big-para"><span>with font-size: 1.5em;</span></dd>
-        <br />
+        <div>
+          <dt class="big-para"><lion-icon .svg=${night}></lion-icon></dt>
+          <dd class="big-para"><span>with font-size: 1.5em;</span></dd>
+        </div>
 
-        <dt><lion-icon .svg=${aliensSpaceship} class="big-icon"></lion-icon></dt>
-        <dd><span>with 70 &times; 70 pixels</span></dd>
-        <br />
+        <div>
+          <dt><lion-icon .svg=${aliensSpaceship} class="big-icon"></lion-icon></dt>
+          <dd><span>with 70 &times; 70 pixels</span></dd>
+        </div>
 
-        <dt><lion-icon .svg=${sun} class="medium-icon"></lion-icon></dt>
-        <dd><span>unstyled icon</span></dd>
-        <br />
+        <div>
+          <dt><lion-icon .svg=${sun} class="medium-icon"></lion-icon></dt>
+          <dd><span>unstyled icon</span></dd>
+        </div>
 
-        <dt><lion-icon .svg=${sun} class="styled-sun medium-icon"></lion-icon></dt>
-        <dd><span>with fill: gold; and :hover { fill: purple; }</span></dd>
+        <div>
+          <dt><lion-icon .svg=${sun} class="styled-sun medium-icon"></lion-icon></dt>
+          <dd><span>with fill: gold; and :hover { fill: purple; }</span></dd>
+        </div>
       </dl>
     `,
   )
