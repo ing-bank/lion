@@ -24,6 +24,7 @@ storiesOf('Form Fundaments|Interaction States', module)
     'States',
     () => html`
       <lion-input
+        label="Interaction States"
         help-text="Interact with this field to see how dirty, touched and prefilled change"
         .modelValue="${'myValue'}"
       >

@@ -91,7 +91,7 @@ storiesOf('Forms|Form', module).add(
 
         <!-- TODO: slider -->
 
-        <lion-textarea name="comments"></lion-textarea>
+        <lion-textarea name="comments" label="Comments"></lion-textarea>
 
         <div class="buttons">
           <lion-button raised>Submit</lion-button>
