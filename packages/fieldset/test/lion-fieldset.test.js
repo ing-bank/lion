@@ -645,7 +645,7 @@ describe('<lion-fieldset>', () => {
       expect(el.modelValue).to.deep.equal({ firstName: 'Bar' });
       expect(input.modelValue).to.equal('Bar');
 
-      await el.resetGroup();
+      el.resetGroup();
       expect(el.modelValue).to.deep.equal({ firstName: 'Foo' });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -664,7 +664,7 @@ describe('<lion-fieldset>', () => {
       expect(el.modelValue).to.deep.equal({ 'firstName[]': ['Bar'] });
       expect(input.modelValue).to.equal('Bar');
 
-      await el.resetGroup();
+      el.resetGroup();
       expect(el.modelValue).to.deep.equal({ 'firstName[]': ['Foo'] });
       expect(input.modelValue).to.equal('Foo');
     });
@@ -690,8 +690,7 @@ describe('<lion-fieldset>', () => {
       expect(nestedFieldset.modelValue).to.deep.equal({ firstName: 'Bar' });
       expect(input.modelValue).to.equal('Bar');
 
-      await el.resetGroup();
-      await nextFrame();
+      el.resetGroup();
       expect(el.modelValue).to.deep.equal({ 'name[]': [{ firstName: 'Foo' }] });
       expect(nestedFieldset.modelValue).to.deep.equal({ firstName: 'Foo' });
       expect(input.modelValue).to.equal('Foo');
@@ -708,14 +707,14 @@ describe('<lion-fieldset>', () => {
 
       // Reset all children states, with prefilled false
       el._setValueForAllFormElements('modelValue', {});
-      el.resetInteractionState();
+      await el.resetInteractionState();
       expect(el.dirty).to.equal(false, 'not "dirty" after reset');
       expect(el.touched).to.equal(false, 'not "touched" after reset');
       expect(el.prefilled).to.equal(false, 'not "prefilled" after reset');
 
       // Reset all children states with prefilled true
       el._setValueForAllFormElements('modelValue', { checked: true }); // not prefilled
-      el.resetInteractionState();
+      await el.resetInteractionState();
       expect(el.dirty).to.equal(false, 'not "dirty" after 2nd reset');
       expect(el.touched).to.equal(false, 'not "touched" after 2nd reset');
       // prefilled state is dependant on value
@@ -739,9 +738,14 @@ describe('<lion-fieldset>', () => {
       });
 
       it('to reset interaction state', async () => {
-        const resetGroupPromise = fieldset
-          .resetGroup()
-          .then(() => expect(fieldset.submitted).to.equal(false));
+        const resetInteractionStatePromise = fieldset
+          .resetInteractionState()
+          .then(() =>
+            expect(fieldset.submitted).to.equal(
+              false,
+              'resetInteractionState should be triggered after submitted is set to false',
+            ),
+          );
         fieldset.submitted = true;
 
         const resolveUpdatePromise = async () => {
@@ -750,7 +754,7 @@ describe('<lion-fieldset>', () => {
 
         await resolveUpdatePromise();
 
-        return resetGroupPromise;
+        return resetInteractionStatePromise;
       });
     });
 
@@ -758,7 +762,8 @@ describe('<lion-fieldset>', () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
       fieldset.submitted = true;
-      await fieldset.resetGroup();
+      fieldset.resetGroup();
+      await fieldset.updateComplete;
       expect(fieldset.submitted).to.equal(false);
       fieldset.formElementsArray.forEach(el => {
         expect(el.submitted).to.equal(false);
@@ -790,7 +795,7 @@ describe('<lion-fieldset>', () => {
       el.formElements.color.modelValue = 'cat';
       expect(el.errorState).to.be.false;
 
-      await el.resetGroup();
+      el.resetGroup();
       expect(el.errorState).to.be.true;
       expect(el.error.containsA).to.be.true;
       expect(el.formElements.color.errorState).to.be.false;
@@ -838,7 +843,7 @@ describe('<lion-fieldset>', () => {
         `);
         const childFieldsetEl = el.querySelector(tagString);
         const resetGroupSpy = sinon.spy(childFieldsetEl, 'resetGroup');
-        await el.resetGroup();
+        el.resetGroup();
         expect(resetGroupSpy.callCount).to.equal(1);
       });
 
@@ -853,7 +858,7 @@ describe('<lion-fieldset>', () => {
         `);
         const childFieldsetEl = el.querySelector(childTagString);
         const resetSpy = sinon.spy(childFieldsetEl, 'reset');
-        await el.resetGroup();
+        el.resetGroup();
         expect(resetSpy.callCount).to.equal(1);
       });
     });

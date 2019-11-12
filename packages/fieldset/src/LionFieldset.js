@@ -222,9 +222,7 @@ export class LionFieldset extends FormRegistrarMixin(
     return serializedValues;
   }
 
-  async resetGroup() {
-    // To ensure resetting happens after submission process, in case it was fired right before reset
-    await this.updateComplete;
+  resetGroup() {
     this.formElementsArray.forEach(child => {
       if (typeof child.resetGroup === 'function') {
         child.resetGroup();
@@ -236,7 +234,9 @@ export class LionFieldset extends FormRegistrarMixin(
     this.resetInteractionState();
   }
 
-  resetInteractionState() {
+  async resetInteractionState() {
+    // To ensure resetting happens after submission process, in case it was fired right before reset
+    await this.updateComplete;
     // TODO: add submitted prop to InteractionStateMixin
     this.submitted = false;
     this.touched = false;
