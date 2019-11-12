@@ -1,6 +1,6 @@
 {
   "name": "@lion/popup",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "Show relative overlay content on click",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -36,7 +36,7 @@
     "@lion/overlays": "^0.6.2"
   },
   "devDependencies": {
-    "@lion/button": "^0.3.33",
+    "@lion/button": "^0.3.34",
     "@lion/icon": "^0.2.8",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
