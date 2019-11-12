@@ -563,7 +563,7 @@ describe('<lion-calendar>', () => {
             class="calendar__day-button"
             tabindex="0"
             aria-label="30 September 2019 Monday"
-            aria-selected="false"
+            aria-pressed="false"
             past=""
             current-month="">
             30
@@ -1099,14 +1099,14 @@ describe('<lion-calendar>', () => {
         expect(elObj.checkForAllDayObjs(hasAriaCurrent, [monthday])).to.equal(true);
       });
 
-      it('sets aria-selected="true" on selected date button', async () => {
+      it('sets aria-pressed="true" on selected date button', async () => {
         const elObj = new CalendarObject(
           await fixture(html`
             <lion-calendar .selectedDate="${new Date('2000/11/12')}"></lion-calendar>
           `),
         );
-        const hasAriaSelected = d => d.buttonEl.getAttribute('aria-selected') === 'true';
-        expect(elObj.checkForAllDayObjs(hasAriaSelected, [12])).to.equal(true);
+        const hasAriaPressed = d => d.buttonEl.getAttribute('aria-pressed') === 'true';
+        expect(elObj.checkForAllDayObjs(hasAriaPressed, [12])).to.equal(true);
       });
 
       // This implementation mentions "button" inbetween and doesn't mention table

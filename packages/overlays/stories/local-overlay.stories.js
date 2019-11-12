@@ -158,13 +158,13 @@ storiesOf('Local Overlay System|Local Overlay', module)
       trapsKeyboardFocus: true,
       contentNode: fixtureSync(html`
         <div class="demo-popup">
-          <button id="el1">Button</button>
-          <a id="el2" href="#">Anchor</a>
-          <div id="el3" tabindex="0">Tabindex</div>
-          <input id="el4" placeholder="Input" />
-          <div id="el5" contenteditable>Content editable</div>
-          <textarea id="el6">Textarea</textarea>
-          <select id="el7">
+          <button id="elem1">Button</button>
+          <a id="elem2" href="#">Anchor</a>
+          <div id="elem3" tabindex="0">Tabindex</div>
+          <input id="elem4" placeholder="Input" />
+          <div id="elem5" contenteditable>Content editable</div>
+          <textarea id="elem6">Textarea</textarea>
+          <select id="elem7">
             <option>1</option>
           </select>
         </div>
