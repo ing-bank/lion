@@ -30,6 +30,10 @@ export class LionInput extends LionField {
         type: Number,
         reflect: true,
       },
+      placeholder: {
+        type: String,
+        reflect: true,
+      },
     };
   }
 
@@ -79,6 +83,9 @@ export class LionInput extends LionField {
     }
     if (changedProps.has('step')) {
       this.inputElement.step = this.step;
+    }
+    if (changedProps.has('placeholder')) {
+      this.inputElement.placeholder = this.placeholder;
     }
   }
 
