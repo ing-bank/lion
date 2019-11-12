@@ -312,54 +312,53 @@ describe('<lion-field>', () => {
       };
       const el = await fixture(html`
         <${tag}
-          .validators=${[new HasX()]}>
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
           ${inputSlot}
         </${tag}>
       `);
-      el.modelValue = 'a@b.nl';
 
-      await el.feedbackComplete;
-      expect(el.hasErrorVisible).to.be.true;
+      const executeScenario = async (_sceneEl, scenario) => {
+        const sceneEl = _sceneEl;
+        sceneEl.resetInteractionState();
+        sceneEl.touched = scenario.el.touched;
+        sceneEl.dirty = scenario.el.dirty;
+        sceneEl.prefilled = scenario.el.prefilled;
+        sceneEl.submitted = scenario.el.submitted;
 
-      const executeScenario = async (el, scenario) => {
-        el.resetInteractionState();
-        el.touched = scenario.el.touched;
-        el.dirty = scenario.el.dirty;
-        el.prefilled = scenario.el.prefilled;
-        el.submitted = scenario.el.submitted;
-
-        await el.updateComplete;
-        await el.feedbackComplete;
-        expect(el.hasErrorVisible).to.equal(scenario.wantErrorVisible);
+        await sceneEl.updateComplete;
+        await sceneEl.feedbackComplete;
+        expect(sceneEl.showsFeedbackFor).to.deep.equal(scenario.wantedShowsFeedbackFor);
       };
 
       await executeScenario(el, {
         index: 0,
         el: { touched: true, dirty: true, prefilled: false, submitted: false },
-        wantErrorVisible: true,
+        wantedShowsFeedbackFor: ['error'],
       });
       await executeScenario(el, {
         index: 1,
         el: { touched: false, dirty: false, prefilled: true, submitted: false },
-        wantErrorVisible: true,
+        wantedShowsFeedbackFor: ['error'],
       });
 
       await executeScenario(el, {
         index: 2,
         el: { touched: false, dirty: false, prefilled: false, submitted: true },
-        wantErrorVisible: true,
+        wantedShowsFeedbackFor: ['error'],
       });
 
       await executeScenario(el, {
         index: 3,
         el: { touched: false, dirty: true, prefilled: false, submitted: false },
-        wantErrorVisible: false,
+        wantedShowsFeedbackFor: [],
       });
 
       await executeScenario(el, {
         index: 4,
         el: { touched: true, dirty: false, prefilled: false, submitted: false },
-        wantErrorVisible: false,
+        wantedShowsFeedbackFor: [],
       });
     });
 
@@ -369,11 +368,11 @@ describe('<lion-field>', () => {
           .validators=${[new Required()]}
         >${inputSlot}</${tag}>
       `);
-      expect(el.hasError).to.be.true;
-      expect(el.errorStates).to.have.a.property('Required');
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error).to.have.a.property('Required');
       el.modelValue = 'cat';
-      expect(el.hasError).to.be.false;
-      expect(el.errorStates).not.to.have.a.property('Required');
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+      expect(el.validationStates.error).not.to.have.a.property('Required');
     });
 
     it('will only update formattedValue when valid on `user-input-changed`', async () => {
@@ -385,7 +384,8 @@ describe('<lion-field>', () => {
         }
 
         execute(value) {
-          return value !== 'bar';
+          const hasError = value !== 'bar';
+          return hasError;
         }
       };
       const el = await fixture(html`

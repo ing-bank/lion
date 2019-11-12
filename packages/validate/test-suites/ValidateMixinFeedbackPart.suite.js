@@ -1,89 +1,132 @@
-/* eslint-disable max-classes-per-file, no-param-reassign, no-unused-expressions */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
 import { LitElement } from '@lion/core';
-import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Validator } from '../src/Validator.js';
 import { Required } from '../src/validators/Required.js';
 import { MinLength } from '../src/validators/StringValidators.js';
 import { DefaultSuccess } from '../src/resultValidators/DefaultSuccess.js';
 import { AlwaysInvalid } from '../test-helpers/helper-validators.js';
-import '../lion-validation-feedback.js';
-import { FeedbackMixin } from '../src/FeedbackMixin.js';
+import { ValidateMixin } from '../src/ValidateMixin.js';
 
-export function runFeedbackMixinSuite(customConfig) {
-  const cfg = {
-    tagString: null,
-    ...customConfig,
-  };
-
-  const lightDom = cfg.lightDom || '';
-
+export function runFeedbackMixinSuite() {
   describe('Validity Feedback', () => {
+    let tagString;
+    let tag;
+    let ContainsLowercaseA;
+    const lightDom = '';
+
+    before(() => {
+      tagString = defineCE(
+        class extends ValidateMixin(LitElement) {
+          static get properties() {
+            return {
+              modelValue: { type: String },
+              submitted: { type: Boolean },
+            };
+          }
+
+          connectedCallback() {
+            super.connectedCallback();
+            this.appendChild(document.createElement('input'));
+          }
+
+          get _inputNode() {
+            return this.querySelector('input');
+          }
+        },
+      );
+      tag = unsafeStatic(tagString);
+
+      ContainsLowercaseA = class extends Validator {
+        constructor(...args) {
+          super(...args);
+          this.name = 'ContainsLowercaseA';
+        }
+
+        execute(modelValue) {
+          const hasError = !modelValue.includes('a');
+          return hasError;
+        }
+      };
+
+      class ContainsCat extends Validator {
+        constructor(...args) {
+          super(...args);
+          this.name = 'ContainsCat';
+        }
+
+        execute(modelValue) {
+          const hasError = !modelValue.includes('cat');
+          return hasError;
+        }
+      }
+
+      AlwaysInvalid.getMessage = () => 'Message for AlwaysInvalid';
+      MinLength.getMessage = () => 'Message for MinLength';
+      ContainsLowercaseA.getMessage = () => 'Message for ContainsLowercaseA';
+      ContainsCat.getMessage = () => 'Message for ContainsCat';
+    });
+
     afterEach(() => {
       sinon.restore();
     });
 
-    // eslint-disable-next-line no-shadow
-    const tagString = defineCE(
-      class extends FeedbackMixin(ValidateMixin(LitElement)) {
-        static get properties() {
-          return { modelValue: String };
-        }
-
-        connectedCallback() {
-          super.connectedCallback();
-          this.appendChild(document.createElement('input'));
-        }
-
-        get _inputNode() {
-          return this.querySelector('input');
-        }
-      },
-    );
-    // eslint-disable-next-line no-shadow
-    const tag = unsafeStatic(tagString);
-
-    class ContainsLowercaseA extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'ContainsLowercaseA';
-        this.execute = modelValue => !modelValue.includes('a');
-      }
-    }
-
-    class ContainsCat extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'containsCat';
-        this.execute = modelValue => !modelValue.includes('cat');
-      }
-    }
-
-    AlwaysInvalid.getMessage = () => 'Message for AlwaysInvalid';
-    MinLength.getMessage = () => 'Message for MinLength';
-    ContainsLowercaseA.getMessage = () => 'Message for ContainsLowercaseA';
-    ContainsCat.getMessage = () => 'Message for ContainsCat';
-
-    it('sets ".hasErrorVisible"/[has-error-visible] when visibility condition is met', async () => {
+    it('has .shouldShowFeedbackFor indicating for which type to show messages', async () => {
       const el = await fixture(html`
-        <${tag} .validators=${[new MinLength(3)]}>${lightDom}</${tag}>`);
+        <${tag}>${lightDom}</${tag}>
+      `);
+      expect(el.shouldShowFeedbackFor).to.deep.equal([]);
+      el.submitted = true;
+      await el.updateComplete;
+      expect(el.shouldShowFeedbackFor).to.deep.equal(['error']);
+    });
 
-      if (cfg.enableFeedbackVisible) {
-        cfg.enableFeedbackVisible(el);
-      }
+    it('has .showsFeedbackFor indicating for which type it actually shows messages', async () => {
+      const el = await fixture(html`
+        <${tag} submitted .validators=${[new MinLength(3)]}>${lightDom}</${tag}>
+      `);
 
       el.modelValue = 'a';
       await el.feedbackComplete;
-      expect(el.hasErrorVisible).to.be.true;
-      expect(el.hasAttribute('has-error-visible')).to.be.true;
+      expect(el.showsFeedbackFor).to.deep.equal(['error']);
 
       el.modelValue = 'abc';
       await el.feedbackComplete;
-      expect(el.hasErrorVisible).to.be.false;
-      expect(el.hasAttribute('has-error-visible')).to.be.false;
+      expect(el.showsFeedbackFor).to.deep.equal([]);
+    });
+
+    it('reflects .showsFeedbackFor as attribute joined with "," to be used as a style hook', async () => {
+      const elTagString = defineCE(
+        class extends ValidateMixin(LitElement) {
+          static get validationTypes() {
+            return [...super.validationTypes, 'x'];
+          }
+        },
+      );
+      const elTag = unsafeStatic(elTagString);
+      const el = await fixture(html`
+        <${elTag}
+          .submitted=${true}
+          .validators=${[
+            new MinLength(2, { type: 'x' }),
+            new MinLength(3, { type: 'error' }),
+          ]}>${lightDom}</${elTag}>
+      `);
+
+      el.modelValue = '1';
+      await el.feedbackComplete;
+      expect(el.showsFeedbackFor).to.deep.equal(['error', 'x']);
+      expect(el.getAttribute('shows-feedback-for')).to.equal('error,x');
+
+      el.modelValue = '12';
+      await el.feedbackComplete;
+      expect(el.showsFeedbackFor).to.deep.equal(['error']);
+      expect(el.getAttribute('shows-feedback-for')).to.equal('error');
+
+      el.modelValue = '123';
+      await el.feedbackComplete;
+      expect(el.showsFeedbackFor).to.deep.equal([]);
+      expect(el.getAttribute('shows-feedback-for')).to.equal('');
     });
 
     it('passes a message to the "._feedbackNode"', async () => {
@@ -94,6 +137,7 @@ export function runFeedbackMixinSuite(customConfig) {
       `);
       expect(el._feedbackNode.feedbackData).to.be.undefined;
       el.validators = [new AlwaysInvalid()];
+      await el.updateComplete;
       await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('Message for AlwaysInvalid');
     });
@@ -199,11 +243,13 @@ export function runFeedbackMixinSuite(customConfig) {
       expect(el._feedbackNode.localName).to.equal(customFeedbackTagString);
 
       el.modelValue = 'dog';
+      await el.updateComplete;
       await el.feedbackComplete;
       await el._feedbackNode.updateComplete;
       expect(el._feedbackNode).shadowDom.to.equal('Custom for ContainsLowercaseA');
 
       el.modelValue = 'cat';
+      await el.updateComplete;
       await el.feedbackComplete;
       await el._feedbackNode.updateComplete;
       expect(el._feedbackNode).shadowDom.to.equal('Custom for AlwaysInvalid');
@@ -216,6 +262,7 @@ export function runFeedbackMixinSuite(customConfig) {
       `);
 
       el.modelValue = 'a';
+      await el.updateComplete;
       await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('custom via config');
     });
@@ -231,30 +278,35 @@ export function runFeedbackMixinSuite(customConfig) {
       `);
 
       el.modelValue = 'a';
+      await el.updateComplete;
       await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('Message for MinLength');
 
       el.modelValue = 'abcd';
+      await el.updateComplete;
       await el.feedbackComplete;
       expect(el._feedbackNode.feedbackData[0].message).to.equal('This is a success message');
     });
 
     describe('Accessibility', () => {
-      it('sets [aria-invalid="true"] to "._inputNode" when ".hasError" is true', async () => {
+      it('sets [aria-invalid="true"] to "._inputNode" when there is an error', async () => {
         const el = await fixture(html`
-        <${tag}
-          .validators=${[new Required()]}
-          .modelValue=${'a'}
-        >${lightDom}</${tag}>
-      `);
+          <${tag}
+            submitted
+            .validators=${[new Required()]}
+            .modelValue=${'a'}
+          >${lightDom}</${tag}>
+        `);
         const inputNode = el._inputNode;
-
         expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
 
         el.modelValue = '';
+        await el.updateComplete;
         await el.feedbackComplete;
         expect(inputNode.getAttribute('aria-invalid')).to.equal('true');
+
         el.modelValue = 'a';
+        await el.updateComplete;
         await el.feedbackComplete;
         expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
       });
@@ -285,11 +337,11 @@ export function runFeedbackMixinSuite(customConfig) {
         const instanceValidator = new MinLength(4, { getMessage: instanceMessageSpy });
 
         el = await fixture(html`
-        <${tag}
-          .validators=${[instanceValidator]}
-          .modelValue=${'cat'}
-        >${lightDom}</${tag}>
-      `);
+          <${tag}
+            .validators=${[instanceValidator]}
+            .modelValue=${'cat'}
+          >${lightDom}</${tag}>
+        `);
         await el.feedbackComplete;
         expect(instanceMessageSpy.args[0][0]).to.eql({
           validatorParams: 4,

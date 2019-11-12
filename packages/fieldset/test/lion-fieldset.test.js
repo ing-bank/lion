@@ -264,7 +264,7 @@ describe('<lion-fieldset>', () => {
         </${tag}>
       `);
       await nextFrame();
-      expect(el.formElements.color.errorStates.IsCat).to.be.true;
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
     });
 
     it('validates when a value changes', async () => {
@@ -298,10 +298,10 @@ describe('<lion-fieldset>', () => {
       `);
       await nextFrame();
 
-      expect(el.errorStates.FormElementsHaveNoError).to.be.true;
-      expect(el.formElements.color.errorStates.IsCat).to.be.true;
+      expect(el.validationStates.error.FormElementsHaveNoError).to.be.true;
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
       el.formElements.color.modelValue = 'cat';
-      expect(el.errorStates).to.deep.equal({});
+      expect(el.validationStates.error).to.deep.equal({});
     });
 
     it('validates on children (de)registration', async () => {
@@ -325,20 +325,20 @@ describe('<lion-fieldset>', () => {
         <${childTag} name="c2"></${childTag}>
       `);
       await nextFrame();
-      expect(el.errorStates.HasEvenNumberOfChildren).to.be.true;
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
       el.appendChild(child2);
       await nextFrame();
-      expect(el.errorStates.HasEvenNumberOfChildren).to.equal(undefined);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
 
       el.removeChild(child2);
       await nextFrame();
-      expect(el.errorStates.HasEvenNumberOfChildren).to.be.true;
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
       // Edge case: remove all children
       el.removeChild(el.querySelector('[id=c1]'));
       await nextFrame();
-      expect(el.errorStates.HasEvenNumberOfChildren).to.equal(undefined);
+      expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
     });
   });
 
@@ -490,9 +490,8 @@ describe('<lion-fieldset>', () => {
       outSideButton.focus();
 
       await el.updateComplete;
-
-      expect(el.errorStates.Input1IsTen).to.be.true;
-      expect(el.hasErrorVisible).to.be.true;
+      expect(el.validationStates.error.Input1IsTen).to.be.true;
+      expect(el.showsFeedbackFor).to.deep.equal(['error']);
     });
 
     it('show error if tabbing "out" of last ', async () => {
@@ -523,7 +522,7 @@ describe('<lion-fieldset>', () => {
       outSideButton.focus();
       await nextFrame();
 
-      expect(el.errorStates.Input1IsTen).to.be.true;
+      expect(el.validationStates.error.Input1IsTen).to.be.true;
       expect(el.hasErrorVisible).to.be.true;
     });
   });
@@ -799,20 +798,20 @@ describe('<lion-fieldset>', () => {
       `);
       await el.registrationReady;
       expect(el.hasError).to.be.true;
-      expect(el.errorStates.ColorContainsA).to.be.true;
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
       expect(el.formElements.color.hasError).to.be.false;
 
       el.formElements.color.modelValue = 'onlyb';
       expect(el.hasError).to.be.true;
-      expect(el.errorStates.ColorContainsA).to.be.true;
-      expect(el.formElements.color.errorStates.IsCat).to.be.true;
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
+      expect(el.formElements.color.validationStates.error.IsCat).to.be.true;
 
       el.formElements.color.modelValue = 'cat';
       expect(el.hasError).to.be.false;
 
       el.resetGroup();
       expect(el.hasError).to.be.true;
-      expect(el.errorStates.ColorContainsA).to.be.true;
+      expect(el.validationStates.error.ColorContainsA).to.be.true;
       expect(el.formElements.color.hasError).to.be.false;
     });
 

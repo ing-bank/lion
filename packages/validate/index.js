@@ -1,5 +1,4 @@
 export { ValidateMixin } from './src/ValidateMixin.js';
-export { FeedbackMixin } from './src/FeedbackMixin.js';
 export { Unparseable } from './src/Unparseable.js';
 export { Validator } from './src/Validator.js';
 export { ResultValidator } from './src/ResultValidator.js';

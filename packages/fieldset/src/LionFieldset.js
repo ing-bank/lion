@@ -1,7 +1,7 @@
 import { SlotMixin, html, LitElement } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { ValidateMixin, FeedbackMixin } from '@lion/validate';
+import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
@@ -12,9 +12,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @extends LionLitElement
  */
 export class LionFieldset extends FormRegistrarMixin(
-  FormControlMixin(
-    FeedbackMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
-  ),
+  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
 ) {
   static get properties() {
     return {

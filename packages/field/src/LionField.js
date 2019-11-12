@@ -2,7 +2,7 @@ import { SlotMixin, LitElement } from '@lion/core';
 import { ElementMixin } from '@lion/core/src/ElementMixin.js';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
-import { ValidateMixin, FeedbackMixin } from '@lion/validate';
+import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
 import { FormatMixin } from './FormatMixin.js';
@@ -35,11 +35,7 @@ import { FocusMixin } from './FocusMixin.js';
 export class LionField extends FormControlMixin(
   InteractionStateMixin(
     FocusMixin(
-      FormatMixin(
-        FeedbackMixin(
-          ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement))))),
-        ),
-      ),
+      FormatMixin(ValidateMixin(DisabledMixin(ElementMixin(SlotMixin(ObserverMixin(LitElement)))))),
     ),
   ),
 ) {

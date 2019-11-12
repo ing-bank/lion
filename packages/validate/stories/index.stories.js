@@ -24,6 +24,8 @@ import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
 
+import '../lion-validation-feedback.js';
+
 loadDefaultFeedbackMessages();
 
 storiesOf('Forms|Validation', module)
