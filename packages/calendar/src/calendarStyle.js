@@ -44,6 +44,7 @@ export const calendarStyle = css`
   .calendar__day-button {
     background-color: #fff;
     border: 0;
+    color: black;
     padding: 0;
     min-width: 40px;
     min-height: 40px;
@@ -59,7 +60,7 @@ export const calendarStyle = css`
 
   .calendar__day-button[previous-month],
   .calendar__day-button[next-month] {
-    color: #ddd;
+    color: rgb(115, 115, 115);
   }
 
   .calendar__day-button:hover {
