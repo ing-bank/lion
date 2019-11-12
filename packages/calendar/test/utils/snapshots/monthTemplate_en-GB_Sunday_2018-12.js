@@ -54,7 +54,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="25 November 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -64,7 +64,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="26 November 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -74,7 +74,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="27 November 2018 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -84,7 +84,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="28 November 2018 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -94,7 +94,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="29 November 2018 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -104,7 +104,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="30 November 2018 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -114,7 +114,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="1 December 2018 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -126,7 +126,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="2 December 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -136,7 +136,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="3 December 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -146,7 +146,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="4 December 2018 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -156,7 +156,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="5 December 2018 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -166,7 +166,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="6 December 2018 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -176,7 +176,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="7 December 2018 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -186,7 +186,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="8 December 2018 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -198,7 +198,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="9 December 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -208,7 +208,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="10 December 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -218,7 +218,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="11 December 2018 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -228,7 +228,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="12 December 2018 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -238,7 +238,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="13 December 2018 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -248,7 +248,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="14 December 2018 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -258,7 +258,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="15 December 2018 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -270,7 +270,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="16 December 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -280,7 +280,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="17 December 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -290,7 +290,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="18 December 2018 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -300,7 +300,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="19 December 2018 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -310,7 +310,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="20 December 2018 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -320,7 +320,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="21 December 2018 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -330,7 +330,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="22 December 2018 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -342,7 +342,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="23 December 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -352,7 +352,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="24 December 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -362,7 +362,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="25 December 2018 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -372,7 +372,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="26 December 2018 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -382,7 +382,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="27 December 2018 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -392,7 +392,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="28 December 2018 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -402,7 +402,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="29 December 2018 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -414,7 +414,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="30 December 2018 Sunday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -424,7 +424,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="31 December 2018 Monday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -434,7 +434,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="1 January 2019 Tuesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -444,7 +444,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="2 January 2019 Wednesday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -454,7 +454,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="3 January 2019 Thursday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -464,7 +464,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="4 January 2019 Friday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
@@ -474,7 +474,7 @@ export default html`
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="5 January 2019 Saturday"
-              aria-selected="false"
+              aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
