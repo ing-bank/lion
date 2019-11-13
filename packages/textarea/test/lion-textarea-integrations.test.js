@@ -4,7 +4,7 @@ import '../lion-textarea.js';
 
 const tagString = 'lion-textarea';
 
-describe.only('<lion-textarea> integrations', () => {
+describe('<lion-textarea> integrations', () => {
   runFormatMixinSuite({
     tagString,
   });
