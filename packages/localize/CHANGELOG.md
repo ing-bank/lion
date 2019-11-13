@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.21...@lion/localize@0.5.0) (2019-11-13)
+
+
+### Features
+
+* remove all deprecations from lion ([66d3d39](https://github.com/ing-bank/lion/commit/66d3d390aebeaa61b6effdea7d5f7eea0e89c894))
+
+
+
+
+
 ## [0.4.21](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.20...@lion/localize@0.4.21) (2019-10-23)
 
 
