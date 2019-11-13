@@ -36,6 +36,19 @@ describe('<lion-field>', () => {
     expect(el.$$slot('input').id).to.equal(el._inputId);
   });
 
+  it(`has a fieldName based on the label`, async () => {
+    const el1 = await fixture(html`<${tag} label="foo">${inputSlot}</${tag}>`);
+    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+
+    const el2 = await fixture(html`<${tag}><label slot="label">bar</label>${inputSlot}</${tag}>`);
+    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it(`has a fieldName based on the name if no label exists`, async () => {
+    const el = await fixture(html`<${tag} name="foo">${inputSlot}</${tag}>`);
+    expect(el.fieldName).to.equal(el.name);
+  });
+
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     const cbFocusHost = sinon.spy();
@@ -291,11 +304,12 @@ describe('<lion-field>', () => {
           super();
           this.name = 'HasX';
         }
+
         execute(value) {
           const result = value.indexOf('x') === -1;
           return result;
         }
-      }
+      };
       const el = await fixture(html`
         <${tag}
           .validators=${[new HasX()]}>
@@ -317,7 +331,7 @@ describe('<lion-field>', () => {
         await el.updateComplete;
         await el.feedbackComplete;
         expect(el.hasErrorVisible).to.equal(scenario.wantErrorVisible);
-      }
+      };
 
       await executeScenario(el, {
         index: 0,
@@ -347,7 +361,7 @@ describe('<lion-field>', () => {
         el: { touched: true, dirty: false, prefilled: false, submitted: false },
         wantErrorVisible: false,
       });
-    })
+    });
 
     it('can be required', async () => {
       const el = await fixture(html`
@@ -369,10 +383,11 @@ describe('<lion-field>', () => {
           super(...args);
           this.name = 'Bar';
         }
+
         execute(value) {
           return value !== 'bar';
         }
-      }
+      };
       const el = await fixture(html`
         <${tag}
           .modelValue=${'init-string'}
