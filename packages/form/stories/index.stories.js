@@ -5,7 +5,7 @@ import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input-iban/lion-input-iban.js';
 import '@lion/textarea/lion-textarea.js';
 
-import { maxLengthValidator } from '@lion/validate';
+import { Required, MaxLength } from '@lion/validate';
 
 storiesOf('Forms|Form', module)
   .add(
@@ -50,13 +50,13 @@ storiesOf('Forms|Form', module)
             <lion-input
               name="firstName"
               label="First Name"
-              .errorValidators=${['required', maxLengthValidator(15)]}
+              .validators=${[new Required(), new MaxLength(15)]}
             >
             </lion-input>
             <lion-input
               name="lastName"
               label="Last Name"
-              .errorValidators=${['required', maxLengthValidator(15)]}
+              .validators=${[new Required(), new MaxLength(15)]}
             >
             </lion-input>
           </lion-fieldset>
