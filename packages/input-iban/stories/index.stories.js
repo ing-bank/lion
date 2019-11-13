@@ -7,7 +7,7 @@ storiesOf('Forms|Input IBAN', module)
   .add(
     'Default',
     () => html`
-      <lion-input-iban name="iban" label="Label"></lion-input-iban>
+      <lion-input-iban name="iban" label="IBAN"></lion-input-iban>
     `,
   )
   .add(
@@ -16,7 +16,7 @@ storiesOf('Forms|Input IBAN', module)
       <lion-input-iban
         .modelValue=${'NL20INGB0001234567'}
         name="iban"
-        label="Label"
+        label="IBAN"
       ></lion-input-iban>
     `,
   )
@@ -26,7 +26,7 @@ storiesOf('Forms|Input IBAN', module)
       <lion-input-iban
         .modelValue=${'NL20INGB0001234567XXXX'}
         name="iban"
-        label="Label"
+        label="IBAN"
       ></lion-input-iban>
     `,
   )
@@ -37,7 +37,7 @@ storiesOf('Forms|Input IBAN', module)
         .modelValue=${'DE89370400440532013000'}
         .validators=${[new IsCountryIBAN('NL')]}
         name="iban"
-        label="Label"
+        label="IBAN"
       ></lion-input-iban>
     `,
   );
