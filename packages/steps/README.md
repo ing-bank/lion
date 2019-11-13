@@ -50,11 +50,11 @@ The first step needs to be explicitely set via `initial-step` so that it get sta
 ```js
 ...
 next() {
-  return this.$id('steps').next();
+  return this.shadowRoot.getElementById('steps').next();
 }
 
 previous() {
-  return this.$id('steps').previous();
+  return this.shadowRoot.getElementById('steps').previous();
 }
 ...
 ```

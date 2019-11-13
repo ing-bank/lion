@@ -61,18 +61,18 @@ export class LionSlider extends LionField {
   }
 
   _proxyChangeEvent() {
-    this.inputElement.dispatchEvent(
+    this._inputNode.dispatchEvent(
       new CustomEvent('user-input-changed', { bubbles: true, composed: true }),
     );
   }
 
   // 3. Proxy property `<my-slider>.mySliderValue` to `<lion-slider>.value`
   get value() {
-    return this.$$slot('input').mySliderValue;
+    return this.querySelector('[slot=input]').mySliderValue;
   }
 
   set value(newV) {
-    this.$$slot('input').mySliderValue = newV;
+    this.querySelector('[slot=input]').mySliderValue = newV;
   }
 }
 ```

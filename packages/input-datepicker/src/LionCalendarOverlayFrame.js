@@ -1,7 +1,7 @@
-import { html, css, LitElement, DomHelpersMixin } from '@lion/core';
+import { html, css, LitElement } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
-export class LionCalendarOverlayFrame extends LocalizeMixin(DomHelpersMixin(LitElement)) {
+export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get styles() {
     return [
       css`
@@ -43,16 +43,10 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(DomHelpersMixin(LitE
           switch (locale) {
             case 'bg-BG':
               return import('@lion/overlays/translations/bg-BG.js');
-            case 'bg':
-              return import('@lion/overlays/translations/bg.js');
             case 'cs-CZ':
               return import('@lion/overlays/translations/cs-CZ.js');
-            case 'cs':
-              return import('@lion/overlays/translations/cs.js');
             case 'de-DE':
               return import('@lion/overlays/translations/de-DE.js');
-            case 'de':
-              return import('@lion/overlays/translations/de.js');
             case 'en-AU':
               return import('@lion/overlays/translations/en-AU.js');
             case 'en-GB':
@@ -60,54 +54,32 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(DomHelpersMixin(LitE
             case 'en-US':
               return import('@lion/overlays/translations/en-US.js');
             case 'en-PH':
-            case 'en':
               return import('@lion/overlays/translations/en.js');
             case 'es-ES':
               return import('@lion/overlays/translations/es-ES.js');
-            case 'es':
-              return import('@lion/overlays/translations/es.js');
             case 'fr-FR':
               return import('@lion/overlays/translations/fr-FR.js');
             case 'fr-BE':
               return import('@lion/overlays/translations/fr-BE.js');
-            case 'fr':
-              return import('@lion/overlays/translations/fr.js');
             case 'hu-HU':
               return import('@lion/overlays/translations/hu-HU.js');
-            case 'hu':
-              return import('@lion/overlays/translations/hu.js');
             case 'it-IT':
               return import('@lion/overlays/translations/it-IT.js');
-            case 'it':
-              return import('@lion/overlays/translations/it.js');
             case 'nl-BE':
               return import('@lion/overlays/translations/nl-BE.js');
             case 'nl-NL':
               return import('@lion/overlays/translations/nl-NL.js');
-            case 'nl':
-              return import('@lion/overlays/translations/nl.js');
             case 'pl-PL':
               return import('@lion/overlays/translations/pl-PL.js');
-            case 'pl':
-              return import('@lion/overlays/translations/pl.js');
             case 'ro-RO':
               return import('@lion/overlays/translations/ro-RO.js');
-            case 'ro':
-              return import('@lion/overlays/translations/ro.js');
             case 'ru-RU':
               return import('@lion/overlays/translations/ru-RU.js');
-            case 'ru':
-              return import('@lion/overlays/translations/ru.js');
             case 'sk-SK':
               return import('@lion/overlays/translations/sk-SK.js');
-            case 'sk':
-              return import('@lion/overlays/translations/sk.js');
             case 'uk-UA':
               return import('@lion/overlays/translations/uk-UA.js');
-            case 'uk':
-              return import('@lion/overlays/translations/uk.js');
             case 'zh-CN':
-            case 'zh':
               return import('@lion/overlays/translations/zh.js');
             default:
               return import(`@lion/overlays/translations/${locale}.js`);

@@ -1,6 +1,5 @@
 import { SlotMixin, html, LitElement } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
 
@@ -11,10 +10,10 @@ const pascalCase = str => str.charAt(0).toUpperCase() + str.slice(1);
  * LionFieldset: fieldset wrapper providing extra features and integration with lion-field elements.
  *
  * @customElement lion-fieldset
- * @extends LionLitElement
+ * @extends {LitElement}
  */
 export class LionFieldset extends FormRegistrarMixin(
-  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(ObserverMixin(LitElement))))),
+  FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(LitElement)))),
 ) {
   static get properties() {
     return {
@@ -50,7 +49,7 @@ export class LionFieldset extends FormRegistrarMixin(
     this.requestUpdate('touched', oldVal);
   }
 
-  get inputElement() {
+  get _inputNode() {
     return this;
   }
 
@@ -128,27 +127,12 @@ export class LionFieldset extends FormRegistrarMixin(
     if (changedProps.has('disabled')) {
       if (this.disabled) {
         this.__requestChildrenToBeDisabled();
-        /** @deprecated use disabled attribute instead */
-        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
       } else {
         this.__retractRequestChildrenToBeDisabled();
-        /** @deprecated use disabled attribute instead */
-        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
       }
-    }
-    if (changedProps.has('touched')) {
-      /** @deprecated use touched attribute instead */
-      this.classList[this.touched ? 'add' : 'remove']('state-touched');
-    }
-
-    if (changedProps.has('dirty')) {
-      /** @deprecated use dirty attribute instead */
-      this.classList[this.dirty ? 'add' : 'remove']('state-dirty');
     }
 
     if (changedProps.has('focused')) {
-      /** @deprecated use touched attribute instead */
-      this.classList[this.focused ? 'add' : 'remove']('state-focused');
       if (this.focused === true) {
         this.__setupOutsideClickHandling();
       }
@@ -422,11 +406,6 @@ export class LionFieldset extends FormRegistrarMixin(
    */
   get _initialModelValue() {
     return this._getFromAllFormElements('_initialModelValue');
-  }
-
-  /** @deprecated */
-  get resetModelValue() {
-    return this._initialModelValue;
   }
 
   /**

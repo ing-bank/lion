@@ -294,12 +294,12 @@ export const ValidateMixin = dedupeMixin(
       }
 
       get _feedbackElement() {
-        return (this.$$slot && this.$$slot('feedback')) || this.querySelector('[slot="feedback"]');
+        return this.querySelector('[slot="feedback"]');
       }
 
       getFieldName(validatorParams) {
-        const label =
-          this.label || (this.$$slot && this.$$slot('label') && this.$$slot('label').textContent);
+        const labelEl = this.querySelector('[slot=label]');
+        const label = this.label || (labelEl && labelEl.textContent);
 
         if (validatorParams && validatorParams.fieldName) {
           return validatorParams.fieldName;
@@ -413,6 +413,8 @@ export const ValidateMixin = dedupeMixin(
 
       /**
        * Can be overridden by sub classers
+       * Note that it's important to always render your feedback to the _feedbackElement textContent!
+       * This is necessary because it is allocated as the feedback slot, which is what the mixin renders feedback to.
        */
       renderFeedback() {
         if (this._feedbackElement) {
@@ -422,10 +424,10 @@ export const ValidateMixin = dedupeMixin(
 
       _onErrorShowChangedAsync() {
         // Screen reader output should be in sync with visibility of error messages
-        if (this.inputElement) {
-          this.inputElement.setAttribute('aria-invalid', this.errorShow);
+        if (this._inputNode) {
+          this._inputNode.setAttribute('aria-invalid', this.errorShow);
           // TODO: test and see if needed for a11y
-          // this.inputElement.setCustomValidity(this._validationMessage || '');
+          // this._inputNode.setCustomValidity(this._validationMessage || '');
         }
       }
 

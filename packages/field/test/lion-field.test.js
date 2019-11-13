@@ -22,7 +22,7 @@ const inputSlot = unsafeHTML(inputSlotString);
 
 function mimicUserInput(formControl, newViewValue) {
   formControl.value = newViewValue; // eslint-disable-line no-param-reassign
-  formControl.inputElement.dispatchEvent(new CustomEvent('input', { bubbles: true }));
+  formControl._inputNode.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
 beforeEach(() => {
@@ -32,7 +32,7 @@ beforeEach(() => {
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.$$slot('input').id).to.equal(el._inputId);
+    expect(el.querySelector('[slot=input]').id).to.equal(el._inputId);
   });
 
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
@@ -40,15 +40,15 @@ describe('<lion-field>', () => {
     const cbFocusHost = sinon.spy();
     el.addEventListener('focus', cbFocusHost);
     const cbFocusNativeInput = sinon.spy();
-    el.inputElement.addEventListener('focus', cbFocusNativeInput);
+    el._inputNode.addEventListener('focus', cbFocusNativeInput);
     const cbBlurHost = sinon.spy();
     el.addEventListener('blur', cbBlurHost);
     const cbBlurNativeInput = sinon.spy();
-    el.inputElement.addEventListener('blur', cbBlurNativeInput);
+    el._inputNode.addEventListener('blur', cbBlurNativeInput);
 
     await triggerFocusFor(el);
 
-    expect(document.activeElement).to.equal(el.inputElement);
+    expect(document.activeElement).to.equal(el._inputNode);
     expect(cbFocusHost.callCount).to.equal(1);
     expect(cbFocusNativeInput.callCount).to.equal(1);
     expect(cbBlurHost.callCount).to.equal(0);
@@ -59,7 +59,7 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(1);
 
     await triggerFocusFor(el);
-    expect(document.activeElement).to.equal(el.inputElement);
+    expect(document.activeElement).to.equal(el._inputNode);
     expect(cbFocusHost.callCount).to.equal(2);
     expect(cbFocusNativeInput.callCount).to.equal(2);
 
@@ -80,14 +80,14 @@ describe('<lion-field>', () => {
   it('can be disabled via attribute', async () => {
     const elDisabled = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
     expect(elDisabled.disabled).to.equal(true);
-    expect(elDisabled.inputElement.disabled).to.equal(true);
+    expect(elDisabled._inputNode.disabled).to.equal(true);
   });
 
   it('can be disabled via property', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     el.disabled = true;
     await el.updateComplete;
-    expect(el.inputElement.disabled).to.equal(true);
+    expect(el._inputNode.disabled).to.equal(true);
   });
 
   it('can be cleared which erases value, validation and interaction states', async () => {
@@ -113,29 +113,29 @@ describe('<lion-field>', () => {
 
   it('reads initial value from attribute value', async () => {
     const el = await fixture(html`<${tag} value="one">${inputSlot}</${tag}>`);
-    expect(el.$$slot('input').value).to.equal('one');
+    expect(el.querySelector('[slot=input]').value).to.equal('one');
   });
 
   it('delegates value property', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.$$slot('input').value).to.equal('');
+    expect(el.querySelector('[slot=input]').value).to.equal('');
     el.value = 'one';
     expect(el.value).to.equal('one');
-    expect(el.$$slot('input').value).to.equal('one');
+    expect(el.querySelector('[slot=input]').value).to.equal('one');
   });
 
-  // This is necessary for security, so that inputElements autocomplete can be set to 'off'
+  // This is necessary for security, so that _inputNodes autocomplete can be set to 'off'
   it('delegates autocomplete property', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.inputElement.autocomplete).to.equal('');
-    expect(el.inputElement.hasAttribute('autocomplete')).to.be.false;
+    expect(el._inputNode.autocomplete).to.equal('');
+    expect(el._inputNode.hasAttribute('autocomplete')).to.be.false;
     el.autocomplete = 'off';
     await el.updateComplete;
-    expect(el.inputElement.autocomplete).to.equal('off');
-    expect(el.inputElement.getAttribute('autocomplete')).to.equal('off');
+    expect(el._inputNode.autocomplete).to.equal('off');
+    expect(el._inputNode.getAttribute('autocomplete')).to.equal('off');
   });
 
-  // TODO: find out if we could put all listeners on this.value (instead of this.inputElement.value)
+  // TODO: find out if we could put all listeners on this.value (instead of this._inputNode.value)
   // and make it act on this.value again
   it('has a class "state-filled" if this.value is filled', async () => {
     const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
@@ -152,30 +152,30 @@ describe('<lion-field>', () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     await triggerFocusFor(el);
     await el.updateComplete;
-    el.inputElement.value = 'hello world';
-    el.inputElement.selectionStart = 2;
-    el.inputElement.selectionEnd = 2;
+    el._inputNode.value = 'hello world';
+    el._inputNode.selectionStart = 2;
+    el._inputNode.selectionEnd = 2;
     el.value = 'hey there universe';
-    expect(el.inputElement.selectionStart).to.equal(2);
-    expect(el.inputElement.selectionEnd).to.equal(2);
+    expect(el._inputNode.selectionStart).to.equal(2);
+    expect(el._inputNode.selectionEnd).to.equal(2);
   });
 
   // TODO: add pointerEvents test for disabled
   it('has a class "state-disabled"', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(el.classList.contains('state-disabled')).to.equal(false);
-    expect(el.inputElement.hasAttribute('disabled')).to.equal(false);
+    expect(el._inputNode.hasAttribute('disabled')).to.equal(false);
 
     el.disabled = true;
     await el.updateComplete;
     await aTimeout();
 
     expect(el.classList.contains('state-disabled')).to.equal(true);
-    expect(el.inputElement.hasAttribute('disabled')).to.equal(true);
+    expect(el._inputNode.hasAttribute('disabled')).to.equal(true);
 
     const disabledel = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
     expect(disabledel.classList.contains('state-disabled')).to.equal(true);
-    expect(disabledel.inputElement.hasAttribute('disabled')).to.equal(true);
+    expect(disabledel._inputNode.hasAttribute('disabled')).to.equal(true);
   });
 
   describe(`A11y${nameSuffix}`, () => {
@@ -200,7 +200,7 @@ describe('<lion-field>', () => {
             <span slot="feedback">No name entered</span>
           </${tag}>
         `);
-      const nativeInput = el.$$slot('input');
+      const nativeInput = el.querySelector('[slot=input]');
 
       expect(nativeInput.getAttribute('aria-labelledby')).to.equal(` label-${el._inputId}`);
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(` help-text-${el._inputId}`);
@@ -218,7 +218,7 @@ describe('<lion-field>', () => {
           </${tag}>
         `);
 
-      const nativeInput = el.$$slot('input');
+      const nativeInput = el.querySelector('[slot=input]');
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
         ` before-${el._inputId} after-${el._inputId}`,
       );
@@ -245,30 +245,30 @@ describe('<lion-field>', () => {
       await el.updateComplete;
       await el.updateComplete;
 
-      const { inputElement } = el;
+      const { _inputNode } = el;
 
       // 1. addToAriaLabel()
       // Check if the aria attr is filled initially
-      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       el.addToAriaLabel('additionalLabel');
       // Now check if ids are added to the end (not overridden)
-      expect(inputElement.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       // Should be placed in the end
       expect(
-        inputElement.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
-          inputElement.getAttribute('aria-labelledby').indexOf('additionalLabel'),
+        _inputNode.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
+          _inputNode.getAttribute('aria-labelledby').indexOf('additionalLabel'),
       );
 
       // 2. addToAriaDescription()
       // Check if the aria attr is filled initially
-      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       el.addToAriaDescription('additionalDescription');
       // Now check if ids are added to the end (not overridden)
-      expect(inputElement.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       // Should be placed in the end
       expect(
-        inputElement.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
-          inputElement.getAttribute('aria-describedby').indexOf('additionalDescription'),
+        _inputNode.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
+          _inputNode.getAttribute('aria-describedby').indexOf('additionalDescription'),
       );
     });
   });
@@ -398,10 +398,10 @@ describe('<lion-field>', () => {
   describe('Delegation', () => {
     it('delegates property value', async () => {
       const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-      expect(el.inputElement.value).to.equal('');
+      expect(el._inputNode.value).to.equal('');
       el.value = 'one';
       expect(el.value).to.equal('one');
-      expect(el.inputElement.value).to.equal('one');
+      expect(el._inputNode.value).to.equal('one');
     });
 
     it('delegates property selectionStart and selectionEnd', async () => {
@@ -413,8 +413,8 @@ describe('<lion-field>', () => {
 
       el.selectionStart = 5;
       el.selectionEnd = 12;
-      expect(el.inputElement.selectionStart).to.equal(5);
-      expect(el.inputElement.selectionEnd).to.equal(12);
+      expect(el._inputNode.selectionStart).to.equal(5);
+      expect(el._inputNode.selectionEnd).to.equal(12);
     });
   });
 });

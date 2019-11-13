@@ -17,7 +17,7 @@ import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
 
 /**
- * @customElement
+ * @customElement lion-calendar
  */
 export class LionCalendar extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
@@ -26,55 +26,40 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         'lion-calendar': locale => {
           switch (locale) {
             case 'bg-BG':
-            case 'bg':
               return import('../translations/bg.js');
             case 'cs-CZ':
-            case 'cs':
               return import('../translations/cs.js');
             case 'de-AT':
             case 'de-DE':
-            case 'de':
               return import('../translations/de.js');
             case 'en-AU':
             case 'en-GB':
             case 'en-PH':
             case 'en-US':
-            case 'en':
               return import('../translations/en.js');
             case 'es-ES':
-            case 'es':
               return import('../translations/es.js');
             case 'fr-FR':
             case 'fr-BE':
-            case 'fr':
               return import('../translations/fr.js');
             case 'hu-HU':
-            case 'hu':
               return import('../translations/hu.js');
             case 'it-IT':
-            case 'it':
               return import('../translations/it.js');
             case 'nl-BE':
             case 'nl-NL':
-            case 'nl':
               return import('../translations/nl.js');
             case 'pl-PL':
-            case 'pl':
               return import('../translations/pl.js');
             case 'ro-RO':
-            case 'ro':
               return import('../translations/ro.js');
             case 'ru-RU':
-            case 'ru':
               return import('../translations/ru.js');
             case 'sk-SK':
-            case 'sk':
               return import('../translations/sk.js');
             case 'uk-UA':
-            case 'uk':
               return import('../translations/uk.js');
             case 'zh-CN':
-            case 'zh':
               return import('../translations/zh.js');
             default:
               return import(`../translations/${locale}.js`);

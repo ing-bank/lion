@@ -20,8 +20,8 @@ import { LionFieldset } from '@lion/fieldset';
  * It extends LionFieldset so it inherits it's features.
  *
  *
- * @customElement
- * @extends LionFieldset
+ * @customElement lion-radio-group
+ * @extends {LionFieldset}
  */
 
 export class LionRadioGroup extends LionFieldset {
@@ -65,28 +65,28 @@ export class LionRadioGroup extends LionFieldset {
 
   _checkRadioElements(ev) {
     const { target } = ev;
-    if (target.type !== 'radio' || target.choiceChecked === false) return;
+    if (target.type !== 'radio' || target.checked === false) return;
 
     const groupName = target.name;
     this.formElementsArray
       .filter(i => i.name === groupName)
       .forEach(radio => {
         if (radio !== target) {
-          radio.choiceChecked = false; // eslint-disable-line no-param-reassign
+          radio.checked = false; // eslint-disable-line no-param-reassign
         }
       });
     this.__triggerCheckedValueChanged();
   }
 
   _getCheckedRadioElement() {
-    const filtered = this.formElementsArray.filter(el => el.choiceChecked === true);
+    const filtered = this.formElementsArray.filter(el => el.checked === true);
     return filtered.length > 0 ? filtered[0] : undefined;
   }
 
   _setCheckedRadioElement(value, check) {
     for (let i = 0; i < this.formElementsArray.length; i += 1) {
       if (check(this.formElementsArray[i], value)) {
-        this.formElementsArray[i].choiceChecked = true;
+        this.formElementsArray[i].checked = true;
         return;
       }
     }
