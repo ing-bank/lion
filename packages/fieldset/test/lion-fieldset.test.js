@@ -22,6 +22,19 @@ beforeEach(() => {
 });
 
 describe('<lion-fieldset>', () => {
+  it(`has a fieldName based on the label`, async () => {
+    const el1 = await fixture(html`<${tag} label="foo">${inputSlots}</${tag}>`);
+    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+
+    const el2 = await fixture(html`<${tag}><label slot="label">bar</label>${inputSlots}</${tag}>`);
+    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it(`has a fieldName based on the name if no label exists`, async () => {
+    const el = await fixture(html`<${tag} name="foo">${inputSlots}</${tag}>`);
+    expect(el.fieldName).to.equal(el.name);
+  });
+
   it(`${tagString} has an up to date list of every form element in #formElements`, async () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();
