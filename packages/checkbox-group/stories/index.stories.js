@@ -3,7 +3,7 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 import '../lion-checkbox-group.js';
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/form/lion-form.js';
-import { localize } from '@lion/localize';
+import { Required, Validator } from '@lion/validate';
 
 storiesOf('Forms|Checkbox Group', module)
   .add(
@@ -11,7 +11,7 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group name="scientistsGroup" label="Who are your favorite scientists?">
+          <lion-checkbox-group name="scientistsGroup" label="Favorite scientists">
             <lion-checkbox
               name="scientists[]"
               label="Archimedes"
@@ -37,7 +37,7 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group name="scientistsGroup" label="Who are your favorite scientists?">
+          <lion-checkbox-group name="scientistsGroup" label="Favorite scientists">
             <lion-checkbox
               name="scientists[]"
               label="Archimedes"
@@ -64,11 +64,7 @@ storiesOf('Forms|Checkbox Group', module)
     () => html`
       <lion-form>
         <form>
-          <lion-checkbox-group
-            name="scientistsGroup"
-            label="Who are your favorite scientists?"
-            disabled
-          >
+          <lion-checkbox-group name="scientistsGroup" label="Favorite scientists" disabled>
             <lion-checkbox
               name="scientists[]"
               label="Archimedes"
@@ -92,7 +88,7 @@ storiesOf('Forms|Checkbox Group', module)
   .add('Validation', () => {
     const submit = () => {
       const form = document.querySelector('#form');
-      if (form.errorState === false) {
+      if (form.hasError === false) {
         console.log(form.serializeGroup());
       }
     };
@@ -101,8 +97,8 @@ storiesOf('Forms|Checkbox Group', module)
         ><form>
           <lion-checkbox-group
             name="scientistsGroup"
-            label="Who are your favorite scientists?"
-            .errorValidators=${[['required']]}
+            label="Favorite scientists"
+            .validators=${[new Required()]}
           >
             <lion-checkbox
               name="scientists[]"
@@ -126,26 +122,29 @@ storiesOf('Forms|Checkbox Group', module)
     `;
   })
   .add('Validation 2 checked', () => {
-    const hasMinTwoChecked = value => {
-      const selectedValues = value['scientists[]'].filter(v => v.checked === true);
-      return {
-        hasMinTwoChecked: selectedValues.length >= 2,
-      };
-    };
-    localize.locale = 'en-GB';
-    try {
-      localize.addData('en-GB', 'lion-validate+hasMinTwoChecked', {
-        error: {
-          hasMinTwoChecked: 'You need to select at least 2 values',
-        },
-      });
-    } catch (error) {
-      // expected as it's a demo
+    class HasMinTwoChecked extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'HasMinTwoChecked';
+      }
+
+      execute(value) {
+        let hasError = false;
+        const selectedValues = value['scientists[]'].filter(v => v.checked === true);
+        if (!(selectedValues.length >= 2)) {
+          hasError = true;
+        }
+        return hasError;
+      }
+
+      static async getMessage() {
+        return 'You need to select at least 2 values.';
+      }
     }
 
     const submit = () => {
       const form = document.querySelector('#form');
-      if (form.errorState === false) {
+      if (form.hasError === false) {
         console.log(form.serializeGroup());
       }
     };
@@ -154,9 +153,9 @@ storiesOf('Forms|Checkbox Group', module)
         ><form>
           <lion-checkbox-group
             name="scientistsGroup"
-            label="Who are your favorite scientists?"
+            label="Favorite scientists"
             help-text="You should have at least 2 of those"
-            .errorValidators=${[[hasMinTwoChecked]]}
+            .validators=${[new HasMinTwoChecked()]}
           >
             <lion-checkbox
               name="scientists[]"
