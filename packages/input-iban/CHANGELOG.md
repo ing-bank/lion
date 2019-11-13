@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.1.69...@lion/input-iban@0.2.0) (2019-11-13)
+
+
+### Features
+
+* remove all deprecations from lion ([66d3d39](https://github.com/ing-bank/lion/commit/66d3d390aebeaa61b6effdea7d5f7eea0e89c894))
+
+
+
+
+
 ## [0.1.69](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.1.68...@lion/input-iban@0.1.69) (2019-11-12)
 
 **Note:** Version bump only for package @lion/input-iban

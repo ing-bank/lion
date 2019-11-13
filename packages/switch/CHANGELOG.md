@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/switch@0.1.7...@lion/switch@0.2.0) (2019-11-13)
+
+
+### Bug Fixes
+
+* **switch:** make switch more accessible ([83f9564](https://github.com/ing-bank/lion/commit/83f9564ae0c7f6f6ed552a63efa268dbe4ff4ec5))
+
+
+### Features
+
+* remove all deprecations from lion ([66d3d39](https://github.com/ing-bank/lion/commit/66d3d390aebeaa61b6effdea7d5f7eea0e89c894))
+
+
+
+
+
 ## [0.1.7](https://github.com/ing-bank/lion/compare/@lion/switch@0.1.6...@lion/switch@0.1.7) (2019-11-12)
 
 **Note:** Version bump only for package @lion/switch

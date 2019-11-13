@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.35](https://github.com/ing-bank/lion/compare/@lion/button@0.3.34...@lion/button@0.3.35) (2019-11-13)
+
+
+### Bug Fixes
+
+* **button:** make button more accessible ([fdedcf2](https://github.com/ing-bank/lion/commit/fdedcf289490209963794e83aa28ca07fb966583))
+
+
+
+
+
 ## [0.3.34](https://github.com/ing-bank/lion/compare/@lion/button@0.3.33...@lion/button@0.3.34) (2019-11-12)
 
 **Note:** Version bump only for package @lion/button
