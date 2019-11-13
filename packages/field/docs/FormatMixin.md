@@ -22,7 +22,7 @@ Examples:
 
 The view value is the result of the formatter function.
 It will be stored as `.formattedValue` and synchronized to `.value` (a viewValue setter that
-allows to synchronize to `.inputElement`).
+allows to synchronize to `._inputNode`).
 Synchronization happens conditionally and is (by default) the result of a blur. Other conditions
 (like error state/validity and whether the a model value was set programatically) also play a role.
 
@@ -45,7 +45,7 @@ Examples:
 - For a number input this would be the String representation of a float ('1234.56' instead
   of 1234.56)
 
-When no parser is available, the value is usually the same as the formattedValue (being inputElement.value)
+When no parser is available, the value is usually the same as the formattedValue (being \_inputNode.value)
 
 ## Formatters, parsers and (de)serializers
 

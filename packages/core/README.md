@@ -4,14 +4,7 @@
 
 ## Deprecations
 
-The following files/features are deprecated
-
-- CssClassMixin
-- DomHelpersMixin (only $$id, $$slot is deprecated)
-- ElementMixin
-- EventMixin
-- ObserverMixin
-- lit-html.js
+Currently all deprecations are removed due to alpha state.
 
 ## Deduping of mixins
 

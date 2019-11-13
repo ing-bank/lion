@@ -14,12 +14,12 @@ describe('lion-switch', () => {
     const el = await fixture(html`
       <lion-switch disabled></lion-switch>
     `);
-    expect(el.inputElement.disabled).to.be.true;
-    expect(el.inputElement.hasAttribute('disabled')).to.be.true;
+    expect(el._inputNode.disabled).to.be.true;
+    expect(el._inputNode.hasAttribute('disabled')).to.be.true;
     el.disabled = false;
     await el.updateComplete;
-    expect(el.inputElement.disabled).to.be.false;
-    expect(el.inputElement.hasAttribute('disabled')).to.be.false;
+    expect(el._inputNode.disabled).to.be.false;
+    expect(el._inputNode.hasAttribute('disabled')).to.be.false;
   });
 
   it('should sync its "checked" state to child button', async () => {
@@ -29,21 +29,21 @@ describe('lion-switch', () => {
     const checkedEl = await fixture(html`
       <lion-switch checked></lion-switch>
     `);
-    expect(uncheckedEl.inputElement.checked).to.be.false;
-    expect(checkedEl.inputElement.checked).to.be.true;
+    expect(uncheckedEl._inputNode.checked).to.be.false;
+    expect(checkedEl._inputNode.checked).to.be.true;
     uncheckedEl.checked = true;
     checkedEl.checked = false;
     await uncheckedEl.updateComplete;
     await checkedEl.updateComplete;
-    expect(uncheckedEl.inputElement.checked).to.be.true;
-    expect(checkedEl.inputElement.checked).to.be.false;
+    expect(uncheckedEl._inputNode.checked).to.be.true;
+    expect(checkedEl._inputNode.checked).to.be.false;
   });
 
   it('should sync "checked" state received from child button', async () => {
     const el = await fixture(html`
       <lion-switch></lion-switch>
     `);
-    const button = el.inputElement;
+    const button = el._inputNode;
     expect(el.checked).to.be.false;
     button.click();
     expect(el.checked).to.be.true;

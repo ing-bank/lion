@@ -3,8 +3,8 @@ import { LionField } from '@lion/field';
 /**
  * LionInput: extension of lion-field with native input element in place and user friendly API
  *
- * @customElement
- * @extends LionField
+ * @customElement lion-input
+ * @extends {LionField}
  */
 export class LionInput extends LionField {
   static get properties() {
@@ -24,10 +24,6 @@ export class LionInput extends LionField {
       },
       type: {
         type: String,
-        reflect: true,
-      },
-      step: {
-        type: Number,
         reflect: true,
       },
       placeholder: {
@@ -56,12 +52,6 @@ export class LionInput extends LionField {
     super();
     this.readOnly = false;
     this.type = 'text';
-    /**
-     * Only application to type="amount" & type="range"
-     *
-     * @deprecated
-     */
-    this.step = undefined;
   }
 
   _requestUpdate(name, oldValue) {
@@ -79,19 +69,16 @@ export class LionInput extends LionField {
   updated(changedProps) {
     super.updated(changedProps);
     if (changedProps.has('type')) {
-      this.inputElement.type = this.type;
-    }
-    if (changedProps.has('step')) {
-      this.inputElement.step = this.step;
+      this._inputNode.type = this.type;
     }
     if (changedProps.has('placeholder')) {
-      this.inputElement.placeholder = this.placeholder;
+      this._inputNode.placeholder = this.placeholder;
     }
   }
 
   __delegateReadOnly() {
-    if (this.inputElement) {
-      this.inputElement.readOnly = this.readOnly;
+    if (this._inputNode) {
+      this._inputNode.readOnly = this.readOnly;
     }
   }
 }

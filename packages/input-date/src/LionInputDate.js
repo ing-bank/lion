@@ -6,7 +6,7 @@ import { isDateValidator } from '@lion/validate';
 /**
  * `LionInputDate` is a class for a date custom form element (`<lion-input-date>`).
  *
- * @customElement
+ * @customElement lion-input-date
  * @extends {LionInput}
  */
 export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {

@@ -9,17 +9,24 @@ import '@lion/form/lion-form.js';
 
 storiesOf('Buttons|Switch', module)
   .add(
-    'All text slots',
+    'Button',
     () => html`
-      <lion-switch label="Label" help-text="Help text"> </lion-switch>
+      <lion-switch-button aria-label="Toggle button"></lion-switch-button>
     `,
   )
   .add(
     'Disabled',
     () => html`
-      <lion-switch label="Disabled label" disabled> </lion-switch>
+      <lion-switch-button aria-label="Toggle button" disabled></lion-switch-button>
     `,
   )
+  .add(
+    'With input slots',
+    () => html`
+      <lion-switch label="Label" help-text="Help text"></lion-switch>
+    `,
+  )
+
   .add('Validation', () => {
     const isTrue = value => value && value.checked && value.checked === true;
     const isTrueValidator = (...factoryParams) => [
@@ -82,10 +89,4 @@ storiesOf('Buttons|Switch', module)
     return html`
       <lion-switch-validation-demo></lion-switch-validation-demo>
     `;
-  })
-  .add(
-    'Button',
-    () => html`
-      <lion-switch-button></lion-switch-button>
-    `,
-  );
+  });

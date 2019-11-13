@@ -8,8 +8,7 @@ import {
   html,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { isDirective } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { LitElement, isDirective } from '@lion/core';
 import {
   localizeTearDown,
   setupEmptyFakeImportsFor,
@@ -295,7 +294,7 @@ describe('LocalizeMixin', () => {
     });
 
     const tag = defineCE(
-      class extends LocalizeMixin(LionLitElement) {
+      class extends LocalizeMixin(LitElement) {
         static get localizeNamespaces() {
           return [myElementNs, ...super.localizeNamespaces];
         }
@@ -328,7 +327,7 @@ describe('LocalizeMixin', () => {
     });
 
     const tag = defineCE(
-      class TestPromise extends LocalizeMixin(LionLitElement) {
+      class TestPromise extends LocalizeMixin(LitElement) {
         static get localizeNamespaces() {
           return [myElementNs, ...super.localizeNamespaces];
         }
@@ -360,7 +359,7 @@ describe('LocalizeMixin', () => {
     });
 
     const tag = defineCE(
-      class extends LocalizeMixin(LionLitElement) {
+      class extends LocalizeMixin(LitElement) {
         static get waitForLocalizeNamespaces() {
           return false;
         }

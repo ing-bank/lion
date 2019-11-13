@@ -15,7 +15,7 @@ describe('FocusMixin', () => {
           `;
         }
 
-        get inputElement() {
+        get _inputNode() {
           return this.querySelector('input');
         }
       },
@@ -29,9 +29,9 @@ describe('FocusMixin', () => {
       <${tag}><input slot="input"></${tag}>
     `);
     el.focus();
-    expect(document.activeElement === el.inputElement).to.be.true;
+    expect(document.activeElement === el._inputNode).to.be.true;
     el.blur();
-    expect(document.activeElement === el.inputElement).to.be.false;
+    expect(document.activeElement === el._inputNode).to.be.false;
   });
 
   it('has an attribute focused when focused', async () => {
@@ -52,23 +52,10 @@ describe('FocusMixin', () => {
       <${tag}><input slot="input"></${tag}>
     `);
     expect(el.focused).to.be.false;
-    el.inputElement.focus();
+    el._inputNode.focus();
     expect(el.focused).to.be.true;
-    el.inputElement.blur();
+    el._inputNode.blur();
     expect(el.focused).to.be.false;
-  });
-
-  it('has a deprecated "state-focused" css class when focused', async () => {
-    const el = await fixture(html`
-      <${tag}><input slot="input"></${tag}>
-    `);
-    el.focus();
-    await el.updateComplete;
-    expect(el.classList.contains('state-focused')).to.be.true;
-
-    el.blur();
-    await el.updateComplete;
-    expect(el.classList.contains('state-focused')).to.be.false;
   });
 
   it('dispatches [focus, blur] events', async () => {

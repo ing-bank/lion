@@ -1,6 +1,5 @@
 import { css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
 import { LionInput } from '@lion/input';
 import { FieldCustomMixin } from '@lion/field';
 import { isNumberValidator } from '@lion/validate';
@@ -10,10 +9,10 @@ import { formatAmount } from './formatters.js';
 /**
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
  *
- * @customElement
+ * @customElement lion-input-amount
  * @extends {LionInput}
  */
-export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixin(LionInput))) {
+export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) {
   static get properties() {
     return {
       currency: {
@@ -22,11 +21,11 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixi
     };
   }
 
-  static get asyncObservers() {
-    return {
-      ...super.asyncObservers,
-      _onCurrencyChanged: ['currency'],
-    };
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('currency')) {
+      this._onCurrencyChanged({ currency: this.currency });
+    }
   }
 
   get slots() {
@@ -57,7 +56,7 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(ObserverMixi
 
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after')) {
-      this.$$slot('after').textContent = currency;
+      this.querySelector('[slot=after]').textContent = currency;
     }
     this.formatOptions.currency = currency;
     this._calculateValues();

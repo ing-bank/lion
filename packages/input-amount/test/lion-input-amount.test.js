@@ -66,33 +66,33 @@ describe('<lion-input-amount>', () => {
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
     const el = await fixture(`<lion-input-amount></lion-input-amount>`);
-    expect(el.inputElement.type).to.equal('text');
+    expect(el._inputNode.type).to.equal('text');
   });
 
   it('shows no currency', async () => {
     const el = await fixture(`<lion-input-amount></lion-input-amount>`);
-    expect(el.$$slot('suffix')).to.be.undefined;
+    expect(el.querySelector('[slot=suffix]')).to.be.null;
   });
 
   it('displays currency if provided', async () => {
     const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
-    expect(el.$$slot('after').innerText).to.equal('EUR');
+    expect(el.querySelector('[slot=after]').innerText).to.equal('EUR');
   });
 
   it('can update currency', async () => {
     const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
     el.currency = 'USD';
     await el.updateComplete;
-    expect(el.$$slot('after').innerText).to.equal('USD');
+    expect(el.querySelector('[slot=after]').innerText).to.equal('USD');
   });
 
   it('ignores currency if a suffix is already present', async () => {
     const el = await fixture(
       `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
     );
-    expect(el.$$slot('suffix').innerText).to.equal('my-currency');
+    expect(el.querySelector('[slot=suffix]').innerText).to.equal('my-currency');
     el.currency = 'EUR';
     await el.updateComplete;
-    expect(el.$$slot('suffix').innerText).to.equal('my-currency');
+    expect(el.querySelector('[slot=suffix]').innerText).to.equal('my-currency');
   });
 });

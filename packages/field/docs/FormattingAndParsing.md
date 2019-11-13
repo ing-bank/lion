@@ -21,7 +21,7 @@ Examples:
 ### formattedValue
 
 The view value is the result of the formatter function (when available).
-The result will be stored in the native inputElement (usually an input[type=text]).
+The result will be stored in the native \_inputNode (usually an input[type=text]).
 
 Examples:
 
@@ -42,7 +42,7 @@ Examples:
 - For a number input this would be the String representation of a float ('1234.56' instead
   of 1234.56)
 
-When no parser is available, the value is usually the same as the formattedValue (being inputElement.value)
+When no parser is available, the value is usually the same as the formattedValue (being \_inputNode.value)
 
 ## Formatters, parsers and (de)serializers
 

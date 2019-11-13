@@ -3,8 +3,8 @@ import { LionFieldset } from '@lion/fieldset';
 /**
  * LionForm: form wrapper providing extra features and integration with lion-field elements.
  *
- * @customElement
- * @extends LionFieldset
+ * @customElement lion-form
+ * @extends {LionFieldset}
  */
 // eslint-disable-next-line no-unused-vars
 export class LionForm extends LionFieldset {

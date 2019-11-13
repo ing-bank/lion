@@ -1,7 +1,6 @@
 import { expect, fixture, defineCE, unsafeStatic, html } from '@open-wc/testing';
 import sinon from 'sinon';
-import { LionLitElement } from '../src/LionLitElement.js';
-import { ObserverMixin } from '../src/ObserverMixin.js';
+import { LitElement } from '../index.js';
 
 import { DelegateMixin } from '../src/DelegateMixin.js';
 
@@ -12,11 +11,11 @@ describe('DelegateMixin', () => {
 
   it('delegates events', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             events: ['click'],
           };
         }
@@ -31,17 +30,17 @@ describe('DelegateMixin', () => {
     const element = await fixture(`<${tag}></${tag}>`);
     const cb = sinon.spy();
     element.addEventListener('click', cb);
-    element.$id('button1').click();
+    element.shadowRoot.getElementById('button1').click();
     expect(cb.callCount).to.equal(1);
   });
 
   it('delegates events before delegation target is attached to DOM', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             events: ['click'],
           };
         }
@@ -58,7 +57,7 @@ describe('DelegateMixin', () => {
     element.addEventListener('click', cb);
     document.body.appendChild(element);
     await element.updateComplete;
-    element.$id('button1').click();
+    element.shadowRoot.getElementById('button1').click();
     expect(cb.callCount).to.equal(1);
 
     // cleanup
@@ -67,11 +66,11 @@ describe('DelegateMixin', () => {
 
   it('delegates if light and shadow dom is used at the same time', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$$slot('button'),
+            target: () => this.querySelector('[slot=button]'),
             events: ['click'],
             methods: ['click'],
           };
@@ -90,17 +89,17 @@ describe('DelegateMixin', () => {
       <${tag}><button slot="button">click me</button></${tag}>`);
     const cb = sinon.spy();
     element.addEventListener('click', cb);
-    element.$$slot('button').click();
+    element.querySelector('[slot=button]').click();
     expect(cb.callCount).to.equal(1);
   });
 
   it('will still support other events', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             events: ['click'],
           };
         }
@@ -125,11 +124,11 @@ describe('DelegateMixin', () => {
 
   it('will call delegated methods', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             methods: ['click'],
           };
         }
@@ -143,13 +142,13 @@ describe('DelegateMixin', () => {
     );
     const element = await fixture(`<${tag}></${tag}>`);
     const cb = sinon.spy();
-    element.$id('button1').addEventListener('click', cb);
+    element.shadowRoot.getElementById('button1').addEventListener('click', cb);
     element.click();
     expect(cb.callCount).to.equal(1);
   });
 
   it('supports arguments for delegated methods', async () => {
-    class DelegateArgumentSub extends LionLitElement {
+    class DelegateArgumentSub extends LitElement {
       constructor() {
         super();
         this.foo = { a: 'a', b: 'b' };
@@ -162,11 +161,11 @@ describe('DelegateMixin', () => {
     }
     customElements.define('delegate-argument-sub', DelegateArgumentSub);
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('sub'),
+            target: () => this.shadowRoot.getElementById('sub'),
             methods: ['setFooAandB'],
           };
         }
@@ -182,17 +181,17 @@ describe('DelegateMixin', () => {
     const element = await fixture(`<${tag}></${tag}>`);
     element.disabled = true;
     element.setFooAandB('newA', 'newB');
-    expect(element.$id('sub').foo.a).to.equal('newA');
-    expect(element.$id('sub').foo.b).to.equal('newB');
+    expect(element.shadowRoot.getElementById('sub').foo.a).to.equal('newA');
+    expect(element.shadowRoot.getElementById('sub').foo.b).to.equal('newB');
   });
 
   it('will set delegated properties', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             properties: ['disabled'],
           };
         }
@@ -207,17 +206,17 @@ describe('DelegateMixin', () => {
     const element = await fixture(`<${tag}></${tag}>`);
     element.disabled = true;
     await element.updateComplete;
-    expect(element.$id('button1').disabled).to.equal(true);
-    expect(element.$id('button1').hasAttribute('disabled')).to.equal(true);
+    expect(element.shadowRoot.getElementById('button1').disabled).to.equal(true);
+    expect(element.shadowRoot.getElementById('button1').hasAttribute('disabled')).to.equal(true);
   });
 
   it('delegates properties before delegation target is attached to DOM', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             properties: ['disabled'],
           };
         }
@@ -233,7 +232,7 @@ describe('DelegateMixin', () => {
     element.disabled = true;
     document.body.appendChild(element);
     await element.updateComplete;
-    expect(element.$id('button1').disabled).to.equal(true);
+    expect(element.shadowRoot.getElementById('button1').disabled).to.equal(true);
 
     // cleanup
     document.body.removeChild(element);
@@ -241,11 +240,11 @@ describe('DelegateMixin', () => {
 
   it('will delegate setAttribute', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             attributes: ['disabled'],
           };
         }
@@ -261,16 +260,16 @@ describe('DelegateMixin', () => {
     element.setAttribute('disabled', '');
     await element.updateComplete;
     expect(element.hasAttribute('disabled')).to.equal(false);
-    expect(element.$id('button1').hasAttribute('disabled')).to.equal(true);
+    expect(element.shadowRoot.getElementById('button1').hasAttribute('disabled')).to.equal(true);
   });
 
   it('will read inital attributes', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             attributes: ['disabled'],
           };
         }
@@ -284,16 +283,16 @@ describe('DelegateMixin', () => {
     );
     const element = await fixture(`<${tag} disabled></${tag}>`);
     expect(element.hasAttribute('disabled')).to.equal(false);
-    expect(element.$id('button1').hasAttribute('disabled')).to.equal(true);
+    expect(element.shadowRoot.getElementById('button1').hasAttribute('disabled')).to.equal(true);
   });
 
   it('will delegate removeAttribute', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.$id('button1'),
+            target: () => this.shadowRoot.getElementById('button1'),
             attributes: ['disabled'],
           };
         }
@@ -309,12 +308,12 @@ describe('DelegateMixin', () => {
     element.removeAttribute('disabled', '');
     await element.updateComplete;
     expect(element.hasAttribute('disabled')).to.equal(false);
-    expect(element.$id('button1').hasAttribute('disabled')).to.equal(false);
+    expect(element.shadowRoot.getElementById('button1').hasAttribute('disabled')).to.equal(false);
   });
 
   it('respects user defined values for delegated attributes and properties', async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
@@ -353,7 +352,7 @@ describe('DelegateMixin', () => {
   it(`uses attribute value as a fallback for delegated property getter
     when property not set by user and delegationTarget not ready`, async () => {
     const tag = defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
@@ -393,7 +392,7 @@ describe('DelegateMixin', () => {
 
   it('works with shadow dom', async () => {
     const tag = await defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
@@ -416,7 +415,7 @@ describe('DelegateMixin', () => {
 
   it('works with light dom', async () => {
     const tag = await defineCE(
-      class extends DelegateMixin(LionLitElement) {
+      class extends DelegateMixin(LitElement) {
         get delegations() {
           return {
             ...super.delegations,
@@ -439,68 +438,5 @@ describe('DelegateMixin', () => {
     const element = await fixture(`<${tag}></${tag}>`);
     element.foo = 'new';
     expect(element.querySelector('div').foo).to.equal('new');
-  });
-
-  it('integrates with the Observer System', async () => {
-    const tag = await defineCE(
-      class extends DelegateMixin(ObserverMixin(LionLitElement)) {
-        get delegations() {
-          return {
-            ...super.delegations,
-            target: () => this.querySelector('div'),
-            properties: ['size'],
-          };
-        }
-
-        static get syncObservers() {
-          return { _onSyncSizeChanged: ['size'] };
-        }
-
-        static get asyncObservers() {
-          return { _onAsyncSizeChanged: ['size'] };
-        }
-
-        render() {
-          return html`
-            <div></div>
-          `;
-        }
-
-        createRenderRoot() {
-          return this;
-        }
-
-        _onSyncSizeChanged() {}
-
-        _onAsyncSizeChanged() {}
-      },
-    );
-    const el = await fixture(`<${tag}><div></div></${tag}>`);
-    const asyncSpy = sinon.spy(el, '_onAsyncSizeChanged');
-    const syncSpy = sinon.spy(el, '_onSyncSizeChanged');
-
-    el.size = 'tiny';
-    expect(syncSpy.callCount).to.equal(1);
-    expect(syncSpy.calledWith({ size: 'tiny' }, { size: undefined })).to.be.true;
-    el.size = 'big';
-    expect(syncSpy.callCount).to.equal(2);
-    expect(syncSpy.calledWith({ size: 'big' }, { size: 'tiny' })).to.be.true;
-    expect(asyncSpy.callCount).to.equal(0);
-
-    await el.updateComplete;
-    expect(syncSpy.callCount).to.equal(2);
-    expect(asyncSpy.callCount).to.equal(1);
-    expect(asyncSpy.calledWith({ size: 'big' }, { size: undefined })).to.be.true;
-
-    el.size = 'medium';
-    await el.updateComplete;
-    expect(syncSpy.callCount).to.equal(3);
-    expect(syncSpy.calledWith({ size: 'medium' }, { size: 'big' })).to.be.true;
-    expect(asyncSpy.callCount).to.equal(2);
-    expect(asyncSpy.calledWith({ size: 'medium' }, { size: 'big' })).to.be.true;
-
-    // we expect to NOT use an "internal" property
-    // TODO: double check if we test the right thing here
-    expect(el.constructor._classProperties.get('size')).to.be.undefined;
   });
 });

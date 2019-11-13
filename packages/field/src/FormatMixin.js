@@ -23,10 +23,10 @@ import { Unparseable } from '@lion/validate';
  * ## Flows
  * FormatMixin supports these two main flows:
  * [1] Application Developer sets `.modelValue`:
- *     Flow: `.modelValue` (formatter) -> `.formattedValue` -> `.inputElement.value`
+ *     Flow: `.modelValue` (formatter) -> `.formattedValue` -> `._inputNode.value`
  *                         (serializer) -> `.serializedValue`
  * [2] End user interacts with field:
- *     Flow: `@user-input-changed` (parser) -> `.modelValue` (formatter) -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `.inputElement.value`
+ *     Flow: `@user-input-changed` (parser) -> `.modelValue` (formatter) -> `.formattedValue` - (debounce till reflect condition (formatOn) is met) -> `._inputNode.value`
  *                                 (serializer) -> `.serializedValue`
  *
  * For backwards compatibility with the platform, we also support `.value` as an api. In that case
@@ -40,11 +40,11 @@ import { Unparseable } from '@lion/validate';
  * The `.formattedValue` should be seen as the 'scheduled' viewValue. It is computed realtime and
  * stores the output of formatter. It will replace viewValue. once condition `formatOn` is met.
  * Another difference is that formattedValue lives on `LionField`, whereas viewValue is shared
- * across `LionField` and `.inputElement`.
+ * across `LionField` and `._inputNode`.
  *
  * For restoring serialized values fetched from a server, we could consider one extra flow:
  * [3] Application Developer sets `.serializedValue`:
- *     Flow: serializedValue (deserializer) -> `.modelValue` (formatter) -> `.formattedValue` -> `.inputElement.value`
+ *     Flow: serializedValue (deserializer) -> `.modelValue` (formatter) -> `.formattedValue` -> `._inputNode.value`
  */
 export const FormatMixin = dedupeMixin(
   superclass =>
@@ -70,7 +70,7 @@ export const FormatMixin = dedupeMixin(
 
           /**
            * The view value is the result of the formatter function (when available).
-           * The result will be stored in the native inputElement (usually an input[type=text]).
+           * The result will be stored in the native _inputNode (usually an input[type=text]).
            *
            * Examples:
            * - For a date input, this would be '20/01/1999' (dependent on locale).
@@ -95,7 +95,7 @@ export const FormatMixin = dedupeMixin(
            *   instead of 1234.56)
            *
            * When no parser is available, the value is usually the same as the formattedValue
-           * (being inputElement.value)
+           * (being _inputNode.value)
            *
            */
           serializedValue: {
@@ -127,16 +127,10 @@ export const FormatMixin = dedupeMixin(
           this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldVal });
         }
         if (name === 'serializedValue' && this.serializedValue !== oldVal) {
-          this._onSerializedValueChanged(
-            { serializedValue: this.serializedValue },
-            { serializedValue: oldVal },
-          );
+          this._calculateValues({ source: 'serialized' });
         }
         if (name === 'formattedValue' && this.formattedValue !== oldVal) {
-          this._onFormattedValueChanged(
-            { formattedValue: this.formattedValue },
-            { formattedValue: oldVal },
-          );
+          this._calculateValues({ source: 'formatted' });
         }
       }
 
@@ -152,7 +146,7 @@ export const FormatMixin = dedupeMixin(
 
       /**
        * Converts modelValue to formattedValue (formattedValue will be synced with
-       * `.inputElement.value`)
+       * `._inputNode.value`)
        * For instance, a Date object to a localized date.
        * @param {Object} value - modelValue: can be an Object, Number, String depending on the
        * input type(date, number, email etc)
@@ -230,7 +224,7 @@ export const FormatMixin = dedupeMixin(
         }
 
         // A.2) Handle edge cases We might have no view value yet, for instance because
-        // inputElement.value was not available yet
+        // _inputNode.value was not available yet
         if (typeof value !== 'string') {
           // This means there is nothing to find inside the view that can be of
           // interest to the Application Developer or needed to store for future
@@ -260,10 +254,10 @@ export const FormatMixin = dedupeMixin(
         // the value, no matter what.
         // This means, whenever we are in errorState and modelValue is set
         // imperatively, we DO want to format a value (it is the only way to get meaningful
-        // input into `.inputElement` with modelValue as input)
+        // input into `._inputNode` with modelValue as input)
 
-        if (this.__isHandlingUserInput && this.errorState && this.inputElement) {
-          return this.inputElement ? this.value : undefined;
+        if (this.__isHandlingUserInput && this.errorState && this._inputNode) {
+          return this._inputNode ? this.value : undefined;
         }
 
         if (this.modelValue instanceof Unparseable) {
@@ -293,30 +287,8 @@ export const FormatMixin = dedupeMixin(
         );
       }
 
-      _onFormattedValueChanged() {
-        /** @deprecated */
-        this.dispatchEvent(
-          new CustomEvent('formatted-value-changed', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
-        this._calculateValues({ source: 'formatted' });
-      }
-
-      _onSerializedValueChanged() {
-        /** @deprecated */
-        this.dispatchEvent(
-          new CustomEvent('serialized-value-changed', {
-            bubbles: true,
-            composed: true,
-          }),
-        );
-        this._calculateValues({ source: 'serialized' });
-      }
-
       /**
-       * Synchronization from `.inputElement.value` to `LionField` (flow [2])
+       * Synchronization from `._inputNode.value` to `LionField` (flow [2])
        */
       _syncValueUpwards() {
         // Downwards syncing should only happen for `LionField`.value changes from 'above'
@@ -326,7 +298,7 @@ export const FormatMixin = dedupeMixin(
       }
 
       /**
-       * Synchronization from `LionField.value` to `.inputElement.value`
+       * Synchronization from `LionField.value` to `._inputNode.value`
        * - flow [1] will always be reflected back
        * - flow [2] will not be reflected back when this flow was triggered via
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
@@ -370,7 +342,7 @@ export const FormatMixin = dedupeMixin(
         this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
 
         this._reflectBackFormattedValueDebounced = () => {
-          // Make sure this is fired after the change event of inputElement, so that formattedValue
+          // Make sure this is fired after the change event of _inputNode, so that formattedValue
           // is guaranteed to be calculated
           setTimeout(this._reflectBackFormattedValueToUser);
         };
@@ -385,21 +357,18 @@ export const FormatMixin = dedupeMixin(
         }
         this._reflectBackFormattedValueToUser();
 
-        if (this.inputElement) {
-          this.inputElement.addEventListener(
-            this.formatOn,
-            this._reflectBackFormattedValueDebounced,
-          );
-          this.inputElement.addEventListener('input', this._proxyInputEvent);
+        if (this._inputNode) {
+          this._inputNode.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
+          this._inputNode.addEventListener('input', this._proxyInputEvent);
         }
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('user-input-changed', this._onUserInputChanged);
-        if (this.inputElement) {
-          this.inputElement.removeEventListener('input', this._proxyInputEvent);
-          this.inputElement.removeEventListener(
+        if (this._inputNode) {
+          this._inputNode.removeEventListener('input', this._proxyInputEvent);
+          this._inputNode.removeEventListener(
             this.formatOn,
             this._reflectBackFormattedValueDebounced,
           );

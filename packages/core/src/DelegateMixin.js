@@ -10,7 +10,7 @@ import { dedupeMixin } from './dedupeMixin.js';
  * get delegations() {
  *   return {
  *     ...super.delegations,
- *     target: () => this.$id('button1'),
+ *     target: () => this.shadowRoot.getElementById('button1'),
  *     events: ['click'],
  *     methods: ['click'],
  *     properties: ['disabled'],

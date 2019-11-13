@@ -74,7 +74,6 @@ export const ChoiceInputMixin = superclass =>
     updated(c) {
       super.updated(c);
       if (c.has('modelValue')) {
-        this._reflectCheckedToCssClass({ modelValue: this.modelValue });
         this.__syncCheckedToInputElement();
       }
     }
@@ -125,7 +124,6 @@ export const ChoiceInputMixin = superclass =>
     connectedCallback() {
       super.connectedCallback();
       this.addEventListener('user-input-changed', this.__toggleChecked);
-      this._reflectCheckedToCssClass();
     }
 
     disconnectedCallback() {
@@ -146,10 +144,10 @@ export const ChoiceInputMixin = superclass =>
     }
 
     __syncCheckedToInputElement() {
-      // .inputElement might not be available yet(slot content)
+      // ._inputNode might not be available yet(slot content)
       // or at all (no reliance on platform construct, in case of [role=option])
-      if (this.inputElement) {
-        this.inputElement.checked = this.checked;
+      if (this._inputNode) {
+        this._inputNode.checked = this.checked;
       }
     }
 
@@ -217,23 +215,4 @@ export const ChoiceInputMixin = superclass =>
      * Synchronization from user input is already arranged in this Mixin.
      */
     _syncValueUpwards() {}
-
-    /**
-     * @deprecated use .checked
-     */
-    get choiceChecked() {
-      return this.checked;
-    }
-
-    /**
-     * @deprecated use .checked
-     */
-    set choiceChecked(c) {
-      this.checked = c;
-    }
-
-    /** @deprecated for styling purposes, use [checked] attribute */
-    _reflectCheckedToCssClass() {
-      this.classList[this.checked ? 'add' : 'remove']('state-checked');
-    }
   };

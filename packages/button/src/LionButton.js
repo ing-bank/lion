@@ -92,7 +92,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           padding: 0;
         }
 
-        :host(:focus) .btn {
+        :host(:focus:not([disabled])) .btn {
           /* if you extend, please overwrite */
           outline: 2px solid #bde4ff;
         }
@@ -137,6 +137,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         if (!this.constructor._button) {
           this.constructor._button = document.createElement('button');
           this.constructor._button.setAttribute('tabindex', '-1');
+          this.constructor._button.setAttribute('aria-hidden', true);
         }
         return this.constructor._button.cloneNode();
       },
