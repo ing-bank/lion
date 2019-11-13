@@ -135,7 +135,7 @@ Check out our [coding guidelines](./docs/README.md) for more detailed informatio
 ## How to contribute
 
 Lion Web Components are only as good as its contributions.
-Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve our product.
+Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
 
 ## Contact
 

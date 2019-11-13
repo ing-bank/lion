@@ -2,6 +2,10 @@
 
 Check out ways to contribute to Lion Web Components:
 
+## Feature requests
+
+When you have an idea on how we could improve, please check our [closed issues](https://github.com/ing-bank/lion/issues?q=is%3Aissue+is%3Aclosed+label%3Aenhancement) to see if there are similar ideas. If there are none, please [submit](https://github.com/ing-bank/lion/issues/new/choose) your feature request as an issue. Add a clear description of what you expect from the improvement and what the use case is. The issue will be closed and the community can add 👍 reactions to [vote and show interest](https://github.com/ing-bank/lion/issues?q=label%3A%22votes+needed%22+sort%3Areactions-%2B1-desc). When the feature gets picked up, the issue can be reopened.
+
 ## Existing components: we love pull requests ♥
 
 Help out the whole lion community by sending your merge requests and issues.
