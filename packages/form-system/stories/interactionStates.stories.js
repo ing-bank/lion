@@ -1,22 +1,16 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { render } from '@lion/core';
-import { localize } from '@lion/localize';
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
 import '@lion/form/lion-form.js';
 import '@lion/input/lion-input.js';
 import './helper-wc/h-output.js';
+import { Validator } from '@lion/validate';
 
 function renderOffline(litHtmlTemplate) {
   const offlineRenderContainer = document.createElement('div');
   render(litHtmlTemplate, offlineRenderContainer);
   return offlineRenderContainer.firstElementChild;
-}
-
-function addTranslations(ns, data) {
-  if (!localize._isNamespaceInCache('en-GB', ns)) {
-    localize.addData('en-GB', ns, data);
-  }
 }
 
 storiesOf('Form Fundaments|Interaction States', module)
@@ -45,26 +39,39 @@ storiesOf('Form Fundaments|Interaction States', module)
 
     // 2. Create a validator...
     // Define a demo validator that should only be visible on an odd amount of characters
-    const oddValidator = [modelValue => ({ odd: modelValue.length % 2 !== 0 })];
+    // const OddValidator = [modelValue => ({ odd: modelValue.length % 2 !== 0 })];
+    class OddValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'OddValidator';
+      }
 
-    addTranslations('lion-validate+odd', {
-      error: {
-        odd: '[ Error feedback ] : Add or remove one character',
-      },
-    });
+      // eslint-disable-next-line class-methods-use-this
+      execute(value) {
+        let hasError = false;
+        if (!(value.length % 2 !== 0)) {
+          hasError = true;
+        }
+        return hasError;
+      }
+
+      _getMessage() {
+        return 'Add or remove one character';
+      }
+    }
 
     // 3. Create field overriding .showErrorCondition...
     // Here we will store a reference to the Field element that overrides the default condition
-    // (function `showErrorCondition`) for triggering validation feedback of `.errorValidators`
+    // (function `showErrorCondition`) for triggering validation feedback of `.validators`
     const fieldElement = renderOffline(html`
       <lion-input
         name="interactionField"
         label="Only an odd amount of characters allowed"
         help-text="Change feedback condition"
         .modelValue="${'notodd'}"
-        .errorValidators="${[oddValidator]}"
+        .validators="${[new OddValidator()]}"
         .showErrorCondition="${newStates =>
-          newStates.error && conditions.every(p => fieldElement[p])}"
+          newStates.errorStates && conditions.every(p => fieldElement[p])}"
       >
         <input slot="input" />
       </lion-input>
@@ -88,7 +95,7 @@ storiesOf('Form Fundaments|Interaction States', module)
         </form>
       </lion-form>
 
-      <h-output .field="${fieldElement}" .show="${[...props, 'errorState']}"> </h-output>
+      <h-output .field="${fieldElement}" .show="${[...props, 'hasError']}"> </h-output>
 
       <h3>
         Set conditions for validation feedback visibility
