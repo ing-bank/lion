@@ -95,12 +95,13 @@ export class LionSelectRich extends OverlayMixin(
   }
 
   get _invokerNode() {
-    return this.querySelector('[slot=invoker]');
+    return Array.from(this.children).find(child => child.slot === 'invoker');
   }
 
   get _listboxNode() {
     return (
-      (this._overlayCtrl && this._overlayCtrl.contentNode) || this.querySelector('[slot=input]')
+      (this._overlayCtrl && this._overlayCtrl.contentNode) ||
+      Array.from(this.children).find(child => child.slot === 'input')
     );
   }
 

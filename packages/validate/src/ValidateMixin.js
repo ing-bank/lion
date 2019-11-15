@@ -294,11 +294,11 @@ export const ValidateMixin = dedupeMixin(
       }
 
       get _feedbackElement() {
-        return this.querySelector('[slot="feedback"]');
+        return Array.from(this.children).find(child => child.slot === 'feedback');
       }
 
       getFieldName(validatorParams) {
-        const labelEl = this.querySelector('[slot=label]');
+        const labelEl = Array.from(this.children).find(child => child.slot === 'label');
         const label = this.label || (labelEl && labelEl.textContent);
 
         if (validatorParams && validatorParams.fieldName) {

@@ -123,7 +123,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   get _nativeButtonNode() {
-    return this.querySelector('[slot=_button]');
+    return Array.from(this.children).find(child => child.slot === '_button');
   }
 
   get _form() {

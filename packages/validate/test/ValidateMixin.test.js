@@ -707,13 +707,15 @@ describe('ValidateMixin', () => {
         >${lightDom}</${tag}>
       `);
 
-      expect(el.querySelector('[slot=feedback]').innerText).to.equal('');
+      expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
+        '',
+      );
 
       showErrors = true;
       el.validate();
       await el.updateComplete;
 
-      expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+      expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
         'This is error message for alwaysFalse',
       );
     });
@@ -725,9 +727,9 @@ describe('ValidateMixin', () => {
           .errorValidators=${[[alwaysFalse]]}
         >${lightDom}</${tag}>
       `);
-      expect(feedbackResult.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for alwaysFalse',
-      );
+      expect(
+        Array.from(feedbackResult.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for alwaysFalse');
     });
 
     it('rerenders validation outcome to *feedback-element*, when dependent on async resources', async () => {
@@ -739,7 +741,9 @@ describe('ValidateMixin', () => {
         >${lightDom}</${tag}>
       `);
 
-      expect(feedbackResult.querySelector('[slot=feedback]').innerText).to.equal('');
+      expect(
+        Array.from(feedbackResult.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('');
       // locale changed or smth
       localize.reset();
       localize.addData('en-GB', 'lion-validate', {
@@ -747,9 +751,9 @@ describe('ValidateMixin', () => {
       });
 
       feedbackResult.onLocaleUpdated();
-      expect(feedbackResult.querySelector('[slot=feedback]').innerText).to.equal(
-        'error:alwaysFalseAsyncTransl',
-      );
+      expect(
+        Array.from(feedbackResult.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('error:alwaysFalseAsyncTransl');
     });
 
     it('allows to overwrite the way messages are translated', async () => {
@@ -770,15 +774,15 @@ describe('ValidateMixin', () => {
         >${lightDom}</${tag}>
       `);
 
-      expect(customTranslations.querySelector('[slot=feedback]').innerText).to.equal(
-        'You should have a lowercase a',
-      );
+      expect(
+        Array.from(customTranslations.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('You should have a lowercase a');
 
       customTranslations.modelValue = 'cat';
       await customTranslations.updateComplete;
-      expect(customTranslations.querySelector('[slot=feedback]').innerText).to.equal(
-        'You can not pass',
-      );
+      expect(
+        Array.from(customTranslations.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('You can not pass');
     });
 
     it('allows to overwrite the way messages are rendered/added to dom', async () => {
@@ -842,13 +846,15 @@ describe('ValidateMixin', () => {
 
       element.modelValue = 'dog';
       await element.updateComplete;
-      expect(element.querySelector('[slot=feedback]').innerText).to.equal(
-        'ERROR on containsLowercaseA',
-      );
+      expect(
+        Array.from(element.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('ERROR on containsLowercaseA');
 
       element.modelValue = 'cat';
       await element.updateComplete;
-      expect(element.querySelector('[slot=feedback]').innerText).to.equal('ERROR on alwaysFalse');
+      expect(
+        Array.from(element.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('ERROR on alwaysFalse');
     });
 
     it('allows to create a custom feedback renderer via the template [to-be-implemented]', async () => {
@@ -868,21 +874,21 @@ describe('ValidateMixin', () => {
 
       validityFeedback.modelValue = 'a';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for minLength',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for minLength');
 
       validityFeedback.modelValue = 'abc';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is warning message for minLength',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is warning message for minLength');
 
       validityFeedback.modelValue = 'abcde';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is info message for minLength',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is info message for minLength');
     });
 
     it('shows success message after fixing an error', async () => {
@@ -896,15 +902,15 @@ describe('ValidateMixin', () => {
 
       validityFeedback.modelValue = 'a';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for minLength',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for minLength');
 
       validityFeedback.modelValue = 'abcd';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is success message for alwaysFalse',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is success message for alwaysFalse');
     });
 
     it(`shows only highest priority validation message determined by order of assignment of
@@ -917,25 +923,27 @@ describe('ValidateMixin', () => {
       `);
       validityFeedback.modelValue = 'dog and dog';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for containsCat',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for containsCat');
 
       validityFeedback.modelValue = 'dog';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for containsCat',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for containsCat');
 
       validityFeedback.modelValue = 'cat';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'This is error message for minLength',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('This is error message for minLength');
 
       validityFeedback.modelValue = 'dog and cat';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal('');
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('');
     });
 
     it('supports randomized selection of multiple messages for the same validator', async () => {
@@ -999,13 +1007,15 @@ describe('ValidateMixin', () => {
         'Good job!',
       );
 
-      expect(randomTranslations.querySelector('[slot=feedback]').innerText).to.equal(
-        'You should have a lowercase a',
-      );
+      expect(
+        Array.from(randomTranslations.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('You should have a lowercase a');
 
       randomTranslations.modelValue = 'cat';
       await randomTranslations.updateComplete;
-      expect(randomTranslations.querySelector('[slot=feedback]').innerText).to.equal('Good job!');
+      expect(
+        Array.from(randomTranslations.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('Good job!');
 
       Math.random = () => 0.25;
       randomTranslations.__lastGetSuccessResult = false;
@@ -1013,9 +1023,9 @@ describe('ValidateMixin', () => {
       randomTranslations.modelValue = 'cat';
       await randomTranslations.updateComplete;
 
-      expect(randomTranslations.querySelector('[slot=feedback]').innerText).to.equal(
-        'You did great!',
-      );
+      expect(
+        Array.from(randomTranslations.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('You did great!');
 
       Math.random = mathRandom; // manually restore
     });
@@ -1043,15 +1053,15 @@ describe('ValidateMixin', () => {
           errorValidators: [[minLength, { min: 4 }]],
         }),
       );
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'You need to enter at least 4 characters.',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('You need to enter at least 4 characters.');
 
       localize.locale = 'de-DE';
       await validityFeedback.updateComplete;
-      expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-        'Es müssen mindestens 4 Zeichen eingegeben werden.',
-      );
+      expect(
+        Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+      ).to.equal('Es müssen mindestens 4 Zeichen eingegeben werden.');
     });
 
     describe('Field name', () => {
@@ -1070,7 +1080,7 @@ describe('ValidateMixin', () => {
             .modelValue=${'cat'}
           >${lightDom}</${tag}>
         `);
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'myField needs more characters',
         );
       });
@@ -1084,9 +1094,9 @@ describe('ValidateMixin', () => {
             ]} .modelValue=${'cat'}
             >${lightDom}
           </${elNameStatic}>`);
-        expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-          'overrideName needs more characters',
-        );
+        expect(
+          Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+        ).to.equal('overrideName needs more characters');
       });
 
       it('constructs field name from label or name (in this priority order)', async () => {
@@ -1098,18 +1108,18 @@ describe('ValidateMixin', () => {
             .errorValidators=${[[minLength, { min: 4 }]]} .modelValue=${'cat'}
             >${lightDom}
           </${elNameStatic}>`);
-        expect(validityFeedback.querySelector('[slot=feedback]').innerText).to.equal(
-          'myField needs more characters',
-        );
+        expect(
+          Array.from(validityFeedback.children).find(child => child.slot === 'feedback').innerText,
+        ).to.equal('myField needs more characters');
 
         const validityFeedback2 = await fixture(html`
         <${elNameStatic} .name="${'myName'}"
           .errorValidators=${[[minLength, { min: 4 }]]} .modelValue=${'cat'}
           >${lightDom}
         </${elNameStatic}>`);
-        expect(validityFeedback2.querySelector('[slot=feedback]').innerText).to.equal(
-          'myName needs more characters',
-        );
+        expect(
+          Array.from(validityFeedback2.children).find(child => child.slot === 'feedback').innerText,
+        ).to.equal('myName needs more characters');
       });
     });
 
@@ -1150,13 +1160,15 @@ describe('ValidateMixin', () => {
 
         element.modelValue = 'dog';
         await element.updateComplete;
-        expect(element.querySelector('[slot=feedback]').innerText).to.equal(
-          'ERROR on containsLowercaseA',
-        );
+        expect(
+          Array.from(element.children).find(child => child.slot === 'feedback').innerText,
+        ).to.equal('ERROR on containsLowercaseA');
 
         element.modelValue = 'cat';
         await element.updateComplete;
-        expect(element.querySelector('[slot=feedback]').innerText).to.equal('');
+        expect(
+          Array.from(element.children).find(child => child.slot === 'feedback').innerText,
+        ).to.equal('');
       });
     });
 
@@ -1209,7 +1221,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'lion-validate : orderValidator',
         );
 
@@ -1220,7 +1232,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'lion-validate+orderValidator : orderValidator',
         );
       });
@@ -1269,7 +1281,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'lion-validate : is12Validator',
         );
 
@@ -1280,7 +1292,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'lion-validate+is12Validator : is12Validator',
         );
 
@@ -1291,7 +1303,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'my-custom-namespace : is12Validator',
         );
 
@@ -1302,7 +1314,7 @@ describe('ValidateMixin', () => {
           },
         });
         el._createMessageAndRenderFeedback();
-        expect(el.querySelector('[slot=feedback]').innerText).to.equal(
+        expect(Array.from(el.children).find(child => child.slot === 'feedback').innerText).to.equal(
           'my-custom-namespace+is12Validator : is12Validator',
         );
       });

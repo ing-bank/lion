@@ -55,7 +55,7 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
@@ -73,7 +73,7 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
@@ -93,7 +93,7 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
       const event = new Event('mouseenter');
       invoker.dispatchEvent(event);
       await el.updateComplete;
@@ -109,8 +109,11 @@ describe('lion-tooltip', () => {
           <lion-button slot="invoker">Tooltip button</lion-button>
         </lion-tooltip>
       `);
-      const invoker = el.querySelector('[slot="content"]');
-      expect(invoker.getAttribute('role')).to.be.equal('tooltip');
+
+      // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content')
+      // When this issue is fixed https://github.com/ing-bank/lion/issues/382
+      const content = el.querySelector('[slot=content]');
+      expect(content.getAttribute('role')).to.be.equal('tooltip');
     });
   });
 });

@@ -56,7 +56,7 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
 
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after')) {
-      this.querySelector('[slot=after]').textContent = currency;
+      Array.from(this.children).find(child => child.slot === 'after').textContent = currency;
     }
     this.formatOptions.currency = currency;
     this._calculateValues();

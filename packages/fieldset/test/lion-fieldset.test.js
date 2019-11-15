@@ -828,7 +828,7 @@ describe('<lion-fieldset>', () => {
           ${inputSlots}
         </${tag}>
       `);
-      const label = el.querySelector('[slot="label"]');
+      const label = Array.from(el.children).find(child => child.slot === 'label');
       expect(el.hasAttribute('aria-labelledby')).to.equal(true);
       expect(el.getAttribute('aria-labelledby')).contains(label.id);
     });

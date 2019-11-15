@@ -71,28 +71,32 @@ describe('<lion-input-amount>', () => {
 
   it('shows no currency', async () => {
     const el = await fixture(`<lion-input-amount></lion-input-amount>`);
-    expect(el.querySelector('[slot=suffix]')).to.be.null;
+    expect(Array.from(el.children).find(child => child.slot === 'suffix')).to.be.undefined;
   });
 
   it('displays currency if provided', async () => {
     const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
-    expect(el.querySelector('[slot=after]').innerText).to.equal('EUR');
+    expect(Array.from(el.children).find(child => child.slot === 'after').innerText).to.equal('EUR');
   });
 
   it('can update currency', async () => {
     const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
     el.currency = 'USD';
     await el.updateComplete;
-    expect(el.querySelector('[slot=after]').innerText).to.equal('USD');
+    expect(Array.from(el.children).find(child => child.slot === 'after').innerText).to.equal('USD');
   });
 
   it('ignores currency if a suffix is already present', async () => {
     const el = await fixture(
       `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
     );
-    expect(el.querySelector('[slot=suffix]').innerText).to.equal('my-currency');
+    expect(Array.from(el.children).find(child => child.slot === 'suffix').innerText).to.equal(
+      'my-currency',
+    );
     el.currency = 'EUR';
     await el.updateComplete;
-    expect(el.querySelector('[slot=suffix]').innerText).to.equal('my-currency');
+    expect(Array.from(el.children).find(child => child.slot === 'suffix').innerText).to.equal(
+      'my-currency',
+    );
   });
 });
