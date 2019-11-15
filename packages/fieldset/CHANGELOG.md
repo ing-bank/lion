@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.2.0...@lion/fieldset@0.2.1) (2019-11-15)
+
+
+### Bug Fixes
+
+* refactor slot selection ([5999ea9](https://github.com/ing-bank/lion/commit/5999ea956967b449f3f04935c7facb19e2889dc9))
+
+
+
+
+
 # [0.2.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.1.66...@lion/fieldset@0.2.0) (2019-11-13)
 
 
