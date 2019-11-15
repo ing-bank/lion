@@ -295,7 +295,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       inputGroupPrefixTemplate() {
-        return !this.querySelector('[slot=prefix]')
+        return !Array.from(this.children).find(child => child.slot === 'prefix')
           ? nothing
           : html`
               <div class="input-group__prefix">
@@ -314,7 +314,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       inputGroupSuffixTemplate() {
-        return !this.querySelector('[slot=suffix]')
+        return !Array.from(this.children).find(child => child.slot === 'suffix')
           ? nothing
           : html`
               <div class="input-group__suffix">

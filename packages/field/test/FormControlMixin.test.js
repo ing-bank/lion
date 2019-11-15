@@ -27,18 +27,18 @@ describe('FormControlMixin', () => {
     const lionFieldAttr = await fixture(html`
       <${tag} help-text="This email address is already taken">${inputSlot}</${tag}>
     `);
-    expect(lionFieldAttr.querySelector('[slot=help-text]').textContent).to.contain(
-      'This email address is already taken',
-    );
+    expect(
+      Array.from(lionFieldAttr.children).find(child => child.slot === 'help-text').textContent,
+    ).to.contain('This email address is already taken');
     const lionFieldProp = await fixture(html`
       <${tag}
         .helpText=${'This email address is already taken'}
       >${inputSlot}
       </${tag}>`);
 
-    expect(lionFieldProp.querySelector('[slot=help-text]').textContent).to.contain(
-      'This email address is already taken',
-    );
+    expect(
+      Array.from(lionFieldProp.children).find(child => child.slot === 'help-text').textContent,
+    ).to.contain('This email address is already taken');
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {
@@ -52,8 +52,8 @@ describe('FormControlMixin', () => {
     await wrapper.updateComplete;
 
     ['aria-describedby', 'aria-labelledby'].forEach(ariaAttributeName => {
-      const ariaAttribute = lionField
-        .querySelector('[slot=input]')
+      const ariaAttribute = Array.from(lionField.children)
+        .find(child => child.slot === 'input')
         .getAttribute(ariaAttributeName)
         .trim()
         .split(' ');
@@ -70,6 +70,10 @@ describe('FormControlMixin', () => {
       </${tag}>
     `);
 
-    expect(lionField.querySelector('[slot=feedback]').getAttribute('aria-live')).to.equal('polite');
+    expect(
+      Array.from(lionField.children)
+        .find(child => child.slot === 'feedback')
+        .getAttribute('aria-live'),
+    ).to.equal('polite');
   });
 });

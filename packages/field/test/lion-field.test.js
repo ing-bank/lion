@@ -32,7 +32,7 @@ beforeEach(() => {
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.querySelector('[slot=input]').id).to.equal(el._inputId);
+    expect(Array.from(el.children).find(child => child.slot === 'input').id).to.equal(el._inputId);
   });
 
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
@@ -113,15 +113,15 @@ describe('<lion-field>', () => {
 
   it('reads initial value from attribute value', async () => {
     const el = await fixture(html`<${tag} value="one">${inputSlot}</${tag}>`);
-    expect(el.querySelector('[slot=input]').value).to.equal('one');
+    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('one');
   });
 
   it('delegates value property', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.querySelector('[slot=input]').value).to.equal('');
+    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('');
     el.value = 'one';
     expect(el.value).to.equal('one');
-    expect(el.querySelector('[slot=input]').value).to.equal('one');
+    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('one');
   });
 
   // This is necessary for security, so that _inputNodes autocomplete can be set to 'off'
@@ -200,7 +200,7 @@ describe('<lion-field>', () => {
             <span slot="feedback">No name entered</span>
           </${tag}>
         `);
-      const nativeInput = el.querySelector('[slot=input]');
+      const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
 
       expect(nativeInput.getAttribute('aria-labelledby')).to.equal(` label-${el._inputId}`);
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(` help-text-${el._inputId}`);
@@ -218,7 +218,7 @@ describe('<lion-field>', () => {
           </${tag}>
         `);
 
-      const nativeInput = el.querySelector('[slot=input]');
+      const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
         ` before-${el._inputId} after-${el._inputId}`,
       );

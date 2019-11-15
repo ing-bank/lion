@@ -21,7 +21,7 @@ describe('lion-popup', () => {
           <lion-button slot="invoker">Popup button</lion-button>
         </lion-popup>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
       invoker.click();
       await el.updateComplete;
 
@@ -38,7 +38,7 @@ describe('lion-popup', () => {
           <lion-button slot="invoker">Popup button</lion-button>
         </lion-popup>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
       const event = new Event('click');
       invoker.dispatchEvent(event);
       await el.updateComplete;
