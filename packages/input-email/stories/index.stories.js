@@ -3,12 +3,13 @@ import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { localize } from '@lion/localize';
 
 import '../lion-input-email.js';
+import '../../fieldset/lion-fieldset.js';
 
 storiesOf('Forms|Input Email', module)
   .add(
     'Default',
     () => html`
-      <lion-input-email label="Label"></lion-input-email>
+      <lion-input-email name="email" label="Label"></lion-input-email>
     `,
   )
   .add(

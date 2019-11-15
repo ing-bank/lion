@@ -31,10 +31,18 @@ describe('<lion-tabs>', () => {
         </lion-tabs>
       `);
       expect(el.selectedIndex).to.equal(1);
-      expect(el.querySelector('[slot=tab][selected]').textContent).to.equal('tab 2');
+      expect(
+        Array.from(el.children).find(
+          child => child.slot === 'tab' && child.hasAttribute('selected'),
+        ).textContent,
+      ).to.equal('tab 2');
 
       el.selectedIndex = 0;
-      expect(el.querySelector('[slot=tab][selected]').textContent).to.equal('tab 1');
+      expect(
+        Array.from(el.children).find(
+          child => child.slot === 'tab' && child.hasAttribute('selected'),
+        ).textContent,
+      ).to.equal('tab 1');
     });
 
     it('has [selected] on current selected tab which serves as styling hook', async () => {
@@ -79,7 +87,10 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel</div>
         </lion-tabs>
       `);
-      expect(el.querySelector('[slot=tab]')).to.have.attribute('role', 'tab');
+      expect(Array.from(el.children).find(child => child.slot === 'tab')).to.have.attribute(
+        'role',
+        'tab',
+      );
     });
 
     /**
@@ -219,8 +230,16 @@ describe('<lion-tabs>', () => {
       }
       el.selectedIndex = el.children.length / 2 - 1;
       await el.updateComplete;
-      expect(el.querySelector('[slot=tab][selected]').textContent).to.equal('tab 5');
-      expect(el.querySelector('[slot=panel][selected]').textContent).to.equal('panel 5');
+      expect(
+        Array.from(el.children).find(
+          child => child.slot === 'tab' && child.hasAttribute('selected'),
+        ).textContent,
+      ).to.equal('tab 5');
+      expect(
+        Array.from(el.children).find(
+          child => child.slot === 'panel' && child.hasAttribute('selected'),
+        ).textContent,
+      ).to.equal('panel 5');
     });
   });
 
@@ -234,8 +253,12 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel 2</div>
         </lion-tabs>
       `);
-      expect(el.querySelector('[slot=panel]')).to.not.have.attribute('tabindex');
-      expect(el.querySelector('[slot=panel]')).to.not.have.attribute('tabindex');
+      expect(Array.from(el.children).find(child => child.slot === 'panel')).to.not.have.attribute(
+        'tabindex',
+      );
+      expect(Array.from(el.children).find(child => child.slot === 'panel')).to.not.have.attribute(
+        'tabindex',
+      );
     });
 
     it('makes selected tab focusable (other tabs are unfocusable)', async () => {

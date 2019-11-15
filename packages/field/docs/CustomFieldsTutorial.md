@@ -68,11 +68,11 @@ export class LionSlider extends LionField {
 
   // 3. Proxy property `<my-slider>.mySliderValue` to `<lion-slider>.value`
   get value() {
-    return this.querySelector('[slot=input]').mySliderValue;
+    return Array.from(this.children).find(child => child.slot === 'input').mySliderValue;
   }
 
   set value(newV) {
-    this.querySelector('[slot=input]').mySliderValue = newV;
+    Array.from(this.children).find(child => child.slot === 'input').mySliderValue = newV;
   }
 }
 ```

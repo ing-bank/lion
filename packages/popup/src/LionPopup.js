@@ -9,12 +9,14 @@ export class LionPopup extends OverlayMixin(LitElement) {
     `;
   }
 
+  // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content')
+  // When this issue is fixed https://github.com/ing-bank/lion/issues/382
   get _overlayContentNode() {
-    return this.querySelector('[slot=content]');
+    return this.querySelector('[slot="content"]');
   }
 
   get _overlayInvokerNode() {
-    return this.querySelector('[slot=invoker]');
+    return Array.from(this.children).find(child => child.slot === 'invoker');
   }
 
   // eslint-disable-next-line class-methods-use-this

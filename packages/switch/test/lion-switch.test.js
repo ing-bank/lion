@@ -7,7 +7,7 @@ describe('lion-switch', () => {
     const el = await fixture(html`
       <lion-switch></lion-switch>
     `);
-    expect(el.querySelector('[slot="input"]')).not.to.be.false;
+    expect(Array.from(el.children).find(child => child.slot === 'input')).not.to.be.false;
   });
 
   it('should sync its "disabled" state to child button', async () => {

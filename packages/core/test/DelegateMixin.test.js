@@ -70,7 +70,7 @@ describe('DelegateMixin', () => {
         get delegations() {
           return {
             ...super.delegations,
-            target: () => this.querySelector('[slot=button]'),
+            target: () => Array.from(this.children).find(child => child.slot === 'button'),
             events: ['click'],
             methods: ['click'],
           };
@@ -89,7 +89,9 @@ describe('DelegateMixin', () => {
       <${tag}><button slot="button">click me</button></${tag}>`);
     const cb = sinon.spy();
     element.addEventListener('click', cb);
-    element.querySelector('[slot=button]').click();
+    Array.from(element.children)
+      .find(child => child.slot === 'button')
+      .click();
     expect(cb.callCount).to.equal(1);
   });
 

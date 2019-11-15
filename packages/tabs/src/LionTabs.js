@@ -216,8 +216,12 @@ export class LionTabs extends LitElement {
     if (!(this.__store && this.__store[this.selectedIndex])) {
       return;
     }
-    const previousButton = this.querySelector('[slot="tab"][selected]');
-    const previousPanel = this.querySelector('[slot="panel"][selected]');
+    const previousButton = Array.from(this.children).find(
+      child => child.slot === 'tab' && child.hasAttribute('selected'),
+    );
+    const previousPanel = Array.from(this.children).find(
+      child => child.slot === 'panel' && child.hasAttribute('selected'),
+    );
     if (previousButton) {
       deselectButton(previousButton);
     }

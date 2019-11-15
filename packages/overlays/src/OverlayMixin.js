@@ -113,6 +113,9 @@ export const OverlayMixin = dedupeMixin(
         this._overlayCtrl = this._defineOverlay({ contentNode, invokerNode });
       }
 
+      // FIXME: We add an overlay slot to the wrapper, but the content node already has a slot="content"
+      // This is a big problem, because slots should be direct children of its host element.
+      // Putting the shadow outlet slot in between breaks that. https://github.com/ing-bank/lion/issues/382
       /**
        * @desc Should be called by Subclasser for local overlay support in shadow roots
        * Create an outlet slot in shadow dom that our local overlay can pass through
