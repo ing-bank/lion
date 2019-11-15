@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.13](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.3.12...@lion/tooltip@0.3.13) (2019-11-15)
+
+
+### Bug Fixes
+
+* refactor slot selection ([5999ea9](https://github.com/ing-bank/lion/commit/5999ea956967b449f3f04935c7facb19e2889dc9))
+
+
+
+
+
 ## [0.3.12](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.3.11...@lion/tooltip@0.3.12) (2019-11-13)
 
 **Note:** Version bump only for package @lion/tooltip
