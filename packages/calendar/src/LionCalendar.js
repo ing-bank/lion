@@ -257,18 +257,30 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __renderHeader() {
     const month = getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth()];
     const year = this.centralDate.getFullYear();
+    const nextMonth =
+      this.centralDate.getMonth() === 11
+        ? getMonthNames({ locale: this.__getLocale() })[0]
+        : getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth() + 1];
+    const previousMonth =
+      this.centralDate.getMonth() === 0
+        ? getMonthNames({ locale: this.__getLocale() })[11]
+        : getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth() - 1];
+    const nextYear =
+      this.centralDate.getMonth() === 11
+        ? this.centralDate.getFullYear() + 1
+        : this.centralDate.getFullYear();
+    const previousYear =
+      this.centralDate.getMonth() === 0
+        ? this.centralDate.getFullYear() - 1
+        : this.centralDate.getFullYear();
+
     return html`
       <div class="calendar__header">
-        ${this.__renderPreviousButton()}
-        <h2
-          class="calendar__month-heading"
-          id="month_and_year"
-          aria-live="polite"
-          aria-atomic="true"
-        >
+        ${this.__renderPreviousButton(previousMonth, previousYear)}
+        <h2 class="calendar__month-heading" id="month_and_year" aria-atomic="true">
           ${month} ${year}
         </h2>
-        ${this.__renderNextButton()}
+        ${this.__renderNextButton(nextMonth, nextYear)}
       </div>
     `;
   }
@@ -290,12 +302,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     });
   }
 
-  __renderPreviousButton() {
+  __renderPreviousButton(previousMonth, previousYear) {
+    const previousButtonTitle = `${this.msgLit(
+      'lion-calendar:previousMonth',
+    )}, ${previousMonth} ${previousYear}`;
+
     return html`
       <button
         class="calendar__previous-month-button"
-        aria-label=${this.msgLit('lion-calendar:previousMonth')}
-        title=${this.msgLit('lion-calendar:previousMonth')}
+        aria-label=${previousButtonTitle}
+        title=${previousButtonTitle}
         @click=${this.goToPreviousMonth}
         ?disabled=${this.isPreviousMonthDisabled}
       >
@@ -304,12 +320,13 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     `;
   }
 
-  __renderNextButton() {
+  __renderNextButton(nextMonth, nextYear) {
+    const nextButtonTitle = `Next Month, ${nextMonth} ${nextYear}`;
     return html`
       <button
         class="calendar__next-month-button"
-        aria-label=${this.msgLit('lion-calendar:nextMonth')}
-        title=${this.msgLit('lion-calendar:nextMonth')}
+        aria-label=${nextButtonTitle}
+        title=${nextButtonTitle}
         @click=${this.goToNextMonth}
         ?disabled=${this.isNextMonthDisabled}
       >
