@@ -3,7 +3,7 @@ import { html } from '@lion/core';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
 import { localize } from '@lion/localize';
-import { maxDateValidator } from '@lion/validate';
+import { MaxDate } from '@lion/validate';
 
 import '../lion-input-date.js';
 
@@ -25,21 +25,31 @@ describe('<lion-input-date>', () => {
   it('has validator "isDate" applied by default', async () => {
     const el = await fixture(`<lion-input-date></lion-input-date>`);
     el.modelValue = '2005/11/10';
-    expect(el.errorState).to.equal(true);
+    expect(el.hasFeedbackFor).to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).to.have.a.property('IsDate');
+
     el.modelValue = new Date('2005/11/10');
-    expect(el.errorState).to.equal(false);
+    expect(el.hasFeedbackFor).not.to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).not.to.have.a.property('IsDate');
   });
 
-  it('gets validated by "maxDate" correctly', async () => {
+  it('gets validated by "MaxDate" correctly', async () => {
     const el = await fixture(html`
       <lion-input-date
         .modelValue=${new Date('2017/06/15')}
-        .errorValidators=${[maxDateValidator(new Date('2017/06/14'))]}
+        .validators=${[new MaxDate(new Date('2017/06/14'))]}
       ></lion-input-date>
     `);
-    expect(el.errorState).to.equal(true);
+    expect(el.hasFeedbackFor).to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).to.have.a.property('MaxDate');
+
     el.modelValue = new Date('2017/06/14');
-    expect(el.errorState).to.equal(false);
+    expect(el.hasFeedbackFor).not.to.include('error');
+    expect(el.validationStates).to.have.a.property('error');
+    expect(el.validationStates.error).not.to.have.a.property('MaxDate');
   });
 
   it('uses formatOptions.locale', async () => {

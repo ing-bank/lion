@@ -1,6 +1,5 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import { localize } from '@lion/localize';
+import { Validator } from '@lion/validate';
 
 import '../lion-input-email.js';
 import '../../fieldset/lion-fieldset.js';
@@ -15,33 +14,34 @@ storiesOf('Forms|Input Email', module)
   .add(
     'Faulty prefilled',
     () => html`
-      <lion-input-email .modelValue=${'foo'} label="Label"></lion-input-email>
+      <lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email>
     `,
   )
-  .add('Use own validator', () => {
-    const gmailOnly = modelValue => ({ gmailOnly: modelValue.indexOf('gmail.com') !== -1 });
-    localize.locale = 'en-GB';
+  .add('Custom validator', () => {
+    class GmailOnly extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'GmailOnly';
+      }
 
-    try {
-      localize.addData('en', 'lion-validate+gmailOnly', {
-        error: {
-          gmailOnly: 'You can only use gmail.com email addresses.',
-        },
-      });
-      localize.addData('nl', 'lion-validate+gmailOnly', {
-        error: {
-          gmailOnly: 'Je mag hier alleen gmail.com e-mailadressen gebruiken.',
-        },
-      });
-    } catch (error) {
-      // expected as it's a demo
+      execute(value) {
+        let hasError = false;
+        if (!(value.indexOf('gmail.com') !== -1)) {
+          hasError = true;
+        }
+        return hasError;
+      }
+
+      static async getMessage() {
+        return 'You can only use gmail.com email addresses.';
+      }
     }
 
     return html`
       <lion-input-email
         .modelValue=${'foo@bar.com'}
-        .errorValidators=${[[gmailOnly]]}
-        label="Label"
+        .validators=${[new GmailOnly()]}
+        label="Email"
       ></lion-input-email>
     `;
   });

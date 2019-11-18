@@ -1,8 +1,8 @@
 export default {
   error: {
-    isIBAN: '請輸入有效的{fieldName}。',
-    isCountryIBAN:
-      '請輸入有效的{validatorParams, select,\n' +
+    IsIBAN: '請輸入有效的{fieldName}。',
+    IsCountryIBAN:
+      '請輸入有效的{params, select,\n' +
       'AT {奥}\n' +
       'BE {比利时的}\n' +
       'CZ {捷克}\n' +
@@ -14,7 +14,7 @@ export default {
       'NL {荷兰人}\n' +
       'PL {抛光}\n' +
       'RO {罗马尼亚}\n' +
-      '另一个 {{validatorParams}}\n' +
+      '另一个 {{params}}\n' +
       '} {fieldName}。',
   },
 };

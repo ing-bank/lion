@@ -552,6 +552,7 @@ export class LionSelectRich extends OverlayMixin(
     this.__listboxOnClick = () => {
       this.opened = false;
     };
+
     this._listboxNode.addEventListener('click', this.__listboxOnClick);
 
     this.__listboxOnKeyUp = this.__listboxOnKeyUp.bind(this);
@@ -598,18 +599,15 @@ export class LionSelectRich extends OverlayMixin(
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  __isRequired(modelValue) {
-    const checkedModelValue = modelValue.find(subModelValue => subModelValue.checked === true);
-    if (!checkedModelValue) {
-      return { required: false };
+  _isEmpty() {
+    const value = this.checkedValue;
+    if (typeof value === 'string' && value === '') {
+      return true;
     }
-    const { value } = checkedModelValue;
-    return {
-      required:
-        (typeof value === 'string' && value !== '') ||
-        (typeof value !== 'string' && value !== undefined && value !== null),
-    };
+    if (value === undefined || value === null) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -624,5 +622,16 @@ export class LionSelectRich extends OverlayMixin(
    */
   get _overlayContentNode() {
     return this._listboxNode;
+  }
+
+  set fieldName(value) {
+    this.__fieldName = value;
+  }
+
+  get fieldName() {
+    const label =
+      this.label ||
+      (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
+    return this.__fieldName || label || this.name;
   }
 }

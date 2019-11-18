@@ -10,7 +10,7 @@ import { Unparseable } from '@lion/validate';
 // - simplify _calculateValues: recursive trigger lock can be omitted, since need for connecting
 // the loop via sync observers is not needed anymore.
 // - consider `formatOn` as an overridable function, by default something like:
-// `(!__isHandlingUserInput || !errorState) && !focused`
+// `(!__isHandlingUserInput || !hasError) && !focused`
 // This would allow for more advanced scenarios, like formatting an input whenever it becomes valid.
 // This would make formattedValue as a concept obsolete, since for maximum flexibility, the
 // formattedValue condition needs to be evaluated right before syncing back to the view
@@ -245,18 +245,24 @@ export const FormatMixin = dedupeMixin(
       }
 
       __callFormatter() {
-        // - Why check for this.errorState?
+        // - Why check for this.hasError?
         // We only want to format values that are considered valid. For best UX,
         // we only 'reward' valid inputs.
         // - Why check for __isHandlingUserInput?
         // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
         // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
         // the value, no matter what.
-        // This means, whenever we are in errorState and modelValue is set
+        // This means, whenever we are in hasError and modelValue is set
         // imperatively, we DO want to format a value (it is the only way to get meaningful
         // input into `._inputNode` with modelValue as input)
 
-        if (this.__isHandlingUserInput && this.errorState && this._inputNode) {
+        if (
+          this.__isHandlingUserInput &&
+          this.hasFeedbackFor &&
+          this.hasFeedbackFor.length &&
+          this.hasFeedbackFor.includes('error') &&
+          this._inputNode
+        ) {
           return this._inputNode ? this.value : undefined;
         }
 

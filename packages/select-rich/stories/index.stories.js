@@ -1,8 +1,10 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 
+import { Required } from '@lion/validate';
 import '@lion/form/lion-form.js';
 import '@lion/option/lion-option.js';
+import '@lion/button/lion-button.js';
 
 import '../lion-select-rich.js';
 import '../lion-options.js';
@@ -101,39 +103,29 @@ storiesOf('Forms|Select Rich', module)
       </div>
     `,
   )
-  .add('Validation', () => {
-    const submit = () => {
-      const form = document.querySelector('#form');
-      if (form.errorState === false) {
-        console.log(form.serializeGroup());
-      }
-    };
-    return html`
+  .add(
+    'Validation',
+    () => html`
       <style>
         ${selectRichDemoStyle}
       </style>
       <div class="demo-area">
-        <lion-form id="form" @submit="${submit}">
-          <form>
-            <lion-select-rich
-              id="color"
-              name="color"
-              label="Favorite color"
-              .errorValidators="${[['required']]}"
-            >
-              <lion-options slot="input" class="demo-listbox">
-                <lion-option .choiceValue=${null}>select a color</lion-option>
-                <lion-option .choiceValue=${'red'}>Red</lion-option>
-                <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-                <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-              </lion-options>
-            </lion-select-rich>
-            <lion-button type="submit">Submit</lion-button>
-          </form>
-        </lion-form>
+        <lion-select-rich
+          id="color"
+          name="color"
+          label="Favorite color"
+          .validators="${[new Required()]}"
+        >
+          <lion-options slot="input" class="demo-listbox">
+            <lion-option .choiceValue=${null}>select a color</lion-option>
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
       </div>
-    `;
-  })
+    `,
+  )
   .add('Render Options', () => {
     const objs = [
       { type: 'mastercard', label: 'Master Card', amount: 12000, active: true },

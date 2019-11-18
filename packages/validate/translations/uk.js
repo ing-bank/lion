@@ -1,55 +1,53 @@
 export default {
   error: {
-    required: 'Уведіть також значення {fieldName}.',
-    equalsLength:
-      'Введіть правильне значення {fieldName}, кількість символів має бути точно {validatorParams}.',
-    minLength: 'Уведіть правильне значення {fieldName} (щонайменше {validatorParams}).',
-    maxLength: 'Уведіть правильне значення {fieldName} (до {validatorParams} символів (-а)).',
-    minMaxLength:
-      'Уведіть правильне значення {fieldName} (від {validatorParams.min} до {validatorParams.max} символів).',
-    isNumber: 'Введіть правильні дані {fieldName}.',
-    minNumber: 'Уведіть значення {fieldName}, що перевищує {validatorParams}.',
-    maxNumber: 'Уведіть значення {fieldName} менше від {validatorParams}.',
-    minMaxNumber:
-      'Уведіть значення {fieldName} від {validatorParams.min} до {validatorParams.max}.',
-    isDate: 'Уведіть дату (ДД ММ РРРР).',
-    minDate: 'Уведіть значення {fieldName} після {validatorParams, date, YYYYMMDD}.',
-    maxDate: 'Уведіть значення {fieldName} перед {validatorParams, date, YYYYMMDD}.',
-    minMaxDate:
-      'Уведіть значення {fieldName} між {validatorParams.min, date, YYYYMMDD} та {validatorParams.max, date, YYYYMMDD}.',
-    isDateDisabled: 'Ця дата недоступна, виберіть іншу.',
-    isEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
+    Required: 'Уведіть також значення {fieldName}.',
+    EqualsLength:
+      'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
+    MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',
+    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів (-а)).',
+    MinMaxLength:
+      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
+    IsNumber: 'Введіть правильні дані {fieldName}.',
+    MinNumber: 'Уведіть значення {fieldName}, що перевищує {params}.',
+    MaxNumber: 'Уведіть значення {fieldName} менше від {params}.',
+    MinMaxNumber: 'Уведіть значення {fieldName} від {params.min} до {params.max}.',
+    IsDate: 'Уведіть дату (ДД ММ РРРР).',
+    MinDate: 'Уведіть значення {fieldName} після {params, date, YYYYMMDD}.',
+    MaxDate: 'Уведіть значення {fieldName} перед {params, date, YYYYMMDD}.',
+    MinMaxDate:
+      'Уведіть значення {fieldName} між {params.min, date, YYYYMMDD} та {params.max, date, YYYYMMDD}.',
+    IsDateDisabled: 'Ця дата недоступна, виберіть іншу.',
+    IsEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
   },
   warning: {
-    required: 'Уведіть також значення {fieldName}.',
-    equalsLength:
-      'Введіть правильне значення {fieldName}, кількість символів має бути точно {validatorParams}.',
-    minLength: 'Уведіть правильне значення {fieldName} (щонайменше {validatorParams}).',
-    maxLength: 'Уведіть правильне значення {fieldName} (до {validatorParams} символів (-а)).',
-    minMaxLength:
-      'Уведіть правильне значення {fieldName} (від {validatorParams.min} до {validatorParams.max} символів).',
-    isNumber: 'Введіть правильні дані {fieldName}.',
-    minNumber: 'Уведіть значення {fieldName}, що перевищує {validatorParams}.',
-    maxNumber: 'Уведіть значення {fieldName} менше від {validatorParams}.',
-    minMaxNumber:
-      'Уведіть значення {fieldName} від {validatorParams.min} до {validatorParams.max}.',
-    isDate: 'Уведіть дату (ДД ММ РРРР).',
-    minDate: 'Уведіть значення {fieldName} після {validatorParams, date, YYYYMMDD}.',
-    maxDate: 'Уведіть значення {fieldName} перед {validatorParams, date, YYYYMMDD}.',
-    minMaxDate:
-      'Уведіть значення {fieldName} між {validatorParams.min, date, YYYYMMDD} та {validatorParams.max, date, YYYYMMDD}.',
-    isDateDisabled: 'Ця дата недоступна, виберіть іншу.',
-    isEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
+    Required: 'Уведіть також значення {fieldName}.',
+    EqualsLength:
+      'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
+    MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',
+    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів (-а)).',
+    MinMaxLength:
+      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
+    IsNumber: 'Введіть правильні дані {fieldName}.',
+    MinNumber: 'Уведіть значення {fieldName}, що перевищує {params}.',
+    MaxNumber: 'Уведіть значення {fieldName} менше від {params}.',
+    MinMaxNumber: 'Уведіть значення {fieldName} від {params.min} до {params.max}.',
+    IsDate: 'Уведіть дату (ДД ММ РРРР).',
+    MinDate: 'Уведіть значення {fieldName} після {params, date, YYYYMMDD}.',
+    MaxDate: 'Уведіть значення {fieldName} перед {params, date, YYYYMMDD}.',
+    MinMaxDate:
+      'Уведіть значення {fieldName} між {params.min, date, YYYYMMDD} та {params.max, date, YYYYMMDD}.',
+    IsDateDisabled: 'Ця дата недоступна, виберіть іншу.',
+    IsEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
   },
   success: {
-    defaultOk: 'Добре',
-    randomOk:
-      'success.defaultOk,success.correct,success.succeeded,success.ok,success.thisIsRight,success.changed,success.okCorrect',
-    correct: 'Правильно',
-    succeeded: 'Успішно',
-    ok: 'ОК!',
-    thisIsRight: 'Вірно.',
-    changed: 'Змінено!',
-    okCorrect: 'ОК, правильно.',
+    DefaultOk: 'Добре',
+    RandomOk:
+      'success.DefaultOk,success.Correct,success.Succeeded,success.Ok,success.ThisIsRight,success.Changed,success.OkCorrect',
+    Correct: 'Правильно',
+    Succeeded: 'Успішно',
+    Ok: 'ОК!',
+    ThisIsRight: 'Вірно.',
+    Changed: 'Змінено!',
+    OkCorrect: 'ОК, правильно.',
   },
 };

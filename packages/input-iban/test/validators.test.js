@@ -1,24 +1,22 @@
 import { expect } from '@open-wc/testing';
-import { smokeTestValidator } from '@lion/validate/test-helpers.js';
 
-import {
-  isIBAN,
-  isIBANValidator,
-  isCountryIBAN,
-  isCountryIBANValidator,
-} from '../src/validators.js';
+import { IsIBAN, IsCountryIBAN } from '../src/validators.js';
+
+import '../lion-input-iban.js';
 
 describe('IBAN validation', () => {
-  it('provides isIBAN() to check for valid IBAN', () => {
-    expect(isIBAN('NL17INGB0002822608')).to.be.true;
-    expect(isIBAN('DE89370400440532013000')).to.be.true;
-    smokeTestValidator('isIBAN', isIBANValidator, 'NL17INGB0002822608');
+  it('provides IsIBAN to check for valid IBAN', () => {
+    const validator = new IsIBAN();
+    expect(validator.execute('NL17INGB0002822608')).to.be.false;
+    expect(validator.execute('DE89370400440532013000')).to.be.false;
   });
-  it('provides isCountryIBAN() to limit IBANs from specfic countries', () => {
-    expect(isCountryIBAN('NL17INGB0002822608', 'NL')).to.be.true;
-    expect(isCountryIBAN('DE89370400440532013000', 'DE')).to.be.true;
-    expect(isCountryIBAN('DE89370400440532013000', 'NL')).to.be.false;
-    expect(isCountryIBAN('foo', 'NL')).to.be.false;
-    smokeTestValidator('isCountryIBAN', isCountryIBANValidator, 'NL17INGB0002822608', 'NL');
+
+  it('provides IsCountryIBAN to limit IBANs from specific countries', () => {
+    const nlValidator = new IsCountryIBAN('NL');
+    const deValidator = new IsCountryIBAN('DE');
+    expect(nlValidator.execute('NL17INGB0002822608')).to.be.false;
+    expect(deValidator.execute('DE89370400440532013000')).to.be.false;
+    expect(nlValidator.execute('DE89370400440532013000')).to.be.true;
+    expect(nlValidator.execute('foo')).to.be.true;
   });
 });

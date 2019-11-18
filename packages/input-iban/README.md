@@ -9,8 +9,8 @@
 - based on [lion-input](../input)
 - default label in different languages
 - makes use of IBAN specific [validate](../validate) with corresponding error messages in different languages
-  - isIBAN (default)
-  - isCountryIBAN
+  - IsIBAN (default)
+  - IsCountryIBAN
 
 ## How to use
 
@@ -24,7 +24,7 @@ npm i --save @lion/input-amount
 import '@lion/input-amount/lion-input-amount.js';
 
 // validator import example
-import { isCountryIBANValidator } from '@lion/validate';
+import { Required, IsCountryIBAN } from '@lion/validate';
 ```
 
 ### Example
@@ -32,6 +32,6 @@ import { isCountryIBANValidator } from '@lion/validate';
 ```html
 <lion-input-iban
   name="account"
-  .errorValidators="${[['required'], isCountryIBANValidator('BE')]}"
+  .validators="${[new Required(), new IsCountryIBAN('BE')]}"
 ></lion-input-iban>
 ```

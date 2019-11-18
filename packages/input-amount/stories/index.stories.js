@@ -1,23 +1,21 @@
 import { storiesOf, html } from '@open-wc/demoing-storybook';
 
+import { Required } from '@lion/validate';
+
 import '../lion-input-amount.js';
 
 storiesOf('Forms|Input Amount', module)
   .add(
     'Default',
     () => html`
-      <lion-input-amount .errorValidators="${['required']}" label="Amount" .modelValue=${123456.78}>
+      <lion-input-amount label="Amount" .validators="${[new Required()]}" .modelValue=${123456.78}>
       </lion-input-amount>
     `,
   )
   .add(
     'Negative number',
     () => html`
-      <lion-input-amount
-        .errorValidators="${['required']}"
-        label="Amount"
-        .modelValue=${-123456.78}
-      >
+      <lion-input-amount label="Amount" .validators="${[new Required()]}" .modelValue=${-123456.78}>
       </lion-input-amount>
     `,
   )
@@ -36,12 +34,8 @@ storiesOf('Forms|Input Amount', module)
   .add(
     'Force locale to nl-NL',
     () => html`
-      <lion-input-amount
-        .formatOptions="${{ locale: 'nl-NL' }}"
-        label="Price"
-        .modelValue=${123456.78}
-        currency="JOD"
-      >
+      <lion-input-amount label="Price" currency="JOD">
+        .formatOptions="${{ locale: 'nl-NL' }}" .modelValue=${123456.78}
       </lion-input-amount>
     `,
   )
@@ -49,10 +43,10 @@ storiesOf('Forms|Input Amount', module)
     'Force locale to en-US',
     () => html`
       <lion-input-amount
-        .formatOptions="${{ locale: 'en-US' }}"
         label="Price"
-        .modelValue=${123456.78}
         currency="YEN"
+        .formatOptions="${{ locale: 'en-US' }}"
+        .modelValue=${123456.78}
       >
       </lion-input-amount>
     `,
