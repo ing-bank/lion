@@ -7,7 +7,7 @@
 ## Features
 
 - based on [lion-input](../input)
-- makes use of email [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
+- makes use of email [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
   - IsEmail (default)
 
 ## How to use

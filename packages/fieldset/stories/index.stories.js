@@ -104,24 +104,13 @@ storiesOf('Forms|Fieldset', module)
       }
 
       static async getMessage() {
-        return 'Demo error message';
+        return '[Fieldset Error] Demo error message';
       }
     };
-
     return html`
       <lion-fieldset id="someId" .validators="${[new DemoValidator()]}">
         <lion-input name="input1" label="Label"> </lion-input>
-        <button
-          @click="${() => {
-            document.getElementById('someId').serializeGroup();
-          }}"
-        >
-          Submit
-        </button>
       </lion-fieldset>
-      <br />
-      <br />
-      <button>Tab-able</button>
     `;
   })
   .add('Validation 2 inputs', () => {

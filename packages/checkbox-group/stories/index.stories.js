@@ -111,7 +111,6 @@ storiesOf('Forms|Checkbox Group', module)
       }
 
       execute(value) {
-        console.log('execute');
         let hasError = false;
         const selectedValues = value['scientists[]'].filter(v => v.checked === true);
         if (!(selectedValues.length >= 2)) {

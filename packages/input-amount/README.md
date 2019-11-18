@@ -12,7 +12,7 @@
 - option to override locale to change the formatting and parsing
 - option to provide additional format options overrides
 - default label in different languages
-- can make use of number specific [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
+- can make use of number specific [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
   - IsNumber (default)
   - MinNumber
   - MaxNumber

@@ -352,6 +352,7 @@ describe('lion-select-rich interactions', () => {
       expect(el.activeIndex).to.equal(0);
     });
 
+    // flaky test
     it.skip('skips disabled options while navigates to first and last option with [Home] and [End] keys', async () => {
       const el = await fixture(html`
         <lion-select-rich opened>

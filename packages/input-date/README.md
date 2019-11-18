@@ -10,7 +10,7 @@
 - makes use of [formatDate](../localize/docs/date.md) for formatting and parsing.
 - option to overwrite locale to change the formatting and parsing
 - default label in different languages
-- can make use of date specific [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
+- can make use of date specific [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate
