@@ -1,4 +1,4 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
+import { expect, fixture, defineCE, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { html, LitElement } from '@lion/core';
 import {
@@ -102,6 +102,19 @@ describe('<lion-input-datepicker>', () => {
 
       elObj.overlayCloseButtonEl.click();
       expect(elObj.overlayController.isShown).to.equal(false);
+    });
+
+    it('closes the calendar via outside click', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
+
+      document.body.click();
+      await aTimeout();
+      expect(elObj.overlayController.isShown).to.be.false;
     });
 
     /**
