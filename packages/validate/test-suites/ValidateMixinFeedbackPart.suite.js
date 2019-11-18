@@ -482,5 +482,31 @@ export function runValidateMixinFeedbackPart() {
         name: 'MinLength',
       });
     });
+
+    it('handles _updateFeedbackComponent with sync and async combinations', async () => {
+      /**
+       * Problem before, without the Queue system:
+       * 1) has an error initially, starts fetching translations *
+       * 2) We correct the error my setting the modelValue to valid input
+       * 3) Synchronously sets the feedback to []
+       * 4) * fetching translations finished, sets the feedback back to an error
+       *
+       * The Queue system solves this by queueing the updateFeedbackComponent tasks and
+       * await them one by one.
+       */
+      const el = await fixture(html`
+        <${tag}
+          .submitted=${true}
+          .validators=${[new MinLength(3)]}
+          .modelValue=${'1'}
+        >${lightDom}</${tag}>
+      `);
+
+      el.modelValue = '12345';
+      await el.updateComplete;
+      await el.feedbackComplete;
+
+      expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+    });
   });
 }

@@ -7,6 +7,7 @@ import { pascalCase } from './utils/pascal-case.js';
 import { Required } from './validators/Required.js';
 import { ResultValidator } from './ResultValidator.js';
 import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+import { AsyncQueue } from './utils/AsyncQueue.js';
 import { Validator } from './Validator.js';
 
 function arrayDiff(array1 = [], array2 = []) {
@@ -527,25 +528,27 @@ export const ValidateMixin = dedupeMixin(
        * - we set the customValidity message of the highest prio Validator
        * - we set aria-invalid="true" in case hasErrorVisible is true
        */
-      async _updateFeedbackComponent() {
-        let feedbackCompleteResolve;
-        this.feedbackComplete = new Promise(resolve => {
-          feedbackCompleteResolve = resolve;
-        });
-
-        if (this.showsFeedbackFor.length > 0) {
-          /** @type {Validator[]} */
-          this.__prioritizedResult = this._prioritizeAndFilterFeedback({
-            validationResult: this.__validationResult,
-          });
-          const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
-
-          this._feedbackNode.feedbackData = messageMap.length ? messageMap : [];
-        } else {
-          this._feedbackNode.feedbackData = [];
+      _updateFeedbackComponent() {
+        if (!this.__feedbackQueue) {
+          this.__feedbackQueue = new AsyncQueue();
         }
 
-        feedbackCompleteResolve();
+        if (this.showsFeedbackFor.length > 0) {
+          this.__feedbackQueue.add(async () => {
+            /** @type {Validator[]} */
+            this.__prioritizedResult = this._prioritizeAndFilterFeedback({
+              validationResult: this.__validationResult,
+            });
+            const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
+
+            this._feedbackNode.feedbackData = messageMap.length ? messageMap : [];
+          });
+        } else {
+          this.__feedbackQueue.add(async () => {
+            this._feedbackNode.feedbackData = [];
+          });
+        }
+        this.feedbackComplete = this.__feedbackQueue.complete;
       }
 
       /**
