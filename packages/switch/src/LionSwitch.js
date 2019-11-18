@@ -39,12 +39,19 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
       this.__handleButtonSwitchCheckedChanged.bind(this),
     );
     this._syncButtonSwitch();
+    this.submitted = true;
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
     this._syncButtonSwitch();
   }
+
+  /**
+   * Override this function from ChoiceInputMixin
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _isEmpty() {}
 
   __handleButtonSwitchCheckedChanged() {
     // TODO: should be replaced by "_inputNode" after the next breaking change

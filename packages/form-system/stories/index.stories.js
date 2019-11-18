@@ -13,6 +13,7 @@ import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
+import { Required, MinLength } from '@lion/validate';
 
 storiesOf('Forms|Form', module).add(
   'Umbrella form',
@@ -22,12 +23,12 @@ storiesOf('Forms|Form', module).add(
         <lion-input
           name="first_name"
           label="First Name"
-          .errorValidators="${['required']}"
+          .validators="${[new Required()]}"
         ></lion-input>
         <lion-input
           name="last_name"
           label="Last Name"
-          .errorValidators="${['required']}"
+          .validators="${[new Required()]}"
         ></lion-input>
 
         <!-- TODO: lion-input-birthdate -->
@@ -36,13 +37,13 @@ storiesOf('Forms|Form', module).add(
           name="date"
           label="Date of application"
           .modelValue="${'2000-12-12'}"
-          .errorValidators="${['required']}"
+          .validators="${[new Required()]}"
         ></lion-input-date>
 
         <lion-textarea
           name="bio"
           label="Biography"
-          .errorValidators="${['required']}"
+          .validators="${[new Required(), new MinLength(10)]}"
           help-text="Please enter at least 10 characters"
         ></lion-textarea>
 
@@ -50,7 +51,11 @@ storiesOf('Forms|Form', module).add(
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
 
-        <lion-checkbox-group min-selected="0" label="What do you like?" name="checkers">
+        <lion-checkbox-group
+          label="What do you like?"
+          name="checkers"
+          .validators="${[new Required()]}"
+        >
           <lion-checkbox name="checkers[]" value="foo" label="I like foo"></lion-checkbox>
           <lion-checkbox name="checkers[]" value="bar" label="I like bar"></lion-checkbox>
           <lion-checkbox name="checkers[]" value="baz" label="I like baz"></lion-checkbox>
@@ -59,8 +64,8 @@ storiesOf('Forms|Form', module).add(
         <lion-radio-group
           class="vertical"
           name="dinosaurs"
-          label="What is your favorite dinosaur?"
-          .errorValidators="${['required']}"
+          label="Favorite dinosaur"
+          .validators="${[new Required()]}"
           error-message="Dinosaurs error message"
         >
           <lion-radio name="dinosaurs[]" value="allosaurus" label="allosaurus"></lion-radio>
@@ -73,7 +78,7 @@ storiesOf('Forms|Form', module).add(
         <lion-select
           label="Make a selection (rich select)"
           name="lyrics"
-          .errorValidators="${['required']}"
+          .validators="${[new Required()]}"
         >
           <select slot="input">
             <option value="1">Fire up that loud</option>
@@ -82,7 +87,7 @@ storiesOf('Forms|Form', module).add(
           </select>
         </lion-select>
 
-        <lion-checkbox-group name="terms">
+        <lion-checkbox-group name="terms" .validators="${[new Required()]}">
           <lion-checkbox
             name="terms[]"
             label="I blindly accept all terms and conditions"

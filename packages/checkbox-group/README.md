@@ -21,6 +21,8 @@ npm i --save @lion/checkbox @lion/checkbox-group
 ```js
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
+// validator import example
+import { Required } from '@lion/validate';
 ```
 
 ### Example
@@ -29,8 +31,8 @@ import '@lion/checkbox-group/lion-checkbox-group.js';
 <lion-form><form>
   <lion-checkbox-group
     name="scientistsGroup"
-    label="Who are your favorite scientists?"
-    .errorValidators=${[['required']]}
+    label="Favorite scientists"
+    .validators=${[new Required()]}
   >
     <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
     <lion-checkbox name="scientists[]" label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>

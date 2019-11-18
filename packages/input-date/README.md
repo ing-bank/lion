@@ -10,11 +10,11 @@
 - makes use of [formatDate](../localize/docs/date.md) for formatting and parsing.
 - option to overwrite locale to change the formatting and parsing
 - default label in different languages
-- can make use of date specific [validators](../validate/docs/DefaultValidators.md) with corresponding error messages in different languages
-  - isDate (default)
-  - minDate
-  - maxDate
-  - minMaxDate
+- can make use of date specific [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
+  - IsDate (default)
+  - MinDate
+  - MaxDate
+  - MinMaxDate
 
 ## How to use
 
@@ -28,7 +28,7 @@ npm i --save @lion/input-date
 import '@lion/input-date/lion-input-date.js';
 
 // validator import example
-import { minDateValidator } from '@lion/validate';
+import { Required, MinDate } from '@lion/validate';
 ```
 
 ### Example
@@ -36,6 +36,6 @@ import { minDateValidator } from '@lion/validate';
 ```html
 <lion-input-date
   name="date"
-  .errorValidators="${[['required'], minDateValidator(100)]}"
+  .validators="${[new Required(), new MinDate(new Date('2018/05/24'))]}"
 ></lion-input-date>
 ```

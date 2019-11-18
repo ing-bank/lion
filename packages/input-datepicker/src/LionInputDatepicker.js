@@ -1,7 +1,7 @@
 import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import { OverlayController, withModalDialogConfig, OverlayMixin } from '@lion/overlays';
-import { isValidatorApplied } from '@lion/validate';
+
 import '@lion/calendar/lion-calendar.js';
 import './lion-calendar-overlay-frame.js';
 
@@ -190,9 +190,8 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   updated(c) {
     super.updated(c);
-
-    if (c.has('errorValidators') || c.has('warningValidators')) {
-      const validators = [...(this.warningValidators || []), ...(this.errorValidators || [])];
+    if (c.has('validators')) {
+      const validators = [...(this.validators || [])];
       this.__syncDisabledDates(validators);
     }
     if (c.has('label')) {
@@ -314,18 +313,16 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   __syncDisabledDates(validators) {
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
-    validators.forEach(([fn, param]) => {
-      const d = new Date();
-
-      if (isValidatorApplied('minDate', fn, d)) {
-        this.__calendarMinDate = param;
-      } else if (isValidatorApplied('maxDate', fn, d)) {
-        this.__calendarMaxDate = param;
-      } else if (isValidatorApplied('minMaxDate', fn, { min: d, max: d })) {
-        this.__calendarMinDate = param.min;
-        this.__calendarMaxDate = param.max;
-      } else if (isValidatorApplied('isDateDisabled', fn, () => true)) {
-        this.__calendarDisableDates = param;
+    validators.forEach(v => {
+      if (v.name === 'MinDate') {
+        this.__calendarMinDate = v.param;
+      } else if (v.name === 'MaxDate') {
+        this.__calendarMaxDate = v.param;
+      } else if (v.name === 'MinMaxDate') {
+        this.__calendarMinDate = v.param.min;
+        this.__calendarMaxDate = v.param.max;
+      } else if (v.name === 'IsDateDisabled') {
+        this.__calendarDisableDates = v.param;
       }
     });
   }

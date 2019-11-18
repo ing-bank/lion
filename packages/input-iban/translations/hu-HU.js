@@ -1,5 +1,5 @@
-import bg from './bg.js';
+import hu from './hu.js';
 
 export default {
-  ...bg,
+  ...hu,
 };

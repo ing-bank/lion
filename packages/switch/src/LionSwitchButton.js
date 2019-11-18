@@ -31,7 +31,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
           outline: 0;
         }
 
-        :host(:focus:not([disabled])) .btn {
+        :host(:focus:not([disabled])) .switch-button__thumb {
           /* if you extend, please overwrite */
           outline: 2px solid #bde4ff;
         }

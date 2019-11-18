@@ -28,7 +28,7 @@ export const ChoiceInputMixin = superclass =>
           hasChanged: (nw, old = {}) => nw.value !== old.value || nw.checked !== old.checked,
         },
         /**
-         * The value property of the modelValue. It provides an easy inteface for storing
+         * The value property of the modelValue. It provides an easy interface for storing
          * (complex) values in the modelValue
          */
         choiceValue: {
@@ -200,13 +200,10 @@ export const ChoiceInputMixin = superclass =>
     }
 
     /**
-     * @override
-     * Overridden from Field, since a different modelValue is used for choice inputs.
+     * Used for required validator.
      */
-    __isRequired(modelValue) {
-      return {
-        required: !!modelValue.checked,
-      };
+    _isEmpty() {
+      return !this.checked;
     }
 
     /**
