@@ -35,6 +35,13 @@ describe('<lion-fieldset>', () => {
     expect(el.fieldName).to.equal(el.name);
   });
 
+  it(`can override fieldName`, async () => {
+    const el = await fixture(
+      html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlots}</${tag}>`,
+    );
+    expect(el.__fieldName).to.equal(el.fieldName);
+  });
+
   it(`${tagString} has an up to date list of every form element in #formElements`, async () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();

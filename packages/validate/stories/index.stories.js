@@ -232,6 +232,22 @@ storiesOf('Forms|Validation', module)
       ></lion-input>
     `,
   )
+  .add(
+    'Override fieldName',
+    () => html`
+      <lion-input
+        .validators="${[new EqualsLength(4, { fieldName: 'custom fieldName' })]}"
+        .modelValue="${'123'}"
+        label="Custom fieldName for 1 validator"
+      ></lion-input>
+      <lion-input
+        .validators="${[new Required(), new EqualsLength(4)]}"
+        .fieldName="${'custom fieldName'}"
+        .modelValue="${'123'}"
+        label="Custom fieldName for all validators"
+      ></lion-input>
+    `,
+  )
   .add('Asynchronous validation', () => {
     function pause(ms = 0) {
       return new Promise(resolve => {

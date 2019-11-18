@@ -86,11 +86,15 @@ export class LionFieldset extends FormRegistrarMixin(
     }, []);
   }
 
+  set fieldName(value) {
+    this.__fieldName = value;
+  }
+
   get fieldName() {
     const label =
       this.label ||
       (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
-    return label || this.name;
+    return this.__fieldName || label || this.name;
   }
 
   constructor() {

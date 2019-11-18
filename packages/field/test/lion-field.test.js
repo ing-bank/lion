@@ -49,6 +49,11 @@ describe('<lion-field>', () => {
     expect(el.fieldName).to.equal(el.name);
   });
 
+  it(`can override fieldName`, async () => {
+    const el = await fixture(html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlot}</${tag}>`);
+    expect(el.__fieldName).to.equal(el.fieldName);
+  });
+
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     const cbFocusHost = sinon.spy();
