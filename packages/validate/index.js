@@ -27,3 +27,5 @@ export {
 } from './src/validators/DateValidators.js';
 
 export { DefaultSuccess } from './src/resultValidators/DefaultSuccess.js';
+
+export { LionValidationFeedback } from './src/LionValidationFeedback.js';
