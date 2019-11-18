@@ -443,20 +443,16 @@ export const ValidateMixin = dedupeMixin(
           if (!(v instanceof Validator)) {
             // throws in constructor are not visible to end user so we do both
             const errorType = Array.isArray(v) ? 'array' : typeof v;
-            const errorMessage = `The validators array may only contain class instances of Validator. Type "${errorType}" found.`;
+            const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found.`;
             // eslint-disable-next-line no-console
-            console.error(errorMessage);
+            console.error(errorMessage, this);
             throw new Error(errorMessage);
           }
           if (this.constructor.validationTypes.indexOf(v.type) === -1) {
             // throws in constructor are not visible to end user so we do both
-            const errorMessage = `The component "${this.tagName.toLowerCase()}" does not support the validator type "${
-              v.type
-            }" used in "${
-              v.name
-            }". You may change your validators type or add it to the components "static get validationTypes() {}".`;
+            const errorMessage = `This component does not support the validator type "${v.type}" used in "${v.name}". You may change your validators type or add it to the components "static get validationTypes() {}".`;
             // eslint-disable-next-line no-console
-            console.error(errorMessage);
+            console.error(errorMessage, this);
             throw new Error(errorMessage);
           }
           events.forEach(e => v.addEventListener(e, this.__onValidatorUpdated));

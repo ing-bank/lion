@@ -76,21 +76,31 @@ export function runValidateMixinSuite(customConfig) {
      */
 
     describe('Validation initiation', () => {
-      it('throws if adding not Validator instances to the validators array', async () => {
+      it('throws and console.errors if adding not Validator instances to the validators array', async () => {
+        // we throw and console error as constructor throw are not visible to the end user
+        const stub = sinon.stub(console, 'error');
         const el = await fixture(html`<${tag}></${tag}>`);
+        const errorMessage =
+          'Validators array only accepts class instances of Validator. Type "array" found.';
         expect(() => {
           el.validators = [[new Required()]];
-        }).to.throw(
-          'The validators array may only contain class instances of Validator. Type "array" found.',
-        );
+        }).to.throw(errorMessage);
+        expect(stub.args[0][0]).to.equal(errorMessage);
+
+        const errorMessage2 =
+          'Validators array only accepts class instances of Validator. Type "string" found.';
         expect(() => {
           el.validators = ['required'];
-        }).to.throw(
-          'The validators array may only contain class instances of Validator. Type "string" found.',
-        );
+        }).to.throw(errorMessage2);
+        expect(stub.args[1][0]).to.equal(errorMessage2);
+
+        stub.restore();
       });
 
-      it('throws if adding a not supported Validator type', async () => {
+      it('throws and console error if adding a not supported Validator type', async () => {
+        // we throw and console error to improve DX
+        const stub = sinon.stub(console, 'error');
+        const errorMessage = `This component does not support the validator type "major error" used in "MajorValidator". You may change your validators type or add it to the components "static get validationTypes() {}".`;
         class MajorValidator extends Validator {
           constructor() {
             super();
@@ -101,9 +111,10 @@ export function runValidateMixinSuite(customConfig) {
         const el = await fixture(html`<${tag}></${tag}>`);
         expect(() => {
           el.validators = [new MajorValidator()];
-        }).to.throw(
-          `The component "${el.tagName.toLowerCase()}" does not support the validator type "major error" used in "MajorValidator". You may change your validators type or add it to the components "static get validationTypes() {}".`,
-        );
+        }).to.throw(errorMessage);
+        expect(stub.args[0][0]).to.equal(errorMessage);
+
+        stub.restore();
       });
 
       it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
