@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.3.1...@lion/validate@0.4.0) (2019-11-18)
+
+
+### Features
+
+* **validate:** new validation api, async validation and more ([6e81b55](https://github.com/ing-bank/lion/commit/6e81b55e3c138d2e5e76ef79a0b496eb7ba9c6c7))
+* finalize validation and adopt it everywhere ([396deb2](https://github.com/ing-bank/lion/commit/396deb2e3b4243f102a5c98e9b0518fa0f31a6b1))
+
+
+
+
+
 ## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/validate@0.3.0...@lion/validate@0.3.1) (2019-11-15)
 
 
