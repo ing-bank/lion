@@ -185,10 +185,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * without side effects caused by the click bubbling back up to lion-button.
    */
   __clickDelegationHandler(e) {
-    if (this.constructor.__isIE11()) {
-      e.stopPropagation();
-    }
-
     if ((this.type === 'submit' || this.type === 'reset') && e.target === this) {
       if (this._form) {
         const nativeButton = document.createElement('button');
