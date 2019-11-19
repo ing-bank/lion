@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.15](https://github.com/ing-bank/lion/compare/@lion/popup@0.3.14...@lion/popup@0.3.15) (2019-11-19)
+
+**Note:** Version bump only for package @lion/popup
+
+
+
+
+
 ## [0.3.14](https://github.com/ing-bank/lion/compare/@lion/popup@0.3.13...@lion/popup@0.3.14) (2019-11-18)
 
 **Note:** Version bump only for package @lion/popup
