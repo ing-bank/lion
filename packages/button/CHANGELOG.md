@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.38](https://github.com/ing-bank/lion/compare/@lion/button@0.3.37...@lion/button@0.3.38) (2019-11-19)
+
+
+### Bug Fixes
+
+* **button:** make click event work in ie11 ([0d7d513](https://github.com/ing-bank/lion/commit/0d7d513405e05f7bdf4e6cd4f0ca0955da16e9b5))
+
+
+
+
+
 ## [0.3.37](https://github.com/ing-bank/lion/compare/@lion/button@0.3.36...@lion/button@0.3.37) (2019-11-18)
 
 **Note:** Version bump only for package @lion/button
