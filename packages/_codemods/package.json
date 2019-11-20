@@ -1,0 +1,43 @@
+{
+  "name": "@lion/codemods",
+  "version": "0.0.1",
+  "description": "Automatically update your sources",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/_codemods"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js"
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "codemod"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "src",
+    "*.js"
+  ],
+  "dependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/generator": "^7.7.2",
+    "@babel/parser": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@babel/traverse": "^7.5.5",
+    "express": "^4.17.1",
+    "lit-html": "^1.1.2",
+    "prettier": "^1.19.1",
+    "puppeteer": "^2.0.0",
+    "puppeteer-core": "^2.0.0",
+    "recast": "^0.18.5"
+  }
+}
