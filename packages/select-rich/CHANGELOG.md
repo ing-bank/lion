@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.5.1...@lion/select-rich@0.5.2) (2019-11-20)
+
+
+### Bug Fixes
+
+* **select-rich:** sync selected el after add item on selected index ([1298b7b](https://github.com/ing-bank/lion/commit/1298b7b0500d305074bdc075b6eaefd21226d4fe))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.5.0...@lion/select-rich@0.5.1) (2019-11-19)
 
 **Note:** Version bump only for package @lion/select-rich
