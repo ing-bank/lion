@@ -18,7 +18,13 @@ function createPageFromAstNode(taggedTemplateExpressionPath, filePath) {
         const source = importDeclPath.node.source.value;
         const newSource = source; // TODO: resolve via filePath
 
-        // Path should also be served via express ofc...
+        // Path should also be served via express otc...
+
+
+      } else {
+        // The definition must be in the current file and its code needs to be copied
+
+        // Find the binding and recursively resolve and add all found Identifiers
 
       }
     }
