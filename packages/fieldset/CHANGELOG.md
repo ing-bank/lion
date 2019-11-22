@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.3.0...@lion/fieldset@0.4.0) (2019-11-22)
+
+
+### Features
+
+* **field:** order aria attributes based on nodes ([95d553e](https://github.com/ing-bank/lion/commit/95d553e23994181b827a091b724572678bea3b2f))
+
+
+
+
+
 # [0.3.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.2.1...@lion/fieldset@0.3.0) (2019-11-18)
 
 

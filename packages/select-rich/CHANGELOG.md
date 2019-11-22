@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.5.2...@lion/select-rich@0.6.0) (2019-11-22)
+
+
+### Features
+
+* **field:** order aria attributes based on nodes ([95d553e](https://github.com/ing-bank/lion/commit/95d553e23994181b827a091b724572678bea3b2f))
+
+
+
+
+
 ## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.5.1...@lion/select-rich@0.5.2) (2019-11-20)
 
 
