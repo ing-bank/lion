@@ -60,6 +60,40 @@ storiesOf('Forms|Select Rich', module)
     `,
   )
   .add(
+    'Many Options with scrolling',
+    () => html`
+      <style>
+        .demo-listbox {
+          max-height: 200px;
+          overflow-y: auto;
+          display: block;
+        }
+        ${selectRichDemoStyle}
+      </style>
+      <div class="demo-area">
+        <lion-select-rich label="Favorite color" name="color">
+          <lion-options slot="input" class="demo-listbox">
+            <lion-option .modelValue=${{ value: 'red', checked: false }}>
+              <p style="color: red;">I am red</p>
+            </lion-option>
+            <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
+              <p style="color: hotpink;">I am hotpink</p>
+            </lion-option>
+            <lion-option .modelValue=${{ value: 'teal', checked: false }}>
+              <p style="color: teal;">I am teal</p>
+            </lion-option>
+            <lion-option .modelValue=${{ value: 'green', checked: false }}>
+              <p style="color: green;">I am green</p>
+            </lion-option>
+            <lion-option .modelValue=${{ value: 'blue', checked: false }}>
+              <p style="color: blue;">I am blue</p>
+            </lion-option>
+          </lion-options>
+        </lion-select-rich>
+      </div>
+    `,
+  )
+  .add(
     'Read-only prefilled',
     () => html`
       <style>
