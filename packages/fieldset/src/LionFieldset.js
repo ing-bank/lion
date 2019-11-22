@@ -2,6 +2,7 @@ import { SlotMixin, html, LitElement } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
+import { getAriaElementsInRightDomOrder } from '@lion/field/src/utils/getAriaElementsInRightDomOrder.js';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
@@ -427,15 +428,10 @@ export class LionFieldset extends FormRegistrarMixin(
    * @param {array} descriptionElements  - description elements like feedback and help-text
    */
   static _addDescriptionElementIdsToField(field, descriptionElements) {
-    // TODO: make clear in documentation that help-text and feedback slot should be appended by now
-    // and dynamically appending (or dom-ifs etc) doesn't work
-    // TODO: we can cache this on constructor level for perf, but changing template via providers
-    // might go wrong then when dom order changes per instance. Although we could check if
-    // 'provision' has taken place or not
-    const orderedEls = this._getAriaElementsInRightDomOrder(descriptionElements);
+    const orderedEls = getAriaElementsInRightDomOrder(descriptionElements, { reverse: true });
     orderedEls.forEach(el => {
-      if (field.addToAriaDescription) {
-        field.addToAriaDescription(el.id);
+      if (field.addToAriaDescribedBy) {
+        field.addToAriaDescribedBy(el, { reorder: false });
       }
     });
   }

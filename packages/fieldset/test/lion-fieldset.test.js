@@ -884,11 +884,7 @@ describe('<lion-fieldset>', () => {
     });
   });
 
-  describe('a11y', () => {
-    // beforeEach(() => {
-    //   localizeTearDown();
-    // });
-
+  describe('Accessibility', () => {
     it('has role="group" set', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
@@ -985,48 +981,46 @@ describe('<lion-fieldset>', () => {
 
           /* eslint-enable camelcase */
 
-          const ariaDescribedBy = el => el.getAttribute('aria-describedby');
-
           // 'L1' fields (inside lion-fieldset[name="l1_g"]) should point to l1(group) msg
-          expect(ariaDescribedBy(input_l1_fa)).to.contain(
+          expect(input_l1_fa.getAttribute('aria-describedby')).to.contain(
             msg_l1_g.id,
             'l1 input(a) refers parent/group',
           );
-          expect(ariaDescribedBy(input_l1_fb)).to.contain(
+          expect(input_l1_fb.getAttribute('aria-describedby')).to.contain(
             msg_l1_g.id,
             'l1 input(b) refers parent/group',
           );
 
           // Also check that aria-describedby of the inputs are not overridden (this relation was
           // put there in lion-input(using lion-field)).
-          expect(ariaDescribedBy(input_l1_fa)).to.contain(
+          expect(input_l1_fa.getAttribute('aria-describedby')).to.contain(
             msg_l1_fa.id,
             'l1 input(a) refers local field',
           );
-          expect(ariaDescribedBy(input_l1_fb)).to.contain(
+          expect(input_l1_fb.getAttribute('aria-describedby')).to.contain(
             msg_l1_fb.id,
             'l1 input(b) refers local field',
           );
 
           // Also make feedback element point to nested fieldset inputs
-          expect(ariaDescribedBy(input_l2_fa)).to.contain(
+          expect(input_l2_fa.getAttribute('aria-describedby')).to.contain(
             msg_l1_g.id,
             'l2 input(a) refers grandparent/group.group',
           );
-          expect(ariaDescribedBy(input_l2_fb)).to.contain(
+          expect(input_l2_fb.getAttribute('aria-describedby')).to.contain(
             msg_l1_g.id,
             'l2 input(b) refers grandparent/group.group',
           );
 
           // Check order: the nearest ('dom wise': so 1. local, 2. parent, 3. grandparent) message
           // should be read first by screen reader
-          let d = ariaDescribedBy(input_l2_fa);
+          const dA = input_l2_fa.getAttribute('aria-describedby');
           expect(
-            d.indexOf(msg_l1_g.id) < d.indexOf(msg_l2_g.id) < d.indexOf(msg_l2_fa.id),
+            dA.indexOf(msg_l2_fa.id) < dA.indexOf(msg_l2_g.id) < dA.indexOf(msg_l1_g.id),
           ).to.equal(true, 'order of ids');
-          d = ariaDescribedBy(input_l2_fb);
+          const dB = input_l2_fb.getAttribute('aria-describedby');
           expect(
-            d.indexOf(msg_l1_g.id) < d.indexOf(msg_l2_g.id) < d.indexOf(msg_l2_fb.id),
+            dB.indexOf(msg_l2_fb.id) < dB.indexOf(msg_l2_g.id) < dB.indexOf(msg_l1_g.id),
           ).to.equal(true, 'order of ids');
         };
       });

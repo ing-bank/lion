@@ -1,5 +1,16 @@
 import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
+import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
+
+/**
+ * Generates random unique identifier (for dom elements)
+ * @param {string} prefix
+ */
+function uuid(prefix) {
+  return `${prefix}-${Math.random()
+    .toString(36)
+    .substr(2, 10)}`;
+}
 
 /**
  * #FormControlMixin :
@@ -18,25 +29,9 @@ export const FormControlMixin = dedupeMixin(
       static get properties() {
         return {
           /**
-           * A list of ids that will be put on the _inputNode as a serialized string
-           */
-          _ariaDescribedby: {
-            type: String,
-          },
-
-          /**
-           * A list of ids that will be put on the _inputNode as a serialized string
-           */
-          _ariaLabelledby: {
-            type: String,
-          },
-
-          /**
            * When no light dom defined and prop set
            */
-          label: {
-            type: String,
-          },
+          label: String,
 
           /**
            * When no light dom defined and prop set
@@ -45,6 +40,16 @@ export const FormControlMixin = dedupeMixin(
             type: String,
             attribute: 'help-text',
           },
+
+          /**
+           * Contains all elements that should end up in aria-labelledby of `._inputNode`
+           */
+          _ariaLabelledNodes: Array,
+
+          /**
+           * Contains all elements that should end up in aria-describedby of `._inputNode`
+           */
+          _ariaDescribedNodes: Array,
         };
       }
 
@@ -67,12 +72,20 @@ export const FormControlMixin = dedupeMixin(
       updated(changedProps) {
         super.updated(changedProps);
 
-        if (changedProps.has('_ariaLabelledby')) {
-          this._onAriaLabelledbyChanged({ _ariaLabelledby: this._ariaLabelledby });
+        if (changedProps.has('_ariaLabelledNodes')) {
+          this.__reflectAriaAttr(
+            'aria-labelledby',
+            this._ariaLabelledNodes,
+            this.__reorderAriaLabelledNodes,
+          );
         }
 
-        if (changedProps.has('_ariaDescribedby')) {
-          this._onAriaDescribedbyChanged({ _ariaDescribedby: this._ariaDescribedby });
+        if (changedProps.has('_ariaDescribedNodes')) {
+          this.__reflectAriaAttr(
+            'aria-describedby',
+            this._ariaDescribedNodes,
+            this.__reorderAriaDescribedNodes,
+          );
         }
 
         if (changedProps.has('label')) {
@@ -102,11 +115,9 @@ export const FormControlMixin = dedupeMixin(
 
       constructor() {
         super();
-        this._inputId = `${this.localName}-${Math.random()
-          .toString(36)
-          .substr(2, 10)}`;
-        this._ariaLabelledby = '';
-        this._ariaDescribedby = '';
+        this._inputId = uuid(this.localName);
+        this._ariaLabelledNodes = [];
+        this._ariaDescribedNodes = [];
       }
 
       connectedCallback() {
@@ -118,7 +129,6 @@ export const FormControlMixin = dedupeMixin(
       /**
        * Public methods
        */
-
       _enhanceLightDomClasses() {
         if (this._inputNode) {
           this._inputNode.classList.add('form-control');
@@ -133,26 +143,14 @@ export const FormControlMixin = dedupeMixin(
         }
         if (_labelNode) {
           _labelNode.setAttribute('for', this._inputId);
-          _labelNode.id = _labelNode.id || `label-${this._inputId}`;
-          const labelledById = ` ${_labelNode.id}`;
-          if (this._ariaLabelledby.indexOf(labelledById) === -1) {
-            this._ariaLabelledby += ` ${_labelNode.id}`;
-          }
+          this.addToAriaLabelledBy(_labelNode, { idPrefix: 'label' });
         }
         if (_helpTextNode) {
-          _helpTextNode.id = _helpTextNode.id || `help-text-${this._inputId}`;
-          const describeIdHelpText = ` ${_helpTextNode.id}`;
-          if (this._ariaDescribedby.indexOf(describeIdHelpText) === -1) {
-            this._ariaDescribedby += ` ${_helpTextNode.id}`;
-          }
+          this.addToAriaDescribedBy(_helpTextNode, { idPrefix: 'help-text' });
         }
         if (_feedbackNode) {
           _feedbackNode.setAttribute('aria-live', 'polite');
-          _feedbackNode.id = _feedbackNode.id || `feedback-${this._inputId}`;
-          const describeIdFeedback = ` ${_feedbackNode.id}`;
-          if (this._ariaDescribedby.indexOf(describeIdFeedback) === -1) {
-            this._ariaDescribedby += ` ${_feedbackNode.id}`;
-          }
+          this.addToAriaDescribedBy(_feedbackNode, { idPrefix: 'feedback' });
         }
         this._enhanceLightDomA11yForAdditionalSlots();
       }
@@ -169,26 +167,14 @@ export const FormControlMixin = dedupeMixin(
         additionalSlots.forEach(additionalSlot => {
           const element = this.__getDirectSlotChild(additionalSlot);
           if (element) {
-            element.id = element.id || `${additionalSlot}-${this._inputId}`;
             if (element.hasAttribute('data-label') === true) {
-              this._ariaLabelledby += ` ${element.id}`;
+              this.addToAriaLabelledBy(element, { idPrefix: additionalSlot });
             }
             if (element.hasAttribute('data-description') === true) {
-              this._ariaDescribedby += ` ${element.id}`;
+              this.addToAriaDescribedBy(element, { idPrefix: additionalSlot });
             }
           }
         });
-      }
-
-      /**
-       * Will handle label, prefix/suffix/before/after (if they contain data-label flag attr).
-       * Also, contents of id references that will be put in the <lion-field>._ariaLabelledby property
-       * from an external context, will be read by a screen reader.
-       */
-      _onAriaLabelledbyChanged({ _ariaLabelledby }) {
-        if (this._inputNode) {
-          this._inputNode.setAttribute('aria-labelledby', _ariaLabelledby);
-        }
       }
 
       /**
@@ -197,9 +183,14 @@ export const FormControlMixin = dedupeMixin(
        * Also, contents of id references that will be put in the <lion-field>._ariaDescribedby property
        * from an external context, will be read by a screen reader.
        */
-      _onAriaDescribedbyChanged({ _ariaDescribedby }) {
+      __reflectAriaAttr(attrName, nodes, reorder) {
         if (this._inputNode) {
-          this._inputNode.setAttribute('aria-describedby', _ariaDescribedby);
+          if (reorder) {
+            // eslint-disable-next-line no-param-reassign
+            nodes = getAriaElementsInRightDomOrder(nodes);
+          }
+          const string = nodes.map(n => n.id).join(' ');
+          this._inputNode.setAttribute(attrName, string);
         }
       }
 
@@ -464,36 +455,6 @@ export const FormControlMixin = dedupeMixin(
         ];
       }
 
-      // aria-labelledby and aria-describedby helpers
-      // TODO: consider extracting to generic ariaLabel helper mixin
-
-      /**
-       * Let the order of adding ids to aria element by DOM order, so that the screen reader
-       * respects visual order when reading:
-       * https://developers.google.com/web/fundamentals/accessibility/focus/dom-order-matters
-       * @param {array} descriptionElements - holds references to description or label elements whose
-       * id should be returned
-       * @returns {array} sorted set of elements based on dom order
-       *
-       * TODO: make this method part of a more generic mixin or util and also use for lion-field
-       */
-      static _getAriaElementsInRightDomOrder(descriptionElements) {
-        const putPrecedingSiblingsAndLocalParentsFirst = (a, b) => {
-          // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
-          const pos = a.compareDocumentPosition(b);
-          if (
-            pos === Node.DOCUMENT_POSITION_PRECEDING ||
-            pos === Node.DOCUMENT_POSITION_CONTAINED_BY
-          ) {
-            return 1;
-          }
-          return -1;
-        };
-
-        const descriptionEls = descriptionElements.filter(el => el); // filter out null references
-        return descriptionEls.sort(putPrecedingSiblingsAndLocalParentsFirst);
-      }
-
       // Returns dom references to all elements that should be referred to by field(s)
       _getAriaDescriptionElements() {
         return [this._helpTextNode, this._feedbackNode];
@@ -501,22 +462,30 @@ export const FormControlMixin = dedupeMixin(
 
       /**
        * Meant for Application Developers wanting to add to aria-labelledby attribute.
-       * @param {string} id - should be the id of an element that contains the label for the
-       * concerned field or fieldset, living in the same shadow root as the host element of field or
-       * fieldset.
+       * @param {Element} element
        */
-      addToAriaLabel(id) {
-        this._ariaLabelledby += ` ${id}`;
+      addToAriaLabelledBy(element, { idPrefix, reorder } = { reorder: true }) {
+        // eslint-disable-next-line no-param-reassign
+        element.id = element.id || `${idPrefix}-${this._inputId}`;
+        if (!this._ariaLabelledNodes.includes(element)) {
+          this._ariaLabelledNodes = [...this._ariaLabelledNodes, element];
+          // This value will be read when we need to reflect to attr
+          this.__reorderAriaLabelledNodes = Boolean(reorder);
+        }
       }
 
       /**
        * Meant for Application Developers wanting to add to aria-describedby attribute.
-       * @param {string} id - should be the id of an element that contains the label for the
-       * concerned field or fieldset, living in the same shadow root as the host element of field or
-       * fieldset.
+       * @param {Element} element
        */
-      addToAriaDescription(id) {
-        this._ariaDescribedby += ` ${id}`;
+      addToAriaDescribedBy(element, { idPrefix, reorder } = { reorder: true }) {
+        // eslint-disable-next-line no-param-reassign
+        element.id = element.id || `${idPrefix}-${this._inputId}`;
+        if (!this._ariaDescribedNodes.includes(element)) {
+          this._ariaDescribedNodes = [...this._ariaDescribedNodes, element];
+          // This value will be read when we need to reflect to attr
+          this.__reorderAriaDescribedNodes = Boolean(reorder);
+        }
       }
 
       __getDirectSlotChild(slotName) {
