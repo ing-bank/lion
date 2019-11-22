@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.6.0...@lion/select-rich@0.6.1) (2019-11-22)
+
+
+### Bug Fixes
+
+* **select-rich:** keyboard navigation should handle scrolling ([0dad105](https://github.com/ing-bank/lion/commit/0dad10510929d849f8fb2997cb7231abcf279e32))
+
+
+
+
+
 # [0.6.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.5.2...@lion/select-rich@0.6.0) (2019-11-22)
 
 
