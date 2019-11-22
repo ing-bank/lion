@@ -15,7 +15,6 @@ import { localizeTearDown } from '@lion/localize/test-helpers.js';
 
 import '../lion-field.js';
 
-const nameSuffix = '';
 const tagString = 'lion-field';
 const tag = unsafeStatic(tagString);
 const inputSlotString = '<input slot="input" />';
@@ -197,7 +196,7 @@ describe('<lion-field>', () => {
     expect(disabledel._inputNode.hasAttribute('disabled')).to.equal(true);
   });
 
-  describe(`A11y${nameSuffix}`, () => {
+  describe('Accessibility', () => {
     it(`by setting corresponding aria-labelledby (for label) and aria-describedby (for helpText, feedback)
       ~~~
       <lion-field>
@@ -221,9 +220,9 @@ describe('<lion-field>', () => {
         `);
       const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
 
-      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(` label-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(` help-text-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(` feedback-${el._inputId}`);
+      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${el._inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${el._inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
     });
 
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
@@ -239,16 +238,16 @@ describe('<lion-field>', () => {
 
       const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
-        ` before-${el._inputId} after-${el._inputId}`,
+        `before-${el._inputId} after-${el._inputId}`,
       );
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(
-        ` prefix-${el._inputId} suffix-${el._inputId}`,
+        `prefix-${el._inputId} suffix-${el._inputId}`,
       );
     });
 
     // TODO: put this test on FormControlMixin test once there
-    it(`allows to add to aria description or label via addToAriaLabel() and
-      addToAriaDescription()`, async () => {
+    it(`allows to add to aria description or label via addToAriaLabelledBy() and
+      addToAriaDescribedBy()`, async () => {
       const wrapper = await fixture(html`
         <div id="wrapper">
           <${tag}>
@@ -269,7 +268,7 @@ describe('<lion-field>', () => {
       // 1. addToAriaLabel()
       // Check if the aria attr is filled initially
       expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
-      el.addToAriaLabel('additionalLabel');
+      el.addToAriaLabelledBy(wrapper.querySelector('#additionalLabel'));
       // Now check if ids are added to the end (not overridden)
       expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
       // Should be placed in the end
@@ -281,7 +280,7 @@ describe('<lion-field>', () => {
       // 2. addToAriaDescription()
       // Check if the aria attr is filled initially
       expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
-      el.addToAriaDescription('additionalDescription');
+      el.addToAriaDescribedBy(wrapper.querySelector('#additionalDescription'));
       // Now check if ids are added to the end (not overridden)
       expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
       // Should be placed in the end
@@ -292,7 +291,7 @@ describe('<lion-field>', () => {
     });
   });
 
-  describe(`Validation${nameSuffix}`, () => {
+  describe(`Validation`, () => {
     beforeEach(() => {
       // Reset and preload validation translations
       localizeTearDown();
@@ -414,7 +413,7 @@ describe('<lion-field>', () => {
     });
   });
 
-  describe(`Content projection${nameSuffix}`, () => {
+  describe(`Content projection`, () => {
     it('renders correctly all slot elements in light DOM', async () => {
       const el = await fixture(html`
         <${tag}>
