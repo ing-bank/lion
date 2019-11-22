@@ -19,6 +19,26 @@ function detectInteractionMode() {
   return 'windows/linux';
 }
 
+function isInView(container, element, partial = false) {
+  const cTop = container.scrollTop;
+  const cBottom = cTop + container.clientHeight;
+  const eTop = element.offsetTop;
+  const eBottom = eTop + element.clientHeight;
+  const isTotal = eTop >= cTop && eBottom <= cBottom;
+  let isPartial;
+
+  if (partial === true) {
+    isPartial = (eTop < cTop && eBottom > cTop) || (eBottom > cBottom && eTop < cBottom);
+  } else if (typeof partial === 'number') {
+    if (eTop < cTop && eBottom > cTop) {
+      isPartial = ((eBottom - cTop) * 100) / element.clientHeight > partial;
+    } else if (eBottom > cBottom && eTop < cBottom) {
+      isPartial = ((cBottom - eTop) * 100) / element.clientHeight > partial;
+    }
+  }
+  return isTotal || isPartial;
+}
+
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  *
@@ -129,9 +149,18 @@ export class LionSelectRich extends OverlayMixin(
     return this.formElements.findIndex(el => el.active === true);
   }
 
+  get scrollTarget() {
+    return this._overlayContentNode.scrollTarget || this._overlayContentNode;
+  }
+
   set activeIndex(index) {
     if (this.formElements[index]) {
-      this.formElements[index].active = true;
+      const el = this.formElements[index];
+      el.active = true;
+
+      if (!isInView(this.scrollTarget, el)) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
   }
 
@@ -591,11 +620,30 @@ export class LionSelectRich extends OverlayMixin(
       this._invokerNode.focus();
     };
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
+
+    this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
+    this.scrollTarget.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
   }
 
   __teardownOverlay() {
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
+    this.scrollTarget.removeEventListener('keydown', this.__overlayOnHide);
+  }
+
+  __preventScrollingWithArrowKeys(ev) {
+    if (this.disabled) {
+      return;
+    }
+    const { key } = ev;
+    switch (key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'Home':
+      case 'End':
+        ev.preventDefault();
+      /* no default */
+    }
   }
 
   _isEmpty() {
