@@ -74,6 +74,9 @@ export class LionSelectRich extends OverlayMixin(
     ];
   }
 
+  /**
+   * @override
+   */
   static _isPrefilled(modelValue) {
     if (!modelValue) {
       return false;
@@ -202,6 +205,13 @@ export class LionSelectRich extends OverlayMixin(
     }
   }
 
+  get _inputNode() {
+    // In FormControl, we get direct child [slot="input"]. This doesn't work, because the overlay
+    // system wraps it in [slot="_overlay-shadow-outlet"]
+    // TODO: find a way to solve this by putting the wrapping part in shadow dom...
+    return this.querySelector('[slot="input"]');
+  }
+
   updated(changedProps) {
     super.updated(changedProps);
 
@@ -212,6 +222,22 @@ export class LionSelectRich extends OverlayMixin(
       } else {
         this._invokerNode.retractRequestToBeDisabled();
         this.__retractRequestOptionsToBeDisabled();
+      }
+    }
+
+    if (this._inputNode && this._invokerNode) {
+      if (changedProps.has('_ariaLabelledNodes')) {
+        this._invokerNode.setAttribute(
+          'aria-labelledby',
+          `${this._inputNode.getAttribute('aria-labelledby')} ${this._invokerNode.id}`,
+        );
+      }
+
+      if (changedProps.has('_ariaDescribedNodes')) {
+        this._invokerNode.setAttribute(
+          'aria-describedby',
+          this._inputNode.getAttribute('aria-describedby'),
+        );
       }
     }
   }
@@ -270,35 +296,6 @@ export class LionSelectRich extends OverlayMixin(
 
   _getFromAllFormElements(property) {
     return this.formElements.map(e => e[property]);
-  }
-
-  /**
-   * add same aria-label to invokerNode as _inputNode
-   * @override
-   */
-  _onAriaLabelledbyChanged({ _ariaLabelledby }) {
-    if (this._inputNode) {
-      this._inputNode.setAttribute('aria-labelledby', _ariaLabelledby);
-    }
-    if (this._invokerNode) {
-      this._invokerNode.setAttribute(
-        'aria-labelledby',
-        `${_ariaLabelledby} ${this._invokerNode.id}`,
-      );
-    }
-  }
-
-  /**
-   * add same aria-label to invokerNode as _inputNode
-   * @override
-   */
-  _onAriaDescribedbyChanged({ _ariaDescribedby }) {
-    if (this._inputNode) {
-      this._inputNode.setAttribute('aria-describedby', _ariaDescribedby);
-    }
-    if (this._invokerNode) {
-      this._invokerNode.setAttribute('aria-describedby', _ariaDescribedby);
-    }
   }
 
   __setupEventListeners() {
