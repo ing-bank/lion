@@ -1,14 +1,6 @@
 import { getDecimalSeparator } from '@lion/localize';
 
 /**
- * @param {string} value to evaluate
- * @return {boolean} true if value equal . or ,
- */
-function isDecimalSeparator(value) {
-  return value === '.' || value === ',';
-}
-
-/**
  * Determines the best possible parsing mode.
  *
  * Parsemode depends mostely on the last 4 chars.
@@ -31,17 +23,11 @@ function isDecimalSeparator(value) {
  * @return {string} unparseable|withLocale|heuristic
  */
 function getParseMode(value) {
-  if (value.length > 4) {
-    const charAtLastSeparatorPosition = value[value.length - 4];
-    if (isDecimalSeparator(charAtLastSeparatorPosition)) {
-      const firstPart = value.substring(0, value.length - 4);
-      const otherSeparators = firstPart.match(/[., ]/g);
-      if (otherSeparators) {
-        const lastSeparator = charAtLastSeparatorPosition;
-        return otherSeparators.indexOf(lastSeparator) === -1 ? 'heuristic' : 'unparseable';
-      }
-      return 'withLocale';
-    }
+  const nonDigits = value.match(/[^0-9]/g);
+
+  // If there are separators, and they are all the same char... use locale
+  if (nonDigits && nonDigits.every(v => v === nonDigits[0])) {
+    return 'withLocale';
   }
   return 'heuristic';
 }

@@ -13,6 +13,17 @@ storiesOf('Forms|Input Amount', module)
     `,
   )
   .add(
+    'No decimals',
+    () => html`
+      <lion-input-amount
+        label="Amount"
+        .formatOptions=${{ maximumFractionDigits: 0, minimumFractionDigits: 0, locale: 'nl-NL' }}
+        .modelValue=${40000}
+      >
+      </lion-input-amount>
+    `,
+  )
+  .add(
     'Negative number',
     () => html`
       <lion-input-amount label="Amount" .validators="${[new Required()]}" .modelValue=${-123456.78}>
