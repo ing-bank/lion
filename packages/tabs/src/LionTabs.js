@@ -200,7 +200,15 @@ export class LionTabs extends LitElement {
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected();
-    this.dispatchEvent(new Event('selected-changed'));
+    this.dispatchEvent(
+      new CustomEvent('selected-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          'selected-tab-index': value,
+        },
+      }),
+    );
     this.requestUpdate('selectedIndex', stale);
   }
 
