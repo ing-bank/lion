@@ -186,8 +186,10 @@ export const FormControlMixin = dedupeMixin(
       __reflectAriaAttr(attrName, nodes, reorder) {
         if (this._inputNode) {
           if (reorder) {
+            const insideNodes = nodes.filter(n => this.contains(n));
+            const outsideNodes = nodes.filter(n => !this.contains(n));
             // eslint-disable-next-line no-param-reassign
-            nodes = getAriaElementsInRightDomOrder(nodes);
+            nodes = [...getAriaElementsInRightDomOrder(insideNodes), ...outsideNodes];
           }
           const string = nodes.map(n => n.id).join(' ');
           this._inputNode.setAttribute(attrName, string);
@@ -464,7 +466,12 @@ export const FormControlMixin = dedupeMixin(
        * Meant for Application Developers wanting to add to aria-labelledby attribute.
        * @param {Element} element
        */
-      addToAriaLabelledBy(element, { idPrefix, reorder } = { reorder: true }) {
+      addToAriaLabelledBy(element, customConfig = {}) {
+        const { idPrefix, reorder } = {
+          reorder: true,
+          ...customConfig,
+        };
+
         // eslint-disable-next-line no-param-reassign
         element.id = element.id || `${idPrefix}-${this._inputId}`;
         if (!this._ariaLabelledNodes.includes(element)) {
@@ -478,7 +485,13 @@ export const FormControlMixin = dedupeMixin(
        * Meant for Application Developers wanting to add to aria-describedby attribute.
        * @param {Element} element
        */
-      addToAriaDescribedBy(element, { idPrefix, reorder } = { reorder: true }) {
+      addToAriaDescribedBy(element, customConfig = {}) {
+        const { idPrefix, reorder } = {
+          // chronologically sorts children of host element('this')
+          reorder: true,
+          ...customConfig,
+        };
+
         // eslint-disable-next-line no-param-reassign
         element.id = element.id || `${idPrefix}-${this._inputId}`;
         if (!this._ariaDescribedNodes.includes(element)) {
