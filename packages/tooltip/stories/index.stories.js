@@ -58,7 +58,7 @@ storiesOf('Overlays Specific WC|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box">
-        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
           <lion-button slot="invoker">Tooltip</lion-button>
           <div slot="content" class="tooltip">Hello there!</div>
         </lion-tooltip>
@@ -72,19 +72,19 @@ storiesOf('Overlays Specific WC|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box_placements">
-        <lion-tooltip .popperConfig=${{ placement: 'top' }}>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
           <lion-button slot="invoker">Top</lion-button>
           <div slot="content" class="tooltip">Its top placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
           <lion-button slot="invoker">Right</lion-button>
           <div slot="content" class="tooltip">Its right placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'bottom' }}>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
           <lion-button slot="invoker">Bottom</lion-button>
           <div slot="content" class="tooltip">Its bottom placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'left' }}>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
           <lion-button slot="invoker">Left</lion-button>
           <div slot="content" class="tooltip">Its left placement</div>
         </lion-tooltip>
@@ -100,28 +100,30 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       <p>Use the Storybook Knobs to dynamically change the popper configuration!</p>
       <div class="demo-box_placements">
         <lion-tooltip
-          .popperConfig="${object('Popper Configuration', {
-            placement: 'bottom-start',
-            positionFixed: true,
-            modifiers: {
-              keepTogether: {
-                enabled: true /* Prevents detachment of content element from reference element */,
+          .config="${{
+            popperConfig: object('Popper Configuration', {
+              placement: 'bottom-start',
+              positionFixed: true,
+              modifiers: {
+                keepTogether: {
+                  enabled: true /* Prevents detachment of content element from reference element */,
+                },
+                preventOverflow: {
+                  enabled: false /* disables shifting/sliding behavior on secondary axis */,
+                  boundariesElement: 'viewport',
+                  padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
+                },
+                flip: {
+                  boundariesElement: 'viewport',
+                  padding: 4 /* viewport-margin for flipping on primary axis */,
+                },
+                offset: {
+                  enabled: true,
+                  offset: `0, 4px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
+                },
               },
-              preventOverflow: {
-                enabled: false /* disables shifting/sliding behavior on secondary axis */,
-                boundariesElement: 'viewport',
-                padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
-              },
-              flip: {
-                boundariesElement: 'viewport',
-                padding: 4 /* viewport-margin for flipping on primary axis */,
-              },
-              offset: {
-                enabled: true,
-                offset: `0, 4px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
-              },
-            },
-          })}"
+            }),
+          }}"
         >
           <lion-button slot="invoker">${text('Invoker text', 'Hover me!')}</lion-button>
           <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>

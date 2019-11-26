@@ -29,7 +29,6 @@ import '../packages/calendar/stories/index.stories.js';
 import '../packages/overlays/stories/index.stories.js';
 import '../packages/overlays/stories/overlay-features.stories.js';
 import '../packages/dialog/stories/index.stories.js';
-import '../packages/popup/stories/index.stories.js';
 import '../packages/tooltip/stories/index.stories.js';
 
 import '../packages/select-rich/stories/index.stories.js';

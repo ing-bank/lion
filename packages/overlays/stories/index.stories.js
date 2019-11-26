@@ -1,9 +1,14 @@
 import { storiesOf, html, withKnobs } from '@open-wc/demoing-storybook';
-import { css, render } from '@lion/core';
+import { css, render, LitElement } from '@lion/core';
 import '@lion/icon/lion-icon.js';
 import '@lion/button/lion-button.js';
-import { withBottomSheetConfig, withDropdownConfig, withModalDialogConfig } from '../index.js';
-import '../lion-overlay.js';
+import {
+  withBottomSheetConfig,
+  withDropdownConfig,
+  withModalDialogConfig,
+  OverlayMixin,
+  OverlayController,
+} from '../index.js';
 
 function renderOffline(litHtmlTemplate) {
   const offlineRenderContainer = document.createElement('div');
@@ -51,7 +56,7 @@ const overlayDemoStyle = css`
     margin-top: 68px;
   }
 
-  lion-overlay {
+  lion-demo-overlay {
     padding: 10px;
   }
 
@@ -88,7 +93,45 @@ const overlayDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System | Overlay Component', module)
+customElements.define(
+  'lion-demo-overlay',
+  class extends OverlayMixin(LitElement) {
+    // eslint-disable-next-line class-methods-use-this
+    _defineOverlay({ contentNode, invokerNode }) {
+      return new OverlayController({
+        placementMode: 'global', // have to set a default
+        contentNode,
+        invokerNode,
+        ...this.config,
+      });
+    }
+
+    _setupOpenCloseListeners() {
+      this.__close = () => {
+        this.opened = false;
+      };
+      this.__toggle = () => {
+        this.opened = !this.opened;
+      };
+      this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
+      this._overlayCtrl.contentNode.addEventListener('close', this.__close);
+    }
+
+    _teardownOpenCloseListeners() {
+      this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
+      this._overlayCtrl.contentNode.removeEventListener('close', this.__close);
+    }
+
+    render() {
+      return html`
+        <slot name="invoker"></slot>
+        <slot name="content"></slot>
+      `;
+    }
+  },
+);
+
+storiesOf('Overlay System | Overlay as a WC', module)
   .addDecorator(withKnobs)
   .add(
     'Default',
@@ -97,8 +140,9 @@ storiesOf('Overlay System | Overlay Component', module)
         ${overlayDemoStyle}
       </style>
       <p>
-        Important note: Your <code>slot="content"</code> gets moved to global overlay container.
-        After initialization it is no longer a child of <code>lion-overlay</code>
+        Important note: For <code>placementMode: 'global'</code>, your
+        <code>slot="content"</code> gets moved to global overlay container. After initialization it
+        is no longer a child of <code>lion-demo-overlay</code>
       </p>
       <p>
         To close your overlay from some action performed inside the content slot, fire a
@@ -111,7 +155,7 @@ storiesOf('Overlay System | Overlay Component', module)
       </p>
       <p>The demo below demonstrates this</p>
       <div class="demo-box">
-        <lion-overlay>
+        <lion-demo-overlay>
           <lion-button slot="invoker">Overlay</lion-button>
           <div slot="content" class="overlay">
             Hello! You can close this notification here:
@@ -121,13 +165,13 @@ storiesOf('Overlay System | Overlay Component', module)
               >⨯</lion-button
             >
           </div>
-        </lion-overlay>
+        </lion-demo-overlay>
       </div>
     `,
   )
   .add('Global placement configuration', () => {
     const overlay = placement => html`
-      <lion-overlay
+      <lion-demo-overlay
         .config=${{ hasBackdrop: true, trapsKeyboardFocus: true, viewportConfig: { placement } }}
       >
         <lion-button slot="invoker">Overlay ${placement}</lion-button>
@@ -139,7 +183,7 @@ storiesOf('Overlay System | Overlay Component', module)
             >⨯</lion-button
           >
         </div>
-      </lion-overlay>
+      </lion-demo-overlay>
     `;
 
     return html`
@@ -159,7 +203,7 @@ storiesOf('Overlay System | Overlay Component', module)
         ${overlayDemoStyle}
       </style>
       <div class="demo-box_placements">
-        <lion-overlay
+        <lion-demo-overlay
           .config=${{ placementMode: 'local', popperConfig: { placement: 'bottom-start' } }}
         >
           <lion-button slot="invoker">Overlay</lion-button>
@@ -171,7 +215,7 @@ storiesOf('Overlay System | Overlay Component', module)
               >⨯</lion-button
             >
           </div>
-        </lion-overlay>
+        </lion-demo-overlay>
       </div>
     `,
   )
@@ -186,13 +230,13 @@ storiesOf('Overlay System | Overlay Component', module)
         <a href="https://popper.js.org/popper-documentation.html">Popper.js Docs</a>
       </div>
       <div class="demo-box_placements">
-        <lion-overlay
+        <lion-demo-overlay
           .config=${{
             placementMode: 'local',
             hidesOnEsc: true,
             hidesOnOutsideClick: true,
             popperConfig: {
-              placement: 'bottom-start',
+              placement: 'bottom-end',
               positionFixed: true,
               modifiers: {
                 keepTogether: {
@@ -219,13 +263,13 @@ storiesOf('Overlay System | Overlay Component', module)
           <button slot="invoker">
             UK
           </button>
-        </lion-overlay>
+        </lion-demo-overlay>
       </div>
     `,
   )
   .add('Switch overlays configuration', () => {
     const overlay = renderOffline(html`
-      <lion-overlay .config=${{ ...withBottomSheetConfig() }}>
+      <lion-demo-overlay .config=${{ ...withBottomSheetConfig() }}>
         <lion-button slot="invoker">Overlay</lion-button>
         <div slot="content" class="overlay">
           Hello! You can close this notification here:
@@ -235,7 +279,7 @@ storiesOf('Overlay System | Overlay Component', module)
             >⨯</lion-button
           >
         </div>
-      </lion-overlay>
+      </lion-demo-overlay>
     `);
 
     return html`
@@ -278,7 +322,7 @@ storiesOf('Overlay System | Overlay Component', module)
   })
   .add('On hover', () => {
     const popup = renderOffline(html`
-      <lion-overlay
+      <lion-demo-overlay
         .config=${{
           placementMode: 'local',
           hidesOnEsc: true,
@@ -301,7 +345,7 @@ storiesOf('Overlay System | Overlay Component', module)
         <div slot="content" class="overlay">
           United Kingdom
         </div>
-      </lion-overlay>
+      </lion-demo-overlay>
     `);
 
     return html`
@@ -315,7 +359,7 @@ storiesOf('Overlay System | Overlay Component', module)
   })
   .add('On an input', () => {
     const popup = renderOffline(html`
-      <lion-overlay
+      <lion-demo-overlay
         .config=${{
           placementMode: 'local',
           elementToFocusAfterHide: null,
@@ -337,7 +381,7 @@ storiesOf('Overlay System | Overlay Component', module)
             popup.opened = true;
           }}
         />
-      </lion-overlay>
+      </lion-demo-overlay>
     `);
 
     return html`
@@ -353,7 +397,7 @@ storiesOf('Overlay System | Overlay Component', module)
 
 /* .add('Toggle placement with knobs', () => {
     const overlay = (placementMode = 'global') => html`
-      <lion-overlay
+      <lion-demo-overlay
         .config=${{
           placementMode,
           ...(placementMode === 'global'
@@ -370,7 +414,7 @@ storiesOf('Overlay System | Overlay Component', module)
             >⨯</lion-button
           >
         </div>
-      </lion-overlay>
+      </lion-demo-overlay>
     `;
 
     return html`

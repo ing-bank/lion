@@ -264,8 +264,6 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
       ...withModalDialogConfig(),
       contentNode,
       invokerNode,
-      elementToFocusAfterHide: invokerNode,
-      hidesOnOutsideClick: true,
     });
     return ctrl;
   }

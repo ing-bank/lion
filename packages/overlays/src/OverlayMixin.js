@@ -15,8 +15,15 @@ export const OverlayMixin = dedupeMixin(
             type: Boolean,
             reflect: true,
           },
-          popperConfig: Object,
+          config: {
+            type: Object,
+          },
         };
+      }
+
+      constructor() {
+        super();
+        this.config = {};
       }
 
       get opened() {
@@ -30,44 +37,63 @@ export const OverlayMixin = dedupeMixin(
         }
       }
 
-      __syncOpened() {
-        if (this._opened) {
-          this._overlayCtrl.show();
-        } else {
-          this._overlayCtrl.hide();
-        }
+      get config() {
+        return this._config;
       }
 
-      get popperConfig() {
-        return this._popperConfig;
-      }
-
-      set popperConfig(config) {
-        this._popperConfig = {
-          ...this._popperConfig,
-          ...config,
-        };
-        this.__syncPopper();
-      }
-
-      __syncPopper() {
+      set config(value) {
         if (this._overlayCtrl) {
-          this._overlayCtrl.updatePopperConfig(this._popperConfig);
+          this._overlayCtrl.updateConfig(value);
         }
+        this._config = value;
       }
+
+      /**
+       * @overridable method `_overlayTemplate`
+       * Be aware that the overlay will be placed in a different shadow root.
+       * Therefore, style encapsulation should be provided by the contents of
+       * _overlayTemplate
+       * @return {TemplateResult}
+       */
+
+      /**
+       * @overridable method `_defineOverlay`
+       * @desc returns an instance of a (dynamic) overlay controller
+       * @returns {OverlayController}
+       */
+      // eslint-disable-next-line
+      _defineOverlay({ contentNode, invokerNode }) {}
+
+      /**
+       * @overridable
+       * @desc use this method to setup your open and close event listeners
+       * For example, set a click event listener on _overlayInvokerNode to set opened to true
+       */
+      // eslint-disable-next-line class-methods-use-this
+      _setupOpenCloseListeners() {}
+
+      /**
+       * @overridable
+       * @desc use this method to tear down your event listeners
+       */
+      // eslint-disable-next-line class-methods-use-this
+      _teardownOpenCloseListeners() {}
 
       connectedCallback() {
         if (super.connectedCallback) {
           super.connectedCallback();
         }
         this._createOverlay();
+        this._setupOpenCloseListeners();
         this.__syncOpened();
         this.__syncPopper();
       }
 
       firstUpdated(c) {
         super.firstUpdated(c);
-        this._createOutletForLocalOverlay();
+        if (this._overlayCtrl.config.placementMode === 'local') {
+          this._createOutletForLocalOverlay();
+        }
       }
 
       updated(c) {
@@ -77,23 +103,32 @@ export const OverlayMixin = dedupeMixin(
         }
       }
 
+      disconnectedCallback() {
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
+        this._teardownOpenCloseListeners();
+      }
+
+      get _overlayInvokerNode() {
+        return Array.from(this.children).find(child => child.slot === 'invoker');
+      }
+
+      // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content')
+      // When this issue is fixed https://github.com/ing-bank/lion/issues/382
+      get _overlayContentNode() {
+        const contentNode = this.querySelector('[slot=content]');
+        if (contentNode) {
+          this._cachedOverlayContentNode = contentNode;
+        }
+        return contentNode || this._cachedOverlayContentNode;
+      }
+
       _renderOverlayContent() {
         render(this._overlayTemplate(), this.__contentParent, {
           scopeName: this.localName,
           eventContext: this,
         });
-      }
-
-      /**
-       * @desc Two options for a Subclasser:
-       * - 1: Define a template in `._overlayTemplate`. In this case the overlay content is
-       * predefined and thus belongs to the web component. Examples: datepicker.
-       * - 2: Define a getter `_overlayContentNode` that returns a node reference to a (content
-       * projected) node. Used when Application Developer is in charge of the content. Examples:
-       * popover, dialog, bottom sheet, dropdown, tooltip, select, combobox etc.
-       */
-      get __managesOverlayViaTemplate() {
-        return Boolean(this._overlayTemplate);
       }
 
       _createOverlay() {
@@ -128,19 +163,30 @@ export const OverlayMixin = dedupeMixin(
       }
 
       /**
-       * @overridable method `_overlayTemplate`
-       * Be aware that the overlay will be placed in a different shadow root.
-       * Therefore, style encapsulation should be provided by the contents of
-       * _overlayTemplate
-       * @return {TemplateResult}
+       * @desc Two options for a Subclasser:
+       * - 1: Define a template in `._overlayTemplate`. In this case the overlay content is
+       * predefined and thus belongs to the web component. Examples: datepicker.
+       * - 2: Define a getter `_overlayContentNode` that returns a node reference to a (content
+       * projected) node. Used when Application Developer is in charge of the content. Examples:
+       * popover, dialog, bottom sheet, dropdown, tooltip, select, combobox etc.
        */
+      get __managesOverlayViaTemplate() {
+        return Boolean(this._overlayTemplate);
+      }
 
-      /**
-       * @overridable method `_defineOverlay`
-       * @desc returns an instance of a (dynamic) overlay controller
-       * @returns {OverlayController}
-       */
-      // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode }) {}
+      __syncOpened() {
+        if (this._opened) {
+          this._overlayCtrl.show();
+        } else {
+          this._overlayCtrl.hide();
+        }
+      }
+
+      __syncPopper() {
+        if (this._overlayCtrl) {
+          // TODO: Use updateConfig directly.. but first check if this sync is even still needed! Maybe we can remove it.
+          this._overlayCtrl.updatePopperConfig(this.config.popperConfig);
+        }
+      }
     },
 );

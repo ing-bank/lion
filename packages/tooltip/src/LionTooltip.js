@@ -1,19 +1,24 @@
-import { LionPopup } from '@lion/popup';
+import { OverlayMixin, OverlayController } from '@lion/overlays';
+import { LitElement, html } from '@lion/core';
 
-export class LionTooltip extends LionPopup {
+export class LionTooltip extends OverlayMixin(LitElement) {
   constructor() {
     super();
     this.mouseActive = false;
     this.keyActive = false;
-
-    // Trigger config setter to ensure it updates in OverlayController
-    this.config = {
-      ...this.config,
-      elementToFocusAfterHide: null,
-    };
   }
 
-  _setupShowHideListeners() {
+  _defineOverlay({ contentNode, invokerNode }) {
+    return new OverlayController({
+      placementMode: 'local', // have to set a default
+      elementToFocusAfterHide: null,
+      contentNode,
+      invokerNode,
+      ...this.config,
+    });
+  }
+
+  _setupOpenCloseListeners() {
     this.__resetActive = () => {
       this.mouseActive = false;
       this.keyActive = false;
@@ -52,7 +57,7 @@ export class LionTooltip extends LionPopup {
     this._overlayInvokerNode.addEventListener('focusout', this.__hideKey);
   }
 
-  _teardownShowHideListeners() {
+  _teardownOpenCloseListeners() {
     this._overlayCtrl.removeEventListener('hide', this.__resetActive);
     this.removeEventListener('mouseenter', this.__showMouse);
     this.removeEventListener('mouseleave', this._hideMouse);
@@ -63,5 +68,12 @@ export class LionTooltip extends LionPopup {
   connectedCallback() {
     super.connectedCallback();
     this._overlayContentNode.setAttribute('role', 'tooltip');
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+    `;
   }
 }

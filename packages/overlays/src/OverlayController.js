@@ -103,18 +103,6 @@ export class OverlayController {
    * @param {OverlayConfig} cfgToAdd
    */
   updateConfig(cfgToAdd) {
-    // only updating the viewportConfig
-    if (Object.keys(cfgToAdd).length === 1 && Object.keys(cfgToAdd)[0] === 'viewportConfig') {
-      this.updateViewportConfig(cfgToAdd.viewportConfig);
-      return;
-    }
-
-    // only updating the popperConfig
-    if (Object.keys(cfgToAdd).length === 1 && Object.keys(cfgToAdd)[0] === 'popperConfig') {
-      this.updatePopperConfig(cfgToAdd.popperConfig);
-      return;
-    }
-
     // Teardown all previous configs
     this._handleFeatures({ phase: 'teardown' });
 
@@ -164,7 +152,7 @@ export class OverlayController {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
         this.constructor.popperModule = preloadPopper();
       }
-      this.__mergePopperConfigs(this.popperConfig || {});
+      this.__mergePopperConfigs(this.config.popperConfig || {});
     }
     this._handleFeatures({ phase: 'init' });
   }
@@ -312,7 +300,6 @@ export class OverlayController {
     // Otherwise we assume the 'outside world' has, purposefully, taken over
     // if (this._contentNodeWrapper.activeElement) {
     if (this.elementToFocusAfterHide) {
-      console.log(this.elementToFocusAfterHide);
       this.elementToFocusAfterHide.focus();
     }
     // }
@@ -556,20 +543,13 @@ export class OverlayController {
     }
   }
 
-  // Popper does not export a nice method to update an existing instance with a new config. Therefore we recreate the instance.
-  // TODO: Send a merge request to Popper to abstract their logic in the constructor to an exposed method which takes in the user config.
+  // TODO: Remove when no longer required by OverlayMixin (after updateConfig works properly while opened)
   async updatePopperConfig(config = {}) {
     this.__mergePopperConfigs(config);
     if (this.isShown) {
       await this.__createPopperInstance();
       this._popper.update();
     }
-  }
-
-  updateViewportConfig(newConfig) {
-    this._handlePosition({ phase: 'hide' });
-    this.viewportConfig = newConfig;
-    this._handlePosition({ phase: 'show' });
   }
 
   teardown() {
@@ -607,14 +587,19 @@ export class OverlayController {
       },
     };
 
-    // Deep merging default config, previously configured user config, new user config
-    this.popperConfig = {
+    /**
+     * Deep merging:
+     *  - default config
+     *  - previously configured user config
+     *  - new user added config
+     */
+    this.config.popperConfig = {
       ...defaultConfig,
-      ...(this.popperConfig || {}),
+      ...(this.config.popperConfig || {}),
       ...(config || {}),
       modifiers: {
         ...defaultConfig.modifiers,
-        ...((this.popperConfig && this.popperConfig.modifiers) || {}),
+        ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
         ...((config && config.modifiers) || {}),
       },
     };
@@ -627,7 +612,7 @@ export class OverlayController {
     }
     const { default: Popper } = await this.constructor.popperModule;
     this._popper = new Popper(this._referenceNode, this._contentNodeWrapper, {
-      ...this.popperConfig,
+      ...this.config.popperConfig,
     });
   }
 
