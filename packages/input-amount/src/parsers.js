@@ -11,9 +11,10 @@ function isDecimalSeparator(value) {
 /**
  * Determines the best possible parsing mode.
  *
- * Parsemode depends mostely on the last 4 chars.
- * - 1234 => xxx1234 (heuristic)
+ * - If there is only one separator (withLocale)
  * - 1,23 => xxx1.23 (heuristic)
+ * - else parse mode depends mostly on the last 4 chars
+ * - 1234 => xxx1234 (heuristic)
  * - [space]123 => xxx123 (heuristic)
  * - ,123 => unclear
  *   - if 1.000,123 (we find a different separator) => 1000.123 (heuristic)
@@ -30,7 +31,13 @@ function isDecimalSeparator(value) {
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
  * @return {string} unparseable|withLocale|heuristic
  */
-function getParseMode(value) {
+function getParseMode(value, { mode = 'auto' } = {}) {
+  const separators = value.match(/[., ]/g);
+
+  if (mode === 'auto' && separators && separators.length === 1) {
+    return 'withLocale';
+  }
+
   if (value.length > 4) {
     const charAtLastSeparatorPosition = value[value.length - 4];
     if (isDecimalSeparator(charAtLastSeparatorPosition)) {
@@ -120,7 +127,7 @@ export function parseAmount(value, options) {
     return undefined;
   }
   const cleanedInput = matchedInput.join('');
-  const parseMode = getParseMode(cleanedInput);
+  const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
     case 'unparseable':
       return parseFloat(cleanedInput.match(/[0-9]/g).join(''));
