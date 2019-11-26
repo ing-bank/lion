@@ -310,10 +310,14 @@ export const FormatMixin = dedupeMixin(
        *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
        */
       _reflectBackFormattedValueToUser() {
-        if (!this.__isHandlingUserInput) {
+        if (this._reflectBackOn()) {
           // Text 'undefined' should not end up in <input>
           this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
         }
+      }
+
+      _reflectBackOn() {
+        return !this.__isHandlingUserInput;
       }
 
       // This can be called whenever the view value should be updated. Dependent on component type
