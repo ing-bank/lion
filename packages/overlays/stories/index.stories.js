@@ -7,7 +7,6 @@ import {
   withDropdownConfig,
   withModalDialogConfig,
   OverlayMixin,
-  OverlayController,
 } from '../index.js';
 
 function renderOffline(litHtmlTemplate) {
@@ -96,14 +95,16 @@ const overlayDemoStyle = css`
 customElements.define(
   'lion-demo-overlay',
   class extends OverlayMixin(LitElement) {
+    constructor() {
+      super();
+      this.closeEventName = 'demo-overlay-close';
+    }
+
     // eslint-disable-next-line class-methods-use-this
-    _defineOverlay({ contentNode, invokerNode }) {
-      return new OverlayController({
+    _defineOverlayConfig() {
+      return {
         placementMode: 'global', // have to set a default
-        contentNode,
-        invokerNode,
-        ...this.config,
-      });
+      };
     }
 
     _setupOpenCloseListeners() {
@@ -114,12 +115,10 @@ customElements.define(
         this.opened = !this.opened;
       };
       this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
-      this._overlayCtrl.contentNode.addEventListener('close', this.__close);
     }
 
     _teardownOpenCloseListeners() {
       this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
-      this._overlayCtrl.contentNode.removeEventListener('close', this.__close);
     }
 
     render() {
@@ -161,7 +160,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
             Hello! You can close this notification here:
             <lion-button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+              @click=${e =>
+                e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
               >⨯</lion-button
             >
           </div>
@@ -179,7 +179,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <lion-button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+            @click=${e =>
+              e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
             >⨯</lion-button
           >
         </div>
@@ -211,7 +212,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
             Hello! You can close this notification here:
             <lion-button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+              @click=${e =>
+                e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
               >⨯</lion-button
             >
           </div>
@@ -275,7 +277,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <lion-button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+            @click=${e =>
+              e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
             >⨯</lion-button
           >
         </div>
@@ -410,7 +413,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <lion-button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
             >⨯</lion-button
           >
         </div>

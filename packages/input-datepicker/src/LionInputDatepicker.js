@@ -1,6 +1,6 @@
 import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
-import { OverlayController, withModalDialogConfig, OverlayMixin } from '@lion/overlays';
+import { withModalDialogConfig, OverlayMixin } from '@lion/overlays';
 
 import '@lion/calendar/lion-calendar.js';
 import './lion-calendar-overlay-frame.js';
@@ -255,17 +255,14 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
 
   /**
    * @override Configures OverlayMixin
-   * @desc returns an instance of a (dynamic) overlay controller
-   * @returns {OverlayController}
+   * @desc overrides default configuration options for this component
+   * @returns {Object}
    */
   // eslint-disable-next-line class-methods-use-this
-  _defineOverlay({ contentNode, invokerNode }) {
-    const ctrl = new OverlayController({
+  _defineOverlayConfig() {
+    return {
       ...withModalDialogConfig(),
-      contentNode,
-      invokerNode,
-    });
-    return ctrl;
+    };
   }
 
   async __openCalendarOverlay() {

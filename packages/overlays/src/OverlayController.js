@@ -152,7 +152,7 @@ export class OverlayController {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
         this.constructor.popperModule = preloadPopper();
       }
-      this.__mergePopperConfigs(this.config.popperConfig || {});
+      this.__mergePopperConfigs(cfgToAdd.popperConfig || {});
     }
     this._handleFeatures({ phase: 'init' });
   }

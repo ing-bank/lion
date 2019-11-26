@@ -1,21 +1,20 @@
-import { OverlayMixin, OverlayController } from '@lion/overlays';
+import { OverlayMixin } from '@lion/overlays';
 import { LitElement, html } from '@lion/core';
 
 export class LionTooltip extends OverlayMixin(LitElement) {
   constructor() {
     super();
+    this.closeEventName = 'tooltip-close';
     this.mouseActive = false;
     this.keyActive = false;
   }
 
-  _defineOverlay({ contentNode, invokerNode }) {
-    return new OverlayController({
+  // eslint-disable-next-line class-methods-use-this
+  _defineOverlayConfig() {
+    return {
       placementMode: 'local', // have to set a default
       elementToFocusAfterHide: null,
-      contentNode,
-      invokerNode,
-      ...this.config,
-    });
+    };
   }
 
   _setupOpenCloseListeners() {

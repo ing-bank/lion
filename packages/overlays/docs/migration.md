@@ -53,7 +53,7 @@ const template = html`
     <button slot="invoker">Click me!</button>
     <div slot="content">
       <div>Hello, World!</div>
-      <button @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}>
+      <button @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}>
         Close
       </button>
     </div>

@@ -34,7 +34,7 @@ html`
     }}>
       This is a dialog
       <button
-        @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+        @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
       >x</button>
     <div>
     <button slot="invoker">

@@ -1,5 +1,5 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
-import { OverlayController, withDropdownConfig, OverlayMixin } from '@lion/overlays';
+import { withDropdownConfig, OverlayMixin } from '@lion/overlays';
 import { FormControlMixin, InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
@@ -601,12 +601,10 @@ export class LionSelectRich extends OverlayMixin(
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _defineOverlay({ invokerNode, contentNode } = {}) {
-    return new OverlayController({
+  _defineOverlayConfig() {
+    return {
       ...withDropdownConfig(),
-      contentNode,
-      invokerNode,
-    });
+    };
   }
 
   __setupOverlay() {

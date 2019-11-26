@@ -82,7 +82,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
             Hello! You can close this notification here:
             <lion-button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+              @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
               >⨯</lion-button
             >
           </div>
@@ -98,7 +98,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
           Hello! You can close this notification here:
           <lion-button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
             >⨯</lion-button
           >
         </div>
@@ -123,7 +123,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
           Hello! You can close this notification here:
           <lion-button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
             >⨯</lion-button
           >
         </div>

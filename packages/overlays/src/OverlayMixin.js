@@ -1,4 +1,5 @@
 import { render, dedupeMixin } from '@lion/core';
+import { OverlayController } from './OverlayController.js';
 
 /**
  * @type {Function()}
@@ -18,12 +19,16 @@ export const OverlayMixin = dedupeMixin(
           config: {
             type: Object,
           },
+          closeEventName: {
+            type: String,
+          },
         };
       }
 
       constructor() {
         super();
         this.config = {};
+        this.closeEventName = 'overlay-close';
       }
 
       get opened() {
@@ -59,10 +64,29 @@ export const OverlayMixin = dedupeMixin(
       /**
        * @overridable method `_defineOverlay`
        * @desc returns an instance of a (dynamic) overlay controller
+       * In case overriding _defineOverlayConfig is not enough
        * @returns {OverlayController}
        */
       // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode }) {}
+      _defineOverlay({ contentNode, invokerNode }) {
+        return new OverlayController({
+          contentNode,
+          invokerNode,
+          ...this._defineOverlayConfig(),
+          ...this.config,
+        });
+      }
+
+      /**
+       * @overridable method `_defineOverlay`
+       * @desc returns an object with default configuration options for your overlay component.
+       * This is generally speaking easier to override than _defineOverlay method entirely.
+       * @returns {OverlayController}
+       */
+      // eslint-disable-next-line
+      _defineOverlayConfig() {
+        return {};
+      }
 
       /**
        * @overridable
@@ -84,6 +108,14 @@ export const OverlayMixin = dedupeMixin(
           super.connectedCallback();
         }
         this._createOverlay();
+
+        // Default close event catcher on the contentNode which is useful if people want to close
+        // their overlay but the content is not in the global root node (nowhere near the overlay component)
+        this.__close = () => {
+          this.opened = false;
+        };
+        this._overlayCtrl.contentNode.addEventListener(this.closeEventName, this.__close);
+
         this._setupOpenCloseListeners();
         this.__syncOpened();
         this.__syncPopper();
@@ -91,9 +123,7 @@ export const OverlayMixin = dedupeMixin(
 
       firstUpdated(c) {
         super.firstUpdated(c);
-        if (this._overlayCtrl.config.placementMode === 'local') {
-          this._createOutletForLocalOverlay();
-        }
+        this._createOutletForLocalOverlay();
       }
 
       updated(c) {
@@ -107,6 +137,7 @@ export const OverlayMixin = dedupeMixin(
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
+        this._overlayCtrl.contentNode.removeEventListener(this.closeEventName, this.__close);
         this._teardownOpenCloseListeners();
       }
 
@@ -114,7 +145,8 @@ export const OverlayMixin = dedupeMixin(
         return Array.from(this.children).find(child => child.slot === 'invoker');
       }
 
-      // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content')
+      // FIXME: This should be refactored to
+      // Array.from(this.children).find(child => child.slot === 'content')
       // When this issue is fixed https://github.com/ing-bank/lion/issues/382
       get _overlayContentNode() {
         const contentNode = this.querySelector('[slot=content]');
@@ -184,7 +216,7 @@ export const OverlayMixin = dedupeMixin(
 
       __syncPopper() {
         if (this._overlayCtrl) {
-          // TODO: Use updateConfig directly.. but first check if this sync is even still needed! Maybe we can remove it.
+          // TODO: Use updateConfig directly.. But maybe we can remove this entirely.
           this._overlayCtrl.updatePopperConfig(this.config.popperConfig);
         }
       }

@@ -35,7 +35,9 @@ describe('lion-dialog', () => {
         <lion-dialog>
           <div slot="content" class="dialog">
             Hey there
-            <button @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}>
+            <button
+              @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
+            >
               x
             </button>
           </div>
