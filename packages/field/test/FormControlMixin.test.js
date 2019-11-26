@@ -62,7 +62,49 @@ describe('FormControlMixin', () => {
     });
   });
 
-  it('adds aria-live="politie" to the feedback slot', async () => {
+  it('internally sorts aria-describedby and aria-labelledby ids', async () => {
+    const wrapper = await fixture(html`
+      <div id="wrapper">
+        <div id="additionalLabelA">should go after input internals</div>
+        <div id="additionalDescriptionA">should go after input internals</div>
+        <${tag}>
+          <input slot="input" />
+          <label slot="label">Added to label by default</label>
+          <div slot="feedback">Added to description by default</div>
+        </${tag}>
+        <div id="additionalLabelB">should go after input internals</div>
+        <div id="additionalDescriptionB">should go after input internals</div>
+      </div>`);
+    const el = wrapper.querySelector(elem);
+
+    const { _inputNode } = el;
+    console.log('_inputNode', _inputNode);
+
+    // 1. addToAriaLabelledBy()
+    // external inputs should go in order defined by user
+    el.addToAriaLabelledBy(wrapper.querySelector('#additionalLabelB'));
+    el.addToAriaLabelledBy(wrapper.querySelector('#additionalLabelA'));
+
+    expect(
+      _inputNode.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
+        _inputNode.getAttribute('aria-labelledby').indexOf('additionalLabelB') <
+        _inputNode.getAttribute('aria-labelledby').indexOf('additionalLabelA'),
+    );
+
+    // 2. addToAriaDescribedBy()
+    // Check if the aria attr is filled initially
+    el.addToAriaDescribedBy(wrapper.querySelector('#additionalDescriptionB'));
+    el.addToAriaDescribedBy(wrapper.querySelector('#additionalDescriptionA'));
+
+    // Should be placed in the end
+    expect(
+      _inputNode.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
+        _inputNode.getAttribute('aria-describedby').indexOf('additionalDescriptionB') <
+        _inputNode.getAttribute('aria-describedby').indexOf('additionalDescriptionA'),
+    );
+  });
+
+  it('adds aria-live="polite" to the feedback slot', async () => {
     const lionField = await fixture(html`
       <${tag}>
         ${inputSlot}
