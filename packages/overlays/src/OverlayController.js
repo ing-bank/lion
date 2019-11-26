@@ -25,7 +25,7 @@ export class OverlayController {
       contentNode: config.contentNode,
       invokerNode: config.invokerNode,
       referenceNode: null,
-      elementToFocusAfterHide: document.body,
+      elementToFocusAfterHide: config.invokerNode,
       inheritsReferenceWidth: '',
       hasBackdrop: false,
       isBlocking: false,
@@ -103,6 +103,18 @@ export class OverlayController {
    * @param {OverlayConfig} cfgToAdd
    */
   updateConfig(cfgToAdd) {
+    // only updating the viewportConfig
+    if (Object.keys(cfgToAdd).length === 1 && Object.keys(cfgToAdd)[0] === 'viewportConfig') {
+      this.updateViewportConfig(cfgToAdd.viewportConfig);
+      return;
+    }
+
+    // only updating the popperConfig
+    if (Object.keys(cfgToAdd).length === 1 && Object.keys(cfgToAdd)[0] === 'popperConfig') {
+      this.updatePopperConfig(cfgToAdd.popperConfig);
+      return;
+    }
+
     // Teardown all previous configs
     this._handleFeatures({ phase: 'teardown' });
 
@@ -167,6 +179,7 @@ export class OverlayController {
     }
   }
 
+  // FIXME: Consider that state can also be shown (rather than only initial/closed), and don't hide in that case
   /**
    * @desc Cleanup ._contentNodeWrapper. We do this, because creating a fresh wrapper
    * can lead to problems with event listeners...
@@ -298,7 +311,10 @@ export class OverlayController {
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
     // if (this._contentNodeWrapper.activeElement) {
-    this.elementToFocusAfterHide.focus();
+    if (this.elementToFocusAfterHide) {
+      console.log(this.elementToFocusAfterHide);
+      this.elementToFocusAfterHide.focus();
+    }
     // }
   }
 
@@ -548,6 +564,12 @@ export class OverlayController {
       await this.__createPopperInstance();
       this._popper.update();
     }
+  }
+
+  updateViewportConfig(newConfig) {
+    this._handlePosition({ phase: 'hide' });
+    this.viewportConfig = newConfig;
+    this._handlePosition({ phase: 'show' });
   }
 
   teardown() {

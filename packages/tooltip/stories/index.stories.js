@@ -49,7 +49,7 @@ const tooltipDemoStyle = css`
   }
 `;
 
-storiesOf('Local Overlay System|Tooltip', module)
+storiesOf('Overlays Specific WC|Tooltip', module)
   .addDecorator(withKnobs)
   .add(
     'Button tooltip',

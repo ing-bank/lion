@@ -11,39 +11,8 @@ const globalOverlayDemoStyle = css`
   }
 `;
 
-storiesOf('Global Overlay System|Global Overlay', module)
-  .add('Default', () => {
-    const overlayCtrl = new OverlayController({
-      placementMode: 'global',
-      contentNode: fixtureSync(html`
-        <div class="demo-overlay">
-          <p>Simple overlay</p>
-          <button @click="${() => overlayCtrl.hide()}">Close</button>
-        </div>
-      `),
-    });
-
-    return html`
-      <style>
-        ${globalOverlayDemoStyle}
-      </style>
-      <a href="#">Anchor 1</a>
-      <button
-        @click="${event => overlayCtrl.show(event.target)}"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-      >
-        Open overlay
-      </button>
-      <a href="#">Anchor 2</a>
-      ${Array(50).fill(
-        html`
-          <p>Lorem ipsum</p>
-        `,
-      )}
-    `;
-  })
-  .add('Option "preventsScroll"', () => {
+storiesOf('Overlay System | Behavior Features', module)
+  .add('preventsScroll', () => {
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       preventsScroll: true,
@@ -73,7 +42,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       )}
     `;
   })
-  .add('Option "hasBackdrop"', () => {
+  .add('hasBackdrop', () => {
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       hasBackdrop: true,
@@ -98,7 +67,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       </button>
     `;
   })
-  .add('Option "trapsKeyboardFocus"', () => {
+  .add('trapsKeyboardFocus', () => {
     const overlayCtrl = new OverlayController({
       placementMode: 'global',
       trapsKeyboardFocus: true,
@@ -135,7 +104,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       <a href="#">Anchor 2</a>
     `;
   })
-  .add('Option "trapsKeyboardFocus" (multiple)', () => {
+  .add('trapsKeyboardFocus" (multiple)', () => {
     const overlayCtrl2 = new OverlayController({
       placementMode: 'global',
       trapsKeyboardFocus: true,
@@ -183,7 +152,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       <a href="#">Anchor 2</a>
     `;
   })
-  .add('Option "isBlocking"', () => {
+  .add('isBlocking', () => {
     const blockingOverlayCtrl = new OverlayController({
       placementMode: 'global',
       isBlocking: true,
@@ -228,7 +197,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       </button>
     `;
   })
-  .add('Option "viewportConfig:placement"', () => {
+  .add('viewportConfig:placement', () => {
     const tagName = 'lion-overlay-placement-demo';
     if (!customElements.get(tagName)) {
       customElements.define(
@@ -241,18 +210,9 @@ storiesOf('Global Overlay System|Global Overlay', module)
             };
           }
 
-          render() {
-            return html`
-              <p>Overlay placement: ${this.placement}</p>
-              <button @click="${this._togglePlacement}">
-                Toggle ${this.placement} position
-              </button>
-              <button @click="${() => this.dispatchEvent(new CustomEvent('close'))}">Close</button>
-            `;
-          }
-
-          _togglePlacement() {
-            const options = [
+          constructor() {
+            super();
+            this.options = [
               'top',
               'top-right',
               'right',
@@ -263,7 +223,24 @@ storiesOf('Global Overlay System|Global Overlay', module)
               'top-left',
               'center',
             ];
-            this.placement = options[(options.indexOf(this.placement) + 1) % options.length];
+          }
+
+          render() {
+            return html`
+              <p>Overlay placement: ${this.placement}</p>
+              <button @click="${this._togglePlacement}">
+                Toggle
+                ${this.options[(this.options.indexOf(this.placement) + 1) % this.options.length]}
+                position
+              </button>
+              <button @click="${() => this.dispatchEvent(new CustomEvent('close'))}">Close</button>
+            `;
+          }
+
+          _togglePlacement() {
+            this.placement = this.options[
+              (this.options.indexOf(this.placement) + 1) % this.options.length
+            ];
             this.dispatchEvent(
               new CustomEvent('toggle-placement', {
                 detail: this.placement,
@@ -300,7 +277,7 @@ storiesOf('Global Overlay System|Global Overlay', module)
       </button>
     `;
   })
-  .add('Option "hidesOnOutsideClick"', () => {
+  .add('hidesOnOutsideClick', () => {
     const shadowContent = document.createElement('div');
     shadowContent.attachShadow({ mode: 'open' });
     shadowContent.shadowRoot.appendChild(

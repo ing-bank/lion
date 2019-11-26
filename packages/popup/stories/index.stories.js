@@ -49,7 +49,7 @@ const popupDemoStyle = css`
   }
 `;
 
-storiesOf('Local Overlay System|Popup', module)
+storiesOf('Overlays Specific WC|Popup', module)
   .addDecorator(withKnobs)
   .add(
     'Button popup',

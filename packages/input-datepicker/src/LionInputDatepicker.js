@@ -204,6 +204,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    * this is our source to give as .contentNode to OverlayController.
    * Important: do not change the name of this method.
    */
+  // TODO: Refactor to new overlay system public API --> @close=${() => { this.opened = false; }}
   _overlayTemplate() {
     return html`
       <lion-calendar-overlay-frame @dialog-close=${() => this._overlayCtrl.hide()}>

@@ -214,6 +214,8 @@ export class LionSelectRich extends OverlayMixin(
       this.modelValue.length > 0
     ) {
       if (this.checkedIndex) {
+        // Necessary to sync the checkedIndex through the getter/setter explicitly
+        // eslint-disable-next-line no-self-assign
         this.checkedIndex = this.checkedIndex;
       }
     }

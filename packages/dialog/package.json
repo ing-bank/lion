@@ -1,7 +1,7 @@
 {
-  "name": "@lion/overlays",
-  "version": "0.6.4",
-  "description": "Overlays System using lit-html for rendering",
+  "name": "@lion/dialog",
+  "version": "0.1.0",
+  "description": "Show relative overlay content on click, as a webcomponent",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages/overlays"
+    "directory": "packages/dialog"
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js"
@@ -19,29 +19,24 @@
   "keywords": [
     "lion",
     "web-components",
-    "overlays"
+    "dialog"
   ],
   "main": "index.js",
   "module": "index.js",
   "files": [
-    "docs",
     "src",
     "stories",
     "test",
-    "test-helpers",
-    "translations",
     "*.js"
   ],
   "dependencies": {
     "@lion/core": "^0.3.0",
-    "popper.js": "^1.15.0"
+    "@lion/overlays": "^0.6.4"
   },
   "devDependencies": {
     "@lion/button": "^0.3.32",
     "@lion/icon": "^0.2.8",
     "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.3.4",
-    "@open-wc/testing-helpers": "^1.0.0",
-    "sinon": "^7.2.2"
+    "@open-wc/testing": "^2.3.9"
   }
 }

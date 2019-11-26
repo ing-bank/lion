@@ -860,7 +860,7 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode.textContent).to.include('content2');
     });
 
-    it('respects the inital config provided to new OverlayController(initialConfig)', async () => {
+    it('respects the initial config provided to new OverlayController(initialConfig)', async () => {
       const contentNode = fixtureSync(html`
         <div>my content</div>
       `);
@@ -879,6 +879,33 @@ describe('OverlayController', () => {
       expect(ctrl.placementMode).to.equal('local');
       expect(ctrl.handlesAccesibility).to.equal(true);
       expect(ctrl.contentNode).to.equal(contentNode);
+    });
+
+    it('allows for updating viewport config placement only, while keeping the content shown', async () => {
+      const contentNode = fixtureSync(html`
+        <div>my content</div>
+      `);
+
+      const ctrl = new OverlayController({
+        // This is the shared config
+        placementMode: 'global',
+        handlesAccesibility: true,
+        contentNode,
+      });
+
+      ctrl.show();
+      expect(
+        ctrl._contentNodeWrapper.classList.contains('global-overlays__overlay-container--center'),
+      );
+      expect(ctrl.isShown).to.be.true;
+
+      ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
+      expect(
+        ctrl._contentNodeWrapper.classList.contains(
+          'global-overlays__overlay-container--top-right',
+        ),
+      );
+      expect(ctrl.isShown).to.be.true;
     });
   });
 

@@ -62,7 +62,10 @@ export const LocalizeMixin = dedupeMixin(
         if (this.__localizeMessageSync) {
           return localize.msg(...args);
         }
-        return until(this.localizeNamespacesLoaded.then(() => localize.msg(...args)), nothing);
+        return until(
+          this.localizeNamespacesLoaded.then(() => localize.msg(...args)),
+          nothing,
+        );
       }
 
       __getUniqueNamespaces() {

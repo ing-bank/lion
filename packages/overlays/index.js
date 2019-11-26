@@ -7,3 +7,5 @@ export { OverlayMixin } from './src/OverlayMixin.js';
 export { withBottomSheetConfig } from './src/configurations/withBottomSheetConfig.js';
 export { withModalDialogConfig } from './src/configurations/withModalDialogConfig.js';
 export { withDropdownConfig } from './src/configurations/withDropdownConfig.js';
+
+export { LionOverlay } from './src/LionOverlay.js';

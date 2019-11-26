@@ -5,12 +5,15 @@ export class LionTooltip extends LionPopup {
     super();
     this.mouseActive = false;
     this.keyActive = false;
+
+    // Trigger config setter to ensure it updates in OverlayController
+    this.config = {
+      ...this.config,
+      elementToFocusAfterHide: null,
+    };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._overlayContentNode.setAttribute('role', 'tooltip');
-
+  _setupShowHideListeners() {
     this.__resetActive = () => {
       this.mouseActive = false;
       this.keyActive = false;
@@ -19,26 +22,26 @@ export class LionTooltip extends LionPopup {
     this.__showMouse = () => {
       if (!this.keyActive) {
         this.mouseActive = true;
-        this._overlayCtrl.show();
+        this.opened = true;
       }
     };
 
     this.__hideMouse = () => {
       if (!this.keyActive) {
-        this._overlayCtrl.hide();
+        this.opened = false;
       }
     };
 
     this.__showKey = () => {
       if (!this.mouseActive) {
         this.keyActive = true;
-        this._overlayCtrl.show();
+        this.opened = true;
       }
     };
 
     this.__hideKey = () => {
       if (!this.mouseActive) {
-        this._overlayCtrl.hide();
+        this.opened = false;
       }
     };
 
@@ -49,12 +52,16 @@ export class LionTooltip extends LionPopup {
     this._overlayInvokerNode.addEventListener('focusout', this.__hideKey);
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
+  _teardownShowHideListeners() {
     this._overlayCtrl.removeEventListener('hide', this.__resetActive);
     this.removeEventListener('mouseenter', this.__showMouse);
     this.removeEventListener('mouseleave', this._hideMouse);
     this._overlayInvokerNode.removeEventListener('focusin', this._showKey);
     this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._overlayContentNode.setAttribute('role', 'tooltip');
   }
 }
