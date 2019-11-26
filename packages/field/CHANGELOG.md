@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/field@0.6.0...@lion/field@0.6.1) (2019-11-26)
+
+
+### Bug Fixes
+
+* **field:** aria ordering within a FormControl ([73e9dc5](https://github.com/ing-bank/lion/commit/73e9dc5849bbafff8ab7a63ddfb86afd3f1f1791))
+
+
+
+
+
 # [0.6.0](https://github.com/ing-bank/lion/compare/@lion/field@0.5.0...@lion/field@0.6.0) (2019-11-22)
 
 
