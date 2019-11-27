@@ -1,10 +1,10 @@
-import { storiesOf, html, withKnobs } from '@open-wc/demoing-storybook';
-import { css, render, LitElement } from '@lion/core';
+import { css, LitElement, render } from '@lion/core';
+import { html, storiesOf, withKnobs } from '@open-wc/demoing-storybook';
 import {
+  OverlayMixin,
   withBottomSheetConfig,
   withDropdownConfig,
   withModalDialogConfig,
-  OverlayMixin,
 } from '../index.js';
 
 function renderOffline(litHtmlTemplate) {
@@ -32,7 +32,7 @@ const togglePlacement = popupController => {
     'left-end',
   ];
   toggledPlacement = placements[(placements.indexOf(toggledPlacement) + 1) % placements.length];
-  popupController.updatePopperConfig({ togglePlacement });
+  popupController.updateConfig({ togglePlacement });
 };
 */
 
