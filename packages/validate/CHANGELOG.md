@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/validate@0.4.1...@lion/validate@0.4.2) (2019-11-27)
+
+
+### Bug Fixes
+
+* make success message disappear ([4b9ca1e](https://github.com/ing-bank/lion/commit/4b9ca1e3566f7402f76d60f0863d4c0e859e6ac9))
+
+
+
+
+
 ## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/validate@0.4.0...@lion/validate@0.4.1) (2019-11-27)
 
 **Note:** Version bump only for package @lion/validate
