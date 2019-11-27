@@ -1,7 +1,7 @@
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
-import './utils/typedef.js';
 import { overlays } from './overlays.js';
 import { containFocus } from './utils/contain-focus.js';
+import './utils/typedef.js';
 
 async function preloadPopper() {
   return import('popper.js/dist/esm/popper.min.js');
@@ -36,7 +36,31 @@ export class OverlayController {
       isTooltip: false,
       handlesUserInteraction: false,
       handlesAccessibility: false,
-      popperConfig: null,
+      popperConfig: {
+        placement: 'top',
+        positionFixed: false,
+        modifiers: {
+          keepTogether: {
+            enabled: false,
+          },
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'viewport',
+            padding: 16, // viewport-margin for shifting/sliding
+          },
+          flip: {
+            boundariesElement: 'viewport',
+            padding: 16, // viewport-margin for flipping
+          },
+          offset: {
+            enabled: true,
+            offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
+          },
+          arrow: {
+            enabled: false,
+          },
+        },
+      },
       viewportConfig: {
         placement: 'center',
       },
@@ -95,6 +119,7 @@ export class OverlayController {
     return this._contentNodeWrapper.zIndex;
   }
 
+  // TODO: Use deepmerge package for doing this kind of config merging...
   /**
    * @desc Allows to dynamically change the overlay configuration. Needed in case the
    * presentation of the overlay changes depending on screen size.
@@ -116,6 +141,18 @@ export class OverlayController {
       ...this._defaultConfig, // our basic ingredients
       ...this.__sharedConfig, // the initial configured overlayController
       ...cfgToAdd, // the added config
+      popperConfig: {
+        ...(this._defaultConfig.popperConfig || {}),
+        ...(this.__sharedConfig.popperConfig || {}),
+        ...(cfgToAdd.popperConfig || {}),
+        modifiers: {
+          ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
+            {}),
+          ...((this.__sharedConfig.popperConfig && this.__sharedConfig.popperConfig.modifiers) ||
+            {}),
+          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || {}),
+        },
+      },
     };
 
     this.__validateConfiguration(this.config);
@@ -152,7 +189,6 @@ export class OverlayController {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
         this.constructor.popperModule = preloadPopper();
       }
-      this.__mergePopperConfigs(cfgToAdd.popperConfig || {});
     }
     this._handleFeatures({ phase: 'init' });
   }
@@ -556,67 +592,12 @@ export class OverlayController {
     }
   }
 
-  // TODO: Remove when no longer required by OverlayMixin (after updateConfig works properly while opened)
-  async updatePopperConfig(config = {}) {
-    this.__mergePopperConfigs(config);
-    if (this.isShown) {
-      await this.__createPopperInstance();
-      this._popper.update();
-    }
-  }
-
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
-    this._contentNodeWrapper.remove();
-  }
-
-  /**
-   * Merges the default config with the current config, and finally with the user supplied config
-   * @param {Object} config user supplied configuration
-   */
-  __mergePopperConfigs(config = {}) {
-    const defaultConfig = {
-      placement: 'top',
-      positionFixed: false,
-      modifiers: {
-        keepTogether: {
-          enabled: false,
-        },
-        preventOverflow: {
-          enabled: true,
-          boundariesElement: 'viewport',
-          padding: 16, // viewport-margin for shifting/sliding
-        },
-        flip: {
-          boundariesElement: 'viewport',
-          padding: 16, // viewport-margin for flipping
-        },
-        offset: {
-          enabled: true,
-          offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
-        },
-        arrow: {
-          enabled: false,
-        },
-      },
-    };
-
-    /**
-     * Deep merging:
-     *  - default config
-     *  - previously configured user config
-     *  - new user added config
-     */
-    this.config.popperConfig = {
-      ...defaultConfig,
-      ...(this.config.popperConfig || {}),
-      ...(config || {}),
-      modifiers: {
-        ...defaultConfig.modifiers,
-        ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
-        ...((config && config.modifiers) || {}),
-      },
-    };
+    // IE11 compatibility (does not support `Node.remove()`)
+    if (this._contentNodeWrapper && this._contentNodeWrapper.parentElement) {
+      this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
+    }
   }
 
   async __createPopperInstance() {

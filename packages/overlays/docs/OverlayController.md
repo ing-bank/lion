@@ -41,7 +41,7 @@ All boolean flags default to 'false'.
 - {Object} viewportConfig - placementMode: local only
   - {String} placement: 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-left' |'bottom' | 'bottom-right' | 'left' | 'center'
 - {Object} popperConfig - placementMode: local only
-  - {String} placement: 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-left' |'bottom' | 'bottom-right' | 'left' | 'center'
+  - {String} placement: 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' |'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
 ```
 
 > Note: popperConfig reflects [Popper.js API](https://popper.js.org/popper-documentation.html)
