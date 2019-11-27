@@ -236,7 +236,7 @@ describe('<lion-radio-group>', () => {
       </lion-radio-group>
     `);
     el.formElements['gender[]'][0].checked = true;
-    expect(el.serializedValue).to.deep.equal({ checked: true, value: 'male' });
+    expect(el.serializedValue).to.deep.equal('male');
   });
 
   it('returns serialized value on unchecked state', async () => {

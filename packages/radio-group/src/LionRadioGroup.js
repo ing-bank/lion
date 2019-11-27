@@ -26,21 +26,20 @@ import { LionFieldset } from '@lion/fieldset';
 
 export class LionRadioGroup extends LionFieldset {
   get checkedValue() {
-    const el = this._getCheckedRadioElement();
-    return el ? el.modelValue.value : '';
+    return this.serializedValue;
   }
 
   set checkedValue(value) {
-    this._setCheckedRadioElement(value, (el, val) => el.modelValue.value === val);
+    this.serializedValue = value;
   }
 
   get serializedValue() {
     const el = this._getCheckedRadioElement();
-    return el ? el.serializedValue : '';
+    return el ? el.modelValue.value : '';
   }
 
   set serializedValue(value) {
-    this._setCheckedRadioElement(value, (el, val) => el.serializedValue === val);
+    this._setCheckedRadioElement(value, (el, val) => el.modelValue.value === val);
   }
 
   get formattedValue() {
