@@ -266,7 +266,11 @@ export class LionFieldset extends FormRegistrarMixin(
     });
   }
 
-  _setValueMapForAllFormElements(property, values) {
+  async _setValueMapForAllFormElements(property, values) {
+    if (!this.__readyForRegistration) {
+      await this.registrationReady;
+    }
+
     if (values && typeof values === 'object') {
       Object.keys(values).forEach(name => {
         if (Array.isArray(this.formElements[name])) {
