@@ -84,12 +84,6 @@ const overlayDemoStyle = css`
     padding: 10px;
     border: 1px solid black;
   }
-
-  @media (max-width: 480px) {
-    .overlay {
-      display: none;
-    }
-  }
 `;
 
 customElements.define(

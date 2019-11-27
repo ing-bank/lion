@@ -148,11 +148,21 @@ export const OverlayMixin = dedupeMixin(
         return Array.from(this.children).find(child => child.slot === 'invoker');
       }
 
-      // FIXME: This should be refactored to
-      // Array.from(this.children).find(child => child.slot === 'content')
-      // When this issue is fixed https://github.com/ing-bank/lion/issues/382
       get _overlayContentNode() {
-        const contentNode = this.querySelector('[slot=content]');
+        let contentNode;
+
+        // FIXME: This should shadow outlet in between the host and the content slot, is a problem
+        // Should simply be Array.from(this.children).find(child => child.slot === 'content')
+        // Issue: https://github.com/ing-bank/lion/issues/382
+        const shadowOutlet = Array.from(this.children).find(
+          child => child.slot === '_overlay-shadow-outlet',
+        );
+        if (shadowOutlet) {
+          contentNode = Array.from(shadowOutlet.children).find(child => child.slot === 'content');
+        } else {
+          contentNode = Array.from(this.children).find(child => child.slot === 'content');
+        }
+
         if (contentNode) {
           this._cachedOverlayContentNode = contentNode;
         }
