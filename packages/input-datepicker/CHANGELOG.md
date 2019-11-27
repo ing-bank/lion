@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.4.4...@lion/input-datepicker@0.4.5) (2019-11-27)
+
+
+### Bug Fixes
+
+* **datepicker:** close with outside click ([#386](https://github.com/ing-bank/lion/issues/386)) ([b34b399](https://github.com/ing-bank/lion/commit/b34b399e173199f89d8f55f245519c014ec05264))
+
+
+
+
+
 ## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.4.3...@lion/input-datepicker@0.4.4) (2019-11-27)
 
 **Note:** Version bump only for package @lion/input-datepicker
