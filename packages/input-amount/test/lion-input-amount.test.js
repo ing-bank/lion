@@ -69,9 +69,9 @@ describe('<lion-input-amount>', () => {
     expect(el._inputNode.type).to.equal('text');
   });
 
-  it('shows no currency', async () => {
+  it('shows no currency by default', async () => {
     const el = await fixture(`<lion-input-amount></lion-input-amount>`);
-    expect(Array.from(el.children).find(child => child.slot === 'suffix')).to.be.undefined;
+    expect(Array.from(el.children).find(child => child.slot === 'after')).to.be.undefined;
   });
 
   it('displays currency if provided', async () => {
@@ -98,5 +98,24 @@ describe('<lion-input-amount>', () => {
     expect(Array.from(el.children).find(child => child.slot === 'suffix').innerText).to.equal(
       'my-currency',
     );
+  });
+
+  describe('Accessibility', () => {
+    it('adds currency id to aria-labelledby of input', async () => {
+      const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
+      expect(el._currencyDisplayNode.getAttribute('data-label')).to.be.not.null;
+      expect(el._inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode.id);
+    });
+
+    it('adds an aria-label to currency slot', async () => {
+      const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
+      expect(el._currencyDisplayNode.getAttribute('aria-label')).to.equal('euros');
+      el.currency = 'USD';
+      await el.updateComplete;
+      expect(el._currencyDisplayNode.getAttribute('aria-label')).to.equal('US dollars');
+      el.currency = 'PHP';
+      await el.updateComplete;
+      expect(el._currencyDisplayNode.getAttribute('aria-label')).to.equal('Philippine pisos');
+    });
   });
 });
