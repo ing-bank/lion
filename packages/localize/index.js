@@ -6,6 +6,7 @@ export { normalizeDateTime } from './src/date/normalizeDateTime.js';
 export { parseDate } from './src/date/parseDate.js';
 export { formatNumber } from './src/number/formatNumber.js';
 export { formatNumberToParts } from './src/number/formatNumberToParts.js';
+export { getCurrencyName } from './src/number/getCurrencyName.js';
 export { getDecimalSeparator } from './src/number/getDecimalSeparator.js';
 export { getFractionDigits } from './src/number/getFractionDigits.js';
 export { getGroupSeparator } from './src/number/getGroupSeparator.js';
