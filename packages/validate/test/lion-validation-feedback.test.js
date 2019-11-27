@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars, no-param-reassign */
+import sinon from 'sinon';
 import { fixture, html, expect } from '@open-wc/testing';
 import '../lion-validation-feedback.js';
-import { AlwaysInvalid } from '../test-helpers.js';
+import { AlwaysInvalid, AlwaysValid } from '../test-helpers.js';
 
 describe('lion-validation-feedback', () => {
   it('renders a validation message', async () => {
@@ -29,5 +30,50 @@ describe('lion-validation-feedback', () => {
     el.feedbackData = [{ message: 'hello', type: 'warning', validator: new AlwaysInvalid() }];
     await el.updateComplete;
     expect(el.getAttribute('type')).to.equal('warning');
+  });
+
+  it('success message clears after 3s', async () => {
+    const el = await fixture(
+      html`
+        <lion-validation-feedback></lion-validation-feedback>
+      `,
+    );
+
+    const clock = sinon.useFakeTimers();
+
+    el.feedbackData = [{ message: 'hello', type: 'success', validator: new AlwaysValid() }];
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('success');
+
+    clock.tick(2900);
+
+    expect(el.getAttribute('type')).to.equal('success');
+
+    clock.tick(200);
+
+    expect(el).to.not.have.attribute('type');
+
+    clock.restore();
+  });
+
+  it('does not clear error messages', async () => {
+    const el = await fixture(
+      html`
+        <lion-validation-feedback></lion-validation-feedback>
+      `,
+    );
+
+    const clock = sinon.useFakeTimers();
+
+    el.feedbackData = [{ message: 'hello', type: 'success', validator: new AlwaysValid() }];
+    await el.updateComplete;
+    expect(el.getAttribute('type')).to.equal('success');
+
+    el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+    clock.tick(3100);
+    expect(el.getAttribute('type')).to.equal('error');
+
+    clock.restore();
   });
 });
