@@ -1,5 +1,5 @@
 import { css } from '@lion/core';
-import { LocalizeMixin } from '@lion/localize';
+import { LocalizeMixin, getCurrencyName } from '@lion/localize';
 import { LionInput } from '@lion/input';
 import { FieldCustomMixin } from '@lion/field';
 import { IsNumber } from '@lion/validate';
@@ -34,6 +34,9 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
       after: () => {
         if (this.currency) {
           const el = document.createElement('span');
+          // The data-label attribute will make sure that FormControl adds this to
+          // input[aria-labelledby]
+          el.setAttribute('data-label', '');
           el.textContent = this.currency;
           return el;
         }
@@ -54,14 +57,27 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.type = 'text';
+
+    if (this.currency) {
+      this.__setCurrencyDisplayLabel();
+    }
+  }
+
+  __setCurrencyDisplayLabel() {
+    this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
+  }
+
+  get _currencyDisplayNode() {
+    return Array.from(this.children).find(child => child.slot === 'after');
   }
 
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after')) {
-      Array.from(this.children).find(child => child.slot === 'after').textContent = currency;
+      this._currencyDisplayNode.textContent = currency;
     }
     this.formatOptions.currency = currency;
     this._calculateValues();
+    this.__setCurrencyDisplayLabel();
   }
 
   static get styles() {
