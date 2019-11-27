@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.5.0...@lion/localize@0.6.0) (2019-11-27)
+
+
+### Features
+
+* **localize:** add getCurrencyName ([708b6f9](https://github.com/ing-bank/lion/commit/708b6f991d1f37013a69f5e880f44ac267131661))
+
+
+
+
+
 # [0.5.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.4.21...@lion/localize@0.5.0) (2019-11-13)
 
 
