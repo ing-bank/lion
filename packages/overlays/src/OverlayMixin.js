@@ -36,6 +36,9 @@ export const OverlayMixin = dedupeMixin(
       }
 
       set opened(show) {
+        if (show) {
+          this.dispatchEvent(new Event('before-show'));
+        }
         this._opened = show; // mainly captured for sync on connectedCallback
         if (this._overlayCtrl) {
           this.__syncOpened();

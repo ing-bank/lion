@@ -323,6 +323,35 @@ storiesOf('Overlay System | Overlay as a WC', module)
       </div>
     `;
   })
+  .add(
+    'Responsive switching',
+    () => html`
+      <style>
+        ${overlayDemoStyle}
+      </style>
+      <lion-demo-overlay
+        .config=${{ ...withBottomSheetConfig() }}
+        @before-show=${e => {
+          if (window.innerWidth >= 600) {
+            e.target.config = { ...withModalDialogConfig() };
+          } else {
+            e.target.config = { ...withBottomSheetConfig() };
+          }
+        }}
+      >
+        <lion-button slot="invoker">Overlay</lion-button>
+        <div slot="content" class="overlay">
+          Hello! You can close this notification here:
+          <lion-button
+            class="close-button"
+            @click=${e =>
+              e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
+            >⨯</lion-button
+          >
+        </div>
+      </lion-demo-overlay>
+    `,
+  )
   .add('On hover', () => {
     const popup = renderOffline(html`
       <lion-demo-overlay
