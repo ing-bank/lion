@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/field@0.6.1...@lion/field@0.6.2) (2019-11-27)
+
+
+### Bug Fixes
+
+* **field:** getAriaElementsInRightDomOrder IE fix ([76492af](https://github.com/ing-bank/lion/commit/76492af889bc35b99a3aaf9d3315a9f6c896d43d))
+
+
+
+
+
 ## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/field@0.6.0...@lion/field@0.6.1) (2019-11-26)
 
 
