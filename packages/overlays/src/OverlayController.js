@@ -554,6 +554,7 @@ export class OverlayController {
 
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
+    this._contentNodeWrapper.remove();
   }
 
   /**

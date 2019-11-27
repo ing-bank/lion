@@ -80,6 +80,10 @@ const overlayDemoStyle = css`
     padding: 8px;
   }
 
+  .overlay lion-button {
+    color: black;
+  }
+
   .demo-popup {
     padding: 10px;
     border: 1px solid black;
@@ -102,16 +106,18 @@ customElements.define(
     }
 
     _setupOpenCloseListeners() {
-      this.__close = () => {
-        this.opened = false;
-      };
       this.__toggle = () => {
+        console.log('toggle!');
         this.opened = !this.opened;
       };
+
+      console.log(this._overlayCtrl.invokerNode, this, this.__toggle);
       this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
+      this._overlayCtrl.invokerNode.addEventListener('click', () => console.log('ay'));
     }
 
     _teardownOpenCloseListeners() {
+      console.log('teardown for', this);
       this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
     }
 
@@ -191,6 +197,41 @@ storiesOf('Overlay System | Overlay as a WC', module)
       </div>
     `;
   })
+  .add(
+    'Nested overlays',
+    () => html`
+      <style>
+        ${overlayDemoStyle}
+      </style>
+      <lion-demo-overlay .config=${{ ...withModalDialogConfig() }}>
+        <lion-button slot="invoker">Overlay</lion-button>
+        <div slot="content" class="overlay">
+          <div>
+            Hello! This is a notification.
+            <lion-button
+              @click=${e =>
+                e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
+              >Close</lion-button
+            >
+            <lion-demo-overlay
+              .config=${{ ...withModalDialogConfig(), viewportConfig: { placement: 'top' } }}
+            >
+              <lion-button slot="invoker">Open child</lion-button>
+              <div slot="content" class="overlay">
+                Hello! You can close this notification here:
+                <lion-button
+                  class="close-button"
+                  @click=${e =>
+                    e.target.dispatchEvent(new Event('demo-overlay-close', { bubbles: true }))}
+                  >⨯</lion-button
+                >
+              </div>
+            </lion-demo-overlay>
+          </div>
+        </div>
+      </lion-demo-overlay>
+    `,
+  )
   .add(
     'Local placementMode',
     () => html`

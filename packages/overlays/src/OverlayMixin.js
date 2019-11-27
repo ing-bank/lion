@@ -142,6 +142,7 @@ export const OverlayMixin = dedupeMixin(
         }
         this._overlayCtrl.contentNode.removeEventListener(this.closeEventName, this.__close);
         this._teardownOpenCloseListeners();
+        this._overlayCtrl.teardown();
       }
 
       get _overlayInvokerNode() {

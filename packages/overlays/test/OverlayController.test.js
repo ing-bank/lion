@@ -162,6 +162,19 @@ describe('OverlayController', () => {
     });
   });
 
+  // TODO: Add teardown feature tests
+  describe('Teardown', () => {
+    it('removes the contentNodeWrapper from global rootnode upon teardown', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      expect(ctrl.manager.globalRootNode.children.length).to.equal(1);
+      ctrl.teardown();
+      expect(ctrl.manager.globalRootNode.children.length).to.equal(0);
+    });
+  });
+
   describe('Node Configuration', () => {
     it('accepts an .contentNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
