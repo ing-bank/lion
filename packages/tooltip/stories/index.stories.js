@@ -3,6 +3,8 @@ import { css } from '@lion/core';
 
 import '../lion-tooltip.js';
 
+import './tail.stories.js';
+
 const tooltipDemoStyle = css`
   .demo-box {
     width: 200px;
