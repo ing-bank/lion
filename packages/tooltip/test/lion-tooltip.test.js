@@ -115,5 +115,41 @@ describe('lion-tooltip', () => {
       const content = el.querySelector('[slot=content]');
       expect(content.getAttribute('role')).to.be.equal('tooltip');
     });
+
+    describe('accessible hiding tooltip behavior', () => {
+      let el;
+      beforeEach(async () => {
+        el = await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <lion-button slot="invoker">Tooltip button</lion-button>
+          </lion-tooltip>
+        `);
+      });
+
+      it('should hide the tooltip if the key pressed is Escape', async () => {
+        const eventMouseEnter = new Event('mouseenter');
+        el.dispatchEvent(eventMouseEnter);
+        await el.updateComplete;
+        expect(el._overlayCtrl.isShown).to.equal(true);
+
+        const eventEscapeKeyPressed = new KeyboardEvent('keydown', { key: 'Escape' });
+        document.dispatchEvent(eventEscapeKeyPressed);
+        await el.updateComplete;
+        expect(el._overlayCtrl.isShown).to.equal(false);
+      });
+
+      it('should keep the tooltip if the key pressed is not Escape', async () => {
+        const eventMouseEnter = new Event('mouseenter');
+        el.dispatchEvent(eventMouseEnter);
+        await el.updateComplete;
+        expect(el._overlayCtrl.isShown).to.equal(true);
+
+        const eventEscapeKeyPressed = new KeyboardEvent('keydown', { key: 'Q' });
+        document.dispatchEvent(eventEscapeKeyPressed);
+        await el.updateComplete;
+        expect(el._overlayCtrl.isShown).to.equal(true);
+      });
+    });
   });
 });
