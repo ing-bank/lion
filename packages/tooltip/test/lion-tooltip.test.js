@@ -139,7 +139,7 @@ describe('lion-tooltip', () => {
         expect(el._overlayCtrl.isShown).to.equal(false);
       });
 
-      it('should keep the tooltip if the key pressed is Escape', async () => {
+      it('should keep the tooltip if the key pressed is not Escape', async () => {
         const eventMouseEnter = new Event('mouseenter');
         el.dispatchEvent(eventMouseEnter);
         await el.updateComplete;
