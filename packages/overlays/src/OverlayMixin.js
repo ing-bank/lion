@@ -140,6 +140,7 @@ export const OverlayMixin = dedupeMixin(
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
+        this.opened = false;
         this._overlayCtrl.contentNode.removeEventListener(this.closeEventName, this.__close);
         this._teardownOpenCloseListeners();
         this._overlayCtrl.teardown();
