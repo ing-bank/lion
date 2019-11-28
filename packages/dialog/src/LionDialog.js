@@ -21,11 +21,16 @@ export class LionDialog extends OverlayMixin(LitElement) {
     this.__toggle = () => {
       this.opened = !this.opened;
     };
-    this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
+
+    if (this._overlayCtrl.invokerNode) {
+      this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
+    }
   }
 
   _teardownOpenCloseListeners() {
-    this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
+    if (this._overlayCtrl.invokerNode) {
+      this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
+    }
   }
 
   render() {
