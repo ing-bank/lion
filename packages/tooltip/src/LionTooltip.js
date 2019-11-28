@@ -42,11 +42,18 @@ export class LionTooltip extends LionPopup {
       }
     };
 
+    this.__handleKeydown = e => {
+      if (e.key === 'Escape') {
+        this._overlayCtrl.hide();
+      }
+    };
+
     this._overlayCtrl.addEventListener('hide', this.__resetActive);
     this.addEventListener('mouseenter', this.__showMouse);
     this.addEventListener('mouseleave', this.__hideMouse);
     this._overlayInvokerNode.addEventListener('focusin', this.__showKey);
     this._overlayInvokerNode.addEventListener('focusout', this.__hideKey);
+    document.addEventListener('keydown', this.__handleKeydown);
   }
 
   disconnectedCallback() {
@@ -56,5 +63,6 @@ export class LionTooltip extends LionPopup {
     this.removeEventListener('mouseleave', this._hideMouse);
     this._overlayInvokerNode.removeEventListener('focusin', this._showKey);
     this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
+    document.removeEventListener('keydown', this.__handleKeydown);
   }
 }
