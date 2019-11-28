@@ -53,7 +53,7 @@ Fieldsets are the basis for:
 <!-- TODO: - [`FormControlMixin`] () -->
 <!-- TODO: - [`LionField`] () -->
 
-- [Model Value](./ModelValue.md)
+- [Model Value](./modelValue.md)
 - [Formatting and parsing](./FormattingAndParsing.md)
 - [Interaction states](./InteractionStates.md)
 - [Validation System](../../validate/docs/ValidationSystem.md)
