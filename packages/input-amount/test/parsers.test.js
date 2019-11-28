@@ -43,35 +43,35 @@ describe('parseAmount()', () => {
     expect(parseAmount('1 234,56789')).to.equal(1234.56789);
   });
 
-  it('detects separators heuristically when there is only one e.g. 123456,78', () => {
-    expect(parseAmount('1.')).to.equal(1);
-    expect(parseAmount('1,')).to.equal(1);
-    expect(parseAmount('1 ')).to.equal(1);
+  it('detects separators heuristically when there is only one and "pasted" mode used e.g. 123456,78', () => {
+    expect(parseAmount('1.', { mode: 'pasted' })).to.equal(1);
+    expect(parseAmount('1,', { mode: 'pasted' })).to.equal(1);
+    expect(parseAmount('1 ', { mode: 'pasted' })).to.equal(1);
 
-    expect(parseAmount('1.2')).to.equal(1.2);
-    expect(parseAmount('1,2')).to.equal(1.2);
-    expect(parseAmount('1 2')).to.equal(12);
+    expect(parseAmount('1.2', { mode: 'pasted' })).to.equal(1.2);
+    expect(parseAmount('1,2', { mode: 'pasted' })).to.equal(1.2);
+    expect(parseAmount('1 2', { mode: 'pasted' })).to.equal(12);
 
-    expect(parseAmount('1.23')).to.equal(1.23);
-    expect(parseAmount('1,23')).to.equal(1.23);
-    expect(parseAmount('1 23')).to.equal(123);
+    expect(parseAmount('1.23', { mode: 'pasted' })).to.equal(1.23);
+    expect(parseAmount('1,23', { mode: 'pasted' })).to.equal(1.23);
+    expect(parseAmount('1 23', { mode: 'pasted' })).to.equal(123);
 
-    expect(parseAmount('1 234')).to.equal(1234);
+    expect(parseAmount('1 234', { mode: 'pasted' })).to.equal(1234);
 
-    expect(parseAmount('1.2345')).to.equal(1.2345);
-    expect(parseAmount('1,2345')).to.equal(1.2345);
-    expect(parseAmount('1 2345')).to.equal(12345);
+    expect(parseAmount('1.2345', { mode: 'pasted' })).to.equal(1.2345);
+    expect(parseAmount('1,2345', { mode: 'pasted' })).to.equal(1.2345);
+    expect(parseAmount('1 2345', { mode: 'pasted' })).to.equal(12345);
 
-    expect(parseAmount('1.23456')).to.equal(1.23456);
-    expect(parseAmount('1,23456')).to.equal(1.23456);
-    expect(parseAmount('1 23456')).to.equal(123456);
+    expect(parseAmount('1.23456', { mode: 'pasted' })).to.equal(1.23456);
+    expect(parseAmount('1,23456', { mode: 'pasted' })).to.equal(1.23456);
+    expect(parseAmount('1 23456', { mode: 'pasted' })).to.equal(123456);
 
-    expect(parseAmount('1.234567')).to.equal(1.234567);
-    expect(parseAmount('1,234567')).to.equal(1.234567);
-    expect(parseAmount('1 234567')).to.equal(1234567);
+    expect(parseAmount('1.234567', { mode: 'pasted' })).to.equal(1.234567);
+    expect(parseAmount('1,234567', { mode: 'pasted' })).to.equal(1.234567);
+    expect(parseAmount('1 234567', { mode: 'pasted' })).to.equal(1234567);
 
-    expect(parseAmount('123456,78')).to.equal(123456.78);
-    expect(parseAmount('123456.78')).to.equal(123456.78);
+    expect(parseAmount('123456,78', { mode: 'pasted' })).to.equal(123456.78);
+    expect(parseAmount('123456.78', { mode: 'pasted' })).to.equal(123456.78);
   });
 
   it('detects separators heuristically when there are 2 same ones e.g. 1.234.56', () => {
@@ -89,12 +89,16 @@ describe('parseAmount()', () => {
     expect(parseAmount('1,234,56789')).to.equal(1234.56789);
   });
 
-  it('uses locale if amount can not be interpreted heuristically e.g. 1.234', () => {
+  it('uses locale to parse amount if there is only one separator e.g. 1.234', () => {
     localize.locale = 'en-GB';
+    expect(parseAmount('12.34')).to.equal(12.34);
+    expect(parseAmount('12,34')).to.equal(1234);
     expect(parseAmount('1.234')).to.equal(1.234);
     expect(parseAmount('1,234')).to.equal(1234);
 
     localize.locale = 'nl-NL';
+    expect(parseAmount('12.34')).to.equal(1234);
+    expect(parseAmount('12,34')).to.equal(12.34);
     expect(parseAmount('1.234')).to.equal(1234);
     expect(parseAmount('1,234')).to.equal(1.234);
   });

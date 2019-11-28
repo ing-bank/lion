@@ -34,8 +34,12 @@ storiesOf('Forms|Input Amount', module)
   .add(
     'Force locale to nl-NL',
     () => html`
-      <lion-input-amount label="Price" currency="JOD">
-        .formatOptions="${{ locale: 'nl-NL' }}" .modelValue=${123456.78}
+      <lion-input-amount
+        label="Price"
+        currency="JOD"
+        .formatOptions="${{ locale: 'nl-NL' }}"
+        .modelValue=${123456.78}
+      >
       </lion-input-amount>
     `,
   )
@@ -78,6 +82,12 @@ storiesOf('Forms|Input Amount', module)
       <p>
         Make sure to set the modelValue last as otherwise formatOptions will not be taken into
         account
+      </p>
+
+      <p>
+        You can copy paste <input value="4000,0" /> and it will become 4000 independent of your
+        locale. <br />
+        If you write 4000,0 manually then it will become 4000 or 40000 dependent on your locale.
       </p>
     `,
   );

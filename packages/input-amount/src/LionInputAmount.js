@@ -49,8 +49,26 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     super();
     this.parser = parseAmount;
     this.formatter = formatAmount;
+    this.__isPasting = false;
+
+    this.addEventListener('paste', () => {
+      this.__isPasting = true;
+      this.__parserCallcountSincePaste = 0;
+    });
 
     this.defaultValidators.push(new IsNumber());
+  }
+
+  __callParser(value = this.formattedValue) {
+    // TODO: input and change events both trigger parsing therefore we need to handle the second parse
+    this.__parserCallcountSincePaste += 1;
+    this.__isPasting = this.__parserCallcountSincePaste === 2;
+    this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
+    return super.__callParser(value);
+  }
+
+  _reflectBackOn() {
+    return super._reflectBackOn() || this.__isPasting;
   }
 
   connectedCallback() {
