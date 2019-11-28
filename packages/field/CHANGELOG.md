@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/field@0.6.3...@lion/field@0.6.4) (2019-11-28)
+
+
+### Bug Fixes
+
+* **input-amount:** handle user pasting of amounts heuristically ([3d438fc](https://github.com/ing-bank/lion/commit/3d438fc1e0f214979bb6a4e6f7af0627b525e3e4))
+
+
+
+
+
 ## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/field@0.6.2...@lion/field@0.6.3) (2019-11-27)
 
 **Note:** Version bump only for package @lion/field

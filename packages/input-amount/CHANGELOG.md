@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.3.4...@lion/input-amount@0.3.5) (2019-11-28)
+
+
+### Bug Fixes
+
+* **input-amount:** handle user pasting of amounts heuristically ([3d438fc](https://github.com/ing-bank/lion/commit/3d438fc1e0f214979bb6a4e6f7af0627b525e3e4))
+* **input-amount:** prefer language while parsing ([6803062](https://github.com/ing-bank/lion/commit/68030624f9291a7fc358d24a8040f839d8a24351))
+
+
+
+
+
 ## [0.3.4](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.3.3...@lion/input-amount@0.3.4) (2019-11-27)
 
 **Note:** Version bump only for package @lion/input-amount
