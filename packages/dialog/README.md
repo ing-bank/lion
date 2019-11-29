@@ -28,10 +28,10 @@ import '@lion/dialog/lion-dialog.js';
 
 ```js
 html`
-  <lion-dialog>
-    <div slot="content" class="tooltip" .config=${{
-      viewportConfig: { placement: 'bottom-right' },
-    }}>
+  <lion-dialog.config=${{
+    viewportConfig: { placement: 'bottom-right' },
+  }}>
+    <div slot="content">
       This is a dialog
       <button
         @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}

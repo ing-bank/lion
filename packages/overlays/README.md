@@ -37,11 +37,11 @@ npm i --save @lion/overlays
 import '@lion/overlays/lion-overlay.js';
 
 html`
-  <lion-overlay>
-    <div slot="content" class="tooltip" .config=${{
-      placementMode: global,
-      viewportConfig: { placement: 'bottom-right' },
-    }}>
+  <lion-overlay.config=${{
+    placementMode: 'global',
+    viewportConfig: { placement: 'bottom-right' },
+  }}>
+    <div slot="content">
       This is an overlay
       <button
         @click=${e => e.target.dispatchEvent(new Event('overlay-close', { bubbles: true }))}

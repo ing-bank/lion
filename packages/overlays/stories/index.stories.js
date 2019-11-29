@@ -364,6 +364,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
       <style>
         ${overlayDemoStyle}
       </style>
+      <p>Open the overlay on a big screen and it will be a dialog</p>
+      <p>Close and open it again on a small screen (< 600px) and it will be a bottom sheet</p>
       <lion-demo-overlay
         .config=${{ ...withBottomSheetConfig() }}
         @before-show=${e => {
@@ -420,7 +422,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
         ${overlayDemoStyle}
       </style>
       <div class="demo-box_placements">
-        In the beautiful ${popup} the weather is nice.
+        <p>In the beautiful ${popup} the weather is nice.</p>
       </div>
     `;
   })
@@ -440,6 +442,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           slot="invoker"
           id="input"
           type="text"
+          autocomplete="off"
           @click=${e => e.stopImmediatePropagation()}
           @focusout=${() => {
             popup.opened = false;

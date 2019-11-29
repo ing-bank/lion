@@ -32,7 +32,7 @@ const tooltipDemoStyle = css`
     flex-direction: column;
   }
 
-  .tooltip {
+  .demo-tooltip {
     display: block;
     position: absolute;
     font-size: 16px;
@@ -40,12 +40,6 @@ const tooltipDemoStyle = css`
     background-color: black;
     border-radius: 4px;
     padding: 8px;
-  }
-
-  @media (max-width: 480px) {
-    .tooltip {
-      display: none;
-    }
   }
 `;
 
@@ -60,7 +54,7 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       <div class="demo-box">
         <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
           <lion-button slot="invoker">Tooltip</lion-button>
-          <div slot="content" class="tooltip">Hello there!</div>
+          <div slot="content" class="demo-tooltip">Hello there!</div>
         </lion-tooltip>
       </div>
     `,
@@ -74,19 +68,19 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       <div class="demo-box_placements">
         <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
           <lion-button slot="invoker">Top</lion-button>
-          <div slot="content" class="tooltip">Its top placement</div>
+          <div slot="content" class="demo-tooltip">Its top placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
           <lion-button slot="invoker">Right</lion-button>
-          <div slot="content" class="tooltip">Its right placement</div>
+          <div slot="content" class="demo-tooltip">Its right placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
           <lion-button slot="invoker">Bottom</lion-button>
-          <div slot="content" class="tooltip">Its bottom placement</div>
+          <div slot="content" class="demo-tooltip">Its bottom placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
           <lion-button slot="invoker">Left</lion-button>
-          <div slot="content" class="tooltip">Its left placement</div>
+          <div slot="content" class="demo-tooltip">Its left placement</div>
         </lion-tooltip>
       </div>
     `,
@@ -126,7 +120,7 @@ storiesOf('Overlays Specific WC|Tooltip', module)
           }}"
         >
           <lion-button slot="invoker">${text('Invoker text', 'Hover me!')}</lion-button>
-          <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>
+          <div slot="content" class="demo-tooltip">${text('Content text', 'Hello, World!')}</div>
         </lion-tooltip>
       </div>
     `,

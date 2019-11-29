@@ -28,7 +28,7 @@ import '@lion/tooltip/lion-tooltip.js';
 
 ```html
 <lion-tooltip>
-  <div slot="content" class="tooltip">This is a tooltip<div>
+  <div slot="content">This is a tooltip<div>
   <a slot="invoker" href="https://www.google.com/">
     Popup on link
   </a>
