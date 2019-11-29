@@ -262,6 +262,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   _defineOverlayConfig() {
     return {
       ...withModalDialogConfig(),
+      hidesOnOutsideClick: true,
     };
   }
 

@@ -14,6 +14,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     return {
       placementMode: 'local', // have to set a default
       elementToFocusAfterHide: null,
+      hidesOnEsc: true,
     };
   }
 

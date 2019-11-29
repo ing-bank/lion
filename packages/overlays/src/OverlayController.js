@@ -483,8 +483,10 @@ export class OverlayController {
     if (phase === 'show') {
       this.__escKeyHandler = ev => ev.key === 'Escape' && this.hide();
       this.contentNode.addEventListener('keyup', this.__escKeyHandler);
+      this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
     } else if (phase === 'hide') {
       this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
+      this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
     }
   }
 
