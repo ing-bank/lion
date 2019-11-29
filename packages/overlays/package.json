@@ -37,8 +37,8 @@
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "@lion/button": "^0.3.32",
-    "@lion/icon": "^0.2.8",
+    "@lion/button": "^0.3.43",
+    "@lion/icon": "^0.2.9",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4",
     "@open-wc/testing-helpers": "^1.0.0",
