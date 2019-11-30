@@ -233,7 +233,7 @@ storiesOf('Overlay System | Behavior Features', module)
                 ${this.options[(this.options.indexOf(this.placement) + 1) % this.options.length]}
                 position
               </button>
-              <button @click="${() => this.dispatchEvent(new CustomEvent('close'))}">Close</button>
+              <button @click="${() => this.dispatchEvent(new Event('hide'))}">Close</button>
             `;
           }
 
@@ -264,9 +264,6 @@ storiesOf('Overlay System | Behavior Features', module)
     element.placement = initialPlacement;
     element.addEventListener('toggle-placement', e => {
       overlayCtrl.updateConfig({ viewportConfig: { placement: e.detail } });
-    });
-    element.addEventListener('close', () => {
-      overlayCtrl.hide();
     });
     return html`
       <style>

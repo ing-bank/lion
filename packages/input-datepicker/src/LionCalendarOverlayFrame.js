@@ -90,14 +90,9 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
     ];
   }
 
-  constructor() {
-    super();
-    this.__dispatchCloseEvent = this.__dispatchCloseEvent.bind(this);
-  }
-
-  __dispatchCloseEvent() {
+  __dispatchHideEvent() {
     // Designed to work in conjunction with ModalDialogController
-    this.dispatchEvent(new CustomEvent('dialog-close'), { bubbles: true, composed: true });
+    this.dispatchEvent(new CustomEvent('hide'), { bubbles: true });
   }
 
   render() {
@@ -109,7 +104,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
             <slot name="heading"></slot>
           </h1>
           <button
-            @click="${this.__dispatchCloseEvent}"
+            @click="${this.__dispatchHideEvent}"
             id="close-button"
             title="${this.msgLit('lion-calendar-overlay-frame:close')}"
             aria-label="${this.msgLit('lion-calendar-overlay-frame:close')}"

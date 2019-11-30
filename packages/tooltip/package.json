@@ -36,8 +36,6 @@
     "@lion/overlays": "^0.6.4"
   },
   "devDependencies": {
-    "@lion/button": "^0.3.43",
-    "@lion/icon": "^0.2.9",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

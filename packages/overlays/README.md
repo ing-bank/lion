@@ -2,8 +2,6 @@
 
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
-> Note: Migrating from the old system (`overlays.add(new SomeController({...}))`)? Please check out our [migration guidelines](./docs/migration.md)
-
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
 
 Manages their position on the screen relative to other elements, including other overlays.
@@ -16,7 +14,6 @@ Its purpose is to make it easy to use our Overlay System declaratively. It can b
 - lion-overlay web component:
 
   - Show content when clicking the invoker
-  - Respond to overlay-close event in the slot="content" element, to close the content
   - Have a `.config` object to set or update the OverlayController's configuration
 
 - [**OverlaysManager**](./docs/OverlaysManager.md), a global repository keeping track of all different types of overlays
@@ -37,14 +34,14 @@ npm i --save @lion/overlays
 import '@lion/overlays/lion-overlay.js';
 
 html`
-  <lion-overlay.config=${{
+  <lion-overlay .config=${{
     placementMode: 'global',
     viewportConfig: { placement: 'bottom-right' },
   }}>
     <div slot="content">
       This is an overlay
       <button
-        @click=${e => e.target.dispatchEvent(new Event('overlay-close', { bubbles: true }))}
+        @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
       >x</button>
     <div>
     <button slot="invoker">

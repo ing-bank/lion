@@ -1,8 +1,6 @@
 import { storiesOf, html, withKnobs, object, text } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 
-import '@lion/icon/lion-icon.js';
-import '@lion/button/lion-button.js';
 import '../lion-tooltip.js';
 
 const tooltipDemoStyle = css`
@@ -53,7 +51,7 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       </style>
       <div class="demo-box">
         <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
-          <lion-button slot="invoker">Tooltip</lion-button>
+          <button slot="invoker">Tooltip</button>
           <div slot="content" class="demo-tooltip">Hello there!</div>
         </lion-tooltip>
       </div>
@@ -67,19 +65,19 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       </style>
       <div class="demo-box_placements">
         <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
-          <lion-button slot="invoker">Top</lion-button>
+          <button slot="invoker">Top</button>
           <div slot="content" class="demo-tooltip">Its top placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
-          <lion-button slot="invoker">Right</lion-button>
+          <button slot="invoker">Right</button>
           <div slot="content" class="demo-tooltip">Its right placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
-          <lion-button slot="invoker">Bottom</lion-button>
+          <button slot="invoker">Bottom</button>
           <div slot="content" class="demo-tooltip">Its bottom placement</div>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
-          <lion-button slot="invoker">Left</lion-button>
+          <button slot="invoker">Left</button>
           <div slot="content" class="demo-tooltip">Its left placement</div>
         </lion-tooltip>
       </div>
@@ -119,7 +117,7 @@ storiesOf('Overlays Specific WC|Tooltip', module)
             }),
           }}"
         >
-          <lion-button slot="invoker">${text('Invoker text', 'Hover me!')}</lion-button>
+          <button slot="invoker">${text('Invoker text', 'Hover me!')}</button>
           <div slot="content" class="demo-tooltip">${text('Content text', 'Hello, World!')}</div>
         </lion-tooltip>
       </div>

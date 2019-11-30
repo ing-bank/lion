@@ -247,7 +247,7 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
       el._invokerNode.click();
-      await el.updateComplete;
+      await aTimeout();
       expect(el.opened).to.be.true;
     });
 
@@ -258,7 +258,7 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
       el._invokerNode.click();
-      await el.updateComplete;
+      await aTimeout();
       expect(el.opened).to.be.true;
     });
 

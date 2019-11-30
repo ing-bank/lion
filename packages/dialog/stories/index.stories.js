@@ -1,7 +1,5 @@
 import { storiesOf, html, withKnobs, object } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-import '@lion/icon/lion-icon.js';
-import '@lion/button/lion-button.js';
 import '../lion-dialog.js';
 
 const dialogDemoStyle = css`
@@ -67,24 +65,25 @@ storiesOf('Overlays Specific WC | Dialog', module)
       </p>
       <p>
         To close your dialog from some action performed inside the content slot, fire a
-        <code>close</code> event.
+        <code>hide</code> event.
       </p>
       <p>
         For the dialog to close, it will need to bubble to the content slot (use
-        <code>bubbles: true</code>. Also <code>composed: true</code> if it needs to traverse shadow
-        boundaries)
+        <code>bubbles: true</code>. If absolutely needed <code>composed: true</code> can be used to
+        traverse shadow boundaries)
       </p>
       <p>The demo below demonstrates this</p>
       <div class="demo-box">
         <lion-dialog>
-          <lion-button slot="invoker">Dialog</lion-button>
+          <button slot="invoker">Dialog</button>
           <div slot="content" class="dialog">
             Hello! You can close this notification here:
-            <lion-button
+            <button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
-              >⨯</lion-button
+              @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
             >
+              ⨯
+            </button>
           </div>
         </lion-dialog>
       </div>
@@ -93,14 +92,15 @@ storiesOf('Overlays Specific WC | Dialog', module)
   .add('Custom configuration', () => {
     const dialog = placement => html`
       <lion-dialog .config=${{ viewportConfig: { placement } }}>
-        <lion-button slot="invoker">Dialog ${placement}</lion-button>
+        <button slot="invoker">Dialog ${placement}</button>
         <div slot="content" class="dialog">
           Hello! You can close this notification here:
-          <lion-button
+          <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
-            >⨯</lion-button
+            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
           >
+            ⨯
+          </button>
         </div>
       </lion-dialog>
     `;
@@ -118,14 +118,15 @@ storiesOf('Overlays Specific WC | Dialog', module)
   .add('Toggle placement with knobs', () => {
     const dialog = html`
       <lion-dialog .config=${object('config', { viewportConfig: { placement: 'center' } })}>
-        <lion-button slot="invoker">Dialog</lion-button>
+        <button slot="invoker">Dialog</button>
         <div slot="content" class="dialog">
           Hello! You can close this notification here:
-          <lion-button
+          <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('dialog-close', { bubbles: true }))}
-            >⨯</lion-button
+            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
           >
+            ⨯
+          </button>
         </div>
       </lion-dialog>
     `;

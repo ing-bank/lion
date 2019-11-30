@@ -1,24 +1,26 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { runOverlayMixinSuite } from '@lion/overlays/test-suites/OverlayMixin.suite.js';
 
 import '../lion-tooltip.js';
 
 describe('lion-tooltip', () => {
-  describe('Basic', () => {
-    it('should not be shown by default', async () => {
-      const el = await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
-        </lion-tooltip>
-      `);
-      expect(el._overlayCtrl.isShown).to.equal(false);
-    });
+  describe('Integration tests', () => {
+    const tagString = 'lion-tooltip';
+    const tag = unsafeStatic(tagString);
 
+    runOverlayMixinSuite({
+      tagString,
+      tag,
+      suffix: ' for lion-tooltip',
+    });
+  });
+
+  describe('Basic', () => {
     it('should show content on mouseenter and hide on mouseleave', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const eventMouseEnter = new Event('mouseenter');
@@ -35,7 +37,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const eventMouseEnter = new Event('mouseenter');
@@ -52,7 +54,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
@@ -70,7 +72,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
@@ -90,7 +92,7 @@ describe('lion-tooltip', () => {
           <div slot="content">
             This is Tooltip using <strong id="click_overlay">overlay</strong>
           </div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
@@ -106,7 +108,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
 

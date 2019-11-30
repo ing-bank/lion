@@ -15,21 +15,18 @@ export class LionDialog extends OverlayMixin(LitElement) {
   }
 
   _setupOpenCloseListeners() {
-    this.__close = () => {
-      this.opened = false;
-    };
     this.__toggle = () => {
       this.opened = !this.opened;
     };
 
-    if (this._overlayCtrl.invokerNode) {
-      this._overlayCtrl.invokerNode.addEventListener('click', this.__toggle);
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.addEventListener('click', this.__toggle);
     }
   }
 
   _teardownOpenCloseListeners() {
-    if (this._overlayCtrl.invokerNode) {
-      this._overlayCtrl.invokerNode.removeEventListener('click', this.__toggle);
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
     }
   }
 

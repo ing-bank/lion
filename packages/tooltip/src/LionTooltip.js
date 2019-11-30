@@ -74,6 +74,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     return html`
       <slot name="invoker"></slot>
       <slot name="content"></slot>
+      <slot name="_overlay-shadow-outlet"></slot>
     `;
   }
 }

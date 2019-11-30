@@ -182,12 +182,6 @@ export class LionSelectRich extends OverlayMixin(
     if (super.connectedCallback) {
       super.connectedCallback();
     }
-
-    this.__setupOverlay();
-    this.__setupInvokerNode();
-    this.__setupListboxNode();
-
-    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
   }
 
   disconnectedCallback() {
@@ -202,6 +196,12 @@ export class LionSelectRich extends OverlayMixin(
 
   firstUpdated(c) {
     super.firstUpdated(c);
+    this.__setupOverlay();
+    this.__setupInvokerNode();
+    this.__setupListboxNode();
+
+    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+
     this.__toggleInvokerDisabled();
   }
 
@@ -241,6 +241,14 @@ export class LionSelectRich extends OverlayMixin(
     // system wraps it in [slot="_overlay-shadow-outlet"]
     // TODO: find a way to solve this by putting the wrapping part in shadow dom...
     return this.querySelector('[slot="input"]');
+  }
+
+  render() {
+    return html`
+      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
+      ${this.feedbackTemplate()}
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
   }
 
   updated(changedProps) {

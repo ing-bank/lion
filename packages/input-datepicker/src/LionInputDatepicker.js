@@ -204,13 +204,20 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    * this is our source to give as .contentNode to OverlayController.
    * Important: do not change the name of this method.
    */
-  // TODO: Refactor to new overlay system public API --> @close=${() => { this.opened = false; }}
   _overlayTemplate() {
+    // TODO: add performance optimization to only render the calendar if needed
     return html`
-      <lion-calendar-overlay-frame @dialog-close=${() => this._overlayCtrl.hide()}>
+      <lion-calendar-overlay-frame>
         <span slot="heading">${this.calendarHeading}</span>
         ${this._calendarTemplate()}
       </lion-calendar-overlay-frame>
+    `;
+  }
+
+  render() {
+    return html`
+      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
+      ${this.feedbackTemplate()} ${this._overlayTemplate()}
     `;
   }
 
@@ -330,5 +337,12 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   get _overlayInvokerNode() {
     return this._invokerElement;
+  }
+
+  /**
+   * @override Configures OverlayMixin
+   */
+  get _overlayContentNode() {
+    return this.shadowRoot.querySelector('lion-calendar-overlay-frame');
   }
 }

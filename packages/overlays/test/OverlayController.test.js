@@ -314,6 +314,33 @@ describe('OverlayController', () => {
       });
     });
 
+    describe('hidesOnHideEventInContentNode', () => {
+      it('hides content on hide event within the content ', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnHideEventInContentNode: true,
+          contentNode: fixtureSync(html`
+            <div>
+              my content
+              <button @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}>
+                x
+              </button>
+            </div>
+          `),
+        });
+        await ctrl.show();
+
+        const closeBtn = ctrl.contentNode.querySelector('button');
+        closeBtn.click();
+
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('does stop propagation of the "hide" event to not pollute the event stack and to prevent side effects', () => {
+        // TODO: how to test this?
+      });
+    });
+
     describe('hidesOnOutsideClick', () => {
       it('hides on outside click', async () => {
         const contentNode = await fixture('<div>Content</div>');

@@ -2088,7 +2088,7 @@
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
 
-"@open-wc/testing@^2.3.4", "@open-wc/testing@^2.3.9":
+"@open-wc/testing@^2.3.4":
   version "2.3.9"
   resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.3.9.tgz#048bb3122d989cf0df96611513aaec7738964e3d"
   integrity sha512-5pKtHNP/73y9VWAwXOdxf4uzKVAtCowSdy4B6It4iETq8RshkAtKJbJBj+iQSU81pG6jOgSNPlGYeU01/CXaxw==
