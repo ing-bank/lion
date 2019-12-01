@@ -17,7 +17,7 @@ As opposed to a single overlay, the overlay manager stores knowledge about:
 The manager is in charge of rendering an overlay to the DOM. Therefore, a developer should be able
 to control:
 
-- It’s ‘physical position’ (where the dialog is attached). This can either be:
+- Its ‘physical position’ (where the dialog is attached). This can either be:
   - globally: at root level of the DOM. This guarantees a total control over its painting, since
     the stacking context can be controlled from here and interfering parents (that set overflow
     values or transforms) can’t be apparent. Additionally, making a modal dialog requiring

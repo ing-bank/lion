@@ -78,7 +78,6 @@ describe('FormControlMixin', () => {
     const el = wrapper.querySelector(elem);
 
     const { _inputNode } = el;
-    console.log('_inputNode', _inputNode);
 
     // 1. addToAriaLabelledBy()
     // external inputs should go in order defined by user

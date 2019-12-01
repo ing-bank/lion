@@ -1,3 +1,9 @@
+/**
+ * Use the `.add` method to add async functions to the queue
+ * Await the `.complete` if you want to ensure the queue is empty at any point
+ * `complete` resolves whenever no more tasks are running.
+ * Important note: Currently runs tasks 1 by 1, there is no concurrency option at the moment
+ */
 export class AsyncQueue {
   constructor() {
     this.__running = false;
@@ -7,7 +13,7 @@ export class AsyncQueue {
   add(task) {
     this.__queue.push(task);
     if (!this.__running) {
-      // aka we have a new queue, because before there was nothing in the queue
+      // We have a new queue, because before there was nothing in the queue
       this.complete = new Promise(resolve => {
         this.__callComplete = resolve;
       });
@@ -22,7 +28,6 @@ export class AsyncQueue {
     if (this.__queue.length > 0) {
       this.__run();
     } else {
-      // queue is empty again, so call complete
       this.__running = false;
       this.__callComplete();
     }

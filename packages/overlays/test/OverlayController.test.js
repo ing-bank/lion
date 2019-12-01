@@ -162,6 +162,19 @@ describe('OverlayController', () => {
     });
   });
 
+  // TODO: Add teardown feature tests
+  describe('Teardown', () => {
+    it('removes the contentNodeWrapper from global rootnode upon teardown', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      expect(ctrl.manager.globalRootNode.children.length).to.equal(1);
+      ctrl.teardown();
+      expect(ctrl.manager.globalRootNode.children.length).to.equal(0);
+    });
+  });
+
   describe('Node Configuration', () => {
     it('accepts an .contentNode<Node> to directly set content', async () => {
       const ctrl = new OverlayController({
@@ -298,6 +311,33 @@ describe('OverlayController', () => {
         await ctrl.show();
         document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         expect(ctrl.isShown).to.be.true;
+      });
+    });
+
+    describe('hidesOnHideEventInContentNode', () => {
+      it('hides content on hide event within the content ', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnHideEventInContentNode: true,
+          contentNode: fixtureSync(html`
+            <div>
+              my content
+              <button @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}>
+                x
+              </button>
+            </div>
+          `),
+        });
+        await ctrl.show();
+
+        const closeBtn = ctrl.contentNode.querySelector('button');
+        closeBtn.click();
+
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('does stop propagation of the "hide" event to not pollute the event stack and to prevent side effects', () => {
+        // TODO: how to test this?
       });
     });
 
@@ -860,7 +900,7 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode.textContent).to.include('content2');
     });
 
-    it('respects the inital config provided to new OverlayController(initialConfig)', async () => {
+    it('respects the initial config provided to new OverlayController(initialConfig)', async () => {
       const contentNode = fixtureSync(html`
         <div>my content</div>
       `);
@@ -879,6 +919,34 @@ describe('OverlayController', () => {
       expect(ctrl.placementMode).to.equal('local');
       expect(ctrl.handlesAccesibility).to.equal(true);
       expect(ctrl.contentNode).to.equal(contentNode);
+    });
+
+    // TODO: Currently not working, enable again when we fix updateConfig
+    it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
+      const contentNode = fixtureSync(html`
+        <div>my content</div>
+      `);
+
+      const ctrl = new OverlayController({
+        // This is the shared config
+        placementMode: 'global',
+        handlesAccesibility: true,
+        contentNode,
+      });
+
+      ctrl.show();
+      expect(
+        ctrl._contentNodeWrapper.classList.contains('global-overlays__overlay-container--center'),
+      );
+      expect(ctrl.isShown).to.be.true;
+
+      ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
+      expect(
+        ctrl._contentNodeWrapper.classList.contains(
+          'global-overlays__overlay-container--top-right',
+        ),
+      );
+      expect(ctrl.isShown).to.be.true;
     });
   });
 

@@ -1,7 +1,7 @@
 {
-  "name": "@lion/tooltip",
-  "version": "0.3.20",
-  "description": "Show relative overlay content on hover",
+  "name": "@lion/dialog",
+  "version": "0.1.0",
+  "description": "Show relative overlay content on click, as a webcomponent",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages/tooltip"
+    "directory": "packages/dialog"
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js"
@@ -19,16 +19,14 @@
   "keywords": [
     "lion",
     "web-components",
-    "tooltip"
+    "dialog"
   ],
   "main": "index.js",
   "module": "index.js",
   "files": [
-    "docs",
     "src",
     "stories",
     "test",
-    "translations",
     "*.js"
   ],
   "dependencies": {

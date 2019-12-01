@@ -177,16 +177,28 @@ describe('<lion-fieldset>', () => {
     expect(el.modelValue).to.deep.equal({
       lastName: 'Bar',
       newfieldset: {
-        'hobbies[]': [{ checked: true, value: 'chess' }, { checked: false, value: 'football' }],
-        'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+        'hobbies[]': [
+          { checked: true, value: 'chess' },
+          { checked: false, value: 'football' },
+        ],
+        'gender[]': [
+          { checked: false, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
         color: { checked: false, value: 'blue' },
       },
     });
     el.modelValue = {
       lastName: 2,
       newfieldset: {
-        'hobbies[]': [{ checked: true, value: 'chess' }, { checked: false, value: 'baseball' }],
-        'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+        'hobbies[]': [
+          { checked: true, value: 'chess' },
+          { checked: false, value: 'baseball' },
+        ],
+        'gender[]': [
+          { checked: false, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
         color: { checked: false, value: 'blue' },
       },
     };
@@ -546,7 +558,10 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.formElements['hobbies[]'][0].serializedValue).to.equal('Bar-serialized');
       expect(fieldset.serializeGroup()).to.deep.equal({
         'hobbies[]': ['Bar-serialized', { checked: false, value: 'rugby' }],
-        'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+        'gender[]': [
+          { checked: false, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
         color: { checked: false, value: 'blue' },
       });
     });
@@ -562,15 +577,27 @@ describe('<lion-fieldset>', () => {
       fieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
 
       expect(fieldset.serializeGroup()).to.deep.equal({
-        'hobbies[]': [{ checked: true, value: 'football' }, { checked: false, value: 'rugby' }],
-        'gender[]': [{ checked: true, value: 'male' }, { checked: false, value: 'female' }],
+        'hobbies[]': [
+          { checked: true, value: 'football' },
+          { checked: false, value: 'rugby' },
+        ],
+        'gender[]': [
+          { checked: true, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
         color: { checked: false, value: 'blue' },
       });
       fieldset.formElements.color.disabled = true;
 
       expect(fieldset.serializeGroup()).to.deep.equal({
-        'hobbies[]': [{ checked: true, value: 'football' }, { checked: false, value: 'rugby' }],
-        'gender[]': [{ checked: true, value: 'male' }, { checked: false, value: 'female' }],
+        'hobbies[]': [
+          { checked: true, value: 'football' },
+          { checked: false, value: 'rugby' },
+        ],
+        'gender[]': [
+          { checked: true, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
       });
     });
 
@@ -594,8 +621,14 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
         newfieldset: {
-          'hobbies[]': [{ checked: false, value: 'chess' }, { checked: false, value: 'rugby' }],
-          'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+          'hobbies[]': [
+            { checked: false, value: 'chess' },
+            { checked: false, value: 'rugby' },
+          ],
+          'gender[]': [
+            { checked: false, value: 'male' },
+            { checked: false, value: 'female' },
+          ],
           color: { checked: false, value: 'blue' },
         },
       });
@@ -622,8 +655,14 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
         newfieldset: {
-          'hobbies[]': [{ checked: false, value: 'chess' }, { checked: false, value: 'rugby' }],
-          'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+          'hobbies[]': [
+            { checked: false, value: 'chess' },
+            { checked: false, value: 'rugby' },
+          ],
+          'gender[]': [
+            { checked: false, value: 'male' },
+            { checked: false, value: 'female' },
+          ],
         },
       });
 
@@ -631,8 +670,14 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
         newfieldset: {
-          'hobbies[]': [{ checked: false, value: 'chess' }, { checked: false, value: 'rugby' }],
-          'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+          'hobbies[]': [
+            { checked: false, value: 'chess' },
+            { checked: false, value: 'rugby' },
+          ],
+          'gender[]': [
+            { checked: false, value: 'male' },
+            { checked: false, value: 'female' },
+          ],
           color: { checked: false, value: 'blue' },
         },
       });
@@ -647,8 +692,14 @@ describe('<lion-fieldset>', () => {
       fieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       fieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
       expect(fieldset.serializeGroup()).to.deep.equal({
-        'hobbies[]': [{ checked: false, value: 'chess' }, { checked: false, value: 'rugby' }],
-        'gender[]': [{ checked: false, value: 'male' }, { checked: false, value: 'female' }],
+        'hobbies[]': [
+          { checked: false, value: 'chess' },
+          { checked: false, value: 'rugby' },
+        ],
+        'gender[]': [
+          { checked: false, value: 'male' },
+          { checked: false, value: 'female' },
+        ],
         color: { checked: false, value: 'blue' },
       });
     });

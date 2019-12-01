@@ -1,8 +1,6 @@
 import { storiesOf, html, withKnobs, object, text } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 
-import '@lion/icon/lion-icon.js';
-import '@lion/button/lion-button.js';
 import '../lion-tooltip.js';
 
 const tooltipDemoStyle = css`
@@ -32,7 +30,7 @@ const tooltipDemoStyle = css`
     flex-direction: column;
   }
 
-  .tooltip {
+  .demo-tooltip {
     display: block;
     position: absolute;
     font-size: 16px;
@@ -41,15 +39,9 @@ const tooltipDemoStyle = css`
     border-radius: 4px;
     padding: 8px;
   }
-
-  @media (max-width: 480px) {
-    .tooltip {
-      display: none;
-    }
-  }
 `;
 
-storiesOf('Local Overlay System|Tooltip', module)
+storiesOf('Overlays Specific WC|Tooltip', module)
   .addDecorator(withKnobs)
   .add(
     'Button tooltip',
@@ -58,9 +50,9 @@ storiesOf('Local Overlay System|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box">
-        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
-          <lion-button slot="invoker">Tooltip</lion-button>
-          <div slot="content" class="tooltip">Hello there!</div>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
+          <button slot="invoker">Tooltip</button>
+          <div slot="content" class="demo-tooltip">Hello there!</div>
         </lion-tooltip>
       </div>
     `,
@@ -72,21 +64,21 @@ storiesOf('Local Overlay System|Tooltip', module)
         ${tooltipDemoStyle}
       </style>
       <div class="demo-box_placements">
-        <lion-tooltip .popperConfig=${{ placement: 'top' }}>
-          <lion-button slot="invoker">Top</lion-button>
-          <div slot="content" class="tooltip">Its top placement</div>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
+          <button slot="invoker">Top</button>
+          <div slot="content" class="demo-tooltip">Its top placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'right' }}>
-          <lion-button slot="invoker">Right</lion-button>
-          <div slot="content" class="tooltip">Its right placement</div>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
+          <button slot="invoker">Right</button>
+          <div slot="content" class="demo-tooltip">Its right placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'bottom' }}>
-          <lion-button slot="invoker">Bottom</lion-button>
-          <div slot="content" class="tooltip">Its bottom placement</div>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
+          <button slot="invoker">Bottom</button>
+          <div slot="content" class="demo-tooltip">Its bottom placement</div>
         </lion-tooltip>
-        <lion-tooltip .popperConfig=${{ placement: 'left' }}>
-          <lion-button slot="invoker">Left</lion-button>
-          <div slot="content" class="tooltip">Its left placement</div>
+        <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
+          <button slot="invoker">Left</button>
+          <div slot="content" class="demo-tooltip">Its left placement</div>
         </lion-tooltip>
       </div>
     `,
@@ -100,31 +92,33 @@ storiesOf('Local Overlay System|Tooltip', module)
       <p>Use the Storybook Knobs to dynamically change the popper configuration!</p>
       <div class="demo-box_placements">
         <lion-tooltip
-          .popperConfig="${object('Popper Configuration', {
-            placement: 'bottom-start',
-            positionFixed: true,
-            modifiers: {
-              keepTogether: {
-                enabled: true /* Prevents detachment of content element from reference element */,
+          .config="${{
+            popperConfig: object('Popper Configuration', {
+              placement: 'bottom-start',
+              positionFixed: true,
+              modifiers: {
+                keepTogether: {
+                  enabled: true /* Prevents detachment of content element from reference element */,
+                },
+                preventOverflow: {
+                  enabled: false /* disables shifting/sliding behavior on secondary axis */,
+                  boundariesElement: 'viewport',
+                  padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
+                },
+                flip: {
+                  boundariesElement: 'viewport',
+                  padding: 4 /* viewport-margin for flipping on primary axis */,
+                },
+                offset: {
+                  enabled: true,
+                  offset: `0, 4px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
+                },
               },
-              preventOverflow: {
-                enabled: false /* disables shifting/sliding behavior on secondary axis */,
-                boundariesElement: 'viewport',
-                padding: 16 /* when enabled, this is the viewport-margin for shifting/sliding */,
-              },
-              flip: {
-                boundariesElement: 'viewport',
-                padding: 4 /* viewport-margin for flipping on primary axis */,
-              },
-              offset: {
-                enabled: true,
-                offset: `0, 4px` /* horizontal and vertical margin (distance between popper and referenceElement) */,
-              },
-            },
-          })}"
+            }),
+          }}"
         >
-          <lion-button slot="invoker">${text('Invoker text', 'Hover me!')}</lion-button>
-          <div slot="content" class="tooltip">${text('Content text', 'Hello, World!')}</div>
+          <button slot="invoker">${text('Invoker text', 'Hover me!')}</button>
+          <div slot="content" class="demo-tooltip">${text('Content text', 'Hello, World!')}</div>
         </lion-tooltip>
       </div>
     `,

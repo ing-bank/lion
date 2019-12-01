@@ -1,4 +1,5 @@
-import { render, dedupeMixin } from '@lion/core';
+import { dedupeMixin } from '@lion/core';
+import { OverlayController } from './OverlayController.js';
 
 /**
  * @type {Function()}
@@ -15,132 +16,165 @@ export const OverlayMixin = dedupeMixin(
             type: Boolean,
             reflect: true,
           },
-          popperConfig: Object,
         };
       }
 
-      get opened() {
-        return this._overlayCtrl.isShown;
+      constructor() {
+        super();
+        this.opened = false;
+        this.config = {};
       }
 
-      set opened(show) {
-        this._opened = show; // mainly captured for sync on connectedCallback
+      get config() {
+        return this.__config;
+      }
+
+      set config(value) {
         if (this._overlayCtrl) {
-          this.__syncOpened();
+          this._overlayCtrl.updateConfig(value);
+        }
+        this.__config = value;
+      }
+
+      /**
+       * @overridable method `_defineOverlay`
+       * @desc returns an instance of a (dynamic) overlay controller
+       * In case overriding _defineOverlayConfig is not enough
+       * @returns {OverlayController}
+       */
+      // eslint-disable-next-line
+      _defineOverlay({ contentNode, invokerNode }) {
+        return new OverlayController({
+          contentNode,
+          invokerNode,
+          ...this._defineOverlayConfig(),
+          ...this.config,
+        });
+      }
+
+      /**
+       * @overridable method `_defineOverlay`
+       * @desc returns an object with default configuration options for your overlay component.
+       * This is generally speaking easier to override than _defineOverlay method entirely.
+       * @returns {OverlayController}
+       */
+      // eslint-disable-next-line
+      _defineOverlayConfig() {
+        return {
+          placementMode: 'local',
+        };
+      }
+
+      updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (changedProperties.has('opened')) {
+          if (this._overlayCtrl) {
+            this.__syncToOverlayController();
+          }
         }
       }
 
-      __syncOpened() {
-        if (this._opened) {
+      /**
+       * @overridable
+       * @desc use this method to setup your open and close event listeners
+       * For example, set a click event listener on _overlayInvokerNode to set opened to true
+       */
+      // eslint-disable-next-line class-methods-use-this
+      _setupOpenCloseListeners() {}
+
+      /**
+       * @overridable
+       * @desc use this method to tear down your event listeners
+       */
+      // eslint-disable-next-line class-methods-use-this
+      _teardownOpenCloseListeners() {}
+
+      firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        // we setup in firstUpdated so we can use nodes from light and shadowDom
+        this._setupOverlayCtrl();
+      }
+
+      disconnectedCallback() {
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
+        if (this._overlayCtrl) {
+          this._teardownOverlayCtrl();
+        }
+      }
+
+      get _overlayInvokerNode() {
+        return Array.from(this.children).find(child => child.slot === 'invoker');
+      }
+
+      get _overlayContentNode() {
+        let contentNode;
+
+        // FIXME: This should shadow outlet in between the host and the content slot, is a problem
+        // Should simply be Array.from(this.children).find(child => child.slot === 'content')
+        // Issue: https://github.com/ing-bank/lion/issues/382
+        const shadowOutlet = Array.from(this.children).find(
+          child => child.slot === '_overlay-shadow-outlet',
+        );
+        if (shadowOutlet) {
+          contentNode = Array.from(shadowOutlet.children).find(child => child.slot === 'content');
+        } else {
+          contentNode = Array.from(this.children).find(child => child.slot === 'content');
+        }
+
+        if (contentNode) {
+          this._cachedOverlayContentNode = contentNode;
+        }
+        return contentNode || this._cachedOverlayContentNode;
+      }
+
+      _setupOverlayCtrl() {
+        this._overlayCtrl = this._defineOverlay({
+          contentNode: this._overlayContentNode,
+          invokerNode: this._overlayInvokerNode,
+        });
+        this.__syncToOverlayController();
+        this.__setupSyncFromOverlayController();
+
+        this._setupOpenCloseListeners();
+      }
+
+      _teardownOverlayCtrl() {
+        this._teardownOpenCloseListeners();
+        this.__teardownSyncFromOverlayController();
+        this._overlayCtrl.teardown();
+      }
+
+      __setupSyncFromOverlayController() {
+        this.__onOverlayCtrlShow = () => {
+          this.opened = true;
+        };
+        this.__onOverlayCtrlHide = () => {
+          this.opened = false;
+        };
+        this.__onBeforeShow = () => {
+          this.dispatchEvent(new Event('before-show'));
+        };
+
+        this._overlayCtrl.addEventListener('show', this.__onOverlayCtrlShow);
+        this._overlayCtrl.addEventListener('hide', this.__onOverlayCtrlHide);
+        this._overlayCtrl.addEventListener('before-show', this.__onBeforeShow);
+      }
+
+      __teardownSyncFromOverlayController() {
+        this._overlayCtrl.removeEventListener('show', this.__onOverlayCtrlShow);
+        this._overlayCtrl.removeEventListener('hide', this.__onOverlayCtrlHide);
+        this._overlayCtrl.removeEventListener('before-show', this.__onBeforeShow);
+      }
+
+      __syncToOverlayController() {
+        if (this.opened) {
           this._overlayCtrl.show();
         } else {
           this._overlayCtrl.hide();
         }
       }
-
-      get popperConfig() {
-        return this._popperConfig;
-      }
-
-      set popperConfig(config) {
-        this._popperConfig = {
-          ...this._popperConfig,
-          ...config,
-        };
-        this.__syncPopper();
-      }
-
-      __syncPopper() {
-        if (this._overlayCtrl) {
-          this._overlayCtrl.updatePopperConfig(this._popperConfig);
-        }
-      }
-
-      connectedCallback() {
-        if (super.connectedCallback) {
-          super.connectedCallback();
-        }
-        this._createOverlay();
-        this.__syncOpened();
-        this.__syncPopper();
-      }
-
-      firstUpdated(c) {
-        super.firstUpdated(c);
-        this._createOutletForLocalOverlay();
-      }
-
-      updated(c) {
-        super.updated(c);
-        if (this.__managesOverlayViaTemplate) {
-          this._renderOverlayContent();
-        }
-      }
-
-      _renderOverlayContent() {
-        render(this._overlayTemplate(), this.__contentParent, {
-          scopeName: this.localName,
-          eventContext: this,
-        });
-      }
-
-      /**
-       * @desc Two options for a Subclasser:
-       * - 1: Define a template in `._overlayTemplate`. In this case the overlay content is
-       * predefined and thus belongs to the web component. Examples: datepicker.
-       * - 2: Define a getter `_overlayContentNode` that returns a node reference to a (content
-       * projected) node. Used when Application Developer is in charge of the content. Examples:
-       * popover, dialog, bottom sheet, dropdown, tooltip, select, combobox etc.
-       */
-      get __managesOverlayViaTemplate() {
-        return Boolean(this._overlayTemplate);
-      }
-
-      _createOverlay() {
-        let contentNode;
-        if (this.__managesOverlayViaTemplate) {
-          this.__contentParent = document.createElement('div');
-          this._renderOverlayContent();
-          contentNode = this.__contentParent.firstElementChild;
-        } else {
-          contentNode = this._overlayContentNode;
-        }
-
-        // Why no template support for invokerNode?
-        // -> Because this node will always be managed by the Subclasser and should
-        //    reside in the dom of the sub class. A reference to a rendered node suffices.
-        const invokerNode = this._overlayInvokerNode;
-        this._overlayCtrl = this._defineOverlay({ contentNode, invokerNode });
-      }
-
-      // FIXME: We add an overlay slot to the wrapper, but the content node already has a slot="content"
-      // This is a big problem, because slots should be direct children of its host element.
-      // Putting the shadow outlet slot in between breaks that. https://github.com/ing-bank/lion/issues/382
-      /**
-       * @desc Should be called by Subclasser for local overlay support in shadow roots
-       * Create an outlet slot in shadow dom that our local overlay can pass through
-       */
-      _createOutletForLocalOverlay() {
-        const outlet = document.createElement('slot');
-        outlet.name = '_overlay-shadow-outlet';
-        this.shadowRoot.appendChild(outlet);
-        this._overlayCtrl._contentNodeWrapper.slot = '_overlay-shadow-outlet';
-      }
-
-      /**
-       * @overridable method `_overlayTemplate`
-       * Be aware that the overlay will be placed in a different shadow root.
-       * Therefore, style encapsulation should be provided by the contents of
-       * _overlayTemplate
-       * @return {TemplateResult}
-       */
-
-      /**
-       * @overridable method `_defineOverlay`
-       * @desc returns an instance of a (dynamic) overlay controller
-       * @returns {OverlayController}
-       */
-      // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode }) {}
     },
 );

@@ -1,5 +1,5 @@
 import { html, css, LitElement, SlotMixin } from '@lion/core';
-import { OverlayController, withDropdownConfig, OverlayMixin } from '@lion/overlays';
+import { withDropdownConfig, OverlayMixin } from '@lion/overlays';
 import { FormControlMixin, InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
 import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
@@ -182,12 +182,6 @@ export class LionSelectRich extends OverlayMixin(
     if (super.connectedCallback) {
       super.connectedCallback();
     }
-
-    this.__setupOverlay();
-    this.__setupInvokerNode();
-    this.__setupListboxNode();
-
-    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
   }
 
   disconnectedCallback() {
@@ -202,6 +196,12 @@ export class LionSelectRich extends OverlayMixin(
 
   firstUpdated(c) {
     super.firstUpdated(c);
+    this.__setupOverlay();
+    this.__setupInvokerNode();
+    this.__setupListboxNode();
+
+    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+
     this.__toggleInvokerDisabled();
   }
 
@@ -214,6 +214,8 @@ export class LionSelectRich extends OverlayMixin(
       this.modelValue.length > 0
     ) {
       if (this.checkedIndex) {
+        // Necessary to sync the checkedIndex through the getter/setter explicitly
+        // eslint-disable-next-line no-self-assign
         this.checkedIndex = this.checkedIndex;
       }
     }
@@ -239,6 +241,14 @@ export class LionSelectRich extends OverlayMixin(
     // system wraps it in [slot="_overlay-shadow-outlet"]
     // TODO: find a way to solve this by putting the wrapping part in shadow dom...
     return this.querySelector('[slot="input"]');
+  }
+
+  render() {
+    return html`
+      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
+      ${this.feedbackTemplate()}
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
   }
 
   updated(changedProps) {
@@ -599,12 +609,10 @@ export class LionSelectRich extends OverlayMixin(
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _defineOverlay({ invokerNode, contentNode } = {}) {
-    return new OverlayController({
+  _defineOverlayConfig() {
+    return {
       ...withDropdownConfig(),
-      contentNode,
-      invokerNode,
-    });
+    };
   }
 
   __setupOverlay() {

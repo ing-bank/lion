@@ -108,10 +108,16 @@ describe('<lion-calendar>', () => {
         `),
       );
       expect(
-        elObj.checkForAllDayObjs(o => o.buttonEl.getAttribute('tabindex') === '0', n => n === 5),
+        elObj.checkForAllDayObjs(
+          o => o.buttonEl.getAttribute('tabindex') === '0',
+          n => n === 5,
+        ),
       ).to.be.true;
       expect(
-        elObj.checkForAllDayObjs(o => o.buttonEl.getAttribute('tabindex') === '-1', n => n !== 5),
+        elObj.checkForAllDayObjs(
+          o => o.buttonEl.getAttribute('tabindex') === '-1',
+          n => n !== 5,
+        ),
       ).to.be.true;
     });
 
