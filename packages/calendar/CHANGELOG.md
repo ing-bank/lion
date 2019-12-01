@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/calendar@0.3.8...@lion/calendar@0.4.0) (2019-12-01)
+
+
+### Features
+
+* **overlays:** improve API for overriding controller config in mixin ([45f5571](https://github.com/ing-bank/lion/commit/45f557183d7bef95ea9685d751e90ba12a4eb2d8))
+
+
+
+
+
 ## [0.3.8](https://github.com/ing-bank/lion/compare/@lion/calendar@0.3.7...@lion/calendar@0.3.8) (2019-11-28)
 
 **Note:** Version bump only for package @lion/calendar

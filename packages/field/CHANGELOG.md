@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.5](https://github.com/ing-bank/lion/compare/@lion/field@0.6.4...@lion/field@0.6.5) (2019-12-01)
+
+
+### Bug Fixes
+
+* **overlays:** remove _contentNodeWrapper on teardown ([0b31494](https://github.com/ing-bank/lion/commit/0b3149469aaa4f7b50d62fc758137a2c94e3a10c))
+
+
+
+
+
 ## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/field@0.6.3...@lion/field@0.6.4) (2019-11-28)
 
 

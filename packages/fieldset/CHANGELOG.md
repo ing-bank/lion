@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.4.4...@lion/fieldset@0.5.0) (2019-12-01)
+
+
+### Features
+
+* **overlays:** improve API for overriding controller config in mixin ([45f5571](https://github.com/ing-bank/lion/commit/45f557183d7bef95ea9685d751e90ba12a4eb2d8))
+
+
+
+
+
 ## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.4.3...@lion/fieldset@0.4.4) (2019-11-28)
 
 **Note:** Version bump only for package @lion/fieldset

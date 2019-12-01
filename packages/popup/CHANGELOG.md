@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/popup@0.3.20...@lion/popup@0.4.0) (2019-12-01)
+
+
+### Features
+
+* refactor the overlay system implementations, docs and demos ([a5a9f97](https://github.com/ing-bank/lion/commit/a5a9f975a61649cd1f861a80923c678c5f4d51be))
+
+
+
+
+
 ## [0.3.20](https://github.com/ing-bank/lion/compare/@lion/popup@0.3.19...@lion/popup@0.3.20) (2019-11-28)
 
 **Note:** Version bump only for package @lion/popup

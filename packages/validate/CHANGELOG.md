@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.4.2...@lion/validate@0.5.0) (2019-12-01)
+
+
+### Features
+
+* refactor the overlay system implementations, docs and demos ([a5a9f97](https://github.com/ing-bank/lion/commit/a5a9f975a61649cd1f861a80923c678c5f4d51be))
+
+
+
+
+
 ## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/validate@0.4.1...@lion/validate@0.4.2) (2019-11-27)
 
 

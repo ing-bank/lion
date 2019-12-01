@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.6.4...@lion/overlays@0.7.0) (2019-12-01)
+
+
+### Bug Fixes
+
+* **overlays:** close overlay upon disconnectedCallback ([ab5cb62](https://github.com/ing-bank/lion/commit/ab5cb627afe5ce5c9739346afe1404cc16326576))
+* **overlays:** fix overlay content node selector to be more accurate ([411889c](https://github.com/ing-bank/lion/commit/411889c919951a74a85b97f8edff7379c46180f7))
+* **overlays:** hideOnEsc should also work while being on the invoker ([c899cf2](https://github.com/ing-bank/lion/commit/c899cf26d278d8512f521ba37522f7472805c9ed))
+* **overlays:** remove _contentNodeWrapper on teardown ([0b31494](https://github.com/ing-bank/lion/commit/0b3149469aaa4f7b50d62fc758137a2c94e3a10c))
+* no longer use overlay templates ([49974bd](https://github.com/ing-bank/lion/commit/49974bd2b86d7f02e8c19aa51a0a79779b897384))
+
+
+### Features
+
+* refactor the overlay system implementations, docs and demos ([a5a9f97](https://github.com/ing-bank/lion/commit/a5a9f975a61649cd1f861a80923c678c5f4d51be))
+* **overlays:** add before-show event to OverlayMixin ([57a3c04](https://github.com/ing-bank/lion/commit/57a3c04873d2f7e6cc879f4d129a10d7d863a8f7))
+* **overlays:** improve API for overriding controller config in mixin ([45f5571](https://github.com/ing-bank/lion/commit/45f557183d7bef95ea9685d751e90ba12a4eb2d8))
+
+
+
+
+
 ## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/overlays@0.6.3...@lion/overlays@0.6.4) (2019-11-15)
 
 
