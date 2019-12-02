@@ -47,6 +47,7 @@
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '**/CHANGELOG.md'",
+    "lint:versions": "node ./scripts/lint-versions.js",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md}\" --write"
@@ -65,6 +66,9 @@
       "prettier --write",
       "markdownlint",
       "git add"
+    ],
+    "*package.json": [
+      "node ./scripts/lint-versions.js"
     ],
     "yarn.lock": [
       "node ./scripts/yarn-lock-scan.js"

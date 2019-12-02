@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@bundled-es-modules/message-format": "6.0.4",
-    "@lion/core": "^0.3.0"
+    "@lion/core": "0.3.0"
   },
   "devDependencies": {
     "@bundled-es-modules/fetch-mock": "^6.5.2",

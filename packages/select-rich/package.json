@@ -36,15 +36,15 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/button": "^0.3.44",
-    "@lion/core": "^0.3.0",
-    "@lion/field": "^0.6.5",
-    "@lion/option": "^0.3.6",
-    "@lion/overlays": "^0.7.0",
-    "@lion/validate": "^0.5.0"
+    "@lion/button": "0.3.44",
+    "@lion/core": "0.3.0",
+    "@lion/field": "0.6.5",
+    "@lion/option": "0.3.6",
+    "@lion/overlays": "0.7.0",
+    "@lion/validate": "0.5.0"
   },
   "devDependencies": {
-    "@lion/form": "^0.3.6",
+    "@lion/form": "0.3.6",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }
