@@ -34,8 +34,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.3.0",
-    "@lion/localize": "^0.7.0"
+    "@lion/core": "0.3.0",
+    "@lion/localize": "0.7.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",

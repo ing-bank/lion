@@ -32,11 +32,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.3.0",
-    "@lion/field": "^0.6.5"
+    "@lion/core": "0.3.0",
+    "@lion/field": "0.6.5"
   },
   "devDependencies": {
-    "@lion/validate": "^0.5.0",
+    "@lion/validate": "0.5.0",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

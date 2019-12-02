@@ -32,9 +32,9 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "^0.4.6",
-    "@lion/core": "^0.3.0",
-    "@lion/input": "^0.3.6"
+    "@lion/choice-input": "0.4.6",
+    "@lion/core": "0.3.0",
+    "@lion/input": "0.3.6"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",

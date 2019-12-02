@@ -33,11 +33,11 @@
   ],
   "dependencies": {
     "@bundled-es-modules/ibantools": "2.0.0",
-    "@lion/core": "^0.3.0",
-    "@lion/field": "^0.6.5",
-    "@lion/input": "^0.3.6",
-    "@lion/localize": "^0.7.0",
-    "@lion/validate": "^0.5.0"
+    "@lion/core": "0.3.0",
+    "@lion/field": "0.6.5",
+    "@lion/input": "0.3.6",
+    "@lion/localize": "0.7.0",
+    "@lion/validate": "0.5.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",

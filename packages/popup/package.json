@@ -32,12 +32,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.3.0",
-    "@lion/overlays": "^0.7.0"
+    "@lion/core": "0.3.0",
+    "@lion/overlays": "0.7.0"
   },
   "devDependencies": {
-    "@lion/button": "^0.3.44",
-    "@lion/icon": "^0.2.9",
+    "@lion/button": "0.3.44",
+    "@lion/icon": "0.2.9",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }
