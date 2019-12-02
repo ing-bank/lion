@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.9](https://github.com/ing-bank/lion/compare/@lion/checkbox@0.2.8...@lion/checkbox@0.2.9) (2019-12-02)
+
+
+### Bug Fixes
+
+* use strict versions to get correct deps on older versions ([8645c13](https://github.com/ing-bank/lion/commit/8645c13b1d77e488713f2e5e0e4e00c4d30ea1ee))
+
+
+
+
+
 ## [0.2.8](https://github.com/ing-bank/lion/compare/@lion/checkbox@0.2.7...@lion/checkbox@0.2.8) (2019-12-01)
 
 **Note:** Version bump only for package @lion/checkbox

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.45](https://github.com/ing-bank/lion/compare/@lion/button@0.3.44...@lion/button@0.3.45) (2019-12-02)
+
+
+### Bug Fixes
+
+* use strict versions to get correct deps on older versions ([8645c13](https://github.com/ing-bank/lion/commit/8645c13b1d77e488713f2e5e0e4e00c4d30ea1ee))
+
+
+
+
+
 ## [0.3.44](https://github.com/ing-bank/lion/compare/@lion/button@0.3.43...@lion/button@0.3.44) (2019-12-01)
 
 **Note:** Version bump only for package @lion/button

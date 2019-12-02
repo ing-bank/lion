@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.20](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.19...@lion/ajax@0.1.20) (2019-12-02)
+
+
+### Bug Fixes
+
+* use strict versions to get correct deps on older versions ([8645c13](https://github.com/ing-bank/lion/commit/8645c13b1d77e488713f2e5e0e4e00c4d30ea1ee))
+
+
+
+
+
 ## [0.1.19](https://github.com/ing-bank/lion/compare/@lion/ajax@0.1.18...@lion/ajax@0.1.19) (2019-11-13)
 
 **Note:** Version bump only for package @lion/ajax
