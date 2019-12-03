@@ -1,13 +1,11 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
+import '@lion/button/lion-button.js';
 import { css } from '@lion/core';
-
-import { Required } from '@lion/validate';
 import '@lion/form/lion-form.js';
 import '@lion/option/lion-option.js';
-import '@lion/button/lion-button.js';
-
-import '../lion-select-rich.js';
+import { Required } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-options.js';
+import '../lion-select-rich.js';
 
 const selectRichDemoStyle = css`
   .demo-area {
@@ -15,7 +13,7 @@ const selectRichDemoStyle = css`
   }
 `;
 
-storiesOf('Forms|Select Rich', module)
+storiesOf('Forms|Select Rich')
   .add(
     'Default',
     () => html`

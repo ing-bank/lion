@@ -1,5 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { LitElement, css } from '@lion/core';
+import { css, LitElement } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-tabs.js';
 
 const tabsDemoStyle = css`
@@ -8,7 +8,7 @@ const tabsDemoStyle = css`
   }
 `;
 
-storiesOf('Tabs', module)
+storiesOf('Tabs')
   .add(
     'Default',
     () => html`

@@ -1,12 +1,11 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { bug12 } from '@lion/icon/stories/icons/bugs-collection.js';
-import '@lion/icon/lion-icon.js';
 import '@lion/form/lion-form.js';
+import '@lion/icon/lion-icon.js';
+import { bug12 } from '@lion/icon/stories/icons/bugs-collection.js';
 import '@lion/input/lion-input.js';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-button.js';
 
-storiesOf('Buttons|Button', module)
+storiesOf('Buttons|Button')
   .add(
     'Used on its own',
     () => html`

@@ -1,11 +1,11 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { MaxLength, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
 import { localize, LocalizeMixin } from '@lion/localize';
+import { loadDefaultFeedbackMessages, MaxLength, Validator } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { LionInput } from '../index.js';
 
 loadDefaultFeedbackMessages();
 
-storiesOf('Forms|Input Localize', module).add('localize', () => {
+storiesOf('Forms|Input Localize').add('localize', () => {
   class InputValidationExample extends LocalizeMixin(LionInput) {
     static get localizeNamespaces() {
       return [

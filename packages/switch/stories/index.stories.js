@@ -1,10 +1,9 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { Validator } from '@lion/validate';
-
-import '../lion-switch.js';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-switch-button.js';
+import '../lion-switch.js';
 
-storiesOf('Buttons|Switch', module)
+storiesOf('Buttons|Switch')
   .add(
     'Default',
     () => html`

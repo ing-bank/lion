@@ -1,5 +1,4 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-option.js';
 
 const a11yNote = html`
@@ -16,7 +15,7 @@ const a11yNote = html`
   </p>
 `;
 
-storiesOf('Forms|Option', module)
+storiesOf('Forms|Option')
   .add(
     'States',
     () => html`

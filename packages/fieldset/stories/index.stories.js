@@ -1,17 +1,14 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import '../lion-fieldset.js';
 import '@lion/input/lion-input.js';
 import { localize } from '@lion/localize';
-
-import { Validator, MinLength, loadDefaultFeedbackMessages } from '@lion/validate';
-
+import { loadDefaultFeedbackMessages, MinLength, Validator } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../../form-system/stories/helper-wc/h-output.js';
+import '../lion-fieldset.js';
 
 localize.locale = 'en-GB';
 loadDefaultFeedbackMessages();
 
-storiesOf('Forms|Fieldset', module)
+storiesOf('Forms|Fieldset')
   .add(
     'Default',
     () => html`

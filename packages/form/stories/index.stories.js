@@ -1,13 +1,11 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import '../lion-form.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input-iban/lion-input-iban.js';
 import '@lion/textarea/lion-textarea.js';
+import { MaxLength, Required } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
+import '../lion-form.js';
 
-import { Required, MaxLength } from '@lion/validate';
-
-storiesOf('Forms|Form', module)
+storiesOf('Forms|Form')
   .add(
     'Basic form result',
     () => html`

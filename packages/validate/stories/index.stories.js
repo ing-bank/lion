@@ -1,36 +1,33 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
 import { LionInput } from '@lion/input';
-
-import '@lion/input/lion-input.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
-
+import '@lion/input/lion-input.js';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import {
-  Required,
-  EqualsLength,
-  MinLength,
-  MaxLength,
-  MinMaxLength,
-  IsNumber,
-  MinNumber,
-  MaxNumber,
-  MinMaxNumber,
-  IsDate,
-  MinDate,
-  MaxDate,
-  MinMaxDate,
-  IsEmail,
-  Validator,
-  loadDefaultFeedbackMessages,
   DefaultSuccess,
+  EqualsLength,
+  IsDate,
+  IsEmail,
+  IsNumber,
+  loadDefaultFeedbackMessages,
+  MaxDate,
+  MaxLength,
+  MaxNumber,
+  MinDate,
+  MinLength,
+  MinMaxDate,
+  MinMaxLength,
+  MinMaxNumber,
+  MinNumber,
+  Required,
+  Validator,
 } from '../index.js';
 
 loadDefaultFeedbackMessages();
 
-storiesOf('Forms|Validation', module)
+storiesOf('Forms|Validation')
   .add(
     'Required Validator',
     () => html`

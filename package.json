@@ -8,8 +8,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
-    "@open-wc/building-rollup": "^0.14.8",
-    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/demoing-storybook": "^1.1.1",
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/prettier-config": "^0.1.0",
     "@open-wc/testing": "^2.3.4",
@@ -36,8 +35,8 @@
   },
   "scripts": {
     "start": "npm run storybook",
-    "storybook": "start-storybook -p 9001 -s ./assets",
-    "storybook:build": "build-storybook -s ./assets",
+    "storybook": "start-storybook -p 9001 --stories \"./packages/*/stories/*.stories.{js,mdx}\" --node-resolve --watch --open",
+    "storybook:build": "build-storybook --stories \"./packages/*/stories/*.stories.{js,mdx}\" --output-dir ./storybook-static",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:compatibility": "karma start --compatibility all --coverage",
