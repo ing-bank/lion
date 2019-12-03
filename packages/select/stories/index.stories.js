@@ -1,9 +1,8 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { Required } from '@lion/validate';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-select.js';
 
-storiesOf('Forms|Select', module)
+storiesOf('Forms|Select')
   .add(
     'Default',
     () => html`

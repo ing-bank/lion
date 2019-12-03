@@ -1,11 +1,11 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { render } from '@lion/core';
-import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
+import '@lion/checkbox/lion-checkbox.js';
+import { render } from '@lion/core';
 import '@lion/form/lion-form.js';
 import '@lion/input/lion-input.js';
-import './helper-wc/h-output.js';
 import { Validator } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
+import './helper-wc/h-output.js';
 
 function renderOffline(litHtmlTemplate) {
   const offlineRenderContainer = document.createElement('div');
@@ -13,7 +13,7 @@ function renderOffline(litHtmlTemplate) {
   return offlineRenderContainer.firstElementChild;
 }
 
-storiesOf('Form Fundaments|Interaction States', module)
+storiesOf('Form Fundaments|Interaction States')
   .add(
     'States',
     () => html`

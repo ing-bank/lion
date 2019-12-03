@@ -1,7 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-icon.js';
-
 import {
   bug01,
   bug02,
@@ -13,13 +11,12 @@ import {
   bug23,
   bug24,
 } from './icons/bugs-collection.js';
-
 import aliensSpaceship from './icons/space/aliens-spaceship.svg.js';
-import sun from './icons/space/sun.svg.js';
 import moonFlag from './icons/space/moon-flag.svg.js';
 import night from './icons/space/night.svg.js';
+import sun from './icons/space/sun.svg.js';
 
-storiesOf('Icon System|Icon', module)
+storiesOf('Icon System|Icon')
   .add(
     'default',
     () => html`
