@@ -33,10 +33,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/field": "^0.6.6",
-    "@lion/input": "^0.3.7",
-    "@lion/localize": "^0.7.1",
-    "@lion/validate": "^0.5.1"
+    "@lion/field": "0.6.6",
+    "@lion/input": "0.3.7",
+    "@lion/localize": "0.7.1",
+    "@lion/validate": "0.5.1"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",
