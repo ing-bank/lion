@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.7](https://github.com/ing-bank/lion/compare/@lion/field@0.6.6...@lion/field@0.6.7) (2019-12-03)
+
+
+### Bug Fixes
+
+* let lerna publish fixed versions ([bc7448c](https://github.com/ing-bank/lion/commit/bc7448c694deb3c05fd3d083a9acb5365b26b7ab))
+
+
+
+
+
 ## [0.6.6](https://github.com/ing-bank/lion/compare/@lion/field@0.6.5...@lion/field@0.6.6) (2019-12-02)
 
 
