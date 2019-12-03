@@ -33,11 +33,11 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/overlays": "^0.7.1"
+    "@lion/overlays": "0.7.1"
   },
   "devDependencies": {
-    "@lion/button": "^0.3.45",
-    "@lion/icon": "^0.2.10",
+    "@lion/button": "0.3.45",
+    "@lion/icon": "0.2.10",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/overlays": "^0.7.1"
+    "@lion/overlays": "0.7.1"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^0.2.0",

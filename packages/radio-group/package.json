@@ -33,11 +33,11 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/fieldset": "^0.5.1"
+    "@lion/fieldset": "0.5.1"
   },
   "devDependencies": {
-    "@lion/radio": "^0.2.9",
-    "@lion/validate": "^0.5.1",
+    "@lion/radio": "0.2.9",
+    "@lion/validate": "0.5.1",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4"
   }

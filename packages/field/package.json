@@ -34,10 +34,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/validate": "^0.5.1"
+    "@lion/validate": "0.5.1"
   },
   "devDependencies": {
-    "@lion/localize": "^0.7.1",
+    "@lion/localize": "0.7.1",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"

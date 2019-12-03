@@ -32,14 +32,14 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/button": "^0.3.45",
-    "@lion/choice-input": "^0.4.7",
+    "@lion/button": "0.3.45",
+    "@lion/choice-input": "0.4.7",
     "@lion/core": "0.3.0",
-    "@lion/field": "^0.6.6"
+    "@lion/field": "0.6.6"
   },
   "devDependencies": {
-    "@lion/localize": "^0.7.1",
-    "@lion/validate": "^0.5.1",
+    "@lion/localize": "0.7.1",
+    "@lion/validate": "0.5.1",
     "@open-wc/demoing-storybook": "^0.2.0",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
