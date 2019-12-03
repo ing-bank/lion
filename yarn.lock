@@ -2156,16 +2156,16 @@
     "@open-wc/semantic-dom-diff" "^0.13.16"
     "@types/chai" "^4.1.7"
 
-"@open-wc/demoing-storybook@^1.0.12":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@open-wc/demoing-storybook/-/demoing-storybook-1.1.0.tgz#c9122d9603522e058aa5102217e5ce09f767f96d"
-  integrity sha512-s+likjkI693QNYSjj5mhzAM0RJ9hAWWFSWHWhIpjCicyZ4lY9K9lzkbLJ/07Boluz/gpfQIeqo1Xdp2pW5uU3w==
+"@open-wc/demoing-storybook@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@open-wc/demoing-storybook/-/demoing-storybook-1.1.1.tgz#130db27acc0492fb66f8fef99f8d51a04a881792"
+  integrity sha512-9gTWoN6+wZ2SADZDrnKzkbRpN4a8YhFNL66yNuUURCgi12n5Y7Yu3+4l9q+o0CZGROLuMDCabFDxgjqui157yw==
   dependencies:
     "@babel/core" "^7.7.2"
     "@babel/plugin-transform-react-jsx" "^7.3.0"
     "@mdx-js/mdx" "^1.5.1"
     "@open-wc/building-rollup" "^0.14.8"
-    "@open-wc/storybook-prebuilt" "^0.0.7"
+    "@open-wc/storybook-prebuilt" "^0.0.8"
     "@storybook/addon-docs" "^5.2.5"
     command-line-args "^5.0.2"
     command-line-usage "^6.1.0"
@@ -2224,10 +2224,10 @@
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.3.tgz#df8e363513c5d58eebe660432a914db38f8327fc"
   integrity sha512-h9yFY7ue+ezwfTfr+NkUYoeMdpXJ8IsmlWLG2syLA+2mjNo6+R/lhF/UYx/5grtM9Mg2WweMfdbPpG5bub6iJw==
 
-"@open-wc/storybook-prebuilt@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-0.0.7.tgz#686b817c2c817365de0ba343140064864d6b7b8b"
-  integrity sha512-F3vo82nqo0vxisu/byjJQMx8dhiRwYLgcrzHCPZf2EIFRnZNygs1ns3wV2LU3li9+phrnSJNStLcQJvPRnlYcw==
+"@open-wc/storybook-prebuilt@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-0.0.8.tgz#71a531e00f6ce67e690ed7077ed70fc237ae4f22"
+  integrity sha512-mv8irqfY+u0udYJhrRSi3UAzsiq2PdlC59rCW5Y2racFLByZqRj7lUw4FXXaC5b2OlHyaMTg1GOKJTuFXoknpQ==
   dependencies:
     standard-version "^7.0.1"
 
