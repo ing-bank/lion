@@ -41,10 +41,44 @@ const tooltipDemoStyle = css`
     border-radius: 4px;
     padding: 8px;
   }
+
+  .arrow {
+    background-color: grey;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+  }
 `;
 
 storiesOf('Overlays Specific WC|Tooltip', module)
   .addDecorator(withKnobs)
+  .add(
+    'Test',
+    () => html`
+      <style>
+        ${tooltipDemoStyle}
+      </style>
+      <div class="demo-box">
+        <lion-tooltip
+          .config=${{
+            popperConfig: {
+              placement: 'bottom',
+              modifiers: {
+                keepTogether: { enabled: true },
+                arrow: { enabled: true },
+              },
+            },
+          }}
+        >
+          <div slot="content" style="height: 30px">
+            Hey there
+          </div>
+          <div slot="arrow" style="width: 10px; height: 10px; background-color: black;"></div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      </div>
+    `,
+  )
   .add(
     'Button tooltip',
     () => html`

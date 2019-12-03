@@ -2,13 +2,6 @@ import { OverlayMixin } from '@lion/overlays';
 import { LitElement, html } from '@lion/core';
 
 export class LionTooltip extends OverlayMixin(LitElement) {
-  constructor() {
-    super();
-    this.closeEventName = 'tooltip-close';
-    this.mouseActive = false;
-    this.keyActive = false;
-  }
-
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
@@ -16,6 +9,34 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       elementToFocusAfterHide: null,
       hidesOnEsc: true,
     };
+  }
+
+  constructor() {
+    super();
+    this.mouseActive = false;
+    this.keyActive = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._overlayContentNode.setAttribute('role', 'tooltip');
+  }
+
+  firstUpdated(...args) {
+    super.firstUpdated(...args);
+    this.shadowRoot
+      .querySelector('slot[name="arrow"]')
+      .addEventListener('slotchange', this.__updateSlottedArrow.bind(this));
+    this.__updateSlottedArrow();
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+      <slot name="arrow"></slot>
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
   }
 
   _setupOpenCloseListeners() {
@@ -65,16 +86,63 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._overlayContentNode.setAttribute('role', 'tooltip');
+  __updateSlottedArrow() {
+    const arrowSlottableNode = Array.from(this.children).find(child => child.slot === 'arrow');
+    if (arrowSlottableNode) {
+      this.__removeExistingArrowInsideContent();
+      this.__moveArrowInsideContent(arrowSlottableNode);
+    }
   }
 
-  render() {
-    return html`
-      <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
-    `;
+  // Move arrow slottable inside the content node
+  __moveArrowInsideContent(node) {
+    const _node = node;
+    _node.setAttribute('x-arrow', true);
+    _node.style.position = 'absolute';
+    this.__arrowHeight = _node.getBoundingClientRect().height;
+
+    // Broken for placement: bottom --> offset = top , popper removes inline styles :(
+    _node.style[`${this.__arrowStyles.offset}`] = `-${this.__arrowHeight}px`;
+
+    _node.style.transform = `rotate(deg(${this.__arrowStyles.rotation}))`;
+
+    this._overlayContentNode.appendChild(_node);
+    if (this._overlayCtrl && this._overlayCtrl._popper) {
+      this._overlayCtrl._popper.update();
+    }
+  }
+
+  // Remove pre-existing arrow slottable
+  __removeExistingArrowInsideContent() {
+    if (this._overlayContentNode) {
+      const arrowInContent = Array.from(this._overlayContentNode.children).find(
+        child => child.slot === 'arrow',
+      );
+
+      if (arrowInContent) {
+        this._overlayContentNode.removeChild(arrowInContent);
+      }
+    }
+  }
+
+  get __arrowStyles() {
+    let pos;
+    const popperCfg = this._overlayCtrl.config.popperConfig;
+    if (popperCfg && popperCfg.placement) {
+      const reg = RegExp('([a-z]{3,})(-)?', 'g');
+      const result = reg.exec(popperCfg.placement);
+      pos = result ? result[1] : 'bottom'; // fallback bottom, because popper fallback is also bottom
+    }
+
+    switch (pos) {
+      case 'top':
+        return { rotation: 0, offset: 'bottom' };
+      case 'left':
+        return { rotation: 270, offset: 'right' };
+      case 'right':
+        return { rotation: 90, offset: 'left' };
+      default:
+        return { rotation: 180, offset: 'top' };
+    }
   }
 }
