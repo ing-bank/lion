@@ -83,7 +83,11 @@ export class LionRadioGroup extends LionFieldset {
     return filtered.length > 0 ? filtered[0] : undefined;
   }
 
-  _setCheckedRadioElement(value, check) {
+  async _setCheckedRadioElement(value, check) {
+    if (!this.__readyForRegistration) {
+      await this.registrationReady;
+    }
+
     for (let i = 0; i < this.formElementsArray.length; i += 1) {
       if (check(this.formElementsArray[i], value)) {
         this.formElementsArray[i].checked = true;
