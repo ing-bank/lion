@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "npm run storybook",
-    "storybook": "start-storybook -p 9001 --stories \"./packages/*/stories/*.stories.{js,mdx}\" --node-resolve --watch --open",
+    "storybook": "start-storybook -p 9001 --stories \"./packages/calendar/stories/*.stories.{js,mdx}\" --node-resolve --watch --open",
     "storybook:build": "build-storybook --stories \"./packages/*/stories/*.stories.{js,mdx}\" --output-dir ./storybook-static",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
