@@ -1,5 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { formatNumber, formatNumberToParts } from '../index.js';
 
 const formatNumberDemoStyle = css`
@@ -26,7 +26,7 @@ const formatNumberDemoStyle = css`
 
 const value = 1234.56;
 
-storiesOf('Localize System|Number', module)
+storiesOf('Localize System|Number')
   .add(
     'formatNumber',
     () => html`

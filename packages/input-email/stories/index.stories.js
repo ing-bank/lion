@@ -1,10 +1,9 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { Validator } from '@lion/validate';
-
-import '../lion-input-email.js';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../../fieldset/lion-fieldset.js';
+import '../lion-input-email.js';
 
-storiesOf('Forms|Input Email', module)
+storiesOf('Forms|Input Email')
   .add(
     'Default',
     () => html`

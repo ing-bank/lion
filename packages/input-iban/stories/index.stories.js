@@ -1,9 +1,8 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { IsCountryIBAN } from '../index.js';
 import '../lion-input-iban.js';
 
-storiesOf('Forms|Input IBAN', module)
+storiesOf('Forms|Input IBAN')
   .add(
     'Default',
     () => html`

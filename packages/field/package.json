@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@lion/localize": "0.7.1",
-    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/demoing-storybook": "^1.1.1",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
   }

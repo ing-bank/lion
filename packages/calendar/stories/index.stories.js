@@ -1,7 +1,6 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { css } from '@lion/core';
 import '@lion/button/lion-button.js';
-
+import { css } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-calendar.js';
 
 const calendarDemoStyle = css`
@@ -12,7 +11,7 @@ const calendarDemoStyle = css`
   }
 `;
 
-storiesOf('Calendar|Standalone', module)
+storiesOf('Calendar|Standalone')
   .add(
     'default',
     () => html`

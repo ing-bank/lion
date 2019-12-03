@@ -1,5 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { formatDate } from '../index.js';
 
 const formatDateDemoStyle = css`
@@ -24,7 +24,7 @@ const formatDateDemoStyle = css`
   }
 `;
 
-storiesOf('Localize System|Date', module).add(
+storiesOf('Localize System|Date').add(
   'formatDate',
   () => html`
     <style>

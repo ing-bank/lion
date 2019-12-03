@@ -1,9 +1,9 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { formatDate } from '@lion/localize';
 import { IsDateDisabled, MinMaxDate } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-input-datepicker.js';
 
-storiesOf('Forms|Input Datepicker', module)
+storiesOf('Forms|Input Datepicker')
   .add(
     'Default',
     () => html`
