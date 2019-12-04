@@ -10,7 +10,6 @@ const tooltipDemoStyle = css`
     width: 200px;
     background-color: white;
     border-radius: 2px;
-    border: 1px solid grey;
     margin: 250px;
     padding: 8px;
   }
@@ -41,13 +40,6 @@ const tooltipDemoStyle = css`
     border-radius: 4px;
     padding: 8px;
   }
-
-  .arrow {
-    background-color: grey;
-    width: 10px;
-    height: 10px;
-    position: absolute;
-  }
 `;
 
 storiesOf('Overlays Specific WC|Tooltip', module)
@@ -60,17 +52,14 @@ storiesOf('Overlays Specific WC|Tooltip', module)
       </style>
       <div class="demo-box">
         <lion-tooltip
+          opened
           .config=${{
             popperConfig: {
-              placement: 'bottom',
-              modifiers: {
-                keepTogether: { enabled: true },
-                arrow: { enabled: true },
-              },
+              placement: 'right',
             },
           }}
         >
-          <div slot="content" style="height: 30px">
+          <div slot="content" class="demo-tooltip">
             Hey there
           </div>
           <div slot="arrow" style="width: 10px; height: 10px; background-color: black;"></div>

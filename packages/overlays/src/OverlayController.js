@@ -576,7 +576,8 @@ export class OverlayController {
 
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
-    this._contentNodeWrapper.remove();
+    // IE11 compatibility (does not support `Node.remove()`)
+    this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
   }
 
   /**
