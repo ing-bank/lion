@@ -21,6 +21,7 @@ export const FormRegistrarPortalMixin = dedupeMixin(
         super();
         this.formElements = [];
         this.registrationTarget = undefined;
+        this.__hasBeenRendered = false;
         this.__readyForRegistration = false;
         this.registrationReady = new Promise(resolve => {
           this.__resolveRegistrationReady = resolve;
@@ -34,6 +35,9 @@ export const FormRegistrarPortalMixin = dedupeMixin(
         this.__checkRegistrationTarget();
 
         formRegistrarManager.add(this);
+        if (this.__hasBeenRendered) {
+          formRegistrarManager.becomesReady();
+        }
 
         this.__redispatchEventForFormRegistrarPortalMixin = ev => {
           ev.stopPropagation();
@@ -67,6 +71,7 @@ export const FormRegistrarPortalMixin = dedupeMixin(
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
         formRegistrarManager.becomesReady(this);
+        this.__hasBeenRendered = true;
       }
 
       __checkRegistrationTarget() {

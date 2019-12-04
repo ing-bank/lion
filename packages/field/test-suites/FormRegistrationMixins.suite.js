@@ -221,6 +221,30 @@ export const runRegistrationSuite = customConfig => {
         expect(registerSpy.args[2][0].target.tagName).to.equal(childEl.tagName);
       });
 
+      it('keeps working if moving the portal itself', async () => {
+        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const portal = await fixture(html`
+          <${portalTag} .registrationTarget=${el}>
+            <${childTag}></${childTag}>
+          </${portalTag}>
+        `);
+        const otherPlace = await fixture(html`
+          <div></div>
+        `);
+        otherPlace.appendChild(portal);
+        const newField = await fixture(html`
+          <${childTag}></${childTag}>
+        `);
+
+        expect(el.formElements.length).to.equal(1);
+
+        portal.appendChild(newField);
+        expect(el.formElements.length).to.equal(2);
+
+        portal.removeChild(newField);
+        expect(el.formElements.length).to.equal(1);
+      });
+
       it('works for portals that have a delayed render', async () => {
         const delayedPortalString = defineCE(
           class extends FormRegistrarPortalMixin(LitElement) {
