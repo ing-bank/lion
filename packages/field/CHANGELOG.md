@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.8](https://github.com/ing-bank/lion/compare/@lion/field@0.6.7...@lion/field@0.6.8) (2019-12-04)
+
+
+### Bug Fixes
+
+* **field:** support moving of a portal node ([6a57e8a](https://github.com/ing-bank/lion/commit/6a57e8a235adac85f5437d6879a2248973c2b6b5))
+
+
+
+
+
 ## [0.6.7](https://github.com/ing-bank/lion/compare/@lion/field@0.6.6...@lion/field@0.6.7) (2019-12-03)
 
 
