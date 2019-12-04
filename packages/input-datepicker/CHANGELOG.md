@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.5.2...@lion/input-datepicker@0.6.0) (2019-12-04)
+
+
+### Features
+
+* integrate and pass automated a11y testing ([e1a417b](https://github.com/ing-bank/lion/commit/e1a417b041431e4e25a5b6a63e23ba0a3974f5a5))
+
+
+
+
+
 ## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.5.1...@lion/input-datepicker@0.5.2) (2019-12-03)
 
 
