@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.7.1...@lion/overlays@0.8.0) (2019-12-04)
+
+
+### Features
+
+* integrate and pass automated a11y testing ([e1a417b](https://github.com/ing-bank/lion/commit/e1a417b041431e4e25a5b6a63e23ba0a3974f5a5))
+
+
+
+
+
 ## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.7.0...@lion/overlays@0.7.1) (2019-12-02)
 
 

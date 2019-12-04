@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/validate@0.5.1...@lion/validate@0.5.2) (2019-12-03)
+
+
+### Bug Fixes
+
+* let lerna publish fixed versions ([bc7448c](https://github.com/ing-bank/lion/commit/bc7448c694deb3c05fd3d083a9acb5365b26b7ab))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/validate@0.5.0...@lion/validate@0.5.1) (2019-12-02)
 
 

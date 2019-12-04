@@ -139,4 +139,14 @@ describe('<lion-textarea>', () => {
       .to.be.below(el.clientHeight)
       .and.to.be.below(el.scrollHeight);
   });
+
+  it('is accessible', async () => {
+    const el = await fixture(`<lion-textarea label="Label"></lion-textarea>`);
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(`<lion-textarea label="Label" disabled></lion-textarea>`);
+    await expect(el).to.be.accessible();
+  });
 });

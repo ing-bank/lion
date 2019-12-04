@@ -56,7 +56,7 @@ jobs:
       - run: git config --global user.name CircleCI
       - run:
           name: Publish package
-          command: "./node_modules/.bin/lerna publish --message 'chore: release new versions' --yes"
+          command: "./node_modules/.bin/lerna publish --message 'chore: release new versions' --exact --yes"
 
 workflows:
   version: 2
