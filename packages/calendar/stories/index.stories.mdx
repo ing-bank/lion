@@ -61,108 +61,124 @@ export const calendarDemoStyle = css`
   }
 `;
 
-<Preview withToolbar>
-  <Story name="Default">
-    {html`
+<Story name="Default">
+  {html`
+    <style>
+      ${calendarDemoStyle}
+    </style>
+    <lion-calendar class="demo-calendar"></lion-calendar>
+  `}
+</Story>
+
+```html
+<lion-calendar></lion-calendar>
+```
+
+## Move to the selected date
+
+The `selectedDate` is the date which is currently marked as selected.
+You usually select a date by click on it with the mouse or hitting Enter on the keyboard.
+
+The `selectedDate` might not be within the currently viewed dates.
+When the `selectedDates` changes then it will also sync its value to the `centralDate`
+
+<Story name="Selected Date">
+  {html`
+    <style>
+      ${calendarDemoStyle}
+    </style>
+    <lion-calendar class="demo-calendar" .selectedDate=${new Date(1988, 2, 5)}></lion-calendar>
+  `}
+</Story>
+
+```html
+<lion-calendar .selectedDate=${new Date(1988, 2, 5)}></lion-calendar>
+```
+
+## Central Date
+
+The `centralDate` defines which month is currently displayed.
+Changing the `centralDate` may means a different view will be displayed to your users.
+Usually if you change only the day "nothing" happens as it's already currently in view.
+The next and previous months buttons work by changing the `centralDate` with plus or minus one month.
+
+The `centralDate` can be different then `selectedDate` as you can have today as actively selected but still look at date that is years ago.
+
+<Story name="Central Date">
+  {() => {
+    const today = new Date();
+    const centralDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+    return html`
       <style>
         ${calendarDemoStyle}
       </style>
-      <lion-calendar class="demo-calendar"></lion-calendar>
-    `}
-  </Story>
-</Preview>
+      <lion-calendar class="demo-calendar" .centralDate="${centralDate}"></lion-calendar>
+    `;
+  }}
+</Story>
 
-### Move to the selected date
+```html
+<lion-calendar .centralDate=${new Date(1988, 2, 5)}></lion-calendar>
+```
 
-Change the selected date by
+## Controlling focus
 
-<Preview withToolbar>
-  <Story name="Selected Date">
-    {() => {
-      const today = new Date();
-      const selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-      return html`
-        <style>
-          ${calendarDemoStyle}
-        </style>
-        <lion-calendar class="demo-calendar" .selectedDate="${selectedDate}"></lion-calendar>
-      `;
-    }}
-  </Story>
-</Preview>
+You can control the focus by calling the following methods
+- `focusCentralDate()`
+- `focusSelectedDate()`
+- `focusDate(dateInstanceToFocus)`
 
-### Central Date
+Be aware that the central date changes when a new date is focused.
 
-When providing the central date it will move the actual view to this date.
-It will also be the first date that is selected
+<Story name="Controlling focus">
+  {() => {
+    const today = new Date();
+    const selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    const centralDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+    return html`
+      <style>
+        ${calendarDemoStyle}
+      </style>
+      <lion-calendar
+        id="js-demo-calendar"
+        class="demo-calendar"
+        .selectedDate="${selectedDate}"
+        .centralDate="${centralDate}"
+      ></lion-calendar>
+      <p>
+        Focus
+        <button @click="${() => document.querySelector('#js-demo-calendar').focusCentralDate()}">
+          Central date
+        </button>
+        <button @click="${() => document.querySelector('#js-demo-calendar').focusSelectedDate()}">
+          Selected date
+        </button>
+        <button @click="${() => document.querySelector('#js-demo-calendar').focusDate(today)}">
+          Today
+        </button>
+      </p>
+    `;
+  }}
+</Story>
 
-<Preview withToolbar>
-  <Story name="Central Date">
-    {() => {
-      const today = new Date();
-      const centralDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-      return html`
-        <style>
-          ${calendarDemoStyle}
-        </style>
-        <lion-calendar class="demo-calendar" .centralDate="${centralDate}"></lion-calendar>
-      `;
-    }}
-  </Story>
-</Preview>
+## Limiting selectable values
 
-### Controlling focus
+### Providing a lower limit
 
-<Preview withToolbar>
-  <Story name="Controlling focus">
-    {() => {
-      const today = new Date();
-      const selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-      const centralDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-      return html`
-        <style>
-          ${calendarDemoStyle}
-        </style>
-        <lion-calendar
-          id="js-demo-calendar"
-          class="demo-calendar"
-          .selectedDate="${selectedDate}"
-          .centralDate="${centralDate}"
-        ></lion-calendar>
-        <p>
-          Focus
-          <button @click="${() => document.querySelector('#js-demo-calendar').focusCentralDate()}">
-            Central date
-          </button>
-          <button @click="${() => document.querySelector('#js-demo-calendar').focusSelectedDate()}">
-            Selected date
-          </button>
-          <button @click="${() => document.querySelector('#js-demo-calendar').focusDate(today)}">
-            Today
-          </button>
-        </p>
-        <p>Be aware that the central date changes when a new date is focused.</p>
-      `;
-    }}
-  </Story>
-</Preview>
+To give a lower limit you can bind
 
-### Controlling a minDate
-
-<Preview withToolbar>
-  <Story name="minDate">
-    {() => {
-      const today = new Date();
-      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
-      return html`
-        <style>
-          ${calendarDemoStyle}
-        </style>
-        <lion-calendar class="demo-calendar" .minDate="${minDate}"></lion-calendar>
-      `;
-    }}
-  </Story>
-</Preview>
+<Story name="minDate">
+  {() => {
+    const today = new Date();
+    const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+    return html`
+      <style>
+        ${calendarDemoStyle}
+      </style>
+      <lion-calendar class="demo-calendar" .minDate="${minDate}"></lion-calendar>
+    `;
+  }}
+</Story>
 
 ### maxDate
 
