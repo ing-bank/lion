@@ -96,4 +96,27 @@ describe('<lion-input-date>', () => {
     await el.updateComplete;
     expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
   });
+
+  it('is accessible', async () => {
+    const el = await fixture(
+      `<lion-input-date><label slot="label">Label</label></lion-input-date>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when readonly', async () => {
+    const el = await fixture(
+      `<lion-input-date readonly .modelValue=${new Date(
+        '2017/06/15',
+      )}><label slot="label">Label</label></lion-input-date>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(
+      `<lion-input-date disabled><label slot="label">Label</label></lion-input-date>`,
+    );
+    await expect(el).to.be.accessible();
+  });
 });

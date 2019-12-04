@@ -221,7 +221,7 @@ export class OverlayController {
       if (this.invokerNode) {
         this.invokerNode.setAttribute('aria-expanded', this.isShown);
       }
-      if (!this.contentNode.hasAttribute('role')) {
+      if (!this.contentNode.role) {
         this.contentNode.setAttribute('role', 'dialog');
       }
     }

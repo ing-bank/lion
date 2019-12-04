@@ -117,5 +117,30 @@ describe('lion-tooltip', () => {
       const content = el.querySelector('[slot=content]');
       expect(content.getAttribute('role')).to.be.equal('tooltip');
     });
+
+    it('should be accessible when closed', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      `);
+      await expect(el).to.be.accessible;
+    });
+
+    it('should be accessible when opened', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <lion-button slot="invoker">Tooltip button</lion-button>
+        </lion-tooltip>
+      `);
+      const invoker = el.querySelector('[slot="invoker"]');
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
+      await el.updateComplete;
+
+      await expect(el).to.be.accessible;
+    });
   });
 });

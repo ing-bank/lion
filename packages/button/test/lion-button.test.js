@@ -228,6 +228,16 @@ describe('lion-button', () => {
 
       expect(el._nativeButtonNode.getAttribute('aria-hidden')).to.equal('true');
     });
+
+    it('is accessible', async () => {
+      const el = await fixture(`<lion-button>foo</lion-button>`);
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible when disabled', async () => {
+      const el = await fixture(`<lion-button disabled>foo</lion-button>`);
+      await expect(el).to.be.accessible();
+    });
   });
 
   describe('form integration', () => {

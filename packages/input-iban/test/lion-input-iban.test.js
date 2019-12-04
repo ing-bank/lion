@@ -53,4 +53,25 @@ describe('<lion-input-iban>', () => {
     expect(el.validationStates.error).to.have.a.property('IsIBAN');
     expect(el.validationStates.error).to.have.a.property('IsCountryIBAN');
   });
+
+  it('is accessible', async () => {
+    const el = await fixture(
+      `<lion-input-iban><label slot="label">Label</label></lion-input-iban>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when readonly', async () => {
+    const el = await fixture(
+      `<lion-input-iban readonly><label slot="label">Label</label></lion-input-iban>`,
+    );
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(
+      `<lion-input-iban disabled><label slot="label">Label</label></lion-input-iban>`,
+    );
+    await expect(el).to.be.accessible();
+  });
 });

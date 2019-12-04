@@ -137,7 +137,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         if (!this.constructor._button) {
           this.constructor._button = document.createElement('button');
           this.constructor._button.setAttribute('tabindex', '-1');
-          this.constructor._button.setAttribute('aria-hidden', true);
+          this.constructor._button.setAttribute('aria-hidden', 'true');
         }
         return this.constructor._button.cloneNode();
       },

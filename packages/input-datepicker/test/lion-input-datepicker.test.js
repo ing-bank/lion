@@ -301,6 +301,50 @@ describe('<lion-input-datepicker>', () => {
       await elObj.closeCalendar();
       expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
     });
+
+    it('is accessible when closed', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+
+      await expect(elObj.invokerEl).to.be.accessible();
+      await expect(elObj.calendarEl).to.be.accessible();
+    });
+
+    it('is accessible when open', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      await expect(elObj.calendarEl).to.be.accessible();
+      elObj.overlayCloseButtonEl.click();
+    });
+
+    it('has accessible invoker when open', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      await expect(elObj.invokerEl).to.be.accessible();
+      elObj.overlayCloseButtonEl.click();
+    });
+
+    it('is accessible with a disabled date', async () => {
+      const no15th = d => d.getDate() !== 15;
+      const el = await fixture(html`
+        <lion-input-datepicker .validators=${[new IsDateDisabled(no15th)]}> </lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+
+      await expect(elObj.calendarEl).to.be.accessible();
+      elObj.overlayCloseButtonEl.click();
+    });
   });
 
   describe.skip('Subclassers', () => {

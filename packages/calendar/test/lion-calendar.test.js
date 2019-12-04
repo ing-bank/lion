@@ -1193,4 +1193,37 @@ describe('<lion-calendar>', () => {
        */
     });
   });
+
+  describe('Accessibility', () => {
+    it('is accessible', async () => {
+      const el = await fixture(
+        html`
+          <lion-calendar></lion-calendar>
+        `,
+      );
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible with a date selected', async () => {
+      const today = new Date();
+      const selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      const el = await fixture(
+        html`
+          <lion-calendar .selectedDate="${selectedDate}"></lion-calendar>
+        `,
+      );
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible with disabled dates', async () => {
+      const el = await fixture(
+        html`
+          <lion-calendar
+            .disableDates=${day => day.getDay() === 6 || day.getDay() === 0}
+          ></lion-calendar>
+        `,
+      );
+      await expect(el).to.be.accessible();
+    });
+  });
 });
