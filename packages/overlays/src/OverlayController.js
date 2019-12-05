@@ -37,7 +37,31 @@ export class OverlayController {
       isTooltip: false,
       handlesUserInteraction: false,
       handlesAccessibility: false,
-      popperConfig: null,
+      popperConfig: {
+        placement: 'top',
+        positionFixed: false,
+        modifiers: {
+          keepTogether: {
+            enabled: false,
+          },
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'viewport',
+            padding: 16, // viewport-margin for shifting/sliding
+          },
+          flip: {
+            boundariesElement: 'viewport',
+            padding: 16, // viewport-margin for flipping
+          },
+          offset: {
+            enabled: true,
+            offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
+          },
+          arrow: {
+            enabled: false,
+          },
+        },
+      },
       viewportConfig: {
         placement: 'center',
       },
@@ -166,7 +190,6 @@ export class OverlayController {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
         this.constructor.popperModule = preloadPopper();
       }
-      this.__mergePopperConfigs(cfgToAdd.popperConfig || {});
     }
     this._handleFeatures({ phase: 'init' });
   }
@@ -578,70 +601,12 @@ export class OverlayController {
     }
   }
 
-  // TODO: Remove when no longer required by OverlayMixin (after updateConfig works properly while opened)
-  async updatePopperConfig(config = {}) {
-    this.__mergePopperConfigs(config);
-    if (this.isShown) {
-      await this.__createPopperInstance();
-      this._popper.update();
-    }
-  }
-
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
     // IE11 compatibility (does not support `Node.remove()`)
     if (this._contentNodeWrapper && this._contentNodeWrapper.parentElement) {
       this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
     }
-  }
-
-  /**
-   * Merges the default config with the current config, and finally with the user supplied config
-   * @param {Object} config user supplied configuration
-   */
-  __mergePopperConfigs(config = {}) {
-    const defaultConfig = {
-      placement: 'top',
-      positionFixed: false,
-      modifiers: {
-        keepTogether: {
-          enabled: false,
-        },
-        preventOverflow: {
-          enabled: true,
-          boundariesElement: 'viewport',
-          padding: 16, // viewport-margin for shifting/sliding
-        },
-        flip: {
-          boundariesElement: 'viewport',
-          padding: 16, // viewport-margin for flipping
-        },
-        offset: {
-          enabled: true,
-          offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
-        },
-        arrow: {
-          enabled: false,
-        },
-      },
-    };
-
-    /**
-     * Deep merging:
-     *  - default config
-     *  - previously configured user config
-     *  - new user added config
-     */
-    this.config.popperConfig = {
-      ...defaultConfig,
-      ...(this.config.popperConfig || {}),
-      ...(config || {}),
-      modifiers: {
-        ...defaultConfig.modifiers,
-        ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
-        ...((config && config.modifiers) || {}),
-      },
-    };
   }
 
   async __createPopperInstance() {

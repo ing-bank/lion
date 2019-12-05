@@ -47,8 +47,18 @@ export const OverlayMixin = dedupeMixin(
         return new OverlayController({
           contentNode,
           invokerNode,
-          ...this._defineOverlayConfig(),
-          ...this.config,
+          ...this._defineOverlayConfig(), // wc provided in the class as defaults
+          ...this.config, // user provided (e.g. in template)
+          popperConfig: {
+            ...(this._defineOverlayConfig().popperConfig || {}),
+            ...(this.config.popperConfig || {}),
+            modifiers: {
+              ...((this._defineOverlayConfig().popperConfig &&
+                this._defineOverlayConfig().popperConfig.modifiers) ||
+                {}),
+              ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
+            },
+          },
         });
       }
 

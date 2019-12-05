@@ -1,7 +1,6 @@
 import { css } from '@lion/core';
 import { html, object, storiesOf, text, withKnobs } from '@open-wc/demoing-storybook';
 import '../lion-tooltip.js';
-import './tail.stories.js';
 
 const tooltipDemoStyle = css`
   .demo-box {

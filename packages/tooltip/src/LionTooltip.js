@@ -1,25 +1,26 @@
 import { html, LitElement } from '@lion/core';
-import { OverlayController, OverlayMixin } from '@lion/overlays';
+import { OverlayMixin } from '@lion/overlays';
 import '../lion-tooltip-arrow.js';
 
 export class LionTooltip extends OverlayMixin(LitElement) {
-  _defineOverlay({ contentNode, invokerNode }) {
-    return new OverlayController({
-      contentNode,
-      invokerNode,
-      placementMode: 'local', // have to set a default
+  // eslint-disable-next-line class-methods-use-this
+  _defineOverlayConfig() {
+    return {
+      placementMode: 'local',
       elementToFocusAfterHide: null,
       hidesOnEsc: true,
-      ...this.config,
       popperConfig: {
-        ...(this.config.popperConfig || {}),
+        placement: 'top', // default
         modifiers: {
-          keepTogether: { enabled: true },
-          arrow: { enabled: true },
-          ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
+          keepTogether: {
+            enabled: true,
+          },
+          arrow: {
+            enabled: true,
+          },
         },
       },
-    });
+    };
   }
 
   constructor() {
