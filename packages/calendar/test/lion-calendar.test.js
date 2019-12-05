@@ -57,7 +57,7 @@ describe('<lion-calendar>', () => {
     it('has previous month button', async () => {
       const el = await fixture(
         html`
-          <lion-calendar></lion-calendar>
+          <lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>
         `,
       );
       expect(el.shadowRoot.querySelector('.calendar__previous-month-button')).dom.to.equal(`
@@ -68,7 +68,7 @@ describe('<lion-calendar>', () => {
     it('has next month button', async () => {
       const el = await fixture(
         html`
-          <lion-calendar></lion-calendar>
+          <lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>
         `,
       );
       expect(el.shadowRoot.querySelector('.calendar__next-month-button')).dom.to.equal(`
@@ -1181,7 +1181,7 @@ describe('<lion-calendar>', () => {
 
     it('displays the right translations according to locale', async () => {
       const el = await fixture(html`
-        <lion-calendar></lion-calendar>
+        <lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>
       `);
 
       const elObj = new CalendarObject(el);
