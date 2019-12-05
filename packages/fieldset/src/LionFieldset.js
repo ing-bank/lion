@@ -210,7 +210,7 @@ export class LionFieldset extends FormRegistrarMixin(
         serializedValues[name] = this.__serializeElements(element);
       } else {
         const serializedValue = this.__serializeElement(element);
-        if (serializedValue) {
+        if (serializedValue || serializedValue === 0) {
           serializedValues[name] = serializedValue;
         }
       }
@@ -353,7 +353,7 @@ export class LionFieldset extends FormRegistrarMixin(
     const serializedValues = [];
     elements.forEach(element => {
       const serializedValue = this.__serializeElement(element);
-      if (serializedValue) {
+      if (serializedValue || serializedValue === 0) {
         serializedValues.push(serializedValue);
       }
     });
