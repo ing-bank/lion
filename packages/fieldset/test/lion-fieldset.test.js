@@ -566,6 +566,23 @@ describe('<lion-fieldset>', () => {
       });
     });
 
+    it('0 is a valid value to be serialized', async () => {
+      const fieldset = await fixture(html`
+      <${tag}>
+        <${childTag} name="price"></${childTag}>
+      </${tag}>`);
+      await nextFrame();
+      fieldset.formElements.price.modelValue = 0;
+      expect(fieldset.serializeGroup()).to.deep.equal({ price: 0 });
+    });
+
+    it('__serializeElements serializes 0 as a valid value', async () => {
+      const fieldset = await fixture(html`<${tag}></${tag}>`);
+      await nextFrame();
+      const elements = [{ serializedValue: 0 }];
+      expect(fieldset.__serializeElements(elements)).to.deep.equal([0]);
+    });
+
     it('form elements which are not disabled', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
