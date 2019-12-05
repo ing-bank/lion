@@ -1,4 +1,4 @@
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent, aTimeout } from '@open-wc/testing';
 import { spy } from 'sinon';
 
 import '@lion/input/lion-input.js';
@@ -88,5 +88,53 @@ describe('<lion-form>', () => {
     expect(submitEv.target).to.equal(el);
     expect(submitEv.bubbles).to.be.true;
     expect(submitEv.composed).to.be.false;
+  });
+
+  it('handles internal submit handler before dispatch', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = el.querySelector('button');
+    const internalHandlerSpy = spy(el, 'submitGroup');
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    await aTimeout();
+    button.click();
+    expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
+  });
+
+  it('handles internal submit handler before dispatch', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = el.querySelector('button');
+    const internalHandlerSpy = spy(el, 'submitGroup');
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    button.click();
+    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
+  });
+
+  it('handles internal reset handler before dispatch', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <button type="reset">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = el.querySelector('button');
+    const internalHandlerSpy = spy(el, 'resetGroup');
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    button.click();
+    expect(dispatchSpy.args[0][0].type).to.equal('reset');
+    expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 });

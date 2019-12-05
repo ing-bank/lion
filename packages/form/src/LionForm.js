@@ -43,16 +43,16 @@ export class LionForm extends LionFieldset {
     this._submit = ev => {
       ev.preventDefault();
       ev.stopPropagation();
-      this.dispatchEvent(new Event('submit', { bubbles: true }));
       this.submitGroup();
+      this.dispatchEvent(new Event('submit', { bubbles: true }));
     };
     this.formElement.addEventListener('submit', this._submit);
 
     this._reset = ev => {
       ev.preventDefault();
       ev.stopPropagation();
-      this.dispatchEvent(new Event('reset', { bubbles: true }));
       this.resetGroup();
+      this.dispatchEvent(new Event('reset', { bubbles: true }));
     };
     this.formElement.addEventListener('reset', this._reset);
   }
