@@ -1,6 +1,5 @@
-import { OverlayMixin, OverlayController } from '@lion/overlays';
-import { LitElement, html } from '@lion/core';
-
+import { html, LitElement } from '@lion/core';
+import { OverlayController, OverlayMixin } from '@lion/overlays';
 import '../lion-tooltip-arrow.js';
 
 export class LionTooltip extends OverlayMixin(LitElement) {

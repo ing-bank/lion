@@ -1,7 +1,7 @@
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
-import './utils/typedef.js';
 import { overlays } from './overlays.js';
 import { containFocus } from './utils/contain-focus.js';
+import './utils/typedef.js';
 
 async function preloadPopper() {
   return import('popper.js/dist/esm/popper.min.js');
@@ -96,6 +96,7 @@ export class OverlayController {
     return this._contentNodeWrapper.zIndex;
   }
 
+  // TODO: Use deepmerge package for doing this kind of config merging...
   /**
    * @desc Allows to dynamically change the overlay configuration. Needed in case the
    * presentation of the overlay changes depending on screen size.
@@ -117,6 +118,18 @@ export class OverlayController {
       ...this._defaultConfig, // our basic ingredients
       ...this.__sharedConfig, // the initial configured overlayController
       ...cfgToAdd, // the added config
+      popperConfig: {
+        ...(this._defaultConfig.popperConfig || {}),
+        ...(this.__sharedConfig.popperConfig || {}),
+        ...(cfgToAdd.popperConfig || {}),
+        modifiers: {
+          ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
+            {}),
+          ...((this.__sharedConfig.popperConfig && this.__sharedConfig.popperConfig.modifiers) ||
+            {}),
+          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || {}),
+        },
+      },
     };
 
     this.__validateConfiguration(this.config);
@@ -577,7 +590,9 @@ export class OverlayController {
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
     // IE11 compatibility (does not support `Node.remove()`)
-    this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
+    if (this._contentNodeWrapper && this._contentNodeWrapper.parentElement) {
+      this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
+    }
   }
 
   /**

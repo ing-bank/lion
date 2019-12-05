@@ -43,8 +43,7 @@ export class LionTooltipArrow extends UpdateStylesMixin(LitElement) {
     `;
   }
 
-  // FIXME: Bug on IE11 where bounding client rect gives back weird value..
-  // Also, from the time writing this, lion-tooltip in general are pretty bugged visually...
+  // FIXME: Bug on IE11 where bounding client rect gives back weird value.. ('150' instead of '4') and that's why the placement is way off
   _updateArrowStyles() {
     const arrowRect = this.getBoundingClientRect();
     let arrowHeight;
