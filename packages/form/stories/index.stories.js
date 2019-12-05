@@ -41,6 +41,7 @@ storiesOf('Forms|Form', module)
       const form = document.querySelector('#form');
       if (!form.hasFeedbackFor.includes('error')) {
         console.log(form.serializeGroup());
+        form.resetGroup();
       }
     };
     return html`
@@ -60,7 +61,7 @@ storiesOf('Forms|Form', module)
             >
             </lion-input>
           </lion-fieldset>
-          <button type="submit">Submit</button>
+          <button type="submit">Submit & Reset (if successfully submitted)</button>
           <button type="button" @click=${() => document.querySelector('#form').resetGroup()}>
             Reset
           </button>
