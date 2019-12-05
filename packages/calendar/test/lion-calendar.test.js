@@ -45,7 +45,6 @@ describe('<lion-calendar>', () => {
         <h2
           id="month_and_year"
           class="calendar__month-heading"
-          aria-live="polite"
           aria-atomic="true"
         >
           December 2000
@@ -62,7 +61,7 @@ describe('<lion-calendar>', () => {
         `,
       );
       expect(el.shadowRoot.querySelector('.calendar__previous-month-button')).dom.to.equal(`
-        <button class="calendar__previous-month-button" aria-label="Previous month" title="Previous month">&lt;</button>
+        <button class="calendar__previous-month-button" aria-label="Previous month, October 2019" title="Previous month, October 2019">&lt;</button>
       `);
     });
 
@@ -73,7 +72,7 @@ describe('<lion-calendar>', () => {
         `,
       );
       expect(el.shadowRoot.querySelector('.calendar__next-month-button')).dom.to.equal(`
-        <button class="calendar__next-month-button" aria-label="Next month" title="Next month">&gt;</button>
+        <button class="calendar__next-month-button" aria-label="Next Month, December 2019" title="Next Month, December 2019">&gt;</button>
       `);
     });
   });
@@ -428,7 +427,7 @@ describe('<lion-calendar>', () => {
       });
 
       describe('Accessibility', () => {
-        it('has aria-live="polite" and aria-atomic="true" set on the secondary title', async () => {
+        it('has aria-atomic="true" set on the secondary title', async () => {
           const elObj = new CalendarObject(
             await fixture(
               html`
@@ -436,7 +435,6 @@ describe('<lion-calendar>', () => {
               `,
             ),
           );
-          expect(elObj.monthHeadingEl.getAttribute('aria-live')).to.equal('polite');
           expect(elObj.monthHeadingEl.getAttribute('aria-atomic')).to.equal('true');
         });
       });
@@ -583,10 +581,18 @@ describe('<lion-calendar>', () => {
             <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
           `);
           const elObj = new CalendarObject(el);
-          expect(elObj.previousMonthButtonEl.getAttribute('title')).to.equal('Previous month');
-          expect(elObj.previousMonthButtonEl.getAttribute('aria-label')).to.equal('Previous month');
-          expect(elObj.nextMonthButtonEl.getAttribute('title')).to.equal('Next month');
-          expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal('Next month');
+          expect(elObj.previousMonthButtonEl.getAttribute('title')).to.equal(
+            'Previous month, November 2000',
+          );
+          expect(elObj.previousMonthButtonEl.getAttribute('aria-label')).to.equal(
+            'Previous month, November 2000',
+          );
+          expect(elObj.nextMonthButtonEl.getAttribute('title')).to.equal(
+            'Next Month, January 2001',
+          );
+          expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
+            'Next Month, January 2001',
+          );
         });
       });
     });
@@ -1179,11 +1185,15 @@ describe('<lion-calendar>', () => {
       `);
 
       const elObj = new CalendarObject(el);
-      expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal('Next month');
+      expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
+        'Next Month, December 2019',
+      );
 
       localize.locale = 'nl-NL';
       await el.updateComplete;
-      expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal('Volgende maand');
+      expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
+        'Next Month, december 2019',
+      );
 
       /**
        * TODO: add more tests, e.g. for:
