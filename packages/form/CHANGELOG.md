@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/ing-bank/lion/compare/@lion/form@0.3.9...@lion/form@0.3.10) (2019-12-06)
+
+
+### Bug Fixes
+
+* **form:** event order of reset and submit ([190ba38](https://github.com/ing-bank/lion/commit/190ba3854a6a031f996e77a7c2ee4cbf851fecbb))
+
+
+
+
+
 ## [0.3.9](https://github.com/ing-bank/lion/compare/@lion/form@0.3.8...@lion/form@0.3.9) (2019-12-04)
 
 **Note:** Version bump only for package @lion/form
