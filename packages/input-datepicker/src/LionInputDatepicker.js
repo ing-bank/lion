@@ -245,8 +245,6 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   // eslint-disable-next-line class-methods-use-this
   _invokerTemplate() {
-    // TODO: aria-expanded should be toggled by Overlay system, to allow local overlays
-    // (a.k.a. dropdowns) as well. Important: will be breaking for subclassers
     return html`
       <button
         type="button"

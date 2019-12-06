@@ -63,15 +63,4 @@ describe('dedupeMixin', () => {
     const myObj = new MixedClass();
     expect(myObj.getMixinNames()).to.equal('Mixin1 Mixin2 Mixin3');
   });
-
-  // // ToDO: check with polymer3 mixin once we are on npm
-  // it('works with mixins deduped by Polymer', () => {
-  //   const [Mixin1, Mixin2] = createMixins('Mixin1', 'Mixin2');
-  //   const DedMixin1 = dedupeMixin(Mixin1);
-  //   const PolMixin2 = dedupingMixin(Mixin2);
-  //   class BaseClass {}
-  //   class MixedClass extends DedMixin1(PolMixin2(DedMixin1(PolMixin2(BaseClass)))) {}
-  //   const myObj = new MixedClass();
-  //   expect(myObj.getMixinNames()).to.equal('Mixin1 Mixin2');
-  // });
 });

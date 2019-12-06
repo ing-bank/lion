@@ -57,7 +57,6 @@ describe('lion-button', () => {
   it('hides the native button in the UI', async () => {
     const el = await fixture(`<lion-button>foo</lion-button>`);
     expect(el._nativeButtonNode.getAttribute('tabindex')).to.equal('-1');
-    // TODO: If we abstract to an srOnlyMixin, we should test that the styling equals that of the srOnlyMixin output
     expect(window.getComputedStyle(el._nativeButtonNode).clip).to.equal('rect(0px, 0px, 0px, 0px)');
   });
 

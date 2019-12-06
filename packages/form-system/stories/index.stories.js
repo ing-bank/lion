@@ -31,8 +31,6 @@ storiesOf('Forms|Form', module).add(
           .validators="${[new Required()]}"
         ></lion-input>
 
-        <!-- TODO: lion-input-birthdate -->
-
         <lion-input-date
           name="date"
           label="Date of application"
@@ -73,7 +71,13 @@ storiesOf('Forms|Form', module).add(
           <lion-radio name="dinosaurs[]" value="diplodocus" label="diplodocus"></lion-radio>
         </lion-radio-group>
 
-        <!-- TODO: rich select -->
+        <lion-select-rich label="Favorite color" name="color">
+          <lion-options slot="input">
+            <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+            <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+            <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
 
         <lion-select
           label="Make a selection (rich select)"

@@ -199,8 +199,8 @@ export class LionField extends FormControlMixin(
   }
 
   /**
-   * Copied from Polymer team. TODO: add license
    * Restores the cursor to its original position after updating the value.
+   *
    * @param {string} newValue The value that should be saved.
    */
   _setValueAndPreserveCaret(newValue) {
