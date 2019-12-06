@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/calendar@0.5.1...@lion/calendar@0.5.2) (2019-12-06)
+
+
+### Bug Fixes
+
+* **calendar:** make tests independents of execution date ([7bddabe](https://github.com/ing-bank/lion/commit/7bddabed86c89648e476a808915985d1df5930e9))
+* **catalog:** add info for next/previous month on to the buttons ([#384](https://github.com/ing-bank/lion/issues/384)) ([b6ec5a8](https://github.com/ing-bank/lion/commit/b6ec5a8cb550b207d72846ca79a220187b9ea5d2))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/calendar@0.5.0...@lion/calendar@0.5.1) (2019-12-04)
 
 **Note:** Version bump only for package @lion/calendar
