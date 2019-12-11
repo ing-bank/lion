@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.4.1...@lion/radio-group@0.4.2) (2019-12-11)
+
+
+### Bug Fixes
+
+* **lion-radio-group:** wait for registration before setting values ([#421](https://github.com/ing-bank/lion/issues/421)) ([4dbd737](https://github.com/ing-bank/lion/commit/4dbd73795f2b10e61d12804eb488a0b6b583245e))
+
+
+
+
+
 ## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.4.0...@lion/radio-group@0.4.1) (2019-12-11)
 
 **Note:** Version bump only for package @lion/radio-group
