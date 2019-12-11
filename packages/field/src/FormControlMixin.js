@@ -209,14 +209,16 @@ export const FormControlMixin = dedupeMixin(
       }
 
       /**
-       *
        * Default Render Result:
+       * <div class="form-field__group-one">
        *   <div class="form-field__label">
        *     <slot name="label"></slot>
        *   </div>
        *   <small class="form-field__help-text">
        *     <slot name="help-text"></slot>
        *   </small>
+       * </div>
+       * <div class="form-field__group-two">
        *   <div class="input-group">
        *     <div class="input-group__before">
        *       <slot name="before"></slot>
@@ -239,11 +241,28 @@ export const FormControlMixin = dedupeMixin(
        *   <div class="form-field__feedback">
        *     <slot name="feedback"></slot>
        *   </div>
+       * </div>
        */
       render() {
         return html`
-          ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
-          ${this.feedbackTemplate()}
+          <div class="form-field__group-one">
+            ${this.groupOneTemplate()}
+          </div>
+          <div class="form-field__group-two">
+            ${this.groupTwoTemplate()}
+          </div>
+        `;
+      }
+
+      groupOneTemplate() {
+        return html`
+          ${this.labelTemplate()} ${this.helpTextTemplate()}
+        `;
+      }
+
+      groupTwoTemplate() {
+        return html`
+          ${this.inputGroupTemplate()} ${this.feedbackTemplate()}
         `;
       }
 

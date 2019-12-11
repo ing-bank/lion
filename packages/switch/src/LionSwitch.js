@@ -23,11 +23,29 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
     };
   }
 
+  /**
+   * Restore original render function from FormControlMixin.js
+   * As it gets overwritten in ChoiceInputMixin
+   */
   render() {
     return html`
-      <div class="input-switch__container">
-        ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.feedbackTemplate()}
+      <div class="form-field__group-one">
+        ${this.groupOneTemplate()}
       </div>
+      <div class="form-field__group-two">
+        ${this.groupTwoTemplate()}
+      </div>
+    `;
+  }
+
+  groupOneTemplate() {
+    return html`
+      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.feedbackTemplate()}
+    `;
+  }
+
+  groupTwoTemplate() {
+    return html`
       ${this.inputGroupTemplate()}
     `;
   }
