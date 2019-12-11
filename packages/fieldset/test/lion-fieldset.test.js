@@ -260,6 +260,36 @@ describe('<lion-fieldset>', () => {
     expect(el.formElements.sub.formElements['hobbies[]'][1].disabled).to.be.true;
   });
 
+  it('can set initial modelValue on creation', async () => {
+    const initialModelValue = {
+      lastName: 'Bar',
+    };
+    const el = await fixture(html`
+      <${tag} .modelValue=${initialModelValue}>
+        <${childTag} name="lastName"></${childTag}>
+      </${tag}>
+    `);
+
+    await el.registrationReady;
+    await el.updateComplete;
+    expect(el.modelValue).to.eql(initialModelValue);
+  });
+
+  it('can set initial serializedValue on creation', async () => {
+    const initialSerializedValue = {
+      lastName: 'Bar',
+    };
+    const el = await fixture(html`
+      <${tag} .modelValue=${initialSerializedValue}>
+        <${childTag} name="lastName"></${childTag}>
+      </${tag}>
+    `);
+
+    await el.registrationReady;
+    await el.updateComplete;
+    expect(el.modelValue).to.eql(initialSerializedValue);
+  });
+
   describe('validation', () => {
     it('validates on init', async () => {
       class IsCat extends Validator {
