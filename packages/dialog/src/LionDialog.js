@@ -2,11 +2,6 @@ import { withModalDialogConfig, OverlayMixin } from '@lion/overlays';
 import { LitElement, html } from '@lion/core';
 
 export class LionDialog extends OverlayMixin(LitElement) {
-  constructor() {
-    super();
-    this.closeEventName = 'dialog-close';
-  }
-
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
@@ -15,6 +10,7 @@ export class LionDialog extends OverlayMixin(LitElement) {
   }
 
   _setupOpenCloseListeners() {
+    super._setupOpenCloseListeners();
     this.__toggle = () => {
       this.opened = !this.opened;
     };
@@ -25,6 +21,7 @@ export class LionDialog extends OverlayMixin(LitElement) {
   }
 
   _teardownOpenCloseListeners() {
+    super._teardownOpenCloseListeners();
     if (this._overlayInvokerNode) {
       this._overlayInvokerNode.removeEventListener('click', this.__toggle);
     }
