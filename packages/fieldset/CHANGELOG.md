@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.3...@lion/fieldset@0.5.4) (2019-12-11)
+
+
+### Bug Fixes
+
+* **fieldset:** wait for registration before setting values ([c378b18](https://github.com/ing-bank/lion/commit/c378b1885f5eb5f3f0f19f260511ae10ae18b866))
+
+
+
+
+
 ## [0.5.3](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.2...@lion/fieldset@0.5.3) (2019-12-04)
 
 **Note:** Version bump only for package @lion/fieldset
