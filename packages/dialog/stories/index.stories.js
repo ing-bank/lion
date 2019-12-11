@@ -80,7 +80,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
             Hello! You can close this notification here:
             <button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
             >
               ⨯
             </button>
@@ -97,7 +97,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
           </button>
@@ -123,7 +123,7 @@ storiesOf('Overlays Specific WC | Dialog', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
           </button>

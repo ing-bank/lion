@@ -4,7 +4,6 @@ import { LitElement, html } from '@lion/core';
 export class LionTooltip extends OverlayMixin(LitElement) {
   constructor() {
     super();
-    this.closeEventName = 'tooltip-close';
     this.mouseActive = false;
     this.keyActive = false;
   }
@@ -19,6 +18,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   _setupOpenCloseListeners() {
+    super._setupOpenCloseListeners();
     this.__resetActive = () => {
       this.mouseActive = false;
       this.keyActive = false;
@@ -58,6 +58,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   _teardownOpenCloseListeners() {
+    super._teardownOpenCloseListeners();
     this._overlayCtrl.removeEventListener('hide', this.__resetActive);
     this.removeEventListener('mouseenter', this.__showMouse);
     this.removeEventListener('mouseleave', this._hideMouse);

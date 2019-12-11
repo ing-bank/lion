@@ -99,6 +99,7 @@ customElements.define(
     }
 
     _setupOpenCloseListeners() {
+      super._setupOpenCloseListeners();
       this.__toggle = () => {
         this.opened = !this.opened;
       };
@@ -106,6 +107,7 @@ customElements.define(
     }
 
     _teardownOpenCloseListeners() {
+      super._teardownOpenCloseListeners();
       this._overlayInvokerNode.removeEventListener('click', this.__toggle);
     }
 
@@ -149,7 +151,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
             Hello! You can close this notification here:
             <button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
             >
               ⨯
             </button>
@@ -168,7 +170,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
           </button>
@@ -197,7 +199,9 @@ storiesOf('Overlay System | Overlay as a WC', module)
         <div slot="content" class="demo-overlay">
           <div>
             Hello! This is a notification.
-            <button @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}>
+            <button
+              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+            >
               Close
             </button>
             <lion-demo-overlay
@@ -208,7 +212,8 @@ storiesOf('Overlay System | Overlay as a WC', module)
                 Hello! You can close this notification here:
                 <button
                   class="close-button"
-                  @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+                  @click=${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
                 >
                   ⨯
                 </button>
@@ -234,7 +239,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
             Hello! You can close this notification here:
             <button
               class="close-button"
-              @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
             >
               ⨯
             </button>
@@ -299,7 +304,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
           </button>
@@ -355,7 +360,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
       <p>Close and open it again on a small screen (< 600px) and it will be a bottom sheet</p>
       <lion-demo-overlay
         .config=${{ ...withBottomSheetConfig() }}
-        @before-show=${e => {
+        @before-opened=${e => {
           if (window.innerWidth >= 600) {
             e.target.config = { ...withModalDialogConfig() };
           } else {
@@ -368,7 +373,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
           </button>
@@ -450,6 +455,87 @@ storiesOf('Overlay System | Overlay as a WC', module)
         ${popup}
       </div>
     `;
+  })
+  .add('Sync application state', () => {
+    const appState = {
+      opened: true,
+    };
+    const openedStateNode = renderOffline(
+      html`
+        <span>${appState.opened}</span>
+      `,
+    );
+    function onOpenClosed(ev) {
+      appState.opened = ev.target.opened;
+      openedStateNode.innerText = appState.opened;
+    }
+    const popup = renderOffline(html`
+      <lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+        <button slot="invoker">Overlay</button>
+        <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-demo-overlay>
+    `);
+
+    return html`
+      <style>
+        ${overlayDemoStyle}
+      </style>
+      appState.opened: ${openedStateNode}
+      <div class="demo-box_placements">
+        ${popup}
+      </div>
+    `;
+  })
+  .add('Intercept open/close', () => {
+    let shouldIntercept = true;
+    let shouldInterceptButton;
+    function toggleIntercept() {
+      shouldIntercept = !shouldIntercept;
+      shouldInterceptButton.textContent = shouldIntercept;
+    }
+    function intercept(ev) {
+      if (shouldIntercept) {
+        ev.preventDefault();
+      }
+    }
+    shouldInterceptButton = renderOffline(
+      html`
+        <button @click="${toggleIntercept}">${shouldIntercept}</button>
+      `,
+    );
+
+    const popup = renderOffline(html`
+      <lion-demo-overlay @before-closed=${intercept} @before-opened=${intercept}>
+        <button slot="invoker">Overlay</button>
+        <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-demo-overlay>
+    `);
+
+    return html`
+      <style>
+        ${overlayDemoStyle}
+      </style>
+      toggle shouldIntercept:${shouldInterceptButton}
+      <div class="demo-box_placements">
+        ${popup}
+      </div>
+    `;
   });
 
 /* .add('Toggle placement with knobs', () => {
@@ -467,7 +553,7 @@ storiesOf('Overlay System | Overlay as a WC', module)
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('hide', { bubbles: true }))}
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
             >⨯</button
           >
         </div>

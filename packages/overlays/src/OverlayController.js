@@ -33,7 +33,6 @@ export class OverlayController {
       trapsKeyboardFocus: false,
       hidesOnEsc: false,
       hidesOnOutsideClick: false,
-      hidesOnHideEventInContentNode: true,
       isTooltip: false,
       handlesUserInteraction: false,
       handlesAccessibility: false,
@@ -244,12 +243,16 @@ export class OverlayController {
     if (this.isShown) {
       return;
     }
-    this.dispatchEvent(new Event('before-show'));
-    this._contentNodeWrapper.style.display = this.placementMode === 'local' ? 'inline-block' : '';
-    await this._handleFeatures({ phase: 'show' });
-    await this._handlePosition({ phase: 'show' });
-    this.elementToFocusAfterHide = elementToFocusAfterHide;
-    this.dispatchEvent(new Event('show'));
+
+    const event = new CustomEvent('before-show', { cancelable: true });
+    this.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      this._contentNodeWrapper.style.display = this.placementMode === 'local' ? 'inline-block' : '';
+      await this._handleFeatures({ phase: 'show' });
+      await this._handlePosition({ phase: 'show' });
+      this.elementToFocusAfterHide = elementToFocusAfterHide;
+      this.dispatchEvent(new Event('show'));
+    }
   }
 
   async _handlePosition({ phase }) {
@@ -285,12 +288,15 @@ export class OverlayController {
       return;
     }
 
-    this.dispatchEvent(new Event('before-hide'));
-    // await this.transitionHide({ backdropNode: this.backdropNode, conentNode: this.contentNode });
-    this._contentNodeWrapper.style.display = 'none';
-    this._handleFeatures({ phase: 'hide' });
-    this.dispatchEvent(new Event('hide'));
-    this._restoreFocus();
+    const event = new CustomEvent('before-hide', { cancelable: true });
+    this.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      // await this.transitionHide({ backdropNode: this.backdropNode, conentNode: this.contentNode });
+      this._contentNodeWrapper.style.display = 'none';
+      this._handleFeatures({ phase: 'hide' });
+      this.dispatchEvent(new Event('hide'));
+      this._restoreFocus();
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
@@ -336,9 +342,6 @@ export class OverlayController {
     }
     if (this.hidesOnOutsideClick) {
       this._handleHidesOnOutsideClick({ phase });
-    }
-    if (this.hidesOnHideEventInContentNode) {
-      this._handleHidesOnHideEventInContentNode({ phase });
     }
     if (this.handlesAccessibility) {
       this._handleAccessibility({ phase });
@@ -495,18 +498,6 @@ export class OverlayController {
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
       }
-    }
-  }
-
-  _handleHidesOnHideEventInContentNode({ phase }) {
-    if (phase === 'show') {
-      this.__hideEventInContentNodeHandler = ev => {
-        ev.stopPropagation();
-        this.hide();
-      };
-      this.contentNode.addEventListener('hide', this.__hideEventInContentNodeHandler);
-    } else if (phase === 'hide') {
-      this.contentNode.removeEventListener('keyup', this.__hideEventInContentNodeHandler);
     }
   }
 

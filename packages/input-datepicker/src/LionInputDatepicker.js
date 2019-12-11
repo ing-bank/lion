@@ -343,6 +343,10 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    * @override Configures OverlayMixin
    */
   get _overlayContentNode() {
-    return this.shadowRoot.querySelector('lion-calendar-overlay-frame');
+    if (this._cachedOverlayContentNode) {
+      return this._cachedOverlayContentNode;
+    }
+    this._cachedOverlayContentNode = this.shadowRoot.querySelector('lion-calendar-overlay-frame');
+    return this._cachedOverlayContentNode;
   }
 }

@@ -36,6 +36,13 @@ export const OverlayMixin = dedupeMixin(
         this.__config = value;
       }
 
+      _requestUpdate(name, oldValue) {
+        super._requestUpdate(name, oldValue);
+        if (name === 'opened') {
+          this.dispatchEvent(new Event('opened-changed'));
+        }
+      }
+
       /**
        * @overridable method `_defineOverlay`
        * @desc returns an instance of a (dynamic) overlay controller
@@ -81,14 +88,32 @@ export const OverlayMixin = dedupeMixin(
        * For example, set a click event listener on _overlayInvokerNode to set opened to true
        */
       // eslint-disable-next-line class-methods-use-this
-      _setupOpenCloseListeners() {}
+      _setupOpenCloseListeners() {
+        this.__closeEventInContentNodeHandler = ev => {
+          ev.stopPropagation();
+          this._overlayCtrl.hide();
+        };
+        if (this._overlayContentNode) {
+          this._overlayContentNode.addEventListener(
+            'close-overlay',
+            this.__closeEventInContentNodeHandler,
+          );
+        }
+      }
 
       /**
        * @overridable
        * @desc use this method to tear down your event listeners
        */
       // eslint-disable-next-line class-methods-use-this
-      _teardownOpenCloseListeners() {}
+      _teardownOpenCloseListeners() {
+        if (this._overlayContentNode) {
+          this._overlayContentNode.removeEventListener(
+            'close-overlay',
+            this.__closeEventInContentNodeHandler,
+          );
+        }
+      }
 
       firstUpdated(changedProperties) {
         super.firstUpdated(changedProperties);
@@ -110,7 +135,9 @@ export const OverlayMixin = dedupeMixin(
       }
 
       get _overlayContentNode() {
-        let contentNode;
+        if (this._cachedOverlayContentNode) {
+          return this._cachedOverlayContentNode;
+        }
 
         // FIXME: This should shadow outlet in between the host and the content slot, is a problem
         // Should simply be Array.from(this.children).find(child => child.slot === 'content')
@@ -119,15 +146,15 @@ export const OverlayMixin = dedupeMixin(
           child => child.slot === '_overlay-shadow-outlet',
         );
         if (shadowOutlet) {
-          contentNode = Array.from(shadowOutlet.children).find(child => child.slot === 'content');
+          this._cachedOverlayContentNode = Array.from(shadowOutlet.children).find(
+            child => child.slot === 'content',
+          );
         } else {
-          contentNode = Array.from(this.children).find(child => child.slot === 'content');
+          this._cachedOverlayContentNode = Array.from(this.children).find(
+            child => child.slot === 'content',
+          );
         }
-
-        if (contentNode) {
-          this._cachedOverlayContentNode = contentNode;
-        }
-        return contentNode || this._cachedOverlayContentNode;
+        return this._cachedOverlayContentNode;
       }
 
       _setupOverlayCtrl() {
@@ -137,7 +164,6 @@ export const OverlayMixin = dedupeMixin(
         });
         this.__syncToOverlayController();
         this.__setupSyncFromOverlayController();
-
         this._setupOpenCloseListeners();
       }
 
@@ -151,22 +177,38 @@ export const OverlayMixin = dedupeMixin(
         this.__onOverlayCtrlShow = () => {
           this.opened = true;
         };
+
         this.__onOverlayCtrlHide = () => {
           this.opened = false;
         };
-        this.__onBeforeShow = () => {
-          this.dispatchEvent(new Event('before-show'));
+
+        this.__onBeforeShow = beforeShowEvent => {
+          const event = new CustomEvent('before-opened', { cancelable: true });
+          this.dispatchEvent(event);
+          if (event.defaultPrevented) {
+            beforeShowEvent.preventDefault();
+          }
+        };
+
+        this.__onBeforeHide = beforeHideEvent => {
+          const event = new CustomEvent('before-closed', { cancelable: true });
+          this.dispatchEvent(event);
+          if (event.defaultPrevented) {
+            beforeHideEvent.preventDefault();
+          }
         };
 
         this._overlayCtrl.addEventListener('show', this.__onOverlayCtrlShow);
         this._overlayCtrl.addEventListener('hide', this.__onOverlayCtrlHide);
         this._overlayCtrl.addEventListener('before-show', this.__onBeforeShow);
+        this._overlayCtrl.addEventListener('before-hide', this.__onBeforeHide);
       }
 
       __teardownSyncFromOverlayController() {
         this._overlayCtrl.removeEventListener('show', this.__onOverlayCtrlShow);
         this._overlayCtrl.removeEventListener('hide', this.__onOverlayCtrlHide);
         this._overlayCtrl.removeEventListener('before-show', this.__onBeforeShow);
+        this._overlayCtrl.removeEventListener('before-hide', this.__onBeforeHide);
       }
 
       __syncToOverlayController() {
