@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/dialog@0.2.3...@lion/dialog@0.3.0) (2019-12-11)
+
+
+### Bug Fixes
+
+* deleted obsolete overlay event names ([1290d9b](https://github.com/ing-bank/lion/commit/1290d9be9556311dd91c539e57d1b0652e5a419c))
+
+
+### Features
+
+* **overlays:** close/hide events on dom (OverlayMixin) level ([b2c5f92](https://github.com/ing-bank/lion/commit/b2c5f92e085c28eebeedd948a1386be9b4c1cdea))
+
+
+
+
+
 ## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/dialog@0.2.2...@lion/dialog@0.2.3) (2019-12-04)
 
 **Note:** Version bump only for package @lion/dialog

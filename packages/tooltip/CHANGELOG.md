@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.5.0...@lion/tooltip@0.5.1) (2019-12-11)
+
+
+### Bug Fixes
+
+* deleted obsolete overlay event names ([1290d9b](https://github.com/ing-bank/lion/commit/1290d9be9556311dd91c539e57d1b0652e5a419c))
+
+
+
+
+
 # [0.5.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.4.2...@lion/tooltip@0.5.0) (2019-12-04)
 
 

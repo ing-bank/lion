@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.6.4...@lion/input-datepicker@0.7.0) (2019-12-11)
+
+
+### Features
+
+* **overlays:** close/hide events on dom (OverlayMixin) level ([b2c5f92](https://github.com/ing-bank/lion/commit/b2c5f92e085c28eebeedd948a1386be9b4c1cdea))
+
+
+
+
+
 ## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.6.3...@lion/input-datepicker@0.6.4) (2019-12-11)
 
 **Note:** Version bump only for package @lion/input-datepicker
