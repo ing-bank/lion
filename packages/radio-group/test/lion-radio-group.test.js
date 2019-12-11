@@ -21,6 +21,24 @@ describe('<lion-radio-group>', () => {
     expect(el.checkedValue).to.equal('alien');
   });
 
+  it('can set initial checkedValue on creation', async () => {
+    const checkedValue = 'alien';
+    const el = await fixture(html`
+      <lion-radio-group .checkedValue="${checkedValue}">
+        <lion-radio name="gender[]" .choiceValue=${'male'}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'female'}></lion-radio>
+        <lion-radio name="gender[]" .choiceValue=${'alien'}></lion-radio>
+      </lion-radio-group>
+    `);
+
+    await nextFrame();
+    await el.registrationReady;
+    await el.updateComplete;
+
+    expect(el.checkedValue).to.equal('alien');
+    expect(el.formElementsArray[2].checked).to.be.true;
+  });
+
   it('can handle complex data via choiceValue', async () => {
     const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
