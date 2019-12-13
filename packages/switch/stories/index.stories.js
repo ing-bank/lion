@@ -19,8 +19,8 @@ storiesOf('Buttons|Switch', module)
   )
   .add('Validation', () => {
     class IsTrue extends Validator {
-      constructor() {
-        super();
+      constructor(...args) {
+        super(...args);
         this.name = 'IsTrue';
       }
 
@@ -37,7 +37,7 @@ storiesOf('Buttons|Switch', module)
         id="newsletterCheck"
         name="newsletterCheck"
         label="Subscribe to newsletter"
-        .validators="${[new IsTrue(null, { type: 'info' })]}"
+        .validators="${[new IsTrue()]}"
       ></lion-switch>
     `;
   })
