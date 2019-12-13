@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.5.1...@lion/tooltip@0.6.0) (2019-12-13)
+
+
+### Features
+
+* **tooltip:** arrow ([d4f99f1](https://github.com/ing-bank/lion/commit/d4f99f1b9222e26908139d0269ab95b563af19eb))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.5.0...@lion/tooltip@0.5.1) (2019-12-11)
 
 

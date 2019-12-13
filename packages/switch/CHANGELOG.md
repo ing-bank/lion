@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/switch@0.3.13...@lion/switch@0.4.0) (2019-12-13)
+
+
+### Features
+
+* **field:** add wrappers to allow label left of input ([5413ad1](https://github.com/ing-bank/lion/commit/5413ad130fac76235609ea735aea6c41467f1b22))
+
+
+
+
+
 ## [0.3.13](https://github.com/ing-bank/lion/compare/@lion/switch@0.3.12...@lion/switch@0.3.13) (2019-12-11)
 
 **Note:** Version bump only for package @lion/switch

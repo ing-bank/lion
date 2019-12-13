@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/textarea@0.4.0...@lion/textarea@0.4.1) (2019-12-13)
+
+**Note:** Version bump only for package @lion/textarea
+
+
+
+
+
 # [0.4.0](https://github.com/ing-bank/lion/compare/@lion/textarea@0.3.8...@lion/textarea@0.4.0) (2019-12-04)
 
 

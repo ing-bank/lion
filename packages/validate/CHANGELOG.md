@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/ing-bank/lion/compare/@lion/validate@0.5.2...@lion/validate@0.5.3) (2019-12-13)
+
+
+### Bug Fixes
+
+* **validate:** allow getMessage to return message based on config ([c21eabb](https://github.com/ing-bank/lion/commit/c21eabbacddf6c3afb007e21dc69a46be5169d7b))
+
+
+
+
+
 ## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/validate@0.5.1...@lion/validate@0.5.2) (2019-12-03)
 
 
