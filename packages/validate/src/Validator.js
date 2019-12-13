@@ -55,6 +55,7 @@ export class Validator {
       name: this.name,
       type: this.type,
       params: this.param,
+      config: this.config,
       ...data,
     };
     if (typeof this.config.getMessage === 'function') {

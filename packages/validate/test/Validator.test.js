@@ -32,6 +32,48 @@ describe('Validator', () => {
     expect(vali.config).to.eql({ my: 'config' });
   });
 
+  it('has access to name, type, params, config in getMessage provided by config', () => {
+    const configSpy = sinon.spy();
+    class MyValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'MyValidator';
+      }
+    }
+    const vali = new MyValidator('myParam', { my: 'config', getMessage: configSpy });
+    vali._getMessage();
+
+    expect(configSpy.args[0][0]).to.deep.equal({
+      name: 'MyValidator',
+      type: 'error',
+      params: 'myParam',
+      config: { my: 'config', getMessage: configSpy },
+    });
+  });
+
+  it('has access to name, type, params, config in static get getMessage', () => {
+    let staticArgs;
+    class MyValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'MyValidator';
+      }
+
+      static getMessage(...args) {
+        staticArgs = args;
+      }
+    }
+    const vali = new MyValidator('myParam', { my: 'config' });
+    vali._getMessage();
+
+    expect(staticArgs[0]).to.deep.equal({
+      name: 'MyValidator',
+      type: 'error',
+      params: 'myParam',
+      config: { my: 'config' },
+    });
+  });
+
   it('fires "param-changed" event on param change', async () => {
     const vali = new Validator('foo');
     const cb = sinon.spy(() => {});
