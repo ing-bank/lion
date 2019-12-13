@@ -402,6 +402,7 @@ export function runValidateMixinFeedbackPart() {
         await el.updateComplete;
         await el.feedbackComplete;
         expect(constructorMessageSpy.args[0][0]).to.eql({
+          config: { type: 'x' },
           params: 4,
           modelValue: 'cat',
           formControl: el,
@@ -423,6 +424,9 @@ export function runValidateMixinFeedbackPart() {
         await el.updateComplete;
         await el.feedbackComplete;
         expect(instanceMessageSpy.args[0][0]).to.eql({
+          config: {
+            getMessage: instanceMessageSpy,
+          },
           params: 4,
           modelValue: 'cat',
           formControl: el,
@@ -447,6 +451,7 @@ export function runValidateMixinFeedbackPart() {
         await el.updateComplete;
         await el.feedbackComplete;
         expect(spy.args[0][0]).to.eql({
+          config: {},
           params: 4,
           modelValue: 'cat',
           formControl: el,
@@ -473,7 +478,12 @@ export function runValidateMixinFeedbackPart() {
       `);
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(spy.args[0][0]).to.eql({
+
+      // ignore fieldName Promise as it will always be unique
+      const compare = spy.args[0][0];
+      delete compare.config.fieldName;
+      expect(compare).to.eql({
+        config: {},
         params: 4,
         modelValue: 'cat',
         formControl: el,
