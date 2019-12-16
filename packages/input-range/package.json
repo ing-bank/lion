@@ -32,8 +32,8 @@
   ],
   "dependencies": {
     "@lion/core": "0.3.0",
-    "@lion/field": "0.6.8",
-    "@lion/input": "0.4.0",
+    "@lion/field": "0.7.0",
+    "@lion/input": "0.4.1",
     "@lion/localize": "0.7.1"
   },
   "devDependencies": {
