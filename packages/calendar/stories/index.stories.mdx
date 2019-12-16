@@ -23,6 +23,27 @@ import '../lion-calendar.js';
 
 `lion-calendar` is a reusable and accessible calendar view.
 
+export const calendarDemoStyle = css`
+  .demo-calendar {
+    border: 1px solid #adadad;
+    box-shadow: 0 0 16px #ccc;
+    max-width: 500px;
+  }
+`;
+
+<Story name="Default">
+  {html`
+    <style>
+      ${calendarDemoStyle}
+    </style>
+    <lion-calendar class="demo-calendar"></lion-calendar>
+  `}
+</Story>
+
+```html
+<lion-calendar></lion-calendar>
+```
+
 ## Features
 
 - fully accessible keyboard navigation (Arrow Keys, PgUp, PgDn, ALT+PgUp, ALT+PgDn)
@@ -49,29 +70,6 @@ npm i --save @lion/calendar
 
 ```js
 import '@lion/calendar/lion-calendar.js';
-```
-
-### Example
-
-export const calendarDemoStyle = css`
-  .demo-calendar {
-    border: 1px solid #adadad;
-    box-shadow: 0 0 16px #ccc;
-    max-width: 500px;
-  }
-`;
-
-<Story name="Default">
-  {html`
-    <style>
-      ${calendarDemoStyle}
-    </style>
-    <lion-calendar class="demo-calendar"></lion-calendar>
-  `}
-</Story>
-
-```html
-<lion-calendar></lion-calendar>
 ```
 
 ## Move to the selected date

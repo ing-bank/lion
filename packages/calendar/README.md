@@ -4,12 +4,6 @@
 
 `lion-calendar` is a reusable and accessible calendar view.
 
-## Features
-
-- fully accessible keyboard navigation (Arrow Keys, PgUp, PgDn, ALT+PgUp, ALT+PgDn)
-- supports multiple ways to disable dates (min/max and custom disabled function)
-- allows different headers (e.g. define first day of the weeks or which notation to use)
-
 ## Live Demo/Documentation
 
 > See our [storybook](http://lion-web-components.netlify.com/) for a live demo and API documentation
