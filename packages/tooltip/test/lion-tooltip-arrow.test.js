@@ -65,15 +65,18 @@ describe('lion-tooltip-arrow', () => {
     await el.repositionComplete;
 
     expect(getComputedStyle(arrowElement).getPropertyValue('top')).to.equal(
-      '12px',
-      '30px (content height) - 6px (arrow width) = 24px, divided by 2 = 12px offset --> arrow is in the middle',
+      '11px',
+      '30px (content height) - 8px = 22px, divided by 2 = 11px offset --> arrow is in the middle',
     );
 
     expect(
       getComputedStyle(el.querySelector('lion-tooltip-arrow')).getPropertyValue('left'),
     ).to.equal(
-      '-6px',
-      'arrow width is 6px so this offset should be taken into account to align the arrow properly',
+      '-10px',
+      `
+        arrow height is 8px so this offset should be taken into account to align the arrow properly,
+        as well as half the difference between width and height ((12 - 8) / 2 = 2)
+      `,
     );
   });
 });

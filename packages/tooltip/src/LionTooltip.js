@@ -1,12 +1,11 @@
 import { html, LitElement } from '@lion/core';
 import { OverlayMixin } from '@lion/overlays';
-import '../lion-tooltip-arrow.js';
 
 export class LionTooltip extends OverlayMixin(LitElement) {
   constructor() {
     super();
-    this.__mouseActive = false;
-    this.__keyActive = false;
+    this._mouseActive = false;
+    this._keyActive = false;
     this.__setupRepositionCompletePromise();
   }
 
@@ -31,7 +30,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   __setupArrowElement() {
-    this.__arrowElement = this.querySelector('[slot=arrow');
+    this.__arrowElement = this.querySelector('[slot=arrow]');
     if (!this.__arrowElement) {
       return;
     }
@@ -87,52 +86,52 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     this.__resetActive = this.__resetActive.bind(this);
     this._overlayCtrl.addEventListener('hide', this.__resetActive);
 
-    this.addEventListener('mouseenter', this.__showMouse);
-    this.addEventListener('mouseleave', this.__hideMouse);
+    this.addEventListener('mouseenter', this._showMouse);
+    this.addEventListener('mouseleave', this._hideMouse);
 
-    this.__showKey = this.__showKey.bind(this);
-    this._overlayInvokerNode.addEventListener('focusin', this.__showKey);
+    this._showKey = this._showKey.bind(this);
+    this._overlayInvokerNode.addEventListener('focusin', this._showKey);
 
-    this.__hideKey = this.__hideKey.bind(this);
-    this._overlayInvokerNode.addEventListener('focusout', this.__hideKey);
+    this._hideKey = this._hideKey.bind(this);
+    this._overlayInvokerNode.addEventListener('focusout', this._hideKey);
   }
 
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
     this._overlayCtrl.removeEventListener('hide', this.__resetActive);
-    this.removeEventListener('mouseenter', this.__showMouse);
+    this.removeEventListener('mouseenter', this._showMouse);
     this.removeEventListener('mouseleave', this._hideMouse);
     this._overlayInvokerNode.removeEventListener('focusin', this._showKey);
     this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
   }
 
   __resetActive() {
-    this.__mouseActive = false;
-    this.__keyActive = false;
+    this._mouseActive = false;
+    this._keyActive = false;
   }
 
-  __showMouse() {
-    if (!this.__keyActive) {
-      this.__mouseActive = true;
+  _showMouse() {
+    if (!this._keyActive) {
+      this._mouseActive = true;
       this.opened = true;
     }
   }
 
-  __hideMouse() {
-    if (!this.__keyActive) {
+  _hideMouse() {
+    if (!this._keyActive) {
       this.opened = false;
     }
   }
 
-  __showKey() {
-    if (!this.__mouseActive) {
-      this.__keyActive = true;
+  _showKey() {
+    if (!this._mouseActive) {
+      this._keyActive = true;
       this.opened = true;
     }
   }
 
-  __hideKey() {
-    if (!this.__mouseActive) {
+  _hideKey() {
+    if (!this._mouseActive) {
       this.opened = false;
     }
   }
