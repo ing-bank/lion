@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/calendar@0.5.6...@lion/calendar@0.5.7) (2019-12-17)
+
+
+### Bug Fixes
+
+* **#423:** prevent default behavior on keyboard interaction ([caf9ab2](https://github.com/ing-bank/lion/commit/caf9ab2f8aa526306acddd6f911e70dfbbcbf963)), closes [#423](https://github.com/ing-bank/lion/issues/423)
+
+
+
+
+
 ## [0.5.6](https://github.com/ing-bank/lion/compare/@lion/calendar@0.5.5...@lion/calendar@0.5.6) (2019-12-16)
 
 **Note:** Version bump only for package @lion/calendar
