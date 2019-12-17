@@ -518,6 +518,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   __addEventForKeyboardNavigation() {
     this.__keyNavigationEvent = this.__contentWrapperElement.addEventListener('keydown', ev => {
+      const preventedKeys = ['ArrowUp', 'ArrowDown', 'PageDown', 'PageUp'];
+
+      if (preventedKeys.includes(ev.key)) {
+        ev.preventDefault();
+      }
+
       switch (ev.key) {
         case 'ArrowUp':
           this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date', mode: 'past' });
