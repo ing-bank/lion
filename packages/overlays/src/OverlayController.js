@@ -46,7 +46,7 @@ export class OverlayController {
           preventOverflow: {
             enabled: true,
             boundariesElement: 'viewport',
-            padding: 16, // viewport-margin for shifting/sliding
+            padding: 8, // viewport-margin for shifting/sliding
           },
           flip: {
             boundariesElement: 'viewport',

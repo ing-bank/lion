@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 
 export class LionTooltipArrow extends LitElement {
   static get properties() {
@@ -11,15 +11,14 @@ export class LionTooltipArrow extends LitElement {
     return css`
       :host {
         position: absolute;
-        --tooltip-arrow-width: 8px;
-        --tooltip-arrow-height: 6px;
+        --tooltip-arrow-width: 12px;
+        --tooltip-arrow-height: 8px;
         width: var(--tooltip-arrow-width);
         height: var(--tooltip-arrow-height);
-        background: black;
       }
 
-      :host([placement^='top']) {
-        bottom: calc(-1 * var(--tooltip-arrow-height));
+      :host svg {
+        display: block;
       }
 
       :host([placement^='bottom']) {
@@ -28,12 +27,18 @@ export class LionTooltipArrow extends LitElement {
       }
 
       :host([placement^='left']) {
-        right: calc(-1 * var(--tooltip-arrow-height));
+        right: calc(
+          -1 * (var(--tooltip-arrow-height) +
+                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+        );
         transform: rotate(270deg);
       }
 
       :host([placement^='right']) {
-        left: calc(-1 * var(--tooltip-arrow-height));
+        left: calc(
+          -1 * (var(--tooltip-arrow-height) +
+                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+        );
         transform: rotate(90deg);
       }
     `;
@@ -41,6 +46,10 @@ export class LionTooltipArrow extends LitElement {
 
   /* IE11 will not render the arrow without this method. */
   render() {
-    return html``;
+    return html`
+      <svg viewBox="0 0 12 8">
+        <path d="M 0,0 h 12 L 6,8 z"></path>
+      </svg>
+    `;
   }
 }

@@ -1,7 +1,7 @@
 import { css } from '@lion/core';
 import { html, object, storiesOf, text, withKnobs } from '@open-wc/demoing-storybook';
-import '../lion-tooltip.js';
 import '../lion-tooltip-arrow.js';
+import '../lion-tooltip.js';
 
 const tooltipDemoStyle = css`
   .demo-box {
@@ -15,13 +15,14 @@ const tooltipDemoStyle = css`
   .demo-box_placements {
     display: flex;
     flex-direction: column;
-    width: 173px;
+    width: max-content;
     margin: 0 auto;
     margin-top: 68px;
   }
 
   lion-tooltip {
-    padding: 10px;
+    width: auto;
+    margin: 10px;
   }
 
   .demo-box__column {
