@@ -27,7 +27,9 @@ Examples:
 
 - For a date input, this would be '20/01/1999' (dependent on locale).
 - For a number input, this could be '1,234.56' (a String representation of modelValue
-  1234.56)
+  1234.56).
+
+A value will not get formatted if it is invalid, so the user won't get rewarded for a falsy input.
 
 ### serializedValue
 
