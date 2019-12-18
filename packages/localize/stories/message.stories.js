@@ -1,8 +1,8 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { LitElement } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { localize, LocalizeMixin } from '../index.js';
 
-storiesOf('Localize System|Message', module).add('locale', () => {
+storiesOf('Localize System|Message').add('locale', () => {
   class messageExample extends LocalizeMixin(LitElement) {
     static get localizeNamespaces() {
       return [

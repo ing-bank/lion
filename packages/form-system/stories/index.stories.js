@@ -1,21 +1,19 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import '@lion/form/lion-form.js';
-import '@lion/fieldset/lion-fieldset.js';
-import '@lion/textarea/lion-textarea.js';
-import '@lion/input/lion-input.js';
-import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/radio/lion-radio.js';
-import '@lion/radio-group/lion-radio-group.js';
-
-import '@lion/input-iban/lion-input-iban.js';
+import '@lion/checkbox/lion-checkbox.js';
+import '@lion/fieldset/lion-fieldset.js';
+import '@lion/form/lion-form.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
-import { Required, MinLength } from '@lion/validate';
+import '@lion/input-iban/lion-input-iban.js';
+import '@lion/input/lion-input.js';
+import '@lion/radio-group/lion-radio-group.js';
+import '@lion/radio/lion-radio.js';
+import '@lion/textarea/lion-textarea.js';
+import { MinLength, Required } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 
-storiesOf('Forms|Form', module).add(
+storiesOf('Forms|Form').add(
   'Umbrella form',
   () => html`
     <lion-form

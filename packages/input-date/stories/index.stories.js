@@ -1,10 +1,9 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { formatDate } from '@lion/localize';
 import { MaxDate, MinDate, MinMaxDate } from '@lion/validate';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-input-date.js';
 
-storiesOf('Forms|Input Date', module)
+storiesOf('Forms|Input Date')
   .add(
     'Default',
     () => html`

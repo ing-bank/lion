@@ -1,13 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
 import '@lion/radio/lion-radio.js';
+import { loadDefaultFeedbackMessages, Required, Validator } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-radio-group.js';
-import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
 
 loadDefaultFeedbackMessages();
 
-storiesOf('Forms|Radio Group', module)
+storiesOf('Forms|Radio Group')
   .add(
     'Default',
     () => html`

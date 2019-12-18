@@ -1,6 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
-
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import '../lion-input-range.js';
 
 const rangeDemoStyle = css`
@@ -9,7 +8,7 @@ const rangeDemoStyle = css`
   }
 `;
 
-storiesOf('Forms | Input Range', module)
+storiesOf('Forms | Input Range')
   .add(
     'Default',
     () => html`

@@ -1,5 +1,5 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
 import { css, LitElement } from '@lion/core';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../index.js';
 
@@ -11,7 +11,7 @@ const globalOverlayDemoStyle = css`
   }
 `;
 
-storiesOf('Overlay System | Behavior Features', module)
+storiesOf('Overlay System | Behavior Features')
   .add('preventsScroll', () => {
     const overlayCtrl = new OverlayController({
       placementMode: 'global',

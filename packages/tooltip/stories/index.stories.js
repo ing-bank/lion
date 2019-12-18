@@ -40,7 +40,7 @@ const tooltipDemoStyle = css`
   }
 `;
 
-storiesOf('Overlays Specific WC|Tooltip', module)
+storiesOf('Overlays Specific WC|Tooltip')
   .addDecorator(withKnobs)
   .add(
     'Test',

@@ -1,10 +1,9 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-
-import '../lion-checkbox-group.js';
 import '@lion/checkbox/lion-checkbox.js';
 import { Required, Validator } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
+import '../lion-checkbox-group.js';
 
-storiesOf('Forms|Checkbox Group', module)
+storiesOf('Forms|Checkbox Group')
   .add(
     'Default',
     () => html`

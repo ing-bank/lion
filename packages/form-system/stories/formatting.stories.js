@@ -1,6 +1,6 @@
-import { storiesOf, html } from '@open-wc/demoing-storybook';
-import { Unparseable } from '@lion/validate';
 import '@lion/input/lion-input.js';
+import { Unparseable } from '@lion/validate';
+import { html, storiesOf } from '@open-wc/demoing-storybook';
 import './helper-wc/h-output.js';
 
 function newDateValid(d) {
@@ -8,7 +8,7 @@ function newDateValid(d) {
   return !isNaN(result.getTime()) ? result : null; // eslint-disable-line no-restricted-globals
 }
 
-storiesOf('Form Fundaments|Formatting and Parsing', module)
+storiesOf('Form Fundaments|Formatting and Parsing')
   .add(
     'model value',
     () => html`

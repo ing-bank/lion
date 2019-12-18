@@ -1,5 +1,5 @@
-import { storiesOf, html, withKnobs, object } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
+import { html, object, storiesOf, withKnobs } from '@open-wc/demoing-storybook';
 import '../lion-dialog.js';
 
 const dialogDemoStyle = css`
@@ -51,7 +51,7 @@ const dialogDemoStyle = css`
   }
 `;
 
-storiesOf('Overlays Specific WC | Dialog', module)
+storiesOf('Overlays Specific WC | Dialog')
   .addDecorator(withKnobs)
   .add(
     'Button dialog',

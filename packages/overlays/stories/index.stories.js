@@ -121,7 +121,7 @@ customElements.define(
   },
 );
 
-storiesOf('Overlay System | Overlay as a WC', module)
+storiesOf('Overlay System | Overlay as a WC')
   .addDecorator(withKnobs)
   .add(
     'Default',
