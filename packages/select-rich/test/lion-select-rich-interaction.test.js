@@ -667,5 +667,31 @@ describe('lion-select-rich interactions', () => {
         expect(oEl.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
       });
     });
+
+    it('sets [aria-invalid="true"] to "._invokerNode" when there is an error', async () => {
+      const el = await fixture(html`
+        <lion-select-rich .validators=${[new Required()]}>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${null}>Please select a value</lion-option>
+            <lion-option .modelValue=${{ value: 10, checked: true }}>Item 1</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+      const invokerNode = el._invokerNode;
+      const options = el.querySelectorAll('lion-option');
+      await el.feedbackComplete;
+      await el.updateComplete;
+      expect(invokerNode.getAttribute('aria-invalid')).to.equal('false');
+
+      options[0].checked = true;
+      await el.feedbackComplete;
+      await el.updateComplete;
+      expect(invokerNode.getAttribute('aria-invalid')).to.equal('true');
+
+      options[1].checked = true;
+      await el.feedbackComplete;
+      await el.updateComplete;
+      expect(invokerNode.getAttribute('aria-invalid')).to.equal('false');
+    });
   });
 });

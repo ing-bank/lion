@@ -278,6 +278,11 @@ export class LionSelectRich extends OverlayMixin(
           this._inputNode.getAttribute('aria-describedby'),
         );
       }
+
+      if (changedProps.has('showsFeedbackFor')) {
+        // The ValidateMixin sets aria-invalid on the inputNode, but in this component we also need it on the invoker
+        this._invokerNode.setAttribute('aria-invalid', this._hasFeedbackVisibleFor('error'));
+      }
     }
   }
 
