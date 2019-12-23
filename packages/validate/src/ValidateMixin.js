@@ -2,13 +2,13 @@
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
-import { Unparseable } from './Unparseable.js';
-import { pascalCase } from './utils/pascal-case.js';
-import { Required } from './validators/Required.js';
 import { ResultValidator } from './ResultValidator.js';
-import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
+import { Unparseable } from './Unparseable.js';
 import { AsyncQueue } from './utils/AsyncQueue.js';
+import { pascalCase } from './utils/pascal-case.js';
+import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
 import { Validator } from './Validator.js';
+import { Required } from './validators/Required.js';
 
 function arrayDiff(array1 = [], array2 = []) {
   return array1.filter(x => !array2.includes(x)).concat(array2.filter(x => !array1.includes(x)));
