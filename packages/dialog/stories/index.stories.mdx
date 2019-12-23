@@ -27,6 +27,21 @@ Its purpose is to make it easy to use our Overlay System declaratively.
   `}
 </Story>
 
+```html
+<lion-dialog>
+  <button slot="invoker">Click me to open dialog</button>
+  <div slot="content" class="dialog">
+    Hello! You can close this dialog here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-dialog>
+```
+
 ## Features
 
 - Show content when clicking the invoker
@@ -90,11 +105,26 @@ The `config` property uses a setter to merge the passed configuration with the c
   }}
 </Story>
 
+```html
+<lion-dialog .config=${{ viewportConfig: { placement: 'top-left' } }}>
+  <button slot="invoker">Dialog top-left</button>
+  <div slot="content" class="dialog">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-dialog>
+```
+
 Configuration passed to `config` property:
 ```js
 {
   viewportConfig: {
-    placement: ...
+    placement: ... // <-- choose a position
   }
 }
 ```
@@ -125,6 +155,21 @@ No backdrop, hides on escape, prevents scrolling while opened, and focuses the b
     </lion-dialog>
   `}
 </Story>
+
+```html
+<lion-dialog .config="${{}}">
+  <button slot="invoker">Open dialog</button>
+  <div slot="content" class="dialog">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-dialog>
+```
 
 Configuration passed to `config` property:
 ```js

@@ -7,7 +7,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/fetch-system-ajax) for a live demo and documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/overlays-specific-wc-dialog) for a live demo and documentation
 
 ## How to use
 
