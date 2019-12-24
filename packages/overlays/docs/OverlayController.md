@@ -30,9 +30,9 @@ In total, we should end up with configuration options as depicted below, for all
 All boolean flags default to 'false'.
 
 ```text
+- {String} placementMode: 'local' | 'global', DOM position of the content node.
 - {Boolean} trapsKeyboardFocus - rotates tab.
 - {Boolean} hidesOnEsc - hides the overlay when pressing [esc].
-- {Boolean} hidesOnHideEventInContentNode - (defaults to true) hides if an event called "hide" is fired within the content
 - {Boolean} hidesOnOutsideClick - hides if user clicks outside of the overlay
 - {Element} elementToFocusAfterHide - the element that should be called `.focus()` on after dialog closes.
 - {Boolean} hasBackdrop - whether it should have a backdrop. (local mode only)
