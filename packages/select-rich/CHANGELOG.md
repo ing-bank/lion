@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.8.7...@lion/select-rich@0.8.8) (2019-12-30)
+
+
+### Bug Fixes
+
+* **select-rich:** add aria-invalid when invalid ([db5f2ef](https://github.com/ing-bank/lion/commit/db5f2ef38c97a7130a1f20540821f4237706e7c7))
+
+
+
+
+
 ## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.8.6...@lion/select-rich@0.8.7) (2019-12-17)
 
 **Note:** Version bump only for package @lion/select-rich
