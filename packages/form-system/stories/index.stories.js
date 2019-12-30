@@ -13,6 +13,7 @@ import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
+import '@lion/input-range/lion-input-range.js';
 import { Required, MinLength } from '@lion/validate';
 
 storiesOf('Forms|Form', module).add(
@@ -62,15 +63,25 @@ storiesOf('Forms|Form', module).add(
         </lion-checkbox-group>
 
         <lion-radio-group
-          class="vertical"
           name="dinosaurs"
           label="Favorite dinosaur"
           .validators="${[new Required()]}"
-          error-message="Dinosaurs error message"
         >
-          <lion-radio name="dinosaurs[]" value="allosaurus" label="allosaurus"></lion-radio>
-          <lion-radio name="dinosaurs[]" value="brontosaurus" label="brontosaurus"></lion-radio>
-          <lion-radio name="dinosaurs[]" value="diplodocus" label="diplodocus"></lion-radio>
+          <lion-radio
+            name="dinosaurs[]"
+            .choiceValue="${'allosaurus'}"
+            label="allosaurus"
+          ></lion-radio>
+          <lion-radio
+            name="dinosaurs[]"
+            .choiceValue="${'brontosaurus'}"
+            label="brontosaurus"
+          ></lion-radio>
+          <lion-radio
+            name="dinosaurs[]"
+            .choiceValue="${'diplodocus'}"
+            label="diplodocus"
+          ></lion-radio>
         </lion-radio-group>
 
         <!-- TODO: rich select -->
@@ -94,7 +105,14 @@ storiesOf('Forms|Form', module).add(
           ></lion-checkbox>
         </lion-checkbox-group>
 
-        <!-- TODO: slider -->
+        <lion-input-range
+          name="interest"
+          label="Interest"
+          min="0"
+          max="5"
+          step="0.1"
+          unit="%"
+        ></lion-input-range>
 
         <lion-textarea name="comments" label="Comments"></lion-textarea>
 
