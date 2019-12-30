@@ -8,7 +8,7 @@ You should use [lion-checkbox](../checkbox/)'s inside this element.
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-checkbox-group) for a live demo and API documentation
 
 ## How to use
 
@@ -21,4 +21,17 @@ npm i --save @lion/checkbox @lion/checkbox-group
 ```js
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
+```
+
+### Example
+
+```html
+<lion-checkbox-group
+  name="scientistsGroup"
+  label="Favorite scientists"
+>
+  <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+  <lion-checkbox name="scientists[]" label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+  <lion-checkbox name="scientists[]" label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+</lion-checkbox-group>
 ```
