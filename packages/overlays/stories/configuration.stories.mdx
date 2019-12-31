@@ -1,0 +1,566 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+
+import './lion-demo-overlay.js';
+import './applyDemoOverlayStyles.js';
+
+<Meta title="Overlay System/Configuration" parameters={{ component: 'lion-demo-overlay' }} />
+
+# Overlay System - Configuration
+
+In total, we should end up with configuration options as depicted below, for all possible overlays.
+All boolean flags default to 'false'.
+
+## placementMode
+
+Either `'local'` or `'global'`.
+This determines the DOM position of the `contentNode`, either next to the invokerNode,
+or in the `global-overlays` container at the bottom of the `<body>`.
+
+Local:
+<Story name="placementMode: local">
+  {html`
+    <lion-demo-overlay .config=${{ placementMode: 'local' }}>
+      <button slot="invoker">Click me to open the local overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ placementMode: 'local' }}>
+  <button slot="invoker">Click me to open the local overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+Global:
+<Story name="placementMode: global">
+  {html`
+    <lion-demo-overlay .config=${{ placementMode: 'global' }}>
+      <button slot="invoker">Click me to open the global overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ placementMode: 'global' }}>
+  <button slot="invoker">Click me to open the local overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## trapsKeyboardFocus
+
+Boolean property. When true, the focus will rotate through the **focusable elements** inside the `contentNode`.
+
+For Modal Dialogs this is an important feature, since these are considered "their own page",
+so especially from an accessibility point of view, trapping the focus inside the dialog is crucial.
+
+You use the feature on any type of overlay.
+
+<Story name="trapsKeyboardFocus">
+  {html`
+    <lion-demo-overlay .config=${{ trapsKeyboardFocus: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        <div><a href="#">A focusable anchor</a></div>
+        <div><a href="#">Another focusable anchor</a></div>
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ trapsKeyboardFocus: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    <div><a href="#">A focusable anchor</a></div>
+    <div><a href="#">Another focusable anchor</a></div>
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## hidesOnEsc
+
+Boolean property. Will allow closing the overlay on ESC key when enabled.
+
+> On MacOS with touchbar, it only works if you view the canvas demo and click "Open canvas in new tab".
+
+<Story name="hidesOnEsc">
+  {html`
+    <lion-demo-overlay .config=${{ hidesOnEsc: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hidesOnEsc: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## hidesOnOutsideClick
+
+Boolean property. Will allow closing the overlay by clicking outside the `contentNode`.
+
+<Story name="hidesOnOutsideClick">
+  {html`
+    <lion-demo-overlay .config=${{ hidesOnOutsideClick: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hidesOnOutsideClick: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## elementToFocusAfterHide
+
+HTMLElement. Will `.focus()` the HTMLElement passed to this property. By default, this is the `invokerNode`.
+
+In the example, we focus the body instead of the `invokerNode`.
+
+<Story name="elementToFocusAfterHide">
+  {html`
+    <lion-demo-overlay .config=${{ elementToFocusAfterHide: document.body }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ elementToFocusAfterHide: document.body }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## hasBackdrop
+
+Boolean property. When true, will add a backdrop when the overlay is opened.
+
+> Backdrops will overlay each other if you open nested overlays with enabled backdrops.
+> If this is not what you intend, you can make the overlays not nested, where opening one, closes the other.
+> Fortunately, we also have a configuration option that simulates that behavior in the next section `isBlocking`.
+
+The backdrop styling can be configured by targeting the `.global-overlays .global-overlays__backdrop` css selector.
+
+The backdrop animation can be configured by targeting the
+`.global-overlays .global-overlays__backdrop--fade-in` and
+`.global-overlays .global-overlays__backdrop--fade-out` css selector.
+This currently only supports CSS Animations, because it relies on the `animationend` event to add/remove classes.
+
+<Story name="hasBackdrop">
+  {html`
+    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## isBlocking
+
+Boolean property. When true, will add a backdrop when the overlay is opened.
+
+> Backdrops will overlay each other if you open nested overlays with enabled backdrops.
+> If this is not what you intend, you can make the overlays not nested, where opening one, closes the other.
+> Fortunately, we also have a configuration option that simulates that behavior in the next section `isBlocking`.
+
+The backdrop styling can be configured by targeting the `.global-overlays .global-overlays__backdrop` css selector.
+
+The backdrop animation can be configured by targeting the
+`.global-overlays .global-overlays__backdrop--fade-in` and
+`.global-overlays .global-overlays__backdrop--fade-out` css selector.
+This currently only supports CSS Animations, because it relies on the `animationend` event to add/remove classes.
+
+<Story name="isBlocking">
+  {html`
+    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        <div>
+          <lion-demo-overlay .config=${{ hasBackdrop: true, isBlocking: true }}>
+            <button slot="invoker">Click me to open another overlay which is blocking</button>
+            <div slot="content" class="demo-overlay demo-overlay--second">
+              Hello! You can close this notification here:
+              <button
+                class="close-button"
+                @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+              >
+                ⨯
+              </button>
+            </div>
+          </lion-demo-overlay>
+        </div>
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    <div>
+      <lion-demo-overlay .config=${{ hasBackdrop: true, isBlocking: true }}>
+        <button slot="invoker">Click me to open another overlay which is blocking</button>
+        <div slot="content" class="demo-overlay demo-overlay--second">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-demo-overlay>
+    </div>
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+This example shows nested overlays, but they don't have to be. For example, they could be siblings, or completely unrelated.
+When an overlay with `isBlocking` is opened, all other overlays are hidden by the `OverlaysManager`, which, as a global registry, is aware of all active overlays on the page.
+
+## preventsScroll
+
+Boolean property. When true, prevents scrolling content that is outside of the `contentNode`.
+
+<Story name="preventsScroll">
+  {html`
+    <lion-demo-overlay .config=${{ preventsScroll: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ preventsScroll: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## viewportConfig
+
+Determines where the overlay is placed relative to the viewport. This can only be used in combination with a 'global' `placementMode`.
+
+Options:
+
+- 'top-left'
+- 'top'
+- 'top-right'
+- 'right'
+- 'bottom-left'
+- 'bottom'
+- 'bottom-right'
+- 'left'
+- 'center'
+
+<Story name="viewportConfig">
+  {html`
+    <lion-demo-overlay .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
+      <button slot="invoker">Click me to open the overlay in the top left corner!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
+  <button slot="invoker">Click me to open the overlay in the top left corner!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+
+## popperConfig for local overlays (placementMode: 'local')
+
+For locally DOM positioned overlays that position themselves relative to their invoker, we use [Popper.js](https://popper.js.org/) for positioning.
+
+> In Popper, `contentNode` is often referred to as `popperElement`, and `invokerNode` is often referred to as the `referenceElement`.
+
+Features:
+
+- Everything Popper features!
+- Currently eagerly loads popper if mode is local, in the constructor. Loading during idle time / using prefetch would be better, this is still WIP. PRs are welcome!
+
+> Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
+> This also means that if you use the arrow feature, you are in charge of styling it properly, use the x-placement attribute for this.
+> An example implementation can be found in [lion-tooltip](../../tooltip), where an arrow is set by default.
+
+To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
+Here's a succinct overview of some often used popper properties:
+
+<Story name="popperConfig">
+  {html`
+    <lion-demo-overlay .config=${{
+      placementMode: 'local',
+      popperConfig: {
+        /* Placement of content node, relative to invoker node */
+        placement: 'bottom-start',
+        positionFixed: true,
+        modifiers: {
+          /* Prevents detachment of content node from invoker node */
+          keepTogether: {
+            enabled: true,
+          },
+          /* When enabled, adds shifting/sliding behavior on secondary axis */
+          preventOverflow: {
+            enabled: false,
+            boundariesElement: 'viewport',
+            /* When enabled, this is the <boundariesElement>-margin for the secondary axis */
+            padding: 32,
+          },
+          /* Use to adjust flipping behavior or constrain directions */
+          flip: {
+            boundariesElement: 'viewport',
+            /* <boundariesElement>-margin for flipping on primary axis */
+            padding: 16,
+          },
+          /* When enabled, adds an offset to either primary or secondary axis */
+          offset: {
+            enabled: true,
+            /* margin between content node and invoker node */
+            offset: `0, 16px`,
+          },
+        },
+      },
+    }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```js
+<lion-demo-overlay .config=${{
+  placementMode: 'local',
+  popperConfig: {
+    /* Placement of content node, relative to invoker node */
+    placement: 'bottom-start',
+    positionFixed: true,
+    modifiers: {
+      /* Prevents detachment of content node from invoker node */
+      keepTogether: {
+        enabled: true,
+      },
+      /* When enabled, adds shifting/sliding behavior on secondary axis */
+      preventOverflow: {
+        enabled: false,
+        boundariesElement: 'viewport',
+        /* When enabled, this is the <boundariesElement>-margin for the secondary axis */
+        padding: 32,
+      },
+      /* Use to adjust flipping behavior or constrain directions */
+      flip: {
+        boundariesElement: 'viewport',
+        /* <boundariesElement>-margin for flipping on primary axis */
+        padding: 16,
+      },
+      /* When enabled, adds an offset to either primary or secondary axis */
+      offset: {
+        enabled: true,
+        /* margin between content node and invoker node */
+        offset: `0, 16px`,
+      },
+    },
+  },
+}}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+> Note: popperConfig reflects [Popper.js API](https://popper.js.org/popper-documentation.html)
