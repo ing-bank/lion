@@ -1,0 +1,646 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { renderLitAsNode } from '@lion/core';
+import {
+  OverlayMixin,
+  withBottomSheetConfig,
+  withDropdownConfig,
+  withModalDialogConfig,
+} from '../index.js';
+
+import './lion-demo-overlay.js';
+import './applyDemoOverlayStyles.js';
+
+<Meta title="Overlay System/System" parameters={{ component: 'lion-demo-overlay' }} />
+
+# Overlays System
+
+Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
+
+Manages their position on the screen relative to other elements, including other overlays.
+
+`lion-dialog` can be used to make it easy to use our Overlay System declaratively. It is a simple Web Component that implements the `OverlayMixin`.
+Configuration options can be easily overrided, and the component can be extended where needed, to override event listeners and more.
+
+In our demos, we will use a quick demo web component `lion-demo-overlay` to showcase the features of the Overlay System.
+
+> Again, we recommend using `lion-dialog` as a starting point for using the Overlay System declaratively with a Web Component,
+> but for our demos we don't want a dependency on that package.
+
+<Story name="default">
+  {html`
+    <lion-demo-overlay>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## Features
+
+- **OverlaysManager**, a global repository keeping track of all different types of active overlays
+- **OverlayController**, a single controller class for handling an overlay
+- **OverlayMixin**, a mixin that can be used to create Web Components that use the OverlayController under the hood
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/overlays
+```
+
+This package should only be used by **subclassers** who want to either:
+- Use OverlayMixin to create Web Components that use OverlayController under the hood (common use case)
+- Extend or use OverlayController
+
+Now, we will go into depth into the three main layers of our overlay system:
+- OverlaysManager, handles logic which requires knowledge of all active overlays
+- OverlayMixin, an easy way to create a Web Component that acts as an overlay
+- OverlayController, handles logic of a single overlay instance
+
+## OverlaysManager
+
+The `OverlaysManager` is a global registry keeping track of all different types of overlays.
+The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.
+
+For example, you may have a modal dialog that open another modal dialog.
+The second dialog needs to block the first.
+When the second dialog is closed, the first one is available again.
+
+The overlay manager keeps track of all registered overlays and controls which one to show.
+
+Below an example is shown with the `isBlocking` option, which makes use of the OverlaysManager's capabilities.
+
+<Story name="OverlaysManager">
+  {html`
+    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+        <div>
+          <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
+        </div>
+      </div>
+    </lion-demo-overlay>
+    <lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+      <div slot="content" class="demo-overlay demo-overlay--second">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+    <div>
+      <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
+    </div>
+  </div>
+</lion-demo-overlay>
+
+<lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+  <div slot="content" class="demo-overlay demo-overlay--second">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## OverlayMixin
+
+OverlayMixin is a mixin anyone can use to create a Web Component which has a `contentNode` (`slot="content"`) and `invokerNode` (`slot="invoker"`).
+
+Under the hood, the `OverlayMixin` will instantiate an OverlayController with these nodes.
+
+By default, there are only a few `OverlayMixin` methods you need to override to create a working Web Component using an overlay:
+
+- `render`, the template needs to include a `<slot name="content">`, `<slot name="invoker">` and `<slot name="_overlay-shadow-outlet">`.
+- `_defineOverlayConfig`, in this protected method, return an object that contains the default configuration for your Web Component's overlay. See configuration section of OverlayController.
+- `_setupOpenCloseListeners`, use this lifecycle hook to setup the open and close event listeners on your `_overlayInvokerNode`.
+- `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
+
+```js
+import { LitElement } from '@lion/core';
+import { OverlayMixin } from '@lion/overlays';
+
+class MyOverlayWC extends OverlayMixin(LitElement) {
+  _defineOverlayConfig() {
+    return {
+      placementMode: 'global',
+      hasBackdrop: true,
+    };
+  }
+
+  _setupOpenCloseListeners() {
+    super._setupOpenCloseListeners();
+    this.__toggle = () => {
+      // opened is the public boolean property to use in the WC for opening/closing
+      this.opened = !this.opened;
+    };
+
+    // Always guard this, because your user may toggle the opened state through something else (e.g. event) and not an invoker node.
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.addEventListener('click', this.__toggle);
+    }
+  }
+
+  _teardownOpenCloseListeners() {
+    super._teardownOpenCloseListeners();
+
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+    }
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
+  }
+}
+```
+
+## OverlayController
+
+OverlayController is the single class we instantiate whenever creating an overlay instance.
+Based on provided config, it will handle:
+
+- DOM position (local vs global)
+- positioning logic
+- accessibility
+- interaction patterns
+
+and has the following public functions:
+
+- **show()**, to show the overlay
+- **hide()**, to hide the overlay
+- **toggle()**, to toggle between show and hide
+
+All overlays contain an invokerNode and a contentNode
+
+- **contentNode**, the toggleable content of the overlay
+- **invokerNode**, the element toggles the visibility of the content. For local overlays, this is the relative element the content is positioned to
+
+For DOM position, local refers to overlays where the content is positioned next to the invokers they are related to, DOM-wise.
+Global refers to overlays where the content is positioned in a global root node at the bottom of `<body>`.
+
+## Configuration
+
+Overlays can be configured in many ways to suit your needs. We go in-depth into each option in the Overlay System - Configuration chapter.
+
+We also export a few preset configuration objects, which you can find [here](../src/configurations).
+
+- withModalDialogConfig
+- withDropdownConfig
+- withBottomSheetConfig
+
+You import these using ES Modules, and then simply call them inside your `OverlayController` instantiation:
+
+```js
+const ctrl = new OverlayController({
+  ...withModalDialogConfig(),
+  invokerNode,
+  contentNode,
+});
+```
+
+or in your Web Component with `OverlayMixin`
+
+```js
+_defineOverlayConfig() {
+  return {
+    ...withModalDialogConfig
+  };
+}
+```
+
+or declaratively in your template with the `.config` property
+
+```html
+<lion-demo-overlay .config=${{ ...withModalDialogConfig() }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+### Responsive switching
+
+Currently we support switching between overlay configurations.
+Keep in mind however that we do not yet support switching between overlay configurations while the content is shown.
+If you try, it will close the content if it is open, and the user will need to re-open.
+Will be supported in the near future.
+
+This can be done declaratively as shown below.
+Drag the viewport under 600px and open the overlay to see the `withBottomSheetConfig` applied.
+
+<Story name="Responsive switching">
+  {html`
+    <lion-demo-overlay
+      .config=${{ ...withBottomSheetConfig() }}
+      @before-opened=${e => {
+        if (window.innerWidth >= 600) {
+          e.target.config = { ...withModalDialogConfig() };
+        } else {
+          e.target.config = { ...withBottomSheetConfig() };
+        }
+      }}
+    >
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay
+  .config=${{ ...withBottomSheetConfig() }}
+  @before-opened=${e => {
+    if (window.innerWidth >= 600) {
+      e.target.config = { ...withModalDialogConfig() };
+    } else {
+      e.target.config = { ...withBottomSheetConfig() };
+    }
+  }}
+>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+Alternative ways to do it is by setting the event listener manually on the `OverlayController` instance.
+
+```js
+myOverlayCtrl.addEventListener('before-show', () => {
+  if (window.innerWidth >= 600) {
+    ctrl.updateConfig(withModalDialogConfig());
+  } else {
+    ctrl.updateConfig(withBottomSheetConfig());
+  }
+});
+```
+
+Or inside of a Web Component that uses the `OverlayMixin`, by overriding protected method `_defineOverlay`,
+where we can access the OverlayController instance and use the `updateConfig` method on the controller:
+
+```js
+_defineOverlay({ invokerNode, contentNode }) {
+
+  // initial
+  const ctrl = new OverlayController({
+    ...withBottomSheetConfig(),
+    hidesOnOutsideClick: true,
+    invokerNode,
+    contentNode,
+  });
+
+  // responsive
+  ctrl.addEventListener('before-show', () => {
+    if (window.innerWidth >= 600) {
+      ctrl.updateConfig(withModalDialogConfig());
+    } else {
+      ctrl.updateConfig(withBottomSheetConfig());
+    }
+  });
+
+  return ctrl;
+```
+
+Below is another demo where you can toggle between configurations using buttons.
+
+<Story name="Responsive Switching 2">
+  {html`
+    <style>
+      .buttons button:not(:first-child) {
+        margin: 10px;
+      }
+    </style>
+    Change config to:
+    <div class="buttons">
+      <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withModalDialogConfig() } }}>
+        Modal Dialog
+      </button>
+      <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withBottomSheetConfig() } }}>
+        Bottom Sheet
+      </button>
+      <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withDropdownConfig() } }}>
+        Dropdown
+      </button>
+    </div>
+    <lion-demo-overlay id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```js
+import { withModalDialogConfig, withBottomSheetConfig, withDropdownConfig } from 'lion/overlays';
+```
+
+```html
+Change config to:
+<div class="buttons">
+  <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withModalDialogConfig() } }}>
+    Modal Dialog
+  </button>
+  <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withBottomSheetConfig() } }}>
+    Bottom Sheet
+  </button>
+  <button @click=${() => { document.getElementById('respSwitchOverlay').config = { ...withDropdownConfig() } }}>
+    Dropdown
+  </button>
+</div>
+<lion-demo-overlay id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## Opened state
+
+For any overlay that implements the OverlayMixin, there is a Boolean property `opened` that reflects whether the overlay content is displayed or not.
+
+You can also listen to the event `opened-changed` which is fired whenever `opened` is toggled.
+This can be useful e.g. if somewhere in your application you need to rely on this "state".
+
+<Story name="Opened state">
+  {() => {
+    const appState = {
+      opened: false,
+    };
+    const openedStateNode = renderLitAsNode(
+      html`
+        <span>${appState.opened}</span>
+      `,
+    );
+    function onOpenClosed(ev) {
+      appState.opened = ev.target.opened;
+      openedStateNode.innerText = appState.opened;
+    }
+    return html`
+      <div>
+        appState.opened: ${openedStateNode}
+      </div>
+      <lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+        <button slot="invoker">Overlay</button>
+        <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-demo-overlay>
+    `;
+  }}
+</Story>
+
+The thing that displays the appState.opened we make a Node, so that we can update it easily.
+
+```js
+const appState = {
+  opened: false,
+};
+
+// Creates a quick Node reference from a lit-template
+const openedStateNode = renderLitAsNode(
+  html`
+    <span>${appState.opened}</span>
+  `,
+);
+
+// Function that syncs our appState (and also Node reference to make it visible in our demo)
+function onOpenClosed(ev) {
+  appState.opened = ev.target.opened;
+  openedStateNode.innerText = appState.opened;
+}
+```
+
+```html
+<div>
+  appState.opened: ${openedStateNode}
+</div>
+<lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+  <button slot="invoker">Overlay</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## Intercepting open/close
+
+It is possible to intercept the open/close by making sure you fire `Event.preventDefault();` on the `before-close` or `before-open` events.
+
+<Story name="Intercept open/close">
+  {() => {
+    let shouldIntercept = true;
+    let shouldInterceptButton;
+    function toggleIntercept() {
+      shouldIntercept = !shouldIntercept;
+      shouldInterceptButton.textContent = shouldIntercept;
+    }
+    function intercept(ev) {
+      if (shouldIntercept) {
+        ev.preventDefault();
+      }
+    }
+    shouldInterceptButton = renderLitAsNode(
+      html`
+        <button @click="${toggleIntercept}">${shouldIntercept}</button>
+      `,
+    );
+    return html`
+      <div>
+        Toggle shouldIntercept: ${shouldInterceptButton}
+      </div>
+      <lion-demo-overlay @before-closed=${intercept} @before-opened=${intercept}>
+        <button slot="invoker">Overlay</button>
+        <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-demo-overlay>
+    `;
+  }}
+</Story>
+
+```js
+let shouldIntercept = true;
+let shouldInterceptButton;
+
+function toggleIntercept() {
+  shouldIntercept = !shouldIntercept;
+  shouldInterceptButton.textContent = shouldIntercept;
+}
+
+function intercept(ev) {
+  if (shouldIntercept) {
+    ev.preventDefault();
+  }
+}
+
+shouldInterceptButton = renderLitAsNode(
+  html`
+    <button @click="${toggleIntercept}">${shouldIntercept}</button>
+  `,
+);
+```
+
+```html
+<div>
+  Toggle shouldIntercept: ${shouldInterceptButton}
+</div>
+<lion-demo-overlay @before-closed=${intercept} @before-opened=${intercept}>
+  <button slot="invoker">Overlay</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      class="close-button"
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
+
+## Future
+
+### Potential example implementations for overlays
+
+- Combobox/autocomplete Component
+- Application menu Component
+- Popover Component
+- Dropdown Component
+- Toast Component
+
+### Potential configuration additions
+
+```text
+- {Boolean} isModal - sets [aria-modal] and/or [aria-hidden="true"] on siblings
+- {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all other overlays, so needed for internals.
+- {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
+- {Boolean} handlesAccessibility -
+  - For non `isTooltip`:
+    - sets [aria-expanded="true/false"] and [aria-haspopup="true"] on invokerNode
+    - sets [aria-controls] on invokerNode
+    - returns focus to invokerNode on hide
+    - sets focus to overlay content(?)
+  - For `isTooltip`:
+    - sets [role="tooltip"] and [aria-labelledby]/[aria-describedby] on the content
+```
+
+### Future for mode local (Popper)
+
+- Default overflow and/or max-width behavior when content is too wide or high for the viewport.
+
+
+## Aria roles
+
+- No `aria-controls` as support for it is not quite there yet
+- No `aria-haspopup`. People knowing the haspop up and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.
