@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.5...@lion/fieldset@0.5.6) (2019-12-16)
+
+
+### Bug Fixes
+
+* **fieldset:** 0 is now a valid serializedValue ([b9f8c96](https://github.com/ing-bank/lion/commit/b9f8c962a6ced8ea483bb9b0db54e32d13005a57))
+
+
+
+
+
 ## [0.5.5](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.4...@lion/fieldset@0.5.5) (2019-12-13)
 
 **Note:** Version bump only for package @lion/fieldset

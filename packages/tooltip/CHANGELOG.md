@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.6.1...@lion/tooltip@0.6.2) (2019-12-17)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
+## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.6.0...@lion/tooltip@0.6.1) (2019-12-16)
+
+
+### Bug Fixes
+
+* **tooltip:** export LionTooltipArrow ([#439](https://github.com/ing-bank/lion/issues/439)) ([b67ae45](https://github.com/ing-bank/lion/commit/b67ae45caeb6aa68ee913c0a79217d36da02aed9))
+
+
+
+
+
 # [0.6.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.5.1...@lion/tooltip@0.6.0) (2019-12-13)
 
 
