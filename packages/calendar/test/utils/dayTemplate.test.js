@@ -19,6 +19,7 @@ describe('dayTemplate', () => {
           tabindex="-1"
           aria-label="19 April 2019 Friday"
           aria-pressed="false"
+          title
         >
           19
         </button>

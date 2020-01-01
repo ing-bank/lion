@@ -5,6 +5,16 @@ export const calendarStyle = css`
     display: block;
   }
 
+  button[title='Unavailable']:focus:after {
+    content: attr(title);
+    background-color: black;
+    color: white;
+    padding: 5px;
+    margin-top: 1.3em;
+    position: absolute;
+    max-width: 200px;
+  }
+
   .calendar {
     display: block;
   }
@@ -67,9 +77,8 @@ export const calendarStyle = css`
     border: 1px solid green;
   }
 
-  .calendar__day-button[disabled] {
+  .calendar__day-button[aria-disabled] {
     background-color: #fff;
     color: #eee;
-    outline: none;
   }
 `;

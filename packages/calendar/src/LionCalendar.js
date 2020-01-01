@@ -230,8 +230,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     super._requestUpdate(name, oldValue);
 
     const map = {
-      disableDates: () => this.__disableDatesChanged(),
-      centralDate: () => this.__centralDateChanged(),
       __focusedDate: () => this.__focusedDateChanged(),
     };
     if (map[name]) {
@@ -249,8 +247,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (this.centralDate === this.__today && this.selectedDate) {
       // initialised with selectedDate only if user didn't provide another one
       this.centralDate = this.selectedDate;
-    } else {
-      this.__ensureValidCentralDate();
     }
   }
 
@@ -385,12 +381,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     return data;
   }
 
-  __disableDatesChanged() {
-    if (this.__connectedCallbackDone) {
-      this.__ensureValidCentralDate();
-    }
-  }
-
   __dateSelectedByUser(selectedDate) {
     this.selectedDate = selectedDate;
     this.__focusedDate = selectedDate;
@@ -403,69 +393,15 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     );
   }
 
-  __centralDateChanged() {
-    if (this.__connectedCallbackDone) {
-      this.__ensureValidCentralDate();
-    }
-  }
-
   __focusedDateChanged() {
     if (this.__focusedDate) {
       this.centralDate = this.__focusedDate;
     }
   }
 
-  __ensureValidCentralDate() {
-    if (!this.__isEnabledDate(this.centralDate)) {
-      this.centralDate = this.__findBestEnabledDateFor(this.centralDate);
-    }
-  }
-
   __isEnabledDate(date) {
     const processedDay = this.__coreDayPreprocessor({ date });
     return !processedDay.disabled;
-  }
-
-  /**
-   * @param {Date} date
-   * @param {Object} opts
-   * @param {String} [opts.mode] Find best date in `future/past/both`
-   */
-  __findBestEnabledDateFor(date, { mode = 'both' } = {}) {
-    const futureDate =
-      this.minDate && this.minDate > date ? new Date(this.minDate) : new Date(date);
-    const pastDate = this.maxDate && this.maxDate < date ? new Date(this.maxDate) : new Date(date);
-
-    if (this.minDate && this.minDate > date) {
-      futureDate.setDate(futureDate.getDate() - 1);
-    }
-    if (this.maxDate && this.maxDate < date) {
-      pastDate.setDate(pastDate.getDate() + 1);
-    }
-
-    let i = 0;
-    do {
-      i += 1;
-      if (mode === 'both' || mode === 'future') {
-        futureDate.setDate(futureDate.getDate() + 1);
-        if (this.__isEnabledDate(futureDate)) {
-          return futureDate;
-        }
-      }
-      if (mode === 'both' || mode === 'past') {
-        pastDate.setDate(pastDate.getDate() - 1);
-        if (this.__isEnabledDate(pastDate)) {
-          return pastDate;
-        }
-      }
-    } while (i < 750); // 2 years+
-
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    throw new Error(
-      `Could not find a selectable date within +/- 750 day for ${year}/${month}/${day}`,
-    );
   }
 
   __addEventDelegationForClickDate() {
@@ -553,8 +489,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     });
   }
 
-  __modifyDate(modify, { dateType, type, mode } = {}) {
-    let tmpDate = new Date(this.centralDate);
+  __modifyDate(modify, { dateType, type } = {}) {
+    const tmpDate = new Date(this.centralDate);
     // if we're not working with days, reset
     // day count to first day of the month
     if (type !== 'Date') {
@@ -566,9 +502,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (type !== 'Date') {
       const maxDays = new Date(tmpDate.getFullYear(), tmpDate.getMonth() + 1, 0).getDate();
       tmpDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
-    }
-    if (!this.__isEnabledDate(tmpDate)) {
-      tmpDate = this.__findBestEnabledDateFor(tmpDate, { mode });
     }
     this[dateType] = tmpDate;
   }

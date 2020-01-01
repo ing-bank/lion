@@ -57,6 +57,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               25
             </button>
@@ -67,6 +68,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               26
             </button>
@@ -77,6 +79,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               27
             </button>
@@ -87,6 +90,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               28
             </button>
@@ -97,6 +101,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               29
             </button>
@@ -107,6 +112,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               30
             </button>
@@ -117,6 +123,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               1
             </button>
@@ -129,6 +136,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               2
             </button>
@@ -139,6 +147,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               3
             </button>
@@ -149,6 +158,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               4
             </button>
@@ -159,6 +169,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               5
             </button>
@@ -169,6 +180,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               6
             </button>
@@ -179,6 +191,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               7
             </button>
@@ -189,6 +202,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               8
             </button>
@@ -201,6 +215,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               9
             </button>
@@ -211,6 +226,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               10
             </button>
@@ -221,6 +237,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               11
             </button>
@@ -231,6 +248,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               12
             </button>
@@ -241,6 +259,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               13
             </button>
@@ -251,6 +270,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               14
             </button>
@@ -261,6 +281,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               15
             </button>
@@ -273,6 +294,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               16
             </button>
@@ -283,6 +305,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               17
             </button>
@@ -293,6 +316,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               18
             </button>
@@ -303,6 +327,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               19
             </button>
@@ -313,6 +338,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               20
             </button>
@@ -323,6 +349,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               21
             </button>
@@ -333,6 +360,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               22
             </button>
@@ -345,6 +373,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               23
             </button>
@@ -355,6 +384,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               24
             </button>
@@ -365,6 +395,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               25
             </button>
@@ -375,6 +406,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               26
             </button>
@@ -385,6 +417,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               27
             </button>
@@ -395,6 +428,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               28
             </button>
@@ -405,6 +439,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               29
             </button>
@@ -417,6 +452,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               30
             </button>
@@ -427,6 +463,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               31
             </button>
@@ -437,6 +474,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               1
             </button>
@@ -447,6 +485,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               2
             </button>
@@ -457,6 +496,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               3
             </button>
@@ -467,6 +507,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               4
             </button>
@@ -477,6 +518,7 @@ export default html`
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
+              title=""
             >
               5
             </button>

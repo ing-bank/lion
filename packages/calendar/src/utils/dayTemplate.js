@@ -21,16 +21,20 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
   const monthName = monthsLabels[day.date.getMonth()];
   const year = day.date.getFullYear();
   const weekdayName = weekdays[day.weekOrder];
+
   return html`
     <td role="gridcell" class="calendar__day-cell">
       <button
         .date=${day.date}
         class="calendar__day-button"
         tabindex=${day.central ? '0' : '-1'}
-        aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
+        aria-label=${day.disabled
+          ? 'Unavailable'
+          : `${dayNumber} ${monthName} ${year} ${weekdayName}`}
         aria-pressed=${day.selected ? 'true' : 'false'}
         aria-current=${ifDefined(day.today ? 'date' : undefined)}
-        ?disabled=${day.disabled}
+        aria-disabled=${ifDefined(day.disabled ? 'true' : undefined)}
+        title=${day.disabled ? 'Unavailable' : ''}
         ?selected=${day.selected}
         ?past=${day.past}
         ?today=${day.today}
