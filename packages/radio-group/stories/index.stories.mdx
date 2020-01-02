@@ -1,0 +1,242 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { loadDefaultFeedbackMessages, Required, Validator } from '@lion/validate';
+import '@lion/radio/lion-radio.js';
+import '../lion-radio-group.js';
+
+<Meta title="Forms/Radio Group" parameters={{ component: 'lion-radio-group' }} />
+
+# Radio Group
+
+You should use [lion-radio](../radio/)'s inside this element.
+
+<Story name="Default">
+  {html`
+    <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+      <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    </lion-radio-group>
+  `}
+</Story>
+
+```html
+<lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+</lion-radio-group>
+```
+
+- Make sure that to use a name attribute as it is necessary for the [lion-form](../form)'s serialization result.
+- If you have many options for a user to pick from, consider using [lion-select](../select) instead
+
+## Features
+
+Since it extends from [lion-fieldset](../fieldset/), it has all the features a fieldset has.
+
+- Get or set the checked value of the group:
+  - modelValue (default) - `checkedValue()`
+  - formattedValue - `formattedValue()`
+  - serializedValue - `serializedValue()`
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/radio @lion/radio-group
+```
+
+```js
+import '@lion/radio/lion-radio.js';
+import '@lion/radio-group/lion-radio-group.js';
+```
+
+## Examples
+
+## Pre-select
+
+You can pre-select an option by adding the checked attribute to the selected `lion-radio`.
+
+<Story name="Pre-select">
+  {html`
+    <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+      <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'} checked></lion-radio>
+      <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    </lion-radio-group>
+  `}
+</Story>
+
+```html
+<lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'} checked></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+</lion-radio-group>
+```
+
+## Disabled
+
+You can disable a specific `lion-radio` option by adding the `disabled` attribute.
+
+<Story name="Disabled radio">
+  {html`
+    <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+      <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
+      <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    </lion-radio-group>
+  `}
+</Story>
+
+```html
+<lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+</lion-radio-group>
+```
+
+You can do the same thing for the entire group by setting the `disabled` attribute on the `lion-radio-group` element.
+
+<Story name="Disabled group">
+  {html`
+    <lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?" disabled>
+      <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+      <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    </lion-radio-group>
+  `}
+</Story>
+
+```html
+<lion-radio-group name="dinosGroup" label="What are your favourite dinosaurs?">
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+</lion-radio-group>
+```
+
+## Validation
+
+<Story name="Validation">
+  {() => {
+    loadDefaultFeedbackMessages();
+    const validate = () => {
+      const radioGroup = document.querySelector('#dinosGroup');
+      radioGroup.submitted = !radioGroup.submitted;
+    };
+    return html`
+      <lion-radio-group
+        id="dinosGroup"
+        name="dinosGroup"
+        label="Favourite dinosaur"
+        .validators=${[new Required()]}
+      >
+        <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
+      </lion-radio-group>
+      <button @click="${() => validate()}">Validate</button>
+    `;
+  }}
+</Story>
+
+```js
+import { loadDefaultFeedbackMessages, Required } from 'lion/validate';
+loadDefaultFeedbackMessages();
+const validate = () => {
+  const radioGroup = document.querySelector('#dinosGroup');
+  radioGroup.submitted = !radioGroup.submitted;
+};
+```
+
+```html
+<lion-radio-group
+  id="dinosGroup"
+  name="dinosGroup"
+  label="Favourite dinosaur"
+  .validators=${[new Required()]}
+>
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
+</lion-radio-group>
+<button @click="${() => validate()}">Validate</button>
+```
+
+You can also create a validator that validates whether a certain option is checked.
+
+<Story name="Validate item">
+  {() => {
+    class IsBrontosaurus extends Validator {
+      constructor() {
+        super();
+        this.name = 'IsBrontosaurus';
+      }
+      execute(value) {
+        const selectedValue = value['dinos[]'].find(v => v.checked === true);
+        const hasError = selectedValue ? selectedValue.value !== 'brontosaurus' : false;
+        return hasError;
+      }
+      static async getMessage() {
+        return 'You need to select "brontosaurus"';
+      }
+    }
+    const validate = () => {
+      const radioGroup = document.querySelector('#dinosGroupTwo');
+      radioGroup.submitted = !radioGroup.submitted;
+    };
+    return html`
+      <lion-radio-group
+        id="dinosGroupTwo"
+        name="dinosGroup"
+        label="Favourite dinosaur"
+        .validators=${[new Required(), new IsBrontosaurus()]}
+      >
+        <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+        <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+      </lion-radio-group>
+      <button @click="${() => validate()}">Validate</button>
+    `;
+  }}
+</Story>
+
+```js
+import { loadDefaultFeedbackMessages, Required, Validator } from 'lion/validate';
+
+class IsBrontosaurus extends Validator {
+  constructor() {
+    super();
+    this.name = 'IsBrontosaurus';
+  }
+  execute(value) {
+    const selectedValue = value['dinos[]'].find(v => v.checked === true);
+    const hasError = selectedValue ? selectedValue.value !== 'brontosaurus' : false;
+    return hasError;
+  }
+  static async getMessage() {
+    return 'You need to select "brontosaurus"';
+  }
+}
+const validate = () => {
+  const radioGroup = document.querySelector('#dinosGroupTwo');
+  radioGroup.submitted = !radioGroup.submitted;
+};
+```
+
+```html
+<lion-radio-group
+  id="dinosGroupTwo"
+  name="dinosGroup"
+  label="Favourite dinosaur"
+  .validators=${[new Required(), new IsBrontosaurus()]}
+>
+  <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+  <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+</lion-radio-group>
+<button @click="${() => validate()}">Validate</button>
+```
