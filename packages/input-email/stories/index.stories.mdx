@@ -1,0 +1,126 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { loadDefaultFeedbackMessages, Validator } from '@lion/validate';
+
+import '../lion-input-email.js';
+
+<Meta title="Forms/Input Email" parameters={{ component: 'lion-input-email' }} />
+
+# Input Email
+
+`lion-input-email` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
+
+<Story name="Default">
+  {() => {
+    loadDefaultFeedbackMessages();
+    return html`
+      <lion-input-email label="Email" name="email"></lion-input-email>
+    `;
+  }}
+</Story>
+
+```html
+<lion-input-email label="Email" name="email"></lion-input-email>
+```
+
+## Features
+
+- Based on [lion-input](../input)
+- Makes use of email [validators](../validate/docs/ValidationSystem.md) with corresponding error messages in different languages
+  - IsEmail (default)
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/input-email
+```
+
+```js
+import '@lion/input-email/lion-input-email.js';
+```
+
+## Examples
+
+### Faulty Prefilled
+
+When prefilling with a faulty input, an error feedback message will show.
+
+Use `loadDefaultFeedbackMessages` to get our default feedback messages displayed on it.
+
+<Story name="Faulty prefilled">
+  {html`
+    <lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email>
+  `}
+</Story>
+
+```js
+import { loadDefaultFeedbackMessages } from 'lion/validate';
+
+loadDefaultFeedbackMessages();
+```
+
+```html
+<lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email>
+```
+
+### Custom Validator
+
+<Story name="Custom Validator">
+  {() => {
+    class GmailOnly extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'GmailOnly';
+      }
+      execute(value) {
+        let hasError = false;
+        if (!(value.indexOf('gmail.com') !== -1)) {
+          hasError = true;
+        }
+        return hasError;
+      }
+      static async getMessage() {
+        return 'You can only use gmail.com email addresses.';
+      }
+    }
+    return html`
+      <lion-input-email
+        .modelValue=${'foo@bar.com'}
+        .validators=${[new GmailOnly()]}
+        label="Email"
+      ></lion-input-email>
+    `;
+  }}
+</Story>
+
+```js
+import { Validator } from '@lion/validate';
+
+class GmailOnly extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'GmailOnly';
+  }
+
+  execute(value) {
+    let hasError = false;
+    if (!(value.indexOf('gmail.com') !== -1)) {
+      hasError = true;
+    }
+    return hasError;
+  }
+
+  static async getMessage() {
+    return 'You can only use gmail.com email addresses.';
+  }
+}
+```
+
+```html
+<lion-input-email
+  .modelValue=${'foo@bar.com'}
+  .validators=${[new GmailOnly()]}
+  label="Email"
+></lion-input-email>
+```
