@@ -26,10 +26,10 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
       <button
         .date=${day.date}
         class="calendar__day-button"
-        tabindex=${day.central ? '0' : '-1'}
+        tabindex=${day.tabindex}
         aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
-        aria-pressed=${day.selected ? 'true' : 'false'}
-        aria-current=${ifDefined(day.today ? 'date' : undefined)}
+        aria-pressed=${day.ariaPressed}
+        aria-current=${ifDefined(day.ariaCurrent)}
         ?disabled=${day.disabled}
         ?selected=${day.selected}
         ?past=${day.past}
