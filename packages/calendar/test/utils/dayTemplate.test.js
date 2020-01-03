@@ -16,9 +16,9 @@ describe('dayTemplate', () => {
       <td role="gridcell" class="calendar__day-cell">
         <button
           class="calendar__day-button"
-          tabindex="-1"
           aria-label="19 April 2019 Friday"
           aria-pressed="false"
+          tabindex="-1"
         >
           19
         </button>
