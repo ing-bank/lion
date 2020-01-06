@@ -7,8 +7,7 @@ storiesOf('Forms|Input Datepicker', module)
   .add(
     'Default',
     () => html`
-      <lion-input-datepicker label="Date" .modelValue=${new Date('2017/06/15')}>
-      </lion-input-datepicker>
+      <lion-input-datepicker label="Date"> </lion-input-datepicker>
     `,
   )
   .add(
