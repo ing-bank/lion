@@ -1,3 +1,4 @@
+
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import '@lion/input/lion-input.js';
 import { Unparseable } from '@lion/validate';
@@ -22,7 +23,7 @@ Our fields can automatically format/parse/serialize user input or an input set i
 
 Below are some concrete examples of implementations of formatters and parsers mimicking a (basic) amount input.
 
-> For an actual amount input, check out [lion-input-amout](../../input-amount).
+> For an actual amount input, check out [lion-input-amount](?path=/docs/forms-lion-input-amount).
 > This comes with its own formatter, parser, serializer.
 
 ### Parsers & modelValue
@@ -73,11 +74,14 @@ In this example, we parse the input and try to convert it to a `Number`.
 
 #### Unparseable
 
-If a parser tries to parse and it returns undefined, the `modelValue` will be an instance of `Unparseable`.
+If a parser tries to parse and it returns undefined, the `modelValue` will be an instance of
+`Unparseable`.
 
-This object contains a type `'unparseable'`, and a `viewValue` which contains the String value of what the user tried to input.
+This object contains a type `'unparseable'`, and a `viewValue` which contains the String value of
+what the user tried to input.
 
-The formatted result of this that is reflected to the user will be the `viewValue` of the `Unparseable` instance, so basically nothing happens for the user.
+The formatted result of this that is reflected to the user will be the `viewValue` of the
+`Unparseable` instance, so basically nothing happens for the user.
 
 <Story name="Unparseable">
   {html`
@@ -108,7 +112,8 @@ It accepts the current modelValue and an options object.
 Below is a very naive and limited parser that ignores non-digits.
 The formatter then uses `Intl.NumberFormat` to format it with thousand separators.
 
-Formatted value is reflected back to the user `on-blur` of the field, but only if the field has no errors (validation).
+Formatted value is reflected back to the user `on-blur` of the field, but only if the field has no
+errors (validation).
 
 <Story name="Formatter">
   {() => {
@@ -193,7 +198,7 @@ const mySerializer = (modelValue, options) => {
 };
 
 const myDeserializer = (myValue, options) => {
-  return new Number(myValue);
+  return parseInt(modelValue, 10);
 };
 ```
 
@@ -208,14 +213,9 @@ const myDeserializer = (myValue, options) => {
 ></lion-input>
 ```
 
-## FieldCustomMixin
-
-When creating your own custom input, please use `FieldCustomMixin` as a basis for this.
-Concrete examples can be found at [`<lion-input-date>`](../../input-date/) and
-[`<lion-input-amount>`](../../input-amount/).
-
 <Story name="Flow Diagram">
   {html`
-    <!-- TODO: Update flow diagram <img src="./packages/form-system/stories/formatterParserFlow.svg" />-->
+    <!-- TODO: Update flow diagram -->
+    <img src="./packages/form-system/stories/formatterParserFlow.svg" />
   `}
 </Story>
