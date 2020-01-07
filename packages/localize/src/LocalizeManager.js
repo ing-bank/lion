@@ -238,10 +238,10 @@ export class LocalizeManager extends LionSingleton {
     if (newLocale === oldLocale) {
       return;
     }
-    this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
     }
+    this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
   }
 
   _loadAllMissing(newLocale, oldLocale) {
