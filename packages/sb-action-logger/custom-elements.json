@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "tags": [
+    {
+      "name": "sb-action-logger",
+      "description": "A visual element to show action logs in Storybook demos",
+      "properties": [
+        {
+          "name": "title",
+          "type": "String",
+          "description": "The title of action logger",
+          "default": "Action Logger"
+        }
+      ],
+      "events": [],
+      "slots": []
+    }
+  ]
+}
