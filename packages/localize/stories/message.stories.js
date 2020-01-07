@@ -1,9 +1,73 @@
-import { LitElement } from '@lion/core';
-import { html, storiesOf } from '@open-wc/demoing-storybook';
+import { LitElement, render } from '@lion/core';
+import { html } from '@open-wc/demoing-storybook';
 import { localize, LocalizeMixin } from '../index.js';
 
-storiesOf('Localize System|Message').add('locale', () => {
-  class messageExample extends LocalizeMixin(LitElement) {
+export default {
+  title: 'Localize System/Extras',
+};
+
+class StorybookLocaleSwitcher extends LitElement {
+  static get properties() {
+    return {
+      showLocales: { type: Array, attribute: 'show-locales' },
+    };
+  }
+
+  constructor() {
+    super();
+    this.showLocales = ['en-GB', 'en-US', 'en-AU', 'nl-NL', 'nl-BE'];
+  }
+
+  callback(locale) {
+    document.documentElement.lang = locale;
+  }
+
+  render() {
+    return html`
+      ${this.showLocales.map(
+        showLocale => html`
+          <button @click=${() => this.callback(showLocale)}>
+            ${showLocale}
+          </button>
+        `,
+      )}
+    `;
+  }
+}
+
+customElements.define('sb-locale-switcher', StorybookLocaleSwitcher);
+
+export const asFunction = () => {
+  const wrapper = document.createElement('div');
+  let message = 'Loading...';
+  function update() {
+    message = localize.msg('lit-html-example:body');
+    render(
+      html`
+        <p>${message}</p>
+        <sb-locale-switcher></sb-locale-switcher>
+      `,
+      wrapper,
+    );
+  }
+
+  localize
+    .loadNamespace({
+      'lit-html-example': locale => import(`./translations/${locale}.js`),
+    })
+    .then(() => {
+      update();
+    });
+
+  localize.addEventListener('localeChanged', () => {
+    localize.loadingComplete.then(() => update());
+  });
+
+  return wrapper;
+};
+
+export const webComponent = () => {
+  class MessageExample extends LocalizeMixin(LitElement) {
     static get localizeNamespaces() {
       return [
         { 'lit-html-example': locale => import(`./translations/${locale}.js`) },
@@ -14,52 +78,17 @@ storiesOf('Localize System|Message').add('locale', () => {
     render() {
       return html`
         <div aria-live="polite">
-          <h1>${this.msgLit('lit-html-example:header', { locale: localize.locale })}</h1>
-          <p>${this.msgLit('lit-html-example:body')}</p>
+          <p>${localize.msg('lit-html-example:body')}</p>
         </div>
       `;
     }
   }
   if (!customElements.get('message-example')) {
-    customElements.define('message-example', messageExample);
+    customElements.define('message-example', MessageExample);
   }
 
   return html`
-    <button
-      @click=${() => {
-        localize.locale = 'en-GB';
-      }}
-    >
-      en-GB
-    </button>
-    <button
-      @click=${() => {
-        localize.locale = 'en-US';
-      }}
-    >
-      en-US
-    </button>
-    <button
-      @click=${() => {
-        localize.locale = 'en-AU';
-      }}
-    >
-      en-AU
-    </button>
-    <button
-      @click=${() => {
-        localize.locale = 'nl-NL';
-      }}
-    >
-      nl-NL
-    </button>
-    <button
-      @click=${() => {
-        localize.locale = 'nl-BE';
-      }}
-    >
-      nl-BE
-    </button>
     <message-example></message-example>
+    <sb-locale-switcher></sb-locale-switcher>
   `;
-});
+};
