@@ -10,30 +10,24 @@ import {
 import './lion-demo-overlay.js';
 import './applyDemoOverlayStyles.js';
 
-<Meta title="Overlay System/System" parameters={{ component: 'lion-demo-overlay' }} />
+<Meta title="Overlay System/Overview" parameters={{ component: 'lion-demo-overlay' }} />
 
-# Overlays System
+# Overlay System
 
-Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
+The overlay system allows to create different types of overlays like dialogs, toasts, tooltips,
+dropdown, etc.
+It's designed to be highly flexible, while still delivering sensible defaults.
+On top of this, the system was built having accessibility in mind.
 
-Manages their position on the screen relative to other elements, including other overlays.
-
-`lion-dialog` can be used to make it easy to use our Overlay System declaratively. It is a simple Web Component that implements the `OverlayMixin`.
-Configuration options can be easily overrided, and the component can be extended where needed, to override event listeners and more.
-
-In our demos, we will use a quick demo web component `lion-demo-overlay` to showcase the features of the Overlay System.
-
-> Again, we recommend using `lion-dialog` as a starting point for using the Overlay System declaratively with a Web Component,
-> but for our demos we don't want a dependency on that package.
+For a detailed rationale, please consult [Rationale](?path=/docs/overlay-rationale--page).
 
 <Story name="default">
   {html`
     <lion-demo-overlay>
       <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content" class="demo-overlay">
+      <div slot="content">
         Hello! You can close this notification here:
         <button
-          class="close-button"
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
         >
           ⨯
@@ -46,10 +40,9 @@ In our demos, we will use a quick demo web component `lion-demo-overlay` to show
 ```html
 <lion-demo-overlay>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -59,10 +52,11 @@ In our demos, we will use a quick demo web component `lion-demo-overlay` to show
 ```
 
 ## Features
-
-- **OverlaysManager**, a global repository keeping track of all different types of active overlays
-- **OverlayController**, a single controller class for handling an overlay
-- **OverlayMixin**, a mixin that can be used to create Web Components that use the OverlayController under the hood
+- support for various types of (preconfigured) overlays
+- accessibility out of the box
+- advanced positioning for both 'local' and 'global' overlays
+- highly configurable/customizable
+- a base mixin that can be used to build your own overlay web components
 
 ## How to use
 
@@ -72,144 +66,14 @@ In our demos, we will use a quick demo web component `lion-demo-overlay` to show
 npm i --save @lion/overlays
 ```
 
-This package should only be used by **subclassers** who want to either:
+The '@lion/overlays' package should only be used by **subclassers** who want to either:
 - Use OverlayMixin to create Web Components that use OverlayController under the hood (common use case)
 - Extend or use OverlayController
 
-Now, we will go into depth into the three main layers of our overlay system:
-- OverlaysManager, handles logic which requires knowledge of all active overlays
-- OverlayMixin, an easy way to create a Web Component that acts as an overlay
+Now, we will go in depth into the three main layers of our overlay system:
 - OverlayController, handles logic of a single overlay instance
-
-## OverlaysManager
-
-The `OverlaysManager` is a global registry keeping track of all different types of overlays.
-The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.
-
-For example, you may have a modal dialog that open another modal dialog.
-The second dialog needs to block the first.
-When the second dialog is closed, the first one is available again.
-
-The overlay manager keeps track of all registered overlays and controls which one to show.
-
-Below an example is shown with the `isBlocking` option, which makes use of the OverlaysManager's capabilities.
-
-<Story name="OverlaysManager">
-  {html`
-    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
-      <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content" class="demo-overlay">
-        Hello! You can close this notification here:
-        <button
-          class="close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-        >
-          ⨯
-        </button>
-        <div>
-          <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
-        </div>
-      </div>
-    </lion-demo-overlay>
-    <lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
-      <div slot="content" class="demo-overlay demo-overlay--second">
-        Hello! You can close this notification here:
-        <button
-          class="close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-        >
-          ⨯
-        </button>
-      </div>
-    </lion-demo-overlay>
-  `}
-</Story>
-
-```html
-<lion-demo-overlay .config=${{ hasBackdrop: true }}>
-  <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content" class="demo-overlay">
-    Hello! You can close this notification here:
-    <button
-      class="close-button"
-      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-    >
-      ⨯
-    </button>
-    <div>
-      <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
-    </div>
-  </div>
-</lion-demo-overlay>
-
-<lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
-  <div slot="content" class="demo-overlay demo-overlay--second">
-    Hello! You can close this notification here:
-    <button
-      class="close-button"
-      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-    >
-      ⨯
-    </button>
-  </div>
-</lion-demo-overlay>
-```
-
-## OverlayMixin
-
-OverlayMixin is a mixin anyone can use to create a Web Component which has a `contentNode` (`slot="content"`) and `invokerNode` (`slot="invoker"`).
-
-Under the hood, the `OverlayMixin` will instantiate an OverlayController with these nodes.
-
-By default, there are only a few `OverlayMixin` methods you need to override to create a working Web Component using an overlay:
-
-- `render`, the template needs to include a `<slot name="content">`, `<slot name="invoker">` and `<slot name="_overlay-shadow-outlet">`.
-- `_defineOverlayConfig`, in this protected method, return an object that contains the default configuration for your Web Component's overlay. See configuration section of OverlayController.
-- `_setupOpenCloseListeners`, use this lifecycle hook to setup the open and close event listeners on your `_overlayInvokerNode`.
-- `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
-
-```js
-import { LitElement } from '@lion/core';
-import { OverlayMixin } from '@lion/overlays';
-
-class MyOverlayWC extends OverlayMixin(LitElement) {
-  _defineOverlayConfig() {
-    return {
-      placementMode: 'global',
-      hasBackdrop: true,
-    };
-  }
-
-  _setupOpenCloseListeners() {
-    super._setupOpenCloseListeners();
-    this.__toggle = () => {
-      // opened is the public boolean property to use in the WC for opening/closing
-      this.opened = !this.opened;
-    };
-
-    // Always guard this, because your user may toggle the opened state through something else (e.g. event) and not an invoker node.
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.addEventListener('click', this.__toggle);
-    }
-  }
-
-  _teardownOpenCloseListeners() {
-    super._teardownOpenCloseListeners();
-
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
-    }
-  }
-
-  render() {
-    return html`
-      <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
-    `;
-  }
-}
-```
+- OverlayMixin, an easy way to create a Web Component that acts as an overlay
+- OverlaysManager, handles logic which requires knowledge of all active overlays
 
 ## OverlayController
 
@@ -270,10 +134,9 @@ or declaratively in your template with the `.config` property
 ```html
 <lion-demo-overlay .config=${{ ...withModalDialogConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -308,7 +171,6 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          class="close-button"
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
         >
           ⨯
@@ -330,10 +192,9 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
   }}
 >
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -406,7 +267,6 @@ Below is another demo where you can toggle between configurations using buttons.
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          class="close-button"
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
         >
           ⨯
@@ -435,10 +295,9 @@ Change config to:
 </div>
 <lion-demo-overlay id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -449,7 +308,8 @@ Change config to:
 
 ## Opened state
 
-For any overlay that implements the OverlayMixin, there is a Boolean property `opened` that reflects whether the overlay content is displayed or not.
+For any overlay that implements the OverlayMixin, there is a Boolean property `opened` that reflects
+whether the overlay content is displayed or not.
 
 You can also listen to the event `opened-changed` which is fired whenever `opened` is toggled.
 This can be useful e.g. if somewhere in your application you need to rely on this "state".
@@ -477,7 +337,6 @@ This can be useful e.g. if somewhere in your application you need to rely on thi
         <div slot="content" class="demo-overlay">
           Hello! You can close this notification here:
           <button
-            class="close-button"
             @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
@@ -515,10 +374,9 @@ function onOpenClosed(ev) {
 </div>
 <lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
   <button slot="invoker">Overlay</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -529,7 +387,8 @@ function onOpenClosed(ev) {
 
 ## Intercepting open/close
 
-It is possible to intercept the open/close by making sure you fire `Event.preventDefault();` on the `before-close` or `before-open` events.
+It is possible to intercept the open/close by making sure you fire `Event.preventDefault();` on
+the `before-close` or `before-open` events.
 
 <Story name="Intercept open/close">
   {() => {
@@ -558,7 +417,6 @@ It is possible to intercept the open/close by making sure you fire `Event.preven
         <div slot="content" class="demo-overlay">
           Hello! You can close this notification here:
           <button
-            class="close-button"
             @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
           >
             ⨯
@@ -597,10 +455,9 @@ shouldInterceptButton = renderLitAsNode(
 </div>
 <lion-demo-overlay @before-closed=${intercept} @before-opened=${intercept}>
   <button slot="invoker">Overlay</button>
-  <div slot="content" class="demo-overlay">
+  <div slot="content">
     Hello! You can close this notification here:
     <button
-      class="close-button"
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
     >
       ⨯
@@ -609,38 +466,130 @@ shouldInterceptButton = renderLitAsNode(
 </lion-demo-overlay>
 ```
 
-## Future
 
-### Potential example implementations for overlays
+## OverlayMixin
 
-- Combobox/autocomplete Component
-- Application menu Component
-- Popover Component
-- Dropdown Component
-- Toast Component
+OverlayMixin is a mixin anyone can use to create a Web Component which has a
+`content node` (`slot="content"`) and `invoker node` (`slot="invoker"`).
 
-### Potential configuration additions
+Under the hood, the `OverlayMixin` will instantiate an OverlayController with these nodes.
 
-```text
-- {Boolean} isModal - sets [aria-modal] and/or [aria-hidden="true"] on siblings
-- {Boolean} isTooltip - has a totally different interaction - and accessibility pattern from all other overlays, so needed for internals.
-- {Boolean} handlesUserInteraction - sets toggle on click, or hover when `isTooltip`
-- {Boolean} handlesAccessibility -
-  - For non `isTooltip`:
-    - sets [aria-expanded="true/false"] and [aria-haspopup="true"] on invokerNode
-    - sets [aria-controls] on invokerNode
-    - returns focus to invokerNode on hide
-    - sets focus to overlay content(?)
-  - For `isTooltip`:
-    - sets [role="tooltip"] and [aria-labelledby]/[aria-describedby] on the content
+By default, there are only a few `OverlayMixin` methods you need to override to create a working Web Component using an overlay:
+
+- `render`, the template needs to include a `<slot name="content">`, `<slot name="invoker">` and `<slot name="_overlay-shadow-outlet">`.
+- `_defineOverlayConfig`, in this protected method, return an object that contains the default configuration for your Web Component's overlay. See configuration section of OverlayController.
+- `_setupOpenCloseListeners`, use this lifecycle hook to setup the open and close event listeners on your `_overlayInvokerNode`.
+- `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
+
+```js
+import { LitElement } from '@lion/core';
+import { OverlayMixin } from '@lion/overlays';
+
+class MyOverlayWC extends OverlayMixin(LitElement) {
+  _defineOverlayConfig() {
+    return {
+      placementMode: 'global',
+      hasBackdrop: true,
+    };
+  }
+
+  _setupOpenCloseListeners() {
+    super._setupOpenCloseListeners();
+    this.__toggle = () => {
+      // opened is the public boolean property to use in the WC for opening/closing
+      this.opened = !this.opened;
+    };
+
+    // Always guard this, because your user may toggle the opened state through something else (e.g. event) and not an invoker node.
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.addEventListener('click', this.__toggle);
+    }
+  }
+
+  _teardownOpenCloseListeners() {
+    super._teardownOpenCloseListeners();
+
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+    }
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
+  }
+}
 ```
 
-### Future for mode local (Popper)
+## OverlaysManager
 
-- Default overflow and/or max-width behavior when content is too wide or high for the viewport.
+The `OverlaysManager` is a global registry keeping track of all different types of overlays.
+The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.
 
+For example, you may have a modal dialog that open another modal dialog.
+The second dialog needs to block the first.
+When the second dialog is closed, the first one is available again.
 
-## Aria roles
+The overlay manager keeps track of all registered overlays and controls which one to show.
 
-- No `aria-controls` as support for it is not quite there yet
-- No `aria-haspopup`. People knowing the haspop up and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.
+Below an example is shown with the `isBlocking` option, which makes use of the OverlaysManager's capabilities.
+
+<Story name="OverlaysManager">
+  {html`
+    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+        <div>
+          <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
+        </div>
+      </div>
+    </lion-demo-overlay>
+    <lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+      <div slot="content" class="demo-overlay demo-overlay--second">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-demo-overlay>
+  `}
+</Story>
+
+```html
+<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content">
+    Hello! You can close this notification here:
+    <button
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+    <div>
+      <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
+    </div>
+  </div>
+</lion-demo-overlay>
+
+<lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+  <div slot="content" class="demo-overlay demo-overlay--second">
+    Hello! You can close this notification here:
+    <button
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</lion-demo-overlay>
+```
