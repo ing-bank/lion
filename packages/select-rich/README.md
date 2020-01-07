@@ -7,16 +7,9 @@ It allows to provide fully customized options and a fully customized invoker but
 The component is meant to be used whenever the native `<select>` doesn't provide enough
 styling/theming/user interaction opportunities.
 
-Its implementation is based on the following Design pattern:
-<https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html>
+## Live Demo/Documentation
 
-## Features
-
-- fully accessible
-- flexible api
-- fully customizable option elements
-- fully customizable invoker element
-- Mimics native select interaction mode (windows/linux and mac)
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/buttons-button) for a live demo and API documentation
 
 ## How to use
 
@@ -30,53 +23,15 @@ npm i --save @lion/select-rich
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/select-rich/lion-options.js';
 import '@lion/option/lion-option.js';
-
-// validator import example
-import { Requred } from '@lion/validate';
 ```
 
 ### Example
 
 ```html
-<lion-select-rich
-  name="favoriteColor"
-  label="Favorite color"
-  .validators=${[new Required()]}
->
+<lion-select-rich name="favoriteColor" label="Favorite color">
   <lion-options slot="input">
     <lion-option .choiceValue=${'red'}>Red</lion-option>
     <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
   </lion-options>
 </lion-select-rich>
 ```
-
-You can also set the full modelValue for each option.
-
-```html
-  <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
-```
-
-You can get/set the the checkedIndex and checkedValue
-
-```js
-const el = document.querySelector('lion-select-rich');
-console.log(el.checkedIndex); // 1
-console.log(el.checkedValue); // 'hotpink'
-console.log(el.modelValue); // [{ value: 'red', checked: false }, { value: 'hotpink', checked: true }]
-```
-
-You can provide an invoker rendering a custom invoker that gets the selected value(s) as an
-input property `.selectedElement`
-
-```html
-<lion-select-rich>
-  <my-invoker-button slot="invoker"></my-invoker-button>
-  <lion-options slot="input">
-    ...
-  </lion-options>
-</lion-select-rich>
-```
-
-## Other Resources
-
-- [Design Considerations](./docs/DesignConsiderations.md)
