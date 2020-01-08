@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.5](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.7.4...@lion/input-datepicker@0.7.5) (2020-01-08)
+
+
+### Bug Fixes
+
+* **datepicker:** focus on selected date on opening ([d29d9db](https://github.com/ing-bank/lion/commit/d29d9db7545aefd0ea5f6807ce8bb847e0189c66))
+
+
+
+
+
 ## [0.7.4](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.7.3...@lion/input-datepicker@0.7.4) (2019-12-17)
 
 **Note:** Version bump only for package @lion/input-datepicker
