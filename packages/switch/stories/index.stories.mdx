@@ -1,0 +1,111 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { Validator } from '@lion/validate';
+
+import '../lion-switch.js';
+
+<Meta title="Buttons/Switch" />
+
+# Switch
+
+`lion-switch` is a component that is used to toggle a property or feature on or off. Toggling the component on or off should have immediate action and should not require pressing any additional buttons (submit) to confirm what just happened. The Switch is not a Checkbox in disguise and should not be used as part of a form.
+
+<Story name="Default (off)">{html`
+  <lion-switch label="Label" help-text="Help text"></lion-switch>
+`}</Story>
+
+```html
+<lion-switch label="Label" help-text="Help text"></lion-switch>
+```
+
+<Story name="Checked">{html`
+  <lion-switch label="Label" help-text="Help text" checked></lion-switch>
+`}</Story>
+
+```html
+<lion-switch label="Label" help-text="Help text" checked></lion-switch>
+```
+
+## Features
+
+- Get or set the checked state (boolean) - `checked` boolean attribute
+- Pre-select an option by setting the `checked` boolean attribute
+- Get or set the value of the choice - `choiceValue()`
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/switch
+```
+
+```js
+import '@lion/switch/lion-switch.js';
+```
+
+## Examples
+
+### Disabled
+
+You can disable switches.
+
+<Story name="Disabled">{html`
+  <lion-switch label="Label" disabled></lion-switch>
+`}</Story>
+
+```html
+<lion-switch label="Label" disabled></lion-switch>
+```
+
+### Validation
+
+Simple example that illustrates where validation feedback will be displayed.
+
+<Story name="Validation">{() => {
+  const IsTrue = class extends Validator {
+    constructor(...args) {
+      super(...args);
+      this.name = 'IsTrue';
+    }
+    execute(value) {
+      return !value.checked;
+    }
+    static async getMessage() {
+      return "You won't get the latest news!";
+    }
+  }
+  return html`
+    <lion-switch
+      id="newsletterCheck"
+      name="newsletterCheck"
+      label="Subscribe to newsletter"
+      .validators="${[new IsTrue()]}"
+    ></lion-switch>
+  `;
+}}</Story>
+
+```js
+import { Validator } from '@lion/validate';
+
+const IsTrue = class extends Validator {
+  constructor(...args) {
+    super(...args);
+    this.name = 'IsTrue';
+  }
+  execute(value) {
+    return !value.checked;
+  }
+  static async getMessage() {
+    return "You won't get the latest news!";
+  }
+}
+```
+
+```html
+<lion-switch
+  id="newsletterCheck"
+  name="newsletterCheck"
+  label="Subscribe to newsletter"
+  .validators="${[new IsTrue()]}"
+></lion-switch>
+```
