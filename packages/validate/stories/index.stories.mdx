@@ -1,0 +1,406 @@
+import { Meta, Story, html } from '@open-wc/demoing-storybook';
+/* eslint-disable import/no-extraneous-dependencies */
+import { LionInput } from '@lion/input';
+import '@lion/input-amount/lion-input-amount.js';
+import '@lion/input-date/lion-input-date.js';
+import '@lion/input-email/lion-input-email.js';
+import '@lion/input/lion-input.js';
+import {
+  DefaultSuccess,
+  EqualsLength,
+  IsDate,
+  IsEmail,
+  IsNumber,
+  loadDefaultFeedbackMessages,
+  MaxDate,
+  MaxLength,
+  MaxNumber,
+  MinDate,
+  MinLength,
+  MinMaxDate,
+  MinMaxLength,
+  MinMaxNumber,
+  MinNumber,
+  Required,
+  Validator,
+} from '../index.js';
+
+<Meta title="Validation/Examples" parameters={{ component: 'lion-input' }}/>
+
+<Story name="Required Validator">
+  {html`
+    <lion-input .validators=${[new Required()]} label="Required"></lion-input>
+  `}
+</Story>
+
+```html
+<lion-input .validators="${[new Required()]}" label="Required"></lion-input>
+```
+
+
+<Story name="String Validators">
+  {html`
+    <lion-input
+      .validators=${[new EqualsLength(7)]}
+      .modelValue=${'not exactly'}
+      label="EqualsLength"
+    ></lion-input>
+    <lion-input
+      .validators=${[new MinLength(10)]}
+      .modelValue=${'too short'}
+      label="MinLength"
+    ></lion-input>
+    <lion-input
+      .validators=${[new MaxLength(7)]}
+      .modelValue=${'too long'}
+      label="MaxLength"
+    ></lion-input>
+    <lion-input
+      .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
+      .modelValue=${'that should be enough'}
+      label="MinMaxLength"
+    ></lion-input>
+  `}
+</Story>
+
+```html
+<lion-input
+  .validators=${[new EqualsLength(7)]}
+  .modelValue=${'not exactly'}
+  label="EqualsLength"
+></lion-input>
+<lion-input
+  .validators=${[new MinLength(10)]}
+  .modelValue=${'too short'}
+  label="MinLength"
+></lion-input>
+<lion-input
+  .validators=${[new MaxLength(7)]}
+  .modelValue=${'too long'}
+  label="MaxLength"
+></lion-input>
+<lion-input
+  .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
+  .modelValue=${'that should be enough'}
+  label="MinMaxLength"
+></lion-input>
+```
+
+
+Number Validators
+
+<Story name="Number Validators">
+  {html`
+   <lion-input-amount
+    .validators="${[new IsNumber()]}"
+    .modelValue="${'foo'}"
+    label="IsNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MinNumber(7)]}"
+    .modelValue="${5}"
+    label="MinNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MaxNumber(7)]}"
+    .modelValue="${9}"
+    label="MaxNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MinMaxNumber({ min: 10, max: 20 })]}"
+    .modelValue="${5}"
+    label="MinMaxNumber"
+  ></lion-input-amount>
+  `}
+</Story>
+
+```html
+   <lion-input-amount
+    .validators="${[new IsNumber()]}"
+    .modelValue="${'foo'}"
+    label="IsNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MinNumber(7)]}"
+    .modelValue="${5}"
+    label="MinNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MaxNumber(7)]}"
+    .modelValue="${9}"
+    label="MaxNumber"
+  ></lion-input-amount>
+  <lion-input-amount
+    .validators="${[new MinMaxNumber({ min: 10, max: 20 })]}"
+    .modelValue="${5}"
+    label="MinMaxNumber"
+  ></lion-input-amount>
+```
+
+<!--
+
+<Story name="Date Validators">
+  {() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+    const yesterday = new Date(year, month, day - 1);
+    const tomorrow = new Date(year, month, day + 1);
+
+    return html`
+      <lion-input-date
+        .validators=${[new IsDate()]}
+        .modelValue=${'foo'}
+        label="IsDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators=${[new MinDate(today)]}
+        .modelValue=${new Date(yesterday)}
+        label="MinDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators=${[new MaxDate(today)]}
+        .modelValue=${new Date(tomorrow)}
+        label="MaxDate"
+      ></lion-input-date>
+      <lion-input-date
+        .validators=${[new MinMaxDate({ min: new Date(yesterday), max: new Date(tomorrow) })]}
+        .modelValue=${new Date(today)}
+        label="MinMaxDate"
+      ></lion-input-date>
+    `;
+  }}
+</Story>
+
+
+```js
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth();
+const day = today.getDate();
+const yesterday = new Date(year, month, day - 1);
+const tomorrow = new Date(year, month, day + 1);
+```
+
+```html
+<lion-input-date
+  .validators="${[new IsDate()]}"
+  .modelValue="${'foo'}"
+  label="IsDate"
+></lion-input-date>
+<lion-input-date
+  .validators="${[new MinDate(today)]}"
+  .modelValue="${new Date(yesterday)}"
+  label="MinDate"
+></lion-input-date>
+<lion-input-date
+  .validators="${[new MaxDate(today)]}"
+  .modelValue="${new Date(tomorrow)}"
+  label="MaxDate"
+></lion-input-date>
+<lion-input-date
+  .validators="${[new MinMaxDate({ min: new Date(yesterday), max: new Date(tomorrow) })]}"
+  .modelValue="${new Date(today)}"
+  label="MinMaxDate"
+></lion-input-date>
+```
+-->
+
+<Story name="Email Validator">
+  {html`
+      <lion-input-email
+        .validators="${[new IsEmail()]}"
+        .modelValue="${'foo'}"
+        label="IsEmail"
+      ></lion-input-email>
+  `}
+</Story>
+
+```html
+  <lion-input-email
+    .validators="${[new IsEmail()]}"
+    .modelValue="${'foo'}"
+    label="IsEmail"
+  ></lion-input-email>
+```
+
+<!--
+<Story name="Validation Types">
+  {() => {
+    try {
+      class MyTypesInput extends LionInput {
+        static get validationTypes() {
+          return ['error', 'warning', 'info', 'success'];
+        }
+      }
+      customElements.define('my-types-input', MyTypesInput);
+    } catch (err) {
+      // expected as it is a demo
+    }
+
+    return html`
+      <style>
+        my-types-input {
+          border-left: 2px solid #fff;
+        }
+        my-types-input[shows-feedback-for]:not([shows-feedback-for='']) {
+          border-left: 2px dotted red;
+        }
+        my-types-input[shows-feedback-for~='error'] input {
+          outline: 2px solid red;
+        }
+        my-types-input[shows-feedback-for~='warning'] input {
+          outline: 2px solid orange;
+        }
+        lion-validation-feedback[type='success'] {
+          color: green;
+        }
+        lion-validation-feedback[type='error'] {
+          color: red;
+        }
+        lion-validation-feedback[type='warning'] {
+          color: orange;
+        }
+        lion-validation-feedback[type='info'] {
+          color: blue;
+        }
+      </style>
+      <my-types-input
+        .validators="${[
+          new Required(),
+          new MinLength(7, { type: 'warning' }),
+          new MaxLength(10, {
+            type: 'info',
+            getMessage: () => `Please, keep the length below the 10 characters.`,
+          }),
+          new DefaultSuccess(),
+        ]}"
+        .modelValue="${'exactly'}"
+        label="Validation Types"
+      ></my-types-input>
+    `;
+  }}
+</Story>
+
+```js
+    try {
+      class MyTypesInput extends LionInput {
+        static get validationTypes() {
+          return ['error', 'warning', 'info', 'success'];
+        }
+      }
+      customElements.define('my-types-input', MyTypesInput);
+    } catch (err) {
+      // expected as it is a demo
+    }
+```
+
+```html
+      <style>
+        my-types-input {
+          border-left: 2px solid #fff;
+        }
+        my-types-input[shows-feedback-for]:not([shows-feedback-for='']) {
+          border-left: 2px dotted red;
+        }
+        my-types-input[shows-feedback-for~='error'] input {
+          outline: 2px solid red;
+        }
+        my-types-input[shows-feedback-for~='warning'] input {
+          outline: 2px solid orange;
+        }
+        lion-validation-feedback[type='success'] {
+          color: green;
+        }
+        lion-validation-feedback[type='error'] {
+          color: red;
+        }
+        lion-validation-feedback[type='warning'] {
+          color: orange;
+        }
+        lion-validation-feedback[type='info'] {
+          color: blue;
+        }
+      </style>
+      <my-types-input
+        .validators="${[
+          new Required(),
+          new MinLength(7, { type: 'warning' }),
+          new MaxLength(10, {
+            type: 'info',
+            getMessage: () => `Please, keep the length below the 10 characters.`,
+          }),
+          new DefaultSuccess(),
+        ]}"
+        .modelValue="${'exactly'}"
+        label="Validation Types"
+      ></my-types-input>
+```
+
+-->
+
+
+
+<Story name="Custom Validators">
+  {() => {
+    class MyValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'myValidator';
+      }
+
+      execute(modelValue, param) {
+        return modelValue !== param;
+      }
+
+      static getMessage({ fieldName, modelValue, params: param }) {
+        if (modelValue.length >= param.length - 1 && param.startsWith(modelValue)) {
+          return 'Almost there...';
+        }
+        return `No "${param}" found in ${fieldName}`;
+      }
+    }
+
+    return html`
+      <lion-input
+        label="Custom validator"
+        help-text="Type 'mine' please"
+        .validators="${[new MyValidator('mine')]}"
+        .modelValue="${'mi'}"
+      ></lion-input>
+    `;
+    }
+  }
+</Story>
+
+
+```js
+    class MyValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'myValidator';
+      }
+
+      execute(modelValue, param) {
+        return modelValue !== param;
+      }
+
+      static getMessage({ fieldName, modelValue, params: param }) {
+        if (modelValue.length >= param.length - 1 && param.startsWith(modelValue)) {
+          return 'Almost there...';
+        }
+        return `No "${param}" found in ${fieldName}`;
+      }
+    }
+```
+
+```html
+<lion-input
+  label="Custom validator"
+  help-text="Type 'mine' please"
+  .validators="${[new MyValidator('mine')]}"
+  .modelValue="${'mi'}"
+></lion-input>
+```
+
