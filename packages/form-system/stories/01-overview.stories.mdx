@@ -1,0 +1,100 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { render } from '@lion/core';
+import '@lion/input/lion-input.js';
+import { Validator } from '@lion/validate';
+import './helper-wc/h-output.js';
+
+<Meta title="Form Fundaments/Overview" />
+
+# Form System Overview
+
+This page should be used as a starting point when first using the Form System.
+It provides an overview of its essential building blocks and provides links to detailed explanations
+of most of its core concepts.
+
+## Building Blocks
+
+Our Form System is built from a set of very fundamental building blocks: `form control`s, `field`s and `fieldset`s.
+
+### Form Controls
+
+`Form control`s are the most fundamental building blocks of our Form System.
+They are the fundament of both `field`s, and `fieldset`s and provide a normalized, predictable api
+throughout the whole form.
+Every form element inherits from `FormControlMixin`.
+
+`FormControlMixin` creates the default html structure
+and accessibility is designed to be used in conjunction with the ValidateMixin and the FormatMixin.
+
+### Fields
+
+Fields (think of an input, texarea, select) are the actual form controls the end user interacts with.
+They extend `LionField`, which in turn uses the `FormControlMixin`.
+Fields provide a normalized api for both platform components and custom made form controls.
+On top of this, they offer:
+
+- [formatting/parsing/serializing](?path=/docs/form-fundaments-formatting-and-parsing) of view values
+- advanced [validation](?path=/docs/form-fundaments-validation) possibilities
+- creation of advanced user interaction scenarios via [interaction states](?path=/docs/form-fundaments-interaction-states--interaction-states)
+- provision of labels and help texts in an easy, declarative manner
+- accessibility out of the box <!-- TODO: write how our form system manages to deliver accessible components with all challenges that shadow dom provide -->
+- advanced styling possibilities: map your own Design System to the internal HTML structure <!-- TODO: link to example of Material Design Datepicker-->
+
+#### Platform fields (wrappers)
+
+Platform field wrappers add all of the functionality described above to native form elements.
+
+- [LionInput](?path=/docs/forms-input), a wrapper for `<input>`
+- [LionTextarea](?path=/docs/forms-textarea), a wrapper for `<textarea>`
+- [LionSelect](?path=/docs/forms-select), a wrapper for `<select>`
+- [LionRadio](?path=/docs/forms-radio-group), a wrapper for `<input type="radio">`
+- [LionCheckbox](?path=/docs/forms-checkbox-group), a wrapper for `<input type="checkbox">`
+- [LionInputRange](?path=/docs/forms-input-range), a wrapper for `<input type="range">`
+
+### Dedicated fields
+
+Dedicated fields are less generic fields in a sense that they by default expect a certain type of
+modelValue. This means that they have validators, parsers and formatters preconfigured.
+
+- [`LionInputDate`](?path=/docs/forms-input-date)
+- [`LionInputDatepicker`](?path=/docs/forms-input-datepicker)
+- [`LionInputEmail`](?path=/docs/forms-input-email)
+- [`LionInputAmount`](?path=/docs/forms-input-amount)
+- [`LionInputIban`](?path=/docs/forms-input-iban)
+
+### Custom fields
+
+Instead of wrapping native elements, this category of fields contains custom built
+form elements.
+
+- [`LionSelectRich`](?path=/docs/forms-select-rich), an advanced (rich) version of `<select>`
+
+One could also think of components like:
+
+- listbox
+- combobox
+- autocomplete
+- etc...
+
+For more information about writing a custom field, please see [How to write a custom field](?path=/docs/form-fundaments-creating-a-custom-field--page)
+
+## Fieldsets
+
+Fieldsets are groups of fields. They can be considered fields on their own as well, since they
+partly share the normalized api via `FormControlMixin`.
+Fieldsets are at the base of:
+
+- [`LionFieldset`](?path=/docs/forms-fieldset)
+- [`LionForm`](?path=/docs/forms-form)
+- [`LionRadioGroup`](?path=/docs/forms-radio-group)
+- [`LionCheckboxGroup`](?path=/docs/forms-checkbox-group)
+
+## Other Resources
+
+<!-- TODO: - [`FormControlMixin`] () -->
+<!-- TODO: - [`LionField`] () -->
+
+- [Model Value](?path=/docs/form-fundaments-modelvalue)
+- [Formatting and parsing](?path=/docs/form-fundaments-formatting-and-parsing)
+- [Interaction states](?path=/docs/form-fundaments-interaction-states)
+- [Validation System](?path=/docs/form-fundaments-validation)
