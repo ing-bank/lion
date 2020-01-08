@@ -37,7 +37,6 @@
     "@lion/localize": "0.7.1"
   },
   "devDependencies": {
-    "@lion/button": "0.4.5",
     "@open-wc/demoing-storybook": "^1.3.0",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
