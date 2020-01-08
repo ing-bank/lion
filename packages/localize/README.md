@@ -17,33 +17,32 @@ npm i --save @lion/localize
 ```
 
 ```js
-import @lion/form/lion-form.js;
+import { localize } from '@lion/localize';
 ```
 
 ### Example
 
-`/path/to/my-hello-component/translations/en-GB.js`
+Translation data:
 
 ```js
+// path/to/hello-world/translations/en-GB.js
 export default { greeting: 'Hello {name}!', };`
 ```
 
-Loading data:
+Loading translations:
 
 ```js
+// path/to/hello-world/HelloWorld.js
 localize.loadNamespace({
-  'my-hello-component': locale => {
+  'hello-world': locale => {
     return import(`./translations/${locale}.js`);
   },
 });
 ```
 
-Rendering data:
+Translating messages:
 
 ```js
-_onNameChanged() {
-  // inserts 'Hello John!' into the element with id="name"
-  const greeting = localize.msg('my-hello-component:greeting', { name: 'John' });
-  this.shadowRoot.querySelector('#greeting').innerText = greeting;
-}
+localize.msg('hello-world:greeting', { name: 'John' });
+// Hello John!
 ```
