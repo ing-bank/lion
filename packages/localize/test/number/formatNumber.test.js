@@ -291,6 +291,7 @@ describe('formatNumber', () => {
         localize.locale = 'bg-BG';
         expect(formatNumber(1.234, currencyCode('EUR'))).to.equal('1,23 EUR');
         expect(formatNumber(1234.567, currencyCode('EUR'))).to.equal('1 234,57 EUR');
+        expect(formatNumber(-1234.567, currencyCode('EUR'))).to.equal('−1 234,57 EUR');
       });
     });
 
