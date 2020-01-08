@@ -15,14 +15,14 @@ you should expect to get only the string interpretation as the output in this lo
 ## Installation
 
 ```bash
-npm i @lion/sb-action-logger
+npm i @lion/helpers
 ```
 
 ## Usage
 
 ```html
 <script type="module">
-  import '@lion/sb-action-logger/sb-action-logger.js';
+  import '@lion/helpers/sb-action-logger/sb-action-logger.js';
 </script>
 
 <sb-action-logger></sb-action-logger>

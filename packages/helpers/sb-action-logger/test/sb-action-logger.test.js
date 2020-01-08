@@ -1,5 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import '../sb-action-logger.js';
+import '../../sb-action-logger.js';
 
 // Note: skips are left out of first iteration
 
@@ -90,10 +90,17 @@ describe('sb-action-logger', () => {
 
       expect(el.shadowRoot.querySelector('.logger').children.length).to.equal(0);
     });
+
+    it('duplicate consecutive logs are kept as one', async () => {
+      const el = await fixture(html`
+        <sb-action-logger></sb-action-logger>
+      `);
+      expect(el).to.be.true;
+    });
   });
 
   describe('Potential Additional Features', () => {
-    it.skip('duplicate consecutive logs are kept as one, adds a visual counter to count per duplicate', async () => {
+    it.skip('duplicate consecutive adds a visual counter to count per duplicate', async () => {
       const el = await fixture(html`
         <sb-action-logger></sb-action-logger>
       `);
