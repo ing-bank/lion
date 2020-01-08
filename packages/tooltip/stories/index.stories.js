@@ -80,22 +80,22 @@ storiesOf('Overlays Specific WC|Tooltip')
       </style>
       <div class="demo-box_placements">
         <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
-          <lion-button slot="invoker">Top</lion-button>
+          <button slot="invoker">Top</button>
           <div slot="content" class="demo-tooltip-body">Its top placement</div>
           <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
-          <lion-button slot="invoker">Right</lion-button>
+          <button slot="invoker">Right</button>
           <div slot="content" class="demo-tooltip-body">Its right placement</div>
           <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
-          <lion-button slot="invoker">Bottom</lion-button>
+          <button slot="invoker">Bottom</button>
           <div slot="content" class="demo-tooltip-body">Its bottom placement</div>
           <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
         </lion-tooltip>
         <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
-          <lion-button slot="invoker">Left</lion-button>
+          <button slot="invoker">Left</button>
           <div slot="content" class="demo-tooltip-body">Its left placement</div>
           <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
         </lion-tooltip>
