@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/field@0.7.0...@lion/field@0.7.1) (2020-01-08)
+
+**Note:** Version bump only for package @lion/field
+
+
+
+
+
 # [0.7.0](https://github.com/ing-bank/lion/compare/@lion/field@0.6.8...@lion/field@0.7.0) (2019-12-13)
 
 

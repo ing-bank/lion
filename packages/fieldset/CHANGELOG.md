@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.6...@lion/fieldset@0.5.7) (2020-01-08)
+
+**Note:** Version bump only for package @lion/fieldset
+
+
+
+
+
 ## [0.5.6](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.5.5...@lion/fieldset@0.5.6) (2019-12-16)
 
 

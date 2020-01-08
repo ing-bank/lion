@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/ing-bank/lion/compare/@lion/localize@0.7.1...@lion/localize@0.7.2) (2020-01-08)
+
+
+### Bug Fixes
+
+* **localize:** allow negative bulgarian numbers ([367e2f4](https://github.com/ing-bank/lion/commit/367e2f4f96be9ef7b3a1018f07a1dcd8311ba07b))
+
+
+
+
+
 ## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/localize@0.7.0...@lion/localize@0.7.1) (2019-12-02)
 
 
