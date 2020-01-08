@@ -1,6 +1,10 @@
 # Tabs
 
-`lion-tabs` implements Tabs view to allow users to quickly move between a small number of equally important views
+`lion-tabs` implements tabs view to allow users to quickly move between a small number of equally important views.
+
+## Live Demo/Documentation
+
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/tabs) for a live demo and API documentation
 
 ## How to use
 
@@ -20,32 +24,11 @@ import '@lion/tabs/lion-tabs.js';
 <lion-tabs>
   <button slot="tab">Info</button>
   <p slot="panel">
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam sequi odit cumque, enim aut
-    assumenda itaque quis voluptas est quos fugiat unde labore reiciendis saepe, iure, optio
-    officiis obcaecati quibusdam.
+    Info page with lots of information about us.
   </p>
-  <div slot="tab">About</div>
+  <button slot="tab">Work</button>
   <p slot="panel">
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam sequi odit cumque, enim aut
-    assumenda itaque quis voluptas est quos fugiat unde labore reiciendis saepe, iure, optio
-    officiis obcaecati quibusdam.
+    Work page that showcases our work.
   </p>
 </lion-tabs>
 ```
-
-Rationales:
-
-- **No separate active/focus state when using keyboard**
-
-  We will immediately switch content as all our content comes from light dom (e.g. no latency)
-
-  See Note at <https://www.w3.org/TR/wai-aria-practices/#keyboard-interaction-19>
-
-  > It is recommended that tabs activate automatically when they receive focus as long as their
-  > associated tab panels are displayed without noticeable latency. This typically requires tab
-  > panel content to be preloaded.
-
-- **Panels are not focusable**
-
-  Focusable elements should have a means to interact with them. Tab panels themselves do not offer any interactiveness.
-  If there is a button or a form inside the tab panel then these elements get focused directly.
