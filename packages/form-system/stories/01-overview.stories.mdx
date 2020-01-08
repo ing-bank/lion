@@ -18,7 +18,7 @@ Our Form System is built from a set of very fundamental building blocks: `form c
 
 ### Form Controls
 
-`Form control`s are the most fundamental building block of our Form System.
+`Form control`s are the most fundamental building blocks of our Form System.
 They are the fundament of both `field`s, and `fieldset`s and provide a normalized, predictable api
 throughout the whole form.
 Every form element inherits from `FormControlMixin`.
@@ -29,9 +29,9 @@ and accessibility is designed to be used in conjunction with the ValidateMixin a
 ### Fields
 
 Fields (think of an input, texarea, select) are the actual form controls the end user interacts with.
-They extend `LionField`, which on its turn uses the `FormControlMixin`.
+They extend `LionField`, which in turn uses the `FormControlMixin`.
 Fields provide a normalized api for both platform components and custom made form controls.
-On top of this, they feature:
+On top of this, they offer:
 
 - [formatting/parsing/serializing](?path=/docs/form-fundaments-formatting-and-parsing) of view values
 - advanced [validation](?path=/docs/form-fundaments-validation) possibilities
@@ -42,8 +42,7 @@ On top of this, they feature:
 
 #### Platform fields (wrappers)
 
-Platform field wrapper add all of the functionality described above to form elements natively
-supported by the platform.
+Platform field wrappers add all of the functionality described above to native form elements.
 
 - [LionInput](?path=/docs/forms-input), a wrapper for `<input>`
 - [LionTextarea](?path=/docs/forms-textarea), a wrapper for `<textarea>`
@@ -65,7 +64,7 @@ modelValue. This means that they have validators, parsers and formatters preconf
 
 ### Custom fields
 
-Instead of wrapping native elements, this category of fields addresses custom built
+Instead of wrapping native elements, this category of fields contains custom built
 form elements.
 
 - [`LionSelectRich`](?path=/docs/forms-select-rich), an advanced (rich) version of `<select>`
@@ -83,7 +82,7 @@ For more information about writing a custom field, please see [How to write a cu
 
 Fieldsets are groups of fields. They can be considered fields on their own as well, since they
 partly share the normalized api via `FormControlMixin`.
-Fieldsets are the basis for:
+Fieldsets are at the base of:
 
 - [`LionFieldset`](?path=/docs/forms-fieldset)
 - [`LionForm`](?path=/docs/forms-form)
