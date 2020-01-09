@@ -4,21 +4,19 @@ import '@lion/input/lion-input.js';
 import { Validator } from '@lion/validate';
 import './helper-wc/h-output.js';
 
-<Meta title="Form Fundaments/Creating a Custom Field" />
+<Meta title="Form System/Creating a Custom Field" />
 
 # Creating a custom field
 
 Custom fields can be created in just a few steps. All you need is an interaction element
-(like for instance a slider, a listbox or a combobox) and connect it to the [Field](../README.md)
+(like for instance a slider, a listbox or a combobox) and connect it to the [Field](?path=/docs/form-system-overview)
 functionality.
 
 ## Prerequisite: an interaction element
 
 An interaction element provides the means for the end user to enter a certain value, just like
 native elements provide in this (think of `<input>`, `<textarea>` and `<select>`).
-An example of a non native element is the
-[slider design pattern](https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/#slider)
-described here.
+An example of a non native element is the <a href="https://www.w3.org/TR/wai-aria-practices-1.1/#slider" target="_blank">slider design pattern</a> described here.
 
 For this tutorial, we assume we have a component `<my-slider>` that exposes its value via property
 `mySliderValue` and sends an event `my-slider-changed` on every value change. To make it focusable,
@@ -27,7 +25,7 @@ it has a tabindex=“0” applied.
 ## Connecting the interaction element to the field
 
 Now we want to integrate the slider in our form framework to enrich the user interface, get
-validation support and get all the other [benefits of LionField](/?path=/docs/form-fundaments-overview--page).
+validation support and get all the other [benefits of LionField](/?path=/docs/form-system-overview).
 We start of by creating a component `<lion-slider>` that extends from `LionField`.
 Then we follow the steps below:
 
@@ -44,7 +42,7 @@ equivalent of the `input` event of the platform, but for custom built interactio
 #### 3. Proxy property `<my-slider>.mySliderValue` to `<lion-slider>.value`
 
 Every time the `user-input-changed` fires, the value of `<my-slider>` is synchronized with the
-[`modelValue`](?path=/docs/form-fundaments-modelvalue--page) of `<my-slider>`. Now the cycle is complete: the modelValue connects
+[`modelValue`](?path=/docs/form-system-modelvalue--page) of `<my-slider>`. Now the cycle is complete: the modelValue connects
 your interaction element to all logic inside the LionField.
 
 Steps as described can be implemented with the following javascript:
