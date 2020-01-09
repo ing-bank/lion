@@ -3,7 +3,7 @@ import * as bugs from './icons/bugs-collection.js';
 import arrowLeftSvg from './icons/arrowLeft.svg.js';
 import '../lion-icon.js';
 
-<Meta title="Icon System/Icon" parameters={{ component: 'lion-icon' }} />
+<Meta title="Icon System/Icon" />
 
 # Icon
 
@@ -76,6 +76,8 @@ By default, a `lion-icon` will be `1em` × `1em` (the current line-height).
   {html`
     <style>
       lion-icon.custom {
+        width: 50px;
+        height: 50px;
         fill: blue;
         stroke: red;
       }
@@ -116,6 +118,26 @@ import bug24 from './bugs/bug24.svg.js';
 export { bug01, bug02, bug05, bug06, bug08, bug12, bug19, bug23, bug24 };
 ```
 
+<Story name="Collections">
+  {html`
+    <style>
+      .icon-collection lion-icon {
+        height: 50px;
+        width: 50px;
+      }
+    </style>
+    <div class="icon-collection">
+      <lion-icon .svg=${bugs.bug05} aria-label="Skinny dung beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug06} aria-label="Butterfly"></lion-icon>
+      <lion-icon .svg=${bugs.bug08} aria-label="Ant"></lion-icon>
+      <lion-icon .svg=${bugs.bug12} aria-label="Striped beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug19} aria-label="Beatle with long whiskers"></lion-icon>
+      <lion-icon .svg=${bugs.bug23} aria-label="Swim beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug24} aria-label="Big forrest ant"></lion-icon>
+    </div>
+  `}
+</Story>
+
 And then use them by either importing them all:
 
 ```js
@@ -138,24 +160,14 @@ import {
 } from './icons/bugs-collection.js';
 ```
 
-<Story name="Collections">
-  {html`
-    <lion-icon class="icon" .svg=${bugs.bug05} aria-label="Skinny dung beatle"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug06} aria-label="Butterfly"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug08} aria-label="Ant"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug12} aria-label="Striped beatle"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug19} aria-label="Beatle with long whiskers"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug23} aria-label="Swim beatle"></lion-icon>
-    <lion-icon class="icon" .svg=${bugs.bug24} aria-label="Big forrest ant"></lion-icon>
-  `}
-</Story>
-
 ### Dynamic import
 
 It is also possible to dynamically import the `.svg.js` file.
 This will load the icon asynchronously.
 
-```html
+<Story id="icon-system-extras--dynamic-icon" />
+
+```js
 <lion-icon .svg=${import('./icons/bugs/bug05.svg.js')} aria-label="Skinny dung beatle"></lion-icon>
 ```
 
