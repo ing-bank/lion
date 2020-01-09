@@ -1,6 +1,5 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { Required, MaxLength, loadDefaultFeedbackMessages } from '@lion/validate';
-import '@lion/textarea/lion-textarea.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input/lion-input.js';
 import '../lion-form.js';
@@ -27,11 +26,6 @@ It is designed to interact with (instances of) the [form controls](../../field/d
           </lion-fieldset>
           <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
         </lion-fieldset>
-        <lion-textarea
-          name="comments"
-          help-text="If none, leave empty"
-          label="Comments"
-        ></lion-textarea>
         <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
           Log to Action Logger
         </button>
@@ -54,11 +48,6 @@ It is designed to interact with (instances of) the [form controls](../../field/d
       </lion-fieldset>
       <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
     </lion-fieldset>
-    <lion-textarea
-      name="comments"
-      help-text="If none, leave empty"
-      label="Comments"
-    ></lion-textarea>
     <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
       Log to Action Logger
     </button>
