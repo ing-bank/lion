@@ -56,7 +56,7 @@ module.exports = {
         return `../../../../packages/${outPackageName}/index.js`;
       },
       getTagImportPath: ({ outTagName }) => {
-        return `../../../../packages/replace-lion-features/demo/${outTagName}.js`;
+        return `../../../../packages/convert-lion-modules/demo/${outTagName}.js`;
       },
     }),
   ],

@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "test": "npm run test:node",
-    "test:node": "mocha test/*.test.js",
+    "test:node": "mocha test/*.test.node.js",
     "test:watch": "onchange 'src/**/*.js' 'test/**/*.js' -- npm run test --silent",
-    "storybook": "start-storybook -p 9001 --stories \"packages/calendar/stories/*.stories.{js,mdx}\" -c demo/.storybook/es-dev-server.config.js --config-dir packages/replace-lion-features/demo/.storybook --root-dir ../../ --node-resolve --watch --open",
+    "storybook": "start-storybook -p 9001 --stories \"packages/calendar/stories/*.stories.{js,mdx}\" -c demo/.storybook/es-dev-server.config.js --config-dir packages/convert-lion-modules/demo/.storybook --root-dir ../../ --node-resolve --watch --open",
     "storybook:build": "build-storybook --stories \"../calendar/stories/*.stories.{js,mdx}\" --output-dir ./storybook-static"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.1.1",
+    "@open-wc/demoing-storybook": "^1.3.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "onchange": "^6.1.0"

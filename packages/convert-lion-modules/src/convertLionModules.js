@@ -1,10 +1,10 @@
-const { replaceComponent } = require('./replaceComponent.js');
+const { convertModule } = require('./convertModule.js');
 
 const defaultComponentNames = ['calendar', 'input', 'input-amount', 'input-email'];
 
 const defaultClassNames = ['ajax', 'localize'];
 
-function replaceLionFeatures(
+function convertLionModules(
   code,
   {
     outPrefix,
@@ -39,10 +39,19 @@ function replaceLionFeatures(
 
   let outCode = code;
   componentNames.forEach(componentName => {
-    outCode = replaceComponent(outCode, {
+    outCode = convertModule(outCode, {
       ...settings,
       inTagName: `${inPrefix}-${componentName}`,
       outTagName: `${outPrefix}-${componentName}`,
+    });
+  });
+
+  // TODO: This hasn't been tested yet.. non-components may require some other settings..
+  classNames.forEach(className => {
+    outCode = convertModule(outCode, {
+      ...settings,
+      inTagName: `${inPrefix}-${className}`,
+      outTagName: `${outPrefix}-${className}`,
     });
   });
 
@@ -50,5 +59,5 @@ function replaceLionFeatures(
 }
 
 module.exports = {
-  replaceLionFeatures,
+  convertLionModules,
 };

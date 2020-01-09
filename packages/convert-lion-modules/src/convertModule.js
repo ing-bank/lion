@@ -62,7 +62,7 @@ function replaceLionClassImports(code, { inPackageName, outPackageName, getIndex
   return code.replace(findRegex, `'${newPath}';`);
 }
 
-function replaceComponent(
+function convertModule(
   code,
   {
     inTagName,
@@ -123,5 +123,5 @@ function replaceComponent(
 }
 
 module.exports = {
-  replaceComponent,
+  convertModule,
 };

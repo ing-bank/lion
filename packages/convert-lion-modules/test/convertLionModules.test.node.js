@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 
-const { replaceLionFeatures } = require('../src/replaceLionFeatures.js');
+const { convertLionModules } = require('../src/convertLionModules.js');
 
-describe('replaceLionFeatures', () => {
+describe('convertLionModules', () => {
   const defaultConfig = { outPrefix: 'ing', currentPackage: 'calendar' };
 
   it('replaces all known tags and classes appropriately', () => {
@@ -22,7 +22,7 @@ describe('replaceLionFeatures', () => {
       import '../../../../packages/calendar/ing-calendar.js';
       import '../../../../packages/input/ing-input.js';
     `;
-    expect(replaceLionFeatures(input, defaultConfig)).to.equal(output);
+    expect(convertLionModules(input, defaultConfig)).to.equal(output);
   });
 
   it('allows to define own logic on where to import from', async () => {
@@ -52,6 +52,6 @@ describe('replaceLionFeatures', () => {
       },
       getTagImportPath: ({ outTagName }) => `../../../../${outTagName}.js`,
     };
-    expect(replaceLionFeatures(input, config)).to.equal(output);
+    expect(convertLionModules(input, config)).to.equal(output);
   });
 });
