@@ -57,6 +57,5 @@ export { DelegateMixin } from './src/DelegateMixin.js';
 export { DisabledMixin } from './src/DisabledMixin.js';
 export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
 export { LionSingleton } from './src/LionSingleton.js';
-export { renderLitAsNode } from './src/renderLitAsNode.js';
 export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';

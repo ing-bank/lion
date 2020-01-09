@@ -1,5 +1,6 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { render } from '@lion/core';
+import { renderLitAsNode } from '@lion/helpers';
 import '@lion/input/lion-input.js';
 import { Validator } from '@lion/validate';
 import './helper-wc/h-output.js';
@@ -94,11 +95,6 @@ In the following example we will demonstrate this with interaction states, the m
 
 <Story name="Feedback Condition">
   {() => {
-    const renderOffline = litHtmlTemplate => {
-      const offlineRenderContainer = document.createElement('div');
-      render(litHtmlTemplate, offlineRenderContainer);
-      return offlineRenderContainer.firstElementChild;
-    };
     // 1. Initialize variables...
     // properties on InteractionStateMixin we want to check conditions for
     const props = ['touched', 'dirty', 'prefilled', 'focused', 'filled', 'submitted'];
@@ -128,7 +124,7 @@ In the following example we will demonstrate this with interaction states, the m
     // 3. Create field overriding .showErrorCondition...
     // Here we will store a reference to the Field element that overrides the default condition
     // (function `showErrorCondition`) for triggering validation feedback of `.validators`
-    const fieldElement = renderOffline(html`
+    const fieldElement = renderLitAsNode(html`
       <lion-input
         name="interactionField"
         label="Only an odd amount of characters allowed"
