@@ -3,6 +3,7 @@ import { Required, MaxLength, loadDefaultFeedbackMessages } from '@lion/validate
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input/lion-input.js';
 import '../lion-form.js';
+import './helpers/demo-form-child.js';
 
 <Meta title="Form Components/Form" parameters={{ component: 'lion-form' }} />
 
@@ -17,14 +18,14 @@ It is designed to interact with (instances of) the [form controls](?path=/docs/f
       <form>
         <lion-fieldset label="Personal data" name="personalData">
           <lion-fieldset label="Full Name" name="fullName">
-            <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-            <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+            <demo-form-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-form-child>
+            <demo-form-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-form-child>
           </lion-fieldset>
           <lion-fieldset label="Location" name="location">
-            <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
-            <lion-input name="city" label="City" .modelValue=${'Amsterdam'}></lion-input>
+            <demo-form-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-form-child>
+            <demo-form-child name="city" label="City" .modelValue=${'Amsterdam'}></demo-form-child>
           </lion-fieldset>
-          <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
+          <demo-form-child name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></demo-form-child>
         </lion-fieldset>
         <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
           Log to Action Logger
@@ -39,14 +40,14 @@ It is designed to interact with (instances of) the [form controls](?path=/docs/f
   <form>
     <lion-fieldset label="Personal data" name="personalData">
       <lion-fieldset label="Full Name" name="fullName">
-        <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-        <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <demo-form-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-form-child>
+        <demo-form-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-form-child>
       </lion-fieldset>
       <lion-fieldset label="Location" name="location">
-        <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
-        <lion-input name="city" label="City" .modelValue=${'Amsterdam'}></lion-input>
+        <demo-form-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-form-child>
+        <demo-form-child name="city" label="City" .modelValue=${'Amsterdam'}></demo-form-child>
       </lion-fieldset>
-      <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
+      <demo-form-child name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></demo-form-child>
     </lion-fieldset>
     <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
       Log to Action Logger
@@ -87,18 +88,18 @@ Same thing goes for resetting the inputs to the original state.
       <lion-form id="form2" @submit="${submit}"
         ><form>
           <lion-fieldset label="Name" name="name">
-            <lion-input
+            <demo-form-child
               name="firstName"
               label="First Name"
               .validators=${[new Required(), new MaxLength(15)]}
             >
-            </lion-input>
-            <lion-input
+            </demo-form-child>
+            <demo-form-child
               name="lastName"
               label="Last Name"
               .validators=${[new Required(), new MaxLength(15)]}
             >
-            </lion-input>
+            </demo-form-child>
           </lion-fieldset>
           <button type="submit">Submit & Reset (if successfully submitted)</button>
           <button type="button" @click=${() => document.querySelector('#form2').resetGroup()}>
@@ -130,18 +131,18 @@ const submit = () => {
 <lion-form id="form2" @submit="${submit}">
   <form>
     <lion-fieldset label="Name" name="name">
-      <lion-input
+      <demo-form-child
         name="firstName"
         label="First Name"
         .validators=${[new Required(), new MaxLength(15)]}
       >
-      </lion-input>
-      <lion-input
+      </demo-form-child>
+      <demo-form-child
         name="lastName"
         label="Last Name"
         .validators=${[new Required(), new MaxLength(15)]}
       >
-      </lion-input>
+      </demo-form-child>
     </lion-fieldset>
     <button type="submit">Submit & Reset (if successfully submitted)</button>
     <button type="button" @click=${() => console.log(document.querySelector('#form2'))}>

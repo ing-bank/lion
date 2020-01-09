@@ -1,19 +1,40 @@
-import { expect, fixture, html, oneEvent, aTimeout } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  html,
+  oneEvent,
+  aTimeout,
+  unsafeStatic,
+  defineCE,
+} from '@open-wc/testing';
 import { spy } from 'sinon';
-
-import '@lion/input/lion-input.js';
+import { LionField } from '@lion/field';
+import '@lion/field/lion-field.js';
 import '@lion/fieldset/lion-fieldset.js';
-
 import '../lion-form.js';
+
+const childTagString = defineCE(
+  class extends LionField {
+    get slots() {
+      return {
+        input: () => document.createElement('input'),
+      };
+    }
+  },
+);
+const childTag = unsafeStatic(childTagString);
+const formTagString = 'lion-form';
+const formTag = unsafeStatic(formTagString);
 
 describe('<lion-form>', () => {
   it('has a custom reset that gets triggered by native reset', async () => {
     const withDefaults = await fixture(html`
-      <lion-form
-        ><form>
-          <lion-input name="firstName" .modelValue="${'Foo'}"></lion-input>
-          <input type="reset" value="reset-button" /></form
-      ></lion-form>
+      <${formTag}>
+        <form>
+          <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
+          <input type="reset" value="reset-button" />
+        </form>
+      </${formTag}>
     `);
     const resetButton = withDefaults.querySelector('input[type=reset]');
 
@@ -41,11 +62,11 @@ describe('<lion-form>', () => {
 
   it('dispatches reset events', async () => {
     const el = await fixture(html`
-      <lion-form>
+      <${formTag}>
         <form>
-          <lion-input name="firstName" .modelValue="${'Foo'}"></lion-input>
+          <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
 
     setTimeout(() => el.reset());
@@ -60,11 +81,11 @@ describe('<lion-form>', () => {
   it('works with the native submit event (triggered via a button)', async () => {
     const submitSpy = spy();
     const el = await fixture(html`
-      <lion-form @submit=${submitSpy}>
+      <${formTag} @submit=${submitSpy}>
         <form>
           <button type="submit">submit</button>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
 
     const button = el.querySelector('button');
@@ -74,11 +95,11 @@ describe('<lion-form>', () => {
 
   it('dispatches submit events', async () => {
     const el = await fixture(html`
-      <lion-form>
+      <${formTag}>
         <form>
           <button type="submit">submit</button>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
     const button = el.querySelector('button');
     setTimeout(() => button.click());
@@ -92,11 +113,11 @@ describe('<lion-form>', () => {
 
   it('handles internal submit handler before dispatch', async () => {
     const el = await fixture(html`
-      <lion-form>
+      <${formTag}>
         <form>
           <button type="submit">submit</button>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
     const button = el.querySelector('button');
     const internalHandlerSpy = spy(el, 'submitGroup');
@@ -108,11 +129,11 @@ describe('<lion-form>', () => {
 
   it('handles internal submit handler before dispatch', async () => {
     const el = await fixture(html`
-      <lion-form>
+      <${formTag}>
         <form>
           <button type="submit">submit</button>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
     const button = el.querySelector('button');
     const internalHandlerSpy = spy(el, 'submitGroup');
@@ -124,11 +145,11 @@ describe('<lion-form>', () => {
 
   it('handles internal reset handler before dispatch', async () => {
     const el = await fixture(html`
-      <lion-form>
+      <${formTag}>
         <form>
           <button type="reset">submit</button>
         </form>
-      </lion-form>
+      </${formTag}>
     `);
     const button = el.querySelector('button');
     const internalHandlerSpy = spy(el, 'resetGroup');

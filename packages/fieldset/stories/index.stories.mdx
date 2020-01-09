@@ -3,6 +3,7 @@ import '@lion/input/lion-input.js';
 import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages, MinLength, Validator, Required } from '@lion/validate';
 import '../lion-fieldset.js';
+import './helpers/demo-fieldset-child.js';
 
 <Meta title="Form Components/Fieldset" parameters={{ component: 'lion-fieldset' }} />
 
@@ -24,16 +25,16 @@ We have three specific fieldset implementations:
       }
     </style>
     <lion-fieldset name="nameGroup" label="Name">
-      <lion-input name="FirstName" label="First Name"></lion-input>
-      <lion-input name="LastName" label="Last Name"></lion-input>
+      <demo-fieldset-child name="FirstName" label="First Name"></demo-fieldset-child>
+      <demo-fieldset-child name="LastName" label="Last Name"></demo-fieldset-child>
     </lion-fieldset>
   `}
 </Story>
 
 ```html
 <lion-fieldset name="nameGroup" label="Name">
-  <lion-input name="FirstName" label="First Name"></lion-input>
-  <lion-input name="LastName" label="Last Name"></lion-input>
+  <demo-fieldset-child name="FirstName" label="First Name"></demo-fieldset-child>
+  <demo-fieldset-child name="LastName" label="Last Name"></demo-fieldset-child>
 </lion-fieldset>
 ```
 
@@ -60,8 +61,8 @@ and the value is the `modelValue` of the field.
 <Story name="Data">
   {html`
     <lion-fieldset name="nameGroup" label="Name">
-      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+      <demo-fieldset-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+      <demo-fieldset-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
       <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
         Log to Action Logger
       </button>
@@ -71,8 +72,8 @@ and the value is the `modelValue` of the field.
 
 ```html
 <lion-fieldset name="nameGroup" label="Name">
-  <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-  <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+  <demo-fieldset-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+  <demo-fieldset-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
   <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
     Log to Action Logger
   </button>
@@ -92,16 +93,16 @@ When enabling a fieldset, fields that have disabled explicitly set will stay dis
     }
     return html`
       <lion-fieldset name="nameGroup" label="Name" id="fieldset" disabled>
-        <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-        <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <demo-fieldset-child name="FirstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+        <demo-fieldset-child name="LastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
         <lion-fieldset name="nameGroup2" label="Name">
-          <lion-input
+          <demo-fieldset-child
             name="FirstName2"
             label="First Name"
             .modelValue=${'Foo'}
             disabled
-          ></lion-input>
-          <lion-input name="LastName2" label="Last Name" .modelValue=${'Bar'}></lion-input>
+          ></demo-fieldset-child>
+          <demo-fieldset-child name="LastName2" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
         </lion-fieldset>
       </lion-fieldset>
       <button @click=${toggleDisabled}>
@@ -120,16 +121,16 @@ function toggleDisabled() {
 
 ```html
 <lion-fieldset name="nameGroup" label="Name" id="fieldset" disabled>
-  <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-  <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+  <demo-fieldset-child name="FirstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+  <demo-fieldset-child name="LastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
   <lion-fieldset name="nameGroup2" label="Name">
-    <lion-input
+    <demo-fieldset-child
       name="FirstName2"
       label="First Name"
       .modelValue=${'Foo'}
       disabled
-    ></lion-input>
-    <lion-input name="LastName2" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    ></demo-fieldset-child>
+    <demo-fieldset-child name="LastName2" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
   </lion-fieldset>
 </lion-fieldset>
 <button @click=${toggleDisabled}>
@@ -146,13 +147,13 @@ Fieldsets can also be nested. The level of nesting will correspond one to one wi
     <lion-fieldset>
       <div slot="label">Personal data</div>
       <lion-fieldset name="nameGroup" label="Name">
-        <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-        <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <demo-fieldset-child name="FirstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+        <demo-fieldset-child name="LastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
       </lion-fieldset>
       <lion-fieldset name="location" label="Location">
-        <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
+        <demo-fieldset-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-fieldset-child>
       </lion-fieldset>
-      <lion-input name="age" label="Age" .modelValue=${21}></lion-input>
+      <demo-fieldset-child name="age" label="Age" .modelValue=${21}></demo-fieldset-child>
       <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
         Log everything to Action Logger
       </button>
@@ -170,13 +171,13 @@ Fieldsets can also be nested. The level of nesting will correspond one to one wi
 <lion-fieldset>
   <div slot="label">Personal data</div>
   <lion-fieldset name="nameGroup" label="Name">
-    <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-    <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    <demo-fieldset-child name="FirstName" label="First Name" .modelValue=${'Foo'}></demo-fieldset-child>
+    <demo-fieldset-child name="LastName" label="Last Name" .modelValue=${'Bar'}></demo-fieldset-child>
   </lion-fieldset>
   <lion-fieldset name="location" label="Location">
-    <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
+    <demo-fieldset-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-fieldset-child>
   </lion-fieldset>
-  <lion-input name="age" label="Age" .modelValue=${21}></lion-input>
+  <demo-fieldset-child name="age" label="Age" .modelValue=${21}></demo-fieldset-child>
   <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
     Log everything to Action Logger
   </button>
@@ -214,7 +215,7 @@ Try it by typing something in the input, then removing it.
     };
     return html`
       <lion-fieldset id="someId" .validators="${[new DemoValidator()]}">
-        <lion-input name="input1" label="Label"></lion-input>
+        <demo-fieldset-child name="input1" label="Label"></demo-fieldset-child>
       </lion-fieldset>
     `;
   }}
@@ -242,7 +243,7 @@ const DemoValidator = class extends Validator {
 
 ```html
 <lion-fieldset id="someId" .validators="${[new DemoValidator()]}">
-  <lion-input name="input1" label="Label"></lion-input>
+  <demo-fieldset-child name="input1" label="Label"></demo-fieldset-child>
 </lion-fieldset>
 ```
 
@@ -266,18 +267,18 @@ You can have your fieldset validator take into consideration multiple fields.
     };
     return html`
       <lion-fieldset .validators="${[new IsCatsAndDogs()]}">
-        <lion-input
+        <demo-fieldset-child
           label="An all time YouTube favorite"
           name="input1"
           help-text="cats"
         >
-        </lion-input>
-        <lion-input
+        </demo-fieldset-child>
+        <demo-fieldset-child
           label="Another all time YouTube favorite"
           name="input2"
           help-text="dogs"
         >
-        </lion-input>
+        </demo-fieldset-child>
       </lion-fieldset>
     `;
   }}
@@ -302,18 +303,18 @@ const IsCatsAndDogs = class extends Validator {
 
 ```html
 <lion-fieldset .validators="${[new IsCatsAndDogs()]}">
-  <lion-input
+  <demo-fieldset-child
     label="An all time YouTube favorite"
     name="input1"
     help-text="cats"
   >
-  </lion-input>
-  <lion-input
+  </demo-fieldset-child>
+  <demo-fieldset-child
     label="Another all time YouTube favorite"
     name="input2"
     help-text="dogs"
   >
-  </lion-input>
+  </demo-fieldset-child>
 </lion-fieldset>
 ```
 
@@ -351,20 +352,20 @@ You can have your fieldset validator take into accounts multiple nested fieldset
       <lion-fieldset name="outer" .validators=${[new IsCatsDogs()]}>
         <lion-fieldset name="inner1">
           <label slot="label">Fieldset no. 1</label>
-          <lion-input
+          <demo-fieldset-child
             label="Write 'cats' here"
             name="input1"
           >
-          </lion-input>
+          </demo-fieldset-child>
         </lion-fieldset>
         <hr />
         <lion-fieldset name="inner2">
           <label slot="label">Fieldset no. 2</label>
-          <lion-input
+          <demo-fieldset-child
             label="Write 'dogs' here"
             name="input1"
           >
-          </lion-input>
+          </demo-fieldset-child>
         </lion-fieldset>
       </lion-fieldset>
     `;
@@ -397,20 +398,20 @@ const IsCatsDogs = class extends Validator {
 <lion-fieldset name="outer" .validators="${[new IsCatsDogs()]}">
   <lion-fieldset name="inner1">
     <label slot="label">Fieldset no. 1</label>
-    <lion-input
+    <demo-fieldset-child
       label="Write 'cats' here"
       name="input1"
     >
-    </lion-input>
+    </demo-fieldset-child>
   </lion-fieldset>
   <hr />
   <lion-fieldset name="inner2">
     <label slot="label">Fieldset no. 2</label>
-    <lion-input
+    <demo-fieldset-child
       label="Write 'dogs' here"
       name="input1"
     >
-    </lion-input>
+    </demo-fieldset-child>
   </lion-fieldset>
 </lion-fieldset>
 ```
