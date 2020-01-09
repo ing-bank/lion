@@ -3,13 +3,13 @@ import { loadDefaultFeedbackMessages } from '@lion/validate';
 
 import '../lion-input-amount.js';
 
-<Meta title="Forms/Input Amount" parameters={{ component: 'lion-input-amount' }} />
+<Meta title="Form components/Input Amount" parameters={{ component: 'lion-input-amount' }} />
 
 # Input Amount
 
 `lion-input-amount` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an amount.
 
-For formatting, we use [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) with some overrides.
+For formatting, we use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat" target="_blank">Intl NumberFormat</a> with some overrides.
 
 For parsing user input, we provide our own parser that takes into account a number of heuristics, locale and ignores invalid characters.
 Valid characters are digits and separators. Formatting happens on-blur.
@@ -31,13 +31,13 @@ If there are no valid characters in the input whatsoever, it will provide an err
 
 ## Features
 
-- Based on [lion-input](../../input)
-- Makes use of [formatNumber](../localize/docs/number.md) for formatting and parsing.
+- Based on [lion-input](?path=/docs/form-system-overview)
+- Makes use of [formatNumber](?path=/docs/localize-system-numbers) for formatting and parsing.
 - Option to show currency as a suffix
 - Option to override locale to change the formatting and parsing
 - Option to provide additional format options overrides
 - Default label in different languages
-- Can make use of number specific [validators](../../validate) with corresponding error messages in different languages
+- Can make use of number specific [validators](?path=/docs/form-system-validate-system) with corresponding error messages in different languages
   - IsNumber (default)
   - MinNumber
   - MaxNumber
@@ -143,7 +143,7 @@ loadDefaultFeedbackMessages();
 
 ### Show no decimals
 
-You can override certain formatting options similar to how you would do this when using [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat).
+You can override certain formatting options similar to how you would do this when using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat" target="_blank">Intl NumberFormat</a>.
 This example shows formatting to whole numbers.
 
 <Story name="No decimals">

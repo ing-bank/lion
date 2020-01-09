@@ -12,7 +12,8 @@ import { AjaxClass } from '../src/AjaxClass.js';
 # Ajax
 
 `lion-ajax` is the global manager for handling all ajax requests.
-It is a promise based system for fetching data, based on [axios](https://github.com/axios/axios)
+It is a promise based system for fetching data, based on <a href="https://github.com/axios/axios" target="_blank">
+axios</a>
 
 <Story name="Default">
   {html`
@@ -155,10 +156,11 @@ myAjax
 
 ## Considerations
 
-Due to a [bug in axios](https://github.com/axios/axios/issues/385) options may leak in to other instances.
+Due to a <a href="https://github.com/axios/axios/issues/385" target="_blank"> bug in axios</a> options may leak in to other instances.
 So please avoid setting global options in axios. Interceptors have no issues.
 
 ## Future plans
 
-- Eventually we want to remove axios and replace it with [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+- Eventually we want to remove axios and replace it with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">
+Fetch</a>
 - This wrapper exist to prevent this switch from causing breaking changes for our users

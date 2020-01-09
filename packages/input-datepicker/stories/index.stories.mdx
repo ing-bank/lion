@@ -4,13 +4,13 @@ import { formatDate } from '@lion/localize';
 
 import '../lion-input-datepicker.js';
 
-<Meta title="Forms/Input Datepicker" parameters={{ component: 'lion-input-datepicker' }} />
+<Meta title="Form components/Input Datepicker" parameters={{ component: 'lion-input-datepicker' }} />
 
 # Input Datepicker
 
 `lion-input-datepicker` component is based on the date text input field. Its purpose is to provide a way for users to fill in a date with a datepicker.
 For an input field with a big range, such as `birthday-input`, a datepicker is not the best choice due to the high variance between possible inputs.
-We encourage using the standard [lion-input-date](../../input-date) for this.
+We encourage using the standard [lion-input-date](?path=/docs/form-component-input-date) for this.
 
 <Story name="Default">
   {() => {
@@ -28,11 +28,11 @@ We encourage using the standard [lion-input-date](../../input-date) for this.
 ## Features
 
 - Input field with a datepicker to help to choose a date
-- Based on [lion-input-date](../../input-date)
-- Makes use of [lion-calendar](../../calendar) inside the datepicker
-- Makes use of [formatDate](../../localize/docs/date.md) for formatting and parsing.
+- Based on [lion-input-date](?path=/docs/form-component-input-date)
+- Makes use of [lion-calendar](?path=/docs/calendar-standalone) inside the datepicker
+- Makes use of [formatDate](?path=/docs/localize-system-dates) for formatting and parsing.
 - Option to overwrite locale to change the formatting and parsing
-- Can make use of date specific [validators](../../validate/docs/DefaultVaValidationSystemlidators.md) with corresponding error messages in different languages
+- Can make use of date specific [validators](?path=/docs/form-system-validate-system) with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate

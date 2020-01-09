@@ -4,7 +4,7 @@ import '@lion/input/lion-input.js';
 import { Unparseable } from '@lion/validate';
 import './helper-wc/h-output.js';
 
-<Meta title="Form Fundaments/Formatting and Parsing" />
+<Meta title="Form System/Formatting and Parsing" />
 
 # Formatting and Parsing
 
@@ -23,7 +23,7 @@ Our fields can automatically format/parse/serialize user input or an input set i
 
 Below are some concrete examples of implementations of formatters and parsers mimicking a (basic) amount input.
 
-> For an actual amount input, check out [lion-input-amount](?path=/docs/forms-lion-input-amount).
+> For an actual amount input, check out [lion-input-amount](?path=/docs/form-components-lion-input-amount).
 > This comes with its own formatter, parser, serializer.
 
 ### Parsers & modelValue
@@ -213,18 +213,33 @@ const myDeserializer = (myValue, options) => {
 ></lion-input>
 ```
 
-### Flow Diagram
+## Flow Diagrams
 
 Below we show three flow diagrams to show the flow of formatting, serializing and parsing user input, with the example of a date input:
 
-- Standard flow, where a user changes the input with their keyboard
-- Unparseable flow, where a user sets the input to something that is not parseable by the parser
-- Imperative / programmatic flow, where the developer sets the modelValue of the input programmatically
+### Standard flow
+Where a user changes the input with their keyboard
 
-<Story name="Flow Diagram">
+<Story name="Standard flow">
   {html`
     <img src="./packages/form-system/stories/diagram/FormatMixinDiagram-1.svg" />
+  `}
+</Story>
+
+### Unparseable flow
+Where a user sets the input to something that is not parseable by the parser
+
+<Story name="Unparseable flow">
+  {html`
     <img src="./packages/form-system/stories/diagram/FormatMixinDiagram-2.svg" />
+  `}
+</Story>
+
+### Imperative / programmatic flow
+Where the developer sets the modelValue of the input programmatically
+
+<Story name="Imperative / programmatic flow">
+  {html`
     <img src="./packages/form-system/stories/diagram/FormatMixinDiagram-3.svg" />
   `}
 </Story>

@@ -453,7 +453,7 @@ Options:
 
 ## popperConfig for local overlays (placementMode: 'local')
 
-For locally DOM positioned overlays that position themselves relative to their invoker, we use [Popper.js](https://popper.js.org/) for positioning.
+For locally DOM positioned overlays that position themselves relative to their invoker, we use <a href="https://popper.js.org/" target="_blank">Popper.js</a> for positioning.
 
 > In Popper, `contentNode` is often referred to as `popperElement`, and `invokerNode` is often referred to as the `referenceElement`.
 
@@ -464,7 +464,7 @@ Features:
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
 > This also means that if you use the arrow feature, you are in charge of styling it properly, use the x-placement attribute for this.
-> An example implementation can be found in [lion-tooltip](../../tooltip), where an arrow is set by default.
+> An example implementation can be found in [lion-tooltip](?path=/docs/overlay-components-tooltip), where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
 Here's a succinct overview of some often used popper properties:
@@ -565,4 +565,4 @@ Here's a succinct overview of some often used popper properties:
 </lion-demo-overlay>
 ```
 
-> Note: popperConfig reflects [Popper.js API](https://popper.js.org/popper-documentation.html)
+> Note: popperConfig reflects <a href="https://popper.js.org/popper-documentation.html" target="_blank">Popper.js API</a>
