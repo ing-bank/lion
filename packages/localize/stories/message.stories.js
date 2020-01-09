@@ -2,40 +2,11 @@ import { LitElement, render } from '@lion/core';
 import { html } from '@open-wc/demoing-storybook';
 import { localize, LocalizeMixin } from '../index.js';
 
+import '@lion/helpers/sb-locale-switcher.js';
+
 export default {
   title: 'Localize System/Extras',
 };
-
-class StorybookLocaleSwitcher extends LitElement {
-  static get properties() {
-    return {
-      showLocales: { type: Array, attribute: 'show-locales' },
-    };
-  }
-
-  constructor() {
-    super();
-    this.showLocales = ['en-GB', 'en-US', 'en-AU', 'nl-NL', 'nl-BE'];
-  }
-
-  callback(locale) {
-    document.documentElement.lang = locale;
-  }
-
-  render() {
-    return html`
-      ${this.showLocales.map(
-        showLocale => html`
-          <button @click=${() => this.callback(showLocale)}>
-            ${showLocale}
-          </button>
-        `,
-      )}
-    `;
-  }
-}
-
-customElements.define('sb-locale-switcher', StorybookLocaleSwitcher);
 
 export const asFunction = () => {
   const wrapper = document.createElement('div');
