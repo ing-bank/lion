@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { html } from '../index.js';
+import { html } from '@lion/core';
 import { renderLitAsNode } from '../src/renderLitAsNode.js';
 
 describe('renderLitAsNode', () => {
