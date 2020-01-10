@@ -2,7 +2,7 @@ import { html } from '@open-wc/demoing-storybook';
 import '../lion-icon.js';
 
 export default {
-  title: 'Icon System/Extras',
+  title: 'Icons/Extras',
 };
 
 export const dynamicIcon = () => html`

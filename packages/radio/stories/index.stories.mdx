@@ -2,11 +2,11 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 
 import '../lion-radio.js';
 
-<Meta title="Form Components/Radio" parameters={{ component: 'lion-radio' }} />
+<Meta title="Forms|Radio" parameters={{ component: 'lion-radio' }} />
 
 # Radio
 
-`lion-radio` component is a sub-element to be used in [lion-radio-group](?path=/docs/form-components-radio-group--default-story) elements. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
+`lion-radio` component is a sub-element to be used in [lion-radio-group](?path=/docs/forms-radio-group--default-story) elements. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 
 <Story name="Default">{html`
   <lion-radio name="dinos[]" label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
@@ -20,7 +20,7 @@ import '../lion-radio.js';
 <lion-radio name="dinos[]" label="diplodocus" .choiceValue=${'diplodocus'} checked></lion-radio>
 ```
 
-- Use this component inside a [lion-radio-group](?path=/docs/form-components-radio-group--default-story)
+- Use this component inside a [lion-radio-group](?path=/docs/forms-radio-group--default-story)
 - Make sure that it has a name attribute with appended `[]` for multiple choices.
 
 ## Features
