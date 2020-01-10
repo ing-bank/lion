@@ -35,7 +35,6 @@
     "@lion/core": "0.3.0"
   },
   "devDependencies": {
-    "@lion/icon": "0.2.10",
     "@open-wc/demoing-storybook": "^1.5.3",
     "@open-wc/testing": "^2.3.4",
     "@polymer/iron-test-helpers": "^3.0.1",
