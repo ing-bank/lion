@@ -37,7 +37,7 @@
     "@lion/field": "0.7.0"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.3.0",
+    "@open-wc/demoing-storybook": "^1.5.3",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
   }
