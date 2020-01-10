@@ -36,7 +36,7 @@
   "scripts": {
     "start": "npm run storybook",
     "storybook": "start-storybook -p 9001",
-    "storybook:build": "build-storybook",
+    "storybook:build": "NODE_OPTIONS='--max-old-space-size=8192' build-storybook",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:compatibility": "karma start --compatibility all --coverage",
