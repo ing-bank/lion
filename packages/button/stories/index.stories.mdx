@@ -1,6 +1,4 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
-import { bug12 } from '@lion/icon/stories/icons/bugs-collection.js';
-import '@lion/icon/lion-icon.js';
 
 import '../lion-button.js';
 
@@ -60,26 +58,6 @@ import '@lion/button/lion-button.js';
 <lion-button @click="${e => console.log('clicked/spaced/entered', e)}">
   Click | Space | Enter me and see log
 </lion-button>
-```
-
-### Icon button
-
-<Story name="Icon">
-  {html`<lion-button><lion-icon .svg="${bug12}"></lion-icon>Bug</lion-button>`}
-</Story>
-
-```html
-<lion-button><lion-icon .svg="${bug12}"></lion-icon>Bug</lion-button>
-```
-
-### Icon only button
-
-<Story name="Icon-only">
-  {html`<lion-button aria-label="Bug"><lion-icon .svg="${bug12}"></lion-icon></lion-button>`}
-</Story>
-
-```html
-<lion-button aria-label="Bug"><lion-icon .svg="${bug12}"></lion-icon></lion-button>
 ```
 
 ### Disabled button
