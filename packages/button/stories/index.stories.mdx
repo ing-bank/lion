@@ -1,7 +1,7 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 
 import '../lion-button.js';
-import icon from './icon.svg.js';
+import iconSvg from './icon.svg.js';
 
 <Meta title="Button System/Button" parameters={{ component: 'lion-button' }} />
 
@@ -61,17 +61,27 @@ import '@lion/button/lion-button.js';
 </lion-button>
 ```
 
+### Icon button
+
+<Story name="Icon">
+  {html`<lion-button>${iconSvg(html)} Bug</lion-button>`}
+</Story>
+
+```html
+<lion-button>${iconSvg(html)} Bug</lion-button>
+```
+
 ### Icon only button
 
 <Story name="Icon-only">{html`
   <lion-button aria-label="Bug">
-    ${icon(html)}
+    ${iconSvg(html)}
   </lion-button>
 `}</Story>
 
 ```html
 <lion-button aria-label="Bug">
-  ${icon(html)}
+  ${iconSvg(html)}
 </lion-button>
 ```
 
