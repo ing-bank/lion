@@ -24,6 +24,16 @@ async function run() {
     docs: {
       iframeHeight: '200px',
     },
+    options: {
+      storySort: (options => (a, b) => {
+        if (a[1].kind.includes('Intro|')) {
+          return -1;
+        } else if (a[1].kind.includes('|System')) {
+          return -1;
+        }
+        return 1;
+      })(),
+    },
   });
 }
 
