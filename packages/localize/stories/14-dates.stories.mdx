@@ -3,7 +3,7 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { formatNumber, formatNumberToParts, formatDate } from '../index.js';
 import allLocales from './all-locales.js';
 
-<Meta title="Localize System/Dates" />
+<Meta title="Localize/Dates" />
 
 export const formatDateDemoStyle = css`
   .demo-table {
@@ -134,7 +134,7 @@ The input value is `new Date('1987/05/12')`.
 Formatting happens via
 
 ```js
-formatDate(new Date('1987/05/12'), { locale })
+formatDate(new Date('1987/05/12'), { locale });
 ```
 
 <Story name="List common locales">
@@ -171,7 +171,7 @@ The input value is `new Date('1987/05/12')`.
 Formatting happens via
 
 ```js
-formatDate(new Date('1987/05/12'), { locale })
+formatDate(new Date('1987/05/12'), { locale });
 ```
 
 <Story name="List all locales">

@@ -1,9 +1,8 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { render } from '@lion/core';
-import { localize, formatNumber, formatDate } from '../index.js'
+import { localize, formatNumber, formatDate } from '../index.js';
 
-<Meta title="Localize System/Localize" />
-
+<Meta title="Localize/Localize" />
 <Story name="Default"></Story>
 
 # Localize
@@ -45,13 +44,6 @@ For use in a web component we have `LocalizeMixin` that lets you define namespac
 
 ```js
 class MessageExample extends LocalizeMixin(LitElement) {
-  static get localizeNamespaces() {
-    return [
-      { 'lit-html-example': locale => import(`./translations/${locale}.js`) },
-      ...super.localizeNamespaces,
-    ];
-  }
-
   render() {
     return html`
       <div aria-live="polite">
@@ -71,11 +63,14 @@ To format numbers you can use `formatNumber`. For more details see [Numbers](?pa
     const wrapper = document.createElement('div');
     let value = 1234.56;
     function update() {
-      render(html`
-        <input type="text" value=${value} />
-        <p>${formatNumber(value)}</p>
-        <sb-locale-switcher></sb-locale-switcher>
-      `, wrapper);
+      render(
+        html`
+          <input type="text" value=${value} />
+          <p>${formatNumber(value)}</p>
+          <sb-locale-switcher></sb-locale-switcher>
+        `,
+        wrapper,
+      );
     }
     localize.addEventListener('localeChanged', () => {
       update();
@@ -99,11 +94,14 @@ To format dates you can use `formatDate`. For more details see [Dates](?path=/do
     const wrapper = document.createElement('div');
     let value = '1987/05/12';
     function update() {
-      render(html`
-        <input type="text" value=${value} />
-        <p>${formatDate(new Date(value))}</p>
-        <sb-locale-switcher></sb-locale-switcher>
-      `, wrapper);
+      render(
+        html`
+          <input type="text" value=${value} />
+          <p>${formatDate(new Date(value))}</p>
+          <sb-locale-switcher></sb-locale-switcher>
+        `,
+        wrapper,
+      );
     }
     localize.addEventListener('localeChanged', () => {
       update();

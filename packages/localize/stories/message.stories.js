@@ -5,7 +5,7 @@ import { localize, LocalizeMixin } from '../index.js';
 import '@lion/helpers/sb-locale-switcher.js';
 
 export default {
-  title: 'Localize System/Extras',
+  title: 'Localize/Extras',
 };
 
 export const asFunction = () => {
@@ -21,7 +21,6 @@ export const asFunction = () => {
       wrapper,
     );
   }
-
   localize
     .loadNamespace({
       'lit-html-example': locale => import(`./translations/${locale}.js`),
@@ -29,11 +28,9 @@ export const asFunction = () => {
     .then(() => {
       update();
     });
-
   localize.addEventListener('localeChanged', () => {
     localize.loadingComplete.then(() => update());
   });
-
   return wrapper;
 };
 
@@ -57,7 +54,6 @@ export const webComponent = () => {
   if (!customElements.get('message-example')) {
     customElements.define('message-example', MessageExample);
   }
-
   return html`
     <message-example></message-example>
     <sb-locale-switcher></sb-locale-switcher>

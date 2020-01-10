@@ -2,11 +2,11 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 
 import '../lion-checkbox.js';
 
-<Meta title="Form Components/Checkbox" parameters={{ component: 'lion-checkbox' }} />
+<Meta title="Forms|Checkbox" parameters={{ component: 'lion-checkbox' }} />
 
 # Checkbox
 
-`lion-checkbox` component is a sub-element to be used in [lion-checkbox-group](?path=/docs/form-components-checkbox-group--default-story) elements. Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
+`lion-checkbox` component is a sub-element to be used in [lion-checkbox-group](?path=/docs/forms-checkbox-group--default-story) elements. Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
 <Story name="Default">{html`
   <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
@@ -20,7 +20,7 @@ import '../lion-checkbox.js';
 <lion-checkbox name="scientists[]" label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
 ```
 
-- Use this component inside a [lion-checkbox-group](?path=/docs/form-components-checkbox-group--default-story)
+- Use this component inside a [lion-checkbox-group](?path=/docs/forms-checkbox-group--default-story)
 - Make sure that it has a name attribute with appended `[]` for multiple choices.
 
 ## Features

@@ -3,7 +3,7 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { formatNumber, formatNumberToParts } from '../index.js';
 import allLocales from './all-locales.js';
 
-<Meta title="Localize System/Numbers" />
+<Meta title="Localize/Numbers" />
 
 export const formatNumberDemoStyle = css`
   .demo-table {
@@ -68,8 +68,7 @@ The input value is `1234.56`.
           </td>
           <td>
             <code
-              >formatNumber({ style: 'currency', currencyDisplay: 'symbol', currency: 'EUR'
-              })</code
+              >formatNumber({ style: 'currency', currencyDisplay: 'symbol', currency: 'EUR' })</code
             >
           </td>
         </tr>
@@ -82,8 +81,10 @@ The input value is `1234.56`.
               currency: 'EUR',
             })}
           </td>
-            <td>
-            <code>formatNumber({ style: 'currency', currencyDisplay: 'code', currency: 'EUR' })</code>
+          <td>
+            <code
+              >formatNumber({ style: 'currency', currencyDisplay: 'code', currency: 'EUR' })</code
+            >
           </td>
         </tr>
         <tr>
@@ -146,8 +147,8 @@ The input value is `1234.56`.
 Formatting happens via
 
 ```js
-formatNumber(1234.56, { locale, style: 'currency', currency: 'EUR' })
-formatNumber(1234.56, { locale, style: 'currency', currency: 'USD' })
+formatNumber(1234.56, { locale, style: 'currency', currency: 'EUR' });
+formatNumber(1234.56, { locale, style: 'currency', currency: 'USD' });
 ```
 
 <Story name="List common locales">
@@ -186,8 +187,8 @@ The input value is `1234.56`.
 Formatting happens via
 
 ```js
-formatNumber(1234.56, { locale, style: 'currency', currency: 'EUR' })
-formatNumber(1234.56, { locale, style: 'currency', currency: 'USD' })
+formatNumber(1234.56, { locale, style: 'currency', currency: 'EUR' });
+formatNumber(1234.56, { locale, style: 'currency', currency: 'USD' });
 ```
 
 <Story name="List all locales">

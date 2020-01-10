@@ -3,7 +3,7 @@ import { Validator } from '@lion/validate';
 
 import '../lion-switch.js';
 
-<Meta title="Button System/Switch" />
+<Meta title="Buttons|Switch" />
 
 # Switch
 
@@ -61,28 +61,30 @@ You can disable switches.
 
 Simple example that illustrates where validation feedback will be displayed.
 
-<Story name="Validation">{() => {
-  const IsTrue = class extends Validator {
-    constructor(...args) {
-      super(...args);
-      this.name = 'IsTrue';
-    }
-    execute(value) {
-      return !value.checked;
-    }
-    static async getMessage() {
-      return "You won't get the latest news!";
-    }
-  }
-  return html`
-    <lion-switch
-      id="newsletterCheck"
-      name="newsletterCheck"
-      label="Subscribe to newsletter"
-      .validators="${[new IsTrue()]}"
-    ></lion-switch>
-  `;
-}}</Story>
+<Story name="Validation">
+  {() => {
+    const IsTrue = class extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'IsTrue';
+      }
+      execute(value) {
+        return !value.checked;
+      }
+      static async getMessage() {
+        return "You won't get the latest news!";
+      }
+    };
+    return html`
+      <lion-switch
+        id="newsletterCheck"
+        name="newsletterCheck"
+        label="Subscribe to newsletter"
+        .validators="${[new IsTrue()]}"
+      ></lion-switch>
+    `;
+  }}
+</Story>
 
 ```js
 import { Validator } from '@lion/validate';
@@ -98,7 +100,7 @@ const IsTrue = class extends Validator {
   static async getMessage() {
     return "You won't get the latest news!";
   }
-}
+};
 ```
 
 ```html
