@@ -5,7 +5,7 @@ import { localize, LocalizeMixin } from '../index.js';
 import '@lion/helpers/sb-locale-switcher.js';
 
 export default {
-  title: 'Localize/Extras',
+  title: 'Localize/System/_internals',
 };
 
 export const asFunction = () => {

@@ -2,7 +2,8 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { render } from '@lion/core';
 import { localize, formatNumber, formatDate } from '../index.js';
 
-<Meta title="Localize/Localize" />
+<Meta title="Localize/Web Components" />
+
 <Story name="Default"></Story>
 
 # Localize
@@ -10,7 +11,7 @@ import { localize, formatNumber, formatDate } from '../index.js';
 Is meant to translate text into multiple languages.
 In it's simplest form it is a function that returns the translated text for a namespace + key.
 
-<Story id="localize-system-extras--as-function" />
+<Story id="localize-system-internals--as-function" />
 
 ```js
 localize.msg('lit-html-example:body'); // for en-GB: I am from England
@@ -18,29 +19,11 @@ localize.msg('lit-html-example:body'); // for nl-NL: Ik kom uit Nederland
 // ...
 ```
 
-## Features
-
-- Uses es modules
-- Formatting of numbers, amounts
-- Formatting of dates
-
-## How to use
-
-### Installation
-
-```sh
-npm i --save @lion/localize
-```
-
-```js
-import { localize } from '@lion/localize';
-```
-
 ## Web Component
 
 For use in a web component we have `LocalizeMixin` that lets you define namespaces and awaits loading of those translations.
 
-<Story id="localize-system-extras--web-component" />
+<Story id="localize-system-internals--web-component" />
 
 ```js
 class MessageExample extends LocalizeMixin(LitElement) {
