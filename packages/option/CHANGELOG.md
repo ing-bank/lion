@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/option@0.3.11...@lion/option@0.4.0) (2020-01-13)
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
 ## [0.3.11](https://github.com/ing-bank/lion/compare/@lion/option@0.3.10...@lion/option@0.3.11) (2020-01-08)
 
 **Note:** Version bump only for package @lion/option

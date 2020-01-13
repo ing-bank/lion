@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/core@0.3.0...@lion/core@0.4.0) (2020-01-13)
+
+
+### Bug Fixes
+
+* refactor slot selection ([5999ea9](https://github.com/ing-bank/lion/commit/5999ea956967b449f3f04935c7facb19e2889dc9))
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
 # [0.3.0](https://github.com/ing-bank/lion/compare/@lion/core@0.2.1...@lion/core@0.3.0) (2019-11-13)
 
 

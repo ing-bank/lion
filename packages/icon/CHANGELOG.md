@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/icon@0.2.10...@lion/icon@0.3.0) (2020-01-13)
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+* integrate and pass automated a11y testing ([e1a417b](https://github.com/ing-bank/lion/commit/e1a417b041431e4e25a5b6a63e23ba0a3974f5a5))
+
+
+
+
+
 ## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/icon@0.2.9...@lion/icon@0.2.10) (2019-12-02)
 
 

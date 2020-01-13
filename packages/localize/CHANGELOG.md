@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.7.2...@lion/localize@0.8.0) (2020-01-13)
+
+
+### Bug Fixes
+
+* **localize:** fire localeChanged after loading missing locales ([bf7603e](https://github.com/ing-bank/lion/commit/bf7603e7e28c10e5f1500d229c35c4710f80125f))
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
 ## [0.7.2](https://github.com/ing-bank/lion/compare/@lion/localize@0.7.1...@lion/localize@0.7.2) (2020-01-08)
 
 
