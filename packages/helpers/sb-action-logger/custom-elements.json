@@ -1,0 +1,46 @@
+{
+  "version": 0,
+  "tags": [
+    {
+      "name": "sb-action-logger",
+      "description": "A visual element to show action logs in Storybook demos",
+      "properties": [
+        {
+          "name": "title",
+          "type": "String",
+          "description": "The title of action logger",
+          "default": "Action Logger"
+        }
+      ],
+      "events": [],
+      "slots": [],
+      "cssProperties": [
+        {
+          "name": "--sb-action-logger-title-color",
+          "description": "Color of the title",
+          "type": "Color"
+        },
+        {
+          "name": "--sb-action-logger-text-color",
+          "description": "Color of the logs' text",
+          "type": "Color"
+        },
+        {
+          "name": "--sb-action-logger-cue-color-primary",
+          "description": "Primary color of the visual cue",
+          "type": "Color"
+        },
+        {
+          "name": "--sb-action-logger-cue-color-secondary",
+          "description": "Secondary color of the visual cue",
+          "type": "Color"
+        },
+        {
+          "name": "--sb-action-logger-cue-duration",
+          "description": "Duration of the visual cue",
+          "type": "Number"
+        }
+      ]
+    }
+  ]
+}
