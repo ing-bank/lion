@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@lion/form": "0.3.14",
-    "@open-wc/demoing-storybook": "^1.1.1",
+    "@open-wc/demoing-storybook": "^1.6.1",
     "@open-wc/testing": "^2.3.4"
   }
 }

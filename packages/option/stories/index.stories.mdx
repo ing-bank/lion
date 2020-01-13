@@ -1,0 +1,120 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+
+import '../lion-option.js';
+
+<Meta title="Forms/Option" parameters={{ component: 'lion-option' }} />
+
+# Option
+
+`lion-option` is a selectable within a [lion-select-rich](?path=/docs/forms-select-rich)
+
+<Story name="Default">
+  {html`
+    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+  `}
+</Story>
+
+```html
+<lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+```
+
+## Features
+
+- has checked state
+- has a modelValue
+- can be disabled
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/option
+```
+
+```js
+import '@lion/option/lion-option.js';
+```
+
+## States
+
+<Story name="States">
+  {html`
+    <lion-option>Default</lion-option>
+    <lion-option disabled>Disabled</lion-option>
+    <lion-option>
+      <p style="color: darkred;">With html</p>
+      <p>and multi Line</p>
+    </lion-option>
+  `}
+</Story>
+
+```html
+<lion-option>Default</lion-option>
+<lion-option disabled>Disabled</lion-option>
+<lion-option>
+  <p style="color: darkred;">With html</p>
+  <p>and multi Line</p>
+</lion-option>
+```
+
+## Values
+
+The `modelValue` of a `<lion-option>` are Objects containing a `value` property and a `checked` boolean property.
+The value can be any complex or simple JavaScript value.
+
+<Story name="Model Values">
+  {html`
+    <lion-option .modelValue=${{ value: 10, checked: false }}>setting modelValue</lion-option>
+    <lion-option .modelValue=${{ value: 10, checked: false }} active>
+      setting modelValue active
+    </lion-option>
+    <lion-option .modelValue=${{ value: 10, checked: true }}>
+      setting modelValue checked
+    </lion-option>
+    <lion-option .modelValue=${{ value: 10, checked: false }} disabled>
+      setting modelValue disabled
+    </lion-option>
+  `}
+</Story>
+
+```html
+<lion-option .modelValue=${{ value: 10, checked: false }}>setting modelValue</lion-option>
+<lion-option .modelValue=${{ value: 10, checked: false }} active>
+  setting modelValue active
+</lion-option>
+<lion-option .modelValue=${{ value: 10, checked: true }}>
+  setting modelValue checked
+</lion-option>
+<lion-option .modelValue=${{ value: 10, checked: false }} disabled>
+  setting modelValue disabled
+</lion-option>
+```
+
+If you want only the value without the `checked` state, use `choiceValue`.
+
+<Story name="Choice Values">
+  {html`
+    <lion-option .choiceValue=${10}>setting choiceValue</lion-option>
+    <lion-option .choiceValue=${10} active>setting choiceValue active</lion-option>
+    <lion-option .choiceValue=${10} checked>setting choiceValue checked</lion-option>
+    <lion-option .choiceValue=${10} disabled>setting choiceValue disabled</lion-option>
+  `}
+</Story>
+
+```html
+<lion-option .choiceValue=${10}>setting choiceValue</lion-option>
+<lion-option .choiceValue=${10} active>setting choiceValue active</lion-option>
+<lion-option .choiceValue=${10} checked>setting choiceValue checked</lion-option>
+<lion-option .choiceValue=${10} disabled>setting choiceValue disabled</lion-option>
+```
+
+This is identical to `lion-checkbox`, `lion-radio` etc.
+
+## Don't use as standalone
+
+> This component should not be used standalone. It is not accessible unless it is a child of a listbox-like element.
+
+This also explains the (intended) accessibility violation when viewing these demos in Canvas mode.
+
+For more details on usage, please see [lion-select-rich](?path=/docs/forms-select-rich).

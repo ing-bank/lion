@@ -1,0 +1,16 @@
+{
+  "animals": {
+    "cow": {
+      "type": "mammal",
+      "limbs": 4
+    },
+    "frog": {
+      "type": "amphibian",
+      "limbs": 4
+    },
+    "snake": {
+      "type": "reptile",
+      "limbs": 0
+    }
+  }
+}

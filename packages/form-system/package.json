@@ -49,7 +49,7 @@
     "@lion/radio-group": "0.4.5",
     "@lion/textarea": "0.4.2",
     "@lion/validate": "0.5.4",
-    "@open-wc/demoing-storybook": "^1.1.1",
+    "@open-wc/demoing-storybook": "^1.6.1",
     "@open-wc/testing": "^2.3.4"
   }
 }

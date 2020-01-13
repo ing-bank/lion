@@ -4,6 +4,7 @@ import {
   setCustomElements,
   withA11y,
 } from '@open-wc/demoing-storybook';
+import { sortEachDepth } from '../packages/helpers/index.js';
 
 async function run() {
   // const customElements = await (
@@ -23,6 +24,14 @@ async function run() {
     },
     docs: {
       iframeHeight: '200px',
+    },
+    options: {
+      showRoots: true,
+      storySort: sortEachDepth([
+        ['Intro', 'Forms', 'Buttons', 'Overlays', 'Navigation', 'Localize', 'Icons', '...'],
+        ['Intro', 'Features Overview', '...', 'System'],
+        ['Overview', '...', '_internals'],
+      ]),
     },
   });
 }

@@ -1,0 +1,166 @@
+import {
+  Story,
+  Meta,
+  html,
+} from '@open-wc/demoing-storybook';
+
+import { ajax } from '../src/ajax.js';
+import { AjaxClass } from '../src/AjaxClass.js';
+
+<Meta title="Others/Fetch/Ajax" parameters={{ component: 'lion-ajax' }} />
+
+# Ajax
+
+`lion-ajax` is the global manager for handling all ajax requests.
+It is a promise based system for fetching data, based on <a href="https://github.com/axios/axios" target="_blank">
+axios</a>
+
+<Story name="Default">
+  {html`
+    <button
+      @click=${() => {
+        ajax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }}
+    >
+      Execute Request to Action Logger
+    </button>
+  `}
+</Story>
+
+```js
+ajax.get('./packages/ajax/stories/data.json').then(response => console.log(response.data));
+```
+
+## Features
+
+- only JS functions, no (unnecessarily expensive) web components
+- supports GET, POST, PUT, DELETE, REQUEST, PATCH and HEAD methods
+- can be used with or without XSRF token
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/ajax
+```
+
+```js
+import { ajax, AjaxClass } from '@lion/ajax';
+```
+
+## Cancelable Request
+
+It is possible to make an Ajax request cancelable, and then call `cancel()` to make the request provide a custom error once fired.
+
+<Story name="Cancelable">
+  {html`
+    <button
+      @click=${() => {
+        const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+        requestAnimationFrame(() => {
+          myAjax.cancel('too slow');
+        });
+        myAjax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }}
+    >
+      Execute Request to Action Logger
+    </button>
+  `}
+</Story>
+
+```js
+const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+
+requestAnimationFrame(() => {
+  myAjax.cancel('too slow');
+});
+
+myAjax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+
+## Cancel concurrent requests
+
+You can cancel concurrent requests with the `cancelPreviousOnNewRequest` option.
+
+<Story name="Cancel Previous on New Request">
+  {html`
+    <button
+      @click=${() => {
+        const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+        myAjax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error.message);
+          });
+        myAjax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error.message);
+          });
+      }}
+    >
+      Execute Both Requests to Action Logger
+    </button>
+  `}
+</Story>
+
+```js
+const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+
+myAjax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error.message);
+  });
+
+myAjax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error.message);
+  });
+```
+
+## Considerations
+
+Due to a <a href="https://github.com/axios/axios/issues/385" target="_blank"> bug in axios</a> options may leak in to other instances.
+So please avoid setting global options in axios. Interceptors have no issues.
+
+## Future plans
+
+- Eventually we want to remove axios and replace it with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">
+Fetch</a>
+- This wrapper exist to prevent this switch from causing breaking changes for our users
