@@ -36,11 +36,9 @@
     "@lion/fieldset": "0.5.7"
   },
   "devDependencies": {
-    "@lion/input": "0.4.2",
-    "@lion/input-iban": "0.4.2",
-    "@lion/textarea": "0.4.2",
+    "@lion/field": "0.7.0",
     "@lion/validate": "0.5.4",
-    "@open-wc/demoing-storybook": "^1.1.1",
+    "@open-wc/demoing-storybook": "^1.6.1",
     "@open-wc/testing": "^2.3.4",
     "sinon": "^7.2.2"
   }

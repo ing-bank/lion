@@ -1,13 +1,31 @@
-import { expect, fixture, html, unsafeStatic, triggerFocusFor, nextFrame } from '@open-wc/testing';
+import {
+  expect,
+  fixture,
+  html,
+  unsafeStatic,
+  triggerFocusFor,
+  nextFrame,
+  defineCE,
+} from '@open-wc/testing';
 import sinon from 'sinon';
 import { Validator, IsNumber } from '@lion/validate';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-import '@lion/input/lion-input.js';
 import '../lion-fieldset.js';
+import { LionField } from '@lion/field';
+import '@lion/field/lion-field.js';
+
+const childTagString = defineCE(
+  class extends LionField {
+    get slots() {
+      return {
+        input: () => document.createElement('input'),
+      };
+    }
+  },
+);
 
 const tagString = 'lion-fieldset';
 const tag = unsafeStatic(tagString);
-const childTagString = 'lion-input';
 const childTag = unsafeStatic(childTagString);
 const inputSlots = html`
   <${childTag} name="gender[]"></${childTag}>
@@ -768,14 +786,14 @@ describe('<lion-fieldset>', () => {
     });
   });
 
-  describe('reset', () => {
+  describe('Reset', () => {
     it('restores default values if changes were made', async () => {
       const el = await fixture(html`
         <${tag}>
           <${childTag} id="firstName" name="firstName" .modelValue="${'Foo'}"></${childTag}>
         </${tag}>
       `);
-      await el.querySelector('lion-input').updateComplete;
+      await el.querySelector(childTagString).updateComplete;
 
       const input = el.querySelector('#firstName');
 
@@ -794,7 +812,7 @@ describe('<lion-fieldset>', () => {
           <${childTag} id="firstName" name="firstName[]" .modelValue="${'Foo'}"></${childTag}>
         </${tag}>
       `);
-      await el.querySelector('lion-input').updateComplete;
+      await el.querySelector(childTagString).updateComplete;
 
       const input = el.querySelector('#firstName');
 
@@ -817,7 +835,7 @@ describe('<lion-fieldset>', () => {
       `);
       await Promise.all([
         el.querySelector('lion-fieldset').updateComplete,
-        el.querySelector('lion-input').updateComplete,
+        el.querySelector(childTagString).updateComplete,
       ]);
 
       const input = el.querySelector('#firstName');
