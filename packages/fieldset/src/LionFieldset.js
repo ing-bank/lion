@@ -1,8 +1,8 @@
-import { SlotMixin, html, LitElement } from '@lion/core';
+import { html, LitElement, SlotMixin } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
-import { ValidateMixin } from '@lion/validate';
 import { FormControlMixin, FormRegistrarMixin } from '@lion/field';
 import { getAriaElementsInRightDomOrder } from '@lion/field/src/utils/getAriaElementsInRightDomOrder.js';
+import { ValidateMixin } from '@lion/validate';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
@@ -314,7 +314,7 @@ export class LionFieldset extends FormRegistrarMixin(
    * Gets triggered by event 'validate-performed' which enabled us to handle 2 different situations
    *   - react on modelValue change, which says something about the validity as a whole
    *       (at least two checkboxes for instance) and nothing about the children's values
-   *   - children validatity states have changed, so fieldset needs to update itself based on that
+   *   - children validity states have changed, so fieldset needs to update itself based on that
    */
   __validate(ev) {
     if (ev && this.isRegisteredFormElement(ev.target)) {

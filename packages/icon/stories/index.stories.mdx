@@ -1,0 +1,174 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import * as bugs from './icons/bugs-collection.js';
+import arrowLeftSvg from './icons/arrowLeft.svg.js';
+import '../lion-icon.js';
+
+<Meta title="Icons/Icon" />
+
+# Icon
+
+A web component for displaying icons.
+
+<Story name="Default">
+  {html`
+    <style>
+      lion-icon {
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+    <lion-icon .svg="${bugs.bug01}"></lion-icon>
+  `}
+</Story>
+
+```html
+<lion-icon .svg="${bug01}"></lion-icon>
+```
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/icon
+```
+
+```js
+import '@lion/icon/lion-icon.js';
+```
+
+## Icon format
+
+Icon file is an ES module with an extension `.svg.js` which exports a function like this:
+
+```js
+// bug.svg.js
+export default tag => tag`
+  <svg focusable="false" ...>...</svg>
+`;
+```
+
+Make sure you have `focusable="false"` in the icon file to prevent bugs in IE/Edge when the icon appears in tab-order.
+
+### Accessibility
+
+It is recommended to add an `aria-label` to provide information to visually impaired users:
+
+A `lion-icon` without an `aria-label` attribute will be automatically be given an `aria-hidden` attribute.
+
+<Story name="Accessible label">
+  {html`
+    <lion-icon .svg="${arrowLeftSvg}" aria-label="Pointing left"></lion-icon>
+  `}
+</Story>
+
+```html
+<lion-icon .svg="${arrowLeftSvg}" aria-label="Pointing left"></lion-icon>
+```
+
+### Styling
+
+By default, a `lion-icon` will be `1em` × `1em` (the current line-height).
+
+`lion-icon` uses SVGs and may be styled with CSS, including using CSS properties such as `fill` and `stroke`:
+
+<Story name="Styling">
+  {html`
+    <style>
+      lion-icon.custom {
+        width: 50px;
+        height: 50px;
+        fill: blue;
+        stroke: red;
+      }
+    </style>
+    <lion-icon class="custom" .svg="${bugs.bug02}" aria-label="Pointing left"></lion-icon>
+  `}
+</Story>
+
+```html
+<style>
+  lion-icon {
+    fill: blue;
+    stroke: lightsteelblue;
+  }
+</style>
+<lion-icon .icon="${bug02}"></lion-icon>
+```
+
+See <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS" target="_blank">SVG and CSS</a> on MDN web docs for more information.
+
+### Collections
+
+Due to the `.svg.js` format using ES Modules, it is very easy to compose and load your own icon collections.
+
+You can bundle them like this:
+
+```js
+import bug01 from './bugs/bug01.svg.js';
+import bug02 from './bugs/bug02.svg.js';
+import bug05 from './bugs/bug05.svg.js';
+import bug06 from './bugs/bug06.svg.js';
+import bug08 from './bugs/bug08.svg.js';
+import bug12 from './bugs/bug12.svg.js';
+import bug19 from './bugs/bug19.svg.js';
+import bug23 from './bugs/bug23.svg.js';
+import bug24 from './bugs/bug24.svg.js';
+
+export { bug01, bug02, bug05, bug06, bug08, bug12, bug19, bug23, bug24 };
+```
+
+<Story name="Collections">
+  {html`
+    <style>
+      .icon-collection lion-icon {
+        height: 50px;
+        width: 50px;
+      }
+    </style>
+    <div class="icon-collection">
+      <lion-icon .svg=${bugs.bug05} aria-label="Skinny dung beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug06} aria-label="Butterfly"></lion-icon>
+      <lion-icon .svg=${bugs.bug08} aria-label="Ant"></lion-icon>
+      <lion-icon .svg=${bugs.bug12} aria-label="Striped beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug19} aria-label="Beatle with long whiskers"></lion-icon>
+      <lion-icon .svg=${bugs.bug23} aria-label="Swim beatle"></lion-icon>
+      <lion-icon .svg=${bugs.bug24} aria-label="Big forrest ant"></lion-icon>
+    </div>
+  `}
+</Story>
+
+And then use them by either importing them all:
+
+```js
+import * as bugs from './icons/bugs-collection.js';
+```
+
+Or one by one:
+
+```js
+import {
+  bug01,
+  bug02,
+  bug05,
+  bug06,
+  bug08,
+  bug12,
+  bug19,
+  bug23,
+  bug24,
+} from './icons/bugs-collection.js';
+```
+
+### Dynamic import
+
+It is also possible to dynamically import the `.svg.js` file.
+This will load the icon asynchronously.
+
+<Story id="icons-system-internal--dynamic-icon" />
+
+```js
+<lion-icon .svg=${import('./icons/bugs/bug05.svg.js')} aria-label="Skinny dung beatle"></lion-icon>
+```
+
+The demo is currently disabled for this feature due to an issue with Storybook.

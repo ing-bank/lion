@@ -36,7 +36,7 @@
     "@lion/fieldset": "0.5.7"
   },
   "devDependencies": {
-    "@lion/field": "0.7.0",
+    "@lion/field": "0.7.1",
     "@lion/validate": "0.5.4",
     "@open-wc/demoing-storybook": "^1.6.1",
     "@open-wc/testing": "^2.3.4",

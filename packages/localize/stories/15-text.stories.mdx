@@ -1,0 +1,20 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { render } from '@lion/core';
+import { localize, formatNumber, formatDate } from '../index.js';
+
+<Meta title="Localize/Text" />
+
+<Story name="Default"></Story>
+
+# Localize
+
+Is meant to translate text into multiple languages.
+In it's simplest form it is a function that returns the translated text for a namespace + key.
+
+<Story id="localize-system-internals--as-function" />
+
+```js
+localize.msg('lit-html-example:body'); // for en-GB: I am from England
+localize.msg('lit-html-example:body'); // for nl-NL: Ik kom uit Nederland
+// ...
+```

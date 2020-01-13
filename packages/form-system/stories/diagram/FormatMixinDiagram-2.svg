@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 2000 879" style="enable-background:new 0 0 2000 879;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st1{opacity:0.4;}
+	.st2{fill:#22B573;}
+	.st3{fill:#0071BC;}
+	.st4{opacity:0.4;fill:#0071BC;}
+	.st5{fill:#F7931E;}
+	.st6{opacity:0.65;}
+	.st7{opacity:0.65;fill:#0071BC;}
+	.st8{fill:#F2F2F2;}
+	.st9{font-family:'INGMe-Bold';}
+	.st10{font-size:36px;}
+	.st11{font-family:'INGMe';}
+	.st12{font-size:20px;}
+	.st13{font-size:19px;}
+	.st14{font-size:26px;}
+	.st15{fill:#4D4D4D;}
+	.st16{fill:#FFFFFF;}
+	.st17{font-size:28px;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 908.4995 105.6836)"><tspan x="0" y="0" class="st9 st10">User flow 2</tspan><tspan x="30.1" y="24" class="st11 st12">(Unparseable)</tspan></text>
+	<text transform="matrix(1 0 0 1 633.6143 262.7981)"><tspan x="0" y="0" class="st11 st10">User</tspan><tspan x="-51.3" y="22.8" class="st11 st13">(inputElement.input)</tspan></text>
+	<text transform="matrix(1 0 0 1 626.7212 456.7981)" class="st11 st10">value</text>
+	<text transform="matrix(1 0 0 1 570.8491 643.7981)" class="st9 st10">modelValue</text>
+	<text transform="matrix(1 0 0 1 142.4126 643.7981)" class="st11 st10">serializedValue</text>
+	<g>
+		<g>
+			<line class="st0" x1="670.32" y1="388.02" x2="670.32" y2="314.42"/>
+			<g>
+				<polygon points="681.43,379.59 670.32,384.31 659.21,379.59 670.32,405.92 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line class="st0" x1="700.32" y1="405.92" x2="700.32" y2="332.33"/>
+			<g>
+				<polygon points="711.43,340.76 700.32,336.04 689.21,340.76 700.32,314.42 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<line class="st0" x1="670.32" y1="567.02" x2="670.32" y2="493.42"/>
+			<g>
+				<polygon points="681.43,558.59 670.32,563.31 659.21,558.59 670.32,584.92 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st0" d="M583.82,673.92c0,0-144.71,149.44-297.99,12.32"/>
+			<g>
+				<polygon points="299.63,683.84 288.58,688.71 284.42,700.04 272.82,673.92 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st0" d="M760.06,452.77c37.11,16.52,116.78,67.59,35.44,179.73"/>
+			<g>
+				<polygon points="763.77,466.39 763.44,454.33 771.89,445.71 743.32,446.42 				"/>
+			</g>
+		</g>
+	</g>
+	<g class="st1">
+		<g>
+			<path class="st0" d="M272.82,585.15c0,0,144.71-149.44,297.99-12.32"/>
+			<g>
+				<polygon points="557.01,575.23 568.05,570.36 572.21,559.03 583.82,585.15 				"/>
+			</g>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 680.5942 538.8196)" class="st3 st11 st14">parser</text>
+	<g>
+		<text transform="matrix(1 0 0 1 369.5942 777.8196)" class="st3 st11 st14">serializer</text>
+	</g>
+	<g class="st6">
+		<text transform="matrix(1 0 0 1 369.5942 501.8196)" class="st3 st11 st14">deserializer</text>
+	</g>
+	<text transform="matrix(1 0 0 1 606.5942 351.8196)" class="st2 st11 st14">sync</text>
+	<text transform="matrix(1 0 0 1 717.5942 351.8196)" class="st2 st11 st14">delegate</text>
+	<text transform="matrix(1 0 0 1 898.5942 527.8196)" class="st2 st11 st14">sync</text>
+	<circle class="st2" cx="579.82" cy="351.92" r="16.97"/>
+	<circle class="st2" cx="842.82" cy="351.92" r="16.97"/>
+	<circle class="st3" cx="702.32" cy="491.42" r="16.97"/>
+	<circle class="st7" cx="344.32" cy="469.42" r="16.97"/>
+	<circle class="st3" cx="344.32" cy="782.42" r="16.97"/>
+	<text transform="matrix(1 0 0 1 555.5942 225.8196)" class="st5 st11 st14">interact</text>
+	<circle class="st5" cx="530.82" cy="219.92" r="16.97"/>
+	<text transform="matrix(1 0 0 1 524.8955 226.178)" class="st9 st12">1</text>
+	<text transform="matrix(1 0 0 1 573.8955 359.178)" class="st9 st12">2</text>
+	<text transform="matrix(1 0 0 1 695.8955 499.178)" class="st9 st12">3</text>
+	<text transform="matrix(1 0 0 1 337.8955 789.178)" class="st9 st12">4</text>
+	<text transform="matrix(1 0 0 1 338.8955 476.178)" class="st6 st9 st12">5</text>
+	<text transform="matrix(1 0 0 1 836.8955 359.178)" class="st9 st12">5</text>
+	<circle class="st2" cx="881.82" cy="490.92" r="16.97"/>
+	<text transform="matrix(1 0 0 1 875.8955 498.178)" class="st9 st12">4</text>
+	<text transform="matrix(1 0 0 1 1089.8506 262.6697)"><tspan x="0" y="0" class="st9 st12">1. User changes the input          </tspan><tspan x="0" y="96" class="st9 st12">2. Native input syncs </tspan><tspan x="0" y="120" class="st9 st12">    with lion-input-date value </tspan><tspan x="0" y="192" class="st15 st9 st12">3. </tspan><tspan x="21.26" y="192" class="st9 st12">Value is parsed to modelValue</tspan><tspan x="0" y="216" class="st9 st12">     but it is unparseable </tspan><tspan x="0" y="240" class="st9 st12">    (parser returns undefined)</tspan><tspan x="0" y="312" class="st9 st12">4. modelValue.viewValue, </tspan><tspan x="0" y="336" class="st9 st12">    which is the value prior to </tspan><tspan x="0" y="360" class="st9 st12">    the parsing step, </tspan><tspan x="0" y="384" class="st9 st12">    is synced back to the user.</tspan><tspan x="0" y="408" class="st9 st12">    It is also serialized </tspan><tspan x="0" y="432" class="st9 st12">    </tspan><tspan x="0" y="504" class="st9 st12">5. Value is delegated back to </tspan><tspan x="0" y="528" class="st9 st12">    native input value </tspan><tspan x="0" y="552" class="st9 st12">    (what the user sees)</tspan></text>
+	<text transform="matrix(1 0 0 1 1458.8506 262.6697)"><tspan x="0" y="0" class="st3 st9 st12">“10%30%2010”</tspan><tspan x="0" y="96" class="st3 st9 st12">“10%30%2010”</tspan><tspan x="0" y="192" class="st3 st9 st12">[Unparseable]</tspan><tspan x="0" y="312" class="st3 st9 st12">“10%30%2010”</tspan><tspan x="0" y="336" class="st3 st9 st12"> </tspan><tspan x="0" y="504" class="st3 st9 st12">“10%30%2010”</tspan></text>
+	<text transform="matrix(1 0 0 1 1655.8506 262.6697)"><tspan x="0" y="0" class="st9 st12"> </tspan><tspan x="4.8" y="0" class="st15 st9 st12">@user-input-changed    </tspan><tspan x="0" y="96" class="st9 st12"> </tspan><tspan x="0" y="192" class="st15 st9 st12">@model-value-changed  </tspan><tspan x="0" y="384" class="st15 st9 st12">    </tspan></text>
+	<text transform="matrix(1 0 0 1 1365.3184 740.4246)" class="st16 st9 st17">!</text>
+	<text transform="matrix(1 0 0 1 110.1018 344.5281)" class="st6"><tspan x="0" y="0" class="st9 st12">5. On request: serializedValue</tspan><tspan x="0" y="24" class="st9 st12">     is deserialized to modelValue,</tspan><tspan x="0" y="48" class="st9 st12">     which will again be Unparseable</tspan></text>
+	<text transform="matrix(1 0 0 1 205.2695 418.5281)" class="st7 st9 st12">[Unparseable]</text>
+	<text transform="matrix(1 0 0 1 1374.6929 672.5281)" class="st3 st9 st12">&quot;{&quot;type&quot;:&quot;unparseable&quot;,&quot;viewValue&quot;:&quot;10%30%2010&quot;}&quot;</text>
+</g>
+</svg>

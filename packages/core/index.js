@@ -3,25 +3,43 @@
  *   For now please import types from lit-element and lit-html directly.
  */
 
+// lit-element
+export {
+  css,
+  CSSResult,
+  // decorators.js
+  customElement,
+  // updating-element.js
+  defaultConverter,
+  eventOptions,
+  LitElement,
+  notEqual,
+  property,
+  query,
+  queryAll,
+  // css-tag.js
+  supportsAdoptingStyleSheets,
+  unsafeCSS,
+  UpdatingElement,
+} from 'lit-element';
 // lit-html
 export {
-  html,
-  svg,
-  render,
-  noChange,
-  nothing,
-  directive,
-  isDirective,
-  TemplateResult,
-  SVGTemplateResult,
   AttributePart,
   BooleanAttributePart,
+  directive,
   EventPart,
-  NodePart,
-  PropertyPart,
+  html,
+  isDirective,
   isPrimitive,
+  noChange,
+  NodePart,
+  nothing,
+  PropertyPart,
+  render,
+  svg,
+  SVGTemplateResult,
+  TemplateResult,
 } from 'lit-html';
-export { render as renderShady } from 'lit-html/lib/shady-render.js';
 export { asyncAppend } from 'lit-html/directives/async-append.js';
 export { asyncReplace } from 'lit-html/directives/async-replace.js';
 export { cache } from 'lit-html/directives/cache.js';
@@ -32,30 +50,12 @@ export { repeat } from 'lit-html/directives/repeat.js';
 export { styleMap } from 'lit-html/directives/style-map.js';
 export { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export { until } from 'lit-html/directives/until.js';
-// lit-element
-export {
-  LitElement,
-  // css-tag.js
-  supportsAdoptingStyleSheets,
-  CSSResult,
-  unsafeCSS,
-  css,
-  // updating-element.js
-  defaultConverter,
-  notEqual,
-  UpdatingElement,
-  // decorators.js
-  customElement,
-  property,
-  query,
-  queryAll,
-  eventOptions,
-} from 'lit-element';
+export { render as renderShady } from 'lit-html/lib/shady-render.js';
 // ours
 export { dedupeMixin } from './src/dedupeMixin.js';
 export { DelegateMixin } from './src/DelegateMixin.js';
-export { LionSingleton } from './src/LionSingleton.js';
-export { SlotMixin } from './src/SlotMixin.js';
 export { DisabledMixin } from './src/DisabledMixin.js';
 export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
+export { LionSingleton } from './src/LionSingleton.js';
+export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
