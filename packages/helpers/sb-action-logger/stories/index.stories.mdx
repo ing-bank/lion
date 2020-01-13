@@ -1,0 +1,116 @@
+import {
+  Story,
+  Preview,
+  Meta,
+  Props,
+  html,
+} from '@open-wc/demoing-storybook';
+
+import '../../sb-action-logger.js';
+
+<Meta
+  title="Helpers/Storybook Action Logger"
+  parameters={{
+    component: "sb-action-logger",
+    options: { selectedPanel: "storybookjs/knobs/panel" }
+  }}
+/>
+
+# Storybook Action Logger
+
+A visual element to show action logs in Storybook demos `sb-action-logger`
+
+<Story name="Default">
+  {html`
+    <style>
+      sb-action-logger {
+        font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
+          BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+    </style>
+    <div>To log: <code>Hello, World!</code></div>
+    <button
+      @click=${() => document.getElementById('logger-a53209ghj').log('Hello, World!')}
+    >Click this button</button>
+    <sb-action-logger id="logger-a53209ghj"></sb-action-logger>
+  `}
+</Story>
+
+```html
+<div>To log: <code>Hello, World!</code></div>
+<button
+  @click=${() => document.getElementById('logger-a53209ghj').log('Hello, World!')}
+>Click this button</button>
+<sb-action-logger id="logger-a53209ghj"></sb-action-logger>
+```
+
+Note that you need some reference to your logger. Above example shows this by using a unique ID.
+
+## Features:
+
+- A public method `log` to log things to the action logger.
+- Overridable `title` property.
+- Clear button to clear logs
+- A counter to count the total amount of logs
+
+## How to use
+
+### Installation
+
+```bash
+npm i sb-action-logger
+```
+
+## API
+
+<Props of="sb-action-logger" />
+
+## Variations
+
+### Custom Title
+
+<Story name="Custom Title">
+  {html`
+    <button
+      @click=${() => document.getElementById('logger-vnfoiu3478').log('Hello, World!')}
+    >Log</button>
+    <sb-action-logger id="logger-vnfoiu3478" .title=${'Hello World'}></sb-action-logger>
+  `}
+</Story>
+
+
+## Rationale
+
+This component was created due to a need for a nice visual action logger in Storybook Docs mode.
+
+In docs mode, you do not have access to the action logger addon component, and it is nice to be able to show actions inline in your demos and documentation.
+
+### Opinionated
+
+I added quite a bit of styling on this component to make it look decent.
+There are a bunch of styles that you can easily override to make it fit your design system which I believe should be enough in most cases.
+If you need more control you can always:
+
+- Override the host styles, there's a few custom CSS props that you can override as well.
+- Extend the component and apply your overrides
+- Open an issue if you believe it would be good to make something more flexible / configurable
+
+Maybe in the future I will abstract this component to a more generic (ugly) one with no styles, so it's more friendly as a shared component.
+
+### Plugin
+
+If you use an action logger inside your Story in Storybook, you will also see it in your canvas, and this may not be your intention.
+
+One idea I have is that we can simplify the usage further by making this a Storybook (docs-)plugin or decorator or whatever.
+I am not too familiar with them at the moment, but it would be cool if someone can simply enable an action logger option on a particular Story inside their .mdx,
+and then actions are automatically logged to the visual logger below it. Would need to figure out how to catch the action and pass it to the visual logger element.
+
+I have not investigated yet on the how, but that is the rough idea. Feel free to help out here :)
+
+## Future
+
+I plan on adding more features.
+They can always be found in the test folder where I specify new features as tests first, and then I skip them until I implement them. Easy to find them that way.
+If the feature you'd like is not in the tests, I probably did not think about it yet or did not plan to do it yet, so in that case feel free to make an issue so we can add it.
+
+I'm happy to accept pull requests for skipped tests (features to be added), see the CONTRIBUTING.md on GitHub for more details on how to contribute to this codebase.
