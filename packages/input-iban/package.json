@@ -32,7 +32,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@bundled-es-modules/ibantools": "2.0.0",
+    "@bundled-es-modules/ibantools": "2.2.0",
     "@lion/core": "^0.1.13",
     "@lion/field": "^0.2.1",
     "@lion/input": "^0.1.48",
