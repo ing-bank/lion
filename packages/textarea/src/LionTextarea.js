@@ -57,6 +57,8 @@ export class LionTextarea extends LionField {
   }
 
   disconnectedCallback() {
+    // eslint-disable-next-line wc/guard-super-call
+    super.disconnectedCallback();
     autosize.destroy(this._inputNode);
   }
 
