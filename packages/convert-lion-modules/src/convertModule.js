@@ -42,8 +42,9 @@ function replaceSrcJsImports(
 }
 
 function replaceLocalTagImports(code, { inTagName, outTagName, outPackageName, getTagImportPath }) {
-  const findRegex = new RegExp(escapeRegExp(`'../${inTagName}.js';`), 'g');
-  const newPath = getTagImportPath({ outTagName, outPackageName });
+  const originalPath = `../${inTagName}.js`;
+  const findRegex = new RegExp(escapeRegExp(`'${originalPath}';`), 'g');
+  const newPath = getTagImportPath({ outTagName, outPackageName, originalPath });
   return code.replace(findRegex, `'${newPath}';`);
 }
 
@@ -51,8 +52,9 @@ function replaceLionTagImports(
   code,
   { inTagName, outTagName, inPackageName, outPackageName, getTagImportPath },
 ) {
-  const findRegex = new RegExp(`import '@lion/${inPackageName}/${inTagName}.js';`, 'g');
-  const newPath = getTagImportPath({ outTagName, outPackageName });
+  const originalPath = `@lion/${inPackageName}/${inTagName}.js`;
+  const findRegex = new RegExp(`import '${originalPath}';`, 'g');
+  const newPath = getTagImportPath({ outTagName, outPackageName, originalPath });
   return code.replace(findRegex, `import '${newPath}';`);
 }
 
