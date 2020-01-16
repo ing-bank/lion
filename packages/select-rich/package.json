@@ -37,6 +37,7 @@
   ],
   "dependencies": {
     "@lion/button": "0.5.4",
+    "@lion/choice-input": "0.5.9",
     "@lion/core": "0.4.3",
     "@lion/field": "0.8.9",
     "@lion/option": "0.4.9",

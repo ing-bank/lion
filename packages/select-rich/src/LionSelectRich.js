@@ -1,10 +1,11 @@
-import { html, css, LitElement, SlotMixin } from '@lion/core';
-import { withDropdownConfig, OverlayMixin } from '@lion/overlays';
-import { FormControlMixin, InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
+import { ChoiceGroupMixin } from '@lion/choice-input';
+import { css, html, LitElement, SlotMixin } from '@lion/core';
+import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
+import { formRegistrarManager } from '@lion/field/src/formRegistrarManager.js';
+import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { ValidateMixin } from '@lion/validate';
-import './differentKeyNamesShimIE.js';
-
 import '../lion-select-invoker.js';
+import './differentKeyNamesShimIE.js';
 
 function uuid() {
   return Math.random()
@@ -45,15 +46,15 @@ function isInView(container, element, partial = false) {
  * @customElement lion-select-rich
  * @extends {LitElement}
  */
-export class LionSelectRich extends OverlayMixin(
-  FormRegistrarMixin(InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement))))),
+export class LionSelectRich extends ChoiceGroupMixin(
+  OverlayMixin(
+    FormRegistrarMixin(
+      InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))),
+    ),
+  ),
 ) {
   static get properties() {
     return {
-      checkedValue: {
-        type: Object,
-      },
-
       disabled: {
         type: Boolean,
         reflect: true,
@@ -68,10 +69,6 @@ export class LionSelectRich extends OverlayMixin(
       interactionMode: {
         type: String,
         attribute: 'interaction-mode',
-      },
-
-      modelValue: {
-        type: Array,
       },
 
       name: {
@@ -92,22 +89,6 @@ export class LionSelectRich extends OverlayMixin(
         }
       `,
     ];
-  }
-
-  /**
-   * @override
-   */
-  static _isPrefilled(modelValue) {
-    if (!modelValue) {
-      return false;
-    }
-    const checkedModelValue = modelValue.find(subModelValue => subModelValue.checked === true);
-    if (!checkedModelValue) {
-      return false;
-    }
-
-    const { value } = checkedModelValue;
-    return super._isPrefilled(value);
   }
 
   get slots() {
@@ -132,16 +113,38 @@ export class LionSelectRich extends OverlayMixin(
     return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
   }
 
-  get checkedIndex() {
-    if (this.modelValue) {
-      return this.modelValue.findIndex(el => el.value === this.checkedValue);
+  get modelValue() {
+    const el = this.formElements.find(option => option.checked);
+    return el ? el.modelValue.value : '';
+  }
+
+  set modelValue(value) {
+    const el = this.formElements.find(option => option.modelValue.value === value);
+
+    if (el) {
+      el.checked = true;
+    } else {
+      // cache user set modelValue, and then try it again when registration is done
+      this.__cachedUserSetModelValue = value;
     }
-    return -1;
+
+    this.__syncInvokerElement();
+    this.requestUpdate('modelValue');
+  }
+
+  get checkedIndex() {
+    let checkedIndex = -1;
+    this.formElements.forEach((option, i) => {
+      if (option.checked) {
+        checkedIndex = i;
+      }
+    });
+    return checkedIndex;
   }
 
   set checkedIndex(index) {
-    if (this.formElements[index]) {
-      this.formElements[index].checked = true;
+    if (this._listboxNode.children[index]) {
+      this._listboxNode.children[index].checked = true;
     }
   }
 
@@ -169,8 +172,6 @@ export class LionSelectRich extends OverlayMixin(
     this.interactionMode = 'auto';
     this.disabled = false;
     // for interaction states
-    // we use a different event as 'model-value-changed' would bubble up from all options
-    this._valueChangedEvent = 'select-model-value-changed';
     this._listboxActiveDescendant = null;
     this.__hasInitialSelectedFormElement = false;
 
@@ -200,31 +201,19 @@ export class LionSelectRich extends OverlayMixin(
     this.__setupInvokerNode();
     this.__setupListboxNode();
 
-    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+    formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
+      // Now that we have rendered + registered our listbox, try setting the user defined modelValue again
+      if (this.__cachedUserSetModelValue) {
+        this.modelValue = this.__cachedUserSetModelValue;
+      }
+    });
 
+    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__toggleInvokerDisabled();
   }
 
   _requestUpdate(name, oldValue) {
     super._requestUpdate(name, oldValue);
-    if (
-      name === 'checkedValue' &&
-      !this.__isSyncingCheckedAndModelValue &&
-      this.modelValue &&
-      this.modelValue.length > 0
-    ) {
-      if (this.checkedIndex) {
-        // Necessary to sync the checkedIndex through the getter/setter explicitly
-        // eslint-disable-next-line no-self-assign
-        this.checkedIndex = this.checkedIndex;
-      }
-    }
-
-    if (name === 'modelValue') {
-      this.dispatchEvent(new CustomEvent('select-model-value-changed'));
-      this.__onModelValueChanged();
-    }
-
     if (name === 'interactionMode') {
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();
@@ -308,14 +297,11 @@ export class LionSelectRich extends OverlayMixin(
    *
    * @override
    * @param {*} child
+   * @param {Number} indexToInsertAt
    */
-  addFormElement(passedChild) {
-    const child = passedChild;
+  addFormElement(child, indexToInsertAt) {
+    super.addFormElement(child, indexToInsertAt);
 
-    // Set the name property on the option elements ourselves, for form serialization
-    child.name = `${this.name}[]`;
-
-    super.addFormElement(child);
     // we need to adjust the elements being registered
     /* eslint-disable no-param-reassign */
     child.id = child.id || `${this.localName}-option-${uuid()}`;
@@ -323,6 +309,7 @@ export class LionSelectRich extends OverlayMixin(
     if (this.disabled) {
       child.makeRequestToBeDisabled();
     }
+
     // the first elements checked by default
     if (!this.__hasInitialSelectedFormElement && (!child.disabled || this.disabled)) {
       child.active = true;
@@ -336,10 +323,6 @@ export class LionSelectRich extends OverlayMixin(
     this.__onChildModelValueChanged({ target: child });
     this.resetInteractionState();
     /* eslint-enable no-param-reassign */
-  }
-
-  _getFromAllFormElements(property) {
-    return this.formElements.map(e => e[property]);
   }
 
   __setupEventListeners() {
@@ -391,24 +374,15 @@ export class LionSelectRich extends OverlayMixin(
           formElement.checked = false;
         }
       });
+      this.modelValue = target.value;
     }
-    this.modelValue = this._getFromAllFormElements('modelValue');
   }
 
-  __onModelValueChanged() {
-    this.__isSyncingCheckedAndModelValue = true;
-
-    const foundChecked = this.modelValue.find(subModelValue => subModelValue.checked);
-    if (foundChecked && foundChecked.value !== this.checkedValue) {
-      this.checkedValue = foundChecked.value;
-    }
-
+  __syncInvokerElement() {
     // sync to invoker
     if (this._invokerNode) {
       this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     }
-
-    this.__isSyncingCheckedAndModelValue = false;
   }
 
   __getNextEnabledOption(currentIndex, offset = 1) {
@@ -657,17 +631,6 @@ export class LionSelectRich extends OverlayMixin(
         ev.preventDefault();
       /* no default */
     }
-  }
-
-  _isEmpty() {
-    const value = this.checkedValue;
-    if (typeof value === 'string' && value === '') {
-      return true;
-    }
-    if (value === undefined || value === null) {
-      return true;
-    }
-    return false;
   }
 
   /**

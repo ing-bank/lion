@@ -1,10 +1,9 @@
-import { expect, fixture, html, triggerFocusFor, triggerBlurFor } from '@open-wc/testing';
-import './keyboardEventShimIE.js';
-
-import { Required } from '@lion/validate';
 import '@lion/option/lion-option.js';
+import { Required } from '@lion/validate';
+import { expect, fixture, html, triggerBlurFor, triggerFocusFor } from '@open-wc/testing';
 import '../lion-options.js';
 import '../lion-select-rich.js';
+import './keyboardEventShimIE.js';
 
 describe('lion-select-rich interactions', () => {
   describe('values', () => {
@@ -36,11 +35,7 @@ describe('lion-select-rich interactions', () => {
 
       expect(el.querySelector('lion-option').checked).to.be.true;
       expect(el.querySelector('lion-option').active).to.be.true;
-      expect(el.modelValue).to.deep.equal([
-        { value: 10, checked: true },
-        { value: 20, checked: false },
-      ]);
-      expect(el.checkedValue).to.equal(10);
+      expect(el.modelValue).to.equal(10);
 
       expect(el.checkedIndex).to.equal(0);
       expect(el.activeIndex).to.equal(0);
@@ -55,11 +50,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      expect(el.modelValue).to.deep.equal([
-        { value: null, checked: true },
-        { value: 20, checked: false },
-      ]);
-      expect(el.checkedValue).to.be.null;
+      expect(el.modelValue).to.be.null;
     });
 
     it('has the checked option as modelValue', async () => {
@@ -71,27 +62,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      expect(el.modelValue).to.deep.equal([
-        { value: 10, checked: false },
-        { value: 20, checked: true },
-      ]);
-      expect(el.checkedValue).to.equal(20);
-    });
-
-    it('syncs checkedValue to modelValue', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-      el.checkedValue = 20;
-      expect(el.modelValue).to.deep.equal([
-        { value: 10, checked: false },
-        { value: 20, checked: true },
-      ]);
+      expect(el.modelValue).to.equal(20);
     });
 
     it('has an activeIndex', async () => {
@@ -139,13 +110,13 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      expect(el.checkedValue).to.equal(30);
+      expect(el.modelValue).to.equal(30);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
-      expect(el.checkedValue).to.equal(10);
+      expect(el.modelValue).to.equal(10);
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
-      expect(el.checkedValue).to.equal(40);
+      expect(el.modelValue).to.equal(40);
     });
 
     // TODO: nice to have
@@ -297,7 +268,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      expect(el.checkedValue).to.equal(10);
+      expect(el.modelValue).to.equal(10);
     });
 
     it('cannot be navigated with keyboard if disabled', async () => {
@@ -310,7 +281,7 @@ describe('lion-select-rich interactions', () => {
         </lion-select-rich>
       `);
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-      expect(el.checkedValue).to.equal(10);
+      expect(el.modelValue).to.equal(10);
     });
 
     it('cannot be opened via click if disabled', async () => {
@@ -477,10 +448,7 @@ describe('lion-select-rich interactions', () => {
       `);
       const option = el.querySelectorAll('lion-option')[1];
       option.checked = true;
-      expect(el.modelValue).to.deep.equal([
-        { value: 10, checked: false },
-        { value: 20, checked: true },
-      ]);
+      expect(el.modelValue).to.equal(20);
     });
 
     it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
@@ -543,7 +511,7 @@ describe('lion-select-rich interactions', () => {
         </lion-select-rich>
       `);
       expect(el.dirty).to.be.false;
-      el.checkedValue = 20;
+      el.modelValue = 20;
       expect(el.dirty).to.be.true;
     });
 
@@ -599,7 +567,7 @@ describe('lion-select-rich interactions', () => {
       expect(el.validationStates).to.have.a.property('error');
       expect(el.validationStates.error).to.have.a.property('Required');
 
-      el.checkedValue = 20;
+      el.modelValue = 20;
       expect(el.hasFeedbackFor).not.to.include('error');
       expect(el.validationStates).to.have.a.property('error');
       expect(el.validationStates.error).not.to.have.a.property('Required');

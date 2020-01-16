@@ -62,18 +62,18 @@ For usage and installation please see the appropriate packages.
             name="checkers"
             .validators="${[new Required()]}"
           >
-            <lion-checkbox name="checkers[]" value="foo" label="I like foo"></lion-checkbox>
-            <lion-checkbox name="checkers[]" value="bar" label="I like bar"></lion-checkbox>
-            <lion-checkbox name="checkers[]" value="baz" label="I like baz"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'bar'} label="I like bar"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
           </lion-checkbox-group>
           <lion-radio-group
             name="dinosaurs"
             label="Favorite dinosaur"
             .validators="${[new Required()]}"
           >
-            <lion-radio name="dinosaurs[]" value="allosaurus" label="allosaurus"></lion-radio>
-            <lion-radio name="dinosaurs[]" value="brontosaurus" label="brontosaurus"></lion-radio>
-            <lion-radio name="dinosaurs[]" value="diplodocus" label="diplodocus"></lion-radio>
+            <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
           </lion-radio-group>
           <lion-select-rich name="favoriteColor" label="Favorite color">
             <lion-options slot="input">
@@ -104,7 +104,6 @@ For usage and installation please see the appropriate packages.
           ></lion-input-range>
           <lion-checkbox-group name="terms" .validators="${[new Required()]}">
             <lion-checkbox
-              name="terms[]"
               label="I blindly accept all terms and conditions"
             ></lion-checkbox>
           </lion-checkbox-group>
