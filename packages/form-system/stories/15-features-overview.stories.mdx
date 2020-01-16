@@ -8,8 +8,12 @@ import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
 import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input/lion-input.js';
+import '@lion/option/lion-option.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
+import '@lion/select/lion-select.js';
+import '@lion/select-rich/lion-options.js';
+import '@lion/select-rich/lion-select-rich.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/validate';
 
@@ -41,7 +45,6 @@ For usage and installation please see the appropriate packages.
           <lion-input-date
             name="date"
             label="Date of application"
-            .modelValue="${'2000-12-12'}"
             .validators="${[new Required()]}"
           ></lion-input-date>
           <lion-textarea
@@ -73,9 +76,15 @@ For usage and installation please see the appropriate packages.
             <lion-radio name="dinosaurs[]" value="brontosaurus" label="brontosaurus"></lion-radio>
             <lion-radio name="dinosaurs[]" value="diplodocus" label="diplodocus"></lion-radio>
           </lion-radio-group>
-          <!-- TODO: rich select -->
+          <lion-select-rich name="favoriteColor" label="Favorite color">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${'red'}>Red</lion-option>
+              <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+            </lion-options>
+          </lion-select-rich>
           <lion-select
-            label="Make a selection (rich select)"
+            label="Make a selection (simple select)"
             name="lyrics"
             .validators="${[new Required()]}"
           >
@@ -118,8 +127,12 @@ import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
 import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input/lion-input.js';
+import '@lion/option/lion-option.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
+import '@lion/select-rich/lion-select-rich.js';
+import '@lion/select-rich/lion-options.js';
+import '@lion/option/lion-option.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/validate';
 ```
