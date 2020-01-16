@@ -75,6 +75,8 @@ function convertModule(
     getIndexClassImportPath = defaultGetIndexClassImportPath,
     getPackageName = defaultGetPackageName,
     getTagImportPath = defaultGetTagImportPath,
+    shouldReplaceTagGlobally = () => true,
+    shouldReplaceClassGlobally = () => true,
   },
 ) {
   if (typeof inTagName !== 'string') {
@@ -115,11 +117,15 @@ function convertModule(
   outCode = replaceLionTagImports(outCode, allData);
   outCode = replaceLionClassImports(outCode, allData);
 
-  // replace all remaining tags
-  outCode = outCode.replace(new RegExp(inTagName, 'g'), outTagName);
+  if (shouldReplaceTagGlobally({ outPackageName })) {
+    // replace all remaining tags
+    outCode = outCode.replace(new RegExp(inTagName, 'g'), outTagName);
+  }
 
-  // replace all remaining Classes
-  outCode = outCode.replace(new RegExp(inClassName, 'g'), outClassName);
+  if (shouldReplaceClassGlobally({ outPackageName })) {
+    // replace all remaining Classes
+    outCode = outCode.replace(new RegExp(inClassName, 'g'), outClassName);
+  }
 
   return outCode;
 }

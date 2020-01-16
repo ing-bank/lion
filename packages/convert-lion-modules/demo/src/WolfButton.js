@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import { css } from '@lion/core';
-import { LionCalendar } from '@lion/calendar';
+import { LionButton } from '@lion/button';
 
-export class DemoCalendar extends LionCalendar {
+export class WolfButton extends LionButton {
   static get styles() {
     return [
       super.styles,

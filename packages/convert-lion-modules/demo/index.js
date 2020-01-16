@@ -1,1 +1,2 @@
-export { DemoCalendar } from './src/DemoCalendar.js';
+export { WolfCalendar } from './src/WolfCalendar.js';
+export { WolfButton } from './src/WolfButton.js';

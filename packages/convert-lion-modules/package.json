@@ -8,10 +8,12 @@
     "storybook": "start-storybook -p 9001 --config-dir ./demo/.storybook --root-dir ../../",
     "storybook:build": "build-storybook --stories \"../calendar/stories/*.stories.{js,mdx}\" --output-dir ./storybook-static"
   },
+  "dependencies": {
+    "@open-wc/demoing-storybook": "^1.6.1"
+  },
   "devDependencies": {
     "@lion/core": "0.4.0",
     "@lion/calendar": "0.6.0",
-    "@open-wc/demoing-storybook": "^1.6.1",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "onchange": "^6.1.0"
