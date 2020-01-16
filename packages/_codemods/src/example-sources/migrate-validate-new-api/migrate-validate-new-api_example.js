@@ -5,34 +5,64 @@
  */
 
 import {
-  isString, equalsLength, minLength, maxLength, minMaxLength, isEmail,
-  isStringValidator, equalsLengthValidator, minLengthValidator, maxLengthValidator, minMaxLengthValidator, isEmailValidator,
-
-  isNumber, minNumber, maxNumber, minMaxNumber,
-  isNumberValidator, minNumberValidator, maxNumberValidator, minMaxNumberValidator,
-
-  isDate, minDate, maxDate, isDateDisabled, minMaxDate,
-  isDateValidator, minDateValidator, maxDateValidator, minMaxDateValidator, isDateDisabledValidator,
-
-  randomOk, defaultOk,
-  randomOkValidator, defaultOkValidator,
+  isString,
+  equalsLength,
+  minLength,
+  maxLength,
+  minMaxLength,
+  isEmail,
+  isStringValidator,
+  equalsLengthValidator,
+  minLengthValidator,
+  maxLengthValidator,
+  minMaxLengthValidator,
+  isEmailValidator,
+  isNumber,
+  minNumber,
+  maxNumber,
+  minMaxNumber,
+  isNumberValidator,
+  minNumberValidator,
+  maxNumberValidator,
+  minMaxNumberValidator,
+  isDate,
+  minDate,
+  maxDate,
+  isDateDisabled,
+  minMaxDate,
+  isDateValidator,
+  minDateValidator,
+  maxDateValidator,
+  minMaxDateValidator,
+  isDateDisabledValidator,
+  randomOk,
+  defaultOk,
+  randomOkValidator,
+  defaultOkValidator,
 } from '@lion/validate'; // '@lion/validate/src/validators.js'
-
 
 /**
  * 1b. Imports 'to'
  */
 
 import {
-  IsString, EqualsLength, MinLength, MaxLength, MinMaxLength, IsEmail,
-
-  IsNumber, MinNumber, MaxNumber, MinMaxNumber,
-
-  IsDate, MinDate, MaxDate, IsDateDisabled, MinMaxDate,
-
+  IsString,
+  EqualsLength,
+  MinLength,
+  MaxLength,
+  MinMaxLength,
+  IsEmail,
+  IsNumber,
+  MinNumber,
+  MaxNumber,
+  MinMaxNumber,
+  IsDate,
+  MinDate,
+  MaxDate,
+  IsDateDisabled,
+  MinMaxDate,
   DefaultSuccess,
 } from '@lion/validate';
-
 
 /**
  * 2a. Templates 'from'
@@ -42,34 +72,32 @@ const paramRef = new Date();
 const cfgRef = { con: 'fig' };
 
 const tplFrom = html`
-<div>
-<lion-input
-  .errorValidators="${[minLengthValidator(1, { x: 'asd' }) ]}"
-  .warningValidators="${[isNumberValidator()]}"
-  .infoValidators="${[maxDateValidator(paramRef, cfgRef)]}"
-  .successValidators="${[[defaultOk]]}">
-</lion-input>
-</div>
+  <div>
+    <lion-input
+      .errorValidators="${[minLengthValidator(1, { x: 'asd' })]}"
+      .warningValidators="${[isNumberValidator()]}"
+      .infoValidators="${[maxDateValidator(paramRef, cfgRef)]}"
+      .successValidators="${[[defaultOk]]}"
+    >
+    </lion-input>
+  </div>
 `;
-
-
 
 /**
  * 2b. Templates 'to'
  */
 
 const tplTo = html`
-<lion-input
-  .validators="${[
-    new MinLength(1, { x: 'asd' }),
-    new IsNumber(null, { type: 'warning'}),
-    new MaxDate(paramRef, { ...cfgRef, type: 'info' }),
-    new DefaultSuccess(),
-  ]}">
-</lion-input>
+  <lion-input
+    .validators="${[
+      new MinLength(1, { x: 'asd' }),
+      new IsNumber(null, { type: 'warning' }),
+      new MaxDate(paramRef, { ...cfgRef, type: 'info' }),
+      new DefaultSuccess(),
+    ]}"
+  >
+  </lion-input>
 `;
-
-
 
 /**
  * 3a. Custom Validator definitions 'from'
@@ -92,7 +120,6 @@ localize.loadNamespace({
   },
 });
 
-
 /**
  * 3b. Custom Validator definitions 'to'
  */
@@ -104,7 +131,6 @@ const nsMyAppIsIban = localize.loadNamespace({
     return import(`./translations/${locale}.js`);
   },
 });
-
 
 export class IsIban extends Validator {
   constructor(...args) {
@@ -118,7 +144,10 @@ export class IsIban extends Validator {
 
   static async getMessage(data) {
     await nsMyAppIsIban;
-    return localize.msg('lion-validate+my-app-isIban:error.my-app-isIban', await transformData(data));
+    return localize.msg(
+      'lion-validate+my-app-isIban:error.my-app-isIban',
+      await transformData(data),
+    );
   }
 }
 
@@ -131,7 +160,6 @@ export class IsIban extends Validator {
  * 4a. Error states (from)
  */
 
-
 myInputRef.errorState;
 myInputRef.error.required;
 
@@ -141,18 +169,14 @@ myInputRef.error.required;
 myInputRef.hasError;
 myInputRef.errorStates.Required;
 
-
-
 /**
  * 5a. Configurations of default validators inside components (from)
  */
 class MyComp extends HTMLElement {
-
   getValidatorsForType(type) {
     if (type === 'error') {
       return [isDateValidator()].concat(super.getValidatorsForType(type) || []);
-    }
-    else if (type === 'warning') {
+    } else if (type === 'warning') {
       return [equalsLengthValidator(2)].concat(super.getValidatorsForType(type) || []);
     }
     return super.getValidatorsForType(type);
@@ -171,24 +195,21 @@ class MyCompStill extends HTMLElement {
   }
 }
 
-
 /**
  * 6a. getFieldName (from)
  */
 
 const tplFieldFrom = html`
-<lion-input .getFieldName="${() => 'xyz'}"></lion-input>
+  <lion-input .getFieldName="${() => 'xyz'}"></lion-input>
 `;
-
 
 /**
  * 6b. .fieldName (to)
  */
 
 const tplFieldTo = html`
-<lion-input .fieldName="${'xyz'}"></lion-input>
+  <lion-input .fieldName="${'xyz'}"></lion-input>
 `;
-
 
 /**
  * 7a. show{Type}Condition (from)
@@ -197,11 +218,9 @@ const tplFieldTo = html`
 class MyCompX extends HTMLElement {
   showErrorCondition(...args) {
     const parent = super.showErrorCondition(...args);
-    return parent && (1 + 1 === 3);
+    return parent && 1 + 1 === 3;
   }
 }
-
-
 
 /**
  * 7b. show{Type}Condition (to)
@@ -209,10 +228,8 @@ class MyCompX extends HTMLElement {
 class MyCompXStill extends HTMLElement {
   _prioritizeAndFilterFeedback({ validationResult }) {
     const parent = super._prioritizeAndFilterFeedback({ validationResult });
-    return parent && (1 + 1 === 3);
+    return parent && 1 + 1 === 3;
   }
 }
-
-
 
 // '.inputElement' -> '._inputNode'

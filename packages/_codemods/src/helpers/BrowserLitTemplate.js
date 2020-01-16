@@ -3,7 +3,8 @@ const puppeteer = require('puppeteer');
 const babelGenerate = require('@babel/generator').default;
 const pathLib = require('path');
 const express = require('express');
-// const fs = require('fs');
+const fs = require('fs');
+const babelParser = require('@babel/parser');
 
 function createPageFromAstNode(taggedTemplateExpressionPath, filePath) {
   const htmlString = babelGenerate(taggedTemplateExpressionPath.node).code;
@@ -13,21 +14,27 @@ function createPageFromAstNode(taggedTemplateExpressionPath, filePath) {
       // console.log(path.node);
       const binding = path.scope.getBinding(path.node.name);
 
-      if (binding.path.node === 'ImportSpecifier') {
-        const importDeclPath = binding.path.findParent((path) => path.isImportDeclaration());
+      // TODO: node.type ???
+      if (binding.path.node.type === 'ImportSpecifier') {
+        const importDeclPath = binding.path.findParent(path => path.isImportDeclaration());
         const source = importDeclPath.node.source.value;
-        const newSource = source; // TODO: resolve via filePath
+        const newSourceFilePath = source; // TODO: resolve via filePath
+
+        // Now 'treeshake' all our dependendant code until we have a working example with all
+        // our scope Identifiers resolved.
+
+        const code = fs.readFileSync(newSourceFilePath, 'utf8');
+        const ast = babelParser.parse(code, {
+          sourceType: 'unambiguous',
+          plugins: ['importMeta', 'dynamicImport'],
+        });
 
         // Path should also be served via express otc...
-
-
       } else {
         // The definition must be in the current file and its code needs to be copied
-
         // Find the binding and recursively resolve and add all found Identifiers
-
       }
-    }
+    },
   });
 
   console.log('identifierBindings[0]', identifierBindings[0].path.node);
@@ -49,8 +56,7 @@ function createPageFromAstNode(taggedTemplateExpressionPath, filePath) {
       <body>
         <div id="templateContainer"></div>
       </body>
-    </html>`
-  ;
+    </html>`;
 }
 
 let server;
@@ -58,7 +64,7 @@ let currentPage;
 let puppeteerInstance;
 
 let serverReadyResolve;
-const serverReadyCompleted = new Promise((resolve) => {
+const serverReadyCompleted = new Promise(resolve => {
   serverReadyResolve = resolve;
 });
 
