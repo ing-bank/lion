@@ -37,7 +37,7 @@
     "@lion/input": "0.5.0"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.6.1",
+    "@open-wc/demoing-storybook": "^1.8.3",
     "@open-wc/testing": "^2.3.4"
   }
 }
