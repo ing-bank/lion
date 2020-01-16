@@ -16,24 +16,24 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 <Story name="Default">
   {html`
     <lion-checkbox-group
-      name="scientistsGroup"
+      name="scientists[]"
       label="Favorite scientists"
     >
-      <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-      <lion-checkbox name="scientists[]" label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-      <lion-checkbox name="scientists[]" label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
     </lion-checkbox-group>
   `}
 </Story>
 
 ```html
 <lion-checkbox-group
-  name="scientistsGroup"
+  name="scientists[]"
   label="Favourite scientists"
 >
-  <lion-checkbox name="scientists[]" label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-  <lion-checkbox name="scientists[]" label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-  <lion-checkbox name="scientists[]" label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -62,20 +62,17 @@ You can pre-select options by targeting the `modelValue` object of the option an
 
 <Story name="Pre-select">
   {html`
-    <lion-checkbox-group name="scientistsGroup" label="Favorite scientists">
+    <lion-checkbox-group name="scientists" label="Favorite scientists">
       <lion-checkbox
-        name="scientists[]"
         label="Archimedes"
         .choiceValue=${'Archimedes'}
       ></lion-checkbox>
       <lion-checkbox
-        name="scientists[]"
         label="Francis Bacon"
         .choiceValue=${'Francis Bacon'}
         checked
       ></lion-checkbox>
       <lion-checkbox
-        name="scientists[]"
         label="Marie Curie"
         .modelValue=${{ value: 'Marie Curie', checked: true }}
       ></lion-checkbox>
@@ -84,20 +81,17 @@ You can pre-select options by targeting the `modelValue` object of the option an
 </Story>
 
 ```html
-<lion-checkbox-group name="scientistsGroup" label="Favorite scientists">
+<lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox
-    name="scientists[]"
     label="Archimedes"
     .choiceValue=${'Archimedes'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Francis Bacon"
     .choiceValue=${'Francis Bacon'}
     checked
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Marie Curie"
     .modelValue=${{ value: 'Marie Curie', checked: true }}
   ></lion-checkbox>
@@ -110,19 +104,16 @@ You can disable the entire group by setting the `disabled` attribute on the `<li
 
 <Story name="Disabled">
   {html`
-    <lion-checkbox-group name="scientistsGroup" label="Favorite scientists" disabled>
+    <lion-checkbox-group name="scientists[]" label="Favorite scientists" disabled>
       <lion-checkbox
-        name="scientists[]"
         label="Archimedes"
         .choiceValue=${'Archimedes'}
       ></lion-checkbox>
       <lion-checkbox
-        name="scientists[]"
         label="Francis Bacon"
         .choiceValue=${'Francis Bacon'}
       ></lion-checkbox>
       <lion-checkbox
-        name="scientists[]"
         label="Marie Curie"
         .modelValue=${{ value: 'Marie Curie', checked: true }}
       ></lion-checkbox>
@@ -131,19 +122,16 @@ You can disable the entire group by setting the `disabled` attribute on the `<li
 </Story>
 
 ```html
-<lion-checkbox-group name="scientistsGroup" label="Favorite scientists" disabled>
+<lion-checkbox-group name="scientists[]" label="Favorite scientists" disabled>
   <lion-checkbox
-    name="scientists[]"
     label="Archimedes"
     .choiceValue=${'Archimedes'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Francis Bacon"
     .choiceValue=${'Francis Bacon'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Marie Curie"
     .modelValue=${{ value: 'Marie Curie', checked: true }}
   ></lion-checkbox>
@@ -164,23 +152,20 @@ The interaction states of the `<lion-checkbox-group>` are evaluated in order to 
     };
     return html`
       <lion-checkbox-group
-        id="scientistsGroup"
-        name="scientistsGroup"
+        id="scientists"
+        name="scientists[]"
         label="Favorite scientists"
         .validators=${[new Required()]}
       >
         <lion-checkbox
-          name="scientists[]"
           label="Archimedes"
           .choiceValue=${'Archimedes'}
         ></lion-checkbox>
         <lion-checkbox
-          name="scientists[]"
           label="Francis Bacon"
           .choiceValue=${'Francis Bacon'}
         ></lion-checkbox>
         <lion-checkbox
-          name="scientists[]"
           label="Marie Curie"
           .choiceValue=${'Marie Curie'}
         ></lion-checkbox>
@@ -201,23 +186,20 @@ const validate = () => {
 
 ```html
 <lion-checkbox-group
-  id="scientistsGroup"
-  name="scientistsGroup"
+  id="scientists"
+  name="scientists[]"
   label="Favorite scientists"
   .validators=${[new Required()]}
 >
   <lion-checkbox
-    name="scientists[]"
     label="Archimedes"
     .choiceValue=${'Archimedes'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Francis Bacon"
     .choiceValue=${'Francis Bacon'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Marie Curie"
     .choiceValue=${'Marie Curie'}
   ></lion-checkbox>
@@ -239,41 +221,33 @@ Below is a more advanced validator on the group that evaluates the children chec
         this.name = 'HasMinTwoChecked';
       }
       execute(value) {
-        let hasError = false;
-        const selectedValues = value['scientists[]'].filter(v => v.checked === true);
-        if (!(selectedValues.length >= 2)) {
-          hasError = true;
-        }
-        return hasError;
+        return value.length < 2;
       }
       static async getMessage() {
         return 'You need to select at least 2 values.';
       }
     }
     const validate = () => {
-      const checkboxGroup = document.querySelector('#scientistsGroup2');
+      const checkboxGroup = document.querySelector('#scientists2');
       checkboxGroup.submitted = !checkboxGroup.submitted;
     };
     return html`
       <lion-checkbox-group
-        id="scientistsGroup2"
-        name="scientistsGroup"
+        id="scientists2"
+        name="scientists[]"
         label="Favorite scientists"
         help-text="You should have at least 2 of those"
         .validators=${[new Required(), new HasMinTwoChecked()]}
       >
         <lion-checkbox
-          name="scientists[]"
           label="Archimedes"
           .choiceValue=${'Archimedes'}
         ></lion-checkbox>
         <lion-checkbox
-          name="scientists[]"
           label="Francis Bacon"
           .choiceValue=${'Francis Bacon'}
         ></lion-checkbox>
         <lion-checkbox
-          name="scientists[]"
           label="Marie Curie"
           .choiceValue=${'Marie Curie'}
         ></lion-checkbox>
@@ -295,12 +269,7 @@ class HasMinTwoChecked extends Validator {
   }
 
   execute(value) {
-    let hasError = false;
-    const selectedValues = value['scientists[]'].filter(v => v.checked === true);
-    if (!(selectedValues.length >= 2)) {
-      hasError = true;
-    }
-    return hasError;
+    return value.length < 2;
   }
 
   static async getMessage() {
@@ -309,31 +278,28 @@ class HasMinTwoChecked extends Validator {
 }
 
 const validate = () => {
-  const checkboxGroup = document.querySelector('#scientistsGroup');
+  const checkboxGroup = document.querySelector('#scientists2');
   checkboxGroup.submitted = !checkboxGroup.submitted;
 };
 ```
 
 ```html
 <lion-checkbox-group
-  id="scientistsGroup"
-  name="scientistsGroup"
+  id="scientists2"
+  name="scientists[]"
   label="Favorite scientists"
   help-text="You should have at least 2 of those"
   .validators=${[new Required(), new HasMinTwoChecked()]}
 >
   <lion-checkbox
-    name="scientists[]"
     label="Archimedes"
     .choiceValue=${'Archimedes'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Francis Bacon"
     .choiceValue=${'Francis Bacon'}
   ></lion-checkbox>
   <lion-checkbox
-    name="scientists[]"
     label="Marie Curie"
     .choiceValue=${'Marie Curie'}
   ></lion-checkbox>

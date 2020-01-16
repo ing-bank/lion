@@ -169,10 +169,10 @@ In the following example we will demonstrate this with interaction states, the m
       <h3>
         Set conditions for validation feedback visibility
       </h3>
-      <lion-checkbox-group name="props" @model-value-changed="${fetchConditionsAndReevaluate}">
+      <lion-checkbox-group name="props[]" @model-value-changed="${fetchConditionsAndReevaluate}">
         ${props.map(
           p => html`
-            <lion-checkbox name="props[]" .label="${p}" .choiceValue="${p}"> </lion-checkbox>
+            <lion-checkbox .label="${p}" .choiceValue="${p}"> </lion-checkbox>
           `,
         )}
       </lion-checkbox-group>

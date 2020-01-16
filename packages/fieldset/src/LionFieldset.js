@@ -370,13 +370,13 @@ export class LionFieldset extends FormRegistrarMixin(
    *
    * @override
    */
-  addFormElement(child) {
+  addFormElement(child, indexToInsertAt) {
     const { name } = child;
     if (!name) {
       console.info('Error Node:', child); // eslint-disable-line no-console
       throw new TypeError('You need to define a name');
     }
-    if (name === this.name) {
+    if (name === this.name && !this._childrenCanHaveSameName) {
       console.info('Error Node:', child); // eslint-disable-line no-console
       throw new TypeError(`You can not have the same name "${name}" as your parent`);
     }
@@ -385,11 +385,16 @@ export class LionFieldset extends FormRegistrarMixin(
       // eslint-disable-next-line no-param-reassign
       child.makeRequestToBeDisabled();
     }
-    if (name.substr(-2) === '[]') {
+
+    if (name.substr(-2) === '[]' || this._childNamesCanBeDuplicate) {
       if (!Array.isArray(this.formElements[name])) {
         this.formElements[name] = [];
       }
-      this.formElements[name].push(child);
+      if (indexToInsertAt > 0) {
+        this.formElements[name].splice(indexToInsertAt, 0, child);
+      } else {
+        this.formElements[name].push(child);
+      }
     } else if (!this.formElements[name]) {
       this.formElements[name] = child;
     } else {
@@ -415,6 +420,16 @@ export class LionFieldset extends FormRegistrarMixin(
     }
 
     this.validate();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get _childrenCanHaveSameName() {
+    return false;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get _childNamesCanBeDuplicate() {
+    return false;
   }
 
   /**

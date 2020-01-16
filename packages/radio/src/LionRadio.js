@@ -1,22 +1,22 @@
-import { LionInput } from '@lion/input';
 import { ChoiceInputMixin } from '@lion/choice-input';
+import { LionInput } from '@lion/input';
 
 /**
  * Lion-radio can be used inside a lion-radio-group.
  *
- * <lion-radio-group>
+ * <lion-radio-group name="radios">
  *   <label slot="label">My Radio</label>
- *   <lion-radio name="name[]">
+ *   <lion-radio>
  *     <label slot="label">Male</label>
  *   </lion-radio>
- *   <lion-radio name="name[]">
+ *   <lion-radio>
  *     <label slot="label">Female</label>
  *   </lion-radio>
  * </lion-radio-group>
  *
  * You can preselect an option by setting marking an lion-radio checked.
  *   Example:
- *   <lion-radio name="name[]" checked>
+ *   <lion-radio checked>
  *
  *
  * @customElement lion-radio

@@ -1,6 +1,6 @@
 import { dedupeMixin } from '@lion/core';
-import { formRegistrarManager } from './formRegistrarManager.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
+import { formRegistrarManager } from './formRegistrarManager.js';
 
 /**
  * This allows an element to become the manager of a register
