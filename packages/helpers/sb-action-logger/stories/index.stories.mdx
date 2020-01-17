@@ -63,6 +63,8 @@ This connects the logger element to the trigger.
 - Overridable `title` property.
 - Clear button to clear logs
 - A counter to count the total amount of logs
+- Stacks consecutive duplicate logs and shows a counter
+- `simple` property/attribute to only show a single log
 
 ## How to use
 
@@ -78,7 +80,39 @@ npm i sb-action-logger
 
 ## Variations
 
+### Simple mode
+
+Simple mode essentially means there is only ever 1 log.
+Duplicates are not counted or stacked, but you will still see the visual cue.
+
+<Story name="Simple mode">
+  {() => {
+    const uid = Math.random().toString(36).substr(2, 10);
+    return html`
+      <div>To log: <code>Hello, World!</code></div>
+      <button
+        @click=${() => {
+          document.getElementById(`logger-${uid}`).log('Hello, World!');
+        }}
+      >Click this button</button>
+      <div>Or to log: <code>What's up, Planet!</code></div>
+      <button
+        @click=${() => {
+          document.getElementById(`logger-${uid}`).log(`What's up, Planet!`);
+        }}
+      >Click this button</button>
+      <sb-action-logger simple id="logger-${uid}"></sb-action-logger>
+    `;
+  }}
+</Story>
+
+```html
+<sb-action-logger simple></sb-action-logger>
+```
+
 ### Custom Title
+
+You can customize the action logger title with the `.title` property.
 
 <Story name="Custom Title">
   {() => {
@@ -92,6 +126,9 @@ npm i sb-action-logger
   }}
 </Story>
 
+```html
+<sb-action-logger .title=${'Hello World'}></sb-action-logger>
+```
 
 ## Rationale
 

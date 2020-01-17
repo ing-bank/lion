@@ -6,6 +6,7 @@ export class SbActionLogger extends LitElement {
   static get properties() {
     return {
       title: { type: String, reflect: true },
+      simple: { type: Boolean, reflect: true },
       __logCounter: { type: Number },
     };
   }
@@ -136,6 +137,12 @@ export class SbActionLogger extends LitElement {
    * @param {} content Content to be logged to the action logger
    */
   log(content) {
+    this.__animateCue();
+
+    if (this.simple) {
+      this.__clearLogs();
+    }
+
     if (this.__isConsecutiveDuplicateLog(content)) {
       this.__handleConsecutiveDuplicateLog();
     } else {
@@ -144,7 +151,6 @@ export class SbActionLogger extends LitElement {
     }
 
     this.__logCounter += 1; // increment total log counter
-    this.__animateCue();
   }
 
   /**

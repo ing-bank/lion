@@ -113,17 +113,30 @@ describe('sb-action-logger', () => {
       expect(firstLog.querySelector('.logger__log-count').innerText).to.equal('3');
       expect(lastLog.querySelector('.logger__log-count').innerText).to.equal('2');
     });
-  });
 
-  describe('Potential Additional Features', () => {
-    // This is handy if you don't want to keep track of updates
-    it.skip('can be set to mode=simple for only showing a single log statement', async () => {
+    it('can be set to simple mode for only showing a single log statement', async () => {
       const el = await fixture(html`
         <sb-action-logger simple></sb-action-logger>
       `);
-      expect(el).to.be.true;
-    });
+      el.log('Hello, World!');
+      const loggerEl = el.shadowRoot.querySelector('.logger');
 
+      expect(loggerEl.children.length).to.equal(1);
+      expect(loggerEl.firstElementChild.querySelector('code').innerText).to.equal('Hello, World!');
+
+      el.log('Hello, Earth!');
+      expect(loggerEl.children.length).to.equal(1);
+      expect(loggerEl.firstElementChild.querySelector('code').innerText).to.equal('Hello, Earth!');
+
+      el.log('Hello, Planet!');
+      el.log('Hello, Planet!');
+      expect(loggerEl.children.length).to.equal(1);
+      expect(loggerEl.firstElementChild.querySelector('code').innerText).to.equal('Hello, Planet!');
+      expect(loggerEl.firstElementChild.querySelector('.logger__log-count')).to.be.null;
+    });
+  });
+
+  describe('Potential Additional Features', () => {
     it.skip('fires a sb-action-logged event when something is logged to the logger', async () => {
       const el = await fixture(html`
         <sb-action-logger></sb-action-logger>
