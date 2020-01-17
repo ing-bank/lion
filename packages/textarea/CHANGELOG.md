@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/textarea@0.5.1...@lion/textarea@0.5.2) (2020-01-17)
+
+
+### Bug Fixes
+
+* unregister form element when disconnected ([60284d7](https://github.com/ing-bank/lion/commit/60284d79bc538632661e2f00ef47aeb191988a91))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/textarea@0.5.0...@lion/textarea@0.5.1) (2020-01-17)
 
 
