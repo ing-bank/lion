@@ -146,7 +146,7 @@ Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improv
 Feel free to create a github issue for any feedback or questions you might have.
 You can also find us on the Polymer slack in the [#lion](https://polymer.slack.com/messages/CJGFWJN9J/convo/CE6D9DN05-1557486154.187100/) channel.
 
-You can join the Polymer slack by visiting [Polymer Slack Invite](https://join.slack.com/t/polymer/shared_invite/enQtNTAzNzg3NjU4ODM4LTkzZGVlOGIxMmNiMjMzZDM1YzYyMzdiYTk0YjQyOWZhZTMwN2RlNjM5ZDFmZjMxZWRjMWViMDA1MjNiYWFhZWM).
+You can join the Polymer slack by visiting [https://www.polymer-project.org/slack-invite](https://www.polymer-project.org/slack-invite).
 
 ## Support and issues
 
