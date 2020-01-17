@@ -24,16 +24,16 @@ A visual element to show action logs in Storybook demos `sb-action-logger`
   {() => {
     const uid = Math.random().toString(36).substr(2, 10);
     return html`
-      <style>
-        sb-action-logger {
-          font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
-            BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-      </style>
       <div>To log: <code>Hello, World!</code></div>
       <button
         @click=${() => {
           document.getElementById(`logger-${uid}`).log('Hello, World!');
+        }}
+      >Click this button</button>
+      <div>Or to log: <code>What's up, Planet!</code></div>
+      <button
+        @click=${() => {
+          document.getElementById(`logger-${uid}`).log(`What's up, Planet!`);
         }}
       >Click this button</button>
       <sb-action-logger id="logger-${uid}"></sb-action-logger>

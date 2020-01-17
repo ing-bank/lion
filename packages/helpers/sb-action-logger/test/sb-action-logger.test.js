@@ -91,22 +91,31 @@ describe('sb-action-logger', () => {
       expect(el.shadowRoot.querySelector('.logger').children.length).to.equal(0);
     });
 
-    it('duplicate consecutive logs are kept as one', async () => {
+    it('duplicate consecutive logs are kept as one, adds a visual counter', async () => {
       const el = await fixture(html`
         <sb-action-logger></sb-action-logger>
       `);
-      expect(el).to.be.true;
+
+      el.log('Hello, World!');
+      el.log('Hello, World!');
+      el.log('Hello, World!'); // 3 consecutive dupes
+      el.log('Hello, Earth!');
+      el.log('Hello, World!');
+      el.log('Hello, Planet!');
+      el.log('Hello, Planet!'); // 2 consecutive dupes
+
+      const loggerEl = el.shadowRoot.querySelector('.logger');
+
+      const firstLog = loggerEl.firstElementChild;
+      const lastLog = loggerEl.lastElementChild;
+
+      expect(loggerEl.children.length).to.equal(4);
+      expect(firstLog.querySelector('.logger__log-count').innerText).to.equal('3');
+      expect(lastLog.querySelector('.logger__log-count').innerText).to.equal('2');
     });
   });
 
   describe('Potential Additional Features', () => {
-    it.skip('duplicate consecutive adds a visual counter to count per duplicate', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
-      expect(el).to.be.true;
-    });
-
     // This is handy if you don't want to keep track of updates
     it.skip('can be set to mode=simple for only showing a single log statement', async () => {
       const el = await fixture(html`
