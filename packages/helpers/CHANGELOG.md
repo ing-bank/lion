@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/ing-bank/lion/compare/@lion/helpers@0.2.0...@lion/helpers@0.2.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* **helpers:** publish folders to npm ([bc6958b](https://github.com/ing-bank/lion/commit/bc6958b98432bf629a8b6a90122cbb8a38416ee7))
+
+
+
+
+
 # 0.2.0 (2020-01-13)
 
 
