@@ -2369,16 +2369,16 @@
     eslint-plugin-no-only-tests "^2.3.1"
     eslint-plugin-wc "^1.2.0"
 
-"@open-wc/karma-esm@^2.11.12":
-  version "2.11.12"
-  resolved "https://registry.yarnpkg.com/@open-wc/karma-esm/-/karma-esm-2.11.12.tgz#5526c1f301ca92eb07f6a03e0296a05acb34ecf8"
-  integrity sha512-DMFi44Em6D9pMuQWnGm0ykj6Wp4xY0iVieidrQQxAjsieR+rDJlUZd+ZApD2d1zUKHaiJjFlAvfaZAYiD/f8uQ==
+"@open-wc/karma-esm@^2.12.6":
+  version "2.12.6"
+  resolved "https://registry.yarnpkg.com/@open-wc/karma-esm/-/karma-esm-2.12.6.tgz#9a252f4b8fd962b26a090987cc62a40d6975d1a8"
+  integrity sha512-Q9wJq1ua5Jk9XXuvseJQ5ioozIizanzfkbh8gzTnTaZjz0gsaN5J+V7YpdThf2RRevWTmhxrGwfsyxh5efXg9Q==
   dependencies:
     "@open-wc/building-utils" "^2.11.0"
     babel-plugin-istanbul "^5.1.4"
     chokidar "^3.0.0"
     deepmerge "^3.2.0"
-    es-dev-server "^1.31.1"
+    es-dev-server "^1.36.2"
     minimatch "^3.0.4"
     node-fetch "^2.6.0"
     portfinder "^1.0.21"
@@ -2402,6 +2402,11 @@
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.4.tgz#1bbf9adbbf3cb6090f525fc7d4274d17cc016457"
   integrity sha512-Wa50FJiB26/jC++snNqOJBr3cYrzUdsFFNLL3HSA7PAscCWEGo5NAdesL/BnehXOCRyMZfpvv+uY9+F8dc7HCQ==
 
+"@open-wc/semantic-dom-diff@^0.15.5":
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.5.tgz#5530a45eea1982706abf72c702828df0e0a61739"
+  integrity sha512-cODcMLSKRuyAQVa1I+NNjj5A+j5o2qhTW00ztcoEg+bkeutvFqWsB8YG0HS/NhP+wJKe/nOcmt4i2T6KwCTNLw==
+
 "@open-wc/storybook-prebuilt@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-0.4.0.tgz#a8ac47d86e50559ddf17f217df2504a098cd85b8"
@@ -2412,24 +2417,29 @@
   resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.4.0.tgz#d93b627c1311a1ad2b5fc4de43fc6f9fa8a79177"
   integrity sha512-XTR0HGOSBEJz7H31FDhHD2R6GHXI6DksiJsYDzJdLXqF/ORkKFzfu1BXGVOnPZytmJZLvnEr7VmE2YfV0y2Yug==
 
-"@open-wc/testing-karma-bs@^1.1.58":
-  version "1.3.19"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma-bs/-/testing-karma-bs-1.3.19.tgz#95870d838961ef5fe1e911c99a08126a4f57c48f"
-  integrity sha512-OOvr8bKNldYyRlZhvoyGOr2phR8pfc+TlZhCLnfZll/mh1CLd0s1mRaLnjump9F99WLgkQYq4aWUVKb/mojuBQ==
+"@open-wc/testing-helpers@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.5.0.tgz#8f3ef0900c2418443450f50c30297ed70f811bf6"
+  integrity sha512-ykm6vk46YqKHdhOhrGuMVayClImU7EnisoQAzCmu2jClU/8FnNHA/ZPBzLssZy/w1ykcrGhB+8QCz7x9kHBHdQ==
+
+"@open-wc/testing-karma-bs@^1.3.30":
+  version "1.3.30"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma-bs/-/testing-karma-bs-1.3.30.tgz#f2ccc600600a5723614a095aa55b971da6a43b59"
+  integrity sha512-GaVJe4W3Fp/30EX2+eRoEckcXpnqwrYrb+1OAbafD9ZkwFLSJUzW+AE+BB5RFGPXrVekTHOCSUfA1cRlzanTcg==
   dependencies:
-    "@open-wc/testing-karma" "^3.2.19"
+    "@open-wc/testing-karma" "^3.2.30"
     "@types/node" "^11.13.0"
     karma-browserstack-launcher "^1.0.0"
 
-"@open-wc/testing-karma@^3.1.33", "@open-wc/testing-karma@^3.2.19":
-  version "3.2.19"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma/-/testing-karma-3.2.19.tgz#aecdb5160fba981d106ad7a1a78916a0792ca7bc"
-  integrity sha512-2/UpfT5EyMpXd71IjXueT01cdGgUfUeC7FTt31ERSmc4RaDXVPBjLnBYv+julSe5MFhxqCVJC4LlcB/8upKajQ==
+"@open-wc/testing-karma@^3.2.30":
+  version "3.2.30"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing-karma/-/testing-karma-3.2.30.tgz#ac4bfb2e9578d5a4ebaecdb2ef2add81cda23827"
+  integrity sha512-z9tpYOxhHcaPtA3muCpfwvDsQunuziwS4HDm2gV4hEsWFQ97WgbMV9wQAtYHaYxzKGQhk5uWcLNQEe10VUxhpg==
   dependencies:
-    "@open-wc/karma-esm" "^2.11.12"
+    "@open-wc/karma-esm" "^2.12.6"
     axe-core "^3.3.1"
     karma "^4.1.0"
-    karma-chrome-launcher "^2.0.0"
+    karma-chrome-launcher "^3.1.0"
     karma-coverage-istanbul-reporter "^2.0.0"
     karma-mocha "^1.0.0"
     karma-mocha-reporter "^2.0.0"
@@ -2454,6 +2464,24 @@
     "@open-wc/chai-dom-equals" "^0.12.36"
     "@open-wc/semantic-dom-diff" "^0.15.4"
     "@open-wc/testing-helpers" "^1.4.0"
+    "@types/chai" "^4.1.7"
+    "@types/chai-dom" "^0.0.8"
+    "@types/mocha" "^5.0.0"
+    "@types/sinon-chai" "^3.2.3"
+    chai "^4.2.0"
+    chai-a11y-axe "^1.2.2"
+    chai-dom "^1.8.1"
+    mocha "^6.2.2"
+    sinon-chai "^3.3.0"
+
+"@open-wc/testing@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.5.0.tgz#b9f0dce6fd0f9aa55ef2383cf6875801cf988191"
+  integrity sha512-giqTHQgQ3eQmX7AUsrC71IzZAtOsnki2OxYgrUQoqtL1bJ3fvsQqL6RxuB16C6nCMJgzQhEIJWr2AMjylUBZxw==
+  dependencies:
+    "@open-wc/chai-dom-equals" "^0.12.36"
+    "@open-wc/semantic-dom-diff" "^0.15.5"
+    "@open-wc/testing-helpers" "^1.5.0"
     "@types/chai" "^4.1.7"
     "@types/chai-dom" "^0.0.8"
     "@types/mocha" "^5.0.0"
@@ -5931,52 +5959,6 @@ es-abstract@^1.17.0-next.0, es-abstract@^1.17.0-next.1:
     string.prototype.trimleft "^2.1.0"
     string.prototype.trimright "^2.1.0"
 
-es-dev-server@^1.31.1:
-  version "1.31.1"
-  resolved "https://registry.yarnpkg.com/es-dev-server/-/es-dev-server-1.31.1.tgz#3e5642f3e7c5ed5294ccec91d741fb16d000e0a7"
-  integrity sha512-ZYcc2j8aPzfIxuzSzmJHyFBB4PXfjNRISt5DeEDflP4/KKnJKl6udgybAo93FvjIdsZ+5x/fNxQN2gm2XNFpYA==
-  dependencies:
-    "@babel/core" "^7.7.2"
-    "@babel/plugin-proposal-dynamic-import" "^7.7.0"
-    "@babel/plugin-proposal-nullish-coalescing-operator" "^7.7.4"
-    "@babel/plugin-proposal-optional-chaining" "^7.7.5"
-    "@babel/plugin-syntax-class-properties" "^7.2.0"
-    "@babel/plugin-syntax-import-meta" "^7.2.0"
-    "@babel/plugin-syntax-nullish-coalescing-operator" "^7.2.0"
-    "@babel/plugin-syntax-numeric-separator" "^7.2.0"
-    "@babel/plugin-syntax-optional-chaining" "^7.2.0"
-    "@babel/plugin-transform-template-literals" "^7.7.4"
-    "@babel/preset-env" "^7.7.1"
-    "@open-wc/building-utils" "^2.11.0"
-    "@types/minimatch" "^3.0.3"
-    browserslist "^4.7.2"
-    browserslist-useragent "^3.0.2"
-    camelcase "^5.3.1"
-    caniuse-api "^3.0.0"
-    caniuse-lite "^1.0.30001008"
-    chokidar "^3.0.0"
-    command-line-args "^5.0.2"
-    command-line-usage "^6.1.0"
-    debounce "^1.2.0"
-    deepmerge "^3.2.0"
-    es-module-lexer "0.3.9"
-    get-stream "^5.1.0"
-    is-stream "^2.0.0"
-    isbinaryfile "^4.0.2"
-    koa "^2.7.0"
-    koa-compress "^3.0.0"
-    koa-etag "^3.0.0"
-    koa-static "^5.0.0"
-    lru-cache "^5.1.1"
-    minimatch "^3.0.4"
-    opn "^5.4.0"
-    path-is-inside "^1.0.2"
-    portfinder "^1.0.21"
-    resolve "^1.11.1"
-    strip-ansi "^5.2.0"
-    useragent "^2.3.0"
-    whatwg-url "^7.0.0"
-
 es-dev-server@^1.36.2:
   version "1.36.2"
   resolved "https://registry.yarnpkg.com/es-dev-server/-/es-dev-server-1.36.2.tgz#b0cbfbad89f765f4a3bfa0793397f3c362466781"
@@ -6024,11 +6006,6 @@ es-dev-server@^1.36.2:
     strip-ansi "^5.2.0"
     useragent "^2.3.0"
     whatwg-url "^7.0.0"
-
-es-module-lexer@0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.3.9.tgz#fbdbb35e1ad434fc71f5d83a887781fadbaca83a"
-  integrity sha512-beowXiBsaVS208GHoJckwOxlG/RpWLLz2ioJHwkUJ3RGFmW508E5RfntV21bMjzO3hQcwZOTHewUFwnGzrBtIg==
 
 es-module-lexer@^0.3.13:
   version "0.3.13"
@@ -6725,13 +6702,6 @@ from@~0:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/from/-/from-0.1.7.tgz#83c60afc58b9c56997007ed1a768b3ab303a44fe"
   integrity sha1-g8YK/Fi5xWmXAH7Rp2izqzA6RP4=
-
-fs-access@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/fs-access/-/fs-access-1.0.1.tgz#d6a87f262271cefebec30c553407fb995da8777a"
-  integrity sha1-1qh/JiJxzv6+wwxVNAf7mV2od3o=
-  dependencies:
-    null-check "^1.0.0"
 
 fs-constants@^1.0.0:
   version "1.0.0"
@@ -8615,12 +8585,11 @@ karma-browserstack-launcher@^1.0.0:
     browserstack-local "^1.3.7"
     q "~1.5.0"
 
-karma-chrome-launcher@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/karma-chrome-launcher/-/karma-chrome-launcher-2.2.0.tgz#cf1b9d07136cc18fe239327d24654c3dbc368acf"
-  integrity sha512-uf/ZVpAabDBPvdPdveyk1EPgbnloPvFFGgmRhYLTDH7gEB4nZdSBk8yTU47w1g/drLSx5uMOkjKk7IWKfWg/+w==
+karma-chrome-launcher@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/karma-chrome-launcher/-/karma-chrome-launcher-3.1.0.tgz#805a586799a4d05f4e54f72a204979f3f3066738"
+  integrity sha512-3dPs/n7vgz1rxxtynpzZTvb9y/GIaW8xjAwcIGttLbycqoFtI7yo1NGnQi6oFTherRE+GIhCAHZC4vEqWGhNvg==
   dependencies:
-    fs-access "^1.0.0"
     which "^1.2.1"
 
 karma-coverage-istanbul-reporter@^2.0.0:
@@ -10173,11 +10142,6 @@ npmlog@^4.0.1, npmlog@^4.1.2:
     console-control-strings "~1.1.0"
     gauge "~2.7.3"
     set-blocking "~2.0.0"
-
-null-check@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/null-check/-/null-check-1.0.0.tgz#977dffd7176012b9ec30d2a39db5cf72a0439edd"
-  integrity sha1-l33/1xdgErnsMNKjnbXPcqBDnt0=
 
 number-is-nan@^1.0.0:
   version "1.0.1"
