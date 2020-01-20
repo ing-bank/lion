@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.5.1...@lion/input-iban@0.5.2) (2020-01-20)
+
+
+### Bug Fixes
+
+* **input-iban:** use ibantools (offers es module now) ([3cc5999](https://github.com/ing-bank/lion/commit/3cc5999038330a4c35ca32ea39674cf9dc828405))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.5.0...@lion/input-iban@0.5.1) (2020-01-17)
 
 
