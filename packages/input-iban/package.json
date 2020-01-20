@@ -32,12 +32,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@bundled-es-modules/ibantools": "2.0.0",
     "@lion/core": "0.4.1",
     "@lion/field": "0.8.1",
     "@lion/input": "0.5.1",
     "@lion/localize": "0.8.1",
-    "@lion/validate": "0.6.1"
+    "@lion/validate": "0.6.1",
+    "ibantools": "^2.2.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.8.3",

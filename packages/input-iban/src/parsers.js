@@ -1,4 +1,4 @@
-import { isValidIBAN } from '@bundled-es-modules/ibantools';
+import { isValidIBAN } from 'ibantools';
 
 /**
  * Parses an IBAN trimming spaces and making uppercase.
