@@ -1055,11 +1055,6 @@
   resolved "https://registry.yarnpkg.com/@bundled-es-modules/fetch-mock/-/fetch-mock-6.5.2.tgz#f68d78dba49ffcb5b58bede5974c8a9dd035a6fb"
   integrity sha512-i5y9thASLbTakBAFRKa+6v4KdPwEd7dqQwVhJIptllx6bORjT2ApjFkBZRGLgonyqT31CbbOQPJK1JBK4Ph6+g==
 
-"@bundled-es-modules/ibantools@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@bundled-es-modules/ibantools/-/ibantools-2.0.0.tgz#9b7abff7991e7d8a40e84de05ed2f8ce93569967"
-  integrity sha512-G2EuL5ysiMvqGV6d/+PfNTkxU0Qm8AUfu6QU6Vmc9ZsHsA06nSWy/YH4nK3lRobdRbX3eMHhpR4Fhk2/bFZeuA==
-
 "@bundled-es-modules/message-format@6.0.4":
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/@bundled-es-modules/message-format/-/message-format-6.0.4.tgz#232da6877adb960f6c8f598c72588a84352de147"
@@ -7597,6 +7592,11 @@ husky@^1.0.0:
     read-pkg "^4.0.1"
     run-node "^1.0.0"
     slash "^2.0.0"
+
+ibantools@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ibantools/-/ibantools-2.2.0.tgz#39f73a88b54f760975929ed21bb0be1161de9c5b"
+  integrity sha512-avdGWvx7KCeb6HROtSdl2hvcvU5MJVU837dshNZjq2j6lVsgVmQGA9N7IAbI7bfXMTRvRXzTRaNNck9khL1CjA==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.15, iconv-lite@^0.4.24, iconv-lite@~0.4.13:
   version "0.4.24"

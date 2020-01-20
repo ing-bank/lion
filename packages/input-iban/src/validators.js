@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file  */
 
-import { isValidIBAN } from '@bundled-es-modules/ibantools/ibantools.js';
+import { isValidIBAN } from 'ibantools';
 import { Validator } from '@lion/validate';
 import { localize } from '@lion/localize';
 
