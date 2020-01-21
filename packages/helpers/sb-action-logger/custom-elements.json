@@ -10,6 +10,12 @@
           "type": "String",
           "description": "The title of action logger",
           "default": "Action Logger"
+        },
+        {
+          "name": "simple",
+          "type": "Boolean",
+          "description": "Simple mode, which only shows a single log",
+          "default": "false"
         }
       ],
       "events": [],

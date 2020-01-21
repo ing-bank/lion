@@ -6,6 +6,7 @@ export class SbActionLogger extends LitElement {
   static get properties() {
     return {
       title: { type: String, reflect: true },
+      simple: { type: Boolean, reflect: true },
       __logCounter: { type: Number },
     };
   }
@@ -21,6 +22,8 @@ export class SbActionLogger extends LitElement {
 
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         display: block;
+        font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
+          BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       }
 
       .header__info {
@@ -88,6 +91,7 @@ export class SbActionLogger extends LitElement {
 
       .logger__log {
         padding: 16px;
+        display: flex;
       }
 
       .logger__log:not(:last-child) {
@@ -102,6 +106,16 @@ export class SbActionLogger extends LitElement {
         white-space: -o-pre-wrap; /* Opera 7 */
         word-wrap: break-word; /* Internet Explorer 5.5+ */
       }
+
+      .logger__log-count {
+        line-height: 8px;
+        font-size: 12px;
+        padding: 4px;
+        border-radius: 4px;
+        margin-right: 8px;
+        color: white;
+        background-color: #777;
+      }
     `;
   }
 
@@ -109,6 +123,10 @@ export class SbActionLogger extends LitElement {
     super();
     this.title = 'Action Logger';
     this.__logCounter = 0;
+  }
+
+  get loggerEl() {
+    return this.shadowRoot.querySelector('.logger');
   }
 
   /**
@@ -119,14 +137,20 @@ export class SbActionLogger extends LitElement {
    * @param {} content Content to be logged to the action logger
    */
   log(content) {
-    const loggerEl = this.shadowRoot.querySelector('.logger');
-    const offlineRenderContainer = document.createElement('div');
-    render(this._logTemplate(content), offlineRenderContainer);
-    // TODO: Feature, combine duplicate consecutive logs as 1 dom element and add a counter for dupes
-    loggerEl.appendChild(offlineRenderContainer.firstElementChild);
-    this.__logCounter += 1;
     this.__animateCue();
-    loggerEl.scrollTo({ top: loggerEl.scrollHeight, behavior: 'smooth' });
+
+    if (this.simple) {
+      this.__clearLogs();
+    }
+
+    if (this.__isConsecutiveDuplicateLog(content)) {
+      this.__handleConsecutiveDuplicateLog();
+    } else {
+      this.__appendLog(content);
+      this.loggerEl.scrollTo({ top: this.loggerEl.scrollHeight, behavior: 'smooth' });
+    }
+
+    this.__logCounter += 1; // increment total log counter
   }
 
   /**
@@ -141,6 +165,60 @@ export class SbActionLogger extends LitElement {
         <code>${content}</code>
       </div>
     `;
+  }
+
+  render() {
+    return html`
+      <div class="header">
+        <div class="header__info">
+          <p class="header__title">${this.title}</p>
+          <div class="header__counter">${this.__logCounter}</div>
+          <button class="header__clear" @click=${this.__clearLogs}>Clear</button>
+        </div>
+        <div class="header__log-cue">
+          <div class="header__log-cue-overlay"></div>
+        </div>
+      </div>
+      <div class="logger"></div>
+    `;
+  }
+
+  __appendLog(content) {
+    const offlineRenderContainer = document.createElement('div');
+    render(this._logTemplate(content), offlineRenderContainer);
+    this.loggerEl.appendChild(offlineRenderContainer.firstElementChild);
+  }
+
+  __isConsecutiveDuplicateLog(content) {
+    if (
+      this.loggerEl.lastElementChild &&
+      this.loggerEl.lastElementChild.querySelector('code').textContent.trim() === content
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  __handleConsecutiveDuplicateLog() {
+    if (!this.loggerEl.lastElementChild.querySelector('.logger__log-count')) {
+      this.__prependLogCounterElement();
+    }
+
+    // Increment log counter for these duplicate logs
+    const logCounter = this.loggerEl.lastElementChild.querySelector('.logger__log-count');
+    let incrementedLogCount = logCounter.textContent;
+    incrementedLogCount = parseInt(incrementedLogCount, 10) + 1;
+    logCounter.innerText = incrementedLogCount;
+  }
+
+  __prependLogCounterElement() {
+    const countEl = document.createElement('div');
+    countEl.classList.add('logger__log-count');
+    countEl.innerText = 1;
+    this.loggerEl.lastElementChild.insertBefore(
+      countEl,
+      this.loggerEl.lastElementChild.firstElementChild,
+    );
   }
 
   __animateCue() {
@@ -158,21 +236,5 @@ export class SbActionLogger extends LitElement {
     const loggerEl = this.shadowRoot.querySelector('.logger');
     loggerEl.innerHTML = '';
     this.__logCounter = 0;
-  }
-
-  render() {
-    return html`
-      <div class="header">
-        <div class="header__info">
-          <p class="header__title">${this.title}</p>
-          <div class="header__counter">${this.__logCounter}</div>
-          <button class="header__clear" @click=${this.__clearLogs}>Clear</button>
-        </div>
-        <div class="header__log-cue">
-          <div class="header__log-cue-overlay"></div>
-        </div>
-      </div>
-      <div class="logger"></div>
-    `;
   }
 }
