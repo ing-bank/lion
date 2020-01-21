@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Helpers that are used throughout lion and can be used outside",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",

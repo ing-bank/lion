@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/helpers@0.2.2...@lion/helpers@0.3.0) (2020-01-21)
+
+
+### Features
+
+* **helpers:** add handling duplicate consecutive logs to action logger ([288c253](https://github.com/ing-bank/lion/commit/288c2531e66a10a5fbe085d8ed69e2c676f818c8))
+* **helpers:** add simple mode to action logger ([d257937](https://github.com/ing-bank/lion/commit/d25793758f57af075e13801d6fefcd239b43fa2b))
+
+
+
+
+
 ## [0.2.2](https://github.com/ing-bank/lion/compare/@lion/helpers@0.2.1...@lion/helpers@0.2.2) (2020-01-20)
 
 **Note:** Version bump only for package @lion/helpers
