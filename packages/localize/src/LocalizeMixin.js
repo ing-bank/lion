@@ -100,8 +100,9 @@ export const LocalizeMixin = dedupeMixin(
         this.onLocaleUpdated();
       }
 
-      onLocaleChanged() {
+      async onLocaleChanged() {
         this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
+        await localize.loadingComplete;
         this.onLocaleUpdated();
         this.requestUpdate();
       }
