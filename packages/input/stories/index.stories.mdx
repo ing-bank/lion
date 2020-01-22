@@ -207,6 +207,7 @@ Our default validators come with default translations already.
     return html`
       <lion-input
         label="Value"
+        .modelValue=${'Too long input'}
         .validators=${[new MaxLength(5)]}
       ></lion-input>
       <button @click=${() => localize.locale = 'de-DE'}>DE</button>
@@ -217,3 +218,11 @@ Our default validators come with default translations already.
     `;
   }}
 </Story>
+
+```html
+<lion-input
+  label="Value"
+  .modelValue=${'Too long input'}
+  .validators=${[new MaxLength(5)]}
+></lion-input>
+```
