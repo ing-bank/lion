@@ -2333,16 +2333,16 @@
     "@open-wc/semantic-dom-diff" "^0.13.16"
     "@types/chai" "^4.1.7"
 
-"@open-wc/demoing-storybook@^1.8.3":
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/@open-wc/demoing-storybook/-/demoing-storybook-1.8.3.tgz#0c272a8082124fefb8e8c2e2f6ac8f3bd500e22d"
-  integrity sha512-9hNP89Wl0OJkXytIaNtKdrWrF+SlX2xg69UteGQU4KzqpZmQs3SiAkzl97pSArmFuV/iBWyUUBu4c6/cLMoOlQ==
+"@open-wc/demoing-storybook@^1.9.0-prerelease-0":
+  version "1.9.0-prerelease-1"
+  resolved "https://registry.yarnpkg.com/@open-wc/demoing-storybook/-/demoing-storybook-1.9.0-prerelease-1.tgz#c1a0269549743e822e6243d640a0519d0779220c"
+  integrity sha512-nNAtigXKTRc5dZplaTl1/Os2aQYHgsLXhlUfQ0Q3y7bWGu+krq2dCobw6x6KRj7tnlHGk9aCQDxJrXmHsmKI8w==
   dependencies:
     "@babel/core" "^7.7.2"
     "@babel/plugin-transform-react-jsx" "^7.3.0"
     "@mdx-js/mdx" "^1.5.1"
     "@open-wc/building-rollup" "^0.19.1"
-    "@open-wc/storybook-prebuilt" "^0.4.0"
+    "@open-wc/storybook-prebuilt" "^1.1.0"
     "@storybook/addon-docs" "5.3.1"
     command-line-args "^5.0.2"
     command-line-usage "^6.1.0"
@@ -2397,22 +2397,19 @@
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.13.21.tgz#718b9ec5f9a98935fc775e577ad094ae8d8b7dea"
   integrity sha512-BONpjHcGX2zFa9mfnwBCLEmlDsOHzT+j6Qt1yfK3MzFXFtAykfzFjAgaxPetu0YbBlCfXuMlfxI4vlRGCGMvFg==
 
-"@open-wc/semantic-dom-diff@^0.15.4":
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.4.tgz#1bbf9adbbf3cb6090f525fc7d4274d17cc016457"
-  integrity sha512-Wa50FJiB26/jC++snNqOJBr3cYrzUdsFFNLL3HSA7PAscCWEGo5NAdesL/BnehXOCRyMZfpvv+uY9+F8dc7HCQ==
-
 "@open-wc/semantic-dom-diff@^0.15.5":
   version "0.15.5"
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.5.tgz#5530a45eea1982706abf72c702828df0e0a61739"
   integrity sha512-cODcMLSKRuyAQVa1I+NNjj5A+j5o2qhTW00ztcoEg+bkeutvFqWsB8YG0HS/NhP+wJKe/nOcmt4i2T6KwCTNLw==
 
-"@open-wc/storybook-prebuilt@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-0.4.0.tgz#a8ac47d86e50559ddf17f217df2504a098cd85b8"
-  integrity sha512-39Kfm3bsHPZioWIvQBuc05EvFakvqotVloe2lq0JPXD0iWxOWvWb4h8UKSvFdJY9RAv1p06OFhyEjpuhrZB9Jw==
+"@open-wc/storybook-prebuilt@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-1.1.0.tgz#e92f8d421181fd0c9dd7175f11663f4f4038cf6a"
+  integrity sha512-I00209qX5mRyvuMoK6Ae6VXoxO9l2uKEUbq5Ao2dL+hgPwECcetCNKzGARKxoKNZrxGUh+wB0vhKwrOTB+QeXw==
+  dependencies:
+    "@rollup/plugin-inject" "^4.0.0"
 
-"@open-wc/testing-helpers@^1.0.0", "@open-wc/testing-helpers@^1.4.0":
+"@open-wc/testing-helpers@^1.0.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.4.0.tgz#d93b627c1311a1ad2b5fc4de43fc6f9fa8a79177"
   integrity sha512-XTR0HGOSBEJz7H31FDhHD2R6GHXI6DksiJsYDzJdLXqF/ORkKFzfu1BXGVOnPZytmJZLvnEr7VmE2YfV0y2Yug==
@@ -2456,24 +2453,6 @@
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
 
-"@open-wc/testing@^2.3.4":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.4.2.tgz#b4ae4682b2435167290f04061000251be85c59b0"
-  integrity sha512-VvTXlwQx3CTasCFuJQCse7JqJzDgkEFoo/6mlKzIwrzA/GJmX7Qko0aLJY7jaxnrotHyN9/njexTUPlOaW2z2g==
-  dependencies:
-    "@open-wc/chai-dom-equals" "^0.12.36"
-    "@open-wc/semantic-dom-diff" "^0.15.4"
-    "@open-wc/testing-helpers" "^1.4.0"
-    "@types/chai" "^4.1.7"
-    "@types/chai-dom" "^0.0.8"
-    "@types/mocha" "^5.0.0"
-    "@types/sinon-chai" "^3.2.3"
-    chai "^4.2.0"
-    chai-a11y-axe "^1.2.2"
-    chai-dom "^1.8.1"
-    mocha "^6.2.2"
-    sinon-chai "^3.3.0"
-
 "@open-wc/testing@^2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.5.0.tgz#b9f0dce6fd0f9aa55ef2383cf6875801cf988191"
@@ -2516,6 +2495,15 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
+
+"@rollup/plugin-inject@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-inject/-/plugin-inject-4.0.0.tgz#5c77f7ad366b6894b3712770848fcf91937b0473"
+  integrity sha512-qWBNZgTxnbE3aFstAd3xMXk5QlkTI3eEnXCQ2kgtbGBy3iz9Xz5OP27skm2HUFVqdORrn57dDe/VU3AWfv43Qw==
+  dependencies:
+    estree-walker "^0.9.0"
+    magic-string "^0.25.2"
+    rollup-pluginutils "^2.6.0"
 
 "@rollup/plugin-node-resolve@^6.1.0":
   version "6.1.0"
@@ -6252,6 +6240,11 @@ estree-walker@^0.6.1:
   resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-0.6.1.tgz#53049143f40c6eb918b23671d1fe3219f3a1b362"
   integrity sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==
 
+estree-walker@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-0.9.0.tgz#9116372f09c02fd88fcafb0c04343631012a0aa6"
+  integrity sha512-12U47o7XHUX329+x3FzNVjCx3SHEzMF0nkDv7r/HnBzX/xNTKxajBk6gyygaxrAFtLj39219oMfbtxv4KpaOiA==
+
 esutils@^2.0.0, esutils@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
@@ -9248,6 +9241,13 @@ macos-release@^2.2.0:
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-2.3.0.tgz#eb1930b036c0800adebccd5f17bc4c12de8bb71f"
   integrity sha512-OHhSbtcviqMPt7yfw5ef5aghS2jzFVKEFyCJndQt2YpSQ9qRVSEv2axSJI1paVThEu+FFGs584h/1YhxjVqajA==
 
+magic-string@^0.25.2:
+  version "0.25.6"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.6.tgz#5586387d1242f919c6d223579cc938bf1420795e"
+  integrity sha512-3a5LOMSGoCTH5rbqobC2HuDNRtE2glHZ8J7pK+QZYppyWA36yuNpsX994rIY2nCuyP7CZYy7lQq/X2jygiZ89g==
+  dependencies:
+    sourcemap-codec "^1.4.4"
+
 magic-string@^0.25.4:
   version "0.25.5"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.5.tgz#694fa8c6b9a51d83cc4a72c5b6883a7cfa890e40"
@@ -12017,7 +12017,7 @@ rollup-plugin-workbox@^4.0.0:
     pretty-bytes "^5.3.0"
     workbox-build "^4.3.1"
 
-rollup-pluginutils@^2.8.1:
+rollup-pluginutils@^2.6.0, rollup-pluginutils@^2.8.1:
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.8.2.tgz#72f2af0748b592364dbd3389e600e5a9444a351e"
   integrity sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==
