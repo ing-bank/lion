@@ -1,6 +1,6 @@
 import { Meta, Story, html } from '@open-wc/demoing-storybook';
 /* eslint-disable import/no-extraneous-dependencies */
-import { LionInput } from '@lion/input';
+import { LionInput } from '@lion/input/index.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
@@ -23,11 +23,14 @@ import {
   MinNumber,
   Required,
   Validator,
-} from '../index.js';
+} from '@lion/validate';
 
-<Meta title="Forms/Validation Examples" parameters={{ component: 'lion-input' }}/>
+<Meta title="Forms/Validation/Examples" parameters={{ component: 'lion-input' }}/>
 
 ## Required Validator
+
+The required validator can be put onto every form field element and will make sure that element is not empty.
+For an input that may mean that it is not an empty string while for a checkbox group it means at least one checkbox needs to be checked.
 
 <Story name="Required Validator">
   {html`
@@ -40,6 +43,8 @@ import {
 ```
 
 ## String Validators
+
+Useful on input elements it allows to define how many characters can be entered.
 
 <Story name="String Validators">
   {html`
@@ -89,8 +94,10 @@ import {
 ></lion-input>
 ```
 
-
 ## Number Validators
+
+Number validations assume that it's modelValue is actually a number.
+Therefore it may only be used on input that have an appropriate parser/formatter like the input-amount.
 
 <Story name="Number Validators">
   {html`
@@ -141,6 +148,8 @@ import {
 ```
 
 ## Date Validators
+
+Date validators work with real javascript dates. Use them on input-date.
 
 <Story name="Date Validators">
   {() => {
@@ -230,6 +239,9 @@ const tomorrow = new Date(year, month, day + 1);
 
 ## Validation Types
 
+When defining your own component you can decide to allow for multiple types of validation.
+By default only `error` is used however there are certainly use cases where warning or success messages make sense.
+
 <Story name="Validation Types">
   {() => {
     try {
@@ -287,16 +299,16 @@ const tomorrow = new Date(year, month, day + 1);
 </Story>
 
 ```js
-    try {
-      class MyTypesInput extends LionInput {
-        static get validationTypes() {
-          return ['error', 'warning', 'info', 'success'];
-        }
-      }
-      customElements.define('my-types-input', MyTypesInput);
-    } catch (err) {
-      // expected as it is a demo
+try {
+  class MyTypesInput extends LionInput {
+    static get validationTypes() {
+      return ['error', 'warning', 'info', 'success'];
     }
+  }
+  customElements.define('my-types-input', MyTypesInput);
+} catch (err) {
+  // expected as it is a demo
+}
 ```
 
 ```html
@@ -342,6 +354,9 @@ const tomorrow = new Date(year, month, day + 1);
 ```
 
 ## Custom Validators
+
+Here is an example how you can make your own validator and providing the error messages directly within.
+You can even hard code localization in there if needed or you can use a localization system.
 
 <Story name="Custom Validators">
   {() => {
@@ -403,6 +418,8 @@ class MyValidator extends Validator {
 ```
 
 ## Override default messages
+
+Oftern
 
 <Story name="Override default messages">
 {html`
