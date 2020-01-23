@@ -1,9 +1,9 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 
-import './lion-demo-overlay.js';
+import './demo-overlay-system.js';
 import './applyDemoOverlayStyles.js';
 
-<Meta title="Overlays/System/Configuration" parameters={{ component: 'lion-demo-overlay' }} />
+<Meta title="Overlays/System/Configuration" parameters={{ component: 'demo-overlay-system' }} />
 
 # Overlay System - Configuration
 
@@ -21,7 +21,7 @@ or in the `global-overlays` container at the bottom of the `<body>`.
 Local:
 <Story name="placementMode: local">
   {html`
-    <lion-demo-overlay .config=${{ placementMode: 'local' }}>
+    <demo-overlay-system .config=${{ placementMode: 'local' }}>
       <button slot="invoker">Click me to open the local overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -32,12 +32,12 @@ Local:
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ placementMode: 'local' }}>
+<demo-overlay-system .config=${{ placementMode: 'local' }}>
   <button slot="invoker">Click me to open the local overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -48,13 +48,13 @@ Local:
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 Global:
 <Story name="placementMode: global">
   {html`
-    <lion-demo-overlay .config=${{ placementMode: 'global' }}>
+    <demo-overlay-system .config=${{ placementMode: 'global' }}>
       <button slot="invoker">Click me to open the global overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -65,12 +65,12 @@ Global:
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ placementMode: 'global' }}>
+<demo-overlay-system .config=${{ placementMode: 'global' }}>
   <button slot="invoker">Click me to open the local overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -81,7 +81,7 @@ Global:
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## trapsKeyboardFocus
@@ -95,7 +95,7 @@ You use the feature on any type of overlay.
 
 <Story name="trapsKeyboardFocus">
   {html`
-    <lion-demo-overlay .config=${{ trapsKeyboardFocus: true }}>
+    <demo-overlay-system .config=${{ trapsKeyboardFocus: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         <div><a href="#">A focusable anchor</a></div>
@@ -108,12 +108,12 @@ You use the feature on any type of overlay.
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ trapsKeyboardFocus: true }}>
+<demo-overlay-system .config=${{ trapsKeyboardFocus: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     <div><a href="#">A focusable anchor</a></div>
@@ -126,7 +126,7 @@ You use the feature on any type of overlay.
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## hidesOnEsc
@@ -137,7 +137,7 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
 
 <Story name="hidesOnEsc">
   {html`
-    <lion-demo-overlay .config=${{ hidesOnEsc: true }}>
+    <demo-overlay-system .config=${{ hidesOnEsc: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -148,12 +148,12 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ hidesOnEsc: true }}>
+<demo-overlay-system .config=${{ hidesOnEsc: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -164,7 +164,7 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## hidesOnOutsideClick
@@ -173,7 +173,7 @@ Boolean property. Will allow closing the overlay by clicking outside the `conten
 
 <Story name="hidesOnOutsideClick">
   {html`
-    <lion-demo-overlay .config=${{ hidesOnOutsideClick: true }}>
+    <demo-overlay-system .config=${{ hidesOnOutsideClick: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -184,12 +184,12 @@ Boolean property. Will allow closing the overlay by clicking outside the `conten
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ hidesOnOutsideClick: true }}>
+<demo-overlay-system .config=${{ hidesOnOutsideClick: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -200,7 +200,7 @@ Boolean property. Will allow closing the overlay by clicking outside the `conten
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## elementToFocusAfterHide
@@ -211,7 +211,7 @@ In the example, we focus the body instead of the `invokerNode`.
 
 <Story name="elementToFocusAfterHide">
   {html`
-    <lion-demo-overlay .config=${{ elementToFocusAfterHide: document.body }}>
+    <demo-overlay-system .config=${{ elementToFocusAfterHide: document.body }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -222,12 +222,12 @@ In the example, we focus the body instead of the `invokerNode`.
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ elementToFocusAfterHide: document.body }}>
+<demo-overlay-system .config=${{ elementToFocusAfterHide: document.body }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -238,7 +238,7 @@ In the example, we focus the body instead of the `invokerNode`.
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## hasBackdrop
@@ -258,7 +258,7 @@ This currently only supports CSS Animations, because it relies on the `animation
 
 <Story name="hasBackdrop">
   {html`
-    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+    <demo-overlay-system .config=${{ hasBackdrop: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -269,12 +269,12 @@ This currently only supports CSS Animations, because it relies on the `animation
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+<demo-overlay-system .config=${{ hasBackdrop: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -285,7 +285,7 @@ This currently only supports CSS Animations, because it relies on the `animation
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## isBlocking
@@ -305,13 +305,13 @@ This currently only supports CSS Animations, because it relies on the `animation
 
 <Story name="isBlocking">
   {html`
-    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+    <demo-overlay-system .config=${{ hasBackdrop: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         <div>
-          <lion-demo-overlay .config=${{ hasBackdrop: true, isBlocking: true }}>
+          <demo-overlay-system .config=${{ hasBackdrop: true, isBlocking: true }}>
             <button slot="invoker">Click me to open another overlay which is blocking</button>
-            <div slot="content" class="demo-overlay demo-overlay--second">
+            <div slot="content" class="demo-overlay demo-overlay--blocking">
               Hello! You can close this notification here:
               <button
                 class="close-button"
@@ -320,7 +320,7 @@ This currently only supports CSS Animations, because it relies on the `animation
                 ⨯
               </button>
             </div>
-          </lion-demo-overlay>
+          </demo-overlay-system>
         </div>
         Hello! You can close this notification here:
         <button
@@ -330,18 +330,18 @@ This currently only supports CSS Animations, because it relies on the `animation
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+<demo-overlay-system .config=${{ hasBackdrop: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     <div>
-      <lion-demo-overlay .config=${{ hasBackdrop: true, isBlocking: true }}>
+      <demo-overlay-system .config=${{ hasBackdrop: true, isBlocking: true }}>
         <button slot="invoker">Click me to open another overlay which is blocking</button>
-        <div slot="content" class="demo-overlay demo-overlay--second">
+        <div slot="content" class="demo-overlay demo-overlay--blocking">
           Hello! You can close this notification here:
           <button
             class="close-button"
@@ -350,7 +350,7 @@ This currently only supports CSS Animations, because it relies on the `animation
             ⨯
           </button>
         </div>
-      </lion-demo-overlay>
+      </demo-overlay-system>
     </div>
     Hello! You can close this notification here:
     <button
@@ -360,7 +360,7 @@ This currently only supports CSS Animations, because it relies on the `animation
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 This example shows nested overlays, but they don't have to be. For example, they could be siblings, or completely unrelated.
@@ -372,7 +372,7 @@ Boolean property. When true, prevents scrolling content that is outside of the `
 
 <Story name="preventsScroll">
   {html`
-    <lion-demo-overlay .config=${{ preventsScroll: true }}>
+    <demo-overlay-system .config=${{ preventsScroll: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -383,12 +383,12 @@ Boolean property. When true, prevents scrolling content that is outside of the `
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ preventsScroll: true }}>
+<demo-overlay-system .config=${{ preventsScroll: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -399,7 +399,7 @@ Boolean property. When true, prevents scrolling content that is outside of the `
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## viewportConfig
@@ -420,7 +420,7 @@ Options:
 
 <Story name="viewportConfig">
   {html`
-    <lion-demo-overlay .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
+    <demo-overlay-system .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
       <button slot="invoker">Click me to open the overlay in the top left corner!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -431,12 +431,12 @@ Options:
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
+<demo-overlay-system .config=${{ placementMode: 'global', viewportConfig: { placement: 'top-left'} }}>
   <button slot="invoker">Click me to open the overlay in the top left corner!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -447,7 +447,7 @@ Options:
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 
@@ -471,7 +471,7 @@ Here's a succinct overview of some often used popper properties:
 
 <Story name="popperConfig">
   {html`
-    <lion-demo-overlay .config=${{
+    <demo-overlay-system .config=${{
       placementMode: 'local',
       popperConfig: {
         /* Placement of content node, relative to invoker node */
@@ -514,12 +514,12 @@ Here's a succinct overview of some often used popper properties:
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```js
-<lion-demo-overlay .config=${{
+<demo-overlay-system .config=${{
   placementMode: 'local',
   popperConfig: {
     /* Placement of content node, relative to invoker node */
@@ -562,7 +562,7 @@ Here's a succinct overview of some often used popper properties:
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 > Note: popperConfig reflects <a href="https://popper.js.org/popper-documentation.html" target="_blank">Popper.js API</a>

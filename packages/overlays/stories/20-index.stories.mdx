@@ -6,11 +6,11 @@ import {
   withModalDialogConfig,
 } from '../index.js';
 
-import './lion-demo-overlay.js';
+import './demo-overlay-system.js';
 import './applyDemoOverlayStyles.js';1
 import { ref as r } from './directives/ref.js';
 
-<Meta title="Overlays/System/Overview" parameters={{ component: 'lion-demo-overlay' }} />
+<Meta title="Overlays/System/Overview" parameters={{ component: 'demo-overlay-system' }} />
 
 # Overlay System
 
@@ -23,24 +23,24 @@ For a detailed rationale, please consult [Rationale](?path=/docs/overlay-rationa
 
 <Story name="default">
   {html`
-    <lion-demo-overlay>
+    <demo-overlay-system>
       <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content">
-        Hello! You can close this notification here:
-        <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-        >
-          ⨯
-        </button>
+      <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay>
+<demo-overlay-system>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -48,7 +48,7 @@ For a detailed rationale, please consult [Rationale](?path=/docs/overlay-rationa
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## Features
@@ -132,9 +132,9 @@ _defineOverlayConfig() {
 or declaratively in your template with the `.config` property
 
 ```html
-<lion-demo-overlay .config=${{ ...withModalDialogConfig() }}>
+<demo-overlay-system .config=${{ ...withModalDialogConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -142,7 +142,7 @@ or declaratively in your template with the `.config` property
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ### Responsive switching
@@ -157,7 +157,7 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
 
 <Story name="Responsive switching">
   {html`
-    <lion-demo-overlay
+    <demo-overlay-system
       .config=${{ ...withBottomSheetConfig() }}
       @before-opened=${e => {
         if (window.innerWidth >= 600) {
@@ -176,12 +176,12 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay
+<demo-overlay-system
   .config=${{ ...withBottomSheetConfig() }}
   @before-opened=${e => {
     if (window.innerWidth >= 600) {
@@ -192,7 +192,7 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
   }}
 >
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -200,7 +200,7 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 Alternative ways to do it is by setting the event listener manually on the `OverlayController` instance.
@@ -262,7 +262,7 @@ Below is another demo where you can toggle between configurations using buttons.
         Dropdown
       </button>
     </div>
-    <lion-demo-overlay id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+    <demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -272,7 +272,7 @@ Below is another demo where you can toggle between configurations using buttons.
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
@@ -293,9 +293,9 @@ Change config to:
     Dropdown
   </button>
 </div>
-<lion-demo-overlay id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+<demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -303,7 +303,7 @@ Change config to:
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## Opened state
@@ -326,7 +326,7 @@ This can be useful e.g. if somewhere in your application you need to rely on thi
     }
     return html`
       appState.opened: <span #openedState=${r(refs)}>${appState.opened}</span>
-      <lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+      <demo-overlay-system .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
         <button slot="invoker">Overlay</button>
         <div slot="content" class="demo-overlay">
           Hello! You can close this notification here:
@@ -336,7 +336,7 @@ This can be useful e.g. if somewhere in your application you need to rely on thi
             ⨯
           </button>
         </div>
-      </lion-demo-overlay>
+      </demo-overlay-system>
     `;
   }}
 </Story>
@@ -357,9 +357,9 @@ function onOpenClosed(ev) {
 <div>
   appState.opened: ${openedStateNode}
 </div>
-<lion-demo-overlay .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+<demo-overlay-system .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
   <button slot="invoker">Overlay</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -367,7 +367,7 @@ function onOpenClosed(ev) {
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
 
 ## Intercepting open/close
@@ -391,13 +391,13 @@ the `before-close` or `before-open` events.
         blockOverlay = !blockOverlay;
         refs.statusButton.textContent = blockOverlay;
       }}">${blockOverlay}</button>
-      <lion-demo-overlay #overlay=${r(refs)} @before-closed=${intercept} @before-opened=${intercept}>
+      <demo-overlay-system #overlay=${r(refs)} @before-closed=${intercept} @before-opened=${intercept}>
         <button slot="invoker" @click=${() => console.log('blockOverlay', blockOverlay, 'opened', refs.overlay.opened)}>Overlay</button>
         <div slot="content" class="demo-overlay">
           Hello! You can close this notification here:
           <button @click=${() => refs.overlay.opened = false}>⨯</button>
         </div>
-      </lion-demo-overlay>
+      </demo-overlay-system>
     `;
   }}
 </Story>
@@ -413,13 +413,13 @@ the `before-close` or `before-open` events.
 ```
 
 ```html
-  <lion-demo-overlay #overlay=${r(refs)} @before-closed=${intercept} @before-opened=${intercept}>
+  <demo-overlay-system #overlay=${r(refs)} @before-closed=${intercept} @before-opened=${intercept}>
     <button slot="invoker">Overlay</button>
     <div slot="content" class="demo-overlay">
       Hello! You can close this notification here:
       <button @click=${() => refs.overlay.opened = false}>⨯</button>
     </div>
-  </lion-demo-overlay>
+  </demo-overlay-system>
 ```
 
 
@@ -495,7 +495,7 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
 
 <Story name="OverlaysManager">
   {html`
-    <lion-demo-overlay .config=${{ hasBackdrop: true }}>
+    <demo-overlay-system .config=${{ hasBackdrop: true }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -508,8 +508,8 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
           <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
         </div>
       </div>
-    </lion-demo-overlay>
-    <lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+    </demo-overlay-system>
+    <demo-overlay-system id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
       <div slot="content" class="demo-overlay demo-overlay--second">
         Hello! You can close this notification here:
         <button
@@ -518,14 +518,14 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
           ⨯
         </button>
       </div>
-    </lion-demo-overlay>
+    </demo-overlay-system>
   `}
 </Story>
 
 ```html
-<lion-demo-overlay .config=${{ hasBackdrop: true }}>
+<demo-overlay-system .config=${{ hasBackdrop: true }}>
   <button slot="invoker">Click me to open the overlay!</button>
-  <div slot="content">
+  <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
     <button
       @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -536,9 +536,9 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
       <button @click=${() => document.getElementById('secondOverlay').opened = true }>Click me to open another overlay which is blocking</button>
     </div>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 
-<lion-demo-overlay id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+<demo-overlay-system id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
   <div slot="content" class="demo-overlay demo-overlay--second">
     Hello! You can close this notification here:
     <button
@@ -547,5 +547,5 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
       ⨯
     </button>
   </div>
-</lion-demo-overlay>
+</demo-overlay-system>
 ```
