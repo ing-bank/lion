@@ -6,7 +6,7 @@
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-form) for a live demo and documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-form-overview--page) for a live demo and documentation
 
 ## How to use
 

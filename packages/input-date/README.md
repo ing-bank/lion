@@ -6,7 +6,7 @@
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-date) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-date--default-story) for a live demo and API documentation
 
 ## How to use
 

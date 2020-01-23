@@ -5,7 +5,7 @@ For an input field with a big range, such as `birthday-input`, a datepicker is n
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-datepicker) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-datepicker--default-story) for a live demo and API documentation
 
 ## How to use
 

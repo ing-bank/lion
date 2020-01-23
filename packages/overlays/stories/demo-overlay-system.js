@@ -1,7 +1,7 @@
 import { html, LitElement } from '@lion/core';
 import { OverlayMixin } from '../src/OverlayMixin.js';
 
-class LionDemoOverlay extends OverlayMixin(LitElement) {
+class DemoOverlaySystem extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
     return {
       placementMode: 'global',
@@ -35,4 +35,4 @@ class LionDemoOverlay extends OverlayMixin(LitElement) {
     `;
   }
 }
-customElements.define('lion-demo-overlay', LionDemoOverlay);
+customElements.define('demo-overlay-system', DemoOverlaySystem);

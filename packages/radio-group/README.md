@@ -8,7 +8,7 @@ You should use [lion-radio](../radio/)'s inside this element.
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-radio-group) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-radio-group--default-story) for a live demo and API documentation
 
 ## How to use
 

@@ -8,7 +8,7 @@ You should use [lion-checkbox](../checkbox/)'s inside this element.
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-checkbox-group) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-checkbox-group--default-story) for a live demo and API documentation
 
 ## How to use
 

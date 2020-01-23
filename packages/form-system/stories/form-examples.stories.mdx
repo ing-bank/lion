@@ -2,15 +2,13 @@ import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { Required, MaxLength, loadDefaultFeedbackMessages } from '@lion/validate';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input/lion-input.js';
-import '../lion-form.js';
-import './helpers/demo-form-child.js';
+import '@lion/form/lion-form.js';
 
-<Meta title="Forms/Form" parameters={{ component: 'lion-form' }} />
+<Meta title="Forms/Form/Examples" parameters={{ component: 'lion-form' }} />
 
-# Form
+# Form Examples
 
-`lion-form` is a webcomponent that enhances the functionality of the native `form` component.
-It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview).
+A form can have multiple nested fieldsets.
 
 <Story name="Default">
   {html`
@@ -18,14 +16,14 @@ It is designed to interact with (instances of) the [form controls](?path=/docs/f
       <form>
         <lion-fieldset label="Personal data" name="personalData">
           <lion-fieldset label="Full Name" name="fullName">
-            <demo-form-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-form-child>
-            <demo-form-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-form-child>
+            <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+            <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
           </lion-fieldset>
           <lion-fieldset label="Location" name="location">
-            <demo-form-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-form-child>
-            <demo-form-child name="city" label="City" .modelValue=${'Amsterdam'}></demo-form-child>
+            <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
+            <lion-input name="city" label="City" .modelValue=${'Amsterdam'}></lion-input>
           </lion-fieldset>
-          <demo-form-child name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></demo-form-child>
+          <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
         </lion-fieldset>
         <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
           Log to Action Logger
@@ -40,14 +38,14 @@ It is designed to interact with (instances of) the [form controls](?path=/docs/f
   <form>
     <lion-fieldset label="Personal data" name="personalData">
       <lion-fieldset label="Full Name" name="fullName">
-        <demo-form-child name="firstName" label="First Name" .modelValue=${'Foo'}></demo-form-child>
-        <demo-form-child name="lastName" label="Last Name" .modelValue=${'Bar'}></demo-form-child>
+        <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+        <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
       </lion-fieldset>
       <lion-fieldset label="Location" name="location">
-        <demo-form-child name="country" label="Country" .modelValue=${'Netherlands'}></demo-form-child>
-        <demo-form-child name="city" label="City" .modelValue=${'Amsterdam'}></demo-form-child>
+        <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
+        <lion-input name="city" label="City" .modelValue=${'Amsterdam'}></lion-input>
       </lion-fieldset>
-      <demo-form-child name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></demo-form-child>
+      <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
     </lion-fieldset>
     <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
       Log to Action Logger
@@ -55,19 +53,6 @@ It is designed to interact with (instances of) the [form controls](?path=/docs/f
   </form>
 </lion-form>
 ```
-
-## Features
-
-- Data synchronization with models
-- Easy retrieval of form data based on field names
-- Advanced validation possibilities
-- Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states)
-- Registration mechanism for [form controls](?path=/docs/forms-system-overview)
-- Accessible out of the box
-
-For more information about fields that are designed for lion-form, please read
-[Forms](?path=/docs/forms-form).
-
 
 ## Form Submit / Reset
 
@@ -88,18 +73,18 @@ Same thing goes for resetting the inputs to the original state.
       <lion-form id="form2" @submit="${submit}"
         ><form>
           <lion-fieldset label="Name" name="name">
-            <demo-form-child
+            <lion-input
               name="firstName"
               label="First Name"
               .validators=${[new Required(), new MaxLength(15)]}
             >
-            </demo-form-child>
-            <demo-form-child
+            </lion-input>
+            <lion-input
               name="lastName"
               label="Last Name"
               .validators=${[new Required(), new MaxLength(15)]}
             >
-            </demo-form-child>
+            </lion-input>
           </lion-fieldset>
           <button type="submit">Submit & Reset (if successfully submitted)</button>
           <button type="button" @click=${() => document.querySelector('#form2').resetGroup()}>
@@ -131,18 +116,18 @@ const submit = () => {
 <lion-form id="form2" @submit="${submit}">
   <form>
     <lion-fieldset label="Name" name="name">
-      <demo-form-child
+      <lion-input
         name="firstName"
         label="First Name"
         .validators=${[new Required(), new MaxLength(15)]}
       >
-      </demo-form-child>
-      <demo-form-child
+      </lion-input>
+      <lion-input
         name="lastName"
         label="Last Name"
         .validators=${[new Required(), new MaxLength(15)]}
       >
-      </demo-form-child>
+      </lion-input>
     </lion-fieldset>
     <button type="submit">Submit & Reset (if successfully submitted)</button>
     <button type="button" @click=${() => console.log(document.querySelector('#form2'))}>

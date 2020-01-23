@@ -7,7 +7,7 @@ const applyDemoOverlayStyles = () => {
       padding: 10px;
     }
 
-    .demo-overlay--second {
+    .demo-overlay--blocking {
       background-color: pink;
     }
   `;

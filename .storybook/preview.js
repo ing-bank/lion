@@ -29,7 +29,7 @@ async function run() {
       showRoots: true,
       storySort: sortEachDepth([
         ['Intro', 'Forms', 'Buttons', 'Overlays', 'Navigation', 'Localize', 'Icons', '...'],
-        ['Intro', 'Features Overview', '...', 'System'],
+        ['Intro', 'Features Overview', '...', 'Validation', 'System'],
         ['Overview', '...', '_internals'],
       ]),
     },

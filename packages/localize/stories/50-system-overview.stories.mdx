@@ -41,48 +41,48 @@ Localization data modules for `my-hello-component` might look like these:
 
 - `/path/to/my-hello-component/translations/en-GB.js`
 
-  ```js
-  export default {
-    greeting: 'Hello {name}!',
-  };
-  ```
+```js
+export default {
+  greeting: 'Hello {name}!',
+};
+```
 
 - `/path/to/my-hello-component/translations/nl-NL.js`
 
-  ```js
-  export default {
-    greeting: 'Hallo {name}!',
-  };
-  ```
+```js
+export default {
+  greeting: 'Hallo {name}!',
+};
+```
 
 The approach with ES modules is great because it allows to simply reuse basic locale data and override only the needed parts for more specific locales.
 
 - `/path/to/my-family-component/translations/en.js`
 
-  ```js
-  export default {
-    havePartnerQuestion: 'Do you have a partner?',
-    haveChildrenQuestion: 'Do you have children?',
-  };
-  ```
+```js
+export default {
+  havePartnerQuestion: 'Do you have a partner?',
+  haveChildrenQuestion: 'Do you have children?',
+};
+```
 
 - `/path/to/my-family-component/translations/en-GB.js`
 
-  ```js
-  import en from './en.js';
-  export default en;
-  ```
+```js
+import en from './en.js';
+export default en;
+```
 
 - `/path/to/my-family-component/translations/en-US.js`
 
-  ```js
-  import en from './en.js';
+```js
+import en from './en.js';
 
-  export default {
-    ...en,
-    haveChildrenQuestion: 'Do you have kids?',
-  };
-  ```
+export default {
+  ...en,
+  haveChildrenQuestion: 'Do you have kids?',
+};
+```
 
 ### Loading data
 

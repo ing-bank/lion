@@ -80,7 +80,7 @@ Simple example that illustrates where validation feedback will be displayed.
         id="newsletterCheck"
         name="newsletterCheck"
         label="Subscribe to newsletter"
-        .validators="${[new IsTrue()]}"
+        .validators="${[new IsTrue(null, {type: 'info'})]}"
       ></lion-switch>
     `;
   }}
@@ -108,6 +108,6 @@ const IsTrue = class extends Validator {
   id="newsletterCheck"
   name="newsletterCheck"
   label="Subscribe to newsletter"
-  .validators="${[new IsTrue()]}"
+  .validators="${[new IsTrue(null, {type: 'info'})]}"
 ></lion-switch>
 ```
