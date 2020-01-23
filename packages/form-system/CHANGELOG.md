@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.5...@lion/form-system@0.3.6) (2020-01-23)
+
+
+### Bug Fixes
+
+* **validate:** move demos to form-system to avoid circular dependencies ([9de0162](https://github.com/ing-bank/lion/commit/9de016240ea749b731111dfa380373367cbae66f))
+* move demos to form-system to avoid circular dependencies ([ddd1a72](https://github.com/ing-bank/lion/commit/ddd1a72ba752c9798885d9c8cd7706a69ed3abb2))
+* update links in stories ([0c53b1d](https://github.com/ing-bank/lion/commit/0c53b1d4bb4fa51820656bacfc2aece653d03182))
+
+
+
+
+
 ## [0.3.5](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.4...@lion/form-system@0.3.5) (2020-01-23)
 
 **Note:** Version bump only for package @lion/form-system

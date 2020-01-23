@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.4](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.3...@lion/localize@0.8.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* update links in stories ([0c53b1d](https://github.com/ing-bank/lion/commit/0c53b1d4bb4fa51820656bacfc2aece653d03182))
+
+
+
+
+
 ## [0.8.3](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.2...@lion/localize@0.8.3) (2020-01-23)
 
 **Note:** Version bump only for package @lion/localize

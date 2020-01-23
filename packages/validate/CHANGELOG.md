@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.3...@lion/validate@0.6.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* **validate:** move demos to form-system to avoid circular dependencies ([9de0162](https://github.com/ing-bank/lion/commit/9de016240ea749b731111dfa380373367cbae66f))
+* update links in stories ([0c53b1d](https://github.com/ing-bank/lion/commit/0c53b1d4bb4fa51820656bacfc2aece653d03182))
+
+
+
+
+
 ## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.2...@lion/validate@0.6.3) (2020-01-23)
 
 **Note:** Version bump only for package @lion/validate

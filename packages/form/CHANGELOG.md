@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/form@0.4.3...@lion/form@0.4.4) (2020-01-23)
+
+
+### Bug Fixes
+
+* move demos to form-system to avoid circular dependencies ([ddd1a72](https://github.com/ing-bank/lion/commit/ddd1a72ba752c9798885d9c8cd7706a69ed3abb2))
+* update links in stories ([0c53b1d](https://github.com/ing-bank/lion/commit/0c53b1d4bb4fa51820656bacfc2aece653d03182))
+
+
+
+
+
 ## [0.4.3](https://github.com/ing-bank/lion/compare/@lion/form@0.4.2...@lion/form@0.4.3) (2020-01-23)
 
 **Note:** Version bump only for package @lion/form
