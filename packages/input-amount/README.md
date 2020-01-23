@@ -6,7 +6,7 @@
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-amount) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-amount--default-story) for a live demo and API documentation
 
 ## How to use
 

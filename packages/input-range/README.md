@@ -7,7 +7,7 @@ Its purpose is to provide a way for users to select one value from a range of va
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-range) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-range--default-story) for a live demo and API documentation
 
 ## How to use
 

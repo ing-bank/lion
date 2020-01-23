@@ -6,7 +6,7 @@
 
 ## Live Demo/Documentation
 
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-iban) for a live demo and API documentation
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-iban--default-story) for a live demo and API documentation
 
 ## How to use
 
