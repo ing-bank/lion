@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.7...@lion/form-system@0.3.8) (2020-01-24)
+
+
+### Bug Fixes
+
+* **form-system:** publish dev-assets to npm ([d0ba04f](https://github.com/ing-bank/lion/commit/d0ba04f41d51a1ff72d78aea19f127d1ba6d4e71))
+
+
+
+
+
 ## [0.3.7](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.6...@lion/form-system@0.3.7) (2020-01-24)
 
 
