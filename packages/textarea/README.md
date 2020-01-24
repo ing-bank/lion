@@ -5,9 +5,9 @@
 `lion-textarea` component is a webcomponent that enhances the functionality of the native `<input type="textarea">` element.
 Its purpose is to provide a way for users to write text that is multiple lines long.
 
-## Features
+## Live Demo/Documentation
 
-- Set the amount of rows it should resize to, before it will scroll - `max-rows` attribute
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-textarea--default-story) for a live demo and API documentation
 
 ## How to use
 

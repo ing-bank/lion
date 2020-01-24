@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.3](https://github.com/ing-bank/lion/compare/@lion/overlays@0.11.2...@lion/overlays@0.11.3) (2020-01-23)
+
+**Note:** Version bump only for package @lion/overlays
+
+
+
+
+
+## [0.11.2](https://github.com/ing-bank/lion/compare/@lion/overlays@0.11.1...@lion/overlays@0.11.2) (2020-01-20)
+
+**Note:** Version bump only for package @lion/overlays
+
+
+
+
+
+## [0.11.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.11.0...@lion/overlays@0.11.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* update storybook and use main.js ([e61e0b9](https://github.com/ing-bank/lion/commit/e61e0b938ff72cc18cc0b3aa1560f2cece0c9fe6))
+
+
+
+
+
+# [0.11.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.10.1...@lion/overlays@0.11.0) (2020-01-13)
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
 ## [0.10.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.10.0...@lion/overlays@0.10.1) (2019-12-17)
 
 **Note:** Version bump only for package @lion/overlays

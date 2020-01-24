@@ -317,7 +317,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   __renderNextButton(nextMonth, nextYear) {
-    const nextButtonTitle = `Next Month, ${nextMonth} ${nextYear}`;
+    const nextButtonTitle = `${this.msgLit('lion-calendar:nextMonth')}, ${nextMonth} ${nextYear}`;
+
     return html`
       <button
         class="calendar__next-month-button"
@@ -343,6 +344,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.today = isSameDate(day.date, today);
     day.future = day.date > today;
     day.disabled = this.disableDates(day.date);
+    day.tabindex = day.central ? '0' : '-1';
+    day.ariaPressed = day.selected ? 'true' : 'false';
+    day.ariaCurrent = day.today ? 'date' : undefined;
 
     if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;

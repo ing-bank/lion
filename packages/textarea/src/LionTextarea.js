@@ -57,6 +57,9 @@ export class LionTextarea extends LionField {
   }
 
   disconnectedCallback() {
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
     autosize.destroy(this._inputNode);
   }
 

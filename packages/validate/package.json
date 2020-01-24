@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate",
-  "version": "0.5.3",
+  "version": "0.6.4",
   "description": "Validate your form elements",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,12 +34,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.3.0",
-    "@lion/localize": "0.7.1"
+    "@lion/core": "0.4.2",
+    "@lion/localize": "0.8.4"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.3.4",
+    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"
   }
 }

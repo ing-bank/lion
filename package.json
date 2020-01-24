@@ -8,13 +8,12 @@
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
-    "@open-wc/building-rollup": "^0.14.8",
-    "@open-wc/demoing-storybook": "^0.2.0",
+    "@open-wc/demoing-storybook": "^1.8.3",
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/prettier-config": "^0.1.0",
-    "@open-wc/testing": "^2.3.4",
-    "@open-wc/testing-karma": "^3.1.33",
-    "@open-wc/testing-karma-bs": "^1.1.58",
+    "@open-wc/testing": "^2.5.0",
+    "@open-wc/testing-karma": "^3.2.30",
+    "@open-wc/testing-karma-bs": "^1.3.30",
     "@open-wc/testing-wallaby": "^0.1.12",
     "@storybook/addon-a11y": "~5.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.5",
@@ -36,16 +35,13 @@
   },
   "scripts": {
     "start": "npm run storybook",
-    "storybook": "start-storybook -p 9001 -s ./assets",
-    "storybook:build": "build-storybook -s ./assets",
+    "storybook": "start-storybook -p 9001",
+    "storybook:build": "build-storybook",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
-    "test:compatibility": "karma start --compatibility all --coverage",
-    "test:compatibility:watch": "karma start --compatibility all --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:bs": "karma start karma.bs.config.js --coverage",
-    "test:legacy:bs":"karma start karma.bs.config.js --legacy --browsers=bs_win10_ie_11",
     "lint": "run-p lint:*",
     "lint:eclint": "git ls-files | xargs eclint check",
     "lint:eslint": "eslint --ext .js,.html .",
@@ -74,9 +70,6 @@
     ],
     "*package.json": [
       "node ./scripts/lint-versions.js"
-    ],
-    "yarn.lock": [
-      "node ./scripts/yarn-lock-scan.js"
     ]
   },
   "bundlesize": [

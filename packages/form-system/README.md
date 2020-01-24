@@ -6,10 +6,9 @@ The Form System allows you to create complex forms with various validation in an
 
 ## Features
 
-- built in [validate](../validate) for error/warning/info/success
-- formatting of values
-- accessible
-- ...
+- Built in [validate](../validate) for error/warning/info/success
+- Formatting of values
+- Accessible
 
 ## Packages
 

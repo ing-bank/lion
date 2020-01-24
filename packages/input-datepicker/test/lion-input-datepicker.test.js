@@ -188,13 +188,23 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
-    it('focuses interactable date on opening of calendar', async () => {
+    it('focuses selected date on opening of calendar', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker .modelValue="${new Date()}"></lion-input-datepicker>
+      `);
+      const elObj = new DatepickerInputObject(el);
+      await elObj.openCalendar();
+      await aTimeout();
+      expect(isSameDate(elObj.calendarEl.focusedDate, elObj.calendarEl.selectedDate)).to.be.true;
+    });
+
+    it('focuses central date on opening of calendar if no date selected', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      expect(elObj.calendarObj.focusedDayObj.el).not.to.equal(null);
+      expect(isSameDate(elObj.calendarEl.focusedDate, elObj.calendarEl.centralDate)).to.be.true;
     });
 
     describe('Validators', () => {

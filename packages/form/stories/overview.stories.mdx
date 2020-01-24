@@ -1,0 +1,33 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+
+<Meta title="Forms/Form/Overview" />
+
+# Form
+
+`lion-form` is a webcomponent that enhances the functionality of the native `form` component.
+It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview--page).
+
+```html
+<lion-form id="form">
+  <form>
+    <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+    <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+  </form>
+</lion-form>
+```
+
+## Features
+
+- Data synchronization with models
+- Easy retrieval of form data based on field names
+- Advanced validation possibilities
+- Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
+- Registration mechanism for [form controls](?path=/docs/forms-system-overview--page)
+- Accessible out of the box
+
+For more information about fields that are designed for lion-form, please read
+[Forms](?path=/docs/forms-system-overview--page).
+
+## Examples
+
+For examples please look at [Form Examples](?path=/docs/forms-form-examples--default-story).

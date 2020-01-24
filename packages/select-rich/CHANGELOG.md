@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.3...@lion/select-rich@0.9.4) (2020-01-23)
+
+**Note:** Version bump only for package @lion/select-rich
+
+
+
+
+
+## [0.9.3](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.2...@lion/select-rich@0.9.3) (2020-01-23)
+
+**Note:** Version bump only for package @lion/select-rich
+
+
+
+
+
+## [0.9.2](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.1...@lion/select-rich@0.9.2) (2020-01-20)
+
+**Note:** Version bump only for package @lion/select-rich
+
+
+
+
+
+## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.0...@lion/select-rich@0.9.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* update storybook and use main.js ([e61e0b9](https://github.com/ing-bank/lion/commit/e61e0b938ff72cc18cc0b3aa1560f2cece0c9fe6))
+
+
+
+
+
+# [0.9.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.8.9...@lion/select-rich@0.9.0) (2020-01-13)
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
+## [0.8.9](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.8.8...@lion/select-rich@0.8.9) (2020-01-08)
+
+**Note:** Version bump only for package @lion/select-rich
+
+
+
+
+
 ## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.8.7...@lion/select-rich@0.8.8) (2019-12-30)
 
 

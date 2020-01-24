@@ -25,5 +25,8 @@ export function createDay(
     past,
     today,
     future,
+    tabindex: '-1',
+    ariaPressed: 'false',
+    ariaCurrent: undefined,
   };
 }

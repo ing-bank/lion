@@ -72,7 +72,7 @@ describe('<lion-calendar>', () => {
         `,
       );
       expect(el.shadowRoot.querySelector('.calendar__next-month-button')).dom.to.equal(`
-        <button class="calendar__next-month-button" aria-label="Next Month, December 2019" title="Next Month, December 2019">&gt;</button>
+        <button class="calendar__next-month-button" aria-label="Next month, December 2019" title="Next month, December 2019">&gt;</button>
       `);
     });
   });
@@ -406,10 +406,10 @@ describe('<lion-calendar>', () => {
             'Previous month, November 2000',
           );
           expect(elObj.nextMonthButtonEl.getAttribute('title')).to.equal(
-            'Next Month, January 2001',
+            'Next month, January 2001',
           );
           expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
-            'Next Month, January 2001',
+            'Next month, January 2001',
           );
         });
       });
@@ -913,21 +913,62 @@ describe('<lion-calendar>', () => {
 
       const elObj = new CalendarObject(el);
       expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
-        'Next Month, December 2019',
+        'Next month, December 2019',
       );
+
+      expect(elObj.previousMonthButtonEl.getAttribute('aria-label')).to.equal(
+        'Previous month, October 2019',
+      );
+
+      expect(elObj.weekdayHeaderEls.map(h => h.getAttribute('aria-label'))).to.eql([
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ]);
+
+      expect(elObj.weekdayHeaderEls.map(h => h.textContent.trim())).to.deep.equal([
+        'Sun',
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+      ]);
 
       localize.locale = 'nl-NL';
       await el.updateComplete;
       expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
-        'Next Month, december 2019',
+        'Volgende maand, december 2019',
       );
 
-      /**
-       * TODO: add more tests, e.g. for:
-       * - weekdays
-       * - weekday abbreviations
-       * - month names
-       */
+      expect(elObj.previousMonthButtonEl.getAttribute('aria-label')).to.equal(
+        'Vorige maand, oktober 2019',
+      );
+
+      expect(elObj.weekdayHeaderEls.map(h => h.getAttribute('aria-label'))).to.eql([
+        'zondag',
+        'maandag',
+        'dinsdag',
+        'woensdag',
+        'donderdag',
+        'vrijdag',
+        'zaterdag',
+      ]);
+
+      expect(elObj.weekdayHeaderEls.map(h => h.textContent.trim())).to.deep.equal([
+        'zo',
+        'ma',
+        'di',
+        'wo',
+        'do',
+        'vr',
+        'za',
+      ]);
     });
   });
 

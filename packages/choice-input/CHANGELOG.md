@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.3...@lion/choice-input@0.5.4) (2020-01-23)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.5.3](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.2...@lion/choice-input@0.5.3) (2020-01-23)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.1...@lion/choice-input@0.5.2) (2020-01-20)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
+## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.0...@lion/choice-input@0.5.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* update storybook and use main.js ([e61e0b9](https://github.com/ing-bank/lion/commit/e61e0b938ff72cc18cc0b3aa1560f2cece0c9fe6))
+
+
+
+
+
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.4.11...@lion/choice-input@0.5.0) (2020-01-13)
+
+
+### Features
+
+* improved storybook demos ([89b835a](https://github.com/ing-bank/lion/commit/89b835a79998c45a28093de01f69216c35009a40))
+
+
+
+
+
+## [0.4.11](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.4.10...@lion/choice-input@0.4.11) (2020-01-08)
+
+**Note:** Version bump only for package @lion/choice-input
+
+
+
+
+
 ## [0.4.10](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.4.9...@lion/choice-input@0.4.10) (2019-12-13)
 
 **Note:** Version bump only for package @lion/choice-input

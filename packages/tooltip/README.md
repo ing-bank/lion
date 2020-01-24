@@ -3,14 +3,12 @@
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
 `lion-tooltip` is a component used for basic popups on hover.
-Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard, or if th
-e invoker element is focused.
+Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard,
+or if the invoker element is focused.
 
-## Features
+## Live Demo/Documentation
 
-- Show content when hovering the invoker
-- Show content when the invoker is focused
-- Use the position property to position the content popup relative to the invoker
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/overlays-specific-wc-tooltip) for a live demo and API documentation
 
 ## How to use
 
@@ -28,9 +26,7 @@ import '@lion/tooltip/lion-tooltip.js';
 
 ```html
 <lion-tooltip>
+  <button slot="invoker">Hover me</button>
   <div slot="content">This is a tooltip<div>
-  <a slot="invoker" href="https://www.google.com/">
-    Popup on link
-  </a>
 </lion-tooltip>
 ```

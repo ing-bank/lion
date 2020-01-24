@@ -4,11 +4,9 @@
 
 `lion-switch` is a component that is used to toggle a property or feature on or off. Toggling the component on or off should have immediate action and should not require pressing any additional buttons (submit) to confirm what just happened. The Switch is not a Checkbox in disguise and should not be used as part of a form.
 
-## Features
+## Live Demo/Documentation
 
-- Get or set the checked state (boolean) - `checked` boolean attribute
-- Pre-select an option by setting the `checked` boolean attribute
-- Get or set the value of the choice - `choiceValue()`
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/buttons-switch) for a live demo and documentation
 
 ## How to use
 

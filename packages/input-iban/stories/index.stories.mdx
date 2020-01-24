@@ -1,0 +1,120 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { loadDefaultFeedbackMessages } from '@lion/validate';
+import { IsCountryIBAN } from '../src/validators.js';
+
+import '../lion-input-iban.js';
+
+<Meta title="Forms/Input Iban" parameters={{ component: 'lion-input-iban' }} />
+
+# Input IBAN
+
+`lion-input-iban` component is based on the generic text input field.
+Its purpose is to provide a way for users to fill in an IBAN (International Bank Account Number).
+
+<Story name="Default">
+  {() => {
+    loadDefaultFeedbackMessages();
+    return html`
+      <lion-input-iban label="Account" name="account"></lion-input-iban>
+    `;
+  }}
+</Story>
+
+```html
+<lion-input-iban label="Account" name="account"></lion-input-iban>
+```
+
+## Features
+
+- Based on [lion-input](?path=/docs/forms-input--default-story)
+- Default label in different languages
+- Makes use of IBAN specific [validate](?path=/docs/forms-validation-overview--page) with corresponding error messages in different languages
+  - IsIBAN (default)
+  - IsCountryIBAN
+- Parses IBANs automatically
+- Formats IBANs automatically
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/input-amount
+```
+
+```js
+import '@lion/input-amount/lion-input-amount.js';
+```
+
+## Examples
+
+### Prefilled
+
+<Story name="Prefilled">
+  {html`
+    <lion-input-iban
+      .modelValue=${'NL20INGB0001234567'}
+      name="iban"
+      label="IBAN"
+    ></lion-input-iban>
+  `}
+</Story>
+
+```html
+<lion-input-iban
+  .modelValue=${'NL20INGB0001234567'}
+  name="iban"
+  label="IBAN"
+></lion-input-iban>
+```
+
+### Faulty Prefilled
+
+<Story name="Faulty prefilled">
+  {html`
+    <lion-input-iban
+      .modelValue=${'NL20INGB0001234567XXXX'}
+      name="iban"
+      label="IBAN"
+    ></lion-input-iban>
+  `}
+</Story>
+
+```html
+<lion-input-iban
+  .modelValue=${'NL20INGB0001234567XXXX'}
+  name="iban"
+  label="IBAN"
+></lion-input-iban>
+```
+
+### Country Restrictions
+
+By default, we validate the input to ensure the IBAN is valid.
+To get the default feedback message for this default validator, use `loadDefaultFeedbackMessages` from `@lion/validate`.
+
+In the example below, we show how to use an additional validator that restricts the `input-iban` to IBANs from only certain countries.
+
+<Story name="Country restrictions">
+  {html`
+    <lion-input-iban
+      .modelValue=${'DE89370400440532013000'}
+      .validators=${[new IsCountryIBAN('NL')]}
+      name="iban"
+      label="IBAN"
+    ></lion-input-iban>
+  `}
+</Story>
+
+```js
+import { IsCountryIBAN } from '@lion/input-iban';
+```
+
+```html
+<lion-input-iban
+  .modelValue=${'DE89370400440532013000'}
+  .validators=${[new IsCountryIBAN('NL')]}
+  name="iban"
+  label="IBAN"
+></lion-input-iban>
+```

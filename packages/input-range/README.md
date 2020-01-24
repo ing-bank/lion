@@ -5,13 +5,9 @@
 `lion-input-range` component is based on the native range input.
 Its purpose is to provide a way for users to select one value from a range of values.
 
-## Features
+## Live Demo/Documentation
 
-- Based on [lion-input](../input).
-- Shows `modelValue` and `unit` above the range input.
-- Shows `min` and `max` value after the range input.
-- Can hide the `min` and `max` value via `no-min-max-labels`.
-- Makes use of [formatNumber](../localize/docs/number.md) for formatting and parsing.
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-range--default-story) for a live demo and API documentation
 
 ## How to use
 

@@ -2,49 +2,28 @@
 
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
-## Deprecations
+`lion-input-amount` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an amount.
 
-Currently all deprecations are removed due to alpha state.
+## Live Demo/Documentation
 
-## Deduping of mixins
+> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/core) for a live demo and API documentation
 
-### Why is deduping of mixins necessary?
+## How to use
 
-Imagine you are developing web components and creating ES classes for Custom Elements. You have two generic mixins (let's say `M1` and `M2`) which require independently the same even more generic mixin (`BaseMixin`). `M1` and `M2` can be used independently, that means they have to inherit from `BaseMixin` also independently. But they can be also used in combination. Sometimes `M1` and `M2` are used in the same component and can mess up the inheritance chain if `BaseMixin` is applied twice.
-In other words, this may happen to the protoype chain `... -> M2 -> BaseMixin -> M1 -> BaseMixin -> ...`.
+### Installation
 
-An example of this may be a `LocalizeMixin` used across different components and mixins. Some mixins may need it and many components need it too and can not rely on other mixins to have it by default, so must inherit from it independently.
+```sh
+npm i --save @lion/core
+```
 
-The more generic the mixin is, the higher the chance of being appliend more than once. As a mixin author you can't control how it is used, and can't always predict it. So as a safety measure it is always recommended to create deduping mixins.
+```js
+import { dedupeMixin, LitElement } from '@lion/core';
+```
 
-### Usage of dedupeMixin()
-
-This is an example of how to make a conventional ES mixin deduping.
+### Example
 
 ```js
 const BaseMixin = dedupeMixin((superClass) => {
   return class extends superClass { ... };
 });
-
-// inherits from BaseMixin
-const M1 = dedupeMixin((superClass) => {
-  return class extends BaseMixin(superClass) { ... };
-});
-
-// inherits from BaseMixin
-const M2 = dedupeMixin((superClass) => {
-  return class extends BaseMixin(superClass) { ... };
-});
-
-// component inherits from M1
-// MyCustomElement -> M1 -> BaseMixin -> BaseCustomElement;
-class MyCustomElement extends M1(BaseCustomElement) { ... }
-
-// component inherits from M2
-// MyCustomElement -> M2 -> BaseMixin -> BaseCustomElement;
-class MyCustomElement extends M2(BaseCustomElement) { ... }
-
-// component inherits from both M1 and M2
-// MyCustomElement -> M2 -> M1 -> BaseMixin -> BaseCustomElement;
-class MyCustomElement extends M2(M1(BaseCustomElement)) { ... }
 ```

@@ -7,9 +7,17 @@
  */
 export function forceAddGroupSeparators(formattedParts, groupSeparator) {
   let concatArray = [];
-  if (formattedParts[0].type === 'integer') {
-    const getInteger = formattedParts.splice(0, 1);
-    const numberOfDigits = getInteger[0].value.length;
+  let firstPart;
+  let integerPart;
+
+  for (let i = 0; i < formattedParts.length; i += 1) {
+    if (formattedParts[i].type === 'integer') {
+      firstPart = formattedParts.splice(0, i);
+      integerPart = formattedParts.splice(0, 1);
+    }
+  }
+  if (integerPart !== undefined) {
+    const numberOfDigits = integerPart[0].value.length;
     const mod3 = numberOfDigits % 3;
     const groups = Math.floor(numberOfDigits / 3);
     const numberArray = [];
@@ -18,7 +26,7 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
     let firstGroup = false;
     // Loop through the  integer
     for (let i = 0; i < numberOfDigits; i += 1) {
-      numberPart += getInteger[0].value[i];
+      numberPart += integerPart[0].value[i];
       // Create first grouping which is < 3
       if (numberPart.length === mod3 && firstGroup === false) {
         numberArray.push({ type: 'integer', value: numberPart });
@@ -38,7 +46,7 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
       }
     }
     numberArray.push({ type: 'integer', value: numberPart });
-    concatArray = numberArray.concat(formattedParts);
+    concatArray = firstPart.concat(numberArray, formattedParts);
   }
   return concatArray;
 }

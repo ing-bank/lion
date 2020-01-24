@@ -1,0 +1,153 @@
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
+
+import '../lion-input-range.js';
+
+<Meta title="Forms/Input Range" parameters={{ component: 'lion-input-range' }} />
+
+# Input range
+
+`lion-input-range` component is based on the native range input.
+Its purpose is to provide a way for users to select one value from a range of values.
+
+<Story name="Default">
+  {html`
+    <lion-input-range
+      min="200"
+      max="500"
+      .modelValue="${300}"
+      label="Input range"
+    ></lion-input-range>
+  `}
+</Story>
+
+```html
+<lion-input-range min="200" max="500" .modelValue="${300}" label="Input range"></lion-input-range>
+```
+
+## Features
+
+- Based on [lion-input](?path=/docs/forms-input--default-story).
+- Shows `modelValue` and `unit` above the range input.
+- Shows `min` and `max` value after the range input.
+- Can hide the `min` and `max` value via `no-min-max-labels`.
+- Makes use of [formatNumber](?path=/docs/localize-numbers) for formatting and parsing.
+
+## How to use
+
+### Installation
+
+```sh
+npm i --save @lion/input-range
+```
+
+```js
+import '@lion/input-range/lion-input-range.js';
+```
+
+## Examples
+
+### Units
+
+<Story name="Units">
+  {html`
+    <style>
+      lion-input-range {
+        max-width: 400px;
+      }
+    </style>
+    <lion-input-range
+      min="0"
+      max="100"
+      .modelValue="${50}"
+      unit="%"
+      label="Percentage"
+    ></lion-input-range>
+  `}
+</Story>
+
+```html
+<lion-input-range
+  min="0"
+  max="100"
+  .modelValue="${50}"
+  unit="%"
+  label="Percentage"
+></lion-input-range>
+```
+
+### Steps
+
+<Story name="Steps">
+  {html`
+    <style>
+      lion-input-range {
+        max-width: 400px;
+      }
+    </style>
+    <lion-input-range
+      min="200"
+      max="500"
+      step="50"
+      .modelValue="${300}"
+      label="Input range"
+      help-text="This slider uses increments of 50"
+    ></lion-input-range>
+  `}
+</Story>
+
+```html
+<lion-input-range
+  min="200"
+  max="500"
+  step="50"
+  .modelValue="${300}"
+  label="Input range"
+  help-text="This slider uses increments of 50"
+></lion-input-range>
+```
+
+### Without Min Max Labels
+
+<Story name="No Min Max Labels">
+  {html`
+    <style>
+      lion-input-range {
+        max-width: 400px;
+      }
+    </style>
+    <lion-input-range no-min-max-labels min="0" max="100" label="Input range"></lion-input-range>
+  `}
+</Story>
+
+```html
+<lion-input-range no-min-max-labels min="0" max="100" label="Input range"></lion-input-range>
+```
+
+### Disabled
+
+<Story name="Disabled">
+  {html`
+    <style>
+      lion-input-range {
+        max-width: 400px;
+      }
+    </style>
+    <lion-input-range
+      disabled
+      min="200"
+      max="500"
+      .modelValue="${300}"
+      label="Input range"
+    ></lion-input-range>
+  `}
+</Story>
+
+```html
+<lion-input-range
+  disabled
+  min="200"
+  max="500"
+  .modelValue="${300}"
+  label="Input range"
+></lion-input-range>
+```

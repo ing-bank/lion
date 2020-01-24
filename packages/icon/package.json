@@ -1,6 +1,6 @@
 {
   "name": "@lion/icon",
-  "version": "0.2.10",
+  "version": "0.3.2",
   "description": "A web component easily displaying svg icons",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,10 +32,10 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.3.0"
+    "@lion/core": "0.4.2"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^2.3.4"
+    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/testing": "^2.5.0"
   }
 }
