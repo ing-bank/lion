@@ -550,7 +550,7 @@ describe('<lion-calendar>', () => {
         clock.restore();
       });
 
-      xit('supports navigating from larger months to smaller ones (day counts)', async () => {
+      it('supports navigating from larger months to smaller ones (day counts)', async () => {
         // given
         const inputDate = new Date('2019/08/31');
         const element = await fixture(html`
@@ -566,6 +566,7 @@ describe('<lion-calendar>', () => {
           <button
             class="calendar__day-button"
             tabindex="0"
+            title=""
             aria-label="30 September 2019 Monday"
             aria-pressed="false"
             past=""
