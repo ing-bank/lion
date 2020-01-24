@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.6...@lion/form-system@0.3.7) (2020-01-24)
+
+
+### Bug Fixes
+
+* **form-system:** use import.meta for docs images with start and build ([9b7d714](https://github.com/ing-bank/lion/commit/9b7d714888924fee7b56a3823ffebc7cfe0f057b))
+
+
+
+
+
 ## [0.3.6](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.5...@lion/form-system@0.3.6) (2020-01-23)
 
 
