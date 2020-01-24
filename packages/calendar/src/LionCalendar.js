@@ -347,6 +347,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.tabindex = day.central ? '0' : '-1';
     day.ariaPressed = day.selected ? 'true' : 'false';
     day.ariaCurrent = day.today ? 'date' : undefined;
+    day.unavailableStatus = `${this.msgLit('lion-calendar:unavailableStatus')}`;
 
     if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;
