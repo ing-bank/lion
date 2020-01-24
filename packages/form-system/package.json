@@ -24,6 +24,7 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "dev-assets",
     "docs",
     "src",
     "stories",
