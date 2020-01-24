@@ -28,10 +28,13 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
         .date=${day.date}
         class="calendar__day-button"
         tabindex=${day.tabindex}
-        aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
+        aria-label=${day.disabled
+          ? 'Unavailable'
+          : `${dayNumber} ${monthName} ${year} ${weekdayName}`}
         aria-pressed=${day.ariaPressed}
         aria-current=${ifDefined(day.ariaCurrent)}
-        ?disabled=${day.disabled}
+        aria-disabled=${ifDefined(day.disabled ? 'true' : undefined)}
+        title=${day.disabled ? 'Unavailable' : ''}
         ?selected=${day.selected}
         ?past=${day.past}
         ?today=${day.today}
