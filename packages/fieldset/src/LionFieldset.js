@@ -5,6 +5,8 @@ import { getAriaElementsInRightDomOrder } from '@lion/field/src/utils/getAriaEle
 import { ValidateMixin } from '@lion/validate';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
+const disableableNonFormSelectors = ['button', 'lion-button'];
+
 /**
  * LionFieldset: fieldset wrapper providing extra features and integration with lion-field elements.
  *
@@ -171,6 +173,7 @@ export class LionFieldset extends FormRegistrarMixin(
         child.makeRequestToBeDisabled();
       }
     });
+    this.__updateDisableableState();
   }
 
   __retractRequestChildrenToBeDisabled() {
@@ -179,6 +182,7 @@ export class LionFieldset extends FormRegistrarMixin(
         child.retractRequestToBeDisabled();
       }
     });
+    this.__updateDisableableState();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -457,5 +461,19 @@ export class LionFieldset extends FormRegistrarMixin(
     // resulting array can be serialized into a string of ids.
 
     this.validate();
+  }
+
+  __updateDisableableState() {
+    disableableNonFormSelectors.forEach(selector => {
+      this.querySelectorAll(selector).forEach(element => {
+        // skip disable update if we're dealing
+        // with a lion-button native button
+        if (selector === 'button' && element.slot === '_button') {
+          return;
+        }
+        // eslint-disable-next-line no-param-reassign
+        element.disabled = this.disabled;
+      });
+    });
   }
 }

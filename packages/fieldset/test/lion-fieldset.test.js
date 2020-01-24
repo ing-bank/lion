@@ -13,6 +13,7 @@ import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import '../lion-fieldset.js';
 import { LionField } from '@lion/field';
 import '@lion/field/lion-field.js';
+import '@lion/button/lion-button.js';
 
 const childTagString = defineCE(
   class extends LionField {
@@ -1150,6 +1151,60 @@ describe('<lion-fieldset>', () => {
         (via aria-describedby)`, async () => {
         childAriaTest(await childAriaFixture('help-text'));
       });
+    });
+  });
+
+  describe('issue 170 - https://github.com/ing-bank/lion/issues/170', () => {
+    it('should disable native & lion button', async () => {
+      // given
+      const buttonSelectors = ['#button1', '#button2', '#button3', '#button4'];
+      const el = await fixture(html`
+        <lion-fieldset>
+          <button id="button1"></button>
+          <lion-button id="button2"></lion-button>
+          <div>
+            <button id="button3"></button>
+            <lion-button id="button4"></lion-button>
+          </div>
+        </lion-fieldset>
+      `);
+      // when
+      el.disabled = true;
+      await el.updateComplete;
+      // then
+      buttonSelectors.forEach(selector => {
+        const button = el.querySelector(selector);
+        expect(button.disabled).to.be.true;
+      });
+      // when
+      el.disabled = false;
+      await el.updateComplete;
+      // then
+      buttonSelectors.forEach(selector => {
+        const button = el.querySelector(selector);
+        expect(button.disabled).to.be.false;
+      });
+    });
+
+    it('should not update button inside lion-button', async () => {
+      // given
+      const el = await fixture(html`
+        <lion-fieldset>
+          <lion-button></lion-button>
+        </lion-fieldset>
+      `);
+      const button = el.querySelector('button');
+      // when
+      el.disabled = true;
+      await el.updateComplete;
+      // then
+      expect(button.disabled).to.be.false;
+      // when
+      button.disabled = true;
+      el.disabled = false;
+      await el.updateComplete;
+      // then
+      expect(button.disabled).to.be.true;
     });
   });
 });
