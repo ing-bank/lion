@@ -35,7 +35,7 @@
     "@lion/core": "0.4.2"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.9.0-prerelease-0",
+    "@open-wc/demoing-storybook": "^1.9.0-prerelease-2",
     "@open-wc/testing": "^2.5.0"
   }
 }
