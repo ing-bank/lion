@@ -138,7 +138,7 @@ describe('LocalizeMixin', () => {
     expect(onLocaleChangedSpy.calledWith('ru-RU', 'nl-NL')).to.be.true;
   });
 
-  it('calls "onLocaleUpdated()" after both "onLocaleReady()" and "onLocaleChanged()"', async () => {
+  it.only('calls "onLocaleUpdated()" after both "onLocaleReady()" and "onLocaleChanged()"', async () => {
     const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
 
     class MyElement extends LocalizeMixin(class {}) {
@@ -161,10 +161,11 @@ describe('LocalizeMixin', () => {
     expect(onLocaleUpdatedSpy.callCount).to.equal(1);
 
     localize.locale = 'nl-NL';
+    await el.localizeNamespacesLoaded;
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
 
-  it('should have the localizeNamespacesLoaded avaliable within "onLocaleUpdated()"', async () => {
+  it.skip('should have the localizeNamespacesLoaded avaliable within "onLocaleUpdated()"', async () => {
     const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
@@ -222,6 +223,9 @@ describe('LocalizeMixin', () => {
     await el.localizeNamespacesLoaded;
 
     localize.locale = 'nl-NL';
+
+    expect(updateSpy.callCount).to.equal(0);
+    await el.localizeNamespacesLoaded;
     expect(updateSpy.callCount).to.equal(1);
   });
 
@@ -261,8 +265,8 @@ describe('LocalizeMixin', () => {
     lionLocalizeMessageSpy.restore();
   });
 
-  it('has a Promise "localizeNamespacesLoaded" which resolves once tranlations are available', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
+  it.only('has a Promise "localizeNamespacesLoaded" which resolves once tranlations are available', async () => {
+    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
@@ -285,7 +289,7 @@ describe('LocalizeMixin', () => {
     expect(el.msgLit('my-element:greeting')).to.equal('Hi!');
   });
 
-  it('renders only once all translations have been loaded (if BaseElement supports it)', async () => {
+  it.only('renders only once all translations have been loaded (if BaseElement supports it)', async () => {
     const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
@@ -313,7 +317,7 @@ describe('LocalizeMixin', () => {
     expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
   });
 
-  it('rerender on locale change once all translations are loaded (if BaseElement supports it)', async () => {
+  it.only('rerender on locale change once all translations are loaded (if BaseElement supports it)', async () => {
     const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
@@ -351,7 +355,9 @@ describe('LocalizeMixin', () => {
   });
 
   it('it can still render async by setting "static get waitForLocalizeNamespaces() { return false; }" (if BaseElement supports it)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 50) };
+    const myElementNs = {
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`, 50)
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
@@ -383,4 +389,33 @@ describe('LocalizeMixin', () => {
     await el.updateComplete;
     expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
   });
+  /*
+  it.only('should request update after localization loading completes', async () => {
+    const myElementNs = {
+      'my-element': locale => fakeImport('./my-element/${locale.js}'),
+    }
+    setupFakeImport(`./my-element/en-GB.js`, {
+      default: {
+        greeting: 'Hi!',
+      },
+    });
+    setupFakeImport(`./my-element/en-US.js`, {
+      default: {
+        greeting: 'Howdy!',
+      },
+    });
+    const tag = defineCE(class extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [ myElementNs, ...super.localizeNamespaces ];
+      }
+    });
+
+    const el = await fixture(`<${tag}></${tag}>`);
+    el.locale = 'en-US';
+    const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+    expect(requestUpdateSpy.called).to.be.false;
+    localize.complete();
+    expect(requestUpdateSpy.called).to.be.true;
+  });
+  */
 });

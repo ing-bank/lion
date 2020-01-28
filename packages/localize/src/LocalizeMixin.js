@@ -24,8 +24,16 @@ export const LocalizeMixin = dedupeMixin(
 
         this.__boundLocalizeOnLocaleChanged = (...args) => this.__localizeOnLocaleChanged(...args);
 
-        // should be loaded in advance
-        this.__localizeStartLoadingNamespaces();
+        // Under the hood starts loading translation files.
+        // A lot of tests assume that at first paint, the
+        // translations will be available.
+        // This might be an indication that first paint
+        // is delayed. We really should not be doing this.
+        // TODO: investigate if first paint is indeed delayed
+        // to have translations available when this happens.
+        // -----
+        // localize.loadNamespaces(this.__getUniqueNamespaces())
+        // -----
         this.localizeNamespacesLoaded.then(() => {
           this.__localizeMessageSync = true;
         });
@@ -80,9 +88,9 @@ export const LocalizeMixin = dedupeMixin(
         return uniqueNamespaces;
       }
 
-      __localizeStartLoadingNamespaces() {
-        this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
-      }
+      // __localizeStartLoadingNamespaces() {
+      //   this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
+      // }
 
       __localizeAddLocaleChangedListener() {
         localize.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
@@ -101,10 +109,13 @@ export const LocalizeMixin = dedupeMixin(
       }
 
       async onLocaleChanged() {
-        this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
-        await localize.loadingComplete;
+        await this.localizeNamespacesLoaded;
         this.onLocaleUpdated();
         this.requestUpdate();
+      }
+
+      get localizeNamespacesLoaded() {
+        return localize.loadNamespaces(this.__getUniqueNamespaces());
       }
 
       // eslint-disable-next-line class-methods-use-this
