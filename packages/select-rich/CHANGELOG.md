@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.5](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.4...@lion/select-rich@0.9.5) (2020-01-29)
+
+
+### Bug Fixes
+
+* **select-rich:** set activeIndex also when checkedIndex = 0 ([03c58fd](https://github.com/ing-bank/lion/commit/03c58fdafdde846fc8249cc0c6e9ceb0ada8dfbd))
+
+
+
+
+
 ## [0.9.4](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.3...@lion/select-rich@0.9.4) (2020-01-23)
 
 **Note:** Version bump only for package @lion/select-rich
