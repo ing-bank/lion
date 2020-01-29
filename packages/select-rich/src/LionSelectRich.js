@@ -622,7 +622,7 @@ export class LionSelectRich extends OverlayMixin(
 
   __setupOverlay() {
     this.__overlayOnShow = () => {
-      if (this.checkedIndex) {
+      if (this.checkedIndex != null) {
         this.activeIndex = this.checkedIndex;
       }
       this._listboxNode.focus();
