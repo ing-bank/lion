@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/ing-bank/lion/compare/@lion/button@0.5.2...@lion/button@0.5.3) (2020-01-30)
+
+
+### Bug Fixes
+
+* **button:** using space on button should not scroll page ([#531](https://github.com/ing-bank/lion/issues/531)) ([52aaa75](https://github.com/ing-bank/lion/commit/52aaa756a7c3501e20ac5547c39cecf1b3a541ab))
+
+
+
+
+
 ## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/button@0.5.1...@lion/button@0.5.2) (2020-01-20)
 
 **Note:** Version bump only for package @lion/button
