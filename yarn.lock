@@ -2397,11 +2397,6 @@
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.13.21.tgz#718b9ec5f9a98935fc775e577ad094ae8d8b7dea"
   integrity sha512-BONpjHcGX2zFa9mfnwBCLEmlDsOHzT+j6Qt1yfK3MzFXFtAykfzFjAgaxPetu0YbBlCfXuMlfxI4vlRGCGMvFg==
 
-"@open-wc/semantic-dom-diff@^0.15.4":
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.4.tgz#1bbf9adbbf3cb6090f525fc7d4274d17cc016457"
-  integrity sha512-Wa50FJiB26/jC++snNqOJBr3cYrzUdsFFNLL3HSA7PAscCWEGo5NAdesL/BnehXOCRyMZfpvv+uY9+F8dc7HCQ==
-
 "@open-wc/semantic-dom-diff@^0.15.5":
   version "0.15.5"
   resolved "https://registry.yarnpkg.com/@open-wc/semantic-dom-diff/-/semantic-dom-diff-0.15.5.tgz#5530a45eea1982706abf72c702828df0e0a61739"
@@ -2412,7 +2407,7 @@
   resolved "https://registry.yarnpkg.com/@open-wc/storybook-prebuilt/-/storybook-prebuilt-0.4.0.tgz#a8ac47d86e50559ddf17f217df2504a098cd85b8"
   integrity sha512-39Kfm3bsHPZioWIvQBuc05EvFakvqotVloe2lq0JPXD0iWxOWvWb4h8UKSvFdJY9RAv1p06OFhyEjpuhrZB9Jw==
 
-"@open-wc/testing-helpers@^1.0.0", "@open-wc/testing-helpers@^1.4.0":
+"@open-wc/testing-helpers@^1.0.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@open-wc/testing-helpers/-/testing-helpers-1.4.0.tgz#d93b627c1311a1ad2b5fc4de43fc6f9fa8a79177"
   integrity sha512-XTR0HGOSBEJz7H31FDhHD2R6GHXI6DksiJsYDzJdLXqF/ORkKFzfu1BXGVOnPZytmJZLvnEr7VmE2YfV0y2Yug==
@@ -2455,24 +2450,6 @@
   dependencies:
     wallaby-webpack "^3.0.0"
     webpack "^4.28.0"
-
-"@open-wc/testing@^2.3.4":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@open-wc/testing/-/testing-2.4.2.tgz#b4ae4682b2435167290f04061000251be85c59b0"
-  integrity sha512-VvTXlwQx3CTasCFuJQCse7JqJzDgkEFoo/6mlKzIwrzA/GJmX7Qko0aLJY7jaxnrotHyN9/njexTUPlOaW2z2g==
-  dependencies:
-    "@open-wc/chai-dom-equals" "^0.12.36"
-    "@open-wc/semantic-dom-diff" "^0.15.4"
-    "@open-wc/testing-helpers" "^1.4.0"
-    "@types/chai" "^4.1.7"
-    "@types/chai-dom" "^0.0.8"
-    "@types/mocha" "^5.0.0"
-    "@types/sinon-chai" "^3.2.3"
-    chai "^4.2.0"
-    chai-a11y-axe "^1.2.2"
-    chai-dom "^1.8.1"
-    mocha "^6.2.2"
-    sinon-chai "^3.3.0"
 
 "@open-wc/testing@^2.5.0":
   version "2.5.0"
