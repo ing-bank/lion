@@ -1,0 +1,70 @@
+import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
+
+<Meta title="Intro/Extending" />
+
+# Extending lion
+
+The primary unease for lion web components is not to use them directly but to extend them.
+
+They are unstyled so you do not need to fight
+
+
+
+
+
+
+# Announcing lion
+
+Bring the web forward - one component at a time.
+
+> Everyone should use web components but not everyone should write them
+Erik
+
+Hey my name is Alfred and I recently got tasked with enhancing our in-house meeting room reservation app.
+I was really proud as it was my solo task under my new boss Diana.
+The task at hand was to separate the room summary from the room details.
+There was a very detailed design spec but no internal reusable component yet.
+After some search I found a popular component that look almost like required -
+just some different paddings and a small behavior change.
+Options + CSS overrides alone didn't work so I copied it over and did some code adjustments to make it pixel perfect.
+My boss was happy, the designers where happy so I was happy.
+2 Weeks later we get a security alert as this component had a security issue 🙈
+luckily it was already fixed in the latest version 🤗
+So I copy it over and ... 🤔 oh it does not look like the design specs anymore 😅
+what did I change again the last time? Using a diff I could copy only the relevant code and so I saved the day 💪
+My boss was ok, the security team and the designers where happy so I was good.
+3 Weeks later we get an accessibility warning - the details page is not reachable via keyboard.
+Oh that is a tough... according to the a11y gurus the html structure needs to change 😅
+My component does not allow for it - what to do? find a new component?
+I remembered that none of other components would allow for a design like needed (without bigger code adjustments).
+As accessibility is mandatory I replaced the tabs with an appropriate version and styled it as good as I could manage.
+My boss was unhappy, the designers where unhappy so I was unhappy.
+Fortunately the security teams was still happy - they felt my frustration, cheered me up, invited my for drinks and said "It is just one of those days... "
+
+Does this story of Alfred feel somehow relatable?
+
+It highlights multiple issues in modern web development:
+- adding a dependency is a big deal
+- picking something because of looks along might not always be the best choice
+- adjusting behavior/stylings can be tough to maintain
+- if something is popular it does not mean it has good accessibility/performance
+- UI components are hard
+
+
+What can we do to tackle these issues?
+
+Imagine having components that purely focus on functionality with no design
+Imagine these components come with great accessibility and performance
+Imagine these components off great extendability
+
+Now stop imagining and look at lion
+
+### What is lion?
+
+We want to bring the web forward - one component at a time.
+
+To archive this goal lion can be the foundation for your codified in-house Design System.
+Aligning on design and usability is already a tough challenge - lets get a jump start on the code.
+
+Lion is the foundation for ing-web which is the codified design system of ING.
+It offers distinct systems for common user interface challenges.
