@@ -2,6 +2,8 @@ import { css, html, SlotMixin, DisabledWithTabIndexMixin, LitElement } from '@li
 
 // eslint-disable-next-line class-methods-use-this
 const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
+// eslint-disable-next-line class-methods-use-this
+const isSpaceKeyboardClickEvent = e => e.keyCode === 32; /* space */
 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
@@ -227,6 +229,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     if (this.active || !isKeyboardClickEvent(e)) {
       return;
     }
+
+    if (isSpaceKeyboardClickEvent(e)) {
+      e.preventDefault();
+    }
+
     // FIXME: In Edge & IE11, this toggling the active state to prevent bounce, does not work.
     this.active = true;
     const keyupHandler = keyupEvent => {
