@@ -1,5 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import '../../button/lion-button.js';
 import '../lion-tooltip-arrow.js';
 import '../lion-tooltip.js';
 
@@ -7,7 +6,7 @@ describe('lion-tooltip-arrow', () => {
   it('has a visual "arrow" element inside the content node', async () => {
     const el = await fixture(html`
       <lion-tooltip opened>
-        <lion-button slot="invoker">Tooltip button</lion-button>
+        <button slot="invoker">Tooltip button</button>
         <div slot="content">Hey there</div>
         <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
@@ -21,7 +20,7 @@ describe('lion-tooltip-arrow', () => {
   it('reflects popper placement in its own placement property and attribute', async () => {
     const el = await fixture(html`
       <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
-        <lion-button slot="invoker">Tooltip button</lion-button>
+        <button slot="invoker">Tooltip button</button>
         <div slot="content">Hey there</div>
         <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
@@ -55,7 +54,7 @@ describe('lion-tooltip-arrow', () => {
         <div slot="content" style="height: 30px; background-color: red;">
           Hey there
         </div>
-        <lion-button slot="invoker">Tooltip button</lion-button>
+        <button slot="invoker" style="height: 30px;">Tooltip button</button>
         <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
     `);
