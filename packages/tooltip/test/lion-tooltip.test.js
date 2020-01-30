@@ -159,7 +159,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       await expect(el).to.be.accessible;
@@ -169,7 +169,7 @@ describe('lion-tooltip', () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
-          <lion-button slot="invoker">Tooltip button</lion-button>
+          <button slot="invoker">Tooltip button</button>
         </lion-tooltip>
       `);
       const invoker = el.querySelector('[slot="invoker"]');
