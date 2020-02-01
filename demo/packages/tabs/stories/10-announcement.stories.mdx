@@ -10,7 +10,7 @@ As many of you may already know, ING has a long and rich history of Web Componen
 
 [Need a refresher?](https://medium.com/ing-blog/ing-%EF%B8%8F-web-components-f52aacc71d7a) Web Components are a set of browser standards that allow us to write browser native, reusable, encapsulated, and modular components. More specifically, the standards that allow us to do so are: [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements), [ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import), [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), [HTML Templates](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
 
-For a long time, Polymer was "the" synonym for Web Components, but today thats no longer the case. The Web Components standards have matured, and a lot has happened since the V0 specification. Today, there are many ways to build and consume your Web Components, like: [Angular Elements](https://angular.io/guide/elements), [Svelte](https://svelte.dev/), [Skate](https://github.com/skatejs/skatejs), [Hybrids](https://github.com/hybridsjs/hybrids), [Stencil](https://stenciljs.com/docs/introduction/) and many, many more. And with the release of the new [Chromium Edge](https://www.theverge.com/2020/1/15/21066767/microsoft-edge-chromium-new-browser-windows-mac-download-os), this means that all major browsers support Web Components natively.
+For a long time, Polymer was _the_ synonym for Web Components, but today thats no longer the case. The Web Components standards have matured, and a lot has happened since the V0 specification. Today, there are many ways to build and consume your Web Components, like: [Angular Elements](https://angular.io/guide/elements), [Svelte](https://svelte.dev/), [Skate](https://github.com/skatejs/skatejs), [Hybrids](https://github.com/hybridsjs/hybrids), [Stencil](https://stenciljs.com/docs/introduction/) and many, many more. And with the release of the new [Chromium Edge](https://www.theverge.com/2020/1/15/21066767/microsoft-edge-chromium-new-browser-windows-mac-download-os), this means that all major browsers support Web Components natively.
 
 So today, I'm happy to share with you all that ING is open-sourcing it's own core library of Web Components: lion! 🎉
 
@@ -39,56 +39,54 @@ Consider the following fictional scenario:
 > *My boss was unhappy, the designers where unhappy so I was unhappy.*
 > Fortunately the security teams was still happy - they felt my frustration, cheered me up, invited my for drinks and said "It is just one of those days... "
 
-Does this story of Alfred feels somehow relatable?
+Does the story of Alfred feels somehow relatable?
 
 It highlights multiple common issues in modern web development:
-- adding a dependency is a big deal
-- picking something because of looks along might not always be the best choice
-- adjusting custom behavior/stylings can be tough to maintain
-- if something is popular it does not mean it has good accessibility/performance
-- UI components are hard
+- Finding and adding a dependency is a big deal
+- Picking something because of looks along might not always be the best choice
+- Adjusting custom behavior/stylings can be tough to maintain
+- If a package is popular it does not mean it has good accessibility/performance
+- UI components are hard to get _right_
 
 ### What can we do to tackle these issues?
 
-🤔 Imagine having components that purely focus on functionality with no design
-🤔 Imagine these components come with great accessibility and performance
-🤔 Imagine these components offer great extendability
+🤔 Imagine having components that purely focus on functionality, and leave the design up to you
+🤔 Imagine that these components come with great accessibility and performance
+🤔 Imagine these components offer great extendability and flexibility
 
-Now stop imagining and look at lion 💪
+Now stop imagining, and look at lion 🦁
 
 ## What is lion?
 
 > We want to bring the web forward - one component at a time.
 
-To archive this goal lion can be the foundation for your codified in-house Design System.
-Aligning on design and usability is already a tough challenge - lets get a jump start on the code.
+Lion is a white label, open source, framework agnostic component library, and can  be the foundation for your codified in-house Design System. Aligning on design and usability is already a tough challenge, with Lion, we hope to take some of the work out of your hands.
 
 ### White Label
 Lion is a core package of white label Web Components. What this means is that the core components only consist of very minimal styling, yet has all the fundamental functionalities. White label products are often created so others can easily rebrand them with their own visual identity. This is great, because it means that everyone can use the core functionalities of our components, while bringing their own branding or design system, because surprisingly, not everyone loves orange.
 
-Check out [lion demo's](http://lion-web-components.netlify.com/). Looks plain, doesn't it?
+Check out the [Lion demo's](http://lion-web-components.netlify.com/). Looks plain, doesn't it?
 
 And this is exactly what we at ING do as well. Our ing-web components extend the lion components, and apply our own ING visual identity which mostly is a thin layer on top of lion.
 
-Have a comparison how it looks on lion and how on ing-web.
+Let's take a look at how Lion and ing-web compare to eachother:
 
 <<---- ADD IMAGE ----->>
 
 ### 🎯 Focus
-The lion package was designed with a focus on global UX and reusability in mind. And as such, the following features were incorporated from the start:
+Lion was designed with a focus on global UX and reusability in mind. And as such, the following features were incorporated right from the start:
 
 ♻️ Reusability - Our components are meant to be distributed and used on a global scale
 🚹 Accessibility - Our components are meant to be accessible for everyone
 🚀 Performance - Our components are meant to be small, performant and fast
 
-These features allows us to roll out our components globally and have a single point of truth, and ensures that everyone in ING has a solid set of building blocks to build their application with, and get up and running in no time.
+These features allows us to roll out our components globally and have a single point of truth, and ensure that everyone in ING has a solid set of building blocks to build their application with, and get up and running in no time.
 
 ### Lessons learned
 
-ING has been with web components quite from the start and this is not the first component set we built.
-So how are these components different from the previous generation?
-They are built from the ground up allow for accessibility and extendability as we learned that these things are almost impossible to change/archive later.
-We'd like to highlight a few of the lessons learned while making the new set of components.
+ING started using web components very early on, and Lion is not the first component library we built. So you may wonder, how are these components different from the previous generation?
+
+Lion is built from the ground up allow for accessibility and extendability as we learned that these things are almost impossible to change/achieve at a later point. We'd like to highlight a few of the lessons learned while making the new set of components.
 
 - Not everything has to be a Web Component, for certain functionality regular JavaScript is better.
 - Stay as close to native semantic HTML elements as possible.
@@ -101,25 +99,28 @@ We'd like to highlight a few of the lessons learned while making the new set of 
 *Erik*
 
 ## 🙋‍ Looking For Contributors/Adopters!
+
 In order for the open sourcing of lion to be a success, we need your helping hand! What can you do?
 
-Primarily use lion 👍 the more extending components there are the more stable the lion base will become.
+Mainly, start using Lion! 👍 
 
-If you wanna do even more you can
+The more extending components there are the more stable the Lion base will become.
+
+If you want to do more you can:
 - Help lion directly
   - By reporting/fixing issues
-  - By working on complete new components (start with an issue for discussion first)
+  - By working on a completely new component (start with an issue for discussion first)
   - By improving documentation
-  - ... every contribution counts!!!
+  - ... every contribution counts! Even typo fixes in the docs 🤓
 - Promote lion within your company
   - Show it to your Tech Architects
   - Bring it up if there is a plan to start (codifying) your Design System
 - Extend Lion to make a web component version of your favorite design systems
+  - Check out the following design systems: [Bulma](https://bulma.io/expo/), [Bootstrap](https://getbootstrap.com/), [Material](https://material.io/design/), [Bolt](https://boltdesignsystem.com/), [Argon](https://demos.creative-tim.com/vue-argon-design-system/documentation/), [Tailwind](https://tailwindcss.com/)
   - Or suggest it to them
-  - Check out the following design systems: Bulma, Bootstrap, Material, Bolt, Argon, Tailwind
 
 ## 🔨 Extend the components
-Use lion as the base to implement your own codified design system.
+You can use Lion as the base to implement your own codified design system.
 
 Let see how Alfred's story would have panned out if he would have chosen lion instead.
 
@@ -204,7 +205,7 @@ If there are issues or missing core features [please let us know](https://github
 PS: as the wicked reader that you are you already noticed that we copied the documentation so improvements on lion documentation will be not be reflected on my documentation page 😅 What if I told you... you can reuse this documentation 🤔 - but that is a story for another time 🤗
 
 ### Why Open Source?
-Web Component library are in huge demand. By open sourcing our extendable components, we help people to do your thing, while reaping all the benefits from the open source community. What's more is that any contribution made to lion directly impacts and benefits every design system using it (and ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community 💪.
+Component libraries are in huge demand. By open sourcing our extendable components, we help people to do your thing, while reaping all the benefits from the open source community. What's more is that any contribution made to lion directly impacts and benefits every design system using it (and ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community!
 
 
 ### Stay tuned
