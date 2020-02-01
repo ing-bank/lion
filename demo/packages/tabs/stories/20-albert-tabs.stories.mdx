@@ -1,34 +1,34 @@
 import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
 import { LitElement } from '@lion/core';
 
-import '../md-tabs.js';
-import '../md-tab.js';
-import '../md-tab-panel.js';
+import '../albert-tabs.js';
+import '../albert-tab.js';
+import '../albert-tab-panel.js';
 
-<Meta title="Intro/Tabs Example" parameters={{ component: 'md-tabs' }} />
+<Meta title="Intro/Tabs Example" parameters={{ component: 'albert-tabs' }} />
 
-# Tabs
+# Albert Tabs
 
 > This is not a real implementation!
 >
 > It is an example of how you can reuse the functionality of lion while still providing a unique style system
 
 
-`md-tabs` implements tabs view to allow users to quickly move between a small number of equally important views.
+`albert-tabs` implements tabs view to allow users to quickly move between a small number of equally important views.
 
 <Preview>
   <Story name="default">
     {html`
-      <md-tabs>
-        <md-tab slot="tab">Info</md-tab>
-        <md-tab-panel slot="panel">
+      <albert-tabs>
+        <albert-tab slot="tab">Info</albert-tab>
+        <albert-tab-panel slot="panel">
           Info page with lots of information about us.
-        </md-tab-panel>
-        <md-tab slot="tab">Work</md-tab>
-        <md-tab-panel slot="panel">
+        </albert-tab-panel>
+        <albert-tab slot="tab">Work</albert-tab>
+        <albert-tab-panel slot="panel">
           Work page that showcases our work.
-        </md-tab-panel>
-      </md-tabs>
+        </albert-tab-panel>
+      </albert-tabs>
     `}
   </Story>
 </Preview>
@@ -44,20 +44,20 @@ npm i --save @lion/tabs;
 ### Usage
 
 ```js
-import '@lion/tabs/md-tabs.js';
+import '@lion/tabs/albert-tabs.js';
 ```
 
 ```html
-<md-tabs>
-  <md-tab slot="tab">Info</md-tab>
-  <md-tab-panel slot="panel">
+<albert-tabs>
+  <albert-tab slot="tab">Info</albert-tab>
+  <albert-tab-panel slot="panel">
     Info page with lots of information about us.
-  </md-tab-panel>
-  <md-tab slot="tab">Work</md-tab>
-  <md-tab-panel slot="panel">
+  </albert-tab-panel>
+  <albert-tab slot="tab">Work</albert-tab>
+  <albert-tab-panel slot="panel">
     Work page that showcases our work.
-  </md-tab-panel>
-</md-tabs>
+  </albert-tab-panel>
+</albert-tabs>
 ```
 
 ## Examples
@@ -69,16 +69,16 @@ You can set the `selectedIndex` to select a certain tab.
 <Preview>
   <Story name="Selected index">
     {html`
-      <md-tabs .selectedIndex=${1}>
-        <md-tab slot="tab">Info</md-tab>
-        <md-tab-panel slot="panel">
+      <albert-tabs .selectedIndex=${1}>
+        <albert-tab slot="tab">Info</albert-tab>
+        <albert-tab-panel slot="panel">
           Info page with lots of information about us.
-        </md-tab-panel>
-        <md-tab slot="tab">Work</md-tab>
-        <md-tab-panel slot="panel">
+        </albert-tab-panel>
+        <albert-tab slot="tab">Work</albert-tab>
+        <albert-tab-panel slot="panel">
           Work page that showcases our work.
-        </md-tab-panel>
-      </md-tabs>
+        </albert-tab-panel>
+      </albert-tabs>
     `}
   </Story>
 </Preview>
@@ -87,21 +87,21 @@ You can set the `selectedIndex` to select a certain tab.
 
 The tab and panel slots are ordered by DOM order.
 
-This means you can switch the grouping in your `md-tabs` from tab + panel to all tabs first or all panels first.
+This means you can switch the grouping in your `albert-tabs` from tab + panel to all tabs first or all panels first.
 
 <Preview>
   <Story name="Slots order">
     {html`
-      <md-tabs>
-        <md-tab slot="tab">Info</md-tab>
-        <md-tab slot="tab">Work</md-tab>
-        <md-tab-panel slot="panel">
+      <albert-tabs>
+        <albert-tab slot="tab">Info</albert-tab>
+        <albert-tab slot="tab">Work</albert-tab>
+        <albert-tab-panel slot="panel">
           Info page with lots of information about us.
-        </md-tab-panel>
-        <md-tab-panel slot="panel">
+        </albert-tab-panel>
+        <albert-tab-panel slot="panel">
           Work page that showcases our work.
-        </md-tab-panel>
-      </md-tabs>
+        </albert-tab-panel>
+      </albert-tabs>
     `}
   </Story>
 </Preview>
@@ -112,7 +112,7 @@ Below, we demonstrate on how you could dynamically add new tab + panels.
 
 <Story name="Distribute new elements">
   {() => {
-    const tagName = 'md-tabs-experimental';
+    const tagName = 'albert-tabs-experimental';
     if (!customElements.get(tagName)) {
       customElements.define(
         tagName,
@@ -128,29 +128,29 @@ Below, we demonstrate on how you could dynamically add new tab + panels.
               <button @click="${this.__handleAppendClick}">
                 Append
               </button>
-              <md-tabs id="appendTabs">
-                <md-tab slot="tab">tab 1</md-tab>
-                <md-tab-panel slot="panel">panel 1</md-tab-panel>
-                <md-tab slot="tab">tab 2</md-tab>
-                <md-tab-panel slot="panel">panel 2</md-tab-panel>
-              </md-tabs>
+              <albert-tabs id="appendTabs">
+                <albert-tab slot="tab">tab 1</albert-tab>
+                <albert-tab-panel slot="panel">panel 1</albert-tab-panel>
+                <albert-tab slot="tab">tab 2</albert-tab>
+                <albert-tab-panel slot="panel">panel 2</albert-tab-panel>
+              </albert-tabs>
               <hr />
               <h3>Push</h3>
               <button @click="${this.__handlePushClick}">
                 Push
               </button>
-              <md-tabs id="pushTabs">
-                <md-tab slot="tab">tab 1</md-tab>
-                <md-tab-panel slot="panel">panel 1</md-tab-panel>
-                <md-tab slot="tab">tab 2</md-tab>
-                <md-tab-panel slot="panel">panel 2</md-tab-panel>
+              <albert-tabs id="pushTabs">
+                <albert-tab slot="tab">tab 1</albert-tab>
+                <albert-tab-panel slot="panel">panel 1</albert-tab-panel>
+                <albert-tab slot="tab">tab 2</albert-tab>
+                <albert-tab-panel slot="panel">panel 2</albert-tab-panel>
                 ${this.__collection.map(
                   item => html`
-                    <md-tab slot="tab">${item.button}</md-tab>
-                    <md-tab-panel slot="panel">${item.panel}</md-tab-panel>
+                    <albert-tab slot="tab">${item.button}</albert-tab>
+                    <albert-tab-panel slot="panel">${item.panel}</albert-tab-panel>
                   `,
                 )}
-              </md-tabs>
+              </albert-tabs>
             `;
           }
           constructor() {
@@ -162,10 +162,10 @@ Below, we demonstrate on how you could dynamically add new tab + panels.
             const c = 2;
             const n = Math.floor(tabsElement.children.length / 2);
             for (let i = n + 1; i < n + c; i += 1) {
-              const tab = document.createElement('md-tab');
+              const tab = document.createElement('albert-tab');
               tab.setAttribute('slot', 'tab');
               tab.innerText = `tab ${i}`;
-              const panel = document.createElement('md-tab-panel');
+              const panel = document.createElement('albert-tab-panel');
               panel.setAttribute('slot', 'panel');
               panel.innerText = `panel ${i}`;
               tabsElement.append(tab);
@@ -187,22 +187,22 @@ Below, we demonstrate on how you could dynamically add new tab + panels.
       );
     }
     return html`
-      <md-tabs-experimental></md-tabs-experimental>
+      <albert-tabs-experimental></albert-tabs-experimental>
     `;
   }}
 </Story>
 
 One way is by creating the DOM elements and appending them as needed.
 
-Inside your `md-tabs` extension, an example for appending nodes on a certain button click:
+Inside your `albert-tabs` extension, an example for appending nodes on a certain button click:
 
 ```js
 __handleAppendClick() {
   const tabsAmount = this.children.length / 2;
-  const tab = document.createElement('md-tab');
+  const tab = document.createElement('albert-tab');
   tab.setAttribute('slot', 'tab');
   tab.innerText = `tab ${tabsAmount + 1}`;
-  const panel = document.createElement('md-tab-panel');
+  const panel = document.createElement('albert-tab-panel');
   panel.setAttribute('slot', 'panel');
   panel.innerText = `panel ${tabsAmount + 1}`;
   this.append(tab);
@@ -230,12 +230,12 @@ __handlePushClick() {
 Make sure your template re-renders when myCollection is updated.
 
 ```html
-<md-tabs id="pushTabs">
+<albert-tabs id="pushTabs">
   ${myCollection.map(item => html`
-  <md-tab slot="tab">${item.button}</md-tab>
-  <md-tab-panel slot="panel">${item.panel}</md-tab-panel>
+  <albert-tab slot="tab">${item.button}</albert-tab>
+  <albert-tab-panel slot="panel">${item.panel}</albert-tab-panel>
   `)}
-</md-tabs>
+</albert-tabs>
 ```
 
 ## Rationale

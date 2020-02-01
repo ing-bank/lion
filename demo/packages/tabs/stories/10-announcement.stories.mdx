@@ -1,0 +1,213 @@
+import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
+
+<Meta title="Intro/Announcement" />
+
+# ING Bank open sources lion
+
+> Bring the web forward - one component at a time.
+
+As many of you may already know, ING has a long and rich history of Web Components, starting out with the Polymer library, all the way up to the recently released LitElement.
+
+[Need a refresher?](https://medium.com/ing-blog/ing-%EF%B8%8F-web-components-f52aacc71d7a) Web Components are a set of browser standards that allow us to write browser native, reusable, encapsulated, and modular components. More specifically, the standards that allow us to do so are: [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements), [ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import), [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), [HTML Templates](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
+
+For a long time, Polymer was "the" synonym for Web Components, but today thats no longer the case. The Web Components standards have matured, and a lot has happened since the V0 specification. Today, there are many ways to build and consume your Web Components, like: [Angular Elements](https://angular.io/guide/elements), [Svelte](https://svelte.dev/), [Skate](https://github.com/skatejs/skatejs), [Hybrids](https://github.com/hybridsjs/hybrids), [Stencil](https://stenciljs.com/docs/introduction/) and many, many more. And with the release of the new [Chromium Edge](https://www.theverge.com/2020/1/15/21066767/microsoft-edge-chromium-new-browser-windows-mac-download-os), this means that all major browsers support Web Components natively.
+
+So today, I'm happy to share with you all that ING is open-sourcing it's own core library of Web Components: lion! 🎉
+
+## Why you should care
+
+Consider the following fictional scenario:
+
+> Hey my name is Alfred and I recently got tasked with enhancing our in-house meeting room reservation app.
+> I was really proud as it was my first solo task under my new boss Diana.
+> The goal was to separate the room summary from the room details.
+> There was a very detailed design spec for "tabs" but no internal reusable component yet.
+> After some search I found a popular component that look almost like required.
+> just some different styling and a small behavior change.
+> Options + CSS overrides alone didn't work so I copied it over and did some code adjustments to make it pixel perfect.
+> *My boss was happy, the designers where happy so I was happy.*
+> 2 Weeks later we get a security alert as this component had a security issue 🙈
+> luckily it was already fixed in the latest version 🤗
+> So I copy it over and ... 🤔 oh it does not look like the design specs anymore 😅
+> what did I change again the last time? Using a diff I could copy only the relevant code and save the the day 💪
+> *My boss was ok, the security team and the designers where happy so I was good.*
+> 3 Weeks later we get an accessibility warning - the details page is not reachable via keyboard.
+> Oh that is a tough one... according to the a11y gurus the html structure needs to change 😅
+> My component does not allow for it - what to do? find a new component?
+> I remembered that none of other components would allow for for the needed design without bigger code adjustments.
+> As accessibility is mandatory I replaced the tabs with an appropriate version and styled it as good as I could manage.
+> *My boss was unhappy, the designers where unhappy so I was unhappy.*
+> Fortunately the security teams was still happy - they felt my frustration, cheered me up, invited my for drinks and said "It is just one of those days... "
+
+Does this story of Alfred feels somehow relatable?
+
+It highlights multiple common issues in modern web development:
+- adding a dependency is a big deal
+- picking something because of looks along might not always be the best choice
+- adjusting custom behavior/stylings can be tough to maintain
+- if something is popular it does not mean it has good accessibility/performance
+- UI components are hard
+
+### What can we do to tackle these issues?
+
+🤔 Imagine having components that purely focus on functionality with no design
+🤔 Imagine these components come with great accessibility and performance
+🤔 Imagine these components offer great extendability
+
+Now stop imagining and look at lion 💪
+
+## What is lion?
+
+> We want to bring the web forward - one component at a time.
+
+To archive this goal lion can be the foundation for your codified in-house Design System.
+Aligning on design and usability is already a tough challenge - lets get a jump start on the code.
+
+### White Label
+Lion is a core package of white label Web Components. What this means is that the core components only consist of very minimal styling, yet has all the fundamental functionalities. White label products are often created so others can easily rebrand them with their own visual identity. This is great, because it means that everyone can use the core functionalities of our components, while bringing their own branding or design system, because surprisingly, not everyone loves orange.
+
+Check out [lion demo's](http://lion-web-components.netlify.com/). Looks plain, doesn't it?
+
+And this is exactly what we at ING do as well. Our ing-web components extend the lion components, and apply our own ING visual identity which mostly is a thin layer on top of lion.
+
+Have a comparison how it looks on lion and how on ing-web.
+
+<<---- ADD IMAGE ----->>
+
+### 🎯 Focus
+The lion package was designed with a focus on global UX and reusability in mind. And as such, the following features were incorporated from the start:
+
+♻️ Reusability - Our components are meant to be distributed and used on a global scale
+🚹 Accessibility - Our components are meant to be accessible for everyone
+🚀 Performance - Our components are meant to be small, performant and fast
+
+These features allows us to roll out our components globally and have a single point of truth, and ensures that everyone in ING has a solid set of building blocks to build their application with, and get up and running in no time.
+
+### Lessons learned
+
+ING has been with web components quite from the start and this is not the first component set we built.
+So how are these components different from the previous generation?
+They are built from the ground up allow for accessibility and extendability as we learned that these things are almost impossible to change/archive later.
+We'd like to highlight a few of the lessons learned while making the new set of components.
+
+- Not everything has to be a Web Component, for certain functionality regular JavaScript is better.
+- Stay as close to native semantic HTML elements as possible.
+- Incorporate accessibility from the start.
+- Not everything needs to be in the shadow DOM, this is especially important for aria relations and accessibility.
+- UI components are hard
+
+> Everyone should use web components but not everyone should write them
+
+*Erik*
+
+## 🙋‍ Looking For Contributors/Adopters!
+In order for the open sourcing of lion to be a success, we need your helping hand! What can you do?
+
+Primarily use lion 👍 the more extending components there are the more stable the lion base will become.
+
+If you wanna do even more you can
+- Help lion directly
+  - By reporting/fixing issues
+  - By working on complete new components (start with an issue for discussion first)
+  - By improving documentation
+  - ... every contribution counts!!!
+- Promote lion within your company
+  - Show it to your Tech Architects
+  - Bring it up if there is a plan to start (codifying) your Design System
+- Extend Lion to make a web component version of your favorite design systems
+  - Or suggest it to them
+  - Check out the following design systems: Bulma, Bootstrap, Material, Bolt, Argon, Tailwind
+
+## 🔨 Extend the components
+Use lion as the base to implement your own codified design system.
+
+Let see how Alfred's story would have panned out if he would have chosen lion instead.
+
+> Hey my name is Alfred and I recently got tasked with enhancing our in-house meeting room reservation app.
+> [...]
+> There was a very detailed design spec but no internal reusable component yet.
+> After some search I found a white labeled base library I could use to build a version for our design system.
+> I extended the web component added my extra styling and added the extra needed functionality.
+> *My boss was happy, the designers where happy so I was happy.*
+> 2 Weeks later we get a security alert as this component had a security issue 🙈
+> luckily it was already fixed in the latest version 🤗 so I updated the version and saved the day 💪
+> *My boss, the security team and the designers where happy so I was happy.*
+> THE END
+
+That seems like a good story to tell 🤗
+
+So how did Alfred do it this time?
+
+First install what you need
+
+```bash
+npm i lit-element @lion/tabs
+```
+
+Create `albert-tabs` by reusing the functionality of lion.
+
+```js
+import { css } from 'lit-element';
+import { LionTabs } from '@lion/tabs';
+
+export class AlbertTabs extends LionTabs {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        /* my stylings */
+      `
+    ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._setupFeature();
+  }
+
+  _setupFeature() {
+    // being awesome
+  }
+}
+```
+
+We also created
+- `albert-tab-panel`
+- `albert-tab`
+
+as pure Styled Web Components by using LitElement.
+The do not have any functionality which is also the reason they do not exist in lion.
+
+```js
+import { LitElement, html, css } from 'lit-element';
+
+export class AlbertTab extends LitElement {
+  static get styles() {
+    return css`/* my stylings */`;
+  }
+
+  render() {
+    return html`
+      <!-- dom as needed -->
+      <slot></slot>
+    `;
+  }
+}
+```
+
+Our component is already done let's write some documentation.
+
+See the [live albert tabs documentation page](?path=/docs/intro-tabs-example--default-story).
+
+If there are issues or missing core features [please let us know](https://github.com/ing-bank/lion/issues).
+
+PS: as the wicked reader that you are you already noticed that we copied the documentation so improvements on lion documentation will be not be reflected on my documentation page 😅 What if I told you... you can reuse this documentation 🤔 - but that is a story for another time 🤗
+
+### Why Open Source?
+Web Component library are in huge demand. By open sourcing our extendable components, we help people to do your thing, while reaping all the benefits from the open source community. What's more is that any contribution made to lion directly impacts and benefits every design system using it (and ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community 💪.
+
+
+### Stay tuned
+
+Lion comprises of multiple Systems like Forms, Overlays, Localization, ... each solves a different challenge in a unique way.
+We will highlight them in future blog posts.

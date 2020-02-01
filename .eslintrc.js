@@ -23,5 +23,11 @@ module.exports = {
         'max-classes-per-file': 'off',
       },
     },
+    {
+      files: ['demo/**/*.js'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
   ],
 };
