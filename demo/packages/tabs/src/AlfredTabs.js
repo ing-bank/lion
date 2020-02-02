@@ -1,7 +1,7 @@
 import { css } from 'lit-element';
 import { LionTabs } from '@lion/tabs';
 
-export class AlbertTabs extends LionTabs {
+export class AlfredTabs extends LionTabs {
   static get styles() {
     return [
       super.styles,

@@ -1,3 +1,3 @@
-export { AlbertTabs } from './src/AlbertTabs.js';
-export { AlbertTab } from './src/AlbertTab.js';
-export { AlbertTabPanel } from './src/AlbertTabPanel.js';
+export { AlfredTabs } from './src/AlfredTabs.js';
+export { AlfredTab } from './src/AlfredTab.js';
+export { AlfredTabPanel } from './src/AlfredTabPanel.js';

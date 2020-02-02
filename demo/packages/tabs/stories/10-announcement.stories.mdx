@@ -14,38 +14,47 @@ For a long time, Polymer was _the_ synonym for Web Components, but today thats n
 
 So today, I'm happy to share with you all that ING is open-sourcing it's own core library of Web Components: lion! 🎉
 
-## Why you should care
+## Why Lion?
 
-Consider the following fictional scenario:
+Imagine the following fictional scenario:
 
-> Hey my name is Alfred and I recently got tasked with enhancing our in-house meeting room reservation app.
-> I was really proud as it was my first solo task under my new boss Diana.
-> The goal was to separate the room summary from the room details.
-> There was a very detailed design spec for "tabs" but no internal reusable component yet.
-> After some search I found a popular component that look almost like required.
-> just some different styling and a small behavior change.
-> Options + CSS overrides alone didn't work so I copied it over and did some code adjustments to make it pixel perfect.
-> *My boss was happy, the designers where happy so I was happy.*
-> 2 Weeks later we get a security alert as this component had a security issue 🙈
-> luckily it was already fixed in the latest version 🤗
-> So I copy it over and ... 🤔 oh it does not look like the design specs anymore 😅
-> what did I change again the last time? Using a diff I could copy only the relevant code and save the the day 💪
-> *My boss was ok, the security team and the designers where happy so I was good.*
-> 3 Weeks later we get an accessibility warning - the details page is not reachable via keyboard.
-> Oh that is a tough one... according to the a11y gurus the html structure needs to change 😅
-> My component does not allow for it - what to do? find a new component?
-> I remembered that none of other components would allow for for the needed design without bigger code adjustments.
-> As accessibility is mandatory I replaced the tabs with an appropriate version and styled it as good as I could manage.
-> *My boss was unhappy, the designers where unhappy so I was unhappy.*
-> Fortunately the security teams was still happy - they felt my frustration, cheered me up, invited my for drinks and said "It is just one of those days... "
+> Alfred works at getRich.com, and is working on a new in-house application.
 
-Does the story of Alfred feels somehow relatable?
+### Agnostic
+
+Finding components is hard, and can lead to a lot of frustration.
+
+> Alfred finds a perfect component for his use case, but unfortunately, it's written in a specific JavaScript framework, and GetRich.com uses a different framework, so he's not able to use it.
+
+Additionally, companies have their own visual identities, and overriding fully styled components to make them look like the companies identity, can sometimes be more work than starting styling from scratch.
+
+> Alfred finds a component that offers all the needed functionalities, however looks vastly different from GetRich.com's identity.
+
+### Customize Functionality
+
+Once you've found your perfect component, at some point down the line you may discover that the component lacks some kind of functionality that you would like to achieve.
+
+> Alfred decides to copy over the code, and implement the feature himself, and as a result now has to maintain the entire component as well, which becomes an added burden to the project.
+
+### Accessibility
+
+Your components should be usable by every kind of user. Accessibility is hard to get right, but an essential feature, additionally, accessibility issues can be impossible to fix at a later stage without breaking changes, so its crucial to incorporate accessibility right from the start.
+
+> Somewhere down the line, Alfred finds an accessibility issue with a component he found online. He can't fix this issue in his code, so he asks the maintainers to fix the accessibility issue, who tell him it's not possible to fix it without doing a breaking change.
+
+Or, alternatively
+
+> Alfred writes his own component, and the accessibility issue is hard to fix because of the way he initially wrote his HTML structure, and will also lead to a breaking change.
+
+### Summary
+
+Does Alfred's story feel relatable?
 
 It highlights multiple common issues in modern web development:
 - Finding and adding a dependency is a big deal
 - Picking something because of looks along might not always be the best choice
 - Adjusting custom behavior/stylings can be tough to maintain
-- If a package is popular it does not mean it has good accessibility/performance
+- If a package is popular it doesn't mean it has good accessibility/performance
 - UI components are hard to get _right_
 
 ### What can we do to tackle these issues?
@@ -100,44 +109,37 @@ Lion is built from the ground up allow for accessibility and extendability as we
 
 ## 🙋‍ Looking For Contributors/Adopters!
 
-In order for the open sourcing of lion to be a success, we need your helping hand! What can you do?
+In order for the open sourcing of Lion to be a success, we need your helping hand! What can you do?
 
-Mainly, start using Lion! 👍 
+### Adopt Lion!
 
-The more extending components there are the more stable the Lion base will become.
+Mainly you can help by starting using Lion! 👍
 
-If you want to do more you can:
-- Help lion directly
-  - By reporting/fixing issues
-  - By working on a completely new component (start with an issue for discussion first)
-  - By improving documentation
-  - ... every contribution counts! Even typo fixes in the docs 🤓
-- Promote lion within your company
-  - Show it to your Tech Architects
-  - Bring it up if there is a plan to start (codifying) your Design System
-- Extend Lion to make a web component version of your favorite design systems
-  - Check out the following design systems: [Bulma](https://bulma.io/expo/), [Bootstrap](https://getbootstrap.com/), [Material](https://material.io/design/), [Bolt](https://boltdesignsystem.com/), [Argon](https://demos.creative-tim.com/vue-argon-design-system/documentation/), [Tailwind](https://tailwindcss.com/)
-  - Or suggest it to them
+The more extending components and users there are, the more stable the Lion base will become, which helps everyone who uses Lion.
+
+Consider:
+- Promoting Lion within your company
+- Showing Lion to your Tech Architects
+- Bring Lion up if there is a plan to start (codifying) your Design System
+
+- Extending Lion to make a web component version of your favorite design systems, such as: [Bulma](https://bulma.io/expo/), [Bootstrap](https://getbootstrap.com/), [Material](https://material.io/design/), [Bolt](https://boltdesignsystem.com/), [Argon](https://demos.creative-tim.com/vue-argon-design-system/documentation/), [Tailwind](https://tailwindcss.com/)
+- Or even suggest Lion to them!
+
+### Contribute to Lion!
+
+If you want to do more you can help Lion directly by:
+
+- Reporting/fixing issues
+- Working on a completely new component (start with an issue for discussion first)
+- Improving documentation
+- ... every contribution counts! Even typo fixes in the docs 🤓
+
 
 ## 🔨 Extend the components
+
 You can use Lion as the base to implement your own codified design system.
 
-Let see how Alfred's story would have panned out if he would have chosen lion instead.
-
-> Hey my name is Alfred and I recently got tasked with enhancing our in-house meeting room reservation app.
-> [...]
-> There was a very detailed design spec but no internal reusable component yet.
-> After some search I found a white labeled base library I could use to build a version for our design system.
-> I extended the web component added my extra styling and added the extra needed functionality.
-> *My boss was happy, the designers where happy so I was happy.*
-> 2 Weeks later we get a security alert as this component had a security issue 🙈
-> luckily it was already fixed in the latest version 🤗 so I updated the version and saved the day 💪
-> *My boss, the security team and the designers where happy so I was happy.*
-> THE END
-
-That seems like a good story to tell 🤗
-
-So how did Alfred do it this time?
+Let see how Alfred's story would have panned out if he would have chosen Lion instead.
 
 First install what you need
 
@@ -145,13 +147,13 @@ First install what you need
 npm i lit-element @lion/tabs
 ```
 
-Create `albert-tabs` by reusing the functionality of lion.
+Create `alfred-tabs` by reusing the functionality of Lion. This gives Alfred all the functionality and accessible core that he needs for his custom tabs component.
 
 ```js
 import { css } from 'lit-element';
 import { LionTabs } from '@lion/tabs';
 
-export class AlbertTabs extends LionTabs {
+export class AlfredTabs extends LionTabs {
   static get styles() {
     return [
       super.styles,
@@ -172,12 +174,7 @@ export class AlbertTabs extends LionTabs {
 }
 ```
 
-We also created
-- `albert-tab-panel`
-- `albert-tab`
-
-as pure Styled Web Components by using LitElement.
-The do not have any functionality which is also the reason they do not exist in lion.
+Alfred also wants to be able to style the tab and tab-panel according to GetRich.com's visual identity. In order to do so, he creates a `alfred-tab-panel` and a `alfred-tab` component, which he can then fully style however he desires, and eventually place inside the `alfred-tabs` component. You can see how Alfred achieved this in the example down below.
 
 ```js
 import { LitElement, html, css } from 'lit-element';
@@ -196,19 +193,37 @@ export class AlbertTab extends LitElement {
 }
 ```
 
-Our component is already done let's write some documentation.
+Excellent! Alfred can now use the tabs component like so:
 
-See the [live albert tabs documentation page](?path=/docs/intro-tabs-example--default-story).
+```html
+<alfred-tabs>
+  <alfred-tab slot="tab">Info</alfred-tab>
+  <alfred-tab-panel slot="panel">
+    Info page with lots of information about us.
+  </alfred-tab-panel>
+  <alfred-tab slot="tab">Work</alfred-tab>
+  <alfred-tab-panel slot="panel">
+    Work page that showcases our work.
+  </alfred-tab-panel>
+</alfred-tabs>
+```
 
-If there are issues or missing core features [please let us know](https://github.com/ing-bank/lion/issues).
+There we go, Alfred's component is already done, so let's write some documentation.
 
-PS: as the wicked reader that you are you already noticed that we copied the documentation so improvements on lion documentation will be not be reflected on my documentation page 😅 What if I told you... you can reuse this documentation 🤔 - but that is a story for another time 🤗
+See the [live alfred tabs documentation page](?path=/docs/intro-tabs-example--default-story).
+
+P.S.: Do note that Alfred is now responsible for keeping the documentation of `alfred-tabs` up to date himself, and improvements on Lion documentation will not automatically be reflected on Alfred's documentation.
 
 ### Why Open Source?
 Component libraries are in huge demand. By open sourcing our extendable components, we help people to do your thing, while reaping all the benefits from the open source community. What's more is that any contribution made to lion directly impacts and benefits every design system using it (and ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community!
 
+If there are issues or missing core features [please let us know](https://github.com/ing-bank/lion/issues).
 
 ### Stay tuned
 
 Lion comprises of multiple Systems like Forms, Overlays, Localization, ... each solves a different challenge in a unique way.
 We will highlight them in future blog posts.
+
+## Thanks
+
+We'd like to thank etc etc
