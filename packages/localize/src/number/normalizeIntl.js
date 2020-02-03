@@ -5,6 +5,7 @@ import { forceNormalSpaces } from './forceNormalSpaces.js';
 import { forceSpaceBetweenCurrencyCodeAndNumber } from './forceSpaceBetweenCurrencyCodeAndNumber.js';
 import { forceYenSymbol } from './forceYenSymbol.js';
 import { forceSpaceInsteadOfZeroForGroup } from './forceSpaceInsteadOfZeroForGroup.js';
+import { forceTryCurrencyCode } from './forceTryCurrencyCode.js';
 
 /**
  * Function with all fixes on localize
@@ -33,6 +34,9 @@ export function normalizeIntl(formattedParts, options, _locale) {
     // Force missing Japanese Yen symbol
     if (_locale === 'fr-FR' || _locale === 'fr-BE') {
       normalize = forceYenSymbol(normalize, options);
+    }
+    if (_locale === 'tr-TR') {
+      normalize = forceTryCurrencyCode(normalize, options);
     }
   }
   return normalize;
