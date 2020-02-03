@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.5](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.4...@lion/localize@0.8.5) (2020-02-03)
+
+
+### Bug Fixes
+
+* **localize:** if locale is set to tr, currency TRY should display TL ([8fb3b23](https://github.com/ing-bank/lion/commit/8fb3b237553bda38cb66b0b75b683f4a69d4a2a5))
+
+
+
+
+
 ## [0.8.4](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.3...@lion/localize@0.8.4) (2020-01-23)
 
 

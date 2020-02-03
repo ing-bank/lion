@@ -1,6 +1,6 @@
 {
   "name": "@lion/switch",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "A Switch is used for switching a property or feature on and off",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,13 +32,13 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "0.5.4",
+    "@lion/choice-input": "0.5.5",
     "@lion/core": "0.4.2",
-    "@lion/field": "0.8.4"
+    "@lion/field": "0.8.5"
   },
   "devDependencies": {
-    "@lion/localize": "0.8.4",
-    "@lion/validate": "0.6.4",
+    "@lion/localize": "0.8.5",
+    "@lion/validate": "0.6.5",
     "@open-wc/demoing-storybook": "^1.8.3",
     "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"

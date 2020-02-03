@@ -1,6 +1,6 @@
 {
   "name": "@lion/field",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Fields are the most fundamental building block of the Form System",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,10 +34,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.2",
-    "@lion/validate": "0.6.4"
+    "@lion/validate": "0.6.5"
   },
   "devDependencies": {
-    "@lion/localize": "0.8.4",
+    "@lion/localize": "0.8.5",
     "@open-wc/demoing-storybook": "^1.8.3",
     "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"
