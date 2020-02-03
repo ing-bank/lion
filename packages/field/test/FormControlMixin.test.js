@@ -38,10 +38,19 @@ describe('FormControlMixin', () => {
 
     const elElem = await fixture(html`
       <${tag}>
-        <label slot="label">Email <span>address</span></label>
+        <label slot="label">Email address</label>
         ${inputSlot}
       </${tag}>`);
     expect(elElem.label).to.equal('Email address', 'as an element');
+  });
+
+  it('has a label that supports inner html', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <label slot="label">Email <span>address</span></label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(el.label).to.equal('Email address');
   });
 
   it('can have a help-text', async () => {
@@ -59,10 +68,19 @@ describe('FormControlMixin', () => {
 
     const elElem = await fixture(html`
       <${tag}>
-        <label slot="help-text">We will not send you any <span>spam</span></label>
+        <label slot="help-text">We will not send you any spam</label>
         ${inputSlot}
       </${tag}>`);
     expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
+  });
+
+  it('can have a help-text that supports inner html', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <label slot="help-text">We will not send you any spam</label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(el.helpText).to.equal('We will not send you any spam');
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {
