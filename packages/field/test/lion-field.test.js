@@ -155,15 +155,15 @@ describe('<lion-field>', () => {
 
   // TODO: find out if we could put all listeners on this.value (instead of this._inputNode.value)
   // and make it act on this.value again
-  it('has a class "state-filled" if this.value is filled', async () => {
+  it('has an attribute filled if this.value is filled', async () => {
     const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
-    expect(el.classList.contains('state-filled')).to.equal(true);
+    expect(el.hasAttribute('filled')).to.equal(true);
     el.value = '';
     await el.updateComplete;
-    expect(el.classList.contains('state-filled')).to.equal(false);
+    expect(el.hasAttribute('filled')).to.equal(false);
     el.value = 'bla';
     await el.updateComplete;
-    expect(el.classList.contains('state-filled')).to.equal(true);
+    expect(el.hasAttribute('filled')).to.equal(true);
   });
 
   it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
@@ -179,20 +179,16 @@ describe('<lion-field>', () => {
   });
 
   // TODO: add pointerEvents test for disabled
-  it('has a class "state-disabled"', async () => {
+  it('is disabled when disabled property is passed', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.classList.contains('state-disabled')).to.equal(false);
     expect(el._inputNode.hasAttribute('disabled')).to.equal(false);
 
     el.disabled = true;
     await el.updateComplete;
     await aTimeout();
 
-    expect(el.classList.contains('state-disabled')).to.equal(true);
     expect(el._inputNode.hasAttribute('disabled')).to.equal(true);
-
     const disabledel = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
-    expect(disabledel.classList.contains('state-disabled')).to.equal(true);
     expect(disabledel._inputNode.hasAttribute('disabled')).to.equal(true);
   });
 
