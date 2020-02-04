@@ -1,8 +1,21 @@
 import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
-import { LitElement } from '@lion/core';
 import sinon from 'sinon';
+import { LitElement } from '../../core/index.js';
 import { ValidateMixin } from '../src/ValidateMixin.js';
 import { Validator } from '../src/Validator.js';
+
+async function expectThrowsAsync(method, errorMessage) {
+  let error = null;
+  try {
+    await method();
+  } catch (err) {
+    error = err;
+  }
+  expect(error).to.be.an('Error', 'No error was thrown');
+  if (errorMessage) {
+    expect(error.message).to.equal(errorMessage);
+  }
+}
 
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
@@ -20,6 +33,20 @@ describe('Validator', () => {
     expect(() => {
       new MyValidator().execute();
     }).to.throw('You must provide a name like "this.name = \'IsCat\'" for your Validator');
+  });
+
+  it('throws when executing a Validator that has a getMessage config property with a value not of type function', async () => {
+    class MyValidator extends Validator {
+      constructor(...args) {
+        super(...args);
+        this.name = 'MyValidator';
+      }
+    }
+
+    await expectThrowsAsync(
+      () => new MyValidator({}, { getMessage: 'This is the custom error message' })._getMessage(),
+      "You must provide a value for getMessage of type 'function', you provided a value of type: string",
+    );
   });
 
   it('receives a "param" as a first argument on instantiation', async () => {
