@@ -58,8 +58,14 @@ export class Validator {
       config: this.config,
       ...data,
     };
-    if (typeof this.config.getMessage === 'function') {
-      return this.config.getMessage(composedData);
+    if (this.config.getMessage) {
+      if (typeof this.config.getMessage === 'function') {
+        return this.config.getMessage(composedData);
+      }
+      throw new Error(
+        `You must provide a value for getMessage of type 'function', you provided a value of type: ${typeof this
+          .config.getMessage}`,
+      );
     }
     return this.constructor.getMessage(composedData);
   }
