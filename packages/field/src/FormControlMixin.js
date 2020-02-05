@@ -54,11 +54,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get label() {
-        return (
-          (this.querySelector('[slot="label"]') &&
-            this.querySelector('[slot="label"]').textContent) ||
-          this.__label
-        );
+        return (this._labelNode && this._labelNode.textContent) || this.__label;
       }
 
       set label(newValue) {
@@ -68,11 +64,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get helpText() {
-        return (
-          (this.querySelector('[slot="help-text"]') &&
-            this.querySelector('[slot="help-text"]').textContent) ||
-          this.__helpText
-        );
+        return (this._helpTextNode && this._helpTextNode.textContent) || this.__helpText;
       }
 
       set helpText(newValue) {
