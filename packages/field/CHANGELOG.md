@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6](https://github.com/ing-bank/lion/compare/@lion/field@0.8.5...@lion/field@0.8.6) (2020-02-05)
+
+
+### Bug Fixes
+
+* **field:** allow html inside labels ([c2c5e7c](https://github.com/ing-bank/lion/commit/c2c5e7c299d99750db5bded1014d8e24f2f6d4c8))
+
+
+
+
+
 ## [0.8.5](https://github.com/ing-bank/lion/compare/@lion/field@0.8.4...@lion/field@0.8.5) (2020-02-03)
 
 **Note:** Version bump only for package @lion/field

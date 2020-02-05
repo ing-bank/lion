@@ -1,6 +1,6 @@
 {
   "name": "@lion/radio",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Provide a way for users to check a single option amongst a set of choices",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,9 +32,9 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "0.5.5",
+    "@lion/choice-input": "0.5.6",
     "@lion/core": "0.4.2",
-    "@lion/input": "0.5.5"
+    "@lion/input": "0.5.6"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.8.3",
