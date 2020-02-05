@@ -32,6 +32,7 @@ export class OverlayController {
       preventsScroll: false,
       trapsKeyboardFocus: false,
       hidesOnEsc: false,
+      hidesOnOutsideEsc: false,
       hidesOnOutsideClick: false,
       isTooltip: false,
       handlesUserInteraction: false,
@@ -376,6 +377,9 @@ export class OverlayController {
     if (this.hidesOnEsc) {
       this._handleHidesOnEsc({ phase });
     }
+    if (this.hidesOnOutsideEsc) {
+      this._handleHidesOnOutsideEsc({ phase });
+    }
     if (this.hidesOnOutsideClick) {
       this._handleHidesOnOutsideClick({ phase });
     }
@@ -534,6 +538,15 @@ export class OverlayController {
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
       }
+    }
+  }
+
+  _handleHidesOnOutsideEsc({ phase }) {
+    if (phase === 'show') {
+      this.__escKeyHandler = ev => ev.key === 'Escape' && this.hide();
+      document.addEventListener('keyup', this.__escKeyHandler);
+    } else if (phase === 'hide') {
+      document.removeEventListener('keyup', this.__escKeyHandler);
     }
   }
 

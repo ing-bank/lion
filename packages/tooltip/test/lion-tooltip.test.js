@@ -85,41 +85,6 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(true);
     });
 
-    it('should show content on focusin and hide on Escape key press', async () => {
-      const el = await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `);
-      const invoker = Array.from(el.children).find(child => child.slot === 'invoker');
-      const eventFocusIn = new Event('focusin');
-      invoker.dispatchEvent(eventFocusIn);
-      await el.updateComplete;
-      expect(el._overlayCtrl.isShown).to.equal(true);
-      const eventEscapeKeypress = new KeyboardEvent('keyup', { key: 'Escape' });
-      invoker.dispatchEvent(eventEscapeKeypress);
-      await el.updateComplete;
-      expect(el._overlayCtrl.isShown).to.equal(false);
-    });
-
-    it('should show content on mouseenter and hide on Escape key press', async () => {
-      const el = await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `);
-      const eventMouseEnter = new Event('mouseenter');
-      el.dispatchEvent(eventMouseEnter);
-      await el.updateComplete;
-      expect(el._overlayCtrl.isShown).to.equal(true);
-      const eventEscapeKeypress = new KeyboardEvent('keyup', { key: 'Escape' });
-      document.dispatchEvent(eventEscapeKeypress);
-      await el.updateComplete;
-      expect(el._overlayCtrl.isShown).to.equal(false);
-    });
-
     it('should tooltip contains html when specified in tooltip content body', async () => {
       const el = await fixture(html`
         <lion-tooltip>
