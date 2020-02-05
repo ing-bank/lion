@@ -1,4 +1,4 @@
-const isIE11 = /Trident/.test(window.navigator.userAgent);
+import { browserDetection } from '@lion/core';
 
 /**
  * @desc Let the order of adding ids to aria element by DOM order, so that the screen reader
@@ -14,9 +14,9 @@ export function getAriaElementsInRightDomOrder(descriptionElements, { reverse } 
     const pos = a.compareDocumentPosition(b);
     // Unfortunately, for IE, we have to switch the order (?)
     if (pos === Node.DOCUMENT_POSITION_PRECEDING || pos === Node.DOCUMENT_POSITION_CONTAINED_BY) {
-      return isIE11 ? -1 : 1;
+      return browserDetection.isIE11 ? -1 : 1;
     }
-    return isIE11 ? 1 : -1;
+    return browserDetection.isIE11 ? 1 : -1;
   };
 
   const descriptionEls = descriptionElements.filter(el => el); // filter out null references
