@@ -53,6 +53,16 @@ describe('FormControlMixin', () => {
     expect(el.label).to.equal('Email address');
   });
 
+  it('only takes label of direct child', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <${tag} label="Email address">
+          ${inputSlot}
+        </${tag}>
+      </${tag}>`);
+    expect(el.label).to.equal(undefined);
+  });
+
   it('can have a help-text', async () => {
     const elAttr = await fixture(html`
       <${tag} help-text="We will not send you any spam">${inputSlot}</${tag}>
@@ -68,7 +78,7 @@ describe('FormControlMixin', () => {
 
     const elElem = await fixture(html`
       <${tag}>
-        <label slot="help-text">We will not send you any spam</label>
+        <div slot="help-text">We will not send you any spam</div>
         ${inputSlot}
       </${tag}>`);
     expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
@@ -77,10 +87,20 @@ describe('FormControlMixin', () => {
   it('can have a help-text that supports inner html', async () => {
     const el = await fixture(html`
       <${tag}>
-        <label slot="help-text">We will not send you any spam</label>
+        <div slot="help-text">We will not send you any <span>spam</span></div>
         ${inputSlot}
       </${tag}>`);
     expect(el.helpText).to.equal('We will not send you any spam');
+  });
+
+  it('only takes help-text of direct child', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <${tag} help-text="We will not send you any spam">
+          ${inputSlot}
+        </${tag}>
+      </${tag}>`);
+    expect(el.helpText).to.equal(undefined);
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {
