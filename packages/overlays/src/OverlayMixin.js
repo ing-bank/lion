@@ -168,7 +168,9 @@ export const OverlayMixin = dedupeMixin(
       }
 
       get _overlayContentNodeWrapper() {
-        return this._overlayContentNode.parentElement;
+        return this.config.placementMode === 'global'
+          ? this._overlayContentNode.parentElement
+          : this._overlayContentNode;
       }
 
       _setupOverlayCtrl() {

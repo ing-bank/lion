@@ -21,6 +21,10 @@ export class LionTooltipArrow extends LitElement {
         display: block;
       }
 
+      :host([placement^='top']) {
+        bottom: calc(-1 * var(--tooltip-arrow-height));
+      }
+
       :host([placement^='bottom']) {
         top: calc(-1 * var(--tooltip-arrow-height));
         transform: rotate(180deg);

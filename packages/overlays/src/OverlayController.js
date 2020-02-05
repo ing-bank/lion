@@ -68,7 +68,9 @@ export class OverlayController {
 
     this.manager.add(this);
 
-    this._contentNodeWrapper = document.createElement('div');
+    this._contentNodeWrapper =
+      config.placementMode === 'global' ? document.createElement('div') : config.contentNode;
+
     this._contentId = `overlay-content--${Math.random()
       .toString(36)
       .substr(2, 10)}`;
@@ -178,6 +180,7 @@ export class OverlayController {
   async _init({ cfgToAdd }) {
     this.__initContentNodeWrapper();
     this.__initConnectionTarget();
+
     if (this.handlesAccessibility) {
       this.__initAccessibility({ cfgToAdd });
     }
@@ -195,11 +198,13 @@ export class OverlayController {
 
   __initConnectionTarget() {
     // Now, add our node to the right place in dom (rendeTarget)
-    if (this.contentNode !== this.__prevConfig.contentNode) {
-      this._contentNodeWrapper.appendChild(this.contentNode);
-    }
-    if (this._renderTarget && this._renderTarget !== this._contentNodeWrapper.parentNode) {
-      this._renderTarget.appendChild(this._contentNodeWrapper);
+    if (this.config.placementMode === 'global') {
+      if (this.contentNode !== this.__prevConfig.contentNode) {
+        this._contentNodeWrapper.appendChild(this.contentNode);
+      }
+      if (this._renderTarget && this._renderTarget !== this._contentNodeWrapper.parentNode) {
+        this._renderTarget.appendChild(this._contentNodeWrapper);
+      }
     }
   }
 
@@ -209,14 +214,19 @@ export class OverlayController {
    * can lead to problems with event listeners...
    */
   __initContentNodeWrapper() {
-    Array.from(this._contentNodeWrapper.attributes).forEach(attrObj => {
-      this._contentNodeWrapper.removeAttribute(attrObj.name);
-    });
-    this._contentNodeWrapper.style.cssText = null;
+    if (this.config.placementMode === 'global') {
+      Array.from(this._contentNodeWrapper.attributes).forEach(attrObj => {
+        this._contentNodeWrapper.removeAttribute(attrObj.name);
+      });
+      this._contentNodeWrapper.style.cssText = null;
+    }
+
     this._contentNodeWrapper.style.display = 'none';
 
     // Make sure that your shadow dom contains this outlet, when we are adding to light dom
-    this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
+    if (this.config.placementMode === 'global') {
+      this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
+    }
 
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
