@@ -53,6 +53,34 @@ export const FormControlMixin = dedupeMixin(
         };
       }
 
+      get label() {
+        return (
+          (this.querySelector('[slot="label"]') &&
+            this.querySelector('[slot="label"]').textContent) ||
+          this.__label
+        );
+      }
+
+      set label(newValue) {
+        const oldValue = this.label;
+        this.__label = newValue;
+        this.requestUpdate('label', oldValue);
+      }
+
+      get helpText() {
+        return (
+          (this.querySelector('[slot="help-text"]') &&
+            this.querySelector('[slot="help-text"]').textContent) ||
+          this.__helpText
+        );
+      }
+
+      set helpText(newValue) {
+        const oldValue = this.helpText;
+        this.__helpText = newValue;
+        this.requestUpdate('helpText', oldValue);
+      }
+
       get slots() {
         return {
           ...super.slots,

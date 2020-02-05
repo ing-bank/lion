@@ -23,22 +23,64 @@ describe('FormControlMixin', () => {
     tag = unsafeStatic(elem);
   });
 
-  it('has the capability to override the help text', async () => {
-    const lionFieldAttr = await fixture(html`
-      <${tag} help-text="This email address is already taken">${inputSlot}</${tag}>
+  it('has a label', async () => {
+    const elAttr = await fixture(html`
+      <${tag} label="Email address">${inputSlot}</${tag}>
     `);
-    expect(
-      Array.from(lionFieldAttr.children).find(child => child.slot === 'help-text').textContent,
-    ).to.contain('This email address is already taken');
-    const lionFieldProp = await fixture(html`
+    expect(elAttr.label).to.equal('Email address', 'as an attribute');
+
+    const elProp = await fixture(html`
       <${tag}
-        .helpText=${'This email address is already taken'}
+        .label=${'Email address'}
       >${inputSlot}
       </${tag}>`);
+    expect(elProp.label).to.equal('Email address', 'as a property');
 
-    expect(
-      Array.from(lionFieldProp.children).find(child => child.slot === 'help-text').textContent,
-    ).to.contain('This email address is already taken');
+    const elElem = await fixture(html`
+      <${tag}>
+        <label slot="label">Email address</label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(elElem.label).to.equal('Email address', 'as an element');
+  });
+
+  it('has a label that supports inner html', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <label slot="label">Email <span>address</span></label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(el.label).to.equal('Email address');
+  });
+
+  it('can have a help-text', async () => {
+    const elAttr = await fixture(html`
+      <${tag} help-text="We will not send you any spam">${inputSlot}</${tag}>
+    `);
+    expect(elAttr.helpText).to.equal('We will not send you any spam', 'as an attribute');
+
+    const elProp = await fixture(html`
+      <${tag}
+        .helpText=${'We will not send you any spam'}
+      >${inputSlot}
+      </${tag}>`);
+    expect(elProp.helpText).to.equal('We will not send you any spam', 'as a property');
+
+    const elElem = await fixture(html`
+      <${tag}>
+        <label slot="help-text">We will not send you any spam</label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
+  });
+
+  it('can have a help-text that supports inner html', async () => {
+    const el = await fixture(html`
+      <${tag}>
+        <label slot="help-text">We will not send you any spam</label>
+        ${inputSlot}
+      </${tag}>`);
+    expect(el.helpText).to.equal('We will not send you any spam');
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {

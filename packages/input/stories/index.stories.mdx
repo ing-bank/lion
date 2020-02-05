@@ -10,7 +10,7 @@ import '../lion-input.js';
 
 `lion-input` component is a webcomponent that enhances the functionality of the native `<input>` element.
 
-<Story name="default">
+<Story name="Default">
   {html`
     <lion-input label="First Name"></lion-input>
   `}
@@ -25,7 +25,7 @@ import '../lion-input.js';
 - Based on [field](?path=/docs/forms-system-overview--page)
 - Extra visual elements can be added via `slots`
   - **label**: can also be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
-    For example add an `sr-only` class to the label to make it visually hidden.
+    For example add an `u-sr-only` class to the label to make it visually hidden.
     A label is always needed for accessibility reasons.
   - **help-text**: a helper text shown below the label to give extra clarification.
   - **prefix**: does not have an active use case yet, but the option is in place.
@@ -49,9 +49,64 @@ import '@lion/input/lion-input.js';
 
 ## Examples
 
+### Label
+
+Can be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
+For example add an `u-sr-only` class to the label to make it (partially) visually hidden.
+A label is always needed for accessibility reasons.
+
+<Story name="Label">
+  {html`
+    <style>
+      .u-sr-only {
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(100%);
+        clip: rect(1px, 1px, 1px, 1px);
+        white-space: nowrap;
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <lion-input>
+      <label slot="label">Label <span class="u-sr-only">partially only visible for screen-readers</span></label>
+    </lion-input>
+  `}
+</Story>
+
+```html
+<style>
+  .u-sr-only {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(100%);
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<lion-input>
+  <label slot="label">Label <span class="u-sr-only">partially only visible for screen-readers</span></label>
+</lion-input>
+```
+
 ### Help-text
 
-<Story name="Help-text with html">
+A helper text shown below the label to give extra clarification.
+
+Just like the `label`, a `help-text` can be provided via the `help-text` attribute, a slot can be used to change the `html` and `CSS` of the help-text.
+For example add an anchor with further explanation.
+
+<Story name="Help-text">
   {html`
     <lion-input>
       <label slot="label">Label</label>

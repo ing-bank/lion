@@ -230,9 +230,6 @@ export class LionField extends FormControlMixin(
   }
 
   get fieldName() {
-    const label =
-      this.label ||
-      (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
-    return this.__fieldName || label || this.name;
+    return this.__fieldName || this.label || this.name;
   }
 }
