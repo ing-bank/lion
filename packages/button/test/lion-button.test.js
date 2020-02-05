@@ -9,7 +9,7 @@ import {
   keyDownOn,
   keyUpOn,
 } from '@polymer/iron-test-helpers/mock-interactions.js';
-import { LionButton } from '../src/LionButton.js';
+import { browserDetection } from '@lion/core';
 
 import '../lion-button.js';
 
@@ -19,16 +19,6 @@ function getTopElement(el) {
   const crossBrowserRoot =
     el.shadowRoot && el.shadowRoot.elementFromPoint ? el.shadowRoot : document;
   return crossBrowserRoot.elementFromPoint(left + width / 2, top + height / 2);
-}
-
-let originalIsIE11Method;
-function mockIsIE11() {
-  originalIsIE11Method = LionButton.__isIE11;
-  LionButton.__isIE11 = () => true;
-}
-
-function restoreMockIsIE11() {
-  LionButton.__isIE11 = originalIsIE11Method;
 }
 
 describe('lion-button', () => {
@@ -212,7 +202,7 @@ describe('lion-button', () => {
     });
 
     it('has an aria-labelledby and wrapper element in IE11', async () => {
-      mockIsIE11();
+      const browserDetectionStub = sinon.stub(browserDetection, 'isIE11').value(true);
       const el = await fixture(`<lion-button>foo</lion-button>`);
       expect(el.hasAttribute('aria-labelledby')).to.be.true;
       const wrapperId = el.getAttribute('aria-labelledby');
@@ -220,7 +210,7 @@ describe('lion-button', () => {
       expect(el.shadowRoot.querySelector(`#${wrapperId}`)).dom.to.equal(
         `<div id="${wrapperId}"><slot></slot></div>`,
       );
-      restoreMockIsIE11();
+      browserDetectionStub.restore();
     });
 
     it('has a native button node with aria-hidden set to true', async () => {
