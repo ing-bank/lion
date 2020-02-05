@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/field@0.8.6...@lion/field@0.8.7) (2020-02-05)
+
+
+### Bug Fixes
+
+* **field:** limit get label/help-text to childNodes ([7f4320d](https://github.com/ing-bank/lion/commit/7f4320dbdfda188f7f6232fe3f72138da225a956))
+
+
+
+
+
 ## [0.8.6](https://github.com/ing-bank/lion/compare/@lion/field@0.8.5...@lion/field@0.8.6) (2020-02-05)
 
 
