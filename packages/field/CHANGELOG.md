@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/field@0.8.7...@lion/field@0.8.8) (2020-02-06)
+
+
+### Bug Fixes
+
+* **button:** run regexp once instead of every render cycle ([954adc5](https://github.com/ing-bank/lion/commit/954adc56596f2d9244baf48889d6b338b2a12ac4))
+
+
+
+
+
 ## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/field@0.8.6...@lion/field@0.8.7) (2020-02-05)
 
 

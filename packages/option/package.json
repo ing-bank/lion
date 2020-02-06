@@ -1,6 +1,6 @@
 {
   "name": "@lion/option",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Allows to provide options for a rich select",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,9 +32,9 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "0.5.7",
-    "@lion/core": "0.4.2",
-    "@lion/field": "0.8.7"
+    "@lion/choice-input": "0.5.8",
+    "@lion/core": "0.4.3",
+    "@lion/field": "0.8.8"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.8.3",

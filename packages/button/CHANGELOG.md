@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/ing-bank/lion/compare/@lion/button@0.5.3...@lion/button@0.5.4) (2020-02-06)
+
+
+### Bug Fixes
+
+* **button:** run regexp once instead of every render cycle ([954adc5](https://github.com/ing-bank/lion/commit/954adc56596f2d9244baf48889d6b338b2a12ac4))
+
+
+
+
+
 ## [0.5.3](https://github.com/ing-bank/lion/compare/@lion/button@0.5.2...@lion/button@0.5.3) (2020-01-30)
 
 

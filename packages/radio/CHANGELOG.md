@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/ing-bank/lion/compare/@lion/radio@0.3.7...@lion/radio@0.3.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/radio
+
+
+
+
+
 ## [0.3.7](https://github.com/ing-bank/lion/compare/@lion/radio@0.3.6...@lion/radio@0.3.7) (2020-02-05)
 
 **Note:** Version bump only for package @lion/radio
