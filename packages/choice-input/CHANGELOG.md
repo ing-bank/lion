@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.9...@lion/choice-input@0.6.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
 ## [0.5.9](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.5.8...@lion/choice-input@0.5.9) (2020-02-06)
 
 **Note:** Version bump only for package @lion/choice-input

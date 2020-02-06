@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.11...@lion/select-rich@0.10.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
 ## [0.9.11](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.9.10...@lion/select-rich@0.9.11) (2020-02-06)
 
 **Note:** Version bump only for package @lion/select-rich
