@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-iban",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "Provide a way for users to fill in an iban",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,8 +33,8 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.3",
-    "@lion/field": "0.8.8",
-    "@lion/input": "0.5.8",
+    "@lion/field": "0.8.9",
+    "@lion/input": "0.5.9",
     "@lion/localize": "0.8.6",
     "@lion/validate": "0.6.6",
     "ibantools": "^2.2.0"

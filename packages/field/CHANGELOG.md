@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.9](https://github.com/ing-bank/lion/compare/@lion/field@0.8.8...@lion/field@0.8.9) (2020-02-06)
+
+
+### Bug Fixes
+
+* **field:** changed order get label ([868785b](https://github.com/ing-bank/lion/commit/868785b860b6edad95fea27182549e2def998b36))
+
+
+
+
+
 ## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/field@0.8.7...@lion/field@0.8.8) (2020-02-06)
 
 
