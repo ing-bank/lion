@@ -44,6 +44,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       placementMode: 'local',
       elementToFocusAfterHide: null,
       hidesOnEsc: true,
+      hidesOnOutsideEsc: true,
       popperConfig: {
         placement: 'top', // default
         modifiers: {
