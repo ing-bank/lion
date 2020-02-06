@@ -54,7 +54,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get label() {
-        return (this._labelNode && this._labelNode.textContent) || this.__label;
+        return this.__label || (this._labelNode && this._labelNode.textContent);
       }
 
       set label(newValue) {
@@ -64,7 +64,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get helpText() {
-        return (this._helpTextNode && this._helpTextNode.textContent) || this.__helpText;
+        return this.__helpText || (this._helpTextNode && this._helpTextNode.textContent);
       }
 
       set helpText(newValue) {
