@@ -38,7 +38,7 @@
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.1",
     "@open-wc/testing": "^2.5.0",
     "@open-wc/testing-helpers": "^1.0.0",
     "sinon": "^7.2.2"
