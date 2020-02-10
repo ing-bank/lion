@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-system",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,7 +34,7 @@
   ],
   "devDependencies": {
     "@lion/checkbox": "0.3.11",
-    "@lion/checkbox-group": "0.6.1",
+    "@lion/checkbox-group": "0.6.2",
     "@lion/core": "0.4.3",
     "@lion/field": "0.9.1",
     "@lion/fieldset": "0.7.1",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/checkbox-group@0.6.1...@lion/checkbox-group@0.6.2) (2020-02-10)
+
+
+### Bug Fixes
+
+* **checkbox-group:** throw if name does not contain [] ([5957cd9](https://github.com/ing-bank/lion/commit/5957cd916507c36e424d795e52112c8c623fd29c))
+
+
+
+
+
 ## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/checkbox-group@0.6.0...@lion/checkbox-group@0.6.1) (2020-02-10)
 
 **Note:** Version bump only for package @lion/checkbox-group
