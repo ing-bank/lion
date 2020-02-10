@@ -6,4 +6,11 @@ export class LionCheckboxGroup extends ChoiceGroupMixin(LionFieldset) {
     super();
     this.multipleChoice = true;
   }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('name') && !String(this.name).match(/\[\]$/)) {
+      throw new Error('Names should end in "[]".');
+    }
+  }
 }

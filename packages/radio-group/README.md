@@ -35,3 +35,23 @@ import '@lion/radio-group/lion-radio-group.js';
 
 - Make sure that to use a name attribute as it is necessary for the [lion-form](../form)'s serialization result.
 - If you have many options for a user to pick from, consider using [`lion-select`](../select) instead
+
+### Model value
+
+The `modelValue` of a `lion-radio-group` is string equal to the `choiceValue` of the `lion-radio` element that has been checked.
+
+Given the dinosaur example above, say that we were to select the last option (diplodocus).
+
+Then the `modelValue` of the `lion-radio-group` will look as follows:
+
+```js
+const groupElement = [parent].querySelector('lion-radio-group');
+groupElement.modelValue;
+  => "diplodocus";
+```
+
+### The `name` attribute
+
+The `name` attribute of a `lion-radio-group` automatically gets assigned to its `lion-radio` children. You can also specify names for the `lion-radio` elements, but if this name is different from the name assigned to `lion-radio-group`, then an exception will be thrown.
+
+Our recommendation would be to set the `name` attribute only on the `lion-radio-group` and not on the `lion-checkbox` elements.

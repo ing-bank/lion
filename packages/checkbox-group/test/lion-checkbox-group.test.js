@@ -53,4 +53,21 @@ describe('<lion-checkbox-group>', () => {
     `);
     await expect(el).to.be.accessible();
   });
+
+  it("should throw exception if name doesn't end in []", async () => {
+    const el = await fixture(
+      html`
+        <lion-checkbox-group name="woof[]"></lion-checkbox-group>
+      `,
+    );
+    el.name = 'woof';
+    let err;
+    try {
+      await el.updateComplete;
+    } catch (e) {
+      err = e;
+    }
+    expect(err).to.be.an.instanceof(Error);
+    expect(err.message).to.equal('Names should end in "[]".');
+  });
 });
