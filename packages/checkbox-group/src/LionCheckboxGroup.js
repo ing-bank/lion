@@ -1,6 +1,11 @@
 import { ChoiceGroupMixin } from '@lion/choice-input';
 import { LionFieldset } from '@lion/fieldset';
 
+/**
+ * A wrapper around multiple checkboxes
+ *
+ * @extends {LionFieldset}
+ */
 export class LionCheckboxGroup extends ChoiceGroupMixin(LionFieldset) {
   constructor() {
     super();

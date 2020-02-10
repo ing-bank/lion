@@ -35,23 +35,3 @@ import '@lion/checkbox-group/lion-checkbox-group.js';
   <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
 </lion-checkbox-group>
 ```
-
-### Model value
-
-The `modelValue` of a `lion-checkbox-group` is an array containing the `choiceValues` of the `lion-checkbox` elements that have been checked.
-
-Given the scientists example above, say that we were to select the first and last options (Archimedes & Marie Curie).
-
-Then the `modelValue` of the `lion-checkbox-group` will look as follows:
-
-```js
-const groupElement = [parent].querySelector('lion-checkbox-group');
-groupElement.modelValue;
-  => ["Archimedes", "Marie Curie"];
-```
-
-### The `name` attribute
-
-The `name` attribute of a `lion-checkbox-group` automatically gets assigned to its `lion-checkbox` children. You can also specify names for the `lion-checkbox` elements, but if this name is different from the name assigned to `lion-checkbox-group`, then an exception will be thrown.
-
-Our recommendation would be to set the `name` attribute only on the `lion-checkbox-group` and not on the `lion-checkbox` elements.
