@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/field@0.9.0...@lion/field@0.9.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* **field:** replace state-disabled/filled css classes with attributes ([8e7670e](https://github.com/ing-bank/lion/commit/8e7670e501a1000b2ba39d31b9f5c56cf747bbf1))
+
+
+
+
+
 # [0.9.0](https://github.com/ing-bank/lion/compare/@lion/field@0.8.9...@lion/field@0.9.0) (2020-02-06)
 
 

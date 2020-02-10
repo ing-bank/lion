@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.11](https://github.com/ing-bank/lion/compare/@lion/input-email@0.5.10...@lion/input-email@0.5.11) (2020-02-10)
+
+**Note:** Version bump only for package @lion/input-email
+
+
+
+
+
 ## [0.5.10](https://github.com/ing-bank/lion/compare/@lion/input-email@0.5.9...@lion/input-email@0.5.10) (2020-02-06)
 
 **Note:** Version bump only for package @lion/input-email
