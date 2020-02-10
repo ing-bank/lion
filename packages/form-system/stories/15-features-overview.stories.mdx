@@ -1,5 +1,4 @@
-import { Story, Preview, Meta, html } from '@open-wc/demoing-storybook';
-import '@lion/checkbox-group/lion-checkbox-group.js';
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/form/lion-form.js';
@@ -59,7 +58,7 @@ For usage and installation please see the appropriate packages.
           <lion-input-email name="email" label="Email"></lion-input-email>
           <lion-checkbox-group
             label="What do you like?"
-            name="checkers"
+            name="checkers[]"
             .validators="${[new Required()]}"
           >
             <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
