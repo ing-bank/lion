@@ -52,11 +52,11 @@ class MyValidator extends Validator {
   }
 
   execute(modelValue, param) {
-    const hasError = false;
+    const hasFeedback = false;
     if (modelValue === param) {
-      hasError = true;
+      hasFeedback = true;
     }
-    return hasError;
+    return hasFeedback;
   }
 
   static getMessage({ fieldName }) {
