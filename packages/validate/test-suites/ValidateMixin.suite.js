@@ -812,6 +812,28 @@ export function runValidateMixinSuite(customConfig) {
         expect(el.validationStates.error).to.eql({});
       });
 
+      it('clears current validation results when validators array updated', async () => {
+        const validators = [new Required()];
+        const el = await fixture(html`
+          <${tag}
+            .validators=${validators}
+          >${lightDom}</${tag}>
+        `);
+        el.modelValue = undefined;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        expect(el.validationStates.error).to.eql({ Required: true });
+
+        el.validators = [];
+        el.modelValue = undefined;
+        expect(el.hasFeedbackFor).to.not.deep.equal(['error']);
+        expect(el.validationStates.error).to.eql({});
+
+        el.validators = [new Required()];
+        el.modelValue = undefined;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        expect(el.validationStates.error).to.not.eql({});
+      });
+
       describe('Events', () => {
         it('fires "showsFeedbackForChanged" event async after feedbackData got synced to feedbackElement', async () => {
           const spy = sinon.spy();
