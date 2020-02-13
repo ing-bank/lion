@@ -1,4 +1,4 @@
-# Overlays System
+# Overlay System
 
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
@@ -6,8 +6,9 @@ Supports different types of overlays like dialogs, toasts, tooltips, dropdown, e
 
 Manages their position on the screen relative to other elements, including other overlays.
 
-Exports `lion-overlay`, which is a generic component wrapping OverlayController.
 Its purpose is to make it easy to use our Overlay System declaratively. It can be easily extended where needed, to override event listeners and more.
+
+See [lion-dialog](../dialog) and [lion-tooltip](../tooltip) for example Web Component implementations using the Overlay System.
 
 ## Features
 
@@ -22,19 +23,21 @@ Its purpose is to make it easy to use our Overlay System declaratively. It can b
 
 ## How to use
 
+Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
+
 ### Installation
 
 ```sh
-npm i --save @lion/overlays
+npm i --save @lion/dialog
 ```
 
 ### Example
 
 ```js
-import '@lion/overlays/lion-overlay.js';
+import '@lion/dialog/lion-dialog.js';
 
 html`
-  <lion-overlay .config=${{
+  <lion-dialog .config=${{
     placementMode: 'global',
     viewportConfig: { placement: 'bottom-right' },
   }}>
@@ -47,11 +50,15 @@ html`
     <button slot="invoker">
       Click me
     </button>
-  </lion-overlay>
+  </lion-dialog>
 `;
 ```
 
 Or by creating a controller yourself
+
+```sh
+npm i --save @lion/overlays
+```
 
 ```js
 import { OverlayController } from '@lion/overlays';
@@ -63,9 +70,51 @@ const ctrl = new OverlayController({
 });
 ```
 
+Or creating your own Web Component which uses the Overlay System
+
+```js
+import { LitElement } from '@lion/core';
+import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
+
+class MyOverlayComponent extends LitElement {
+  _defineOverlayConfig() {
+    return {
+      ...withModalDialogConfig,
+    };
+  }
+
+  _setupOpenCloseListeners() {
+    super._setupOpenCloseListeners();
+    this.__toggle = () => {
+      this.opened = !this.opened;
+    };
+
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.addEventListener('click', this.__toggle);
+    }
+  }
+
+  _teardownOpenCloseListeners() {
+    super._teardownOpenCloseListeners();
+
+    if (this._overlayInvokerNode) {
+      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+    }
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot name="content"></slot>
+      <slot name="_overlay-shadow-outlet"></slot>
+    `;
+  }
+}
+```
+
 ## Rationales
 
-For rationales, please check the [docs](./docs) folder, where we go more in-depth.
+For rationales, please check the [docs](./docs) folder, where we go more in-depth. Or check out the Storybook demos which also contains more info.
 
 ### Aria roles
 
