@@ -162,7 +162,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       this._buttonId = `button-${Math.random()
         .toString(36)
         .substr(2, 10)}`;
-      this.setAttribute('aria-labelledby', this._buttonId);
+      this.updateComplete.then(() => this.setAttribute('aria-labelledby', this._buttonId));
     }
   }
 
