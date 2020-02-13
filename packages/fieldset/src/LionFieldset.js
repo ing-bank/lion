@@ -80,12 +80,22 @@ export class LionFieldset extends FormRegistrarMixin(
     return this._everyFormElementHas('prefilled');
   }
 
+  // TODO: can be protected? (or default and $form.$control('name') is api)
   get formElementsArray() {
+    console.log('formElementsArray');
     return Object.keys(this.formElements).reduce((result, name) => {
       const element = this.formElements[name];
       return result.concat(Array.isArray(element) ? element : [element]);
     }, []);
   }
+
+  // get formElements() {
+  //   return this.__formElements;
+  // }
+
+  // set formElements(v) {
+  //   this.__formElements = v;
+  // }
 
   set fieldName(value) {
     this.__fieldName = value;
@@ -202,17 +212,24 @@ export class LionFieldset extends FormRegistrarMixin(
   }
 
   serializeGroup() {
+    // Get serializedValue and filter out disabled?
+    // return this._getFromAllFormElements('serializedValue', (node) =>);
+    if (!this.formElements) {
+      return undefined;
+    }
     const childrenNames = Object.keys(this.formElements);
-    const serializedValues = childrenNames.length > 0 ? {} : undefined;
+    const serializedValues = {};
     childrenNames.forEach(name => {
       const element = this.formElements[name];
       if (Array.isArray(element)) {
+        console.log('__serializeElements');
         serializedValues[name] = this.__serializeElements(element);
       } else {
+        console.log('__serializeElement');
         const serializedValue = this.__serializeElement(element);
-        if (serializedValue || serializedValue === 0) {
-          serializedValues[name] = serializedValue;
-        }
+        // if (serializedValue || serializedValue === 0) {
+        serializedValues[name] = serializedValue;
+        // }
       }
     });
     return serializedValues;
@@ -242,6 +259,11 @@ export class LionFieldset extends FormRegistrarMixin(
     });
   }
 
+  /**
+   *
+   * @param {*} property
+   * @param {function} condition
+   */
   _getFromAllFormElements(property) {
     if (!this.formElements) {
       return undefined;
@@ -251,7 +273,8 @@ export class LionFieldset extends FormRegistrarMixin(
     childrenNames.forEach(name => {
       if (Array.isArray(this.formElements[name])) {
         // grouped via myName[]
-        values[name] = this.formElements[name].map(node => node.modelValue);
+        // TODO: doesn't exist anymore -> multiple
+        values[name] = this.formElements[name].map(node => node[property]);
       } else {
         // not grouped
         values[name] = this.formElements[name][property];
@@ -357,9 +380,9 @@ export class LionFieldset extends FormRegistrarMixin(
     const serializedValues = [];
     elements.forEach(element => {
       const serializedValue = this.__serializeElement(element);
-      if (serializedValue || serializedValue === 0) {
-        serializedValues.push(serializedValue);
-      }
+      // if (serializedValue || serializedValue === 0) {
+      serializedValues.push(serializedValue);
+      // }
     });
     return serializedValues;
   }

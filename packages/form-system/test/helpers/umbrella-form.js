@@ -1,37 +1,13 @@
-import { Story, Meta, html } from '@open-wc/demoing-storybook';
-import '@lion/checkbox/lion-checkbox.js';
-import '@lion/fieldset/lion-fieldset.js';
-import '@lion/form/lion-form.js';
-import '@lion/input-amount/lion-input-amount.js';
-import '@lion/input-date/lion-input-date.js';
-import '@lion/input-datepicker/lion-input-datepicker.js';
-import '@lion/input-email/lion-input-email.js';
-import '@lion/input-iban/lion-input-iban.js';
-import '@lion/input-range/lion-input-range.js';
-import '@lion/input/lion-input.js';
-import '@lion/option/lion-option.js';
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio/lion-radio.js';
-import '@lion/select/lion-select.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/textarea/lion-textarea.js';
-import { MinLength, Required } from '@lion/validate';
+import { LitElement, html } from '@lion/core';
+import { Required, MinLength } from '@lion/validate';
 
-<Meta title="Forms/Features Overview" />
+export class UmbrellaForm extends LitElement {
+  get _lionFormNode() {
+    return this.shadowRoot.querySelector('lion-form');
+  }
 
-# Features Overview
-
-This is a meta package to show interaction between various form elements.
-For usage and installation please see the appropriate packages.
-
-## Umbrella Form
-
-<Preview>
-  <Story name="Example">
-    {() => {
-      Required.getMessage = () => 'Please enter a value';
-      return html`
+  render() {
+    return html`
       <lion-form>
         <form>
           <lion-input
@@ -90,11 +66,7 @@ For usage and installation please see the appropriate packages.
               <lion-option .choiceValue=${'teal'}>Teal</lion-option>
             </lion-options>
           </lion-select-rich>
-          <lion-select
-            label="Lyrics"
-            name="lyrics"
-            .validators="${[new Required()]}"
-          >
+          <lion-select label="Lyrics" name="lyrics" .validators="${[new Required()]}">
             <select slot="input">
               <option value="1">Fire up that loud</option>
               <option value="2">Another round of shots...</option>
@@ -111,9 +83,7 @@ For usage and installation please see the appropriate packages.
             label="Input range"
           ></lion-input-range>
           <lion-checkbox-group name="terms" .validators="${[new Required()]}">
-            <lion-checkbox
-              label="I blindly accept all terms and conditions"
-            ></lion-checkbox>
+            <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
           </lion-checkbox-group>
           <lion-textarea name="comments" label="Comments"></lion-textarea>
           <div class="buttons">
@@ -121,34 +91,14 @@ For usage and installation please see the appropriate packages.
             <lion-button
               type="button"
               raised
-              @click=${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+              @click=${ev =>
+                ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
               >Reset</lion-button
             >
           </div>
         </form>
       </lion-form>
-    `;}}
-  </Story>
-</Preview>
-
-```js
-import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/checkbox/lion-checkbox.js';
-import '@lion/fieldset/lion-fieldset.js';
-import '@lion/form/lion-form.js';
-import '@lion/input-amount/lion-input-amount.js';
-import '@lion/input-date/lion-input-date.js';
-import '@lion/input-datepicker/lion-input-datepicker.js';
-import '@lion/input-email/lion-input-email.js';
-import '@lion/input-iban/lion-input-iban.js';
-import '@lion/input-range/lion-input-range.js';
-import '@lion/input/lion-input.js';
-import '@lion/option/lion-option.js';
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio/lion-radio.js';
-import '@lion/select/lion-select.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/textarea/lion-textarea.js';
-import { MinLength, Required } from '@lion/validate';
-```
+    `;
+  }
+}
+customElements.define('umbrella-form', UmbrellaForm);

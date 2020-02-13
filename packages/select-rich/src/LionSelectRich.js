@@ -132,6 +132,11 @@ export class LionSelectRich extends ChoiceGroupMixin(
     this.requestUpdate('modelValue');
   }
 
+  // TODO: quick and dirty fix. Should be possible to do it nicer on a higher layer
+  get serializedValue() {
+    return this.modelValue;
+  }
+
   get checkedIndex() {
     let checkedIndex = -1;
     this.formElements.forEach((option, i) => {

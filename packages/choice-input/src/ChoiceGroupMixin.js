@@ -20,7 +20,7 @@ export const ChoiceGroupMixin = dedupeMixin(
       get serializedValue() {
         const elems = this._getCheckedElements();
         if (this.multipleChoice) {
-          return this.modelValue;
+          return elems.map(el => el.serializedValue);
         }
         return elems ? elems.serializedValue : '';
       }
@@ -124,6 +124,14 @@ export const ChoiceGroupMixin = dedupeMixin(
           return filtered;
         }
         return filtered.length > 0 ? filtered[0] : undefined;
+      }
+
+      get formElements() {
+        return this.formElementsArray;
+      }
+
+      set formElements(v) {
+        this.__formElements = v;
       }
 
       async _setCheckedElements(value, check) {

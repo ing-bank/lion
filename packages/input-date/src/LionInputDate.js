@@ -36,4 +36,18 @@ export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
     super.connectedCallback();
     this.type = 'text';
   }
+
+  /**
+   * @override
+   */
+  // eslint-disable-next-line class-methods-use-this
+  // serializer(modelValue) {
+  //   return modelValue.toISOString().slice(0, 10);
+  // }
+
+  // // eslint-disable-next-line class-methods-use-this
+  // deserializer(serializedValue) {
+  //   // TODO: use normalize util?
+  //   return new Date(serializedValue);
+  // }
 }

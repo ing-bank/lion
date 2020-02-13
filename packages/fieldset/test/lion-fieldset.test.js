@@ -409,7 +409,7 @@ describe('<lion-fieldset>', () => {
     });
   });
 
-  describe('interaction states', () => {
+  describe('Interaction states', () => {
     it('has false states (dirty, touched, prefilled) on init', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
@@ -515,7 +515,7 @@ describe('<lion-fieldset>', () => {
       `);
 
       outside.click();
-      expect(el.touched, 'unfocused fieldset should stays untouched').to.be.false;
+      expect(el.touched, 'unfocused fieldset should stay untouched').to.be.false;
 
       el.children[1].focus();
       el.children[2].focus();
@@ -524,7 +524,6 @@ describe('<lion-fieldset>', () => {
       outside.click(); // blur the group via a click
       outside.focus(); // a real mouse click moves focus as well
       expect(el.touched).to.be.true;
-
       expect(el2.touched).to.be.false;
     });
 
@@ -654,6 +653,8 @@ describe('<lion-fieldset>', () => {
       });
       fieldset.formElements.color.disabled = true;
 
+      console.log(JSON.stringify(fieldset.serializeGroup(), null, 2));
+
       expect(fieldset.serializeGroup()).to.deep.equal({
         'hobbies[]': [
           { checked: true, value: 'football' },
@@ -699,7 +700,7 @@ describe('<lion-fieldset>', () => {
       });
     });
 
-    it('will exclude form elements within an disabled fieldset', async () => {
+    it.only('will exclude form elements within a disabled fieldset', async () => {
       const fieldset = await fixture(html`
         <${tag} name="userData">
           <${childTag} name="comment"></${childTag}>
@@ -716,6 +717,7 @@ describe('<lion-fieldset>', () => {
       newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
       newFieldset.formElements.color.disabled = true;
+      console.log('disabled is set');
 
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
