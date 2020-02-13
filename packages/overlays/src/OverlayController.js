@@ -184,7 +184,7 @@ export class OverlayController {
     }
 
     if (this.placementMode === 'local') {
-      // Now, it's time to lazily load Popper if not done yet
+      // Now, it is time to lazily load Popper if not done yet
       // Do we really want to add display: inline or is this up to user?
       if (!this.constructor.popperModule) {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
