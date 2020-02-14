@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/ing-bank/lion/compare/@lion/form-system@0.4.4...@lion/form-system@0.4.5) (2020-02-14)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
+## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/form-system@0.4.3...@lion/form-system@0.4.4) (2020-02-13)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
+## [0.4.3](https://github.com/ing-bank/lion/compare/@lion/form-system@0.4.2...@lion/form-system@0.4.3) (2020-02-10)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
+## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/form-system@0.4.1...@lion/form-system@0.4.2) (2020-02-10)
+
+
+### Bug Fixes
+
+* **checkbox-group:** throw if name does not contain [] ([5957cd9](https://github.com/ing-bank/lion/commit/5957cd916507c36e424d795e52112c8c623fd29c))
+
+
+
+
+
+## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/form-system@0.4.0...@lion/form-system@0.4.1) (2020-02-10)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.16...@lion/form-system@0.4.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
+## [0.3.16](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.15...@lion/form-system@0.3.16) (2020-02-06)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
+## [0.3.15](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.14...@lion/form-system@0.3.15) (2020-02-06)
+
+**Note:** Version bump only for package @lion/form-system
+
+
+
+
+
 ## [0.3.14](https://github.com/ing-bank/lion/compare/@lion/form-system@0.3.13...@lion/form-system@0.3.14) (2020-02-05)
 
 **Note:** Version bump only for package @lion/form-system

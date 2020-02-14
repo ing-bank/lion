@@ -60,7 +60,7 @@ describe('FormControlMixin', () => {
           ${inputSlot}
         </${tag}>
       </${tag}>`);
-    expect(el.label).to.equal(undefined);
+    expect(el.label).to.equal('');
   });
 
   it('can have a help-text', async () => {
@@ -100,7 +100,7 @@ describe('FormControlMixin', () => {
           ${inputSlot}
         </${tag}>
       </${tag}>`);
-    expect(el.helpText).to.equal(undefined);
+    expect(el.helpText).to.equal('');
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {

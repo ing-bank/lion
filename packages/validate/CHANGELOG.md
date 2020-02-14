@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.6](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.5...@lion/validate@0.6.6) (2020-02-06)
+
+
+### Bug Fixes
+
+* **validator:** throw error if getMessage not of type Function ([ce3c02b](https://github.com/ing-bank/lion/commit/ce3c02b63bf8bc807946457c1a9289b8b57b5ee2))
+
+
+
+
+
 ## [0.6.5](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.4...@lion/validate@0.6.5) (2020-02-03)
 
 **Note:** Version bump only for package @lion/validate

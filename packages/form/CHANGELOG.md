@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.11](https://github.com/ing-bank/lion/compare/@lion/form@0.4.10...@lion/form@0.4.11) (2020-02-10)
+
+**Note:** Version bump only for package @lion/form
+
+
+
+
+
+## [0.4.10](https://github.com/ing-bank/lion/compare/@lion/form@0.4.9...@lion/form@0.4.10) (2020-02-06)
+
+**Note:** Version bump only for package @lion/form
+
+
+
+
+
+## [0.4.9](https://github.com/ing-bank/lion/compare/@lion/form@0.4.8...@lion/form@0.4.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/form
+
+
+
+
+
+## [0.4.8](https://github.com/ing-bank/lion/compare/@lion/form@0.4.7...@lion/form@0.4.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/form
+
+
+
+
+
 ## [0.4.7](https://github.com/ing-bank/lion/compare/@lion/form@0.4.6...@lion/form@0.4.7) (2020-02-05)
 
 **Note:** Version bump only for package @lion/form

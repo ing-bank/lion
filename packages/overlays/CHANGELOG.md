@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.0...@lion/overlays@0.12.1) (2020-02-13)
+
+**Note:** Version bump only for package @lion/overlays
+
+
+
+
+
+# [0.12.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.11.3...@lion/overlays@0.12.0) (2020-02-06)
+
+
+### Features
+
+* **overlay:** add hide on outside esc handler ([c0ed437](https://github.com/ing-bank/lion/commit/c0ed437e8fed618c47fe90feca7969fde934b9eb))
+
+
+
+
+
 ## [0.11.3](https://github.com/ing-bank/lion/compare/@lion/overlays@0.11.2...@lion/overlays@0.11.3) (2020-01-23)
 
 **Note:** Version bump only for package @lion/overlays

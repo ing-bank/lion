@@ -128,14 +128,10 @@ export class LionField extends FormControlMixin(
   updated(changedProps) {
     super.updated(changedProps);
 
-    if (changedProps.has('disabled')) {
-      if (this.disabled) {
-        this._inputNode.disabled = true;
-        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
-      } else {
-        this._inputNode.disabled = false;
-        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
-      }
+    if (changedProps.has('disabled') && this.disabled) {
+      this._inputNode.disabled = true;
+    } else if (changedProps.has('disabled')) {
+      this._inputNode.disabled = false;
     }
 
     if (changedProps.has('name')) {
@@ -195,7 +191,9 @@ export class LionField extends FormControlMixin(
       super._onValueChanged();
     }
     // For styling purposes, make it known the input field is not empty
-    this.classList[value ? 'add' : 'remove']('state-filled');
+    if (this._inputNode) {
+      this[value ? 'setAttribute' : 'removeAttribute']('filled', '');
+    }
   }
 
   /**

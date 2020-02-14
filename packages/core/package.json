@@ -1,6 +1,6 @@
 {
   "name": "@lion/core",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Core functionality that is shared across all Lion Web Components",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -31,7 +31,7 @@
     "*.js"
   ],
   "dependencies": {
-    "lit-element": "~2.1.0",
+    "lit-element": "^2.2.1",
     "lit-html": "^1.0.0"
   },
   "devDependencies": {

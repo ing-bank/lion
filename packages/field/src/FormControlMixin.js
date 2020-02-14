@@ -54,7 +54,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get label() {
-        return (this._labelNode && this._labelNode.textContent) || this.__label;
+        return this.__label || (this._labelNode && this._labelNode.textContent);
       }
 
       set label(newValue) {
@@ -64,7 +64,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       get helpText() {
-        return (this._helpTextNode && this._helpTextNode.textContent) || this.__helpText;
+        return this.__helpText || (this._helpTextNode && this._helpTextNode.textContent);
       }
 
       set helpText(newValue) {
@@ -411,13 +411,14 @@ export const FormControlMixin = dedupeMixin(
        *               (validation) feedback message
        *
        * Modifiers:
-       * - {state} .state-disabled : when .form-control (<input>, <textarea> etc.) has disabled set
+       * - {state} [disabled] when .form-control (<input>, <textarea> etc.) has disabled set
        *            to true
-       * - {state} .state-focused: when .form-control (<input>, <textarea> etc.) <input> has focus
-       * - {state} .state-filled: whether <input> has a value
-       * - {state} .state-touched: whether the user had blurred the field once
-       * - {state} .state-dirty: whether the value has changed since initial value
+       * - {state} [filled] whether <input> has a value
+       * - {state} [touched] whether the user had blurred the field once
+       * - {state} [dirty] whether the value has changed since initial value
        *
+       * TODO: update states below
+       * - {state} .state-focused: when .form-control (<input>, <textarea> etc.) <input> has focus
        * - {state} .state-invalid: when input has error(s) (regardless of whether they should be
        *            shown to the user)
        * - {state} .state-error: when input has error(s) and this/these should be shown to the user
@@ -456,12 +457,12 @@ export const FormControlMixin = dedupeMixin(
               display: block;
             }
 
-            :host(.state-disabled) {
+            :host([disabled]) {
               pointer-events: none;
             }
 
-            :host(.state-disabled) .form-field__label ::slotted(*),
-            :host(.state-disabled) .form-field__help-text ::slotted(*) {
+            :host([disabled]) .form-field__label ::slotted(*),
+            :host([disabled]) .form-field__help-text ::slotted(*) {
               color: var(--disabled-text-color, #adadad);
             }
 
@@ -478,8 +479,8 @@ export const FormControlMixin = dedupeMixin(
               display: flex;
             }
 
-            /***** {state} .state-disabled *****/
-            :host(.state-disabled) .input-group ::slotted(slot='input') {
+            /***** {state} :disabled *****/
+            :host([disabled]) .input-group ::slotted(slot='input') {
               color: var(--disabled-text-color, #adadad);
             }
 

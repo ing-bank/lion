@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/field@0.9.0...@lion/field@0.9.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* **field:** replace state-disabled/filled css classes with attributes ([8e7670e](https://github.com/ing-bank/lion/commit/8e7670e501a1000b2ba39d31b9f5c56cf747bbf1))
+
+
+
+
+
+# [0.9.0](https://github.com/ing-bank/lion/compare/@lion/field@0.8.9...@lion/field@0.9.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
+## [0.8.9](https://github.com/ing-bank/lion/compare/@lion/field@0.8.8...@lion/field@0.8.9) (2020-02-06)
+
+
+### Bug Fixes
+
+* **field:** changed order get label ([868785b](https://github.com/ing-bank/lion/commit/868785b860b6edad95fea27182549e2def998b36))
+
+
+
+
+
+## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/field@0.8.7...@lion/field@0.8.8) (2020-02-06)
+
+
+### Bug Fixes
+
+* **button:** run regexp once instead of every render cycle ([954adc5](https://github.com/ing-bank/lion/commit/954adc56596f2d9244baf48889d6b338b2a12ac4))
+
+
+
+
+
 ## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/field@0.8.6...@lion/field@0.8.7) (2020-02-05)
 
 

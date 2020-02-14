@@ -32,6 +32,7 @@ export class OverlayController {
       preventsScroll: false,
       trapsKeyboardFocus: false,
       hidesOnEsc: false,
+      hidesOnOutsideEsc: false,
       hidesOnOutsideClick: false,
       isTooltip: false,
       handlesUserInteraction: false,
@@ -183,7 +184,7 @@ export class OverlayController {
     }
 
     if (this.placementMode === 'local') {
-      // Now, it's time to lazily load Popper if not done yet
+      // Now, it is time to lazily load Popper if not done yet
       // Do we really want to add display: inline or is this up to user?
       if (!this.constructor.popperModule) {
         // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
@@ -376,6 +377,9 @@ export class OverlayController {
     if (this.hidesOnEsc) {
       this._handleHidesOnEsc({ phase });
     }
+    if (this.hidesOnOutsideEsc) {
+      this._handleHidesOnOutsideEsc({ phase });
+    }
     if (this.hidesOnOutsideClick) {
       this._handleHidesOnOutsideClick({ phase });
     }
@@ -534,6 +538,15 @@ export class OverlayController {
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
       }
+    }
+  }
+
+  _handleHidesOnOutsideEsc({ phase }) {
+    if (phase === 'show') {
+      this.__escKeyHandler = ev => ev.key === 'Escape' && this.hide();
+      document.addEventListener('keyup', this.__escKeyHandler);
+    } else if (phase === 'hide') {
+      document.removeEventListener('keyup', this.__escKeyHandler);
     }
   }
 

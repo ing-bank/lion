@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.11](https://github.com/ing-bank/lion/compare/@lion/input@0.5.10...@lion/input@0.5.11) (2020-02-10)
+
+**Note:** Version bump only for package @lion/input
+
+
+
+
+
+## [0.5.10](https://github.com/ing-bank/lion/compare/@lion/input@0.5.9...@lion/input@0.5.10) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input
+
+
+
+
+
+## [0.5.9](https://github.com/ing-bank/lion/compare/@lion/input@0.5.8...@lion/input@0.5.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input
+
+
+
+
+
+## [0.5.8](https://github.com/ing-bank/lion/compare/@lion/input@0.5.7...@lion/input@0.5.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input
+
+
+
+
+
 ## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/input@0.5.6...@lion/input@0.5.7) (2020-02-05)
 
 **Note:** Version bump only for package @lion/input

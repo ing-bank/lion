@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/option@0.5.0...@lion/option@0.5.1) (2020-02-10)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/option@0.4.9...@lion/option@0.5.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
+## [0.4.9](https://github.com/ing-bank/lion/compare/@lion/option@0.4.8...@lion/option@0.4.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
+## [0.4.8](https://github.com/ing-bank/lion/compare/@lion/option@0.4.7...@lion/option@0.4.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/option
+
+
+
+
+
 ## [0.4.7](https://github.com/ing-bank/lion/compare/@lion/option@0.4.6...@lion/option@0.4.7) (2020-02-05)
 
 **Note:** Version bump only for package @lion/option

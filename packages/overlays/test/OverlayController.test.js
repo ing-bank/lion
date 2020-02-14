@@ -314,6 +314,29 @@ describe('OverlayController', () => {
       });
     });
 
+    describe('hidesOnOutsideEsc', () => {
+      it('hides when [escape] is pressed on outside element', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
+        await ctrl.show();
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await aTimeout();
+        expect(ctrl.isShown).to.be.false;
+      });
+
+      it('stays shown when [escape] is pressed on inside element', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
+        await ctrl.show();
+        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        expect(ctrl.isShown).to.be.true;
+      });
+    });
+
     describe('hidesOnOutsideClick', () => {
       it('hides on outside click', async () => {
         const contentNode = await fixture('<div>Content</div>');

@@ -83,6 +83,18 @@ All validators return `false` if the required validity state is met.
 
 All validators are considered self explanatory due to their explicit namings.
 
+You can implement your own custom message for a default validator. Pass a getMessage function via the options in the construtor.
+
+```js
+function getCustomMessage(data) {
+  return `${data.name} is a required field`;
+}
+```
+
+```html
+<validatable-el .validators="${[new Required({}, { getMessage: getCustomMessage })]}"></validatable-el>
+```
+
 ### Custom Validators
 
 On top of default validators, application developers can write their own by extending the `Validator` class.
