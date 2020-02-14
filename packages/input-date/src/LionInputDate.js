@@ -1,7 +1,7 @@
 import { LocalizeMixin, formatDate, parseDate } from '@lion/localize';
 import { FieldCustomMixin } from '@lion/field';
 import { LionInput } from '@lion/input';
-import { IsDate } from '@lion/validate';
+import { IsDate, Unparseable } from '@lion/validate';
 
 /**
  * `LionInputDate` has a .modelValue of type Date. It parses, formats and validates based
@@ -37,17 +37,17 @@ export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
     this.type = 'text';
   }
 
-  /**
-   * @override
-   */
   // eslint-disable-next-line class-methods-use-this
-  // serializer(modelValue) {
-  //   return modelValue.toISOString().slice(0, 10);
-  // }
+  serializer(modelValue) {
+    if (!(modelValue instanceof Date) || modelValue instanceof Unparseable) {
+      return '';
+    }
+    return modelValue.toISOString().slice(0, 10);
+  }
 
-  // // eslint-disable-next-line class-methods-use-this
-  // deserializer(serializedValue) {
-  //   // TODO: use normalize util?
-  //   return new Date(serializedValue);
-  // }
+  // eslint-disable-next-line class-methods-use-this
+  deserializer(serializedValue) {
+    // TODO: use normalize util?
+    return new Date(serializedValue);
+  }
 }

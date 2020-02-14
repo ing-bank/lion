@@ -58,7 +58,7 @@ export function runFormatMixinSuite(customConfig) {
     }
   }
 
-  describe(`FormatMixin ${cfg.suffix ? `(${cfg.suffix})` : ''}`, async () => {
+  describe('FormatMixin', async () => {
     let elem;
     let nonFormat;
     let fooFormat;

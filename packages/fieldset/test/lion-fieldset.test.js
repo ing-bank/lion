@@ -60,13 +60,13 @@ describe('<lion-fieldset>', () => {
     expect(el.__fieldName).to.equal(el.fieldName);
   });
 
-  it(`${tagString} has an up to date list of every form element in #formElements`, async () => {
+  it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();
-    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements.keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(2);
     el.removeChild(el.formElements['hobbies[]'][0]);
-    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements.keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(1);
   });
 
@@ -91,7 +91,7 @@ describe('<lion-fieldset>', () => {
     el.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
     el.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
 
-    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements.keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(2);
     expect(el.formElements['hobbies[]'][0].modelValue.value).to.equal('chess');
     expect(el.formElements['gender[]'][0].modelValue.value).to.equal('male');
@@ -166,13 +166,13 @@ describe('<lion-fieldset>', () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     const newField = await fixture(html`<${childTag} name="lastName"></${childTag}>`);
 
-    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements.keys().length).to.equal(3);
 
     el.appendChild(newField);
-    expect(Object.keys(el.formElements).length).to.equal(4);
+    expect(el.formElements.keys().length).to.equal(4);
 
     el._inputNode.removeChild(newField);
-    expect(Object.keys(el.formElements).length).to.equal(3);
+    expect(el.formElements.keys().length).to.equal(3);
   });
 
   it('can read/write all values (of every input) via this.modelValue', async () => {
@@ -623,14 +623,19 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.serializeGroup()).to.deep.equal({ price: 0 });
     });
 
-    it('__serializeElements serializes 0 as a valid value', async () => {
-      const fieldset = await fixture(html`<${tag}></${tag}>`);
+    it('serializes 0 as a valid value', async () => {
+      const fieldset = await fixture(html`
+      <${tag} name="x">
+        <${childTag} name="y"></${childTag}>
+      </${tag}>`);
       await nextFrame();
-      const elements = [{ serializedValue: 0 }];
-      expect(fieldset.__serializeElements(elements)).to.deep.equal([0]);
+      fieldset.formElements.y.modelValue = 0;
+      expect(fieldset.serializeGroup()).to.deep.equal({
+        y: 0,
+      });
     });
 
-    it('form elements which are not disabled', async () => {
+    it('form elements that are not disabled', async () => {
       const fieldset = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
       await nextFrame();
       fieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
@@ -652,8 +657,6 @@ describe('<lion-fieldset>', () => {
         color: { checked: false, value: 'blue' },
       });
       fieldset.formElements.color.disabled = true;
-
-      console.log(JSON.stringify(fieldset.serializeGroup(), null, 2));
 
       expect(fieldset.serializeGroup()).to.deep.equal({
         'hobbies[]': [
@@ -682,8 +685,8 @@ describe('<lion-fieldset>', () => {
       newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
       fieldset.formElements.comment.modelValue = 'Foo';
-      expect(Object.keys(fieldset.formElements).length).to.equal(2);
-      expect(Object.keys(newFieldset.formElements).length).to.equal(3);
+      expect(fieldset.formElements.keys().length).to.equal(2);
+      expect(newFieldset.formElements.keys().length).to.equal(3);
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
         newfieldset: {
@@ -700,7 +703,7 @@ describe('<lion-fieldset>', () => {
       });
     });
 
-    it.only('will exclude form elements within a disabled fieldset', async () => {
+    it('will exclude form elements within a disabled fieldset', async () => {
       const fieldset = await fixture(html`
         <${tag} name="userData">
           <${childTag} name="comment"></${childTag}>
@@ -717,7 +720,6 @@ describe('<lion-fieldset>', () => {
       newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
       newFieldset.formElements.color.disabled = true;
-      console.log('disabled is set');
 
       expect(fieldset.serializeGroup()).to.deep.equal({
         comment: 'Foo',
@@ -771,7 +773,7 @@ describe('<lion-fieldset>', () => {
       });
     });
 
-    it('does not serialize undefined values (nb radios/checkboxes are always serialized)', async () => {
+    it('does serialize undefined values as ""(nb radios/checkboxes are always serialized)', async () => {
       const fieldset = await fixture(html`
         <${tag}>
           <${childTag} name="custom[]"></${childTag}>
@@ -781,6 +783,22 @@ describe('<lion-fieldset>', () => {
       await nextFrame();
       fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
       fieldset.formElements['custom[]'][1].modelValue = undefined;
+
+      expect(fieldset.serializeGroup()).to.deep.equal({
+        'custom[]': ['custom 1', ''],
+      });
+    });
+
+    it('does not serialize disabled values', async () => {
+      const fieldset = await fixture(html`
+        <${tag}>
+          <${childTag} name="custom[]"></${childTag}>
+          <${childTag} name="custom[]"></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
+      fieldset.formElements['custom[]'][1].disabled = true;
 
       expect(fieldset.serializeGroup()).to.deep.equal({
         'custom[]': ['custom 1'],

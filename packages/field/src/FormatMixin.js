@@ -164,7 +164,7 @@ export const FormatMixin = dedupeMixin(
        * @returns {String} serializedValue
        */
       serializer(v) {
-        return v;
+        return v !== undefined ? v : '';
       }
 
       /**

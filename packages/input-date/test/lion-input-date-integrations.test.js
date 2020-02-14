@@ -3,7 +3,6 @@ import { runFormatMixinSuite } from '@lion/field/test-suites/FormatMixin.suite.j
 import '../lion-input-date.js';
 
 const tagString = 'lion-input-date';
-
 describe('<lion-input-date> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,

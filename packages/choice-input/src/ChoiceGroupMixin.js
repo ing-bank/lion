@@ -32,6 +32,8 @@ export const ChoiceGroupMixin = dedupeMixin(
       constructor() {
         super();
         this.multipleChoice = false;
+        /** @override from FormRegistrarMixin */
+        this._formElementsWithNamedKeys = false;
       }
 
       connectedCallback() {
@@ -124,14 +126,6 @@ export const ChoiceGroupMixin = dedupeMixin(
           return filtered;
         }
         return filtered.length > 0 ? filtered[0] : undefined;
-      }
-
-      get formElements() {
-        return this.formElementsArray;
-      }
-
-      set formElements(v) {
-        this.__formElements = v;
       }
 
       async _setCheckedElements(value, check) {

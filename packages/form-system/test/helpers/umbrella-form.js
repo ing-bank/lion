@@ -10,16 +10,18 @@ export class UmbrellaForm extends LitElement {
     return html`
       <lion-form>
         <form>
-          <lion-input
-            name="first_name"
-            label="First Name"
-            .validators="${[new Required()]}"
-          ></lion-input>
-          <lion-input
-            name="last_name"
-            label="Last Name"
-            .validators="${[new Required()]}"
-          ></lion-input>
+          <lion-fieldset name="full_name">
+            <lion-input
+              name="first_name"
+              label="First Name"
+              .validators="${[new Required()]}"
+            ></lion-input>
+            <lion-input
+              name="last_name"
+              label="Last Name"
+              .validators="${[new Required()]}"
+            ></lion-input>
+          </lion-fieldset>
           <lion-input-date
             name="date"
             label="Date of application"
