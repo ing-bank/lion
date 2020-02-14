@@ -13,11 +13,11 @@
 ### Installation
 
 ```sh
-npm i --save @lion/input-amount
+npm i --save @lion/input-iban
 ```
 
 ```js
-import '@lion/input-amount/lion-input-amount.js';
+import '@lion/input-iban/lion-input-iban.js';
 ```
 
 ### Example
