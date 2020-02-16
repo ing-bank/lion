@@ -11,6 +11,6 @@ export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement))
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
-    this._setRole('radiogroup');
+    this.setAttribute('role', 'radiogroup');
   }
 }

@@ -175,7 +175,7 @@ export const FormatMixin = dedupeMixin(
        * @returns {Object} modelValue
        */
       deserializer(v) {
-        return v;
+        return v === undefined ? '' : v;
       }
 
       /**

@@ -41,10 +41,6 @@ export class LionField extends FormControlMixin(
         // make sure validation can be triggered based on observer
         type: Boolean,
       },
-      name: {
-        type: String,
-        reflect: true,
-      },
       autocomplete: {
         type: String,
         reflect: true,
@@ -221,13 +217,5 @@ export class LionField extends FormControlMixin(
     } else {
       this._inputNode.value = newValue;
     }
-  }
-
-  set fieldName(value) {
-    this.__fieldName = value;
-  }
-
-  get fieldName() {
-    return this.__fieldName || this.label || this.name;
   }
 }

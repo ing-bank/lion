@@ -1,7 +1,7 @@
 import { ChoiceGroupMixin } from '@lion/choice-input';
 import { css, html, LitElement, SlotMixin } from '@lion/core';
 import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
-import { formRegistrarManager } from '@lion/field/src/formRegistrarManager.js';
+import { formRegistrarManager } from '@lion/field/src/registration/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { ValidateMixin } from '@lion/validate';
 import '../lion-select-invoker.js';

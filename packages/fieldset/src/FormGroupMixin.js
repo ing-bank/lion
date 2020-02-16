@@ -6,14 +6,14 @@ import { ValidateMixin } from '@lion/validate';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
- * @desc Form group mixin serves as the basis for (sub) forms.
+ * @desc Form group mixin serves as the basis for (sub) forms. Designed to be put on
+ * elements with role=group (or radiogroup)
  * It bridges all the functionality of the child form controls:
  * ValidateMixin, InteractionStateMixin, FormatMixin, FormControlMixin etc.
  * It is designed to be used on top of FormRegstrarMixin and ChoiceGroupMixin
  * Also, the LionFieldset element (which supports name based retrieval of children via formElements
  * and the automatic grouping of formElements via '[]')
  *
- * @extends {LitElement}
  */
 export const FormGroupMixin = dedupeMixin(
   superclass =>
@@ -23,36 +23,47 @@ export const FormGroupMixin = dedupeMixin(
     ) {
       static get properties() {
         return {
-          name: {
-            type: String,
-          },
+          /**
+           * Interaction state that can be used to compute the visibility of
+           * feedback messages
+           */
           submitted: {
             type: Boolean,
             reflect: true,
           },
+          /**
+           * Interaction state that will be active when any of the children
+           * is focused.
+           */
           focused: {
             type: Boolean,
             reflect: true,
           },
+          /**
+           * Interaction state that will be active when any of the children
+           * is dirty (see InteractionStateMixin for more details.)
+           */
           dirty: {
             type: Boolean,
             reflect: true,
           },
+          /**
+           * Interaction state that will be active when the group as a whole is
+           * blurred
+           */
           touched: {
             type: Boolean,
             reflect: true,
           },
+          /**
+           * Interaction state that will be active when all of the children
+           * are prefilled (see InteractionStateMixin for more details.)
+           */
+          prefilled: {
+            type: Boolean,
+            reflect: true,
+          },
         };
-      }
-
-      get touched() {
-        return this.__touched;
-      }
-
-      set touched(value) {
-        const oldVal = this.__touched;
-        this.__touched = value;
-        this.requestUpdate('touched', oldVal);
       }
 
       get _inputNode() {
@@ -83,24 +94,13 @@ export const FormGroupMixin = dedupeMixin(
         this._setValueMapForAllFormElements('formattedValue', values);
       }
 
+      // TODO: should it be any or every? Should we maybe keep track of both,
+      // so we can configure feedback visibility depending on scenario?
+      // Should we allow configuring feedback visibility on validator instances
+      // for maximal flexibility?
+      // Document this...
       get prefilled() {
         return this._everyFormElementHas('prefilled');
-      }
-
-      // TODO: can be deleted
-      get formElementsArray() {
-        return this.formElements;
-      }
-
-      set fieldName(value) {
-        this.__fieldName = value;
-      }
-
-      get fieldName() {
-        const label =
-          this.label ||
-          (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
-        return this.__fieldName || label || this.name;
       }
 
       constructor() {
@@ -110,7 +110,6 @@ export const FormGroupMixin = dedupeMixin(
         this.dirty = false;
         this.touched = false;
         this.focused = false;
-        // this.formElements = {};
         this.__addedSubValidators = false;
 
         this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
@@ -118,7 +117,7 @@ export const FormGroupMixin = dedupeMixin(
         this.addEventListener('focusin', this._syncFocused);
         this.addEventListener('focusout', this._onFocusOut);
         this.addEventListener('dirty-changed', this._syncDirty);
-        this.addEventListener('validate-performed', this.__validate);
+        this.addEventListener('validate-performed', this.__onChildValidatePerformed);
 
         this.defaultValidators = [new FormElementsHaveNoError()];
       }
@@ -126,7 +125,8 @@ export const FormGroupMixin = dedupeMixin(
       connectedCallback() {
         // eslint-disable-next-line wc/guard-super-call
         super.connectedCallback();
-        this._setRole();
+        this.setAttribute('role', 'group');
+        this.__initInteractionStates();
       }
 
       disconnectedCallback() {
@@ -136,6 +136,17 @@ export const FormGroupMixin = dedupeMixin(
           document.removeEventListener('click', this._checkForOutsideClick);
           this.__hasActiveOutsideClickHandling = false;
         }
+      }
+
+      async __initInteractionStates() {
+        if (!this.__readyForRegistration) {
+          await this.registrationReady;
+        }
+        this.formElements.forEach(el => {
+          if (typeof el.initInteractionState === 'function') {
+            el.initInteractionState();
+          }
+        });
       }
 
       updated(changedProps) {
@@ -171,7 +182,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       __requestChildrenToBeDisabled() {
-        this.formElementsArray.forEach(child => {
+        this.formElements.forEach(child => {
           if (child.makeRequestToBeDisabled) {
             child.makeRequestToBeDisabled();
           }
@@ -179,7 +190,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       __retractRequestChildrenToBeDisabled() {
-        this.formElementsArray.forEach(child => {
+        this.formElements.forEach(child => {
           if (child.retractRequestToBeDisabled) {
             child.retractRequestToBeDisabled();
           }
@@ -201,7 +212,7 @@ export const FormGroupMixin = dedupeMixin(
        */
       submitGroup() {
         this.submitted = true;
-        this.formElementsArray.forEach(child => {
+        this.formElements.forEach(child => {
           if (typeof child.submitGroup === 'function') {
             child.submitGroup();
           } else {
@@ -211,7 +222,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       resetGroup() {
-        this.formElementsArray.forEach(child => {
+        this.formElements.forEach(child => {
           if (typeof child.resetGroup === 'function') {
             child.resetGroup();
           } else if (typeof child.reset === 'function') {
@@ -227,7 +238,7 @@ export const FormGroupMixin = dedupeMixin(
         this.submitted = false;
         this.touched = false;
         this.dirty = false;
-        this.formElementsArray.forEach(formElement => {
+        this.formElements.forEach(formElement => {
           if (typeof formElement.resetInteractionState === 'function') {
             formElement.resetInteractionState();
           }
@@ -252,7 +263,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       _setValueForAllFormElements(property, value) {
-        this.formElementsArray.forEach(el => {
+        this.formElements.forEach(el => {
           el[property] = value; // eslint-disable-line no-param-reassign
         });
       }
@@ -307,7 +318,7 @@ export const FormGroupMixin = dedupeMixin(
        *       (at least two checkboxes for instance) and nothing about the children's values
        *   - children validity states have changed, so fieldset needs to update itself based on that
        */
-      __validate(ev) {
+      __onChildValidatePerformed(ev) {
         if (ev && this.isRegisteredFormElement(ev.target)) {
           this.validate();
         }
@@ -318,7 +329,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       _onFocusOut(ev) {
-        const lastEl = this.formElementsArray[this.formElementsArray.length - 1];
+        const lastEl = this.formElements[this.formElements.length - 1];
         if (ev.target === lastEl) {
           this.touched = true;
         }
@@ -327,10 +338,6 @@ export const FormGroupMixin = dedupeMixin(
 
       _syncDirty() {
         this.dirty = this._anyFormElementHas('dirty');
-      }
-
-      _setRole(role) {
-        this.setAttribute('role', role || 'group');
       }
 
       __linkChildrenMessagesToParent(child) {
@@ -359,16 +366,6 @@ export const FormGroupMixin = dedupeMixin(
         }
         this.__linkChildrenMessagesToParent(child);
         this.validate();
-      }
-
-      // eslint-disable-next-line class-methods-use-this
-      get _childrenCanHaveSameName() {
-        return false;
-      }
-
-      // eslint-disable-next-line class-methods-use-this
-      get _childNamesCanBeDuplicate() {
-        return false;
       }
 
       /**

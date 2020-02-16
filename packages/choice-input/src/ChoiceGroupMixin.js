@@ -32,8 +32,6 @@ export const ChoiceGroupMixin = dedupeMixin(
       constructor() {
         super();
         this.multipleChoice = false;
-        /** @override from FormRegistrarMixin */
-        this._formElementsWithNamedKeys = false;
       }
 
       connectedCallback() {
@@ -55,24 +53,10 @@ export const ChoiceGroupMixin = dedupeMixin(
        */
       addFormElement(child, indexToInsertAt) {
         this._throwWhenInvalidChildModelValue(child);
+        // TODO: nice to have or does it have a function (since names are meant as keys for
+        // formElements)?
         this.__delegateNameAttribute(child);
         super.addFormElement(child, indexToInsertAt);
-      }
-
-      /**
-       * @override from LionFieldset
-       */
-      // eslint-disable-next-line class-methods-use-this
-      get _childrenCanHaveSameName() {
-        return true;
-      }
-
-      /**
-       * @override from LionFieldset
-       */
-      // eslint-disable-next-line class-methods-use-this
-      get _childNamesCanBeDuplicate() {
-        return true;
       }
 
       _throwWhenInvalidChildModelValue(child) {
@@ -110,7 +94,7 @@ export const ChoiceGroupMixin = dedupeMixin(
         if (target.checked === false) return;
 
         const groupName = target.name;
-        this.formElementsArray
+        this.formElements
           .filter(i => i.name === groupName)
           .forEach(choice => {
             if (choice !== target) {
@@ -121,7 +105,7 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       _getCheckedElements() {
-        const filtered = this.formElementsArray.filter(el => el.checked === true);
+        const filtered = this.formElements.filter(el => el.checked === true);
         if (this.multipleChoice) {
           return filtered;
         }
@@ -133,12 +117,12 @@ export const ChoiceGroupMixin = dedupeMixin(
           await this.registrationReady;
         }
 
-        for (let i = 0; i < this.formElementsArray.length; i += 1) {
+        for (let i = 0; i < this.formElements.length; i += 1) {
           if (this.multipleChoice) {
-            this.formElementsArray[i].checked = value.includes(this.formElementsArray[i].value);
-          } else if (check(this.formElementsArray[i], value)) {
+            this.formElements[i].checked = value.includes(this.formElements[i].value);
+          } else if (check(this.formElements[i], value)) {
             // Allows checking against custom values e.g. formattedValue or serializedValue
-            this.formElementsArray[i].checked = true;
+            this.formElements[i].checked = true;
           }
         }
       }
