@@ -38,9 +38,7 @@ export class LionInput extends LionField {
       ...super.slots,
       input: () => {
         const native = document.createElement('input');
-        if (this.__dataInstanceProps && this.__dataInstanceProps.modelValue) {
-          native.setAttribute('value', this.__dataInstanceProps.modelValue);
-        } else if (this.hasAttribute('value')) {
+        if (this.hasAttribute('value')) {
           native.setAttribute('value', this.getAttribute('value'));
         }
         return native;

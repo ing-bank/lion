@@ -57,6 +57,5 @@ Fieldsets are the basis for:
 - [Formatting and parsing](./FormattingAndParsing.md)
 - [Interaction states](./InteractionStates.md)
 - [Validation System](../../validate/docs/ValidationSystem.md)
-- [FieldCustomMixin](./FieldCustomMixin.md)
 
 <!-- TODO: - [`FocusMixin`] (/FocusMixin.md) -->

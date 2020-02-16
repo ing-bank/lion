@@ -1,4 +1,3 @@
-export { FieldCustomMixin } from './src/FieldCustomMixin.js';
 export { FocusMixin } from './src/FocusMixin.js';
 export { FormatMixin } from './src/FormatMixin.js';
 export { FormControlMixin } from './src/FormControlMixin.js';

@@ -1,7 +1,6 @@
 import { css } from '@lion/core';
 import { LocalizeMixin, getCurrencyName } from '@lion/localize';
 import { LionInput } from '@lion/input';
-import { FieldCustomMixin } from '@lion/field';
 import { IsNumber } from '@lion/validate';
 import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
@@ -12,20 +11,24 @@ import { formatAmount } from './formatters.js';
  * @customElement lion-input-amount
  * @extends {LionInput}
  */
-export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputAmount extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
-      currency: {
-        type: String,
-      },
+      /**
+       * @desc an iso code like 'EUR' or 'USD' that will be displayed next to the input
+       * and from which an accessible label (like 'euros') is computed for screen
+       * reader users
+       * @type {string}
+       */
+      currency: String,
+      /**
+       * @desc the modelValue of the input-amount has the 'Number' type. This allows
+       * Application Developers to easily read from and write to this input or write custom
+       * validators.
+       * @type {number}
+       */
+      modelValue: Number,
     };
-  }
-
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('currency')) {
-      this._onCurrencyChanged({ currency: this.currency });
-    }
   }
 
   get slots() {
@@ -45,6 +48,21 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     };
   }
 
+  get _currencyDisplayNode() {
+    return Array.from(this.children).find(child => child.slot === 'after');
+  }
+
+  static get styles() {
+    return [
+      ...super.styles,
+      css`
+        .input-group__container > .input-group__input ::slotted(.form-control) {
+          text-align: right;
+        }
+      `,
+    ];
+  }
+
   constructor() {
     super();
     this.parser = parseAmount;
@@ -59,18 +77,6 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     this.defaultValidators.push(new IsNumber());
   }
 
-  __callParser(value = this.formattedValue) {
-    // TODO: input and change events both trigger parsing therefore we need to handle the second parse
-    this.__parserCallcountSincePaste += 1;
-    this.__isPasting = this.__parserCallcountSincePaste === 2;
-    this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
-    return super.__callParser(value);
-  }
-
-  _reflectBackOn() {
-    return super._reflectBackOn() || this.__isPasting;
-  }
-
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
@@ -81,12 +87,29 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     }
   }
 
-  __setCurrencyDisplayLabel() {
-    this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('currency')) {
+      this._onCurrencyChanged({ currency: this.currency });
+    }
   }
 
-  get _currencyDisplayNode() {
-    return Array.from(this.children).find(child => child.slot === 'after');
+  /**
+   * @override of FormatMixin
+   */
+  __callParser(value = this.formattedValue) {
+    // TODO: input and change events both trigger parsing therefore we need to handle the second parse
+    this.__parserCallcountSincePaste += 1;
+    this.__isPasting = this.__parserCallcountSincePaste === 2;
+    this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
+    return super.__callParser(value);
+  }
+
+  /**
+   * @override of FormatMixin
+   */
+  _reflectBackOn() {
+    return super._reflectBackOn() || this.__isPasting;
   }
 
   _onCurrencyChanged({ currency }) {
@@ -98,14 +121,10 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     this.__setCurrencyDisplayLabel();
   }
 
-  static get styles() {
-    return [
-      ...super.styles,
-      css`
-        .input-group__container > .input-group__input ::slotted(.form-control) {
-          text-align: right;
-        }
-      `,
-    ];
+  __setCurrencyDisplayLabel() {
+    // TODO: for optimal a11y, abbreviations should be part of aria-label
+    // example, for a language switch with text 'en', an aria-label of 'english' is not
+    // sufficient, it should also contain the abbreviation.
+    this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
   }
 }

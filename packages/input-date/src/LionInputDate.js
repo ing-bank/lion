@@ -1,5 +1,4 @@
 import { LocalizeMixin, formatDate, parseDate } from '@lion/localize';
-import { FieldCustomMixin } from '@lion/field';
 import { LionInput } from '@lion/input';
 import { IsDate } from '@lion/validate';
 
@@ -10,7 +9,7 @@ import { IsDate } from '@lion/validate';
  * @customElement lion-input-date
  * @extends {LionInput}
  */
-export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputDate extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
       modelValue: Date,

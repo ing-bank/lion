@@ -1,5 +1,4 @@
 import { LocalizeMixin } from '@lion/localize';
-import { FieldCustomMixin } from '@lion/field';
 import { LionInput } from '@lion/input';
 import { IsEmail } from '@lion/validate';
 
@@ -9,7 +8,7 @@ import { IsEmail } from '@lion/validate';
  * @customElement lion-input-email
  * @extends {LionInput}
  */
-export class LionInputEmail extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputEmail extends LocalizeMixin(LionInput) {
   constructor() {
     super();
     // local-part@domain where the local part may be up to 64 characters long

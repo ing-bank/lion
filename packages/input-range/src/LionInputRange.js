@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LocalizeMixin, formatNumber } from '@lion/localize';
-import { FieldCustomMixin } from '@lion/field';
 import { LionInput } from '@lion/input';
 import { html, css, unsafeCSS } from '@lion/core';
 
@@ -10,7 +9,7 @@ import { html, css, unsafeCSS } from '@lion/core';
  * @customElement `lion-input-range`
  * @extends LionInput
  */
-export class LionInputRange extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputRange extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
       min: Number,
