@@ -9,19 +9,19 @@ export class LionTooltipArrow extends LitElement {
 
   static get styles() {
     return css`
-      :host {
+      /* :host {
         position: absolute;
         --tooltip-arrow-width: 12px;
         --tooltip-arrow-height: 8px;
         width: var(--tooltip-arrow-width);
         height: var(--tooltip-arrow-height);
-      }
+      } */
 
       :host svg {
         display: block;
       }
 
-      :host([placement^='bottom']) {
+      /* :host([placement^='bottom']) {
         top: calc(-1 * var(--tooltip-arrow-height));
         transform: rotate(180deg);
       }
@@ -40,7 +40,7 @@ export class LionTooltipArrow extends LitElement {
                 (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
         );
         transform: rotate(90deg);
-      }
+      } */
     `;
   }
 

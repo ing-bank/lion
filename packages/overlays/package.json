@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.3",
-    "popper.js": "^1.15.0"
+    "@popperjs/core": "^2.0.6"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.8.3",

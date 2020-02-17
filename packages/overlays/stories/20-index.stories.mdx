@@ -432,7 +432,7 @@ Under the hood, the `OverlayMixin` will instantiate an OverlayController with th
 
 By default, there are only a few `OverlayMixin` methods you need to override to create a working Web Component using an overlay:
 
-- `render`, the template needs to include a `<slot name="content">`, `<slot name="invoker">` and `<slot name="_overlay-shadow-outlet">`.
+- `render`, the template needs to include a `<div id="overlay-content-node-wrapper"><slot name="content"/></div>` and  `<slot name="invoker">`.
 - `_defineOverlayConfig`, in this protected method, return an object that contains the default configuration for your Web Component's overlay. See configuration section of OverlayController.
 - `_setupOpenCloseListeners`, use this lifecycle hook to setup the open and close event listeners on your `_overlayInvokerNode`.
 - `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
@@ -473,8 +473,9 @@ class MyOverlayWC extends OverlayMixin(LitElement) {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+      </div>
     `;
   }
 }

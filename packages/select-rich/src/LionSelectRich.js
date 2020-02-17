@@ -241,7 +241,10 @@ export class LionSelectRich extends ChoiceGroupMixin(
     return html`
       ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
       ${this.feedbackTemplate()}
-      <slot name="_overlay-shadow-outlet"></slot>
+      <!-- <slot name="_overlay-shadow-outlet"></slot> -->
+      <div id="overlay-content-node-wrapper">
+        <slot name="input"></slot>
+      </div>
     `;
   }
 
@@ -292,7 +295,9 @@ export class LionSelectRich extends ChoiceGroupMixin(
     return html`
       <div class="input-group__input">
         <slot name="invoker"></slot>
-        <slot name="input"></slot>
+        <!-- <div id="overlay-content-node-wrapper">
+          <slot name="input"></slot>
+        </div> -->
       </div>
     `;
   }
@@ -301,7 +306,7 @@ export class LionSelectRich extends ChoiceGroupMixin(
    * Overrides FormRegistrar adding to make sure children have specific default states when added
    *
    * @override
-   * @param {*} child
+   * @param {HTMLElement} child
    * @param {Number} indexToInsertAt
    */
   addFormElement(child, indexToInsertAt) {

@@ -50,10 +50,11 @@ export const OverlayMixin = dedupeMixin(
        * @returns {OverlayController}
        */
       // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode }) {
+      _defineOverlay({ contentNode, invokerNode, contentNodeWrapper }) {
         return new OverlayController({
           contentNode,
           invokerNode,
+          contentNodeWrapper,
           ...this._defineOverlayConfig(), // wc provided in the class as defaults
           ...this.config, // user provided (e.g. in template)
           popperConfig: {
@@ -69,6 +70,7 @@ export const OverlayMixin = dedupeMixin(
         });
       }
 
+      // TODO: strive for a minimum amount of configurarion hooks per Mixin from subclasser perspective
       /**
        * @overridable method `_defineOverlay`
        * @desc returns an object with default configuration options for your overlay component.
@@ -168,13 +170,15 @@ export const OverlayMixin = dedupeMixin(
       }
 
       get _overlayContentNodeWrapper() {
-        return this._overlayContentNode.parentElement;
+        return this.shadowRoot.querySelector('#overlay-content-node-wrapper');
+        // return this._overlayContentNode.parentElement;
       }
 
       _setupOverlayCtrl() {
         this._overlayCtrl = this._defineOverlay({
           contentNode: this._overlayContentNode,
           invokerNode: this._overlayInvokerNode,
+          contentNodeWrapper: this._overlayContentNodeWrapper,
         });
         this.__syncToOverlayController();
         this.__setupSyncFromOverlayController();

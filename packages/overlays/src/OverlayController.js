@@ -4,7 +4,8 @@ import { containFocus } from './utils/contain-focus.js';
 import './utils/typedef.js';
 
 async function preloadPopper() {
-  return import('popper.js/dist/esm/popper.min.js');
+  // return import('popper.js/dist/esm/popper.min.js');
+  return import('@popperjs/core/dist/esm/popper.js');
 }
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
@@ -39,28 +40,61 @@ export class OverlayController {
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
-        positionFixed: false,
-        modifiers: {
-          keepTogether: {
+        // positionFixed: false,
+        modifiers: [
+          // {
+          //   name: 'keepTogether',
+          //   enabled: false,
+          // },
+          {
+            name: 'preventOverflow',
+            enabled: true,
+            options: {
+              boundariesElement: 'viewport',
+              padding: 8, // viewport-margin for shifting/sliding
+            },
+          },
+          {
+            name: 'flip',
+            enabled: true,
+            options: {
+              boundariesElement: 'viewport',
+              padding: 16, // viewport-margin for flipping
+            },
+          },
+          {
+            name: 'offset',
+            enabled: true,
+            options: {
+              offset: [0, 8], // horizontal and vertical margin (distance between popper and referenceElement)
+            },
+          },
+          {
+            name: 'arrow',
             enabled: false,
           },
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: 'viewport',
-            padding: 8, // viewport-margin for shifting/sliding
-          },
-          flip: {
-            boundariesElement: 'viewport',
-            padding: 16, // viewport-margin for flipping
-          },
-          offset: {
-            enabled: true,
-            offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
-          },
-          arrow: {
-            enabled: false,
-          },
-        },
+        ],
+        // modifiers: {
+        //   keepTogether: {
+        //     enabled: false,
+        //   },
+        //   preventOverflow: {
+        //     enabled: true,
+        //     boundariesElement: 'viewport',
+        //     padding: 8, // viewport-margin for shifting/sliding
+        //   },
+        //   flip: {
+        //     boundariesElement: 'viewport',
+        //     padding: 16, // viewport-margin for flipping
+        //   },
+        //   offset: {
+        //     enabled: true,
+        //     offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
+        //   },
+        //   arrow: {
+        //     enabled: false,
+        //   },
+        // },
       },
       viewportConfig: {
         placement: 'center',
@@ -69,7 +103,6 @@ export class OverlayController {
 
     this.manager.add(this);
 
-    this._contentNodeWrapper = document.createElement('div');
     this._contentId = `overlay-content--${Math.random()
       .toString(36)
       .substr(2, 10)}`;
@@ -158,6 +191,11 @@ export class OverlayController {
 
     this.__validateConfiguration(this.config);
     Object.assign(this, this.config);
+    if (this.config.placementMode === 'local' && this.config.contentNodeWrapper) {
+      this._contentNodeWrapper = this.config.contentNodeWrapper;
+    } else {
+      this._contentNodeWrapper = document.createElement('div');
+    }
     this._init({ cfgToAdd });
   }
 
@@ -197,7 +235,9 @@ export class OverlayController {
   __initConnectionTarget() {
     // Now, add our node to the right place in dom (rendeTarget)
     if (this.contentNode !== this.__prevConfig.contentNode) {
-      this._contentNodeWrapper.appendChild(this.contentNode);
+      if (this.config.placementMode === 'global') {
+        this._contentNodeWrapper.appendChild(this.contentNode);
+      }
     }
     if (this._renderTarget && this._renderTarget !== this._contentNodeWrapper.parentNode) {
       this._renderTarget.appendChild(this._contentNodeWrapper);
@@ -217,7 +257,7 @@ export class OverlayController {
     this._contentNodeWrapper.style.display = 'none';
 
     // Make sure that your shadow dom contains this outlet, when we are adding to light dom
-    this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
+    // this._contentNodeWrapper.slot = '_overlay-shadow-outlet';
 
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
@@ -308,7 +348,7 @@ export class OverlayController {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      this._popper.update();
+      this._popper.forceUpdate();
     }
   }
 
@@ -434,7 +474,7 @@ export class OverlayController {
       case 'init':
         this.backdropNode = document.createElement('div');
         this.backdropNode.classList.add('global-overlays__backdrop');
-        this.backdropNode.slot = '_overlay-shadow-outlet';
+        // this.backdropNode.slot = '_overlay-shadow-outlet';
         this._contentNodeWrapper.parentElement.insertBefore(
           this.backdropNode,
           this._contentNodeWrapper,
@@ -556,6 +596,7 @@ export class OverlayController {
     }
 
     const referenceWidth = `${this._referenceNode.clientWidth}px`;
+
     switch (this.inheritsReferenceWidth) {
       case 'max':
         this._contentNodeWrapper.style.maxWidth = referenceWidth;
@@ -609,6 +650,7 @@ export class OverlayController {
     this._handleFeatures({ phase: 'teardown' });
     // IE11 compatibility (does not support `Node.remove()`)
     if (this._contentNodeWrapper && this._contentNodeWrapper.parentElement) {
+      // TODO: only in global mode if at all?
       this._contentNodeWrapper.parentElement.removeChild(this._contentNodeWrapper);
     }
   }
@@ -618,8 +660,12 @@ export class OverlayController {
       this._popper.destroy();
       this._popper = null;
     }
-    const { default: Popper } = await this.constructor.popperModule;
-    this._popper = new Popper(this._referenceNode, this._contentNodeWrapper, {
+    // const { default: Popper } = await this.constructor.popperModule;
+    // this._popper = new Popper(this._referenceNode, this._contentNodeWrapper, {
+    //   ...this.config.popperConfig,
+    // });
+    const { createPopper } = await this.constructor.popperModule;
+    this._popper = createPopper(this._referenceNode, this._contentNodeWrapper, {
       ...this.config.popperConfig,
     });
   }
