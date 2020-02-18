@@ -130,8 +130,10 @@ export class LionField extends FormControlMixin(
 
     if (changedProps.has('disabled') && this.disabled) {
       this._inputNode.disabled = true;
+      this.validate();
     } else if (changedProps.has('disabled')) {
       this._inputNode.disabled = false;
+      this.validate();
     }
 
     if (changedProps.has('name')) {

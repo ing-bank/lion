@@ -261,6 +261,12 @@ export const ValidateMixin = dedupeMixin(
        * call. Situation B will occur after every call.
        */
       async validate({ clearCurrentResult } = {}) {
+        if (this.disabled) {
+          this.__clearValidationResults();
+          this.__validationResult = [];
+          this._updateFeedbackComponent();
+          return;
+        }
         if (!this.__validateInitialized) {
           return;
         }
