@@ -1224,9 +1224,6 @@ describe('<lion-fieldset>', () => {
     describe('restore', () => {
       let el;
       let fullNameEl;
-      let firstNameEl;
-      let lastNameEl;
-      let cityEl;
       beforeEach(async () => {
         el = await fixture(html`
           <${tag} name="data" disabled>
@@ -1238,9 +1235,6 @@ describe('<lion-fieldset>', () => {
           </${tag}>
         `);
         fullNameEl = el.querySelector('[name="full_name"]');
-        firstNameEl = el.querySelector('[name="first_name"]');
-        lastNameEl = el.querySelector('[name="last_name"]');
-        cityEl = el.querySelector('[name="city"]');
       });
 
       it('does stuff', () => {
@@ -1253,20 +1247,17 @@ describe('<lion-fieldset>', () => {
           city: 'Amsterdam',
         });
         // then
-        expect(el.modelValue).to.eql({
+        expect(el.capture()).to.eql({
           full_name: {
             first_name: 'John',
             last_name: 'Doe',
           },
           city: 'Amsterdam',
         });
-        expect(fullNameEl.modelValue).to.eql({
+        expect(fullNameEl.capture()).to.eql({
           first_name: 'John',
           last_name: 'Doe',
         });
-        expect(firstNameEl.modelValue).to.equal('John');
-        expect(lastNameEl.modelValue).to.equal('Doe');
-        expect(cityEl.modelValue).to.equal('Amsterdam');
       });
     });
   });
