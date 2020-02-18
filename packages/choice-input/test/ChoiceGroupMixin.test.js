@@ -5,6 +5,7 @@ import { Required } from '@lion/validate';
 import { expect, fixture, nextFrame } from '@open-wc/testing';
 import { ChoiceGroupMixin } from '../src/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../src/ChoiceInputMixin.js';
+import '@lion/fieldset/lion-fieldset.js';
 
 describe('ChoiceGroupMixin', () => {
   before(() => {
@@ -230,7 +231,7 @@ describe('ChoiceGroupMixin', () => {
       </choice-group>
     `);
     el.formElements[0].checked = true;
-    expect(el.serializedValue).to.deep.equal({ checked: true, value: 'male' });
+    expect(el.serializedValue).to.deep.equal('male');
   });
 
   it('returns serialized value on unchecked state', async () => {
@@ -300,6 +301,42 @@ describe('ChoiceGroupMixin', () => {
       expect(el.formElements[0].checked).to.be.false;
       expect(el.formElements[1].checked).to.be.true;
       expect(el.formElements[2].checked).to.be.false;
+    });
+  });
+
+  describe('Integration with a parent form/fieldset', () => {
+    it('will serialize all children with their serializedValue', async () => {
+      const el = await fixture(html`
+        <lion-fieldset>
+          <choice-group name="gender">
+            <choice-group-input .choiceValue=${'male'} checked disabled></choice-group-input>
+            <choice-group-input .choiceValue=${'female'} checked></choice-group-input>
+            <choice-group-input .choiceValue=${'other'}></choice-group-input>
+          </choice-group>
+        </lion-fieldset>
+      `);
+
+      await nextFrame();
+      await el.registrationReady;
+      await el.updateComplete;
+      expect(el.serializedValue).to.eql({
+        gender: 'female',
+      });
+
+      // Notice that keepDisabled works on FormControl level: it gets the
+      // serializedValue of choice-group, which regards disabled values as being not checked
+      expect(el.serializeGroup({ keepDisabled: true })).to.eql({
+        gender: 'female',
+      });
+
+      const choiceGroupEl = el.querySelector('[name="gender"]');
+      choiceGroupEl.multipleChoice = true;
+      expect(el.serializedValue).to.eql({
+        gender: ['female'],
+      });
+      expect(el.serializeGroup({ keepDisabled: true })).to.eql({
+        gender: ['female'],
+      });
     });
   });
 });

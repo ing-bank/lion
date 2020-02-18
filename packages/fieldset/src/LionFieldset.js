@@ -29,7 +29,7 @@ export class LionFieldset extends FormGroupMixin(LitElement) {
 
   /**
    * @desc Returns all serialized values for formElements.
-   * By default, disabled and Unparseable values are filtered out.
+   * By default, disabled values are filtered out.
    * @example
    * // When we submit a form
    * formOrFieldset.serializeGroup();
@@ -38,10 +38,10 @@ export class LionFieldset extends FormGroupMixin(LitElement) {
    * // or saved in localStorage.
    * formOrFieldset.serializeGroup({ keepDisabled: true });
    *
-   * @param {object} [filterOptions] allows to disable default filters
-   * @param {boolean} [filterOptions.omitDisabled=true] when submitting a final result to a
+   * @param {object} [[options]
+   * @param {boolean} [options.keepDisabled=false] when submitting a final result to a
    * server, disabled values are usually left out.
-   * @param {boolean} [filterOptions.includeSelf=false] wraos children output in an object
+   * @param {boolean} [options.includeSelf=false] wraps children output in an object
    * with the name of the current form/fieldset as key.
    * @returns {object} serialized values, following .formElements structure
    */

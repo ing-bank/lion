@@ -7,8 +7,8 @@
  * <form>
  *   <input id="a" name="a">
  *   <fieldset>
- *      <input id="b1" name="b">
- *      <input id="b2" name="b">
+ *      <input id="b1" name="b[]">
+ *      <input id="b2" name="b[]">
  *      <input id="c" name="c">
  *   </fieldset>
  *   <select id="d" name="d">
@@ -80,7 +80,7 @@
  * lionForm.formElements[1];                  // Element l-input#b1
  * lionForm.formElements[2];                  // Element l-input#b2
  * lionForm.formElements.a;                   // Element l-input#a
- * lionForm.formElements.b;                   // Array<Element> [l-input#b1, l-input#b2]
+ * lionForm.formElements['b[]'];              // Array<Element> [l-input#b1, l-input#b2]
  * lionForm.formElements.c;                   // Element l-input#c
  *
  * lionForm.formElements[d-g].formElements; // Array<Element>

@@ -5,12 +5,30 @@ export const ChoiceGroupMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line
     class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
+      static get properties() {
+        return {
+          /**
+           * @desc When false (default), modelValue and serializedValue will reflect the
+           * currently selected choice (usually a string). When true, modelValue will and
+           * serializedValue will be an array of strings.
+           * @type {boolean}
+           */
+          multipleChoice: {
+            type: Boolean,
+            attribute: 'multiple-choice',
+          },
+        };
+      }
+
       get modelValue() {
         const elems = this._getCheckedElements();
         if (this.multipleChoice) {
+          // TODO: holds for both modelValue and serializedValue of choiceInput:
+          // consider only allowing strings as values, in which case 'el.value' would suffice
+          // and choice-input could be simplified
           return elems.map(el => el.modelValue.value);
         }
-        return elems ? elems.modelValue.value : '';
+        return elems[0] ? elems[0].modelValue.value : '';
       }
 
       set modelValue(value) {
@@ -18,11 +36,19 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       get serializedValue() {
+        // We want to filter out disabled values out by default:
+        // The goal of serializing values could either be submitting state to a backend
+        // ot storing state in a backend. For this, only values that are entered by the end
+        // user are relevant, choice values are always defined by the Application Developer
+        // and known by the backend.
+
+        // Assuming values are always defined as strings, modelValues and serializedValues
+        // are the same.
         const elems = this._getCheckedElements();
         if (this.multipleChoice) {
-          return elems.map(el => el.serializedValue);
+          return elems.map(el => el.serializedValue.value);
         }
-        return elems ? elems.serializedValue : '';
+        return elems[0] ? elems[0].serializedValue.value : '';
       }
 
       set serializedValue(value) {
@@ -57,6 +83,18 @@ export const ChoiceGroupMixin = dedupeMixin(
         // formElements)?
         this.__delegateNameAttribute(child);
         super.addFormElement(child, indexToInsertAt);
+      }
+
+      /**
+       * @override
+       */
+      _getFromAllFormElements(property, filterCondition = () => true) {
+        // For modelValue and serializedValue, an exception should be made,
+        // The reset can be requested from children
+        if (property === 'modelValue' || property === 'serializedValue') {
+          return this[property];
+        }
+        return this.formElements.filter(filterCondition).map(el => el.property);
       }
 
       _throwWhenInvalidChildModelValue(child) {
@@ -105,11 +143,12 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       _getCheckedElements() {
-        const filtered = this.formElements.filter(el => el.checked === true);
-        if (this.multipleChoice) {
-          return filtered;
-        }
-        return filtered.length > 0 ? filtered[0] : undefined;
+        // We want to filter out disabled values out by default
+        return this.formElements.filter(el => el.checked && !el.disabled);
+        // if (this.multipleChoice) {
+        //   return filtered;
+        // }
+        // return filtered.length > 0 ? filtered[0] : undefined;
       }
 
       async _setCheckedElements(value, check) {
