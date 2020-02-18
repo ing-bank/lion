@@ -9,6 +9,8 @@ For some more details see the [announcement blog post](https://medium.com/ing-bl
 
 We do have a [live Storybook](http://lion-web-components.netlify.com) which shows all our components.
 
+**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all depencies by executing `yarn install`.
+
 ## How to install
 
 ```bash
