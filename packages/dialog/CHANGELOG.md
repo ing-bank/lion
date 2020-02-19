@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.5...@lion/dialog@0.4.6) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
 ## [0.4.5](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.4...@lion/dialog@0.4.5) (2020-02-13)
 
 **Note:** Version bump only for package @lion/dialog

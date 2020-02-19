@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.16](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.8.15...@lion/input-datepicker@0.8.16) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
 ## [0.8.15](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.8.14...@lion/input-datepicker@0.8.15) (2020-02-13)
 
 **Note:** Version bump only for package @lion/input-datepicker

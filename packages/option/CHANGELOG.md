@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/ing-bank/lion/compare/@lion/option@0.5.1...@lion/option@0.5.2) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
 ## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/option@0.5.0...@lion/option@0.5.1) (2020-02-10)
 
 **Note:** Version bump only for package @lion/option

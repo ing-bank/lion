@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.2](https://github.com/ing-bank/lion/compare/@lion/field@0.9.1...@lion/field@0.9.2) (2020-02-19)
+
+
+### Bug Fixes
+
+* **field:** do not validate disabled fields ([#586](https://github.com/ing-bank/lion/issues/586)) ([9127f08](https://github.com/ing-bank/lion/commit/9127f08440555fd08e11cc55315aa530dc09819b))
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
 ## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/field@0.9.0...@lion/field@0.9.1) (2020-02-10)
 
 

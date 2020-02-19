@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.6...@lion/localize@0.8.7) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
 ## [0.8.6](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.5...@lion/localize@0.8.6) (2020-02-06)
 
 **Note:** Version bump only for package @lion/localize
