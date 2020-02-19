@@ -140,6 +140,17 @@ describe('<lion-textarea>', () => {
       .and.to.be.below(el.scrollHeight);
   });
 
+  it('has an attribute that can be used to set the placeholder text of the textarea', async () => {
+    const el = await fixture(`<lion-textarea placeholder="text"></lion-textarea>`);
+    expect(el.getAttribute('placeholder')).to.equal('text');
+    expect(el._inputNode.getAttribute('placeholder')).to.equal('text');
+
+    el.placeholder = 'foo';
+    await el.updateComplete;
+    expect(el.getAttribute('placeholder')).to.equal('foo');
+    expect(el._inputNode.getAttribute('placeholder')).to.equal('foo');
+  });
+
   it('is accessible', async () => {
     const el = await fixture(`<lion-textarea label="Label"></lion-textarea>`);
     await expect(el).to.be.accessible();
