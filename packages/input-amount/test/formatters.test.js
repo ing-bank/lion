@@ -9,8 +9,6 @@ describe('formatAmount()', () => {
     localizeTearDown();
   });
 
-  // TODO: Document that maximumFractionDigits >= minimumFractionDigits else a RangeError is thrown by Intl
-
   it('formats number with options', async () => {
     expect(
       formatAmount(12.345678, {

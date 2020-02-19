@@ -15,7 +15,6 @@ const defaultMonthLabels = [
   'December',
 ];
 
-// TODO: remove as much logic as possible from this template and move to processor
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels } = {}) {
   const dayNumber = day.date.getDate();
   const monthName = monthsLabels[day.date.getMonth()];

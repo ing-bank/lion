@@ -11,7 +11,6 @@ function mimicUserInput(formControl, newViewValue) {
 }
 
 export function runFormatMixinSuite(customConfig) {
-  // TODO: Maybe remove suffix
   const cfg = {
     tagString: null,
     modelValueType: String,
@@ -23,11 +22,6 @@ export function runFormatMixinSuite(customConfig) {
    * Mocks a value for you based on the data type
    * Optionally toggles you a different value
    * for needing to mimic a value-change.
-   *
-   * TODO: The FormatMixin can know about platform types like
-   * Date, but not about modelValue of input-iban etc.
-   * Make this concept expandable by allowing 'non standard'
-   * modelValues to hook into this.
    */
   function generateValueBasedOnType(opts = {}) {
     const options = { type: cfg.modelValueType, toggleValue: false, viewValue: false, ...opts };

@@ -153,8 +153,6 @@ describe('<lion-field>', () => {
     expect(el._inputNode.getAttribute('autocomplete')).to.equal('off');
   });
 
-  // TODO: find out if we could put all listeners on this.value (instead of this._inputNode.value)
-  // and make it act on this.value again
   it('has an attribute filled if this.value is filled', async () => {
     const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
     expect(el.hasAttribute('filled')).to.equal(true);
@@ -178,7 +176,7 @@ describe('<lion-field>', () => {
     expect(el._inputNode.selectionEnd).to.equal(2);
   });
 
-  // TODO: add pointerEvents test for disabled
+  // TODO: Add test that css pointerEvents is none if disabled.
   it('is disabled when disabled property is passed', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
     expect(el._inputNode.hasAttribute('disabled')).to.equal(false);
@@ -241,7 +239,7 @@ describe('<lion-field>', () => {
       );
     });
 
-    // TODO: put this test on FormControlMixin test once there
+    // TODO: Move test below to FormControlMixin.test.js.
     it(`allows to add to aria description or label via addToAriaLabelledBy() and
       addToAriaDescribedBy()`, async () => {
       const wrapper = await fixture(html`
