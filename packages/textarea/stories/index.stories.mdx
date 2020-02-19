@@ -67,6 +67,22 @@ The textarea can be disabled with the `disabled` attribute.
   </Story>
 </Preview>
 
+### Readonly
+
+`readonly` attribute indicate that you can't change the content. Compared with `disabled` attribute, the `readonly` attribute doesn't prevent clicking or selecting the element.
+
+<Preview>
+  <Story name="Readonly">
+    {html`
+      <lion-textarea 
+        label="Readonly" 
+        readonly
+        .modelValue=${['batman', 'and', 'robin'].join('\n')}
+      ></lion-textarea>
+    `}
+  </Story>
+</Preview>
+
 ### Stop growing
 
 Use the `max-rows` attribute to make it stop growing after a certain amount of lines.
