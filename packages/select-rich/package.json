@@ -14,7 +14,9 @@
     "directory": "packages/select-rich"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/select-rich/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/select-rich/test/**/*.test.js\""
   },
   "keywords": [
     "lion",

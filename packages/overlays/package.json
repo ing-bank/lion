@@ -14,7 +14,9 @@
     "directory": "packages/overlays"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/overlays/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/overlays/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
