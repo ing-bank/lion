@@ -14,7 +14,9 @@
     "directory": "packages/radio-group"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/radio-group/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/radio-group/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
