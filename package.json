@@ -79,7 +79,7 @@
     },
     {
       "path": "./bundlesize/dist/all/all-*.js",
-      "maxSize": "40 kB"
+      "maxSize": "45 kB"
     }
   ]
 }
