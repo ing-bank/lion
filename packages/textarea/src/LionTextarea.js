@@ -24,6 +24,10 @@ export class LionTextarea extends LionField {
         attribute: 'readonly',
         reflect: true,
       },
+      placeholder: {
+        type: String,
+        reflect: true,
+      },
     };
   }
 
@@ -76,6 +80,13 @@ export class LionTextarea extends LionField {
       const native = this._inputNode;
       if (native) {
         native.readOnly = this.readOnly;
+      }
+    }
+
+    if (changedProperties.has('placeholder')) {
+      const native = this._inputNode;
+      if (native) {
+        native.placeholder = this.placeholder;
       }
     }
 
