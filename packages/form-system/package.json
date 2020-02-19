@@ -52,7 +52,7 @@
     "@lion/select-rich": "0.10.3",
     "@lion/textarea": "0.5.12",
     "@lion/validate": "0.6.6",
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0"
   },
   "peerDependencies": {
