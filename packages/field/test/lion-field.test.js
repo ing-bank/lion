@@ -359,6 +359,42 @@ describe('<lion-field>', () => {
         wantedShowsFeedbackFor: [],
       });
     });
+    it('should not run validation when disabled', async () => {
+      const HasX = class extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasX';
+        }
+
+        execute(value) {
+          const result = value.indexOf('x') === -1;
+          return result;
+        }
+      };
+      const disabledEl = await fixture(html`
+        <${tag}
+          disabled
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
+
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error).to.have.a.property('HasX');
+
+      expect(disabledEl.hasFeedbackFor).to.deep.equal([]);
+      expect(disabledEl.validationStates.error).to.equal(undefined);
+    });
 
     it('can be required', async () => {
       const el = await fixture(html`
