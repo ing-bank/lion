@@ -393,9 +393,6 @@ export const FormControlMixin = dedupeMixin(
        * with the CSS component.
        * Note that every occurence of '::slotted(*)' can be rewritten to '> *' for use in an other
        * context
-       *
-       * TODO: find best naming convention: https://en.bem.info/methodology/naming-convention/
-       * (react style would align better with JSS)
        */
 
       /**
@@ -418,6 +415,8 @@ export const FormControlMixin = dedupeMixin(
        * - {state} [dirty] whether the value has changed since initial value
        *
        * TODO: update states below
+       * These classes are now attributes. Check them agains the new attribute names inside ValidateMixin
+       * and InteractionStateMixin. Some states got renamed. Make sure to use the correct ones!
        * - {state} .state-focused: when .form-control (<input>, <textarea> etc.) <input> has focus
        * - {state} .state-invalid: when input has error(s) (regardless of whether they should be
        *            shown to the user)

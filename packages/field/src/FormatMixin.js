@@ -219,7 +219,7 @@ export const FormatMixin = dedupeMixin(
           // For backwards compatibility we return an empty string:
           // - it triggers validation for required validators (see ValidateMixin.validate())
           // - it can be expected by 3rd parties (for instance unit tests)
-          // TODO: In a breaking refactor of the Validation System, this behavior can be corrected.
+          // TODO(@tlouisse): In a breaking refactor of the Validation System, this behavior can be corrected.
           return '';
         }
 
