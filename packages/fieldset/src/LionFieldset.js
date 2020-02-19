@@ -19,6 +19,7 @@ export class LionFieldset extends FormRegistrarMixin(
       name: {
         type: String,
       },
+      // TODO: Move property submitted to InteractionStateMixin.
       submitted: {
         type: Boolean,
         reflect: true,
@@ -231,7 +232,6 @@ export class LionFieldset extends FormRegistrarMixin(
   }
 
   resetInteractionState() {
-    // TODO: add submitted prop to InteractionStateMixin
     this.submitted = false;
     this.touched = false;
     this.dirty = false;
@@ -409,6 +409,9 @@ export class LionFieldset extends FormRegistrarMixin(
     child.__parentFormGroup = this;
 
     // aria-describedby of (nested) children
+
+    // TODO: Teardown in removeFormElement
+
     let parent = this;
     while (parent) {
       this.constructor._addDescriptionElementIdsToField(
@@ -465,12 +468,6 @@ export class LionFieldset extends FormRegistrarMixin(
     } else if (this.formElements[name]) {
       delete this.formElements[name];
     }
-
-    // TODO: Clean up aria references of elements that were ancestors of child.
-    // For this, it would be better if LionField._ariaDescribedby would be an element array from
-    // which you can delete all elems that are not child.contains(descriptionEl), so that the
-    // resulting array can be serialized into a string of ids.
-
     this.validate();
   }
 }

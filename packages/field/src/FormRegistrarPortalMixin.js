@@ -41,7 +41,6 @@ export const FormRegistrarPortalMixin = dedupeMixin(
 
         this.__redispatchEventForFormRegistrarPortalMixin = ev => {
           ev.stopPropagation();
-          // TODO: change ev.target to original registering element
           this.registrationTarget.dispatchEvent(
             new CustomEvent('form-element-register', {
               detail: { element: ev.detail.element },

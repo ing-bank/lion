@@ -50,13 +50,8 @@ Fieldsets are the basis for:
 
 ## Other Resources
 
-<!-- TODO: - [`FormControlMixin`] () -->
-<!-- TODO: - [`LionField`] () -->
-
 - [Model Value](./modelValue.md)
 - [Formatting and parsing](./FormattingAndParsing.md)
 - [Interaction states](./InteractionStates.md)
 - [Validation System](../../validate/docs/ValidationSystem.md)
 - [FieldCustomMixin](./FieldCustomMixin.md)
-
-<!-- TODO: - [`FocusMixin`] (/FocusMixin.md) -->

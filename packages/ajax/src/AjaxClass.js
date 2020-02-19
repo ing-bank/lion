@@ -75,7 +75,6 @@ export class AjaxClass extends LionSingleton {
 
   /**
    * Sets the config for the instance
-   * TODO: rename to 'config', because of conflict with options() request method on axios
    */
   set options(config) {
     this.__config = config;
@@ -130,7 +129,6 @@ export class AjaxClass extends LionSingleton {
    * @param {string} url the endpoint location
    * @param {AxiosRequestConfig} config the config specific for this request
    * @returns {AxiosResponseSchema}
-   * TODO: consider reenable after rename of options to config
    */
   // options(url, config) {
   //   return this.proxy.options.apply(this, [url, { ...this.__config, ...config }]);
