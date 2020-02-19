@@ -25,6 +25,7 @@ const setupButton = ({ element, uid, clickHandler, keydownHandler }) => {
   element.setAttribute('aria-controls', `panel-${uid}`);
   element.addEventListener('click', clickHandler);
   element.addEventListener('keyup', keydownHandler);
+  element.addEventListener('keydown', e => e.preventDefault());
 };
 
 const cleanButton = (element, clickHandler, keydownHandler) => {
@@ -33,6 +34,7 @@ const cleanButton = (element, clickHandler, keydownHandler) => {
   element.removeAttribute('aria-controls');
   element.removeEventListener('click', clickHandler);
   element.removeEventListener('keyup', keydownHandler);
+  element.removeEventListener('keydown', e => e.preventDefault());
 };
 
 const selectButton = element => {
@@ -168,7 +170,6 @@ export class LionTabs extends LitElement {
     switch (e.key) {
       case 'ArrowDown':
       case 'ArrowRight':
-        e.preventDefault();
         if (this.selectedIndex + 1 >= this._pairCount) {
           this.selectedIndex = 0;
         } else {
