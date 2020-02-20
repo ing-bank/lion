@@ -1,5 +1,5 @@
 import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
-import { FormRegisteringMixin } from './FormRegisteringMixin.js';
+import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 
 /**
@@ -29,10 +29,17 @@ export const FormControlMixin = dedupeMixin(
       static get properties() {
         return {
           /**
+           * The name the element will be registered on to the .formElements collection
+           * of the parent.
+           */
+          name: {
+            type: String,
+            reflect: true,
+          },
+          /**
            * When no light dom defined and prop set
            */
           label: String,
-
           /**
            * When no light dom defined and prop set
            */
@@ -40,12 +47,10 @@ export const FormControlMixin = dedupeMixin(
             type: String,
             attribute: 'help-text',
           },
-
           /**
            * Contains all elements that should end up in aria-labelledby of `._inputNode`
            */
           _ariaLabelledNodes: Array,
-
           /**
            * Contains all elements that should end up in aria-describedby of `._inputNode`
            */
@@ -71,6 +76,14 @@ export const FormControlMixin = dedupeMixin(
         const oldValue = this.helpText;
         this.__helpText = newValue;
         this.requestUpdate('helpText', oldValue);
+      }
+
+      set fieldName(value) {
+        this.__fieldName = value;
+      }
+
+      get fieldName() {
+        return this.__fieldName || this.label || this.name;
       }
 
       get slots() {
@@ -146,9 +159,6 @@ export const FormControlMixin = dedupeMixin(
         this._enhanceLightDomA11y();
       }
 
-      /**
-       * Public methods
-       */
       _enhanceLightDomClasses() {
         if (this._inputNode) {
           this._inputNode.classList.add('form-control');
