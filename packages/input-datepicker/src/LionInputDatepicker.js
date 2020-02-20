@@ -1,8 +1,7 @@
+import '@lion/calendar/lion-calendar.js';
 import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
-import { withModalDialogConfig, OverlayMixin } from '@lion/overlays';
-
-import '@lion/calendar/lion-calendar.js';
+import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
 import './lion-calendar-overlay-frame.js';
 
 /**
@@ -230,6 +229,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   _calendarTemplate() {
     return html`
       <lion-calendar
+        slot="content"
         id="calendar"
         .selectedDate="${this.constructor.__getSyncDownValue(this.modelValue)}"
         .minDate="${this.__calendarMinDate}"
