@@ -1,16 +1,15 @@
-import { expect, fixture, html, aTimeout, oneEvent } from '@open-wc/testing';
-import sinon from 'sinon';
+import { browserDetection } from '@lion/core';
+import { aTimeout, expect, fixture, html, oneEvent } from '@open-wc/testing';
 import {
+  down,
+  keyDownOn,
+  keyUpOn,
   makeMouseEvent,
   pressEnter,
   pressSpace,
-  down,
   up,
-  keyDownOn,
-  keyUpOn,
 } from '@polymer/iron-test-helpers/mock-interactions.js';
-import { browserDetection } from '@lion/core';
-
+import sinon from 'sinon';
 import '../lion-button.js';
 
 function getTopElement(el) {
@@ -225,7 +224,11 @@ describe('lion-button', () => {
 
     it('is accessible when disabled', async () => {
       const el = await fixture(`<lion-button disabled>foo</lion-button>`);
-      await expect(el).to.be.accessible();
+      await expect(el).to.be.accessible({
+        // Because disabled button shouldn't have proper contrast, otherwise it does not look disabled
+        // See also disabled a11y paradox, I believe Jake Abma talked about solving it in the future with an icon
+        ignoredRules: ['color-contrast'],
+      });
     });
   });
 
