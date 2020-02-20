@@ -624,7 +624,7 @@ describe('<lion-fieldset>', () => {
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
     });
 
-    it.skip('(re)initializes children interaction states on registration ready', async () => {
+    it('(re)initializes children interaction states on registration ready', async () => {
       const fieldset = await fixtureSync(html`
       <${tag} .modelValue="${{ a: '1', b: '2' }}">
         <${childTag} name="a"></${childTag}>
@@ -698,7 +698,7 @@ describe('<lion-fieldset>', () => {
       expect(fieldset.serializedValue).to.deep.equal({ price: 0 });
     });
 
-    it.skip('serializes undefined values as ""(nb radios/checkboxes are always serialized)', async () => {
+    it('serializes undefined values as ""(nb radios/checkboxes are always serialized)', async () => {
       const fieldset = await fixture(html`
         <${tag}>
           <${childTag} name="custom[]"></${childTag}>
