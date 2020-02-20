@@ -15,11 +15,10 @@ export function runInteractionStateMixinSuite(customConfig) {
   const cfg = {
     tagString: null,
     allowedModelValueTypes: [Array, Object, Number, Boolean, String, Date],
-    suffix: '',
     ...customConfig,
   };
 
-  describe(`InteractionStateMixin ${cfg.suffix ? `(${cfg.suffix})` : ''}`, async () => {
+  describe(`InteractionStateMixin`, async () => {
     let tag;
     before(() => {
       if (!cfg.tagString) {
@@ -169,6 +168,18 @@ export function runInteractionStateMixinSuite(customConfig) {
       el.prefilled = false;
       el.modelValue = 'Some value';
       el.resetInteractionState();
+      expect(el.dirty).to.be.false;
+      expect(el.touched).to.be.false;
+      expect(el.prefilled).to.be.true;
+    });
+
+    it('has a method initInteractionState()', async () => {
+      const el = await fixture(html`<${tag}></${tag}>`);
+      el.modelValue = 'Some value';
+      expect(el.dirty).to.be.true;
+      expect(el.touched).to.be.false;
+      expect(el.prefilled).to.be.false;
+      el.initInteractionState();
       expect(el.dirty).to.be.false;
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.true;
