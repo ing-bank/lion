@@ -1,14 +1,22 @@
-import '@lion/calendar/lion-calendar.js';
+import { LionCalendar } from '@lion/calendar/src/LionCalendar';
 import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
-import './lion-calendar-overlay-frame.js';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
  * @customElement lion-input-datepicker
  * @extends {LionInputDate}
  */
-export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
+export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionInputDate)) {
+  static get scopedElements() {
+    return {
+      'lion-calendar': LionCalendar,
+      'lion-calendar-overlay-frame': LionCalendarOverlayFrame,
+    };
+  }
+
   static get properties() {
     return {
       /**
@@ -206,7 +214,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   _overlayTemplate() {
     // TODO: add performance optimization to only render the calendar if needed
     return html`
-      <lion-calendar-overlay-frame>
+      <lion-calendar-overlay-frame class="calendar__overlay-frame">
         <span slot="heading">${this.calendarHeading}</span>
         ${this._calendarTemplate()}
       </lion-calendar-overlay-frame>
@@ -350,7 +358,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
     if (this._cachedOverlayContentNode) {
       return this._cachedOverlayContentNode;
     }
-    this._cachedOverlayContentNode = this.shadowRoot.querySelector('lion-calendar-overlay-frame');
+    this._cachedOverlayContentNode = this.shadowRoot.querySelector('.calendar__overlay-frame');
     return this._cachedOverlayContentNode;
   }
 }
