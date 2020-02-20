@@ -101,12 +101,6 @@ function deserializeDate(serializeValue, options) {
 }
 ```
 
-### FieldCustomMixin
-
-When creating your own custom input, please use `FieldCustomMixin` as a basis for this.
-Concrete examples can be found at [`<lion-input-date>`](../../input-date/) and
-[`<lion-input-amount>`](../../input-amount/).
-
 ## Flow diagram
 
 The following flow diagram is based on both end user input and interaction programmed by the

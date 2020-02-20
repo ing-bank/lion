@@ -24,15 +24,13 @@ export const InteractionStateMixin = dedupeMixin(
             type: Boolean,
             reflect: true,
           },
-
           /**
-           * True when user has typed in something in the input field.
+           * True when user has changed the value of the field.
            */
           dirty: {
             type: Boolean,
             reflect: true,
           },
-
           /**
            * True when user has left non-empty field or input is prefilled.
            * The name must be seen from the point of view of the input field:
@@ -112,9 +110,8 @@ export const InteractionStateMixin = dedupeMixin(
        * Since this method will be called twice in last mentioned scenario, it must stay idempotent.
        */
       initInteractionState() {
-        if (this.constructor._isPrefilled(this.modelValue)) {
-          this.prefilled = true;
-        }
+        this.dirty = false;
+        this.prefilled = this.constructor._isPrefilled(this.modelValue);
       }
 
       /**

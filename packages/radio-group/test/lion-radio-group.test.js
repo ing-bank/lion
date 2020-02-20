@@ -37,9 +37,9 @@ describe('<lion-radio-group>', () => {
       </lion-radio-group>
     `);
     await nextFrame();
-    const male = el.formElementsArray[0];
+    const male = el.formElements[0];
     const maleInput = male.querySelector('input');
-    const female = el.formElementsArray[1];
+    const female = el.formElements[1];
     const femaleInput = female.querySelector('input');
 
     expect(male.checked).to.equal(false);

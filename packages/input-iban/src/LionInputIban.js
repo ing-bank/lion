@@ -1,6 +1,5 @@
 import { LocalizeMixin } from '@lion/localize';
 import { LionInput } from '@lion/input';
-import { FieldCustomMixin } from '@lion/field';
 import { formatIBAN } from './formatters.js';
 import { parseIBAN } from './parsers.js';
 import { IsIBAN } from './validators.js';
@@ -10,7 +9,7 @@ import { IsIBAN } from './validators.js';
  *
  * @extends {LionInput}
  */
-export class LionInputIban extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputIban extends LocalizeMixin(LionInput) {
   constructor() {
     super();
     this.formatter = formatIBAN;

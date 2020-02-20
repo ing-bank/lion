@@ -1,12 +1,13 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 import '../lion-input.js';
 
+const tagString = 'lion-input';
+const tag = unsafeStatic(tagString);
+
 describe('<lion-input>', () => {
   it('delegates readOnly property and readonly attribute', async () => {
-    const el = await fixture(
-      `<lion-input readonly><label slot="label">Testing readonly</label></lion-input>`,
-    );
+    const el = await fixture(html`<${tag} readonly></${tag}>`);
     expect(el._inputNode.readOnly).to.equal(true);
     el.readOnly = false;
     await el.updateComplete;
@@ -14,13 +15,20 @@ describe('<lion-input>', () => {
     expect(el._inputNode.readOnly).to.equal(false);
   });
 
+  it('delegates value attribute', async () => {
+    const el = await fixture(html`<${tag} value="prefilled"></${tag}>`);
+    expect(el._inputNode.value).to.equal('prefilled');
+  });
+
   it('automatically creates an <input> element if not provided by user', async () => {
-    const el = await fixture(`<lion-input></lion-input>`);
+    const el = await fixture(html`
+      <${tag}></${tag}>
+    `);
     expect(el.querySelector('input')).to.equal(el._inputNode);
   });
 
   it('has a type which is reflected to an attribute and is synced down to the native input', async () => {
-    const el = await fixture(`<lion-input></lion-input>`);
+    const el = await fixture(html`<${tag}></${tag}>`);
     expect(el.type).to.equal('text');
     expect(el.getAttribute('type')).to.equal('text');
     expect(el._inputNode.getAttribute('type')).to.equal('text');
@@ -32,7 +40,7 @@ describe('<lion-input>', () => {
   });
 
   it('has an attribute that can be used to set the placeholder text of the input', async () => {
-    const el = await fixture(`<lion-input placeholder="text"></lion-input>`);
+    const el = await fixture(html`<${tag} placeholder="text"></${tag}>`);
     expect(el.getAttribute('placeholder')).to.equal('text');
     expect(el._inputNode.getAttribute('placeholder')).to.equal('text');
 
@@ -42,20 +50,20 @@ describe('<lion-input>', () => {
     expect(el._inputNode.getAttribute('placeholder')).to.equal('foo');
   });
 
-  it('is accessible', async () => {
-    const el = await fixture(`<lion-input><label slot="label">Label</label></lion-input>`);
-    await expect(el).to.be.accessible();
-  });
+  describe('Accessibility', () => {
+    it('is accessible', async () => {
+      const el = await fixture(html`<${tag} label="Label"></${tag}>`);
+      await expect(el).to.be.accessible();
+    });
 
-  it('is accessible when readonly', async () => {
-    const el = await fixture(
-      `<lion-input readonly .modelValue=${'read only'}><label slot="label">Label</label></lion-input>`,
-    );
-    await expect(el).to.be.accessible();
-  });
+    it('is accessible when readonly', async () => {
+      const el = await fixture(html`<${tag} readonly label="Label"></${tag}>`);
+      await expect(el).to.be.accessible();
+    });
 
-  it('is accessible when disabled', async () => {
-    const el = await fixture(`<lion-input disabled><label slot="label">Label</label></lion-input>`);
-    await expect(el).to.be.accessible();
+    it('is accessible when disabled', async () => {
+      const el = await fixture(html`<${tag} disabled label="Label"></${tag}>`);
+      await expect(el).to.be.accessible();
+    });
   });
 });
