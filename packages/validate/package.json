@@ -37,7 +37,8 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.4",
-    "@lion/localize": "0.8.7"
+    "@lion/localize": "0.8.7",
+    "@open-wc/scoped-elements": "^0.4.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.10.4",

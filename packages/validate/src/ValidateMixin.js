@@ -2,6 +2,8 @@
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
+import { createScopedElement, ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
 import { AsyncQueue } from './utils/AsyncQueue.js';
@@ -24,7 +26,15 @@ function arrayDiff(array1 = [], array2 = []) {
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
+    class ValidateMixin extends ScopedElementsMixin(SyncUpdatableMixin(SlotMixin(superclass))) {
+      static get scopedElements() {
+        return {
+          ...super.scopedElements,
+          // TODO: Remove once we can load it asynchronously, see todo below in loadFeedbackComponent method
+          'lion-validation-feedback': LionValidationFeedback,
+        };
+      }
+
       static get properties() {
         return {
           /**
@@ -108,7 +118,8 @@ export const ValidateMixin = dedupeMixin(
       get slots() {
         return {
           ...super.slots,
-          feedback: () => document.createElement('lion-validation-feedback'),
+          feedback: () =>
+            createScopedElement('lion-validation-feedback', this.constructor.scopedElements),
         };
       }
 
@@ -185,7 +196,10 @@ export const ValidateMixin = dedupeMixin(
        * Should be overridden by subclasses if a different validation-feedback component is used
        */
       async _loadFeedbackComponent() {
-        await import('../lion-validation-feedback.js');
+        /* TODO: See https://github.com/open-wc/open-wc/issues/1354
+          const { LionValidationFeedback } = await import('./LionValidationFeedback.js');
+          this.constructor.scopedElements['lion-validation-feedback'] = LionValidationFeedback;
+        */
       }
 
       firstUpdated(c) {

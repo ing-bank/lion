@@ -12,6 +12,7 @@ import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionInputDate)) {
   static get scopedElements() {
     return {
+      ...super.scopedElements,
       'lion-calendar': LionCalendar,
       'lion-calendar-overlay-frame': LionCalendarOverlayFrame,
     };
