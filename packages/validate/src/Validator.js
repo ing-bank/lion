@@ -9,8 +9,12 @@ export class Validator {
     this.type = (config && config.type) || 'error'; // Default type supported by ValidateMixin
   }
 
-  static get validatorName() {
-    return this.name;
+  static get name() {
+    return this.validatorName;
+  }
+
+  static set name(name) {
+    this.validatorName = name;
   }
 
   static get async() {
@@ -24,7 +28,7 @@ export class Validator {
    * @returns {Boolean|Promise<Boolean>}
    */
   execute(/* modelValue, param */) {
-    if (!this.validatorName) {
+    if (!this.name) {
       throw new Error('You must provide a name like "this.name = \'IsCat\'" for your Validator');
     }
   }
@@ -58,7 +62,7 @@ export class Validator {
    */
   async _getMessage(data) {
     const composedData = {
-      name: this.validatorName,
+      name: this.name,
       type: this.type,
       params: this.param,
       config: this.config,
@@ -86,7 +90,7 @@ export class Validator {
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   static async getMessage(/* data */) {
-    return `Please configure an error message for "${this.validatorName}" by overriding "static async getMessage()"`;
+    return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
   }
 
   /**
