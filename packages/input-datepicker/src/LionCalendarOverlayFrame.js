@@ -1,4 +1,4 @@
-import { html, css, LitElement } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
 export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
@@ -112,7 +112,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
             <slot name="close-icon">&times;</slot>
           </button>
         </div>
-        <slot></slot>
+        <slot name="content"></slot>
       </div>
     `;
   }
