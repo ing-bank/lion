@@ -3,7 +3,7 @@ import './helpers/umbrella-form.js';
 
 // Test umbrella form
 describe('Form Integrations', () => {
-  it.skip('".serializedValue" returns all non disabled fields based on form structure', async () => {
+  it('".serializedValue" returns all non disabled fields based on form structure', async () => {
     const el = await fixture(
       html`
         <umbrella-form></umbrella-form>
