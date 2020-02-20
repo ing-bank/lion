@@ -50,7 +50,7 @@ For usage and installation please see the appropriate packages.
           <lion-textarea
             name="bio"
             label="Biography"
-            .validators="${[ new Required(), new MinLength(10, { getMessage: () => 'min 10 pls...'}) ]}"
+            .validators="${[new Required(), new MinLength(10)]}"
             help-text="Please enter at least 10 characters"
           ></lion-textarea>
           <lion-input-amount name="money" label="Money"></lion-input-amount>
