@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.13](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.12...@lion/input-amount@0.5.13) (2020-02-20)
+
+
+### Bug Fixes
+
+* removed FieldCustomMixin ([f44d8aa](https://github.com/ing-bank/lion/commit/f44d8aa26ae7124d8dcb251e1f66ab9beae71050))
+
+
+
+
+
 ## [0.5.12](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.11...@lion/input-amount@0.5.12) (2020-02-19)
 
 

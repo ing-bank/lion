@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.13](https://github.com/ing-bank/lion/compare/@lion/input@0.5.12...@lion/input@0.5.13) (2020-02-20)
+
+
+### Bug Fixes
+
+* rearrange/cleanup mixin duties ([cb7120e](https://github.com/ing-bank/lion/commit/cb7120e3a59f02e7e87f00c4d281e47ca8d33ea8))
+
+
+
+
+
 ## [0.5.12](https://github.com/ing-bank/lion/compare/@lion/input@0.5.11...@lion/input@0.5.12) (2020-02-19)
 
 
