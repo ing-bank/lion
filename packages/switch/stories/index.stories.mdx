@@ -111,3 +111,21 @@ const IsTrue = class extends Validator {
   .validators="${[new IsTrue(null, {type: 'info'})]}"
 ></lion-switch>
 ```
+
+### With checked-changed handler
+
+You can listen for a `checked-changed` event that is fired when the switch is clicked.
+
+<Story name="Handler">{html`
+  <lion-switch
+    label="Label"
+    @checked-changed="${(e) => console.log(e.target.checked)}">
+  </lion-switch>
+`}</Story>
+
+```html
+<lion-switch
+  label="Label"
+  @checked-changed="${(e) => console.log(e.target.checked)}">
+</lion-switch>
+```
