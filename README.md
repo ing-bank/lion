@@ -1,4 +1,4 @@
-# Lion Web Components
+# Lion Web Components [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.comgithub.com/ing-bank/lion)](https://www.tickgit.com/browse?repo=github.com/ing-bank/lion)
 
 Lion web components is a set of highly performant, accessible and flexible Web Components.
 They provide an unopinionated, white label layer that can be extended to your own layer of components.
