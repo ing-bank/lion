@@ -37,8 +37,12 @@ const cleanButton = (element, clickHandler, keydownHandler) => {
   element.removeEventListener('keydown', e => e.preventDefault());
 };
 
-const selectButton = element => {
-  element.focus();
+const selectButton = (element, firstUpdate = false) => {
+  // Don't focus on first update, as the component might be lower on the page
+  if (!firstUpdate) {
+    element.focus();
+  }
+
   element.setAttribute('selected', true);
   element.setAttribute('aria-selected', true);
   element.setAttribute('tabindex', 0);
@@ -109,6 +113,7 @@ export class LionTabs extends LitElement {
 
   firstUpdated() {
     super.firstUpdated();
+    this.__firstUpdate = true;
     this.__setupSlots();
   }
 
@@ -198,6 +203,7 @@ export class LionTabs extends LitElement {
   }
 
   set selectedIndex(value) {
+    this.__firstUpdate = false;
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected();
@@ -231,7 +237,7 @@ export class LionTabs extends LitElement {
     }
     const { button: currentButton, panel: currentPanel } = this.__store[this.selectedIndex];
     if (currentButton) {
-      selectButton(currentButton);
+      selectButton(currentButton, this.__firstUpdate);
     }
     if (currentPanel) {
       selectPanel(currentPanel);
