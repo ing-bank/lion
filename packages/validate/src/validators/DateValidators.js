@@ -9,9 +9,13 @@ function isDate(value) {
 }
 
 export class IsDate extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsDate';
+  }
+
+  static get validatorName() {
+    return 'IsDate';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -25,9 +29,13 @@ export class IsDate extends Validator {
 }
 
 export class MinDate extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MinDate';
+  }
+
+  static get validatorName() {
+    return 'MinDate';
   }
 
   execute(value, min = this.param) {
@@ -45,6 +53,10 @@ export class MaxDate extends Validator {
     this.name = 'MaxDate';
   }
 
+  static get validatorName() {
+    return 'MaxDate';
+  }
+
   execute(value, max = this.param) {
     let hasError = false;
     if (!isDate(value) || value > normalizeDateTime(max)) {
@@ -55,9 +67,13 @@ export class MaxDate extends Validator {
 }
 
 export class MinMaxDate extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MinMaxDate';
+  }
+
+  static get validatorName() {
+    return 'MinMaxDate';
   }
 
   execute(value, { min = 0, max = 0 } = this.param) {
@@ -70,9 +86,13 @@ export class MinMaxDate extends Validator {
 }
 
 export class IsDateDisabled extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsDateDisabled';
+  }
+
+  static get validatorName() {
+    return 'IsDateDisabled';
   }
 
   execute(value, isDisabledFn = this.param) {

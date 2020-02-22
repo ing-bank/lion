@@ -4,9 +4,13 @@ import { Validator } from '../Validator.js';
 const isString = value => typeof value === 'string';
 
 export class IsString extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsString';
+  }
+
+  static get validatorName() {
+    return 'IsString';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -20,9 +24,13 @@ export class IsString extends Validator {
 }
 
 export class EqualsLength extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'EqualsLength';
+  }
+
+  static get validatorName() {
+    return 'EqualsLength';
   }
 
   execute(value, length = this.param) {
@@ -35,9 +43,13 @@ export class EqualsLength extends Validator {
 }
 
 export class MinLength extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MinLength';
+  }
+
+  static get validatorName() {
+    return 'MinLength';
   }
 
   execute(value, min = this.param) {
@@ -50,9 +62,13 @@ export class MinLength extends Validator {
 }
 
 export class MaxLength extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MaxLength';
+  }
+
+  static get validatorName() {
+    return 'MaxLength';
   }
 
   execute(value, max = this.param) {
@@ -65,9 +81,13 @@ export class MaxLength extends Validator {
 }
 
 export class MinMaxLength extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MinMaxLength';
+  }
+
+  static get validatorName() {
+    return 'MinMaxLength';
   }
 
   execute(value, { min = 0, max = 0 } = this.param) {
@@ -81,9 +101,13 @@ export class MinMaxLength extends Validator {
 
 const isEmailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export class IsEmail extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsEmail';
+  }
+
+  static get validatorName() {
+    return 'IsEmail';
   }
 
   // eslint-disable-next-line class-methods-use-this
