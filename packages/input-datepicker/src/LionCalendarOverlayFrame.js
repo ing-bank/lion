@@ -38,53 +38,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        /* FIXME: This awful switch statement is used to make sure it works with polymer build.. */
-        'lion-calendar-overlay-frame': locale => {
-          switch (locale) {
-            case 'bg-BG':
-              return import('@lion/overlays/translations/bg-BG.js');
-            case 'cs-CZ':
-              return import('@lion/overlays/translations/cs-CZ.js');
-            case 'de-DE':
-              return import('@lion/overlays/translations/de-DE.js');
-            case 'en-AU':
-              return import('@lion/overlays/translations/en-AU.js');
-            case 'en-GB':
-              return import('@lion/overlays/translations/en-GB.js');
-            case 'en-US':
-              return import('@lion/overlays/translations/en-US.js');
-            case 'en-PH':
-              return import('@lion/overlays/translations/en.js');
-            case 'es-ES':
-              return import('@lion/overlays/translations/es-ES.js');
-            case 'fr-FR':
-              return import('@lion/overlays/translations/fr-FR.js');
-            case 'fr-BE':
-              return import('@lion/overlays/translations/fr-BE.js');
-            case 'hu-HU':
-              return import('@lion/overlays/translations/hu-HU.js');
-            case 'it-IT':
-              return import('@lion/overlays/translations/it-IT.js');
-            case 'nl-BE':
-              return import('@lion/overlays/translations/nl-BE.js');
-            case 'nl-NL':
-              return import('@lion/overlays/translations/nl-NL.js');
-            case 'pl-PL':
-              return import('@lion/overlays/translations/pl-PL.js');
-            case 'ro-RO':
-              return import('@lion/overlays/translations/ro-RO.js');
-            case 'ru-RU':
-              return import('@lion/overlays/translations/ru-RU.js');
-            case 'sk-SK':
-              return import('@lion/overlays/translations/sk-SK.js');
-            case 'uk-UA':
-              return import('@lion/overlays/translations/uk-UA.js');
-            case 'zh-CN':
-              return import('@lion/overlays/translations/zh.js');
-            default:
-              return import(`@lion/overlays/translations/${locale}.js`);
-          }
-        },
+        'lion-calendar-overlay-frame': locale => import(`@lion/overlays/translations/${locale}.js`),
       },
       ...super.localizeNamespaces,
     ];

@@ -22,50 +22,7 @@ import { createDay } from './utils/createDay.js';
 export class LionCalendar extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
-      {
-        'lion-calendar': locale => {
-          switch (locale) {
-            case 'bg-BG':
-              return import('../translations/bg.js');
-            case 'cs-CZ':
-              return import('../translations/cs.js');
-            case 'de-AT':
-            case 'de-DE':
-              return import('../translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-PH':
-            case 'en-US':
-              return import('../translations/en.js');
-            case 'es-ES':
-              return import('../translations/es.js');
-            case 'fr-FR':
-            case 'fr-BE':
-              return import('../translations/fr.js');
-            case 'hu-HU':
-              return import('../translations/hu.js');
-            case 'it-IT':
-              return import('../translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-              return import('../translations/nl.js');
-            case 'pl-PL':
-              return import('../translations/pl.js');
-            case 'ro-RO':
-              return import('../translations/ro.js');
-            case 'ru-RU':
-              return import('../translations/ru.js');
-            case 'sk-SK':
-              return import('../translations/sk.js');
-            case 'uk-UA':
-              return import('../translations/uk.js');
-            case 'zh-CN':
-              return import('../translations/zh.js');
-            default:
-              return import(`../translations/${locale}.js`);
-          }
-        },
-      },
+      { 'lion-calendar': locale => import(`../translations/${locale}.js`) },
       ...super.localizeNamespaces,
     ];
   }
