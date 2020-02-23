@@ -111,7 +111,7 @@ export function loadDefaultFeedbackMessages() {
 
   const getLocalizedMessage = async data => {
     await forMessagesToBeReady();
-    return localize.msg(`lion-validate:${data.type}.${data.validatorName}`, data);
+    return localize.msg(`lion-validate:${data.type}.${data.name}`, data);
   };
 
   Required.getMessage = async data => getLocalizedMessage(data);

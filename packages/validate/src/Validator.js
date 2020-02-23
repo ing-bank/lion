@@ -88,7 +88,7 @@ export class Validator {
    * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
    */
   static async getMessage(/* data */) {
-    return `Please configure an error message for "${this.constructor.validatorName}" by overriding "static async getMessage()"`;
+    return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
   }
 
   /**
