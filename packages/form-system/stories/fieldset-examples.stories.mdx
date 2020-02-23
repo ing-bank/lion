@@ -177,7 +177,9 @@ Try it by typing something in the input, then removing it.
     const DemoValidator = class extends Validator {
       constructor() {
         super();
-        this.name = 'DemoValidator';
+      }
+      static get validatorName() {
+        return 'DemoValidator';
       }
       execute(value) {
         if (value && value.input1) {
@@ -201,7 +203,10 @@ Try it by typing something in the input, then removing it.
 const DemoValidator = class extends Validator {
   constructor() {
     super();
-    this.name = 'DemoValidator';
+  }
+
+  static get validatorName() {
+    return 'DemoValidator';
   }
 
   execute(value) {
@@ -232,7 +237,9 @@ You can have your fieldset validator take into consideration multiple fields.
     const IsCatsAndDogs = class extends Validator {
       constructor() {
         super();
-        this.name = 'IsCatsAndDogs';
+      }
+      static get validatorName() {
+        return 'IsCatsAndDogs';
       }
       execute(value) {
         return !(value.input1 === 'cats' && value.input2 === 'dogs');
@@ -264,7 +271,10 @@ You can have your fieldset validator take into consideration multiple fields.
 const IsCatsAndDogs = class extends Validator {
   constructor() {
     super();
-    this.name = 'IsCatsAndDogs';
+  }
+
+  static get validatorName() {
+    return 'IsCatsAndDogs';
   }
 
   execute(value) {
@@ -310,7 +320,9 @@ You can have your fieldset validator take into accounts multiple nested fieldset
     const IsCatsDogs = class extends Validator {
       constructor() {
         super();
-        this.name = 'IsCatsDogs';
+      }
+      static get validatorName() {
+        return 'IsCatsAndDogs';
       }
       execute(value) {
         if ((value.inner1 && value.inner1.input1 === 'cats') &&
@@ -352,7 +364,10 @@ You can have your fieldset validator take into accounts multiple nested fieldset
 const IsCatsDogs = class extends Validator {
   constructor() {
     super();
-    this.name = 'IsCatsDogs';
+  }
+
+  static get validatorName() {
+    return 'IsCatsDogs';
   }
 
   execute(value) {

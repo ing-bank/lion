@@ -300,9 +300,13 @@ describe('<lion-field>', () => {
 
     it('should conditionally show error', async () => {
       const HasX = class extends Validator {
+        // eslint-disable-next-line no-useless-constructor
         constructor() {
           super();
-          this.name = 'HasX';
+        }
+
+        static get validatorName() {
+          return 'HasX';
         }
 
         execute(value) {

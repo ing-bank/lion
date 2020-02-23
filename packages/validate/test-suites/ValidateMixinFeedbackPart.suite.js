@@ -41,9 +41,13 @@ export function runValidateMixinFeedbackPart() {
       tag = unsafeStatic(tagString);
 
       ContainsLowercaseA = class extends Validator {
+        // eslint-disable-next-line no-useless-constructor
         constructor(...args) {
           super(...args);
-          this.name = 'ContainsLowercaseA';
+        }
+
+        static get validatorName() {
+          return 'ContainsLowercaseA';
         }
 
         execute(modelValue) {
@@ -53,9 +57,13 @@ export function runValidateMixinFeedbackPart() {
       };
 
       class ContainsCat extends Validator {
+        // eslint-disable-next-line no-useless-constructor
         constructor(...args) {
           super(...args);
-          this.name = 'ContainsCat';
+        }
+
+        static get validatorName() {
+          return 'ContainsCat';
         }
 
         execute(modelValue) {
@@ -244,7 +252,7 @@ export function runValidateMixinFeedbackPart() {
 
           render() {
             return html`
-              Custom for ${this.feedbackData[0].validator.name}
+              Custom for ${this.feedbackData[0].validator.constructor.name}
             `;
           }
         },

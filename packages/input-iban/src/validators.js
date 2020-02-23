@@ -19,9 +19,13 @@ const loadTranslations = async () => {
 };
 
 export class IsIBAN extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsIBAN';
+  }
+
+  static get validatorName() {
+    return 'IsIBAN';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -36,9 +40,13 @@ export class IsIBAN extends Validator {
 }
 
 export class IsCountryIBAN extends IsIBAN {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'IsCountryIBAN';
+  }
+
+  static get validatorName() {
+    return 'IsCountryIBAN';
   }
 
   execute(value) {

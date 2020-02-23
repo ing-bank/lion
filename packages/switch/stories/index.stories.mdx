@@ -66,7 +66,9 @@ Simple example that illustrates where validation feedback will be displayed.
     const IsTrue = class extends Validator {
       constructor(...args) {
         super(...args);
-        this.name = 'IsTrue';
+      }
+      static get validatorName() {
+        return 'IsTrue';
       }
       execute(value) {
         return !value.checked;
@@ -92,7 +94,9 @@ import { Validator } from '@lion/validate';
 const IsTrue = class extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'IsTrue';
+  }
+  static get validatorName() {
+    return 'IsTrue';
   }
   execute(value) {
     return !value.checked;

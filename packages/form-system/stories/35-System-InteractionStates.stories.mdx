@@ -107,7 +107,9 @@ In the following example we will demonstrate this with interaction states, the m
     class OddValidator extends Validator {
       constructor(...args) {
         super(...args);
-        this.name = 'OddValidator';
+      }
+      static get validatorName() {
+        return 'OddValidator';
       }
       // eslint-disable-next-line class-methods-use-this
       execute(value) {

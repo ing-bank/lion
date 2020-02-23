@@ -48,7 +48,6 @@ All validators extend from the default `Validator` class. Below example is an ex
 class MyValidator extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'MyValidator';
   }
 
   execute(modelValue, param) {
@@ -57,6 +56,10 @@ class MyValidator extends Validator {
       hasError = true;
     }
     return hasError;
+  }
+
+  static get validatorName() {
+    return 'Required';
   }
 
   static getMessage({ fieldName }) {
@@ -87,7 +90,7 @@ You can implement your own custom message for a default validator. Pass a getMes
 
 ```js
 function getCustomMessage(data) {
-  return `${data.name} is a required field`;
+  return `${data.validatorName} is a required field`;
 }
 ```
 
@@ -115,8 +118,6 @@ You can make your async validators as follows:
 class AsyncValidator extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'AsyncValidator';
-    this.async = true;
   }
 
   async execute() {
@@ -125,6 +126,12 @@ class AsyncValidator extends Validator {
     console.log('async done...');
     return true;
   }
+
+  static get validatorName() {
+    return 'AsyncValidator';
+  }
+
+  static get async() { return true; }
 
   static getMessage({ modelValue }) {
     return `Validated for modelValue: ${modelValue}`;

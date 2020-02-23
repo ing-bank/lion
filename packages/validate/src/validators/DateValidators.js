@@ -48,9 +48,9 @@ export class MinDate extends Validator {
 }
 
 export class MaxDate extends Validator {
+  // eslint-disable-next-line no-useless-constructor
   constructor(...args) {
     super(...args);
-    this.name = 'MaxDate';
   }
 
   static get validatorName() {
