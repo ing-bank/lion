@@ -26,7 +26,7 @@ export class Validator {
   execute(/* modelValue, param */) {
     if (!this.validatorName) {
       throw new Error(
-        'You must provide a name like "this.validatorName = \'IsCat\'" for your Validator',
+        'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
       );
     }
   }

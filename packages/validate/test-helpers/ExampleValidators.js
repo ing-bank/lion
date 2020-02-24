@@ -2,11 +2,6 @@
 import { Validator } from '../src/Validator.js';
 
 export class AlwaysInvalid extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'AlwaysInvalid';
   }
@@ -18,11 +13,6 @@ export class AlwaysInvalid extends Validator {
 }
 
 export class AlwaysValid extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'AlwaysValid';
   }
@@ -34,11 +24,6 @@ export class AlwaysValid extends Validator {
 }
 
 export class AsyncAlwaysValid extends AlwaysValid {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get async() {
     return true;
   }
@@ -49,11 +34,6 @@ export class AsyncAlwaysValid extends AlwaysValid {
 }
 
 export class AsyncAlwaysInvalid extends AlwaysValid {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get async() {
     return true;
   }

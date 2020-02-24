@@ -41,11 +41,6 @@ export function runValidateMixinFeedbackPart() {
       tag = unsafeStatic(tagString);
 
       ContainsLowercaseA = class extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor(...args) {
-          super(...args);
-        }
-
         static get validatorName() {
           return 'ContainsLowercaseA';
         }
@@ -57,11 +52,6 @@ export function runValidateMixinFeedbackPart() {
       };
 
       class ContainsCat extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor(...args) {
-          super(...args);
-        }
-
         static get validatorName() {
           return 'ContainsCat';
         }

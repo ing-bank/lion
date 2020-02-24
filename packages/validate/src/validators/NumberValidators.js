@@ -11,11 +11,6 @@ const isNumber = value =>
   value === value && typeof value === 'number';
 
 export class IsNumber extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsNumber';
   }
@@ -31,11 +26,6 @@ export class IsNumber extends Validator {
 }
 
 export class MinNumber extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinNumber';
   }
@@ -50,11 +40,6 @@ export class MinNumber extends Validator {
 }
 
 export class MaxNumber extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MaxNumber';
   }
@@ -69,11 +54,6 @@ export class MaxNumber extends Validator {
 }
 
 export class MinMaxNumber extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinMaxNumber';
   }

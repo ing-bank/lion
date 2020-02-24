@@ -237,9 +237,6 @@ Below is a more advanced validator on the group that evaluates the children chec
   {() => {
     loadDefaultFeedbackMessages();
     class HasMinTwoChecked extends Validator {
-      constructor(...args) {
-        super(...args);
-      }
       execute(value) {
         return value.length < 2;
       }
@@ -286,9 +283,6 @@ import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate
 loadDefaultFeedbackMessages();
 
 class HasMinTwoChecked extends Validator {
-  constructor(...args) {
-    super(...args);
-  }
 
   execute(value) {
     return value.length < 2;

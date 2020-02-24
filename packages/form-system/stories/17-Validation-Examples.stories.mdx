@@ -361,9 +361,6 @@ You can even hard code localization in there if needed or you can use a localiza
 <Story name="Custom Validators">
   {() => {
     class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-      }
       static get validatorName() {
         return 'myValidator';
       }

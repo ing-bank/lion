@@ -19,11 +19,6 @@ const loadTranslations = async () => {
 };
 
 export class IsIBAN extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsIBAN';
   }

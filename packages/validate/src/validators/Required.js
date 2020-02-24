@@ -1,11 +1,6 @@
 import { Validator } from '../Validator.js';
 
 export class Required extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'Required';
   }

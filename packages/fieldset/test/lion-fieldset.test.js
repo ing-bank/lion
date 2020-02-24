@@ -311,11 +311,6 @@ describe('<lion-fieldset>', () => {
   describe('validation', () => {
     it('validates on init', async () => {
       class IsCat extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'IsCat';
         }
@@ -348,11 +343,6 @@ describe('<lion-fieldset>', () => {
 
     it('has a special validator for all children - can be checked via this.error.FormElementsHaveNoError', async () => {
       class IsCat extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'IsCat';
         }
@@ -381,11 +371,6 @@ describe('<lion-fieldset>', () => {
 
     it('validates on children (de)registration', async () => {
       class HasEvenNumberOfChildren extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'HasEvenNumberOfChildren';
         }
@@ -542,11 +527,6 @@ describe('<lion-fieldset>', () => {
 
     it('potentially shows fieldset error message on interaction change', async () => {
       class Input1IsTen extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'Input1IsTen';
         }
@@ -578,11 +558,6 @@ describe('<lion-fieldset>', () => {
 
     it('show error if tabbing "out" of last ', async () => {
       class Input1IsTen extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'Input1IsTen';
         }
@@ -910,11 +885,6 @@ describe('<lion-fieldset>', () => {
 
     it('has correct validation afterwards', async () => {
       class IsCat extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'IsCat';
         }
@@ -925,11 +895,6 @@ describe('<lion-fieldset>', () => {
         }
       }
       class ColorContainsA extends Validator {
-        // eslint-disable-next-line no-useless-constructor
-        constructor() {
-          super();
-        }
-
         static get validatorName() {
           return 'ColorContainsA';
         }

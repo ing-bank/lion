@@ -9,11 +9,6 @@ function isDate(value) {
 }
 
 export class IsDate extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsDate';
   }
@@ -29,11 +24,6 @@ export class IsDate extends Validator {
 }
 
 export class MinDate extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinDate';
   }
@@ -48,11 +38,6 @@ export class MinDate extends Validator {
 }
 
 export class MaxDate extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MaxDate';
   }
@@ -67,11 +52,6 @@ export class MaxDate extends Validator {
 }
 
 export class MinMaxDate extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinMaxDate';
   }
@@ -86,11 +66,6 @@ export class MinMaxDate extends Validator {
 }
 
 export class IsDateDisabled extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsDateDisabled';
   }

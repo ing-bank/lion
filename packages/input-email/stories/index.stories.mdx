@@ -69,9 +69,6 @@ loadDefaultFeedbackMessages();
 <Story name="Custom Validator">
   {() => {
     class GmailOnly extends Validator {
-      constructor(...args) {
-        super(...args);
-      }
       static get validatorName() {
         return 'GmailOnly';
       }
@@ -100,10 +97,6 @@ loadDefaultFeedbackMessages();
 import { Validator } from '@lion/validate';
 
 class GmailOnly extends Validator {
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'GmailOnly';
   }

@@ -344,11 +344,6 @@ export function runFormatMixinSuite(customConfig) {
         // that set hasError back to false when the user input is mimicked.
 
         const AlwaysInvalid = class extends Validator {
-          // eslint-disable-next-line no-useless-constructor
-          constructor(...args) {
-            super(...args);
-          }
-
           static get validatorName() {
             return 'AlwaysInvalid';
           }

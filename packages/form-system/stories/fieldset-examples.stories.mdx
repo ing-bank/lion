@@ -175,9 +175,6 @@ Try it by typing something in the input, then removing it.
 <Story name="Validation">
   {() => {
     const DemoValidator = class extends Validator {
-      constructor() {
-        super();
-      }
       static get validatorName() {
         return 'DemoValidator';
       }
@@ -201,10 +198,6 @@ Try it by typing something in the input, then removing it.
 
 ```js
 const DemoValidator = class extends Validator {
-  constructor() {
-    super();
-  }
-
   static get validatorName() {
     return 'DemoValidator';
   }
@@ -235,9 +228,6 @@ You can have your fieldset validator take into consideration multiple fields.
 <Story name="Validating 2 fields">
   {() => {
     const IsCatsAndDogs = class extends Validator {
-      constructor() {
-        super();
-      }
       static get validatorName() {
         return 'IsCatsAndDogs';
       }
@@ -269,10 +259,6 @@ You can have your fieldset validator take into consideration multiple fields.
 
 ```js
 const IsCatsAndDogs = class extends Validator {
-  constructor() {
-    super();
-  }
-
   static get validatorName() {
     return 'IsCatsAndDogs';
   }
@@ -318,9 +304,6 @@ You can have your fieldset validator take into accounts multiple nested fieldset
 <Story name="Validating 2 fieldsets">
   {() => {
     const IsCatsDogs = class extends Validator {
-      constructor() {
-        super();
-      }
       static get validatorName() {
         return 'IsCatsAndDogs';
       }
@@ -362,10 +345,6 @@ You can have your fieldset validator take into accounts multiple nested fieldset
 
 ```js
 const IsCatsDogs = class extends Validator {
-  constructor() {
-    super();
-  }
-
   static get validatorName() {
     return 'IsCatsDogs';
   }

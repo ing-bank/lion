@@ -13,7 +13,7 @@ describe('String Validation', () => {
   it('provides new IsString() to allow only strings', () => {
     let isEnabled;
     const validator = new IsString();
-    expect(IsString.validatorName).to.equal('IsString');
+    expect(validator.constructor.name).to.equal('IsString');
 
     isEnabled = validator.execute('foo');
     expect(isEnabled).to.be.false;
@@ -28,7 +28,7 @@ describe('String Validation', () => {
   it('provides new EqualsLength(x) to allow only a specific string length', () => {
     let isEnabled;
     const validator = new EqualsLength(3);
-    expect(EqualsLength.validatorName).to.equal('EqualsLength');
+    expect(validator.constructor.name).to.equal('EqualsLength');
 
     isEnabled = validator.execute('foo');
     expect(isEnabled).to.be.false;
@@ -43,7 +43,7 @@ describe('String Validation', () => {
   it('provides new MinLength(x) to allow only strings longer then min', () => {
     let isEnabled;
     const validator = new MinLength(3);
-    expect(MinLength.validatorName).to.equal('MinLength');
+    expect(validator.constructor.name).to.equal('MinLength');
 
     isEnabled = validator.execute('foo');
     expect(isEnabled).to.be.false;
@@ -55,7 +55,7 @@ describe('String Validation', () => {
   it('provides new MaxLength(x) to allow only strings shorter then max', () => {
     let isEnabled;
     const validator = new MaxLength(3);
-    expect(MaxLength.validatorName).to.equal('MaxLength');
+    expect(validator.constructor.name).to.equal('MaxLength');
 
     isEnabled = validator.execute('foo');
     expect(isEnabled).to.be.false;
@@ -67,7 +67,7 @@ describe('String Validation', () => {
   it('provides new MinMaxValidator({ min: x, max: y}) to allow only strings between min and max', () => {
     let isEnabled;
     const validator = new MinMaxLength({ min: 2, max: 4 });
-    expect(MinMaxLength.validatorName).to.equal('MinMaxLength');
+    expect(validator.constructor.name).to.equal('MinMaxLength');
 
     isEnabled = validator.execute('foo');
     expect(isEnabled).to.be.false;
@@ -82,7 +82,7 @@ describe('String Validation', () => {
   it('provides new IsEmail() to allow only valid email formats', () => {
     let isEnabled;
     const validator = new IsEmail();
-    expect(IsEmail.validatorName).to.equal('IsEmail');
+    expect(validator.constructor.name).to.equal('IsEmail');
 
     isEnabled = validator.execute('foo@bar.com');
     expect(isEnabled).to.be.false;

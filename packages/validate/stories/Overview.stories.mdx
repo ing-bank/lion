@@ -46,10 +46,6 @@ All validators extend from the default `Validator` class. Below example is an ex
 
 ```js
 class MyValidator extends Validator {
-  constructor(...args) {
-    super(...args);
-  }
-
   execute(modelValue, param) {
     const hasError = false;
     if (modelValue === param) {
@@ -116,10 +112,6 @@ You can make your async validators as follows:
 
 ```js
 class AsyncValidator extends Validator {
-  constructor(...args) {
-    super(...args);
-  }
-
   async execute() {
     console.log('async pending...');
     await pause(2000);

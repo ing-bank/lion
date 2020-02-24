@@ -4,11 +4,6 @@ import { Validator } from '../Validator.js';
 const isString = value => typeof value === 'string';
 
 export class IsString extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsString';
   }
@@ -24,11 +19,6 @@ export class IsString extends Validator {
 }
 
 export class EqualsLength extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'EqualsLength';
   }
@@ -43,11 +33,6 @@ export class EqualsLength extends Validator {
 }
 
 export class MinLength extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinLength';
   }
@@ -62,11 +47,6 @@ export class MinLength extends Validator {
 }
 
 export class MaxLength extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MaxLength';
   }
@@ -81,11 +61,6 @@ export class MaxLength extends Validator {
 }
 
 export class MinMaxLength extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'MinMaxLength';
   }
@@ -101,11 +76,6 @@ export class MinMaxLength extends Validator {
 
 const isEmailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export class IsEmail extends Validator {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(...args) {
-    super(...args);
-  }
-
   static get validatorName() {
     return 'IsEmail';
   }
