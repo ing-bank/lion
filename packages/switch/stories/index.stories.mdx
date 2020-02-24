@@ -1,6 +1,7 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { Validator } from '@lion/validate';
 
+import { LionSwitch } from '../src/LionSwitch';
 import '../lion-switch.js';
 
 <Meta title="Buttons/Switch" />
@@ -75,19 +76,26 @@ Simple example that illustrates where validation feedback will be displayed.
         return "You won't get the latest news!";
       }
     };
+    class CustomSwitch extends LionSwitch {
+      static get validationTypes() {
+        return [...super.validationTypes, 'info'];
+      }
+    }
+    customElements.define('custom-switch', CustomSwitch)
     return html`
-      <lion-switch
+      <custom-switch
         id="newsletterCheck"
         name="newsletterCheck"
         label="Subscribe to newsletter"
-        .validators="${[new IsTrue(null, {type: 'error'})]}"
-      ></lion-switch>
+        .validators="${[new IsTrue(null, {type: 'info'})]}"
+      ></custom-switch>
     `;
   }}
 </Story>
 
 ```js
 import { Validator } from '@lion/validate';
+import { LionSwitch } from '@lion/switch/src/LionSwitch';
 
 const IsTrue = class extends Validator {
   constructor(...args) {
@@ -101,13 +109,20 @@ const IsTrue = class extends Validator {
     return "You won't get the latest news!";
   }
 };
+
+class CustomSwitch extends LionSwitch {
+  static get validationTypes() {
+    return [...super.validationTypes, 'info'];
+  }
+}
+customElements.define('custom-switch', CustomSwitch);
 ```
 
 ```html
-<lion-switch
+<custom-switch
   id="newsletterCheck"
   name="newsletterCheck"
   label="Subscribe to newsletter"
   .validators="${[new IsTrue(null, {type: 'error'})]}"
-></lion-switch>
+></custom-switch>
 ```
