@@ -370,11 +370,11 @@ export function runValidateMixinSuite(customConfig) {
         `);
 
         el.modelValue = 'cat';
-        expect(el.validationStates.error.isCat).to.be.undefined;
+        expect(el.validationStates.error.IsCat).to.be.undefined;
         el.modelValue = 'dog';
-        expect(el.validationStates.error.isCat).to.be.true;
+        expect(el.validationStates.error.IsCat).to.be.true;
         el.modelValue = '';
-        expect(el.validationStates.error.isCat).to.be.undefined;
+        expect(el.validationStates.error.IsCat).to.be.undefined;
       });
 
       it('Validators get retriggered on parameter change', async () => {
