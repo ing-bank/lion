@@ -317,8 +317,12 @@ export const ValidateMixin = dedupeMixin(
         const /** @type {Validator[]} */ filteredValidators = this._allValidators.filter(
             v => !(v instanceof ResultValidator) && !(v instanceof Required),
           );
-        const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(v => !v.async);
-        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
+        const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(
+            v => !v.constructor.async,
+          );
+        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(
+            v => v.constructor.async,
+          );
 
         /**
          * 2. Synchronous validators
@@ -372,7 +376,7 @@ export const ValidateMixin = dedupeMixin(
       __executeResultValidators(regularValidationResult) {
         /** @type {ResultValidator[]} */
         const resultValidators = this._allValidators.filter(
-          v => !v.async && v instanceof ResultValidator,
+          v => !v.constructor.async && v instanceof ResultValidator,
         );
 
         return resultValidators.filter(v =>
