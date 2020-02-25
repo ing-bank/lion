@@ -41,7 +41,8 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     if (!(modelValue instanceof Date)) {
       return '';
     }
-    return modelValue.toISOString().slice(0, 10);
+    const offset = modelValue.getTimezoneOffset() * 60000;
+    return new Date(modelValue - offset).toISOString().slice(0, 10);
   }
 
   // eslint-disable-next-line class-methods-use-this
