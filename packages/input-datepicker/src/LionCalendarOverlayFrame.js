@@ -38,7 +38,6 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        /* FIXME: This awful switch statement is used to make sure it works with polymer build.. */
         'lion-calendar-overlay-frame': locale => {
           switch (locale) {
             case 'bg-BG':

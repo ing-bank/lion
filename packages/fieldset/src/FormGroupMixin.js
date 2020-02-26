@@ -95,11 +95,6 @@ export const FormGroupMixin = dedupeMixin(
         this._setValueMapForAllFormElements('formattedValue', values);
       }
 
-      // TODO: should it be any or every? Should we maybe keep track of both,
-      // so we can configure feedback visibility depending on scenario?
-      // Should we allow configuring feedback visibility on validator instances
-      // for maximal flexibility?
-      // Document this...
       get prefilled() {
         return this._everyFormElementHas('prefilled');
       }

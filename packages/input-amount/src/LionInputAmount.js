@@ -98,7 +98,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
    * @override of FormatMixin
    */
   __callParser(value = this.formattedValue) {
-    // TODO: input and change events both trigger parsing therefore we need to handle the second parse
+    // TODO: (@daKmor) input and change events both trigger parsing therefore we need to handle the second parse
     this.__parserCallcountSincePaste += 1;
     this.__isPasting = this.__parserCallcountSincePaste === 2;
     this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
@@ -122,7 +122,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   __setCurrencyDisplayLabel() {
-    // TODO: for optimal a11y, abbreviations should be part of aria-label
+    // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
     // example, for a language switch with text 'en', an aria-label of 'english' is not
     // sufficient, it should also contain the abbreviation.
     this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
