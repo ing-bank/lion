@@ -81,7 +81,8 @@ Simple example that illustrates where validation feedback will be displayed.
         return [...super.validationTypes, 'info'];
       }
     }
-    customElements.define('custom-switch', CustomSwitch);
+    if (!customElements.get('custom-switch'))
+      customElements.define('custom-switch', CustomSwitch);
     return html`
       <custom-switch
         id="newsletterCheck"
