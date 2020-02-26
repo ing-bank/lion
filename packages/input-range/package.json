@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-range",
-  "version": "0.2.12",
+  "version": "0.2.14",
   "description": "Provide a way for users to select one value from a range of values",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,9 +34,9 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.4",
-    "@lion/field": "0.9.2",
-    "@lion/input": "0.5.12",
-    "@lion/localize": "0.8.7"
+    "@lion/field": "0.10.1",
+    "@lion/input": "0.5.14",
+    "@lion/localize": "0.8.8"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.10.4",

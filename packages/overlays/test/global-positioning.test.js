@@ -24,18 +24,6 @@ describe('Global Positioning', () => {
       expect(overlays.globalRootNode.children.length).to.equal(1);
       expect(overlays.globalRootNode.children[0]).to.have.trimmed.text('my content');
     });
-
-    // TODO: not implemented atm. Is this needed? If so, it should be covered in a css class
-    // on a wrapping element, since it may break user styling.
-    it.skip('sets ".contentNode" styling to display flex by default', async () => {
-      const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
-      });
-      await ctrl.show();
-      expect(
-        window.getComputedStyle(overlays.globalRootNode.children[0]).getPropertyValue('display'),
-      ).to.equal('flex');
-    });
   });
 
   describe('viewportConfig', () => {

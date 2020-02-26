@@ -298,7 +298,7 @@ Alternatively you can also let the fieldset validator be dependent on the error 
 
 Simply loop over the formElements inside your Validator's `execute` method:
 ```js
-this.formElementsArray.some(el => el.hasFeedbackFor.includes('error'));
+this.formElements.some(el => el.hasFeedbackFor.includes('error'));
 ```
 
 ### Validating multiple fieldsets

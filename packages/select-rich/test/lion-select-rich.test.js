@@ -41,15 +41,15 @@ describe('lion-select-rich', () => {
     `);
     await nextFrame();
 
-    expect(el.formElementsArray[0].name).to.equal('foo');
-    expect(el.formElementsArray[1].name).to.equal('foo');
+    expect(el.formElements[0].name).to.equal('foo');
+    expect(el.formElements[1].name).to.equal('foo');
 
     const validChild = await fixture(html`
       <lion-option .choiceValue=${30}>Item 3</lion-option>
     `);
     el.appendChild(validChild);
 
-    expect(el.formElementsArray[2].name).to.equal('foo');
+    expect(el.formElements[2].name).to.equal('foo');
   });
 
   it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
@@ -108,7 +108,7 @@ describe('lion-select-rich', () => {
     `);
 
     expect(el.modelValue).to.equal('other');
-    expect(el.formElementsArray[2].checked).to.be.true;
+    expect(el.formElements[2].checked).to.be.true;
   });
 
   it(`has a fieldName based on the label`, async () => {

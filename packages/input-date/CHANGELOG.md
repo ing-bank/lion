@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.13...@lion/input-date@0.5.14) (2020-02-26)
+
+**Note:** Version bump only for package @lion/input-date
+
+
+
+
+
+## [0.5.13](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.12...@lion/input-date@0.5.13) (2020-02-20)
+
+
+### Bug Fixes
+
+* **input-date:** serialize Date as iso string without time information ([ffa4da9](https://github.com/ing-bank/lion/commit/ffa4da9649d2500e399b8dc9e4997636ca6c3713))
+
+
+
+
+
 ## [0.5.12](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.11...@lion/input-date@0.5.12) (2020-02-19)
 
 

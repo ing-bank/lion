@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.13...@lion/input-range@0.2.14) (2020-02-26)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.13](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.12...@lion/input-range@0.2.13) (2020-02-20)
+
+
+### Bug Fixes
+
+* removed FieldCustomMixin ([f44d8aa](https://github.com/ing-bank/lion/commit/f44d8aa26ae7124d8dcb251e1f66ab9beae71050))
+
+
+
+
+
 ## [0.2.12](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.11...@lion/input-range@0.2.12) (2020-02-19)
 
 

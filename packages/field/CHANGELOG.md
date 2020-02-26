@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/ing-bank/lion/compare/@lion/field@0.10.0...@lion/field@0.10.1) (2020-02-26)
+
+**Note:** Version bump only for package @lion/field
+
+
+
+
+
+# [0.10.0](https://github.com/ing-bank/lion/compare/@lion/field@0.9.2...@lion/field@0.10.0) (2020-02-20)
+
+
+### Bug Fixes
+
+* by default, serialize undefined values as '' ([583a182](https://github.com/ing-bank/lion/commit/583a1820d616d2801f2701ac92d623e777534c1b))
+* rearrange/cleanup mixin duties ([cb7120e](https://github.com/ing-bank/lion/commit/cb7120e3a59f02e7e87f00c4d281e47ca8d33ea8))
+* removed FieldCustomMixin ([f44d8aa](https://github.com/ing-bank/lion/commit/f44d8aa26ae7124d8dcb251e1f66ab9beae71050))
+* **field:** interaction states initialized after registration ready ([d6829ef](https://github.com/ing-bank/lion/commit/d6829ef6199a31e4b2ab1e97dd2ccce354043145))
+
+
+### Features
+
+* api normalisation formElements and values ([9b905c4](https://github.com/ing-bank/lion/commit/9b905c492a0c0d2226cc1d75c73e2e70dc97815a))
+
+
+
+
+
 ## [0.9.2](https://github.com/ing-bank/lion/compare/@lion/field@0.9.1...@lion/field@0.9.2) (2020-02-19)
 
 
