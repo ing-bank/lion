@@ -1,5 +1,5 @@
-import { LocalizeMixin, formatDate, parseDate } from '@lion/localize';
 import { LionInput } from '@lion/input';
+import { formatDate, LocalizeMixin, parseDate } from '@lion/localize';
 import { IsDate } from '@lion/validate';
 
 /**
@@ -41,7 +41,10 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     if (!(modelValue instanceof Date)) {
       return '';
     }
-    return modelValue.toISOString().slice(0, 10);
+    // modelValue is localized, so we take the timezone offset in milliseconds and subtract it
+    // before converting it to ISO string
+    const offset = modelValue.getTimezoneOffset() * 60000;
+    return new Date(modelValue - offset).toISOString().slice(0, 10);
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -141,9 +141,9 @@ describe('<lion-input-date>', () => {
   it('serializes to iso format', async () => {
     const el = await fixture(
       html`
-        <lion-input-date .modelValue="${new Date('2000-12-12')}"></lion-input-date>
+        <lion-input-date .modelValue="${new Date('2000/12/15')}"></lion-input-date>
       `,
     );
-    expect(el.serializedValue).to.equal('2000-12-12');
+    expect(el.serializedValue).to.equal('2000-12-15');
   });
 });
