@@ -31,8 +31,13 @@ For usage and installation please see the appropriate packages.
   <Story name="Example">
     {() => {
       Required.getMessage = () => 'Please enter a value';
+      const map = new WeakMap();
       return html`
-      <lion-form>
+      <button @click="${() => console.log('map', map)}">modelValue-chnaged</button>
+      <lion-form @model-value-changed="${({target}) => {
+        const count = map.get(target);
+        map.set(target, (count || 0) + 1);
+        }}">
         <form>
           <lion-fieldset name="full_name">
             <lion-input
