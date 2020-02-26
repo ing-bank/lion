@@ -36,7 +36,8 @@
   "dependencies": {
     "@lion/choice-input": "0.6.2",
     "@lion/core": "0.4.4",
-    "@lion/field": "0.9.2"
+    "@lion/field": "0.9.2",
+    "@open-wc/scoped-elements": "0.5.0"
   },
   "devDependencies": {
     "@lion/localize": "0.8.7",

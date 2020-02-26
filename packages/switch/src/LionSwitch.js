@@ -1,10 +1,12 @@
+import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
 import { html, css } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
 
-import '../lion-switch-button.js';
+import { LionValidationFeedback } from '@lion/validate';
+import { LionSwitchButton } from './LionSwitchButton.js';
 
-export class LionSwitch extends ChoiceInputMixin(LionField) {
+export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
       super.styles,
@@ -16,10 +18,23 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
     ];
   }
 
+  static get scopedElements() {
+    return {
+      ...super.scopedElements,
+      // TODO (@CubLion): see if registering "lion-validation-feedback"
+      // is indeed needed once a new release of  "@lion/validate" happens.
+      'lion-validation-feedback': LionValidationFeedback,
+      'lion-switch-button': LionSwitchButton,
+    };
+  }
+
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('lion-switch-button'),
+      input: () =>
+        document.createElement(
+          getScopedTagName('lion-switch-button', this.constructor.scopedElements),
+        ),
     };
   }
 

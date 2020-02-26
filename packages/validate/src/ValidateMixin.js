@@ -2,7 +2,7 @@
 
 import { dedupeMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
-import { createScopedElement, ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
@@ -119,7 +119,9 @@ export const ValidateMixin = dedupeMixin(
         return {
           ...super.slots,
           feedback: () =>
-            createScopedElement('lion-validation-feedback', this.constructor.scopedElements),
+            document.createElement(
+              getScopedTagName('lion-validation-feedback', this.constructor.scopedElements),
+            ),
         };
       }
 

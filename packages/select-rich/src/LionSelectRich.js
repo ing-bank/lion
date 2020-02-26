@@ -1,11 +1,13 @@
+import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
 import { ChoiceGroupMixin } from '@lion/choice-input';
 import { css, html, LitElement, SlotMixin } from '@lion/core';
 import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
 import { formRegistrarManager } from '@lion/field/src/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
-import { ValidateMixin } from '@lion/validate';
-import '../lion-select-invoker.js';
+import { ValidateMixin, LionValidationFeedback } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
+
+import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 function uuid() {
   return Math.random()
@@ -46,13 +48,25 @@ function isInView(container, element, partial = false) {
  * @customElement lion-select-rich
  * @extends {LitElement}
  */
-export class LionSelectRich extends ChoiceGroupMixin(
-  OverlayMixin(
-    FormRegistrarMixin(
-      InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))),
+export class LionSelectRich extends ScopedElementsMixin(
+  ChoiceGroupMixin(
+    OverlayMixin(
+      FormRegistrarMixin(
+        InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))),
+      ),
     ),
   ),
 ) {
+  static get scopedElements() {
+    return {
+      ...super.scopedElements,
+      // TODO (@CubLion): see if registering "lion-validation-feedback"
+      // is indeed needed once a new release of  "@lion/validate" happens.
+      'lion-validation-feedback': LionValidationFeedback,
+      'lion-select-invoker': LionSelectInvoker,
+    };
+  }
+
   static get properties() {
     return {
       disabled: {
@@ -94,7 +108,10 @@ export class LionSelectRich extends ChoiceGroupMixin(
   get slots() {
     return {
       ...super.slots,
-      invoker: () => document.createElement('lion-select-invoker'),
+      invoker: () =>
+        document.createElement(
+          getScopedTagName('lion-select-invoker', this.constructor.scopedElements),
+        ),
     };
   }
 
