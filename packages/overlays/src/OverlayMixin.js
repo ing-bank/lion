@@ -149,7 +149,8 @@ export const OverlayMixin = dedupeMixin(
           return this._cachedOverlayContentNode;
         }
 
-        // FIXME: This should shadow outlet in between the host and the content slot, is a problem
+        // (@jorenbroekema) This should shadow outlet in between the host and the content slot,
+        // is a problem.
         // Should simply be Array.from(this.children).find(child => child.slot === 'content')
         // Issue: https://github.com/ing-bank/lion/issues/382
         const shadowOutlet = Array.from(this.children).find(

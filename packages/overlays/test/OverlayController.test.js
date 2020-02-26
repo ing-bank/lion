@@ -917,7 +917,7 @@ describe('OverlayController', () => {
       expect(ctrl.contentNode).to.equal(contentNode);
     });
 
-    // TODO: Currently not working, enable again when we fix updateConfig
+    // Currently not working, enable again when we fix updateConfig
     it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
       const contentNode = fixtureSync(html`
         <div>my content</div>

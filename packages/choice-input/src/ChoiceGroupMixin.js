@@ -23,9 +23,6 @@ export const ChoiceGroupMixin = dedupeMixin(
       get modelValue() {
         const elems = this._getCheckedElements();
         if (this.multipleChoice) {
-          // TODO: holds for both modelValue and serializedValue of choiceInput:
-          // consider only allowing strings as values, in which case 'el.value' would suffice
-          // and choice-input could be simplified
           return elems.map(el => el.modelValue.value);
         }
         return elems[0] ? elems[0].modelValue.value : '';
@@ -79,8 +76,6 @@ export const ChoiceGroupMixin = dedupeMixin(
        */
       addFormElement(child, indexToInsertAt) {
         this._throwWhenInvalidChildModelValue(child);
-        // TODO: nice to have or does it have a function (since names are meant as keys for
-        // formElements)?
         this.__delegateNameAttribute(child);
         super.addFormElement(child, indexToInsertAt);
       }

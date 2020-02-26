@@ -64,7 +64,6 @@ describe('<lion-fieldset>', () => {
   });
 
   // TODO: Tests below belong to FormRegistrarMixin. Preferably run suite integration test
-
   it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     await nextFrame();

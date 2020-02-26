@@ -120,7 +120,6 @@ export class OverlayController {
     return this._contentNodeWrapper.zIndex;
   }
 
-  // TODO: Use deepmerge package for doing this kind of config merging...
   /**
    * @desc Allows to dynamically change the overlay configuration. Needed in case the
    * presentation of the overlay changes depending on screen size.
@@ -187,7 +186,6 @@ export class OverlayController {
       // Now, it is time to lazily load Popper if not done yet
       // Do we really want to add display: inline or is this up to user?
       if (!this.constructor.popperModule) {
-        // TODO: Instead, prefetch it or use a preloader-manager to load it during idle time
         this.constructor.popperModule = preloadPopper();
       }
     }
@@ -204,7 +202,6 @@ export class OverlayController {
     }
   }
 
-  // FIXME: Consider that state can also be shown (rather than only initial/closed), and don't hide in that case
   /**
    * @desc Cleanup ._contentNodeWrapper. We do this, because creating a fresh wrapper
    * can lead to problems with event listeners...
@@ -243,12 +240,12 @@ export class OverlayController {
   }
 
   __initAccessibility() {
-    // TODO: add setup props in object and restore on teardown
+    // TODO: remove a11y attributes on teardown
     if (!this.contentNode.id) {
       this.contentNode.setAttribute('id', this._contentId);
     }
     if (this.isTooltip) {
-      // TODO: this could also be labelledby
+      // TODO: (@tlouisse) this could also be labelledby.
       if (this.invokerNode) {
         this.invokerNode.setAttribute('aria-describedby', this._contentId);
       }
@@ -624,7 +621,6 @@ export class OverlayController {
     });
   }
 
-  // TODO: this method has to be removed when EventTarget polyfill is available on IE11
   __fakeExtendsEventTarget() {
     const delegate = document.createDocumentFragment();
     ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {

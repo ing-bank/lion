@@ -57,7 +57,6 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   static get localizeNamespaces() {
     return [
       {
-        /* FIXME: This awful switch statement is used to make sure it works with polymer build.. */
         'lion-input-datepicker': locale => {
           switch (locale) {
             case 'bg-BG':
@@ -206,6 +205,8 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   _overlayTemplate() {
     // TODO: add performance optimization to only render the calendar if needed
+    // When not opened (usually on init), it does not need to be rendered.
+    // This would make first paint quicker
     return html`
       <lion-calendar-overlay-frame>
         <span slot="heading">${this.calendarHeading}</span>
@@ -245,8 +246,6 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   // eslint-disable-next-line class-methods-use-this
   _invokerTemplate() {
-    // TODO: aria-expanded should be toggled by Overlay system, to allow local overlays
-    // (a.k.a. dropdowns) as well. Important: will be breaking for subclassers
     return html`
       <button
         type="button"
