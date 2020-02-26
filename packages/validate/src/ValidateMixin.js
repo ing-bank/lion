@@ -323,8 +323,12 @@ export const ValidateMixin = dedupeMixin(
         const /** @type {Validator[]} */ filteredValidators = this._allValidators.filter(
             v => !(v instanceof ResultValidator) && !(v instanceof Required),
           );
-        const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(v => !v.async);
-        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => v.async);
+        const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(
+            v => !v.constructor.async,
+          );
+        const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(
+            v => v.constructor.async,
+          );
 
         /**
          * 2. Synchronous validators
@@ -378,7 +382,7 @@ export const ValidateMixin = dedupeMixin(
       __executeResultValidators(regularValidationResult) {
         /** @type {ResultValidator[]} */
         const resultValidators = this._allValidators.filter(
-          v => !v.async && v instanceof ResultValidator,
+          v => !v.constructor.async && v instanceof ResultValidator,
         );
 
         return resultValidators.filter(v =>
@@ -415,7 +419,7 @@ export const ValidateMixin = dedupeMixin(
           if (!validationStates[v.type]) {
             validationStates[v.type] = {};
           }
-          validationStates[v.type][v.name] = true;
+          validationStates[v.type][v.constructor.name] = true;
         });
         this.validationStates = validationStates;
         this.hasFeedbackFor = [...new Set(this.__validationResult.map(v => v.type))];
@@ -457,7 +461,7 @@ export const ValidateMixin = dedupeMixin(
           }
           if (this.constructor.validationTypes.indexOf(v.type) === -1) {
             // throws in constructor are not visible to end user so we do both
-            const errorMessage = `This component does not support the validator type "${v.type}" used in "${v.name}". You may change your validators type or add it to the components "static get validationTypes() {}".`;
+            const errorMessage = `This component does not support the validator type "${v.type}" used in "${v.constructor.validatorName}". You may change your validators type or add it to the components "static get validationTypes() {}".`;
             // eslint-disable-next-line no-console
             console.error(errorMessage, this);
             throw new Error(errorMessage);

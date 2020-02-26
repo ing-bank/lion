@@ -1,9 +1,8 @@
 import { Validator } from '../Validator.js';
 
 export class Required extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'Required';
+  static get validatorName() {
+    return 'Required';
   }
 
   /**

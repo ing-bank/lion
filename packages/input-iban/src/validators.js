@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file  */
 
-import { isValidIBAN } from 'ibantools';
-import { Validator } from '@lion/validate';
 import { localize } from '@lion/localize';
+import { Validator } from '@lion/validate';
+import { isValidIBAN } from 'ibantools';
 
 let loaded = false;
 const loadTranslations = async () => {
@@ -19,9 +19,8 @@ const loadTranslations = async () => {
 };
 
 export class IsIBAN extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'IsIBAN';
+  static get validatorName() {
+    return 'IsIBAN';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -36,9 +35,8 @@ export class IsIBAN extends Validator {
 }
 
 export class IsCountryIBAN extends IsIBAN {
-  constructor(...args) {
-    super(...args);
-    this.name = 'IsCountryIBAN';
+  static get validatorName() {
+    return 'IsCountryIBAN';
   }
 
   execute(value) {

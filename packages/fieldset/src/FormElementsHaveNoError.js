@@ -1,9 +1,8 @@
 import { Validator } from '@lion/validate';
 
 export class FormElementsHaveNoError extends Validator {
-  constructor() {
-    super();
-    this.name = 'FormElementsHaveNoError';
+  static get validatorName() {
+    return 'FormElementsHaveNoError';
   }
 
   // eslint-disable-next-line class-methods-use-this

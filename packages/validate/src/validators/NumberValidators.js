@@ -11,9 +11,8 @@ const isNumber = value =>
   value === value && typeof value === 'number';
 
 export class IsNumber extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'IsNumber';
+  static get validatorName() {
+    return 'IsNumber';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -27,9 +26,8 @@ export class IsNumber extends Validator {
 }
 
 export class MinNumber extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'MinNumber';
+  static get validatorName() {
+    return 'MinNumber';
   }
 
   execute(value, min = this.param) {
@@ -42,9 +40,8 @@ export class MinNumber extends Validator {
 }
 
 export class MaxNumber extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'MaxNumber';
+  static get validatorName() {
+    return 'MaxNumber';
   }
 
   execute(value, max = this.param) {
@@ -57,9 +54,8 @@ export class MaxNumber extends Validator {
 }
 
 export class MinMaxNumber extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'MinMaxNumber';
+  static get validatorName() {
+    return 'MinMaxNumber';
   }
 
   execute(value, { min = 0, max = 0 } = this.param) {

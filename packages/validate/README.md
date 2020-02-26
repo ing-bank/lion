@@ -42,9 +42,8 @@ import { Required, IsString, MaxLength, DefaultSuccess, Validator } from '@lion/
 
 const isInitialsRegex = /^([A-Z]\.)+$/;
 class IsInitialsExample extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'IsExampleInitials';
+  static get validatorName() {
+    return 'IsExampleInitials';
   }
 
   execute(value) {
