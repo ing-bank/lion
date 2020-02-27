@@ -22,16 +22,16 @@ export class LionForm extends LionFieldset {
     this.__teardownEventsForLionForm();
   }
 
-  get formElement() {
+  get _formNode() {
     return this.querySelector('form');
   }
 
   submit() {
-    this.formElement.submit();
+    this._formNode.submit();
   }
 
   reset() {
-    this.formElement.reset();
+    this._formNode.reset();
   }
 
   /**
@@ -46,7 +46,7 @@ export class LionForm extends LionFieldset {
       this.submitGroup();
       this.dispatchEvent(new Event('submit', { bubbles: true }));
     };
-    this.formElement.addEventListener('submit', this._submit);
+    this._formNode.addEventListener('submit', this._submit);
 
     this._reset = ev => {
       ev.preventDefault();
@@ -54,11 +54,11 @@ export class LionForm extends LionFieldset {
       this.resetGroup();
       this.dispatchEvent(new Event('reset', { bubbles: true }));
     };
-    this.formElement.addEventListener('reset', this._reset);
+    this._formNode.addEventListener('reset', this._reset);
   }
 
   __teardownEventsForLionForm() {
-    this.formElement.removeEventListener('submit', this._submit);
-    this.formElement.removeEventListener('rest', this._reset);
+    this._formNode.removeEventListener('submit', this._submit);
+    this._formNode.removeEventListener('rest', this._reset);
   }
 }

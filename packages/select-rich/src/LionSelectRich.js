@@ -157,8 +157,8 @@ export class LionSelectRich extends ChoiceGroupMixin(
     return this.formElements.findIndex(el => el.active === true);
   }
 
-  get scrollTarget() {
-    return this._overlayContentNode.scrollTarget || this._overlayContentNode;
+  get _scrollTargetNode() {
+    return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
   }
 
   set activeIndex(index) {
@@ -166,7 +166,7 @@ export class LionSelectRich extends ChoiceGroupMixin(
       const el = this.formElements[index];
       el.active = true;
 
-      if (!isInView(this.scrollTarget, el)) {
+      if (!isInView(this._scrollTargetNode, el)) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
@@ -239,8 +239,8 @@ export class LionSelectRich extends ChoiceGroupMixin(
 
   render() {
     return html`
-      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
-      ${this.feedbackTemplate()}
+      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._inputGroupTemplate()}
+      ${this._feedbackTemplate()}
       <slot name="_overlay-shadow-outlet"></slot>
     `;
   }
@@ -288,7 +288,7 @@ export class LionSelectRich extends ChoiceGroupMixin(
    * @override
    */
   // eslint-disable-next-line
-  inputGroupInputTemplate() {
+  _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
         <slot name="invoker"></slot>
@@ -614,13 +614,13 @@ export class LionSelectRich extends ChoiceGroupMixin(
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
 
     this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
-    this.scrollTarget.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
+    this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
   }
 
   __teardownOverlay() {
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
-    this.scrollTarget.removeEventListener('keydown', this.__overlayOnHide);
+    this._scrollTargetNode.removeEventListener('keydown', this.__overlayOnHide);
   }
 
   __preventScrollingWithArrowKeys(ev) {

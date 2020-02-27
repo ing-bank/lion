@@ -83,24 +83,24 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     }
   }
 
-  inputGroupTemplate() {
+  _inputGroupTemplate() {
     return html`
       <div>
         <span class="input-range__value">${formatNumber(this.formattedValue)}</span>
         <span class="input-range__unit">${this.unit}</span>
       </div>
       <div class="input-group">
-        ${this.inputGroupBeforeTemplate()}
+        ${this._inputGroupBeforeTemplate()}
         <div class="input-group__container">
-          ${this.inputGroupPrefixTemplate()} ${this.inputGroupInputTemplate()}
-          ${this.inputGroupSuffixTemplate()}
+          ${this._inputGroupPrefixTemplate()} ${this._inputGroupInputTemplate()}
+          ${this._inputGroupSuffixTemplate()}
         </div>
-        ${this.inputGroupAfterTemplate()}
+        ${this._inputGroupAfterTemplate()}
       </div>
     `;
   }
 
-  inputGroupInputTemplate() {
+  _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
         <slot name="input"></slot>

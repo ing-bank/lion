@@ -19,7 +19,7 @@ describe('lion-select-invoker', () => {
     el.selectedElement = await fixture(`<div class="option"><h2>I am</h2><p>2 lines</p></div>`);
     await el.updateComplete;
 
-    expect(el.contentWrapper).lightDom.to.equal(
+    expect(el._contentWrapperNode).lightDom.to.equal(
       `
         <h2>I am</h2>
         <p>2 lines</p>
@@ -37,7 +37,7 @@ describe('lion-select-invoker', () => {
     el.selectedElement = await fixture(`<div class="option">just textContent</div>`);
     await el.updateComplete;
 
-    expect(el.contentWrapper).lightDom.to.equal('just textContent');
+    expect(el._contentWrapperNode).lightDom.to.equal('just textContent');
   });
 
   it('has tabindex="0"', async () => {
@@ -66,11 +66,11 @@ describe('lion-select-invoker', () => {
 
       el.selectedElement = await fixture(`<div class="option">cat</div>`);
       await el.updateComplete;
-      expect(el.contentWrapper).lightDom.to.equal('cat selected');
+      expect(el._contentWrapperNode).lightDom.to.equal('cat selected');
 
       el.selectedElement = await fixture(`<div class="option">dog</div>`);
       await el.updateComplete;
-      expect(el.contentWrapper).lightDom.to.equal('no valid selection');
+      expect(el._contentWrapperNode).lightDom.to.equal('no valid selection');
     });
   });
 });

@@ -39,7 +39,7 @@ export class DatepickerInputObject {
    */
 
   get invokerEl() {
-    return this.el._invokerElement;
+    return this.el._invokerNode;
   }
 
   get overlayEl() {
