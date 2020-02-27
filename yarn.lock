@@ -2325,7 +2325,7 @@
     eslint-config-prettier "^3.3.0"
     prettier "^1.19.1"
 
-"@open-wc/scoped-elements@0.5.0":
+"@open-wc/scoped-elements@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-0.5.0.tgz#485b0e530acb3530933198af66f5dbef1e64a277"
   integrity sha512-SVMzFDBjXPAD+5sgbZ/SaGSfEoIVgcmYzbeXRvR5afdkikKdQcXONb4nsA5QqotpDci3eWxT4UClMax+44C8sA==

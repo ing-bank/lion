@@ -1,5 +1,4 @@
-import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
-import { html, css } from '@lion/core';
+import { html, css, ScopedElementsMixin, getScopedTagName } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
 import { LionSwitchButton } from './LionSwitchButton.js';

@@ -1,8 +1,7 @@
 import { LionCalendar } from '@lion/calendar/src/LionCalendar';
-import { html, ifDefined, render } from '@lion/core';
+import { html, ifDefined, render, ScopedElementsMixin } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**

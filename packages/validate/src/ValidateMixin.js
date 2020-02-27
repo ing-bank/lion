@@ -1,8 +1,7 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 
-import { dedupeMixin, SlotMixin } from '@lion/core';
+import { dedupeMixin, SlotMixin, ScopedElementsMixin, getScopedTagName } from '@lion/core';
 import { localize } from '@lion/localize';
-import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';

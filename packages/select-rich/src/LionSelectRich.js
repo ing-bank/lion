@@ -1,6 +1,12 @@
-import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
 import { ChoiceGroupMixin } from '@lion/choice-input';
-import { css, html, LitElement, SlotMixin } from '@lion/core';
+import {
+  css,
+  html,
+  LitElement,
+  SlotMixin,
+  ScopedElementsMixin,
+  getScopedTagName,
+} from '@lion/core';
 import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
 import { formRegistrarManager } from '@lion/field/src/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
