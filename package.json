@@ -75,7 +75,7 @@
   "bundlesize": [
     {
       "path": "./bundlesize/dist/core/core-*.js",
-      "maxSize": "10 kB"
+      "maxSize": "11 kB"
     },
     {
       "path": "./bundlesize/dist/all/all-*.js",
