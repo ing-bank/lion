@@ -2,8 +2,6 @@ import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements'
 import { html, css } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
-
-import { LionValidationFeedback } from '@lion/validate';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
@@ -21,9 +19,6 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   static get scopedElements() {
     return {
       ...super.scopedElements,
-      // TODO (@CubLion): see if registering "lion-validation-feedback"
-      // is indeed needed once a new release of  "@lion/validate" happens.
-      'lion-validation-feedback': LionValidationFeedback,
       'lion-switch-button': LionSwitchButton,
     };
   }

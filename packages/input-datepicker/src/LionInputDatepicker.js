@@ -3,7 +3,6 @@ import { html, ifDefined, render } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-import { LionValidationFeedback } from '@lion/validate';
 import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
@@ -14,9 +13,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   static get scopedElements() {
     return {
       ...super.scopedElements,
-      // TODO (@CubLion): see if registering "lion-validation-feedback"
-      // is indeed needed once a new release of  "@lion/validate" happens.
-      'lion-validation-feedback': LionValidationFeedback,
       'lion-calendar': LionCalendar,
       'lion-calendar-overlay-frame': LionCalendarOverlayFrame,
     };
