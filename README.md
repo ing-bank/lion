@@ -133,6 +133,35 @@ Check out our [coding guidelines](./docs/README.md) for more detailed informatio
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](./CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
 
+## Scoped elements
+
+The [CustomElementRegistry](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry) provides methods for registering custom elements. One of the limitations of working with this global registry is that multiple versions of the same element cannot co-exist. This causes bottlenecks in software delivery that should be managed by the teams and complex build systems. [Scoped Custom Element Registries](https://github.com/w3c/webcomponents/issues/716) is a proposal that will solve the problem but it until ready we've opted to use [OpenWC's Scoped Elements](https://open-wc.org/scoped-element).
+
+```js
+import { ScopedElementsMixin, LitElement, html } from '@lion/core';
+
+import { LionInput } from '@lion/input';
+import { LionButton } from '@lion/button';
+
+class MyElement extends ScopedElementsMixin(LitElement) {
+  static get scopedElements() {
+    return {
+      'lion-input': LionInput,
+      'lion-button': LionButton,
+    };
+  }
+
+  render() {
+    return html`
+      <lion-input label="Greeting" name="greeting" .modelValue=${'Hello world'}> </lion-input>
+      <lion-button>Save<lion-button> </lion-button></lion-button>
+    `;
+  }
+}
+```
+
+We encourage you to have a look at [OpenWC's Scoped elements](https://open-wc.org/scoped-elements).
+
 ## Contact
 
 Feel free to create a github issue for any feedback or questions you might have.
