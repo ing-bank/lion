@@ -9,8 +9,10 @@ import {
 } from '@open-wc/testing';
 import { spy } from 'sinon';
 import { LionField } from '@lion/field';
+import { LionFieldset } from '@lion/fieldset';
 import '@lion/field/lion-field.js';
 import '@lion/fieldset/lion-fieldset.js';
+
 import '../lion-form.js';
 
 const childTagString = defineCE(
@@ -27,6 +29,26 @@ const formTagString = 'lion-form';
 const formTag = unsafeStatic(formTagString);
 
 describe('<lion-form>', () => {
+  it('is an instance of LionFieldSet', async () => {
+    const el = await fixture(html`
+      <${formTag}>
+        <form>
+        </form>
+      </${formTag}>
+    `);
+    expect(el).to.be.instanceOf(LionFieldset);
+  });
+
+  it('relies on the native form for its accessible role', async () => {
+    const el = await fixture(html`
+      <${formTag}>
+        <form>
+        </form>
+      </${formTag}>
+    `);
+    expect(el.getAttribute('role')).to.be.null;
+  });
+
   it('has a custom reset that gets triggered by native reset', async () => {
     const withDefaults = await fixture(html`
       <${formTag}>

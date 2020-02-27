@@ -13,6 +13,9 @@ export class LionForm extends LionFieldset {
       super.connectedCallback();
     }
     this.__registerEventsForLionForm();
+
+    // @override LionFieldset: makes sure a11y is handled by ._formNode
+    this.removeAttribute('role');
   }
 
   disconnectedCallback() {
@@ -33,11 +36,6 @@ export class LionForm extends LionFieldset {
   reset() {
     this._formNode.reset();
   }
-
-  /**
-   * As we use a native form there is no need for a role
-   */
-  _setRole() {} // eslint-disable-line class-methods-use-this
 
   __registerEventsForLionForm() {
     this._submit = ev => {
