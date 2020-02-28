@@ -89,10 +89,10 @@ export const FormControlMixin = dedupeMixin(
         };
       }
 
-      updated(changedProps) {
-        super.updated(changedProps);
+      updated(changedProperties) {
+        super.updated(changedProperties);
 
-        if (changedProps.has('_ariaLabelledNodes')) {
+        if (changedProperties.has('_ariaLabelledNodes')) {
           this.__reflectAriaAttr(
             'aria-labelledby',
             this._ariaLabelledNodes,
@@ -100,7 +100,7 @@ export const FormControlMixin = dedupeMixin(
           );
         }
 
-        if (changedProps.has('_ariaDescribedNodes')) {
+        if (changedProperties.has('_ariaDescribedNodes')) {
           this.__reflectAriaAttr(
             'aria-describedby',
             this._ariaDescribedNodes,
@@ -108,11 +108,11 @@ export const FormControlMixin = dedupeMixin(
           );
         }
 
-        if (changedProps.has('label')) {
+        if (changedProperties.has('label')) {
           this._onLabelChanged({ label: this.label });
         }
 
-        if (changedProps.has('helpText')) {
+        if (changedProperties.has('helpText')) {
           this._onHelpTextChanged({ helpText: this.helpText });
         }
       }

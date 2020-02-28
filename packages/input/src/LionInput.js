@@ -61,17 +61,17 @@ export class LionInput extends LionField {
     }
   }
 
-  firstUpdated(c) {
-    super.firstUpdated(c);
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this.__delegateReadOnly();
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('type')) {
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('type')) {
       this._inputNode.type = this.type;
     }
-    if (changedProps.has('placeholder')) {
+    if (changedProperties.has('placeholder')) {
       this._inputNode.placeholder = this.placeholder;
     }
   }

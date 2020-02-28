@@ -188,8 +188,8 @@ export const ValidateMixin = dedupeMixin(
         await import('../lion-validation-feedback.js');
       }
 
-      firstUpdated(c) {
-        super.firstUpdated(c);
+      firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
         this.__validateInitialized = true;
         this.validate();
         this._loadFeedbackComponent();
@@ -581,10 +581,13 @@ export const ValidateMixin = dedupeMixin(
         );
       }
 
-      updated(c) {
-        super.updated(c);
+      updated(changedProperties) {
+        super.updated(changedProperties);
 
-        if (c.has('shouldShowFeedbackFor') || c.has('hasFeedbackFor')) {
+        if (
+          changedProperties.has('shouldShowFeedbackFor') ||
+          changedProperties.has('hasFeedbackFor')
+        ) {
           this.showsFeedbackFor = this.constructor.validationTypes
             .map(type => (this._hasFeedbackVisibleFor(type) ? type : undefined))
             .filter(_ => !!_);

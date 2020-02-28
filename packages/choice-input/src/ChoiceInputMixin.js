@@ -62,18 +62,18 @@ export const ChoiceInputMixin = superclass =>
       }
     }
 
-    firstUpdated(c) {
-      super.firstUpdated(c);
-      if (c.has('checked')) {
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+      if (changedProperties.has('checked')) {
         // Here we set the initial value for our [slot=input] content,
         // which has been set by our SlotMixin
         this.__syncCheckedToInputElement();
       }
     }
 
-    updated(c) {
-      super.updated(c);
-      if (c.has('modelValue')) {
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has('modelValue')) {
         this.__syncCheckedToInputElement();
       }
     }

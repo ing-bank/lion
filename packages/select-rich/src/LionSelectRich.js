@@ -195,8 +195,8 @@ export class LionSelectRich extends ChoiceGroupMixin(
     this.__teardownListboxNode();
   }
 
-  firstUpdated(c) {
-    super.firstUpdated(c);
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this.__setupOverlay();
     this.__setupInvokerNode();
     this.__setupListboxNode();
@@ -240,10 +240,10 @@ export class LionSelectRich extends ChoiceGroupMixin(
     `;
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
+  updated(changedProperties) {
+    super.updated(changedProperties);
 
-    if (changedProps.has('disabled')) {
+    if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this._invokerNode.makeRequestToBeDisabled();
         this.__requestOptionsToBeDisabled();
@@ -254,21 +254,21 @@ export class LionSelectRich extends ChoiceGroupMixin(
     }
 
     if (this._inputNode && this._invokerNode) {
-      if (changedProps.has('_ariaLabelledNodes')) {
+      if (changedProperties.has('_ariaLabelledNodes')) {
         this._invokerNode.setAttribute(
           'aria-labelledby',
           `${this._inputNode.getAttribute('aria-labelledby')} ${this._invokerNode.id}`,
         );
       }
 
-      if (changedProps.has('_ariaDescribedNodes')) {
+      if (changedProperties.has('_ariaDescribedNodes')) {
         this._invokerNode.setAttribute(
           'aria-describedby',
           this._inputNode.getAttribute('aria-describedby'),
         );
       }
 
-      if (changedProps.has('showsFeedbackFor')) {
+      if (changedProperties.has('showsFeedbackFor')) {
         // The ValidateMixin sets aria-invalid on the inputNode, but in this component we also need it on the invoker
         this._invokerNode.setAttribute('aria-invalid', this._hasFeedbackVisibleFor('error'));
       }

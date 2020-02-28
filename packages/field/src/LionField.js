@@ -101,8 +101,8 @@ export class LionField extends FormControlMixin(
     this.submitted = false;
   }
 
-  firstUpdated(c) {
-    super.firstUpdated(c);
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this._initialModelValue = this.modelValue;
   }
 
@@ -125,20 +125,20 @@ export class LionField extends FormControlMixin(
     this._inputNode.removeEventListener('change', this._onChange);
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
+  updated(changedProperties) {
+    super.updated(changedProperties);
 
-    if (changedProps.has('disabled') && this.disabled) {
+    if (changedProperties.has('disabled') && this.disabled) {
       this._inputNode.disabled = true;
-    } else if (changedProps.has('disabled')) {
+    } else if (changedProperties.has('disabled')) {
       this._inputNode.disabled = false;
     }
 
-    if (changedProps.has('name')) {
+    if (changedProperties.has('name')) {
       this._inputNode.name = this.name;
     }
 
-    if (changedProps.has('autocomplete')) {
+    if (changedProperties.has('autocomplete')) {
       this._inputNode.autocomplete = this.autocomplete;
     }
   }

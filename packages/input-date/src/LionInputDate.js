@@ -24,9 +24,9 @@ export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
     this.defaultValidators.push(new IsDate());
   }
 
-  updated(c) {
-    super.updated(c);
-    if (c.has('locale')) {
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('locale')) {
       this._calculateValues();
     }
   }

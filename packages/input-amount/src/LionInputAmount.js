@@ -21,9 +21,9 @@ export class LionInputAmount extends FieldCustomMixin(LocalizeMixin(LionInput)) 
     };
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('currency')) {
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('currency')) {
       this._onCurrencyChanged({ currency: this.currency });
     }
   }

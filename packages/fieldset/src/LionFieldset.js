@@ -133,10 +133,10 @@ export class LionFieldset extends FormRegistrarMixin(
     }
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
+  updated(changedProperties) {
+    super.updated(changedProperties);
 
-    if (changedProps.has('disabled')) {
+    if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.__requestChildrenToBeDisabled();
       } else {
@@ -144,7 +144,7 @@ export class LionFieldset extends FormRegistrarMixin(
       }
     }
 
-    if (changedProps.has('focused')) {
+    if (changedProperties.has('focused')) {
       if (this.focused === true) {
         this.__setupOutsideClickHandling();
       }
