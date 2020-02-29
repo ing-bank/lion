@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14](https://github.com/ing-bank/lion/compare/@lion/select@0.5.13...@lion/select@0.5.14) (2020-02-26)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.13](https://github.com/ing-bank/lion/compare/@lion/select@0.5.12...@lion/select@0.5.13) (2020-02-20)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.12](https://github.com/ing-bank/lion/compare/@lion/select@0.5.11...@lion/select@0.5.12) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.5.11](https://github.com/ing-bank/lion/compare/@lion/select@0.5.10...@lion/select@0.5.11) (2020-02-10)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.10](https://github.com/ing-bank/lion/compare/@lion/select@0.5.9...@lion/select@0.5.10) (2020-02-06)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.9](https://github.com/ing-bank/lion/compare/@lion/select@0.5.8...@lion/select@0.5.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.8](https://github.com/ing-bank/lion/compare/@lion/select@0.5.7...@lion/select@0.5.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/select@0.5.6...@lion/select@0.5.7) (2020-02-05)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.6](https://github.com/ing-bank/lion/compare/@lion/select@0.5.5...@lion/select@0.5.6) (2020-02-05)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
+## [0.5.5](https://github.com/ing-bank/lion/compare/@lion/select@0.5.4...@lion/select@0.5.5) (2020-02-03)
+
+**Note:** Version bump only for package @lion/select
+
+
+
+
+
 ## [0.5.4](https://github.com/ing-bank/lion/compare/@lion/select@0.5.3...@lion/select@0.5.4) (2020-01-23)
 
 

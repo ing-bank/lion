@@ -1,15 +1,20 @@
-import { Story, Preview, Meta, html } from '@open-wc/demoing-storybook';
-import '@lion/checkbox-group/lion-checkbox-group.js';
+import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import '@lion/checkbox/lion-checkbox.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/form/lion-form.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
+import '@lion/input-datepicker/lion-input-datepicker.js';
 import '@lion/input-email/lion-input-email.js';
 import '@lion/input-iban/lion-input-iban.js';
+import '@lion/input-range/lion-input-range.js';
 import '@lion/input/lion-input.js';
+import '@lion/option/lion-option.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
+import '@lion/select/lion-select.js';
+import '@lion/select-rich/lion-options.js';
+import '@lion/select-rich/lion-select-rich.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/validate';
 
@@ -24,26 +29,35 @@ For usage and installation please see the appropriate packages.
 
 <Preview>
   <Story name="Example">
-    {html`
+    {() => {
+      Required.getMessage = () => 'Please enter a value';
+      return html`
       <lion-form>
         <form>
-          <lion-input
-            name="first_name"
-            label="First Name"
-            .validators="${[new Required()]}"
-          ></lion-input>
-          <lion-input
-            name="last_name"
-            label="Last Name"
-            .validators="${[new Required()]}"
-          ></lion-input>
-          <!-- TODO: lion-input-birthdate -->
+          <lion-fieldset name="full_name">
+            <lion-input
+              name="first_name"
+              label="First Name"
+              .validators="${[new Required()]}"
+            ></lion-input>
+            <lion-input
+              name="last_name"
+              label="Last Name"
+              .validators="${[new Required()]}"
+            ></lion-input>
+          </lion-fieldset>
           <lion-input-date
             name="date"
             label="Date of application"
-            .modelValue="${'2000-12-12'}"
+            .modelValue="${new Date('2000-12-12')}"
             .validators="${[new Required()]}"
           ></lion-input-date>
+          <lion-input-datepicker
+            name="datepicker"
+            label="Date to be picked"
+            .modelValue="${new Date('2020-12-12')}"
+            .validators="${[new Required()]}"
+          ></lion-input-datepicker>
           <lion-textarea
             name="bio"
             label="Biography"
@@ -58,24 +72,28 @@ For usage and installation please see the appropriate packages.
             name="checkers"
             .validators="${[new Required()]}"
           >
-            <lion-checkbox name="checkers[]" value="foo" label="I like foo"></lion-checkbox>
-            <lion-checkbox name="checkers[]" value="bar" label="I like bar"></lion-checkbox>
-            <lion-checkbox name="checkers[]" value="baz" label="I like baz"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'bar'} label="I like bar"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
           </lion-checkbox-group>
           <lion-radio-group
-            class="vertical"
             name="dinosaurs"
             label="Favorite dinosaur"
             .validators="${[new Required()]}"
-            error-message="Dinosaurs error message"
           >
-            <lion-radio name="dinosaurs[]" value="allosaurus" label="allosaurus"></lion-radio>
-            <lion-radio name="dinosaurs[]" value="brontosaurus" label="brontosaurus"></lion-radio>
-            <lion-radio name="dinosaurs[]" value="diplodocus" label="diplodocus"></lion-radio>
+            <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
           </lion-radio-group>
-          <!-- TODO: rich select -->
+          <lion-select-rich name="favoriteColor" label="Favorite color">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${'red'}>Red</lion-option>
+              <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+            </lion-options>
+          </lion-select-rich>
           <lion-select
-            label="Make a selection (rich select)"
+            label="Lyrics"
             name="lyrics"
             .validators="${[new Required()]}"
           >
@@ -85,13 +103,20 @@ For usage and installation please see the appropriate packages.
               <option value="3">Drop down for what?</option>
             </select>
           </lion-select>
-          <lion-checkbox-group name="terms" .validators="${[new Required()]}">
+          <lion-input-range
+            name="range"
+            min="1"
+            max="5"
+            .modelValue="${2.3}"
+            unit="%"
+            step="0.1"
+            label="Input range"
+          ></lion-input-range>
+          <lion-checkbox-group .mulipleChoice="${false}" name="terms" .validators="${[new Required()]}">
             <lion-checkbox
-              name="terms[]"
               label="I blindly accept all terms and conditions"
             ></lion-checkbox>
           </lion-checkbox-group>
-          <!-- TODO: slider -->
           <lion-textarea name="comments" label="Comments"></lion-textarea>
           <div class="buttons">
             <lion-button raised>Submit</lion-button>
@@ -104,7 +129,7 @@ For usage and installation please see the appropriate packages.
           </div>
         </form>
       </lion-form>
-    `}
+    `;}}
   </Story>
 </Preview>
 
@@ -115,11 +140,17 @@ import '@lion/fieldset/lion-fieldset.js';
 import '@lion/form/lion-form.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
+import '@lion/input-datepicker/lion-input-datepicker.js';
 import '@lion/input-email/lion-input-email.js';
 import '@lion/input-iban/lion-input-iban.js';
+import '@lion/input-range/lion-input-range.js';
 import '@lion/input/lion-input.js';
+import '@lion/option/lion-option.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio/lion-radio.js';
+import '@lion/select/lion-select.js';
+import '@lion/select-rich/lion-options.js';
+import '@lion/select-rich/lion-select-rich.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/validate';
 ```

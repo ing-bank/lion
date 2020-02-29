@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.11](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.10...@lion/calendar@0.6.11) (2020-02-26)
+
+**Note:** Version bump only for package @lion/calendar
+
+
+
+
+
+## [0.6.10](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.9...@lion/calendar@0.6.10) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.6.9](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.8...@lion/calendar@0.6.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/calendar
+
+
+
+
+
+## [0.6.8](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.7...@lion/calendar@0.6.8) (2020-02-03)
+
+**Note:** Version bump only for package @lion/calendar
+
+
+
+
+
+## [0.6.7](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.6...@lion/calendar@0.6.7) (2020-01-30)
+
+
+### Bug Fixes
+
+* remove unused (dev)dependency on lion-button ([41f5af7](https://github.com/ing-bank/lion/commit/41f5af71cae2bc6b5ee979a5ba83301d14592a2c))
+
+
+
+
+
+## [0.6.6](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.5...@lion/calendar@0.6.6) (2020-01-30)
+
+**Note:** Version bump only for package @lion/calendar
+
+
+
+
+
 ## [0.6.5](https://github.com/ing-bank/lion/compare/@lion/calendar@0.6.4...@lion/calendar@0.6.5) (2020-01-23)
 
 **Note:** Version bump only for package @lion/calendar

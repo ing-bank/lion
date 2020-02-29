@@ -1,5 +1,4 @@
 import { LocalizeMixin, formatDate, parseDate } from '@lion/localize';
-import { FieldCustomMixin } from '@lion/field';
 import { LionInput } from '@lion/input';
 import { IsDate } from '@lion/validate';
 
@@ -10,7 +9,7 @@ import { IsDate } from '@lion/validate';
  * @customElement lion-input-date
  * @extends {LionInput}
  */
-export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
+export class LionInputDate extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
       modelValue: Date,
@@ -35,5 +34,18 @@ export class LionInputDate extends FieldCustomMixin(LocalizeMixin(LionInput)) {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.type = 'text';
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  serializer(modelValue) {
+    if (!(modelValue instanceof Date)) {
+      return '';
+    }
+    return modelValue.toISOString().slice(0, 10);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  deserializer(serializedValue) {
+    return new Date(serializedValue);
   }
 }

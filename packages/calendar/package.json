@@ -1,6 +1,6 @@
 {
   "name": "@lion/calendar",
-  "version": "0.6.5",
+  "version": "0.6.11",
   "description": "Standalone calendar",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/calendar"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/calendar/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/calendar/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -33,12 +35,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.2",
-    "@lion/localize": "0.8.4"
+    "@lion/core": "0.4.4",
+    "@lion/localize": "0.8.8"
   },
   "devDependencies": {
-    "@lion/button": "0.5.2",
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"
   }

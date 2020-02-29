@@ -52,11 +52,11 @@ class MyValidator extends Validator {
   }
 
   execute(modelValue, param) {
-    const hasError = false;
+    const hasFeedback = false;
     if (modelValue === param) {
-      hasError = true;
+      hasFeedback = true;
     }
-    return hasError;
+    return hasFeedback;
   }
 
   static getMessage({ fieldName }) {
@@ -82,6 +82,18 @@ By default, the validate system ships with the following validators:
 All validators return `false` if the required validity state is met.
 
 All validators are considered self explanatory due to their explicit namings.
+
+You can implement your own custom message for a default validator. Pass a getMessage function via the options in the construtor.
+
+```js
+function getCustomMessage(data) {
+  return `${data.name} is a required field`;
+}
+```
+
+```html
+<validatable-el .validators="${[new Required({}, { getMessage: getCustomMessage })]}"></validatable-el>
+```
 
 ### Custom Validators
 

@@ -153,17 +153,15 @@ describe('<lion-field>', () => {
     expect(el._inputNode.getAttribute('autocomplete')).to.equal('off');
   });
 
-  // TODO: find out if we could put all listeners on this.value (instead of this._inputNode.value)
-  // and make it act on this.value again
-  it('has a class "state-filled" if this.value is filled', async () => {
+  it('has an attribute filled if this.value is filled', async () => {
     const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
-    expect(el.classList.contains('state-filled')).to.equal(true);
+    expect(el.hasAttribute('filled')).to.equal(true);
     el.value = '';
     await el.updateComplete;
-    expect(el.classList.contains('state-filled')).to.equal(false);
+    expect(el.hasAttribute('filled')).to.equal(false);
     el.value = 'bla';
     await el.updateComplete;
-    expect(el.classList.contains('state-filled')).to.equal(true);
+    expect(el.hasAttribute('filled')).to.equal(true);
   });
 
   it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
@@ -178,21 +176,17 @@ describe('<lion-field>', () => {
     expect(el._inputNode.selectionEnd).to.equal(2);
   });
 
-  // TODO: add pointerEvents test for disabled
-  it('has a class "state-disabled"', async () => {
+  // TODO: Add test that css pointerEvents is none if disabled.
+  it('is disabled when disabled property is passed', async () => {
     const el = await fixture(html`<${tag}>${inputSlot}</${tag}>`);
-    expect(el.classList.contains('state-disabled')).to.equal(false);
     expect(el._inputNode.hasAttribute('disabled')).to.equal(false);
 
     el.disabled = true;
     await el.updateComplete;
     await aTimeout();
 
-    expect(el.classList.contains('state-disabled')).to.equal(true);
     expect(el._inputNode.hasAttribute('disabled')).to.equal(true);
-
     const disabledel = await fixture(html`<${tag} disabled>${inputSlot}</${tag}>`);
-    expect(disabledel.classList.contains('state-disabled')).to.equal(true);
     expect(disabledel._inputNode.hasAttribute('disabled')).to.equal(true);
   });
 
@@ -245,7 +239,7 @@ describe('<lion-field>', () => {
       );
     });
 
-    // TODO: put this test on FormControlMixin test once there
+    // TODO: Move test below to FormControlMixin.test.js.
     it(`allows to add to aria description or label via addToAriaLabelledBy() and
       addToAriaDescribedBy()`, async () => {
       const wrapper = await fixture(html`
@@ -364,6 +358,42 @@ describe('<lion-field>', () => {
         el: { touched: true, dirty: false, prefilled: false, submitted: false },
         wantedShowsFeedbackFor: [],
       });
+    });
+    it('should not run validation when disabled', async () => {
+      const HasX = class extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasX';
+        }
+
+        execute(value) {
+          const result = value.indexOf('x') === -1;
+          return result;
+        }
+      };
+      const disabledEl = await fixture(html`
+        <${tag}
+          disabled
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
+
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error).to.have.a.property('HasX');
+
+      expect(disabledEl.hasFeedbackFor).to.deep.equal([]);
+      expect(disabledEl.validationStates.error).to.equal(undefined);
     });
 
     it('can be required', async () => {

@@ -1,6 +1,6 @@
 import { Meta, Story, html } from '@open-wc/demoing-storybook';
 /* eslint-disable import/no-extraneous-dependencies */
-import { LionInput } from '@lion/input/index.js';
+import { LionInput } from '@lion/input';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
 import '@lion/input-email/lion-input-email.js';
@@ -29,8 +29,10 @@ import {
 
 ## Required Validator
 
-The required validator can be put onto every form field element and will make sure that element is not empty.
-For an input that may mean that it is not an empty string while for a checkbox group it means at least one checkbox needs to be checked.
+The required validator can be put onto every form field element and will make sure that element is
+not empty.
+For an input that may mean that it is not an empty string,
+while for a checkbox group it means at least one checkbox needs to be checked.
 
 <Story name="Required Validator">
   {html`
@@ -614,4 +616,65 @@ const minDateValidatorRef = new MinDate(beginDate, {
   .modelValue="${new Date('09/09/1989')}"
   .validators="${[minDateValidatorRef]}"
 ></lion-input-date>
+```
+
+## Disabled inputs validation
+
+According to the W3C specs, Disabled fields should not be validated.
+Therefor if the attribute disabled is present on a lion-input it will not be validated.
+
+<Story name="Disabled Validators">
+  {html`
+    <lion-input
+      disabled
+      .validators=${[new EqualsLength(7)]}
+      .modelValue=${'not exactly'}
+      label="EqualsLength"
+    ></lion-input>
+    <lion-input
+      disabled
+      .validators=${[new MinLength(10)]}
+      .modelValue=${'too short'}
+      label="MinLength"
+    ></lion-input>
+    <lion-input
+      disabled
+      .validators=${[new MaxLength(7)]}
+      .modelValue=${'too long'}
+      label="MaxLength"
+    ></lion-input>
+    <lion-input
+      disabled
+      .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
+      .modelValue=${'that should be enough'}
+      label="MinMaxLength"
+    ></lion-input>
+  `}
+</Story>
+
+```html
+<lion-input
+  disabled
+  .validators=${[new EqualsLength(7)]}
+  .modelValue=${'not exactly'}
+  label="EqualsLength"
+></lion-input>
+<lion-input
+  disabled
+  .validators=${[new MinLength(10)]}
+  .modelValue=${'too short'}
+  label="MinLength"
+></lion-input>
+<lion-input
+  disabled
+  .validators=${[new MaxLength(7)]}
+  .modelValue=${'too long'}
+  label="MaxLength"
+></lion-input>
+<lion-input
+  disabled
+  .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
+  .modelValue=${'that should be enough'}
+  label="MinMaxLength"
+></lion-input>
 ```

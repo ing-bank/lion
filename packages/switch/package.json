@@ -1,6 +1,6 @@
 {
   "name": "@lion/switch",
-  "version": "0.5.4",
+  "version": "0.5.16",
   "description": "A Switch is used for switching a property or feature on and off",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/switch"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/switch/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/switch/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,15 +34,14 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/button": "0.5.2",
-    "@lion/choice-input": "0.5.4",
-    "@lion/core": "0.4.2",
-    "@lion/field": "0.8.4"
+    "@lion/choice-input": "0.7.1",
+    "@lion/core": "0.4.4",
+    "@lion/field": "0.10.1"
   },
   "devDependencies": {
-    "@lion/localize": "0.8.4",
-    "@lion/validate": "0.6.4",
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@lion/localize": "0.8.8",
+    "@lion/validate": "0.6.8",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"
   }

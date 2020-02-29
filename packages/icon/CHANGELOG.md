@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/ing-bank/lion/compare/@lion/icon@0.3.3...@lion/icon@0.3.4) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.3.3](https://github.com/ing-bank/lion/compare/@lion/icon@0.3.2...@lion/icon@0.3.3) (2020-02-06)
+
+**Note:** Version bump only for package @lion/icon
+
+
+
+
+
 ## [0.3.2](https://github.com/ing-bank/lion/compare/@lion/icon@0.3.1...@lion/icon@0.3.2) (2020-01-20)
 
 **Note:** Version bump only for package @lion/icon

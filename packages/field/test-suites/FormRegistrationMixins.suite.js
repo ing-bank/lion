@@ -1,20 +1,18 @@
-import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import { LitElement } from '@lion/core';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-
-import { FormRegistrarMixin } from '../src/FormRegistrarMixin.js';
-import { FormRegisteringMixin } from '../src/FormRegisteringMixin.js';
-import { FormRegistrarPortalMixin } from '../src/FormRegistrarPortalMixin.js';
-import { formRegistrarManager } from '../src/formRegistrarManager.js';
+import { FormRegisteringMixin } from '../src/registration/FormRegisteringMixin.js';
+import { formRegistrarManager } from '../src/registration/formRegistrarManager.js';
+import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
+import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPortalMixin.js';
 
 export const runRegistrationSuite = customConfig => {
   const cfg = {
     baseElement: HTMLElement,
-    suffix: null,
     ...customConfig,
   };
 
-  describe(`FormRegistrationMixins${cfg.suffix ? ` (${cfg.suffix})` : ''}`, () => {
+  describe('FormRegistrationMixins', () => {
     let parentTag;
     let childTag;
     let portalTag;
@@ -125,6 +123,25 @@ export const runRegistrationSuite = customConfig => {
 
       el.removeChild(newField);
       expect(el.formElements.length).to.equal(1);
+    });
+
+    it('adds elements to formElements in the right order (DOM)', async () => {
+      const el = await fixture(html`
+        <${parentTag}>
+          <${childTag}></${childTag}>
+          <${childTag}></${childTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `);
+      const newField = await fixture(html`
+        <${childTag}></${childTag}>
+      `);
+      newField.myProp = 'test';
+
+      el.children[1].insertAdjacentElement('beforebegin', newField);
+
+      expect(el.formElements.length).to.equal(4);
+      expect(el.children[1].myProp).to.equal('test');
     });
 
     describe('FormRegistrarPortalMixin', () => {

@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.11.3",
+  "version": "0.12.3",
   "description": "Overlays System using lit-html for rendering",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/overlays"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/overlays/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/overlays/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -34,11 +36,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.2",
+    "@lion/core": "0.4.4",
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",
     "@open-wc/testing-helpers": "^1.0.0",
     "sinon": "^7.2.2"

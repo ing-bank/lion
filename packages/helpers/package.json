@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Helpers that are used throughout lion and can be used outside",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/helpers"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/helpers/*/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/helpers/*/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,10 +34,10 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.2"
+    "@lion/core": "0.4.4"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0"
   }
 }

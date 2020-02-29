@@ -8,11 +8,7 @@ import { FocusMixin } from './FocusMixin.js';
 
 /* eslint-disable wc/guard-super-call */
 
-// TODO:
-// - Consider exporting as FieldMixin
-// - Add submitted prop to InteractionStateMixin
-// - Find a better way to do value delegation via attr
-
+// TODO: Add submitted prop to InteractionStateMixin.
 /**
  * `LionField`: wraps <input>, <textarea>, <select> and other interactable elements.
  * Also it would follow a nice hierarchy: lion-form -> lion-fieldset -> lion-field
@@ -40,10 +36,6 @@ export class LionField extends FormControlMixin(
       submitted: {
         // make sure validation can be triggered based on observer
         type: Boolean,
-      },
-      name: {
-        type: String,
-        reflect: true,
       },
       autocomplete: {
         type: String,
@@ -107,7 +99,8 @@ export class LionField extends FormControlMixin(
   }
 
   connectedCallback() {
-    // TODO: Normally we put super calls on top for predictability,
+    // TODO: Investigate issue below.
+    // Normally we put super calls on top for predictability,
     // here we temporarily need to do attribute delegation before,
     // so the FormatMixin uses the right value. Should be solved
     // when value delegation is part of the calculation loop of
@@ -129,13 +122,8 @@ export class LionField extends FormControlMixin(
     super.updated(changedProps);
 
     if (changedProps.has('disabled')) {
-      if (this.disabled) {
-        this._inputNode.disabled = true;
-        this.classList.add('state-disabled'); // eslint-disable-line wc/no-self-class
-      } else {
-        this._inputNode.disabled = false;
-        this.classList.remove('state-disabled'); // eslint-disable-line wc/no-self-class
-      }
+      this._inputNode.disabled = this.disabled;
+      this.validate();
     }
 
     if (changedProps.has('name')) {
@@ -195,11 +183,12 @@ export class LionField extends FormControlMixin(
       super._onValueChanged();
     }
     // For styling purposes, make it known the input field is not empty
-    this.classList[value ? 'add' : 'remove']('state-filled');
+    if (this._inputNode) {
+      this[value ? 'setAttribute' : 'removeAttribute']('filled', '');
+    }
   }
 
   /**
-   * Copied from Polymer team. TODO: add license
    * Restores the cursor to its original position after updating the value.
    * @param {string} newValue The value that should be saved.
    */
@@ -223,16 +212,5 @@ export class LionField extends FormControlMixin(
     } else {
       this._inputNode.value = newValue;
     }
-  }
-
-  set fieldName(value) {
-    this.__fieldName = value;
-  }
-
-  get fieldName() {
-    const label =
-      this.label ||
-      (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
-    return this.__fieldName || label || this.name;
   }
 }

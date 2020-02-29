@@ -1,7 +1,14 @@
-import { css, html, SlotMixin, DisabledWithTabIndexMixin, LitElement } from '@lion/core';
+import {
+  css,
+  html,
+  browserDetection,
+  SlotMixin,
+  DisabledWithTabIndexMixin,
+  LitElement,
+} from '@lion/core';
 
-// eslint-disable-next-line class-methods-use-this
 const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
+const isSpaceKeyboardClickEvent = e => e.keyCode === 32; /* space */
 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
@@ -25,7 +32,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     return html`
       <div class="btn">
         ${this._renderBefore()}
-        ${this.constructor.__isIE11()
+        ${browserDetection.isIE11
           ? html`
               <div id="${this._buttonId}"><slot></slot></div>
             `
@@ -151,11 +158,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.active = false;
     this.__setupDelegationInConstructor();
 
-    if (this.constructor.__isIE11()) {
+    if (browserDetection.isIE11) {
       this._buttonId = `button-${Math.random()
         .toString(36)
         .substr(2, 10)}`;
-      this.setAttribute('aria-labelledby', this._buttonId);
+      this.updateComplete.then(() => this.setAttribute('aria-labelledby', this._buttonId));
     }
   }
 
@@ -227,7 +234,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     if (this.active || !isKeyboardClickEvent(e)) {
       return;
     }
-    // FIXME: In Edge & IE11, this toggling the active state to prevent bounce, does not work.
+
+    if (isSpaceKeyboardClickEvent(e)) {
+      e.preventDefault();
+    }
+
     this.active = true;
     const keyupHandler = keyupEvent => {
       if (isKeyboardClickEvent(keyupEvent)) {
@@ -247,11 +258,5 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       // dispatch click
       this.click();
     }
-  }
-
-  static __isIE11() {
-    const ua = window.navigator.userAgent;
-    const result = /Trident/.test(ua);
-    return result;
   }
 }

@@ -200,7 +200,7 @@ export const ValidateMixin = dedupeMixin(
         if (name === 'validators') {
           // trigger validation (ideally only for the new or changed validator)
           this.__setupValidators();
-          this.validate();
+          this.validate({ clearCurrentResult: true });
         } else if (name === 'modelValue') {
           this.validate({ clearCurrentResult: true });
         }
@@ -261,6 +261,12 @@ export const ValidateMixin = dedupeMixin(
        * call. Situation B will occur after every call.
        */
       async validate({ clearCurrentResult } = {}) {
+        if (this.disabled) {
+          this.__clearValidationResults();
+          this.__validationResult = [];
+          this._updateFeedbackComponent();
+          return;
+        }
         if (!this.__validateInitialized) {
           return;
         }

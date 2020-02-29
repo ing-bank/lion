@@ -29,10 +29,6 @@ describe('<lion-input-datepicker>', () => {
       ).not.to.equal(null);
     });
 
-    it.skip('activates full screen mode on mobile screens', async () => {
-      // TODO: should this be part of globalOverlayController as option?
-    });
-
     it('has a close button, with a tooltip "Close"', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
@@ -72,7 +68,6 @@ describe('<lion-input-datepicker>', () => {
       ).lightDom.to.equal('foo');
     });
 
-    // TODO: fix the Overlay system, so that the backdrop/body cannot be focused
     it('closes the calendar on [esc] key', async () => {
       const el = await fixture(html`
         <lion-input-datepicker></lion-input-datepicker>
@@ -130,10 +125,6 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(true);
     });
 
-    // Relies on delegation of disabled property to invoker.
-    // TODO: consider making this (delegation to interactive child nodes) generic functionality
-    // inside LionField/FormControl. Or, for maximum flexibility, add a config attr
-    // to the invoker node like 'data-disabled-is-delegated'
     it('delegates disabled state of host input', async () => {
       const el = await fixture(html`
         <lion-input-datepicker disabled></lion-input-datepicker>

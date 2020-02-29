@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-datepicker",
-  "version": "0.8.5",
+  "version": "0.8.18",
   "description": "Provide a way for users to fill in a date via a calendar overlay",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/input-datepicker"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/input-datepicker/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/input-datepicker/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -36,17 +38,16 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/calendar": "0.6.5",
-    "@lion/core": "0.4.2",
-    "@lion/field": "0.8.4",
-    "@lion/input-date": "0.5.4",
-    "@lion/localize": "0.8.4",
-    "@lion/overlays": "0.11.3",
-    "@lion/validate": "0.6.4"
+    "@lion/calendar": "0.6.11",
+    "@lion/core": "0.4.4",
+    "@lion/field": "0.10.1",
+    "@lion/input-date": "0.5.14",
+    "@lion/localize": "0.8.8",
+    "@lion/overlays": "0.12.3",
+    "@lion/validate": "0.6.8"
   },
   "devDependencies": {
-    "@lion/button": "0.5.2",
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",
     "sinon": "^7.2.2"
   }

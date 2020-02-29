@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.2...@lion/tooltip@0.8.3) (2020-02-26)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
+## [0.8.2](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.1...@lion/tooltip@0.8.2) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.8.1](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.0...@lion/tooltip@0.8.1) (2020-02-13)
+
+**Note:** Version bump only for package @lion/tooltip
+
+
+
+
+
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.7.3...@lion/tooltip@0.8.0) (2020-02-06)
+
+
+### Bug Fixes
+
+* **tooltip:** remove dependency on lion-button ([8889413](https://github.com/ing-bank/lion/commit/8889413ca43a3eb224964bd44dc82b7eab53039e))
+
+
+### Features
+
+* **overlay:** add hide on outside esc handler ([c0ed437](https://github.com/ing-bank/lion/commit/c0ed437e8fed618c47fe90feca7969fde934b9eb))
+
+
+
+
+
 ## [0.7.3](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.7.2...@lion/tooltip@0.7.3) (2020-01-23)
 
 **Note:** Version bump only for package @lion/tooltip

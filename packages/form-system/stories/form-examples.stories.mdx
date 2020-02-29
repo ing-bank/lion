@@ -1,4 +1,4 @@
-import { Story, Meta, html } from '@open-wc/demoing-storybook';
+import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
 import { Required, MaxLength, loadDefaultFeedbackMessages } from '@lion/validate';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input/lion-input.js';
@@ -10,6 +10,7 @@ import '@lion/form/lion-form.js';
 
 A form can have multiple nested fieldsets.
 
+<Preview>
 <Story name="Default">
   {html`
     <lion-form id="form">
@@ -25,48 +26,38 @@ A form can have multiple nested fieldsets.
           </lion-fieldset>
           <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
         </lion-fieldset>
-        <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
+        <button type="button" @click=${() => console.log(document.querySelector('#form').serializedValue)}>
           Log to Action Logger
         </button>
       </form>
     </lion-form>
   `}
 </Story>
-
-```html
-<lion-form id="form">
-  <form>
-    <lion-fieldset label="Personal data" name="personalData">
-      <lion-fieldset label="Full Name" name="fullName">
-        <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-        <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
-      </lion-fieldset>
-      <lion-fieldset label="Location" name="location">
-        <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
-        <lion-input name="city" label="City" .modelValue=${'Amsterdam'}></lion-input>
-      </lion-fieldset>
-      <lion-input name="birthdate" label="Birthdate" .modelValue=${'23-04-1991'}></lion-input>
-    </lion-fieldset>
-    <button type="button" @click=${() => console.log(document.querySelector('#form').serializeGroup())}>
-      Log to Action Logger
-    </button>
-  </form>
-</lion-form>
-```
+</Preview>
 
 ## Form Submit / Reset
 
 You can control whether a form gets submitted based on validation states.
 Same thing goes for resetting the inputs to the original state.
 
+Be sure to call `serializedValue` when a you want to submit a form.
+This value automatically filters out disabled children and makes sure the values
+that are retrieved can be transmitted over a wire. (for instance, an input-date with a modelValue
+of type `Date` will be serialized to an iso formatted string).
+
+
+>  Note: Offering a reset button is a bad practice in terms of accessibility.
+This button is only used here to demonstrate the `serializeGroup()` method.
+
+<Preview>
 <Story name="Submit/reset">
   {() => {
     loadDefaultFeedbackMessages();
     const submit = () => {
       const form = document.querySelector('#form2');
       if (!form.hasFeedbackFor.includes('error')) {
-        console.log(form.serializeGroup());
-        form.resetGroup();
+        document.getElementById('form2_output').innerText = JSON.stringify(form.serializedValue);
+        document.querySelector('#form2').resetGroup();
       }
     };
     return html`
@@ -85,58 +76,65 @@ Same thing goes for resetting the inputs to the original state.
               .validators=${[new Required(), new MaxLength(15)]}
             >
             </lion-input>
+            <lion-input
+              name="address"
+              disabled
+              label="Address"
+              .validators=${[new MaxLength(15)]}
+            >
+            </lion-input>
           </lion-fieldset>
           <button type="submit">Submit & Reset (if successfully submitted)</button>
-          <button type="button" @click=${() => document.querySelector('#form2').resetGroup()}>
-            Reset
+          <button type="button" @click=${() => {
+            document.querySelector('#form2').resetGroup();
+            const form = document.querySelector('#form2');
+            document.getElementById('form2_output').innerText = JSON.stringify(form.serializedValue);
+          }}>
+            reset
           </button>
-          <p>
-            A reset button should never be offered to users. This button is only used here to
-            demonstrate the functionality.
-          </p>
+          <pre id="form2_output">
+          </pre>
         </form></lion-form
       >
     `;
   }}
 </Story>
+</Preview>
 
-```js
-import { Required, MaxLength } from '@lion/validate'
 
-const submit = () => {
-  const form = document.querySelector('#form2');
-  if (!form.hasFeedbackFor.includes('error')) {
-    console.log(form.serializeGroup());
-    form.resetGroup();
-  }
-};
-```
 
-```html
-<lion-form id="form2" @submit="${submit}">
-  <form>
-    <lion-fieldset label="Name" name="name">
-      <lion-input
-        name="firstName"
-        label="First Name"
-        .validators=${[new Required(), new MaxLength(15)]}
-      >
-      </lion-input>
-      <lion-input
-        name="lastName"
-        label="Last Name"
-        .validators=${[new Required(), new MaxLength(15)]}
-      >
-      </lion-input>
-    </lion-fieldset>
-    <button type="submit">Submit & Reset (if successfully submitted)</button>
-    <button type="button" @click=${() => console.log(document.querySelector('#form2'))}>
-      Reset
-    </button>
-    <p>
-      A reset button should never be offered to users. This button is only used here to
-      demonstrate the functionality.
-    </p>
-  </form>
-</lion-form>
-```
+## Serialize in a multistep form
+
+In a multistep form (consisting of multiple forms) it might be handy to wrap the serialized output
+with the name of the form.
+
+<Preview>
+  <Story name="Multistep">
+    {() => {
+      loadDefaultFeedbackMessages();
+      const serializeWithName = (formId, outputId) => {
+        const form = document.getElementById(formId);
+        if (!form.hasFeedbackFor.includes('error')) {
+          const output = { [form.name]: form.serializedValue };
+          document.getElementById(outputId).innerText = JSON.stringify(output);
+        }
+      };
+      return html`
+        <lion-form name="step1FormName" id="form3"><form>
+          <lion-input name="step1InputName" label="Step 1 Input"></lion-input>
+          <button @click="${() => serializeWithName('form3', 'form3_output')}">
+            serialize step 1 with name
+          </button>
+          <pre id="form3_output"></pre>
+        </form></lion-form>
+        <lion-form name="step2FormName" id="form4"><form>
+          <lion-input name="step2InputName" label="Step 2 Input"></lion-input>
+          <button @click="${() => serializeWithName('form4', 'form4_output')}">
+            serialize step 2 with name
+          </button>
+          <pre id="form4_output"></pre>
+        </form></lion-form>
+      `;
+    }}
+  </Story>
+</Preview>

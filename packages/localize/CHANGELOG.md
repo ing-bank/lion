@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.7...@lion/localize@0.8.8) (2020-02-26)
+
+**Note:** Version bump only for package @lion/localize
+
+
+
+
+
+## [0.8.7](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.6...@lion/localize@0.8.7) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.8.6](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.5...@lion/localize@0.8.6) (2020-02-06)
+
+**Note:** Version bump only for package @lion/localize
+
+
+
+
+
+## [0.8.5](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.4...@lion/localize@0.8.5) (2020-02-03)
+
+
+### Bug Fixes
+
+* **localize:** if locale is set to tr, currency TRY should display TL ([8fb3b23](https://github.com/ing-bank/lion/commit/8fb3b237553bda38cb66b0b75b683f4a69d4a2a5))
+
+
+
+
+
 ## [0.8.4](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.3...@lion/localize@0.8.4) (2020-01-23)
 
 

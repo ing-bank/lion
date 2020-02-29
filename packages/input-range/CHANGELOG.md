@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.13...@lion/input-range@0.2.14) (2020-02-26)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.13](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.12...@lion/input-range@0.2.13) (2020-02-20)
+
+
+### Bug Fixes
+
+* removed FieldCustomMixin ([f44d8aa](https://github.com/ing-bank/lion/commit/f44d8aa26ae7124d8dcb251e1f66ab9beae71050))
+
+
+
+
+
+## [0.2.12](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.11...@lion/input-range@0.2.12) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.2.11](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.10...@lion/input-range@0.2.11) (2020-02-10)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.9...@lion/input-range@0.2.10) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.9](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.8...@lion/input-range@0.2.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.8](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.7...@lion/input-range@0.2.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.7](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.6...@lion/input-range@0.2.7) (2020-02-05)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.6](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.5...@lion/input-range@0.2.6) (2020-02-05)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
+## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.4...@lion/input-range@0.2.5) (2020-02-03)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
 ## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.3...@lion/input-range@0.2.4) (2020-01-23)
 
 

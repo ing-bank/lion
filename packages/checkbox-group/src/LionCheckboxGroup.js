@@ -1,17 +1,22 @@
-import { LionFieldset } from '@lion/fieldset';
+import { LitElement } from '@lion/core';
+import { ChoiceGroupMixin } from '@lion/choice-input';
+import { FormGroupMixin } from '@lion/fieldset';
 
-export class LionCheckboxGroup extends LionFieldset {
-  // eslint-disable-next-line class-methods-use-this
-  _isEmpty(modelValues) {
-    const keys = Object.keys(modelValues);
-    for (let i = 0; i < keys.length; i += 1) {
-      const modelValue = modelValues[keys[i]];
-      if (Array.isArray(modelValue)) {
-        // grouped via myName[]
-        return !modelValue.some(node => node.checked);
-      }
-      return !modelValue.checked;
+/**
+ * A wrapper around multiple checkboxes
+ *
+ * @extends {LionFieldset}
+ */
+export class LionCheckboxGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {
+  constructor() {
+    super();
+    this.multipleChoice = true;
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('name') && !String(this.name).match(/\[\]$/)) {
+      throw new Error('Names should end in "[]".');
     }
-    return true;
   }
 }

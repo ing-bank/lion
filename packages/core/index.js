@@ -59,3 +59,4 @@ export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
 export { LionSingleton } from './src/LionSingleton.js';
 export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
+export { browserDetection } from './src/browserDetection.js';

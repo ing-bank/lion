@@ -1,6 +1,6 @@
 {
   "name": "@lion/dialog",
-  "version": "0.4.3",
+  "version": "0.4.7",
   "description": "Show relative overlay content on click, as a webcomponent",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/dialog"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/dialog/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/dialog/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -30,11 +32,11 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.2",
-    "@lion/overlays": "0.11.3"
+    "@lion/core": "0.4.4",
+    "@lion/overlays": "0.12.3"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0"
   }
 }

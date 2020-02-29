@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.8](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.7...@lion/validate@0.6.8) (2020-02-26)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
+## [0.6.7](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.6...@lion/validate@0.6.7) (2020-02-19)
+
+
+### Bug Fixes
+
+* **field:** do not validate disabled fields ([#586](https://github.com/ing-bank/lion/issues/586)) ([9127f08](https://github.com/ing-bank/lion/commit/9127f08440555fd08e11cc55315aa530dc09819b))
+* **validate:** reset validation result on validators change ([#565](https://github.com/ing-bank/lion/issues/565)) ([ce6a89c](https://github.com/ing-bank/lion/commit/ce6a89c895652e62c5e9a4935c9b9ca2bf52d82c))
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.6.6](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.5...@lion/validate@0.6.6) (2020-02-06)
+
+
+### Bug Fixes
+
+* **validator:** throw error if getMessage not of type Function ([ce3c02b](https://github.com/ing-bank/lion/commit/ce3c02b63bf8bc807946457c1a9289b8b57b5ee2))
+
+
+
+
+
+## [0.6.5](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.4...@lion/validate@0.6.5) (2020-02-03)
+
+**Note:** Version bump only for package @lion/validate
+
+
+
+
+
 ## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.3...@lion/validate@0.6.4) (2020-01-23)
 
 

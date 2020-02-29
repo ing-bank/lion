@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/ing-bank/lion/compare/@lion/ajax@0.2.5...@lion/ajax@0.2.6) (2020-02-26)
+
+**Note:** Version bump only for package @lion/ajax
+
+
+
+
+
+## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/ajax@0.2.4...@lion/ajax@0.2.5) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/ajax@0.2.3...@lion/ajax@0.2.4) (2020-02-06)
+
+**Note:** Version bump only for package @lion/ajax
+
+
+
+
+
+## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/ajax@0.2.2...@lion/ajax@0.2.3) (2020-01-29)
+
+
+### Bug Fixes
+
+* update broken ajax storybook link ([f731ade](https://github.com/ing-bank/lion/commit/f731ade8f02f68cc140228bfd1d58934c403a57d))
+
+
+
+
+
 ## [0.2.2](https://github.com/ing-bank/lion/compare/@lion/ajax@0.2.1...@lion/ajax@0.2.2) (2020-01-20)
 
 **Note:** Version bump only for package @lion/ajax

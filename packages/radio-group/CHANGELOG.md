@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.7.0...@lion/radio-group@0.7.1) (2020-02-26)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.6.3...@lion/radio-group@0.7.0) (2020-02-20)
+
+
+### Features
+
+* api normalisation formElements and values ([9b905c4](https://github.com/ing-bank/lion/commit/9b905c492a0c0d2226cc1d75c73e2e70dc97815a))
+
+
+
+
+
+## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.6.2...@lion/radio-group@0.6.3) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.6.1...@lion/radio-group@0.6.2) (2020-02-10)
+
+
+### Bug Fixes
+
+* **checkbox-group:** throw if name does not contain [] ([5957cd9](https://github.com/ing-bank/lion/commit/5957cd916507c36e424d795e52112c8c623fd29c))
+* move documentation from readme to mdx ([d2708d2](https://github.com/ing-bank/lion/commit/d2708d2457e4af9685f76f9d0eb3cdf549b16ab7))
+
+
+
+
+
+## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.6.0...@lion/radio-group@0.6.1) (2020-02-10)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.9...@lion/radio-group@0.6.0) (2020-02-06)
+
+
+### Features
+
+* flatten modelValue and remove checkedValue ([848ff06](https://github.com/ing-bank/lion/commit/848ff06887c86532e60d33d2db67d1152910d9cb))
+
+
+
+
+
+## [0.5.9](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.8...@lion/radio-group@0.5.9) (2020-02-06)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+## [0.5.8](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.7...@lion/radio-group@0.5.8) (2020-02-06)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.6...@lion/radio-group@0.5.7) (2020-02-05)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+## [0.5.6](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.5...@lion/radio-group@0.5.6) (2020-02-05)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
+## [0.5.5](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.4...@lion/radio-group@0.5.5) (2020-02-03)
+
+**Note:** Version bump only for package @lion/radio-group
+
+
+
+
+
 ## [0.5.4](https://github.com/ing-bank/lion/compare/@lion/radio-group@0.5.3...@lion/radio-group@0.5.4) (2020-01-23)
 
 

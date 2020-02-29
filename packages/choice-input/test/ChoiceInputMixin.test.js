@@ -1,9 +1,8 @@
-import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
-import sinon from 'sinon';
-import { Required } from '@lion/validate';
-
 import { LionInput } from '@lion/input';
+import { Required } from '@lion/validate';
+import { expect, fixture } from '@open-wc/testing';
+import sinon from 'sinon';
 import { ChoiceInputMixin } from '../src/ChoiceInputMixin.js';
 
 describe('ChoiceInputMixin', () => {

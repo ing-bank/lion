@@ -48,11 +48,11 @@ class IsInitialsExample extends Validator {
   }
 
   execute(value) {
-    let hasError = false;
+    let hasFeedback = false;
     if (!IsString || !isInitialsRegex.test(value.toLowerCase())) {
-      hasError = true;
+      hasFeedback = true;
     }
-    return hasError;
+    return hasFeedback;
   }
 
   static getMessage({ fieldName }) {

@@ -1,23 +1,17 @@
 # Lion Web Components
 
-> ## 🛠 Status: Pilot Phase
->
-> Lion Web Components are still in an early alpha stage; they should not be considered production ready yet.
->
-> The goal of our pilot phase is to gather feedback from a private group of users.
-> Therefore, during this phase, we kindly ask you to:
->
-> - not publicly promote or link us yet: (no tweets, blog posts or other forms of communication about Lion Web Components)
-> - not publicly promote or link products derived from/based on Lion Web Components
->
-> As soon as Pilot Phase ends we will let you know (feel free to subscribe to this issue <https://github.com/ing-bank/lion/issues/1>)
-
 Lion web components is a set of highly performant, accessible and flexible Web Components.
 They provide an unopinionated, white label layer that can be extended to your own layer of components.
+
+For some more details see the [announcement blog post](https://medium.com/ing-blog/ing-open-sources-lion-a-library-for-performant-accessible-flexible-web-components-22ad165b1d3d).
+
+[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.comgithub.com/ing-bank/lion)](https://www.tickgit.com/browse?repo=github.com/ing-bank/lion)
 
 ## Demos
 
 We do have a [live Storybook](http://lion-web-components.netlify.com) which shows all our components.
+
+**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all depencies by executing `yarn install`.
 
 ## How to install
 

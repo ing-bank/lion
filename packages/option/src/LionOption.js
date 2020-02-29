@@ -1,6 +1,6 @@
-import { html, css, LitElement, DisabledMixin } from '@lion/core';
-import { FormRegisteringMixin } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
+import { css, DisabledMixin, html, LitElement } from '@lion/core';
+import { FormRegisteringMixin } from '@lion/field';
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
@@ -14,6 +14,10 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     return {
       active: {
         type: Boolean,
+        reflect: true,
+      },
+      name: {
+        type: String,
         reflect: true,
       },
     };

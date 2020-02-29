@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/core@0.4.3...@lion/core@0.4.4) (2020-02-19)
+
+
+### Bug Fixes
+
+* reduce storybook chunck sizes for more performance ([9fc5606](https://github.com/ing-bank/lion/commit/9fc560605f5dcf6e9abcf8d58079c59f12750046))
+
+
+
+
+
+## [0.4.3](https://github.com/ing-bank/lion/compare/@lion/core@0.4.2...@lion/core@0.4.3) (2020-02-06)
+
+
+### Bug Fixes
+
+* **button:** run regexp once instead of every render cycle ([954adc5](https://github.com/ing-bank/lion/commit/954adc56596f2d9244baf48889d6b338b2a12ac4))
+* **core:** change the version of lit-element to latest ^2.2.1 ([2e5d8c7](https://github.com/ing-bank/lion/commit/2e5d8c740b6b289492317508fbbe5c684ba508d8))
+
+
+
+
+
 ## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/core@0.4.1...@lion/core@0.4.2) (2020-01-20)
 
 **Note:** Version bump only for package @lion/core

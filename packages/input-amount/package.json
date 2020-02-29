@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-amount",
-  "version": "0.5.4",
+  "version": "0.5.14",
   "description": "Provide a way for users to fill in an amount",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/input-amount"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/input-amount/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/input-amount/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,14 +34,14 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.2",
-    "@lion/field": "0.8.4",
-    "@lion/input": "0.5.4",
-    "@lion/localize": "0.8.4",
-    "@lion/validate": "0.6.4"
+    "@lion/core": "0.4.4",
+    "@lion/field": "0.10.1",
+    "@lion/input": "0.5.14",
+    "@lion/localize": "0.8.8",
+    "@lion/validate": "0.6.8"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@lion/radio",
-  "version": "0.3.4",
+  "version": "0.4.4",
   "description": "Provide a way for users to check a single option amongst a set of choices",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -14,7 +14,9 @@
     "directory": "packages/radio"
   },
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test --grep \"packages/radio/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/radio/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,12 +34,12 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/choice-input": "0.5.4",
-    "@lion/core": "0.4.2",
-    "@lion/input": "0.5.4"
+    "@lion/choice-input": "0.7.1",
+    "@lion/core": "0.4.4",
+    "@lion/input": "0.5.14"
   },
   "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.8.3",
+    "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0"
   }
 }

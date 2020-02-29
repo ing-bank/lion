@@ -1,5 +1,5 @@
 import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
-import { FormRegisteringMixin } from './FormRegisteringMixin.js';
+import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 
 /**
@@ -29,10 +29,17 @@ export const FormControlMixin = dedupeMixin(
       static get properties() {
         return {
           /**
+           * The name the element will be registered on to the .formElements collection
+           * of the parent.
+           */
+          name: {
+            type: String,
+            reflect: true,
+          },
+          /**
            * When no light dom defined and prop set
            */
           label: String,
-
           /**
            * When no light dom defined and prop set
            */
@@ -40,17 +47,43 @@ export const FormControlMixin = dedupeMixin(
             type: String,
             attribute: 'help-text',
           },
-
           /**
            * Contains all elements that should end up in aria-labelledby of `._inputNode`
            */
           _ariaLabelledNodes: Array,
-
           /**
            * Contains all elements that should end up in aria-describedby of `._inputNode`
            */
           _ariaDescribedNodes: Array,
         };
+      }
+
+      get label() {
+        return this.__label || (this._labelNode && this._labelNode.textContent);
+      }
+
+      set label(newValue) {
+        const oldValue = this.label;
+        this.__label = newValue;
+        this.requestUpdate('label', oldValue);
+      }
+
+      get helpText() {
+        return this.__helpText || (this._helpTextNode && this._helpTextNode.textContent);
+      }
+
+      set helpText(newValue) {
+        const oldValue = this.helpText;
+        this.__helpText = newValue;
+        this.requestUpdate('helpText', oldValue);
+      }
+
+      set fieldName(value) {
+        this.__fieldName = value;
+      }
+
+      get fieldName() {
+        return this.__fieldName || this.label || this.name;
       }
 
       get slots() {
@@ -126,9 +159,6 @@ export const FormControlMixin = dedupeMixin(
         this._enhanceLightDomA11y();
       }
 
-      /**
-       * Public methods
-       */
       _enhanceLightDomClasses() {
         if (this._inputNode) {
           this._inputNode.classList.add('form-control');
@@ -373,9 +403,6 @@ export const FormControlMixin = dedupeMixin(
        * with the CSS component.
        * Note that every occurence of '::slotted(*)' can be rewritten to '> *' for use in an other
        * context
-       *
-       * TODO: find best naming convention: https://en.bem.info/methodology/naming-convention/
-       * (react style would align better with JSS)
        */
 
       /**
@@ -391,13 +418,16 @@ export const FormControlMixin = dedupeMixin(
        *               (validation) feedback message
        *
        * Modifiers:
-       * - {state} .state-disabled : when .form-control (<input>, <textarea> etc.) has disabled set
+       * - {state} [disabled] when .form-control (<input>, <textarea> etc.) has disabled set
        *            to true
-       * - {state} .state-focused: when .form-control (<input>, <textarea> etc.) <input> has focus
-       * - {state} .state-filled: whether <input> has a value
-       * - {state} .state-touched: whether the user had blurred the field once
-       * - {state} .state-dirty: whether the value has changed since initial value
+       * - {state} [filled] whether <input> has a value
+       * - {state} [touched] whether the user had blurred the field once
+       * - {state} [dirty] whether the value has changed since initial value
        *
+       * TODO: update states below
+       * These classes are now attributes. Check them agains the new attribute names inside ValidateMixin
+       * and InteractionStateMixin. Some states got renamed. Make sure to use the correct ones!
+       * - {state} .state-focused: when .form-control (<input>, <textarea> etc.) <input> has focus
        * - {state} .state-invalid: when input has error(s) (regardless of whether they should be
        *            shown to the user)
        * - {state} .state-error: when input has error(s) and this/these should be shown to the user
@@ -436,12 +466,12 @@ export const FormControlMixin = dedupeMixin(
               display: block;
             }
 
-            :host(.state-disabled) {
+            :host([disabled]) {
               pointer-events: none;
             }
 
-            :host(.state-disabled) .form-field__label ::slotted(*),
-            :host(.state-disabled) .form-field__help-text ::slotted(*) {
+            :host([disabled]) .form-field__label ::slotted(*),
+            :host([disabled]) .form-field__help-text ::slotted(*) {
               color: var(--disabled-text-color, #adadad);
             }
 
@@ -458,8 +488,8 @@ export const FormControlMixin = dedupeMixin(
               display: flex;
             }
 
-            /***** {state} .state-disabled *****/
-            :host(.state-disabled) .input-group ::slotted(slot='input') {
+            /***** {state} :disabled *****/
+            :host([disabled]) .input-group ::slotted(slot='input') {
               color: var(--disabled-text-color, #adadad);
             }
 
