@@ -129,8 +129,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
   }
 
-  __CurrencyLabel(){
-    return normalizeCurrencyLabel(this.currency,this.__getLocale());
+  __CurrencyLabel() {
+    return normalizeCurrencyLabel(this.currency, this.__getLocale());
   }
 
   __getLocale() {
