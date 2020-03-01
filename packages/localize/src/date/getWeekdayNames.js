@@ -32,10 +32,6 @@ function getCachedWeekdayNames(locale) {
   return weekdayNamesCache[locale];
 }
 
-// TODO: consider using a database with information for the `firstDayOfWeek`?
-// https://github.com/unicode-cldr/cldr-core/blob/35.0.0/supplemental/weekData.json#L60
-// https://github.com/tc39/ecma402/issues/6#issuecomment-114079502
-
 /**
  * @desc Returns weekday names for locale
  * @param {string} options.locale locale

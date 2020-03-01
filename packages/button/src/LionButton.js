@@ -239,7 +239,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       e.preventDefault();
     }
 
-    // FIXME: In Edge & IE11, this toggling the active state to prevent bounce, does not work.
     this.active = true;
     const keyupHandler = keyupEvent => {
       if (isKeyboardClickEvent(keyupEvent)) {
