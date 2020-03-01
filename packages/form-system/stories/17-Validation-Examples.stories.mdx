@@ -363,9 +363,8 @@ You can even hard code localization in there if needed or you can use a localiza
 <Story name="Custom Validators">
   {() => {
     class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'myValidator';
+      static get validatorName() {
+        return 'myValidator';
       }
       execute(modelValue, param) {
         return modelValue !== param;
@@ -394,7 +393,10 @@ You can even hard code localization in there if needed or you can use a localiza
 class MyValidator extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'myValidator';
+  }
+
+  static get validatorName() {
+    return 'myValidator';
   }
 
   execute(modelValue, param) {
@@ -511,8 +513,12 @@ Oftern
     class AsyncValidator extends Validator {
       constructor(...args) {
         super(...args);
-        this.name = 'asyncValidator';
-        this.async = true;
+      }
+      static get validatorName() {
+        return 'asyncValidator';
+      }
+      static get async() { 
+        return true; 
       }
       async execute() {
         console.log('async pending...');
@@ -549,8 +555,12 @@ function pause(ms = 0) {
 class AsyncValidator extends Validator {
   constructor(...args) {
     super(...args);
-    this.name = 'asyncValidator';
-    this.async = true;
+  }
+  static get validatorName() {
+    return 'asyncValidator';
+  }
+  static get async() { 
+    return true; 
   }
   async execute() {
     console.log('async pending...');

@@ -56,7 +56,120 @@ npm i --save @lion/ajax
 import { ajax, AjaxClass } from '@lion/ajax';
 ```
 
-## Cancelable Request
+### Performing requests
+
+Performing a `GET` request:
+
+<Story name="GET">
+  {html`
+    <button
+      @click=${() => {
+        ajax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }}
+    >
+      Execute Request to Action Logger
+    </button>
+  `}
+</Story>
+
+```js
+ajax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+
+To post data to the server, pass the data as the second argument in the `POST` request:
+
+```js
+const body = {
+  ant: {
+    type: "insect",
+    limbs: 6,
+  }
+};
+
+ajax
+  .post('zooApi/animals/addAnimal', body)
+  .then(response => {
+    console.log(`POST successful: ${response.status} ${response.statusText}`);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+
+## Configuration
+
+### JSON prefix
+
+The called API might add a JSON prefix to the response in order to prevent hijacking.
+The prefix renders the string syntactically invalid as a script so that it cannot be hijacked.
+This prefix should be stripped before parsing the string as JSON.
+Pass the prefix with the `jsonPrefix` option.
+
+```js
+const myAjax = AjaxClass.getNewInstance({ jsonPrefix: ")]}'," });
+myAjax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+
+### Additional headers
+
+Add additional headers to the requests with the `headers` option.
+
+<Story name="Headers">
+  {html`
+    <button
+      @click=${() => {
+        const myAjax = AjaxClass.getNewInstance({ headers: { 'MY-HEADER': 'SOME-HEADER-VALUE' } });
+        myAjax
+          .get('./packages/ajax/stories/data.json')
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }}
+    >
+      Execute Request to Action Logger
+    </button>
+  `}
+</Story>
+
+```js
+const myAjax = AjaxClass.getNewInstance({ headers: { 'X-CUSTOM-HEADER': 'SOME-HEADER-VALUE' } });
+myAjax
+  .get('./packages/ajax/stories/data.json')
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+
+When executing the request above, check the Network tab in the Browser's dev tools and look for the Request Header on the GET call.
+
+### Cancelable Request
 
 It is possible to make an Ajax request cancelable, and then call `cancel()` to make the request provide a custom error once fired.
 
@@ -100,7 +213,7 @@ myAjax
   });
 ```
 
-## Cancel concurrent requests
+### Cancel concurrent requests
 
 You can cancel concurrent requests with the `cancelPreviousOnNewRequest` option.
 

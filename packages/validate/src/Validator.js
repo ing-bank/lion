@@ -4,11 +4,17 @@ export class Validator {
   constructor(param, config) {
     fakeExtendsEventTarget(this);
 
-    this.name = '';
-    this.async = false;
     this.__param = param;
     this.__config = config || {};
     this.type = (config && config.type) || 'error'; // Default type supported by ValidateMixin
+  }
+
+  static get validatorName() {
+    return '';
+  }
+
+  static get async() {
+    return false;
   }
 
   /**
@@ -18,8 +24,10 @@ export class Validator {
    * @returns {Boolean|Promise<Boolean>}
    */
   execute(/* modelValue, param */) {
-    if (!this.name) {
-      throw new Error('You must provide a name like "this.name = \'IsCat\'" for your Validator');
+    if (!this.validatorName) {
+      throw new Error(
+        'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
+      );
     }
   }
 
@@ -52,7 +60,7 @@ export class Validator {
    */
   async _getMessage(data) {
     const composedData = {
-      name: this.name,
+      name: this.constructor.validatorName,
       type: this.type,
       params: this.param,
       config: this.config,

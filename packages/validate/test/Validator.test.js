@@ -32,14 +32,15 @@ describe('Validator', () => {
     class MyValidator extends Validator {}
     expect(() => {
       new MyValidator().execute();
-    }).to.throw('You must provide a name like "this.name = \'IsCat\'" for your Validator');
+    }).to.throw(
+      'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
+    );
   });
 
   it('throws when executing a Validator that has a getMessage config property with a value not of type function', async () => {
     class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'MyValidator';
+      static get validatorName() {
+        return 'MyValidator';
       }
     }
 
@@ -62,9 +63,8 @@ describe('Validator', () => {
   it('has access to name, type, params, config in getMessage provided by config', () => {
     const configSpy = sinon.spy();
     class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'MyValidator';
+      static get validatorName() {
+        return 'MyValidator';
       }
     }
     const vali = new MyValidator('myParam', { my: 'config', getMessage: configSpy });
@@ -81,9 +81,8 @@ describe('Validator', () => {
   it('has access to name, type, params, config in static get getMessage', () => {
     let staticArgs;
     class MyValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'MyValidator';
+      static get validatorName() {
+        return 'MyValidator';
       }
 
       static getMessage(...args) {

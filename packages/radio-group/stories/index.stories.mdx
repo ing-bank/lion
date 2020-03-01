@@ -192,9 +192,8 @@ You can also create a validator that validates whether a certain option is check
 <Story name="Validate item">
   {() => {
     class IsBrontosaurus extends Validator {
-      constructor() {
-        super();
-        this.name = 'IsBrontosaurus';
+      static get validatorName() {
+        return 'IsBrontosaurus';
       }
       execute(value) {
         return value === 'brontosaurus';
@@ -227,9 +226,8 @@ You can also create a validator that validates whether a certain option is check
 import { loadDefaultFeedbackMessages, Required, Validator } from 'lion/validate';
 
 class IsBrontosaurus extends Validator {
-  constructor() {
-    super();
-    this.name = 'IsBrontosaurus';
+  static get validatorName() {
+    return 'IsBrontosaurus';
   }
   execute(value) {
     return value === 'brontosaurus';

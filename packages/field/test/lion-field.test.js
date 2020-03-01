@@ -298,9 +298,8 @@ describe('<lion-field>', () => {
 
     it('should conditionally show error', async () => {
       const HasX = class extends Validator {
-        constructor() {
-          super();
-          this.name = 'HasX';
+        static get validatorName() {
+          return 'HasX';
         }
 
         execute(value) {
@@ -412,9 +411,8 @@ describe('<lion-field>', () => {
     it('will only update formattedValue when valid on `user-input-changed`', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
       const Bar = class extends Validator {
-        constructor(...args) {
-          super(...args);
-          this.name = 'Bar';
+        static get validatorName() {
+          return 'Bar';
         }
 
         execute(value) {

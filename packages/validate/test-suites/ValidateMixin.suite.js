@@ -1,22 +1,21 @@
-import { expect, fixture, html, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
-import sinon from 'sinon';
 import { LitElement } from '@lion/core';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import {
-  AlwaysValid,
-  AlwaysInvalid,
-  AsyncAlwaysValid,
-  AsyncAlwaysInvalid,
-} from '../test-helpers.js';
-
-import {
-  ValidateMixin,
-  Unparseable,
-  Validator,
-  ResultValidator,
-  Required,
-  MinLength,
   MaxLength,
+  MinLength,
+  Required,
+  ResultValidator,
+  Unparseable,
+  ValidateMixin,
+  Validator,
 } from '../index.js';
+import {
+  AlwaysInvalid,
+  AlwaysValid,
+  AsyncAlwaysInvalid,
+  AsyncAlwaysValid,
+} from '../test-helpers.js';
 
 export function runValidateMixinSuite(customConfig) {
   const cfg = {
@@ -104,8 +103,11 @@ export function runValidateMixinSuite(customConfig) {
         class MajorValidator extends Validator {
           constructor() {
             super();
-            this.name = 'MajorValidator';
             this.type = 'major error';
+          }
+
+          static get validatorName() {
+            return 'MajorValidator';
           }
         }
         const el = await fixture(html`<${tag}></${tag}>`);
@@ -218,9 +220,8 @@ export function runValidateMixinSuite(customConfig) {
 
       it('finally checks for ResultValidators: creates TotalValidationResult', async () => {
         class MyResult extends ResultValidator {
-          constructor(...args) {
-            super(...args);
-            this.name = 'ResultValidator';
+          static get validatorName() {
+            return 'ResultValidator';
           }
         }
 
@@ -285,20 +286,26 @@ export function runValidateMixinSuite(customConfig) {
       class IsCat extends Validator {
         constructor(...args) {
           super(...args);
-          this.name = 'isCat';
           this.execute = (modelValue, param) => {
             const validateString = param && param.number ? `cat${param.number}` : 'cat';
             const showError = modelValue !== validateString;
             return showError;
           };
         }
+
+        static get validatorName() {
+          return 'isCat';
+        }
       }
 
       class OtherValidator extends Validator {
         constructor(...args) {
           super(...args);
-          this.name = 'otherValidator';
           this.execute = () => true;
+        }
+
+        static get validatorName() {
+          return 'otherValidator';
         }
       }
 
@@ -357,11 +364,11 @@ export function runValidateMixinSuite(customConfig) {
         `);
 
         el.modelValue = 'cat';
-        expect(el.validationStates.error.isCat).to.be.undefined;
+        expect(el.validationStates.error.IsCat).to.be.undefined;
         el.modelValue = 'dog';
-        expect(el.validationStates.error.isCat).to.be.true;
+        expect(el.validationStates.error.IsCat).to.be.true;
         el.modelValue = '';
-        expect(el.validationStates.error.isCat).to.be.undefined;
+        expect(el.validationStates.error.IsCat).to.be.undefined;
       });
 
       it('Validators get retriggered on parameter change', async () => {
@@ -391,10 +398,12 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       class IsAsyncCat extends Validator {
-        constructor(param, config) {
-          super(param, config);
-          this.name = 'delayed-cat';
-          this.async = true;
+        static get validatorName() {
+          return 'delayed-cat';
+        }
+
+        static get async() {
+          return true;
         }
 
         /**
@@ -769,20 +778,26 @@ export function runValidateMixinSuite(customConfig) {
       class ContainsLowercaseA extends Validator {
         constructor(...args) {
           super(...args);
-          this.name = 'ContainsLowercaseA';
           this.execute = modelValue => !modelValue.includes('a');
+        }
+
+        static get validatorName() {
+          return 'ContainsLowercaseA';
         }
       }
 
       class ContainsLowercaseB extends Validator {
         constructor(...args) {
           super(...args);
-          this.name = 'containsLowercaseB';
           this.execute = modelValue => !modelValue.includes('b');
+        }
+
+        static get validatorName() {
+          return 'containsLowercaseB';
         }
       }
 
-      it('stores validity of individual Validators in ".validationStates.error[validator.name]"', async () => {
+      it('stores validity of individual Validators in ".validationStates.error[validator.validatorName]"', async () => {
         const el = await fixture(html`
           <${tag}
             .modelValue=${'a'}

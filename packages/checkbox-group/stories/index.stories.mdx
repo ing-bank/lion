@@ -237,12 +237,11 @@ Below is a more advanced validator on the group that evaluates the children chec
   {() => {
     loadDefaultFeedbackMessages();
     class HasMinTwoChecked extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'HasMinTwoChecked';
-      }
       execute(value) {
         return value.length < 2;
+      }
+      static get validatorName() {
+        return 'HasMinTwoChecked';
       }
       static async getMessage() {
         return 'You need to select at least 2 values.';
@@ -284,13 +283,13 @@ import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate
 loadDefaultFeedbackMessages();
 
 class HasMinTwoChecked extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'HasMinTwoChecked';
-  }
 
   execute(value) {
     return value.length < 2;
+  }
+
+  static get validatorName() {
+    return 'HasMinTwoChecked';
   }
 
   static async getMessage() {

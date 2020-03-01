@@ -105,9 +105,8 @@ In the following example we will demonstrate this with interaction states, the m
     // Define a demo validator that should only be visible on an odd amount of characters
     // const OddValidator = [modelValue => ({ odd: modelValue.length % 2 !== 0 })];
     class OddValidator extends Validator {
-      constructor(...args) {
-        super(...args);
-        this.name = 'OddValidator';
+      static get validatorName() {
+        return 'OddValidator';
       }
       // eslint-disable-next-line class-methods-use-this
       execute(value) {

@@ -2,9 +2,8 @@
 import { Validator } from '../src/Validator.js';
 
 export class AlwaysInvalid extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'AlwaysInvalid';
+  static get validatorName() {
+    return 'AlwaysInvalid';
   }
 
   execute() {
@@ -14,9 +13,8 @@ export class AlwaysInvalid extends Validator {
 }
 
 export class AlwaysValid extends Validator {
-  constructor(...args) {
-    super(...args);
-    this.name = 'AlwaysValid';
+  static get validatorName() {
+    return 'AlwaysValid';
   }
 
   execute() {
@@ -26,9 +24,8 @@ export class AlwaysValid extends Validator {
 }
 
 export class AsyncAlwaysValid extends AlwaysValid {
-  constructor(...args) {
-    super(...args);
-    this.async = true;
+  static get async() {
+    return true;
   }
 
   execute() {
@@ -37,9 +34,8 @@ export class AsyncAlwaysValid extends AlwaysValid {
 }
 
 export class AsyncAlwaysInvalid extends AlwaysValid {
-  constructor(...args) {
-    super(...args);
-    this.async = true;
+  static get async() {
+    return true;
   }
 
   async execute() {
