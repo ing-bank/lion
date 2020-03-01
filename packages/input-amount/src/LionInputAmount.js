@@ -115,7 +115,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after')) {
-      this._currencyDisplayNode.textContent = currency;
+      this._currencyDisplayNode.textContent = this.__CurrencyLabel();
     }
     this.formatOptions.currency = currency;
     this._calculateValues();
