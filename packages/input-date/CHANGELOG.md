@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.15](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.14...@lion/input-date@0.5.15) (2020-03-01)
+
+
+### Bug Fixes
+
+* **input-date:** use timezone offset in serializedValue ([#608](https://github.com/ing-bank/lion/issues/608)) ([8f2927b](https://github.com/ing-bank/lion/commit/8f2927be4ccd12662822e319d327de9cd149ac2f))
+
+
+
+
+
 ## [0.5.14](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.13...@lion/input-date@0.5.14) (2020-02-26)
 
 **Note:** Version bump only for package @lion/input-date

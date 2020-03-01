@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.5.15...@lion/input-iban@0.6.0) (2020-03-01)
+
+
+### Features
+
+* **validate:** use static validatorName instead of instance name ([#600](https://github.com/ing-bank/lion/issues/600)) ([7c45dd6](https://github.com/ing-bank/lion/commit/7c45dd683984e88e3216fba9fcae1b6dc73835b2))
+
+
+
+
+
 ## [0.5.15](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.5.14...@lion/input-iban@0.5.15) (2020-02-26)
 
 **Note:** Version bump only for package @lion/input-iban

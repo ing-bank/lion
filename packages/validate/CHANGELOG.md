@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.8...@lion/validate@0.7.0) (2020-03-01)
+
+
+### Features
+
+* **validate:** use static validatorName instead of instance name ([#600](https://github.com/ing-bank/lion/issues/600)) ([7c45dd6](https://github.com/ing-bank/lion/commit/7c45dd683984e88e3216fba9fcae1b6dc73835b2))
+
+
+
+
+
 ## [0.6.8](https://github.com/ing-bank/lion/compare/@lion/validate@0.6.7...@lion/validate@0.6.8) (2020-02-26)
 
 **Note:** Version bump only for package @lion/validate
