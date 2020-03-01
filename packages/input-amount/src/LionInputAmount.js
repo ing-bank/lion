@@ -1,9 +1,9 @@
 import { css } from '@lion/core';
-import { LocalizeMixin, getCurrencyName } from '@lion/localize';
+import { LocalizeMixin, getCurrencyName, localize } from '@lion/localize';
 import { LionInput } from '@lion/input';
 import { IsNumber } from '@lion/validate';
 import { parseAmount } from './parsers.js';
-import { formatAmount } from './formatters.js';
+import { formatAmount, normalizeCurrencyLabel } from './formatters.js';
 
 /**
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
@@ -40,7 +40,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
           // The data-label attribute will make sure that FormControl adds this to
           // input[aria-labelledby]
           el.setAttribute('data-label', '');
-          el.textContent = this.currency;
+
+          el.textContent = this.__CurrencyLabel();
           return el;
         }
         return null;
@@ -126,5 +127,13 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     // example, for a language switch with text 'en', an aria-label of 'english' is not
     // sufficient, it should also contain the abbreviation.
     this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
+  }
+
+  __CurrencyLabel(){
+    return normalizeCurrencyLabel(this.currency,this.__getLocale());
+  }
+
+  __getLocale() {
+    return this.locale || localize.locale;
   }
 }

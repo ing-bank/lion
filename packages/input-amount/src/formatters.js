@@ -23,3 +23,10 @@ export function formatAmount(modelValue, givenOptions) {
 
   return formatNumber(modelValue, options);
 }
+
+export function normalizeCurrencyLabel(currency, locale){
+  if(currency === 'TRY' && locale === 'tr-TR') {
+    return 'TL';
+  }
+  return currency;
+}
