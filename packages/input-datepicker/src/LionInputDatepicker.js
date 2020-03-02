@@ -178,22 +178,22 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
     }
   }
 
-  firstUpdated(c) {
-    super.firstUpdated(c);
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this.__toggleInvokerDisabled();
   }
 
   /**
    * @override
-   * @param {Map} c - changed properties
+   * @param {Map} changedProperties - changed properties
    */
-  updated(c) {
-    super.updated(c);
-    if (c.has('validators')) {
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('validators')) {
       const validators = [...(this.validators || [])];
       this.__syncDisabledDates(validators);
     }
-    if (c.has('label')) {
+    if (changedProperties.has('label')) {
       this.calendarHeading = this.calendarHeading || this.label;
     }
   }
