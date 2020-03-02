@@ -27,8 +27,8 @@ describe('SyncUpdatableMixin', () => {
             this.propB = 'init-b';
           }
 
-          firstUpdated(c) {
-            super.firstUpdated(c);
+          firstUpdated(changedProperties) {
+            super.firstUpdated(changedProperties);
             hasCalledFirstUpdated = true;
           }
 
