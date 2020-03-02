@@ -30,23 +30,23 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
   render() {
     return html`
       <div class="form-field__group-one">
-        ${this.groupOneTemplate()}
+        ${this._groupOneTemplate()}
       </div>
       <div class="form-field__group-two">
-        ${this.groupTwoTemplate()}
+        ${this._groupTwoTemplate()}
       </div>
     `;
   }
 
-  groupOneTemplate() {
+  _groupOneTemplate() {
     return html`
-      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.feedbackTemplate()}
+      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._feedbackTemplate()}
     `;
   }
 
-  groupTwoTemplate() {
+  _groupTwoTemplate() {
     return html`
-      ${this.inputGroupTemplate()}
+      ${this._inputGroupTemplate()}
     `;
   }
 

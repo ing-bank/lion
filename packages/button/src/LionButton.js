@@ -31,7 +31,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   render() {
     return html`
       <div class="btn">
-        ${this._renderBefore()}
+        ${this._beforeTemplate()}
         ${browserDetection.isIE11
           ? html`
               <div id="${this._buttonId}"><slot></slot></div>
@@ -39,7 +39,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           : html`
               <slot></slot>
             `}
-        ${this._renderAfter()}
+        ${this._afterTemplate()}
         <slot name="_button"></slot>
         <div class="click-area"></div>
       </div>
@@ -47,12 +47,12 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _renderBefore() {
+  _beforeTemplate() {
     return html``;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _renderAfter() {
+  _afterTemplate() {
     return html``;
   }
 

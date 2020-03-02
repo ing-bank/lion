@@ -136,11 +136,11 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
     ];
   }
 
-  get _invokerElement() {
+  get _invokerNode() {
     return this.querySelector(`#${this.__invokerId}`);
   }
 
-  get _calendarElement() {
+  get _calendarNode() {
     return this._overlayCtrl.contentNode.querySelector('#calendar');
   }
 
@@ -173,8 +173,8 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
   }
 
   __toggleInvokerDisabled() {
-    if (this._invokerElement) {
-      this._invokerElement.disabled = this.disabled || this.readOnly;
+    if (this._invokerNode) {
+      this._invokerNode.disabled = this.disabled || this.readOnly;
     }
   }
 
@@ -217,8 +217,8 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
 
   render() {
     return html`
-      ${this.labelTemplate()} ${this.helpTextTemplate()} ${this.inputGroupTemplate()}
-      ${this.feedbackTemplate()} ${this._overlayTemplate()}
+      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._inputGroupTemplate()}
+      ${this._feedbackTemplate()} ${this._overlayTemplate()}
     `;
   }
 
@@ -276,7 +276,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
     this._overlayCtrl.show();
     await Promise.all([
       this._overlayCtrl.contentNode.updateComplete,
-      this._calendarElement.updateComplete,
+      this._calendarNode.updateComplete,
     ]);
     this._onCalendarOverlayOpened();
   }
@@ -286,10 +286,10 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    */
   _onCalendarOverlayOpened() {
     if (this._focusCentralDateOnCalendarOpen) {
-      if (this._calendarElement.selectedDate) {
-        this._calendarElement.focusSelectedDate();
+      if (this._calendarNode.selectedDate) {
+        this._calendarNode.focusSelectedDate();
       } else {
-        this._calendarElement.focusCentralDate();
+        this._calendarNode.focusCentralDate();
       }
     }
   }
@@ -339,7 +339,7 @@ export class LionInputDatepicker extends OverlayMixin(LionInputDate) {
    * @override Configures OverlayMixin
    */
   get _overlayInvokerNode() {
-    return this._invokerElement;
+    return this._invokerNode;
   }
 
   /**

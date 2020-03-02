@@ -10,9 +10,16 @@ import { html } from '@lion/core';
 export class LionSelectInvoker extends LionButton {
   static get properties() {
     return {
+      /**
+       * @desc the option Element that is currently selected
+       */
       selectedElement: {
         type: Object,
       },
+      /**
+       * @desc When the connected LionSelectRich insteance is readOnly,
+       * this should be reflected in the invoker as well
+       */
       readOnly: {
         type: Boolean,
         reflect: true,
@@ -32,7 +39,7 @@ export class LionSelectInvoker extends LionButton {
     };
   }
 
-  get contentWrapper() {
+  get _contentWrapperNode() {
     return this.shadowRoot.getElementById('content-wrapper');
   }
 
@@ -53,7 +60,7 @@ export class LionSelectInvoker extends LionButton {
     return ``;
   }
 
-  _renderBefore() {
+  _beforeTemplate() {
     return html`
       <div id="content-wrapper">
         ${this._contentTemplate()}
@@ -62,7 +69,7 @@ export class LionSelectInvoker extends LionButton {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _renderAfter() {
+  _afterTemplate() {
     return html`
       <slot name="after"></slot>
     `;

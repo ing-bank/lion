@@ -194,7 +194,7 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       // eslint-disable-next-line class-methods-use-this
-      inputGroupTemplate() {
+      _inputGroupTemplate() {
         return html`
           <div class="input-group">
             <slot></slot>

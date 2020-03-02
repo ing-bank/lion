@@ -276,28 +276,28 @@ export const FormControlMixin = dedupeMixin(
       render() {
         return html`
           <div class="form-field__group-one">
-            ${this.groupOneTemplate()}
+            ${this._groupOneTemplate()}
           </div>
           <div class="form-field__group-two">
-            ${this.groupTwoTemplate()}
+            ${this._groupTwoTemplate()}
           </div>
         `;
       }
 
-      groupOneTemplate() {
+      _groupOneTemplate() {
         return html`
-          ${this.labelTemplate()} ${this.helpTextTemplate()}
+          ${this._labelTemplate()} ${this._helpTextTemplate()}
         `;
       }
 
-      groupTwoTemplate() {
+      _groupTwoTemplate() {
         return html`
-          ${this.inputGroupTemplate()} ${this.feedbackTemplate()}
+          ${this._inputGroupTemplate()} ${this._feedbackTemplate()}
         `;
       }
 
       // eslint-disable-next-line class-methods-use-this
-      labelTemplate() {
+      _labelTemplate() {
         return html`
           <div class="form-field__label">
             <slot name="label"></slot>
@@ -306,7 +306,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       // eslint-disable-next-line class-methods-use-this
-      helpTextTemplate() {
+      _helpTextTemplate() {
         return html`
           <small class="form-field__help-text">
             <slot name="help-text"></slot>
@@ -314,21 +314,21 @@ export const FormControlMixin = dedupeMixin(
         `;
       }
 
-      inputGroupTemplate() {
+      _inputGroupTemplate() {
         return html`
           <div class="input-group">
-            ${this.inputGroupBeforeTemplate()}
+            ${this._inputGroupBeforeTemplate()}
             <div class="input-group__container">
-              ${this.inputGroupPrefixTemplate()} ${this.inputGroupInputTemplate()}
-              ${this.inputGroupSuffixTemplate()}
+              ${this._inputGroupPrefixTemplate()} ${this._inputGroupInputTemplate()}
+              ${this._inputGroupSuffixTemplate()}
             </div>
-            ${this.inputGroupAfterTemplate()}
+            ${this._inputGroupAfterTemplate()}
           </div>
         `;
       }
 
       // eslint-disable-next-line class-methods-use-this
-      inputGroupBeforeTemplate() {
+      _inputGroupBeforeTemplate() {
         return html`
           <div class="input-group__before">
             <slot name="before"></slot>
@@ -336,7 +336,7 @@ export const FormControlMixin = dedupeMixin(
         `;
       }
 
-      inputGroupPrefixTemplate() {
+      _inputGroupPrefixTemplate() {
         return !Array.from(this.children).find(child => child.slot === 'prefix')
           ? nothing
           : html`
@@ -347,7 +347,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       // eslint-disable-next-line class-methods-use-this
-      inputGroupInputTemplate() {
+      _inputGroupInputTemplate() {
         return html`
           <div class="input-group__input">
             <slot name="input"></slot>
@@ -355,7 +355,7 @@ export const FormControlMixin = dedupeMixin(
         `;
       }
 
-      inputGroupSuffixTemplate() {
+      _inputGroupSuffixTemplate() {
         return !Array.from(this.children).find(child => child.slot === 'suffix')
           ? nothing
           : html`
@@ -366,7 +366,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       // eslint-disable-next-line class-methods-use-this
-      inputGroupAfterTemplate() {
+      _inputGroupAfterTemplate() {
         return html`
           <div class="input-group__after">
             <slot name="after"></slot>
@@ -375,7 +375,7 @@ export const FormControlMixin = dedupeMixin(
       }
 
       // eslint-disable-next-line class-methods-use-this
-      feedbackTemplate() {
+      _feedbackTemplate() {
         return html`
           <div class="form-field__feedback">
             <slot name="feedback"></slot>
