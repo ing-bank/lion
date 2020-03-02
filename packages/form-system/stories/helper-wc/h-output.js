@@ -37,8 +37,8 @@ export class HelperOutput extends LitElement {
     ];
   }
 
-  firstUpdated(c) {
-    super.firstUpdated(c);
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     if (!this.field) {
       // Fuzzy logic, but... practical
       const prev = this.previousElementSibling;

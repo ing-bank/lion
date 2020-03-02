@@ -25,8 +25,8 @@ export const SyncUpdatableMixin = dedupeMixin(
         this.__SyncUpdatableNamespace = {};
       }
 
-      firstUpdated(c) {
-        super.firstUpdated(c);
+      firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
         this.__SyncUpdatableNamespace.connected = true;
         this.__syncUpdatableInitialize();
       }
