@@ -1,4 +1,4 @@
-import { formatNumber, getFractionDigits } from '@lion/localize';
+import { formatNumber, getFractionDigits, normalizeCurrencyLabel } from '@lion/localize';
 
 /**
  * Formats a number considering the default fraction digits provided by Intl
@@ -24,9 +24,9 @@ export function formatAmount(modelValue, givenOptions) {
   return formatNumber(modelValue, options);
 }
 
-export function normalizeCurrencyLabel(currency, locale) {
-  if (currency === 'TRY' && locale === 'tr-TR') {
-    return 'TL';
+export function formatCurrencyLabel(currency, locale) {
+  if (currency === '') {
+    return '';
   }
-  return currency;
+  return normalizeCurrencyLabel(currency, locale);
 }

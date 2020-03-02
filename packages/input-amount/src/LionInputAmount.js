@@ -3,7 +3,7 @@ import { LocalizeMixin, getCurrencyName, localize } from '@lion/localize';
 import { LionInput } from '@lion/input';
 import { IsNumber } from '@lion/validate';
 import { parseAmount } from './parsers.js';
-import { formatAmount, normalizeCurrencyLabel } from './formatters.js';
+import { formatAmount, formatCurrencyLabel } from './formatters.js';
 
 /**
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
@@ -41,7 +41,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
           // input[aria-labelledby]
           el.setAttribute('data-label', '');
 
-          el.textContent = this.__CurrencyLabel();
+          el.textContent = this.__getCurrencyLabel();
           return el;
         }
         return null;
@@ -115,7 +115,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after')) {
-      this._currencyDisplayNode.textContent = this.__CurrencyLabel();
+      this._currencyDisplayNode.textContent = this.__getCurrencyLabel();
     }
     this.formatOptions.currency = currency;
     this._calculateValues();
@@ -129,8 +129,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency));
   }
 
-  __CurrencyLabel() {
-    return normalizeCurrencyLabel(this.currency, this.__getLocale());
+  __getCurrencyLabel() {
+    return formatCurrencyLabel(this.currency, this.__getLocale());
   }
 
   __getLocale() {
