@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.16](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.15...@lion/input-date@0.5.16) (2020-03-02)
+
+**Note:** Version bump only for package @lion/input-date
+
+
+
+
+
 ## [0.5.15](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.14...@lion/input-date@0.5.15) (2020-03-01)
 
 

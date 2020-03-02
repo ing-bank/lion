@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.16](https://github.com/ing-bank/lion/compare/@lion/form@0.4.15...@lion/form@0.4.16) (2020-03-02)
+
+
+### Bug Fixes
+
+* normalize subclasser apis ([ce0630f](https://github.com/ing-bank/lion/commit/ce0630f32b2206813e5cfd2c7842b2faa5141591))
+* **form:** leave accessible role to native form ([1310bd4](https://github.com/ing-bank/lion/commit/1310bd491e5363ec86159c1ae390964b1fb9cc16))
+
+
+
+
+
 ## [0.4.15](https://github.com/ing-bank/lion/compare/@lion/form@0.4.14...@lion/form@0.4.15) (2020-03-01)
 
 **Note:** Version bump only for package @lion/form
