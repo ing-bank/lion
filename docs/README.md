@@ -2,4 +2,4 @@
 
 First be sure to understand our [definitions](./definitions.md).
 
-- [Guidelines for Styling](./guidelinesStyling.md)
+- [Guidelines for Styling](./guidelines-styling.md)
