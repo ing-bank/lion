@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.1](https://github.com/ing-bank/lion/compare/@lion/field@0.11.0...@lion/field@0.11.1) (2020-03-02)
+
+
+### Bug Fixes
+
+* normalize subclasser apis ([ce0630f](https://github.com/ing-bank/lion/commit/ce0630f32b2206813e5cfd2c7842b2faa5141591))
+
+
+
+
+
 # [0.11.0](https://github.com/ing-bank/lion/compare/@lion/field@0.10.1...@lion/field@0.11.0) (2020-03-01)
 
 

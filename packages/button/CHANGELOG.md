@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.8](https://github.com/ing-bank/lion/compare/@lion/button@0.5.7...@lion/button@0.5.8) (2020-03-02)
+
+
+### Bug Fixes
+
+* normalize subclasser apis ([ce0630f](https://github.com/ing-bank/lion/commit/ce0630f32b2206813e5cfd2c7842b2faa5141591))
+
+
+
+
+
 ## [0.5.7](https://github.com/ing-bank/lion/compare/@lion/button@0.5.6...@lion/button@0.5.7) (2020-02-26)
 
 **Note:** Version bump only for package @lion/button
