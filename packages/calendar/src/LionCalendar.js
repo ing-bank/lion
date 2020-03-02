@@ -217,8 +217,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.__addEventForKeyboardNavigation();
   }
 
-  updated(changed) {
-    if (changed.has('__focusedDate') && this.__focusedDate) {
+  updated(changedProperties) {
+    if (changedProperties.has('__focusedDate') && this.__focusedDate) {
       this.focusCentralDate();
     }
   }

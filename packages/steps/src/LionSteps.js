@@ -31,10 +31,13 @@ export class LionSteps extends LitElement {
     };
   }
 
-  updated(changedProps) {
-    super.updated(changedProps);
-    if (changedProps.has('current')) {
-      this._onCurrentChanged({ current: this.current }, { current: changedProps.get('current') });
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('current')) {
+      this._onCurrentChanged(
+        { current: this.current },
+        { current: changedProperties.get('current') },
+      );
     }
   }
 
