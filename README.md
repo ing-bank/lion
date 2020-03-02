@@ -154,7 +154,7 @@ class MyElement extends ScopedElementsMixin(LitElement) {
   render() {
     return html`
       <lion-input label="Greeting" name="greeting" .modelValue=${'Hello world'}> </lion-input>
-      <lion-button>Save<lion-button> </lion-button></lion-button>
+      <lion-button>Save</lion-button>
     `;
   }
 }
