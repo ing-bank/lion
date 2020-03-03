@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/icon@0.3.4...@lion/icon@0.4.0) (2020-03-03)
+
+
+### Features
+
+* **icon:** add icon lazy loading system ([f887f97](https://github.com/ing-bank/lion/commit/f887f973f0071f5c2af3e62ef1634cf9ce7f4e76))
+
+
+
+
+
 ## [0.3.4](https://github.com/ing-bank/lion/compare/@lion/icon@0.3.3...@lion/icon@0.3.4) (2020-02-19)
 
 
