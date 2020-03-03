@@ -1,5 +1,6 @@
 import { expect, fixture, fixtureSync, aTimeout, html } from '@open-wc/testing';
-import { until, render } from '@lion/core';
+import { until } from '@lion/core';
+import { icons } from '../src/icons.js';
 
 import heartSvg from './heart.svg.js';
 import hammerSvg from './hammer.svg.js';
@@ -142,45 +143,6 @@ describe('lion-icon', () => {
     expect(elHammer.getAttribute('aria-hidden')).to.equal('false');
   });
 
-  it('supports dynamic icons using promises', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon
-          .svg=${import('./heart.svg.js').then(e => e.default)}
-          aria-label="Love"
-        ></lion-icon>
-      `,
-    );
-    await el.svg;
-    await el.updateComplete;
-    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
-  });
-
-  it('uses the default export, by default', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${import('./heart.svg.js')} aria-label="Love"></lion-icon>
-      `,
-    );
-    await el.svg;
-    await el.updateComplete;
-    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
-  });
-
-  it('supports dynamic icon bundles', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon
-          .svg=${import('./myIcon.bundle.js').then(e => e.heart)}
-          aria-label="Love"
-        ></lion-icon>
-      `,
-    );
-    await el.svg;
-    await el.updateComplete;
-    expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
-  });
-
   it('supports dynamic icons using until directive', async () => {
     const svgLoading = new Promise(resolve => {
       window.addEventListener('importDone', resolve);
@@ -233,84 +195,67 @@ describe('lion-icon', () => {
     expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
 
-  describe('race conditions with dynamic promisified icons', () => {
-    async function prepareRaceCondition(...svgs) {
-      const container = fixtureSync(`<div></div>`);
-      const resolves = svgs.map(svg => {
-        let resolveSvg;
+  it('supports icons using an icon id', async () => {
+    try {
+      icons.addIconResolver('foo', () => heartSvg);
+      const el = await fixture(
+        html`
+          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
+        `,
+      );
 
-        const svgProperty =
-          Promise.resolve(svg) === svg
-            ? new Promise(resolve => {
-                resolveSvg = () => resolve(svg);
-              })
-            : svg;
-
-        render(
-          html`
-            <lion-icon .svg=${svgProperty}></lion-icon>
-          `,
-          container,
-        );
-
-        return resolveSvg;
-      });
-
-      const icon = container.children[0];
-      await icon.updateComplete;
-      return [icon, ...resolves];
+      expect(el.children[0].dataset.testId).to.equal('svg-heart');
+    } finally {
+      icons.removeIconResolver('foo');
     }
+  });
 
-    it('renders in the order of rendering instead of the order of resolution', async () => {
-      let resolveHeartSvg;
-      let resolveHammerSvg;
-      let icon;
-      let svg;
-
-      [icon, resolveHeartSvg, resolveHammerSvg] = await prepareRaceCondition(
-        Promise.resolve(heartSvg),
-        Promise.resolve(hammerSvg),
+  it('clears rendered icon when icon id is removed', async () => {
+    try {
+      icons.addIconResolver('foo', () => heartSvg);
+      const el = await fixture(
+        html`
+          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
+        `,
       );
-      resolveHeartSvg();
-      resolveHammerSvg();
-      await aTimeout();
-      [svg] = icon.children;
-      expect(svg).to.exist;
-      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
+      await el.updateComplete;
+      el.removeAttribute('icon-id');
+      await el.updateComplete;
+      expect(el.children.length).to.equal(0);
+    } finally {
+      icons.removeIconResolver('foo');
+    }
+  });
 
-      [icon, resolveHeartSvg, resolveHammerSvg] = await prepareRaceCondition(
-        Promise.resolve(heartSvg),
-        Promise.resolve(hammerSvg),
+  it('does not create race conditions when icon changed while resolving icon id', async () => {
+    try {
+      icons.addIconResolver(
+        'foo',
+        () => new Promise(resolve => setTimeout(() => resolve(heartSvg), 10)),
       );
-      resolveHammerSvg();
-      resolveHeartSvg();
-      await aTimeout();
-      [svg] = icon.children;
-      expect(svg).to.exist;
-      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
-    });
+      icons.addIconResolver(
+        'bar',
+        () => new Promise(resolve => setTimeout(() => resolve(hammerSvg), 4)),
+      );
+      const el = await fixture(
+        html`
+          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
+        `,
+      );
 
-    it('renders if a resolved promise was replaced by a string', async () => {
-      const [icon, resolveHeartSvg] = await prepareRaceCondition(
-        Promise.resolve(heartSvg),
-        hammerSvg,
-      );
-      resolveHeartSvg();
-      await aTimeout();
-      const [svg] = icon.children;
-      expect(svg).to.exist;
-      expect(svg.getAttribute('data-test-id')).to.equal('svg-hammer');
-    });
+      await el.updateComplete;
+      el.iconId = 'bar:lorem:ipsum';
+      await el.updateComplete;
+      await aTimeout(4);
 
-    it('does not render if a resolved promise was replaced by another unresolved promise', async () => {
-      const [icon, resolveHeartSvg] = await prepareRaceCondition(
-        Promise.resolve(heartSvg),
-        Promise.resolve(hammerSvg),
-      );
-      resolveHeartSvg();
-      await aTimeout();
-      const [svg] = icon.children;
-      expect(svg).to.not.exist;
-    });
+      // heart is still loading at this point, but hammer came later so that should be later
+      expect(el.children[0].dataset.testId).to.equal('svg-hammer');
+      await aTimeout(10);
+      // heart finished loading, but it should not be rendered because hammer came later
+      expect(el.children[0].dataset.testId).to.equal('svg-hammer');
+    } finally {
+      icons.removeIconResolver('foo');
+      icons.removeIconResolver('bar');
+    }
   });
 });

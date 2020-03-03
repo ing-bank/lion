@@ -1,26 +1,59 @@
 import { html, nothing, TemplateResult, css, render, LitElement } from '@lion/core';
+import { icons } from './icons.js';
 
-const isPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
+function unwrapSvg(wrappedSvgObject) {
+  const svgObject =
+    wrappedSvgObject && wrappedSvgObject.default ? wrappedSvgObject.default : wrappedSvgObject;
+  return typeof svgObject === 'function' ? svgObject(html) : svgObject;
+}
+
+function validateSvg(svg) {
+  if (!(svg === nothing || svg instanceof TemplateResult)) {
+    throw new Error(
+      'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"',
+    );
+  }
+}
 
 /**
  * Custom element for rendering SVG icons
- * @polymerElement
  */
 export class LionIcon extends LitElement {
   static get properties() {
     return {
-      // svg is a property to ensure the setter is called if the property is set before upgrading
+      /**
+       * @desc When icons are not loaded as part of an iconset defined on iconManager,
+       * it's possible to directly load an svg.
+       * @type {TemplateResult|function}
+       */
       svg: {
         type: Object,
       },
-      role: {
-        type: String,
-        attribute: 'role',
-        reflect: true,
-      },
+      /**
+       * @desc The iconId allows to access icons that are registered to the IconManager
+       * For instance, "lion:space:alienSpaceship"
+       * @type {string}
+       */
       ariaLabel: {
         type: String,
         attribute: 'aria-label',
+        reflect: true,
+      },
+      /**
+       * @desc The iconId allows to access icons that are registered to the IconManager
+       * For instance, "lion:space:alienSpaceship"
+       * @type {string}
+       */
+      iconId: {
+        type: String,
+        attribute: 'icon-id',
+      },
+      /**
+       * @private
+       */
+      role: {
+        type: String,
+        attribute: 'role',
         reflect: true,
       },
     };
@@ -63,6 +96,10 @@ export class LionIcon extends LitElement {
     if (changedProperties.has('ariaLabel')) {
       this._onLabelChanged(changedProperties);
     }
+
+    if (changedProperties.has('iconId')) {
+      this._onIconIdChanged(changedProperties.get('iconId'));
+    }
   }
 
   render() {
@@ -85,16 +122,8 @@ export class LionIcon extends LitElement {
     this.__svg = svg;
     if (svg === undefined || svg === null) {
       this._renderSvg(nothing);
-    } else if (isPromise(svg)) {
-      this._renderSvg(nothing); // show nothing before resolved
-      svg.then(resolvedSvg => {
-        // render only if it is still the same and was not replaced after loading started
-        if (svg === this.__svg) {
-          this._renderSvg(this.constructor.__unwrapSvg(resolvedSvg));
-        }
-      });
     } else {
-      this._renderSvg(this.constructor.__unwrapSvg(svg));
+      this._renderSvg(unwrapSvg(svg));
     }
   }
 
@@ -112,21 +141,24 @@ export class LionIcon extends LitElement {
   }
 
   _renderSvg(svgObject) {
-    this.constructor.__validateSvg(svgObject);
+    validateSvg(svgObject);
     render(svgObject, this);
   }
 
-  static __unwrapSvg(wrappedSvgObject) {
-    const svgObject =
-      wrappedSvgObject && wrappedSvgObject.default ? wrappedSvgObject.default : wrappedSvgObject;
-    return typeof svgObject === 'function' ? svgObject(html) : svgObject;
-  }
+  async _onIconIdChanged(prevIconId) {
+    if (!this.iconId) {
+      // clear if switching from iconId to no iconId
+      if (prevIconId) {
+        this.svg = null;
+      }
+    } else {
+      const iconIdBeforeResolve = this.iconId;
+      const svg = await icons.resolveIconForId(iconIdBeforeResolve);
 
-  static __validateSvg(svg) {
-    if (!(svg === nothing || svg instanceof TemplateResult)) {
-      throw new Error(
-        'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"',
-      );
+      // update SVG if it did not change in the meantime to avoid race conditions
+      if (this.iconId === iconIdBeforeResolve) {
+        this.svg = svg;
+      }
     }
   }
 }
