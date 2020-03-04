@@ -6,6 +6,7 @@ import { forceSpaceBetweenCurrencyCodeAndNumber } from './forceSpaceBetweenCurre
 import { forceYenSymbol } from './forceYenSymbol.js';
 import { forceSpaceInsteadOfZeroForGroup } from './forceSpaceInsteadOfZeroForGroup.js';
 import { forceTryCurrencyCode } from './forceTryCurrencyCode.js';
+import { forceENAUSymbols } from './forceENAUSymbols.js';
 
 /**
  * Function with all fixes on localize
@@ -37,6 +38,9 @@ export function normalizeIntl(formattedParts, options, _locale) {
     }
     if (_locale === 'tr-TR') {
       normalize = forceTryCurrencyCode(normalize, options);
+    }
+    if (_locale === 'en-AU') {
+      normalize = forceENAUSymbols(normalize, options);
     }
   }
   return normalize;
