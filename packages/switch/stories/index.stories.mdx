@@ -3,6 +3,7 @@ import { Validator } from '@lion/validate';
 
 import { LionSwitch } from '../src/LionSwitch';
 import '../lion-switch.js';
+import '../../helpers/sb-action-logger.js';
 
 <Meta title="Buttons/Switch" />
 
@@ -81,8 +82,9 @@ Simple example that illustrates where validation feedback will be displayed.
         return [...super.validationTypes, 'info'];
       }
     }
-    if (!customElements.get('custom-switch'))
+    if (!customElements.get('custom-switch')) {
       customElements.define('custom-switch', CustomSwitch);
+    }
     return html`
       <custom-switch
         id="newsletterCheck"
@@ -132,16 +134,33 @@ customElements.define('custom-switch', CustomSwitch);
 
 You can listen for a `checked-changed` event that is fired when the switch is clicked.
 
-<Story name="Handler">{html`
-  <lion-switch
-    label="Label"
-    @checked-changed="${(e) => console.log(e.target.checked)}">
-  </lion-switch>
-`}</Story>
+<Story name="checked-changed handler">
+  {() => {
+    const uid = Math.random().toString(36).substr(2, 10);
+    return html`
+      <lion-switch
+        label="Label"
+        @checked-changed="${(e) => {
+          document.getElementById(`logger-${uid}`).log(`Current value: ${e.target.checked}`);
+        }}">
+      </lion-switch>
+      <sb-action-logger id="logger-${uid}"></sb-action-logger>
+    `;
+  }}
+</Story>
+
+```js
+import '@lion/helpers/sb-action-logger.js';
+
+const uid = Math.random().toString(36).substr(2, 10);
+```
 
 ```html
 <lion-switch
   label="Label"
-  @checked-changed="${(e) => console.log(e.target.checked)}">
+  @checked-changed="${(e) => {
+    document.getElementById(`logger-${uid}`).log(`Current value: ${e.target.checked}`);
+  }}">
+  <sb-action-logger id="logger-${uid}"></sb-action-logger>
 </lion-switch>
 ```
