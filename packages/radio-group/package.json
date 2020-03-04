@@ -36,10 +36,10 @@
   "dependencies": {
     "@lion/choice-input": "0.7.3",
     "@lion/core": "0.4.4",
-    "@lion/fieldset": "0.9.1"
+    "@lion/fieldset": "0.9.1",
+    "@lion/input": "0.5.16"
   },
   "devDependencies": {
-    "@lion/radio": "0.4.6",
     "@lion/validate": "0.7.0",
     "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",

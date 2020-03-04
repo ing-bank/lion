@@ -1,5 +1,4 @@
 import { LitElement } from '@lion/core';
-import '@lion/option/lion-option.js';
 import { OverlayController } from '@lion/overlays';
 import { Required } from '@lion/validate';
 import {
@@ -12,6 +11,7 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import { LionSelectRich } from '../index.js';
+import '../lion-option.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
 import './keyboardEventShimIE.js';

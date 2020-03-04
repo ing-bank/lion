@@ -4,7 +4,7 @@
 
 `lion-checkbox-group` component enhances the functionality of the native `<input type="checkbox">` element. Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
-You should use [lion-checkbox](../checkbox/)'s inside this element.
+You should use `lion-checkbox` inside this element.
 
 ## Live Demo/Documentation
 
@@ -15,12 +15,12 @@ You should use [lion-checkbox](../checkbox/)'s inside this element.
 ### Installation
 
 ```sh
-npm i --save @lion/checkbox @lion/checkbox-group
+npm i --save @lion/checkbox-group
 ```
 
 ```js
-import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
+import '@lion/checkbox-group/lion-checkbox.js';
 ```
 
 ### Example

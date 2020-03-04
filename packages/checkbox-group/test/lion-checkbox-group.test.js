@@ -1,7 +1,8 @@
-import '@lion/checkbox/lion-checkbox.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { expect, fixture, html } from '@open-wc/testing';
+
 import '../lion-checkbox-group.js';
+import '../lion-checkbox.js';
 
 beforeEach(() => {
   localizeTearDown();

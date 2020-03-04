@@ -4,7 +4,7 @@
 
 `lion-radio-group` component is webcomponent that enhances the functionality of the native `<input type="radio">` element. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 
-You should use [lion-radio](../radio/)'s inside this element.
+You should use `lion-radio` inside this element.
 
 ## Live Demo/Documentation
 
@@ -15,12 +15,12 @@ You should use [lion-radio](../radio/)'s inside this element.
 ### Installation
 
 ```sh
-npm i --save @lion/radio @lion/radio-group
+npm i --save @lion/radio-group
 ```
 
 ```js
-import '@lion/radio/lion-radio.js';
 import '@lion/radio-group/lion-radio-group.js';
+import '@lion/radio-group/lion-radio.js';
 ```
 
 ### Example
