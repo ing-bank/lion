@@ -1,8 +1,8 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
-import '@lion/checkbox/lion-checkbox.js';
 
 import '../lion-checkbox-group.js';
+import '../lion-checkbox.js';
 
 <Meta title="Forms/Checkbox Group" parameters={{ component: 'lion-checkbox-group' }} />
 
@@ -48,12 +48,12 @@ Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page)
 ### Installation
 
 ```sh
-npm i --save @lion/checkbox @lion/checkbox-group
+npm i --save @lion/checkbox-group
 ```
 
 ```js
-import '@lion/checkbox/lion-checkbox.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
+import '@lion/checkbox-group/lion-checkbox.js';
 ```
 
 ### Model value

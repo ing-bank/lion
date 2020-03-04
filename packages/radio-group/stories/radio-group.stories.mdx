@@ -1,7 +1,8 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { loadDefaultFeedbackMessages, Required, Validator } from '@lion/validate';
-import '@lion/radio/lion-radio.js';
+
 import '../lion-radio-group.js';
+import '../lion-radio.js';
 
 <Meta title="Forms/Radio Group" parameters={{ component: 'lion-radio-group' }} />
 
@@ -44,12 +45,12 @@ Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page)
 ### Installation
 
 ```sh
-npm i --save @lion/radio @lion/radio-group
+npm i --save @lion/radio-group
 ```
 
 ```js
-import '@lion/radio/lion-radio.js';
 import '@lion/radio-group/lion-radio-group.js';
+import '@lion/radio-group/lion-radio.js';
 ```
 
 

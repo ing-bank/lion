@@ -22,7 +22,7 @@ npm i --save @lion/select-rich
 ```js
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/select-rich/lion-options.js';
-import '@lion/option/lion-option.js';
+import '@lion/select-rich/lion-option.js';
 ```
 
 ### Example

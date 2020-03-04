@@ -1,6 +1,7 @@
-import '@lion/radio/lion-radio.js';
 import { expect, fixture, html, nextFrame } from '@open-wc/testing';
+
 import '../lion-radio-group.js';
+import '../lion-radio.js';
 
 describe('<lion-radio-group>', () => {
   it('should have role = radiogroup', async () => {
