@@ -13,3 +13,4 @@ export { getGroupSeparator } from './src/number/getGroupSeparator.js';
 export { localize, setLocalize } from './src/localize.js';
 export { LocalizeManager } from './src/LocalizeManager.js';
 export { LocalizeMixin } from './src/LocalizeMixin.js';
+export { normalizeCurrencyLabel } from './src/number/normalizeCurrencyLabel.js';

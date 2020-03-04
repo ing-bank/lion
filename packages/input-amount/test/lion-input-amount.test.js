@@ -79,6 +79,12 @@ describe('<lion-input-amount>', () => {
     expect(Array.from(el.children).find(child => child.slot === 'after').innerText).to.equal('EUR');
   });
 
+  it('displays correct currency for TRY if locale is tr-TR', async () => {
+    localize.locale = 'tr-TR';
+    const el = await fixture(`<lion-input-amount currency="TRY"></lion-input-amount>`);
+    expect(Array.from(el.children).find(child => child.slot === 'after').innerText).to.equal('TL');
+  });
+
   it('can update currency', async () => {
     const el = await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`);
     el.currency = 'USD';
