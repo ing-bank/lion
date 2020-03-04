@@ -1,7 +1,6 @@
 import '../packages/ajax/index.js';
 import '../packages/button/index.js';
 import '../packages/calendar/index.js';
-import '../packages/checkbox/index.js';
 import '../packages/checkbox-group/index.js';
 import '../packages/choice-input/index.js';
 import '../packages/core/index.js';
@@ -16,9 +15,7 @@ import '../packages/input-date/index.js';
 import '../packages/input-email/index.js';
 import '../packages/input-iban/index.js';
 import '../packages/localize/index.js';
-import '../packages/option/index.js';
 import '../packages/overlays/index.js';
-import '../packages/radio/index.js';
 import '../packages/radio-group/index.js';
 import '../packages/select/index.js';
 import '../packages/select-rich/index.js';

@@ -1,6 +1,7 @@
-import '@lion/option/lion-option.js';
 import { Required } from '@lion/validate';
 import { expect, fixture, html, triggerBlurFor, triggerFocusFor } from '@open-wc/testing';
+
+import '../lion-option.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
 import './keyboardEventShimIE.js';
