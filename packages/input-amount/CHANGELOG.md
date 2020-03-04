@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.17](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.16...@lion/input-amount@0.5.17) (2020-03-04)
+
+
+### Bug Fixes
+
+* **input-amount:** normalize added for currency label ([#618](https://github.com/ing-bank/lion/issues/618)) ([1bec11a](https://github.com/ing-bank/lion/commit/1bec11a2672671fd981f63eb00ba169e4df9451b))
+
+
+
+
+
 ## [0.5.16](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.15...@lion/input-amount@0.5.16) (2020-03-02)
 
 **Note:** Version bump only for package @lion/input-amount

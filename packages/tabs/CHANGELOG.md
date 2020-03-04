@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.4...@lion/tabs@0.2.5) (2020-03-04)
+
+
+### Bug Fixes
+
+* **tabs:** prevent scrolling when initially focussing a tab ([e3bbc3e](https://github.com/ing-bank/lion/commit/e3bbc3ecf1d159c54edf85d85a00652f20ab2a68))
+
+
+
+
+
 ## [0.2.4](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.3...@lion/tabs@0.2.4) (2020-02-19)
 
 

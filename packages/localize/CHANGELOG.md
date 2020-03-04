@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.9](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.8...@lion/localize@0.8.9) (2020-03-04)
+
+
+### Bug Fixes
+
+* **input-amount:** normalize added for currency label ([#618](https://github.com/ing-bank/lion/issues/618)) ([1bec11a](https://github.com/ing-bank/lion/commit/1bec11a2672671fd981f63eb00ba169e4df9451b))
+* **localize:** force symbols for locale 'en-AU' ([#619](https://github.com/ing-bank/lion/issues/619)) ([a9ea72b](https://github.com/ing-bank/lion/commit/a9ea72b7dff1d87c5a0dde85edead5135d1efcaf))
+
+
+
+
+
 ## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/localize@0.8.7...@lion/localize@0.8.8) (2020-02-26)
 
 **Note:** Version bump only for package @lion/localize

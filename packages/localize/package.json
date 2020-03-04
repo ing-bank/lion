@@ -1,6 +1,6 @@
 {
   "name": "@lion/localize",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "The localization system helps to manage localization data split into locales and automate its loading",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
