@@ -1,16 +1,15 @@
-import { expect, fixture, html, aTimeout, oneEvent } from '@open-wc/testing';
-import sinon from 'sinon';
+import { browserDetection } from '@lion/core';
+import { aTimeout, expect, fixture, html, oneEvent } from '@open-wc/testing';
 import {
+  down,
+  keyDownOn,
+  keyUpOn,
   makeMouseEvent,
   pressEnter,
   pressSpace,
-  down,
   up,
-  keyDownOn,
-  keyUpOn,
 } from '@polymer/iron-test-helpers/mock-interactions.js';
-import { browserDetection } from '@lion/core';
-
+import sinon from 'sinon';
 import '../lion-button.js';
 
 function getTopElement(el) {
@@ -225,7 +224,7 @@ describe('lion-button', () => {
 
     it('is accessible when disabled', async () => {
       const el = await fixture(`<lion-button disabled>foo</lion-button>`);
-      await expect(el).to.be.accessible();
+      await expect(el).to.be.accessible({ ignoredRules: ['color-contrast'] });
     });
   });
 
