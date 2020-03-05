@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Helpers that are used throughout lion and can be used outside",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,7 +34,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.4.4"
+    "@lion/core": "0.4.5"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.10.4",

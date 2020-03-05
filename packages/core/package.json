@@ -1,6 +1,6 @@
 {
   "name": "@lion/core",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Core functionality that is shared across all Lion Web Components",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",

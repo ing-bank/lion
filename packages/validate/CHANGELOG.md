@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.7.1...@lion/validate@0.8.0) (2020-03-05)
+
+
+### Features
+
+* use Scoped Elements ([15b4a5e](https://github.com/ing-bank/lion/commit/15b4a5ebb388e158f6dc2529954ba6a23f325eb3))
+
+
+
+
+
 ## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/validate@0.7.0...@lion/validate@0.7.1) (2020-03-04)
 
 **Note:** Version bump only for package @lion/validate

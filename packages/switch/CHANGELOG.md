@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/switch@0.6.3...@lion/switch@0.7.0) (2020-03-05)
+
+
+### Features
+
+* use Scoped Elements ([15b4a5e](https://github.com/ing-bank/lion/commit/15b4a5ebb388e158f6dc2529954ba6a23f325eb3))
+
+
+
+
+
 ## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/switch@0.6.2...@lion/switch@0.6.3) (2020-03-05)
 
 

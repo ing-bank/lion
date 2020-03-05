@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/ing-bank/lion/compare/@lion/core@0.4.4...@lion/core@0.4.5) (2020-03-05)
+
+
+### Bug Fixes
+
+* **core:** use dedupeMixin [@open-wc](https://github.com/open-wc) ([d1beffb](https://github.com/ing-bank/lion/commit/d1beffbff58a4bb0e2029e8dfc3cba7158b97eed))
+
+
+
+
+
 ## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/core@0.4.3...@lion/core@0.4.4) (2020-02-19)
 
 
