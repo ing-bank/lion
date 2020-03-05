@@ -23,10 +23,9 @@ import '@lion/icon/lion-icon.js';
 ### Example
 
 ```js
-import 'lion-icon/lion-icon.js';
-import bugSvg from './somewhere';
+import './somewhere/my-iconset.js';
 ```
 
 ```html
-<lion-icon .svg="${bugSvg}"></lion-icon>
+<lion-icon icon-id="somewhere:myIconset:foo"></lion-icon>
 ```
