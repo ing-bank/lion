@@ -1,7 +1,7 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import { Validator } from '@lion/validate';
 
-import { LionSwitch } from '../src/LionSwitch';
+import { LionSwitch } from '../index.js';
 import '../lion-switch.js';
 import '@lion/helpers/sb-action-logger.js';
 
@@ -76,13 +76,16 @@ Simple example that illustrates where validation feedback will be displayed.
         return "You won't get the latest news!";
       }
     };
-    class CustomSwitch extends LionSwitch {
-      static get validationTypes() {
-        return [...super.validationTypes, 'info'];
-      }
-    }
-    if (!customElements.get('custom-switch')) {
-      customElements.define('custom-switch', CustomSwitch);
+    const tagName = 'custom-switch';
+    if (!customElements.get(tagName)) {
+      customElements.define(
+        tagName,
+        class CustomSwitch extends LionSwitch {
+          static get validationTypes() {
+            return [...super.validationTypes, 'info'];
+          }
+        },
+      );
     }
     return html`
       <custom-switch
@@ -97,7 +100,7 @@ Simple example that illustrates where validation feedback will be displayed.
 
 ```js
 import { Validator } from '@lion/validate';
-import { LionSwitch } from '@lion/switch/src/LionSwitch';
+import { LionSwitch } from '@lion/switch';
 
 const IsTrue = class extends Validator {
   static get validatorName() {
