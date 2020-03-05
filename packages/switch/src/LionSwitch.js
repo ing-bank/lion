@@ -72,8 +72,6 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
   _isEmpty() {}
 
   __handleButtonSwitchCheckedChanged() {
-    // TODO: should be replaced by "_inputNode" after the next breaking change
-    // https://github.com/ing-bank/lion/blob/master/packages/field/src/FormControlMixin.js#L78
     this.checked = this._inputNode.checked;
   }
 
