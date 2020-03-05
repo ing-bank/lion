@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 
-import { dedupeMixin, SlotMixin } from '@lion/core';
+import { dedupeMixin, SlotMixin, ScopedElementsMixin, getScopedTagName } from '@lion/core';
 import { localize } from '@lion/localize';
+import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
 import { AsyncQueue } from './utils/AsyncQueue.js';
@@ -24,7 +25,14 @@ function arrayDiff(array1 = [], array2 = []) {
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(superclass)) {
+    class ValidateMixin extends ScopedElementsMixin(SyncUpdatableMixin(SlotMixin(superclass))) {
+      static get scopedElements() {
+        return {
+          ...super.scopedElements,
+          'lion-validation-feedback': LionValidationFeedback,
+        };
+      }
+
       static get properties() {
         return {
           /**
@@ -108,7 +116,10 @@ export const ValidateMixin = dedupeMixin(
       get slots() {
         return {
           ...super.slots,
-          feedback: () => document.createElement('lion-validation-feedback'),
+          feedback: () =>
+            document.createElement(
+              getScopedTagName('lion-validation-feedback', this.constructor.scopedElements),
+            ),
         };
       }
 
@@ -181,18 +192,10 @@ export const ValidateMixin = dedupeMixin(
         localize.addEventListener('localeChanged', this._updateFeedbackComponent);
       }
 
-      /**
-       * Should be overridden by subclasses if a different validation-feedback component is used
-       */
-      async _loadFeedbackComponent() {
-        await import('../lion-validation-feedback.js');
-      }
-
       firstUpdated(changedProperties) {
         super.firstUpdated(changedProperties);
         this.__validateInitialized = true;
         this.validate();
-        this._loadFeedbackComponent();
       }
 
       updateSync(name, oldValue) {

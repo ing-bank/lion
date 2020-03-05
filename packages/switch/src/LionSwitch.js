@@ -1,10 +1,9 @@
-import { html, css } from '@lion/core';
+import { html, css, ScopedElementsMixin, getScopedTagName } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
+import { LionSwitchButton } from './LionSwitchButton.js';
 
-import '../lion-switch-button.js';
-
-export class LionSwitch extends ChoiceInputMixin(LionField) {
+export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
       super.styles,
@@ -16,10 +15,20 @@ export class LionSwitch extends ChoiceInputMixin(LionField) {
     ];
   }
 
+  static get scopedElements() {
+    return {
+      ...super.scopedElements,
+      'lion-switch-button': LionSwitchButton,
+    };
+  }
+
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement('lion-switch-button'),
+      input: () =>
+        document.createElement(
+          getScopedTagName('lion-switch-button', this.constructor.scopedElements),
+        ),
     };
   }
 
