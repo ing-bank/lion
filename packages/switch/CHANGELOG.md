@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/switch@0.6.2...@lion/switch@0.6.3) (2020-03-05)
+
+
+### Bug Fixes
+
+* **switch:** remove old todo ([a242aca](https://github.com/ing-bank/lion/commit/a242aca7318c07e8358dee22c6d307dea6daa4bb))
+
+
+
+
+
 ## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/switch@0.6.1...@lion/switch@0.6.2) (2020-03-04)
 
 **Note:** Version bump only for package @lion/switch
