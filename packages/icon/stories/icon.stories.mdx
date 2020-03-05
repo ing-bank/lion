@@ -1,5 +1,8 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
-import { bug24 } from './icons/iconset-bugs.js';
+import './icons/iconset-bugs.js';
+import './icons/iconset-misc.js';
+import * as spaceSet from './icons/iconset-space.js';
+
 import '../lion-icon.js';
 import './icon-resolvers.js';
 
@@ -37,14 +40,39 @@ npm i --save @lion/icon
 import '@lion/icon/lion-icon.js';
 ```
 
-### Displaying icons
+### Icon sets
 
 Icons are displayed using icon sets. These are collections of icons, lazily loaded on demand for performance.
 See the system documentation to learn more about icon sets.
 
-<Story name="Iconset">
+<Story name="Icon sets">
   {html`
-    <lion-icon icon-id="lion:space:alienSpaceship"></lion-icon>
+    ${Object.keys(spaceSet).map(
+      name => html`
+      <style>
+        .demo-icon__container {
+          display: inline-flex;
+          position: relative;
+          flex-grow: 1;
+          flex-direction: column;
+          align-items: center;
+          width: 80px;
+          height: 80px;
+          padding: 4px;
+        }
+        .demo-icon__name {
+          font-size: 10px;
+        }
+      </style>
+      <div class="demo-icon__container" title="lion:space:${name}">
+        <lion-icon
+          icon-id="lion:space:${name}"
+          aria-label="icon: ${name}"
+        ></lion-icon>
+        <span class="demo-icon__name">${name}</span>
+      </div>
+      `
+    )}
   `}
 </Story>
 
@@ -75,30 +103,30 @@ A `lion-icon` without an `aria-label` attribute will be automatically given an `
 
 By default, a `lion-icon` will be `1em` × `1em` (the current line-height).
 
-`lion-icon` uses SVGs and may be styled with CSS, including using CSS properties such as `fill` and `stroke`:
+`lion-icon` uses SVGs and may be styled with CSS, including using CSS properties such as `fill`:
 
 <Story name="Styling">
   {html`
     <style>
-      lion-icon.custom {
-        width: 50px;
-        height: 50px;
+      .demo-icon {
+        width: 160px;
+        height: 160px;
         fill: blue;
-        stroke: red;
       }
     </style>
-    <lion-icon icon-id="lion:bugs:bug02" aria-label="Pointing left"></lion-icon>
+    <lion-icon icon-id="lion:bugs:bug02" aria-label="Bug" class="demo-icon"></lion-icon>
   `}
 </Story>
 
 ```html
 <style>
-  lion-icon {
+  .demo-icon {
+    width: 160px;
+    height: 160px;
     fill: blue;
-    stroke: lightsteelblue;
   }
 </style>
-<lion-icon icon-id="lion:bugs:bug02" aria-label="Pointing left"></lion-icon>
+<lion-icon icon-id="lion:bugs:bug02" aria-label="Bug" class="demo-icon"></lion-icon>
 ```
 
 See <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS" target="_blank">SVG and CSS</a> on MDN web docs for more information.
