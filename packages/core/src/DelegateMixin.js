@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import { dedupeMixin } from './dedupeMixin.js';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
  * # DelegateMixin

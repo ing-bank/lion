@@ -1,5 +1,5 @@
 /* global ShadyCSS */
-import { dedupeMixin } from './dedupeMixin.js';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 export const UpdateStylesMixin = dedupeMixin(
   superclass =>
