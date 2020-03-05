@@ -217,7 +217,7 @@ describe('lion-select-rich', () => {
       `);
 
       expect(el._invokerNode).to.exist;
-      expect(el._invokerNode.tagName).to.equal('LION-SELECT-INVOKER');
+      expect(el._invokerNode.tagName).to.include('LION-SELECT-INVOKER');
     });
 
     it('sets the first option as the selectedElement if no option is checked', async () => {
