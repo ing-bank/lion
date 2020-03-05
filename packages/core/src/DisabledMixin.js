@@ -1,4 +1,4 @@
-import { dedupeMixin } from './dedupeMixin.js';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
  * #DisabledMixin

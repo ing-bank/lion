@@ -51,8 +51,10 @@ export { styleMap } from 'lit-html/directives/style-map.js';
 export { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export { until } from 'lit-html/directives/until.js';
 export { render as renderShady } from 'lit-html/lib/shady-render.js';
+// open-wc
+export { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
+export { dedupeMixin } from '@open-wc/dedupe-mixin';
 // ours
-export { dedupeMixin } from './src/dedupeMixin.js';
 export { DelegateMixin } from './src/DelegateMixin.js';
 export { DisabledMixin } from './src/DisabledMixin.js';
 export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';

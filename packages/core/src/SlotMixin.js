@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import { dedupeMixin } from './dedupeMixin.js';
-
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 /**
  * # SlotMixin
  * `SlotMixin`, when attached to the DOM it creates content for defined slots in the Light DOM.
