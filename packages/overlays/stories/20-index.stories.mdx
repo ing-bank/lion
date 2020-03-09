@@ -584,3 +584,162 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
   </div>
 </demo-overlay-system>
 ```
+
+
+## Local Backdrop
+We provide a possibility to add a backdrop to a locally placed overlay.
+You can pass your backdropNode as a configuration parameter and control its styling reacting upon OverlayController events.
+Here is the example below
+
+<Story name="Local backdrop">
+  {() => {
+    let backdropNode = document.createElement('div');
+    backdropNode.classList.add('local-backdrop-01');
+    return html`
+    <style>
+      .local-backdrop-01 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background-color: red;
+        opacity: 0.3;
+        display: none;
+      }
+    </style>
+    <demo-overlay-system
+      @before-opened=${(e) => backdropNode.style.display = 'block'}
+      @before-closed=${(e) => backdropNode.style.display = 'none'}
+      .config=${{ hasBackdrop: true, placementMode: 'local', backdropNode }}
+    >
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-overlay-system>
+  `}}
+</Story>
+
+```js
+  let backdropNode = document.createElement('div');
+  backdropNode.classList.add('local-backdrop-01');
+  return html`
+  <style>
+    .local-backdrop-01 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-color: red;
+      opacity: 0.3;
+      display: none;
+    }
+  </style>
+  <demo-overlay-system
+    @before-opened=${(e) => backdropNode.style.display = 'block'}
+    @before-closed=${(e) => backdropNode.style.display = 'none'}
+    .config=${{ hasBackdrop: true, placementMode: 'local', backdropNode }}
+  >
+    <button slot="invoker">Click me to open the overlay!</button>
+    <div slot="content" class="demo-overlay">
+      Hello! You can close this notification here:
+      <button
+        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+      >
+        ⨯
+      </button>
+    </div>
+  </demo-overlay-system>
+```
+
+## Declarative Local Backdrop
+Another way to add custom backdrop is declaratively add an element with `slot="backdrop"`.
+
+<Story name="Declarative Local Backdrop">
+  {() => {
+    const beforeOpened = () => {
+      document.querySelector('.local-backdrop-02').style.display = 'block';
+    }
+    const beforeClosed = () => {
+      document.querySelector('.local-backdrop-02').style.display = 'none';
+    }
+    return html`
+    <style>
+      .local-backdrop-02 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background-color: red;
+        opacity: 0.3;
+        display: none;
+      }
+    </style>
+    <demo-overlay-system
+      @before-opened=${beforeOpened}
+      @before-closed=${beforeClosed}
+      .config=${{ hasBackdrop: true, placementMode: 'local' }}
+    >
+      <div slot="backdrop" class="local-backdrop-02"></div>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-overlay-system>
+  `}}
+</Story>
+
+```js
+  const beforeOpened = () => {
+    document.querySelector('.local-backdrop-02').style.display = 'block';
+  }
+  const beforeClosed = () => {
+    document.querySelector('.local-backdrop-02').style.display = 'none';
+  }
+  return html`
+  <style>
+    .local-backdrop-02 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-color: red;
+      opacity: 0.3;
+      display: none;
+    }
+  </style>
+  <demo-overlay-system
+    @before-opened=${beforeOpened}
+    @before-closed=${beforeClosed}
+    .config=${{ hasBackdrop: true, placementMode: 'local' }}
+  >
+    <div slot="backdrop" class="local-backdrop-02"></div>
+    <button slot="invoker">Click me to open the overlay!</button>
+    <div slot="content" class="demo-overlay">
+      Hello! You can close this notification here:
+      <button
+        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+      >
+        ⨯
+      </button>
+    </div>
+  </demo-overlay-system>
+```

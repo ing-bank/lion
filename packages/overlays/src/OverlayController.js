@@ -24,6 +24,7 @@ export class OverlayController {
       placementMode: null,
       contentNode: config.contentNode,
       invokerNode: config.invokerNode,
+      backdropNode: config.backdropNode,
       referenceNode: null,
       elementToFocusAfterHide: config.invokerNode,
       inheritsReferenceWidth: '',
@@ -423,10 +424,38 @@ export class OverlayController {
    */
   _handleBackdrop({ animation = true, phase }) {
     if (this.placementMode === 'local') {
-      return; // coming soon...
+      switch (phase) {
+        case 'init':
+          if (!this.backdropNode) {
+            this.backdropNode = document.createElement('div');
+            this.backdropNode.classList.add('local-overlays__backdrop');
+          }
+          this.backdropNode.slot = '_overlay-shadow-outlet';
+          this._contentNodeWrapper.parentElement.insertBefore(
+            this.backdropNode,
+            this._contentNodeWrapper,
+          );
+          break;
+        case 'show':
+          this.__hasActiveBackdrop = true;
+          break;
+        case 'hide':
+          if (!this.backdropNode) {
+            return;
+          }
+          this.__hasActiveBackdrop = false;
+          break;
+        case 'teardown':
+          if (!this.backdropNode) {
+            return;
+          }
+          this.backdropNode.parentNode.removeChild(this.backdropNode);
+          break;
+        /* no default */
+      }
+      return;
     }
     const { backdropNode } = this;
-
     switch (phase) {
       case 'init':
         this.backdropNode = document.createElement('div');

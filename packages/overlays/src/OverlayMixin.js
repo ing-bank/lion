@@ -50,10 +50,11 @@ export const OverlayMixin = dedupeMixin(
        * @returns {OverlayController}
        */
       // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode }) {
+      _defineOverlay({ contentNode, invokerNode, backdropNode }) {
         return new OverlayController({
           contentNode,
           invokerNode,
+          backdropNode,
           ...this._defineOverlayConfig(), // wc provided in the class as defaults
           ...this.config, // user provided (e.g. in template)
           popperConfig: {
@@ -144,6 +145,10 @@ export const OverlayMixin = dedupeMixin(
         return Array.from(this.children).find(child => child.slot === 'invoker');
       }
 
+      get _overlayBackdropNode() {
+        return Array.from(this.children).find(child => child.slot === 'backdrop');
+      }
+
       get _overlayContentNode() {
         if (this._cachedOverlayContentNode) {
           return this._cachedOverlayContentNode;
@@ -176,6 +181,7 @@ export const OverlayMixin = dedupeMixin(
         this._overlayCtrl = this._defineOverlay({
           contentNode: this._overlayContentNode,
           invokerNode: this._overlayInvokerNode,
+          backdropNode: this._overlayBackdropNode,
         });
         this.__syncToOverlayController();
         this.__setupSyncFromOverlayController();
