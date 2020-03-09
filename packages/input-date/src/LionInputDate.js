@@ -2,6 +2,12 @@ import { LionInput } from '@lion/input';
 import { formatDate, LocalizeMixin, parseDate } from '@lion/localize';
 import { IsDate } from '@lion/validate';
 
+function isValidDate(date) {
+  // to make sure it is a valid date we use isNaN and not Number.isNaN
+  // eslint-disable-next-line no-restricted-globals
+  return date instanceof Date && !isNaN(date);
+}
+
 /**
  * `LionInputDate` has a .modelValue of type Date. It parses, formats and validates based
  * on locale.
@@ -38,7 +44,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
 
   // eslint-disable-next-line class-methods-use-this
   serializer(modelValue) {
-    if (!(modelValue instanceof Date)) {
+    if (!isValidDate(modelValue)) {
       return '';
     }
     // modelValue is localized, so we take the timezone offset in milliseconds and subtract it
