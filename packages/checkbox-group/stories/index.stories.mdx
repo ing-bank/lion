@@ -169,7 +169,7 @@ The interaction states of the `<lion-checkbox-group>` are evaluated in order to 
   {() => {
     loadDefaultFeedbackMessages();
     const validate = () => {
-      const checkboxGroup = document.querySelector('#scientistsGroup');
+      const checkboxGroup = document.querySelector('#scientists');
       checkboxGroup.submitted = !checkboxGroup.submitted;
     };
     return html`
@@ -201,7 +201,7 @@ The interaction states of the `<lion-checkbox-group>` are evaluated in order to 
 import { Required, loadDefaultFeedbackMessages } from '@lion/validate';
 loadDefaultFeedbackMessages();
 const validate = () => {
-  const checkboxGroup = document.querySelector('#scientistsGroup');
+  const checkboxGroup = document.querySelector('#scientists');
   checkboxGroup.submitted = !checkboxGroup.submitted;
 };
 ```

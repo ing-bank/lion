@@ -671,6 +671,88 @@ describe('OverlayController', () => {
       });
     });
 
+    describe('locally placed overlay with hasBackdrop', () => {
+      it('has no backdrop by default', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+        });
+        await ctrl.show();
+        expect(ctrl.backdropNode).to.be.undefined;
+      });
+
+      it('supports a backdrop option', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: false,
+        });
+        await ctrl.show();
+        expect(ctrl.backdropNode).to.be.undefined;
+        await ctrl.hide();
+
+        const backdropNode = document.createElement('div');
+        backdropNode.classList.add('custom-backdrop');
+
+        const controllerWithBackdrop = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: true,
+          backdropNode,
+        });
+        await controllerWithBackdrop.show();
+        expect(controllerWithBackdrop.backdropNode).to.have.class('custom-backdrop');
+      });
+
+      it('reenables the backdrop when shown/hidden/shown', async () => {
+        const backdropNode = document.createElement('div');
+        backdropNode.classList.add('custom-backdrop');
+
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: true,
+          backdropNode,
+        });
+        await ctrl.show();
+        expect(ctrl.backdropNode).to.have.class('custom-backdrop');
+        await ctrl.hide();
+        await ctrl.show();
+        expect(ctrl.backdropNode).to.have.class('custom-backdrop');
+      });
+
+      it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {
+        const backdropNode = document.createElement('div');
+        backdropNode.classList.add('custom-backdrop-zero');
+
+        const ctrl0 = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: true,
+          backdropNode,
+        });
+        await ctrl0.show();
+        expect(ctrl0.backdropNode).to.have.class('custom-backdrop-zero');
+
+        const ctrl1 = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: false,
+        });
+        await ctrl1.show();
+        expect(ctrl0.backdropNode).to.have.class('custom-backdrop-zero');
+        expect(ctrl1.backdropNode).to.be.undefined;
+
+        const anotherBackdropNode = document.createElement('div');
+        anotherBackdropNode.classList.add('custom-backdrop-two');
+
+        const ctrl2 = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: true,
+          backdropNode: anotherBackdropNode,
+        });
+        await ctrl2.show();
+
+        expect(ctrl0.backdropNode).to.have.class('custom-backdrop-zero');
+        expect(ctrl1.backdropNode).to.be.undefined;
+        expect(ctrl2.backdropNode).to.have.class('custom-backdrop-two');
+      });
+    });
+
     describe('isBlocking', () => {
       it('prevents showing of other overlays', async () => {
         const ctrl0 = new OverlayController({
