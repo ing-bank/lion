@@ -13,29 +13,23 @@ describe('<lion-input-date>', () => {
   });
 
   it('returns undefined when value is empty string', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date></lion-input-date>
+    `);
     expect(el.parser('')).to.equal(undefined);
   });
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date></lion-input-date>
+    `);
     expect(el._inputNode.type).to.equal('text');
   });
 
   it('has validator "isDate" applied by default', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date></lion-input-date>
+    `);
     el.modelValue = '2005/11/10';
     expect(el.hasFeedbackFor).to.include('error');
     expect(el.validationStates).to.have.a.property('error');
@@ -45,6 +39,15 @@ describe('<lion-input-date>', () => {
     expect(el.hasFeedbackFor).not.to.include('error');
     expect(el.validationStates).to.have.a.property('error');
     expect(el.validationStates.error).not.to.have.a.property('IsDate');
+  });
+
+  it("does not throw on invalid dates like new Date('foo')", async () => {
+    const el = await fixture(html`
+      <lion-input-date></lion-input-date>
+    `);
+    expect(() => {
+      el.modelValue = new Date('foo');
+    }).to.not.throw();
   });
 
   it('gets validated by "MaxDate" correctly', async () => {
@@ -110,40 +113,32 @@ describe('<lion-input-date>', () => {
   });
 
   it('is accessible', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date><label slot="label">Label</label></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date><label slot="label">Label</label></lion-input-date>
+    `);
     await expect(el).to.be.accessible();
   });
 
   it('is accessible when readonly', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date readonly .modelValue=${new Date('2017/06/15')}
-          ><label slot="label">Label</label></lion-input-date
-        >
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date readonly .modelValue=${new Date('2017/06/15')}
+        ><label slot="label">Label</label></lion-input-date
+      >
+    `);
     await expect(el).to.be.accessible();
   });
 
   it('is accessible when disabled', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date disabled><label slot="label">Label</label></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date disabled><label slot="label">Label</label></lion-input-date>
+    `);
     await expect(el).to.be.accessible();
   });
 
   it('serializes to iso format', async () => {
-    const el = await fixture(
-      html`
-        <lion-input-date .modelValue="${new Date('2000/12/15')}"></lion-input-date>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-input-date .modelValue="${new Date('2000/12/15')}"></lion-input-date>
+    `);
     expect(el.serializedValue).to.equal('2000-12-15');
   });
 });
