@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.19](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.18...@lion/input-date@0.5.19) (2020-03-09)
+
+
+### Bug Fixes
+
+* **input-date:** do not throw for invalid date instances ([2ef69f8](https://github.com/ing-bank/lion/commit/2ef69f8e02ec2cf4c76cec55e917882fc675e5d1))
+
+
+
+
+
 ## [0.5.18](https://github.com/ing-bank/lion/compare/@lion/input-date@0.5.17...@lion/input-date@0.5.18) (2020-03-05)
 
 **Note:** Version bump only for package @lion/input-date
