@@ -1,5 +1,6 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import demoStyle from './demo-dialog-style.js';
+import './styled-dialog-content.js';
 import '../lion-dialog.js';
 
 <Meta title="Overlays/Dialog" parameters={{ component: 'lion-dialog' }} />
@@ -76,6 +77,64 @@ The documentation of the full config object can be found in the `lion/overlay` p
 
 The `config` property uses a setter to merge the passed configuration with the current, so you only **overwrite what you pass** when updating `config`.
 
+### Styling content
+
+Because the content of a dialog is slotted, it can only be styled one level deep. If you need more, you should create a custom component that passes the styles along with the html.
+
+<Story name="Styling content">
+  {() => {
+    return html`
+      <style>${demoStyle}</style>
+      <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+        <button slot="invoker">Styled dialog</button>
+        <styled-dialog-content slot="content"></styled-dialog-content>
+      </lion-dialog>
+    `;
+  }}
+</Story>
+
+```html
+<lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+  <button slot="invoker">Styled dialog</button>
+  <styled-dialog-content slot="content"></styled-dialog-content>
+</lion-dialog>
+```
+
+```js
+class StyledDialogContent extends LitElement {
+  static get styles() {
+    return [
+      css`
+        :host {
+          background-color: #fff;
+        }
+        .nice {
+          font-weight: bold;
+          color: green;
+        }
+      `
+    ];
+  }
+
+  _closeOverlay() {
+    this.dispatchEvent(new Event('close-overlay', { bubbles: true }));
+  }
+
+  render() {
+    return html`
+      <div><p>Hello person who opened the dialog!</p></div>
+      <div><p>Look how nice this <span class="nice">dialog</span> looks!</p><p>This is also content.</p></div>
+      <button
+        class="close-button"
+        @click=${this._closeOverlay}
+      >⨯
+      </button>
+    `;
+  }
+}
+
+customElements.define('styled-dialog-content',StyledDialogContent);
+```
 
 ### Placement overrides
 
