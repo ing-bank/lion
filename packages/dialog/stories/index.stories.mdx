@@ -1,5 +1,6 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
 import demoStyle from './demo-dialog-style.js';
+import './styled-dialog-content.js';
 import '../lion-dialog.js';
 
 <Meta title="Overlays/Dialog" parameters={{ component: 'lion-dialog' }} />
@@ -76,7 +77,103 @@ The documentation of the full config object can be found in the `lion/overlay` p
 
 The `config` property uses a setter to merge the passed configuration with the current, so you only **overwrite what you pass** when updating `config`.
 
+### Styling content
 
+It's not possible to style content from the dialog component. This is because the content slot is moved to the global root node. This is why a custom component should be created and slotted in as the content. This ensures style encapsulation on the dialog content.
+
+<Story name="Styling content">
+  {() => {
+    return html`
+      <style>${demoStyle}</style>
+      <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+        <button slot="invoker">Styled dialog</button>
+        <styled-dialog-content slot="content"></styled-dialog-content>
+      </lion-dialog>
+    `;
+  }}
+</Story>
+
+```html
+<lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+  <button slot="invoker">Styled dialog</button>
+  <styled-dialog-content slot="content"></styled-dialog-content>
+</lion-dialog>
+```
+
+```js
+class StyledDialogContent extends LitElement {
+  static get styles() {
+    return [
+      css`
+        :host {
+          background-color: #fff;
+        }
+        .nice {
+          font-weight: bold;
+          color: green;
+        }
+        .close-button {
+          color: black;
+          font-size: 28px;
+          line-height: 28px;
+        }
+      `
+    ];
+  }
+
+  _closeOverlay() {
+    this.dispatchEvent(new Event('close-overlay', { bubbles: true }));
+  }
+
+  render() {
+    return html`
+      <div><p>Hello person who opened the dialog!</p></div>
+      <div><p>Look how nice this <span class="nice">dialog</span> looks!</p>/div>
+      <button
+        class="close-button"
+        @click=${this._closeOverlay}
+      >⨯
+      </button>
+    `;
+  }
+}
+
+customElements.define('styled-dialog-content',StyledDialogContent);
+```
+
+### Close overlay from component slotted as content
+
+The overlay cannot be closed by dispatching the `close-overlay` from a button in a styled component that is slotted in as content, because it will not cross the shadow boundary of the component. A method should be created that will dispatch the `close-overlay` event from the component.
+
+<Story name="Close overlay from component">
+  {() => {
+    return html`
+      <style>${demoStyle}</style>
+      <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+        <button slot="invoker">Styled dialog</button>
+        <styled-dialog-content slot="content"></styled-dialog-content>
+      </lion-dialog>
+    `;
+  }}
+</Story>
+
+```js
+_closeOverlay() {
+  this.dispatchEvent(new Event('close-overlay', { bubbles: true }));
+}
+
+render() {
+  return html`
+    <div><p>Hello person who opened the dialog!</p></div>
+    <div><p>Look how nice this <span class="nice">dialog</span> looks!</p>/div>
+    <button
+      class="close-button"
+      @click=${this._closeOverlay}
+    >⨯
+    </button>
+  `;
+}
+```
 ### Placement overrides
 
 <Story name="Placement overrides">
