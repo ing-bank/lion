@@ -2,75 +2,88 @@ import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
 
 <Meta title="Intro/Journey" />
 
-# Scaling up web components
+# Scaling up Web Components
 
-# INGs web components Journey
+# INGs Web Components Journey
 
-We early on betted on web components and we experienced all the issues and changes web components are known for. In the end we could overcome all issues and can now have a productive scalable workflow.
+Early on, we betted on web components and we experienced all the issues and changes Web Components are known for. In the end we could overcome all issues and enjoy a productive scalable workflow with all the benefits of Web Components.
 
 This is how we did it.
 
-## How ING started with web components
+## How ING started with Web Components
 
 Using right from the start with html imports, v0 custom elements, v0 shadow dom and custom template system.
 
-Lead to the following problems...
+This lead to a lot of problems, so a decision was made to start with a clean slate.
 
 ## Starting a new Journey
 
-When we started Lion because we had a need for:
+We started ing-web with three important requirements in mind:
 
 - Accessibility
 - Performance
 - Flexibility
 
-We really started from scratch but alway kept it align with new ideas like lit-html and lit-element. At some point we fully used them.
+This meant we had to start from scratch, yet always stay aligned with new ideas like lit-html and lit-element.
+We started with our own solutions and eventually adopted these new technologies.
 
 ## Separated the functionality with styling (2 tier system)
 
 In the past we changed our codebase every few years, starting all over again. Rewriting the same functionalities, but with a different style guide.
 
-By separating functionality with styling we got:
+By separating functionality and ing specific styling we aimed to be to able to:
 
-- Switch from one style guide to another, without throwing away all functionality code.
-- To be able to have different variations of features.
+- Switch from one style guide to another, without throwing away all functionality related code.
+- To be able to have different variations of features and components
 
-But we also got some unexpected benefit like:
+But we also got some unexpected benefits like:
 
-- Fully focus on the api, without caring too much on how it will look.
+- Fully focus on a good developer API, without caring too much on how it will look.
 - Being able to create a component without have the designs ready.
-- Keeping a clean code base by having the backwards compatibilty code on a different layer.
+- Keeping a clean code base by having the backwards compatibilty code on a different layer. Therefore allowing ourselves to innovate and break often (also known as "fail fast") on the functionality layer.
 
-## Released first interal version
+## Releasing the first internal version
 
-The interal need to have a stable version was big, so we finialized some of our systems, but we were not yet feature complete.
+The internal need to have a stable version was big, so we finalized some of our systems, but we were not yet feature complete.
 
-Slowly more features and systems were added.
+Slowly more features and systems were added, though our consumers expected more feature completeness, and more maturity.
 
-## Struggle with delivery
+## Struggle to scale
 
 We already had a big component set and people expected a lot of features right from the start.
 
 We found features that could not be made without a breaking change, so plans were made for a v2. Since most applications don't like to migrate but prefer to work on new features, we kept on postponing it.
 
+We soon realized that we were never going to be able to build the entire company in terms of components, not with just our team.
+We had to find a solution to scale up.
+
 ## Community to the rescue
 
-Scaling by using a community in ING
+We started scaling by using the community of developers in ING
 
-First we had a very high quality bar to contribute.
-Later we had labs to accept everything but people went crazy.
-Not working together on creating a better component, but adding the same component for a 3rd time, but with a different api.
-Provide blueprints as guidance helps...
+First we had a very high quality bar to contribute. This made the threshold for contributions high, and with developers having their own squad responsibilities, very few contributions made it to our component library, and the progress was not always pleasant.
 
-Direct communication, 
+We decided there was a need for a low threshold approach so we created an experimental repository for work-in-progress components.
+We called it labs, and basically accepted every contribution regardless of quality or alignment with branding or UX.
+Suffice to say, people went a bit crazy, and before we knew it the repository was a mess with lots of duplicate components of varying quality.
 
-We asked for volunteers that want to help us out.
-Have them actually do simple tasks and guide them in the proces.
-Slowly increase the complexity of tasks until they know how to contribute features which are up to our quality bar.
+Contributors did not collaborate with us or with each other, to create better components, but instead the same component was added multiple times, but with a different API.
+
+We learned that we need a more collaborative approach with more guidance.
+So we set a standard in terms of how far UX specifications should be complete before even starting to work on coding the component.
+In addition, our team provides blueprints for components that meet this standard and that people want to contribute.
+This blueprint makes the fundamentals like the developer API and some technical details, concrete.
+This helps facilitate discussion and prevents contributors from going the complete opposite direction.
+
+We also added a role in our team specifically for directly communicating with contributors to give feedback early. This feels more like helping, and less like judging.
+
+We started actively asking for volunteers to help out, not just for new components, but also for adding features to existing components and helping to solve bugs and issues. We start them off with some simpler tasks (though still beneficial!) to get them acquainted with our way of work, conventions, our codebase, etc.
+
+Then, we slowly increase the complexity of tasks and soon we had contributors from outside the team that we can trust to deliver high quality code to our codebase!
 
 ## Plan for v2
 
-In the mean time the need for breaking changes grew each sprint.
+In the meantime the need for breaking changes grew each sprint.
 
 So we started to do the breaking changes we wanted.
 
@@ -80,6 +93,8 @@ To mitigate all these changes for our feature/application developers we came up 
 
 ## Scoped Elements
 
+One of the big reasons why it is usually impossible to have multiple major versions of the same component is a technical one; the CustomElementsRegistry is global, and registering the same element twice under the same name is impossible.
+
 ### how does it work
 
 ### impact
@@ -88,9 +103,9 @@ To mitigate all these changes for our feature/application developers we came up 
 
 Free to upgrade whenever a feature wants to.
 
-## ING and web components
+## ING and Web Components
 
-So we basically hit every issue that is know for web components.
+So we basically hit every issue that is know for Web Components.
 Being
 
 - Accessibility we overcame with our form system
