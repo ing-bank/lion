@@ -55,6 +55,7 @@ export const ChoiceGroupMixin = dedupeMixin(
       constructor() {
         super();
         this.multipleChoice = false;
+        this._isChoiceGroup = true; // configures event propagation logic of FormControlMixin
       }
 
       connectedCallback() {

@@ -151,6 +151,8 @@ export const FormControlMixin = dedupeMixin(
         this._inputId = uuid(this.localName);
         this._ariaLabelledNodes = [];
         this._ariaDescribedNodes = [];
+        this._isChoiceGroup = false;
+        this.addEventListener('model-value-changed', this.__repropagateChildrenValues);
       }
 
       connectedCallback() {
@@ -552,6 +554,23 @@ export const FormControlMixin = dedupeMixin(
 
       __getDirectSlotChild(slotName) {
         return [...this.children].find(el => el.slot === slotName);
+      }
+
+      __repropagateChildrenValues(ev) {
+        if (ev.target === this) return;
+        ev.stopImmediatePropagation();
+
+        if (this._isChoiceGroup && !this.multipleChoice && !ev.target.checked) {
+          // We only send the checked changed up (not the unchecked)
+          ev.stopPropagation();
+          return;
+        }
+
+        const formPath = [...((ev.detail && ev.detail.formPath) || [ev.target]), this];
+        // Since for a11y everything needs to be in lightdom, we don't add 'composed:true'
+        this.dispatchEvent(
+          new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
+        );
       }
     },
 );
