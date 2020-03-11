@@ -93,22 +93,34 @@ To mitigate all these changes for our feature/application developers we came up 
 
 ## Scoped Elements
 
-One of the big reasons why it is usually impossible to have multiple major versions of the same component is a technical one; the CustomElementsRegistry is global, and registering the same element twice under the same name is impossible.
+The reason why it is usually impossible to have multiple major versions of the same component is a technical one; the CustomElementsRegistry is global, and registering the same element twice under the same name is therefore impossible.
+
+In ING this is a major problem because teams need to be able to upgrade at their own pace, and applications should be able to have multiple version of the same component. The alternative is a single, globally aligned, big bang migration. This makes no one happy.
+
+Because we cannot wait for a solution to hit the browsers, the guys at @open-wc created a solution for now, which scopes your custom elements, making it possible to have multiple versions of the same component.
 
 ### how does it work
 
+Your custom elements apply a mixin, which scopes the tags that are used inside that component, by adding hashes to the name. It rewrites your templates to use the correct tag, and there is even a helper for getting the hashed tag name.
+
 ### impact
+
+Everyone that is using or creating shared dependencies with the next major version of our component library, will be required to use this scoped elements solution. This is important to mitigate any conflicts that could occur if the same component is registered more than once.
 
 ## Migration Conclusion
 
-Free to upgrade whenever a feature wants to.
+The big benefit of using this package, is that applications and features can be migrated to the next major version whenever they want. This means that teams can autonomously migrate, following their own planning.
 
 ## ING and Web Components
 
-So we basically hit every issue that is know for Web Components.
-Being
+So we basically hit every issue that is known for Web Components.
 
-- Accessibility we overcame with our form system
-- Scalingabilty we overcame with harnesing the power of the community
-- Using 2 of the same we overcame with scopedElement
+Some examples
+
+- Accessibility and ShadowDOM, which we overcame in our form system
+- Scalabilty, which we overcame by harnesing the power of the community
+- Using multiple major versions of the same component, which we overcame with scoped elements
 - Performance we overcame with staying close to the platform (browser)
+
+We are at a point where we are very satisfied with our workflow, our technology stack and what is on the horizon.
+The bet on Web Components seems to have been worth it, and hopefully you as our reader can take something from our journey to enjoy it too!
