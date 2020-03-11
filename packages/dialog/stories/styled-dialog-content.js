@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '../../core/index.js';
+import { LitElement, html, css } from '@lion/core';
 
 class StyledDialogContent extends LitElement {
   static get styles() {
