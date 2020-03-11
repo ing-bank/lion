@@ -1,0 +1,99 @@
+import { Story, Meta, html, Preview } from '@open-wc/demoing-storybook';
+
+<Meta title="Intro/Journey" />
+
+# Scaling up web components
+
+# INGs web components Journey
+
+We early on betted on web components and we experienced all the issues and changes web components are known for. In the end we could overcome all issues and can now have a productive scalable workflow.
+
+This is how we did it.
+
+## How ING started with web components
+
+Using right from the start with html imports, v0 custom elements, v0 shadow dom and custom template system.
+
+Lead to the following problems...
+
+## Starting a new Journey
+
+When we started Lion because we had a need for:
+
+- Accessibility
+- Performance
+- Flexibility
+
+We really started from scratch but alway kept it align with new ideas like lit-html and lit-element. At some point we fully used them.
+
+## Separated the functionality with styling (2 tier system)
+
+In the past we changed our codebase every few years, starting all over again. Rewriting the same functionalities, but with a different style guide.
+
+By separating functionality with styling we got:
+
+- Switch from one style guide to another, without throwing away all functionality code.
+- To be able to have different variations of features.
+
+But we also got some unexpected benefit like:
+
+- Fully focus on the api, without caring too much on how it will look.
+- Being able to create a component without have the designs ready.
+- Keeping a clean code base by having the backwards compatibilty code on a different layer.
+
+## Released first interal version
+
+The interal need to have a stable version was big, so we finialized some of our systems, but we were not yet feature complete.
+
+Slowly more features and systems were added.
+
+## Struggle with delivery
+
+We already had a big component set and people expected a lot of features right from the start.
+
+We found features that could not be made without a breaking change, so plans were made for a v2. Since most applications don't like to migrate but prefer to work on new features, we kept on postponing it.
+
+## Community to the rescue
+
+Scaling by using a community in ING
+
+First we had a very high quality bar to contribute.
+Later we had labs to accept everything but people went crazy.
+Not working together on creating a better component, but adding the same component for a 3rd time, but with a different api.
+Provide blueprints as guidance helps...
+
+Direct communication, 
+
+We asked for volunteers that want to help us out.
+Have them actually do simple tasks and guide them in the proces.
+Slowly increase the complexity of tasks until they know how to contribute features which are up to our quality bar.
+
+## Plan for v2
+
+In the mean time the need for breaking changes grew each sprint.
+
+So we started to do the breaking changes we wanted.
+
+Which turned out to be a lot.
+
+To mitigate all these changes for our feature/application developers we came up with a way to support both versions of our internal code base.
+
+## Scoped Elements
+
+### how does it work
+
+### impact
+
+## Migration Conclusion
+
+Free to upgrade whenever a feature wants to.
+
+## ING and web components
+
+So we basically hit every issue that is know for web components.
+Being
+
+- Accessibility we overcame with our form system
+- Scalingabilty we overcame with harnesing the power of the community
+- Using 2 of the same we overcame with scopedElement
+- Performance we overcame with staying close to the platform (browser)
