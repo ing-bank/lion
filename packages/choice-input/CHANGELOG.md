@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.6](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.7.5...@lion/choice-input@0.7.6) (2020-03-12)
+
+
+### Bug Fixes
+
+* **choice-input:** fix serializedValue setter check ([0445b86](https://github.com/ing-bank/lion/commit/0445b86350f65649c03ed84bfaf9652838c43e55))
+
+
+
+
+
 ## [0.7.5](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.7.4...@lion/choice-input@0.7.5) (2020-03-05)
 
 **Note:** Version bump only for package @lion/choice-input

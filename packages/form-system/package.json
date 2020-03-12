@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-system",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -33,7 +33,7 @@
     "*.js"
   ],
   "devDependencies": {
-    "@lion/checkbox-group": "0.8.3",
+    "@lion/checkbox-group": "0.8.4",
     "@lion/core": "0.4.5",
     "@lion/field": "0.11.3",
     "@lion/fieldset": "0.9.3",
@@ -45,9 +45,9 @@
     "@lion/input-iban": "0.6.3",
     "@lion/input-range": "0.2.18",
     "@lion/localize": "0.8.10",
-    "@lion/radio-group": "0.8.3",
+    "@lion/radio-group": "0.8.4",
     "@lion/select": "0.5.18",
-    "@lion/select-rich": "0.12.0",
+    "@lion/select-rich": "0.12.1",
     "@lion/textarea": "0.5.19",
     "@lion/validate": "0.8.0",
     "@open-wc/demoing-storybook": "^1.10.4",
