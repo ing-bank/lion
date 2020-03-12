@@ -1,11 +1,11 @@
 import { html, LitElement } from '@lion/core';
 import { FormGroupMixin } from '@lion/fieldset';
+import '@lion/fieldset/lion-fieldset.js';
 import { LionInput } from '@lion/input';
 import { Required } from '@lion/validate';
 import { expect, fixture, nextFrame } from '@open-wc/testing';
 import { ChoiceGroupMixin } from '../src/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../src/ChoiceInputMixin.js';
-import '@lion/fieldset/lion-fieldset.js';
 
 describe('ChoiceGroupMixin', () => {
   before(() => {
@@ -114,6 +114,18 @@ describe('ChoiceGroupMixin', () => {
 
     expect(el.modelValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
+  });
+
+  it('can set initial serializedValue on creation', async () => {
+    const el = await fixture(html`
+      <choice-group name="gender" .serializedValue=${'other'}>
+        <choice-group-input .choiceValue=${'male'}></choice-group-input>
+        <choice-group-input .choiceValue=${'female'}></choice-group-input>
+        <choice-group-input .choiceValue=${'other'}></choice-group-input>
+      </choice-group>
+    `);
+
+    expect(el.serializedValue).to.equal('other');
   });
 
   it('can handle complex data via choiceValue', async () => {

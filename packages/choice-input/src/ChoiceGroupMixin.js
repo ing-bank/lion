@@ -1,5 +1,5 @@
 import { dedupeMixin } from '@lion/core';
-import { InteractionStateMixin, FormRegistrarMixin } from '@lion/field';
+import { FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
 
 export const ChoiceGroupMixin = dedupeMixin(
   superclass =>
@@ -49,7 +49,7 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       set serializedValue(value) {
-        this._setCheckedElements(value, (el, val) => el.serializedValue === val);
+        this._setCheckedElements(value, (el, val) => el.serializedValue.value === val);
       }
 
       constructor() {
