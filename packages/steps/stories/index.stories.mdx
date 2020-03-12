@@ -118,7 +118,7 @@ If you have an intermediate step loading data via AJAX request and then automati
 If you need to be notified when transition between steps happens use `transition` event providing steps data:
 
 ```html
-<lion-steps on-transition="onTransition">
+<lion-steps @transition="${onTransition}">
   <lion-step>Step 1</lion-step>
   <lion-step>Step 2</lion-step>
   <lion-step>Step 3</lion-step>
@@ -140,9 +140,9 @@ For notifications about specific step status change you can use individual event
 
 ```html
 <lion-steps>
-  <lion-step on-left="onLeft">Step 1</lion-step>
-  <lion-step on-skipped="onSkipped">Step 2</lion-step>
-  <lion-step on-entered="onEntered">Step 3</lion-step>
+  <lion-step @leave="${onLeave}">Step 1</lion-step>
+  <lion-step @skip="${onSkip}">Step 2</lion-step>
+  <lion-step @enter="${onEnter}">Step 3</lion-step>
 </lion-steps>
 ```
 
