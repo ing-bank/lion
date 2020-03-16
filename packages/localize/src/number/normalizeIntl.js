@@ -38,6 +38,9 @@ export function normalizeIntl(formattedParts, options, _locale) {
     }
     if (_locale === 'tr-TR') {
       normalize = forceTryCurrencyCode(normalize, options);
+      if (options.currencyDisplay === 'code') {
+        normalize = forceCurrencyToEnd(normalize);
+      }
     }
     if (_locale === 'en-AU') {
       normalize = forceENAUSymbols(normalize, options);
