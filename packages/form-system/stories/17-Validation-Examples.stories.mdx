@@ -35,9 +35,11 @@ For an input that may mean that it is not an empty string,
 while for a checkbox group it means at least one checkbox needs to be checked.
 
 <Story name="Required Validator">
-  {html`
+  {() => {
+    loadDefaultFeedbackMessages();
+    return html`
     <lion-input .validators=${[new Required()]} label="Required"></lion-input>
-  `}
+  `}}
 </Story>
 
 ```html
@@ -242,7 +244,7 @@ const tomorrow = new Date(year, month, day + 1);
 ## Validation Types
 
 When defining your own component you can decide to allow for multiple types of validation.
-By default only `error` is used however there are certainly use cases where warning or success messages make sense.
+By default only `error` is used, however there are certainly use cases where warning or success messages make sense.
 
 <Story name="Validation Types">
   {() => {
@@ -258,29 +260,24 @@ By default only `error` is used however there are certainly use cases where warn
     }
     return html`
       <style>
-        my-types-input {
-          border-left: 2px solid #fff;
+        .demo-types-input {
+          padding: 0.5rem;
         }
-        my-types-input[shows-feedback-for]:not([shows-feedback-for='']) {
-          border-left: 2px dotted red;
+        .demo-types-input[shows-feedback-for~='success'] {
+          background-color: #e4ffe4;
+          border: 1px solid green;
         }
-        my-types-input[shows-feedback-for~='error'] input {
-          outline: 2px solid red;
+        .demo-types-input[shows-feedback-for~='error'] {
+          background-color: #ffd4d4;
+          border: 1px solid red;
         }
-        my-types-input[shows-feedback-for~='warning'] input {
-          outline: 2px solid orange;
+        .demo-types-input[shows-feedback-for~='warning'] {
+          background-color: #ffe4d4;
+          border: 1px solid orange;
         }
-        lion-validation-feedback[type='success'] {
-          color: green;
-        }
-        lion-validation-feedback[type='error'] {
-          color: red;
-        }
-        lion-validation-feedback[type='warning'] {
-          color: orange;
-        }
-        lion-validation-feedback[type='info'] {
-          color: blue;
+        .demo-types-input[shows-feedback-for~='info'] {
+          background-color: #d4e4ff;
+          border: 1px solid blue;
         }
       </style>
       <my-types-input
@@ -295,6 +292,7 @@ By default only `error` is used however there are certainly use cases where warn
         ]}"
         .modelValue="${'exactly'}"
         label="Validation Types"
+        class="demo-types-input"
       ></my-types-input>
     `;
   }}
@@ -315,29 +313,24 @@ try {
 
 ```html
 <style>
-  my-types-input {
-    border-left: 2px solid #fff;
+  .demo-types-input {
+    padding: 0.5rem;
   }
-  my-types-input[shows-feedback-for]:not([shows-feedback-for='']) {
-    border-left: 2px dotted red;
+  .demo-types-input[shows-feedback-for~='success'] {
+    background-color: #e4ffe4;
+    border: 1px solid green;
   }
-  my-types-input[shows-feedback-for~='error'] input {
-    outline: 2px solid red;
+  .demo-types-input[shows-feedback-for~='error'] {
+    background-color: #ffd4d4;
+    border: 1px solid red;
   }
-  my-types-input[shows-feedback-for~='warning'] input {
-    outline: 2px solid orange;
+  .demo-types-input[shows-feedback-for~='warning'] {
+    background-color: #ffe4d4;
+    border: 1px solid orange;
   }
-  lion-validation-feedback[type='success'] {
-    color: green;
-  }
-  lion-validation-feedback[type='error'] {
-    color: red;
-  }
-  lion-validation-feedback[type='warning'] {
-    color: orange;
-  }
-  lion-validation-feedback[type='info'] {
-    color: blue;
+  .demo-types-input[shows-feedback-for~='info'] {
+    background-color: #d4e4ff;
+    border: 1px solid blue;
   }
 </style>
 <my-types-input
@@ -352,6 +345,7 @@ try {
   ]}"
   .modelValue="${'exactly'}"
   label="Validation Types"
+  class="demo-types-input"
 ></my-types-input>
 ```
 
@@ -421,9 +415,11 @@ class MyValidator extends Validator {
 ></lion-input>
 ```
 
-## Override default messages
+## Default messages
 
-Oftern
+To get default validation messages you need to import and call the `loadDefaultFeedbackMessages` function once in your application.
+
+Sometimes the default messages don't make sense for your input field. In that case you want to override it by adding a `getMessage` function to your validator.
 
 <Story name="Override default messages">
 {html`
@@ -468,6 +464,8 @@ Oftern
 ```
 
 ## Override fieldName
+
+In the scenario that the default messages are correct, but you only want to change the `fieldName`, this can both be done for a single specific validator or for all at once.
 
 <Story name="Override fieldName">
 {html`
@@ -584,7 +582,7 @@ class AsyncValidator extends Validator {
     });
     return html`
       <lion-input-date
-        label="Your birth date"
+        label="Birth date"
         help-text="Adjust this date to retrigger validation of the input below..."
         .modelValue="${beginDate}"
         @model-value-changed="${({ target: { modelValue, errorState } }) => {
@@ -595,7 +593,7 @@ class AsyncValidator extends Validator {
         }}"
       ></lion-input-date>
       <lion-input-date
-        label="Your graduation date"
+        label="Graduation date"
         .modelValue="${new Date('09/09/1989')}"
         .validators="${[minDateValidatorRef]}"
       ></lion-input-date>
