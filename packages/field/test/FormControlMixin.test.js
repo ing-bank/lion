@@ -1,7 +1,8 @@
-import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
+import { expect, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import { LitElement, SlotMixin } from '@lion/core';
-
+import { formFixture as fixture } from '../test-helpers/formFixture.js';
 import { FormControlMixin } from '../src/FormControlMixin.js';
+import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
 describe('FormControlMixin', () => {
   const inputSlot = '<input slot="input" />';
@@ -178,5 +179,140 @@ describe('FormControlMixin', () => {
         .find(child => child.slot === 'feedback')
         .getAttribute('aria-live'),
     ).to.equal('polite');
+  });
+
+  describe('Model-value-changed event propagation', () => {
+    const FormControlWithRegistrarMixinClass = class extends FormControlMixin(
+      FormRegistrarMixin(SlotMixin(LitElement)),
+    ) {
+      static get properties() {
+        return {
+          modelValue: {
+            type: String,
+          },
+        };
+      }
+    };
+
+    const groupElem = defineCE(FormControlWithRegistrarMixinClass);
+    const groupTag = unsafeStatic(groupElem);
+
+    describe('On initialization', () => {
+      it('redispatches one event from host', async () => {
+        let eventForm;
+        let eventFieldset;
+        let countForm = 0;
+        let countFieldset = 0;
+
+        function formHandler(ev) {
+          eventForm = ev;
+          countForm += 1;
+        }
+        function fieldsetHandler(ev) {
+          eventFieldset = ev;
+          countFieldset += 1;
+        }
+        const formEl = await fixture(html`
+          <${groupTag} name="form" ._repropagateRole=${'form-group'} @model-value-changed=${formHandler}>
+            <${groupTag} name="fieldset" ._repropagateRole=${'form-group'} @model-value-changed=${fieldsetHandler}>
+              <${tag} name="field"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const fieldsetEl = formEl.querySelector('[name=fieldset]');
+
+        // await formEl.updateComplete;
+        // await aTimeout();
+        expect(countFieldset).to.equal(1);
+        expect(eventFieldset.target).to.equal(fieldsetEl);
+        expect(eventFieldset.detail.formPath).to.eql([fieldsetEl]);
+
+        expect(countForm).to.equal(1);
+        expect(eventForm.target).to.equal(formEl);
+        expect(eventForm.detail.formPath).to.eql([formEl]);
+      });
+    });
+
+    describe('After initialization', () => {
+      it('redispatches one event from host and keeps formPath history', async () => {
+        let eventForm;
+        let eventFieldset;
+        let countForm = 0;
+        let countFieldset = 0;
+
+        function formHandler(ev) {
+          eventForm = ev;
+          countForm += 1;
+        }
+        function fieldsetHandler(ev) {
+          eventFieldset = ev;
+          countFieldset += 1;
+        }
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="fieldset">
+              <${tag} name="field"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const fieldEl = formEl.querySelector('[name=field]');
+        const fieldsetEl = formEl.querySelector('[name=fieldset]');
+        formEl.addEventListener('model-value-changed', formHandler);
+        fieldsetEl.addEventListener('model-value-changed', fieldsetHandler);
+
+        fieldEl.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+        expect(countFieldset).to.equal(1);
+        expect(eventFieldset.target).to.equal(fieldsetEl);
+        expect(eventFieldset.detail.formPath).to.eql([fieldEl, fieldsetEl]);
+
+        expect(countForm).to.equal(1);
+        expect(eventForm.target).to.equal(formEl);
+        expect(eventForm.detail.formPath).to.eql([fieldEl, fieldsetEl, formEl]);
+      });
+
+      it('sends one event for single select choice-groups', async () => {
+        let eventForm;
+        let countForm = 0;
+        let eventChoiceGroup;
+        let countChoiceGroup = 0;
+
+        function formHandler(ev) {
+          eventForm = ev;
+          countForm += 1;
+        }
+        function choiceGroupHandler(ev) {
+          eventChoiceGroup = ev;
+          countChoiceGroup += 1;
+        }
+
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="choice-group" ._repropagateRole=${'choice-group'}>
+              <${tag} name="choice-group" id="option1" .checked=${true}></${tag}>
+              <${tag} name="choice-group" id="option2"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const choiceGroupEl = formEl.querySelector('[name=choice-group]');
+        const option1El = formEl.querySelector('#option1');
+        const option2El = formEl.querySelector('#option2');
+        formEl.addEventListener('model-value-changed', formHandler);
+        choiceGroupEl.addEventListener('model-value-changed', choiceGroupHandler);
+
+        // Simulate check
+        option2El.checked = true;
+        option2El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+        option1El.checked = false;
+        option1El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+
+        expect(countChoiceGroup).to.equal(1);
+        expect(eventChoiceGroup.target).to.equal(choiceGroupEl);
+        expect(eventChoiceGroup.detail.formPath).to.eql([choiceGroupEl]);
+
+        expect(countForm).to.equal(1);
+        expect(eventForm.target).to.equal(formEl);
+        expect(eventForm.detail.formPath).to.eql([choiceGroupEl, formEl]);
+      });
+    });
   });
 });

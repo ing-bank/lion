@@ -148,7 +148,6 @@ export class LionSelectRich extends ScopedElementsMixin(
       this.__cachedUserSetModelValue = value;
     }
 
-    this.__syncInvokerElement();
     this.requestUpdate('modelValue');
   }
 
@@ -199,8 +198,9 @@ export class LionSelectRich extends ScopedElementsMixin(
     // for interaction states
     this._listboxActiveDescendant = null;
     this.__hasInitialSelectedFormElement = false;
-
+    this._repropagateRole = 'choice-group'; // configures FormControlMixin
     this.__setupEventListeners();
+    this.__initInteractionStates();
   }
 
   connectedCallback() {
@@ -248,6 +248,15 @@ export class LionSelectRich extends ScopedElementsMixin(
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
     }
+  }
+
+  async __initInteractionStates() {
+    await this.registrationComplete;
+    // This timeout is here, so that we know we handle after the initial model-value
+    // event (see firstUpdated method FormConrtolMixin) has fired.
+    setTimeout(() => {
+      this.initInteractionState();
+    });
   }
 
   get _inputNode() {
@@ -298,6 +307,10 @@ export class LionSelectRich extends ScopedElementsMixin(
         this._invokerNode.setAttribute('aria-invalid', this._hasFeedbackVisibleFor('error'));
       }
     }
+
+    if (changedProperties.has('modelValue')) {
+      this.__syncInvokerElement();
+    }
   }
 
   toggle() {
@@ -345,24 +358,27 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
     child.setAttribute('aria-posinset', this.formElements.length);
 
-    this.__onChildModelValueChanged({ target: child });
+    this.__proxyChildModelValueChanged({ target: child });
     this.resetInteractionState();
     /* eslint-enable no-param-reassign */
   }
 
   __setupEventListeners() {
     this.__onChildActiveChanged = this.__onChildActiveChanged.bind(this);
-    this.__onChildModelValueChanged = this.__onChildModelValueChanged.bind(this);
+    this.__proxyChildModelValueChanged = this.__proxyChildModelValueChanged.bind(this);
     this.__onKeyUp = this.__onKeyUp.bind(this);
 
     this._listboxNode.addEventListener('active-changed', this.__onChildActiveChanged);
-    this._listboxNode.addEventListener('model-value-changed', this.__onChildModelValueChanged);
+    this._listboxNode.addEventListener('model-value-changed', this.__proxyChildModelValueChanged);
     this.addEventListener('keyup', this.__onKeyUp);
   }
 
   __teardownEventListeners() {
     this._listboxNode.removeEventListener('active-changed', this.__onChildActiveChanged);
-    this._listboxNode.removeEventListener('model-value-changed', this.__onChildModelValueChanged);
+    this._listboxNode.removeEventListener(
+      'model-value-changed',
+      this.__proxyChildModelValueChanged,
+    );
     this._listboxNode.removeEventListener('keyup', this.__onKeyUp);
   }
 
@@ -391,16 +407,14 @@ export class LionSelectRich extends ScopedElementsMixin(
     });
   }
 
-  __onChildModelValueChanged({ target }) {
-    if (target.checked) {
-      this.formElements.forEach(formElement => {
-        if (formElement !== target) {
-          // eslint-disable-next-line no-param-reassign
-          formElement.checked = false;
-        }
-      });
-      this.modelValue = target.value;
+  __proxyChildModelValueChanged(ev) {
+    // We need to redispatch the model-value-changed event on 'this', so it will
+    // align with FormControl.__repropagateChildrenValues method. Also, this makes
+    // it act like a portal, in case the listbox is put in a modal overlay on body level.
+    if (ev.stopPropagation) {
+      ev.stopPropagation();
     }
+    this.dispatchEvent(new CustomEvent('model-value-changed', { detail: { element: ev.target } }));
   }
 
   __syncInvokerElement() {

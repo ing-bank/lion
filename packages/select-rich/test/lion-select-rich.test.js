@@ -1,15 +1,9 @@
 import { LitElement } from '@lion/core';
 import { OverlayController } from '@lion/overlays';
 import { Required } from '@lion/validate';
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  html,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { aTimeout, defineCE, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
+import { formFixture as fixture } from '@lion/field/test-helpers/formFixture.js';
+
 import { LionSelectRich } from '../index.js';
 import '../lion-option.js';
 import '../lion-options.js';
@@ -246,6 +240,7 @@ describe('lion-select-rich', () => {
       expect(el._invokerNode.selectedElement).dom.to.equal(options[1]);
 
       el.checkedIndex = 0;
+      await el.updateComplete;
       expect(el._invokerNode.selectedElement).dom.to.equal(options[0]);
     });
 
