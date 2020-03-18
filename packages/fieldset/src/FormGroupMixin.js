@@ -203,6 +203,13 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       /**
+       * @param {Function} filter Filter for form elements (default: el => !el.disabled)
+       */
+      filterSerializedValue(filter) {
+        return this._getFromAllFormElements('serializedValue', filter);
+      }
+
+      /**
        * @desc Handles interaction state 'submitted'.
        * This allows children to enable visibility of validation feedback
        */

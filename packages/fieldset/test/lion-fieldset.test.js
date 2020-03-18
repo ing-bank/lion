@@ -757,6 +757,38 @@ describe('<lion-fieldset>', () => {
       });
     });
 
+    it('does not serialize disabled values when no filter is given to `filterSerializedValue`', async () => {
+      const fieldset = await fixture(html`
+        <${tag}>
+          <${childTag} name="custom[]"></${childTag}>
+          <${childTag} name="custom[]"></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
+      fieldset.formElements['custom[]'][1].disabled = true;
+
+      expect(fieldset.filterSerializedValue()).to.deep.equal({
+        'custom[]': ['custom 1'],
+      });
+    });
+
+    it('only serializes values matching the filter given to `filterSerializedValue`', async () => {
+      const fieldset = await fixture(html`
+        <${tag}>
+          <${childTag} name="custom[]"></${childTag}>
+          <${childTag} name="custom[]"></${childTag}>
+        </${tag}>
+      `);
+      await nextFrame();
+      fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
+      fieldset.formElements['custom[]'][1].readonly = true;
+
+      expect(fieldset.filterSerializedValue(el => !el.readonly)).to.deep.equal({
+        'custom[]': ['custom 1'],
+      });
+    });
+
     it('will exclude form elements within a disabled fieldset', async () => {
       const fieldset = await fixture(html`
         <${tag} name="userData">

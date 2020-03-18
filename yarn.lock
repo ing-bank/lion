@@ -2266,6 +2266,11 @@
   resolved "https://registry.yarnpkg.com/@open-wc/dedupe-mixin/-/dedupe-mixin-1.1.1.tgz#3ac8e498422ef316276bbe4aa687e35bd10c6871"
   integrity sha512-Y1+h5nQjJnDHP+8OceZB47I4D7iOiYnM0jXYLGEi96IusR93et30BIyEEQAJ4AvYfbuIrdbf0L5vQWfszU6/Jg==
 
+"@open-wc/dedupe-mixin@^1.2.1":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@open-wc/dedupe-mixin/-/dedupe-mixin-1.2.8.tgz#91acaf34e2e9978230c6b337d208aec9168d731c"
+  integrity sha512-hbv6c4Lcn+Nx+z+9wsFAC1WYsS2Lf/BXmb7hv++3eJltfkRtrPlxb/aCJ5FcdJiNKTE+CAY+OBvrfi3ao1YYGA==
+
 "@open-wc/demoing-storybook@^1.10.4":
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/@open-wc/demoing-storybook/-/demoing-storybook-1.10.5.tgz#3886e01fcc3b13485d5bdb4904f4ec627895609f"
