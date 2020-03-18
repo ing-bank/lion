@@ -665,8 +665,8 @@ export function runValidateMixinSuite(customConfig) {
       it('calls "._isEmpty" when provided (useful for different modelValues)', async () => {
         const customRequiredTagString = defineCE(
           class extends ValidateMixin(LitElement) {
-            _isEmpty(modelValue) {
-              return modelValue.model === '';
+            _isEmpty() {
+              return this.modelValue.model === '';
             }
           },
         );

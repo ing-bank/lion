@@ -1,19 +1,19 @@
+import { LionField } from '@lion/field';
+import '@lion/field/lion-field.js';
+import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { IsNumber, Validator } from '@lion/validate';
 import {
+  defineCE,
   expect,
   fixtureSync,
   html,
-  unsafeStatic,
-  triggerFocusFor,
   nextFrame,
-  defineCE,
+  triggerFocusFor,
+  unsafeStatic,
 } from '@open-wc/testing';
 import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import sinon from 'sinon';
-import { Validator, IsNumber } from '@lion/validate';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import '../lion-fieldset.js';
-import { LionField } from '@lion/field';
-import '@lion/field/lion-field.js';
 
 const childTagString = defineCE(
   class extends LionField {
@@ -434,6 +434,7 @@ describe('<lion-fieldset>', () => {
       // Edge case: remove all children
       el.removeChild(el.querySelector('[id=c1]'));
       await nextFrame();
+
       expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
     });
   });

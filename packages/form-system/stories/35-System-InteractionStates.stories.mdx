@@ -60,8 +60,8 @@ The example below shows how this is done for checkboxes/radio-inputs.
 /**
  * @override
  */
-static _isPrefilled(modelValue) {
-  return modelValue.checked;
+_isEmpty() {
+  return !this.checked;
 }
 ```
 

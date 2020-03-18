@@ -1,18 +1,17 @@
+import { unsafeHTML } from '@lion/core';
+import { localize } from '@lion/localize';
+import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { Required, Validator } from '@lion/validate';
 import {
+  aTimeout,
   expect,
   fixture,
   html,
-  unsafeStatic,
-  triggerFocusFor,
   triggerBlurFor,
-  aTimeout,
+  triggerFocusFor,
+  unsafeStatic,
 } from '@open-wc/testing';
-import { unsafeHTML } from '@lion/core';
 import sinon from 'sinon';
-import { Validator, Required } from '@lion/validate';
-import { localize } from '@lion/localize';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
-
 import '../lion-field.js';
 
 const tagString = 'lion-field';
@@ -151,17 +150,6 @@ describe('<lion-field>', () => {
     await el.updateComplete;
     expect(el._inputNode.autocomplete).to.equal('off');
     expect(el._inputNode.getAttribute('autocomplete')).to.equal('off');
-  });
-
-  it('has an attribute filled if this.value is filled', async () => {
-    const el = await fixture(html`<${tag} value="filled">${inputSlot}</${tag}>`);
-    expect(el.hasAttribute('filled')).to.equal(true);
-    el.value = '';
-    await el.updateComplete;
-    expect(el.hasAttribute('filled')).to.equal(false);
-    el.value = 'bla';
-    await el.updateComplete;
-    expect(el.hasAttribute('filled')).to.equal(true);
   });
 
   it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
