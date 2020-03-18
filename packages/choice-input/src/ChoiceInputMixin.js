@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import { html, css, nothing } from '@lion/core';
+import { css, html, nothing } from '@lion/core';
 import { FormatMixin } from '@lion/field';
 
 export const ChoiceInputMixin = superclass =>
@@ -149,16 +149,6 @@ export const ChoiceInputMixin = superclass =>
       if (this._inputNode) {
         this._inputNode.checked = this.checked;
       }
-    }
-
-    /**
-     * @override
-     * Override InteractionStateMixin
-     * 'prefilled' should be false when modelValue is { checked: false }, which would return
-     * true in original method (since non-empty objects are considered prefilled by default).
-     */
-    static _isPrefilled(modelValue) {
-      return modelValue.checked;
     }
 
     /**

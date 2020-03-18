@@ -1,4 +1,5 @@
-import { html, css, nothing, dedupeMixin, SlotMixin } from '@lion/core';
+import { css, dedupeMixin, html, nothing, SlotMixin } from '@lion/core';
+import { Unparseable } from '@lion/validate';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 
@@ -390,6 +391,25 @@ export const FormControlMixin = dedupeMixin(
             <slot name="after"></slot>
           </div>
         `;
+      }
+
+      _isEmpty(modelValue = this.modelValue) {
+        let value = modelValue;
+        if (this.modelValue instanceof Unparseable) {
+          value = this.modelValue.viewValue;
+        }
+
+        // Checks for empty platform types: Objects, Arrays, Dates
+        if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
+          return !Object.keys(value).length;
+        }
+
+        // eslint-disable-next-line no-mixed-operators
+        // Checks for empty platform types: Numbers, Booleans
+        const isNumberValue = typeof value === 'number' && (value === 0 || Number.isNaN(value));
+        const isBooleanValue = typeof value === 'boolean' && value === false;
+
+        return !value && !isNumberValue && !isBooleanValue;
       }
 
       // eslint-disable-next-line class-methods-use-this

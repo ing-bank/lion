@@ -31,9 +31,8 @@ export function runInteractionStateMixinSuite(customConfig) {
 
             set modelValue(v) {
               this._modelValue = v;
-              this.dispatchEvent(
-                new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
-              );
+              this.dispatchEvent(new CustomEvent('model-value-changed', { bubbles: true }));
+              this.requestUpdate('modelValue');
             }
 
             get modelValue() {
@@ -78,6 +77,17 @@ export function runInteractionStateMixinSuite(customConfig) {
       el.dirty = true;
       await el.updateComplete;
       expect(el.hasAttribute('dirty')).to.be.true;
+    });
+
+    it('sets an attribute "filled" if the input has a non-empty modelValue', async () => {
+      const el = await fixture(html`<${tag} .modelValue=${'hello'}></${tag}>`);
+      expect(el.hasAttribute('filled')).to.equal(true);
+      el.modelValue = '';
+      await el.updateComplete;
+      expect(el.hasAttribute('filled')).to.equal(false);
+      el.modelValue = 'foo';
+      await el.updateComplete;
+      expect(el.hasAttribute('filled')).to.equal(true);
     });
 
     it('fires "(touched|dirty)-state-changed" event when state changes', async () => {

@@ -95,15 +95,14 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       _isEmpty() {
-        const value = this.modelValue;
         if (this.multipleChoice) {
           return this.modelValue.length === 0;
         }
 
-        if (typeof value === 'string' && value === '') {
+        if (typeof this.modelValue === 'string' && this.modelValue === '') {
           return true;
         }
-        if (value === undefined || value === null) {
+        if (this.modelValue === undefined || this.modelValue === null) {
           return true;
         }
         return false;
