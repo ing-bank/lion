@@ -1,6 +1,5 @@
 import {
   expect,
-  fixture,
   fixtureSync,
   html,
   unsafeStatic,
@@ -8,6 +7,7 @@ import {
   nextFrame,
   defineCE,
 } from '@open-wc/testing';
+import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import sinon from 'sinon';
 import { Validator, IsNumber } from '@lion/validate';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';

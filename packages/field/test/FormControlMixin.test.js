@@ -1,7 +1,9 @@
-import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
+import { expect, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import { LitElement, SlotMixin } from '@lion/core';
-
+import sinon from 'sinon';
+import { formFixture as fixture } from '../test-helpers/formFixture.js';
 import { FormControlMixin } from '../src/FormControlMixin.js';
+import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
 describe('FormControlMixin', () => {
   const inputSlot = '<input slot="input" />';
@@ -178,5 +180,114 @@ describe('FormControlMixin', () => {
         .find(child => child.slot === 'feedback')
         .getAttribute('aria-live'),
     ).to.equal('polite');
+  });
+
+  describe('Model-value-changed event propagation', () => {
+    const FormControlWithRegistrarMixinClass = class extends FormControlMixin(
+      FormRegistrarMixin(SlotMixin(LitElement)),
+    ) {
+      static get properties() {
+        return {
+          modelValue: {
+            type: String,
+          },
+        };
+      }
+    };
+
+    const groupElem = defineCE(FormControlWithRegistrarMixinClass);
+    const groupTag = unsafeStatic(groupElem);
+
+    describe('On initialization', () => {
+      it('redispatches one event from host', async () => {
+        const formSpy = sinon.spy();
+        const fieldsetSpy = sinon.spy();
+        const formEl = await fixture(html`
+          <${groupTag} name="form" ._repropagationRole=${'form-group'} @model-value-changed=${formSpy}>
+            <${groupTag} name="fieldset" ._repropagationRole=${'form-group'} @model-value-changed=${fieldsetSpy}>
+              <${tag} name="field"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const fieldsetEl = formEl.querySelector('[name=fieldset]');
+
+        expect(fieldsetSpy.callCount).to.equal(1);
+        const fieldsetEv = fieldsetSpy.firstCall.args[0];
+        expect(fieldsetEv.target).to.equal(fieldsetEl);
+        expect(fieldsetEv.detail.formPath).to.eql([fieldsetEl]);
+
+        expect(formSpy.callCount).to.equal(1);
+        const formEv = formSpy.firstCall.args[0];
+        expect(formEv.target).to.equal(formEl);
+        expect(formEv.detail.formPath).to.eql([formEl]);
+      });
+    });
+
+    describe('After initialization', () => {
+      it('redispatches one event from host and keeps formPath history', async () => {
+        const formSpy = sinon.spy();
+        const fieldsetSpy = sinon.spy();
+        const fieldSpy = sinon.spy();
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="fieldset">
+              <${tag} name="field"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const fieldEl = formEl.querySelector('[name=field]');
+        const fieldsetEl = formEl.querySelector('[name=fieldset]');
+
+        formEl.addEventListener('model-value-changed', formSpy);
+        fieldsetEl.addEventListener('model-value-changed', fieldsetSpy);
+        fieldEl.addEventListener('model-value-changed', fieldSpy);
+
+        fieldEl.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+
+        expect(fieldsetSpy.callCount).to.equal(1);
+        const fieldsetEv = fieldsetSpy.firstCall.args[0];
+        expect(fieldsetEv.target).to.equal(fieldsetEl);
+        expect(fieldsetEv.detail.formPath).to.eql([fieldEl, fieldsetEl]);
+
+        expect(formSpy.callCount).to.equal(1);
+        const formEv = formSpy.firstCall.args[0];
+        expect(formEv.target).to.equal(formEl);
+        expect(formEv.detail.formPath).to.eql([fieldEl, fieldsetEl, formEl]);
+      });
+
+      it('sends one event for single select choice-groups', async () => {
+        const formSpy = sinon.spy();
+        const choiceGroupSpy = sinon.spy();
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="choice-group" ._repropagationRole=${'choice-group'}>
+              <${tag} name="choice-group" id="option1" .checked=${true}></${tag}>
+              <${tag} name="choice-group" id="option2"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const choiceGroupEl = formEl.querySelector('[name=choice-group]');
+        const option1El = formEl.querySelector('#option1');
+        const option2El = formEl.querySelector('#option2');
+        formEl.addEventListener('model-value-changed', formSpy);
+        choiceGroupEl.addEventListener('model-value-changed', choiceGroupSpy);
+
+        // Simulate check
+        option2El.checked = true;
+        option2El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+        option1El.checked = false;
+        option1El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+
+        expect(choiceGroupSpy.callCount).to.equal(1);
+        const choiceGroupEv = choiceGroupSpy.firstCall.args[0];
+        expect(choiceGroupEv.target).to.equal(choiceGroupEl);
+        expect(choiceGroupEv.detail.formPath).to.eql([choiceGroupEl]);
+
+        expect(formSpy.callCount).to.equal(1);
+        const formEv = formSpy.firstCall.args[0];
+        expect(formEv.target).to.equal(formEl);
+        expect(formEv.detail.formPath).to.eql([choiceGroupEl, formEl]);
+      });
+    });
   });
 });

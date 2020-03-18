@@ -55,20 +55,7 @@ export const ChoiceGroupMixin = dedupeMixin(
       constructor() {
         super();
         this.multipleChoice = false;
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-        if (!this.multipleChoice) {
-          this.addEventListener('model-value-changed', this._checkSingleChoiceElements);
-        }
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        if (!this.multipleChoice) {
-          this.removeEventListener('model-value-changed', this._checkSingleChoiceElements);
-        }
+        this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
       }
 
       /**
@@ -157,9 +144,10 @@ export const ChoiceGroupMixin = dedupeMixin(
         }
       }
 
-      __triggerCheckedValueChanged() {
+      __setChoiceGroupTouched() {
         const value = this.modelValue;
         if (value != null && value !== this.__previousCheckedValue) {
+          // TODO: what happens here exactly? Needs to be based on user interaction (?)
           this.touched = true;
           this.__previousCheckedValue = value;
         }
@@ -178,6 +166,25 @@ export const ChoiceGroupMixin = dedupeMixin(
             }" given)`,
           );
         }
+      }
+
+      /**
+       * @override FormControlMixin
+       */
+      _onBeforeRepropagateChildrenValues(ev) {
+        // Normalize target, since we might receive 'portal events' (from children in a modal,
+        // see select-rich)
+        const target = (ev.detail && ev.detail.element) || ev.target;
+        if (this.multipleChoice || !target.checked) {
+          return;
+        }
+        this.formElements.forEach(option => {
+          if (target.choiceValue !== option.choiceValue) {
+            option.checked = false; // eslint-disable-line no-param-reassign
+          }
+        });
+        this.__setChoiceGroupTouched();
+        this.requestUpdate('modelValue');
       }
     },
 );

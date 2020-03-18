@@ -135,8 +135,8 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       async __initInteractionStates() {
-        if (!this.__readyForRegistration) {
-          await this.registrationReady;
+        if (!this.registrationHasCompleted) {
+          await this.registrationComplete;
         }
         this.formElements.forEach(el => {
           if (typeof el.initInteractionState === 'function') {
