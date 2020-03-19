@@ -166,7 +166,7 @@ You can do the same thing for the entire group by setting the `disabled` attribu
 </Story>
 
 ```js
-import { loadDefaultFeedbackMessages, Required } from 'lion/validate';
+import { loadDefaultFeedbackMessages, Required } from '@lion/validate';
 loadDefaultFeedbackMessages();
 const validate = () => {
   const radioGroup = document.querySelector('#dinosGroup');
@@ -224,7 +224,7 @@ You can also create a validator that validates whether a certain option is check
 </Story>
 
 ```js
-import { loadDefaultFeedbackMessages, Required, Validator } from 'lion/validate';
+import { loadDefaultFeedbackMessages, Required, Validator } from '@lion/validate';
 
 class IsBrontosaurus extends Validator {
   static get validatorName() {

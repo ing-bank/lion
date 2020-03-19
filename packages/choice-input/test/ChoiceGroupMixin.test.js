@@ -3,7 +3,8 @@ import { FormGroupMixin } from '@lion/fieldset';
 import '@lion/fieldset/lion-fieldset.js';
 import { LionInput } from '@lion/input';
 import { Required } from '@lion/validate';
-import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { expect, nextFrame } from '@open-wc/testing';
+import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import { ChoiceGroupMixin } from '../src/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../src/ChoiceInputMixin.js';
 
@@ -194,21 +195,21 @@ describe('ChoiceGroupMixin', () => {
     counter = 0; // reset after setup which may result in different results
 
     el.formElements[0].checked = true;
-    expect(counter).to.equal(2); // male becomes checked, female becomes unchecked
+    expect(counter).to.equal(1); // male becomes checked, female becomes unchecked
 
     // not changed values trigger no event
     el.formElements[0].checked = true;
-    expect(counter).to.equal(2);
+    expect(counter).to.equal(1);
 
     el.formElements[2].checked = true;
-    expect(counter).to.equal(4); // other becomes checked, male becomes unchecked
+    expect(counter).to.equal(2); // other becomes checked, male becomes unchecked
 
     // not found values trigger no event
     el.modelValue = 'foo';
-    expect(counter).to.equal(4);
+    expect(counter).to.equal(2);
 
     el.modelValue = 'male';
-    expect(counter).to.equal(6); // male becomes checked, other becomes unchecked
+    expect(counter).to.equal(3); // male becomes checked, other becomes unchecked
   });
 
   it('can be required', async () => {

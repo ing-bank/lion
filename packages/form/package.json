@@ -1,6 +1,6 @@
 {
   "name": "@lion/form",
-  "version": "0.4.18",
+  "version": "0.4.20",
   "description": "It enhances the functionality of the native `form` component. It is designed to interact with (instances of) form fields",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -35,10 +35,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.4.5",
-    "@lion/fieldset": "0.9.3"
+    "@lion/fieldset": "0.9.4"
   },
   "devDependencies": {
-    "@lion/field": "0.11.3",
+    "@lion/field": "0.11.4",
     "@lion/validate": "0.8.0",
     "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/testing": "^2.5.0",

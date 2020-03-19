@@ -32,16 +32,16 @@ import { LionField } from '@lion/field';
 export class LionSelect extends LionField {
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('change', this._proxyChangeEvent);
+    this._inputNode.addEventListener('change', this._proxyChangeEvent);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('change', this._proxyChangeEvent);
+    this._inputNode.removeEventListener('change', this._proxyChangeEvent);
   }
 
   _proxyChangeEvent() {
-    this._inputNode.dispatchEvent(
+    this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
         composed: true,

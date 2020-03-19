@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.19](https://github.com/ing-bank/lion/compare/@lion/select@0.5.18...@lion/select@0.5.19) (2020-03-19)
+
+
+### Bug Fixes
+
+* normalization model-value-changed events ([1b6c3a4](https://github.com/ing-bank/lion/commit/1b6c3a44c820b9d61c26849b91bbb1bc8d6c772b))
+
+
+
+
+
 ## [0.5.18](https://github.com/ing-bank/lion/compare/@lion/select@0.5.17...@lion/select@0.5.18) (2020-03-05)
 
 **Note:** Version bump only for package @lion/select

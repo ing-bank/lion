@@ -25,5 +25,6 @@ export class LionFieldset extends FormGroupMixin(LitElement) {
     super();
     /** @override from FormRegistrarMixin */
     this._isFormOrFieldset = true;
+    this._repropagationRole = 'fieldset'; // configures FormControlMixin
   }
 }
