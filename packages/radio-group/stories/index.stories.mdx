@@ -21,7 +21,7 @@ You should use `<lion-radio>`s inside this element.
 </Story>
 
 ```html
-<lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+<lion-radio-group name="dinos_1" label="What are your favourite dinosaurs?">
   <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
   <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
   <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -82,7 +82,7 @@ You can pre-select an option by adding the checked attribute to the selected `li
 
 <Story name="Pre-select">
   {html`
-    <lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+    <lion-radio-group name="dinos_2" label="What are your favourite dinosaurs?">
       <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
       <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'} checked></lion-radio>
       <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -91,7 +91,7 @@ You can pre-select an option by adding the checked attribute to the selected `li
 </Story>
 
 ```html
-<lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+<lion-radio-group name="dinos_3" label="What are your favourite dinosaurs?">
   <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
   <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'} checked></lion-radio>
   <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -104,7 +104,7 @@ You can disable a specific `lion-radio` option by adding the `disabled` attribut
 
 <Story name="Disabled radio">
   {html`
-    <lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+    <lion-radio-group name="dinos_4" label="What are your favourite dinosaurs?">
       <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
       <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
       <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -113,7 +113,7 @@ You can disable a specific `lion-radio` option by adding the `disabled` attribut
 </Story>
 
 ```html
-<lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+<lion-radio-group name="dinos_5" label="What are your favourite dinosaurs?">
   <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
   <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
   <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -124,7 +124,7 @@ You can do the same thing for the entire group by setting the `disabled` attribu
 
 <Story name="Disabled group">
   {html`
-    <lion-radio-group name="dinos" label="What are your favourite dinosaurs?" disabled>
+    <lion-radio-group name="dinos_6" label="What are your favourite dinosaurs?" disabled>
       <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
       <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
       <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -133,7 +133,7 @@ You can do the same thing for the entire group by setting the `disabled` attribu
 </Story>
 
 ```html
-<lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
+<lion-radio-group name="dinos_7" label="What are your favourite dinosaurs?">
   <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
   <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'} disabled></lion-radio>
   <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
@@ -152,7 +152,7 @@ You can do the same thing for the entire group by setting the `disabled` attribu
     return html`
       <lion-radio-group
         id="dinos"
-        name="dinos"
+        name="dinos_8"
         label="Favourite dinosaur"
         .validators=${[new Required()]}
       >
@@ -176,8 +176,8 @@ const validate = () => {
 
 ```html
 <lion-radio-group
-  id="dinos"
-  name="dinos"
+  id="dinosGroup"
+  name="dinosGroup"
   label="Favourite dinosaur"
   .validators=${[new Required()]}
 >
@@ -210,7 +210,7 @@ You can also create a validator that validates whether a certain option is check
     return html`
       <lion-radio-group
         id="dinosTwo"
-        name="dinos"
+        name="dinosTwo"
         label="Favourite dinosaur"
         .validators=${[new Required(), new IsBrontosaurus()]}
       >
@@ -246,7 +246,7 @@ const validate = () => {
 ```html
 <lion-radio-group
   id="dinosGroupTwo"
-  name="dinos"
+  name="dinosGroupTwo"
   label="Favourite dinosaur"
   .validators=${[new Required(), new IsBrontosaurus()]}
 >
