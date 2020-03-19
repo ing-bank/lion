@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.6](https://github.com/ing-bank/lion/compare/@lion/form-system@0.6.5...@lion/form-system@0.6.6) (2020-03-19)
+
+
+### Bug Fixes
+
+* normalization model-value-changed events ([1b6c3a4](https://github.com/ing-bank/lion/commit/1b6c3a44c820b9d61c26849b91bbb1bc8d6c772b))
+
+
+
+
+
 ## [0.6.5](https://github.com/ing-bank/lion/compare/@lion/form-system@0.6.4...@lion/form-system@0.6.5) (2020-03-12)
 
 **Note:** Version bump only for package @lion/form-system
