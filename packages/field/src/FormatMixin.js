@@ -289,7 +289,10 @@ export const FormatMixin = dedupeMixin(
       _dispatchModelValueChangedEvent() {
         /** @event model-value-changed */
         this.dispatchEvent(
-          new CustomEvent('model-value-changed', { bubbles: true, composed: true }),
+          new CustomEvent('model-value-changed', {
+            bubbles: true,
+            detail: { formPath: [this] },
+          }),
         );
       }
 

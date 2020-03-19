@@ -55,6 +55,22 @@ export const FormControlMixin = dedupeMixin(
            * Contains all elements that should end up in aria-describedby of `._inputNode`
            */
           _ariaDescribedNodes: Array,
+          /**
+           * Based on the role, details of handling model-value-changed repropagation differ.
+           * @type {'child'|'fieldset'|'choice-group'}
+           */
+          _repropagationRole: String,
+          /**
+           * By default, a field with _repropagationRole 'choice-group' will act as an
+           * 'endpoint'. This means it will be considered as an individual field: for
+           * a select, individual options will not be part of the formPath. They
+           * will.
+           * Similarly, components that (a11y wise) need to be fieldsets, but 'interaction wise'
+           * (from Application Developer perspective) need to be more like fields
+           * (think of an amount-input with a currency select box next to it), can set this
+           * to true to hide private internals in the formPath.
+           */
+          _isRepropagationEndpoint: Boolean,
         };
       }
 
@@ -151,6 +167,8 @@ export const FormControlMixin = dedupeMixin(
         this._inputId = uuid(this.localName);
         this._ariaLabelledNodes = [];
         this._ariaDescribedNodes = [];
+        this._repropagationRole = 'child';
+        this.addEventListener('model-value-changed', this.__repropagateChildrenValues);
       }
 
       connectedCallback() {
@@ -552,6 +570,96 @@ export const FormControlMixin = dedupeMixin(
 
       __getDirectSlotChild(slotName) {
         return [...this.children].find(el => el.slot === slotName);
+      }
+
+      firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        this.__dispatchInitialModelValueChangedEvent();
+      }
+
+      async __dispatchInitialModelValueChangedEvent() {
+        // When we are not a fieldset / choice-group, we don't need to wait for our children
+        // to send a unified event
+        if (this._repropagationRole === 'child') {
+          return;
+        }
+
+        await this.registrationComplete;
+        // Initially we don't repropagate model-value-changed events coming
+        // from children. On firstUpdated we re-dispatch this event to maintain
+        // 'count consistency' (to not confuse the application developer with a
+        // large number of initial events). Initially the source field will not
+        // be part of the formPath but afterwards it will.
+        this.__repropagateChildrenInitialized = true;
+        this.dispatchEvent(
+          new CustomEvent('model-value-changed', {
+            bubbles: true,
+            detail: { formPath: [this], initialize: true },
+          }),
+        );
+      }
+
+      // eslint-disable-next-line class-methods-use-this, no-unused-vars
+      _onBeforeRepropagateChildrenValues(ev) {}
+
+      __repropagateChildrenValues(ev) {
+        // Allows sub classes to internally listen to the children change events
+        // (before stopImmediatePropagation is called below).
+        this._onBeforeRepropagateChildrenValues(ev);
+        // Normalize target, we also might get it from 'portals' (rich select)
+        const target = (ev.detail && ev.detail.element) || ev.target;
+        const isEndpoint =
+          this._isRepropagationEndpoint || this._repropagationRole === 'choice-group';
+
+        // Prevent eternal loops after we sent the event below.
+        if (target === this) {
+          return;
+        }
+
+        // A. Stop sibling handlers
+        //
+        // Make sure our sibling event listeners (added by Application developers) will not get
+        // the child model-value-changed event, but the repropagated one at the bottom of this
+        // method
+        ev.stopImmediatePropagation();
+
+        // B1. Are we still initializing? If so, halt...
+        //
+        // Stop repropagating children events before firstUpdated and make sure we de not
+        // repropagate init events of our children (we already sent our own
+        // initial model-value-change event in firstUpdated)
+        const isGroup = this._repropagationRole !== 'child'; // => fieldset or choice-group
+        const isSelfInitializing = isGroup && !this.__repropagateChildrenInitialized;
+        const isChildGroupInitializing = ev.detail && ev.detail.initialize;
+        if (isSelfInitializing || isChildGroupInitializing) {
+          return;
+        }
+
+        // B2. Are we a single choice choice-group? If so, halt when unchecked
+        //
+        // We only send the checked changed up (not the unchecked). In this way a choice group
+        // (radio-group, checkbox-group, select/listbox) acts as an 'endpoint' (a single Field)
+        // just like the native <select>
+        if (this._repropagationRole === 'choice-group' && !this.multipleChoice && !target.checked) {
+          return;
+        }
+
+        // C1. We are ready to dispatch. Create a formPath
+        //
+        // Compute the formPath. Choice groups are regarded 'end points'
+        let parentFormPath = [];
+        if (!isEndpoint) {
+          parentFormPath = (ev.detail && ev.detail.formPath) || [target];
+        }
+        const formPath = [...parentFormPath, this];
+
+        // C2. Finally, redispatch a fresh model-value-changed event from our host, consumable
+        // for an Application Developer
+        //
+        // Since for a11y everything needs to be in lightdom, we don't add 'composed:true'
+        this.dispatchEvent(
+          new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
+        );
       }
     },
 );
