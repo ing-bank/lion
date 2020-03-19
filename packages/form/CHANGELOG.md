@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.20](https://github.com/ing-bank/lion/compare/@lion/form@0.4.19...@lion/form@0.4.20) (2020-03-19)
+
+
+### Bug Fixes
+
+* **form:** remove correct reset event listener on teardown ([9cd0ed3](https://github.com/ing-bank/lion/commit/9cd0ed364fd440353c0b4a94bb1e5001ea9415c0))
+
+
+
+
+
 ## [0.4.19](https://github.com/ing-bank/lion/compare/@lion/form@0.4.18...@lion/form@0.4.19) (2020-03-19)
 
 **Note:** Version bump only for package @lion/form
