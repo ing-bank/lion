@@ -57,6 +57,6 @@ export class LionForm extends LionFieldset {
 
   __teardownEventsForLionForm() {
     this._formNode.removeEventListener('submit', this._submit);
-    this._formNode.removeEventListener('rest', this._reset);
+    this._formNode.removeEventListener('reset', this._reset);
   }
 }
