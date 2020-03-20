@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.6](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.5...@lion/overlays@0.12.6) (2020-03-20)
+
+
+### Bug Fixes
+
+* **overlays:** support backdrop with local overlay ([e472b64](https://github.com/ing-bank/lion/commit/e472b64f7bc7c7c3ecf1e50f3f2b245c36c387f1))
+
+
+
+
+
 ## [0.12.5](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.4...@lion/overlays@0.12.5) (2020-03-19)
 
 
