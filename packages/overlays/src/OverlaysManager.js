@@ -1,5 +1,5 @@
-import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
+import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 

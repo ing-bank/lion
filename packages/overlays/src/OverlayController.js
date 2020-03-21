@@ -1,4 +1,5 @@
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import { localOverlaysStyle } from './localOverlaysStyle.js';
 import { overlays } from './overlays.js';
 import { containFocus } from './utils/contain-focus.js';
 import './utils/typedef.js';
@@ -423,43 +424,22 @@ export class OverlayController {
    * animation is played.
    */
   _handleBackdrop({ animation = true, phase }) {
-    if (this.placementMode === 'local') {
-      switch (phase) {
-        case 'init':
-          if (!this.backdropNode) {
-            this.backdropNode = document.createElement('div');
-            this.backdropNode.classList.add('local-overlays__backdrop');
-          }
-          this.backdropNode.slot = '_overlay-shadow-outlet';
-          this._contentNodeWrapper.parentElement.insertBefore(
-            this.backdropNode,
-            this._contentNodeWrapper,
-          );
-          break;
-        case 'show':
-          this.__hasActiveBackdrop = true;
-          break;
-        case 'hide':
-          if (!this.backdropNode) {
-            return;
-          }
-          this.__hasActiveBackdrop = false;
-          break;
-        case 'teardown':
-          if (!this.backdropNode) {
-            return;
-          }
-          this.backdropNode.parentNode.removeChild(this.backdropNode);
-          break;
-        /* no default */
-      }
-      return;
-    }
     const { backdropNode } = this;
     switch (phase) {
       case 'init':
-        this.backdropNode = document.createElement('div');
-        this.backdropNode.classList.add('global-overlays__backdrop');
+        // For global overlays, styles for this are added to head by the OverlayManager
+        // For local, we add it locally in DOM here
+        if (this.placementMode === 'local') {
+          const styleTag = document.createElement('style');
+          styleTag.setAttribute('data-local-overlays', '');
+          styleTag.textContent = localOverlaysStyle.cssText;
+          this._contentNodeWrapper.parentElement.insertBefore(styleTag, this._contentNodeWrapper);
+        }
+        if (!this.backdropNode) {
+          this.__noBackdropNodePassed = true;
+          this.backdropNode = document.createElement('div');
+          this.backdropNode.classList.add(`${this.placementMode}-overlays__backdrop`);
+        }
         this.backdropNode.slot = '_overlay-shadow-outlet';
         this._contentNodeWrapper.parentElement.insertBefore(
           this.backdropNode,
@@ -467,9 +447,11 @@ export class OverlayController {
         );
         break;
       case 'show':
-        backdropNode.classList.add('global-overlays__backdrop--visible');
-        if (animation === true) {
-          backdropNode.classList.add('global-overlays__backdrop--fade-in');
+        if (this.__noBackdropNodePassed) {
+          backdropNode.classList.add(`${this.placementMode}-overlays__backdrop--visible`);
+          if (animation === true) {
+            backdropNode.classList.add(`${this.placementMode}-overlays__backdrop--fade-in`);
+          }
         }
         this.__hasActiveBackdrop = true;
         break;
@@ -477,22 +459,25 @@ export class OverlayController {
         if (!backdropNode) {
           return;
         }
-        backdropNode.classList.remove('global-overlays__backdrop--fade-in');
 
-        if (animation) {
-          let afterFadeOut;
-          backdropNode.classList.add('global-overlays__backdrop--fade-out');
-          this.__backDropAnimation = new Promise(resolve => {
-            afterFadeOut = () => {
-              backdropNode.classList.remove('global-overlays__backdrop--fade-out');
-              backdropNode.classList.remove('global-overlays__backdrop--visible');
-              backdropNode.removeEventListener('animationend', afterFadeOut);
-              resolve();
-            };
-          });
-          backdropNode.addEventListener('animationend', afterFadeOut);
-        } else {
-          backdropNode.classList.remove('global-overlays__backdrop--visible');
+        if (this.__noBackdropNodePassed) {
+          backdropNode.classList.remove(`${this.placementMode}-overlays__backdrop--fade-in`);
+
+          if (animation) {
+            let afterFadeOut;
+            backdropNode.classList.add(`${this.placementMode}-overlays__backdrop--fade-out`);
+            this.__backDropAnimation = new Promise(resolve => {
+              afterFadeOut = () => {
+                backdropNode.classList.remove(`${this.placementMode}-overlays__backdrop--fade-out`);
+                backdropNode.classList.remove(`${this.placementMode}-overlays__backdrop--visible`);
+                backdropNode.removeEventListener('animationend', afterFadeOut);
+                resolve();
+              };
+            });
+            backdropNode.addEventListener('animationend', afterFadeOut);
+          } else {
+            backdropNode.classList.remove(`${this.placementMode}-overlays__backdrop--visible`);
+          }
         }
         this.__hasActiveBackdrop = false;
         break;

@@ -1,20 +1,20 @@
 /* eslint-disable no-new */
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import {
-  expect,
-  html,
-  fixture,
   aTimeout,
   defineCE,
-  unsafeStatic,
+  expect,
+  fixture,
+  html,
   nextFrame,
+  unsafeStatic,
 } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
-import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
-import { keyCodes } from '../src/utils/key-codes.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
+import { keyCodes } from '../src/utils/key-codes.js';
+import { simulateTab } from '../src/utils/simulate-tab.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
@@ -689,6 +689,18 @@ describe('OverlayController', () => {
         expect(ctrl.backdropNode).to.be.undefined;
         await ctrl.hide();
 
+        const controllerWithBackdrop = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: true,
+        });
+        await controllerWithBackdrop.show();
+        expect(controllerWithBackdrop.backdropNode).to.have.class('local-overlays__backdrop');
+        expect(controllerWithBackdrop.backdropNode).to.have.class(
+          'local-overlays__backdrop--visible',
+        );
+      });
+
+      it('supports passing your own backdrop node', async () => {
         const backdropNode = document.createElement('div');
         backdropNode.classList.add('custom-backdrop');
 
@@ -699,22 +711,21 @@ describe('OverlayController', () => {
         });
         await controllerWithBackdrop.show();
         expect(controllerWithBackdrop.backdropNode).to.have.class('custom-backdrop');
+        expect(controllerWithBackdrop.backdropNode).to.not.have.class('local-overlays__backdrop');
       });
 
       it('reenables the backdrop when shown/hidden/shown', async () => {
-        const backdropNode = document.createElement('div');
-        backdropNode.classList.add('custom-backdrop');
-
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           hasBackdrop: true,
-          backdropNode,
         });
         await ctrl.show();
-        expect(ctrl.backdropNode).to.have.class('custom-backdrop');
+        expect(ctrl.backdropNode).to.have.class('local-overlays__backdrop--visible');
         await ctrl.hide();
+        await aTimeout(300); // animation fade out is 300ms before the class is removed to make it display none
+        expect(ctrl.backdropNode).to.not.have.class('local-overlays__backdrop--visible');
         await ctrl.show();
-        expect(ctrl.backdropNode).to.have.class('custom-backdrop');
+        expect(ctrl.backdropNode).to.have.class('local-overlays__backdrop--visible');
       });
 
       it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {

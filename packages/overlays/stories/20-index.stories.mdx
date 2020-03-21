@@ -587,32 +587,13 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
 
 
 ## Local Backdrop
+
 We provide a possibility to add a backdrop to a locally placed overlay.
-You can pass your backdropNode as a configuration parameter and control its styling reacting upon OverlayController events.
-Here is the example below
 
 <Story name="Local backdrop">
-  {() => {
-    let backdropNode = document.createElement('div');
-    backdropNode.classList.add('local-backdrop-01');
-    return html`
-    <style>
-      .local-backdrop-01 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background-color: red;
-        opacity: 0.3;
-        display: none;
-      }
-    </style>
+  {() => html`
     <demo-overlay-system
-      @before-opened=${(e) => backdropNode.style.display = 'block'}
-      @before-closed=${(e) => backdropNode.style.display = 'none'}
-      .config=${{ hasBackdrop: true, placementMode: 'local', backdropNode }}
+      .config=${{ hasBackdrop: true, placementMode: 'local' }}
     >
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
@@ -624,15 +605,77 @@ Here is the example below
         </button>
       </div>
     </demo-overlay-system>
-  `}}
+  `}
+</Story>
+
+```html
+<demo-overlay-system
+  .config=${{ hasBackdrop: true, placementMode: 'local', }}
+>
+  <button slot="invoker">Click me to open the overlay!</button>
+  <div slot="content" class="demo-overlay">
+    Hello! You can close this notification here:
+    <button
+      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+    >
+      ⨯
+    </button>
+  </div>
+</demo-overlay-system>
+```
+
+### Pass a backdropNode
+
+You can, optionally, pass your own `backdropNode` as a configuration parameter and control its styling and how it responds to OverlayController events.
+Passing your own `backdropNode` will mean you do not get any of the default styling that we provide if you do not pass a node.
+
+Here is the example below.
+
+<Story name="Passing local backdrop">
+  {() => {
+    let backdropNode = document.createElement('div');
+    backdropNode.classList.add('custom-backdrop');
+    return html`
+      <style>
+        .custom-backdrop {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          background-color: red;
+          opacity: 0.3;
+          display: none;
+        }
+      </style>
+      <demo-overlay-system
+        @before-opened=${(e) => backdropNode.style.display = 'block'}
+        @before-closed=${(e) => backdropNode.style.display = 'none'}
+        .config=${{ hasBackdrop: true, placementMode: 'local', backdropNode }}
+      >
+        <button slot="invoker">Click me to open the overlay!</button>
+        <div slot="content" class="demo-overlay">
+          Hello! You can close this notification here:
+          <button
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </demo-overlay-system>
+    `;
+  }}
 </Story>
 
 ```js
-  let backdropNode = document.createElement('div');
-  backdropNode.classList.add('local-backdrop-01');
-  return html`
+let backdropNode = document.createElement('div');
+backdropNode.classList.add('custom-backdrop');
+return html`
   <style>
-    .local-backdrop-01 {
+    .custom-backdrop {
+      content: '';
       position: fixed;
       top: 0;
       left: 0;
@@ -659,22 +702,19 @@ Here is the example below
       </button>
     </div>
   </demo-overlay-system>
+`;
 ```
 
-## Declarative Local Backdrop
+### Declarative Local Backdrop
+
 Another way to add custom backdrop is declaratively add an element with `slot="backdrop"`.
 
 <Story name="Declarative Local Backdrop">
   {() => {
-    const beforeOpened = () => {
-      document.querySelector('.local-backdrop-02').style.display = 'block';
-    }
-    const beforeClosed = () => {
-      document.querySelector('.local-backdrop-02').style.display = 'none';
-    }
     return html`
     <style>
-      .local-backdrop-02 {
+      .custom-backdrop-declarative {
+        content: '';
         position: fixed;
         top: 0;
         left: 0;
@@ -687,11 +727,11 @@ Another way to add custom backdrop is declaratively add an element with `slot="b
       }
     </style>
     <demo-overlay-system
-      @before-opened=${beforeOpened}
-      @before-closed=${beforeClosed}
+      @before-opened=${(e) => document.querySelector('.custom-backdrop-declarative').style.display = 'block'}
+      @before-closed=${(e) => document.querySelector('.custom-backdrop-declarative').style.display = 'none'}
       .config=${{ hasBackdrop: true, placementMode: 'local' }}
     >
-      <div slot="backdrop" class="local-backdrop-02"></div>
+      <div slot="backdrop" class="custom-backdrop-declarative"></div>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -706,15 +746,10 @@ Another way to add custom backdrop is declaratively add an element with `slot="b
 </Story>
 
 ```js
-  const beforeOpened = () => {
-    document.querySelector('.local-backdrop-02').style.display = 'block';
-  }
-  const beforeClosed = () => {
-    document.querySelector('.local-backdrop-02').style.display = 'none';
-  }
-  return html`
+return html`
   <style>
-    .local-backdrop-02 {
+    .custom-backdrop-declarative {
+      content: '';
       position: fixed;
       top: 0;
       left: 0;
@@ -727,11 +762,9 @@ Another way to add custom backdrop is declaratively add an element with `slot="b
     }
   </style>
   <demo-overlay-system
-    @before-opened=${beforeOpened}
-    @before-closed=${beforeClosed}
     .config=${{ hasBackdrop: true, placementMode: 'local' }}
   >
-    <div slot="backdrop" class="local-backdrop-02"></div>
+    <div slot="backdrop" class="custom-backdrop-declarative"></div>
     <button slot="invoker">Click me to open the overlay!</button>
     <div slot="content" class="demo-overlay">
       Hello! You can close this notification here:
@@ -742,4 +775,5 @@ Another way to add custom backdrop is declaratively add an element with `slot="b
       </button>
     </div>
   </demo-overlay-system>
+`;
 ```
