@@ -109,6 +109,8 @@ localize.loadNamespace({
 });
 ```
 
+> Note: dynamic variables inside dynamic imports may cause problems with tools that do static analysis, and may not work out of the box
+
 Usage of dynamic imports is recommended if you want to be able to create smart bundles later on for a certain locale.
 The module must have a `default` export as shown above to be handled properly.
 

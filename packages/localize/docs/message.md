@@ -48,6 +48,8 @@ class MyHelloComponent extends LocalizeMixin(LitElement) {
 }
 ```
 
+> Note: dynamic variables inside dynamic imports may cause problems with tools that do static analysis, and may not work out of the box
+
 The `namespace` can be one of two types: an object with an explicit loader function as shown above and just a simple string for which the loader has been preconfigured.
 
 > When calling `this.msgLit()`, what comes after `:` may contain dots only if they are intended as a separator for objects. For more details, please check [messageformat](https://messageformat.github.io/messageformat/), which is the underlying library that we use.
