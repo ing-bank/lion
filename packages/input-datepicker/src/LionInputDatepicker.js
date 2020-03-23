@@ -138,7 +138,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
             case 'zh':
               return import('../translations/zh.js');
             default:
-              return import(`../translations/${locale}.js`);
+              return import(`../translations/en.js`);
           }
         },
       },
