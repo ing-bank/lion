@@ -39,6 +39,13 @@ export const InteractionStateMixin = dedupeMixin(
           prefilled: {
             type: Boolean,
           },
+          /**
+           * True when user has attempted to submit the form, e.g. through a button
+           * of type="submit"
+           */
+          submitted: {
+            type: Boolean,
+          },
         };
       }
 
