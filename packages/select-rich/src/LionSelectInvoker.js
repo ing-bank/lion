@@ -1,5 +1,5 @@
 import { LionButton } from '@lion/button';
-import { html } from '@lion/core';
+import { css, html } from '@lion/core';
 
 /**
  * LionSelectInvoker: invoker button consuming a selected element
@@ -8,6 +8,17 @@ import { html } from '@lion/core';
  * @extends {LionButton}
  */
 export class LionSelectInvoker extends LionButton {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        #content-wrapper {
+          position: relative;
+        }
+      `,
+    ];
+  }
+
   static get properties() {
     return {
       /**
