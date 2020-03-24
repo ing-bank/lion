@@ -1,18 +1,17 @@
 import { ChoiceGroupMixin } from '@lion/choice-input';
 import {
   css,
+  getScopedTagName,
   html,
   LitElement,
-  SlotMixin,
   ScopedElementsMixin,
-  getScopedTagName,
+  SlotMixin,
 } from '@lion/core';
 import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
 import { formRegistrarManager } from '@lion/field/src/registration/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
-
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 function uuid() {
@@ -86,10 +85,6 @@ export class LionSelectRich extends ScopedElementsMixin(
       interactionMode: {
         type: String,
         attribute: 'interaction-mode',
-      },
-
-      name: {
-        type: String,
       },
     };
   }
