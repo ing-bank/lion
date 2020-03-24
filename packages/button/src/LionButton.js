@@ -1,10 +1,10 @@
 import {
-  css,
-  html,
   browserDetection,
-  SlotMixin,
+  css,
   DisabledWithTabIndexMixin,
+  html,
   LitElement,
+  SlotMixin,
 } from '@lion/core';
 
 const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
@@ -31,6 +31,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   render() {
     return html`
       <div class="btn">
+        <div class="click-area"></div>
         ${this._beforeTemplate()}
         ${browserDetection.isIE11
           ? html`
@@ -41,7 +42,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
             `}
         ${this._afterTemplate()}
         <slot name="_button"></slot>
-        <div class="click-area"></div>
       </div>
     `;
   }
