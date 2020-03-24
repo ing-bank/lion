@@ -1,9 +1,8 @@
 import { LitElement } from '@lion/core';
+import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import { OverlayController } from '@lion/overlays';
 import { Required } from '@lion/validate';
 import { aTimeout, defineCE, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
-import { formFixture as fixture } from '@lion/field/test-helpers.js';
-
 import { LionSelectRich } from '../index.js';
 import '../lion-option.js';
 import '../lion-options.js';
@@ -189,9 +188,12 @@ describe('lion-select-rich', () => {
     expect(el.hasFeedbackFor.includes('error')).to.be.true;
     expect(el.showsFeedbackFor.includes('error')).to.be.false;
 
+    // test submitted prop explicitly, since we dont extend field, we add the prop manually
+    el.submitted = true;
+    await el.updateComplete;
+    expect(el.showsFeedbackFor.includes('error')).to.be.true;
+
     el._listboxNode.children[1].checked = true;
-    // Set touched to true (needed for feedback show) because we simulate a user touching the select
-    el.touched = true;
     await el.updateComplete;
     expect(el.hasFeedbackFor.includes('error')).to.be.false;
     expect(el.showsFeedbackFor.includes('error')).to.be.false;
