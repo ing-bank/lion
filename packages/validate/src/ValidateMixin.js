@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 
-import { dedupeMixin, SlotMixin, ScopedElementsMixin, getScopedTagName } from '@lion/core';
+import { dedupeMixin, SlotMixin, ScopedElementsMixin } from '@lion/core';
 import { localize } from '@lion/localize';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
@@ -25,7 +25,7 @@ function arrayDiff(array1 = [], array2 = []) {
 export const ValidateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class ValidateMixin extends ScopedElementsMixin(SyncUpdatableMixin(SlotMixin(superclass))) {
+    class ValidateMixin extends SyncUpdatableMixin(SlotMixin(ScopedElementsMixin(superclass))) {
       static get scopedElements() {
         return {
           ...super.scopedElements,
@@ -117,9 +117,7 @@ export const ValidateMixin = dedupeMixin(
         return {
           ...super.slots,
           feedback: () =>
-            document.createElement(
-              getScopedTagName('lion-validation-feedback', this.constructor.scopedElements),
-            ),
+            document.createElement(this.constructor.getScopedTagName('lion-validation-feedback')),
         };
       }
 

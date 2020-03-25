@@ -171,7 +171,7 @@ Since Scoped Elements changes tagnames under the hood, a tagname querySelector s
 like this:
 
 ```js
-this.querySelector(getTagName('lion-input', this.constructor.scopedElements));
+this.querySelector(this.constructor.getScopedTagName('lion-input'));
 ```
 
 ### CSS selectors
@@ -218,12 +218,12 @@ connectedCallback() {
 In a less complex case, we might just want to add a child node to the dom.
 
 ```js
-import { ScopedElementsMixin, LitElement, getScopedTagNamegetScopedTagName  } from '@lion/core';
+import { ScopedElementsMixin, LitElement } from '@lion/core';
 
 ...
 
 __getLightDomNode() {
-  return document.createElement(getScopedTagName('lion-input', this.constructor.scopedElements));
+  return document.createElement(this.constructor.getScopedTagName('lion-input'));
 }
 ```
 

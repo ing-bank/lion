@@ -1,4 +1,4 @@
-import { html, css, ScopedElementsMixin, getScopedTagName } from '@lion/core';
+import { html, css, ScopedElementsMixin } from '@lion/core';
 import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
 import { LionSwitchButton } from './LionSwitchButton.js';
@@ -25,10 +25,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   get slots() {
     return {
       ...super.slots,
-      input: () =>
-        document.createElement(
-          getScopedTagName('lion-switch-button', this.constructor.scopedElements),
-        ),
+      input: () => document.createElement(this.constructor.getScopedTagName('lion-switch-button')),
     };
   }
 
