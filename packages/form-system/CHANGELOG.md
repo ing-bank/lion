@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.6.8...@lion/form-system@0.7.0) (2020-03-25)
+
+
+### Features
+
+* **field:** align (pre)filled and empty, fix filled not working ([e397f8d](https://github.com/ing-bank/lion/commit/e397f8d68b44c2ccb6447a908a97ace6568738ad))
+
+
+
+
+
 ## [0.6.8](https://github.com/ing-bank/lion/compare/@lion/form-system@0.6.7...@lion/form-system@0.6.8) (2020-03-20)
 
 **Note:** Version bump only for package @lion/form-system

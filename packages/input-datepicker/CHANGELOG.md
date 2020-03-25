@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.10.3...@lion/input-datepicker@0.11.0) (2020-03-25)
+
+
+### Features
+
+* refrain from using dynamic vars inside dynamic import ([42c840f](https://github.com/ing-bank/lion/commit/42c840f9498810a81296c9beb8a4f6bbdbc4fa0b))
+* update to stable @open-wc/scoped-elements ([10bac56](https://github.com/ing-bank/lion/commit/10bac5672b406d3f08a89a795ee295f5028ca6d0))
+
+
+
+
+
 ## [0.10.3](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.10.2...@lion/input-datepicker@0.10.3) (2020-03-20)
 
 **Note:** Version bump only for package @lion/input-datepicker

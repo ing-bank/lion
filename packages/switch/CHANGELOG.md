@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/switch@0.7.2...@lion/switch@0.8.0) (2020-03-25)
+
+
+### Features
+
+* update to stable @open-wc/scoped-elements ([10bac56](https://github.com/ing-bank/lion/commit/10bac5672b406d3f08a89a795ee295f5028ca6d0))
+
+
+
+
+
 ## [0.7.2](https://github.com/ing-bank/lion/compare/@lion/switch@0.7.1...@lion/switch@0.7.2) (2020-03-19)
 
 **Note:** Version bump only for package @lion/switch

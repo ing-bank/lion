@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.10](https://github.com/ing-bank/lion/compare/@lion/button@0.5.9...@lion/button@0.5.10) (2020-03-25)
+
+
+### Bug Fixes
+
+* **button:** prevent clickarea from blocking sibling content ([2b2d6b3](https://github.com/ing-bank/lion/commit/2b2d6b34aa9d8d61f01302480f280ec502da8765))
+
+
+
+
+
 ## [0.5.9](https://github.com/ing-bank/lion/compare/@lion/button@0.5.8...@lion/button@0.5.9) (2020-03-05)
 
 **Note:** Version bump only for package @lion/button

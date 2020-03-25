@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.7.7...@lion/choice-input@0.8.0) (2020-03-25)
+
+
+### Features
+
+* **field:** align (pre)filled and empty, fix filled not working ([e397f8d](https://github.com/ing-bank/lion/commit/e397f8d68b44c2ccb6447a908a97ace6568738ad))
+
+
+
+
+
 ## [0.7.7](https://github.com/ing-bank/lion/compare/@lion/choice-input@0.7.6...@lion/choice-input@0.7.7) (2020-03-19)
 
 

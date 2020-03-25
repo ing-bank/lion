@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/ing-bank/lion/compare/@lion/field@0.11.4...@lion/field@0.12.0) (2020-03-25)
+
+
+### Bug Fixes
+
+* **field:** put submitted prop in interaction state mixin ([530cb31](https://github.com/ing-bank/lion/commit/530cb31089b4fced266880d15d63d124596d231b))
+
+
+### Features
+
+* **field:** align (pre)filled and empty, fix filled not working ([e397f8d](https://github.com/ing-bank/lion/commit/e397f8d68b44c2ccb6447a908a97ace6568738ad))
+
+
+
+
+
 ## [0.11.4](https://github.com/ing-bank/lion/compare/@lion/field@0.11.3...@lion/field@0.11.4) (2020-03-19)
 
 

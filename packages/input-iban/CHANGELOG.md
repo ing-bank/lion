@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.6.4...@lion/input-iban@0.7.0) (2020-03-25)
+
+
+### Features
+
+* refrain from using dynamic vars inside dynamic import ([42c840f](https://github.com/ing-bank/lion/commit/42c840f9498810a81296c9beb8a4f6bbdbc4fa0b))
+
+
+
+
+
 ## [0.6.4](https://github.com/ing-bank/lion/compare/@lion/input-iban@0.6.3...@lion/input-iban@0.6.4) (2020-03-19)
 
 **Note:** Version bump only for package @lion/input-iban

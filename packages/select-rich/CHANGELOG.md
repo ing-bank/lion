@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.12.4...@lion/select-rich@0.13.0) (2020-03-25)
+
+
+### Bug Fixes
+
+* **select-rich:** allow hoverable content inside content-wrapper ([eadb0fd](https://github.com/ing-bank/lion/commit/eadb0fd9714207e015862bb7e2f8d623515c2837))
+
+
+### Features
+
+* update to stable @open-wc/scoped-elements ([10bac56](https://github.com/ing-bank/lion/commit/10bac5672b406d3f08a89a795ee295f5028ca6d0))
+
+
+
+
+
 ## [0.12.4](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.12.3...@lion/select-rich@0.12.4) (2020-03-20)
 
 **Note:** Version bump only for package @lion/select-rich

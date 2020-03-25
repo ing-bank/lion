@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/core@0.4.5...@lion/core@0.5.0) (2020-03-25)
+
+
+### Features
+
+* update to stable @open-wc/scoped-elements ([10bac56](https://github.com/ing-bank/lion/commit/10bac5672b406d3f08a89a795ee295f5028ca6d0))
+
+
+
+
+
 ## [0.4.5](https://github.com/ing-bank/lion/compare/@lion/core@0.4.4...@lion/core@0.4.5) (2020-03-05)
 
 
