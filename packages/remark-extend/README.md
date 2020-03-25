@@ -318,3 +318,9 @@ Starting from `### Red` until the next headline with depth of 3.
 
 the sun can get red
 ```
+
+```js script
+export default {
+  title: 'Tools/Remark Extend',
+};
+```

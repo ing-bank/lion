@@ -1,10 +1,44 @@
 # Form
 
 `lion-form` is a webcomponent that enhances the functionality of the native `form` component.
+It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview--page).
+
+```js script
+import { html } from 'lit-html';
+import '@lion/input/lion-input.js';
+import './lion-form.js';
+
+export default {
+  title: 'Forms/Form/Overview',
+};
+```
+
+```js story
+export const main = () => html`
+  <lion-form id="form">
+    <form>
+      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+      <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    </form>
+  </lion-form>
+`;
+```
 
 ## Live Demo/Documentation
 
 > See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-form-overview--page) for a live demo and documentation
+
+## Features
+
+- Data synchronization with models
+- Easy retrieval of form data based on field names
+- Advanced validation possibilities
+- Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
+- Registration mechanism for [form controls](?path=/docs/forms-system-overview--page)
+- Accessible out of the box
+
+For more information about fields that are designed for lion-form, please read
+[Forms](?path=/docs/forms-system-overview--page).
 
 ## How to use
 
@@ -29,3 +63,5 @@ import '@lion/form/lion-form.js';
   </form>
 </lion-form>
 ```
+
+For more examples please look at [Form Examples](?path=/docs/forms-form-examples--default-story).

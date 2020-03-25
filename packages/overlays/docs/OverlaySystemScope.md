@@ -1,4 +1,12 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Overlay System: Scope
+
+```js script
+export default {
+  title: 'Overlays/Scope',
+};
+```
 
 The goal of this document is to specify the goal and duties of the overlay system, mainly by
 identifying all different appearances and types of overlays.
@@ -73,7 +81,7 @@ to consult the W3C. This website shows a full list with specifications of access
 <https://www.w3.org/TR/wai-aria-practices/>.
 A great overview of all widget-, structure- and role relations can be found in the ontology diagram
 below:
-![rdf_model](/uploads/5aa251bd4a7a1ec36241d20e0af8cbb3/rdf_model.png)
+
 <https://www.w3.org/WAI/PF/aria-1.1/rdf_model.svg>
 
 Out of all the overlay names mentioned above, we can only identify the dialog and the tooltip as

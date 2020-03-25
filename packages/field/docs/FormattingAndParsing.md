@@ -1,4 +1,12 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Formatting and parsing
+
+```js script
+export default {
+  title: 'Forms/Field/Formatting and parsing',
+};
+```
 
 The `FormatMixin` keeps track of the `modelValue`, `formattedValue` and `serializedValue`.
 It is designed to work in conjunction with `LionField`.

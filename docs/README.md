@@ -1,5 +1,13 @@
 # Coding Guidelines
 
-First be sure to understand our [definitions](./definitions.md).
+```js script
+export default {
+  title: 'Guidelines/Intro',
+};
+```
 
-- [Guidelines for Styling](./guidelines-styling.md)
+First be sure to understand our [definitions](?path=/docs/guidelines-definitions--page).
+
+- [Guidelines for Styling](?path=/docs/guidelines-styling--page)
+- [Guidelines for Scoped Elements](?path=/docs/guidelines-scoped-elements--page)
+- [Guidelines for SubClasser APIs](?path=/docs/guidelines-subclasser-apis--page)
