@@ -1,4 +1,12 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Helpers
+
+```js script
+export default {
+  title: 'Helpers/Intro',
+};
+```
 
 A helpers package that contains several helpers that are used inside lion but can be used outside as well.
 
@@ -8,6 +16,12 @@ Therefore, they may not have the same quality standards as our other packages.
 ## Live Demo/Documentation
 
 > See our [storybook](http://lion-web-components.netlify.com/?path=/docs/helpers) for a live demo and API documentation
+
+## Packages
+
+| Package                                                                        | Version                                                                                                                  | Description      |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| [sb-action-logger](?path=/docs/helpers-storybook-action-logger--default-story) | [![sb-action-logger](https://img.shields.io/npm/v/sb-action-logger.svg)](https://www.npmjs.com/package/sb-action-logger) | sb-action-logger |
 
 ## Installation
 

@@ -1,4 +1,12 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Overlay System
+
+```js script
+export default {
+  title: 'Overlays/Intro',
+};
+```
 
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
 
@@ -10,11 +18,14 @@ See [lion-dialog](../dialog) and [lion-tooltip](../tooltip) for example Web Comp
 
 ## Features
 
+- local rendering (at dom location)
+  - positioning with popper.js
+- global rendering (at body level)
+- fully accessible
+- flexible to build multiple overlay components
 - lion-overlay web component:
-
   - Show content when clicking the invoker
   - Have a `.config` object to set or update the OverlayController's configuration
-
 - [**OverlaysManager**](./docs/OverlaysManager.md), a global repository keeping track of all different types of overlays
 - [**OverlayController**](./docs/OverlayController.md), a single controller class for handling overlays
 - **OverlayMixin**, a mixin that can be used to create webcomponents that use the OverlayController under the hood
@@ -26,6 +37,7 @@ Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
 ### Installation
 
 ```sh
+npm i --save @lion/overlays
 npm i --save @lion/dialog
 ```
 
@@ -53,10 +65,6 @@ html`
 ```
 
 Or by creating a controller yourself
-
-```sh
-npm i --save @lion/overlays
-```
 
 ```js
 import { OverlayController } from '@lion/overlays';

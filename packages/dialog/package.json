@@ -15,6 +15,7 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/dialog/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/dialog/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/dialog/test/**/*.test.js\""
   },

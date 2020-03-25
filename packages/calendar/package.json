@@ -15,6 +15,7 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/calendar/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/calendar/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/calendar/test/**/*.test.js\""
   },
