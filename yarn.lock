@@ -2261,15 +2261,10 @@
     "@open-wc/semantic-dom-diff" "^0.13.16"
     "@types/chai" "^4.1.7"
 
-"@open-wc/dedupe-mixin@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@open-wc/dedupe-mixin/-/dedupe-mixin-1.1.1.tgz#3ac8e498422ef316276bbe4aa687e35bd10c6871"
-  integrity sha512-Y1+h5nQjJnDHP+8OceZB47I4D7iOiYnM0jXYLGEi96IusR93et30BIyEEQAJ4AvYfbuIrdbf0L5vQWfszU6/Jg==
-
-"@open-wc/dedupe-mixin@^1.2.1":
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/@open-wc/dedupe-mixin/-/dedupe-mixin-1.2.10.tgz#4992874e98b8c49ed71e7e17d2adc7538d62260b"
-  integrity sha512-I3/aKV8OJ5LkZLOvTiGRgKs+o7VVz3EUozbc7yeKJo7x8+j+NHWhVvtNHE8GXAXbN3s4KmMWQt1mXWCEZwNg7g==
+"@open-wc/dedupe-mixin@^1.2.1", "@open-wc/dedupe-mixin@^1.2.12":
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/@open-wc/dedupe-mixin/-/dedupe-mixin-1.2.12.tgz#5fd2e562bf37e66a98d4a51402d03cb2afffbd0e"
+  integrity sha512-a18Md4Utj1nRHaIix5tfd52t2kfN0zghcen5VGb70bwtvI0HuRfoum9vmbCr+XugpnRc4Tql7HJAbNBW0Y7Gvw==
 
 "@open-wc/demoing-storybook@^1.10.4":
   version "1.10.5"
@@ -2330,13 +2325,13 @@
     eslint-config-prettier "^3.3.0"
     prettier "^1.19.1"
 
-"@open-wc/scoped-elements@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-0.5.0.tgz#485b0e530acb3530933198af66f5dbef1e64a277"
-  integrity sha512-SVMzFDBjXPAD+5sgbZ/SaGSfEoIVgcmYzbeXRvR5afdkikKdQcXONb4nsA5QqotpDci3eWxT4UClMax+44C8sA==
+"@open-wc/scoped-elements@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-1.0.3.tgz#f8d6a7b2d0c5fc5a72a657d1bdb2b9ec9d016a4c"
+  integrity sha512-+oFcWdWrNYi5pW6c2Ds5BxaaD5oXINEHtN3ktAa9UuSXW2it5C3YSoFQiZoN0thyp/neHMMo1XktT+ZsruYkhg==
   dependencies:
-    "@open-wc/dedupe-mixin" "^1.1.1"
-    lit-element "^2.0.1"
+    "@open-wc/dedupe-mixin" "^1.2.12"
+    lit-element "^2.2.1"
 
 "@open-wc/semantic-dom-diff@^0.13.16":
   version "0.13.21"

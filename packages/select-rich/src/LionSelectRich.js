@@ -1,12 +1,5 @@
 import { ChoiceGroupMixin } from '@lion/choice-input';
-import {
-  css,
-  getScopedTagName,
-  html,
-  LitElement,
-  ScopedElementsMixin,
-  SlotMixin,
-} from '@lion/core';
+import { css, html, LitElement, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
 import { formRegistrarManager } from '@lion/field/src/registration/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
@@ -107,9 +100,7 @@ export class LionSelectRich extends ScopedElementsMixin(
     return {
       ...super.slots,
       invoker: () =>
-        document.createElement(
-          getScopedTagName('lion-select-invoker', this.constructor.scopedElements),
-        ),
+        document.createElement(this.constructor.getScopedTagName('lion-select-invoker')),
     };
   }
 

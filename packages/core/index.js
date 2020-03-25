@@ -52,7 +52,7 @@ export { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export { until } from 'lit-html/directives/until.js';
 export { render as renderShady } from 'lit-html/lib/shady-render.js';
 // open-wc
-export { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
+export { ScopedElementsMixin } from '@open-wc/scoped-elements';
 export { dedupeMixin } from '@open-wc/dedupe-mixin';
 // ours
 export { DelegateMixin } from './src/DelegateMixin.js';
