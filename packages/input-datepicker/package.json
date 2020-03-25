@@ -44,8 +44,7 @@
     "@lion/input-date": "0.5.20",
     "@lion/localize": "0.8.10",
     "@lion/overlays": "0.12.6",
-    "@lion/validate": "0.8.0",
-    "@open-wc/scoped-elements": "^0.5.0"
+    "@lion/validate": "0.8.0"
   },
   "devDependencies": {
     "@open-wc/demoing-storybook": "^1.10.4",
