@@ -1,20 +1,20 @@
 import { html, LitElement } from '@lion/core';
-import {
-  localize,
-  getWeekdayNames,
-  getMonthNames,
-  normalizeDateTime,
-  LocalizeMixin,
-} from '@lion/localize';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import {
+  getMonthNames,
+  getWeekdayNames,
+  localize,
+  LocalizeMixin,
+  normalizeDateTime,
+} from '@lion/localize';
+import { calendarStyle } from './calendarStyle.js';
+import { createDay } from './utils/createDay.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';
-import { dayTemplate } from './utils/dayTemplate.js';
 import { dataTemplate } from './utils/dataTemplate.js';
+import { dayTemplate } from './utils/dayTemplate.js';
 import { getFirstDayNextMonth } from './utils/getFirstDayNextMonth.js';
 import { getLastDayPreviousMonth } from './utils/getLastDayPreviousMonth.js';
 import { isSameDate } from './utils/isSameDate.js';
-import { calendarStyle } from './calendarStyle.js';
-import { createDay } from './utils/createDay.js';
 
 /**
  * @customElement lion-calendar
@@ -62,7 +62,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
             case 'zh-CN':
               return import('../translations/zh.js');
             default:
-              return import(`../translations/${locale}.js`);
+              return import(`../translations/en.js`);
           }
         },
       },

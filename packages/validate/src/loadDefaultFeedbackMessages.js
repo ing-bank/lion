@@ -1,25 +1,23 @@
 import { localize } from '@lion/localize';
+import { DefaultSuccess } from './resultValidators/DefaultSuccess.js';
+import {
+  IsDate,
+  IsDateDisabled,
+  MaxDate,
+  MinDate,
+  MinMaxDate,
+} from './validators/DateValidators.js';
+import { IsNumber, MaxNumber, MinMaxNumber, MinNumber } from './validators/NumberValidators.js';
 import { Required } from './validators/Required.js';
 import {
   EqualsLength,
-  MinLength,
-  MaxLength,
-  MinMaxLength,
   IsEmail,
+  MaxLength,
+  MinLength,
+  MinMaxLength,
 } from './validators/StringValidators.js';
 
-import { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './validators/NumberValidators.js';
-
-import {
-  IsDate,
-  MinDate,
-  MaxDate,
-  MinMaxDate,
-  IsDateDisabled,
-} from './validators/DateValidators.js';
-import { DefaultSuccess } from './resultValidators/DefaultSuccess.js';
-
-export { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './validators/NumberValidators.js';
+export { IsNumber, MaxNumber, MinMaxNumber, MinNumber } from './validators/NumberValidators.js';
 
 let loaded = false;
 
@@ -102,7 +100,7 @@ export function loadDefaultFeedbackMessages() {
             case 'zh':
               return import('../translations/zh.js');
             default:
-              return import(`../translations/${locale}.js`);
+              return import(`../translations/en.js`);
           }
         },
       },

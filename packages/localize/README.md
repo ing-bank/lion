@@ -40,6 +40,8 @@ localize.loadNamespace({
 });
 ```
 
+> Note: dynamic variables inside dynamic imports may cause problems with tools that do static analysis, and may not work out of the box
+
 Translating messages:
 
 ```js
