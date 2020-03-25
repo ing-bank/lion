@@ -1,14 +1,14 @@
+import { LitElement } from '@lion/core';
 import {
+  defineCE,
   expect,
   fixture,
-  unsafeStatic,
   html,
-  defineCE,
-  triggerFocusFor,
   triggerBlurFor,
+  triggerFocusFor,
+  unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { LitElement } from '@lion/core';
 import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
 
 export function runInteractionStateMixinSuite(customConfig) {
