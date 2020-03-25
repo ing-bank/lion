@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 
-import { dedupeMixin, SlotMixin, ScopedElementsMixin } from '@lion/core';
+import { dedupeMixin, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import { localize } from '@lion/localize';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
@@ -307,10 +307,12 @@ export const ValidateMixin = dedupeMixin(
          * - the validatity is dependent on the formControl type and therefore determined
          * by the formControl.__isEmpty method. Basically, the Required Validator is a means
          * to trigger formControl.__isEmpty.
-         * - when __isEmpty returns false, the input was empty. This means we need to stop
+         * - when __isEmpty returns true, the input was empty. This means we need to stop
          * validation here, because all other Validators' execute functions assume the
          * value is not empty (there would be nothing to validate).
          */
+        // TODO: Try to remove this when we have a single lion form core package, because then we can
+        // depend on FormControlMixin directly, and _isEmpty will always be an existing method on the prototype then
         const isEmpty = this.__isEmpty(value);
         if (isEmpty) {
           if (requiredValidator) {
@@ -423,6 +425,7 @@ export const ValidateMixin = dedupeMixin(
           validationStates[v.type][v.constructor.name] = true;
         });
         this.validationStates = validationStates;
+
         this.hasFeedbackFor = [...new Set(this.__validationResult.map(v => v.type))];
 
         /** private event that should be listened to by LionFieldSet */
@@ -485,7 +488,11 @@ export const ValidateMixin = dedupeMixin(
         // if (typeof this.__isRequired === 'function') {
         //   return !this.__isRequired(v);
         // }
-        return v === null || typeof v === 'undefined' || v === '';
+        return (
+          this.modelValue === null ||
+          typeof this.modelValue === 'undefined' ||
+          this.modelValue === ''
+        );
       }
 
       // ------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { dedupeMixin } from '@lion/core';
-import { Unparseable } from '@lion/validate';
+import { FormControlMixin } from './FormControlMixin.js';
 
 /**
  * @desc `InteractionStateMixin` adds meta information about touched and dirty states, that can
@@ -14,7 +14,7 @@ import { Unparseable } from '@lion/validate';
 export const InteractionStateMixin = dedupeMixin(
   superclass =>
     // eslint-disable-next-line no-unused-vars, no-shadow
-    class InteractionStateMixin extends superclass {
+    class InteractionStateMixin extends FormControlMixin(superclass) {
       static get properties() {
         return {
           /**
@@ -28,6 +28,13 @@ export const InteractionStateMixin = dedupeMixin(
            * True when user has changed the value of the field.
            */
           dirty: {
+            type: Boolean,
+            reflect: true,
+          },
+          /**
+           * True when the modelValue is non-empty (see _isEmpty in FormControlMixin)
+           */
+          filled: {
             type: Boolean,
             reflect: true,
           },
@@ -55,26 +62,15 @@ export const InteractionStateMixin = dedupeMixin(
           this._onTouchedChanged();
         }
 
+        if (name === 'modelValue') {
+          // We do this in _requestUpdate because we don't want to fire another re-render (e.g. when doing this in updated)
+          // Furthermore, we cannot do it on model-value-changed event because it isn't fired initially.
+          this.filled = !this._isEmpty();
+        }
+
         if (name === 'dirty' && this.dirty !== oldVal) {
           this._onDirtyChanged();
         }
-      }
-
-      static _isPrefilled(modelValue) {
-        let value = modelValue;
-        if (modelValue instanceof Unparseable) {
-          value = modelValue.viewValue;
-        }
-        // Checks for empty platform types: Objects, Arrays, Dates
-        if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
-          return !!Object.keys(value).length;
-        }
-        // eslint-disable-next-line no-mixed-operators
-        // Checks for empty platform types: Numbers, Booleans
-        const isNumberValue = typeof value === 'number' && (value === 0 || Number.isNaN(value));
-        const isBooleanValue = typeof value === 'boolean' && value === false;
-
-        return !!value || isNumberValue || isBooleanValue;
       }
 
       constructor() {
@@ -82,9 +78,9 @@ export const InteractionStateMixin = dedupeMixin(
         this.touched = false;
         this.dirty = false;
         this.prefilled = false;
+        this.filled = false;
         this._leaveEvent = 'blur';
         this._valueChangedEvent = 'model-value-changed';
-
         this._iStateOnLeave = this._iStateOnLeave.bind(this);
         this._iStateOnValueChange = this._iStateOnValueChange.bind(this);
       }
@@ -118,23 +114,23 @@ export const InteractionStateMixin = dedupeMixin(
        */
       initInteractionState() {
         this.dirty = false;
-        this.prefilled = this.constructor._isPrefilled(this.modelValue);
+        this.prefilled = !this._isEmpty();
       }
 
       /**
        * Sets touched value to true
        * Reevaluates prefilled state.
        * When false, on next interaction, user will start with a clean state.
-       * @private
+       * @protected
        */
       _iStateOnLeave() {
         this.touched = true;
-        this.prefilled = this.constructor._isPrefilled(this.modelValue);
+        this.prefilled = !this._isEmpty();
       }
 
       /**
        * Sets dirty value and validates when already touched or invalid
-       * @private
+       * @protected
        */
       _iStateOnValueChange() {
         this.dirty = true;
@@ -146,7 +142,7 @@ export const InteractionStateMixin = dedupeMixin(
       resetInteractionState() {
         this.touched = false;
         this.dirty = false;
-        this.prefilled = this.constructor._isPrefilled(this.modelValue);
+        this.prefilled = !this._isEmpty();
       }
 
       _onTouchedChanged() {

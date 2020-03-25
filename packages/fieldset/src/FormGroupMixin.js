@@ -1,6 +1,6 @@
-import { html, dedupeMixin, SlotMixin } from '@lion/core';
+import { dedupeMixin, html, SlotMixin } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
-import { FormControlMixin, FormRegistrarMixin, FormControlsCollection } from '@lion/field';
+import { FormControlMixin, FormControlsCollection, FormRegistrarMixin } from '@lion/field';
 import { getAriaElementsInRightDomOrder } from '@lion/field/src/utils/getAriaElementsInRightDomOrder.js';
 import { ValidateMixin } from '@lion/validate';
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
@@ -361,7 +361,7 @@ export const FormGroupMixin = dedupeMixin(
         }
         // TODO: Unlink in removeFormElement
         this.__linkChildrenMessagesToParent(child);
-        this.validate();
+        this.validate({ clearCurrentResult: true });
       }
 
       /**
@@ -392,7 +392,7 @@ export const FormGroupMixin = dedupeMixin(
        */
       removeFormElement(...args) {
         super.removeFormElement(...args);
-        this.validate();
+        this.validate({ clearCurrentResult: true });
       }
     },
 );
