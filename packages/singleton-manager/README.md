@@ -300,3 +300,9 @@ Only by using a more controlled way like
 - [yarn resolutions](https://classic.yarnpkg.com/en/docs/selective-version-resolutions/)
 
 you can "hard" code it to the same versions.
+
+```js script
+export default {
+  title: 'Others/SingletonManager',
+};
+```

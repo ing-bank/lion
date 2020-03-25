@@ -8,6 +8,7 @@ module.exports = {
         '**/test-node/**/*.js',
         '**/demo/**/*.js',
         '**/stories/**/*.js',
+        '**/docs/**/*.js',
         '**/*.config.js',
       ],
       rules: {

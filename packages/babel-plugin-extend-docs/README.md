@@ -223,3 +223,9 @@ module.exports = {
   ],
 };
 ```
+
+```js script
+export default {
+  title: 'Tools/BabelPluginExtendDocs',
+};
+```

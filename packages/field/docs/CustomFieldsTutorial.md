@@ -1,4 +1,12 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Creating a custom field
+
+```js script
+export default {
+  title: 'Forms/Field/Custom fields tutorial',
+};
+```
 
 Custom fields can be created in just a few steps. All you need is an interaction element
 (like for instance a slider, a listbox or a combobox) and connect it to the [Field](../README.md)
@@ -8,9 +16,7 @@ functionality.
 
 An interaction element provides the means for the end user to enter a certain value, just like
 native elements provide in this (think of `<input>`, `<textarea>` and `<select>`).
-An example of a non native element is the
-[slider design pattern](https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/#slider)
-described here.
+An example of a non native element is the [slider design pattern](https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/#slider) described here.
 
 For this tutorial, we assume we have a component `<my-slider>` that exposes its value via property
 `mySliderValue` and sends an event `my-slider-changed` on every value change. To make it focusable,
@@ -19,7 +25,7 @@ it has a tabindex=“0” applied.
 ## Connecting the interaction element to the field
 
 Now we want to integrate the slider in our form framework to enrich the user interface, get
-validation support and get all the other [benefits of LionField](../README.md).
+validation support and get all the other [benefits of LionField](?path=/docs/forms-field-overview--page).
 We start of by creating a component `<lion-slider>` that extends from `LionField`.
 Then we follow the steps below:
 
