@@ -378,6 +378,32 @@ describe('lion-select-rich', () => {
       await elDisabled.updateComplete;
       expect(elDisabled.opened).to.be.false;
     });
+
+    it('should override the inheritsWidth prop when no default selected feature is used', async () => {
+      const el = await fixture(html`
+        <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
+      el.opened = true;
+      await el.updateComplete;
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+
+      // Emulate selecting hotpink, it closing, and opening it again
+      el.modelValue = 'hotpink';
+      el.opened = false;
+      await el.updateComplete; // necessary for overlay controller to actually close and re-open
+      el.opened = true;
+      await el.updateComplete;
+
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
+    });
   });
 
   describe('interaction-mode', () => {

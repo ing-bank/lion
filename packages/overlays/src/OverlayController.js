@@ -591,6 +591,7 @@ export class OverlayController {
         break;
       case 'min':
         this._contentNodeWrapper.style.minWidth = referenceWidth;
+        this._contentNodeWrapper.style.width = 'auto';
         break;
       /* no default */
     }
