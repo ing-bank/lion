@@ -79,6 +79,17 @@ export class LionSelectRich extends ScopedElementsMixin(
         type: String,
         attribute: 'interaction-mode',
       },
+
+      /**
+       * When setting this to true, on initial render, no option will be selected.
+       * It it advisable to override `_noSelectionTemplate` method in the select-invoker
+       * to render some kind of placeholder initially
+       */
+      hasNoDefaultSelected: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'has-no-default-selected',
+      },
     };
   }
 
@@ -184,6 +195,7 @@ export class LionSelectRich extends ScopedElementsMixin(
     // for interaction states
     this._listboxActiveDescendant = null;
     this.__hasInitialSelectedFormElement = false;
+    this.hasNoDefaultSelected = false;
     this._repropagationRole = 'choice-group'; // configures FormControlMixin
     this.__setupEventListeners();
     this.__initInteractionStates();
@@ -335,7 +347,11 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
 
     // the first elements checked by default
-    if (!this.__hasInitialSelectedFormElement && (!child.disabled || this.disabled)) {
+    if (
+      !this.hasNoDefaultSelected &&
+      !this.__hasInitialSelectedFormElement &&
+      (!child.disabled || this.disabled)
+    ) {
       child.active = true;
       child.checked = true;
       this.__hasInitialSelectedFormElement = true;

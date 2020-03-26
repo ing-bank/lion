@@ -3,7 +3,7 @@ import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import { OverlayController } from '@lion/overlays';
 import { Required } from '@lion/validate';
 import { aTimeout, defineCE, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
-import { LionSelectRich } from '../index.js';
+import { LionSelectInvoker, LionSelectRich } from '../index.js';
 import '../lion-option.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
@@ -202,6 +202,21 @@ describe('lion-select-rich', () => {
     await el.updateComplete;
     expect(el.hasFeedbackFor.includes('error')).to.be.true;
     expect(el.showsFeedbackFor.includes('error')).to.be.true;
+  });
+
+  it('supports having no default selection initially', async () => {
+    const el = await fixture(html`
+      <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    expect(el.selectedElement).to.be.undefined;
+    expect(el.modelValue).to.equal('');
   });
 
   describe('Invoker', () => {
@@ -710,6 +725,46 @@ describe('lion-select-rich', () => {
       expect(el._overlayCtrl.placementMode).to.equal('global');
       el.dispatchEvent(new Event('switch'));
       expect(el._overlayCtrl.placementMode).to.equal('local');
+    });
+
+    it('supports putting a placeholder template when there is no default selection initially', async () => {
+      const invokerTagName = defineCE(
+        class extends LionSelectInvoker {
+          _noSelectionTemplate() {
+            return html`
+              Please select an option..
+            `;
+          }
+        },
+      );
+      const invokerTag = unsafeStatic(invokerTagName);
+
+      const selectTagName = defineCE(
+        class extends LionSelectRich {
+          get slots() {
+            return {
+              ...super.slots,
+              invoker: () => document.createElement(invokerTag.d),
+            };
+          }
+        },
+      );
+      const selectTag = unsafeStatic(selectTagName);
+
+      const el = await fixture(html`
+        <${selectTag} id="color" name="color" label="Favorite color" has-no-default-selected>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </${selectTag}>
+      `);
+
+      expect(el._invokerNode.shadowRoot.getElementById('content-wrapper')).dom.to.equal(
+        `<div id="content-wrapper">Please select an option..</div>`,
+      );
+      expect(el.modelValue).to.equal('');
     });
   });
 });
