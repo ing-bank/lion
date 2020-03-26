@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.8](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.7...@lion/overlays@0.12.8) (2020-03-26)
+
+
+### Bug Fixes
+
+* **select-rich:** consider no default select for inheritsReferenceWidth ([e636ce1](https://github.com/ing-bank/lion/commit/e636ce1f9c12c35a0885aa6e991d9554c944def5))
+
+
+
+
+
 ## [0.12.7](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.6...@lion/overlays@0.12.7) (2020-03-25)
 
 **Note:** Version bump only for package @lion/overlays

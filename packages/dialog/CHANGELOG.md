@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.13](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.12...@lion/dialog@0.4.13) (2020-03-26)
+
+**Note:** Version bump only for package @lion/dialog
+
+
+
+
+
 ## [0.4.12](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.11...@lion/dialog@0.4.12) (2020-03-25)
 
 **Note:** Version bump only for package @lion/dialog

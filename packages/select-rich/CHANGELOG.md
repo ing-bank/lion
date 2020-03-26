@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.13.0...@lion/select-rich@0.14.0) (2020-03-26)
+
+
+### Bug Fixes
+
+* **select-rich:** consider no default select for inheritsReferenceWidth ([e636ce1](https://github.com/ing-bank/lion/commit/e636ce1f9c12c35a0885aa6e991d9554c944def5))
+
+
+### Features
+
+* **select-rich:** add has no default selection feature ([975a01a](https://github.com/ing-bank/lion/commit/975a01aca91d11f25f7391fff3bca692a67681b8))
+
+
+
+
+
 # [0.13.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.12.4...@lion/select-rich@0.13.0) (2020-03-25)
 
 
