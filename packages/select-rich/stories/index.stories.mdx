@@ -462,6 +462,51 @@ console.log(`checkedIndex: ${selectEl.checkedIndex}`); // 0
 console.log(`checkedValue: ${selectEl.checkedValue}`); // 'red'
 ```
 
+### No default selection
+
+If you want to set a placeholder option with something like 'Please select', you can of course do this, the same way you would do it in a native select.
+
+Simply put an option with a modelValue that is `null`.
+
+```html
+<lion-option .choiceValue=${null}>select a color</lion-option>
+```
+
+However, this allows the user to explicitly select this option.
+
+Often, you may want a placeholder that appears initially, but cannot be selected explicitly by the user.
+For this you can use `has-no-default-selected` attribute.
+
+Both methods work with the `Required` validator.
+
+<Story name="No default selected">
+  {html`
+    <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+      <lion-options slot="input">
+        <lion-option .choiceValue=${'red'}>Red</lion-option>
+        <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+        <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+      </lion-options>
+    </lion-select-rich>
+  `}
+</Story>
+
+
+```html
+<lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+  <lion-options slot="input">
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
+    <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+  </lion-options>
+</lion-select-rich>
+```
+
+> By default, the placeholder is completely empty in the `LionSelectInvoker`,
+> but subclassers can easily override this in their extension, by the overriding `_noSelectionTemplate()` method.
+
+
+
 ### Custom Invoker
 
 You can provide a custom invoker using the invoker slot.

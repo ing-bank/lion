@@ -68,7 +68,15 @@ export class LionSelectInvoker extends LionButton {
       }
       return this.selectedElement.textContent;
     }
-    return ``;
+    return this._noSelectionTemplate();
+  }
+
+  /**
+   * To be overriden for a placeholder, used when `hasNoDefaultSelected` is true on the select rich
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _noSelectionTemplate() {
+    return html``;
   }
 
   _beforeTemplate() {

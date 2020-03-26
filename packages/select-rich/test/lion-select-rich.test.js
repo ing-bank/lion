@@ -3,7 +3,7 @@ import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import { OverlayController } from '@lion/overlays';
 import { Required } from '@lion/validate';
 import { aTimeout, defineCE, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
-import { LionSelectRich } from '../index.js';
+import { LionSelectInvoker, LionSelectRich } from '../index.js';
 import '../lion-option.js';
 import '../lion-options.js';
 import '../lion-select-rich.js';
@@ -204,6 +204,21 @@ describe('lion-select-rich', () => {
     expect(el.showsFeedbackFor.includes('error')).to.be.true;
   });
 
+  it('supports having no default selection initially', async () => {
+    const el = await fixture(html`
+      <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    expect(el.selectedElement).to.be.undefined;
+    expect(el.modelValue).to.equal('');
+  });
+
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
       const el = await fixture(html`
@@ -362,6 +377,32 @@ describe('lion-select-rich', () => {
       elDisabled._invokerNode.click();
       await elDisabled.updateComplete;
       expect(elDisabled.opened).to.be.false;
+    });
+
+    it('should override the inheritsWidth prop when no default selected feature is used', async () => {
+      const el = await fixture(html`
+        <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
+      el.opened = true;
+      await el.updateComplete;
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+
+      // Emulate selecting hotpink, it closing, and opening it again
+      el.modelValue = 'hotpink';
+      el.opened = false;
+      await el.updateComplete; // necessary for overlay controller to actually close and re-open
+      el.opened = true;
+      await el.updateComplete;
+
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
     });
   });
 
@@ -710,6 +751,46 @@ describe('lion-select-rich', () => {
       expect(el._overlayCtrl.placementMode).to.equal('global');
       el.dispatchEvent(new Event('switch'));
       expect(el._overlayCtrl.placementMode).to.equal('local');
+    });
+
+    it('supports putting a placeholder template when there is no default selection initially', async () => {
+      const invokerTagName = defineCE(
+        class extends LionSelectInvoker {
+          _noSelectionTemplate() {
+            return html`
+              Please select an option..
+            `;
+          }
+        },
+      );
+      const invokerTag = unsafeStatic(invokerTagName);
+
+      const selectTagName = defineCE(
+        class extends LionSelectRich {
+          get slots() {
+            return {
+              ...super.slots,
+              invoker: () => document.createElement(invokerTag.d),
+            };
+          }
+        },
+      );
+      const selectTag = unsafeStatic(selectTagName);
+
+      const el = await fixture(html`
+        <${selectTag} id="color" name="color" label="Favorite color" has-no-default-selected>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </${selectTag}>
+      `);
+
+      expect(el._invokerNode.shadowRoot.getElementById('content-wrapper')).dom.to.equal(
+        `<div id="content-wrapper">Please select an option..</div>`,
+      );
+      expect(el.modelValue).to.equal('');
     });
   });
 });
