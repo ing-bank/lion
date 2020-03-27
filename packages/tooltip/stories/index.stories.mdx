@@ -27,7 +27,7 @@ e invoker element is focused.
     <style>${tooltipDemoStyles}</style>
     <lion-tooltip>
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-      <div slot="content" class="demo-tooltip-content">This is a tooltip<div>
+      <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
     </lion-tooltip>
   `}
 </Story>
@@ -99,7 +99,7 @@ You can easily change the placement of the content node relative to the invoker.
 ```html
 <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
   <button slot="invoker">Top</button>
-  <div slot="content">Its top placement<div>
+  <div slot="content">Its top placement</div>
 </lion-tooltip>
 ```
 
@@ -135,7 +135,7 @@ You can override the Popper configuration, the API is one to one with Popper's A
         },
       })}}>
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-      <div slot="content" class="demo-tooltip-content">This is a tooltip<div>
+      <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
     </lion-tooltip>
   `}
 </Story>
@@ -167,7 +167,7 @@ You can override the Popper configuration, the API is one to one with Popper's A
   }
 }}>
   <button slot="invoker">Hover me</button>
-  <div slot="content">This is a tooltip<div>
+  <div slot="content">This is a tooltip</div>
 </lion-tooltip>
 ```
 
@@ -191,7 +191,7 @@ We export a `lion-tooltip-arrow` that you can use by default for this.
     <style>${tooltipDemoStyles}</style>
     <lion-tooltip>
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-      <div slot="content" class="demo-tooltip-content">This is a tooltip<div>
+      <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
       <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
   `}
@@ -200,7 +200,7 @@ We export a `lion-tooltip-arrow` that you can use by default for this.
 ```html
 <lion-tooltip>
   <button slot="invoker">Hover me</button>
-  <div slot="content">This is a tooltip<div>
+  <div slot="content">This is a tooltip</div>
   <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
 </lion-tooltip>
 ```
@@ -237,7 +237,7 @@ The rest of the work is done by Popper.js (for positioning) and the `lion-toolti
       <style>${tooltipDemoStyles}</style>
       <lion-tooltip>
         <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-        <div slot="content" class="demo-tooltip-content">This is a tooltip<div>
+        <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
         <custom-tooltip-arrow slot="arrow"></custom-tooltip-arrow>
       </lion-tooltip>
     `;
@@ -272,7 +272,7 @@ customElements.define('custom-tooltip-arrow', CustomTooltipArrow);
 ```html
 <lion-tooltip>
   <button slot="invoker">Hover me</button>
-  <div slot="content">This is a tooltip<div>
+  <div slot="content">This is a tooltip</div>
   <custom-tooltip-arrow slot="arrow"></custom-tooltip-arrow>
 </lion-tooltip>
 ```
