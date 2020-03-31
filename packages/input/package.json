@@ -36,11 +36,5 @@
   "dependencies": {
     "@lion/core": "0.5.0",
     "@lion/field": "0.12.0"
-  },
-  "devDependencies": {
-    "@lion/localize": "0.9.0",
-    "@lion/validate": "0.9.0",
-    "@open-wc/demoing-storybook": "^1.10.4",
-    "@open-wc/testing": "^2.5.0"
   }
 }

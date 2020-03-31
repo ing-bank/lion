@@ -37,10 +37,5 @@
     "@open-wc/scoped-elements": "^1.0.3",
     "lit-element": "^2.2.1",
     "lit-html": "^1.0.0"
-  },
-  "devDependencies": {
-    "@open-wc/demoing-storybook": "^1.10.4",
-    "@open-wc/testing": "^2.5.0",
-    "sinon": "^7.2.2"
   }
 }
