@@ -162,7 +162,7 @@ export class LionField extends FormControlMixin(
       // invalid and dirty/touched states respectively
       super.clear();
     }
-    this.value = ''; // can't set null here, because IE11 treats it as a string
+    this.modelValue = ''; // can't set null here, because IE11 treats it as a string
   }
 
   _onChange() {
