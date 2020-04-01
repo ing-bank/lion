@@ -62,7 +62,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
             case 'zh-CN':
               return import('../translations/zh.js');
             default:
-              return import(`../translations/en.js`);
+              return import('../translations/en.js');
           }
         },
       },
