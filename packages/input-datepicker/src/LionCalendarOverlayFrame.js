@@ -81,7 +81,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
             case 'zh-CN':
               return import('@lion/overlays/translations/zh.js');
             default:
-              return import(`@lion/overlays/translations/en.js`);
+              return import('@lion/overlays/translations/en.js');
           }
         },
       },

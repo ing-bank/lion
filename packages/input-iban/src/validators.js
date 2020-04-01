@@ -82,7 +82,7 @@ const loadTranslations = async () => {
           case 'zh':
             return import('../translations/zh.js');
           default:
-            return import(`../translations/en.js`);
+            return import('../translations/en.js');
         }
       },
     },
