@@ -219,7 +219,11 @@ export class LionSelectRich extends ScopedElementsMixin(
 
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-    this.__setupOverlay();
+
+    this._overlaySetupComplete.then(() => {
+      this.__setupOverlay();
+    });
+
     this.__setupInvokerNode();
     this.__setupListboxNode();
 
