@@ -126,17 +126,25 @@ export const OverlayMixin = dedupeMixin(
         }
       }
 
-      firstUpdated(changedProperties) {
-        super.firstUpdated(changedProperties);
-        // we setup in firstUpdated so we can use nodes from light and shadowDom
-        this._setupOverlayCtrl();
+      connectedCallback() {
+        if (super.connectedCallback) {
+          super.connectedCallback();
+        }
+        this._overlaySetupComplete = new Promise(resolve => {
+          this.__overlaySetupCompleteResolve = resolve;
+        });
+        // Wait for DOM to be ready before setting up the overlay
+        this.updateComplete.then(() => this._setupOverlayCtrl());
       }
 
       disconnectedCallback() {
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
+
         if (this._overlayCtrl) {
+          this.__tornDown = true;
+          this.__overlayContentNodeWrapperBeforeTeardown = this._overlayContentNodeWrapper;
           this._teardownOverlayCtrl();
         }
       }
@@ -178,6 +186,13 @@ export const OverlayMixin = dedupeMixin(
       }
 
       _setupOverlayCtrl() {
+        // When we reconnect, this is for recovering from disconnectedCallback --> teardown which removes the
+        // the content node wrapper contents (which is necessary for global overlays to remove them from bottom of body)
+        if (this.__tornDown) {
+          this.__reappendContentNodeWrapperNodes();
+          this.__tornDown = false;
+        }
+
         this._overlayCtrl = this._defineOverlay({
           contentNode: this._overlayContentNode,
           invokerNode: this._overlayInvokerNode,
@@ -186,6 +201,7 @@ export const OverlayMixin = dedupeMixin(
         this.__syncToOverlayController();
         this.__setupSyncFromOverlayController();
         this._setupOpenCloseListeners();
+        this.__overlaySetupCompleteResolve();
       }
 
       _teardownOverlayCtrl() {
@@ -238,6 +254,14 @@ export const OverlayMixin = dedupeMixin(
         } else {
           this._overlayCtrl.hide();
         }
+      }
+
+      // TODO: Simplify this logic of tearing down / reappending overlay content node wrapper
+      // after we have moved this wrapper to ShadowDOM.
+      __reappendContentNodeWrapperNodes() {
+        Array.from(this.__overlayContentNodeWrapperBeforeTeardown.children).forEach(child => {
+          this.appendChild(child);
+        });
       }
     },
 );
