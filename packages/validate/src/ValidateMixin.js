@@ -484,10 +484,6 @@ export const ValidateMixin = dedupeMixin(
         if (typeof this._isEmpty === 'function') {
           return this._isEmpty(v);
         }
-        // // TODO: move to compat layer. Be sure to keep this, because people use this a lot
-        // if (typeof this.__isRequired === 'function') {
-        //   return !this.__isRequired(v);
-        // }
         return (
           this.modelValue === null ||
           typeof this.modelValue === 'undefined' ||

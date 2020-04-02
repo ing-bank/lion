@@ -148,7 +148,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.requestUpdate('modelValue');
   }
 
-  // TODO: quick and dirty fix. Should be possible to do it nicer on a higher layer
   get serializedValue() {
     return this.modelValue;
   }
@@ -260,7 +259,6 @@ export class LionSelectRich extends ScopedElementsMixin(
   get _inputNode() {
     // In FormControl, we get direct child [slot="input"]. This doesn't work, because the overlay
     // system wraps it in [slot="_overlay-shadow-outlet"]
-    // TODO: find a way to solve this by putting the wrapping part in shadow dom...
     return this.querySelector('[slot="input"]');
   }
 

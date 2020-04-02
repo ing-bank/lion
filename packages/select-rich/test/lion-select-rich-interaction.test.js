@@ -401,29 +401,6 @@ describe('lion-select-rich interactions', () => {
     });
   });
 
-  // TODO: nice to have
-  describe.skip('Read only', () => {
-    it('can be focused if readonly', async () => {
-      const el = await fixture(html`
-        <lion-listbox readonly> </lion-listbox>
-      `);
-      expect(el.tabIndex).to.equal('-1');
-    });
-
-    it('cannot be navigated with keyboard if readonly', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input" name="foo">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-      expect(el.choiceValue).to.equal(10);
-    });
-  });
-
   describe('Programmatic interaction', () => {
     it('can set active state', async () => {
       const el = await fixture(html`

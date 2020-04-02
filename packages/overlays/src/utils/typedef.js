@@ -17,7 +17,7 @@
  * @property {HTMLElement} contentNode
  * @property {boolean} [isModal=false] - sets aria-modal and/or aria-hidden="true" on siblings
  * @property {boolean} [isGlobal=false] - determines the connection point in DOM (body vs next
- * to invoker). This is what other libraries often refer to as 'portal'. TODO: rename to renderToBody?
+ * to invoker). This is what other libraries often refer to as 'portal'.
  * @property {boolean} [isTooltip=false] - has a totally different interaction- and accessibility pattern from all other overlays, so needed for internals.
  * @property {boolean} [handlesUserInteraction] - sets toggle on click, or hover when `isTooltip`
  * @property {boolean} [handlesAccessibility] -

@@ -775,28 +775,6 @@ export function runValidateMixinSuite(customConfig) {
     });
 
     describe('State storage and reflection', () => {
-      class ContainsLowercaseA extends Validator {
-        constructor(...args) {
-          super(...args);
-          this.execute = modelValue => !modelValue.includes('a');
-        }
-
-        static get validatorName() {
-          return 'ContainsLowercaseA';
-        }
-      }
-
-      class ContainsLowercaseB extends Validator {
-        constructor(...args) {
-          super(...args);
-          this.execute = modelValue => !modelValue.includes('b');
-        }
-
-        static get validatorName() {
-          return 'containsLowercaseB';
-        }
-      }
-
       it('stores validity of individual Validators in ".validationStates.error[validator.validatorName]"', async () => {
         const el = await fixture(html`
           <${tag}
@@ -889,35 +867,6 @@ export function runValidateMixinSuite(customConfig) {
           el.modelValue = 'abcdefg';
           await el.updateComplete;
           expect(spy).to.have.callCount(2);
-        });
-
-        // TODO: what is it used for?
-        it.skip('fires "error-states-changed" event when "internal" state changes', async () => {
-          const el = await fixture(html`
-            <${tag}
-              .validators=${[new MinLength(3), new ContainsLowercaseA(), new ContainsLowercaseB()]}
-            >${lightDom}
-            </${tag}>
-          `);
-
-          const cbError = sinon.spy();
-          el.addEventListener('error-states-changed', cbError);
-
-          el.modelValue = 'a';
-          await el.updateComplete;
-          expect(cbError.callCount).to.equal(1);
-
-          el.modelValue = 'aa';
-          await el.updateComplete;
-          expect(cbError.callCount).to.equal(1);
-
-          el.modelValue = 'aaa';
-          await el.updateComplete;
-          expect(cbError.callCount).to.equal(2);
-
-          el.modelValue = 'aba';
-          await el.updateComplete;
-          expect(cbError.callCount).to.equal(3);
         });
       });
     });
