@@ -191,8 +191,6 @@ export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
         expect(contentNode).to.not.be.undefined;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }
-
-      expect(true).to.be.true;
     });
   });
 }
