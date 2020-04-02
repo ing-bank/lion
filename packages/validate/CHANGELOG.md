@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/validate@0.9.0...@lion/validate@0.9.1) (2020-04-02)
+
+
+### Bug Fixes
+
+* convert unnecessary backticks to single quotes for unpkg ([5103289](https://github.com/ing-bank/lion/commit/5103289f994c26f63e805be56515f150628acd91))
+
+
+
+
+
 # [0.9.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.8.0...@lion/validate@0.9.0) (2020-03-25)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/ing-bank/lion/compare/@lion/field@0.12.0...@lion/field@0.12.1) (2020-04-02)
+
+
+### Bug Fixes
+
+* **field:** clear method reset modelValue ([cf13410](https://github.com/ing-bank/lion/commit/cf134100262a2a7f77a0ec58b3e685de8e14795d))
+
+
+
+
+
 # [0.12.0](https://github.com/ing-bank/lion/compare/@lion/field@0.11.4...@lion/field@0.12.0) (2020-03-25)
 
 

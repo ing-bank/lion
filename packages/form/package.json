@@ -1,6 +1,6 @@
 {
   "name": "@lion/form",
-  "version": "0.4.21",
+  "version": "0.4.22",
   "description": "It enhances the functionality of the native `form` component. It is designed to interact with (instances of) form fields",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,7 +34,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.0",
-    "@lion/fieldset": "0.10.0"
+    "@lion/core": "0.5.1",
+    "@lion/fieldset": "0.10.1"
   }
 }

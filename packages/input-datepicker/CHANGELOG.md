@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.2](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.1...@lion/input-datepicker@0.11.2) (2020-04-02)
+
+
+### Bug Fixes
+
+* convert unnecessary backticks to single quotes for unpkg ([5103289](https://github.com/ing-bank/lion/commit/5103289f994c26f63e805be56515f150628acd91))
+
+
+
+
+
 ## [0.11.1](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.0...@lion/input-datepicker@0.11.1) (2020-03-26)
 
 **Note:** Version bump only for package @lion/input-datepicker

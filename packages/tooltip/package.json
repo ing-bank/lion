@@ -1,6 +1,6 @@
 {
   "name": "@lion/tooltip",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "Show relative overlay content on hover",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,7 +34,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.0",
-    "@lion/overlays": "0.12.8"
+    "@lion/core": "0.5.1",
+    "@lion/overlays": "0.12.9"
   }
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.9](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.8...@lion/tooltip@0.8.9) (2020-04-02)
+
+
+### Bug Fixes
+
+* **tooltip:** support reconnecting tooltip arrow inside other overlays ([78a8554](https://github.com/ing-bank/lion/commit/78a8554019de6c91cae7c0d8e3fd2caa3c2209d1))
+
+
+
+
+
 ## [0.8.8](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.7...@lion/tooltip@0.8.8) (2020-03-26)
 
 **Note:** Version bump only for package @lion/tooltip

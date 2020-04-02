@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.9](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.8...@lion/overlays@0.12.9) (2020-04-02)
+
+
+### Bug Fixes
+
+* **overlays:** support reconnecting overlay nodes inside other overlays ([afd5ac9](https://github.com/ing-bank/lion/commit/afd5ac96cc100d86acd88c4b225039dc47fe8773))
+
+
+
+
+
 ## [0.12.8](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.7...@lion/overlays@0.12.8) (2020-03-26)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.1](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.14.0...@lion/select-rich@0.14.1) (2020-04-02)
+
+
+### Bug Fixes
+
+* **select-rich:** wait until mixin overlay is ready before doing setup ([53a21f2](https://github.com/ing-bank/lion/commit/53a21f2baaf048d2138ace5efcb586d0e6d49c31))
+
+
+
+
+
 # [0.14.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.13.0...@lion/select-rich@0.14.0) (2020-03-26)
 
 
