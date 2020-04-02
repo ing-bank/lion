@@ -1,5 +1,6 @@
-import { expect, fixture, html, aTimeout } from '@open-wc/testing';
+import { expect, fixture, html, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
+import { overlays } from '../src/overlays.js';
 
 export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
   describe(`OverlayMixin${suffix}`, () => {
@@ -22,12 +23,12 @@ export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
     it('syncs opened to overlayController', async () => {
       el.opened = true;
       expect(el.opened).to.be.true;
-      await aTimeout(); // overlayCtrl show/hide is async
+      await nextFrame(); // overlayCtrl show/hide is async
       expect(el._overlayCtrl.isShown).to.be.true;
 
       el.opened = false;
       expect(el.opened).to.be.false;
-      await aTimeout(0); // overlayCtrl show/hide is async
+      await nextFrame(); // overlayCtrl show/hide is async
       expect(el._overlayCtrl.isShown).to.be.false;
     });
 
@@ -80,6 +81,8 @@ export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
           <button slot="invoker">invoker button</button>
         </${tag}>
       `);
+      // Wait until it's done opening (handling features is async)
+      await nextFrame();
       expect(beforeSpy).not.to.have.been.called;
       await el._overlayCtrl.hide();
       expect(beforeSpy).to.have.been.called;
@@ -135,6 +138,61 @@ export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
       `);
       closeBtn.click();
       expect(el.opened).to.be.false;
+    });
+  });
+
+  describe(`OverlayMixin${suffix} nested`, () => {
+    it('reconstructs the overlay when disconnected and reconnected to DOM (support for nested overlay nodes)', async () => {
+      const nestedEl = await fixture(html`
+        <${tag}>
+          <div slot="content">content of the nested overlay</div>
+          <button slot="invoker">invoker nested</button>
+        </${tag}>
+      `);
+
+      const mainEl = await fixture(html`
+        <${tag}>
+          <div slot="content">
+            open nested overlay:
+            ${nestedEl}
+          </div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `);
+
+      if (mainEl._overlayCtrl.placementMode === 'global') {
+        // Specifically checking the output in global root node, because the _contentOverlayNode still references
+        // the node that was removed in the teardown but hasn't been garbage collected due to reference to it still existing..
+
+        // Find the outlets that are not backdrop outlets
+        const outletsInGlobalRootNode = Array.from(overlays.globalRootNode.children).filter(
+          child =>
+            child.slot === '_overlay-shadow-outlet' &&
+            !child.classList.contains('global-overlays__backdrop'),
+        );
+
+        // Check the last one, which is the most nested one
+        const lastContentNodeInContainer =
+          outletsInGlobalRootNode[outletsInGlobalRootNode.length - 1];
+        expect(outletsInGlobalRootNode.length).to.equal(2);
+
+        // Check that it indeed has the intended content
+        expect(lastContentNodeInContainer.firstElementChild.innerText).to.equal(
+          'content of the nested overlay',
+        );
+        expect(lastContentNodeInContainer.firstElementChild.slot).to.equal('content');
+      } else {
+        const actualNestedOverlay = mainEl._overlayContentNode.firstElementChild;
+        const outletNode = Array.from(actualNestedOverlay.children).find(
+          child => child.slot === '_overlay-shadow-outlet',
+        );
+        const contentNode = Array.from(outletNode.children).find(child => child.slot === 'content');
+
+        expect(contentNode).to.not.be.undefined;
+        expect(contentNode.innerText).to.equal('content of the nested overlay');
+      }
+
+      expect(true).to.be.true;
     });
   });
 }
