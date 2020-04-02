@@ -12,12 +12,9 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this._overlayContentNode.setAttribute('role', 'tooltip');
-  }
-
-  firstUpdated(...args) {
-    super.firstUpdated(...args);
-
-    this.__setupArrowElement();
+    // Schedule setting up the arrow element so that it works both on firstUpdated
+    // and when the tooltip is moved in the DOM (disconnected + reconnected)
+    this.updateComplete.then(() => this.__setupArrowElement());
   }
 
   render() {
@@ -30,7 +27,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   __setupArrowElement() {
-    this.__arrowElement = this.querySelector('[slot=arrow]');
+    this.__arrowElement = Array.from(this.children).find(child => child.slot === 'arrow');
     if (!this.__arrowElement) {
       return;
     }
