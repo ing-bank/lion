@@ -248,7 +248,10 @@ export class OverlayController {
     if (this.isTooltip) {
       // TODO: (@tlouisse) this could also be labelledby.
       if (this.invokerNode) {
-        this.invokerNode.setAttribute(this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby', this._contentId);
+        this.invokerNode.setAttribute(
+          this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
+          this._contentId,
+        );
       }
       this.contentNode.setAttribute('role', 'tooltip');
     } else {
