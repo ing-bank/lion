@@ -37,6 +37,7 @@
     "@lion/core": "0.5.1"
   },
   "devDependencies": {
-    "@polymer/iron-test-helpers": "^3.0.1"
+    "@polymer/iron-test-helpers": "^3.0.1",
+    "@lion/input": "0.5.21"
   }
 }

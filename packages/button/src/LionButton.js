@@ -61,8 +61,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       css`
         :host {
           display: inline-block;
-          padding-top: 2px;
-          padding-bottom: 2px;
           min-height: 40px; /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
           outline: 0;
           background-color: transparent;
@@ -75,18 +73,22 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           align-items: center;
           position: relative;
           background: #eee; /* minimal styling to make it recognizable as btn */
-          padding: 7px 15px;
+          padding: 8px; /* vertical padding to fix with host min-height */
           outline: none; /* focus style handled below, else it follows boundaries of click-area */
         }
 
         :host .btn ::slotted(button) {
           position: absolute;
+          top: 0;
+          left: 0;
           clip: rect(0 0 0 0);
           clip-path: inset(50%);
           overflow: hidden;
           white-space: nowrap;
           height: 1px;
           width: 1px;
+          padding: 0; /* reset default agent styles */
+          border: 0; /* reset default agent styles */
         }
 
         .click-area {
@@ -95,7 +97,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           right: 0;
           bottom: 0;
           left: 0;
-          margin: -3px -1px;
+          margin: 0;
           padding: 0;
         }
 
