@@ -1167,6 +1167,19 @@ describe('OverlayController', () => {
         expect(ctrl.invokerNode.getAttribute('aria-describedby')).to.equal(ctrl._contentId);
       });
 
+      it('adds [aria-labelledby] on invoker when invokerRelation is label', async () => {
+        const invokerNode = await fixture('<div role="button">invoker</div>');
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          isTooltip: true,
+          invokerRelation: 'label',
+          invokerNode,
+        });
+        expect(ctrl.invokerNode.getAttribute('aria-describedby')).to.equal(null);
+        expect(ctrl.invokerNode.getAttribute('aria-labelledby')).to.equal(ctrl._contentId);
+      });
+
       it('adds [role=tooltip] on content', async () => {
         const invokerNode = await fixture('<div role="button">invoker</div>');
         const ctrl = new OverlayController({
