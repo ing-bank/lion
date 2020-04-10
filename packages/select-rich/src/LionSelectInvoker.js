@@ -28,13 +28,22 @@ export class LionSelectInvoker extends LionButton {
         type: Object,
       },
       /**
-       * @desc When the connected LionSelectRich insteance is readOnly,
+       * @desc When the connected LionSelectRich instance is readOnly,
        * this should be reflected in the invoker as well
        */
       readOnly: {
         type: Boolean,
         reflect: true,
         attribute: 'readonly',
+      },
+      /**
+       * @desc When the connected LionSelectRich instance has only one option,
+       * this should be reflected in the invoker as well
+       */
+      singleOption: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'singleOption',
       },
     };
   }

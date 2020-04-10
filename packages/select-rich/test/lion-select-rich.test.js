@@ -274,6 +274,19 @@ describe('lion-select-rich', () => {
       expect(el.hasAttribute('readonly')).to.be.true;
       expect(el._invokerNode.hasAttribute('readonly')).to.be.true;
     });
+
+    it('delegates singleOption to the invoker', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      expect(el.singleOption).to.be.true;
+      expect(el._invokerNode.hasAttribute('singleOption')).to.be.true;
+    });
   });
 
   describe('overlay', () => {
@@ -351,7 +364,7 @@ describe('lion-select-rich', () => {
       expect(options[1].checked).to.be.true;
     });
 
-    it('stays closed on click if it is disabled or readonly', async () => {
+    it('stays closed on click if it is disabled or readonly or has a single option', async () => {
       const elReadOnly = await fixture(html`
         <lion-select-rich readonly>
           <lion-options slot="input">
@@ -370,6 +383,14 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
 
+      const elSingleoption = await fixture(html`
+        <lion-select-rich>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
       elReadOnly._invokerNode.click();
       await elReadOnly.updateComplete;
       expect(elReadOnly.opened).to.be.false;
@@ -377,6 +398,10 @@ describe('lion-select-rich', () => {
       elDisabled._invokerNode.click();
       await elDisabled.updateComplete;
       expect(elDisabled.opened).to.be.false;
+
+      elSingleoption._invokerNode.click();
+      await elSingleoption.updateComplete;
+      expect(elSingleoption.opened).to.be.false;
     });
 
     it('should override the inheritsWidth prop when no default selected feature is used', async () => {
