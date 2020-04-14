@@ -2,7 +2,13 @@ module.exports = {
   extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
   overrides: [
     {
-      files: ['**/test-suites/**/*.js', '**/test/**/*.js', '**/stories/**/*.js', '**/*.config.js'],
+      files: [
+        '**/test-suites/**/*.js',
+        '**/test/**/*.js',
+        '**/test-node/**/*.js',
+        '**/stories/**/*.js',
+        '**/*.config.js',
+      ],
       rules: {
         'no-console': 'off',
         'no-unused-expressions': 'off',
