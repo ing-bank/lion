@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.14.2...@lion/select-rich@0.15.0) (2020-04-14)
+
+
+### Features
+
+* **select-rich:** added signleoption functionality ([7c37418](https://github.com/ing-bank/lion/commit/7c3741854d75d841a613717761c433cb868f5c49))
+
+
+
+
+
 ## [0.14.2](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.14.1...@lion/select-rich@0.14.2) (2020-04-07)
 
 **Note:** Version bump only for package @lion/select-rich

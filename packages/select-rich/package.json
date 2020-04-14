@@ -1,6 +1,6 @@
 {
   "name": "@lion/select-rich",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "description": "Provides a select with options that can contain html",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
