@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.13.0...@lion/overlays@0.13.1) (2020-04-15)
+
+
+### Bug Fixes
+
+* **overlays:** synchronize intercepted opened state OverlayMixin ([88d3850](https://github.com/ing-bank/lion/commit/88d3850d5ddcbd98f94a1950bfd096dc76ddc90f))
+
+
+
+
+
 # [0.13.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.12.9...@lion/overlays@0.13.0) (2020-04-07)
 
 
