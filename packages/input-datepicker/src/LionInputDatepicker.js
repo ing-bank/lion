@@ -333,14 +333,14 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
-      if (v.constructor.name === 'MinDate') {
+      if (v.constructor.validatorName === 'MinDate') {
         this.__calendarMinDate = v.param;
-      } else if (v.constructor.name === 'MaxDate') {
+      } else if (v.constructor.validatorName === 'MaxDate') {
         this.__calendarMaxDate = v.param;
-      } else if (v.constructor.name === 'MinMaxDate') {
+      } else if (v.constructor.validatorName === 'MinMaxDate') {
         this.__calendarMinDate = v.param.min;
         this.__calendarMaxDate = v.param.max;
-      } else if (v.constructor.name === 'IsDateDisabled') {
+      } else if (v.constructor.validatorName === 'IsDateDisabled') {
         this.__calendarDisableDates = v.param;
       }
     });
