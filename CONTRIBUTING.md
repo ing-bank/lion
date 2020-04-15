@@ -51,7 +51,7 @@ git remote add fork git@github.com:<your-user>/lion.git
 git push -u fork fix/buttonSize
 ```
 
-- Go to your fork and create a Pull Request :)
+- Go to your fork and create a Pull Request :).
 
 Some things that will increase the chance that your merge request is accepted:
 
