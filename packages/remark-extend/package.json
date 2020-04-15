@@ -1,6 +1,6 @@
 {
   "name": "remark-extend",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A plugin for remark that allows to extend a md file with another md file",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
