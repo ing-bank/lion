@@ -6,6 +6,7 @@ module.exports = {
         '**/test-suites/**/*.js',
         '**/test/**/*.js',
         '**/test-node/**/*.js',
+        '**/demo/**/*.js',
         '**/stories/**/*.js',
         '**/*.config.js',
       ],
