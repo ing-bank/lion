@@ -240,7 +240,7 @@ describe('LocalizeManager', () => {
         expect(e).to.be.instanceof(Error);
         expect(e.message).to.equal(
           'Data for namespace "my-component" and locale "en-GB" could not be loaded. ' +
-            'Make sure you have data for locale "en-GB" (and/or generic language "en").',
+          'Make sure you have data for locale "en-GB" (and/or generic language "en").',
         );
         return;
       }
@@ -295,7 +295,7 @@ describe('LocalizeManager', () => {
           expect(e).to.be.instanceof(Error);
           expect(e.message).to.equal(
             'Data for namespace "my-component" and current locale "nl-NL" or fallback locale "en-GB" could not be loaded. ' +
-              'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
+            'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
           );
           return;
         }
@@ -592,5 +592,54 @@ describe('LocalizeManager', () => {
         `Namespace is missing in the key "${msgKey}". The format for keys is "namespace:name".`,
       );
     });
+  });
+
+
+  describe.only('when altering html lang attribute (like Google Translate)', () => {
+    const originalLang = document.documentElement.lang;
+
+    function simulateGoogleTranslate(lang) {
+      document.documentElement.lang = lang;
+    }
+
+    beforeEach(() => {
+      // This simulates a default language provided in html: <html lang="en-GB">
+      document.documentElement.lang = 'en-GB';
+      manager = new LocalizeManager();
+    });
+
+    after(() => {
+      document.documentElement.lang = originalLang;
+    });
+
+    describe('On initialization', () => {
+      it("doesn't synchronize from html[lang] attribute to LocalizeManager", async () => {
+        expect(manager.locale).to.be.undefined;
+      });
+    });
+
+    describe('After initialization', () => {
+      it(`synchronizes from LocalizeManager to html[lang] when
+        3rd party translation tool is NOT in control (default)`, async () => {
+          manager.locale = 'nl-NL';
+          expect(document.documentElement.lang).to.equal('nl-NL');
+        });
+
+      it(`doesn't synchronize from LocalizeManager to html[lang] when
+        3rd party translation tool is in control`, async () => {
+          simulateGoogleTranslate('fr');
+          manager.locale = 'nl-NL';
+          expect(document.documentElement.lang).to.equal('fr');
+        });
+
+      it(`doesn't synchronize from html[lang] attribute to LocalizeManager`, async () => {
+        manager.locale = 'nl-NL';
+        // When a 3rd party like Google Translate alters lang attr of the page, we want to
+        // keep this for accessibility, but it should NOT be synchronized to our manager.
+        simulateGoogleTranslate('fr');
+        expect(manager.locale).to.equal('nl-NL');
+      });
+    });
+
   });
 });

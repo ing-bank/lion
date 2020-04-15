@@ -24,6 +24,32 @@ export class LocalizeManager extends LionSingleton {
     this.formatNumberOptions = { returnIfNaN: '' };
 
     this._setupHtmlLangAttributeObserver();
+
+    /**
+     * This value allows for support for Google Translate (or other 3rd parties taking control
+     * of the html[lang] attribute).
+     *
+     * Have the following scenario in mind:
+     * 1. locale is initialized by developer via `localize.locale = 'en-US';` (or html[data-localize-lang="en-US"])
+     * This should happen at the initial page load. LocalizeManager sets html[lang="en-US"]
+     * (needed for a11y)
+     * 2. Google Translate kicks in for the French language. It will set html[lang="fr"].
+     * This new language is not one known by us, so we most likely don't have translations for
+     * this file. Therefore, we do NOT sync this value to LocalizeManager. The manager should
+     * still ask for known resources (in this case for locale 'en-US')
+     * 3. locale is changed (think of a language dropdown)
+     * It's a bit of a weird case, because we would not expect an end user to do this. If he/she
+     * does, make sure that we do not go against Google Translate, so we maintain accessibility
+     * (by not altering html[lang]). We detect this by reading _langAttrSetBy3rdParty.
+     * When its value is 'auto' or null, we consider Google translate 'not active'.
+     *
+     * Keep in mind that this ONLY works when 1 happens before 2. This is something that the
+     * developer should arrange for.
+     *
+     * Also keep in mind that all of the above also works with other tools than Google Translate,
+     * but this is most widely used tool and therefore used as an example.
+     */
+    this._langAttrSetBy3rdParty = null;
   }
 
   teardown() {
@@ -118,8 +144,9 @@ export class LocalizeManager extends LionSingleton {
   _setupHtmlLangAttributeObserver() {
     if (!this._htmlLangAttributeObserver) {
       this._htmlLangAttributeObserver = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
+        mutations.forEach(() => {
+          this._langAttrSetBy3rdParty = document.documentElement.lang;
+          // this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
         });
       });
     }
@@ -187,14 +214,14 @@ export class LocalizeManager extends LionSingleton {
               const fallbackLang = this._getLangFromLocale(fallbackLocale);
               throw new Error(
                 `Data for namespace "${namespace}" and current locale "${locale}" or fallback locale "${fallbackLocale}" could not be loaded. ` +
-                  `Make sure you have data either for locale "${locale}" (and/or generic language "${lang}") or for fallback "${fallbackLocale}" (and/or "${fallbackLang}").`,
+                `Make sure you have data either for locale "${locale}" (and/or generic language "${lang}") or for fallback "${fallbackLocale}" (and/or "${fallbackLang}").`,
               );
             },
           );
         }
         throw new Error(
           `Data for namespace "${namespace}" and locale "${locale}" could not be loaded. ` +
-            `Make sure you have data for locale "${locale}" (and/or generic language "${lang}").`,
+          `Make sure you have data for locale "${locale}" (and/or generic language "${lang}").`,
         );
       });
     });

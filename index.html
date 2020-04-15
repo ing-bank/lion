@@ -1,0 +1,34 @@
+<html lang="en-US">
+
+<body>
+  <h3>Document level</h3>
+  <div id="documentLevelOutput"></div>
+  <hr />
+  <h3>Shadow</h3>
+  <div id="withinShadowRootOutput"></div>
+
+  <script>
+    const domToAdd = `
+  <p> Some English text </p>
+  <p> Een beetje Nederlandse tekst </p>
+  <button onclick="append('More English text', this)">append EN</button>
+  <button onclick="append('Meer Nederlandse tekst', this)">append NL</button>`;
+
+    const documentLevelOutput = document.getElementById('documentLevelOutput');
+    documentLevelOutput.innerHTML = domToAdd;
+
+    const withinShadowRootOutput = document.getElementById('withinShadowRootOutput');
+    withinShadowRootOutput.attachShadow({ mode: 'open' });
+    withinShadowRootOutput.shadowRoot.innerHTML = domToAdd;
+
+    function append(txt, buttonEl) {
+      const para = document.createElement('p');
+      para.innerText = txt;
+      const target = buttonEl.closest('[id]') || buttonEl.getRootNode();
+      target.appendChild(para);
+    }
+
+  </script>
+</body>
+
+</html>
