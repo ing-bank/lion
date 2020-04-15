@@ -285,7 +285,7 @@ describe('lion-select-rich', () => {
       `);
 
       expect(el.singleOption).to.be.true;
-      expect(el._invokerNode.hasAttribute('singleOption')).to.be.true;
+      expect(el._invokerNode.hasAttribute('single-option')).to.be.true;
     });
   });
 
