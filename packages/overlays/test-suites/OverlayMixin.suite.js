@@ -113,7 +113,14 @@ export function runOverlayMixinSuite({ /* tagString, */ tag, suffix = '' }) {
           <button slot="invoker">invoker button</button>
         </${tag}>
       `);
-      await el._overlayCtrl.show();
+      el.querySelector('[slot="invoker"]').click();
+      await nextFrame();
+      expect(el.opened).to.be.false;
+
+      // Also, the opened state should be synced back to that of the OverlayController
+      el.opened = true;
+      expect(el.opened).to.be.true;
+      await nextFrame();
       expect(el.opened).to.be.false;
     });
 

@@ -32,6 +32,7 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
       <slot name="invoker"></slot>
       <slot name="content"></slot>
       <slot name="_overlay-shadow-outlet"></slot>
+      <div>popup is ${this.opened ? 'opened' : 'closed'}</div>
     `;
   }
 }
