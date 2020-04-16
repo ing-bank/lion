@@ -310,15 +310,17 @@ describe('formatNumber', () => {
     });
 
     describe('tr-TR', () => {
-      localize.locale = 'tr-TR';
-      expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123.456,79');
-      expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123.456,79');
-      expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123.457');
-      expect(formatNumber(123456.789, currencyCode('TRY'))).to.equal('TL 123.456,79');
-      expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123.456,79');
-      expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123.456,79');
-      expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123.457');
-      expect(formatNumber(123456.789, currencySymbol('TRY'))).to.equal('₺123.456,79');
+      it('supports basics', () => {
+        localize.locale = 'tr-TR';
+        expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123.456,79');
+        expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123.456,79');
+        expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123.457');
+        expect(formatNumber(123456.789, currencyCode('TRY'))).to.equal('TL 123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123.457');
+        expect(formatNumber(123456.789, currencySymbol('TRY'))).to.equal('₺123.456,79');
+      });
     });
   });
 });
