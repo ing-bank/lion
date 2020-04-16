@@ -48,6 +48,22 @@ describe('lion-select-invoker', () => {
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
+  it('should not render after slot when singleOption is true', async () => {
+    const el = await fixture(html`
+      <lion-select-invoker .singleOption="${true}"></lion-select-invoker>
+    `);
+
+    expect(el.shadowRoot.querySelector('slot[name="after"]')).to.not.exist;
+  });
+
+  it('should render after slot when singleOption is not true', async () => {
+    const el = await fixture(html`
+      <lion-select-invoker></lion-select-invoker>
+    `);
+
+    expect(el.shadowRoot.querySelector('slot[name="after"]')).to.exist;
+  });
+
   describe('Subclassers', () => {
     it('supports a custom _contentTemplate', async () => {
       const myTag = defineCE(
