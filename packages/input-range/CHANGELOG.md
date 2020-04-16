@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.22](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.21...@lion/input-range@0.2.22) (2020-04-16)
+
+
+### Bug Fixes
+
+* **input-range:** securely apply css ([ada5350](https://github.com/ing-bank/lion/commit/ada5350a213f17f995d6bdedb82f387b3571a695))
+
+
+
+
+
 ## [0.2.21](https://github.com/ing-bank/lion/compare/@lion/input-range@0.2.20...@lion/input-range@0.2.21) (2020-04-02)
 
 **Note:** Version bump only for package @lion/input-range
