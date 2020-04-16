@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.5](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.4...@lion/input-datepicker@0.11.5) (2020-04-16)
+
+
+### Bug Fixes
+
+* validators use validatorName instead of name ([4776810](https://github.com/ing-bank/lion/commit/4776810be929951feefdef97318e7f0b2a628b30))
+
+
+
+
+
 ## [0.11.4](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.3...@lion/input-datepicker@0.11.4) (2020-04-15)
 
 **Note:** Version bump only for package @lion/input-datepicker

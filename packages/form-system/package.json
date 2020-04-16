@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-system",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -41,7 +41,7 @@
     "@lion/input": "0.5.21",
     "@lion/input-amount": "0.5.21",
     "@lion/input-date": "0.5.22",
-    "@lion/input-datepicker": "0.11.4",
+    "@lion/input-datepicker": "0.11.5",
     "@lion/input-email": "0.6.6",
     "@lion/input-iban": "0.7.1",
     "@lion/input-range": "0.2.21",
