@@ -118,7 +118,7 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
 
   __setupStyleTag() {
     this.__styleTag = document.createElement('style');
-    this.__styleTag.innerHTML = this.constructor.rangeStyles(unsafeCSS(this.scopedClass));
+    this.__styleTag.textContent = this.constructor.rangeStyles(unsafeCSS(this.scopedClass));
     this.insertBefore(this.__styleTag, this.childNodes[0]);
   }
 
