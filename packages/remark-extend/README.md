@@ -39,13 +39,14 @@ Some examples are:
 - `:root` for the top of the markdown file
 - `:scope:last-child` for the end of the markdown file
 - `heading:has([value=Red])` first heading with a text value of Red (e.g. ### Red)
-- `heading[depth=2]` first third level heading (e.g. ## Something)
+- `heading[depth=2]` first second level heading (e.g. ## Something)
+- `heading[depth=2]:has([value=Red]) ~ heading[depth=2]` following h2 after h2 with "Red" (e.g. ## Red ... ## Something)
 
 ### Markdown AST
 
 All adjustments to the markdown file happen via the markdown AST (Abstract Syntax Tree).
 
-You can explore it via the [ASTExplorer](https://astexplorer.net/).
+You can explore it via the [ASTExplorer](https://astexplorer.net/). (> Markdown > remark)
 
 ```md
 ### Red
