@@ -82,6 +82,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.type = 'text';
+    this._inputNode.setAttribute('inputmode', 'decimal');
 
     if (this.currency) {
       this.__setCurrencyDisplayLabel();
