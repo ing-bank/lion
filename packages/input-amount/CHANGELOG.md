@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.22](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.21...@lion/input-amount@0.5.22) (2020-04-17)
+
+
+### Bug Fixes
+
+* **input-amount:** set hint to use numeric on-screen keyboard ([#689](https://github.com/ing-bank/lion/issues/689)) ([02778c0](https://github.com/ing-bank/lion/commit/02778c0daa7fb7f476be9e66887d10498fb082dd))
+
+
+
+
+
 ## [0.5.21](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.20...@lion/input-amount@0.5.21) (2020-04-02)
 
 **Note:** Version bump only for package @lion/input-amount
