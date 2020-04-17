@@ -49,6 +49,11 @@ describe('lion-button', () => {
     expect(window.getComputedStyle(el._nativeButtonNode).clip).to.equal('rect(0px, 0px, 0px, 0px)');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(`<lion-button hidden>foo</lion-button>`);
+    expect(el).not.to.be.displayed;
+  });
+
   it('can be disabled imperatively', async () => {
     const el = await fixture(`<lion-button disabled>foo</lion-button>`);
     expect(el.getAttribute('tabindex')).to.equal('-1');

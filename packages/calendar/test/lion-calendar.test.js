@@ -1276,5 +1276,14 @@ describe('<lion-calendar>', () => {
       );
       await expect(el).to.be.accessible();
     });
+
+    it('is hidden when attribute hidden is true', async () => {
+      const el = await fixture(
+        html`
+          <lion-calendar hidden></lion-calendar>
+        `,
+      );
+      expect(el).not.to.be.displayed;
+    });
   });
 });

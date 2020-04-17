@@ -504,6 +504,10 @@ export const FormControlMixin = dedupeMixin(
               display: block;
             }
 
+            :host([hidden]) {
+              display: none;
+            }
+
             :host([disabled]) {
               pointer-events: none;
             }

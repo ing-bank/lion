@@ -16,6 +16,13 @@ describe('ChoiceInputMixin', () => {
     customElements.define('choice-input', ChoiceInput);
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(html`
+      <choice-input hidden></choice-input>
+    `);
+    expect(el).not.to.be.displayed;
+  });
+
   it('has choiceValue', async () => {
     const el = await fixture(html`
       <choice-input .choiceValue=${'foo'}></choice-input>

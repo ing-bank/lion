@@ -34,6 +34,15 @@ describe('lion-steps', () => {
     expect(el).to.be.a('HTMLElement');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(
+      html`
+        <lion-steps hidden> </lion-steps>
+      `,
+    );
+    expect(el).not.to.be.displayed;
+  });
+
   it('has "steps" getter that returns default slot elements', async () => {
     const el = await fixture(html`
       <lion-steps>

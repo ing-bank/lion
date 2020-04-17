@@ -17,6 +17,16 @@ describe('lion-icon', () => {
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
+    const el = await fixture(
+      html`
+        <lion-icon .svg=${iconFunction} hidden></lion-icon>
+      `,
+    );
+    expect(el).not.to.be.displayed;
+  });
+
   it('supports svg icon as a lit-html template', async () => {
     const icon = html`
       <svg data-test-id="svg"></svg>

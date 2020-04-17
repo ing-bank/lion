@@ -493,6 +493,9 @@ describe('<lion-input-datepicker>', () => {
         expect(myOverlayOpenedCbHandled).to.be.true;
         await myElObj.selectMonthDay(1);
         expect(myUserSelectedChangedCbHandled).to.be.true;
+        /*         myElObj.overlayEl.hidden = true;
+        await el.updateComplete;
+        expect(myElObj.overlayEl).not.to.be.displayed; */
       });
 
       it.skip('can configure the overlay presentation based on media query switch', async () => {});
@@ -512,6 +515,19 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(submitSpy.callCount).to.equal(0);
+    });
+
+    it('is hidden when attribute hidden is true', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+
+      await el.updateComplete;
+      const myElObj = new DatepickerInputObject(el);
+      await myElObj.openCalendar();
+      myElObj.overlayEl.hidden = true;
+      await el.updateComplete;
+      expect(myElObj.overlayEl).not.to.be.displayed;
     });
   });
 });
