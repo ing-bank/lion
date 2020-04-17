@@ -225,7 +225,7 @@ describe('LocalizeManager', () => {
         expect(e).to.be.instanceof(Error);
         expect(e.message).to.equal(
           'Data for namespace "my-component" and locale "en-GB" could not be loaded. ' +
-          'Make sure you have data for locale "en-GB" (and/or generic language "en").',
+            'Make sure you have data for locale "en-GB" (and/or generic language "en").',
         );
         return;
       }
@@ -280,7 +280,7 @@ describe('LocalizeManager', () => {
           expect(e).to.be.instanceof(Error);
           expect(e.message).to.equal(
             'Data for namespace "my-component" and current locale "nl-NL" or fallback locale "en-GB" could not be loaded. ' +
-            'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
+              'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
           );
           return;
         }
@@ -556,8 +556,6 @@ describe('LocalizeManager', () => {
   });
 });
 
-
-
 describe('When supporting external translation tools like Google Translate', () => {
   let manager;
   const originalLang = document.documentElement.lang;
@@ -575,13 +573,16 @@ describe('When supporting external translation tools like Google Translate', () 
       LocalizeManager.resetInstance();
     }
     return LocalizeManager.getInstance({
-      autoLoadOnLocaleChange: true,
-      fallbackLocale: 'en-GB',
       supportExternalTranslationTools: true,
     });
   }
 
   afterEach(async () => {
+    document.documentElement.removeAttribute('lang');
+    document.documentElement.removeAttribute('data-localize-lang');
+  });
+
+  after(async () => {
     document.documentElement.lang = originalLang;
     document.documentElement.removeAttribute('data-localize-lang');
   });
@@ -591,10 +592,6 @@ describe('When supporting external translation tools like Google Translate', () 
       manager.reset();
       manager.teardown();
       LocalizeManager.resetInstance();
-
-      // This simulates a default setup: <html data-localize-lang="en-GB" lang="en-GB">
-      document.documentElement.lang = 'en-GB'; // needed for a11y, can be altered by Google Translate
-      document.documentElement.setAttribute('data-localize-lang', 'en-GB'); // read by manager
     });
 
     it(`restores html[lang] when 3rd party translation tool is turned off again`, async () => {
@@ -608,19 +605,19 @@ describe('When supporting external translation tools like Google Translate', () 
 
     it(`synchronizes from LocalizeManager to html[lang] when
       3rd party translation tool is NOT in control (default scenario)`, async () => {
-        manager = getInstance();
-        manager.locale = 'nl-NL';
-        expect(document.documentElement.lang).to.equal('nl-NL');
-      });
+      manager = getInstance();
+      manager.locale = 'nl-NL';
+      expect(document.documentElement.lang).to.equal('nl-NL');
+    });
 
     // TODO: works when run in isolation. Find out which side effects to get rid of...
-    it.skip(`doesn't synchronize from LocalizeManager to html[lang] when
+    it(`doesn't synchronize from LocalizeManager to html[lang] when
       3rd party translation tool is in control`, async () => {
-        manager = getInstance();
-        await simulateGoogleTranslateOn('fr');
-        manager.locale = 'nl-NL';
-        expect(document.documentElement.lang).to.equal('fr');
-      });
+      manager = getInstance();
+      await simulateGoogleTranslateOn('fr');
+      manager.locale = 'nl-NL';
+      expect(document.documentElement.lang).to.equal('fr');
+    });
 
     it(`doesn't synchronize from html[lang] attribute to LocalizeManager`, async () => {
       manager = getInstance();
@@ -630,13 +627,11 @@ describe('When supporting external translation tools like Google Translate', () 
       await simulateGoogleTranslateOn('fr');
       expect(manager.locale).to.equal('nl-NL');
     });
-
-
   });
 
   describe('On initialization', () => {
     /** A default scenario */
-    it("synchronizes from html[data-localize-lang] attribute to LocalizeManager", async () => {
+    it('synchronizes from html[data-localize-lang] attribute to LocalizeManager', async () => {
       document.documentElement.setAttribute('data-localize-lang', 'nl-NL');
       document.documentElement.lang = 'nl-NL';
       manager = getInstance();
@@ -645,18 +640,17 @@ describe('When supporting external translation tools like Google Translate', () 
 
     /** A scenario where Google Translate kicked in before initialization */
     it(`synchronizes from html[data-localize-lang] attribute to LocalizeManager when html[lang]
-      has a different value` , async () => {
-        document.documentElement.setAttribute('data-localize-lang', 'en-GB');
-        document.documentElement.lang = 'fr';
-        manager = getInstance();
-        expect(manager.locale).to.equal('en-GB');
-      });
-
-    // TODO: works when run in isolation. Find out which side effects to get rid of...
-    it.skip("doesn't synchronize from html[lang] attribute to LocalizeManager", async () => {
+      has a different value`, async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'en-GB');
+      document.documentElement.lang = 'fr';
       manager = getInstance();
-      document.documentElement.lang = 'en-GB';
-      expect(manager.locale).to.be.undefined;
+      expect(manager.locale).to.equal('en-GB');
+    });
+
+    it("doesn't synchronize from html[lang] attribute to LocalizeManager", async () => {
+      manager = getInstance();
+      document.documentElement.lang = 'nl-NL';
+      expect(manager.locale).to.not.equal('nl-NL');
     });
   });
 });
@@ -699,7 +693,7 @@ describe('[deprecated] When not supporting external translation tools like Googl
 
     manager = new LocalizeManager({
       supportExternalTranslationTools: false,
-      autoLoadOnLocaleChange: true
+      autoLoadOnLocaleChange: true,
     });
 
     await manager.loadNamespace({
@@ -719,5 +713,4 @@ describe('[deprecated] When not supporting external translation tools like Googl
       'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
     });
   });
-
 });
