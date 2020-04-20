@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-system",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -48,7 +48,7 @@
     "@lion/localize": "0.9.1",
     "@lion/radio-group": "0.8.7",
     "@lion/select": "0.5.21",
-    "@lion/select-rich": "0.15.1",
+    "@lion/select-rich": "0.15.2",
     "@lion/textarea": "0.5.22",
     "@lion/validate": "0.9.1"
   }
