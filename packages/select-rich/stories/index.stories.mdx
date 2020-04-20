@@ -506,6 +506,28 @@ Both methods work with the `Required` validator.
 > but subclassers can easily override this in their extension, by the overriding `_noSelectionTemplate()` method.
 
 
+### Single Option
+
+If there is a single option rendered, then `singleOption` property is set to `true` on `lion-select-rich` and invoker as well. Invoker also gets `single-option` which can be used to having desired templating and styling. As in here the arrow is not displayed for single option
+
+<Story name="Single Option">
+  {html`
+    <lion-select-rich label="Single Option" name="color">
+      <lion-options slot="input">
+        <lion-option .choiceValue=${'red'}>Red</lion-option>
+      </lion-options>
+    </lion-select-rich>
+  `}
+</Story>
+
+```html
+<lion-select-rich label="single option select" name="color">
+  <lion-options slot="input">
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
+  </lion-options>
+</lion-select-rich>
+```
+
 
 ### Custom Invoker
 

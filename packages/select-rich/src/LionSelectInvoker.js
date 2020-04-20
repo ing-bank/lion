@@ -43,7 +43,7 @@ export class LionSelectInvoker extends LionButton {
       singleOption: {
         type: Boolean,
         reflect: true,
-        attribute: 'singleOption',
+        attribute: 'single-option',
       },
     };
   }
@@ -99,7 +99,11 @@ export class LionSelectInvoker extends LionButton {
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
     return html`
-      <slot name="after"></slot>
+      ${!this.singleOption
+        ? html`
+            <slot name="after"></slot>
+          `
+        : ''}
     `;
   }
 }

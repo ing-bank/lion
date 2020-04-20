@@ -285,7 +285,7 @@ describe('lion-select-rich', () => {
       `);
 
       expect(el.singleOption).to.be.true;
-      expect(el._invokerNode.hasAttribute('singleOption')).to.be.true;
+      expect(el._invokerNode.hasAttribute('single-option')).to.be.true;
     });
   });
 
@@ -428,6 +428,29 @@ describe('lion-select-rich', () => {
       await el.updateComplete;
 
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
+    });
+
+    it('should set singleOption to true when options change dynamically to 1 option', async () => {
+      const elSingleoption = await fixture(html`
+        <lion-select-rich>
+          <lion-options slot="input">
+            <lion-option .choiceValue=${10}>Item 1</lion-option>
+            <lion-option .choiceValue=${20}>Item 2</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      elSingleoption._invokerNode.click();
+      await elSingleoption.updateComplete;
+      expect(elSingleoption.singleOption).to.be.undefined;
+
+      const optionELm = elSingleoption.querySelectorAll('lion-option')[0];
+      optionELm.parentNode.removeChild(optionELm);
+      elSingleoption.requestUpdate();
+
+      elSingleoption._invokerNode.click();
+      await elSingleoption.updateComplete;
+      expect(elSingleoption.singleOption).to.be.true;
     });
   });
 

@@ -219,10 +219,6 @@ export class LionSelectRich extends ScopedElementsMixin(
 
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-    if (this._listboxNode.childElementCount === 1) {
-      this.singleOption = true;
-      this._invokerNode.singleOption = true;
-    }
 
     this._overlaySetupComplete.then(() => {
       this.__setupOverlay();
@@ -280,6 +276,11 @@ export class LionSelectRich extends ScopedElementsMixin(
 
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    if (this.formElements.length === 1) {
+      this.singleOption = true;
+      this._invokerNode.singleOption = true;
+    }
 
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
