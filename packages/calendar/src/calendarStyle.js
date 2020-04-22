@@ -5,6 +5,10 @@ export const calendarStyle = css`
     display: block;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   .calendar {
     display: block;
   }

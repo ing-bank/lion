@@ -94,6 +94,10 @@ export const ChoiceInputMixin = superclass =>
             display: flex;
           }
 
+          :host([hidden]) {
+            display: none;
+          }
+
           .choice-field__graphic-container {
             display: none;
           }

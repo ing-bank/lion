@@ -22,6 +22,15 @@ describe('lion-switch', () => {
     expect(el._inputNode.hasAttribute('disabled')).to.be.false;
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(
+      html`
+        <lion-switch hidden></lion-switch>
+      `,
+    );
+    expect(el).not.to.be.displayed;
+  });
+
   it('should sync its "checked" state to child button', async () => {
     const uncheckedEl = await fixture(html`
       <lion-switch></lion-switch>

@@ -17,6 +17,10 @@ export class LionTooltipArrow extends LitElement {
         height: var(--tooltip-arrow-height);
       }
 
+      :host([hidden]) {
+        display: none;
+      }
+
       :host svg {
         display: block;
       }

@@ -513,5 +513,18 @@ describe('<lion-input-datepicker>', () => {
       await elObj.openCalendar();
       expect(submitSpy.callCount).to.equal(0);
     });
+
+    it('is hidden when attribute hidden is true', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker></lion-input-datepicker>
+      `);
+
+      await el.updateComplete;
+      const myElObj = new DatepickerInputObject(el);
+      await myElObj.openCalendar();
+      myElObj.overlayEl.hidden = true;
+      await el.updateComplete;
+      expect(myElObj.overlayEl).not.to.be.displayed;
+    });
   });
 });

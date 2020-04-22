@@ -44,6 +44,17 @@ describe('lion-step', () => {
     expect(el.children[0].status).to.equal('untouched');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(
+      html`
+        <fake-lion-steps>
+          <lion-step hidden>Step 1</lion-step>
+        </fake-lion-steps>
+      `,
+    );
+    expect(el.children[0]).not.to.be.displayed;
+  });
+
   it('communicates with a parent steps controller to handles actions', async () => {
     const el = await fixture(html`
       <fake-lion-steps>

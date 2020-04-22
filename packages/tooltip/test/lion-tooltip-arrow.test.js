@@ -41,6 +41,23 @@ describe('lion-tooltip-arrow', () => {
     expect(arrowElement.getAttribute('placement')).to.equal('bottom');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(html`
+      <lion-tooltip .config="${{}}">
+        <div slot="content">
+          Hey there
+        </div>
+        <button slot="invoker">Tooltip button</button>
+        <lion-tooltip-arrow slot="arrow" hidden></lion-tooltip-arrow>
+      </lion-tooltip>
+    `);
+    const arrowElement = el.querySelector('lion-tooltip-arrow');
+    el.opened = true;
+
+    await el.repositionComplete;
+    expect(arrowElement).not.to.be.displayed;
+  });
+
   it('makes sure positioning of the arrow is correct', async () => {
     const el = await fixture(html`
       <lion-tooltip

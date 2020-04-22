@@ -104,6 +104,17 @@ describe('lion-select-rich', () => {
     expect(el.formElements[2].checked).to.be.true;
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(
+      html`
+        <lion-select-rich label="foo" hidden
+          ><lion-options slot="input"></lion-options
+        ></lion-select-rich>
+      `,
+    );
+    expect(el).not.to.be.displayed;
+  });
+
   it(`has a fieldName based on the label`, async () => {
     const el1 = await fixture(
       html`

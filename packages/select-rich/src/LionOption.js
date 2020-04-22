@@ -32,6 +32,10 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
           padding: 4px;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([active]),
         :host(:hover) {
           background-color: #ddd;
