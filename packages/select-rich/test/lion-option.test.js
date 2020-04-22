@@ -18,6 +18,15 @@ describe('lion-option', () => {
       `);
       expect(el.modelValue).to.deep.equal({ value: 10, checked: true });
     });
+
+    it('is hidden when attribute hidden is true', async () => {
+      const el = await fixture(
+        html`
+          <lion-option .choiceValue=${10} hidden></lion-option>
+        `,
+      );
+      expect(el).not.to.be.displayed;
+    });
   });
 
   describe('Accessibility', () => {

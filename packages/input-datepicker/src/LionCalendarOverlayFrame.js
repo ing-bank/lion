@@ -11,6 +11,10 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
           position: relative;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         .calendar-overlay__header {
           display: flex;
         }

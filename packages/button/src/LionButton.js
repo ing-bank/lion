@@ -119,6 +119,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           pointer-events: none;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([disabled]) .btn {
           /* if you extend, please overwrite */
           background: lightgray;

@@ -84,6 +84,10 @@ export class LionStep extends LitElement {
           display: none;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([status='entered']) {
           display: block;
         }

@@ -8,6 +8,10 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     return [
       super.styles,
       css`
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([disabled]) {
           color: #adadad;
         }

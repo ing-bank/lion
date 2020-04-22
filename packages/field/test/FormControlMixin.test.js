@@ -46,6 +46,15 @@ describe('FormControlMixin', () => {
     expect(elElem.label).to.equal('Email address', 'as an element');
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    const el = await fixture(html`
+    <${tag} hidden>
+    <label slot="label">Email <span>address</span></label>
+        ${inputSlot}
+    </${tag}>`);
+    expect(el).not.to.be.displayed;
+  });
+
   it('has a label that supports inner html', async () => {
     const el = await fixture(html`
       <${tag}>

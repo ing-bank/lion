@@ -100,6 +100,10 @@ export class LionSelectRich extends ScopedElementsMixin(
           display: block;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([disabled]) {
           color: #adadad;
         }

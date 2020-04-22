@@ -69,6 +69,10 @@ export class LionIcon extends LitElement {
           height: 1em;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host:first-child {
           margin-left: 0;
         }

@@ -25,6 +25,10 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
           outline: 0;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         .btn {
           position: relative;
           height: 100%;

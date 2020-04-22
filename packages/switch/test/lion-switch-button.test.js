@@ -25,6 +25,12 @@ describe('lion-switch-button', () => {
     expect(el.hasAttribute('checked')).to.be.false;
   });
 
+  it('is hidden when attribute hidden is true', async () => {
+    el.hidden = true;
+    await el.updateComplete;
+    expect(el).not.to.be.displayed;
+  });
+
   it('should toggle the value of "checked" on click', async () => {
     expect(el.checked).to.be.false;
     expect(el.hasAttribute('checked')).to.be.false;
