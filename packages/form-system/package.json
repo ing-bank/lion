@@ -33,6 +33,7 @@
     "*.js"
   ],
   "dependencies": {
+    "@lion/button": "0.5.11",
     "@lion/checkbox-group": "0.8.7",
     "@lion/core": "0.5.1",
     "@lion/field": "0.12.1",

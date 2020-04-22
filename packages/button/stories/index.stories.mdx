@@ -1,5 +1,4 @@
 import { Story, Meta, html } from '@open-wc/demoing-storybook';
-import '@lion/input/lion-input.js';
 
 import '../lion-button.js';
 import iconSvg from './icon.svg.js';
@@ -142,24 +141,6 @@ Important notes:
 - A (lion)-button of type submit is mandatory for the last use case, if you have multiple inputs. This is native behavior.
 - `@click` on `<lion-button>` and `@submit` on `<form>` are triggered by these use cases. We strongly encourage you to listen to the submit handler if your goal is to do something on form-submit.
 - To prevent form submission full page reloads, add a **submit handler on the form** `@submit` with `event.preventDefault()`. Adding it on the `<lion-button>` is not enough.
-
-### Usage with lion inputs
-
-<Story name="Within lion fields">
-  {html`
-    <lion-input label="Prefix and sufix">
-      <lion-button slot="prefix" type="button">prefix</lion-button>
-      <lion-button slot="suffix" type="button">sufix</lion-button>
-    </lion-input>
-  `}
-</Story>
-
-```html
-<lion-input label="Prefix and sufix">
-  <lion-button slot="prefix" type="button">prefix</lion-button>
-  <lion-button slot="suffix" type="button">sufix</lion-button>
-</lion-input>
-```
 
 ## Considerations
 
