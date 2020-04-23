@@ -227,8 +227,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
 
   render() {
     return html`
-      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._inputGroupTemplate()}
-      ${this._feedbackTemplate()} ${this._overlayTemplate()}
+      <div class="form-field__group-one">
+        ${this._groupOneTemplate()}
+      </div>
+      <div class="form-field__group-two">
+        ${this._groupTwoTemplate()} ${this._overlayTemplate()}
+      </div>
     `;
   }
 
