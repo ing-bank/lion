@@ -1,7 +1,5 @@
 # Localize
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 The localization system helps to manage localization data split into locales and automate its loading.
 
 ## Live Demo/Documentation

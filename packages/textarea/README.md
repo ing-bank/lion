@@ -1,7 +1,5 @@
 # Textarea
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-textarea` component is a webcomponent that enhances the functionality of the native `<input type="textarea">` element.
 Its purpose is to provide a way for users to write text that is multiple lines long.
 

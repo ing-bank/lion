@@ -1,7 +1,5 @@
 # Input range
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-input-range` component is based on the native range input.
 Its purpose is to provide a way for users to select one value from a range of values.
 

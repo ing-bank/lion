@@ -1,7 +1,5 @@
 # Input
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-input` component is a webcomponent that enhances the functionality of the native `<input>` element.
 
 ## Live Demo/Documentation
