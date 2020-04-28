@@ -1,7 +1,5 @@
 # Ajax
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `ajax` is the global manager for handling all ajax requests.
 It is a promise based system for fetching data, based on [axios](https://github.com/axios/axios)
 

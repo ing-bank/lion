@@ -1,7 +1,5 @@
 # Icon
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 A web component for displaying icons.
 
 ## Live Demo/Documentation

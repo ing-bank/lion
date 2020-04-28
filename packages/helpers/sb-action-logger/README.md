@@ -1,7 +1,5 @@
 # Storybook Action Logger
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 A visual element to show action logs in Storybook demos `sb-action-logger`.
 
 **This is a demonstrative tool**, not a debugging tool (although it may help initially).

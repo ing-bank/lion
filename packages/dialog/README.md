@@ -1,7 +1,5 @@
 # Dialog
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-dialog` is a component wrapping a modal dialog controller.
 Its purpose is to make it easy to use our Overlay System declaratively.
 

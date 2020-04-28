@@ -1,7 +1,5 @@
 # Helpers
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 A helpers package that contains several helpers that are used inside lion but can be used outside as well.
 
 These helpers are considered developer tools, not actual things to use in production.

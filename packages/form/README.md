@@ -1,7 +1,5 @@
 # Form
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-form` is a webcomponent that enhances the functionality of the native `form` component.
 
 ## Live Demo/Documentation

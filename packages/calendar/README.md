@@ -1,7 +1,5 @@
 # Calendar
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-calendar` is a reusable and accessible calendar view.
 
 ## Live Demo/Documentation
