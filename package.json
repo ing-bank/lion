@@ -10,7 +10,6 @@
     "@commitlint/config-conventional": "^7.0.0",
     "@open-wc/demoing-storybook": "^1.10.4",
     "@open-wc/eslint-config": "^1.0.0",
-    "@open-wc/prettier-config": "^0.1.0",
     "@open-wc/testing": "^2.5.0",
     "@open-wc/testing-helpers": "^1.0.0",
     "@open-wc/testing-karma": "^3.2.30",
@@ -24,12 +23,14 @@
     "chai": "^4.2.0",
     "eclint": "^2.8.1",
     "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.11.0",
     "husky": "^1.0.0",
     "lerna": "3.4.3",
     "lint-staged": "^8.0.0",
     "markdownlint-cli": "^0.17.0",
     "mocha": "^7.1.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
     "rimraf": "^2.6.3",
     "rollup": "^1.27.8",
     "sinon": "^7.2.2",
@@ -86,5 +87,11 @@
       "path": "./bundlesize/dist/all/all-*.js",
       "maxSize": "45 kB"
     }
-  ]
+  ],
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "trailingComma": "all"
+  }
 }
