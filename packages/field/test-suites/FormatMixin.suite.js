@@ -1,8 +1,7 @@
-import { expect, fixture, html, aTimeout, defineCE, unsafeStatic } from '@open-wc/testing';
-import sinon from 'sinon';
-
 import { LitElement } from '@lion/core';
 import { Unparseable, Validator } from '@lion/validate';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import { FormatMixin } from '../src/FormatMixin.js';
 
 function mimicUserInput(formControl, newViewValue) {
@@ -62,9 +61,7 @@ export function runFormatMixinSuite(customConfig) {
         cfg.tagString = defineCE(
           class extends FormatMixin(LitElement) {
             render() {
-              return html`
-                <slot name="input"></slot>
-              `;
+              return html`<slot name="input"></slot>`;
             }
 
             set value(newValue) {

@@ -1,6 +1,5 @@
-import { expect, fixture, html, defineCE, unsafeStatic, oneEvent } from '@open-wc/testing';
-
 import { LitElement } from '@lion/core';
+import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import { FocusMixin } from '../src/FocusMixin.js';
 
 describe('FocusMixin', () => {
@@ -10,9 +9,7 @@ describe('FocusMixin', () => {
     const tagString = defineCE(
       class extends FocusMixin(LitElement) {
         render() {
-          return html`
-            <slot name="input"></slot>
-          `;
+          return html`<slot name="input"></slot>`;
         }
 
         get _inputNode() {

@@ -1,19 +1,15 @@
-import { expect, html } from '@open-wc/testing';
 import { formFixture as fixture } from '@lion/field/test-helpers.js';
-
+import '@lion/fieldset/lion-fieldset.js';
+import '@lion/input/lion-input.js';
+import { expect, html } from '@open-wc/testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
-
-import '@lion/input/lion-input.js';
-import '@lion/fieldset/lion-fieldset.js';
 
 describe('model value event', () => {
   describe('form path', () => {
     it('should be property', async () => {
       const spy = sinon.spy();
-      const input = await fixture(html`
-        <lion-input></lion-input>
-      `);
+      const input = await fixture(html`<lion-input></lion-input>`);
       input.addEventListener('model-value-changed', spy);
       input.modelValue = 'woof';
       const e = spy.firstCall.args[0];
@@ -22,9 +18,7 @@ describe('model value event', () => {
 
     it('should contain dispatching field', async () => {
       const spy = sinon.spy();
-      const input = await fixture(html`
-        <lion-input></lion-input>
-      `);
+      const input = await fixture(html`<lion-input></lion-input>`);
       input.addEventListener('model-value-changed', spy);
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
@@ -90,11 +84,7 @@ describe('model value event', () => {
     let e;
     beforeEach(async () => {
       const spy = sinon.spy();
-      const el = await fixture(
-        html`
-          <lion-input></lion-input>
-        `,
-      );
+      const el = await fixture(html`<lion-input></lion-input>`);
       el.addEventListener('model-value-changed', spy);
       el.modelValue = 'foo';
       // eslint-disable-next-line prefer-destructuring

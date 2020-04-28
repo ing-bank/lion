@@ -1,5 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-
 import '../lion-textarea.js';
 
 function hasBrowserResizeSupport() {
@@ -58,9 +57,7 @@ describe('<lion-textarea>', () => {
 
   it('supports initial modelValue', async () => {
     const el = await fixture(
-      html`
-        <lion-textarea .modelValue="${'From value attribute'}"></lion-textarea>
-      `,
+      html`<lion-textarea .modelValue="${'From value attribute'}"></lion-textarea>`,
     );
     expect(el.querySelector('textarea').value).to.equal('From value attribute');
   });
@@ -101,11 +98,7 @@ describe('<lion-textarea>', () => {
   });
 
   it('stops growing after property "maxRows" is reached when there was an initial value', async () => {
-    const el = await fixture(
-      html`
-        <lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>
-      `,
-    );
+    const el = await fixture(html`<lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>`);
 
     return [4, 5, 6, 7, 8].reduce(async (heightPromise, i) => {
       const oldHeight = await heightPromise;
@@ -126,18 +119,14 @@ describe('<lion-textarea>', () => {
   });
 
   it('stops shrinking after property "rows" is reached', async () => {
-    const el = await fixture(html`
-      <lion-textarea rows="1" max-rows="3"></lion-textarea>
-    `);
+    const el = await fixture(html`<lion-textarea rows="1" max-rows="3"></lion-textarea>`);
     expect(el.scrollHeight).to.be.equal(el.clientHeight);
     const oneRowHeight = el.clientHeight;
 
     el.rows = 3;
     el.resizeTextarea();
     await el.updateComplete;
-    expect(oneRowHeight)
-      .to.be.below(el.clientHeight)
-      .and.to.be.below(el.scrollHeight);
+    expect(oneRowHeight).to.be.below(el.clientHeight).and.to.be.below(el.scrollHeight);
   });
 
   it('has an attribute that can be used to set the placeholder text of the textarea', async () => {

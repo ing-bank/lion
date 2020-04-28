@@ -1,9 +1,6 @@
-import { LitElement, css, html } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 
-const uuid = () =>
-  Math.random()
-    .toString(36)
-    .substr(2, 10);
+const uuid = () => Math.random().toString(36).substr(2, 10);
 
 const setupPanel = ({ element, uid }) => {
   element.setAttribute('id', `panel-${uid}`);

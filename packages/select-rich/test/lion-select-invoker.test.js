@@ -1,21 +1,16 @@
-import { expect, fixture, html, defineCE } from '@open-wc/testing';
 import { LionButton } from '@lion/button';
-import { LionSelectInvoker } from '../src/LionSelectInvoker.js';
-
+import { defineCE, expect, fixture, html } from '@open-wc/testing';
 import '../lion-select-invoker.js';
+import { LionSelectInvoker } from '../src/LionSelectInvoker.js';
 
 describe('lion-select-invoker', () => {
   it('should behave as a button', async () => {
-    const el = await fixture(html`
-      <lion-select-invoker></lion-select-invoker>
-    `);
+    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
     expect(el instanceof LionButton).to.be.true;
   });
 
   it('renders invoker info based on selectedElement child elements', async () => {
-    const el = await fixture(html`
-      <lion-select-invoker></lion-select-invoker>
-    `);
+    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
     el.selectedElement = await fixture(`<div class="option"><h2>I am</h2><p>2 lines</p></div>`);
     await el.updateComplete;
 
@@ -31,9 +26,7 @@ describe('lion-select-invoker', () => {
   });
 
   it('renders invoker info based on selectedElement textContent', async () => {
-    const el = await fixture(html`
-      <lion-select-invoker></lion-select-invoker>
-    `);
+    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
     el.selectedElement = await fixture(`<div class="option">just textContent</div>`);
     await el.updateComplete;
 
@@ -41,9 +34,7 @@ describe('lion-select-invoker', () => {
   });
 
   it('has tabindex="0"', async () => {
-    const el = await fixture(html`
-      <lion-select-invoker></lion-select-invoker>
-    `);
+    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
     expect(el.tabIndex).to.equal(0);
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
@@ -57,9 +48,7 @@ describe('lion-select-invoker', () => {
   });
 
   it('should render after slot when singleOption is not true', async () => {
-    const el = await fixture(html`
-      <lion-select-invoker></lion-select-invoker>
-    `);
+    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
 
     expect(el.shadowRoot.querySelector('slot[name="after"]')).to.exist;
   });
@@ -70,9 +59,7 @@ describe('lion-select-invoker', () => {
         class extends LionSelectInvoker {
           _contentTemplate() {
             if (this.selectedElement && this.selectedElement.textContent === 'cat') {
-              return html`
-                cat selected
-              `;
+              return html`cat selected `;
             }
             return `no valid selection`;
           }

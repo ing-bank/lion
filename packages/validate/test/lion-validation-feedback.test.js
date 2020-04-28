@@ -1,16 +1,12 @@
 /* eslint-disable no-unused-vars, no-param-reassign */
+import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-import { fixture, html, expect } from '@open-wc/testing';
 import '../lion-validation-feedback.js';
 import { AlwaysInvalid, AlwaysValid } from '../test-helpers.js';
 
 describe('lion-validation-feedback', () => {
   it('renders a validation message', async () => {
-    const el = await fixture(
-      html`
-        <lion-validation-feedback></lion-validation-feedback>
-      `,
-    );
+    const el = await fixture(html`<lion-validation-feedback></lion-validation-feedback>`);
     expect(el).shadowDom.to.equal('');
     el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
     await el.updateComplete;
@@ -18,11 +14,7 @@ describe('lion-validation-feedback', () => {
   });
 
   it('renders the validation type attribute', async () => {
-    const el = await fixture(
-      html`
-        <lion-validation-feedback></lion-validation-feedback>
-      `,
-    );
+    const el = await fixture(html`<lion-validation-feedback></lion-validation-feedback>`);
     el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
     await el.updateComplete;
     expect(el.getAttribute('type')).to.equal('error');
@@ -33,11 +25,7 @@ describe('lion-validation-feedback', () => {
   });
 
   it('success message clears after 3s', async () => {
-    const el = await fixture(
-      html`
-        <lion-validation-feedback></lion-validation-feedback>
-      `,
-    );
+    const el = await fixture(html`<lion-validation-feedback></lion-validation-feedback>`);
 
     const clock = sinon.useFakeTimers();
 
@@ -57,11 +45,7 @@ describe('lion-validation-feedback', () => {
   });
 
   it('does not clear error messages', async () => {
-    const el = await fixture(
-      html`
-        <lion-validation-feedback></lion-validation-feedback>
-      `,
-    );
+    const el = await fixture(html`<lion-validation-feedback></lion-validation-feedback>`);
 
     const clock = sinon.useFakeTimers();
 

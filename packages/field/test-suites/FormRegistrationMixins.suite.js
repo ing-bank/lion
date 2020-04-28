@@ -90,9 +90,7 @@ export const runRegistrationSuite = customConfig => {
           }
 
           render() {
-            return html`
-              <slot></slot>
-            `;
+            return html`<slot></slot>`;
           }
         },
       );
@@ -245,9 +243,7 @@ export const runRegistrationSuite = customConfig => {
             <${childTag}></${childTag}>
           </${portalTag}>
         `);
-        const otherPlace = await fixture(html`
-          <div></div>
-        `);
+        const otherPlace = await fixture(html`<div></div>`);
         otherPlace.appendChild(portal);
         const newField = await fixture(html`
           <${childTag}></${childTag}>
@@ -271,9 +267,7 @@ export const runRegistrationSuite = customConfig => {
             }
 
             render() {
-              return html`
-                <slot></slot>
-              `;
+              return html`<slot></slot>`;
             }
           },
         );

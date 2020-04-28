@@ -242,10 +242,7 @@ describe('remarkExtend', () => {
       '```',
     ].join('\n');
 
-    const parser = unified()
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
+    const parser = unified().use(markdown).use(remarkExtend, { extendMd }).use(mdStringify);
 
     await expectThrowsAsync(
       () => parser.process(input),

@@ -5,9 +5,7 @@ import '../../sb-action-logger.js';
 
 describe('sb-action-logger', () => {
   it('has a default title "Action Logger"', async () => {
-    const el = await fixture(html`
-      <sb-action-logger></sb-action-logger>
-    `);
+    const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
     expect(el.shadowRoot.querySelector('.header__title').innerText).to.equal('Action Logger');
   });
@@ -24,9 +22,7 @@ describe('sb-action-logger', () => {
 
   describe('Logger behavior', () => {
     it('is possible to send something to the logger using the log method', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       el.log('Hello, World!');
 
@@ -37,9 +33,7 @@ describe('sb-action-logger', () => {
     });
 
     it('appends new logs to the logger', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       el.log('Hello, World!');
       el.log('Hello, Planet!');
@@ -53,9 +47,7 @@ describe('sb-action-logger', () => {
     });
 
     it('shows a visual cue whenever something is logged to the logger', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       const cueEl = el.shadowRoot.querySelector('.header__log-cue-overlay');
       expect(cueEl.classList.contains('header__log-cue-overlay--slide')).to.be.false;
@@ -65,9 +57,7 @@ describe('sb-action-logger', () => {
     });
 
     it('has a visual counter that counts the amount of total logs', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       const cueEl = el.shadowRoot.querySelector('.header__log-cue-overlay');
 
@@ -78,9 +68,7 @@ describe('sb-action-logger', () => {
     });
 
     it('has a clear button that clears the logs and resets the counter', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       el.log('Hello, World!');
       el.log('Hello, Planet!');
@@ -92,9 +80,7 @@ describe('sb-action-logger', () => {
     });
 
     it('duplicate consecutive logs are kept as one, adds a visual counter', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
       el.log('Hello, World!');
       el.log('Hello, World!');
@@ -115,9 +101,7 @@ describe('sb-action-logger', () => {
     });
 
     it('can be set to simple mode for only showing a single log statement', async () => {
-      const el = await fixture(html`
-        <sb-action-logger simple></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger simple></sb-action-logger>`);
       el.log('Hello, World!');
       const loggerEl = el.shadowRoot.querySelector('.logger');
 
@@ -138,9 +122,7 @@ describe('sb-action-logger', () => {
 
   describe('Potential Additional Features', () => {
     it.skip('fires a sb-action-logged event when something is logged to the logger', async () => {
-      const el = await fixture(html`
-        <sb-action-logger></sb-action-logger>
-      `);
+      const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
       expect(el).to.be.true;
     });
   });

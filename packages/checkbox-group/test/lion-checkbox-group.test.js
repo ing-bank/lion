@@ -1,6 +1,5 @@
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { expect, fixture, html } from '@open-wc/testing';
-
 import '../lion-checkbox-group.js';
 import '../lion-checkbox.js';
 
@@ -56,11 +55,7 @@ describe('<lion-checkbox-group>', () => {
   });
 
   it("should throw exception if name doesn't end in []", async () => {
-    const el = await fixture(
-      html`
-        <lion-checkbox-group name="woof[]"></lion-checkbox-group>
-      `,
-    );
+    const el = await fixture(html`<lion-checkbox-group name="woof[]"></lion-checkbox-group>`);
     el.name = 'woof';
     let err;
     try {

@@ -1,5 +1,6 @@
 import { LionField } from '@lion/field';
 import '@lion/field/lion-field.js';
+import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { IsNumber, Validator } from '@lion/validate';
 import {
@@ -11,7 +12,6 @@ import {
   triggerFocusFor,
   unsafeStatic,
 } from '@open-wc/testing';
-import { formFixture as fixture } from '@lion/field/test-helpers.js';
 import sinon from 'sinon';
 import '../lion-fieldset.js';
 
@@ -461,9 +461,7 @@ describe('<lion-fieldset>', () => {
       await triggerFocusFor(
         fieldset.formElements['hobbies[]'][fieldset.formElements['gender[]'].length - 1]._inputNode,
       );
-      const el = await fixture(html`
-        <button></button>
-      `);
+      const el = await fixture(html`<button></button>`);
       el.focus();
 
       expect(fieldset.touched).to.be.true;
@@ -540,9 +538,7 @@ describe('<lion-fieldset>', () => {
       `);
 
       await nextFrame();
-      const outside = await fixture(html`
-        <button>outside</button>
-      `);
+      const outside = await fixture(html`<button>outside</button>`);
 
       outside.click();
       expect(el.touched, 'unfocused fieldset should stay untouched').to.be.false;
@@ -569,9 +565,7 @@ describe('<lion-fieldset>', () => {
         }
       }
 
-      const outSideButton = await fixture(html`
-        <button>outside</button>
-      `);
+      const outSideButton = await fixture(html`<button>outside</button>`);
       const el = await fixture(html`
         <${tag} .validators=${[new Input1IsTen()]}>
           <${childTag} name="input1" .validators=${[new IsNumber()]}></${childTag}>
@@ -599,9 +593,7 @@ describe('<lion-fieldset>', () => {
           return hasError;
         }
       }
-      const outSideButton = await fixture(html`
-        <button>outside</button>
-      `);
+      const outSideButton = await fixture(html`<button>outside</button>`);
       const el = await fixture(html`
         <${tag} .validators=${[new Input1IsTen()]}>
           <${childTag} name="input1" .validators=${[new IsNumber()]}></${childTag}>

@@ -1,25 +1,23 @@
+import { isDirective, LitElement } from '@lion/core';
 import {
+  aTimeout,
+  defineCE,
   expect,
   fixture,
   fixtureSync,
-  nextFrame,
-  aTimeout,
-  defineCE,
   html,
+  nextFrame,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { LitElement, isDirective } from '@lion/core';
+import { localize } from '../src/localize.js';
+import { LocalizeMixin } from '../src/LocalizeMixin.js';
 import {
-  localizeTearDown,
-  setupEmptyFakeImportsFor,
-  resetFakeImport,
   fakeImport,
+  localizeTearDown,
+  resetFakeImport,
+  setupEmptyFakeImportsFor,
   setupFakeImport,
 } from '../test-helpers.js';
-
-import { localize } from '../src/localize.js';
-
-import { LocalizeMixin } from '../src/LocalizeMixin.js';
 
 describe('LocalizeMixin', () => {
   afterEach(() => {
@@ -300,9 +298,7 @@ describe('LocalizeMixin', () => {
         }
 
         render() {
-          return html`
-            <p>${this.msgLit('my-element:greeting')}</p>
-          `;
+          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
         }
       },
     );
@@ -333,9 +329,7 @@ describe('LocalizeMixin', () => {
         }
 
         render() {
-          return html`
-            <p>${this.msgLit('my-element:greeting')}</p>
-          `;
+          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
         }
       },
     );
@@ -369,9 +363,7 @@ describe('LocalizeMixin', () => {
         }
 
         render() {
-          return html`
-            <p>${this.msgLit('my-element:greeting')}</p>
-          `;
+          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
         }
       },
     );

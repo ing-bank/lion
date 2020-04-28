@@ -98,12 +98,6 @@ export class LionSelectInvoker extends LionButton {
 
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
-    return html`
-      ${!this.singleOption
-        ? html`
-            <slot name="after"></slot>
-          `
-        : ''}
-    `;
+    return html`${!this.singleOption ? html`<slot name="after"></slot>` : ''}`;
   }
 }

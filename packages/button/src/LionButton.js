@@ -34,12 +34,8 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         <div class="click-area"></div>
         ${this._beforeTemplate()}
         ${browserDetection.isIE11
-          ? html`
-              <div id="${this._buttonId}"><slot></slot></div>
-            `
-          : html`
-              <slot></slot>
-            `}
+          ? html`<div id="${this._buttonId}"><slot></slot></div>`
+          : html`<slot></slot>`}
         ${this._afterTemplate()}
         <slot name="_button"></slot>
       </div>
@@ -165,9 +161,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.__setupDelegationInConstructor();
 
     if (browserDetection.isIE11) {
-      this._buttonId = `button-${Math.random()
-        .toString(36)
-        .substr(2, 10)}`;
+      this._buttonId = `button-${Math.random().toString(36).substr(2, 10)}`;
       this.updateComplete.then(() => this.setAttribute('aria-labelledby', this._buttonId));
     }
   }
