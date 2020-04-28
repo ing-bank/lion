@@ -1,6 +1,5 @@
-import { expect, fixture, defineCE, html } from '@open-wc/testing';
+import { defineCE, expect, fixture, html } from '@open-wc/testing';
 import { css, LitElement } from '../index.js';
-
 import { UpdateStylesMixin } from '../src/UpdateStylesMixin.js';
 
 describe('UpdateStylesMixin', () => {
@@ -24,9 +23,7 @@ describe('UpdateStylesMixin', () => {
         }
 
         render() {
-          return html`
-            <h1 id="header">hey</h1>
-          `;
+          return html`<h1 id="header">hey</h1>`;
         }
       },
     );
@@ -65,9 +62,7 @@ describe('UpdateStylesMixin', () => {
         }
 
         render() {
-          return html`
-            <h1 id="header">hey</h1>
-          `;
+          return html`<h1 id="header">hey</h1>`;
         }
       },
     );

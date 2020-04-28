@@ -1,10 +1,8 @@
-import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
-
 import { localize } from '@lion/localize';
+import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { MaxDate } from '@lion/validate';
-
+import { expect, fixture } from '@open-wc/testing';
 import '../lion-input-date.js';
 
 describe('<lion-input-date>', () => {
@@ -13,23 +11,17 @@ describe('<lion-input-date>', () => {
   });
 
   it('returns undefined when value is empty string', async () => {
-    const el = await fixture(html`
-      <lion-input-date></lion-input-date>
-    `);
+    const el = await fixture(html`<lion-input-date></lion-input-date>`);
     expect(el.parser('')).to.equal(undefined);
   });
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
-    const el = await fixture(html`
-      <lion-input-date></lion-input-date>
-    `);
+    const el = await fixture(html`<lion-input-date></lion-input-date>`);
     expect(el._inputNode.type).to.equal('text');
   });
 
   it('has validator "isDate" applied by default', async () => {
-    const el = await fixture(html`
-      <lion-input-date></lion-input-date>
-    `);
+    const el = await fixture(html`<lion-input-date></lion-input-date>`);
     el.modelValue = '2005/11/10';
     expect(el.hasFeedbackFor).to.include('error');
     expect(el.validationStates).to.have.a.property('error');
@@ -42,9 +34,7 @@ describe('<lion-input-date>', () => {
   });
 
   it("does not throw on invalid dates like new Date('foo')", async () => {
-    const el = await fixture(html`
-      <lion-input-date></lion-input-date>
-    `);
+    const el = await fixture(html`<lion-input-date></lion-input-date>`);
     expect(() => {
       el.modelValue = new Date('foo');
     }).to.not.throw();

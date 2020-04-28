@@ -1,6 +1,6 @@
-import { html, css, ScopedElementsMixin } from '@lion/core';
-import { LionField } from '@lion/field';
 import { ChoiceInputMixin } from '@lion/choice-input';
+import { css, html, ScopedElementsMixin } from '@lion/core';
+import { LionField } from '@lion/field';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
@@ -49,15 +49,11 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   }
 
   _groupOneTemplate() {
-    return html`
-      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._feedbackTemplate()}
-    `;
+    return html`${this._labelTemplate()} ${this._helpTextTemplate()} ${this._feedbackTemplate()}`;
   }
 
   _groupTwoTemplate() {
-    return html`
-      ${this._inputGroupTemplate()}
-    `;
+    return html`${this._inputGroupTemplate()}`;
   }
 
   connectedCallback() {

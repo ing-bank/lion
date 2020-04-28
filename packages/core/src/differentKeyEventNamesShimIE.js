@@ -25,7 +25,7 @@ if (typeof window.KeyboardEvent !== 'function') {
     };
     Object.defineProperty(event, 'key', {
       // eslint-disable-next-line object-shorthand, func-names
-      get: function() {
+      get: function () {
         const key = descriptor.get.call(this);
 
         // eslint-disable-next-line no-prototype-builtins

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { css, html, LitElement } from 'lit-element';
 
 export class LeaTab extends LitElement {
   static get styles() {
@@ -38,8 +38,6 @@ export class LeaTab extends LitElement {
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html`<slot></slot>`;
   }
 }

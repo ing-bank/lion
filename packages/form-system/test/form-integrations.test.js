@@ -4,11 +4,7 @@ import './helpers/umbrella-form.js';
 // Test umbrella form
 describe('Form Integrations', () => {
   it('".serializedValue" returns all non disabled fields based on form structure', async () => {
-    const el = await fixture(
-      html`
-        <umbrella-form></umbrella-form>
-      `,
-    );
+    const el = await fixture(html`<umbrella-form></umbrella-form>`);
     const formEl = el._lionFormNode;
     expect(formEl.serializedValue).to.eql({
       bio: '',

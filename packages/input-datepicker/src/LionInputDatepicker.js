@@ -169,9 +169,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   __createUniqueIdForA11y() {
-    return `${this.localName}-${Math.random()
-      .toString(36)
-      .substr(2, 10)}`;
+    return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
 
   _requestUpdate(name, oldValue) {

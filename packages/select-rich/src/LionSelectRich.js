@@ -8,9 +8,7 @@ import './differentKeyNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 function uuid() {
-  return Math.random()
-    .toString(36)
-    .substr(2, 10);
+  return Math.random().toString(36).substr(2, 10);
 }
 
 function detectInteractionMode() {

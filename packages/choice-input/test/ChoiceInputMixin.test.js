@@ -17,16 +17,12 @@ describe('ChoiceInputMixin', () => {
   });
 
   it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(html`
-      <choice-input hidden></choice-input>
-    `);
+    const el = await fixture(html`<choice-input hidden></choice-input>`);
     expect(el).not.to.be.displayed;
   });
 
   it('has choiceValue', async () => {
-    const el = await fixture(html`
-      <choice-input .choiceValue=${'foo'}></choice-input>
-    `);
+    const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
 
     expect(el.choiceValue).to.equal('foo');
     expect(el.modelValue).to.deep.equal({
@@ -38,9 +34,7 @@ describe('ChoiceInputMixin', () => {
   it('can handle complex data via choiceValue', async () => {
     const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
-    const el = await fixture(html`
-      <choice-input .choiceValue=${date}></choice-input>
-    `);
+    const el = await fixture(html`<choice-input .choiceValue=${date}></choice-input>`);
 
     expect(el.choiceValue).to.equal(date);
     expect(el.modelValue.value).to.equal(date);
@@ -134,9 +128,7 @@ describe('ChoiceInputMixin', () => {
     });
 
     it('synchronizes modelValue to checked state and vice versa', async () => {
-      const el = await fixture(html`
-        <choice-input .choiceValue=${'foo'}></choice-input>
-      `);
+      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
       expect(el.checked).to.be.false;
       expect(el.modelValue).to.deep.equal({
         checked: false,
@@ -153,9 +145,7 @@ describe('ChoiceInputMixin', () => {
     it('ensures optimal synchronize performance by preventing redundant computation steps', async () => {
       /* we are checking private apis here to make sure we do not have cyclical updates
         which can be quite common for these type of connected data */
-      const el = await fixture(html`
-        <choice-input .choiceValue=${'foo'}></choice-input>
-      `);
+      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
       expect(el.checked).to.be.false;
 
       const spyModelCheckedToChecked = sinon.spy(el, '__syncModelCheckedToChecked');
@@ -224,9 +214,7 @@ describe('ChoiceInputMixin', () => {
 
   describe('Format/parse/serialize loop', () => {
     it('creates a modelValue object like { checked: true, value: foo } on init', async () => {
-      const el = await fixture(html`
-        <choice-input .choiceValue=${'foo'}></choice-input>
-      `);
+      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
       expect(el.modelValue).deep.equal({ value: 'foo', checked: false });
 
       const elChecked = await fixture(html`
@@ -248,9 +236,7 @@ describe('ChoiceInputMixin', () => {
 
   describe('Interaction states', () => {
     it('is considered prefilled when checked and not considered prefilled when unchecked', async () => {
-      const el = await fixture(html`
-        <choice-input .checked=${true}></choice-input>
-      `);
+      const el = await fixture(html`<choice-input .checked=${true}></choice-input>`);
       expect(el.prefilled).equal(true, 'checked element not considered prefilled');
 
       const elUnchecked = await fixture(`<choice-input></choice-input>`);

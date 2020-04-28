@@ -389,11 +389,7 @@ describe('lion-button', () => {
   describe('click event', () => {
     it('is fired once', async () => {
       const clickSpy = sinon.spy();
-      const el = await fixture(
-        html`
-          <lion-button @click="${clickSpy}">foo</lion-button>
-        `,
-      );
+      const el = await fixture(html`<lion-button @click="${clickSpy}">foo</lion-button>`);
 
       getTopElement(el).click();
 

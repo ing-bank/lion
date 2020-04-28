@@ -1,14 +1,11 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-
 import '../lion-switch-button.js';
 
 describe('lion-switch-button', () => {
   let el;
   beforeEach(async () => {
-    el = await fixture(html`
-      <lion-switch-button></lion-switch-button>
-    `);
+    el = await fixture(html`<lion-switch-button></lion-switch-button>`);
   });
 
   it('should be focusable', () => {

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 import { LionField } from '@lion/field';
 import { LionFieldset } from '@lion/fieldset';
 
@@ -84,19 +84,11 @@ export class HelperOutput extends LitElement {
           Interaction States
         </caption>
         <tr>
-          ${this.show.map(
-            prop => html`
-              <th>${prop}</th>
-            `,
-          )}
+          ${this.show.map(prop => html`<th>${prop}</th>`)}
         </tr>
         <tr></tr>
         <tr>
-          ${this.show.map(
-            prop => html`
-              <td>${this.__renderProp(field[prop])}</td>
-            `,
-          )}
+          ${this.show.map(prop => html`<td>${this.__renderProp(field[prop])}</td>`)}
         </tr>
       </table>
     `;

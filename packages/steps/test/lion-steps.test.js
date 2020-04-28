@@ -1,8 +1,7 @@
+import { expect, fixture, html, nextFrame, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
-import { expect, fixture, html, oneEvent, nextFrame } from '@open-wc/testing';
-
-import '../lion-steps.js';
 import '../lion-step.js';
+import '../lion-steps.js';
 
 async function checkWorkflow(steps, expected) {
   return new Promise(resolve => {
@@ -28,18 +27,12 @@ async function checkWorkflow(steps, expected) {
 
 describe('lion-steps', () => {
   it('can be instantiated', async () => {
-    const el = await fixture(html`
-      <lion-steps> </lion-steps>
-    `);
+    const el = await fixture(html`<lion-steps> </lion-steps>`);
     expect(el).to.be.a('HTMLElement');
   });
 
   it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(
-      html`
-        <lion-steps hidden> </lion-steps>
-      `,
-    );
+    const el = await fixture(html`<lion-steps hidden> </lion-steps>`);
     expect(el).not.to.be.displayed;
   });
 

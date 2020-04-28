@@ -42,11 +42,11 @@ export class LionValidationFeedback extends LitElement {
   render() {
     return html`
       ${this.feedbackData &&
-        this.feedbackData.map(
-          ({ message, type, validator }) => html`
-            ${this._messageTemplate({ message, type, validator })}
-          `,
-        )}
+      this.feedbackData.map(
+        ({ message, type, validator }) => html`
+          ${this._messageTemplate({ message, type, validator })}
+        `,
+      )}
     `;
   }
 }

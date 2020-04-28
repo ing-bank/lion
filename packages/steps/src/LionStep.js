@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 
 /**
  * `LionStep` is one of many in a LionSteps Controller
@@ -96,9 +96,7 @@ export class LionStep extends LitElement {
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html`<slot></slot>`;
   }
 
   firstUpdated() {
