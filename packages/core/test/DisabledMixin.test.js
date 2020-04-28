@@ -1,5 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-
 import { LitElement } from '../index.js';
 import { DisabledMixin } from '../src/DisabledMixin.js';
 
@@ -10,9 +9,7 @@ describe('DisabledMixin', () => {
   });
 
   it('reflects disabled to attribute', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     expect(el.hasAttribute('disabled')).to.be.false;
     el.disabled = true;
     await el.updateComplete;
@@ -20,9 +17,7 @@ describe('DisabledMixin', () => {
   });
 
   it('can be requested to be disabled', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     expect(el.disabled).to.be.true;
     await el.updateComplete;
@@ -30,9 +25,7 @@ describe('DisabledMixin', () => {
   });
 
   it('will not allow to become enabled after makeRequestToBeDisabled()', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     expect(el.disabled).to.be.true;
 
@@ -41,18 +34,14 @@ describe('DisabledMixin', () => {
   });
 
   it('will stay disabled after retractRequestToBeDisabled() if it was disabled before', async () => {
-    const el = await fixture(html`
-      <can-be-disabled disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     el.retractRequestToBeDisabled();
     expect(el.disabled).to.be.true;
   });
 
   it('will become enabled after retractRequestToBeDisabled() if it was enabled before', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     expect(el.disabled).to.be.true;
     el.retractRequestToBeDisabled();
@@ -60,9 +49,7 @@ describe('DisabledMixin', () => {
   });
 
   it('may allow multiple calls to makeRequestToBeDisabled()', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     el.makeRequestToBeDisabled();
     el.retractRequestToBeDisabled();
@@ -70,9 +57,7 @@ describe('DisabledMixin', () => {
   });
 
   it('will restore last state after retractRequestToBeDisabled()', async () => {
-    const el = await fixture(html`
-      <can-be-disabled></can-be-disabled>
-    `);
+    const el = await fixture(html`<can-be-disabled></can-be-disabled>`);
     el.makeRequestToBeDisabled();
     el.disabled = true;
     el.retractRequestToBeDisabled();

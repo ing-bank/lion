@@ -20,10 +20,7 @@ const { remarkExtend } = require('remark-extend');
 const sourceMd = '# Headline';
 const extendMd = 'extending instructions';
 
-const parser = unified()
-  .use(markdown)
-  .use(remarkExtend, { extendMd })
-  .use(mdStringify);
+const parser = unified().use(markdown).use(remarkExtend, { extendMd }).use(mdStringify);
 const result = await parser.process(sourceMd);
 ```
 

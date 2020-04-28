@@ -1,4 +1,4 @@
-import { html, nothing, TemplateResult, css, render, LitElement } from '@lion/core';
+import { css, html, LitElement, nothing, render, TemplateResult } from '@lion/core';
 import { icons } from './icons.js';
 
 function unwrapSvg(wrappedSvgObject) {
@@ -107,9 +107,7 @@ export class LionIcon extends LitElement {
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html`<slot></slot>`;
   }
 
   connectedCallback() {

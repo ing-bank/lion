@@ -1,7 +1,6 @@
-import { expect, fixture, defineCE, unsafeStatic, html } from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LitElement } from '../index.js';
-
 import { DelegateMixin } from '../src/DelegateMixin.js';
 
 describe('DelegateMixin', () => {
@@ -21,9 +20,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -46,9 +43,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -107,9 +102,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
 
         foo() {
@@ -136,9 +129,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -173,9 +164,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <delegate-argument-sub id="sub"></delegate-argument-sub>
-          `;
+          return html`<delegate-argument-sub id="sub"></delegate-argument-sub>`;
         }
       },
     );
@@ -199,9 +188,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -224,9 +211,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -252,9 +237,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -277,9 +260,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -300,9 +281,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <button id="button1">with delegation</button>
-          `;
+          return html`<button id="button1">with delegation</button>`;
         }
       },
     );
@@ -404,9 +383,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <div></div>
-          `;
+          return html`<div></div>`;
         }
       },
     );
@@ -431,9 +408,7 @@ describe('DelegateMixin', () => {
         }
 
         render() {
-          return html`
-            <div></div>
-          `;
+          return html`<div></div>`;
         }
       },
     );

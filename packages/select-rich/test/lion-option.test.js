@@ -1,39 +1,28 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-
 import '../lion-option.js';
 
 describe('lion-option', () => {
   describe('Values', () => {
     it('has a modelValue', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10}></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10}></lion-option>`);
       expect(el.modelValue).to.deep.equal({ value: 10, checked: false });
     });
 
     it('can be checked', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10} checked></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10} checked></lion-option>`);
       expect(el.modelValue).to.deep.equal({ value: 10, checked: true });
     });
 
     it('is hidden when attribute hidden is true', async () => {
-      const el = await fixture(
-        html`
-          <lion-option .choiceValue=${10} hidden></lion-option>
-        `,
-      );
+      const el = await fixture(html`<lion-option .choiceValue=${10} hidden></lion-option>`);
       expect(el).not.to.be.displayed;
     });
   });
 
   describe('Accessibility', () => {
     it('has the "option" role', async () => {
-      const el = await fixture(html`
-        <lion-option></lion-option>
-      `);
+      const el = await fixture(html`<lion-option></lion-option>`);
       expect(el.getAttribute('role')).to.equal('option');
     });
 
@@ -70,9 +59,7 @@ describe('lion-option', () => {
 
   describe('State reflection', () => {
     it('asynchronously adds the attribute "active" when active', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10}></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10}></lion-option>`);
       expect(el.active).to.equal(false);
       expect(el.hasAttribute('active')).to.be.false;
 
@@ -90,9 +77,7 @@ describe('lion-option', () => {
     });
 
     it('does become checked on [click]', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10}></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10}></lion-option>`);
       expect(el.checked).to.be.false;
       el.click();
       await el.updateComplete;
@@ -112,18 +97,14 @@ describe('lion-option', () => {
 
   describe('Disabled', () => {
     it('does not becomes active on [mouseenter]', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10} disabled></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10} disabled></lion-option>`);
       expect(el.active).to.be.false;
       el.dispatchEvent(new Event('mouseenter'));
       expect(el.active).to.be.false;
     });
 
     it('does not become checked on [click]', async () => {
-      const el = await fixture(html`
-        <lion-option .choiceValue=${10} disabled></lion-option>
-      `);
+      const el = await fixture(html`<lion-option .choiceValue=${10} disabled></lion-option>`);
       expect(el.checked).to.be.false;
       el.click();
       await el.updateComplete;

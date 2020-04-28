@@ -8,9 +8,7 @@ import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDo
  * @param {string} prefix
  */
 function uuid(prefix) {
-  return `${prefix}-${Math.random()
-    .toString(36)
-    .substr(2, 10)}`;
+  return `${prefix}-${Math.random().toString(36).substr(2, 10)}`;
 }
 
 /**
@@ -304,15 +302,11 @@ export const FormControlMixin = dedupeMixin(
       }
 
       _groupOneTemplate() {
-        return html`
-          ${this._labelTemplate()} ${this._helpTextTemplate()}
-        `;
+        return html` ${this._labelTemplate()} ${this._helpTextTemplate()} `;
       }
 
       _groupTwoTemplate() {
-        return html`
-          ${this._inputGroupTemplate()} ${this._feedbackTemplate()}
-        `;
+        return html` ${this._inputGroupTemplate()} ${this._feedbackTemplate()} `;
       }
 
       // eslint-disable-next-line class-methods-use-this

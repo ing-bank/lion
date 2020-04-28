@@ -1,11 +1,10 @@
-import { expect, fixture, aTimeout } from '@open-wc/testing';
 import { html } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-
+import { aTimeout, expect, fixture } from '@open-wc/testing';
+import '../lion-input-amount.js';
 import { formatAmount } from '../src/formatters.js';
 import { parseAmount } from '../src/parsers.js';
-import '../lion-input-amount.js';
 
 describe('<lion-input-amount>', () => {
   beforeEach(() => {
@@ -21,9 +20,7 @@ describe('<lion-input-amount>', () => {
     // JOD displays 3 fraction digits by default
     localize.locale = 'fr-FR';
     const el = await fixture(
-      html`
-        <lion-input-amount currency="JOD" .modelValue="${123}"></lion-input-amount>
-      `,
+      html`<lion-input-amount currency="JOD" .modelValue="${123}"></lion-input-amount>`,
     );
     expect(el.formattedValue).to.equal('123,000');
   });

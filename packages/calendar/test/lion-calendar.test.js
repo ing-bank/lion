@@ -1,15 +1,12 @@
-import { expect, fixture } from '@open-wc/testing';
-import '@lion/core/test-helpers/keyboardEventShimIE.js';
-import sinon from 'sinon';
-
 import { html } from '@lion/core';
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-
-import { CalendarObject, DayObject } from '../test-helpers.js';
-
-import { isSameDate } from '../src/utils/isSameDate.js';
+import { expect, fixture } from '@open-wc/testing';
+import sinon from 'sinon';
 import '../lion-calendar.js';
+import { isSameDate } from '../src/utils/isSameDate.js';
+import { CalendarObject, DayObject } from '../test-helpers.js';
 
 describe('<lion-calendar>', () => {
   beforeEach(() => {
@@ -18,11 +15,7 @@ describe('<lion-calendar>', () => {
 
   describe('Structure', () => {
     it('implements BEM structure', async () => {
-      const el = await fixture(
-        html`
-          <lion-calendar></lion-calendar>
-        `,
-      );
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
       expect(el.shadowRoot.querySelector('.calendar')).to.exist;
       expect(el.shadowRoot.querySelector('.calendar__header')).to.exist;
@@ -35,11 +28,7 @@ describe('<lion-calendar>', () => {
     it('has heading with month and year', async () => {
       const clock = sinon.useFakeTimers({ now: new Date('2000/12/01').getTime() });
 
-      const el = await fixture(
-        html`
-          <lion-calendar></lion-calendar>
-        `,
-      );
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
       expect(el.shadowRoot.querySelector('.calendar__month-heading')).dom.to.equal(`
         <h2
@@ -56,9 +45,7 @@ describe('<lion-calendar>', () => {
 
     it('has previous month button', async () => {
       const el = await fixture(
-        html`
-          <lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>
-        `,
+        html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
       );
       expect(el.shadowRoot.querySelector('.calendar__previous-month-button')).dom.to.equal(`
         <button class="calendar__previous-month-button" aria-label="Previous month, October 2019" title="Previous month, October 2019">&lt;</button>
@@ -67,9 +54,7 @@ describe('<lion-calendar>', () => {
 
     it('has next month button', async () => {
       const el = await fixture(
-        html`
-          <lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>
-        `,
+        html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
       );
       expect(el.shadowRoot.querySelector('.calendar__next-month-button')).dom.to.equal(`
         <button class="calendar__next-month-button" aria-label="Next month, December 2019" title="Next month, December 2019">&gt;</button>
@@ -90,9 +75,7 @@ describe('<lion-calendar>', () => {
     it('sets "centralDate" to today by default', async () => {
       const clock = sinon.useFakeTimers({ now: new Date('2013/03/15').getTime() });
 
-      const el = await fixture(html`
-        <lion-calendar></lion-calendar>
-      `);
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
       const elObj = new CalendarObject(el);
       expect(isSameDate(el.centralDate, new Date())).to.be.true;
       expect(elObj.activeMonthAndYear).to.equal('March 2013');
@@ -172,9 +155,7 @@ describe('<lion-calendar>', () => {
     });
 
     it('does not set "selectedDate" by default', async () => {
-      const el = await fixture(html`
-        <lion-calendar></lion-calendar>
-      `);
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
       const elObj = new CalendarObject(el);
       const today = new Date();
       expect(el.selectedDate).to.equal(undefined);
@@ -236,9 +217,7 @@ describe('<lion-calendar>', () => {
     });
 
     it('has a focusDate() method to focus an arbitrary date', async () => {
-      const el = await fixture(html`
-        <lion-calendar></lion-calendar>
-      `);
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
       const elObj = new CalendarObject(el);
       await el.focusDate(new Date('2016/06/10'));
       expect(isSameDate(el.focusedDate, new Date('2016/06/10'))).to.be.true;
@@ -364,11 +343,7 @@ describe('<lion-calendar>', () => {
             return d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0;
           }
 
-          const el = await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          );
+          const el = await fixture(html`<lion-calendar></lion-calendar>`);
           // The central date will be today's date: it's the date all other
           // dates in the month view will be derived from.
           expect(isNormalizedDate(el.centralDate)).to.be.true;
@@ -406,9 +381,7 @@ describe('<lion-calendar>', () => {
     describe('Title', () => {
       it('contains secondary title displaying the current month and year in focus', async () => {
         const el = await fixture(
-          html`
-            <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
-          `,
+          html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
         expect(elObj.activeMonthAndYear).to.equal('December 2000');
@@ -416,9 +389,7 @@ describe('<lion-calendar>', () => {
 
       it('updates the secondary title when the displayed month/year changes', async () => {
         const el = await fixture(
-          html`
-            <lion-calendar .centralDate="${new Date('2000/12/12')}"></lion-calendar>
-          `,
+          html`<lion-calendar .centralDate="${new Date('2000/12/12')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
         el.centralDate = new Date('1999/10/12');
@@ -428,13 +399,7 @@ describe('<lion-calendar>', () => {
 
       describe('Accessibility', () => {
         it('has aria-atomic="true" set on the secondary title', async () => {
-          const elObj = new CalendarObject(
-            await fixture(
-              html`
-                <lion-calendar></lion-calendar>
-              `,
-            ),
-          );
+          const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
           expect(elObj.monthHeadingEl.getAttribute('aria-atomic')).to.equal('true');
         });
       });
@@ -443,9 +408,7 @@ describe('<lion-calendar>', () => {
     describe('Navigation', () => {
       it('has a button for navigation to previous month', async () => {
         const el = await fixture(
-          html`
-            <lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>
-          `,
+          html`<lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
         expect(elObj.previousMonthButtonEl).not.to.equal(null);
@@ -462,9 +425,7 @@ describe('<lion-calendar>', () => {
 
       it('has a button for navigation to next month', async () => {
         const el = await fixture(
-          html`
-            <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
-          `,
+          html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
         expect(elObj.nextMonthButtonEl).not.to.equal(null);
@@ -507,9 +468,7 @@ describe('<lion-calendar>', () => {
       it('handles switch to previous month when dates are disabled', async () => {
         const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-        const el = await fixture(html`
-          <lion-calendar></lion-calendar>
-        `);
+        const el = await fixture(html`<lion-calendar></lion-calendar>`);
         const elObj = new CalendarObject(el);
         expect(elObj.activeMonthAndYear).to.equal('December 2000');
 
@@ -530,9 +489,7 @@ describe('<lion-calendar>', () => {
       it('handles switch to next month when dates are disabled', async () => {
         const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-        const el = await fixture(html`
-          <lion-calendar></lion-calendar>
-        `);
+        const el = await fixture(html`<lion-calendar></lion-calendar>`);
         const elObj = new CalendarObject(el);
         expect(elObj.activeMonthAndYear).to.equal('December 2000');
 
@@ -601,9 +558,7 @@ describe('<lion-calendar>', () => {
   describe('Calendar body (months view)', () => {
     it('renders the days of the week as table headers', async () => {
       const el = await fixture(
-        html`
-          <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
-        `,
+        html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
       );
       const elObj = new CalendarObject(el);
       expect(elObj.weekdayHeaderEls.map(h => h.textContent.trim())).to.deep.equal([
@@ -621,11 +576,7 @@ describe('<lion-calendar>', () => {
       it('adds "today" attribute if date is today', async () => {
         const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-        const el = await fixture(
-          html`
-            <lion-calendar></lion-calendar>
-          `,
-        );
+        const el = await fixture(html`<lion-calendar></lion-calendar>`);
         const elObj = new CalendarObject(el);
         expect(elObj.getDayEl(15).hasAttribute('today')).to.be.true;
 
@@ -636,9 +587,7 @@ describe('<lion-calendar>', () => {
 
       it('adds "selected" attribute to the selected date', async () => {
         const el = await fixture(
-          html`
-            <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
-          `,
+          html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
         expect(elObj.checkForAllDayObjs(obj => obj.el.hasAttribute('selected'), [12])).to.equal(
@@ -929,9 +878,7 @@ describe('<lion-calendar>', () => {
         it('is today if no selected date is available', async () => {
           const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-          const el = await fixture(html`
-            <lion-calendar></lion-calendar>
-          `);
+          const el = await fixture(html`<lion-calendar></lion-calendar>`);
           const elObj = new CalendarObject(el);
           expect(elObj.centralDayObj.monthday).to.equal(15);
 
@@ -1021,37 +968,19 @@ describe('<lion-calendar>', () => {
       // As an enhancement, we detect when grid boundaries day are exceeded, so we move to
       // next/previous month.
       it('has role="application" to activate keyboard navigation', async () => {
-        const elObj = new CalendarObject(
-          await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          ),
-        );
+        const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
         expect(elObj.rootEl.getAttribute('role')).to.equal('application');
       });
 
       it(`renders the calendar as a table element with role="grid", aria-readonly="true" and
         a caption (month + year)`, async () => {
-        const elObj = new CalendarObject(
-          await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          ),
-        );
+        const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
         expect(elObj.gridEl.getAttribute('role')).to.equal('grid');
         expect(elObj.gridEl.getAttribute('aria-readonly')).to.equal('true');
       });
 
       it('adds aria-labels to the weekday table headers', async () => {
-        const elObj = new CalendarObject(
-          await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          ),
-        );
+        const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
         expect(elObj.weekdayHeaderEls.map(h => h.getAttribute('aria-label'))).to.eql([
           'Sunday',
           'Monday',
@@ -1064,13 +993,7 @@ describe('<lion-calendar>', () => {
       });
 
       it('renders each day as a button inside a table cell', async () => {
-        const elObj = new CalendarObject(
-          await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          ),
-        );
+        const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
         const hasBtn = d => d.el.tagName === 'BUTTON';
         expect(elObj.checkForAllDayObjs(hasBtn)).to.equal(true);
       });
@@ -1099,13 +1022,7 @@ describe('<lion-calendar>', () => {
       });
 
       it('sets aria-current="date" to todays button', async () => {
-        const elObj = new CalendarObject(
-          await fixture(
-            html`
-              <lion-calendar></lion-calendar>
-            `,
-          ),
-        );
+        const elObj = new CalendarObject(await fixture(html`<lion-calendar></lion-calendar>`));
         const hasAriaCurrent = d => d.buttonEl.getAttribute('aria-current') === 'date';
         const monthday = new Date().getDate();
         expect(elObj.checkForAllDayObjs(hasAriaCurrent, [monthday])).to.equal(true);
@@ -1247,11 +1164,7 @@ describe('<lion-calendar>', () => {
 
   describe('Accessibility', () => {
     it('is accessible', async () => {
-      const el = await fixture(
-        html`
-          <lion-calendar></lion-calendar>
-        `,
-      );
+      const el = await fixture(html`<lion-calendar></lion-calendar>`);
       await expect(el).to.be.accessible();
     });
 
@@ -1259,9 +1172,7 @@ describe('<lion-calendar>', () => {
       const today = new Date();
       const selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
       const el = await fixture(
-        html`
-          <lion-calendar .selectedDate="${selectedDate}"></lion-calendar>
-        `,
+        html`<lion-calendar .selectedDate="${selectedDate}"></lion-calendar>`,
       );
       await expect(el).to.be.accessible();
     });
@@ -1278,11 +1189,7 @@ describe('<lion-calendar>', () => {
     });
 
     it('is hidden when attribute hidden is true', async () => {
-      const el = await fixture(
-        html`
-          <lion-calendar hidden></lion-calendar>
-        `,
-      );
+      const el = await fixture(html`<lion-calendar hidden></lion-calendar>`);
       expect(el).not.to.be.displayed;
     });
   });

@@ -5,9 +5,7 @@ import { overlays } from '../src/overlays.js';
 
 const withDefaultGlobalConfig = () => ({
   placementMode: 'global',
-  contentNode: fixtureSync(html`
-    <p>my content</p>
-  `),
+  contentNode: fixtureSync(html`<p>my content</p>`),
 });
 
 describe('Global Positioning', () => {

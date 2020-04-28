@@ -1,11 +1,10 @@
-import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
-import sinon from 'sinon';
 import { LitElement } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
+import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '../index.js';
 import { AlwaysInvalid } from '../test-helpers.js';
-
-import { Validator, Required, MinLength, DefaultSuccess, ValidateMixin } from '../index.js';
 
 export function runValidateMixinFeedbackPart() {
   describe('Validity Feedback', () => {
@@ -241,9 +240,7 @@ export function runValidateMixinFeedbackPart() {
           }
 
           render() {
-            return html`
-              Custom for ${this.feedbackData[0].validator.constructor.name}
-            `;
+            return html`Custom for ${this.feedbackData[0].validator.constructor.name}`;
           }
         },
       );

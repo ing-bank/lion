@@ -1,41 +1,26 @@
-import { expect, fixture, fixtureSync, aTimeout, html } from '@open-wc/testing';
 import { until } from '@lion/core';
-import { icons } from '../src/icons.js';
-
-import heartSvg from './heart.svg.js';
-import hammerSvg from './hammer.svg.js';
+import { aTimeout, expect, fixture, fixtureSync, html } from '@open-wc/testing';
 import '../lion-icon.js';
+import { icons } from '../src/icons.js';
+import hammerSvg from './hammer.svg.js';
+import heartSvg from './heart.svg.js';
 
 describe('lion-icon', () => {
   it('supports svg icon as a function which recieves a tag function as an argument and returns a tagged template literal', async () => {
     const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${iconFunction}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${iconFunction}></lion-icon>`);
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
   });
 
   it('is hidden when attribute hidden is true', async () => {
     const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${iconFunction} hidden></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${iconFunction} hidden></lion-icon>`);
     expect(el).not.to.be.displayed;
   });
 
   it('supports svg icon as a lit-html template', async () => {
-    const icon = html`
-      <svg data-test-id="svg"></svg>
-    `;
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${icon}></lion-icon>
-      `,
-    );
+    const icon = html`<svg data-test-id="svg"></svg>`;
+    const el = await fixture(html`<lion-icon .svg=${icon}></lion-icon>`);
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
   });
 
@@ -43,27 +28,15 @@ describe('lion-icon', () => {
     const errorMessage =
       'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"';
     expect(() => {
-      fixtureSync(
-        html`
-          <lion-icon .svg=${'<svg></svg>'}></lion-icon>
-        `,
-      );
+      fixtureSync(html`<lion-icon .svg=${'<svg></svg>'}></lion-icon>`);
     }).to.throw(Error, errorMessage);
     expect(() => {
-      fixtureSync(
-        html`
-          <lion-icon .svg=${() => '<svg></svg>'}></lion-icon>
-        `,
-      );
+      fixtureSync(html`<lion-icon .svg=${() => '<svg></svg>'}></lion-icon>`);
     }).to.throw(Error, errorMessage);
   });
 
   it('displays an svg icon with an aria label attribute', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>`);
 
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
     expect(el.getAttribute('role')).to.equal('img');
@@ -72,49 +45,29 @@ describe('lion-icon', () => {
   });
 
   it('displays an svg icon with an aria hidden attribute', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${hammerSvg}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${hammerSvg}></lion-icon>`);
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-hammer');
     expect(el.getAttribute('aria-hidden')).to.equal('true');
     expect(el.hasAttribute('aria-label')).to.equal(false);
   });
 
   it('is accessible with an aria label', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>`);
     await expect(el).to.be.accessible();
   });
 
   it('is accessible without an aria label', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg}></lion-icon>`);
     await expect(el).to.be.accessible();
   });
 
   it('expects svg-icons to have the attribute `focusable="false"` so the icon doesn\'t appear in tab-order in IE/Edge', async () => {
-    const icon = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
-      `,
-    );
+    const icon = await fixture(html`<lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>`);
     expect(icon.children[0].getAttribute('focusable')).to.equal('false');
   });
 
   it('can change the displayed icon', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>`);
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
     el.svg = hammerSvg;
     await el.updateComplete;
@@ -122,16 +75,8 @@ describe('lion-icon', () => {
   });
 
   it('can add or remove the aria-label attribute', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>
-      `,
-    );
-    const elHammer = await fixture(
-      html`
-        <lion-icon .svg=${hammerSvg}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg} aria-label="Love"></lion-icon>`);
+    const elHammer = await fixture(html`<lion-icon .svg=${hammerSvg}></lion-icon>`);
 
     // verify initial values
     expect(el.getAttribute('aria-label')).to.equal('Love');
@@ -182,11 +127,7 @@ describe('lion-icon', () => {
   });
 
   it('does not render "undefined" if changed from valid input to undefined', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg}></lion-icon>`);
     await el.updateComplete;
     el.svg = undefined;
     await el.updateComplete;
@@ -194,11 +135,7 @@ describe('lion-icon', () => {
   });
 
   it('does not render "null" if changed from valid input to null', async () => {
-    const el = await fixture(
-      html`
-        <lion-icon .svg=${heartSvg}></lion-icon>
-      `,
-    );
+    const el = await fixture(html`<lion-icon .svg=${heartSvg}></lion-icon>`);
     await el.updateComplete;
     el.svg = null;
     await el.updateComplete;
@@ -208,11 +145,7 @@ describe('lion-icon', () => {
   it('supports icons using an icon id', async () => {
     try {
       icons.addIconResolver('foo', () => heartSvg);
-      const el = await fixture(
-        html`
-          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
-        `,
-      );
+      const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);
 
       expect(el.children[0].dataset.testId).to.equal('svg-heart');
     } finally {
@@ -223,11 +156,7 @@ describe('lion-icon', () => {
   it('clears rendered icon when icon id is removed', async () => {
     try {
       icons.addIconResolver('foo', () => heartSvg);
-      const el = await fixture(
-        html`
-          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
-        `,
-      );
+      const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);
       await el.updateComplete;
       el.removeAttribute('icon-id');
       await el.updateComplete;
@@ -247,11 +176,7 @@ describe('lion-icon', () => {
         'bar',
         () => new Promise(resolve => setTimeout(() => resolve(hammerSvg), 4)),
       );
-      const el = await fixture(
-        html`
-          <lion-icon icon-id="foo:lorem:ipsum"></lion-icon>
-        `,
-      );
+      const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);
 
       await el.updateComplete;
       el.iconId = 'bar:lorem:ipsum';
