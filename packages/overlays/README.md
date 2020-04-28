@@ -1,7 +1,5 @@
 # Overlay System
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
 
 Manages their position on the screen relative to other elements, including other overlays.

@@ -1,7 +1,5 @@
 # Validate
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 ## Features
 
 - allow for advanced UX scenarios by updating validation state on every value change

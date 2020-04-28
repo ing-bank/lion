@@ -1,7 +1,5 @@
 # Fieldset
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-fieldset` groups multiple input fields or other fieldsets together.
 
 ## Live Demo/Documentation

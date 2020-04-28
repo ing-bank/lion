@@ -1,7 +1,5 @@
 # Tooltip
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-tooltip` is a component used for basic popups on hover.
 Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard,
 or if the invoker element is focused.

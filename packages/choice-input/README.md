@@ -1,7 +1,5 @@
 # ChoiceInputMixin
 
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
 `lion-choice-input` mixin is a fundamental building block of form controls which return a checked-state. It is used in:
 
 - [lion-checkbox](../checkbox/)
