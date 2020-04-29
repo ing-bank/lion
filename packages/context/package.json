@@ -1,0 +1,39 @@
+{
+  "name": "dependency-injection",
+  "version": "0.7.2",
+  "description": "Standalone calendar",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/calendar"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start:no-context": "es-dev-server -c demo/no-context/server.js",
+    "start:with-context": "es-dev-server -c demo/with-context/server.js",
+    "test": "cd ../../ && yarn test --grep \"packages/calendar/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/calendar/test/**/*.test.js\""
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "calendar"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "stories",
+    "test",
+    "test-helpers",
+    "translations",
+    "*.js"
+  ]
+}
