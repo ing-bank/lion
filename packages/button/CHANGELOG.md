@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.12](https://github.com/ing-bank/lion/compare/@lion/button@0.5.11...@lion/button@0.5.12) (2020-04-29)
+
+
+### Bug Fixes
+
+* add display:none for hidden ([#692](https://github.com/ing-bank/lion/issues/692)) ([9731771](https://github.com/ing-bank/lion/commit/9731771c23a5ed8661558e62cb5e34b62cc2b8b7))
+* **button:** adjust button to more sensible default styling ([#674](https://github.com/ing-bank/lion/issues/674)) ([78cd503](https://github.com/ing-bank/lion/commit/78cd503b5ef4c54cce5bae5008397e1ce1242133))
+
+
+
+
+
 ## [0.5.11](https://github.com/ing-bank/lion/compare/@lion/button@0.5.10...@lion/button@0.5.11) (2020-04-02)
 
 **Note:** Version bump only for package @lion/button

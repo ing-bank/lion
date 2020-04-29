@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.2](https://github.com/ing-bank/lion/compare/@lion/field@0.12.1...@lion/field@0.12.2) (2020-04-29)
+
+
+### Bug Fixes
+
+* add display:none for hidden ([#692](https://github.com/ing-bank/lion/issues/692)) ([9731771](https://github.com/ing-bank/lion/commit/9731771c23a5ed8661558e62cb5e34b62cc2b8b7))
+
+
+
+
+
 ## [0.12.1](https://github.com/ing-bank/lion/compare/@lion/field@0.12.0...@lion/field@0.12.1) (2020-04-02)
 
 

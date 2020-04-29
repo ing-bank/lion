@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.2](https://github.com/ing-bank/lion/compare/@lion/localize@0.9.1...@lion/localize@0.9.2) (2020-04-29)
+
+
+### Bug Fixes
+
+* **localization:** force TR currency code at the end ([#641](https://github.com/ing-bank/lion/issues/641)) ([89a84a8](https://github.com/ing-bank/lion/commit/89a84a8b29969a018d28af4dadc509709caaa7c3))
+
+
+
+
+
 ## [0.9.1](https://github.com/ing-bank/lion/compare/@lion/localize@0.9.0...@lion/localize@0.9.1) (2020-04-02)
 
 **Note:** Version bump only for package @lion/localize

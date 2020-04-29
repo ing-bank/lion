@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Overlays System using lit-html for rendering",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -36,7 +36,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.1",
+    "@lion/core": "0.5.2",
     "popper.js": "^1.15.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@lion/icon",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A web component easily displaying svg icons",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -34,6 +34,6 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.1"
+    "@lion/core": "0.5.2"
   }
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/ing-bank/lion/compare/@lion/form-system@0.7.9...@lion/form-system@0.7.10) (2020-04-29)
+
+
+### Bug Fixes
+
+* **button:** adjust button to more sensible default styling ([#674](https://github.com/ing-bank/lion/issues/674)) ([78cd503](https://github.com/ing-bank/lion/commit/78cd503b5ef4c54cce5bae5008397e1ce1242133))
+
+
+
+
+
 ## [0.7.9](https://github.com/ing-bank/lion/compare/@lion/form-system@0.7.8...@lion/form-system@0.7.9) (2020-04-20)
 
 **Note:** Version bump only for package @lion/form-system

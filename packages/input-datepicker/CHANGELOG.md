@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.6](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.5...@lion/input-datepicker@0.11.6) (2020-04-29)
+
+
+### Bug Fixes
+
+* add display:none for hidden ([#692](https://github.com/ing-bank/lion/issues/692)) ([9731771](https://github.com/ing-bank/lion/commit/9731771c23a5ed8661558e62cb5e34b62cc2b8b7))
+* **input-datepicker:** align template to FormControlMixin ([a02f9e8](https://github.com/ing-bank/lion/commit/a02f9e8b3e734162fe2c43d293a1324515cbfdaf))
+
+
+
+
+
 ## [0.11.5](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.4...@lion/input-datepicker@0.11.5) (2020-04-16)
 
 

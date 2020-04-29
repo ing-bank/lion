@@ -1,6 +1,6 @@
 {
   "name": "@lion/dialog",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "description": "Show relative overlay content on click, as a webcomponent",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -32,7 +32,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.1",
-    "@lion/overlays": "0.13.1"
+    "@lion/core": "0.5.2",
+    "@lion/overlays": "0.13.2"
   }
 }

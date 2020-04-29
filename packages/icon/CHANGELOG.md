@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/icon@0.4.3...@lion/icon@0.4.4) (2020-04-29)
+
+
+### Bug Fixes
+
+* add display:none for hidden ([#692](https://github.com/ing-bank/lion/issues/692)) ([9731771](https://github.com/ing-bank/lion/commit/9731771c23a5ed8661558e62cb5e34b62cc2b8b7))
+
+
+
+
+
 ## [0.4.3](https://github.com/ing-bank/lion/compare/@lion/icon@0.4.2...@lion/icon@0.4.3) (2020-04-02)
 
 **Note:** Version bump only for package @lion/icon
