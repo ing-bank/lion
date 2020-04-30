@@ -4,6 +4,11 @@ import 'page-a/page-a.js';
 import 'page-b/page-b.js';
 
 class DemoApp extends LitElement {
+  constructor() {
+    super();
+    this.page = 'A';
+  }
+
   static get properties() {
     return {
       page: { type: String },
@@ -55,11 +60,6 @@ class DemoApp extends LitElement {
         text-align: center;
       }
     `;
-  }
-
-  constructor() {
-    super();
-    this.page = 'A';
   }
 
   render() {
