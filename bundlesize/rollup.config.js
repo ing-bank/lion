@@ -1,12 +1,11 @@
-import createDefaultConfig from '@open-wc/building-rollup/modern-config';
+import { createBasicConfig } from '@open-wc/building-rollup';
 
 export default ['core', 'all'].map(name => {
-  const config = createDefaultConfig({
-    input: `bundlesize/${name}.js`,
-  });
+  const config = createBasicConfig();
 
   return {
     ...config,
+    input: `bundlesize/${name}.js`,
     treeshake: false,
     output: {
       ...config.output,
