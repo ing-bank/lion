@@ -31,5 +31,4 @@ local.log
 ## browserstack
 browserstack.err
 
-!packages/context/demo/no-context/**/node_modules
-!packages/context/demo/with-context/**/node_modules
+!packages/context/demo/**/*

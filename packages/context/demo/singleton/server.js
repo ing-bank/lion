@@ -1,6 +1,6 @@
 module.exports = {
   rootDir: '../../',
-  appIndex: 'packages/context/demo/with-context-complex/index.html',
+  appIndex: 'packages/context/demo/singleton/index.html',
   nodeResolve: true,
   open: true,
 };
