@@ -17,6 +17,7 @@
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start:no-context": "es-dev-server -c demo/no-context/server.js",
     "start:with-context": "es-dev-server -c demo/with-context/server.js",
+    "start:with-context-complex": "es-dev-server -c demo/with-context-complex/server.js",
     "test": "cd ../../ && yarn test --grep \"packages/calendar/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:watch --grep \"packages/calendar/test/**/*.test.js\""
   },
