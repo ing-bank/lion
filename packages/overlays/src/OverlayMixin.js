@@ -147,8 +147,8 @@ export const OverlayMixin = dedupeMixin(
         if (this._overlayCtrl) {
           this.__tornDown = true;
           this.__overlayContentNodeWrapperBeforeTeardown = this._overlayContentNodeWrapper;
-          this._teardownOverlayCtrl();
         }
+        this._teardownOverlayCtrl();
       }
 
       get _overlayInvokerNode() {
@@ -206,10 +206,13 @@ export const OverlayMixin = dedupeMixin(
         this.__overlaySetupCompleteResolve();
       }
 
-      _teardownOverlayCtrl() {
+      async _teardownOverlayCtrl() {
+        if (this._overlayCtrl) {
+          this.__teardownSyncFromOverlayController();
+          this._overlayCtrl.teardown();
+        }
+        await this.updateComplete;
         this._teardownOpenCloseListeners();
-        this.__teardownSyncFromOverlayController();
-        this._overlayCtrl.teardown();
       }
 
       async _setOpenedWithoutPropertyEffects(newOpened) {
