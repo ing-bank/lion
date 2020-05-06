@@ -1,6 +1,5 @@
-import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '@lion/overlays/test-suites/OverlayMixin.suite.js';
-
+import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import '../lion-dialog.js';
 
 describe('lion-dialog', () => {
@@ -29,6 +28,31 @@ describe('lion-dialog', () => {
       invoker.click();
 
       expect(el.opened).to.be.true;
+    });
+
+    it('supports nested overlays', async () => {
+      const el = await fixture(html`
+        <lion-dialog>
+          <div slot="content">
+            open nested overlay:
+            <lion-dialog>
+              <div slot="content">
+                Nested content
+              </div>
+              <button slot="invoker">nested invoker button</button>
+            </lion-dialog>
+          </div>
+          <button slot="invoker">invoker button</button>
+        </lion-dialog>
+      `);
+
+      el._overlayInvokerNode.click();
+      expect(el.opened).to.be.true;
+
+      const wrapperNode = Array.from(document.querySelector('.global-overlays').children)[1];
+      const nestedDialog = wrapperNode.querySelector('lion-dialog');
+      nestedDialog._overlayInvokerNode.click();
+      expect(nestedDialog.opened).to.be.true;
     });
   });
 });
