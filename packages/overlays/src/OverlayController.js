@@ -71,7 +71,9 @@ export class OverlayController {
     this.manager.add(this);
 
     this._contentNodeWrapper = document.createElement('div');
-    this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
+    this._contentId = `overlay-content--${Math.random()
+      .toString(36)
+      .substr(2, 10)}`;
 
     this.updateConfig(config);
 

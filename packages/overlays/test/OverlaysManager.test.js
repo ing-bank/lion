@@ -1,13 +1,30 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html } from '@open-wc/testing';
 import { OverlayController } from '../src/OverlayController.js';
 import { OverlaysManager } from '../src/OverlaysManager.js';
+
+function isScrollPrevented() {
+  return Boolean(getComputedStyle(document.body).overflow === 'hidden');
+}
+
+const withGlobalTestCfg = () => ({
+  placementMode: 'global',
+  contentNode: fixtureSync(
+    html`
+      <div>my content</div>
+    `,
+  ),
+});
 
 describe('OverlaysManager', () => {
   let defaultOptions;
   let mngr;
 
   before(async () => {
-    const contentNode = await fixture(html`<p>my content</p>`);
+    const contentNode = await fixture(
+      html`
+        <p>my content</p>
+      `,
+    );
 
     defaultOptions = {
       placementMode: 'global',
@@ -62,7 +79,7 @@ describe('OverlaysManager', () => {
     expect(() => mngr.add(ctrl)).to.throw('controller instance is already added');
   });
 
-  it('throws if you try to remove a non existing controller', () => {
+  it.skip('throws if you try to remove a non existing controller', () => {
     // we do not pass one our own manager so it will not be added to it
     const ctrl = new OverlayController(defaultOptions);
     expect(() => mngr.remove(ctrl)).to.throw('could not find controller to remove');
@@ -93,5 +110,45 @@ describe('OverlaysManager', () => {
 
     await dialog2.hide();
     expect(mngr.shownList).to.deep.equal([]);
+  });
+
+  describe('Multiple Manager Instances', () => {
+    let mgr1;
+    let mgr2;
+
+    beforeEach(() => {
+      mgr1 = new OverlaysManager();
+      mgr2 = new OverlaysManager();
+    });
+
+    afterEach(() => {
+      mgr1.teardown();
+      mgr2.teardown();
+    });
+
+    it('shares storage for blocking overlays', async () => {
+      const ctrl1 = new OverlayController({ ...withGlobalTestCfg(), isBlocking: true });
+      const ctrl2 = new OverlayController({ ...withGlobalTestCfg(), isBlocking: true });
+
+      await ctrl1.show();
+      expect(ctrl1._contentNodeWrapper).to.be.displayed;
+      await ctrl2.show();
+      expect(ctrl2._contentNodeWrapper).to.be.displayed;
+      expect(ctrl1._contentNodeWrapper).to.be.not.displayed;
+    });
+
+    it('shares storage for scroll prevention', async () => {
+      const ctrl1 = new OverlayController({ ...withGlobalTestCfg(), preventsScroll: true }, mgr1);
+      const ctrl2 = new OverlayController({ ...withGlobalTestCfg(), preventsScroll: true }, mgr2);
+
+      await ctrl1.show();
+      await ctrl2.show();
+      expect(isScrollPrevented()).to.be.true;
+      await ctrl1.hide();
+      expect(isScrollPrevented()).to.be.true;
+
+      await ctrl2.hide();
+      expect(isScrollPrevented()).to.be.false;
+    });
   });
 });

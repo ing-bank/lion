@@ -22,6 +22,16 @@ const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 /**
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
+
+// This allows for having multiple overlay managers active on a page, by sharing
+// list. shownList and blockingMap. These data are relevant for controller features 'preventsScroll'
+// and isBlocking'.
+// TODO: the current approach coerces a tight contract between controllers and the managers (their apis
+// are called within this list). It might be better to store seperate lists per manager and only consult
+// global namespace for lookup (if possible)
+// TODO: encapsulate global styles, now we create potential style conflicts when two overlays are opened.
+window.lion = window.lion || {};
+window.lion.overlays = window.lion.overlays || {};
 export class OverlaysManager {
   static __createGlobalRootNode() {
     const rootNode = document.createElement('div');
@@ -54,23 +64,45 @@ export class OverlaysManager {
    * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
+  // eslint-disable-next-line class-methods-use-this
   get list() {
-    return this.__list;
+    return window.lion.overlays.list;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  set list(list) {
+    window.lion.overlays.list = list;
   }
 
   /**
    * no setter as .shownList is intended to be read-only
    * You can use .show or .hide on individual controllers to modify
    */
+  // eslint-disable-next-line class-methods-use-this
   get shownList() {
-    return this.__shownList;
+    return window.lion.overlays.shownList;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  set shownList(shownList) {
+    window.lion.overlays.shownList = shownList;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get __blockingMap() {
+    return window.lion.overlays.blockingMap;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  set __blockingMap(blockingMap) {
+    window.lion.overlays.blockingMap = blockingMap;
   }
 
   constructor() {
-    this.__list = [];
-    this.__shownList = [];
+    this.list = this.list || [];
+    this.shownList = this.shownList || [];
+    this.__blockingMap = this.__blockingMap || new WeakMap();
     this.__siblingsInert = false;
-    this.__blockingMap = new WeakMap();
   }
 
   /**
@@ -90,17 +122,17 @@ export class OverlaysManager {
     if (!this.list.find(ctrl => ctrlToRemove === ctrl)) {
       throw new Error('could not find controller to remove');
     }
-    this.__list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
+    this.list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
   }
 
   show(ctrlToShow) {
     if (this.list.find(ctrl => ctrlToShow === ctrl)) {
       this.hide(ctrlToShow);
     }
-    this.__shownList.unshift(ctrlToShow);
+    this.shownList.unshift(ctrlToShow);
 
     // make sure latest shown ctrl is visible
-    Array.from(this.__shownList)
+    Array.from(this.shownList)
       .reverse()
       .forEach((ctrl, i) => {
         // eslint-disable-next-line no-param-reassign
@@ -112,7 +144,7 @@ export class OverlaysManager {
     if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
       throw new Error('could not find controller to hide');
     }
-    this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+    this.shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
   }
 
   teardown() {
@@ -120,8 +152,8 @@ export class OverlaysManager {
       ctrl.teardown();
     });
 
-    this.__list = [];
-    this.__shownList = [];
+    this.list = [];
+    this.shownList = [];
     this.__siblingsInert = false;
 
     const rootNode = this.constructor.__globalRootNode;
@@ -198,15 +230,14 @@ export class OverlaysManager {
   /** Blocking */
   requestToShowOnly(blockingCtrl) {
     const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
-
-    controllersToHide.map(ctrl => ctrl.hide());
+    controllersToHide.forEach(ctrl => ctrl.hide());
     this.__blockingMap.set(blockingCtrl, controllersToHide);
   }
 
   retractRequestToShowOnly(blockingCtrl) {
     if (this.__blockingMap.has(blockingCtrl)) {
       const controllersWhichGotHidden = this.__blockingMap.get(blockingCtrl);
-      controllersWhichGotHidden.map(ctrl => ctrl.show());
+      controllersWhichGotHidden.forEach(ctrl => ctrl.show());
     }
   }
 }
