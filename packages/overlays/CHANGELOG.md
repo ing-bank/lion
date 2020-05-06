@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.3](https://github.com/ing-bank/lion/compare/@lion/overlays@0.13.2...@lion/overlays@0.13.3) (2020-05-06)
+
+
+### Bug Fixes
+
+* **dialog:** teardown open close listeners after initial update complete ([da87445](https://github.com/ing-bank/lion/commit/da87445f33f4a168449ef6e37fc4244f16a0dc00))
+
+
+
+
+
 ## [0.13.2](https://github.com/ing-bank/lion/compare/@lion/overlays@0.13.1...@lion/overlays@0.13.2) (2020-04-29)
 
 **Note:** Version bump only for package @lion/overlays
