@@ -5,7 +5,7 @@ We have an app with 2 pages.
 - page-a uses overlays 1.x
 - page-b uses overlays 2.x (gets installed nested)
 
-```
+```txt
 my-app (node_modules)
 ├── overlays (1.x)
 ├── page-a
@@ -40,12 +40,12 @@ export class OverlaysManager {
 }
 ```
 
-## Example A (no context)
+## Example A (fail)
 
 See it "fail" e.g. 2 separate OverlaysManager are at work and are "fighting" over the way to block the body.
 
 ```bash
-npm run start:no-context
+npm run start:fail
 ```
 
 Steps to reproduce:
@@ -53,11 +53,11 @@ Steps to reproduce:
 1. Page A click on block
 2. Page B => "Blocked: false" (even when hitting the refresh button)
 
-See [the code](./demo/no-context/demo-app.js).
+See [the code](./demo/fail/demo-app.js).
 
 ---
 
-## Example B (with context and simple patch on app level)
+## Example B (singleton manager)
 
 The breaking change in `OverlayManager` was renaming of 2 function (which has been deprecated before).
 
@@ -67,6 +67,8 @@ The breaking change in `OverlayManager` was renaming of 2 function (which has be
 knowing that we can create a Manager that is compatible with both via
 
 ```js
+import { OverlaysManager } from 'overlays';
+
 class CompatibleManager extends OverlaysManager {
   blockingBody() {
     this.block();
@@ -80,25 +82,24 @@ class CompatibleManager extends OverlaysManager {
 all that is left is a to "override" the default instance of the "users"
 
 ```js
-import { overlaysId, OverlaysManager } from 'overlays';
-import { overlaysId as overlaysId2 } from './node_modules/page-b/node_modules/overlays/index.js';
+import { singletonManager } from 'singleton-manager';
 
 const manager = new CompatibleManager();
-this.provideInstance(overlaysId, manager);
-this.provideInstance(overlaysId2, manager);
+singletonManager.set('overlays::index.js::1.x', compatibleManager);
+singletonManager.set('overlays::index.js::2.x', compatibleManager);
 ```
 
 See it in action
 
 ```bash
-npm run start:with-context
+npm run start:singleton
 ```
 
-and [the code](./demo/with-context/demo-app.js).
+and [the code](./demo/singleton/demo-app.js).
 
 ---
 
-## Example C (with context and complex patch on app level)
+## Example C (singleton and complex patching on app level)
 
 The breaking change in `OverlayManager` was converting a property to a function and a rename of a function.
 
@@ -116,7 +117,11 @@ We will make 2 separate instances of the `OverlayManager`.
 compatibleManager1 = new CompatibleManager1(); // 1.x
 compatibleManager2 = new CompatibleManager2(); // 2.x
 console.log(typeof compatibleManager1.blockBody); // Boolean
-console.log(typeof compatibleManager1.blockBody); // function
+console.log(typeof compatibleManager1.blockBody); // Function
+
+// and override
+singletonManager.set('overlays::index.js::1.x', compatibleManager1);
+singletonManager.set('overlays::index.js::2.x', compatibleManager2);
 ```
 
 and they are "compatible" to each other because they sync the important data to each other.
@@ -127,28 +132,36 @@ This makes sure even though functions and data is separate it will be always con
 See it in action
 
 ```bash
-npm run start:with-context-complex
+npm run start:singleton-complex
 ```
 
-and [the code](./demo/with-context-complex/demo-app.js).
+and [the code](./demo/singleton-complex/demo-app.js).
 
 ---
 
 ## How does it work?
 
-As a user you request an instance provided by the app and with a fallback (when the app does not provided it).
+As a user you can override what the import of `overlays/instance.js` provides.
+You do this via a singletonManager and a "magic" string.
+
+- Reason be that you can target ranges of versions
 
 ```js
-import { overlaysId, OverlaysManager } from 'overlays';
-this.overlays = this.getInstance(overlaysId, () => new OverlaysManager());
+singletonManager.set('overlays::index.js::1.x', compatibleManager1);
+singletonManager.set('overlays::index.js::2.x', compatibleManager2);
 ```
+
+### Details
+
+Potentially we could have "range", "exacts version" and symbol for unique filename.
+So you can override with increasing specificity.
 
 ## Non Goals
 
 Making sure that there are only 2 versions of a specific packages.
 npm is not meant to handle something like this... and it never will
 
-```
+```txt
 my-app
 ├─┬ feat-a@x
 │ └── foo@2.x
@@ -159,7 +172,7 @@ my-app
 
 dedupe works by moving dependencies up the tree
 
-```
+```txt
 // this app
 my-app
 my-app/node_modules/feat-a/node_modules/foo
