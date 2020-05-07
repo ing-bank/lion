@@ -352,14 +352,11 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
   /**
    * Lifecycle callback for subclassers
+   * @overridable
    */
   _onCalendarOverlayOpened() {
     if (this._focusCentralDateOnCalendarOpen) {
-      if (this._calendarNode.selectedDate) {
-        this._calendarNode.focusSelectedDate();
-      } else {
-        this._calendarNode.focusCentralDate();
-      }
+      this._calendarNode.initCentralDate();
     }
   }
 

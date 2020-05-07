@@ -8,20 +8,23 @@ export class DatepickerInputObject {
 
   /**
    * Methods mimicing User Interaction
+   * @param {{click?:boolean}} [options]
    */
-
-  async openCalendar() {
+  async openCalendar({ click } = {}) {
     // Make sure the calendar is opened, not closed/toggled;
     this.overlayController.hide();
-    this.invokerEl.click();
-    const completePromises = [];
-    if (this.overlayEl) {
-      completePromises.push(this.overlayEl.updateComplete);
+    if (click) {
+      this.invokerEl.click();
+      const completePromises = [];
+      if (this.overlayEl) {
+        completePromises.push(this.overlayEl.updateComplete);
+      }
+      if (this.calendarEl) {
+        completePromises.push(this.calendarEl.updateComplete);
+      }
+      return Promise.all(completePromises);
     }
-    if (this.calendarEl) {
-      completePromises.push(this.calendarEl.updateComplete);
-    }
-    return Promise.all(completePromises);
+    return this.el.__openCalendarOverlay();
   }
 
   async closeCalendar() {

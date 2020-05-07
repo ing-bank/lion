@@ -20,7 +20,7 @@ describe('<lion-calendar>', () => {
     localizeTearDown();
   });
 
-  describe.skip('Structure', () => {
+  describe('Structure', () => {
     it('implements BEM structure', async () => {
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
@@ -209,6 +209,17 @@ describe('<lion-calendar>', () => {
       expect(elObj.selectedDayObj).to.be.undefined;
     });
 
+    it('recalculates "centralDate" when "selectedDate" is reset', async () => {
+      const el = await fixture(html`
+        <lion-calendar .selectedDate="${new Date('2019/06/15')}"></lion-calendar>
+      `);
+      const elObj = new CalendarObject(el);
+      el.selectedDate = undefined;
+      await el.updateComplete;
+      expect(elObj.selectedDayObj).to.be.undefined;
+      expect(isSameDate(el.centralDate, new Date('2019/06/15'))).to.be.true;
+    });
+
     it('sends event "user-selected-date-changed" when user selects a date', async () => {
       const dateChangedSpy = sinon.spy();
       const el = await fixture(html`
@@ -287,6 +298,26 @@ describe('<lion-calendar>', () => {
       await el.focusSelectedDate();
       expect(isSameDate(/** @type {Date} */ (el.focusedDate), new Date('2014/07/07'))).to.be.true;
       expect(elObj.getDayObj(7).isFocused).to.be.true;
+    });
+
+    it('has a initCentralDate() method for external contexts like datepickers', async () => {
+      const initialCentralDate = new Date('2014/07/05');
+      const initialSelectedDate = new Date('2014/07/07');
+      const el = await fixture(html`<lion-calendar
+        .centralDate="${initialCentralDate}"
+        .selectedDate="${initialSelectedDate}"
+      ></lion-calendar>`);
+
+      expect(el.selectedDate).to.equal(initialSelectedDate);
+      expect(el.centralDate).to.equal(initialCentralDate);
+
+      const newSelectedDate = new Date('2015/07/05');
+      el.selectedDate = newSelectedDate;
+      el.initCentralDate();
+      expect(el.centralDate).to.equal(newSelectedDate);
+      el.selectedDate = undefined;
+      el.initCentralDate();
+      expect(el.centralDate).to.equal(initialCentralDate);
     });
 
     describe('Enabled Dates', () => {
