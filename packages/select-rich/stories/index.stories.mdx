@@ -312,17 +312,11 @@ It is up to you how to render this Object in the DOM.
       );
     }
     return html`
-      <lion-select-rich
-        label="Credit Card"
-        name="color"
-        @select-model-value-changed=${showOutput}
-      >
+      <lion-select-rich label="Credit Card" name="color" @select-model-value-changed=${showOutput}>
         <lion-options slot="input">
           ${objs.map(
             obj => html`
-              <lion-option .modelValue=${{ value: obj, checked: false }}
-                >${obj.label}</lion-option
-              >
+              <lion-option .modelValue=${{ value: obj, checked: false }}>${obj.label}</lion-option>
             `,
           )}
         </lion-options>
@@ -423,17 +417,22 @@ You can get/set the checkedIndex and checkedValue.
         id="richSelectCheckedInput"
         aria-labelledby="label-richSelectCheckedInput"
         type="number"
-        @change=${(e) => {
+        @change=${e => {
           const selectEl = document.getElementById('checkedRichSelect');
           selectEl.checkedIndex = e.target.value;
         }}
-      >
+      />
     </div>
-    <button class="log-button" @click=${() => {
-      const selectEl = document.getElementById('checkedRichSelect');
-      console.log(`checkedIndex: ${selectEl.checkedIndex}`);
-      console.log(`checkedValue: ${selectEl.checkedValue}`);
-    }}>Console log checked index and value</button>
+    <button
+      class="log-button"
+      @click=${() => {
+        const selectEl = document.getElementById('checkedRichSelect');
+        console.log(`checkedIndex: ${selectEl.checkedIndex}`);
+        console.log(`checkedValue: ${selectEl.checkedValue}`);
+      }}
+    >
+      Console log checked index and value
+    </button>
     <lion-select-rich id="checkedRichSelect" name="favoriteColor" label="Favorite color">
       <lion-options slot="input">
         <lion-option .choiceValue=${'red'}>Red</lion-option>
@@ -469,7 +468,7 @@ If you want to set a placeholder option with something like 'Please select', you
 Simply put an option with a modelValue that is `null`.
 
 ```html
-<lion-option .choiceValue=${null}>select a color</lion-option>
+<lion-option .choiceValue="${null}">select a color</lion-option>
 ```
 
 However, this allows the user to explicitly select this option.
@@ -491,7 +490,6 @@ Both methods work with the `Required` validator.
   `}
 </Story>
 
-
 ```html
 <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
   <lion-options slot="input">
@@ -504,7 +502,6 @@ Both methods work with the `Required` validator.
 
 > By default, the placeholder is completely empty in the `LionSelectInvoker`,
 > but subclassers can easily override this in their extension, by the overriding `_noSelectionTemplate()` method.
-
 
 ### Single Option
 
@@ -527,7 +524,6 @@ If there is a single option rendered, then `singleOption` property is set to `tr
   </lion-options>
 </lion-select-rich>
 ```
-
 
 ### Custom Invoker
 
@@ -583,3 +579,54 @@ class MyInvokerButton extends LitElement() {
 
 > This example only works if your option elements don't have ShadowDOM boundaries themselves.
 > Cloning deeply only works up until the first shadow boundary.
+
+### With a form
+
+Foo
+
+<Story name="With a form">
+  {html`
+    <form id="form">
+      <lion-select-rich
+        has-no-default-selectedX
+        label="Reset"
+        name="reset"
+        @model-value-changed=${() => console.log('model value changed called')}
+      >
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+        </lion-options>
+      </lion-select-rich>
+      <button
+        type="reset"
+      >
+        Reset
+      </button>
+    </form>
+  `}
+</Story>
+
+```html
+<form id="form">
+  <lion-select-account
+    has-no-default-selected
+    label="Lots and lots of accounts"
+    name="bar"
+    @model-value-changed=${() => console.log('model value changed called')}
+    .errorValidators="${['required']}"
+  >
+    <lion-select-options slot="input">
+      <lion-option .choiceValue=${'red'}>Red</lion-option>
+      <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+    </lion-select-options>
+  </lion-select-account>
+  <button
+    type="reset"
+  >
+    Reset
+  </button>
+</form>
+```

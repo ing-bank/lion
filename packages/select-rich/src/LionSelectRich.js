@@ -234,10 +234,25 @@ export class LionSelectRich extends ScopedElementsMixin(
       if (this.__cachedUserSetModelValue) {
         this.modelValue = this.__cachedUserSetModelValue;
       }
+      if (!this._initialModelValue) {
+        this._initialModelValue = !this.hasNoDefaultSelected ? this.modelValue : '';
+      }
     });
 
     this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__toggleInvokerDisabled();
+  }
+
+  resetInteractionState() {
+    if (super.resetInteractionState) {
+      super.resetInteractionState();
+    }
+    this.submitted = false;
+  }
+
+  reset() {
+    this.modelValue = this._initialModelValue;
+    this.resetInteractionState();
   }
 
   _requestUpdate(name, oldValue) {
@@ -256,7 +271,7 @@ export class LionSelectRich extends ScopedElementsMixin(
   async __initInteractionStates() {
     await this.registrationComplete;
     // This timeout is here, so that we know we handle after the initial model-value
-    // event (see firstUpdated method FormConrtolMixin) has fired.
+    // event (see firstUpdated method FormControlMixin) has fired.
     setTimeout(() => {
       this.initInteractionState();
     });

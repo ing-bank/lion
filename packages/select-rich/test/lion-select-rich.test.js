@@ -100,6 +100,51 @@ describe('lion-select-rich', () => {
     expect(el.formElements[2].checked).to.be.true;
   });
 
+  it('supports having no default selection initially', async () => {
+    const el = await fixture(html`
+      <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    expect(el.selectedElement).to.be.undefined;
+    expect(el.modelValue).to.equal('');
+  });
+
+  it('should reset selected value to initial value', async () => {
+    const el = await fixture(html`
+      <lion-select-rich name="gender">
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'male'}></lion-option>
+          <lion-option .choiceValue=${'female'}></lion-option>
+          <lion-option .choiceValue=${'other'}></lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+    el.checkedIndex = 1;
+    el.reset();
+    expect(el.modelValue).to.equal('male');
+  });
+
+  it('should reset selected value to "Please select account" with has-no-default-selected attribute', async () => {
+    const el = await fixture(html`
+      <lion-select-rich name="gender" has-no-default-selected>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'male'}></lion-option>
+          <lion-option .choiceValue=${'female'}></lion-option>
+          <lion-option .choiceValue=${'other'}></lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+    el.checkedIndex = 1;
+    el.reset();
+    expect(el.modelValue).to.equal('');
+  });
+
   it('is hidden when attribute hidden is true', async () => {
     const el = await fixture(
       html`
@@ -209,21 +254,6 @@ describe('lion-select-rich', () => {
     await el.updateComplete;
     expect(el.hasFeedbackFor.includes('error')).to.be.true;
     expect(el.showsFeedbackFor.includes('error')).to.be.true;
-  });
-
-  it('supports having no default selection initially', async () => {
-    const el = await fixture(html`
-      <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.selectedElement).to.be.undefined;
-    expect(el.modelValue).to.equal('');
   });
 
   describe('Invoker', () => {
