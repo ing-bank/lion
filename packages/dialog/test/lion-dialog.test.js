@@ -30,7 +30,7 @@ describe('lion-dialog', () => {
       expect(el.opened).to.be.true;
     });
 
-    it.skip('supports nested overlays', async () => {
+    it('supports nested overlays', async () => {
       const el = await fixture(html`
         <lion-dialog>
           <div slot="content">

@@ -157,7 +157,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
   });
 
   describe(`OverlayMixin${suffix} nested`, () => {
-    it.skip('supports nested overlays', async () => {
+    it('supports nested overlays', async () => {
       const el = await fixture(html`
         <${tag}>
           <div slot="content" id="mainContent">
@@ -222,6 +222,44 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         expect(contentNode).to.not.be.null;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }
+    });
+
+    it("doesn't tear down controller when dom nodes are being moved around", async () => {
+      const nestedEl = await fixture(html`
+        <${tag} id="nest">
+          <div slot="content" id="nestedContent">content of the nested overlay</div>
+          <button slot="invoker">invoker nested</button>
+        </${tag}>
+      `);
+
+      const setupOverlayCtrlSpy = sinon.spy(nestedEl, '_setupOverlayCtrl');
+      const teardownOverlayCtrlSpy = sinon.spy(nestedEl, '_teardownOverlayCtrl');
+
+      const mainEl = await fixture(html`
+        <${tag} id="main">
+          <div slot="content" id="mainContent">
+            open nested overlay:
+            ${nestedEl}
+          </div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `);
+
+      // Even though many connected/disconnected calls take place,
+      // we detect we are in the middle of a 'move'
+      expect(teardownOverlayCtrlSpy).to.not.have.been.called;
+      expect(setupOverlayCtrlSpy).to.not.have.been.called;
+
+      // Now move nestedEl to an offline node
+      const offlineNode = document.createElement('div');
+      offlineNode.appendChild(nestedEl);
+      await aTimeout();
+      // And we detect this time the disconnect was 'permanent'
+      expect(teardownOverlayCtrlSpy.callCount).to.equal(1);
+
+      mainEl._overlayContentNode.appendChild(nestedEl);
+      await aTimeout();
+      expect(setupOverlayCtrlSpy.callCount).to.equal(1);
     });
   });
 }
