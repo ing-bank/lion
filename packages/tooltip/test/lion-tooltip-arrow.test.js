@@ -58,7 +58,7 @@ describe('lion-tooltip-arrow', () => {
     expect(arrowElement).not.to.be.displayed;
   });
 
-  it('makes sure positioning of the arrow is correct', async () => {
+  it.skip('makes sure positioning of the arrow is correct', async () => {
     const el = await fixture(html`
       <lion-tooltip
         .config="${{

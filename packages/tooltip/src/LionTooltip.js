@@ -20,9 +20,12 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="arrow"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+        <!-- <div class="arrow"> -->
+        <slot name="arrow"></slot>
+        <!-- </div> -->
+      </div>
     `;
   }
 
@@ -32,7 +35,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       return;
     }
     this.__arrowElement.setAttribute('x-arrow', true);
-    this._overlayContentNodeWrapper.appendChild(this.__arrowElement);
+    // this._overlayContentWrapperNode.appendChild(this.__arrowElement);
   }
 
   // eslint-disable-next-line class-methods-use-this

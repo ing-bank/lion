@@ -37,7 +37,9 @@ describe('lion-select-rich', () => {
     expect(el.formElements[0].name).to.equal('foo');
     expect(el.formElements[1].name).to.equal('foo');
 
-    const validChild = await fixture(html`<lion-option .choiceValue=${30}>Item 3</lion-option>`);
+    const validChild = await fixture(html`
+      <lion-option .choiceValue=${30}>Item 3</lion-option>
+    `);
     el.appendChild(validChild);
 
     expect(el.formElements[2].name).to.equal('foo');
@@ -54,7 +56,9 @@ describe('lion-select-rich', () => {
     `);
     await nextFrame();
 
-    const invalidChild = await fixture(html`<lion-option .modelValue=${'Lara'}></lion-option>`);
+    const invalidChild = await fixture(html`
+      <lion-option .modelValue=${'Lara'}></lion-option>
+    `);
 
     expect(() => {
       el.addFormElement(invalidChild);
@@ -98,17 +102,6 @@ describe('lion-select-rich', () => {
 
     expect(el.modelValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
-  });
-
-  it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(
-      html`
-        <lion-select-rich label="foo" hidden
-          ><lion-options slot="input"></lion-options
-        ></lion-select-rich>
-      `,
-    );
-    expect(el).not.to.be.displayed;
   });
 
   it(`has a fieldName based on the label`, async () => {
@@ -774,13 +767,13 @@ describe('lion-select-rich', () => {
     it('allows to override the type of overlay', async () => {
       const mySelectTagString = defineCE(
         class MySelect extends LionSelectRich {
-          _defineOverlay({ invokerNode, contentNode }) {
+          _defineOverlay({ invokerNode, contentNode, contentWrapperNode }) {
             const ctrl = new OverlayController({
               placementMode: 'global',
               contentNode,
+              contentWrapperNode,
               invokerNode,
             });
-
             this.addEventListener('switch', () => {
               ctrl.updateConfig({ placementMode: 'local' });
             });
@@ -802,7 +795,7 @@ describe('lion-select-rich', () => {
           </lion-options>
         </${mySelectTag}>
       `);
-
+      await el.updateComplete;
       expect(el._overlayCtrl.placementMode).to.equal('global');
       el.dispatchEvent(new Event('switch'));
       expect(el._overlayCtrl.placementMode).to.equal('local');
@@ -812,7 +805,9 @@ describe('lion-select-rich', () => {
       const invokerTagName = defineCE(
         class extends LionSelectInvoker {
           _noSelectionTemplate() {
-            return html`Please select an option..`;
+            return html`
+              Please select an option..
+            `;
           }
         },
       );

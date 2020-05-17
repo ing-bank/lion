@@ -123,10 +123,9 @@ or in your Web Component with `OverlayMixin`, make sure you override these metho
 - Define configuration
 - Handle setting up event listeners of toggling the opened state of your overlay
 - Handle the tearing down of those event listeners
-- Define a template which includes
+- Define a template which includes:
   - invoker slot for your user to provide the invoker node (the element that invokes the overlay content)
   - content slot for your user to provide the content that shows when the overlay is opened
-  - _overlay-shadow-outlet, this slot is currently necessary under the hood for acting as a wrapper element for placement purposes, but is not something your end user should be concerned with, unless they are extending your component.
 
 ```js
 _defineOverlayConfig() {
@@ -157,8 +156,9 @@ _teardownOpenCloseListeners() {
 render() {
   return html`
     <slot name="invoker"></slot>
-    <slot name="content"></slot>
-    <slot name="_overlay-shadow-outlet"></slot>
+    <div id="overlay-content-node-wrapper">
+      <slot name="content"></slot>
+    </div>
   `;
 }
 ```
@@ -296,7 +296,7 @@ Below is another demo where you can toggle between configurations using buttons.
         Dropdown
       </button>
     </div>
-    <demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+    <demo-overlay-system id="respSwitchOverlay" .config=${{ ...withDropdownConfig() }}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -327,7 +327,7 @@ Change config to:
     Dropdown
   </button>
 </div>
-<demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
+<demo-overlay-system id="respSwitchOverlay" .config=${{ ...withDropdownConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -507,8 +507,9 @@ class MyOverlayWC extends OverlayMixin(LitElement) {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+      </div>
     `;
   }
 }
@@ -742,3 +743,38 @@ Another way to add custom backdrop is declaratively add an element with `slot="b
     </div>
   </demo-overlay-system>
 ```
+
+
+### Nested Overlays
+
+Overlays can be nested, as the demo below shows.
+It's also possible to compose a nested construction by moving around dom nodes.
+
+<Preview>
+  <Story name="Nested overlays">
+    {html`
+    <demo-overlay-system .config="${withModalDialogConfig()}">
+      <div slot="content" id="mainContent" class="demo-overlay">
+        open nested overlay:
+        <demo-overlay-system .config="${withModalDialogConfig()}">
+          <div slot="content" id="nestedContent" class="demo-overlay">
+            Nested content
+            <button
+              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+            >
+              ⨯
+            </button>
+          </div>
+          <button slot="invoker" id="nestedInvoker">nested invoker button</button>
+        </demo-overlay-system>
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+      <button slot="invoker" id="mainInvoker">invoker button</button>
+    </demo-overlay-system>
+  `}
+  </Story>
+</Preview>

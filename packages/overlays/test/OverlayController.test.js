@@ -1,29 +1,33 @@
 /* eslint-disable no-new */
-import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import {
+  expect,
+  html,
+  fixture,
   aTimeout,
   defineCE,
-  expect,
-  fixture,
-  html,
-  nextFrame,
   unsafeStatic,
+  nextFrame,
 } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
-import { OverlayController } from '../src/OverlayController.js';
-import { overlays } from '../src/overlays.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
+import { OverlayController } from '../src/OverlayController.js';
+import { overlays } from '../src/overlays.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
-  contentNode: fixtureSync(html`<div>my content</div>`),
+  contentNode: fixtureSync(html`
+    <div>my content</div>
+  `),
 });
 
 const withLocalTestConfig = () => ({
   placementMode: 'local',
-  contentNode: fixtureSync(html`<div>my content</div>`),
+  contentNode: fixtureSync(html`
+    <div>my content</div>
+  `),
   invokerNode: fixtureSync(html`
     <div role="button" style="width: 100px; height: 20px;">Invoker</div>
   `),
@@ -68,7 +72,7 @@ describe('OverlayController', () => {
         }
         if (mode === 'inline') {
           contentNode = await fixture(html`
-            <div style="z-index:${zIndexVal};">
+            <div style="z-index: ${zIndexVal} ;">
               I should be on top
             </div>
           `);
@@ -134,7 +138,9 @@ describe('OverlayController', () => {
       it.skip('creates local target next to sibling for placement mode "local"', async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
-          invokerNode: await fixture(html`<button>Invoker</button>`),
+          invokerNode: await fixture(html`
+            <button>Invoker</button>
+          `),
         });
         expect(ctrl._renderTarget).to.be.undefined;
         expect(ctrl.content).to.equal(ctrl.invokerNode.nextElementSibling);
@@ -158,7 +164,7 @@ describe('OverlayController', () => {
 
   // TODO: Add teardown feature tests
   describe('Teardown', () => {
-    it('removes the contentNodeWrapper from global rootnode upon teardown', async () => {
+    it('removes the contentWrapperNode from global rootnode upon teardown', async () => {
       const ctrl = new OverlayController({
         ...withGlobalTestConfig(),
       });
@@ -184,6 +190,52 @@ describe('OverlayController', () => {
         invokerNode: await fixture('<button>invoke</button>'),
       });
       expect(ctrl.invokerNode).to.have.trimmed.text('invoke');
+    });
+
+    describe('When contentWrapperNode projects contentNode', () => {
+      it('recognizes projected contentNode', async () => {
+        const shadowHost = document.createElement('div');
+        shadowHost.attachShadow({ mode: 'open' });
+        shadowHost.shadowRoot.innerHTML = `
+          <div id="contentWrapperNode">
+            <slot name="contentNode"></slot>
+            <my-arrow></my-arrow>
+          </div>
+        `;
+        const contentNode = document.createElement('div');
+        contentNode.slot = 'contentNode';
+        shadowHost.appendChild(contentNode);
+
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+          contentWrapperNode: shadowHost.shadowRoot.getElementById('contentWrapperNode'),
+        });
+
+        expect(ctrl.__isContentNodeProjected).to.be.true;
+      });
+    });
+
+    describe('When contentWrapperNode needs to be provided for correct arrow positioning', () => {
+      it('uses contentWrapperNode as provided for local positioning', async () => {
+        const el = await fixture(html`
+          <div id="contentWrapperNode">
+            <div id="contentNode"></div>
+            <my-arrow></my-arrow>
+          </div>
+        `);
+
+        const contentNode = el.querySelector('#contentNode');
+        const contentWrapperNode = el;
+
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+          contentWrapperNode,
+        });
+
+        expect(ctrl._contentWrapperNode).to.equal(contentWrapperNode);
+      });
     });
   });
 
@@ -220,7 +272,9 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
-        const elOutside = await fixture(html`<button>click me</button>`);
+        const elOutside = await fixture(html`
+          <button>click me</button>
+        `);
         const input1 = ctrl.contentNode.querySelectorAll('input')[0];
         const input2 = ctrl.contentNode.querySelectorAll('input')[1];
 
@@ -235,7 +289,9 @@ describe('OverlayController', () => {
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
-        const contentNode = await fixture(html`<div><input /></div>`);
+        const contentNode = await fixture(html`
+          <div><input /></div>
+        `);
 
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -243,10 +299,14 @@ describe('OverlayController', () => {
           trapsKeyboardFocus: true,
         });
         // add element to dom to allow focus
-        await fixture(html` ${ctrl.content} `);
+        await fixture(html`
+          ${ctrl.content}
+        `);
         await ctrl.show();
 
-        const elOutside = await fixture(html`<input />`);
+        const elOutside = await fixture(html`
+          <input />
+        `);
         const input = ctrl.contentNode.querySelector('input');
 
         input.focus();
@@ -402,7 +462,10 @@ describe('OverlayController', () => {
         await ctrl.show();
 
         // Don't hide on inside shadowDom click
-        ctrl.contentNode.querySelector(tagString).shadowRoot.querySelector('button').click();
+        ctrl.contentNode
+          .querySelector(tagString)
+          .shadowRoot.querySelector('button')
+          .click();
 
         await aTimeout();
         expect(ctrl.isShown).to.be.true;
@@ -451,7 +514,9 @@ describe('OverlayController', () => {
       });
 
       it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
-        const invokerNode = await fixture(html`<div role="button">Invoker</div>`);
+        const invokerNode = await fixture(html`
+          <div role="button">Invoker</div>
+        `);
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -938,7 +1003,11 @@ describe('OverlayController', () => {
     it('reinitializes content', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: await fixture(html`<div>content1</div>`),
+        contentNode: await fixture(
+          html`
+            <div>content1</div>
+          `,
+        ),
       });
       await ctrl.show(); // Popper adds inline styles
       expect(ctrl.content.style.transform).not.to.be.undefined;
@@ -946,13 +1015,19 @@ describe('OverlayController', () => {
 
       ctrl.updateConfig({
         placementMode: 'local',
-        contentNode: await fixture(html`<div>content2</div>`),
+        contentNode: await fixture(
+          html`
+            <div>content2</div>
+          `,
+        ),
       });
       expect(ctrl.contentNode.textContent).to.include('content2');
     });
 
     it('respects the initial config provided to new OverlayController(initialConfig)', async () => {
-      const contentNode = fixtureSync(html`<div>my content</div>`);
+      const contentNode = fixtureSync(html`
+        <div>my content</div>
+      `);
 
       const ctrl = new OverlayController({
         // This is the shared config
@@ -972,7 +1047,9 @@ describe('OverlayController', () => {
 
     // Currently not working, enable again when we fix updateConfig
     it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
-      const contentNode = fixtureSync(html`<div>my content</div>`);
+      const contentNode = fixtureSync(html`
+        <div>my content</div>
+      `);
 
       const ctrl = new OverlayController({
         // This is the shared config
@@ -983,13 +1060,13 @@ describe('OverlayController', () => {
 
       ctrl.show();
       expect(
-        ctrl._contentNodeWrapper.classList.contains('global-overlays__overlay-container--center'),
+        ctrl._contentWrapperNode.classList.contains('global-overlays__overlay-container--center'),
       );
       expect(ctrl.isShown).to.be.true;
 
       ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
       expect(
-        ctrl._contentNodeWrapper.classList.contains(
+        ctrl._contentWrapperNode.classList.contains(
           'global-overlays__overlay-container--top-right',
         ),
       );
@@ -1185,6 +1262,27 @@ describe('OverlayController', () => {
           placementMode: 'global',
         });
       }).to.throw('You need to provide a .contentNode');
+    });
+
+    it('throws if contentNodewrapper is not provided for projected contentNode', async () => {
+      const shadowHost = document.createElement('div');
+      shadowHost.attachShadow({ mode: 'open' });
+      shadowHost.shadowRoot.innerHTML = `
+        <div id="contentWrapperNode">
+          <slot name="contentNode"></slot>
+          <my-arrow></my-arrow>
+        </div>
+      `;
+      const contentNode = document.createElement('div');
+      contentNode.slot = 'contentNode';
+      shadowHost.appendChild(contentNode);
+
+      expect(() => {
+        new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+      }).to.throw('You need to provide a .contentWrapperNode when .contentNode is projected');
     });
   });
 });

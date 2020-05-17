@@ -23,6 +23,10 @@ export const OverlayMixin = dedupeMixin(
         super();
         this.opened = false;
         this.config = {};
+
+        this._overlaySetupComplete = new Promise(resolve => {
+          this.__overlaySetupCompleteResolve = resolve;
+        });
       }
 
       get config() {
@@ -50,11 +54,12 @@ export const OverlayMixin = dedupeMixin(
        * @returns {OverlayController}
        */
       // eslint-disable-next-line
-      _defineOverlay({ contentNode, invokerNode, backdropNode }) {
+      _defineOverlay({ contentNode, invokerNode, backdropNode, contentWrapperNode }) {
         return new OverlayController({
           contentNode,
           invokerNode,
           backdropNode,
+          contentWrapperNode,
           ...this._defineOverlayConfig(), // wc provided in the class as defaults
           ...this.config, // user provided (e.g. in template)
           popperConfig: {
@@ -160,22 +165,7 @@ export const OverlayMixin = dedupeMixin(
       }
 
       get _overlayContentNode() {
-        if (this._cachedOverlayContentNode) {
-          return this._cachedOverlayContentNode;
-        }
-
-        // (@jorenbroekema) This should shadow outlet in between the host and the content slot,
-        // is a problem.
-        // Should simply be Array.from(this.children).find(child => child.slot === 'content')
-        // Issue: https://github.com/ing-bank/lion/issues/382
-        const shadowOutlet = Array.from(this.children).find(
-          child => child.slot === '_overlay-shadow-outlet',
-        );
-        if (shadowOutlet) {
-          this._cachedOverlayContentNode = Array.from(shadowOutlet.children).find(
-            child => child.slot === 'content',
-          );
-        } else {
+        if (!this._cachedOverlayContentNode) {
           this._cachedOverlayContentNode = Array.from(this.children).find(
             child => child.slot === 'content',
           );
@@ -183,8 +173,8 @@ export const OverlayMixin = dedupeMixin(
         return this._cachedOverlayContentNode;
       }
 
-      get _overlayContentNodeWrapper() {
-        return this._overlayContentNode.parentElement;
+      get _overlayContentWrapperNode() {
+        return this.shadowRoot.querySelector('#overlay-content-node-wrapper');
       }
 
       _setupOverlayCtrl() {
@@ -199,6 +189,7 @@ export const OverlayMixin = dedupeMixin(
           contentNode: this._overlayContentNode,
           invokerNode: this._overlayInvokerNode,
           backdropNode: this._overlayBackdropNode,
+          contentWrapperNode: this._overlayContentWrapperNode,
         });
         this.__syncToOverlayController();
         this.__setupSyncFromOverlayController();
