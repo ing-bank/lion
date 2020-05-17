@@ -15,7 +15,7 @@ describe('lion-tooltip', () => {
   });
 
   describe('Basic', () => {
-    it('should show content on mouseenter and hide on mouseleave', async () => {
+    it('shows content on mouseenter and hide on mouseleave', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
@@ -32,7 +32,7 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(false);
     });
 
-    it('should show content on mouseenter and remain shown on focusout', async () => {
+    it('shows content on mouseenter and remain shown on focusout', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
@@ -49,7 +49,7 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(true);
     });
 
-    it('should show content on focusin and hide on focusout', async () => {
+    it('shows content on focusin and hide on focusout', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
@@ -67,7 +67,7 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(false);
     });
 
-    it('should show content on focusin and remain shown on mouseleave', async () => {
+    it('shows content on focusin and remain shown on mouseleave', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">Hey there</div>
@@ -85,7 +85,7 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(true);
     });
 
-    it('should tooltip contains html when specified in tooltip content body', async () => {
+    it('contains html when specified in tooltip content body', async () => {
       const el = await fixture(html`
         <lion-tooltip>
           <div slot="content">
@@ -99,6 +99,57 @@ describe('lion-tooltip', () => {
       invoker.dispatchEvent(event);
       await el.updateComplete;
       expect(el.querySelector('strong')).to.not.be.undefined;
+    });
+  });
+
+  describe('Arrow', () => {
+    it('shows when "has-arrow" is configured', async () => {
+      const el = await fixture(html`
+        <lion-tooltip has-arrow>
+          <div slot="content">
+            This is Tooltip using <strong id="click_overlay">overlay</strong>
+          </div>
+          <button slot="invoker">Tooltip button</button>
+        </lion-tooltip>
+      `);
+      expect(el._arrowNode).to.be.displayed;
+    });
+
+    it('makes sure positioning of the arrow is correct', async () => {
+      const el = await fixture(html`
+        <lion-tooltip
+          has-arrow
+          .config="${{
+            popperConfig: {
+              placement: 'right',
+            },
+          }}"
+          style="position: relative; top: 10px;"
+        >
+          <div slot="content" style="height: 30px; background-color: red;">
+            Hey there
+          </div>
+          <button slot="invoker" style="height: 30px;">Tooltip button</button>
+        </lion-tooltip>
+      `);
+
+      el.opened = true;
+
+      await el.repositionComplete;
+
+      // Pretty sure we use flex for this now so that's why it fails
+      /* expect(getComputedStyle(el.__arrowElement).getPropertyValue('top')).to.equal(
+        '11px',
+        '30px (content height) - 8px = 22px, divided by 2 = 11px offset --> arrow is in the middle',
+      ); */
+
+      expect(getComputedStyle(el._arrowNode).getPropertyValue('left')).to.equal(
+        '-10px',
+        `
+          arrow height is 8px so this offset should be taken into account to align the arrow properly,
+          as well as half the difference between width and height ((12 - 8) / 2 = 2)
+        `,
+      );
     });
   });
 

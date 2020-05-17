@@ -1,10 +1,8 @@
 import { Story, Meta, html, object, withKnobs } from '@open-wc/demoing-storybook';
 import { css } from '@lion/core';
 import { tooltipDemoStyles } from './tooltipDemoStyles.js';
-import { LionTooltipArrow } from '../src/LionTooltipArrow.js';
+import { LionTooltip } from '../src/LionTooltip.js';
 import '../lion-tooltip.js';
-import '../lion-tooltip-arrow.js';
-
 <Meta
   title="Overlays/Tooltip"
   parameters={{
@@ -72,32 +70,28 @@ You can easily change the placement of the content node relative to the invoker.
       ${tooltipDemoStyles}
     </style>
     <div class="demo-box-placements">
-      <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
+      <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }} has-arrow>
         <button slot="invoker">Top</button>
         <div slot="content" class="demo-tooltip-content">Its top placement</div>
-        <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
-      <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
+      <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }} has-arrow>
         <button slot="invoker">Right</button>
         <div slot="content" class="demo-tooltip-content">Its right placement</div>
-        <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
-      <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
+      <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }} has-arrow>
         <button slot="invoker">Bottom</button>
         <div slot="content" class="demo-tooltip-content">Its bottom placement</div>
-        <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
-      <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
+      <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }} has-arrow>
         <button slot="invoker">Left</button>
         <div slot="content" class="demo-tooltip-content">Its left placement</div>
-        <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
       </lion-tooltip>
     </div>
   `}
 </Story>
 
 ```html
-<lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
+<lion-tooltip .config=${{ popperConfig: { placement: 'top' } }} has-arrow>
   <button slot="invoker">Top</button>
   <div slot="content">Its top placement</div>
 </lion-tooltip>
@@ -178,44 +172,40 @@ Modifier explanations:
 - flip: enables flipping behavior on the primary axis (e.g. if top placement, flipping to bottom if there is not enough space on the top). The padding property defines the margin with the boundariesElement, which is usually the viewport.
 - offset: enables an offset between the content node and the invoker node. First argument is horizontal marign, second argument is vertical margin.
 
-
 ### Arrow
 
-Popper also comes with an arrow modifier.
-In our tooltip you can pass an arrow element (e.g. an SVG Element) through the `slot="arrow"`.
+By default, the arrow is disabled for our tooltip. Via the `has-arrow` property it can be enabled.
 
-We export a `lion-tooltip-arrow` that you can use by default for this.
+> As a Subclasser, you can decide to turn the arrow on by default if this fits in your Design System
 
 <Story name="Arrow">
   {html`
     <style>${tooltipDemoStyles}</style>
-    <lion-tooltip>
+    <lion-tooltip has-arrow>
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
       <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
-      <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
   `}
 </Story>
 
 ```html
-<lion-tooltip>
+<lion-tooltip has-arrow>
   <button slot="invoker">Hover me</button>
   <div slot="content">This is a tooltip</div>
-  <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
 </lion-tooltip>
 ```
 
 #### Use a custom arrow
 
-If you plan on passing your own arrow element, you can extend the `lion-tooltip-arrow`.
+If you plan on providing a custom arrow, you can extend the `lion-tooltip`.
 
-All you need to do is override the `render` method to pass your own SVG, and extend the styles to pass the proper dimensions of your arrow.
+All you need to do is override the `_arrowTemplate` method to pass your own SVG, and extend the styles to pass the proper dimensions of your arrow.
 The rest of the work is done by Popper.js (for positioning) and the `lion-tooltip-arrow` (arrow dimensions, rotation, etc.).
 
 <Story name="Custom arrow">
   {() => {
-    if (!customElements.get('custom-tooltip-arrow')) {
-      customElements.define('custom-tooltip-arrow', class extends LionTooltipArrow {
+    if (!customElements.get('custom-tooltip')) {
+      customElements.define('custom-tooltip', class extends LionTooltip {
         static get styles() {
           return [super.styles, css`
             :host {
@@ -224,7 +214,11 @@ The rest of the work is done by Popper.js (for positioning) and the `lion-toolti
             }
           `];
         }
-        render() {
+        constructor() {
+          super();
+          this.hasArrow = true;
+        }
+        _arrowTemplate() {
           return html`
             <svg viewBox="0 0 20 8">
               <path d="M 0,0 h 20 L 10,8 z"></path>
@@ -235,11 +229,10 @@ The rest of the work is done by Popper.js (for positioning) and the `lion-toolti
     }
     return html`
       <style>${tooltipDemoStyles}</style>
-      <lion-tooltip>
+      <custom-tooltip>
         <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
         <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
-        <custom-tooltip-arrow slot="arrow"></custom-tooltip-arrow>
-      </lion-tooltip>
+      </custom-tooltip>
     `;
   }}
 </Story>
@@ -248,7 +241,7 @@ The rest of the work is done by Popper.js (for positioning) and the `lion-toolti
 import { html, css } from '@lion/core';
 import { LionTooltipArrow } from '@lion/tooltip';
 
-class CustomTooltipArrow extends LionTooltipArrow {
+class CustomTooltip extends LionTooltip {
   static get styles() {
     return [super.styles, css`
       :host {
@@ -257,8 +250,11 @@ class CustomTooltipArrow extends LionTooltipArrow {
       }
     `];
   }
-
-  render() {
+  constructor() {
+    super();
+    this.hasArrow = true;
+  }
+  _arrowTemplate() {
     return html`
       <svg viewBox="0 0 20 8">
         <path d="M 0,0 h 20 L 10,8 z"></path>
@@ -266,27 +262,12 @@ class CustomTooltipArrow extends LionTooltipArrow {
     `;
   }
 }
-customElements.define('custom-tooltip-arrow', CustomTooltipArrow);
+customElements.define('custom-tooltip', CustomTooltip);
 ```
 
 ```html
-<lion-tooltip>
+<custom-tooltip>
   <button slot="invoker">Hover me</button>
   <div slot="content">This is a tooltip</div>
-  <custom-tooltip-arrow slot="arrow"></custom-tooltip-arrow>
-</lion-tooltip>
+</custom-tooltip>
 ```
-
-#### Rationale
-
-**Why a Web Component for the Arrow?**
-
-Our preferred API is to pass the arrow as a slot.
-Popper.JS however, necessitates that the arrow element is **inside** the content node,
-otherwise it cannot compute the positioning of the Popper element and the arrow element, so we move the arrow node inside the content node.
-
-This means that we can no longer style the arrow through the `lion-tooltip` with the `::slotted` selector,
-because the arrow element is no longer a direct child of `lion-tooltip`.
-
-Additionally we now also need to sync the popper placement state to the arrow element, to style it properly.
-For all this logic + style encapsulation, we decided a Web Component was the only reasonable solution for the arrow element.
