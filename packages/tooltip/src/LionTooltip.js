@@ -17,6 +17,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       :host {
         --tooltip-arrow-width: 12px;
         --tooltip-arrow-height: 8px;
+        display: inline-block;
       }
 
       :host([hidden]) {
