@@ -16,22 +16,22 @@ const deselectPanel = element => {
   element.removeAttribute('selected');
 };
 
-const setupButton = ({ element, uid, clickHandler, keydownHandler }) => {
+const setupButton = ({ element, uid, clickHandler, keydownHandler, keyupHandler }) => {
   element.setAttribute('id', `button-${uid}`);
   element.setAttribute('role', 'tab');
   element.setAttribute('aria-controls', `panel-${uid}`);
   element.addEventListener('click', clickHandler);
-  element.addEventListener('keyup', keydownHandler);
-  element.addEventListener('keydown', e => e.preventDefault());
+  element.addEventListener('keyup', keyupHandler);
+  element.addEventListener('keydown', keydownHandler);
 };
 
-const cleanButton = (element, clickHandler, keydownHandler) => {
+const cleanButton = ({ element, clickHandler, keydownHandler, keyupHandler }) => {
   element.removeAttribute('id');
   element.removeAttribute('role');
   element.removeAttribute('aria-controls');
   element.removeEventListener('click', clickHandler);
-  element.removeEventListener('keyup', keydownHandler);
-  element.removeEventListener('keydown', e => e.preventDefault());
+  element.removeEventListener('keyup', keyupHandler);
+  element.removeEventListener('keydown', keydownHandler);
 };
 
 const selectButton = (element, firstUpdate = false) => {
@@ -49,6 +49,19 @@ const deselectButton = element => {
   element.removeAttribute('selected');
   element.setAttribute('aria-selected', false);
   element.setAttribute('tabindex', -1);
+};
+
+const handleButtonKeydown = e => {
+  switch (e.key) {
+    case 'ArrowDown':
+    case 'ArrowRight':
+    case 'ArrowUp':
+    case 'ArrowLeft':
+    case 'Home':
+    case 'End':
+      e.preventDefault();
+    /* no default */
+  }
 };
 
 export class LionTabs extends LitElement {
@@ -143,7 +156,8 @@ export class LionTabs extends LitElement {
         button,
         panel,
         clickHandler: this.__createButtonClickHandler(index),
-        keydownHandler: this.__handleButtonKeydown.bind(this),
+        keydownHandler: handleButtonKeydown,
+        keyupHandler: this.__handleButtonKeyup.bind(this),
       };
       setupPanel({ element: entry.panel, ...entry });
       setupButton({ element: entry.button, ...entry });
@@ -158,7 +172,7 @@ export class LionTabs extends LitElement {
       return;
     }
     this.__store.forEach(entry => {
-      cleanButton(entry.button, entry.clickHandler, entry.keydownHandler);
+      cleanButton({ element: entry.button, ...entry });
     });
   }
 
@@ -168,7 +182,7 @@ export class LionTabs extends LitElement {
     };
   }
 
-  __handleButtonKeydown(e) {
+  __handleButtonKeyup(e) {
     switch (e.key) {
       case 'ArrowDown':
       case 'ArrowRight':
@@ -180,7 +194,6 @@ export class LionTabs extends LitElement {
         break;
       case 'ArrowUp':
       case 'ArrowLeft':
-        e.preventDefault();
         if (this.selectedIndex <= 0) {
           this.selectedIndex = this._pairCount - 1;
         } else {
@@ -188,11 +201,9 @@ export class LionTabs extends LitElement {
         }
         break;
       case 'Home':
-        e.preventDefault();
         this.selectedIndex = 0;
         break;
       case 'End':
-        e.preventDefault();
         this.selectedIndex = this._pairCount - 1;
         break;
       /* no default */
