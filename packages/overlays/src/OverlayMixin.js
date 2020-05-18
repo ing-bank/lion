@@ -133,7 +133,7 @@ export const OverlayMixin = dedupeMixin(
         }
       }
 
-      async connectedCallback() {
+      connectedCallback() {
         if (super.connectedCallback) {
           super.connectedCallback();
         }
@@ -172,9 +172,11 @@ export const OverlayMixin = dedupeMixin(
           // We need to prevent that we create a setup/teardown cycle during startup, where it
           // is common that the overlay system moves around nodes. Therefore, we make the
           // teardown async, so that it only happens when we are permanently disconnecting from dom
-          this._overlayDisconnectComplete.then(() => {
-            this._teardownOverlayCtrl();
-          });
+          this._overlayDisconnectComplete
+            .then(() => {
+              this._teardownOverlayCtrl();
+            })
+            .catch(() => {});
         }
       }
 
