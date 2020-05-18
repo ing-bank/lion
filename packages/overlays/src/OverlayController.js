@@ -132,9 +132,7 @@ export class OverlayController {
     };
 
     this.manager.add(this);
-    this._contentId = `overlay-content--${Math.random()
-      .toString(36)
-      .substr(2, 10)}`;
+    this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
 
     if (this._defaultConfig.contentNode) {
       this.__isContentNodeProjected = Boolean(this._defaultConfig.contentNode.assignedSlot);

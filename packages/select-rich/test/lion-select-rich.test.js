@@ -37,9 +37,7 @@ describe('lion-select-rich', () => {
     expect(el.formElements[0].name).to.equal('foo');
     expect(el.formElements[1].name).to.equal('foo');
 
-    const validChild = await fixture(html`
-      <lion-option .choiceValue=${30}>Item 3</lion-option>
-    `);
+    const validChild = await fixture(html` <lion-option .choiceValue=${30}>Item 3</lion-option> `);
     el.appendChild(validChild);
 
     expect(el.formElements[2].name).to.equal('foo');
@@ -56,9 +54,7 @@ describe('lion-select-rich', () => {
     `);
     await nextFrame();
 
-    const invalidChild = await fixture(html`
-      <lion-option .modelValue=${'Lara'}></lion-option>
-    `);
+    const invalidChild = await fixture(html` <lion-option .modelValue=${'Lara'}></lion-option> `);
 
     expect(() => {
       el.addFormElement(invalidChild);
@@ -805,9 +801,7 @@ describe('lion-select-rich', () => {
       const invokerTagName = defineCE(
         class extends LionSelectInvoker {
           _noSelectionTemplate() {
-            return html`
-              Please select an option..
-            `;
+            return html` Please select an option.. `;
           }
         },
       );

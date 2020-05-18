@@ -5,11 +5,7 @@ import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers
 
 const withLocalTestConfig = () => ({
   placementMode: 'local',
-  contentNode: fixtureSync(
-    html`
-      <div>my content</div>
-    `,
-  ),
+  contentNode: fixtureSync(html` <div>my content</div> `),
   invokerNode: fixtureSync(html`
     <div role="button" style="width: 100px; height: 20px;">Invoker</div>
   `),
@@ -58,11 +54,7 @@ describe('Local Positioning', () => {
     it('uses top as the default placement', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `),
@@ -79,11 +71,7 @@ describe('Local Positioning', () => {
     it('positions to preferred place if placement is set and space is available', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `),
@@ -104,11 +92,7 @@ describe('Local Positioning', () => {
     it('positions to different place if placement is set and no space is available', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;">invoker</div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;">invoker</div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
             content
@@ -131,11 +115,7 @@ describe('Local Positioning', () => {
     it('allows the user to override default Popper modifiers', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `),
@@ -168,11 +148,7 @@ describe('Local Positioning', () => {
     it('positions the Popper element correctly on show', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `),
@@ -203,11 +179,7 @@ describe('Local Positioning', () => {
     it.skip('updates placement properly even during hidden state', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `),
@@ -256,11 +228,7 @@ describe('Local Positioning', () => {
     it.skip('updates positioning correctly during shown state when config gets updated', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: fixtureSync(
-          html`
-            <div style="width: 80px; height: 20px;"></div>
-          `,
-        ),
+        contentNode: fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `),
         invokerNode: fixtureSync(html`
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
             Invoker
