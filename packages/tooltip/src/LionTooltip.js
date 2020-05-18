@@ -1,6 +1,9 @@
 import { css, html, LitElement } from '@lion/core';
 import { OverlayMixin } from '@lion/overlays';
 
+/**
+ * @customElement lion-tooltip
+ */
 export class LionTooltip extends OverlayMixin(LitElement) {
   static get properties() {
     return {
@@ -73,7 +76,9 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
     this._overlayContentNode.setAttribute('role', 'tooltip');
   }
 
