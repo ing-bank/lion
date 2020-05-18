@@ -15,8 +15,8 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test --grep \"packages/core/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/core/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/core/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/core/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,6 +32,7 @@
     "translations",
     "*.js"
   ],
+  "sideEffects": false,
   "dependencies": {
     "@open-wc/dedupe-mixin": "^1.2.1",
     "@open-wc/scoped-elements": "^1.0.3",

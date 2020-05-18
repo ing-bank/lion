@@ -46,7 +46,7 @@
     "test": "run-p test:browser test:node",
     "test:browser": "karma start --coverage",
     "test:node": "lerna run test:node",
-    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:browser:watch": "karma start --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:bs": "karma start karma.bs.config.js --coverage",

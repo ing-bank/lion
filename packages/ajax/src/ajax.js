@@ -1,9 +1,10 @@
+import { singletonManager } from 'singleton-manager';
 import { AjaxClass } from './AjaxClass.js';
 
 /**
  * @typedef {ajax} ajax the global instance for handling all ajax requests
  */
-export let ajax = AjaxClass.getInstance(); // eslint-disable-line import/no-mutable-exports
+export let ajax = singletonManager.get('@lion/ajax::ajax::0.3.x') || AjaxClass.getInstance(); // eslint-disable-line import/no-mutable-exports
 
 /**
  * setAjax allows the Application Developer to override the globally used instance of {@link:ajax}.
