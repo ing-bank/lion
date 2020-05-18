@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.12.0...@lion/input-datepicker@0.13.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 # [0.12.0](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.11.7...@lion/input-datepicker@0.12.0) (2020-05-18)
 
 

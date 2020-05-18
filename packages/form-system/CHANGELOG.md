@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.7.13...@lion/form-system@0.8.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 ## [0.7.13](https://github.com/ing-bank/lion/compare/@lion/form-system@0.7.12...@lion/form-system@0.7.13) (2020-05-18)
 
 **Note:** Version bump only for package @lion/form-system

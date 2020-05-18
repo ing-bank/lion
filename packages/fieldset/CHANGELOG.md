@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.10.2...@lion/fieldset@0.11.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 ## [0.10.2](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.10.1...@lion/fieldset@0.10.2) (2020-04-29)
 
 **Note:** Version bump only for package @lion/fieldset

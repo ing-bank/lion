@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.10...@lion/tabs@0.3.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 ## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.9...@lion/tabs@0.2.10) (2020-05-18)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.23...@lion/input-amount@0.6.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 ## [0.5.23](https://github.com/ing-bank/lion/compare/@lion/input-amount@0.5.22...@lion/input-amount@0.5.23) (2020-04-29)
 
 **Note:** Version bump only for package @lion/input-amount

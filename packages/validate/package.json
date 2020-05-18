@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "Validate your form elements",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -39,7 +39,7 @@
     "lion-validation-feedback.js"
   ],
   "dependencies": {
-    "@lion/core": "0.5.2",
-    "@lion/localize": "0.9.2"
+    "@lion/core": "0.6.0",
+    "@lion/localize": "0.10.0"
   }
 }

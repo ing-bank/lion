@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.14.0...@lion/overlays@0.15.0) (2020-05-18)
+
+
+### Features
+
+* use singleton manager to support nested npm installations ([e2eb0e0](https://github.com/ing-bank/lion/commit/e2eb0e0077b9efed9382701461753778f63cad48))
+
+
+
+
+
 # [0.14.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.13.3...@lion/overlays@0.14.0) (2020-05-18)
 
 
