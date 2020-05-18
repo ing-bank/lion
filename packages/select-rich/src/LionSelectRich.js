@@ -332,7 +332,10 @@ export class LionSelectRich extends ScopedElementsMixin(
     return html`
       <div class="input-group__input">
         <slot name="invoker"></slot>
-        <slot name="input"></slot>
+        <slot name="_overlay-shadow-outlet"></slot>
+        <div id="overlay-content-node-wrapper">
+          <slot name="input"></slot>
+        </div>
       </div>
     `;
   }
@@ -366,8 +369,12 @@ export class LionSelectRich extends ScopedElementsMixin(
       this.__hasInitialSelectedFormElement = true;
     }
 
+    // TODO: small perf improvement could be made if logic below would be scheduled to next update,
+    // so it occurs once for all options
     this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-    child.setAttribute('aria-posinset', this.formElements.length);
+    this.formElements.forEach((el, idx) => {
+      el.setAttribute('aria-posinset', idx + 1);
+    });
 
     this.__proxyChildModelValueChanged({ target: child });
     this.resetInteractionState();

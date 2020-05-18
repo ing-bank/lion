@@ -103,8 +103,10 @@ class MyOverlayComponent extends LitElement {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="content"></slot>
       <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+      </div>
     `;
   }
 }

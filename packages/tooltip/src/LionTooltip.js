@@ -1,7 +1,70 @@
-import { html, LitElement } from '@lion/core';
+import { css, html, LitElement } from '@lion/core';
 import { OverlayMixin } from '@lion/overlays';
 
 export class LionTooltip extends OverlayMixin(LitElement) {
+  static get properties() {
+    return {
+      hasArrow: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'has-arrow',
+      },
+    };
+  }
+
+  static get styles() {
+    return css`
+      :host {
+        --tooltip-arrow-width: 12px;
+        --tooltip-arrow-height: 8px;
+        display: inline-block;
+      }
+
+      :host([hidden]) {
+        display: none;
+      }
+
+      .arrow {
+        position: absolute;
+        width: var(--tooltip-arrow-width);
+        height: var(--tooltip-arrow-height);
+      }
+
+      .arrow svg {
+        display: block;
+      }
+
+      [x-placement^='bottom'] .arrow {
+        top: calc(-1 * var(--tooltip-arrow-height));
+        transform: rotate(180deg);
+      }
+
+      [x-placement^='left'] .arrow {
+        right: calc(
+          -1 * (var(--tooltip-arrow-height) +
+                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+        );
+        transform: rotate(270deg);
+      }
+
+      [x-placement^='right'] .arrow {
+        left: calc(
+          -1 * (var(--tooltip-arrow-height) +
+                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+        );
+        transform: rotate(90deg);
+      }
+
+      .arrow {
+        display: none;
+      }
+
+      :host([has-arrow]) .arrow {
+        display: block;
+      }
+    `;
+  }
+
   constructor() {
     super();
     this._mouseActive = false;
@@ -12,27 +75,28 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this._overlayContentNode.setAttribute('role', 'tooltip');
-    // Schedule setting up the arrow element so that it works both on firstUpdated
-    // and when the tooltip is moved in the DOM (disconnected + reconnected)
-    this.updateComplete.then(() => this.__setupArrowElement());
   }
 
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="content"></slot>
-      <slot name="arrow"></slot>
       <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+        <div class="arrow" x-arrow>
+          ${this._arrowTemplate()}
+        </div>
+      </div>
     `;
   }
 
-  __setupArrowElement() {
-    this.__arrowElement = Array.from(this.children).find(child => child.slot === 'arrow');
-    if (!this.__arrowElement) {
-      return;
-    }
-    this.__arrowElement.setAttribute('x-arrow', true);
-    this._overlayContentNodeWrapper.appendChild(this.__arrowElement);
+  // eslint-disable-next-line class-methods-use-this
+  _arrowTemplate() {
+    return html`
+      <svg viewBox="0 0 12 8">
+        <path d="M 0,0 h 12 L 6,8 z"></path>
+      </svg>
+    `;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -49,7 +113,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
             enabled: true,
           },
           arrow: {
-            enabled: true,
+            enabled: this.hasArrow,
           },
         },
         onCreate: data => {
@@ -68,12 +132,15 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     });
   }
 
+  get _arrowNode() {
+    return this.shadowRoot.querySelector('[x-arrow]');
+  }
+
   __syncFromPopperState(data) {
     if (!data) {
       return;
     }
-    if (this.__arrowElement && data.placement !== this.__arrowElement.placement) {
-      this.__arrowElement.placement = data.placement;
+    if (this._arrowNode && data.placement !== this._arrowNode.placement) {
       this.__repositionCompleteResolver(data.placement);
       this.__setupRepositionCompletePromise();
     }
