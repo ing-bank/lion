@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.13...@lion/tooltip@0.9.0) (2020-05-18)
+
+
+### Bug Fixes
+
+* **overlays:** local backdrop outlet ([e19a0f4](https://github.com/ing-bank/lion/commit/e19a0f483c65a8a758da78b86e3723e9270e5bd3))
+* **tooltip:** tooltip display inline-block ([810bdad](https://github.com/ing-bank/lion/commit/810bdad523695d67217514586c5e509319322795))
+
+
+### Features
+
+* **overlays:** enhance content projection for styling purposes ([f33ea6b](https://github.com/ing-bank/lion/commit/f33ea6b0b0dca88d006762ec5110e5845a73d219))
+* **tooltip:** simplified tooltip component by making arrow a template ([73eb90a](https://github.com/ing-bank/lion/commit/73eb90ab96622fb1c268e03c31707679eaab0bb2))
+
+
+
+
+
 ## [0.8.13](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.8.12...@lion/tooltip@0.8.13) (2020-05-06)
 
 **Note:** Version bump only for package @lion/tooltip

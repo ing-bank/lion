@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.9...@lion/tabs@0.2.10) (2020-05-18)
+
+
+### Bug Fixes
+
+* **tabs:** tab keyboard navigation trap ([fbbea36](https://github.com/ing-bank/lion/commit/fbbea367205941de652da8224871923d120c2ede)), closes [#712](https://github.com/ing-bank/lion/issues/712)
+
+
+
+
+
 ## [0.2.9](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.8...@lion/tabs@0.2.9) (2020-04-29)
 
 **Note:** Version bump only for package @lion/tabs

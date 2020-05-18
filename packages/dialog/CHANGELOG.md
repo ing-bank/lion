@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.18...@lion/dialog@0.5.0) (2020-05-18)
+
+
+### Bug Fixes
+
+* **overlays:** local backdrop outlet ([e19a0f4](https://github.com/ing-bank/lion/commit/e19a0f483c65a8a758da78b86e3723e9270e5bd3))
+* **overlays:** setup/teardown fixes + perf improvements OverlayMixin ([8a6bef8](https://github.com/ing-bank/lion/commit/8a6bef8142d252cde7dd66067ca87acfffb2b9f6))
+
+
+### Features
+
+* **overlays:** enhance content projection for styling purposes ([f33ea6b](https://github.com/ing-bank/lion/commit/f33ea6b0b0dca88d006762ec5110e5845a73d219))
+
+
+
+
+
 ## [0.4.18](https://github.com/ing-bank/lion/compare/@lion/dialog@0.4.17...@lion/dialog@0.4.18) (2020-05-06)
 
 

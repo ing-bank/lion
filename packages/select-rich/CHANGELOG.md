@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.15.4...@lion/select-rich@0.16.0) (2020-05-18)
+
+
+### Bug Fixes
+
+* **overlays:** local backdrop outlet ([e19a0f4](https://github.com/ing-bank/lion/commit/e19a0f483c65a8a758da78b86e3723e9270e5bd3))
+
+
+### Features
+
+* **overlays:** enhance content projection for styling purposes ([f33ea6b](https://github.com/ing-bank/lion/commit/f33ea6b0b0dca88d006762ec5110e5845a73d219))
+
+
+
+
+
 ## [0.15.4](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.15.3...@lion/select-rich@0.15.4) (2020-05-06)
 
 **Note:** Version bump only for package @lion/select-rich
