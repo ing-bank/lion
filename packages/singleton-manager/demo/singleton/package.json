@@ -1,0 +1,8 @@
+{
+  "name": "fail-demo-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "page-a": "^1.0.0",
+    "page-b": "^1.0.0"
+  }
+}
