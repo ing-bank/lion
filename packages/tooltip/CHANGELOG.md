@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.10.0...@lion/tooltip@0.10.1) (2020-05-18)
+
+
+### Bug Fixes
+
+* tooltip storybook demo fix ([e84dac2](https://github.com/ing-bank/lion/commit/e84dac2a48c0a4dadf87b08f3ec5d252598b8868))
+
+
+
+
+
 # [0.10.0](https://github.com/ing-bank/lion/compare/@lion/tooltip@0.9.0...@lion/tooltip@0.10.0) (2020-05-18)
 
 
