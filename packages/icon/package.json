@@ -15,8 +15,8 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test --grep \"packages/icon/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/icon/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/icon/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/icon/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -33,7 +33,11 @@
     "translations",
     "*.js"
   ],
+  "sideEffects": [
+    "lion-icon.js"
+  ],
   "dependencies": {
-    "@lion/core": "0.5.2"
+    "@lion/core": "0.5.2",
+    "singleton-manager": "^0.0.0"
   }
 }

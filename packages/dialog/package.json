@@ -15,8 +15,8 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test --grep \"packages/dialog/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/dialog/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/dialog/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/dialog/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -30,6 +30,9 @@
     "stories",
     "test",
     "*.js"
+  ],
+  "sideEffects": [
+    "lion-dialog.js"
   ],
   "dependencies": {
     "@lion/core": "0.5.2",

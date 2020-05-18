@@ -15,8 +15,8 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test --grep \"packages/overlays/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/overlays/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/overlays/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/overlays/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -35,8 +35,10 @@
     "translations",
     "*.js"
   ],
+  "sideEffects": false,
   "dependencies": {
     "@lion/core": "0.5.2",
+    "singleton-manager": "^0.0.0",
     "popper.js": "^1.15.0"
   }
 }

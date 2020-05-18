@@ -15,8 +15,8 @@
   },
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test --grep \"packages/tooltip/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:watch --grep \"packages/tooltip/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/tooltip/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tooltip/test/**/*.test.js\""
   },
   "keywords": [
     "lion",
@@ -32,6 +32,10 @@
     "test",
     "translations",
     "*.js"
+  ],
+  "sideEffects": [
+    "lion-tooltip.js",
+    "lion-tooltip-arrow.js"
   ],
   "dependencies": {
     "@lion/core": "0.5.2",

@@ -16,6 +16,9 @@ function readPackageJsonDeps(filePath) {
         result[dep] = merged[dep];
       }
     });
+    // Note: we IGNORE singleton manager here as we NEED it to be a broad range of version
+    // the singleton-manager should never have a breaking change
+    delete result['singleton-manager'];
     return result;
   }
   return {};
