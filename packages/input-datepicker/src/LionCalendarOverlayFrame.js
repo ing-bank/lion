@@ -115,6 +115,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
             <slot name="close-icon">&times;</slot>
           </button>
         </div>
+        <slot name="_overlay-shadow-outlet"></slot>
         <div id="overlay-content-node-wrapper">
           <slot name="content"></slot>
         </div>

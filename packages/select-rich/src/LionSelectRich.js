@@ -334,6 +334,7 @@ export class LionSelectRich extends ScopedElementsMixin(
     return html`
       <div class="input-group__input">
         <slot name="invoker"></slot>
+        <slot name="_overlay-shadow-outlet"></slot>
         <div id="overlay-content-node-wrapper">
           <slot name="input"></slot>
         </div>

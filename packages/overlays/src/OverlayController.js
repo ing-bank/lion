@@ -527,10 +527,8 @@ export class OverlayController {
             this.backdropNode = document.createElement('div');
             this.backdropNode.classList.add('local-overlays__backdrop');
           }
-          this._contentWrapperNode.parentNode.insertBefore(
-            this.backdropNode,
-            this._contentWrapperNode,
-          );
+          this.backdropNode.slot = '_overlay-shadow-outlet';
+          this.contentNode.parentNode.insertBefore(this.backdropNode, this.contentNode);
           break;
         case 'show':
           this.__hasActiveBackdrop = true;
