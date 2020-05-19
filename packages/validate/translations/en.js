@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Please enter a correct {fieldName} (up to {params} characters).',
     MinMaxLength:
       'Please enter a correct {fieldName} (between {params.min} and {params.max} characters).',
+    Pattern: 'Please enter a valid {fieldName}',
     IsNumber: 'Please enter a valid {fieldName}.',
     MinNumber: 'Please enter a(n) {fieldName} higher than {params}.',
     MaxNumber: 'Please enter a(n) {fieldName} lower than {params}.',

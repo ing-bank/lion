@@ -5,6 +5,7 @@ export default {
     MinLength: 'Du musst mindestens {params} Zeichen eingeben.',
     MaxLength: 'Du kannst maximal {params} Zeichen eingeben.',
     MinMaxLength: 'Du musst zwischen {params.min} und {params.max} Zeichen eingeben.',
+    Pattern: 'Geben Sie ein gültiges {fieldName} ein.',
     IsNumber: 'Geben Sie ein gültiges {fieldName} ein.',
     MinNumber: 'Geben Sie für {fieldName} einen Wert über {params} ein.',
     MaxNumber: 'Geben Sie für {fieldName} einen Wert unter {params} ein.',

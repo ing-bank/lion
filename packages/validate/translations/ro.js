@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {params} (de) caractere).',
     MinMaxLength:
       'Introduceți un/o {fieldName} corect(ă) (între {params.min} și {params.max} (de) caractere).',
+    Pattern: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
     IsNumber: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
     MinNumber: 'Introduceți un/o {fieldName} mai mare decât {params}.',
     MaxNumber: 'Introduceți un/o {fieldName} mai mic(ă) decât {params}.',

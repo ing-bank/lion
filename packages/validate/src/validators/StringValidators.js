@@ -89,3 +89,25 @@ export class IsEmail extends Validator {
     return hasError;
   }
 }
+
+const hasPattern = (value, pattern) => pattern.test(value);
+export class Pattern extends Validator {
+  static get validatorName() {
+    return 'Pattern';
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  execute(value, pattern = this.param) {
+    if (!(pattern instanceof RegExp)) {
+      throw new Error(
+        'Psst... Pattern validator expects RegExp object as parameter e.g, new Pattern(/#LionRocks/) or new Pattern(RegExp("#LionRocks")',
+      );
+    }
+    let hasError = false;
+    if (!isString(value) || !hasPattern(value, pattern)) {
+      hasError = true;
+    }
+
+    return hasError;
+  }
+}

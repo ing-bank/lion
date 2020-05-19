@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Proszę podać prawidłową wartość {fieldName} (maks. {params} znaków).',
     MinMaxLength:
       'Proszę podać prawidłową wartość {fieldName} (od {params.min} do {params.max} znaków).',
+    Pattern: 'Wprowadź prawidłową wartość w polu {fieldName}.',
     IsNumber: 'Wprowadź prawidłową wartość w polu {fieldName}.',
     MinNumber: 'Proszę podać wartość {fieldName} większą niż {params}.',
     MaxNumber: 'Proszę podać wartość {fieldName} mniejszą niż {params}.',

@@ -5,6 +5,7 @@ export default {
     MinLength: 'Моля, въведете правилен {fieldName} (поне {params}).',
     MaxLength: 'Моля, въведете правилен {fieldName} (до {params} знака).',
     MinMaxLength: 'Моля, въведете правилен {fieldName} (между {params.min} и {params.max} знака).',
+    Pattern: 'Введіть правильні дані {fieldName}.',
     IsNumber: 'Введіть правильні дані {fieldName}.',
     MinNumber: 'Моля, въведете {fieldName} повече от {params}.',
     MaxNumber: 'Моля, въведете {fieldName} по-малко от {params}.',

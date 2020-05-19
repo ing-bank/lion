@@ -15,6 +15,7 @@ import {
   MaxLength,
   MinLength,
   MinMaxLength,
+  Pattern,
 } from './validators/StringValidators.js';
 
 export { IsNumber, MaxNumber, MinMaxNumber, MinNumber } from './validators/NumberValidators.js';
@@ -117,6 +118,7 @@ export function loadDefaultFeedbackMessages() {
   MinLength.getMessage = async data => getLocalizedMessage(data);
   MaxLength.getMessage = async data => getLocalizedMessage(data);
   MinMaxLength.getMessage = async data => getLocalizedMessage(data);
+  Pattern.getMessage = async data => getLocalizedMessage(data);
   IsEmail.getMessage = async data => getLocalizedMessage(data);
   IsNumber.getMessage = async data => getLocalizedMessage(data);
   MinNumber.getMessage = async data => getLocalizedMessage(data);

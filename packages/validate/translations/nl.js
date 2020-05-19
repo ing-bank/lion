@@ -5,6 +5,7 @@ export default {
     MinLength: 'Vul een {fieldName} in van minimaal {params} karakters.',
     MaxLength: 'Vul een {fieldName} in van maximaal {params} karakters.',
     MinMaxLength: 'Vul een {fieldName} in tussen {params.min} en {params.max} karakters.',
+    Pattern: 'Vul een geldig(e) {fieldName} in.',
     IsNumber: 'Vul een geldig(e) {fieldName} in.',
     MinNumber: 'Vul een {fieldName} in van minimaal {params}.',
     MaxNumber: 'Vul een {fieldName} in van maximaal {params}.',

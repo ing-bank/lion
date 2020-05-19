@@ -5,6 +5,7 @@ export default {
     MinLength: 'Uveďte správne {fieldName} (najmenej {params}).',
     MaxLength: 'Uveďte správne {fieldName} (maximálne {params} znakov).',
     MinMaxLength: 'Uveďte správne {fieldName} ({params.min} až {params.max} znakov).',
+    Pattern: 'Zadajte platnú hodnotu do poľa {fieldName}.',
     IsNumber: 'Zadajte platnú hodnotu do poľa {fieldName}.',
     MinNumber: 'Uveďte {fieldName} s hodnotou viac ako {params}.',
     MaxNumber: 'Uveďte {fieldName} s hodnotou menej ako {params}.',

@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Введите корректное значение поля {fieldName} (до {params} симв.).',
     MinMaxLength:
       'Введите корректное значение поля {fieldName} (от {params.min} до {params.max} симв.).',
+    Pattern: 'Введите действительное значение поля {fieldName}.',
     IsNumber: 'Введите действительное значение поля {fieldName}.',
     MinNumber: 'Введите значение поля {fieldName}, превышающее {params}.',
     MaxNumber: 'Введите значение поля {fieldName} меньше, чем {params}.',

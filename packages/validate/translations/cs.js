@@ -5,6 +5,7 @@ export default {
     MinLength: 'Zadejte správné {fieldName} (alespoň {params}).',
     MaxLength: 'Zadejte správné {fieldName} (až {params} znaků).',
     MinMaxLength: 'Zadejte správné {fieldName} (od {params.min} do {params.max} znaků).',
+    Pattern: 'Zadejte platné {fieldName}.',
     IsNumber: 'Zadejte platné {fieldName}.',
     MinNumber: 'Zadejte {fieldName} větší než {params}.',
     MaxNumber: 'Zadejte {fieldName} menší než {params}.',

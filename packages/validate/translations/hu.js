@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Adjon meg egy helyes {fieldName} értéket (legfeljebb {params} karakter).',
     MinMaxLength:
       'Adjon meg egy helyes {fieldName} értéket ({params.min} és {params.max} karakter között).',
+    Pattern: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
     IsNumber: 'Kérjük, adjon meg érvényes {fieldName} értéket.',
     MinNumber: 'Adjon meg egy {params} értéknél nagyobb {fieldName} értéket.',
     MaxNumber: 'Adjon meg egy {params} értéknél alacsonyabb {fieldName} értéket.',
