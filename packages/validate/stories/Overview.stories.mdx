@@ -22,6 +22,24 @@ not always lead to the desired User Experience.
 Together with [interaction states](?path=/docs/forms-system-interaction-states--interaction-states),
 validity states can determine whether a validation message should be shown along the input field.
 
+## Assessing field validation state programmatically
+When a field has feedback for an element it can be accessed using the `hasFeedbackFor` and `showsFeedbackFor` properties of the element.
+This can be used if the validity of an element is needed to be known in code.
+
+`hasFeedbackFor` is the state of the element regardless of whether the feedback is shown or not.
+`showsFeedbackFor` represents whether or not validation feedback is being shown. This takes into account 
+interaction state such as a field being `touched` and `dirty`, `prefilled` or `submitted`
+
+```js
+// Field is invalid and has not interacted with
+el.hasFeedbackFor.includes('error') // returns true
+el.showsFeedbackFor.includes('error') // returns false
+
+// Field  invalid, dirty and touched
+el.hasFeedbackFor.includes('error') // returns true
+el.showsFeedbackFor.includes('error') // returns true
+```
+
 ## Validators
 
 All validators are extensions of the `Validator` class. They should be applied to the element implementing
