@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/ing-bank/lion/compare/@lion/icon@0.5.0...@lion/icon@0.5.1) (2020-05-19)
+
+
+### Bug Fixes
+
+* **icon:** export setIcons ([0393427](https://github.com/ing-bank/lion/commit/0393427fa9df50dc4240a6e20115fb4a4d9756ca))
+
+
+
+
+
 # [0.5.0](https://github.com/ing-bank/lion/compare/@lion/icon@0.4.4...@lion/icon@0.5.0) (2020-05-18)
 
 

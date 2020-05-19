@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.15.0...@lion/overlays@0.15.1) (2020-05-19)
+
+
+### Bug Fixes
+
+* **overlays:** support singleton override via setOverlays ([171b87f](https://github.com/ing-bank/lion/commit/171b87f8ebc74c7c780282bb97dbce01c8124d4f))
+
+
+
+
+
 # [0.15.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.14.0...@lion/overlays@0.15.0) (2020-05-18)
 
 
