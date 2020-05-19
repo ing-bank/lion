@@ -1,5 +1,10 @@
 import { singletonManager } from 'singleton-manager';
 import { OverlaysManager } from './OverlaysManager.js';
 
-export const overlays =
+// eslint-disable-next-line import/no-mutable-exports
+export let overlays =
   singletonManager.get('@lion/overlays::overlays::0.15.x') || new OverlaysManager();
+
+export function setOverlays(newOverlays) {
+  overlays = newOverlays;
+}
