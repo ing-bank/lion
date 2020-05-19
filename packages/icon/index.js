@@ -1,2 +1,2 @@
 export { LionIcon } from './src/LionIcon.js';
-export { icons } from './src/icons.js';
+export { icons, setIcons } from './src/icons.js';
