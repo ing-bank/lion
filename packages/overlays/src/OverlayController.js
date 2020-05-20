@@ -610,7 +610,7 @@ export class OverlayController {
   _handleTrapsKeyboardFocus({ phase }) {
     if (phase === 'show') {
       this.enableTrapsKeyboardFocus();
-    } else if (phase === 'hide') {
+    } else if (phase === 'hide' || phase === 'teardown') {
       this.disableTrapsKeyboardFocus();
     }
   }
