@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.2](https://github.com/ing-bank/lion/compare/@lion/overlays@0.15.1...@lion/overlays@0.15.2) (2020-05-20)
+
+
+### Bug Fixes
+
+* **overlays:** contain focus when tabbing into window ([d1189c9](https://github.com/ing-bank/lion/commit/d1189c9b4ea7f1393496206466fd4ff336afde5c))
+
+
+
+
+
 ## [0.15.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.15.0...@lion/overlays@0.15.1) (2020-05-19)
 
 
