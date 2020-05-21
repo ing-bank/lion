@@ -229,6 +229,18 @@ export const FormGroupMixin = dedupeMixin(
         this.resetInteractionState();
       }
 
+      clearGroup() {
+        this.formElements.forEach(child => {
+          if (typeof child.clearGroup === 'function') {
+            child.clearGroup();
+          } else if (typeof child.clear === 'function') {
+            child.clear();
+          }
+        });
+
+        this.resetInteractionState();
+      }
+
       resetInteractionState() {
         this.submitted = false;
         this.touched = false;

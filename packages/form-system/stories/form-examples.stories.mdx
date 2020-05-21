@@ -101,6 +101,47 @@ This button is only used here to demonstrate the `serializeGroup()` method.
 </Story>
 </Preview>
 
+# clearGroup of form
+
+To clear the values of the values of the fields use clearGroup().
+
+<Preview>
+<Story name="clearGroup">
+  {() => {
+    return html`
+      <lion-form id="form3" 
+        ><form>
+          <lion-fieldset label="Name" name="name">
+            <lion-input
+              name="firstName"
+              label="First Name"
+              .modelValue=${'Foo'}
+            >
+            </lion-input>
+            <lion-input
+              name="lastName"
+              label="Last Name"
+            >
+            </lion-input>
+         
+          </lion-fieldset>
+          <button type="button" @click=${() => {
+            document.querySelector('#form3').clearGroup();
+            const form = document.querySelector('#form3');
+            document.getElementById('form3_output').innerText = JSON.stringify(form.serializedValue);
+          }}>
+            Clear
+          </button>
+          <pre id="form3_output">
+          </pre>
+        </form></lion-form
+      >
+    `;
+  }}
+</Story>
+</Preview>
+
+
 
 
 ## Serialize in a multistep form
