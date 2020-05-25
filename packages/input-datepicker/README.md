@@ -21,9 +21,7 @@ loadDefaultFeedbackMessages();
 
 ```js preview-story
 export const main = () => {
-  return html`
-    <lion-input-datepicker label="Date" name="date"></lion-input-datepicker>
-  `;
+  return html` <lion-input-datepicker label="Date" name="date"></lion-input-datepicker> `;
 };
 ```
 
@@ -49,7 +47,7 @@ export const main = () => {
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/input-datepicker
 ```
 

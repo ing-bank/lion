@@ -44,7 +44,7 @@ For more information about fields that are designed for lion-form, please read
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/form
 ```
 

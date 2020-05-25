@@ -32,7 +32,7 @@ export const main = () => html` <lion-switch label="Label" help-text="Help text"
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/switch
 ```
 

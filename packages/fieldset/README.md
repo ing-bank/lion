@@ -50,7 +50,7 @@ Our fieldset instead has a label attribute or you can add a label with a div- or
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/fieldset
 ```
 

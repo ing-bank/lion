@@ -12,7 +12,7 @@ The date formatter returns a date based on the locale by using [Intl DateTimeFor
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/localize
 ```
 
