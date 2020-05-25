@@ -538,9 +538,9 @@ export const declarativeLocalBackdrop = () => {
 Overlays can be nested, as the demo below shows.
 It's also possible to compose a nested construction by moving around dom nodes.
 
-<Preview>
-  <Story name="Nested overlays">
-    {html`
+```js preview-story
+export const nestedOverlays = () => {
+  return html`
     <demo-overlay-system .config="${withModalDialogConfig()}">
       <div slot="content" id="mainContent" class="demo-overlay">
         open nested overlay:
@@ -563,6 +563,6 @@ It's also possible to compose a nested construction by moving around dom nodes.
       </div>
       <button slot="invoker" id="mainInvoker">invoker button</button>
     </demo-overlay-system>
-  `}
-  </Story>
-</Preview>
+  `;
+};
+```

@@ -35,7 +35,7 @@ Further examples can be seen at [Features Overview Demo](?path=/docs/localize-fe
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/localize
 ```
 

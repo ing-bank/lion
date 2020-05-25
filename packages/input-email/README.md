@@ -34,7 +34,7 @@ export const main = () => {
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/input-email
 ```
 

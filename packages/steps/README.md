@@ -35,7 +35,7 @@ In many application you build multi-step workflows like multi-step forms where y
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/steps
 ```
 

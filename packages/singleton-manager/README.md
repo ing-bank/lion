@@ -7,7 +7,7 @@ Primarily useful if two major version of a package with a singleton is used.
 
 ### Installation
 
-```sh
+```bash
 npm i --save singleton-manager
 ```
 

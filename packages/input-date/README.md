@@ -39,7 +39,7 @@ export const main = () => html` <lion-input-date label="Date"></lion-input-date>
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/input-date
 ```
 

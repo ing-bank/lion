@@ -27,7 +27,7 @@ export default {
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/ajax
 ```
 

@@ -36,7 +36,7 @@ Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/overlays
 npm i --save @lion/dialog
 ```

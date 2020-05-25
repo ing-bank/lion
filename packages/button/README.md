@@ -33,7 +33,7 @@ export const main = () => html` <lion-button>Default</lion-button> `;
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/button
 ```
 

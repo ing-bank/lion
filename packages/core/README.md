@@ -34,7 +34,7 @@ import { LitElement, html, render } from '@lion/core';
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/core
 ```
 

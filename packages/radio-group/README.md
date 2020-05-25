@@ -48,7 +48,7 @@ Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page)
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/radio-group
 ```
 

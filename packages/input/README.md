@@ -41,7 +41,7 @@ export const main = () => html` <lion-input label="First Name"></lion-input> `;
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/input
 ```
 
