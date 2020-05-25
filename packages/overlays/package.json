@@ -35,7 +35,10 @@
     "translations",
     "*.js"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "./stories/demo-overlay-system.js",
+    "./stories/applyDemoOverlayStyles.js"
+  ],
   "dependencies": {
     "@lion/core": "0.6.0",
     "popper.js": "^1.15.0",

@@ -32,7 +32,8 @@
     "*.js"
   ],
   "sideEffects": [
-    "lion-dialog.js"
+    "lion-dialog.js",
+    "./stories/styled-dialog-content.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
