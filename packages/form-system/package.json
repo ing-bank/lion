@@ -32,7 +32,9 @@
     "translations",
     "*.js"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "./stories/helper-wc/h-output.js"
+  ],
   "dependencies": {
     "@lion/button": "0.6.0",
     "@lion/checkbox-group": "0.9.0",

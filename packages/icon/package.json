@@ -34,7 +34,8 @@
     "*.js"
   ],
   "sideEffects": [
-    "lion-icon.js"
+    "lion-icon.js",
+    "./stories/icon-resolvers.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",

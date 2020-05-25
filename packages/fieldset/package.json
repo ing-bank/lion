@@ -34,7 +34,8 @@
     "*.js"
   ],
   "sideEffects": [
-    "lion-fieldset.js"
+    "lion-fieldset.js",
+    "./stories/helpers/demo-fieldset-child.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
