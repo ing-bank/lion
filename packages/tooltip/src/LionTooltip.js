@@ -128,6 +128,8 @@ export class LionTooltip extends OverlayMixin(LitElement) {
           this.__syncFromPopperState(data);
         },
       },
+      isTooltip: true,
+      handlesAccessibility: true,
     };
   }
 

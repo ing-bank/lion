@@ -61,6 +61,44 @@ export const placementGlobal = () => html`
 `;
 ```
 
+## isTooltip (placementMode: 'local')
+
+As specified in the [overlay rationale](/?path=/docs/overlays-system-rationale--page) there are only two official types of overlays: dialogs and tooltips. And their main differences are:
+
+- Dialogs have a modal option, tooltips don’t
+- Dialogs have interactive content, tooltips don’t
+- Dialogs are opened via regular buttons (click/space/enter), tooltips act on focus/mouseover
+
+Since most overlays have interactive content the default is set to dialogs. To get a tooltip, you can add `isTooltip` to the config object. This only works for local placement and it also needs to have `handlesAccessibility` activated to work.
+
+```js preview-story
+export const isTooltip = () => {
+  function showTooltip() {
+    const tooltip = document.querySelector('#tooltip');
+    tooltip.opened = true;
+  }
+
+  function hideTooltip() {
+    const tooltip = document.querySelector('#tooltip');
+    tooltip.opened = false;
+  }
+
+  return html`
+    <demo-overlay-system
+      id="tooltip"
+      .config=${{ placementMode: 'local', isTooltip: true, handlesAccessibility: true }}
+    >
+      <button slot="invoker" @mouseenter="${showTooltip}" @mouseleave="${hideTooltip}">
+        Hover me to open the tooltip!
+      </button>
+      <div slot="content" class="demo-overlay">
+        Hello!
+      </div>
+    </demo-overlay-system>
+  `;
+};
+```
+
 ## trapsKeyboardFocus
 
 Boolean property. When true, the focus will rotate through the **focusable elements** inside the `contentNode`.
@@ -295,7 +333,7 @@ export const viewportConfig = () => html`
 
 ## popperConfig for local overlays (placementMode: 'local')
 
-For locally DOM positioned overlays that position themselves relative to their invoker, we use <a href="https://popper.js.org/" target="_blank">Popper.js</a> for positioning.
+For locally DOM positioned overlays that position themselves relative to their invoker, we use [Popper.js](https://popper.js.org/) for positioning.
 
 > In Popper, `contentNode` is often referred to as `popperElement`, and `invokerNode` is often referred to as the `referenceElement`.
 
@@ -306,7 +344,7 @@ Features:
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
 > This also means that if you use the arrow feature, you are in charge of styling it properly, use the x-placement attribute for this.
-> An example implementation can be found in [lion-tooltip](?path=/docs/overlays-tooltip), where an arrow is set by default.
+> An example implementation can be found in [lion-tooltip](?path=/docs/overlays-tooltip--main#tooltip), where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
 Here's a succinct overview of some often used popper properties:

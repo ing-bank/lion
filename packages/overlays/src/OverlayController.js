@@ -100,6 +100,7 @@ export class OverlayController {
       hidesOnOutsideEsc: false,
       hidesOnOutsideClick: false,
       isTooltip: false,
+      invokerRelation: 'description',
       handlesUserInteraction: false,
       handlesAccessibility: false,
       popperConfig: {
@@ -134,7 +135,7 @@ export class OverlayController {
 
     this.manager.add(this);
     this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
-
+    this.__originalAttrs = new Map();
     if (this._defaultConfig.contentNode) {
       if (!this._defaultConfig.contentNode.isConnected) {
         throw new Error(
@@ -236,18 +237,32 @@ export class OverlayController {
   // eslint-disable-next-line class-methods-use-this
   __validateConfiguration(newConfig) {
     if (!newConfig.placementMode) {
-      throw new Error('You need to provide a .placementMode ("global"|"local")');
+      throw new Error(
+        '[OverlayController] You need to provide a .placementMode ("global"|"local")',
+      );
     }
     if (!['global', 'local'].includes(newConfig.placementMode)) {
       throw new Error(
-        `"${newConfig.placementMode}" is not a valid .placementMode, use ("global"|"local")`,
+        `[OverlayController] "${newConfig.placementMode}" is not a valid .placementMode, use ("global"|"local")`,
       );
     }
     if (!newConfig.contentNode) {
-      throw new Error('You need to provide a .contentNode');
+      throw new Error('[OverlayController] You need to provide a .contentNode');
     }
     if (this.__isContentNodeProjected && !newConfig.contentWrapperNode) {
-      throw new Error('You need to provide a .contentWrapperNode when .contentNode is projected');
+      throw new Error(
+        '[OverlayController] You need to provide a .contentWrapperNode when .contentNode is projected',
+      );
+    }
+    if (newConfig.isTooltip && newConfig.placementMode !== 'local') {
+      throw new Error(
+        '[OverlayController] .isTooltip should be configured with .placementMode "local"',
+      );
+    }
+    if (newConfig.isTooltip && !newConfig.handlesAccessibility) {
+      throw new Error(
+        '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
+      );
     }
     // if (newConfig.popperConfig.modifiers.arrow && !newConfig.contentWrapperNode) {
     //   throw new Error('You need to provide a .contentWrapperNode when Popper arrow is enabled');
@@ -257,9 +272,6 @@ export class OverlayController {
   async _init({ cfgToAdd }) {
     this.__initcontentWrapperNode({ cfgToAdd });
     this.__initConnectionTarget();
-    if (this.handlesAccessibility) {
-      this.__initAccessibility({ cfgToAdd });
-    }
 
     if (this.placementMode === 'local') {
       // Lazily load Popper if not done yet
@@ -339,27 +351,58 @@ export class OverlayController {
     }
   }
 
-  __initAccessibility() {
-    // TODO: remove a11y attributes on teardown
-    if (!this.contentNode.id) {
-      this.contentNode.setAttribute('id', this._contentId);
+  __setupTeardownAccessibility({ phase }) {
+    if (phase === 'init') {
+      this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
+      this.__storeOriginalAttrs(this.invokerNode, [
+        'aria-expanded',
+        'aria-labelledby',
+        'aria-describedby',
+      ]);
+
+      if (!this.contentNode.id) {
+        this.contentNode.setAttribute('id', this._contentId);
+      }
+      if (this.isTooltip) {
+        if (this.invokerNode) {
+          this.invokerNode.setAttribute(
+            this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
+            this._contentId,
+          );
+        }
+        this.contentNode.setAttribute('role', 'tooltip');
+      } else {
+        if (this.invokerNode) {
+          this.invokerNode.setAttribute('aria-expanded', this.isShown);
+        }
+        if (!this.contentNode.role) {
+          this.contentNode.setAttribute('role', 'dialog');
+        }
+      }
+    } else if (phase === 'teardown') {
+      this.__restorOriginalAttrs();
     }
-    if (this.isTooltip) {
-      if (this.invokerNode) {
-        this.invokerNode.setAttribute(
-          this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
-          this._contentId,
-        );
-      }
-      this.contentNode.setAttribute('role', 'tooltip');
-    } else {
-      if (this.invokerNode) {
-        this.invokerNode.setAttribute('aria-expanded', this.isShown);
-      }
-      if (!this.contentNode.role) {
-        this.contentNode.setAttribute('role', 'dialog');
-      }
+  }
+
+  __storeOriginalAttrs(node, attrs) {
+    const attrMap = {};
+    attrs.forEach(attrName => {
+      attrMap[attrName] = node.getAttribute(attrName);
+    });
+    this.__originalAttrs.set(node, attrMap);
+  }
+
+  __restorOriginalAttrs() {
+    for (const [node, attrMap] of this.__originalAttrs) {
+      Object.entries(attrMap).forEach(([attrName, value]) => {
+        if (value !== null) {
+          node.setAttribute(attrName, value);
+        } else {
+          node.removeAttribute(attrName);
+        }
+      });
     }
+    this.__originalAttrs.clear();
   }
 
   get isShown() {
@@ -772,6 +815,9 @@ export class OverlayController {
   }
 
   _handleAccessibility({ phase }) {
+    if (phase === 'init' || phase === 'teardown') {
+      this.__setupTeardownAccessibility({ phase });
+    }
     if (this.invokerNode && !this.isTooltip) {
       this.invokerNode.setAttribute('aria-expanded', phase === 'show');
     }
