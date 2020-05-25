@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.1](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.11.0...@lion/fieldset@0.11.1) (2020-05-25)
+
+
+### Bug Fixes
+
+* add side effects to package.json to fix storybook build ([a7f7b4c](https://github.com/ing-bank/lion/commit/a7f7b4c70d48a78c0a1d5511e54004c157f1dba3))
+
+
+
+
+
 # [0.11.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.10.2...@lion/fieldset@0.11.0) (2020-05-18)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@lion/radio-group",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Manage a group of choices",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -40,7 +40,7 @@
   "dependencies": {
     "@lion/choice-input": "0.9.0",
     "@lion/core": "0.6.0",
-    "@lion/fieldset": "0.11.0",
+    "@lion/fieldset": "0.11.1",
     "@lion/input": "0.6.0"
   }
 }

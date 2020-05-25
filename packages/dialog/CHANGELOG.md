@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/dialog@0.6.2...@lion/dialog@0.6.3) (2020-05-25)
+
+
+### Bug Fixes
+
+* add side effects to package.json to fix storybook build ([a7f7b4c](https://github.com/ing-bank/lion/commit/a7f7b4c70d48a78c0a1d5511e54004c157f1dba3))
+
+
+
+
+
 ## [0.6.2](https://github.com/ing-bank/lion/compare/@lion/dialog@0.6.1...@lion/dialog@0.6.2) (2020-05-20)
 
 **Note:** Version bump only for package @lion/dialog
