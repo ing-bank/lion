@@ -37,7 +37,7 @@ export const main = () => html`
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/tabs;
 ```
 
@@ -184,9 +184,7 @@ export const distributeNewElement = () => {
       },
     );
   }
-  return html`
-    <lion-tabs-experimental></lion-tabs-experimental>
-  `;
+  return html` <lion-tabs-experimental></lion-tabs-experimental> `;
 };
 ```
 

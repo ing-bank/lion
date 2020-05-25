@@ -43,7 +43,7 @@ For a detailed description of the validation system and the `ValidateMixin`, ple
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/validate
 ```
 

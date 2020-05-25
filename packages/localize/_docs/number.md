@@ -14,7 +14,7 @@ The number formatter returns a number based on the locale by using [Intl NumberF
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/localize
 ```
 

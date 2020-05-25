@@ -6,6 +6,7 @@ e invoker element is focused.
 
 ```js script
 import { css, html } from '@lion/core';
+import { LionTooltip } from './src/LionTooltip.js';
 import './lion-tooltip.js';
 
 export default {
@@ -72,7 +73,7 @@ export const main = () => html`
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/tooltip
 ```
 

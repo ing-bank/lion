@@ -48,7 +48,7 @@ For most other form elements in `lion` we do this for you, because there's no ne
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/select
 ```
 

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
->>>>>>> feat: use markdown javascript (mdjs) for documentation
 # Dialog
 
 `lion-dialog` is a component wrapping a modal dialog controller.
@@ -53,7 +50,7 @@ export const main = () => html`
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/dialog
 ```
 
