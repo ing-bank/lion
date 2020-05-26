@@ -13,35 +13,64 @@ function addTask(file, newAction) {
   file.data.remarkExtend.push(newAction);
 }
 
-function findReplacementTasks(tree, file) {
-  visit(tree, 'code', node => {
-    if (node.lang === 'js' && node.meta && node.meta.startsWith('::replaceFrom')) {
-      const startSelector = node.meta.substring(
-        node.meta.indexOf("('") + 2,
-        node.meta.indexOf("')"),
-      );
-      addTask(file, {
-        action: 'replaceFrom',
-        startSelector,
-        jsCode: node.value,
-      });
-    }
-    if (node.lang === 'js' && node.meta && node.meta.startsWith('::replaceBetween')) {
-      const startSelector = node.meta.substring(
-        node.meta.indexOf("('") + 2,
-        node.meta.indexOf("',"),
-      );
-      const endSelector = node.meta
-        .substring(node.meta.indexOf("',") + 4, node.meta.indexOf("')"))
-        .trim();
-      addTask(file, {
-        action: 'replaceBetween',
-        startSelector,
-        endSelector,
-        jsCode: node.value,
-      });
-    }
-  });
+function evaluateAsReplacementTask(node, file) {
+  if (
+    node.type === 'code' &&
+    node.lang === 'js' &&
+    node.meta &&
+    node.meta.startsWith('::replaceFrom')
+  ) {
+    const startSelector = node.meta.substring(node.meta.indexOf("('") + 2, node.meta.indexOf("')"));
+    addTask(file, {
+      action: 'replaceFrom',
+      startSelector,
+      jsCode: node.value,
+    });
+  }
+  if (
+    node.type === 'code' &&
+    node.lang === 'js' &&
+    node.meta &&
+    node.meta.startsWith('::replaceBetween')
+  ) {
+    const startSelector = node.meta.substring(node.meta.indexOf("('") + 2, node.meta.indexOf("',"));
+    const endSelector = node.meta
+      .substring(node.meta.indexOf("',") + 4, node.meta.indexOf("')"))
+      .trim();
+    addTask(file, {
+      action: 'replaceBetween',
+      startSelector,
+      endSelector,
+      jsCode: node.value,
+    });
+  }
+}
+
+function evaluateAsRemoveTask(node, file) {
+  if (node.type === 'code' && node.value && node.value.startsWith('::removeFrom')) {
+    const startSelector = node.value.substring(
+      node.value.indexOf("('") + 2,
+      node.value.indexOf("')"),
+    );
+    addTask(file, {
+      action: 'removeFrom',
+      startSelector,
+    });
+  }
+  if (node.type === 'code' && node.value && node.value.startsWith('::removeBetween')) {
+    const startSelector = node.value.substring(
+      node.value.indexOf("('") + 2,
+      node.value.indexOf("',"),
+    );
+    const endSelector = node.value
+      .substring(node.value.indexOf("',") + 4, node.value.indexOf("')"))
+      .trim();
+    addTask(file, {
+      action: 'removeBetween',
+      startSelector,
+      endSelector,
+    });
+  }
 }
 
 function shouldFinishGathering(node) {
@@ -54,83 +83,63 @@ function shouldFinishGathering(node) {
   return false;
 }
 
-function findMdAdditionTasks(tree, file) {
-  let addNodes = [];
-  let gathering = false;
-  let startSelector;
-  let action = '';
-  visit(tree, (node, index, parent) => {
-    if (gathering === true && shouldFinishGathering(node)) {
-      gathering = false;
-      addTask(file, {
-        action,
-        startSelector,
-        addNodes,
-      });
-      addNodes = [];
-    }
-
-    if (gathering === true) {
-      if (parent.type === 'root') {
-        addNodes.push(node);
-      }
-    }
-
-    if (node.type === 'code' && node.value && node.value.startsWith('::addMdAfter')) {
-      startSelector = node.value.substring(node.value.indexOf("('") + 2, node.value.indexOf("')"));
-      gathering = true;
-      action = 'addMdAfter';
-    }
-    if (node.type === 'code' && node.value && node.value.startsWith('::addMdBefore')) {
-      startSelector = node.value.substring(node.value.indexOf("('") + 2, node.value.indexOf("')"));
-      gathering = true;
-      action = 'addMdBefore';
-    }
-  });
-
-  if (gathering === true) {
+let mdAdditionAddNodes = [];
+let mdAdditionGathering = false;
+let mdAdditionStartSelector;
+let mdAdditionAction = '';
+function evaluateAsMdAdditionTask(node, file, parent) {
+  if (mdAdditionGathering === true && shouldFinishGathering(node)) {
+    mdAdditionGathering = false;
     addTask(file, {
-      action,
-      startSelector,
-      addNodes,
+      action: mdAdditionAction,
+      startSelector: mdAdditionStartSelector,
+      addNodes: mdAdditionAddNodes,
     });
+    mdAdditionAddNodes = [];
   }
-}
 
-function findRemoveTasks(tree, file) {
-  visit(tree, 'code', node => {
-    if (node.value && node.value.startsWith('::removeFrom')) {
-      const startSelector = node.value.substring(
-        node.value.indexOf("('") + 2,
-        node.value.indexOf("')"),
-      );
-      addTask(file, {
-        action: 'removeFrom',
-        startSelector,
-      });
+  if (mdAdditionGathering === true) {
+    if (parent.type === 'root') {
+      mdAdditionAddNodes.push(node);
     }
-    if (node.value && node.value.startsWith('::removeBetween')) {
-      const startSelector = node.value.substring(
-        node.value.indexOf("('") + 2,
-        node.value.indexOf("',"),
-      );
-      const endSelector = node.value
-        .substring(node.value.indexOf("',") + 4, node.value.indexOf("')"))
-        .trim();
-      addTask(file, {
-        action: 'removeBetween',
-        startSelector,
-        endSelector,
-      });
-    }
-  });
+  }
+
+  if (node.type === 'code' && node.value && node.value.startsWith('::addMdAfter')) {
+    mdAdditionStartSelector = node.value.substring(
+      node.value.indexOf("('") + 2,
+      node.value.indexOf("')"),
+    );
+    mdAdditionGathering = true;
+    mdAdditionAction = 'addMdAfter';
+  }
+  if (node.type === 'code' && node.value && node.value.startsWith('::addMdBefore')) {
+    mdAdditionStartSelector = node.value.substring(
+      node.value.indexOf("('") + 2,
+      node.value.indexOf("')"),
+    );
+    mdAdditionGathering = true;
+    mdAdditionAction = 'addMdBefore';
+  }
 }
 
 function findExtendTasks() {
   return (tree, file) => {
-    findReplacementTasks(tree, file);
-    findMdAdditionTasks(tree, file);
-    findRemoveTasks(tree, file);
+    visit(tree, (node, index, parent) => {
+      evaluateAsReplacementTask(node, file);
+      evaluateAsMdAdditionTask(node, file, parent);
+      evaluateAsRemoveTask(node, file);
+    });
+
+    // for evaluateAsMdAdditionTask
+    if (mdAdditionGathering === true) {
+      mdAdditionGathering = false;
+      addTask(file, {
+        action: mdAdditionAction,
+        startSelector: mdAdditionStartSelector,
+        addNodes: mdAdditionAddNodes,
+      });
+      mdAdditionAddNodes = [];
+    }
   };
 }
 

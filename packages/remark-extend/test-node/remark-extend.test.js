@@ -88,46 +88,6 @@ describe('remarkExtend', () => {
     expect(result.contents).to.equal(output);
   });
 
-  it('does replacements in order of extendMd', async () => {
-    const input = [
-      '### Red', // <-- start
-      '',
-      'red is the fire',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceFrom(':root')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-      "```js ::replaceFrom(':root')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/green/g, 'yellow').replace(/Green/g, 'Yellow');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-    ].join('\n');
-    const output = [
-      '<h3>Yellow</h3>', // <-- start
-      '<p>yellow is the fire</p>',
-      '',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
   it('can replace from a starting point downward', async () => {
     const input = [
       '### Red',
@@ -613,6 +573,55 @@ describe('remarkExtend', () => {
       '<p>the sun can get red</p>',
       '',
     ].join('\n');
+    const parser = unified()
+      //
+      .use(markdown)
+      .use(remarkExtend, { extendMd })
+      .use(mdStringify);
+    const result = await parser.process(input);
+
+    expect(result.contents).to.equal(output);
+  });
+
+  it('does replacements in order of extendMd', async () => {
+    const input = [
+      '### Red', // <-- start
+      '',
+      'red is the fire',
+      '### More',
+    ].join('\n');
+    const extendMd = [
+      '```',
+      "::removeBetween('heading:has([value=Red]) + *', 'heading:has([value=Red]) ~ heading')",
+      '```',
+      "```js ::replaceFrom(':root')",
+      'module.exports.replaceSection = (node) => {',
+      '  if (node.value) {',
+      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
+      '  }',
+      '  return node;',
+      '};',
+      '```',
+      "```js ::replaceFrom(':root')",
+      'module.exports.replaceSection = (node) => {',
+      '  if (node.value) {',
+      "     node.value = node.value.replace(/green/g, 'yellow').replace(/Green/g, 'Yellow');",
+      '  }',
+      '  return node;',
+      '};',
+      '```',
+      '```',
+      "::addMdAfter('heading:has([value=Yellow])')",
+      '```',
+      'This is added',
+    ].join('\n');
+    const output = [
+      '<h3>Yellow</h3>', // <-- start
+      '<p>This is added</p>',
+      '<h3>More</h3>',
+      '',
+    ].join('\n');
+
     const parser = unified()
       //
       .use(markdown)
