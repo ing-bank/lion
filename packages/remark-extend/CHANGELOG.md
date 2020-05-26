@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/ing-bank/lion/compare/remark-extend@0.1.2...remark-extend@0.1.3) (2020-05-26)
+
+
+### Bug Fixes
+
+* **remark-extend:** task order is the same as in provided extend md ([00176c6](https://github.com/ing-bank/lion/commit/00176c6c5e83651f095f7fe22da28b4b21d8f8d1))
+
+
+
+
+
 ## [0.1.2](https://github.com/ing-bank/lion/compare/remark-extend@0.1.1...remark-extend@0.1.2) (2020-04-29)
 
 **Note:** Version bump only for package remark-extend
