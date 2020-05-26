@@ -34,9 +34,9 @@ const cleanButton = ({ element, clickHandler, keydownHandler, keyupHandler }) =>
   element.removeEventListener('keydown', keydownHandler);
 };
 
-const selectButton = (element, firstUpdate = false) => {
+const selectButton = (element, withFocus = false) => {
   // Don't focus on first update, as the component might be lower on the page
-  if (!firstUpdate) {
+  if (withFocus) {
     element.focus();
   }
 
@@ -118,12 +118,11 @@ export class LionTabs extends LitElement {
 
   constructor() {
     super();
-    this.selectedIndex = 0;
+    this.__setSelectedIndex(0);
   }
 
   firstUpdated() {
     super.firstUpdated();
-    this.__firstUpdate = true;
     this.__setupSlots();
   }
 
@@ -132,7 +131,7 @@ export class LionTabs extends LitElement {
     const handleSlotChange = () => {
       this.__cleanStore();
       this.__setupStore();
-      this.__updateSelected();
+      this.__updateSelected(false);
     };
     tabSlot.addEventListener('slotchange', handleSlotChange);
   }
@@ -178,7 +177,7 @@ export class LionTabs extends LitElement {
 
   __createButtonClickHandler(index) {
     return () => {
-      this.selectedIndex = index;
+      this.__setSelectedIndex(index);
     };
   }
 
@@ -187,34 +186,41 @@ export class LionTabs extends LitElement {
       case 'ArrowDown':
       case 'ArrowRight':
         if (this.selectedIndex + 1 >= this._pairCount) {
-          this.selectedIndex = 0;
+          this.__setSelectedIndex(0);
         } else {
-          this.selectedIndex += 1;
+          this.__setSelectedIndex(this.selectedIndex + 1);
         }
         break;
       case 'ArrowUp':
       case 'ArrowLeft':
         if (this.selectedIndex <= 0) {
-          this.selectedIndex = this._pairCount - 1;
+          this.__setSelectedIndex(this._pairCount - 1);
         } else {
-          this.selectedIndex -= 1;
+          this.__setSelectedIndex(this.selectedIndex - 1);
         }
         break;
       case 'Home':
-        this.selectedIndex = 0;
+        this.__setSelectedIndex(0);
         break;
       case 'End':
-        this.selectedIndex = this._pairCount - 1;
+        this.__setSelectedIndex(this._pairCount - 1);
         break;
       /* no default */
     }
   }
 
   set selectedIndex(value) {
-    this.__firstUpdate = false;
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
-    this.__updateSelected();
+    this.__updateSelected(false);
+    this.dispatchEvent(new Event('selected-changed'));
+    this.requestUpdate('selectedIndex', stale);
+  }
+
+  __setSelectedIndex(value) {
+    const stale = this.__selectedIndex;
+    this.__selectedIndex = value;
+    this.__updateSelected(true);
     this.dispatchEvent(new Event('selected-changed'));
     this.requestUpdate('selectedIndex', stale);
   }
@@ -227,7 +233,7 @@ export class LionTabs extends LitElement {
     return this.__store.length;
   }
 
-  __updateSelected() {
+  __updateSelected(withFocus = false) {
     if (!(this.__store && this.__store[this.selectedIndex])) {
       return;
     }
@@ -245,7 +251,7 @@ export class LionTabs extends LitElement {
     }
     const { button: currentButton, panel: currentPanel } = this.__store[this.selectedIndex];
     if (currentButton) {
-      selectButton(currentButton, this.__firstUpdate);
+      selectButton(currentButton, withFocus);
     }
     if (currentPanel) {
       selectPanel(currentPanel);
