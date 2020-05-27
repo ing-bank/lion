@@ -69,6 +69,30 @@ export class LionSelectInvoker extends LionButton {
     this.type = 'button';
   }
 
+  connectedCallback() {
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
+
+    const handleKeydown = event => {
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'ArrowUp':
+          event.preventDefault();
+        /* no default */
+      }
+    };
+    this.handleKeydown = handleKeydown;
+    this.addEventListener('keydown', this.handleKeydown);
+  }
+
+  disconnectedCallback() {
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
+    this.removeEventListener('keydown', this.handleKeydown);
+  }
+
   _contentTemplate() {
     if (this.selectedElement) {
       const labelNodes = Array.from(this.selectedElement.querySelectorAll('*'));
