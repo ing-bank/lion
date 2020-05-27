@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.9.0...@lion/form-system@0.10.0) (2020-05-27)
+
+
+### Features
+
+* **fieldset:** add clearGroup method ([#723](https://github.com/ing-bank/lion/issues/723)) ([8314b1a](https://github.com/ing-bank/lion/commit/8314b1acc24c979e4fc9f53dc0c4b352ff3604fa))
+
+
+
+
+
 # [0.9.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.8.3...@lion/form-system@0.9.0) (2020-05-27)
 
 
