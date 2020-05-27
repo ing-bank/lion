@@ -286,6 +286,20 @@ describe('<lion-tabs>', () => {
     });
   });
 
+  it('focuses on a tab when the selected tab is changed by user interaction', async () => {
+    const el = await fixture(html`
+      <lion-tabs>
+        <button slot="tab">tab 1</button>
+        <div slot="panel">panel 1</div>
+        <button slot="tab">tab 2</button>
+        <div slot="panel">panel 2</div>
+      </lion-tabs>
+    `);
+    const secondTab = el.querySelector('[slot="tab"]:nth-of-type(2)');
+    secondTab.dispatchEvent(new MouseEvent('click'));
+    expect(secondTab === document.activeElement).to.be.true;
+  });
+
   describe('Accessibility', () => {
     it('does not make panels focusable', async () => {
       const el = await fixture(html`
