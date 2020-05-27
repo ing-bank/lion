@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.5](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.17.4...@lion/select-rich@0.17.5) (2020-05-27)
+
+
+### Bug Fixes
+
+* **select-rich:** prevent scrolling when focused ([dd3053a](https://github.com/ing-bank/lion/commit/dd3053a7bcab59b2c7736e2fa13a53a154953f02))
+
+
+
+
+
 ## [0.17.4](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.17.3...@lion/select-rich@0.17.4) (2020-05-27)
 
 **Note:** Version bump only for package @lion/select-rich
