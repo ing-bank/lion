@@ -1042,7 +1042,7 @@ describe('<lion-fieldset>', () => {
         expect(clearSpy.callCount).to.equal(1);
       });
 
-      it('should clear the value of children fields', async () => {
+      it('should clear the value of  fields', async () => {
         const el = await fixture(html`
           <${tag} name="parentFieldset">
           <${tag} name="childFieldset">
