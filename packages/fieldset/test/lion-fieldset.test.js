@@ -1010,6 +1010,51 @@ describe('<lion-fieldset>', () => {
         expect(resetSpy.callCount).to.equal(1);
       });
     });
+
+    describe('clearGroup method', () => {
+      it('calls clearGroup on children fieldset', async () => {
+        const el = await fixture(html`
+          <${tag} name="parentFieldset">
+          <${tag} name="childFieldset">
+              <${childTag} name="child[]" .modelValue="${'foo1'}">
+              </${childTag}>
+            </${tag}>
+          </${tag}>
+        `);
+        const childFieldsetEl = el.querySelector(tagString);
+        const clearGroupSpy = sinon.spy(childFieldsetEl, 'clearGroup');
+        el.clearGroup();
+        expect(clearGroupSpy.callCount).to.equal(1);
+      });
+
+      it('calls clear on children fields', async () => {
+        const el = await fixture(html`
+          <${tag} name="parentFieldset">
+          <${tag} name="childFieldset">
+              <${childTag} name="child[]" .modelValue="${'foo1'}">
+              </${childTag}>
+            </${tag}>
+          </${tag}>
+        `);
+        const childFieldsetEl = el.querySelector(childTagString);
+        const clearSpy = sinon.spy(childFieldsetEl, 'clear');
+        el.clearGroup();
+        expect(clearSpy.callCount).to.equal(1);
+      });
+
+      it('should clear the value of children fields', async () => {
+        const el = await fixture(html`
+          <${tag} name="parentFieldset">
+          <${tag} name="childFieldset">
+              <${childTag} name="child" .modelValue="${'foo1'}">
+              </${childTag}>
+            </${tag}>
+          </${tag}>
+        `);
+        el.clearGroup();
+        expect(el.querySelector('[name="child"]').modelValue).to.equal('');
+      });
+    });
   });
 
   describe('Accessibility', () => {
