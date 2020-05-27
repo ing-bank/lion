@@ -126,29 +126,6 @@ describe('remarkExtend', () => {
     expect(result.contents).to.equal(output);
   });
 
-  it('throws if a start selector is not found', async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceFrom('heading:has([value=More Red])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
-      'The start selector "heading:has([value=More Red])" could not find a matching node.',
-    );
-  });
-
   it('can replace within a range (start point included, endpoint not)', async () => {
     const input = [
       '### Red',
@@ -191,6 +168,60 @@ describe('remarkExtend', () => {
     expect(result.contents).to.equal(output);
   });
 
+  it('throws if a start selector is not found', async () => {
+    const input = [
+      //
+      '### Red',
+    ].join('\n');
+    const extendMd = [
+      "```js ::replaceFrom('heading:has([value=More Red])')",
+      'module.exports.replaceSection = (node) => {}',
+      '```',
+    ].join('\n');
+
+    const parser = unified()
+      //
+      .use(markdown)
+      .use(remarkExtend, { extendMd })
+      .use(mdStringify);
+
+    await expectThrowsAsync(
+      () => parser.process(input),
+      'The start selector "heading:has([value=More Red])" could not find a matching node.',
+    );
+  });
+
+  it('throws with addition info (if provide as filePath, overrideFilePath) if a start selector is not found', async () => {
+    const input = [
+      //
+      '### Red',
+    ].join('\n');
+    const extendMd = [
+      "```js ::replaceFrom('heading:has([value=More Red])')",
+      'module.exports.replaceSection = (node) => {}',
+      '```',
+    ].join('\n');
+
+    const parser = unified()
+      //
+      .use(markdown)
+      .use(remarkExtend, {
+        extendMd,
+        filePath: '/path/to/input.md',
+        overrideFilePath: '/path/to/override.md',
+      })
+      .use(mdStringify);
+
+    await expectThrowsAsync(
+      () => parser.process(input),
+      [
+        'The start selector "heading:has([value=More Red])" could not find a matching node.',
+        'Markdown File: /path/to/input.md',
+        'Override File: /path/to/override.md',
+      ].join('\n'),
+    );
+  });
+
   it('throws if a end selector is not found', async () => {
     const input = [
       //
@@ -207,6 +238,36 @@ describe('remarkExtend', () => {
     await expectThrowsAsync(
       () => parser.process(input),
       'The end selector "heading:has([value=Red2])" could not find a matching node.',
+    );
+  });
+
+  it('throws with addition info (if provide as filePath, overrideFilePath) if a end selector is not found', async () => {
+    const input = [
+      //
+      '### Red',
+    ].join('\n');
+    const extendMd = [
+      "```js ::replaceBetween('heading:has([value=Red])', 'heading:has([value=Red2])')",
+      'module.exports.replaceSection = (node) => {}',
+      '```',
+    ].join('\n');
+
+    const parser = unified()
+      .use(markdown)
+      .use(remarkExtend, {
+        extendMd,
+        filePath: '/path/to/input.md',
+        overrideFilePath: '/path/to/override.md',
+      })
+      .use(mdStringify);
+
+    await expectThrowsAsync(
+      () => parser.process(input),
+      [
+        'The end selector "heading:has([value=Red2])" could not find a matching node.',
+        'Markdown File: /path/to/input.md',
+        'Override File: /path/to/override.md',
+      ].join('\n'),
     );
   });
 

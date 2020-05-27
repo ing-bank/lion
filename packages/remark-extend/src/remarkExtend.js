@@ -274,7 +274,14 @@ function remarkExtend(options) {
         const { action, startSelector, endSelector, jsCode, addNodes } = extensionTask;
         const start = select(extensionTask.startSelector, tree);
         if (!start) {
-          throw new Error(`The start selector "${startSelector}" could not find a matching node.`);
+          const msg = [
+            `The start selector "${startSelector}" could not find a matching node.`,
+            options.filePath ? `Markdown File: ${options.filePath}` : '',
+            options.overrideFilePath ? `Override File: ${options.overrideFilePath}` : '',
+          ]
+            .filter(Boolean)
+            .join('\n');
+          throw new Error(msg);
         }
         const startIsNode = { ...start };
         delete startIsNode.children; // unified is comparison does not support children
@@ -283,7 +290,14 @@ function remarkExtend(options) {
         if (action === 'replaceBetween' || action === 'removeBetween') {
           const end = select(endSelector, tree);
           if (!end) {
-            throw new Error(`The end selector "${endSelector}" could not find a matching node.`);
+            const msg = [
+              `The end selector "${endSelector}" could not find a matching node.`,
+              options.filePath ? `Markdown File: ${options.filePath}` : '',
+              options.overrideFilePath ? `Override File: ${options.overrideFilePath}` : '',
+            ]
+              .filter(Boolean)
+              .join('\n');
+            throw new Error(msg);
           }
           endIsNode = { ...end };
           delete endIsNode.children; // unified is comparison does not support children
