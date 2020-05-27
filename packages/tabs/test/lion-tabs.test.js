@@ -244,7 +244,7 @@ describe('<lion-tabs>', () => {
   });
 
   describe('Initializing without Focus', () => {
-    it('keeps track of when the component is updated', async () => {
+    it('does not focus a tab when setting selectedIndex property', async () => {
       const el = await fixture(html`
         <lion-tabs>
           <button slot="tab">tab 1</button>
@@ -254,9 +254,9 @@ describe('<lion-tabs>', () => {
         </lion-tabs>
       `);
 
-      expect(el.__firstUpdate).to.be.true;
       el.selectedIndex = 1;
-      expect(el.__firstUpdate).to.be.false;
+      expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be
+        .false;
     });
 
     it('does not focus a tab on firstUpdate', async () => {
@@ -272,7 +272,7 @@ describe('<lion-tabs>', () => {
       expect(tabs.some(tab => tab === document.activeElement)).to.be.false;
     });
 
-    it('focuses on a tab when switching the selectedIndex', async () => {
+    it('focuses on a tab when setting with _setSelectedIndexWithFocus method', async () => {
       const el = await fixture(html`
         <lion-tabs>
           <button slot="tab">tab 1</button>
@@ -281,10 +281,23 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel 2</div>
         </lion-tabs>
       `);
-      el.selectedIndex = 1;
-      const tab = Array.from(el.children).filter(child => child.slot === 'tab')[1];
-      expect(tab).to.equal(document.activeElement);
+      el._setSelectedIndexWithFocus(1);
+      expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be.true;
     });
+  });
+
+  it('focuses on a tab when the selected tab is changed by user interaction', async () => {
+    const el = await fixture(html`
+      <lion-tabs>
+        <button slot="tab">tab 1</button>
+        <div slot="panel">panel 1</div>
+        <button slot="tab">tab 2</button>
+        <div slot="panel">panel 2</div>
+      </lion-tabs>
+    `);
+    const secondTab = el.querySelector('[slot="tab"]:nth-of-type(2)');
+    secondTab.dispatchEvent(new MouseEvent('click'));
+    expect(secondTab === document.activeElement).to.be.true;
   });
 
   describe('Accessibility', () => {
