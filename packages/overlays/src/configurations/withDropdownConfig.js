@@ -1,7 +1,7 @@
 export const withDropdownConfig = () => ({
   placementMode: 'local',
 
-  inheritsReferenceWidth: 'full',
+  inheritsReferenceWidth: 'min',
   hidesOnOutsideClick: true,
   popperConfig: {
     placement: 'bottom-start',

@@ -400,6 +400,23 @@ describe('lion-select-rich', () => {
       expect(elSingleoption.opened).to.be.false;
     });
 
+    it('sets inheritsReferenceWidth to min by default', async () => {
+      const el = await fixture(html`
+        <lion-select-rich name="favoriteColor" label="Favorite color">
+          <lion-options slot="input">
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          </lion-options>
+        </lion-select-rich>
+      `);
+
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+      el.opened = true;
+      await el.updateComplete;
+      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+    });
+
     it('should override the inheritsWidth prop when no default selected feature is used', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
@@ -410,10 +427,14 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
+      // The default is min, so we override that behavior here
+      el._overlayCtrl.inheritsReferenceWidth = 'full';
+      el._initialInheritsReferenceWidth = 'full';
 
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
       el.opened = true;
       await el.updateComplete;
+      // Opens while hasNoDefaultSelected = true, so we expect an override
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
 
       // Emulate selecting hotpink, it closing, and opening it again
@@ -423,6 +444,7 @@ describe('lion-select-rich', () => {
       el.opened = true;
       await el.updateComplete;
 
+      // noDefaultSelected will now flip the override back to what was the initial reference width
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
     });
 
