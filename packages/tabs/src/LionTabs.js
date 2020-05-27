@@ -35,7 +35,6 @@ const cleanButton = ({ element, clickHandler, keydownHandler, keyupHandler }) =>
 };
 
 const selectButton = (element, withFocus = false) => {
-  // Don't focus on first update, as the component might be lower on the page
   if (withFocus) {
     element.focus();
   }
@@ -118,7 +117,7 @@ export class LionTabs extends LitElement {
 
   constructor() {
     super();
-    this.__setSelectedIndex(0);
+    this.selectedIndex = 0;
   }
 
   firstUpdated() {
@@ -177,7 +176,7 @@ export class LionTabs extends LitElement {
 
   __createButtonClickHandler(index) {
     return () => {
-      this.__setSelectedIndex(index);
+      this._setSelectedIndexWithFocus(index);
     };
   }
 
@@ -186,24 +185,24 @@ export class LionTabs extends LitElement {
       case 'ArrowDown':
       case 'ArrowRight':
         if (this.selectedIndex + 1 >= this._pairCount) {
-          this.__setSelectedIndex(0);
+          this._setSelectedIndexWithFocus(0);
         } else {
-          this.__setSelectedIndex(this.selectedIndex + 1);
+          this._setSelectedIndexWithFocus(this.selectedIndex + 1);
         }
         break;
       case 'ArrowUp':
       case 'ArrowLeft':
         if (this.selectedIndex <= 0) {
-          this.__setSelectedIndex(this._pairCount - 1);
+          this._setSelectedIndexWithFocus(this._pairCount - 1);
         } else {
-          this.__setSelectedIndex(this.selectedIndex - 1);
+          this._setSelectedIndexWithFocus(this.selectedIndex - 1);
         }
         break;
       case 'Home':
-        this.__setSelectedIndex(0);
+        this._setSelectedIndexWithFocus(0);
         break;
       case 'End':
-        this.__setSelectedIndex(this._pairCount - 1);
+        this._setSelectedIndexWithFocus(this._pairCount - 1);
         break;
       /* no default */
     }
@@ -217,7 +216,7 @@ export class LionTabs extends LitElement {
     this.requestUpdate('selectedIndex', stale);
   }
 
-  __setSelectedIndex(value) {
+  _setSelectedIndexWithFocus(value) {
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected(true);

@@ -272,7 +272,7 @@ describe('<lion-tabs>', () => {
       expect(tabs.some(tab => tab === document.activeElement)).to.be.false;
     });
 
-    it('focuses on a tab when setting with __setSelectedIndex method', async () => {
+    it('focuses on a tab when setting with _setSelectedIndexWithFocus method', async () => {
       const el = await fixture(html`
         <lion-tabs>
           <button slot="tab">tab 1</button>
@@ -281,7 +281,7 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel 2</div>
         </lion-tabs>
       `);
-      el.__setSelectedIndex(1);
+      el._setSelectedIndexWithFocus(1);
       expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be.true;
     });
   });
