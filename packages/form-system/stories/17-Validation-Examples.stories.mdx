@@ -23,6 +23,7 @@ import {
   MinNumber,
   Required,
   Validator,
+  Pattern,
 } from '@lion/validate';
 
 <Meta title="Forms/Validation/Examples" parameters={{ component: 'lion-input' }}/>
@@ -71,6 +72,11 @@ Useful on input elements it allows to define how many characters can be entered.
       .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
       .modelValue=${'that should be enough'}
       label="MinMaxLength"
+    ></lion-input>
+    <lion-input
+      .validators=${[new Pattern(/#LionRocks/)]}
+      .modelValue=${'regex checks if "#Lion<NO SPACE>Rocks" is in this input #LionRocks'}
+      label="Pattern"
     ></lion-input>
   `}
 </Story>

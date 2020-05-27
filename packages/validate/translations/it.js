@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Inserire un(a) {fieldName} corretto(a) (fino a {params} caratteri).',
     MinMaxLength:
       'Inserire un(a) {fieldName} corretto(a) (tra {params.min} e {params.max} caratteri).',
+    Pattern: 'Inserire un valore valido per {fieldName}.',
     IsNumber: 'Inserire un valore valido per {fieldName}.',
     MinNumber: 'Inserire un(a) {fieldName} superiore a {params}.',
     MaxNumber: 'Inserire un(a) {fieldName} inferiore a {params}.',

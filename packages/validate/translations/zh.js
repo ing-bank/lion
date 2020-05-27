@@ -5,6 +5,7 @@ export default {
     MinLength: '請輸入正確的{fieldName}（長度至少{params}個字符）​​。',
     MaxLength: '請輸入正確的{fieldName}（長度最多{params}個字符）​​。',
     MinMaxLength: '請輸入正確的{fieldName}（長度在{params.min}和{params.max}個字符之間）。',
+    Pattern: '請輸入有效的{fieldName}。',
     IsNumber: '請輸入有效的{fieldName}。',
     MinNumber: '請輸入高於{params}的{fieldName}。',
     MaxNumber: '请输入低于{params}的{fieldName}。',

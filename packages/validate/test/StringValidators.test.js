@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinMaxLength,
   IsEmail,
+  Pattern,
 } from '../src/validators/StringValidators.js';
 
 describe('String Validation', () => {
@@ -110,5 +111,28 @@ describe('String Validation', () => {
 
     isEnabled = validator.execute('foo@120.120.120.93');
     expect(isEnabled).to.be.true;
+  });
+
+  it('provides new Pattern() to allow only valid patterns', () => {
+    let isEnabled;
+    let validator = new Pattern(/#LionRocks/);
+    expect(validator.constructor.validatorName).to.equal('Pattern');
+
+    isEnabled = validator.execute('#LionRocks');
+    expect(isEnabled).to.be.false;
+
+    isEnabled = validator.execute('#LionRests');
+    expect(isEnabled).to.be.true;
+
+    validator = new Pattern(new RegExp('#LionRocks'));
+    isEnabled = validator.execute('Some string #LionRocks');
+    expect(isEnabled).to.be.false;
+
+    validator = new Pattern('#LionRocks');
+    expect(() => {
+      validator.execute('Some string #LionRocks');
+    }).to.throw(
+      'Psst... Pattern validator expects RegExp object as parameter e.g, new Pattern(/#LionRocks/) or new Pattern(RegExp("#LionRocks")',
+    );
   });
 });

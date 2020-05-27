@@ -7,6 +7,7 @@ export default {
     MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів (-а)).',
     MinMaxLength:
       'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
+    Pattern: 'Введіть правильні дані {fieldName}.',
     IsNumber: 'Введіть правильні дані {fieldName}.',
     MinNumber: 'Уведіть значення {fieldName}, що перевищує {params}.',
     MaxNumber: 'Уведіть значення {fieldName} менше від {params}.',

@@ -6,6 +6,7 @@ export default {
     MaxLength: 'Introduzca un/a {fieldName} correcto/a (hasta {params} caracteres).',
     MinMaxLength:
       'Introduzca un/a {fieldName} correcto/a (de entre {params.min} y {params.max} caracteres).',
+    Pattern: 'Introduzca un/a {fieldName} válido/a.',
     IsNumber: 'Introduzca un/a {fieldName} válido/a.',
     MinNumber: 'Introduzca un/a {fieldName} superior a {params}.',
     MaxNumber: 'Introduzca un/a {fieldName} inferior a {params}.',

@@ -14,6 +14,7 @@ export {
   MaxLength,
   MinMaxLength,
   IsEmail,
+  Pattern,
 } from './src/validators/StringValidators.js';
 
 export { IsNumber, MinNumber, MaxNumber, MinMaxNumber } from './src/validators/NumberValidators.js';

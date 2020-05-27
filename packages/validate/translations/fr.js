@@ -7,6 +7,7 @@ export default {
     MaxLength: "Veuillez indiquer un(e) {fieldName} correct(e) (jusqu'à {params} caractères).",
     MinMaxLength:
       'Veuillez indiquer un(e) {fieldName} correct(e) (entre {params.min} et {params.max} caractères).',
+    Pattern: 'Indiquez un(e) {fieldName} valide.',
     IsNumber: 'Indiquez un(e) {fieldName} valide.',
     MinNumber: 'Veuillez indiquer un(e) {fieldName} supérieur(e) à {params}.',
     MaxNumber: 'Veuillez indiquer un(e) {fieldName} inférieur(e) à {params}.',
