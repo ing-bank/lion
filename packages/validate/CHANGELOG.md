@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.10.0...@lion/validate@0.11.0) (2020-05-27)
+
+
+### Features
+
+* **validate:** introduce Pattern validator for Strings ([#719](https://github.com/ing-bank/lion/issues/719)) ([e2f9b6e](https://github.com/ing-bank/lion/commit/e2f9b6e3411a7e167b5a88db77a62f3bd4bfd0a4))
+
+
+
+
+
 # [0.10.0](https://github.com/ing-bank/lion/compare/@lion/validate@0.9.2...@lion/validate@0.10.0) (2020-05-18)
 
 

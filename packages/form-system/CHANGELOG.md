@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/ing-bank/lion/compare/@lion/form-system@0.8.3...@lion/form-system@0.9.0) (2020-05-27)
+
+
+### Features
+
+* **validate:** introduce Pattern validator for Strings ([#719](https://github.com/ing-bank/lion/issues/719)) ([e2f9b6e](https://github.com/ing-bank/lion/commit/e2f9b6e3411a7e167b5a88db77a62f3bd4bfd0a4))
+
+
+
+
+
 ## [0.8.3](https://github.com/ing-bank/lion/compare/@lion/form-system@0.8.2...@lion/form-system@0.8.3) (2020-05-25)
 
 
