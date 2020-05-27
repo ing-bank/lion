@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/ing-bank/lion/compare/remark-extend@0.1.3...remark-extend@0.1.4) (2020-05-27)
+
+
+### Bug Fixes
+
+* **remark-extend:** when throwing show path to used files ([7df6879](https://github.com/ing-bank/lion/commit/7df6879af2f455ba0dd938a9e6375b0751d714fc))
+
+
+
+
+
 ## [0.1.3](https://github.com/ing-bank/lion/compare/remark-extend@0.1.2...remark-extend@0.1.3) (2020-05-26)
 
 
