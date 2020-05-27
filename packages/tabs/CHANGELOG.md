@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/tabs@0.3.0...@lion/tabs@0.3.1) (2020-05-27)
+
+
+### Bug Fixes
+
+* **tabs:** do not focus tabs when selectedIndex is set ([#729](https://github.com/ing-bank/lion/issues/729)) ([e4ec227](https://github.com/ing-bank/lion/commit/e4ec2275669b7ec9648f6c0986bd9fe3d321b488))
+
+
+
+
+
 # [0.3.0](https://github.com/ing-bank/lion/compare/@lion/tabs@0.2.10...@lion/tabs@0.3.0) (2020-05-18)
 
 
