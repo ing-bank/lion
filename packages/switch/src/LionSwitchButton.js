@@ -113,6 +113,12 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     }
   }
 
+  updated(changedProperties) {
+    if (changedProperties.has('disabled')) {
+      this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places
+    }
+  }
+
   /**
    * We synchronously update aria-checked to support voice over on safari.
    *

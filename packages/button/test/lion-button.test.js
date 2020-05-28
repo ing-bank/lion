@@ -57,15 +57,18 @@ describe('lion-button', () => {
   it('can be disabled imperatively', async () => {
     const el = await fixture(`<lion-button disabled>foo</lion-button>`);
     expect(el.getAttribute('tabindex')).to.equal('-1');
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
 
     el.disabled = false;
     await el.updateComplete;
     expect(el.getAttribute('tabindex')).to.equal('0');
+    expect(el.getAttribute('aria-disabled')).to.equal('false');
     expect(el.hasAttribute('disabled')).to.equal(false);
 
     el.disabled = true;
     await el.updateComplete;
     expect(el.getAttribute('tabindex')).to.equal('-1');
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
     expect(el.hasAttribute('disabled')).to.equal(true);
   });
 
