@@ -59,8 +59,10 @@ and has the following public functions:
 
 All overlays contain an invokerNode and a contentNode
 
-- **contentNode**, the toggleable content of the overlay
+- **contentNode**, the toggleable content of the overlay.
 - **invokerNode**, the element toggles the visibility of the content. For local overlays, this is the relative element the content is positioned to
+
+> Make sure you pass a DOM-connected contentNode, an offline rendered (e.g. with just `document.createElement` or `renderLitAsNode`) will not work, because then we cannot determine the renderTarget to render the content to.
 
 For DOM position, local refers to overlays where the content is positioned next to the invokers they are related to, DOM-wise.
 Global refers to overlays where the content is positioned in a global root node at the bottom of `<body>`.

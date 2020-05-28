@@ -135,6 +135,11 @@ export class OverlayController {
     this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
 
     if (this._defaultConfig.contentNode) {
+      if (!this._defaultConfig.contentNode.isConnected) {
+        throw new Error(
+          '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+        );
+      }
       this.__isContentNodeProjected = Boolean(this._defaultConfig.contentNode.assignedSlot);
     }
     this.updateConfig(config);
