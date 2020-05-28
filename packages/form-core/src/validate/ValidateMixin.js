@@ -265,7 +265,7 @@ export const ValidateMixin = dedupeMixin(
       async validate({ clearCurrentResult } = {}) {
         if (this.disabled) {
           this.__clearValidationResults();
-          this.__validationResult = [];
+          this.__finishValidation({ source: 'sync', hasAsync: true });
           this._updateFeedbackComponent();
           return;
         }

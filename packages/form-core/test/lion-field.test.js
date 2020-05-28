@@ -380,7 +380,36 @@ describe('<lion-field>', () => {
       expect(el.validationStates.error).to.have.a.property('HasX');
 
       expect(disabledEl.hasFeedbackFor).to.deep.equal([]);
-      expect(disabledEl.validationStates.error).to.equal(undefined);
+      expect(disabledEl.validationStates.error).to.deep.equal({});
+    });
+
+    it('should remove validation when disabled state toggles', async () => {
+      const HasX = class extends Validator {
+        constructor() {
+          super();
+          this.name = 'HasX';
+        }
+
+        execute(value) {
+          const result = value.indexOf('x') === -1;
+          return result;
+        }
+      };
+      const el = await fixture(html`
+        <${tag}
+          .validators=${[new HasX()]}
+          .modelValue=${'a@b.nl'}
+        >
+          ${inputSlot}
+        </${tag}>
+      `);
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.validationStates.error).to.have.a.property('HasX');
+
+      el.disabled = true;
+      await el.updateComplete;
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+      expect(el.validationStates.error).to.deep.equal({});
     });
 
     it('can be required', async () => {
