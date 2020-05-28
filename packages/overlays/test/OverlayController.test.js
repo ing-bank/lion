@@ -1,20 +1,20 @@
 /* eslint-disable no-new */
+import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import {
-  expect,
-  html,
-  fixture,
   aTimeout,
   defineCE,
-  unsafeStatic,
+  expect,
+  fixture,
+  html,
   nextFrame,
+  unsafeStatic,
 } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
-import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import sinon from 'sinon';
-import { keyCodes } from '../src/utils/key-codes.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
+import { keyCodes } from '../src/utils/key-codes.js';
+import { simulateTab } from '../src/utils/simulate-tab.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
@@ -153,6 +153,30 @@ describe('OverlayController', () => {
         });
         expect(ctrl._renderTarget).to.equal(parentNode);
       });
+
+      it('throws when passing a content node that was created "offline"', async () => {
+        const contentNode = document.createElement('div');
+        const createOverlayController = () => {
+          new OverlayController({
+            ...withLocalTestConfig(),
+            contentNode,
+          });
+        };
+        expect(createOverlayController).to.throw(
+          '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+        );
+      });
+
+      it('succeeds when passing a content node that was created "online"', async () => {
+        const contentNode = document.createElement('div');
+        document.body.appendChild(contentNode);
+        const overlay = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+        expect(overlay.contentNode.isConnected).to.be.true;
+        expect(overlay._renderTarget).to.not.be.undefined;
+      });
     });
   });
 
@@ -199,6 +223,9 @@ describe('OverlayController', () => {
         const contentNode = document.createElement('div');
         contentNode.slot = 'contentNode';
         shadowHost.appendChild(contentNode);
+
+        // Ensure the contentNode is connected to DOM
+        document.body.appendChild(shadowHost);
 
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -1210,9 +1237,12 @@ describe('OverlayController', () => {
 
   describe('Exception handling', () => {
     it('throws if no .placementMode gets passed on', async () => {
+      const contentNode = document.createElement('div');
+      // Ensure the contentNode is connected to DOM
+      document.body.appendChild(contentNode);
       expect(() => {
         new OverlayController({
-          contentNode: {},
+          contentNode,
         });
       }).to.throw('You need to provide a .placementMode ("global"|"local")');
     });
@@ -1245,6 +1275,9 @@ describe('OverlayController', () => {
       const contentNode = document.createElement('div');
       contentNode.slot = 'contentNode';
       shadowHost.appendChild(contentNode);
+
+      // Ensure the contentNode is connected to DOM
+      document.body.appendChild(shadowHost);
 
       expect(() => {
         new OverlayController({

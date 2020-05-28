@@ -6,16 +6,13 @@ describe('OverlaysManager', () => {
   let defaultOptions;
   let mngr;
 
-  before(async () => {
+  beforeEach(async () => {
     const contentNode = await fixture(html`<p>my content</p>`);
 
     defaultOptions = {
       placementMode: 'global',
       contentNode,
     };
-  });
-
-  beforeEach(() => {
     mngr = new OverlaysManager();
   });
 
