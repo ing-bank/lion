@@ -45,10 +45,8 @@
   ],
   "dependencies": {
     "@lion/button": "0.6.0",
-    "@lion/choice-input": "0.9.1",
     "@lion/core": "0.6.0",
-    "@lion/field": "0.13.1",
-    "@lion/overlays": "0.15.3",
-    "@lion/validate": "0.11.0"
+    "@lion/form-core": "0.0.0",
+    "@lion/overlays": "0.15.3"
   }
 }

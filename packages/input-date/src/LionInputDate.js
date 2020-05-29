@@ -1,6 +1,6 @@
 import { LionInput } from '@lion/input';
 import { formatDate, LocalizeMixin, parseDate } from '@lion/localize';
-import { IsDate } from '@lion/validate';
+import { IsDate } from '@lion/form-core';
 
 function isValidDate(date) {
   // to make sure it is a valid date we use isNaN and not Number.isNaN

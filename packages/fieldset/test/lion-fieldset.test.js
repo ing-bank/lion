@@ -1,8 +1,7 @@
-import { LionField } from '@lion/field';
-import '@lion/field/lion-field.js';
-import { formFixture as fixture } from '@lion/field/test-helpers.js';
+import { LionField, IsNumber, Validator } from '@lion/form-core';
+import '@lion/form-core/lion-field.js';
+import { formFixture as fixture } from '@lion/form-core/test-helpers.js';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-import { IsNumber, Validator } from '@lion/validate';
 import {
   defineCE,
   expect,
@@ -247,7 +246,7 @@ describe('<lion-fieldset>', () => {
           <${childTag} name="d" disabled .modelValue="${'x'}"></${childTag}>
         </${tag}>
         <${tag} name="disabledFieldset" disabled>
-          <${childTag} name="e"  .modelValue="${'x'}"></${childTag}>
+          <${childTag} name="e" .modelValue="${'x'}"></${childTag}>
         </${tag}>
       </${tag}>
     `);
@@ -300,7 +299,9 @@ describe('<lion-fieldset>', () => {
 
   it('does not propagate/override initial disabled value on nested form elements', async () => {
     const el = await fixture(
-      html`<${tag}><${tag} name="sub" disabled>${inputSlots}</${tag}></${tag}>`,
+      html`<${tag}>
+  <${tag} name="sub" disabled>${inputSlots}</${tag}>
+</${tag}>`,
     );
     await el.updateComplete;
     expect(el.disabled).to.equal(false);
@@ -355,10 +356,9 @@ describe('<lion-fieldset>', () => {
 
       const el = await fixture(html`
         <${tag}>
-          <${childTag} name="color"
-            .validators=${[new IsCat()]}
-            .modelValue=${'blue'}
-          ></${childTag}>
+          <${childTag} name="color" .validators=${[
+        new IsCat(),
+      ]} .modelValue=${'blue'}></${childTag}>
         </${tag}>
       `);
       await nextFrame();
@@ -387,10 +387,9 @@ describe('<lion-fieldset>', () => {
 
       const el = await fixture(html`
         <${tag}>
-          <${childTag} name="color"
-            .validators=${[new IsCat()]}
-            .modelValue=${'blue'}
-          ></${childTag}>
+          <${childTag} name="color" .validators=${[
+        new IsCat(),
+      ]} .modelValue=${'blue'}></${childTag}>
         </${tag}>
       `);
       await nextFrame();
@@ -983,7 +982,7 @@ describe('<lion-fieldset>', () => {
       it('calls resetGroup on children fieldsets', async () => {
         const el = await fixture(html`
           <${tag} name="parentFieldset">
-          <${tag} name="childFieldset">
+            <${tag} name="childFieldset">
               <${childTag} name="child[]" .modelValue="${'foo1'}">
               </${childTag}>
             </${tag}>
@@ -998,7 +997,7 @@ describe('<lion-fieldset>', () => {
       it('calls reset on children fields', async () => {
         const el = await fixture(html`
           <${tag} name="parentFieldset">
-          <${tag} name="childFieldset">
+            <${tag} name="childFieldset">
               <${childTag} name="child[]" .modelValue="${'foo1'}">
               </${childTag}>
             </${tag}>

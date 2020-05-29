@@ -1,6 +1,6 @@
 import { LocalizeMixin } from '@lion/localize';
 import { LionInput } from '@lion/input';
-import { IsEmail } from '@lion/validate';
+import { IsEmail } from '@lion/form-core';
 
 /**
  * LionInputEmail: extension of lion-input

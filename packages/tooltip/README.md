@@ -171,12 +171,14 @@ By default, the arrow is disabled for our tooltip. Via the `has-arrow` property 
 
 ```js preview-story
 export const arrow = () => html`
-    <style>${tooltipDemoStyles}</style>
-    <lion-tooltip has-arrow>
-      <button slot="invoker">Hover me</button>
-      <div slot="content">This is a tooltip</div>
-    </lion-tooltip>
-  `;
+  <style>
+    ${tooltipDemoStyles}
+  </style>
+  <lion-tooltip has-arrow>
+    <button slot="invoker">Hover me</button>
+    <div slot="content">This is a tooltip</div>
+  </lion-tooltip>
+`;
 ```
 
 #### Use a custom arrow
@@ -189,14 +191,19 @@ The rest of the work is done by Popper.js (for positioning) and the `lion-toolti
 ```js preview-story
 export const customArrow = () => {
   if (!customElements.get('custom-tooltip')) {
-    customElements.define('custom-tooltip', class extends LionTooltip {
+    customElements.define(
+      'custom-tooltip',
+      class extends LionTooltip {
         static get styles() {
-          return [super.styles, css`
-            :host {
-              --tooltip-arrow-width: 20px;
-              --tooltip-arrow-height: 8px;
-            }
-          `];
+          return [
+            super.styles,
+            css`
+              :host {
+                --tooltip-arrow-width: 20px;
+                --tooltip-arrow-height: 8px;
+              }
+            `,
+          ];
         }
         constructor() {
           super();
@@ -209,14 +216,17 @@ export const customArrow = () => {
             </svg>
           `;
         }
-      });
-    }
-    return html`
-      <style>${tooltipDemoStyles}</style>
-      <custom-tooltip>
-        <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-        <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
-      </custom-tooltip>
-    `;
+      },
+    );
+  }
+  return html`
+    <style>
+      ${tooltipDemoStyles}
+    </style>
+    <custom-tooltip>
+      <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
+      <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
+    </custom-tooltip>
+  `;
 };
 ```

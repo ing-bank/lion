@@ -1,4 +1,4 @@
-import { ChoiceInputMixin } from '@lion/choice-input';
+import { ChoiceInputMixin } from '@lion/form-core';
 import { LionInput } from '@lion/input';
 
 /**

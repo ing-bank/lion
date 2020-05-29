@@ -11,7 +11,7 @@ If there are no valid characters in the input whatsoever, it will provide an err
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages } from '@lion/validate';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import './lion-input-amount.js';
 

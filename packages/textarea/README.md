@@ -5,7 +5,8 @@ Its purpose is to provide a way for users to write text that is multiple lines l
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, MaxLength, MinLength, Required } from '@lion/validate';
+import { MaxLength, MinLength, Required } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import './lion-textarea.js';
 

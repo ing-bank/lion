@@ -9,7 +9,8 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 
 ```js script
 import { html } from 'lit-html';
-import { Required, Validator, loadDefaultFeedbackMessages } from '@lion/validate';
+import { Required, Validator } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import './lion-checkbox-group.js';
 import './lion-checkbox.js';
 
@@ -38,7 +39,8 @@ export const main = () => html`
 
 ## Features
 
-Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page), it has all the features a fieldset has.
+Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page),
+it has all the features a fieldset has.
 
 ## How to use
 
@@ -57,7 +59,8 @@ import '@lion/checkbox-group/lion-checkbox.js';
 
 The `modelValue` of a `lion-checkbox-group` is an array containing the `choiceValues` of the `lion-checkbox` elements that have been checked.
 
-Given the scientists example above, say that we were to select the first and last options (Archimedes & Marie Curie).
+Given the scientists example above, say that we were to select the first and last options
+(Archimedes & Marie Curie).
 
 Then the `modelValue` of the `lion-checkbox-group` will look as follows:
 

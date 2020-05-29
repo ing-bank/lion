@@ -47,23 +47,32 @@ module.exports = {
       generateBundle() {
         this.emitFile({
           type: 'asset',
-          fileName: 'packages/form-system/dev-assets/FormatMixinDiagram-1.svg',
+          fileName: 'packages/form-integrations/dev-assets/FormatMixinDiagram-1.svg',
           source: fs.readFileSync(
-            path.join(__dirname, '../packages/form-system/dev-assets/FormatMixinDiagram-1.svg'),
+            path.join(
+              __dirname,
+              '../packages/form-integrations/dev-assets/FormatMixinDiagram-1.svg',
+            ),
           ),
         });
         this.emitFile({
           type: 'asset',
-          fileName: 'packages/form-system/dev-assets/FormatMixinDiagram-2.svg',
+          fileName: 'packages/form-integrations/dev-assets/FormatMixinDiagram-2.svg',
           source: fs.readFileSync(
-            path.join(__dirname, '../packages/form-system/dev-assets/FormatMixinDiagram-2.svg'),
+            path.join(
+              __dirname,
+              '../packages/form-integrations/dev-assets/FormatMixinDiagram-2.svg',
+            ),
           ),
         });
         this.emitFile({
           type: 'asset',
-          fileName: 'packages/form-system/dev-assets/FormatMixinDiagram-3.svg',
+          fileName: 'packages/form-integrations/dev-assets/FormatMixinDiagram-3.svg',
           source: fs.readFileSync(
-            path.join(__dirname, '../packages/form-system/dev-assets/FormatMixinDiagram-3.svg'),
+            path.join(
+              __dirname,
+              '../packages/form-integrations/dev-assets/FormatMixinDiagram-3.svg',
+            ),
           ),
         });
       },

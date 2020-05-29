@@ -1,5 +1,5 @@
-import { runInteractionStateMixinSuite } from '@lion/field/test-suites/InteractionStateMixin.suite.js';
-import { runFormatMixinSuite } from '@lion/field/test-suites/FormatMixin.suite.js';
+import { runInteractionStateMixinSuite } from '@lion/form-core/test-suites/InteractionStateMixin.suite.js';
+import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
 import '../lion-input-amount.js';
 
 const tagString = 'lion-input-amount';

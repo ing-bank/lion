@@ -4,7 +4,7 @@
 
 ```js script
 import { html } from 'lit-html';
-import { Validator } from '@lion/validate';
+import { Validator } from '@lion/form-core';
 import { LionSwitch } from './index.js';
 import './lion-switch.js';
 import '@lion/helpers/sb-action-logger.js';

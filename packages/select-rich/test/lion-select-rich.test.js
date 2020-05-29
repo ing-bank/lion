@@ -1,7 +1,7 @@
 import { LitElement } from '@lion/core';
-import { formFixture as fixture } from '@lion/field/test-helpers.js';
+import { formFixture as fixture } from '@lion/form-core/test-helpers.js';
 import { OverlayController } from '@lion/overlays';
-import { Required } from '@lion/validate';
+import { Required } from '@lion/form-core';
 import { aTimeout, defineCE, expect, html, nextFrame, unsafeStatic } from '@open-wc/testing';
 import { LionSelectInvoker, LionSelectRich } from '../index.js';
 import '../lion-option.js';

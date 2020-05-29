@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file  */
 
 import { localize } from '@lion/localize';
-import { Validator } from '@lion/validate';
+import { Validator } from '@lion/form-core';
 import { isValidIBAN } from 'ibantools';
 
 let loaded = false;

@@ -1,5 +1,5 @@
 import { LitElement } from '@lion/core';
-import { FormGroupMixin } from './FormGroupMixin.js';
+import { FormGroupMixin } from '@lion/form-core';
 
 /**
  * @desc LionFieldset is basically a 'sub form' and can have its own nested sub forms.

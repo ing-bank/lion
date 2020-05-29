@@ -10,7 +10,9 @@ Its implementation is based on the following Design pattern:
 
 ```js script
 import { html } from '@lion/core';
-import { loadDefaultFeedbackMessages, Required } from '@lion/validate';
+import { Required } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+
 import './lion-option.js';
 import './lion-options.js';
 import './lion-select-rich.js';

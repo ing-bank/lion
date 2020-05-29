@@ -4,7 +4,9 @@
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, MaxLength } from '@lion/validate';
+import { MaxLength } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+
 import { localize } from '@lion/localize';
 
 import './lion-input.js';

@@ -9,7 +9,8 @@ usability for keyboard and screen reader users.
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, Required } from '@lion/validate';
+import { Required } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import './lion-select.js';
 
