@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/ing-bank/lion/compare/@lion/tabs@0.3.1...@lion/tabs@0.4.0) (2020-05-29)
+
+
+### Features
+
+* use markdown javascript (mdjs) for documentation ([bcd074d](https://github.com/ing-bank/lion/commit/bcd074d1fbce8754d428538df723ba402603e2c8))
+
+
+
+
+
 ## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/tabs@0.3.0...@lion/tabs@0.3.1) (2020-05-27)
 
 

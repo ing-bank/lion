@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/input-date@0.6.1...@lion/input-date@0.7.0) (2020-05-29)
+
+
+### Features
+
+* merge field/validate/choice-input/form-group into @lion/form-core ([6170374](https://github.com/ing-bank/lion/commit/6170374ee8c058cb95fff79b4953b0535219e9b4))
+* use markdown javascript (mdjs) for documentation ([bcd074d](https://github.com/ing-bank/lion/commit/bcd074d1fbce8754d428538df723ba402603e2c8))
+
+
+
+
+
 ## [0.6.1](https://github.com/ing-bank/lion/compare/@lion/input-date@0.6.0...@lion/input-date@0.6.1) (2020-05-27)
 
 **Note:** Version bump only for package @lion/input-date

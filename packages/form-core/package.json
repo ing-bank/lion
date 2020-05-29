@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Form-core contains all essential building blocks for creating form fields and fieldsets",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -41,6 +41,6 @@
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
-    "@lion/localize": "0.10.0"
+    "@lion/localize": "0.11.0"
   }
 }

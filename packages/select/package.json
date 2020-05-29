@@ -1,6 +1,6 @@
 {
   "name": "@lion/select",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Provide a set of options where you can select one",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -38,6 +38,6 @@
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
-    "@lion/form-core": "0.0.0"
+    "@lion/form-core": "0.1.0"
   }
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/dialog@0.6.3...@lion/dialog@0.7.0) (2020-05-29)
+
+
+### Features
+
+* use markdown javascript (mdjs) for documentation ([bcd074d](https://github.com/ing-bank/lion/commit/bcd074d1fbce8754d428538df723ba402603e2c8))
+
+
+
+
+
 ## [0.6.3](https://github.com/ing-bank/lion/compare/@lion/dialog@0.6.2...@lion/dialog@0.6.3) (2020-05-25)
 
 
