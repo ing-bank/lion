@@ -30,5 +30,8 @@
     "src",
     "test-node",
     "*.js"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.10.1"
+  }
 }

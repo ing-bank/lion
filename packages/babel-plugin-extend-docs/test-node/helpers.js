@@ -1,4 +1,5 @@
-const babel = require('babel-core');
+// eslint-disable-next-line import/no-unresolved
+const babel = require('@babel/core');
 const babelPluginExtendDocs = require('../src/babelPluginExtendDocs.js');
 
 function executeBabel(input, options) {
