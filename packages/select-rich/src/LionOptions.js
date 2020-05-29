@@ -1,5 +1,5 @@
 import { LitElement } from '@lion/core';
-import { FormRegistrarPortalMixin } from '@lion/field';
+import { FormRegistrarPortalMixin } from '@lion/form-core';
 
 /**
  * LionOptions

@@ -1,4 +1,4 @@
-import { LionField } from '@lion/field';
+import { LionField } from '@lion/form-core';
 
 /**
  * LionSelectNative: wraps the native HTML element select

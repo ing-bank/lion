@@ -4,7 +4,9 @@
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, MinDate, MinMaxDate, MaxDate } from '@lion/validate';
+import { MinDate, MinMaxDate, MaxDate } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+
 import { formatDate } from '@lion/localize';
 
 import './lion-input-date.js';

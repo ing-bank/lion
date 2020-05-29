@@ -1,9 +1,14 @@
-import { ChoiceGroupMixin } from '@lion/choice-input';
+import {
+  ChoiceGroupMixin,
+  FormControlMixin,
+  FormRegistrarMixin,
+  InteractionStateMixin,
+  ValidateMixin,
+} from '@lion/form-core';
 import { css, html, LitElement, ScopedElementsMixin, SlotMixin } from '@lion/core';
-import { FormControlMixin, FormRegistrarMixin, InteractionStateMixin } from '@lion/field';
-import { formRegistrarManager } from '@lion/field/src/registration/formRegistrarManager.js';
+
+import { formRegistrarManager } from '@lion/form-core/src/registration/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
-import { ValidateMixin } from '@lion/validate';
 import './differentKeyNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 

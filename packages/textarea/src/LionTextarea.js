@@ -1,5 +1,5 @@
 import autosize from 'autosize/src/autosize.js';
-import { LionField } from '@lion/field';
+import { LionField } from '@lion/form-core';
 import { css } from '@lion/core';
 
 /**

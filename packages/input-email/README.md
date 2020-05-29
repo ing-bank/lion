@@ -4,7 +4,8 @@
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, Validator } from '@lion/validate';
+import { Validator } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import './lion-input-email.js';
 

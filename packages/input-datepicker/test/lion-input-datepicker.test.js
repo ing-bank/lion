@@ -1,7 +1,7 @@
 import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
 import { html, LitElement } from '@lion/core';
-import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/validate';
+import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
 import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-input-datepicker.js';

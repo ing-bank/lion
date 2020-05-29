@@ -183,9 +183,7 @@ export const distributeNewElements = () => {
       },
     );
   }
-  return html`
-    <lea-tabs-experimental></lea-tabs-experimental>
-  `;
+  return html` <lea-tabs-experimental></lea-tabs-experimental> `;
 };
 ```
 

@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
-    "@lion/field": "0.13.1",
+    "@lion/form-core": "0.0.0",
     "@lion/input": "0.6.1",
     "@lion/localize": "0.10.0"
   }

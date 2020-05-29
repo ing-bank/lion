@@ -7,7 +7,7 @@ Its purpose is to provide a way for users to fill in an IBAN (International Bank
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages } from '@lion/validate';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { IsCountryIBAN } from './src/validators.js';
 
 import './lion-input-iban.js';

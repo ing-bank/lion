@@ -6,7 +6,8 @@ You should use `<lion-radio>`s inside this element.
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, Required, Validator } from '@lion/validate';
+import { Required, Validator } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import './lion-radio-group.js';
 import './lion-radio.js';

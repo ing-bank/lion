@@ -43,10 +43,12 @@
   "dependencies": {
     "@lion/calendar": "0.8.0",
     "@lion/core": "0.6.0",
-    "@lion/field": "0.13.1",
+    "@lion/form-core": "0.0.0",
     "@lion/input-date": "0.6.1",
     "@lion/localize": "0.10.0",
-    "@lion/overlays": "0.15.3",
-    "@lion/validate": "0.11.0"
+    "@lion/overlays": "0.15.3"
+  },
+  "devDependencies": {
+    "@lion/validate-messages": "0.0.0"
   }
 }

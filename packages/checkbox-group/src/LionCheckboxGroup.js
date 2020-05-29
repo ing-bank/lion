@@ -1,6 +1,5 @@
 import { LitElement } from '@lion/core';
-import { ChoiceGroupMixin } from '@lion/choice-input';
-import { FormGroupMixin } from '@lion/fieldset';
+import { ChoiceGroupMixin, FormGroupMixin } from '@lion/form-core';
 
 /**
  * A wrapper around multiple checkboxes

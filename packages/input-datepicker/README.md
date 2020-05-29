@@ -8,7 +8,8 @@ We encourage using the standard [lion-input-date](?path=/docs/form-component-inp
 
 ```js script
 import { html } from 'lit-html';
-import { loadDefaultFeedbackMessages, MinMaxDate, IsDateDisabled } from '@lion/validate';
+import { MinMaxDate, IsDateDisabled } from '@lion/form-core';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { formatDate } from '@lion/localize';
 
 import './lion-input-datepicker.js';

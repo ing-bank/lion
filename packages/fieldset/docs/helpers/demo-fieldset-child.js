@@ -1,4 +1,4 @@
-import { LionField } from '@lion/field';
+import { LionField } from '@lion/form-core';
 
 customElements.define(
   'demo-fieldset-child',

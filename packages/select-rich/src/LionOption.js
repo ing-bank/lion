@@ -1,6 +1,5 @@
-import { ChoiceInputMixin } from '@lion/choice-input';
+import { ChoiceInputMixin, FormRegisteringMixin } from '@lion/form-core';
 import { css, DisabledMixin, html, LitElement } from '@lion/core';
-import { FormRegisteringMixin } from '@lion/field';
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option

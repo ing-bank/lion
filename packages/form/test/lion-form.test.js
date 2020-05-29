@@ -8,9 +8,9 @@ import {
   defineCE,
 } from '@open-wc/testing';
 import { spy } from 'sinon';
-import { LionField } from '@lion/field';
+import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
-import '@lion/field/lion-field.js';
+import '@lion/form-core/lion-field.js';
 import '@lion/fieldset/lion-fieldset.js';
 
 import '../lion-form.js';

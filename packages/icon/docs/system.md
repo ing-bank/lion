@@ -17,9 +17,7 @@ For security reasons, icons are defined using lit-html templates to guarantee XS
 ```js
 import { html } from 'lit-html';
 
-export default html`
-  <svg focusable="false" ...>...</svg>
-`;
+export default html` <svg focusable="false" ...>...</svg> `;
 ```
 
 The icon can also be a function. In this case, it's possible to reuse the icons if a
@@ -73,9 +71,7 @@ An icon resolver can also be synchronous, returning the icon directly:
 ```js
 const icons = {
   coolIcons: {
-    'my-icon': html`
-      <svg>... icon code ...</svg>
-    `,
+    'my-icon': html` <svg>... icon code ...</svg> `,
   },
 };
 
