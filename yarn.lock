@@ -1998,6 +1998,31 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
+"@lion/field@0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@lion/field/-/field-0.13.1.tgz#566244c16fbac8e46d59e5a2eca7024cc6c8bfdc"
+  integrity sha512-ecAzZt4qq4VA+BCrxS9wcE5Vzy3yK6ETdHQlnmIZKuJwaACbtx+FKTkDovwxkYy4jpohWB2g+etQevz4F6GOzw==
+  dependencies:
+    "@lion/core" "0.6.0"
+    "@lion/validate" "0.11.0"
+
+"@lion/localize@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@lion/localize/-/localize-0.10.0.tgz#f3608baeb9ae65ac4e0c3efdd6208208220a6153"
+  integrity sha512-oAy07yvNkFlsMxW3TBwrHvj1QEcjVDJ50vazuekzpc0M6v9c+00/6Y3U3TnH/H5V5qjKmOHnfhqYZoVqkmaqhA==
+  dependencies:
+    "@bundled-es-modules/message-format" "6.0.4"
+    "@lion/core" "0.6.0"
+    singleton-manager "1.0.0"
+
+"@lion/validate@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@lion/validate/-/validate-0.11.0.tgz#634465b2a90461024e913698f60505cd0b774a19"
+  integrity sha512-pphmYoWZZyybjLo0kdZ8jBSDwS2yh4Kjuanu6Qv8YJCK1gK1d7CvMIqBdFAPlRvZ5DSpz7eoHMrY/iYbo6edog==
+  dependencies:
+    "@lion/core" "0.6.0"
+    "@lion/localize" "0.10.0"
+
 "@marionebl/sander@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@marionebl/sander/-/sander-0.6.1.tgz#1958965874f24bc51be48875feb50d642fc41f7b"
