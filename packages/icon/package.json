@@ -28,14 +28,13 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test",
     "translations",
     "*.js"
   ],
   "sideEffects": [
     "lion-icon.js",
-    "./stories/icon-resolvers.js"
+    "./docs/icon-resolvers.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
