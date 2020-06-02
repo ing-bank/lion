@@ -28,13 +28,13 @@
   "module": "index.js",
   "files": [
     "src",
-    "stories",
+    "docs",
     "test",
     "*.js"
   ],
   "sideEffects": [
     "lion-dialog.js",
-    "./stories/styled-dialog-content.js"
+    "./docs/styled-dialog-content.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",

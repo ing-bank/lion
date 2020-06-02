@@ -27,13 +27,12 @@
     "dev-assets",
     "docs",
     "src",
-    "stories",
     "test",
     "translations",
     "*.js"
   ],
   "sideEffects": [
-    "./stories/helper-wc/h-output.js"
+    "./docs/helper-wc/h-output.js"
   ],
   "dependencies": {
     "@lion/button": "0.7.1",

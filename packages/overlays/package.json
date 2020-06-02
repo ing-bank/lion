@@ -36,8 +36,8 @@
     "*.js"
   ],
   "sideEffects": [
-    "./stories/demo-overlay-system.js",
-    "./stories/applyDemoOverlayStyles.js"
+    "./docs/demo-overlay-system.js",
+    "./docs/applyDemoOverlayStyles.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",

@@ -28,14 +28,13 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test",
     "translations",
     "*.js"
   ],
   "sideEffects": [
     "lion-fieldset.js",
-    "./stories/helpers/demo-fieldset-child.js"
+    "./docs/helpers/demo-fieldset-child.js"
   ],
   "dependencies": {
     "@lion/core": "0.6.0",
