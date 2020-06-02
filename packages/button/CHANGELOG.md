@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/ing-bank/lion/compare/@lion/button@0.7.0...@lion/button@0.7.1) (2020-06-02)
+
+
+### Bug Fixes
+
+* **button:** aria-disabled for button and switch ([31ccb4a](https://github.com/ing-bank/lion/commit/31ccb4a10f6b14e93ddaca825d5e6bf2db8dd1ee))
+
+
+
+
+
 # [0.7.0](https://github.com/ing-bank/lion/compare/@lion/button@0.6.0...@lion/button@0.7.0) (2020-05-29)
 
 
