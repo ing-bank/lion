@@ -97,3 +97,41 @@ To format dates you can use `formatDate`. For more details see [Dates](?path=/do
     return wrapper;
   }}
 </Story>
+
+## Override translations
+
+Sometimes you want to reuse a web component but you may need to change the translations so it fits your use case
+
+```js
+localize.addData('en-GB', 'lit-html-example', {
+  header: '{ locale }: Localize message example (Overrided)',
+  body: 'I am English (Overrided)',
+}, true);
+```
+
+<Story name="Override">
+  {() => {
+    localize.addData('en-GB', 'override-example', {
+        text: 'The translations can be overrided',
+    }, true);
+    
+    function overrideTranslations() {
+      localize.addData('en-GB', 'override-example', {
+        text: 'This translations has been overrided',
+      }, true);
+      update();
+    }
+    const wrapper = document.createElement('div');
+    function update() {
+      render(
+        html`
+          <button type="button" @click=${() => overrideTranslations()}>Override translations</button>
+          <p>${localize.msg('override-example:text')}</p>
+        `,
+        wrapper,
+      );
+    }
+    update();
+    return wrapper;
+  }}
+</Story>

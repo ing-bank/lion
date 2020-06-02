@@ -132,6 +132,20 @@ describe('LocalizeManager', () => {
         'en-GB': { 'lion-hello': { greeting: 'Hi!' } },
       });
     });
+
+    it('allows to override previously loaded data for the same locale & namespace if the override parameter is set to true', () => {
+      manager = new LocalizeManager();
+
+      manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
+
+      expect(() => {
+        manager.addData('en-GB', 'lion-hello', { greeting: 'Hello!' }, true);
+      }).to.not.throw();
+
+      expect(manager.__storage).to.deep.equal({
+        'en-GB': { 'lion-hello': { greeting: 'Hello!' } },
+      });
+    });
   });
 
   describe('loading via dynamic imports', () => {
@@ -490,6 +504,25 @@ describe('LocalizeManager', () => {
       ]);
 
       expect(called).to.equal(1);
+    });
+
+    it('loads namespace more than once if the override property is set to true', async () => {
+      let called = 0;
+      const myNamespace = {
+        'my-namespace': () => {
+          called += 1;
+          return Promise.resolve({ default: {} });
+        },
+      };
+      manager = new LocalizeManager();
+
+      await Promise.all([
+        manager.loadNamespace(myNamespace, manager.locale, true),
+        manager.loadNamespace(myNamespace, manager.locale, true),
+        manager.loadNamespace(myNamespace, manager.locale, true),
+      ]);
+
+      expect(called).to.equal(3);
     });
 
     it('does not load inlined data', async () => {

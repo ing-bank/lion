@@ -69,8 +69,8 @@ export class LocalizeManager extends LionSingleton {
     this.__namespaceLoaderPromisesCache = {};
   }
 
-  addData(locale, namespace, data) {
-    if (this._isNamespaceInCache(locale, namespace)) {
+  addData(locale, namespace, data, override = false) {
+    if (this._isNamespaceInCache(locale, namespace) && !override) {
       throw new Error(
         `Namespace "${namespace}" has been already added for the locale "${locale}".`,
       );
@@ -88,7 +88,11 @@ export class LocalizeManager extends LionSingleton {
     return Promise.all(namespaces.map(namespace => this.loadNamespace(namespace, { locale })));
   }
 
-  loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
+  loadNamespace(
+    namespaceObj,
+    { locale = this.locale } = { locale: this.locale },
+    override = false,
+  ) {
     const isDynamicImport = typeof namespaceObj === 'object';
 
     const namespace = isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj;
@@ -97,12 +101,14 @@ export class LocalizeManager extends LionSingleton {
       return Promise.resolve();
     }
 
-    const existingLoaderPromise = this._getCachedNamespaceLoaderPromise(locale, namespace);
+    const existingLoaderPromise = override
+      ? null
+      : this._getCachedNamespaceLoaderPromise(locale, namespace);
     if (existingLoaderPromise) {
       return existingLoaderPromise;
     }
 
-    return this._loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace);
+    return this._loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace, override);
   }
 
   msg(keys, vars, opts = {}) {
@@ -145,13 +151,13 @@ export class LocalizeManager extends LionSingleton {
     return null;
   }
 
-  _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace) {
+  _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace, override = false) {
     const loader = this._getNamespaceLoader(namespaceObj, isDynamicImport, namespace);
     const loaderPromise = this._getNamespaceLoaderPromise(loader, locale, namespace);
     this._cacheNamespaceLoaderPromise(locale, namespace, loaderPromise);
     return loaderPromise.then(obj => {
       const data = isLocalizeESModule(obj) ? obj.default : obj;
-      this.addData(locale, namespace, data);
+      this.addData(locale, namespace, data, override);
     });
   }
 
