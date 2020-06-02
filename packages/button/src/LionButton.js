@@ -184,6 +184,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         native.type = this.type;
       }
     }
+    if (changedProperties.has('disabled')) {
+      this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places
+    }
   }
 
   /**

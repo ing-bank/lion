@@ -108,4 +108,12 @@ describe('lion-switch-button', () => {
       expect(el.getAttribute('aria-checked')).to.equal('false');
     });
   });
+  it('should manage "aria-disabled"', async () => {
+    el.disabled = true;
+    await el.updateComplete;
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
+    el.disabled = false;
+    await el.updateComplete;
+    expect(el.getAttribute('aria-disabled')).to.equal('false');
+  });
 });
