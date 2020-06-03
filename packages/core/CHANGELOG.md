@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/ing-bank/lion/compare/@lion/core@0.6.0...@lion/core@0.7.0) (2020-06-03)
+
+
+### Bug Fixes
+
+* remove all stories folders from npm ([1e04d06](https://github.com/ing-bank/lion/commit/1e04d06921f9d5e1a446b6d14045154ff83771c3))
+
+
+### Features
+
+* use markdown javascript (mdjs) for documentation ([bcd074d](https://github.com/ing-bank/lion/commit/bcd074d1fbce8754d428538df723ba402603e2c8))
+
+
+
+
+
 # [0.6.0](https://github.com/ing-bank/lion/compare/@lion/core@0.5.2...@lion/core@0.6.0) (2020-05-18)
 
 

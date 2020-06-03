@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate-messages",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A set of localized messages for default Validators",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -36,8 +36,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@lion/core": "0.6.0",
-    "@lion/form-core": "0.1.0",
-    "@lion/localize": "0.11.0"
+    "@lion/core": "0.7.0",
+    "@lion/form-core": "0.1.1",
+    "@lion/localize": "0.11.1"
   }
 }

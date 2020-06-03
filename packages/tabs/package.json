@@ -1,6 +1,6 @@
 {
   "name": "@lion/tabs",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Allows users to quickly move between a small number of equally important views.",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -37,6 +37,6 @@
     "lion-tabs.js"
   ],
   "dependencies": {
-    "@lion/core": "0.6.0"
+    "@lion/core": "0.7.0"
   }
 }

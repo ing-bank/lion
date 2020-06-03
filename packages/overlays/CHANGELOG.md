@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.1](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.0...@lion/overlays@0.16.1) (2020-06-03)
+
+
+### Bug Fixes
+
+* **overlays:** change dropdownConfig inheritsReferenceWidth to min ([16f7afb](https://github.com/ing-bank/lion/commit/16f7afbbdc8316c8da16f6f177c85af0cde4f70d))
+* **overlays:** prevent resize due to scrollbars on global overlay open ([#746](https://github.com/ing-bank/lion/issues/746)) ([c8da23c](https://github.com/ing-bank/lion/commit/c8da23ccb2a44b646e4bcdc3a2306086f444fb63))
+* define side effects for demo files ([1d40567](https://github.com/ing-bank/lion/commit/1d405671875c1c9c5518a3b7f57814337b3a67d6))
+* remove all stories folders from npm ([1e04d06](https://github.com/ing-bank/lion/commit/1e04d06921f9d5e1a446b6d14045154ff83771c3))
+* throw when passing unconnected contentNode ([78dbfbe](https://github.com/ing-bank/lion/commit/78dbfbed49be49791f02054748e85f5f59468f67))
+
+
+
+
+
 # [0.16.0](https://github.com/ing-bank/lion/compare/@lion/overlays@0.15.3...@lion/overlays@0.16.0) (2020-05-29)
 
 

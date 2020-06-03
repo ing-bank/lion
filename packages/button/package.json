@@ -1,6 +1,6 @@
 {
   "name": "@lion/button",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A button that is easily styleable and accessible in all contexts",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -37,7 +37,7 @@
     "lion-button.js"
   ],
   "dependencies": {
-    "@lion/core": "0.6.0"
+    "@lion/core": "0.7.0"
   },
   "devDependencies": {
     "@polymer/iron-test-helpers": "^3.0.1"

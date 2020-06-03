@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.2](https://github.com/ing-bank/lion/compare/@lion/switch@0.10.1...@lion/switch@0.10.2) (2020-06-03)
+
+
+### Bug Fixes
+
+* remove all stories folders from npm ([1e04d06](https://github.com/ing-bank/lion/commit/1e04d06921f9d5e1a446b6d14045154ff83771c3))
+
+
+
+
+
 ## [0.10.1](https://github.com/ing-bank/lion/compare/@lion/switch@0.10.0...@lion/switch@0.10.1) (2020-06-02)
 
 

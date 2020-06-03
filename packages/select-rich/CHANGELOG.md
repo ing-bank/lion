@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.2](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.1...@lion/select-rich@0.18.2) (2020-06-03)
+
+
+### Bug Fixes
+
+* **overlays:** change dropdownConfig inheritsReferenceWidth to min ([16f7afb](https://github.com/ing-bank/lion/commit/16f7afbbdc8316c8da16f6f177c85af0cde4f70d))
+* remove all stories folders from npm ([1e04d06](https://github.com/ing-bank/lion/commit/1e04d06921f9d5e1a446b6d14045154ff83771c3))
+
+
+
+
+
 ## [0.18.1](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.0...@lion/select-rich@0.18.1) (2020-06-02)
 
 **Note:** Version bump only for package @lion/select-rich

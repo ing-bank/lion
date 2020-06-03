@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/ing-bank/lion/compare/@lion/form-integrations@0.1.1...@lion/form-integrations@0.1.2) (2020-06-03)
+
+
+### Bug Fixes
+
+* define side effects for demo files ([1d40567](https://github.com/ing-bank/lion/commit/1d405671875c1c9c5518a3b7f57814337b3a67d6))
+
+
+
+
+
 ## [0.1.1](https://github.com/ing-bank/lion/compare/@lion/form-integrations@0.1.0...@lion/form-integrations@0.1.1) (2020-06-02)
 
 **Note:** Version bump only for package @lion/form-integrations

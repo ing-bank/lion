@@ -1,6 +1,6 @@
 {
   "name": "@lion/calendar",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Standalone calendar",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -38,7 +38,7 @@
     "lion-calendar.js"
   ],
   "dependencies": {
-    "@lion/core": "0.6.0",
-    "@lion/localize": "0.11.0"
+    "@lion/core": "0.7.0",
+    "@lion/localize": "0.11.1"
   }
 }
