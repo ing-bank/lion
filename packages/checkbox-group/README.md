@@ -31,11 +31,11 @@ export const main = () => html`
 `;
 ```
 
-> Make sure that the checkbox-group also has a name attribute, this is necessary for the [lion-form](?path=/docs/forms-form-overview--page)'s serialization result.
+> Make sure that the checkbox-group also has a name attribute, this is necessary for the [lion-form](?path=/docs/forms-form-overview--main)'s serialization result.
 
 ## Features
 
-Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page),
+Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--main),
 it has all the features a fieldset has.
 
 ## How to use

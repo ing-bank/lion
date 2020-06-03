@@ -18,9 +18,9 @@ export default {
 
 We have three specific fieldset implementations:
 
-- [lion-form](?path=/docs/forms-form-overview--page)
-- [lion-checkbox-group](?path=/docs/forms-checkbox-group--default-story)
-- [lion-radio-group](?path=/docs/forms-radio-group--default-story)
+- [lion-form](?path=/docs/forms-form-overview--main)
+- [lion-checkbox-group](?path=/docs/forms-checkbox-group--main)
+- [lion-radio-group](?path=/docs/forms-radio-group--main)
 
 ```js story
 export const main = () => html`
@@ -39,7 +39,7 @@ Our fieldset instead has a label attribute or you can add a label with a div- or
 
 - Easy retrieval of form data based on field names
 - Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
-- Can have [validate](?path=/docs/forms-validation-overview--page) on fieldset level and shows the validation feedback below the fieldset
+- Can have [validate](?path=/docs/forms-validation-examples) on fieldset level and shows the validation feedback below the fieldset
 - Can disable input fields on fieldset level
 - Accessible out of the box
 
@@ -65,4 +65,4 @@ import '@lion/fieldset/lion-fieldset.js';
 </lion-fieldset>
 ```
 
-For more examples please look at [Fieldset Examples](?path=/docs/forms-fieldset-examples--default-story).
+For more examples please look at [Fieldset Examples](?path=/docs/forms-fieldset-examples).
