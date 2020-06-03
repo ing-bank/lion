@@ -38,7 +38,6 @@
     "@lion/button": "0.7.2",
     "@lion/checkbox-group": "0.10.1",
     "@lion/core": "0.7.0",
-    "@lion/field": "0.13.1",
     "@lion/fieldset": "0.13.1",
     "@lion/form": "0.6.1",
     "@lion/form-core": "0.1.1",
