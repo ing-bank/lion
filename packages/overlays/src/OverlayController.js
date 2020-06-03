@@ -9,6 +9,7 @@ async function preloadPopper() {
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
 const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
+const supportsCSSTypedObject = window.CSS && CSS.number;
 
 /**
  * @desc OverlayController is the fundament for every single type of overlay. With the right
@@ -383,7 +384,9 @@ export class OverlayController {
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       this._contentWrapperNode.style.display = '';
+      this._keepBodySize({ phase: 'before-show' });
       await this._handleFeatures({ phase: 'show' });
+      this._keepBodySize({ phase: 'show' });
       await this._handlePosition({ phase: 'show' });
       this.elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
@@ -410,6 +413,51 @@ export class OverlayController {
     }
   }
 
+  _keepBodySize({ phase }) {
+    switch (phase) {
+      case 'before-show':
+        this.__bodyClientWidth = document.body.clientWidth;
+        this.__bodyClientHeight = document.body.clientHeight;
+        this.__bodyMarginRight = 0;
+        this.__bodyMarginBottom = 0;
+        break;
+      case 'show': {
+        if (supportsCSSTypedObject) {
+          this.__bodyMarginRight = document.body.computedStyleMap().get('margin-right').value;
+          this.__bodyMarginBottom = document.body.computedStyleMap().get('margin-bottom').value;
+        } else if (window.getComputedStyle) {
+          const bodyStyle = window.getComputedStyle(document.body);
+          if (bodyStyle) {
+            this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
+            this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+          }
+        }
+        const scrollbarWidth = document.body.clientWidth - this.__bodyClientWidth;
+        const scrollbarHeight = document.body.clientHeight - this.__bodyClientHeight;
+        const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
+        const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
+        if (supportsCSSTypedObject) {
+          document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
+          document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
+        } else {
+          document.body.style.marginRight = `${newMarginRight}px`;
+          document.body.style.marginBottom = `${newMarginBottom}px`;
+        }
+        break;
+      }
+      case 'hide':
+        if (supportsCSSTypedObject) {
+          document.body.attributeStyleMap.set('margin-right', CSS.px(this.__bodyMarginRight));
+          document.body.attributeStyleMap.set('margin-bottom', CSS.px(this.__bodyMarginBottom));
+        } else {
+          document.body.style.marginRight = `${this.__bodyMarginRight}px`;
+          document.body.style.marginBottom = `${this.__bodyMarginBottom}px`;
+        }
+        break;
+      /* no default */
+    }
+  }
+
   /**
    * @event before-hide right before the overlay hides. Used for animations and switching overlays
    * @event hide right after the overlay is hidden
@@ -429,6 +477,7 @@ export class OverlayController {
       // await this.transitionHide({ backdropNode: this.backdropNode, conentNode: this.contentNode });
       this._contentWrapperNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
+      this._keepBodySize({ phase: 'hide' });
       this.dispatchEvent(new Event('hide'));
       this._restoreFocus();
     }
