@@ -26,7 +26,6 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test",
     "*.js"
   ],
