@@ -47,6 +47,28 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(el.opened).to.be.false;
     });
 
+    it('does not change the body size when opened', async () => {
+      const parentNode = document.createElement('div');
+      parentNode.setAttribute('style', 'height: 10000px; width: 10000px;');
+      const elWithBigParent = await fixture(
+        html`
+        <${tag}>
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `,
+        { parentNode },
+      );
+      const { offsetWidth, offsetHeight } = elWithBigParent.offsetParent;
+      await elWithBigParent._overlayCtrl.show();
+      expect(elWithBigParent.opened).to.be.true;
+      expect(elWithBigParent.offsetParent.offsetWidth).to.equal(offsetWidth);
+      expect(elWithBigParent.offsetParent.offsetHeight).to.equal(offsetHeight);
+      await elWithBigParent._overlayCtrl.hide();
+      expect(elWithBigParent.offsetParent.offsetWidth).to.equal(offsetWidth);
+      expect(elWithBigParent.offsetParent.offsetHeight).to.equal(offsetHeight);
+    });
+
     it('should respond to initially and dynamically setting the config', async () => {
       const itEl = await fixture(html`
           <${tag} .config=${{ trapsKeyboardFocus: false, viewportConfig: { placement: 'top' } }}>
