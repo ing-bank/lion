@@ -13,10 +13,6 @@ export default {
 };
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/fetch-system-ajax) for a live demo and documentation
-
 ## Features
 
 - only JS functions, no (unnecessarily expensive) web components

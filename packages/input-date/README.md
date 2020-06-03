@@ -21,10 +21,6 @@ loadDefaultFeedbackMessages();
 export const main = () => html` <lion-input-date label="Date"></lion-input-date> `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-date--default-story) for a live demo and API documentation
-
 ## Features
 
 - Based on [lion-input](?path=/docs/forms-input--default-story)

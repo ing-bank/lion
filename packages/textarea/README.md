@@ -23,10 +23,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-textarea--default-story) for a live demo and API documentation
-
 ## Features
 
 - Default rows is 2 and it will grow to max-rows of 6.

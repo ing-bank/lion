@@ -29,10 +29,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/tabs) for a live demo and API documentation
-
 ## How to use
 
 ### Installation

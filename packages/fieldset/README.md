@@ -35,10 +35,6 @@ A native fieldset element should always have a legend-element for a11y purposes.
 However, our fieldset element is not native and should not have a legend-element.
 Our fieldset instead has a label attribute or you can add a label with a div- or heading-element using `slot="label"`.
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-fieldset-overview--page) for a live demo and documentation
-
 ## Features
 
 - Easy retrieval of form data based on field names

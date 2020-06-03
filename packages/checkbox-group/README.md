@@ -5,7 +5,7 @@
 `lion-checkbox-group` component enhances the functionality of the native `<input type="checkbox">` element.
 Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
-> You should use [lion-checkbox](https://github.com/ing-bank/lion/tree/master/packages/checkbox) elements as the children of the `<lion-checkbox-group>`.
+> You should use `<lion-checkbox>` elements as the children of the `<lion-checkbox-group>`.
 
 ```js script
 import { html } from 'lit-html';
@@ -32,10 +32,6 @@ export const main = () => html`
 ```
 
 > Make sure that the checkbox-group also has a name attribute, this is necessary for the [lion-form](?path=/docs/forms-form-overview--page)'s serialization result.
-
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-checkbox-group--default-story) for a live demo and API documentation
 
 ## Features
 

@@ -19,10 +19,6 @@ export default {
 export const main = () => html` <lion-button>Default</lion-button> `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/buttons-button) for a live demo and API documentation
-
 ## Features
 
 - Clickable area that is bigger than visual size

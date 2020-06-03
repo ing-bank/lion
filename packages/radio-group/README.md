@@ -32,10 +32,6 @@ export const main = () => html`
 - Make sure that to use a name attribute as it is necessary for the [lion-form](?path=/docs/forms-form-overview--page)'s serialization result.
 - If you have many options for a user to pick from, consider using [lion-select](?path=/docs/forms-select--default-story) instead
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-radio-group--default-story) for a live demo and API documentation
-
 ## Features
 
 Since it extends from [lion-fieldset](?path=/docs/forms-fieldset-overview--page), it has all the features a fieldset has.

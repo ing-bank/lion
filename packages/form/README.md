@@ -24,10 +24,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-form-overview--page) for a live demo and documentation
-
 ## Features
 
 - Data synchronization with models

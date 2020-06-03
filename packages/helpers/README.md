@@ -13,10 +13,6 @@ A helpers package that contains several helpers that are used inside lion but ca
 These helpers are considered developer tools, not actual things to use in production.
 Therefore, they may not have the same quality standards as our other packages.
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/helpers) for a live demo and API documentation
-
 ## Packages
 
 | Package                                                                        | Version                                                                                                                  | Description      |

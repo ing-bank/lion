@@ -55,10 +55,6 @@ export const main = () => html`
   `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/overlays-specific-wc-tooltip) for a live demo and API documentation
-
 ## Features
 
 - Show content when hovering the invoker

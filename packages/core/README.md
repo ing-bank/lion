@@ -17,10 +17,6 @@ export default {
 import { LitElement, html, render } from '@lion/core';
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/core) for a live demo and API documentation
-
 ## Features
 
 - [function to deduplicate mixins (dedupeMixin)](#deduping-of-mixins)
