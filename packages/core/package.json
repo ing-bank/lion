@@ -27,7 +27,6 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test-helpers",
     "translations",
     "*.js"

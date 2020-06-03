@@ -31,7 +31,6 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test",
     "translations",
     "*.js"
