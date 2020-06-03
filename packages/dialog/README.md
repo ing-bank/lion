@@ -36,10 +36,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/overlays-specific-wc-dialog) for a live demo and documentation
-
 ## Features
 
 - Show content when clicking the invoker

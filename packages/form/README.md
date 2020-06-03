@@ -24,10 +24,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-form-overview--page) for a live demo and documentation
-
 ## Features
 
 - Data synchronization with models
@@ -37,8 +33,7 @@ export const main = () => html`
 - Registration mechanism for [form controls](?path=/docs/forms-system-overview--page)
 - Accessible out of the box
 
-For more information about fields that are designed for lion-form, please read
-[Forms](?path=/docs/forms-system-overview--page).
+For more information about fields that are designed for lion-form, please read [forms](?path=/docs/forms-system-overview--page).
 
 ## How to use
 
@@ -63,5 +58,3 @@ import '@lion/form/lion-form.js';
   </form>
 </lion-form>
 ```
-
-For more examples please look at [Form Examples](?path=/docs/forms-form-examples--default-story).

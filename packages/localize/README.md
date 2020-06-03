@@ -11,10 +11,6 @@ export default {
 Is meant to translate text into multiple languages.
 In it's simplest form it is a function that returns the translated text for a namespace + key.
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/localize--page) for a live demo and documentation
-
 ## Features
 
 - Uses es modules

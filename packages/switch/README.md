@@ -18,10 +18,6 @@ export default {
 export const main = () => html` <lion-switch label="Label" help-text="Help text"></lion-switch> `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/buttons-switch) for a live demo and documentation
-
 ## Features
 
 - Get or set the checked state (boolean) - `checked` boolean attribute

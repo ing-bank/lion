@@ -19,10 +19,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-range--default-story) for a live demo and API documentation
-
 ## Features
 
 - Based on [lion-input](?path=/docs/forms-input--default-story).

@@ -30,10 +30,6 @@ export const main = () => {
 };
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/calendar-standalone) for a live demo and API documentation
-
 ## Features
 
 - fully accessible keyboard navigation (Arrow Keys, PgUp, PgDn, ALT+PgUp, ALT+PgDn)

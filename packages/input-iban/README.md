@@ -25,10 +25,6 @@ export const main = () => {
 };
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input-iban--default-story) for a live demo and API documentation
-
 ## Features
 
 - Based on [lion-input](?path=/docs/forms-input--default-story)

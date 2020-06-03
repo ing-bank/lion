@@ -63,10 +63,6 @@ This connects the logger element to the trigger.
 If you try logging complex values such as arrays, objects or promises,
 you should expect to get only the string interpretation as the output in this logger.
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/helpers-storybook-action-logger) for a live demo and API documentation
-
 ## Features:
 
 - A public method `log` to log things to the action logger.

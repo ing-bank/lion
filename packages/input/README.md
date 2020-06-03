@@ -20,10 +20,6 @@ export default {
 export const main = () => html` <lion-input label="First Name"></lion-input> `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/forms-input--default-story) for a live demo and API documentation
-
 ## Features
 
 - Based on [field](?path=/docs/forms-system-overview--page)

@@ -35,10 +35,6 @@ export const main = () => html`
 `;
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/icon-system-icon) for a live demo and documentation
-
 ## How to use
 
 ### Installation

@@ -12,10 +12,6 @@ export default {
 };
 ```
 
-## Live Demo/Documentation
-
-> See our [storybook](http://lion-web-components.netlify.com/?path=/docs/steps-steps) for a live demo and API documentation
-
 ## Features
 
 - navigate between different steps with 'previous' and 'next' functions.
