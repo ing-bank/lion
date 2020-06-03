@@ -29,7 +29,6 @@
   "files": [
     "docs",
     "src",
-    "stories",
     "test",
     "test-helpers",
     "translations",

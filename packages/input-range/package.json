@@ -28,7 +28,6 @@
   "module": "index.js",
   "files": [
     "src",
-    "stories",
     "test",
     "*.js"
   ],
