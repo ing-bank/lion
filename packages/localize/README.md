@@ -38,3 +38,21 @@ npm i --save @lion/localize
 ```js
 import { localize } from '@lion/localize';
 ```
+
+### Example
+
+The locale which will be loaded by default is accessed via the `localize.locale`.
+
+The single source of truth for page's locale is `<html lang="my-LOCALE">`.
+At the same time the interaction should happen via `localize.locale` getter/setter to be able to notify and react to the change.
+
+```js
+import { localize } from '@lion/localize.js';
+
+localize.addEventListener('localeChanged', () => {
+  // do smth when data is loaded for a new locale
+});
+
+// changes locale, syncs to `<html lang="es-ES">` and fires the event above
+localize.locale = 'es-ES';
+```
