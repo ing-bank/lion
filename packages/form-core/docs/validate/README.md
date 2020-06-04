@@ -29,10 +29,10 @@ Our validation system is designed to:
 - allow for advanced UX scenarios by updating validation state on every value change
 - provide a powerful way of writing validations via classes
 
-Validation is applied by default to all [form controls](../form-core/docs/FormFundaments.md) via the
+Validation is applied by default to all [form controls](?path=/docs/forms-field-overview--page) via the
 ValidateMixin.
 
-For a detailed description of the validation system and the `ValidateMixin`, please see [ValidationSystem](./docs/ValidationSystem.md).
+For a detailed description of the validation system and the `ValidateMixin`, please see [ValidationSystem](?path=/docs/forms-validation-system--page).
 
 ## How to use
 

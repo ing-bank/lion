@@ -119,7 +119,7 @@ On top of default validators, application developers can write their own by exte
 
 ### Localization
 
-The `ValidateMixin` supports localization out of the box via the [localize system](../../localize/).
+The `ValidateMixin` supports localization out of the box via the [localize system](?path=/docs/localize-intro--page).
 All default validation messages are translated in the following languages (depicted by iso code):
 bg, cs, de, en, es, fr, hu, it, nl, pl, ro ,ru, sk, uk and zh.
 
