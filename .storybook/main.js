@@ -5,6 +5,7 @@ module.exports = {
   stories: [
     '../packages/*/README.md',
     '../packages/*/docs/*.md',
+    '../packages/*/docs/!(assets)**/*.md',
     '../docs/README.md',
     '../docs/**/*.md',
     '../README.md',

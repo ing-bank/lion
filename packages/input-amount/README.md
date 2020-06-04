@@ -30,8 +30,8 @@ export const main = () => {
 
 ## Features
 
-- Based on [lion-input](?path=/docs/forms-system-overview--page)
-- Makes use of [formatNumber](?path=/docs/localize-numbers) for formatting and parsing.
+- Based on [lion-input](?path=/docs/forms-input--main#input)
+- Makes use of [formatNumber](?path=/docs/localize-numbers--formatting#formatting) for formatting and parsing.
 - Option to show currency as a suffix
 - Option to override locale to change the formatting and parsing
 - Option to provide additional format options overrides
