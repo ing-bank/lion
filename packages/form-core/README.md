@@ -57,6 +57,5 @@ Fieldsets are the basis for:
 
 ## Other Resources
 
-- [Form fundamentals](?path=/docs/forms-field-fundaments--page)
 - [Formatting and parsing](?path=/docs/forms-field-formatting-and-parsing--page)
 - [Custom Fields](?path=/docs/forms-field-custom-fields-tutorial--page)
