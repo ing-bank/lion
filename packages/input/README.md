@@ -33,7 +33,7 @@ export const main = () => html` <lion-input label="First Name"></lion-input> `;
   - **before**: does not have an active use case yet, but the option is in place.
   - **after**: can be used to show a currency or percentage.
 - Delegates attributes like `type`, `disabled`, `placeholder` and `read-only` to the native input.
-- Can make us of [validation](?path=/docs/forms-validation-overview--page)
+- Can make us of [validation](?path=/docs/forms-validation-overview--main#validate)
 
 ## How to use
 

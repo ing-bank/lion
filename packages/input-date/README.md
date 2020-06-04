@@ -23,11 +23,11 @@ export const main = () => html` <lion-input-date label="Date"></lion-input-date>
 
 ## Features
 
-- Based on [lion-input](?path=/docs/forms-input--default-story)
-- Makes use of [formatDate](?path=/docs/localize-dates--formatting)) for formatting and parsing.
+- Based on [lion-input](?path=/docs/forms-input--main#input)
+- Makes use of [formatDate](?path=/docs/localize-dates--formatting#date-localization) for formatting and parsing.
 - Option to override locale to change the formatting and parsing
 - Default label in different languages
-- Can make use of date specific [validators](?path=/docs/forms-validation-overview--page) with corresponding error messages in different languages
+- Can make use of date specific [validators](?path=/docs/forms-validation-overview--main#validate) with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate

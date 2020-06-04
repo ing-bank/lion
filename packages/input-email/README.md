@@ -23,8 +23,8 @@ export const main = () => {
 
 ## Features
 
-- Based on [lion-input](?path=/docs/forms-input--default-story)
-- Makes use of email [validators](?path=/docs/forms-validation-overview--page) with corresponding error messages in different languages
+- Based on [lion-input](?path=/docs/forms-input--main#input)
+- Makes use of email [validators](?path=/docs/forms-validation-overview--main#validate) with corresponding error messages in different languages
   - IsEmail (default)
 
 ## How to use

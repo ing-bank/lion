@@ -29,11 +29,11 @@ export const main = () => {
 ## Features
 
 - Input field with a datepicker to help to choose a date
-- Based on [lion-input-date](?path=/docs/form-component-input-date)
-- Makes use of [lion-calendar](?path=/docs/calendar-standalone) inside the datepicker
-- Makes use of [formatDate](?path=/docs/localize-dates--formatting)) for formatting and parsing.
+- Based on [lion-input-date](?path=/docs/forms-input-date--main#input)
+- Makes use of [lion-calendar](?path=/docs/others-calendar--main#calendar) inside the datepicker
+- Makes use of [formatDate](?path=/docs/localize-dates--formatting#date-localization) for formatting and parsing.
 - Option to overwrite locale to change the formatting and parsing
-- Can make use of date specific [validators](?path=/docs/forms-validation-overview--page) with corresponding error messages in different languages
+- Can make use of date specific [validators](?path=/docs/forms-validation-overview--main#validate) with corresponding error messages in different languages
   - IsDate (default)
   - MinDate
   - MaxDate

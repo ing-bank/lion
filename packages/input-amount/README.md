@@ -36,7 +36,7 @@ export const main = () => {
 - Option to override locale to change the formatting and parsing
 - Option to provide additional format options overrides
 - Default label in different languages
-- Can make use of number specific [validators](?path=/docs/forms-validation-overview--page) with corresponding error messages in different languages
+- Can make use of number specific [validators](?path=/docs/forms-validation-overview--main#validate) with corresponding error messages in different languages
   - IsNumber (default)
   - MinNumber
   - MaxNumber

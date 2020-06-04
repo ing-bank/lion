@@ -21,11 +21,11 @@ export const main = () => html`
 
 ## Features
 
-- Based on [lion-input](?path=/docs/forms-input--default-story).
+- Based on [lion-input](?path=/docs/forms-input--main#input).
 - Shows `modelValue` and `unit` above the range input.
 - Shows `min` and `max` value after the range input.
 - Can hide the `min` and `max` value via `no-min-max-labels`.
-- Makes use of [formatNumber](?path=/docs/localize-numbers) for formatting and parsing.
+- Makes use of [formatNumber](?path=/docs/localize-numbers--formatting#formatting) for formatting and parsing.
 
 ## How to use
 
