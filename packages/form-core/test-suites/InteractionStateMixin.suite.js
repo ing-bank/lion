@@ -168,19 +168,23 @@ export function runInteractionStateMixinSuite(customConfig) {
       el.dirty = true;
       el.touched = true;
       el.prefilled = true;
+      el.submitted = true;
       el.resetInteractionState();
       expect(el.dirty).to.be.false;
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.false;
+      expect(el.submitted).to.be.false;
 
       el.dirty = true;
       el.touched = true;
       el.prefilled = false;
+      el.submitted = true;
       el.modelValue = 'Some value';
       el.resetInteractionState();
       expect(el.dirty).to.be.false;
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.true;
+      expect(el.submitted).to.be.false;
     });
 
     it('has a method initInteractionState()', async () => {
