@@ -11,10 +11,6 @@ export class LocalizeManager extends LionSingleton {
     super(params);
     this._fakeExtendsEventTarget();
 
-    if (!document.documentElement.lang) {
-      document.documentElement.lang = 'en-GB';
-    }
-
     this._autoLoadOnLocaleChange = !!params.autoLoadOnLocaleChange;
     this._fallbackLocale = params.fallbackLocale;
     this.__storage = {};
@@ -23,7 +19,54 @@ export class LocalizeManager extends LionSingleton {
     this.__namespaceLoaderPromisesCache = {};
     this.formatNumberOptions = { returnIfNaN: '' };
 
+    /**
+     * Via html[data-localize-lang], developers are allowed to set the initial locale, without
+     * having to worry about whether locale is initialized before 3rd parties like Google Translate.
+     * When this value differs from html[lang], we assume the 3rd party took
+     * control over the page language and we set this._langAttrSetByTranslationTool to html[lang]
+     */
+    const initialLocale = document.documentElement.getAttribute('data-localize-lang');
+
+    this._supportExternalTranslationTools = Boolean(initialLocale);
+
+    if (this._supportExternalTranslationTools) {
+      this.locale = initialLocale || 'en-GB';
+      this._setupTranslationToolSupport();
+    }
+
+    if (!document.documentElement.lang) {
+      document.documentElement.lang = this.locale || 'en-GB';
+    }
+
     this._setupHtmlLangAttributeObserver();
+  }
+
+  _setupTranslationToolSupport() {
+    /**
+     * This value allows for support for Google Translate (or other 3rd parties taking control
+     * of the html[lang] attribute).
+     *
+     * Have the following scenario in mind:
+     * 1. locale is initialized by developer via html[data-localize-lang="en-US"] and
+     * html[lang="en-US"]. When localize is loaded (note that this also can be after step 2 below),
+     * it will sync its initial state from html[data-localize-lang]
+     * 2. Google Translate kicks in for the French language. It will set html[lang="fr"].
+     * This new language is not one known by us, so we most likely don't have translations for
+     * this file. Therefore, we do NOT sync this value to LocalizeManager. The manager should
+     * still ask for known resources (in this case for locale 'en-US')
+     * 3. locale is changed (think of a language dropdown)
+     * It's a bit of a weird case, because we would not expect an end user to do this. If he/she
+     * does, make sure that we do not go against Google Translate, so we maintain accessibility
+     * (by not altering html[lang]). We detect this by reading _langAttrSetByTranslationTool:
+     * when its value is null, we consider Google translate 'not active'.
+     *
+     * When Google Translate is turned off by the user (html[lang=auto]),
+     * `localize.locale` will be synced to html[lang] again
+     *
+     * Keep in mind that all of the above also works with other tools than Google Translate,
+     * but this is the most widely used tool and therefore used as an example.
+     */
+    this._langAttrSetByTranslationTool = document.documentElement.lang || null;
   }
 
   teardown() {
@@ -32,21 +75,36 @@ export class LocalizeManager extends LionSingleton {
 
   // eslint-disable-next-line class-methods-use-this
   get locale() {
+    if (this._supportExternalTranslationTools) {
+      return this.__locale;
+    }
     return document.documentElement.lang;
   }
 
   set locale(value) {
-    const oldLocale = document.documentElement.lang;
-
-    this._teardownHtmlLangAttributeObserver();
-    document.documentElement.lang = value;
-    this._setupHtmlLangAttributeObserver();
+    let oldLocale;
+    if (this._supportExternalTranslationTools) {
+      oldLocale = this.__locale;
+      this.__locale = value;
+      if (this._langAttrSetByTranslationTool === null) {
+        this._setHtmlLangAttribute(value);
+      }
+    } else {
+      oldLocale = document.documentElement.lang;
+      this._setHtmlLangAttribute(value);
+    }
 
     if (!value.includes('-')) {
       this.__handleLanguageOnly(value);
     }
 
     this._onLocaleChanged(value, oldLocale);
+  }
+
+  _setHtmlLangAttribute(locale) {
+    this._teardownHtmlLangAttributeObserver();
+    document.documentElement.lang = locale;
+    this._setupHtmlLangAttributeObserver();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -119,7 +177,17 @@ export class LocalizeManager extends LionSingleton {
     if (!this._htmlLangAttributeObserver) {
       this._htmlLangAttributeObserver = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-          this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
+          if (this._supportExternalTranslationTools) {
+            if (document.documentElement.lang === 'auto') {
+              // Google Translate is switched off
+              this._langAttrSetByTranslationTool = null;
+              this._setHtmlLangAttribute(this.locale);
+            } else {
+              this._langAttrSetByTranslationTool = document.documentElement.lang;
+            }
+          } else {
+            this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
+          }
         });
       });
     }

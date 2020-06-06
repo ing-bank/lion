@@ -1,5 +1,6 @@
 import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
+// eslint-disable-next-line import/no-unresolved
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers.js';
 
@@ -27,11 +28,6 @@ describe('LocalizeManager', () => {
     resetFakeImport();
   });
 
-  it('initializes locale from <html> by default', () => {
-    manager = new LocalizeManager();
-    expect(manager.locale).to.equal('en-GB');
-  });
-
   it('syncs locale back to <html> if changed', () => {
     manager = new LocalizeManager();
     manager.locale = 'nl-NL';
@@ -57,16 +53,6 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager();
       setTimeout(() => {
         manager.locale = 'en-US';
-      });
-      const event = await oneEvent(manager, 'localeChanged');
-      expect(event.detail.newLocale).to.equal('en-US');
-      expect(event.detail.oldLocale).to.equal('en-GB');
-    });
-
-    it('fires "localeChanged" event if locale was changed via <html lang> attribute', async () => {
-      manager = new LocalizeManager();
-      setTimeout(() => {
-        document.documentElement.lang = 'en-US';
       });
       const event = await oneEvent(manager, 'localeChanged');
       expect(event.detail.newLocale).to.equal('en-US');
@@ -432,30 +418,6 @@ describe('LocalizeManager', () => {
         'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
       });
     });
-
-    it('loads namespaces automatically when locale is changed via <html lang> attribute', async () => {
-      setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
-      setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
-
-      manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
-
-      await manager.loadNamespace({
-        'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
-      });
-
-      expect(manager.__storage).to.deep.equal({
-        'en-GB': { 'my-component': { greeting: 'Hello!' } },
-      });
-
-      document.documentElement.lang = 'nl-NL';
-      await aTimeout(); // wait for mutation observer to be called
-      await manager.loadingComplete;
-
-      expect(manager.__storage).to.deep.equal({
-        'en-GB': { 'my-component': { greeting: 'Hello!' } },
-        'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
-      });
-    });
   });
 
   describe('loading extra features', () => {
@@ -591,6 +553,168 @@ describe('LocalizeManager', () => {
       expect(() => manager.msg(msgKey)).to.throw(
         `Namespace is missing in the key "${msgKey}". The format for keys is "namespace:name".`,
       );
+    });
+  });
+});
+
+describe('When supporting external translation tools like Google Translate', () => {
+  let manager;
+  const originalLang = document.documentElement.lang;
+
+  async function simulateGoogleTranslateOn(lang) {
+    document.documentElement.lang = lang;
+  }
+
+  async function simulateGoogleTranslateOff() {
+    document.documentElement.lang = 'auto';
+  }
+
+  function getInstance(cfg) {
+    LocalizeManager.resetInstance();
+    return LocalizeManager.getInstance(cfg || {});
+  }
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('lang');
+    document.documentElement.removeAttribute('data-localize-lang');
+  });
+
+  after(() => {
+    document.documentElement.lang = originalLang;
+  });
+
+  describe('On initialization', () => {
+    /** A default scenario */
+    it('synchronizes from html[data-localize-lang] attribute to LocalizeManager', async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'nl-NL');
+      document.documentElement.lang = 'nl-NL';
+      manager = getInstance();
+      expect(manager.locale).to.equal('nl-NL');
+    });
+
+    /** A scenario where Google Translate kicked in before initialization */
+    it(`synchronizes from html[data-localize-lang] attribute to LocalizeManager when html[lang]
+      has a different value`, async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'en-US');
+      document.documentElement.lang = 'fr';
+      manager = getInstance();
+      expect(manager.locale).to.equal('en-US');
+    });
+
+    it("doesn't synchronize from html[lang] attribute to LocalizeManager", async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'en-US');
+      manager = getInstance();
+      document.documentElement.lang = 'nl-NL';
+      expect(manager.locale).to.not.equal('nl-NL');
+    });
+
+    it('triggers support for external translation tools via data-localize-lang', async () => {
+      document.documentElement.removeAttribute('data-localize-lang');
+      manager = getInstance();
+      expect(manager._supportExternalTranslationTools).to.be.false;
+
+      document.documentElement.setAttribute('data-localize-lang', 'nl-NL');
+      manager = getInstance();
+      expect(manager._supportExternalTranslationTools).to.be.true;
+    });
+  });
+
+  describe('After initialization', () => {
+    it(`synchronizes from LocalizeManager to html[lang] when
+      3rd party translation tool is NOT in control`, async () => {
+      document.documentElement.removeAttribute('lang');
+      manager = getInstance();
+      expect(document.documentElement.lang).to.equal('en-GB');
+      manager.locale = 'nl-NL';
+      expect(document.documentElement.lang).to.equal('nl-NL');
+    });
+
+    it(`doesn't synchronize from LocalizeManager to html[lang] when
+      3rd party translation tool is in control`, async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'en-US');
+      manager = getInstance();
+      await simulateGoogleTranslateOn('fr');
+      manager.locale = 'nl-NL';
+      expect(document.documentElement.lang).to.equal('fr');
+    });
+
+    it(`doesn't synchronize from html[lang] attribute to LocalizeManager`, async () => {
+      document.documentElement.setAttribute('data-localize-lang', 'en-US');
+      manager = getInstance();
+      manager.locale = 'nl-NL';
+      // When a 3rd party like Google Translate alters lang attr of the page, we want to
+      // keep this for accessibility, but it should NOT be synchronized to our manager.
+      await simulateGoogleTranslateOn('fr');
+      expect(manager.locale).to.equal('nl-NL');
+    });
+
+    it(`restores html[lang] when 3rd party translation tool is turned off again`, async () => {
+      manager = getInstance();
+      manager.locale = 'nl-NL';
+      await simulateGoogleTranslateOn('fr');
+      expect(document.documentElement.lang).to.equal('fr');
+      await simulateGoogleTranslateOff();
+      expect(document.documentElement.lang).to.equal('nl-NL');
+    });
+  });
+});
+
+describe('[deprecated] When not supporting external translation tools like Google Translate', () => {
+  let manager;
+
+  beforeEach(() => {
+    // makes sure that between tests the localization is reset to default state
+    document.documentElement.lang = 'en-GB';
+  });
+
+  afterEach(() => {
+    manager.teardown();
+  });
+
+  afterEach(() => {
+    fetchMock.restore();
+    resetFakeImport();
+  });
+
+  it('initializes locale from <html> by default', () => {
+    manager = new LocalizeManager({ supportExternalTranslationTools: false });
+    expect(manager.locale).to.equal('en-GB');
+  });
+
+  it('fires "localeChanged" event if locale was changed via <html lang> attribute', async () => {
+    manager = new LocalizeManager({ supportExternalTranslationTools: false });
+    setTimeout(() => {
+      document.documentElement.lang = 'en-US';
+    });
+    const event = await oneEvent(manager, 'localeChanged');
+    expect(event.detail.newLocale).to.equal('en-US');
+    expect(event.detail.oldLocale).to.equal('en-GB');
+  });
+
+  it('loads namespaces automatically when locale is changed via <html lang> attribute', async () => {
+    setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
+    setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
+
+    manager = new LocalizeManager({
+      supportExternalTranslationTools: false,
+      autoLoadOnLocaleChange: true,
+    });
+
+    await manager.loadNamespace({
+      'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
+    });
+
+    expect(manager.__storage).to.deep.equal({
+      'en-GB': { 'my-component': { greeting: 'Hello!' } },
+    });
+
+    document.documentElement.lang = 'nl-NL';
+    await aTimeout(); // wait for mutation observer to be called
+    await manager.loadingComplete;
+
+    expect(manager.__storage).to.deep.equal({
+      'en-GB': { 'my-component': { greeting: 'Hello!' } },
+      'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
     });
   });
 });
