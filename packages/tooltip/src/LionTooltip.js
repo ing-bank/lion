@@ -12,6 +12,10 @@ export class LionTooltip extends OverlayMixin(LitElement) {
         reflect: true,
         attribute: 'has-arrow',
       },
+      invokerRelation: {
+        type: String,
+        attribute: 'invoker-relation',
+      },
     };
   }
 
@@ -70,6 +74,17 @@ export class LionTooltip extends OverlayMixin(LitElement) {
 
   constructor() {
     super();
+    /**
+     * Whether an arrow should be displayed
+     * @type {boolean}
+     */
+    this.hasArrow = false;
+    /**
+     * Decides whether the tooltip invoker text should be considered a description
+     * (sets aria-describedby) or a label (sets aria-labelledby).
+     * @type {'label'\'description'}
+     */
+    this.invokerRelation = 'description';
     this._mouseActive = false;
     this._keyActive = false;
     this.__setupRepositionCompletePromise();
@@ -79,7 +94,6 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     if (super.connectedCallback) {
       super.connectedCallback();
     }
-    this._overlayContentNode.setAttribute('role', 'tooltip');
   }
 
   render() {
@@ -128,8 +142,9 @@ export class LionTooltip extends OverlayMixin(LitElement) {
           this.__syncFromPopperState(data);
         },
       },
-      isTooltip: true,
       handlesAccessibility: true,
+      isTooltip: true,
+      invokerRelation: this.invokerRelation,
     };
   }
 

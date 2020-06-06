@@ -206,6 +206,32 @@ describe('lion-tooltip', () => {
       expect(content.getAttribute('role')).to.be.equal('tooltip');
     });
 
+    it('should have aria-describedby role set on the invoker', async () => {
+      const el = await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <button slot="invoker">Tooltip button</button>
+        </lion-tooltip>
+      `);
+      const content = el.querySelector('[slot=content]');
+      const invoker = el.querySelector('[slot=invoker]');
+      expect(invoker.getAttribute('aria-describedby')).to.be.equal(content.id);
+      expect(invoker.getAttribute('aria-labelledby')).to.be.equal(null);
+    });
+
+    it('should have aria-labelledby role set on the invoker when [ invoker-relation="label"]', async () => {
+      const el = await fixture(html`
+        <lion-tooltip invoker-relation="label">
+          <div slot="content">Hey there</div>
+          <button slot="invoker">Tooltip button</button>
+        </lion-tooltip>
+      `);
+      const content = el.querySelector('[slot=content]');
+      const invoker = el.querySelector('[slot=invoker]');
+      expect(invoker.getAttribute('aria-describedby')).to.be.equal(null);
+      expect(invoker.getAttribute('aria-labelledby')).to.be.equal(content.id);
+    });
+
     it('should be accessible when closed', async () => {
       const el = await fixture(html`
         <lion-tooltip>
