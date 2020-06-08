@@ -1,7 +1,7 @@
 import { formatNumber, getFractionDigits, normalizeCurrencyLabel } from '@lion/localize';
 
 /**
- * Formats a number considering the default fraction digits provided by Intl
+ * Formats a number considering the default fraction digits provided by Intl.
  *
  * @param {float} modelValue Number to format
  * @param {object} givenOptions Options for Intl

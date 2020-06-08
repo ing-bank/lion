@@ -7,7 +7,7 @@ import { friendlyFormatIBAN } from 'ibantools';
  * @return {string} formatted value
  */
 export function formatIBAN(modelValue) {
-  // defensive code because of ibantools
+  // defensive code because of ibantools.
   if (!modelValue) {
     return '';
   }

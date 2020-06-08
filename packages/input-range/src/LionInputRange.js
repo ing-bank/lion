@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { LocalizeMixin, formatNumber } from '@lion/localize';
+import { css, html, unsafeCSS } from '@lion/core';
 import { LionInput } from '@lion/input';
-import { html, css, unsafeCSS } from '@lion/core';
+import { formatNumber, LocalizeMixin } from '@lion/localize';
 
 /**
- * LionInputRange: extension of lion-input
+ * LionInputRange: extension of lion-input.
  *
  * @customElement `lion-input-range`
  * @extends LionInput
