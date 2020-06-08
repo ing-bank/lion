@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Helpers that are used throughout lion and can be used outside",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -38,6 +38,6 @@
     "sb-locale-switcher.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.0"
+    "@lion/core": "0.7.1"
   }
 }

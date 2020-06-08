@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/ing-bank/lion/compare/@lion/tabs@0.4.1...@lion/tabs@0.4.2) (2020-06-08)
+
+**Note:** Version bump only for package @lion/tabs
+
+
+
+
+
 ## [0.4.1](https://github.com/ing-bank/lion/compare/@lion/tabs@0.4.0...@lion/tabs@0.4.1) (2020-06-03)
 
 
