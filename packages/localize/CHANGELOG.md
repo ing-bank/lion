@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.11.2...@lion/localize@0.12.0) (2020-06-08)
+
+
+### Features
+
+* **localize:** support google translate ([271520d](https://github.com/ing-bank/lion/commit/271520d55cff3c182357f792cad6675e54c36be3))
+
+
+
+
+
 ## [0.11.2](https://github.com/ing-bank/lion/compare/@lion/localize@0.11.1...@lion/localize@0.11.2) (2020-06-08)
 
 **Note:** Version bump only for package @lion/localize

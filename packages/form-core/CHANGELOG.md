@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.2...@lion/form-core@0.1.3) (2020-06-08)
+
+**Note:** Version bump only for package @lion/form-core
+
+
+
+
+
 ## [0.1.2](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.1...@lion/form-core@0.1.2) (2020-06-08)
 
 **Note:** Version bump only for package @lion/form-core
