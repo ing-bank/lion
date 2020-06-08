@@ -74,7 +74,7 @@ export const faultyPrefilled = () => html`
 ### Country Restrictions
 
 By default, we validate the input to ensure the IBAN is valid.
-To get the default feedback message for this default validator, use `loadDefaultFeedbackMessages` from `@lion/validate`.
+To get the default feedback message for this default validator, use `loadDefaultFeedbackMessages` from `@lion/form-core`.
 
 In the example below, we show how to use an additional validator that restricts the `input-iban` to IBANs from only certain countries.
 

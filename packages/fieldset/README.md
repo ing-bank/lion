@@ -39,7 +39,7 @@ Our fieldset instead has a label attribute or you can add a label with a div- or
 
 - Easy retrieval of form data based on field names
 - Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
-- Can have [validate](?path=/docs/forms-validation-examples) on fieldset level and shows the validation feedback below the fieldset
+- Can have [validate](?path=/docs/forms-validation-overview--main#validate) on fieldset level and shows the validation feedback below the fieldset
 - Can disable input fields on fieldset level
 - Accessible out of the box
 
@@ -65,4 +65,4 @@ import '@lion/fieldset/lion-fieldset.js';
 </lion-fieldset>
 ```
 
-For more examples please look at [Fieldset Examples](?path=/docs/forms-fieldset-examples).
+For more examples please look at [Fieldset Examples](?path=/docs/forms-fieldset-examples--data#fieldset-examples).

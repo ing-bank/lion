@@ -39,7 +39,7 @@ For a detailed description of the validation system and the `ValidateMixin`, ple
 ### Installation
 
 ```bash
-npm i --save @lion/validate
+npm i --save @lion/form-core
 ```
 
 ```js

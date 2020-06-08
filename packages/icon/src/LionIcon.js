@@ -16,7 +16,7 @@ function validateSvg(svg) {
 }
 
 /**
- * Custom element for rendering SVG icons.
+ * Custom element for rendering SVG icons
  */
 export class LionIcon extends LitElement {
   static get properties() {

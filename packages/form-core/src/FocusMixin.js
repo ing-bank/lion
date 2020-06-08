@@ -61,6 +61,7 @@ export const FocusMixin = dedupeMixin(
       }
 
       __registerEventsForFocusMixin() {
+        // focus
         this.__redispatchFocus = ev => {
           ev.stopPropagation();
           this.dispatchEvent(new Event('focus'));
