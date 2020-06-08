@@ -1,7 +1,7 @@
 import { LionField } from '@lion/form-core';
 
 /**
- * LionInput: extension of lion-field with native input element in place and user friendly API
+ * LionInput: extension of lion-field with native input element in place and user friendly API.
  *
  * @customElement lion-input
  * @extends {LionField}

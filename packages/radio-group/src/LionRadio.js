@@ -18,7 +18,6 @@ import { LionInput } from '@lion/input';
  *   Example:
  *   <lion-radio checked>
  *
- *
  * @customElement lion-radio
  * @extends {LionInput}
  */

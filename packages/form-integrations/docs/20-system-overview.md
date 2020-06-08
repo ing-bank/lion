@@ -34,7 +34,7 @@ Fields provide a normalized api for both platform components and custom made for
 On top of this, they offer:
 
 - [formatting/parsing/serializing](?path=/docs/forms-system-formatting-and-parsing--parser) of view values
-- advanced [validation](?path=/docs/forms-validation-overview--page) possibilities
+- advanced [validation](?path=/docs/forms-validation-overview--main#validate) possibilities
 - creation of advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
 - provision of labels and help texts in an easy, declarative manner
 - accessibility out of the box
@@ -94,4 +94,4 @@ Fieldsets are at the base of:
 - [Model Value](?path=/docs/forms-system-modelvalue--page)
 - [Formatting and parsing](?path=/docs/forms-system-formatting-and-parsing--parser)
 - [Interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
-- [Validation System](?path=/docs/forms-validation-overview--page)
+- [Validation System](?path=/docs/forms-validation-overview--main#validate)

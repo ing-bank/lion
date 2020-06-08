@@ -1,6 +1,6 @@
-import { LocalizeMixin } from '@lion/localize';
-import { LionInput } from '@lion/input';
 import { IsEmail } from '@lion/form-core';
+import { LionInput } from '@lion/input';
+import { LocalizeMixin } from '@lion/localize';
 
 /**
  * LionInputEmail: extension of lion-input
@@ -12,7 +12,7 @@ export class LionInputEmail extends LocalizeMixin(LionInput) {
   constructor() {
     super();
     // local-part@domain where the local part may be up to 64 characters long
-    // and the domain may have a maximum of 255 characters
+    // and the domain may have a maximum of 255 characters.
     // @see https://www.wikiwand.com/en/Email_address
     // however, the longest active email is even bigger
     // @see https://laughingsquid.com/the-worlds-longest-active-email-address/

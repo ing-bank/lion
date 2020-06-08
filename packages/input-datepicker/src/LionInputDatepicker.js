@@ -22,7 +22,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
       /**
        * The heading to be added on top of the calendar overlay.
        * Naming chosen from an Application Developer perspective.
-       * For a Subclasser 'calendarOverlayHeading' would be more appropriate
+       * For a Subclasser 'calendarOverlayHeading' would be more appropriate.
        */
       calendarHeading: {
         type: String,

@@ -17,6 +17,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  *     attributes: ['disabled'],
  *   };
  * }
+ *
  * render() {
  *   return html`
  *     <button id="button1">with delegation</button>

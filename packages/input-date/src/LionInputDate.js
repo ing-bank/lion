@@ -1,6 +1,6 @@
+import { IsDate } from '@lion/form-core';
 import { LionInput } from '@lion/input';
 import { formatDate, LocalizeMixin, parseDate } from '@lion/localize';
-import { IsDate } from '@lion/form-core';
 
 function isValidDate(date) {
   // to make sure it is a valid date we use isNaN and not Number.isNaN
@@ -48,7 +48,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
       return '';
     }
     // modelValue is localized, so we take the timezone offset in milliseconds and subtract it
-    // before converting it to ISO string
+    // before converting it to ISO string.
     const offset = modelValue.getTimezoneOffset() * 60000;
     return new Date(modelValue - offset).toISOString().slice(0, 10);
   }
