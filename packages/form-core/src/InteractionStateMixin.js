@@ -141,6 +141,7 @@ export const InteractionStateMixin = dedupeMixin(
        */
       resetInteractionState() {
         this.touched = false;
+        this.submitted = false;
         this.dirty = false;
         this.prefilled = !this._isEmpty();
       }
