@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.3...@lion/form-core@0.1.4) (2020-06-09)
+
+
+### Bug Fixes
+
+* **form-core:** on reset the submitted values becomes false ([#753](https://github.com/ing-bank/lion/issues/753)) ([d86cfc5](https://github.com/ing-bank/lion/commit/d86cfc59018a2e5dcff0b2f5728683fc4e4861e6))
+
+
+
+
+
 ## [0.1.3](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.2...@lion/form-core@0.1.3) (2020-06-08)
 
 **Note:** Version bump only for package @lion/form-core
