@@ -207,7 +207,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   }
 
   __setupDelegationInConstructor() {
-    // do not move to connectedCallback, otherwise IE11 breaks
+    // do not move to connectedCallback, otherwise IE11 breaks.
     // more info: https://github.com/ing-bank/lion/issues/179#issuecomment-511763835
     this.addEventListener('click', this.__clickDelegationHandler, true);
   }

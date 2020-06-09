@@ -1,6 +1,5 @@
-import { ChoiceInputMixin, LionField } from '@lion/form-core';
 import { css, html, ScopedElementsMixin } from '@lion/core';
-
+import { ChoiceInputMixin, LionField } from '@lion/form-core';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
@@ -72,7 +71,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   }
 
   /**
-   * Override this function from ChoiceInputMixin
+   * Override this function from ChoiceInputMixin.
    */
   // eslint-disable-next-line class-methods-use-this
   _isEmpty() {}

@@ -15,7 +15,7 @@ export default {
 };
 ```
 
-```js story
+```js preview-story
 export const main = () => html` <lion-button>Default</lion-button> `;
 ```
 
