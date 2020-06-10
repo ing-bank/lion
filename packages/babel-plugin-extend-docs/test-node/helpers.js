@@ -82,6 +82,41 @@ const baseConfig = {
       },
     },
     {
+      description: 'LionCheckbox',
+      variable: {
+        from: 'LionCheckbox',
+        to: 'WolfCheckbox',
+        paths: [
+          {
+            from: './index.js',
+            to: './index.js',
+          },
+          {
+            from: './src/LionCheckbox.js',
+            to: './index.js',
+          },
+          {
+            from: '@lion/checkbox-group',
+            to: './index.js',
+          },
+        ],
+      },
+      tag: {
+        from: 'lion-checkbox',
+        to: 'wolf-checkbox',
+        paths: [
+          {
+            from: './lion-checkbox.js',
+            to: './__element-definitions/wolf-checkbox.js',
+          },
+          {
+            from: '@lion/checkbox-group/lion-checkbox.js',
+            to: './__element-definitions/wolf-checkbox.js',
+          },
+        ],
+      },
+    },
+    {
       description: 'localize',
       variable: {
         from: 'localize',
