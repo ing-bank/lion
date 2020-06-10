@@ -14,7 +14,7 @@ export default {
 };
 ```
 
-```js story
+```js preview-story
 export const main = () => html`
   <lion-tabs>
     <button slot="tab">Info</button>
@@ -37,13 +37,13 @@ export const main = () => html`
 npm i --save @lion/tabs;
 ```
 
-### Usage
-
 ```js
-import { LiontTabs } from '@lion/tabs';
+import { LionTabs } from '@lion/tabs';
 // or
 import '@lion/tabs/lion-tabs.js';
 ```
+
+### Usage
 
 ```html
 <lion-tabs>
@@ -106,7 +106,7 @@ Below, we demonstrate on how you could dynamically add new tab + panels.
 
 ```js preview-story
 export const distributeNewElement = () => {
-  const tagName = 'lion-tabs-experimental';
+  const tagName = 'demo-tabs-add-dynamically';
   if (!customElements.get(tagName)) {
     customElements.define(
       tagName,
@@ -119,20 +119,17 @@ export const distributeNewElement = () => {
         render() {
           return html`
             <h3>Append</h3>
-            <button @click="${this.__handleAppendClick}">
-              Append
-            </button>
             <lion-tabs id="appendTabs">
               <button slot="tab">tab 1</button>
               <p slot="panel">panel 1</p>
               <button slot="tab">tab 2</button>
               <p slot="panel">panel 2</p>
             </lion-tabs>
+            <button @click="${this.__handleAppendClick}">
+              Append
+            </button>
             <hr />
             <h3>Push</h3>
-            <button @click="${this.__handlePushClick}">
-              Push
-            </button>
             <lion-tabs id="pushTabs">
               <button slot="tab">tab 1</button>
               <p slot="panel">panel 1</p>
@@ -145,6 +142,9 @@ export const distributeNewElement = () => {
                 `,
               )}
             </lion-tabs>
+            <button @click="${this.__handlePushClick}">
+              Push
+            </button>
           `;
         }
         constructor() {
@@ -180,7 +180,7 @@ export const distributeNewElement = () => {
       },
     );
   }
-  return html` <lion-tabs-experimental></lion-tabs-experimental> `;
+  return html` <demo-tabs-add-dynamically></demo-tabs-add-dynamically> `;
 };
 ```
 

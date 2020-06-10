@@ -14,7 +14,7 @@ export default {
 };
 ```
 
-```js story
+```js preview-story
 export const main = () => html` <lion-switch label="Label" help-text="Help text"></lion-switch> `;
 ```
 

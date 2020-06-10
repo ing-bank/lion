@@ -67,7 +67,7 @@ export class LionTabs extends LitElement {
   static get properties() {
     return {
       /**
-       * index number of the selected tab
+       * index number of the selected tab.
        */
       selectedIndex: {
         type: Number,
