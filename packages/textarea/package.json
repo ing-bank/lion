@@ -1,6 +1,6 @@
 {
   "name": "@lion/textarea",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Provide a way for users to write text that is multiple lines long",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.7.1",
-    "@lion/form-core": "0.1.4",
+    "@lion/form-core": "0.1.5",
     "autosize": "4.0.2"
   }
 }
