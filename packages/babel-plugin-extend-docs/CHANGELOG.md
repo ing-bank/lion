@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/ing-bank/lion/compare/babel-plugin-extend-docs@0.2.0...babel-plugin-extend-docs@0.2.1) (2020-06-10)
+
+
+### Bug Fixes
+
+* **babel-plugin-extend-docs:** check more strictly on tagnames ([dc143b7](https://github.com/ing-bank/lion/commit/dc143b7323590ebb46054d22abfb16aa2090c110))
+
+
+
+
+
 # [0.2.0](https://github.com/ing-bank/lion/compare/babel-plugin-extend-docs@0.1.0...babel-plugin-extend-docs@0.2.0) (2020-05-29)
 
 
