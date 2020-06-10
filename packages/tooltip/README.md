@@ -62,7 +62,6 @@ export const main = () => html`
 - Uses Popper.js under the hood, to have the content pop up relative to the invoker
 - Use `.config` to override the overlay configuration
 - Config has `popperConfig` property that has a one to one relation with Popper.js configuration API.
-- Comes with a default `lion-tooltip-arrow` for an arrow.
 
 ## How to use
 

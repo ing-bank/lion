@@ -14,7 +14,7 @@ Manages their position on the screen relative to other elements, including other
 
 Its purpose is to make it easy to use our Overlay System declaratively. It can be easily extended where needed, to override event listeners and more.
 
-See [lion-dialog](../dialog) and [lion-tooltip](../tooltip) for example Web Component implementations using the Overlay System.
+See [lion-dialog](?path=/docs/overlays-dialog--main#dialog) and [lion-tooltip](?path=/docs/overlays-tooltip--main#tooltip) for example Web Component implementations using the Overlay System.
 
 ## Features
 
@@ -26,9 +26,9 @@ See [lion-dialog](../dialog) and [lion-tooltip](../tooltip) for example Web Comp
 - lion-overlay web component:
   - Show content when clicking the invoker
   - Have a `.config` object to set or update the OverlayController's configuration
-- [**OverlaysManager**](./docs/OverlaysManager.md), a global repository keeping track of all different types of overlays
-- [**OverlayController**](./docs/OverlayController.md), a single controller class for handling overlays
-- **OverlayMixin**, a mixin that can be used to create webcomponents that use the OverlayController under the hood
+- [**OverlaysManager**](?path=/docs/overlays-system-overview--overlay-manager#overlaysmanager), a global repository keeping track of all different types of overlays
+- [**OverlayController**](?path=/docs/overlays-system-overview--overlay-manager#overlaycontroller), a single controller class for handling overlays
+- [**OverlayMixin**](?path=/docs/overlays-system-overview--overlay-manager#overlaymixin), a mixin that can be used to create webcomponents that use the OverlayController under the hood
 
 ## How to use
 

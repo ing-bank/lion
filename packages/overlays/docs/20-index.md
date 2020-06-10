@@ -71,7 +71,7 @@ Global refers to overlays where the content is positioned in a global root node 
 
 Overlays can be configured in many ways to suit your needs. We go in-depth into each option in the Overlay System - Configuration chapter.
 
-We also export a few preset configuration objects, which you can find [here](?path=/docs/overlays-system-configuration).
+We also export a few preset configuration objects, which you can find [here](?path=/docs/overlays-system-configuration--placement-local#overlay-system---configuration).
 
 - withModalDialogConfig
 - withDropdownConfig

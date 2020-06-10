@@ -306,7 +306,7 @@ Features:
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
 > This also means that if you use the arrow feature, you are in charge of styling it properly, use the x-placement attribute for this.
-> An example implementation can be found in [lion-tooltip](?path=/docs/overlays-tooltip), where an arrow is set by default.
+> An example implementation can be found in [lion-tooltip](?path=/docs/overlays-tooltip--main#tooltip), where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
 Here's a succinct overview of some often used popper properties:

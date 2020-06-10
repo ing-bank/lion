@@ -160,7 +160,7 @@ export class OverlayController {
    * @desc Usually the parent node of contentWrapperNode that either exists locally or globally.
    * When a responsive scenario is created (in which we switch from global to local or vice versa)
    * we need to know where we should reappend contentWrapperNode (or contentNode in case it's
-   * projected)
+   * projected).
    * @type {HTMLElement}
    */
   get _renderTarget() {

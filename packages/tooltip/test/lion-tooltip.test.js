@@ -200,7 +200,7 @@ describe('lion-tooltip', () => {
         </lion-tooltip>
       `);
 
-      // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content')
+      // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content').
       // When this issue is fixed https://github.com/ing-bank/lion/issues/382
       const content = el.querySelector('[slot=content]');
       expect(content.getAttribute('role')).to.be.equal('tooltip');
