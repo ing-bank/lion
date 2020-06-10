@@ -207,7 +207,7 @@ describe('babel-plugin-extend-docs', () => {
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
-  it('will no touch content of tags', () => {
+  it('will not touch content of tags', () => {
     const code = [
       'export const main = () => html`',
       `  <lion-input \${'hi'} label="lion-input"></lion-input>`,
@@ -222,6 +222,48 @@ describe('babel-plugin-extend-docs', () => {
       '  <wolf-input ',
       '    label="some label"',
       '  ></wolf-input>',
+      '`;',
+    ].join('\n');
+    expect(executeBabel(code, testConfig)).to.equal(output);
+  });
+
+  it('will not replace opening tags that are not the exact same tag name', () => {
+    const code = [
+      'export const main = () => html`',
+      `  <lion-checkbox-group \${'hi'} label="lion-checkbox-group"></lion-checkbox-group>`,
+      '  <lion-checkbox ',
+      '    label="some label"',
+      '  ></lion-checkbox>',
+      '  <lion-checkbox></lion-checkbox>',
+      '`;',
+    ].join('\n');
+    const output = [
+      'export const main = () => html`',
+      `  <lion-checkbox-group \${'hi'} label="lion-checkbox-group"></lion-checkbox-group>`,
+      '  <wolf-checkbox ',
+      '    label="some label"',
+      '  ></wolf-checkbox>',
+      '  <wolf-checkbox></wolf-checkbox>',
+      '`;',
+    ].join('\n');
+    expect(executeBabel(code, testConfig)).to.equal(output);
+  });
+
+  it('will not replace closing tags that are not the exact same tag name', () => {
+    const code = [
+      'export const main = () => html`',
+      `  <group-lion-checkbox \${'hi'} label="group-lion-checkbox"></group-lion-checkbox>`,
+      '  <lion-checkbox ',
+      '    label="some label"',
+      '  ></lion-checkbox>',
+      '`;',
+    ].join('\n');
+    const output = [
+      'export const main = () => html`',
+      `  <group-lion-checkbox \${'hi'} label="group-lion-checkbox"></group-lion-checkbox>`,
+      '  <wolf-checkbox ',
+      '    label="some label"',
+      '  ></wolf-checkbox>',
       '`;',
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);

@@ -9,8 +9,8 @@ const { validateOptions } = require('./validateOptions.js');
 function replaceTemplateElements({ path, opts }) {
   const replaceTag = (value, from, to) =>
     value
-      .replace(new RegExp(`<${from}`, 'g'), `<${to}`)
-      .replace(new RegExp(`${from}>`, 'g'), `${to}>`);
+      .replace(new RegExp(`<${from}(?= |>)`, 'g'), `<${to}`) // positive lookahead for '>' or ' ' after the tagName
+      .replace(new RegExp(`/${from}>`, 'g'), `/${to}>`);
   path.node.quasi.quasis.forEach(quasi => {
     opts.changes.forEach(change => {
       if (change.tag && quasi.value.raw.match(change.tag.from)) {
