@@ -15,9 +15,9 @@ Therefore, they may not have the same quality standards as our other packages.
 
 ## Packages
 
-| Package                                                                        | Version                                                                                                                  | Description      |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ---------------- |
-| [sb-action-logger](?path=/docs/helpers-storybook-action-logger--default-story) | [![sb-action-logger](https://img.shields.io/npm/v/sb-action-logger.svg)](https://www.npmjs.com/package/sb-action-logger) | sb-action-logger |
+| Package                                                               | Description             |
+| --------------------------------------------------------------------- | ----------------------- |
+| [sb-action-logger](?path=/docs/helpers-storybook-action-logger--main) | Storybook action logger |
 
 ## Installation
 
