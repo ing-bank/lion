@@ -2,42 +2,42 @@
   "name": "@lion/helpers",
   "version": "0.5.1",
   "description": "Helpers that are used throughout lion and can be used outside",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/helpers"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "renderLitAsNode",
+    "sb-action-logger",
+    "sb-locale-switcher",
+    "sortEachDepth"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/helpers/*/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/helpers/*/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "helpers",
-    "action logger"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "renderLitAsNode",
-    "sb-action-logger",
-    "sb-locale-switcher",
-    "sortEachDepth",
-    "*.js"
-  ],
   "sideEffects": [
     "sb-action-logger.js",
     "sb-locale-switcher.js"
   ],
   "dependencies": {
     "@lion/core": "0.7.1"
+  },
+  "keywords": [
+    "action logger",
+    "helpers",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

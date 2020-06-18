@@ -2,40 +2,40 @@
   "name": "@lion/core",
   "version": "0.7.1",
   "description": "Core functionality that is shared across all Lion Web Components",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/core"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test-helpers",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/core/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/core/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test-helpers",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": false,
   "dependencies": {
     "@open-wc/dedupe-mixin": "^1.2.1",
     "@open-wc/scoped-elements": "^1.0.3",
     "lit-element": "^2.2.1",
     "lit-html": "^1.0.0"
+  },
+  "keywords": [
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

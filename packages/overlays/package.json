@@ -2,38 +2,30 @@
   "name": "@lion/overlays",
   "version": "0.16.3",
   "description": "Overlays System using lit-html for rendering",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/overlays"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/overlays/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/overlays/test/**/*.test.js\""
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "overlays"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.js",
     "docs",
     "src",
     "test",
     "test-helpers",
     "test-suites",
-    "translations",
-    "*.js"
+    "translations"
   ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/overlays/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/overlays/test/**/*.test.js\""
+  },
   "sideEffects": [
     "./docs/demo-overlay-system.js",
     "./docs/applyDemoOverlayStyles.js"
@@ -42,5 +34,13 @@
     "@lion/core": "0.7.1",
     "popper.js": "^1.15.0",
     "singleton-manager": "1.0.0"
+  },
+  "keywords": [
+    "lion",
+    "overlays",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

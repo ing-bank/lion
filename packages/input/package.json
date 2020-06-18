@@ -2,41 +2,41 @@
   "name": "@lion/input",
   "version": "0.7.5",
   "description": "It enhances the functionality of the native `<input>` element",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/input"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/input/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/input/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "input"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-input.js"
   ],
   "dependencies": {
     "@lion/core": "0.7.1",
     "@lion/form-core": "0.1.5"
+  },
+  "keywords": [
+    "input",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

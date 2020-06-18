@@ -2,35 +2,26 @@
   "name": "@lion/input-range",
   "version": "0.4.5",
   "description": "Provide a way for users to select one value from a range of values",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/input-range"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "test"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/input-range/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/input-range/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "input-range",
-    "slider"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "src",
-    "test",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-input-range.js"
   ],
@@ -39,5 +30,14 @@
     "@lion/form-core": "0.1.5",
     "@lion/input": "0.7.5",
     "@lion/localize": "0.12.0"
+  },
+  "keywords": [
+    "input-range",
+    "lion",
+    "slider",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

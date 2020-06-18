@@ -2,36 +2,28 @@
   "name": "@lion/dialog",
   "version": "0.7.3",
   "description": "Show relative overlay content on click, as a webcomponent",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/dialog"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start": "cd ../../ && yarn dev-server --open packages/dialog/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/dialog/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/dialog/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "dialog"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "src",
-    "docs",
-    "test",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-dialog.js",
     "./docs/styled-dialog-content.js"
@@ -39,5 +31,13 @@
   "dependencies": {
     "@lion/core": "0.7.1",
     "@lion/overlays": "0.16.3"
+  },
+  "keywords": [
+    "dialog",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
