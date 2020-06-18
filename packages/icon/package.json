@@ -2,36 +2,28 @@
   "name": "@lion/icon",
   "version": "0.6.3",
   "description": "A web component easily displaying svg icons",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/icon"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/icon/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/icon/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "icon"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-icon.js",
     "./docs/icon-resolvers.js"
@@ -39,5 +31,13 @@
   "dependencies": {
     "@lion/core": "0.7.1",
     "singleton-manager": "1.0.0"
+  },
+  "keywords": [
+    "icon",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

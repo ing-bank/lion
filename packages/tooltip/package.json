@@ -2,36 +2,28 @@
   "name": "@lion/tooltip",
   "version": "0.11.3",
   "description": "Show relative overlay content on hover",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/tooltip"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/tooltip/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tooltip/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "tooltip"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-tooltip.js",
     "lion-tooltip-arrow.js"
@@ -39,5 +31,13 @@
   "dependencies": {
     "@lion/core": "0.7.1",
     "@lion/overlays": "0.16.3"
+  },
+  "keywords": [
+    "lion",
+    "tooltip",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
