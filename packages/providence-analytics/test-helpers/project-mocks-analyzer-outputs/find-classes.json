@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "find-classes",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock__-297820780",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {},
+        "metaConfig": null
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "file": "./target-src/find-customelements/multiple.js",
+      "result": [
+        {
+          "name": null,
+          "isMixin": true,
+          "superClasses": [
+            {
+              "name": "HTMLElement",
+              "isMixin": false,
+              "rootFile": {
+                "file": "[current]",
+                "specifier": "HTMLElement"
+              }
+            }
+          ],
+          "members": {
+            "props": [],
+            "methods": []
+          }
+        },
+        {
+          "name": "ExtendedOnTheFly",
+          "isMixin": false,
+          "superClasses": [
+            {
+              "isMixin": true,
+              "rootFile": {
+                "file": "[current]"
+              }
+            },
+            {
+              "isMixin": false,
+              "rootFile": {
+                "file": "[current]"
+              }
+            }
+          ],
+          "members": {
+            "props": [],
+            "methods": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-subclasses/ExtendedComp.js",
+      "result": [
+        {
+          "name": "ExtendedComp",
+          "isMixin": false,
+          "superClasses": [
+            {
+              "name": "MyCompMixin",
+              "isMixin": true,
+              "rootFile": {
+                "file": "exporting-ref-project",
+                "specifier": "[default]"
+              }
+            },
+            {
+              "name": "RefClass",
+              "isMixin": false,
+              "rootFile": {
+                "file": "exporting-ref-project",
+                "specifier": "RefClass"
+              }
+            }
+          ],
+          "members": {
+            "props": [
+              {
+                "name": "getterSetter",
+                "accessType": "public",
+                "kind": [
+                  "get",
+                  "set"
+                ]
+              },
+              {
+                "name": "staticGetterSetter",
+                "accessType": "public",
+                "static": true,
+                "kind": [
+                  "get",
+                  "set"
+                ]
+              },
+              {
+                "name": "attributes",
+                "accessType": "public",
+                "static": true,
+                "kind": [
+                  "get"
+                ]
+              },
+              {
+                "name": "styles",
+                "accessType": "public",
+                "static": true,
+                "kind": [
+                  "get"
+                ]
+              },
+              {
+                "name": "updateComplete",
+                "accessType": "public",
+                "kind": [
+                  "get"
+                ]
+              },
+              {
+                "name": "localizeNamespaces",
+                "accessType": "public",
+                "static": true,
+                "kind": [
+                  "get"
+                ]
+              },
+              {
+                "name": "slots",
+                "accessType": "public",
+                "kind": [
+                  "get"
+                ]
+              }
+            ],
+            "methods": [
+              {
+                "name": "method",
+                "accessType": "public"
+              },
+              {
+                "name": "_protectedMethod",
+                "accessType": "protected"
+              },
+              {
+                "name": "__privateMethod",
+                "accessType": "private"
+              },
+              {
+                "name": "$protectedMethod",
+                "accessType": "protected"
+              },
+              {
+                "name": "$$privateMethod",
+                "accessType": "private"
+              },
+              {
+                "name": "constructor",
+                "accessType": "public"
+              },
+              {
+                "name": "connectedCallback",
+                "accessType": "public"
+              },
+              {
+                "name": "disconnectedCallback",
+                "accessType": "public"
+              },
+              {
+                "name": "_requestUpdate",
+                "accessType": "protected"
+              },
+              {
+                "name": "createRenderRoot",
+                "accessType": "public"
+              },
+              {
+                "name": "render",
+                "accessType": "public"
+              },
+              {
+                "name": "updated",
+                "accessType": "public"
+              },
+              {
+                "name": "firstUpdated",
+                "accessType": "public"
+              },
+              {
+                "name": "update",
+                "accessType": "public"
+              },
+              {
+                "name": "shouldUpdate",
+                "accessType": "public"
+              },
+              {
+                "name": "onLocaleUpdated",
+                "accessType": "public"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

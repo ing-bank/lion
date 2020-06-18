@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "find-customelements",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock__-2006922104",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {}
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "file": "./target-src/find-customelements/multiple.js",
+      "result": [
+        {
+          "tagName": "ref-class",
+          "constructorIdentifier": "RefClass",
+          "rootFile": {
+            "file": "exporting-ref-project",
+            "specifier": "RefClass"
+          }
+        },
+        {
+          "tagName": "extended-comp",
+          "constructorIdentifier": "ExtendedComp",
+          "rootFile": {
+            "file": "./target-src/match-subclasses/ExtendedComp.js",
+            "specifier": "ExtendedComp"
+          }
+        },
+        {
+          "tagName": "on-the-fly",
+          "constructorIdentifier": "[inline]",
+          "rootFile": {
+            "file": "[current]",
+            "specifier": "[inline]"
+          }
+        }
+      ]
+    }
+  ]
+}
