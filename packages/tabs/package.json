@@ -2,41 +2,41 @@
   "name": "@lion/tabs",
   "version": "0.4.3",
   "description": "Allows users to quickly move between a small number of equally important views.",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/tabs"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start": "cd ../../ && yarn dev-server --open packages/tabs/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/tabs/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tabs/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "tabs"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-tabs.js"
   ],
   "dependencies": {
     "@lion/core": "0.7.1"
+  },
+  "keywords": [
+    "lion",
+    "tabs",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

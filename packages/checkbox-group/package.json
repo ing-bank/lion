@@ -2,37 +2,29 @@
   "name": "@lion/checkbox-group",
   "version": "0.10.5",
   "description": "A container for multiple checkboxes",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/checkbox-group"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start": "cd ../../ && yarn dev-server --open packages/checkbox-group/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/checkbox-group/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/checkbox-group/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "checkbox-group"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-checkbox.js",
     "lion-checkbox-group.js"
@@ -42,5 +34,13 @@
     "@lion/fieldset": "0.13.5",
     "@lion/form-core": "0.1.5",
     "@lion/input": "0.7.5"
+  },
+  "keywords": [
+    "checkbox-group",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
