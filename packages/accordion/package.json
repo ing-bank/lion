@@ -1,6 +1,6 @@
 {
   "name": "@lion/accordion",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vertically stacked list of invokers that can be clicked to reveal or hide content associated with them.",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
