@@ -1,6 +1,6 @@
 {
   "name": "@lion/ajax",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Thin wrapper around axios to allow for custom interceptors",
   "license": "MIT",
   "author": "ing-bank",
@@ -28,8 +28,8 @@
   "sideEffects": false,
   "dependencies": {
     "@bundled-es-modules/axios": "0.18.1",
-    "@lion/core": "0.7.1",
-    "singleton-manager": "1.0.0"
+    "@lion/core": "0.7.2",
+    "singleton-manager": "1.1.0"
   },
   "keywords": [
     "ajax",

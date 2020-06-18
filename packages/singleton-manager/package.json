@@ -1,6 +1,6 @@
 {
   "name": "singleton-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Manage singletons across multiple major versions so they converge to a single instance",
   "license": "MIT",
   "author": "ing-bank",

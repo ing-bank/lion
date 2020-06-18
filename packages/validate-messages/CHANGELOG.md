@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/ing-bank/lion/compare/@lion/validate-messages@0.1.5...@lion/validate-messages@0.1.6) (2020-06-18)
+
+**Note:** Version bump only for package @lion/validate-messages
+
+
+
+
+
 ## [0.1.5](https://github.com/ing-bank/lion/compare/@lion/validate-messages@0.1.4...@lion/validate-messages@0.1.5) (2020-06-10)
 
 **Note:** Version bump only for package @lion/validate-messages

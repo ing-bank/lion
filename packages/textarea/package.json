@@ -1,6 +1,6 @@
 {
   "name": "@lion/textarea",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Provide a way for users to write text that is multiple lines long",
   "license": "MIT",
   "author": "ing-bank",
@@ -28,8 +28,8 @@
     "lion-textarea.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.1",
-    "@lion/form-core": "0.1.5",
+    "@lion/core": "0.7.2",
+    "@lion/form-core": "0.1.6",
     "autosize": "4.0.2"
   },
   "keywords": [
