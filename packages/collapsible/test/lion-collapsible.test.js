@@ -33,8 +33,6 @@ describe('<lion-collapsible>', () => {
       const collapsible = await fixture(defaultCollapsible);
       const invoker = collapsible.querySelector('[slot=invoker]');
       invoker.dispatchEvent(new Event('click'));
-      collapsible.transitioning = false;
-      console.log(collapsible.expanded, collapsible.transitioning);
       expect(collapsible.expanded).to.equal(true);
     });
   });
