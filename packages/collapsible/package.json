@@ -1,0 +1,41 @@
+{
+  "name": "@lion/collapsible",
+  "version": "0.1.0",
+  "description": "This component is a combination of a button (the trigger), a chunk of extra content.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/collapsible"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "stories",
+    "test"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/collapsible/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/collapsible/test/**/*.test.js\""
+  },
+  "sideEffects": [
+    "lion-collapsible.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.7.2"
+  },
+  "keywords": [
+    "button",
+    "collapsible",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
