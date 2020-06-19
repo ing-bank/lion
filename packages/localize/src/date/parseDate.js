@@ -2,9 +2,9 @@ import { localize } from '../localize.js';
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
 import { addLeadingZero } from './addLeadingZero.js';
 
-const memoize = (fn, parm) => {
+const memoize = fn => {
   const cache = {};
-  return () => {
+  return parm => {
     const n = parm;
     if (n in cache) {
       return cache[n];
@@ -15,7 +15,7 @@ const memoize = (fn, parm) => {
   };
 };
 
-const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale, localize.locale);
+const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale);
 
 /**
  * To parse a date into the right format
@@ -26,7 +26,7 @@ const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale, l
 export function parseDate(date) {
   const stringToParse = addLeadingZero(date);
   let parsedString;
-  switch (memoizedGetDateFormatBasedOnLocale()) {
+  switch (memoizedGetDateFormatBasedOnLocale(localize.locale)) {
     case 'day-month-year':
       parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
         3,
