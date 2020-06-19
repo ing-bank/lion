@@ -1,0 +1,46 @@
+{
+  "name": "@lion/collapsible",
+  "version": "0.0.0",
+  "description": "This component is a combination of a button (the invoker), a chunk of extra content.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/collapsible"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/collapsible/README.md",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/collapsible/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/collapsible/test/**/*.test.js\""
+  },
+  "sideEffects": [
+    "lion-collapsible.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.8.0"
+  },
+  "keywords": [
+    "collapsible",
+    "expandable",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
