@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/ing-bank/lion/compare/babel-plugin-extend-docs@0.2.2...babel-plugin-extend-docs@0.2.3) (2020-06-18)
+
+
+### Bug Fixes
+
+* **babel-plugin-extend-docs:** use posix path join for posix type path ([4441945](https://github.com/ing-bank/lion/commit/4441945d051fa558db2270926583fd0443043c25))
+
+
+
+
+
+## [0.2.2](https://github.com/ing-bank/lion/compare/babel-plugin-extend-docs@0.2.1...babel-plugin-extend-docs@0.2.2) (2020-06-18)
+
+**Note:** Version bump only for package babel-plugin-extend-docs
+
+
+
+
+
 ## [0.2.1](https://github.com/ing-bank/lion/compare/babel-plugin-extend-docs@0.2.0...babel-plugin-extend-docs@0.2.1) (2020-06-10)
 
 

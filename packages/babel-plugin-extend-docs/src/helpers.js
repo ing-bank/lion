@@ -5,8 +5,8 @@ function joinPaths(a, b) {
   if (a && a === b.substring(0, a.length)) {
     joinMe = b.substring(a.length + 1);
   }
-  const updatedPath = path.join(a, joinMe);
-  // console.log({ a, b, updatedPath });
+  // Normalize for windows
+  const updatedPath = path.posix.join(a, joinMe);
 
   if (a === '' && b.startsWith('./')) {
     return `./${updatedPath}`;

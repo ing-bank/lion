@@ -1,43 +1,43 @@
 {
   "name": "@lion/steps",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Breaks a single goal down into dependable sub-tasks.",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/steps"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start": "cd ../../ && yarn dev-server --open packages/steps/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/steps/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/steps/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "steps"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-step.js",
     "lion-steps.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.1"
+    "@lion/core": "0.7.2"
+  },
+  "keywords": [
+    "lion",
+    "steps",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

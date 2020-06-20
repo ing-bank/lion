@@ -1,45 +1,45 @@
 {
   "name": "@lion/button",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "A button that is easily styleable and accessible in all contexts",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/button"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start": "cd ../../ && yarn dev-server --open packages/button/README.md",
     "test": "cd ../../ && yarn test:browser --grep \"packages/button/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/button/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "button"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-button.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.1"
+    "@lion/core": "0.7.2"
   },
   "devDependencies": {
     "@polymer/iron-test-helpers": "^3.0.1"
+  },
+  "keywords": [
+    "button",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

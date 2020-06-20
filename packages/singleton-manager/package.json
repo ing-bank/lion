@@ -1,18 +1,24 @@
 {
   "name": "singleton-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Manage singletons across multiple major versions so they converge to a single instance",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/singleton-manager"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "start:fail": "es-dev-server -c demo/fail/server.js",
@@ -21,18 +27,12 @@
     "test": "cd ../../ && yarn test:browser --grep \"packages/singleton-manager/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/singleton-manager/test/**/*.test.js\""
   },
+  "sideEffects": false,
   "keywords": [
     "lion",
     "singleton-manager"
   ],
-  "main": "index.js",
-  "module": "index.js",
-  "sideEffects": false,
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "test-helpers",
-    "*.js"
-  ]
+  "publishConfig": {
+    "access": "public"
+  }
 }

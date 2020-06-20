@@ -318,7 +318,7 @@ export class LocalizeManager extends LionSingleton {
     Object.keys(oldLocaleNamespaces).forEach(namespace => {
       const newNamespaceData = newLocaleNamespaces[namespace];
       if (!newNamespaceData) {
-        promises.push(this.loadNamespace(namespace));
+        promises.push(this.loadNamespace(namespace, { locale: newLocale }));
       }
     });
     return Promise.all(promises);

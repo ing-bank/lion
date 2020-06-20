@@ -1,0 +1,42 @@
+{
+  "name": "@lion/accordion",
+  "version": "0.1.1",
+  "description": "Vertically stacked list of invokers that can be clicked to reveal or hide content associated with them.",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/accordion"
+  },
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/tabs/README.md",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/tabs/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tabs/test/**/*.test.js\""
+  },
+  "keywords": [
+    "lion",
+    "web-components",
+    "accordion"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "docs",
+    "src",
+    "test",
+    "translations",
+    "*.js"
+  ],
+  "sideEffects": [
+    "lion-accordion.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.7.2"
+  }
+}

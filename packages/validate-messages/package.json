@@ -1,43 +1,43 @@
 {
   "name": "@lion/validate-messages",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A set of localized messages for default Validators",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/validate-messages"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/validate-messages/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/validate-messages/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "validate",
-    "messages",
-    "feedback",
-    "translations"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "dependencies": {
-    "@lion/core": "0.7.1",
-    "@lion/form-core": "0.1.5",
-    "@lion/localize": "0.12.0"
+    "@lion/core": "0.7.2",
+    "@lion/form-core": "0.1.6",
+    "@lion/localize": "0.12.1"
+  },
+  "keywords": [
+    "feedback",
+    "lion",
+    "messages",
+    "translations",
+    "validate",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

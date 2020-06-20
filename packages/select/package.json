@@ -1,42 +1,42 @@
 {
   "name": "@lion/select",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Provide a set of options where you can select one",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/select"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "translations"
+  ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && yarn test:browser --grep \"packages/select/test/**/*.test.js\"",
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/select/test/**/*.test.js\""
   },
-  "keywords": [
-    "lion",
-    "web-components",
-    "select"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "docs",
-    "src",
-    "test",
-    "translations",
-    "*.js"
-  ],
   "sideEffects": [
     "lion-select.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.1",
-    "@lion/form-core": "0.1.5"
+    "@lion/core": "0.7.2",
+    "@lion/form-core": "0.1.6"
+  },
+  "keywords": [
+    "lion",
+    "select",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

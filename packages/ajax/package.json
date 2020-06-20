@@ -1,42 +1,42 @@
 {
   "name": "@lion/ajax",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Thin wrapper around axios to allow for custom interceptors",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/ajax"
   },
-  "scripts": {
-    "start": "cd ../../ && yarn dev-server --open packages/ajax/README.md",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/ajax/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/ajax/test/**/*.test.js\""
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "ajax"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.js",
     "docs",
     "src",
     "test",
-    "translations",
-    "*.js"
+    "translations"
   ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/ajax/README.md",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/ajax/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/ajax/test/**/*.test.js\""
+  },
   "sideEffects": false,
   "dependencies": {
     "@bundled-es-modules/axios": "0.18.1",
-    "@lion/core": "0.7.1",
-    "singleton-manager": "1.0.0"
+    "@lion/core": "0.7.2",
+    "singleton-manager": "1.1.0"
+  },
+  "keywords": [
+    "ajax",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

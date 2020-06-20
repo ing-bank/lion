@@ -1,15 +1,39 @@
 {
-  "name": "@lion/root",
   "private": true,
+  "name": "@lion/root",
   "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
+    "dev-server": "es-dev-server",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "format:prettier": "prettier \"**/*.{js,md}\" --write",
+    "lint": "run-p lint:*",
+    "lint:eclint": "git ls-files | xargs eclint check",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '**/CHANGELOG.md'",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:versions": "node ./scripts/lint-versions.js",
+    "start": "npm run storybook",
+    "storybook": "start-storybook -p 9001",
+    "storybook:build": "build-storybook",
+    "storybook:build:start": "es-dev-server --root-dir storybook-static --open",
+    "test": "run-p test:browser test:node",
+    "test:browser": "karma start --coverage",
+    "test:browser:watch": "karma start --auto-watch=true --single-run=false",
+    "test:bs": "karma start karma.bs.config.js --coverage",
+    "test:node": "lerna run test:node",
+    "test:prune-snapshots": "karma start --prune-snapshots",
+    "test:update-snapshots": "karma start --update-snapshots"
+  },
   "devDependencies": {
-    "@open-wc/building-rollup": "^1.2.1",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
     "@mdjs/core": "^0.3.1",
+    "@open-wc/building-rollup": "^1.2.1",
     "@open-wc/demoing-storybook": "^2.0.2",
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/testing": "^2.5.0",
@@ -28,59 +52,17 @@
     "eslint-config-prettier": "^6.11.0",
     "husky": "^1.0.0",
     "lerna": "3.4.3",
-    "lint-staged": "^8.0.0",
+    "lint-staged": "^10.0.0",
     "markdownlint-cli": "^0.17.0",
     "mocha": "^7.1.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
+    "prettier-package-json": "^2.1.3",
     "rimraf": "^2.6.3",
     "rollup": "^2.0.0",
     "sinon": "^7.2.2",
     "webpack-merge": "^4.1.5",
     "whatwg-fetch": "^3.0.0"
-  },
-  "scripts": {
-    "dev-server": "es-dev-server",
-    "start": "npm run storybook",
-    "storybook": "start-storybook -p 9001",
-    "storybook:build": "build-storybook",
-    "storybook:build:start": "es-dev-server --root-dir storybook-static --open",
-    "test": "run-p test:browser test:node",
-    "test:browser": "karma start --coverage",
-    "test:node": "lerna run test:node",
-    "test:browser:watch": "karma start --auto-watch=true --single-run=false",
-    "test:update-snapshots": "karma start --update-snapshots",
-    "test:prune-snapshots": "karma start --prune-snapshots",
-    "test:bs": "karma start karma.bs.config.js --coverage",
-    "lint": "run-p lint:*",
-    "lint:eclint": "git ls-files | xargs eclint check",
-    "lint:eslint": "eslint --ext .js,.html .",
-    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '**/CHANGELOG.md'",
-    "lint:versions": "node ./scripts/lint-versions.js",
-    "format": "npm run format:eslint && npm run format:prettier",
-    "format:eslint": "eslint --ext .js,.html . --fix",
-    "format:prettier": "prettier \"**/*.{js,md}\" --write",
-    "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize"
-  },
-  "lint-staged": {
-    "*": [
-      "eclint fix",
-      "git add"
-    ],
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ],
-    "*.md": [
-      "prettier --write",
-      "markdownlint",
-      "git add"
-    ],
-    "*package.json": [
-      "node ./scripts/lint-versions.js"
-    ]
   },
   "bundlesize": [
     {
