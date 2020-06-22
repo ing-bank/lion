@@ -32,7 +32,6 @@ export const FormRegistrarPortalMixin = dedupeMixin(
         if (super.connectedCallback) {
           super.connectedCallback();
         }
-        this.__checkRegistrationTarget();
 
         formRegistrarManager.add(this);
         if (this.__hasBeenRendered) {
@@ -66,6 +65,7 @@ export const FormRegistrarPortalMixin = dedupeMixin(
       }
 
       firstUpdated(changedProperties) {
+        this.__checkRegistrationTarget();
         super.firstUpdated(changedProperties);
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
