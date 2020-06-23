@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.5](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.4...@lion/overlays@0.16.5) (2020-06-23)
+
+
+### Bug Fixes
+
+* **overlays:** accessibility attrs setup/teardown ([dfe1905](https://github.com/ing-bank/lion/commit/dfe1905e7c61007decb27da4dc30ea17fb1de1b1))
+
+
+
+
+
 ## [0.16.4](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.3...@lion/overlays@0.16.4) (2020-06-18)
 
 **Note:** Version bump only for package @lion/overlays
