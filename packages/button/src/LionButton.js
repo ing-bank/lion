@@ -235,6 +235,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
   __keydownHandler(e) {
     if (this.active || !isKeyboardClickEvent(e)) {
+      if (isSpaceKeyboardClickEvent(e)) {
+        e.preventDefault();
+      }
       return;
     }
 
