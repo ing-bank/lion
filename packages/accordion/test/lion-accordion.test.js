@@ -199,10 +199,12 @@ describe('<lion-accordion>', () => {
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.focusedIndex = 0;
       invokers[0].firstElementChild.dispatchEvent(
-        new KeyboardEvent('keyup', { key: 'ArrowRight' }),
+        new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
       expect(el.focusedIndex).to.equal(1);
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      invokers[0].firstElementChild.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+      );
       expect(el.focusedIndex).to.equal(2);
     });
 
@@ -219,9 +221,11 @@ describe('<lion-accordion>', () => {
       `);
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.focusedIndex = 2;
-      invokers[2].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      invokers[2].firstElementChild.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+      );
       expect(el.focusedIndex).to.equal(1);
-      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(el.focusedIndex).to.equal(0);
     });
 
@@ -235,18 +239,18 @@ describe('<lion-accordion>', () => {
         </lion-accordion>
       `);
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'Home' }));
+      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
       expect(el.focusedIndex).to.equal(0);
     });
 
     it('selects last invoker on [end]', async () => {
       const el = await fixture(basicAccordion);
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
+      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
       expect(el.focusedIndex).to.equal(2);
     });
 
-    it('selects first invoker on [arrow-right] if on last invoker', async () => {
+    it('stays on last invoker on [arrow-right]', async () => {
       const el = await fixture(html`
         <lion-accordion focusedIndex="2">
           <h2 slot="invoker"><button>invoker 1</button></h2>
@@ -259,12 +263,12 @@ describe('<lion-accordion>', () => {
       `);
       const invokers = el.querySelectorAll('[slot=invoker]');
       invokers[2].firstElementChild.dispatchEvent(
-        new KeyboardEvent('keyup', { key: 'ArrowRight' }),
+        new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
-      expect(el.focusedIndex).to.equal(0);
+      expect(el.focusedIndex).to.equal(2);
     });
 
-    it('selects last invoker on [arrow-left] if on first invoker', async () => {
+    it('stays on first invoker on [arrow-left]', async () => {
       const el = await fixture(html`
         <lion-accordion>
           <h2 slot="invoker"><button>invoker 1</button></h2>
@@ -276,8 +280,10 @@ describe('<lion-accordion>', () => {
         </lion-accordion>
       `);
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
-      expect(el.focusedIndex).to.equal(2);
+      invokers[0].firstElementChild.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+      );
+      expect(el.focusedIndex).to.equal(null);
     });
   });
 
