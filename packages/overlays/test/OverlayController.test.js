@@ -18,12 +18,12 @@ import { simulateTab } from '../src/utils/simulate-tab.js';
 
 const withGlobalTestConfig = () => ({
   placementMode: 'global',
-  contentNode: fixtureSync(html` <div>my content</div> `),
+  contentNode: fixtureSync(html`<div>my content</div>`),
 });
 
 const withLocalTestConfig = () => ({
   placementMode: 'local',
-  contentNode: fixtureSync(html` <div>my content</div> `),
+  contentNode: fixtureSync(html`<div>my content</div>`),
   invokerNode: fixtureSync(html`
     <div role="button" style="width: 100px; height: 20px;">Invoker</div>
   `),
@@ -134,7 +134,7 @@ describe('OverlayController', () => {
       it.skip('creates local target next to sibling for placement mode "local"', async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
-          invokerNode: await fixture(html` <button>Invoker</button> `),
+          invokerNode: await fixture(html`<button>Invoker</button>`),
         });
         expect(ctrl._renderTarget).to.be.undefined;
         expect(ctrl.content).to.equal(ctrl.invokerNode.nextElementSibling);
@@ -293,7 +293,7 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
-        const elOutside = await fixture(html` <button>click me</button> `);
+        const elOutside = await fixture(html`<button>click me</button>`);
         const input1 = ctrl.contentNode.querySelectorAll('input')[0];
         const input2 = ctrl.contentNode.querySelectorAll('input')[1];
 
@@ -308,7 +308,7 @@ describe('OverlayController', () => {
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
-        const contentNode = await fixture(html` <div><input /></div> `);
+        const contentNode = await fixture(html`<div><input /></div>`);
 
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -316,10 +316,10 @@ describe('OverlayController', () => {
           trapsKeyboardFocus: true,
         });
         // add element to dom to allow focus
-        await fixture(html` ${ctrl.content} `);
+        await fixture(html`${ctrl.content}`);
         await ctrl.show();
 
-        const elOutside = await fixture(html` <input /> `);
+        const elOutside = await fixture(html`<input />`);
         const input = ctrl.contentNode.querySelector('input');
 
         input.focus();
@@ -524,7 +524,7 @@ describe('OverlayController', () => {
       });
 
       it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
-        const invokerNode = await fixture(html` <div role="button">Invoker</div> `);
+        const invokerNode = await fixture(html`<div role="button">Invoker</div>`);
         const contentNode = await fixture('<div>Content</div>');
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -1011,7 +1011,7 @@ describe('OverlayController', () => {
     it('reinitializes content', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: await fixture(html` <div>content1</div> `),
+        contentNode: await fixture(html`<div>content1</div>`),
       });
       await ctrl.show(); // Popper adds inline styles
       expect(ctrl.content.style.transform).not.to.be.undefined;
@@ -1019,13 +1019,13 @@ describe('OverlayController', () => {
 
       ctrl.updateConfig({
         placementMode: 'local',
-        contentNode: await fixture(html` <div>content2</div> `),
+        contentNode: await fixture(html`<div>content2</div>`),
       });
       expect(ctrl.contentNode.textContent).to.include('content2');
     });
 
     it('respects the initial config provided to new OverlayController(initialConfig)', async () => {
-      const contentNode = fixtureSync(html` <div>my content</div> `);
+      const contentNode = fixtureSync(html`<div>my content</div>`);
 
       const ctrl = new OverlayController({
         // This is the shared config
@@ -1045,7 +1045,7 @@ describe('OverlayController', () => {
 
     // Currently not working, enable again when we fix updateConfig
     it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
-      const contentNode = fixtureSync(html` <div>my content</div> `);
+      const contentNode = fixtureSync(html`<div>my content</div>`);
 
       const ctrl = new OverlayController({
         // This is the shared config
@@ -1071,7 +1071,7 @@ describe('OverlayController', () => {
   });
 
   describe('Accessibility', () => {
-    it('adds and removes [aria-expanded] on invoker', async () => {
+    it('synchronizes [aria-expanded] on invoker', async () => {
       const invokerNode = await fixture('<div role="button">invoker</div>');
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
@@ -1232,6 +1232,66 @@ describe('OverlayController', () => {
         });
         expect(ctrl.contentNode.getAttribute('role')).to.equal('tooltip');
       });
+
+      describe('Teardown', () => {
+        it('restores [role] on dialog content', async () => {
+          const invokerNode = await fixture('<div role="button">invoker</div>');
+          const ctrl = new OverlayController({
+            ...withLocalTestConfig(),
+            handlesAccessibility: true,
+            invokerNode,
+          });
+          expect(ctrl.contentNode.getAttribute('role')).to.equal('dialog');
+          ctrl.teardown();
+          expect(ctrl.contentNode.getAttribute('role')).to.equal(null);
+        });
+
+        it('restores [role] on tooltip content', async () => {
+          const invokerNode = await fixture('<div role="button">invoker</div>');
+          const contentNode = await fixture('<div role="presentation">content</div>');
+          const ctrl = new OverlayController({
+            ...withLocalTestConfig(),
+            handlesAccessibility: true,
+            isTooltip: true,
+            invokerNode,
+            contentNode,
+          });
+          expect(contentNode.getAttribute('role')).to.equal('tooltip');
+          ctrl.teardown();
+          expect(contentNode.getAttribute('role')).to.equal('presentation');
+        });
+
+        it('restores [aria-describedby] on content', async () => {
+          const invokerNode = await fixture('<div role="button">invoker</div>');
+          const contentNode = await fixture('<div role="presentation">content</div>');
+          const ctrl = new OverlayController({
+            ...withLocalTestConfig(),
+            handlesAccessibility: true,
+            isTooltip: true,
+            invokerNode,
+            contentNode,
+          });
+          expect(invokerNode.getAttribute('aria-describedby')).to.equal(contentNode.id);
+          ctrl.teardown();
+          expect(invokerNode.getAttribute('aria-describedby')).to.equal(null);
+        });
+
+        it('restores [aria-labelledby] on content', async () => {
+          const invokerNode = await fixture('<div role="button">invoker</div>');
+          const contentNode = await fixture('<div role="presentation">content</div>');
+          const ctrl = new OverlayController({
+            ...withLocalTestConfig(),
+            handlesAccessibility: true,
+            isTooltip: true,
+            invokerNode,
+            contentNode,
+            invokerRelation: 'label',
+          });
+          expect(invokerNode.getAttribute('aria-labelledby')).to.equal(contentNode.id);
+          ctrl.teardown();
+          expect(invokerNode.getAttribute('aria-labelledby')).to.equal(null);
+        });
+      });
     });
   });
 
@@ -1244,7 +1304,7 @@ describe('OverlayController', () => {
         new OverlayController({
           contentNode,
         });
-      }).to.throw('You need to provide a .placementMode ("global"|"local")');
+      }).to.throw('[OverlayController] You need to provide a .placementMode ("global"|"local")');
     });
 
     it('throws if invalid .placementMode gets passed on', async () => {
@@ -1252,7 +1312,9 @@ describe('OverlayController', () => {
         new OverlayController({
           placementMode: 'invalid',
         });
-      }).to.throw('"invalid" is not a valid .placementMode, use ("global"|"local")');
+      }).to.throw(
+        '[OverlayController] "invalid" is not a valid .placementMode, use ("global"|"local")',
+      );
     });
 
     it('throws if no .contentNode gets passed on', async () => {
@@ -1260,7 +1322,7 @@ describe('OverlayController', () => {
         new OverlayController({
           placementMode: 'global',
         });
-      }).to.throw('You need to provide a .contentNode');
+      }).to.throw('[OverlayController] You need to provide a .contentNode');
     });
 
     it('throws if contentNodewrapper is not provided for projected contentNode', async () => {
@@ -1284,7 +1346,39 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode,
         });
-      }).to.throw('You need to provide a .contentWrapperNode when .contentNode is projected');
+      }).to.throw(
+        '[OverlayController] You need to provide a .contentWrapperNode when .contentNode is projected',
+      );
+    });
+
+    it('throws if placementMode is global for a tooltip', async () => {
+      const contentNode = document.createElement('div');
+      document.body.appendChild(contentNode);
+      expect(() => {
+        new OverlayController({
+          placementMode: 'global',
+          contentNode,
+          isTooltip: true,
+          handlesAccessibility: true,
+        });
+      }).to.throw(
+        '[OverlayController] .isTooltip should be configured with .placementMode "local"',
+      );
+    });
+
+    it('throws if handlesAccessibility is false for a tooltip', async () => {
+      const contentNode = document.createElement('div');
+      document.body.appendChild(contentNode);
+      expect(() => {
+        new OverlayController({
+          placementMode: 'local',
+          contentNode,
+          isTooltip: true,
+          handlesAccessibility: false,
+        });
+      }).to.throw(
+        '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
+      );
     });
   });
 });
