@@ -1,6 +1,6 @@
 {
   "name": "@lion/accordion",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vertically stacked list of invokers that can be clicked to reveal or hide content associated with them.",
   "license": "MIT",
   "author": "ing-bank",
