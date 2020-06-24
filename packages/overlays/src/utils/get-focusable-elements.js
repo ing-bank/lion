@@ -42,7 +42,7 @@ function getChildNodes(element) {
   if (element.localName === 'slot') {
     /** @type {HTMLSlotElement} */
     const slot = element;
-    return slot.assignedNodes();
+    return slot.assignedNodes({ flatten: true });
   }
 
   const { children } = element.shadowRoot || element;
