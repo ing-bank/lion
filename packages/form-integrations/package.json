@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-integrations",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "license": "MIT",
   "author": "ing-bank",
@@ -27,7 +27,7 @@
     "./docs/helper-wc/h-output.js"
   ],
   "dependencies": {
-    "@lion/button": "0.7.5",
+    "@lion/button": "0.7.6",
     "@lion/checkbox-group": "0.10.6",
     "@lion/core": "0.7.2",
     "@lion/fieldset": "0.13.6",
@@ -42,7 +42,7 @@
     "@lion/localize": "0.12.1",
     "@lion/radio-group": "0.10.6",
     "@lion/select": "0.7.6",
-    "@lion/select-rich": "0.18.8",
+    "@lion/select-rich": "0.18.9",
     "@lion/textarea": "0.7.6",
     "@lion/validate-messages": "0.1.6"
   },
