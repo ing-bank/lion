@@ -13,14 +13,14 @@ const setupInvoker = ({ element, uid, index, clickHandler, keydownHandler }) => 
   element.firstElementChild.setAttribute('id', `invoker-${uid}`);
   element.firstElementChild.setAttribute('aria-controls', `content-${uid}`);
   element.firstElementChild.addEventListener('click', clickHandler);
-  element.firstElementChild.addEventListener('keyup', keydownHandler);
+  element.firstElementChild.addEventListener('keydown', keydownHandler);
 };
 
 const cleanInvoker = (element, clickHandler, keydownHandler) => {
   element.firstElementChild.removeAttribute('id');
   element.firstElementChild.removeAttribute('aria-controls');
   element.firstElementChild.removeEventListener('click', clickHandler);
-  element.firstElementChild.removeEventListener('keyup', keydownHandler);
+  element.firstElementChild.removeEventListener('keydown', keydownHandler);
 };
 
 const focusInvoker = element => {
@@ -190,18 +190,14 @@ export class LionAccordion extends LitElement {
       case 'ArrowDown':
       case 'ArrowRight':
         e.preventDefault();
-        if (this.focusedIndex + 1 >= this._pairCount) {
-          this.focusedIndex = 0;
-        } else {
+        if (this.focusedIndex + 2 <= this._pairCount) {
           this.focusedIndex += 1;
         }
         break;
       case 'ArrowUp':
       case 'ArrowLeft':
         e.preventDefault();
-        if (this.focusedIndex <= 0) {
-          this.focusedIndex = this._pairCount - 1;
-        } else {
+        if (this.focusedIndex >= 1) {
           this.focusedIndex -= 1;
         }
         break;
