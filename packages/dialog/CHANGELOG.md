@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.6](https://github.com/ing-bank/lion/compare/@lion/dialog@0.7.5...@lion/dialog@0.7.6) (2020-06-24)
+
+
+### Bug Fixes
+
+* **overlays:** make focusable slotted buttons ([5e151bb](https://github.com/ing-bank/lion/commit/5e151bb8a41b4fcb37a00c0dcf568f4cb0378259))
+
+
+
+
+
 ## [0.7.5](https://github.com/ing-bank/lion/compare/@lion/dialog@0.7.4...@lion/dialog@0.7.5) (2020-06-23)
 
 **Note:** Version bump only for package @lion/dialog
