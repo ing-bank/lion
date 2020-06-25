@@ -77,6 +77,7 @@ describe('InputDataService', () => {
           './index.js': '',
           './internal.js': '',
           './nested/index.js': '',
+          './nested/nested-two/index.test.js': '',
           './something.test.js': '',
           './index.html': '',
           './something.test.html': '',
@@ -89,6 +90,7 @@ describe('InputDataService', () => {
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
           '/fictional/project/nested/index.js',
+          '/fictional/project/nested/nested-two/index.test.js',
           '/fictional/project/something.test.js',
         ]);
       });
@@ -111,6 +113,7 @@ describe('InputDataService', () => {
           '/fictional/project/index.js',
           '/fictional/project/internal.js',
           '/fictional/project/nested/index.js',
+          '/fictional/project/nested/nested-two/index.test.js',
           '/fictional/project/something.test.html',
           '/fictional/project/something.test.js',
         ]);
@@ -138,12 +141,13 @@ describe('InputDataService', () => {
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
           '/fictional/project/internal.js',
+          '/fictional/project/nested/nested-two/index.test.js',
           '/fictional/project/something.test.html',
           '/fictional/project/something.test.js',
         ]);
       });
 
-      it('allows passing multiple exclude globs', async () => {
+      it('allows passing exclude globs', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
           exclude: '**/*.test.{html,js}',

@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 const pathLib = require('path');
 const child_process = require('child_process'); // eslint-disable-line camelcase
+const glob = require('glob');
 const readPackageTree = require('../program/utils/read-package-tree-with-bower-support.js');
 const { InputDataService } = require('../program/services/InputDataService.js');
 const { LogService } = require('../program/services/LogService.js');
@@ -28,7 +29,16 @@ function setQueryMethod(m) {
  * @returns {string[]}
  */
 function pathsArrayFromCs(t) {
-  return t.split(',').map(t => pathLib.resolve(process.cwd(), t.trim()));
+  return t
+    .split(',')
+    .map(t => {
+      const isGlob = t.includes('*');
+      if (isGlob) {
+        return glob.sync(t);
+      }
+      return pathLib.resolve(process.cwd(), t.trim());
+    })
+    .flat();
 }
 
 /**
