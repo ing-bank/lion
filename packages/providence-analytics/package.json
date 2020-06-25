@@ -21,7 +21,7 @@
   "scripts": {
     "dashboard": "node ./dashboard/src/server.js",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
-    "test:node": "mocha './test-node/program/**/*.test.js'",
+    "test:node": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
     "test:node:watch": "yarn test:node --watch"
   },
@@ -34,6 +34,7 @@
     "@babel/types": "^7.9.0",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@typescript-eslint/typescript-estree": "^2.0.0",
+    "anymatch": "^3.1.1",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
     "deepmerge": "^4.0.0",
@@ -42,6 +43,7 @@
     "glob": "^7.1.6",
     "htm": "^3.0.3",
     "inquirer": "^7.0.0",
+    "is-negated-glob": "^1.0.0",
     "lit-element": "^2.2.1",
     "ora": "^3.4.0",
     "parse5": "^5.1.1",

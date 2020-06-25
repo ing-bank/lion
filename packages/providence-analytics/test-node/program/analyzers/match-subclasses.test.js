@@ -138,19 +138,23 @@ const expectedMatchesOutput = [
 describe('Analyzer "match-subclasses"', () => {
   const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
   const queryResults = [];
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
+  const cacheDisabledQInitialValue = QueryService.cacheDisabled;
+  const cacheDisabledIInitialValue = InputDataService.cacheDisabled;
 
   before(() => {
     QueryService.cacheDisabled = true;
+    InputDataService.cacheDisabled = true;
     suppressNonCriticalLogs();
   });
 
   after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
+    QueryService.cacheDisabled = cacheDisabledQInitialValue;
+    InputDataService.cacheDisabled = cacheDisabledIInitialValue;
     restoreSuppressNonCriticalLogs();
   });
 
   beforeEach(() => {
+    InputDataService.cacheDisabled = true;
     InputDataService.referenceProjectPaths = [];
     mockWriteToJson(queryResults);
   });

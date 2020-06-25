@@ -133,9 +133,9 @@ function getLocalNameSpecifiers(node) {
 /**
  * @desc Finds import specifiers and sources for a given ast result
  * @param {BabelAst} ast
- * @param {boolean} searchForFileImports
+ * @param {FindExportsConfig} config
  */
-function findExportsPerAstEntry(ast, searchForFileImports) {
+function findExportsPerAstEntry(ast, { skipFileImports }) {
   // Visit AST...
   const transformedEntry = [];
   // Unfortunately, we cannot have async functions in babel traverse.
@@ -155,7 +155,7 @@ function findExportsPerAstEntry(ast, searchForFileImports) {
     },
   });
 
-  if (searchForFileImports) {
+  if (!skipFileImports) {
     // Always add an entry for just the file 'relativePath'
     // (since this also can be imported directly from a search target project)
     transformedEntry.push({
@@ -181,14 +181,13 @@ class FindExportsAnalyzer extends Analyzer {
     /**
      * @typedef FindExportsConfig
      * @property {boolean} [onlyInternalSources=false]
-     * @property {{ [category]: (filePath) => boolean }} [customConfig.categories] object with
-     * categories as keys and (not necessarily mutually exlusive) functions that define a category
-     * @property {boolean} searchForFileImports Instead of only focusing on specifiers like
-     * [import {specifier} 'lion-based-ui/foo.js'], also list [import 'lion-based-ui/foo.js'] as a result
+     * @property {boolean} [skipFileImports=false] Instead of both focusing on specifiers like
+     * [import {specifier} 'lion-based-ui/foo.js'], and [import 'lion-based-ui/foo.js'] as a result,
+     * not list file exports
      */
     const cfg = {
       targetProjectPath: null,
-      metaConfig: null,
+      skipFileImports: false,
       ...customConfig,
     };
 
@@ -205,7 +204,7 @@ class FindExportsAnalyzer extends Analyzer {
      */
     const projectPath = cfg.targetProjectPath;
     const queryOutput = await this._traverse(async (ast, { relativePath }) => {
-      let transformedEntry = findExportsPerAstEntry(ast, cfg, relativePath, projectPath);
+      let transformedEntry = findExportsPerAstEntry(ast, cfg);
 
       transformedEntry = await normalizeSourcePaths(transformedEntry, relativePath, projectPath);
       transformedEntry = await trackdownRoot(transformedEntry, relativePath, projectPath);

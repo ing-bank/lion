@@ -2,7 +2,6 @@
 const fs = require('fs');
 const pathLib = require('path');
 const { performance } = require('perf_hooks');
-
 const { providence } = require('../program/providence.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { LogService } = require('../program/services/LogService.js');

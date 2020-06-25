@@ -6,9 +6,52 @@ const fs = require('fs');
 const pathLib = require('path');
 const child_process = require('child_process'); // eslint-disable-line camelcase
 const glob = require('glob');
+const anymatch = require('anymatch');
+const isNegatedGlob = require('is-negated-glob');
 const { LogService } = require('./LogService.js');
 const { AstService } = require('./AstService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
+
+function getGitIgnorePaths(rootPath) {
+  let fileContent;
+  try {
+    fileContent = fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
+  } catch (_) {
+    return [];
+  }
+
+  const entries = fileContent.split('\n').filter(entry => {
+    entry = entry.trim();
+    if (entry.startsWith('#')) {
+      return false;
+    }
+    return entry.trim().length;
+  });
+  return entries;
+}
+
+/**
+ * Gives back all files and folders that need to be added to npm artifact
+ */
+function getNpmPackagePaths(rootPath) {
+  let pkgJson;
+  try {
+    const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
+    pkgJson = JSON.parse(fileContent);
+  } catch (_) {
+    return [];
+  }
+  if (pkgJson.files) {
+    return pkgJson.files.map(fileOrFolder => {
+      const isFolderGlob = !fileOrFolder.includes('*') && !fileOrFolder.includes('.');
+      if (isFolderGlob) {
+        return `${fileOrFolder}/**/*`;
+      }
+      return fileOrFolder;
+    });
+  }
+  return [];
+}
 
 /**
  *
@@ -33,14 +76,6 @@ function multiGlobSync(patterns, { keepDirs = false } = {}) {
   });
   return Array.from(res);
 }
-
-const defaultGatherFilesConfig = {
-  extensions: ['.js'],
-  excludeFiles: [],
-  excludeFolders: ['node_modules', 'bower_components'],
-  includePaths: [],
-  depth: Infinity,
-};
 
 /**
  * @typedef {Object} ProjectData
@@ -70,7 +105,7 @@ class InputDataService {
         path: projectPath,
       },
       entries: this.gatherFilesFromDir(projectPath, {
-        ...defaultGatherFilesConfig,
+        ...this.defaultGatherFilesConfig,
         ...gatherFilesConfig,
       }),
     }));
@@ -218,8 +253,12 @@ class InputDataService {
     this.__targetProjectPaths = ensureArray(v);
   }
 
-  static getDefaultGatherFilesConfig() {
-    return defaultGatherFilesConfig;
+  static get defaultGatherFilesConfig() {
+    return {
+      extensions: ['.js'],
+      filter: ['!node_modules/**', '!bower_components/**', '!**/*.conf.js', '!**/*.config.js'],
+      depth: Infinity,
+    };
   }
 
   static getGlobPattern(startPath, cfg, withoutDepth = false) {
@@ -243,36 +282,46 @@ class InputDataService {
    * @param {string[]} [result] - list of file paths, for internal (recursive) calls
    * @returns {string[]} result list of file paths
    */
-  static gatherFilesFromDir(startPath, customConfig) {
+  static gatherFilesFromDir(startPath, customConfig = {}) {
     const cfg = {
-      ...defaultGatherFilesConfig,
+      ...this.defaultGatherFilesConfig,
       ...customConfig,
     };
+    if (!customConfig.omitDefaultFilter) {
+      cfg.filter = [...this.defaultGatherFilesConfig.filter, ...(customConfig.filter || [])];
+    }
+
+    const gitIgnorePaths = getGitIgnorePaths(startPath);
+    const npmPackagePaths = getNpmPackagePaths(startPath);
+    const removeFilter = gitIgnorePaths.map(p => `!${p}`);
+    const keepFilter = npmPackagePaths;
+
+    cfg.filter.forEach(filterEntry => {
+      const { negated, pattern } = isNegatedGlob(filterEntry);
+      if (negated) {
+        removeFilter.push(pattern);
+      } else {
+        keepFilter.push(filterEntry);
+      }
+    });
 
     let globPattern = this.getGlobPattern(startPath, cfg);
     globPattern += `.{${cfg.extensions.map(e => e.slice(1)).join(',')},}`;
     const globRes = multiGlobSync(globPattern);
 
-    const globPatternWithoutDepth = this.getGlobPattern(startPath, cfg, true);
-    let excludedGlobFiles;
-    if (cfg.exclude) {
-      excludedGlobFiles = multiGlobSync(`${globPatternWithoutDepth}/${cfg.exclude}`);
-    }
-
-    let filteredGlobRes = globRes.filter(gr => {
-      const localGr = gr.replace(startPath, '');
-      return (
-        !cfg.excludeFolders.some(f => localGr.includes(`${f}/`)) &&
-        !cfg.excludeFiles.some(f => localGr.includes(f)) &&
-        !(excludedGlobFiles && excludedGlobFiles.some(f => gr.includes(f)))
-      );
+    const filteredGlobRes = globRes.filter(filePath => {
+      const localFilePath = filePath.replace(`${startPath}/`, '');
+      if (removeFilter.length) {
+        const remove = anymatch(removeFilter, localFilePath);
+        if (remove) {
+          return false;
+        }
+      }
+      if (!keepFilter.length) {
+        return true;
+      }
+      return anymatch(keepFilter, localFilePath);
     });
-
-    if (cfg.includePaths && cfg.includePaths.length) {
-      filteredGlobRes = globRes.filter(gr =>
-        cfg.includePaths.some(p => gr.startsWith(pathLib.resolve(startPath, p))),
-      );
-    }
 
     if (!filteredGlobRes || !filteredGlobRes.length) {
       LogService.warn(`No files found for path '${startPath}'`);
@@ -293,5 +342,6 @@ class InputDataService {
     }
   }
 }
+InputDataService.cacheDisabled = false;
 
 module.exports = { InputDataService };

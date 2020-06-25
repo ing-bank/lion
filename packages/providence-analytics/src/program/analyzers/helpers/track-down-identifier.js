@@ -9,9 +9,6 @@ const { AstService } = require('../../services/AstService.js');
 const { LogService } = require('../../services/LogService.js');
 const { memoizeAsync } = require('../../utils/memoize.js');
 
-// TODO: memoize trackDownIdentifierFromScope (we can do so if tests are not mocked under same
-// filesystem paths)
-
 /** @typedef {import('./types').RootFile} RootFile */
 
 /**
@@ -82,7 +79,6 @@ function getImportSourceFromAst(astPath, identifierName) {
 }
 
 let trackDownIdentifier;
-
 /**
  * @example
  *```js
@@ -237,7 +233,7 @@ trackDownIdentifier = memoizeAsync(trackDownIdentifierFn);
  * @param {string} fullCurrentFilePath
  * @param {string} projectPath
  */
-async function trackDownIdentifierFromScope(
+async function trackDownIdentifierFromScopeFn(
   astPath,
   identifierNameInScope,
   fullCurrentFilePath,
@@ -260,6 +256,8 @@ async function trackDownIdentifierFromScope(
   }
   return rootFile;
 }
+
+const trackDownIdentifierFromScope = memoizeAsync(trackDownIdentifierFromScopeFn);
 
 module.exports = {
   trackDownIdentifier,
