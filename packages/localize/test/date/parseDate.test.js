@@ -32,8 +32,6 @@ describe('parseDate()', () => {
     expect(equalsDate(parseDate('12.12.1976'), new Date('1976/12/12'))).to.equal(true);
     expect(equalsDate(parseDate('13.12.1976'), new Date('1976/12/13'))).to.equal(true);
     expect(equalsDate(parseDate('14.12.1976'), new Date('1976/12/14'))).to.equal(true);
-    expect(equalsDate(parseDate('14.12-1976'), new Date('1976/12/14'))).to.equal(true);
-    expect(equalsDate(parseDate('14-12/1976'), new Date('1976/12/14'))).to.equal(true);
   });
   it('return undefined when no valid date provided', () => {
     expect(parseDate('12.12.1976.,')).to.equal(undefined);

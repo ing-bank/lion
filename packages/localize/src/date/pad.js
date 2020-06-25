@@ -5,7 +5,6 @@
  * @returns {string}
  */
 export function pad(n) {
-  const v = Math.abs(n);
-
+  const v = isNaN(n) ? n : Math.abs(n);
   return String(v < 10 ? `0${v}` : v);
 }
