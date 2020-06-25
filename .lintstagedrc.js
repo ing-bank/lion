@@ -3,6 +3,7 @@ module.exports = {
   '*': ['eclint fix', 'git add'],
   '*.js': ['eslint --fix', 'prettier --write', 'git add'],
   '*.md': ['prettier --write', 'markdownlint', 'git add'],
+  'yarn.lock': ['node ./scripts/yarn-lock-scan.js'],
   '*package.json': absolutePaths => {
     const sortPackages = [];
     absolutePaths.forEach(p => {

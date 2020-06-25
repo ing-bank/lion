@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "find-imports",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock__139587347",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "keepInternalSources": false,
+        "gatherFilesConfig": {}
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "file": "./target-src/find-customelements/multiple.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "RefClass"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/find-imports/all-notations.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "[file]"
+          ],
+          "source": "imported/source",
+          "normalizedSource": "imported/source"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "imported/source-a",
+          "normalizedSource": "imported/source-a"
+        },
+        {
+          "importSpecifiers": [
+            "b"
+          ],
+          "source": "imported/source-b",
+          "normalizedSource": "imported/source-b"
+        },
+        {
+          "importSpecifiers": [
+            "c",
+            "d"
+          ],
+          "source": "imported/source-c",
+          "normalizedSource": "imported/source-c"
+        },
+        {
+          "importSpecifiers": [
+            "[default]",
+            "f",
+            "g"
+          ],
+          "source": "imported/source-d",
+          "normalizedSource": "imported/source-d"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "my/source-e",
+          "normalizedSource": "my/source-e"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "[variable]",
+          "normalizedSource": "[variable]"
+        },
+        {
+          "importSpecifiers": [
+            "[*]"
+          ],
+          "source": "imported/source-g",
+          "normalizedSource": "imported/source-g"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-imports/deep-imports.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "RefClass"
+          ],
+          "source": "exporting-ref-project/ref-src/core.js",
+          "normalizedSource": "exporting-ref-project/ref-src/core.js"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "exporting-ref-project/ref-src/core.js",
+          "normalizedSource": "exporting-ref-project/ref-src/core.js"
+        },
+        {
+          "importSpecifiers": [
+            "nonMatched"
+          ],
+          "source": "unknown-project/xyz.js",
+          "normalizedSource": "unknown-project/xyz.js"
+        },
+        {
+          "importSpecifiers": [
+            "[file]"
+          ],
+          "source": "exporting-ref-project/ref-component",
+          "normalizedSource": "exporting-ref-project/ref-component"
+        },
+        {
+          "importSpecifiers": [
+            "resolvePathCorrect"
+          ],
+          "source": "exporting-ref-project/ref-src/folder",
+          "normalizedSource": "exporting-ref-project/ref-src/folder"
+        },
+        {
+          "importSpecifiers": [
+            "[*]"
+          ],
+          "source": "exporting-ref-project/ref-src/core.js",
+          "normalizedSource": "exporting-ref-project/ref-src/core.js"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-imports/root-level-imports.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "RefClass"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        },
+        {
+          "importSpecifiers": [
+            "RefRenamedClass"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        },
+        {
+          "importSpecifiers": [
+            "nonMatched"
+          ],
+          "source": "unknown-project",
+          "normalizedSource": "unknown-project"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-subclasses/ExtendedComp.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "RefClass"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-subclasses/internalProxy.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        }
+      ]
+    }
+  ]
+}

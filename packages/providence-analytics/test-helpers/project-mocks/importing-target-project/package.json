@@ -1,0 +1,8 @@
+{
+  "name": "importing-target-project",
+  "version": "0.0.2-target-mock",
+  "main": "./target-src/match-imports/root-level-imports.js",
+  "dependencies": {
+    "exporting-ref-project": "^1.0.0"
+  }
+}
