@@ -1,4 +1,4 @@
-import { css, html, LitElement } from '@lion/core';
+import { css, html, LitElement } from 'lit-element';
 
 const uuid = () => Math.random().toString(36).substr(2, 10);
 
@@ -71,7 +71,8 @@ export class LionTabs extends LitElement {
        */
       selectedIndex: {
         type: Number,
-        value: 0,
+        attribute: 'selected-index',
+        reflect: true,
       },
     };
   }
@@ -117,11 +118,14 @@ export class LionTabs extends LitElement {
 
   constructor() {
     super();
+    /**
+     * An index number of the selected tab
+     */
     this.selectedIndex = 0;
   }
 
-  firstUpdated() {
-    super.firstUpdated();
+  firstUpdated(changedProps) {
+    super.firstUpdated(changedProps);
     this.__setupSlots();
   }
 
