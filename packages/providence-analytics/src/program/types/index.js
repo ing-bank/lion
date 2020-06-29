@@ -50,8 +50,16 @@
  */
 
 /**
+ * @typedef {Array|String|RegExp|Function} AnyMatchString see: https://www.npmjs.com/package/anymatch
+ * Allows negations as well. See: https://www.npmjs.com/package/is-negated-glob
+ * @example
+ * `'scripts/**\/*.js'
+ * '!scripts / vendor/**'
+ * 'scripts/vendor/react.js'
+ */
+
+/**
  * @typedef {Object} GatherFilesConfig
  * @property {string[]} [extensions] file extension like ['.js', '.html']
- * @property {string[]} [excludeFiles] file names filtered out
- * @property {string[]} [excludeFolders] folder names filtered outs
+ * @property {AnyMatchString[]} [filter] file patterns filtered out. See: https://www.npmjs.com/package/anymatch
  */

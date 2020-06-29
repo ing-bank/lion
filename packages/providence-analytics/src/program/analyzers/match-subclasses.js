@@ -132,12 +132,9 @@ function matchSubclassesPostprocess(
                 klass => klass.rootFile.specifier === exportSpecifier,
               );
 
-            // console.log('classEntryResult', classEntryResult);
-
             if (!classMatch) {
               return;
             }
-            // console.log(exportSpecifier, classEntryResult.superClasses && classEntryResult.superClasses.map(k => k.rootFile.specifier));
 
             /**
              * @example

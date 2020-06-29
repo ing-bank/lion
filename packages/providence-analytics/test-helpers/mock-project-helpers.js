@@ -38,7 +38,8 @@ function mockProject(files, cfg = {}, existingMock = {}) {
   }
 
   const optionalPackageJson = {};
-  const hasPackageJson = cfg.filePaths && cfg.filePaths.includes('./package.json');
+  const hasPackageJson =
+    (cfg.filePaths && cfg.filePaths.includes('./package.json')) || files['./package.json'];
   if (!hasPackageJson) {
     optionalPackageJson[projPath] = {
       'package.json': `{ "name": "${projName}" , "version": "${cfg.version || '0.1.0-mock'}" }`,

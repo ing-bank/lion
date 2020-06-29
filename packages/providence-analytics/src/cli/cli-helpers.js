@@ -7,6 +7,10 @@ const { InputDataService } = require('../program/services/InputDataService.js');
 const { LogService } = require('../program/services/LogService.js');
 const { aForEach } = require('../program/utils/async-array-utils.js');
 
+function flatten(arr) {
+  return Array.prototype.concat.apply([], arr);
+}
+
 function csToArray(v) {
   return v.split(',').map(v => v.trim());
 }
@@ -28,22 +32,31 @@ function setQueryMethod(m) {
 /**
  * @returns {string[]}
  */
-function pathsArrayFromCs(t) {
-  return t
-    .split(',')
-    .map(t => {
-      const isGlob = t.includes('*');
-      if (isGlob) {
-        return glob.sync(t);
+function pathsArrayFromCs(t, cwd = process.cwd()) {
+  if (!t) {
+    return undefined;
+  }
+
+  return flatten(
+    t.split(',').map(t => {
+      if (t.startsWith('/')) {
+        return t;
       }
-      return pathLib.resolve(process.cwd(), t.trim());
-    })
-    .flat();
+      if (t.includes('*')) {
+        if (!t.endsWith('/')) {
+          // eslint-disable-next-line no-param-reassign
+          t = `${t}/`;
+        }
+        return glob.sync(t, { cwd, absolute: true });
+      }
+      return pathLib.resolve(cwd, t.trim());
+    }),
+  );
 }
 
 /**
  * @param {string} name collection name found in eCfg
- * @param {'search-target'|'reference'} [colType='search-targets'] collectioon type
+ * @param {'search-target'|'reference'} [colType='search-targets'] collection type
  * @param {object} eCfg external configuration. Usually providence.conf.js
  * @returns {string[]}
  */
@@ -60,21 +73,17 @@ function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg) {
   return undefined;
 }
 
-function spawnProcess(processArgStr, opts, { log } = {}) {
+function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
   let output;
   proc.stdout.on('data', data => {
     output += data;
-    if (log) {
-      LogService.debug(data);
-    }
+    LogService.debug(data.toString());
   });
   return new Promise((resolve, reject) => {
     proc.stderr.on('data', data => {
-      if (log) {
-        LogService.error(data);
-      }
+      LogService.error(data.toString());
       reject(data.toString());
     });
     proc.on('close', code => {

@@ -54,11 +54,10 @@ describe('InputDataService', () => {
           '/test-helpers/project-mocks/importing-target-project',
         ),
       ).to.equal(true);
-
-      expect(inputDataPerProject[0].entries.length).to.equal(6);
+      expect(inputDataPerProject[0].entries.length).to.equal(11);
       expect(inputDataPerProject[0].entries[0].context.code).to.not.be.undefined;
       expect(inputDataPerProject[0].entries[0].file).to.equal(
-        './target-src/find-customelements/multiple.js',
+        './node_modules/exporting-ref-project/index.js',
       );
     });
 
@@ -122,7 +121,7 @@ describe('InputDataService', () => {
       it('allows passing excludeFolders', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          excludeFolders: ['nested'],
+          filter: ['!nested/**'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -133,10 +132,10 @@ describe('InputDataService', () => {
         ]);
       });
 
-      it('allows passing excludeFiles', async () => {
+      it('allows passing excluded files', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          excludeFiles: ['index.js'],
+          filter: ['!index.js', '!**/*/index.js'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -150,7 +149,7 @@ describe('InputDataService', () => {
       it('allows passing exclude globs', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          exclude: '**/*.test.{html,js}',
+          filter: ['!**/*.test.{html,js}'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -158,6 +157,135 @@ describe('InputDataService', () => {
           '/fictional/project/internal.js',
           '/fictional/project/nested/index.js',
         ]);
+      });
+
+      it('omits node_modules and bower_components at root level by default', async () => {
+        mockProject({
+          './index.js': '',
+          './node_modules/pkg/x.js': '',
+          './bower_components/pkg/y.js': '',
+          './nested/node_modules/pkg/x.js': '',
+          './nested/bower_components/pkg/y.js': '',
+        });
+
+        const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+        expect(globOutput).to.eql([
+          '/fictional/project/index.js',
+          '/fictional/project/nested/bower_components/pkg/y.js',
+          '/fictional/project/nested/node_modules/pkg/x.js',
+        ]);
+      });
+
+      it('allows to add root level files', async () => {
+        mockProject({
+          './root-lvl.js': '',
+          './omitted/file.js': '',
+          './added/file.js': '',
+        });
+        const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+          filter: ['*', 'added/**/*'],
+        });
+        expect(globOutput).to.eql([
+          '/fictional/project/added/file.js',
+          '/fictional/project/root-lvl.js',
+        ]);
+      });
+
+      describe('Default config', () => {
+        it('omits config files by default', async () => {
+          mockProject({
+            './index.js': '',
+            './karma.conf.js': '',
+            './commitlint.config.js': '',
+            './some-pkg/commitlint.config.js': '',
+            './some-other-pkg/commitlint.conf.js': '',
+          });
+
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+          expect(globOutput).to.eql(['/fictional/project/index.js']);
+        });
+
+        it('omits hidden files by default', async () => {
+          mockProject({
+            './.blablarc.js': '',
+            './index.js': '',
+          });
+
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+          expect(globOutput).to.eql(['/fictional/project/index.js']);
+        });
+
+        it('filters npm files entries', async () => {
+          mockProject({
+            './docs/x.js': '',
+            './src/y.js': '',
+            './file.add.js': '',
+            './omit.js': '',
+            './package.json': JSON.stringify({
+              files: ['*.add.js', 'docs', 'src'],
+            }),
+          });
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+          expect(globOutput).to.eql([
+            '/fictional/project/docs/x.js',
+            '/fictional/project/file.add.js',
+            '/fictional/project/src/y.js',
+          ]);
+        });
+
+        it('filters .gitignore entries', async () => {
+          mockProject({
+            './coverage/file.js': '',
+            './storybook-static/index.js': '',
+            './build/index.js': '',
+            '.gitignore': `
+/coverage
+# comment
+/storybook-static/
+
+build/
+            `,
+          });
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+          expect(globOutput).to.eql([]);
+        });
+
+        describe('Default filter', () => {
+          it('merges default config filter with configured filter', async () => {
+            mockProject({
+              './node_modules/root-lvl.js': '',
+              './bower_components/omitted/file.js': '',
+              './added.js': '',
+              './omit.js': '',
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              filter: ['added*'],
+            });
+            expect(globOutput).to.eql(['/fictional/project/added.js']);
+          });
+
+          it('allows to omit default config filter', async () => {
+            mockProject({
+              './node_modules/root-lvl.js': '',
+              './bower_components/omitted/file.js': '',
+              './xyz.conf.js': '',
+              './abc.config.js': '',
+              './added.js': '',
+              './omit.js': '',
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              filter: ['!omit*'],
+              omitDefaultFilter: true,
+            });
+            expect(globOutput).to.eql([
+              '/fictional/project/abc.config.js',
+              '/fictional/project/added.js',
+              '/fictional/project/bower_components/omitted/file.js',
+              '/fictional/project/node_modules/root-lvl.js',
+              '/fictional/project/xyz.conf.js',
+            ]);
+          });
+        });
       });
     });
   });
