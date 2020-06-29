@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit-element';
+import { css, html, LitElement } from '@lion/core';
 
 const uuid = () => Math.random().toString(36).substr(2, 10);
 
