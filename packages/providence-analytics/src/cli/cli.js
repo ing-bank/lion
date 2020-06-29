@@ -147,7 +147,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
 
   commander
     .version(version, '-v, --version')
-    .option('-e, --extensions [extensions]', 'extensions like ".js, .html"', extensionsFromCs, [
+    .option('-e, --extensions [extensions]', 'extensions like "js,html"', extensionsFromCs, [
       '.js',
       '.html',
     ])
@@ -198,9 +198,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       searchMode = 'search-query';
       regexSearchOptions = options;
       regexSearchOptions.regexString = regexString;
-      launchProvidence()
-        .then(() => resolveCli())
-        .catch(() => rejectCli());
+      launchProvidence().then(resolveCli).catch(rejectCli);
     });
 
   commander
@@ -212,9 +210,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       searchMode = 'feature-query';
       featureOptions = options;
       featureOptions.queryString = queryString;
-      launchProvidence()
-        .then(() => resolveCli())
-        .catch(() => rejectCli());
+      launchProvidence().then(resolveCli).catch(rejectCli);
     });
 
   commander
@@ -234,9 +230,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       searchMode = 'analyzer-query';
       analyzerOptions = options;
       analyzerOptions.name = analyzerName;
-      launchProvidence()
-        .then(() => resolveCli())
-        .catch(() => rejectCli());
+      launchProvidence().then(resolveCli).catch(rejectCli);
     });
 
   commander
@@ -278,12 +272,12 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
           referenceProjectPaths: commander.referencePaths,
           prefixCfg,
           outputFolder: options.outputFolder,
-          extensions: commander.referencePaths,
+          extensions: commander.extensions,
           whitelist: commander.whitelist,
           whitelistReference: commander.whitelistReference,
         })
-        .then(() => resolveCli())
-        .catch(() => rejectCli());
+        .then(resolveCli)
+        .catch(rejectCli);
     });
 
   commander
