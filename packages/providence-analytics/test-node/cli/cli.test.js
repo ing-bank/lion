@@ -15,9 +15,10 @@ const {
 } = require('../../test-helpers/mock-log-service-helpers.js');
 
 const { QueryService } = require('../../src/program/services/QueryService.js');
-const { LogService } = require('../../src/program/services/LogService.js');
 
 const providenceModule = require('../../src/program/providence.js');
+const extendDocsModule = require('../../src/cli/generate-extend-docs-data.js');
+
 const dummyAnalyzer = require('../../test-helpers/templates/analyzer-template.js');
 const { cli } = require('../../src/cli/cli.js');
 const { pathsArrayFromCs } = require('../../src/cli/cli-helpers.js');
@@ -27,7 +28,6 @@ const rootDir = pathLib.resolve(__dirname, '../../');
 
 describe('Providence CLI', () => {
   before(() => {
-    LogService.debugEnabled = true;
     suppressNonCriticalLogs();
     mockWriteToJson(queryResults);
 
@@ -142,6 +142,47 @@ describe('Providence CLI', () => {
     describe('Query', () => {});
     describe('Search', () => {});
     describe('Manage', () => {});
+    describe('Extend docs', () => {
+      let extendDocsStub;
+      beforeEach(() => {
+        extendDocsStub = sinon.stub(extendDocsModule, 'launchProvidenceWithExtendDocs').returns(
+          new Promise(resolve => {
+            resolve();
+          }),
+        );
+      });
+
+      afterEach(() => {
+        extendDocsStub.restore();
+      });
+
+      it('allows configuration', async () => {
+        await runCli(
+          [
+            'extend-docs',
+            '-t /xyz',
+            '-r /xyz/x',
+            '--prefix-from pfrom --prefix-to pto',
+            '--output-folder /outp',
+            '--extensions bla',
+            '--whitelist wl --whitelist-reference wlr',
+          ].join(' '),
+          rootDir,
+        );
+        expect(extendDocsStub.called).to.be.true;
+        expect(extendDocsStub.args[0][0]).to.eql({
+          referenceProjectPaths: ['/xyz/x'],
+          prefixCfg: {
+            from: 'pfrom',
+            to: 'pto',
+          },
+          outputFolder: '/outp',
+          extensions: ['/xyz/x'],
+          whitelist: [`${process.cwd()}/wl`],
+          whitelistReference: [`${process.cwd()}/wlr`],
+        });
+      });
+    });
   });
 });
 

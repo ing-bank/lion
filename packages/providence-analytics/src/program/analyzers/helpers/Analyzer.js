@@ -165,7 +165,7 @@ class Analyzer {
           `skipping ${LogService.pad(this.name, 16)} for ${
             this.identifier
           }: (${reason})\n${cfg.targetProjectPath.replace(
-            '/Users/hu84jr/git/providence/providence-input-data/search-targets/',
+            `${process.cwd()}/providence-input-data/search-targets/`,
             '',
           )}`,
         );

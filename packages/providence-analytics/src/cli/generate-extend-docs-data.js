@@ -6,20 +6,31 @@ const { providence } = require('../program/providence.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { LogService } = require('../program/services/LogService.js');
 
-async function launchProvidenceWithExtendDocs(referencePaths, prefixObj, outputFolder) {
+async function launchProvidenceWithExtendDocs({
+  referenceProjectPaths,
+  prefixCfg,
+  outputFolder,
+  extensions,
+  whitelist,
+  whitelistReference,
+}) {
   const t0 = performance.now();
 
   const results = await providence(
-    QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixObj }),
+    QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixCfg }),
     {
       gatherFilesConfig: {
-        extensions: ['.js', '.html'],
-        excludeFolders: ['coverage', 'test'],
+        extensions: extensions || ['.js'],
+        filter: whitelist || ['!coverage', '!test'],
+      },
+      gatherFilesConfigReference: {
+        extensions: extensions || ['.js'],
+        filter: whitelistReference || ['!coverage', '!test'],
       },
       queryMethod: 'ast',
       report: false,
       targetProjectPaths: [pathLib.resolve(process.cwd())],
-      referenceProjectPaths: referencePaths,
+      referenceProjectPaths,
     },
   );
 

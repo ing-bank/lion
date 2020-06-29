@@ -18,7 +18,7 @@ const {
   pathsArrayFromCollectionName,
   pathsArrayFromCs,
 } = require('./cli-helpers.js');
-const { launchProvidenceWithExtendDocs } = require('./generate-extend-docs-data.js');
+const extendDocsModule = require('./generate-extend-docs-data.js');
 const { version } = require('../../package.json');
 
 async function cli({ cwd, addProjectDependencyPaths } = {}) {
@@ -111,12 +111,10 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
     providenceModule.providence(queryConfig, {
       gatherFilesConfig: {
         extensions: commander.extensions,
-        // ...(commander.filteredTarget ? { excludeFolders: commander.filteredTarget } : {}),
         filter: commander.whitelist,
       },
       gatherFilesConfigReference: {
         extensions: commander.extensions,
-        // ...(commander.filteredTarget ? { excludeFolders: commander.filteredTarget } : {}),
         filter: commander.whitelistReference,
       },
       debugEnabled: commander.debug,
@@ -275,7 +273,17 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
         process.exit(1);
       }
       const prefixCfg = { from: options.prefixFrom, to: options.prefixTo };
-      launchProvidenceWithExtendDocs(commander.referencePaths, prefixCfg, options.outputFolder);
+      extendDocsModule
+        .launchProvidenceWithExtendDocs({
+          referenceProjectPaths: commander.referencePaths,
+          prefixCfg,
+          outputFolder: options.outputFolder,
+          extensions: commander.referencePaths,
+          whitelist: commander.whitelist,
+          whitelistReference: commander.whitelistReference,
+        })
+        .then(() => resolveCli())
+        .catch(() => rejectCli());
     });
 
   commander

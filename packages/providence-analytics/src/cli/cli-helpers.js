@@ -33,6 +33,10 @@ function setQueryMethod(m) {
  * @returns {string[]}
  */
 function pathsArrayFromCs(t, cwd = process.cwd()) {
+  if (!t) {
+    return undefined;
+  }
+
   return flatten(
     t.split(',').map(t => {
       if (t.startsWith('/')) {
