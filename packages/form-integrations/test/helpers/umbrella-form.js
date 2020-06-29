@@ -44,13 +44,13 @@ export class UmbrellaForm extends LitElement {
           <lion-input-date
             name="date"
             label="Date of application"
-            .modelValue="${new Date('2000-12-12')}"
+            .modelValue="${new Date('2000/12/12')}"
             .validators="${[new Required()]}"
           ></lion-input-date>
           <lion-input-datepicker
             name="datepicker"
             label="Date to be picked"
-            .modelValue="${new Date('2020-12-12')}"
+            .modelValue="${new Date('2020/12/12')}"
             .validators="${[new Required()]}"
           ></lion-input-datepicker>
           <lion-textarea
