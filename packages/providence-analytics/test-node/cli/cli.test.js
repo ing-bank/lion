@@ -54,7 +54,7 @@ describe('Providence CLI', () => {
   let qConfStub;
   beforeEach(() => {
     qConfStub = sinon.stub(QueryService, 'getQueryConfigFromAnalyzer').returns({ analyzer: {} });
-    providenceStub = sinon.stub(providenceModule, 'providence');
+    providenceStub = sinon.stub(providenceModule, 'providence').returns(Promise.resolve());
   });
 
   afterEach(() => {
@@ -145,11 +145,9 @@ describe('Providence CLI', () => {
     describe('Extend docs', () => {
       let extendDocsStub;
       beforeEach(() => {
-        extendDocsStub = sinon.stub(extendDocsModule, 'launchProvidenceWithExtendDocs').returns(
-          new Promise(resolve => {
-            resolve();
-          }),
-        );
+        extendDocsStub = sinon
+          .stub(extendDocsModule, 'launchProvidenceWithExtendDocs')
+          .returns(Promise.resolve());
       });
 
       afterEach(() => {
@@ -177,7 +175,7 @@ describe('Providence CLI', () => {
             to: 'pto',
           },
           outputFolder: '/outp',
-          extensions: ['/xyz/x'],
+          extensions: ['.bla'],
           whitelist: [`${process.cwd()}/wl`],
           whitelistReference: [`${process.cwd()}/wlr`],
         });
