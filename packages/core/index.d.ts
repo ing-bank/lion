@@ -50,10 +50,11 @@ export { render as renderShady } from 'lit-html/lib/shady-render.js';
 export { ScopedElementsMixin } from '@open-wc/scoped-elements';
 export { dedupeMixin } from '@open-wc/dedupe-mixin';
 // ours
-export { DelegateMixin } from './src/DelegateMixin.js';
-export { DisabledMixin } from './src/DisabledMixin.js';
-export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
-export { LionSingleton } from './src/LionSingleton.js';
+// TODO: type them and then enable them
+// export { DelegateMixin } from './src/DelegateMixin.js';
+// export { DisabledMixin } from './src/DisabledMixin.js';
+// export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
+// export { LionSingleton } from './src/LionSingleton.js';
 export { SlotMixin } from './src/SlotMixin.js';
-export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
-export { browserDetection } from './src/browserDetection.js';
+// export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
+// export { browserDetection } from './src/browserDetection.js';

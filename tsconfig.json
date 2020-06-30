@@ -7,14 +7,18 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": false,
+    "strict": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "types": ["node", "mocha"],
     "esModuleInterop": true
   },
   "files": ["browser.d.ts"],
-  "include": ["packages/tabs/**/*"],
+  "include": [
+    "packages/core/src/SlotMixin.js",
+    "packages/core/test/SlotMixin.js",
+    "packages/tabs/**/*"
+  ],
   "exclude": [
     "node_modules",
     "**/node_modules/*",

@@ -1,74 +1,111 @@
 import { css, html, LitElement } from '@lion/core';
 
-const uuid = () => Math.random().toString(36).substr(2, 10);
+/**
+ * @typedef {Object} StoreEntry
+ * @property {Element} el Dom Element
+ * @property {string} [uid] Unique ID for the entry
+ * @property {Element} [button] Unique ID for the entry
+ * @property {Element} [panel] Unique ID for the entry
+ * @property {eventHandler} clickHandler
+ * @property {eventHandler} keydownHandler
+ * @property {eventHandler} keyupHandler
+ */
 
-const setupPanel = ({ element, uid }) => {
-  element.setAttribute('id', `panel-${uid}`);
-  element.setAttribute('role', 'tabpanel');
-  element.setAttribute('aria-labelledby', `button-${uid}`);
-};
+function uuid() {
+  return Math.random().toString(36).substr(2, 10);
+}
 
-const selectPanel = element => {
-  element.setAttribute('selected', true);
-};
+/**
+ * @param {object} options
+ * @param {Element} options.el
+ * @param {string} options.uid
+ */
+function setupPanel({ el, uid }) {
+  el.setAttribute('id', `panel-${uid}`);
+  el.setAttribute('role', 'tabpanel');
+  el.setAttribute('aria-labelledby', `button-${uid}`);
+}
 
-const deselectPanel = element => {
-  element.removeAttribute('selected');
-};
+/**
+ * @param {Element} el
+ */
+function selectPanel(el) {
+  el.setAttribute('selected', true);
+}
 
-const setupButton = ({ element, uid, clickHandler, keydownHandler, keyupHandler }) => {
-  element.setAttribute('id', `button-${uid}`);
-  element.setAttribute('role', 'tab');
-  element.setAttribute('aria-controls', `panel-${uid}`);
-  element.addEventListener('click', clickHandler);
-  element.addEventListener('keyup', keyupHandler);
-  element.addEventListener('keydown', keydownHandler);
-};
+/**
+ * @param {Element} el
+ */
+function deselectPanel(el) {
+  el.removeAttribute('selected');
+}
 
-const cleanButton = ({ element, clickHandler, keydownHandler, keyupHandler }) => {
-  element.removeAttribute('id');
-  element.removeAttribute('role');
-  element.removeAttribute('aria-controls');
-  element.removeEventListener('click', clickHandler);
-  element.removeEventListener('keyup', keyupHandler);
-  element.removeEventListener('keydown', keydownHandler);
-};
+/**
+ * @param {StoreEntry} options
+ */
+function setupButton({ el, uid, clickHandler, keydownHandler, keyupHandler }) {
+  el.setAttribute('id', `button-${uid}`);
+  el.setAttribute('role', 'tab');
+  el.setAttribute('aria-controls', `panel-${uid}`);
+  el.addEventListener('click', clickHandler);
+  el.addEventListener('keyup', keyupHandler);
+  el.addEventListener('keydown', keydownHandler);
+}
 
-const selectButton = (element, withFocus = false) => {
+/**
+ * @param {StoreEntry} options
+ */
+function cleanButton({ el, clickHandler, keydownHandler, keyupHandler }) {
+  el.removeAttribute('id');
+  el.removeAttribute('role');
+  el.removeAttribute('aria-controls');
+  el.removeEventListener('click', clickHandler);
+  el.removeEventListener('keyup', keyupHandler);
+  el.removeEventListener('keydown', keydownHandler);
+}
+
+/**
+ * @param {Element} el
+ * @param {boolean} withFocus
+ */
+function selectButton(el, withFocus = false) {
   if (withFocus) {
-    element.focus();
+    el.focus();
   }
 
-  element.setAttribute('selected', true);
-  element.setAttribute('aria-selected', true);
-  element.setAttribute('tabindex', 0);
-};
+  el.setAttribute('selected', true);
+  el.setAttribute('aria-selected', true);
+  el.setAttribute('tabindex', 0);
+}
 
-const deselectButton = element => {
-  element.removeAttribute('selected');
-  element.setAttribute('aria-selected', false);
-  element.setAttribute('tabindex', -1);
-};
+/**
+ * @param {Element} el
+ */
+function deselectButton(el) {
+  el.removeAttribute('selected');
+  el.setAttribute('aria-selected', false);
+  el.setAttribute('tabindex', -1);
+}
 
-const handleButtonKeydown = e => {
-  switch (e.key) {
+/**
+ * @param {KeyboardEvent} ev
+ */
+function handleButtonKeydown(ev) {
+  switch (ev.key) {
     case 'ArrowDown':
     case 'ArrowRight':
     case 'ArrowUp':
     case 'ArrowLeft':
     case 'Home':
     case 'End':
-      e.preventDefault();
+      ev.preventDefault();
     /* no default */
   }
-};
+}
 
 export class LionTabs extends LitElement {
   static get properties() {
     return {
-      /**
-       * index number of the selected tab.
-       */
       selectedIndex: {
         type: Number,
         attribute: 'selected-index',
@@ -140,6 +177,7 @@ export class LionTabs extends LitElement {
   }
 
   __setupStore() {
+    /** @type {StoreEntry[]} */
     this.__store = [];
     const buttons = this.querySelectorAll('[slot="tab"]');
     const panels = this.querySelectorAll('[slot="panel"]');
@@ -158,11 +196,11 @@ export class LionTabs extends LitElement {
         button,
         panel,
         clickHandler: this.__createButtonClickHandler(index),
-        keydownHandler: handleButtonKeydown,
+        keydownHandler: handleButtonKeydown.bind(this),
         keyupHandler: this.__handleButtonKeyup.bind(this),
       };
-      setupPanel({ element: entry.panel, ...entry });
-      setupButton({ element: entry.button, ...entry });
+      setupPanel({ el: entry.panel, ...entry });
+      setupButton({ el: entry.button, ...entry });
       deselectPanel(entry.panel);
       deselectButton(entry.button);
       this.__store.push(entry);
@@ -174,44 +212,55 @@ export class LionTabs extends LitElement {
       return;
     }
     this.__store.forEach(entry => {
-      cleanButton({ element: entry.button, ...entry });
+      cleanButton({ el: entry.button, ...entry });
     });
   }
 
+  /**
+   * @param {number} index
+   */
   __createButtonClickHandler(index) {
     return () => {
       this._setSelectedIndexWithFocus(index);
     };
   }
 
-  __handleButtonKeyup(e) {
-    switch (e.key) {
-      case 'ArrowDown':
-      case 'ArrowRight':
-        if (this.selectedIndex + 1 >= this._pairCount) {
+  /**
+   * @param {KeyboardEvent} ev
+   */
+  __handleButtonKeyup(ev) {
+    if (typeof this.selectedIndex === 'number') {
+      switch (ev.key) {
+        case 'ArrowDown':
+        case 'ArrowRight':
+          if (this.selectedIndex + 1 >= this._pairCount) {
+            this._setSelectedIndexWithFocus(0);
+          } else {
+            this._setSelectedIndexWithFocus(this.selectedIndex + 1);
+          }
+          break;
+        case 'ArrowUp':
+        case 'ArrowLeft':
+          if (this.selectedIndex <= 0) {
+            this._setSelectedIndexWithFocus(this._pairCount - 1);
+          } else {
+            this._setSelectedIndexWithFocus(this.selectedIndex - 1);
+          }
+          break;
+        case 'Home':
           this._setSelectedIndexWithFocus(0);
-        } else {
-          this._setSelectedIndexWithFocus(this.selectedIndex + 1);
-        }
-        break;
-      case 'ArrowUp':
-      case 'ArrowLeft':
-        if (this.selectedIndex <= 0) {
+          break;
+        case 'End':
           this._setSelectedIndexWithFocus(this._pairCount - 1);
-        } else {
-          this._setSelectedIndexWithFocus(this.selectedIndex - 1);
-        }
-        break;
-      case 'Home':
-        this._setSelectedIndexWithFocus(0);
-        break;
-      case 'End':
-        this._setSelectedIndexWithFocus(this._pairCount - 1);
-        break;
-      /* no default */
+          break;
+        /* no default */
+      }
     }
   }
 
+  /**
+   * @param {number | undefined} value The new index
+   */
   set selectedIndex(value) {
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
@@ -220,6 +269,9 @@ export class LionTabs extends LitElement {
     this.requestUpdate('selectedIndex', stale);
   }
 
+  /**
+   * @param {number} value The new index for focus
+   */
   _setSelectedIndexWithFocus(value) {
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
@@ -228,16 +280,21 @@ export class LionTabs extends LitElement {
     this.requestUpdate('selectedIndex', stale);
   }
 
+  /**
+   * @return {number | undefined}
+   */
   get selectedIndex() {
     return this.__selectedIndex;
   }
 
   get _pairCount() {
-    return this.__store.length;
+    return (this.__store && this.__store.length) || 0;
   }
 
   __updateSelected(withFocus = false) {
-    if (!(this.__store && this.__store[this.selectedIndex])) {
+    if (
+      !(this.__store && typeof this.selectedIndex === 'number' && this.__store[this.selectedIndex])
+    ) {
       return;
     }
     const previousButton = Array.from(this.children).find(

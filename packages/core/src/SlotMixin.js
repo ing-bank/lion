@@ -3,8 +3,8 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {import('./types').SlotMixin} SlotMixin
- * @typedef {import('./types').SlotsMap} SlotsMap
+ * @typedef {import('../types/SlotMixinTypes').SlotMixin} SlotMixin
+ * @typedef {import('../types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import("lit-element").LitElement} LitElement
  */
 
@@ -12,6 +12,9 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 const SlotMixinImplementation = superclass =>
   // eslint-disable-next-line no-unused-vars, no-shadow
   class SlotMixinHost extends superclass {
+    /**
+     * @return {SlotsMap}
+     */
     get slots() {
       return {};
     }
@@ -34,20 +37,27 @@ const SlotMixinImplementation = superclass =>
           if (!this.querySelector(`[slot=${slotName}]`)) {
             const slotFactory = this.slots[slotName];
             const slotContent = slotFactory();
+            // ignore non-elements to enable conditional slots
             if (slotContent instanceof Element) {
               slotContent.setAttribute('slot', slotName);
               this.appendChild(slotContent);
               this.__privateSlots.add(slotName);
-            } // ignore non-elements to enable conditional slots
+            }
           }
         });
         this.__isConnectedSlotMixin = true;
       }
     }
 
+    /**
+     * @param {string} slotName Name of the slot
+     * @return {boolean} true if given slot name been created by SlotMixin
+     */
     _isPrivateSlot(slotName) {
       return this.__privateSlots.has(slotName);
     }
   };
 
-export const SlotMixin = dedupeMixin(SlotMixinImplementation);
+// not sure how to strict type this 😅
+// @ts-ignore
+export const SlotMixin = /** @type {SlotMixin} */ (dedupeMixin(SlotMixinImplementation));

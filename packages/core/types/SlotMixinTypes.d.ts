@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 
-export function slotFunction(): HTMLElement;
+declare function slotFunction(): HTMLElement | undefined;
 
 export type SlotsMap = {
   [key: string]: typeof slotFunction;
@@ -15,7 +15,7 @@ export declare class SlotMixinHost {
   /**
    * Starts the creation of slots
    */
-  protected _connectSlotMixin();
+  protected _connectSlotMixin(): void;
 
   /**
    * Useful to decide if a given slot should be manipulated depending on if it was auto generated
