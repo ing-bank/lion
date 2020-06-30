@@ -180,3 +180,29 @@ export const validateItem = () => {
   `;
 };
 ```
+
+### Help text
+
+You can add help text on each checkbox with `help-text` attribute on the `<lion-radio>`.
+
+```js preview-story
+export const helpText = () => html`
+  <lion-radio-group name="dinosTwo" label="Favourite dinosaur">
+    <lion-radio
+      label="allosaurus"
+      .choiceValue=${'allosaurus'}
+      help-text="Allosaurus is a genus of carnivorous theropod dinosaur that lived 155 to 145 million years ago during the late Jurassic period"
+    ></lion-radio>
+    <lion-radio
+      label="brontosaurus"
+      .choiceValue=${'brontosaurus'}
+      help-text="Brontosaurus is a genus of gigantic quadruped sauropod dinosaurs"
+    ></lion-radio>
+    <lion-radio
+      label="diplodocus"
+      .choiceValue=${'diplodocus'}
+      help-text="Diplodocus is a genus of diplodocid sauropod dinosaurs whose fossils were first discovered in 1877 by S. W. Williston"
+    ></lion-radio>
+  </lion-radio-group>
+`;
+```

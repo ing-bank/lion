@@ -92,6 +92,7 @@ export const ChoiceInputMixin = superclass =>
         css`
           :host {
             display: flex;
+            flex-wrap: wrap;
           }
 
           :host([hidden]) {
@@ -100,6 +101,10 @@ export const ChoiceInputMixin = superclass =>
 
           .choice-field__graphic-container {
             display: none;
+          }
+          .choice-field__help-text {
+            display: block;
+            flex-basis: 100%;
           }
         `,
       ];
@@ -118,6 +123,9 @@ export const ChoiceInputMixin = superclass =>
         <div class="choice-field__label">
           <slot name="label"></slot>
         </div>
+        <small class="choice-field__help-text">
+          <slot name="help-text"></slot>
+        </small>
       `;
     }
 
