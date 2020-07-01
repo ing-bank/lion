@@ -31,9 +31,6 @@
   "dependencies": {
     "@lion/core": "0.7.2"
   },
-  "devDependencies": {
-    "@polymer/iron-test-helpers": "^3.0.1"
-  },
   "keywords": [
     "button",
     "lion",

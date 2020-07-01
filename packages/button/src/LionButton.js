@@ -8,7 +8,7 @@ import {
 } from '@lion/core';
 
 const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
-const isSpaceKeyboardClickEvent = e => e.keyCode === 32; /* space */
+const isSpaceKeyboardClickEvent = e => e.keyCode === 32 || e.key === 32; /* space */
 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
@@ -229,8 +229,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     const mouseupHandler = () => {
       this.active = false;
       document.removeEventListener('mouseup', mouseupHandler);
+      this.removeEventListener('mouseup', mouseupHandler);
     };
     document.addEventListener('mouseup', mouseupHandler);
+    this.addEventListener('mouseup', mouseupHandler);
   }
 
   __keydownHandler(e) {

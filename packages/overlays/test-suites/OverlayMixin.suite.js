@@ -10,23 +10,24 @@ function getGlobalOverlayNodes() {
 
 export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
   describe(`OverlayMixin${suffix}`, () => {
-    let el;
-
-    beforeEach(async () => {
-      el = await fixture(html`
+    it('should not be opened by default', async () => {
+      const el = await fixture(html`
         <${tag}>
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
       `);
-    });
-
-    it('should not be opened by default', async () => {
       expect(el.opened).to.be.false;
       expect(el._overlayCtrl.isShown).to.be.false;
     });
 
     it('syncs opened to overlayController', async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `);
       el.opened = true;
       expect(el.opened).to.be.true;
       await nextFrame(); // overlayCtrl show/hide is async
@@ -39,6 +40,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('syncs OverlayController to opened', async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `);
       expect(el.opened).to.be.false;
       await el._overlayCtrl.show();
       expect(el.opened).to.be.true;
@@ -86,7 +93,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires "opened-changed" event on hide', async () => {
       const spy = sinon.spy();
-      el = await fixture(html`
+      const el = await fixture(html`
         <${tag} @opened-changed="${spy}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
@@ -105,7 +112,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires "before-closed" event on hide', async () => {
       const beforeSpy = sinon.spy();
-      el = await fixture(html`
+      const el = await fixture(html`
         <${tag} @before-closed="${beforeSpy}" .opened="${true}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
@@ -121,7 +128,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires before-opened" event on show', async () => {
       const beforeSpy = sinon.spy();
-      el = await fixture(html`
+      const el = await fixture(html`
         <${tag} @before-opened="${beforeSpy}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
@@ -137,7 +144,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       function preventer(ev) {
         ev.preventDefault();
       }
-      el = await fixture(html`
+      const el = await fixture(html`
         <${tag} @before-opened="${preventer}" @before-closed="${preventer}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
@@ -164,7 +171,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </button>
       `);
 
-      el = await fixture(html`
+      const el = await fixture(html`
         <${tag} opened>
           <div slot="content">
             content of the overlay
@@ -179,6 +186,15 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
   });
 
   describe(`OverlayMixin${suffix} nested`, () => {
+    // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
+    // Not sure why this "bug" happens...
+    beforeEach(() => {
+      const globalRootNode = document.querySelector('.global-overlays');
+      if (globalRootNode) {
+        globalRootNode.innerHTML = '';
+      }
+    });
+
     it('supports nested overlays', async () => {
       const el = await fixture(html`
         <${tag}>
@@ -216,7 +232,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </${tag}>
       `);
 
-      const mainEl = await fixture(html`
+      const el = await fixture(html`
         <${tag} id="main">
           <div slot="content" id="mainContent">
             open nested overlay:
@@ -226,7 +242,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </${tag}>
       `);
 
-      if (mainEl._overlayCtrl.placementMode === 'global') {
+      if (el._overlayCtrl.placementMode === 'global') {
         // Specifically checking the output in global root node, because the _contentOverlayNode still references
         // the node that was removed in the teardown but hasn't been garbage collected due to reference to it still existing..
 
@@ -240,7 +256,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         );
         expect(lastContentNodeInContainer.firstElementChild.slot).to.equal('content');
       } else {
-        const contentNode = mainEl._overlayContentNode.querySelector('#nestedContent');
+        const contentNode = el._overlayContentNode.querySelector('#nestedContent');
         expect(contentNode).to.not.be.null;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }
@@ -257,7 +273,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       const setupOverlayCtrlSpy = sinon.spy(nestedEl, '_setupOverlayCtrl');
       const teardownOverlayCtrlSpy = sinon.spy(nestedEl, '_teardownOverlayCtrl');
 
-      const mainEl = await fixture(html`
+      const el = await fixture(html`
         <${tag} id="main">
           <div slot="content" id="mainContent">
             open nested overlay:
@@ -279,7 +295,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       // And we detect this time the disconnect was 'permanent'
       expect(teardownOverlayCtrlSpy.callCount).to.equal(1);
 
-      mainEl._overlayContentNode.appendChild(nestedEl);
+      el._overlayContentNode.appendChild(nestedEl);
       await aTimeout();
       expect(setupOverlayCtrlSpy.callCount).to.equal(1);
     });
