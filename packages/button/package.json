@@ -1,6 +1,6 @@
 {
   "name": "@lion/button",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "A button that is easily styleable and accessible in all contexts",
   "license": "MIT",
   "author": "ing-bank",
@@ -30,9 +30,6 @@
   ],
   "dependencies": {
     "@lion/core": "0.7.2"
-  },
-  "devDependencies": {
-    "@polymer/iron-test-helpers": "^3.0.1"
   },
   "keywords": [
     "button",

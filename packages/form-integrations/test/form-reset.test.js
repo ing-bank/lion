@@ -1,22 +1,21 @@
-import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
-
+import '@lion/button/lion-button';
+import '@lion/checkbox-group/lion-checkbox';
+import '@lion/checkbox-group/lion-checkbox-group';
+import { MinLength, Required } from '@lion/form-core';
+import '@lion/form/lion-form';
 import '@lion/input-amount/lion-input-amount';
 import '@lion/input-date/lion-input-date';
-import '@lion/textarea/lion-textarea';
 import '@lion/input-datepicker/lion-input-datepicker';
 import '@lion/input-email/lion-input-email';
 import '@lion/input-iban/lion-input-iban';
 import '@lion/input-range/lion-input-range';
 import '@lion/input/lion-input';
-import '@lion/checkbox-group/lion-checkbox-group';
-import '@lion/checkbox-group/lion-checkbox';
-import '@lion/radio-group/lion-radio-group';
 import '@lion/radio-group/lion-radio';
+import '@lion/radio-group/lion-radio-group';
 import '@lion/select/lion-select';
 import '@lion/switch/lion-switch';
-import '@lion/form/lion-form';
-import '@lion/button/lion-button';
-import { Required, MinLength } from '@lion/form-core';
+import '@lion/textarea/lion-textarea';
+import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
 
 describe(`Submitting/Resetting Form`, async () => {
   let el;
@@ -127,8 +126,6 @@ describe(`Submitting/Resetting Form`, async () => {
     el.querySelector('#submit_button').click();
     await elementUpdated(el);
     el.formElements.forEach(field => {
-      console.log(field);
-      console.log(field.submitted);
       expect(field.submitted).to.be.true;
     });
   });

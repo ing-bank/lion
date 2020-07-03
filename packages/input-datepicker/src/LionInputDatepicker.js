@@ -151,7 +151,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   get _calendarNode() {
-    return this._overlayCtrl.contentNode.querySelector('#calendar');
+    return this._overlayCtrl.contentNode.querySelector('[slot="content"]');
   }
 
   constructor() {
@@ -243,7 +243,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     return html`
       <lion-calendar
         slot="content"
-        id="calendar"
         .selectedDate="${this.constructor.__getSyncDownValue(this.modelValue)}"
         .minDate="${this.__calendarMinDate}"
         .maxDate="${this.__calendarMaxDate}"

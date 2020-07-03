@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "match-imports",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__453069400",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "referenceProject": {
+        "mainEntry": "./index.js",
+        "name": "exporting-ref-project",
+        "version": "1.0.0",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {}
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "exportSpecifier": {
+        "name": "[default]",
+        "project": "exporting-ref-project",
+        "filePath": "./index.js",
+        "id": "[default]::./index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/root-level-imports.js",
+            "./target-src/match-subclasses/internalProxy.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "RefClass",
+        "project": "exporting-ref-project",
+        "filePath": "./index.js",
+        "id": "RefClass::./index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/find-customelements/multiple.js",
+            "./target-src/match-imports/root-level-imports.js",
+            "./target-src/match-subclasses/ExtendedComp.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "RefRenamedClass",
+        "project": "exporting-ref-project",
+        "filePath": "./index.js",
+        "id": "RefRenamedClass::./index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/root-level-imports.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "[file]",
+        "project": "exporting-ref-project",
+        "filePath": "./ref-component.js",
+        "id": "[file]::./ref-component.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/deep-imports.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "RefClass",
+        "project": "exporting-ref-project",
+        "filePath": "./ref-src/core.js",
+        "id": "RefClass::./ref-src/core.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/deep-imports.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "[default]",
+        "project": "exporting-ref-project",
+        "filePath": "./ref-src/core.js",
+        "id": "[default]::./ref-src/core.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/deep-imports.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "[file]",
+        "project": "exporting-ref-project",
+        "filePath": "./ref-src/core.js",
+        "id": "[file]::./ref-src/core.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/deep-imports.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "resolvePathCorrect",
+        "project": "exporting-ref-project",
+        "filePath": "./ref-src/folder/index.js",
+        "id": "resolvePathCorrect::./ref-src/folder/index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            "./target-src/match-imports/deep-imports.js"
+          ]
+        }
+      ]
+    }
+  ]
+}

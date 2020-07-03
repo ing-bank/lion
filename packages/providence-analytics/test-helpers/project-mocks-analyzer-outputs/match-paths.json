@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "match-paths",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__-238486383",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "referenceProject": {
+        "mainEntry": "./index.js",
+        "name": "exporting-ref-project",
+        "version": "1.0.0",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {},
+        "prefix": null
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "name": "[default]",
+      "variable": {
+        "from": "[default]",
+        "to": "ExtendedComp",
+        "paths": [
+          {
+            "from": "./index.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "./ref-src/core.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "exporting-ref-project/index.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "exporting-ref-project/ref-src/core.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RefClass",
+      "variable": {
+        "from": "RefClass",
+        "to": "ExtendedComp",
+        "paths": [
+          {
+            "from": "./index.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "./ref-src/core.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "exporting-ref-project/index.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          },
+          {
+            "from": "exporting-ref-project/ref-src/core.js",
+            "to": "./target-src/match-subclasses/ExtendedComp.js"
+          }
+        ]
+      },
+      "tag": {
+        "from": "ref-component",
+        "to": "extended-comp",
+        "paths": [
+          {
+            "from": "./ref-component.js",
+            "to": "./target-src/find-customelements/multiple.js"
+          },
+          {
+            "from": "exporting-ref-project/ref-component.js",
+            "to": "./target-src/find-customelements/multiple.js"
+          }
+        ]
+      }
+    }
+  ]
+}

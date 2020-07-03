@@ -79,6 +79,24 @@ import '@lion/tooltip/lion-tooltip.js';
 
 ## Examples
 
+### invokerRelation
+
+There is a difference between tooltips used as a primary label or as a description. In most cases a button will already have its own label, so the tooltip will be used as a description with extra information, which is already set as default. Only in case of icon buttons you want to use the tooltip as the primary label. To do so you need to set the `invokerRelation` to `label`.
+
+> For detailed information please read: [inclusive tooltips](https://inclusive-components.design/tooltips-toggletips/#inclusivetooltips).
+
+```js preview-story
+export const invokerRelation = () => html`
+  <style>
+    ${tooltipDemoStyles}
+  </style>
+  <lion-tooltip .config=${{ invokerRelation: 'label' }}>
+    <button slot="invoker" class="demo-tooltip-invoker">📅</button>
+    <div slot="content" class="demo-tooltip-content">Agenda<div>
+  </lion-tooltip>
+`;
+```
+
 ### Placements
 
 You can easily change the placement of the content node relative to the invoker.

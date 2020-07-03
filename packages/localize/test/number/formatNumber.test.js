@@ -1,8 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '../../src/localize.js';
-import { localizeTearDown } from '../../test-helpers.js';
-
 import { formatNumber } from '../../src/number/formatNumber.js';
+import { localizeTearDown } from '../../test-helpers.js';
 
 const currencyCode = currency => ({ style: 'currency', currencyDisplay: 'code', currency });
 const currencySymbol = currency => ({ style: 'currency', currencyDisplay: 'symbol', currency });
@@ -310,15 +309,17 @@ describe('formatNumber', () => {
     });
 
     describe('tr-TR', () => {
-      localize.locale = 'tr-TR';
-      expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
-      expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
-      expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
-      expect(formatNumber(123456.789, currencyCode('TRY'))).to.equal('123.456,79 TL');
-      expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123.456,79');
-      expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123.456,79');
-      expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123.457');
-      expect(formatNumber(123456.789, currencySymbol('TRY'))).to.equal('₺123.456,79');
+      it('supports basics', () => {
+        localize.locale = 'tr-TR';
+        expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
+        expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
+        expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
+        expect(formatNumber(123456.789, currencyCode('TRY'))).to.equal('123.456,79 TL');
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123.456,79');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123.457');
+        expect(formatNumber(123456.789, currencySymbol('TRY'))).to.equal('₺123.456,79');
+      });
     });
   });
 });

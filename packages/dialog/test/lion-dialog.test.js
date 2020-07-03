@@ -3,6 +3,15 @@ import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import '../lion-dialog.js';
 
 describe('lion-dialog', () => {
+  // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
+  // Not sure why this "bug" happens...
+  beforeEach(() => {
+    const globalRootNode = document.querySelector('.global-overlays');
+    if (globalRootNode) {
+      globalRootNode.innerHTML = '';
+    }
+  });
+
   describe('Integration tests', () => {
     const tagString = 'lion-dialog';
     const tag = unsafeStatic(tagString);

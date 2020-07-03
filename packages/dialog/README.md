@@ -9,6 +9,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 import { html } from 'lit-html';
 import demoStyle from './docs/demo-dialog-style.js';
 import './docs/styled-dialog-content.js';
+import './docs/slots-dialog-content.js';
 import './lion-dialog.js';
 
 export default {
@@ -96,6 +97,20 @@ export const stylingContent = () => html`
   <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
     <button slot="invoker">Styled dialog</button>
     <styled-dialog-content slot="content"></styled-dialog-content>
+  </lion-dialog>
+`;
+```
+
+### Content with slots
+
+```js preview-story
+export const slotsContent = () => html`
+  <style>
+    ${demoStyle}
+  </style>
+  <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
+    <button slot="invoker">Dialog with content with slots</button>
+    <slots-dialog-content slot="content"></slots-dialog-content>
   </lion-dialog>
 `;
 ```

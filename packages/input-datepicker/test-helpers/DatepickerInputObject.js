@@ -55,7 +55,7 @@ export class DatepickerInputObject {
   }
 
   get calendarEl() {
-    return this.overlayEl && this.overlayEl.querySelector('#calendar');
+    return this.el && this.el._calendarNode;
   }
 
   /**

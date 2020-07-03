@@ -153,7 +153,7 @@ describe('parseAmount()', () => {
   it('parseAmount with locale set and length is more than four', () => {
     expect(
       parseAmount('6,000', {
-        locale: 'gb-GB',
+        locale: 'en-GB',
       }),
     ).to.equal(6000);
     expect(

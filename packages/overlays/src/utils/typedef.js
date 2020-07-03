@@ -35,6 +35,7 @@
  * @property {boolean} [isTooltip=false] has a totally different interaction- and accessibility
  * pattern from all other overlays. Will behave as role="tooltip" element instead of a role="dialog"
  * element.
+ * @property {'label'|'description'} [invokerRelation='description']
  * @property {boolean} [handlesAccessibility]
  *  For non `isTooltip`:
  *    - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
