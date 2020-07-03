@@ -47,22 +47,22 @@ describe('formatDate', () => {
     localize.locale = 'en-US';
     expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
   });
-  
-  it('displays Hungarian dates correctly', async () => {
-      const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit',
-        locale: 'en-US',
-      };
-      localize.locale = 'hu-HU';
-      let date = parseDate('2018-5-28');
-      expect(formatDate(date)).to.equal('2018. 05. 28.');
 
-      date = parseDate('1970-11-3');
-      expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
-    });
+  it('displays Hungarian dates correctly', async () => {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+      locale: 'en-US',
+    };
+    localize.locale = 'hu-HU';
+    let date = parseDate('2018-5-28');
+    expect(formatDate(date)).to.equal('2018. 05. 28.');
+
+    date = parseDate('1970-11-3');
+    expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
+  });
 
   it('displays Bulgarian dates correctly', async () => {
     const options = {
