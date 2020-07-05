@@ -29,8 +29,8 @@ describe('parseDate()', () => {
     expect(equalsDate(parseDate('31.12.1970'), new Date('1970/12/31'))).to.equal(true);
   });
   it('handles all kind of delimiters', () => {
-    expect(equalsDate(parseDate('12.12.1976'), new Date('1976/12/12'))).to.equal(true);
-    expect(equalsDate(parseDate('13.12.1976'), new Date('1976/12/13'))).to.equal(true);
+    expect(equalsDate(parseDate('12 12 1976'), new Date('1976/12/12'))).to.equal(true);
+    expect(equalsDate(parseDate('13-12-1976'), new Date('1976/12/13'))).to.equal(true);
     expect(equalsDate(parseDate('14.12.1976'), new Date('1976/12/14'))).to.equal(true);
     expect(equalsDate(parseDate('14. 12. 1976.'), new Date('1976/12/14'))).to.equal(true);
     expect(equalsDate(parseDate('14.12.1976 г.'), new Date('1976/12/14'))).to.equal(true);
