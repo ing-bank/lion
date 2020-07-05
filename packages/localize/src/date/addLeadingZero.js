@@ -11,7 +11,7 @@ export function addLeadingZero(dateString) {
   const dateParts = splitDate(dateString);
   const delimiter = dateParts ? dateParts[2] : '';
   const dateArray =
-    dateString.split && dateString.split(delimiter).filter(partt => partt.trim().length > 0);
+    dateString.split && dateString.split(delimiter).filter(str => str.trim().length > 0);
   if (!dateArray || dateArray.length !== 3) {
     // prevent fail on invalid dates
     return '';
