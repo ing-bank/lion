@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.7](https://github.com/ing-bank/lion/compare/@lion/button@0.7.6...@lion/button@0.7.7) (2020-07-06)
+
+
+### Bug Fixes
+
+* **button:** add mouseupHandler also on 'this', remove iron test helpers ([9f9d49e](https://github.com/ing-bank/lion/commit/9f9d49ebcf0bcb8edfe5d0e0a9e1fe2a59488655))
+
+
+
+
+
 ## [0.7.6](https://github.com/ing-bank/lion/compare/@lion/button@0.7.5...@lion/button@0.7.6) (2020-06-24)
 
 

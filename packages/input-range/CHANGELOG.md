@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.7](https://github.com/ing-bank/lion/compare/@lion/input-range@0.4.6...@lion/input-range@0.4.7) (2020-07-06)
+
+**Note:** Version bump only for package @lion/input-range
+
+
+
+
+
 ## [0.4.6](https://github.com/ing-bank/lion/compare/@lion/input-range@0.4.5...@lion/input-range@0.4.6) (2020-06-18)
 
 **Note:** Version bump only for package @lion/input-range

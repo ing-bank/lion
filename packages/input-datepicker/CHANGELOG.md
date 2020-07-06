@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.9](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.14.8...@lion/input-datepicker@0.14.9) (2020-07-06)
+
+
+### Bug Fixes
+
+* **datepicker:** remove calendar id in calendar overlay frame ([781d74d](https://github.com/ing-bank/lion/commit/781d74d31a30383ca70f04de7195da82eda96d3d))
+
+
+
+
+
 ## [0.14.8](https://github.com/ing-bank/lion/compare/@lion/input-datepicker@0.14.7...@lion/input-datepicker@0.14.8) (2020-06-24)
 
 **Note:** Version bump only for package @lion/input-datepicker

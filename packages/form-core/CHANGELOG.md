@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.6...@lion/form-core@0.2.0) (2020-07-06)
+
+
+### Features
+
+* **choice-input:** add rendering of help-text ([5cd36ca](https://github.com/ing-bank/lion/commit/5cd36cac20c763d47ee495daede421bb66c4d0ba))
+
+
+
+
+
 ## [0.1.6](https://github.com/ing-bank/lion/compare/@lion/form-core@0.1.5...@lion/form-core@0.1.6) (2020-06-18)
 
 **Note:** Version bump only for package @lion/form-core
