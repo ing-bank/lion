@@ -517,7 +517,7 @@ export class OverlayController {
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      // await this.transitionHide({ backdropNode: this.backdropNode, conentNode: this.contentNode });
+      // await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
       this._contentWrapperNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });

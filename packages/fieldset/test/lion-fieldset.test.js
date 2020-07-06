@@ -622,8 +622,7 @@ describe('<lion-fieldset>', () => {
       const spyB = sinon.spy(childB, 'initInteractionState');
       expect(fieldset.prefilled).to.be.false;
       expect(fieldset.dirty).to.be.false;
-      await fieldset.registrationReady;
-      await nextFrame();
+      await fieldset.registrationComplete;
       expect(spyA).to.have.been.called;
       expect(spyB).to.have.been.called;
       expect(fieldset.prefilled).to.be.true;
