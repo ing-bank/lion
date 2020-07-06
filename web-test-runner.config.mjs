@@ -1,4 +1,5 @@
 export default {
+  sessionStartTimeout: 30000,
   coverage: process.argv.includes('--coverage')
     ? {
         thresholds: {
