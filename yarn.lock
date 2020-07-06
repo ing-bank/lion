@@ -2513,20 +2513,6 @@
     mocha "^6.2.2"
     sinon-chai "^3.3.0"
 
-"@polymer/iron-test-helpers@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@polymer/iron-test-helpers/-/iron-test-helpers-3.0.1.tgz#ec2b9c6567e2967a191b3d800a04b1167b2d1394"
-  integrity sha512-2R7dnGcW2eg95i7LhYWWUO4AlAk6qXsPnKoyeN2R1t0km0ECMx0jjwqeLwCo8/7LwuVPZSiarI4DK7jyU7fJLQ==
-  dependencies:
-    "@polymer/polymer" "^3.0.0"
-
-"@polymer/polymer@^3.0.0":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@polymer/polymer/-/polymer-3.4.1.tgz#333bef25711f8411bb5624fb3eba8212ef8bee96"
-  integrity sha512-KPWnhDZibtqKrUz7enIPOiO4ZQoJNOuLwqrhV2MXzIt3VVnUVJVG5ORz4Z2sgO+UZ+/UZnPD0jqY+jmw/+a9mQ==
-  dependencies:
-    "@webcomponents/shadycss" "^1.9.1"
-
 "@reach/router@^1.2.1":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.3.4.tgz#d2574b19370a70c80480ed91f3da840136d10f8c"
@@ -3248,7 +3234,7 @@
     "@web/test-runner-mocha" "^0.1.2"
     command-line-args "^5.1.1"
 
-"@webcomponents/shadycss@^1.9.1", "@webcomponents/shadycss@^1.9.4":
+"@webcomponents/shadycss@^1.9.4":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.10.0.tgz#7a80ec1e8b271fb3f0cc02cd4358b877a303545d"
   integrity sha512-UMS+dF4DXDrcUmQqK6aLd/3mFyfGktKG/hZR6FtrsQK/INO07G0H8FxElLkuvHj0iePeZGpR7R4lWFTvX7rc9g==

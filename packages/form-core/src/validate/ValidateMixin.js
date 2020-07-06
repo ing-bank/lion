@@ -544,6 +544,10 @@ export const ValidateMixin = dedupeMixin(
        * - we set aria-invalid="true" in case hasErrorVisible is true
        */
       _updateFeedbackComponent() {
+        if (!this._feedbackNode) {
+          return;
+        }
+
         if (!this.__feedbackQueue) {
           this.__feedbackQueue = new AsyncQueue();
         }
