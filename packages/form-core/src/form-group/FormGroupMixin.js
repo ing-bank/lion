@@ -304,9 +304,14 @@ export const FormGroupMixin = dedupeMixin(
       _anyFormElementHasFeedbackFor(state) {
         return Object.keys(this.formElements).some(name => {
           if (Array.isArray(this.formElements[name])) {
-            return this.formElements[name].some(el => !!el.hasFeedbackFor.includes(state));
+            return this.formElements[name].some(el => {
+              return Boolean(el.hasFeedbackFor && el.hasFeedbackFor.includes(state));
+            });
           }
-          return !!this.formElements[name].hasFeedbackFor.includes(state);
+          return Boolean(
+            this.formElements[name].hasFeedbackFor &&
+              this.formElements[name].hasFeedbackFor.includes(state),
+          );
         });
       }
 
