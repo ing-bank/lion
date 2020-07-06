@@ -183,3 +183,29 @@ export const validationAdvanced = () => {
   `;
 };
 ```
+
+### Help text
+
+You can add help text on each checkbox with `help-text` attribute on the `<lion-checkbox>`.
+
+```js preview-story
+export const helpText = () => html`
+  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
+    <lion-checkbox
+      label="Archimedes"
+      .choiceValue=${'Archimedes'}
+      help-text="Archimedes of Syracuse was a Greek mathematician, physicist, engineer, inventor, and astronomer"
+    ></lion-checkbox>
+    <lion-checkbox
+      label="Francis Bacon"
+      .choiceValue=${'Francis Bacon'}
+      help-text="Francis Bacon, 1st Viscount St Alban also known as Lord Verulam, was an English philosopher and statesman who served as Attorney General and as Lord Chancellor of England"
+    ></lion-checkbox>
+    <lion-checkbox
+      label="Marie Curie"
+      .choiceValue=${'Marie Curie'}
+      help-text="Marie Skłodowska Curie born Maria Salomea Skłodowska, was a Polish and naturalized-French physicist and chemist who conducted pioneering research on radioactivity"
+    ></lion-checkbox>
+  </lion-checkbox-group>
+`;
+```
