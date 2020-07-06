@@ -10,8 +10,8 @@ import { pad } from './pad.js';
 export function addLeadingZero(dateString) {
   const dateParts = splitDate(dateString);
   const delimiter = dateParts ? dateParts[2] : '';
-  const uniformDateString = dateString.replace(/[.\-/\s]/g, delimiter);
-  const dateArray = uniformDateString.split && uniformDateString.split(delimiter);
+  const dateArray =
+    dateString.split && dateString.split(delimiter).filter(str => str.trim().length > 0);
   if (!dateArray || dateArray.length !== 3) {
     // prevent fail on invalid dates
     return '';

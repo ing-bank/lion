@@ -10,7 +10,7 @@ export default {
     MinNumber: 'Моля, въведете {fieldName} повече от {params}.',
     MaxNumber: 'Моля, въведете {fieldName} по-малко от {params}.',
     MinMaxNumber: 'Моля, въведете {fieldName} между {params.min} и {params.max}.',
-    IsDate: 'Моля, въведете дата (ДД-ММ-ГГГГ).',
+    IsDate: 'Моля, въведете дата (ДД.ММ.ГГГГ r.).',
     MinDate: 'Моля, въведете {fieldName} след {params, date, YYYYMMDD}.',
     MaxDate: 'Моля, въведете {fieldName} преди {params, date, YYYYMMDD}.',
     MinMaxDate:
@@ -28,7 +28,7 @@ export default {
     MinNumber: 'Моля, въведете {fieldName} повече от {params}.',
     MaxNumber: 'Моля, въведете {fieldName} по-малко от {params}.',
     MinMaxNumber: 'Моля, въведете {fieldName} между {params.min} и {params.max}.',
-    IsDate: 'Моля, въведете дата (ДД-ММ-ГГГГ).',
+    IsDate: 'Моля, въведете дата (ДД.ММ.ГГГГ r.).',
     MinDate: 'Моля, въведете {fieldName} след {params, date, YYYYMMDD}.',
     MaxDate: 'Моля, въведете {fieldName} преди {params, date, YYYYMMDD}.',
     MinMaxDate:
