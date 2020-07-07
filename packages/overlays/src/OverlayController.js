@@ -290,6 +290,10 @@ export class OverlayController {
       }
     }
 
+    if (!this._renderTarget) {
+      return;
+    }
+
     if (this.__isContentNodeProjected && this.placementMode === 'local') {
       // We add the contentNode in its slot, so that it will be projected by contentWrapperNode
       this._renderTarget.appendChild(this.contentNode);
@@ -635,7 +639,7 @@ export class OverlayController {
           this.__hasActiveBackdrop = false;
           break;
         case 'teardown':
-          if (!this.backdropNode) {
+          if (!this.backdropNode || !this.backdropNode.parentNode) {
             return;
           }
           this.backdropNode.parentNode.removeChild(this.backdropNode);
@@ -685,7 +689,7 @@ export class OverlayController {
         this.__hasActiveBackdrop = false;
         break;
       case 'teardown':
-        if (!backdropNode) {
+        if (!backdropNode || !backdropNode.parentNode) {
           return;
         }
         if (animation && this.__backDropAnimation) {
