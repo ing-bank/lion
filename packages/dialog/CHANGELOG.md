@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.8](https://github.com/ing-bank/lion/compare/@lion/dialog@0.7.7...@lion/dialog@0.7.8) (2020-07-07)
+
+**Note:** Version bump only for package @lion/dialog
+
+
+
+
+
 ## [0.7.7](https://github.com/ing-bank/lion/compare/@lion/dialog@0.7.6...@lion/dialog@0.7.7) (2020-07-06)
 
 **Note:** Version bump only for package @lion/dialog

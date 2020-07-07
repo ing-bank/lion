@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.8](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.7...@lion/overlays@0.16.8) (2020-07-07)
+
+
+### Bug Fixes
+
+* **overlays:** only teardown when overlayCtrl defined ([121e156](https://github.com/ing-bank/lion/commit/121e1562fa0896f5e91732e4f9bea270c941a59c))
+
+
+
+
+
 ## [0.16.7](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.6...@lion/overlays@0.16.7) (2020-07-06)
 
 **Note:** Version bump only for package @lion/overlays

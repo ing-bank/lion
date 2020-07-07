@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/ing-bank/lion/compare/@lion/localize@0.12.1...@lion/localize@0.13.0) (2020-07-07)
+
+
+### Bug Fixes
+
+* **localize:** format hungarian & bulgarian dates ([cddd51a](https://github.com/ing-bank/lion/commit/cddd51adcb1b64da3f6850c8bd7f38830abb8aa8)), closes [#540](https://github.com/ing-bank/lion/issues/540)
+
+
+### BREAKING CHANGES
+
+* **localize:** N
+
+
+
+
+
 ## [0.12.1](https://github.com/ing-bank/lion/compare/@lion/localize@0.12.0...@lion/localize@0.12.1) (2020-06-18)
 
 

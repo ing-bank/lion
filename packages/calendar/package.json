@@ -1,6 +1,6 @@
 {
   "name": "@lion/calendar",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Standalone calendar",
   "license": "MIT",
   "author": "ing-bank",
@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.7.2",
-    "@lion/localize": "0.12.1"
+    "@lion/localize": "0.13.0"
   },
   "keywords": [
     "calendar",

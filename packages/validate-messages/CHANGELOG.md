@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ing-bank/lion/compare/@lion/validate-messages@0.1.7...@lion/validate-messages@0.2.0) (2020-07-07)
+
+
+### Bug Fixes
+
+* **localize:** format hungarian & bulgarian dates ([cddd51a](https://github.com/ing-bank/lion/commit/cddd51adcb1b64da3f6850c8bd7f38830abb8aa8)), closes [#540](https://github.com/ing-bank/lion/issues/540)
+
+
+### BREAKING CHANGES
+
+* **localize:** N
+
+
+
+
+
 ## [0.1.7](https://github.com/ing-bank/lion/compare/@lion/validate-messages@0.1.6...@lion/validate-messages@0.1.7) (2020-07-06)
 
 **Note:** Version bump only for package @lion/validate-messages

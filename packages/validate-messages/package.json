@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate-messages",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "A set of localized messages for default Validators",
   "license": "MIT",
   "author": "ing-bank",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@lion/core": "0.7.2",
-    "@lion/form-core": "0.2.0",
-    "@lion/localize": "0.12.1"
+    "@lion/form-core": "0.2.1",
+    "@lion/localize": "0.13.0"
   },
   "keywords": [
     "feedback",
