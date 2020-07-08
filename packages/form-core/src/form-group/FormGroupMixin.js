@@ -269,7 +269,10 @@ export const FormGroupMixin = dedupeMixin(
         return result;
       }
 
-      _setValueForAllFormElements(property, value) {
+      async _setValueForAllFormElements(property, value) {
+        if (!this.__readyForRegistration) {
+          await this.registrationReady;
+        }
         this.formElements.forEach(el => {
           el[property] = value; // eslint-disable-line no-param-reassign
         });
