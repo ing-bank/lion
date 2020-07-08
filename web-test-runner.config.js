@@ -1,4 +1,5 @@
-export default {
+module.exports = {
+  nodeResolve: true,
   sessionStartTimeout: 30000,
   coverage: process.argv.includes('--coverage')
     ? {
