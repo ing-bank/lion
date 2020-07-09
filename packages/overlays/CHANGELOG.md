@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.9](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.8...@lion/overlays@0.16.9) (2020-07-09)
+
+
+### Bug Fixes
+
+* **overlays:** add protected show and hide complete hooks,fix flaky test ([53a5426](https://github.com/ing-bank/lion/commit/53a54261e97a529867a6f56971471d6f6de5347c))
+
+
+
+
+
 ## [0.16.8](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.7...@lion/overlays@0.16.8) (2020-07-07)
 
 
