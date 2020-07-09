@@ -206,16 +206,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__initInteractionStates();
   }
 
-  disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
-    this.__teardownEventListeners();
-    this.__teardownOverlay();
-    this.__teardownInvokerNode();
-    this.__teardownListboxNode();
-  }
-
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
@@ -689,11 +679,15 @@ export class LionSelectRich extends ScopedElementsMixin(
     this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
   }
 
-  __teardownOverlay() {
+  _teardownOverlayCtrl() {
+    super._teardownOverlayCtrl();
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
     this._scrollTargetNode.removeEventListener('keydown', this.__overlayOnHide);
+    this.__teardownInvokerNode();
+    this.__teardownListboxNode();
+    this.__teardownEventListeners();
   }
 
   __preventScrollingWithArrowKeys(ev) {
