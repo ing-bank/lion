@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-datepicker",
-  "version": "0.14.10",
+  "version": "0.14.11",
   "description": "Provide a way for users to fill in a date via a calendar overlay",
   "license": "MIT",
   "author": "ing-bank",
@@ -31,13 +31,13 @@
   "dependencies": {
     "@lion/calendar": "0.9.5",
     "@lion/core": "0.7.2",
-    "@lion/form-core": "0.2.1",
-    "@lion/input-date": "0.7.8",
+    "@lion/form-core": "0.2.2",
+    "@lion/input-date": "0.7.9",
     "@lion/localize": "0.13.0",
     "@lion/overlays": "0.16.8"
   },
   "devDependencies": {
-    "@lion/validate-messages": "0.2.0"
+    "@lion/validate-messages": "0.2.1"
   },
   "keywords": [
     "calendar",
