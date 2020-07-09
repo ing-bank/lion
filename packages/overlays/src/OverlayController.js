@@ -419,11 +419,16 @@ export class OverlayController {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    this._showComplete = new Promise(resolve => {
+      this._showResolve = resolve;
+    });
+
     if (this.manager) {
       this.manager.show(this);
     }
 
     if (this.isShown) {
+      this._showResolve();
       return;
     }
 
@@ -438,6 +443,7 @@ export class OverlayController {
       this.elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
     }
+    this._showResolve();
   }
 
   async _handlePosition({ phase }) {
@@ -510,11 +516,16 @@ export class OverlayController {
    * @event hide right after the overlay is hidden
    */
   async hide() {
+    this._hideComplete = new Promise(resolve => {
+      this._hideResolve = resolve;
+    });
+
     if (this.manager) {
       this.manager.hide(this);
     }
 
     if (!this.isShown) {
+      this._hideResolve();
       return;
     }
 
@@ -528,6 +539,7 @@ export class OverlayController {
       this.dispatchEvent(new Event('hide'));
       this._restoreFocus();
     }
+    this._hideResolve();
   }
 
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars

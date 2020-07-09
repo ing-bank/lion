@@ -29,18 +29,15 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </${tag}>
       `);
       el.opened = true;
-      expect(el.opened).to.be.true;
       await el.updateComplete;
-      if (el.repositionComplete) {
-        await el.repositionComplete;
-      }
-      await nextFrame(); // overlayCtrl show/hide is async
+      await el._overlayCtrl._showComplete;
+      expect(el.opened).to.be.true;
       expect(el._overlayCtrl.isShown).to.be.true;
 
       el.opened = false;
-      expect(el.opened).to.be.false;
       await el.updateComplete;
-      await nextFrame(); // overlayCtrl show/hide is async
+      await el._overlayCtrl._hideComplete;
+      expect(el.opened).to.be.false;
       expect(el._overlayCtrl.isShown).to.be.false;
     });
 
