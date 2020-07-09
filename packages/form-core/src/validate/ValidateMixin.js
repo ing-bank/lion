@@ -423,7 +423,7 @@ export const ValidateMixin = dedupeMixin(
           if (!validationStates[v.type]) {
             validationStates[v.type] = {};
           }
-          validationStates[v.type][v.constructor.name] = true;
+          validationStates[v.type][v.constructor.validatorName] = true;
         });
         this.validationStates = validationStates;
 

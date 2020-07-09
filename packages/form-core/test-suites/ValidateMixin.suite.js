@@ -294,7 +294,7 @@ export function runValidateMixinSuite(customConfig) {
         }
 
         static get validatorName() {
-          return 'isCat';
+          return 'IsCat';
         }
       }
 

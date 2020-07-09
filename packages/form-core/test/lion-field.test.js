@@ -348,9 +348,8 @@ describe('<lion-field>', () => {
     });
     it('should not run validation when disabled', async () => {
       const HasX = class extends Validator {
-        constructor() {
-          super();
-          this.name = 'HasX';
+        static get validatorName() {
+          return 'HasX';
         }
 
         execute(value) {
@@ -385,9 +384,8 @@ describe('<lion-field>', () => {
 
     it('should remove validation when disabled state toggles', async () => {
       const HasX = class extends Validator {
-        constructor() {
-          super();
-          this.name = 'HasX';
+        static get validatorName() {
+          return 'HasX';
         }
 
         execute(value) {
