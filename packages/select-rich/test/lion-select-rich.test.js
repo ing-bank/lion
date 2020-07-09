@@ -857,4 +857,24 @@ describe('lion-select-rich', () => {
       expect(el.modelValue).to.equal('');
     });
   });
+
+  describe('Instantiation methods', () => {
+    it('can be instantiated via "document.createElement"', async () => {
+      let properlyInstantiated = false;
+
+      try {
+        const el = document.createElement('lion-select-rich');
+        const optionsEl = document.createElement('lion-options');
+        optionsEl.slot = 'input';
+        const optionEl = document.createElement('lion-option');
+        optionsEl.appendChild(optionEl);
+        el.appendChild(optionsEl);
+        properlyInstantiated = true;
+      } catch (e) {
+        throw Error(e);
+      }
+
+      expect(properlyInstantiated).to.be.true;
+    });
+  });
 });
