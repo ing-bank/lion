@@ -203,15 +203,7 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__hasInitialSelectedFormElement = false;
     this.hasNoDefaultSelected = false;
     this._repropagationRole = 'choice-group'; // configures FormControlMixin
-    this.__setupEventListeners();
     this.__initInteractionStates();
-  }
-
-  connectedCallback() {
-    this._listboxNode.registrationTarget = this;
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
   }
 
   disconnectedCallback() {
@@ -233,6 +225,8 @@ export class LionSelectRich extends ScopedElementsMixin(
 
     this.__setupInvokerNode();
     this.__setupListboxNode();
+    this.__setupEventListeners();
+    this._listboxNode.registrationTarget = this;
 
     formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
       // Now that we have rendered + registered our listbox, try setting the user defined modelValue again
