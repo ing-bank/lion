@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/ing-bank/lion/compare/@lion/form-core@0.2.2...@lion/form-core@0.2.3) (2020-07-09)
+
+
+### Bug Fixes
+
+* **formgroup:** wait for formElements to register ([780383d](https://github.com/ing-bank/lion/commit/780383d081607c0099004c2824a1493ced3d78a9))
+
+
+
+
+
 ## [0.2.2](https://github.com/ing-bank/lion/compare/@lion/form-core@0.2.1...@lion/form-core@0.2.2) (2020-07-09)
 
 
