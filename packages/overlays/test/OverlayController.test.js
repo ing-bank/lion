@@ -68,7 +68,7 @@ describe('OverlayController', () => {
         }
         if (mode === 'inline') {
           contentNode = await fixture(html`
-            <div style="z-index: ${zIndexVal} ;">
+            <div style="z-index: xxxxxxxxxxxx ;">
               I should be on top
             </div>
           `);
@@ -1111,6 +1111,33 @@ describe('OverlayController', () => {
         invokerNode,
       });
       expect(ctrl.contentNode.getAttribute('role')).to.equal('dialog');
+    });
+
+    it('preserves [role] on content when present', async () => {
+      const invokerNode = await fixture('<div role="button">invoker</div>');
+      const contentNode = await fixture('<div role="menu">invoker</div>');
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        handlesAccessibility: true,
+        invokerNode,
+        contentNode,
+      });
+      expect(ctrl.contentNode.getAttribute('role')).to.equal('menu');
+    });
+
+    it('allows to not provide an invokerNode', async () => {
+      let properlyInstantiated = false;
+      try {
+        new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          invokerNode: null,
+        });
+        properlyInstantiated = true;
+      } catch (e) {
+        throw new Error(e);
+      }
+      expect(properlyInstantiated).to.be.true;
     });
 
     it('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {
