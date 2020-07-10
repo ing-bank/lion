@@ -808,17 +808,28 @@ export class OverlayController {
 
     if (phase === 'show') {
       let wasClickInside = false;
-      // handle on capture phase and remember till the next task that there was an inside click
+      let wasIndirectSynchronousClick = false;
+      // Handle on capture phase and remember till the next task that there was an inside click
       this.__preventCloseOutsideClick = () => {
+        if (wasClickInside) {
+          // This occurs when a synchronous new click is triggered from a previous click.
+          // For instance, when we have a label pointing to an input, the platform triggers
+          // a new click on the input. Not taking this click into account, will hide the overlay
+          // in `__onCaptureHtmlClick`
+          wasIndirectSynchronousClick = true;
+        }
         wasClickInside = true;
         setTimeout(() => {
           wasClickInside = false;
+          setTimeout(() => {
+            wasIndirectSynchronousClick = false;
+          });
         });
       };
       // handle on capture phase and schedule the hide if needed
       this.__onCaptureHtmlClick = () => {
         setTimeout(() => {
-          if (wasClickInside === false) {
+          if (wasClickInside === false && !wasIndirectSynchronousClick) {
             this.hide();
           }
         });

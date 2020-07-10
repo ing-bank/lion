@@ -68,10 +68,11 @@ describe('OverlayController', () => {
         }
         if (mode === 'inline') {
           contentNode = await fixture(html`
-            <div style="z-index: xxxxxxxxxxxx ;">
+            <div>
               I should be on top
             </div>
           `);
+          contentNode.style.zIndex = zIndexVal;
         }
         return contentNode;
       }
@@ -430,6 +431,7 @@ describe('OverlayController', () => {
         // Don't hide on inside (content) click
         ctrl.contentNode.click();
         await aTimeout();
+
         expect(ctrl.isShown).to.be.true;
 
         // Important to check if it can be still shown after, because we do some hacks inside
@@ -565,6 +567,28 @@ describe('OverlayController', () => {
         // Important to check if it can be still shown after, because we do some hacks inside
         await ctrl.show();
         expect(ctrl.isShown).to.equal(true);
+      });
+
+      it('doesn\'t hide on "inside label" click', async () => {
+        const contentNode = await fixture(`
+          <div>
+            <label for="test">test</label>
+            <input id="test">
+            Content
+          </div>`);
+        const labelNode = contentNode.querySelector('label[for=test]');
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        // Don't hide on label click
+        labelNode.click();
+        await aTimeout();
+
+        expect(ctrl.isShown).to.be.true;
       });
     });
 
