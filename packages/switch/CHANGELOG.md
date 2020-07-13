@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.13](https://github.com/ing-bank/lion/compare/@lion/switch@0.10.12...@lion/switch@0.10.13) (2020-07-13)
+
+**Note:** Version bump only for package @lion/switch
+
+
+
+
+
 ## [0.10.12](https://github.com/ing-bank/lion/compare/@lion/switch@0.10.11...@lion/switch@0.10.12) (2020-07-09)
 
 **Note:** Version bump only for package @lion/switch

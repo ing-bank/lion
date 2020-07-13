@@ -1,6 +1,6 @@
 {
   "name": "@lion/tabs",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Allows users to quickly move between a small number of equally important views.",
   "license": "MIT",
   "author": "ing-bank",
@@ -32,7 +32,7 @@
     "lion-tabs.js"
   ],
   "dependencies": {
-    "@lion/core": "0.7.2"
+    "@lion/core": "0.8.0"
   },
   "keywords": [
     "lion",

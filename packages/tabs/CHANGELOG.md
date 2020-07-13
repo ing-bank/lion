@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/ing-bank/lion/compare/@lion/tabs@0.4.4...@lion/tabs@0.5.0) (2020-07-13)
+
+
+### Features
+
+* **tabs:** fix types and export type definition files for tabs ([0cf8a0c](https://github.com/ing-bank/lion/commit/0cf8a0c9212faae42b95a84c5a49b3e94035bcef))
+
+
+
+
+
 ## [0.4.4](https://github.com/ing-bank/lion/compare/@lion/tabs@0.4.3...@lion/tabs@0.4.4) (2020-06-18)
 
 **Note:** Version bump only for package @lion/tabs
