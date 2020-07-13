@@ -1,6 +1,6 @@
 {
   "name": "@lion/select-rich",
-  "version": "0.18.17",
+  "version": "0.18.18",
   "description": "Provides a select with options that can contain html",
   "license": "MIT",
   "author": "ing-bank",

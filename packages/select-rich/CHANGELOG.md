@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.18](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.17...@lion/select-rich@0.18.18) (2020-07-13)
+
+
+### Bug Fixes
+
+* **select-rich:** align teardown phase with OverlayMixin ([97922df](https://github.com/ing-bank/lion/commit/97922df18117812aa816bf2658d162bf29b0b998))
+
+
+
+
+
 ## [0.18.17](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.16...@lion/select-rich@0.18.17) (2020-07-13)
 
 **Note:** Version bump only for package @lion/select-rich
