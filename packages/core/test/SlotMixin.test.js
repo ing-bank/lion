@@ -14,8 +14,8 @@ describe('SlotMixin', () => {
         }
       },
     );
-    const element = await fixture(`<${tag}></${tag}>`);
-    expect(element.children[0].slot).to.equal('feedback');
+    const el = await fixture(`<${tag}></${tag}>`);
+    expect(el.children[0].slot).to.equal('feedback');
   });
 
   it('does not override user provided slots', async () => {
@@ -31,7 +31,7 @@ describe('SlotMixin', () => {
     );
     const el = await fixture(`<${tag}><p slot="feedback">user-content</p></${tag}>`);
     expect(el.children[0].tagName).to.equal('P');
-    expect(el.children[0].innerText).to.equal('user-content');
+    expect(/** @type HTMLParagraphElement */ (el.children[0]).innerText).to.equal('user-content');
   });
 
   it('supports complex dom trees as element', async () => {
@@ -57,10 +57,12 @@ describe('SlotMixin', () => {
         }
       },
     );
-    const element = await fixture(`<${tag}></${tag}>`);
-    expect(element.children[0].slot).to.equal('feedback');
-    expect(element.children[0].getAttribute('foo')).to.equal('bar');
-    expect(element.children[0].children[0].innerText).to.equal('cat');
+    const el = await fixture(`<${tag}></${tag}>`);
+    expect(el.children[0].slot).to.equal('feedback');
+    expect(el.children[0].getAttribute('foo')).to.equal('bar');
+    expect(/** @type HTMLParagraphElement */ (el.children[0].children[0]).innerText).to.equal(
+      'cat',
+    );
   });
 
   it('supports conditional slots', async () => {
@@ -82,35 +84,37 @@ describe('SlotMixin', () => {
         }
       },
     );
-    const elementSlot = await fixture(`<${tag}><${tag}>`);
-    expect(elementSlot.querySelector('#someSlot')).to.exist;
+    const elSlot = await fixture(`<${tag}><${tag}>`);
+    expect(elSlot.querySelector('#someSlot')).to.exist;
     renderSlot = false;
-    const elementNoSlot = await fixture(`<${tag}><${tag}>`);
-    expect(elementNoSlot.querySelector('#someSlot')).to.not.exist;
+    const elNoSlot = await fixture(`<${tag}><${tag}>`);
+    expect(elNoSlot.querySelector('#someSlot')).to.not.exist;
   });
 
   it("allows to check which slots have been created via this._isPrivateSlot('slotname')", async () => {
     let renderSlot = true;
-    const tag = defineCE(
-      class extends SlotMixin(HTMLElement) {
-        get slots() {
-          return {
-            ...super.slots,
-            conditional: () => (renderSlot ? document.createElement('div') : undefined),
-          };
-        }
+    class SlotPrivateText extends SlotMixin(HTMLElement) {
+      get slots() {
+        return {
+          ...super.slots,
+          conditional: () => (renderSlot ? document.createElement('div') : undefined),
+        };
+      }
 
-        didCreateConditionalSlot() {
-          return this._isPrivateSlot('conditional');
-        }
-      },
-    );
-    const el = await fixture(`<${tag}><${tag}>`);
+      didCreateConditionalSlot() {
+        return this._isPrivateSlot('conditional');
+      }
+    }
+
+    const tag = defineCE(SlotPrivateText);
+    const el = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(el.didCreateConditionalSlot()).to.be.true;
-    const elUserSlot = await fixture(`<${tag}><p slot="conditional">foo</p><${tag}>`);
+    const elUserSlot = /** @type {SlotPrivateText} */ (await fixture(
+      `<${tag}><p slot="conditional">foo</p><${tag}>`,
+    ));
     expect(elUserSlot.didCreateConditionalSlot()).to.be.false;
     renderSlot = false;
-    const elNoSlot = await fixture(`<${tag}><${tag}>`);
+    const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
   });
 });

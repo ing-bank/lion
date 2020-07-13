@@ -3,6 +3,7 @@ if (typeof window.KeyboardEvent !== 'function') {
   const event = KeyboardEvent.prototype;
   const descriptor = Object.getOwnPropertyDescriptor(event, 'key');
   if (descriptor) {
+    /** @type {Object.<string, string>} */
     const keys = {
       Win: 'Meta',
       Scroll: 'ScrollLock',
@@ -26,10 +27,13 @@ if (typeof window.KeyboardEvent !== 'function') {
     Object.defineProperty(event, 'key', {
       // eslint-disable-next-line object-shorthand, func-names
       get: function () {
-        const key = descriptor.get.call(this);
+        if (descriptor.get) {
+          const key = descriptor.get.call(this);
 
-        // eslint-disable-next-line no-prototype-builtins
-        return keys.hasOwnProperty(key) ? keys[key] : key;
+          // eslint-disable-next-line no-prototype-builtins
+          return keys.hasOwnProperty(key) ? keys[key] : key;
+        }
+        return undefined;
       },
     });
   }

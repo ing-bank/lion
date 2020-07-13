@@ -20,6 +20,10 @@ yarn-error.log
 /build/
 /bundlesize/dist/
 
+## types
+*.d.ts
+!packages/*/types/*
+
 ## temp folders
 /.tmp/
 /coverage/

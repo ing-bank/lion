@@ -11,6 +11,11 @@ describe('LionSingleton', () => {
 
   it('supports parameters for .getInstance(foo, bar)', async () => {
     class MySingleton extends LionSingleton {
+      /**
+       *
+       * @param {string} foo
+       * @param {string} bar
+       */
       constructor(foo, bar) {
         super();
         this.foo = foo;
@@ -59,6 +64,7 @@ describe('LionSingleton', () => {
   });
 
   it('can at any time add mixins via .addInstanceMixin()', () => {
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     const MyMixin = superclass =>
       class extends superclass {
         constructor() {
@@ -72,6 +78,7 @@ describe('LionSingleton', () => {
     const mySingleton = MySingleton.getInstance();
     expect(mySingleton.myMixin).to.be.true;
 
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     const OtherMixin = superclass =>
       class extends superclass {
         constructor() {
@@ -89,6 +96,7 @@ describe('LionSingleton', () => {
   });
 
   it('can provide new instances (with applied Mixins) via .getNewInstance()', async () => {
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     const MyMixin = superclass =>
       class extends superclass {
         constructor() {
@@ -100,13 +108,19 @@ describe('LionSingleton', () => {
 
     MySingleton.addInstanceMixin(MyMixin);
     const singletonOne = MySingleton.getNewInstance();
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     singletonOne.one = true;
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     expect(singletonOne.myMixin).to.be.true;
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     expect(singletonOne.one).to.be.true;
 
     const singletonTwo = MySingleton.getNewInstance();
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     expect(singletonTwo.myMixin).to.be.true;
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     expect(singletonTwo.one).to.be.undefined;
+    // @ts-ignore because we're getting rid of LionSingleton altogether
     expect(singletonOne.one).to.be.true; // to be sure
   });
 });

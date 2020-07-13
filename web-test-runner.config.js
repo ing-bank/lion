@@ -1,6 +1,7 @@
 module.exports = {
   nodeResolve: true,
   sessionStartTimeout: 30000,
+  concurrency: 5,
   coverageConfig: {
     threshold: {
       statements: 80,

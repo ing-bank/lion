@@ -6,10 +6,11 @@
  */
 export class LionSingleton {
   /**
-   * @param {function()} mixin
+   * @param {function} mixin
    */
   static addInstanceMixin(mixin) {
     if (!this.__instanceMixins) {
+      /** @type {function[]} */
       this.__instanceMixins = [];
     }
     this.__instanceMixins.push(mixin);
@@ -26,6 +27,8 @@ export class LionSingleton {
         Klass = mixin(Klass);
       });
     }
+    // Ignoring, because it's up to the extension layer to accept arguments in its constructor
+    // @ts-ignore-next-line
     return new Klass(...args);
   }
 

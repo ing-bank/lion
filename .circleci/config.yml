@@ -57,6 +57,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: git config --global user.email circleci@circleci
       - run: git config --global user.name CircleCI
+      - run: npm run build:types
       - run:
           name: Publish package
           command: "./node_modules/.bin/lerna publish --message 'chore: release new versions' --exact --yes"
