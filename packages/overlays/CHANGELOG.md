@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.11](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.10...@lion/overlays@0.16.11) (2020-07-13)
+
+
+### Bug Fixes
+
+* **overlays:** no hide on label click ([e46f51c](https://github.com/ing-bank/lion/commit/e46f51ce335ec50879fc4f3bcdd57454632cc333))
+* **overlays:** role preservation + guarded attr storage ([c3f7aa8](https://github.com/ing-bank/lion/commit/c3f7aa8ea21bfe5fec23010bd130b4d942e8bc1a))
+
+
+
+
+
 ## [0.16.10](https://github.com/ing-bank/lion/compare/@lion/overlays@0.16.9...@lion/overlays@0.16.10) (2020-07-13)
 
 **Note:** Version bump only for package @lion/overlays

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.19](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.18...@lion/select-rich@0.18.19) (2020-07-13)
+
+**Note:** Version bump only for package @lion/select-rich
+
+
+
+
+
 ## [0.18.18](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.17...@lion/select-rich@0.18.18) (2020-07-13)
 
 
