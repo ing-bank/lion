@@ -13,11 +13,14 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
     "*.js",
     "docs",
     "src",
+    "test",
     "test-helpers",
-    "translations"
+    "translations",
+    "types"
   ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
@@ -26,7 +29,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@open-wc/dedupe-mixin": "^1.2.1",
+    "@open-wc/dedupe-mixin": "^1.2.18",
     "@open-wc/scoped-elements": "^1.0.3",
     "lit-element": "^2.2.1",
     "lit-html": "^1.0.0"

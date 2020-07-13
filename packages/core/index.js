@@ -1,8 +1,3 @@
-/**
- * Info for TypeScript users:
- *   For now please import types from lit-element and lit-html directly.
- */
-
 // lit-element
 export {
   css,
