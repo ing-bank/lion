@@ -13,11 +13,14 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
     "*.js",
     "docs",
     "src",
     "test",
-    "test-helpers"
+    "test-helpers",
+    "translations",
+    "types"
   ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
