@@ -67,8 +67,7 @@ const supportsCSSTypedObject = window.CSS && CSS.number;
  * Note that a contentWrapperNode should be provided for [l2], [l3] and [l4]
  * In case of a global overlay ([g1]), it's enough to provide just the contentNode.
  * In case of a local overlay or a responsive overlay switching from placementMode, one should
- * always configure as if it was a local overlay.
- *
+ * always configure as if it were a local overlay.
  */
 
 export class OverlayController {
@@ -358,11 +357,14 @@ export class OverlayController {
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
-      this.__storeOriginalAttrs(this.invokerNode, [
-        'aria-expanded',
-        'aria-labelledby',
-        'aria-describedby',
-      ]);
+
+      if (this.invokerNode) {
+        this.__storeOriginalAttrs(this.invokerNode, [
+          'aria-expanded',
+          'aria-labelledby',
+          'aria-describedby',
+        ]);
+      }
 
       if (!this.contentNode.id) {
         this.contentNode.setAttribute('id', this._contentId);
@@ -379,7 +381,7 @@ export class OverlayController {
         if (this.invokerNode) {
           this.invokerNode.setAttribute('aria-expanded', this.isShown);
         }
-        if (!this.contentNode.role) {
+        if (!this.contentNode.getAttribute('role')) {
           this.contentNode.setAttribute('role', 'dialog');
         }
       }
@@ -806,17 +808,28 @@ export class OverlayController {
 
     if (phase === 'show') {
       let wasClickInside = false;
-      // handle on capture phase and remember till the next task that there was an inside click
+      let wasIndirectSynchronousClick = false;
+      // Handle on capture phase and remember till the next task that there was an inside click
       this.__preventCloseOutsideClick = () => {
+        if (wasClickInside) {
+          // This occurs when a synchronous new click is triggered from a previous click.
+          // For instance, when we have a label pointing to an input, the platform triggers
+          // a new click on the input. Not taking this click into account, will hide the overlay
+          // in `__onCaptureHtmlClick`
+          wasIndirectSynchronousClick = true;
+        }
         wasClickInside = true;
         setTimeout(() => {
           wasClickInside = false;
+          setTimeout(() => {
+            wasIndirectSynchronousClick = false;
+          });
         });
       };
       // handle on capture phase and schedule the hide if needed
       this.__onCaptureHtmlClick = () => {
         setTimeout(() => {
-          if (wasClickInside === false) {
+          if (wasClickInside === false && !wasIndirectSynchronousClick) {
             this.hide();
           }
         });
