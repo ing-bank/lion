@@ -65,8 +65,8 @@ export const FormRegistrarPortalMixin = dedupeMixin(
       }
 
       firstUpdated(changedProperties) {
-        this.__checkRegistrationTarget();
         super.firstUpdated(changedProperties);
+        this.__checkRegistrationTarget();
         this.__resolveRegistrationReady();
         this.__readyForRegistration = true;
         formRegistrarManager.becomesReady(this);
