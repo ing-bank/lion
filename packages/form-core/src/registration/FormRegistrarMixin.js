@@ -1,7 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { dedupeMixin } from '@lion/core';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
-import { formRegistrarManager } from './formRegistrarManager.js';
 import { FormControlsCollection } from './FormControlsCollection.js';
 
 // TODO: rename .formElements to .formControls? (or .$controls ?)
@@ -31,7 +30,7 @@ export const FormRegistrarMixin = dedupeMixin(
            * (multi)select)
            * @type {boolean}
            */
-          _isFormOrFieldset: Boolean,
+          _isFormOrFieldset: { type: Boolean },
         };
       }
 
@@ -41,56 +40,12 @@ export const FormRegistrarMixin = dedupeMixin(
 
         this._isFormOrFieldset = false;
 
-        this.__readyForRegistration = false;
-        this.__hasBeenRendered = false;
-        this.registrationReady = new Promise(resolve => {
-          this.__resolveRegistrationReady = resolve;
-        });
-        this.registrationComplete = new Promise(resolve => {
-          this.__resolveRegistrationComplete = resolve;
-        });
-
         this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
         this.addEventListener('form-element-register', this._onRequestToAddFormElement);
       }
 
-      connectedCallback() {
-        if (super.connectedCallback) {
-          super.connectedCallback();
-        }
-        formRegistrarManager.add(this);
-        if (this.__hasBeenRendered) {
-          formRegistrarManager.becomesReady();
-        }
-      }
-
-      disconnectedCallback() {
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback();
-        }
-        formRegistrarManager.remove(this);
-      }
-
       isRegisteredFormElement(el) {
         return this.formElements.some(exitingEl => exitingEl === el);
-      }
-
-      firstUpdated(changedProperties) {
-        super.firstUpdated(changedProperties);
-        this.__resolveRegistrationReady();
-        this.__readyForRegistration = true;
-
-        // After we allow our children to register, we need to wait one tick before they
-        // all sent their 'form-element-register' event.
-        // TODO: allow developer to delay this moment, similar to LitElement.performUpdate can be
-        // delayed.
-        setTimeout(() => {
-          this.registrationHasCompleted = true;
-          this.__resolveRegistrationComplete();
-        });
-
-        formRegistrarManager.becomesReady();
-        this.__hasBeenRendered = true;
       }
 
       addFormElement(child, indexToInsertAt) {

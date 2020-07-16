@@ -33,6 +33,7 @@ describe('Select Rich Integration tests', () => {
           </lion-options>
         </lion-select-rich>
       `);
+      await nestedEl.registrationComplete;
 
       await fixture(html`
         <${tag} id="main">
@@ -42,7 +43,7 @@ describe('Select Rich Integration tests', () => {
           </div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-        `);
+      `);
       properlyInstantiated = true;
     } catch (e) {
       throw new Error(e);

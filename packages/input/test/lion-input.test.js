@@ -17,7 +17,7 @@ describe('<lion-input>', () => {
 
   it('delegates value attribute', async () => {
     const el = await fixture(html`<${tag} value="prefilled"></${tag}>`);
-    expect(el._inputNode.value).to.equal('prefilled');
+    expect(el._inputNode.getAttribute('value')).to.equal('prefilled');
   });
 
   it('automatically creates an <input> element if not provided by user', async () => {

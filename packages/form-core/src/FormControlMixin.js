@@ -174,6 +174,11 @@ export const FormControlMixin = dedupeMixin(
         super.connectedCallback();
         this._enhanceLightDomClasses();
         this._enhanceLightDomA11y();
+        this._triggerInitialModelValueChangedEvent();
+      }
+
+      _triggerInitialModelValueChangedEvent() {
+        this.__dispatchInitialModelValueChangedEvent();
       }
 
       _enhanceLightDomClasses() {
@@ -590,19 +595,13 @@ export const FormControlMixin = dedupeMixin(
         return [...this.children].find(el => el.slot === slotName);
       }
 
-      firstUpdated(changedProperties) {
-        super.firstUpdated(changedProperties);
-        this.__dispatchInitialModelValueChangedEvent();
-      }
-
-      async __dispatchInitialModelValueChangedEvent() {
+      __dispatchInitialModelValueChangedEvent() {
         // When we are not a fieldset / choice-group, we don't need to wait for our children
         // to send a unified event
         if (this._repropagationRole === 'child') {
           return;
         }
 
-        await this.registrationComplete;
         // Initially we don't repropagate model-value-changed events coming
         // from children. On firstUpdated we re-dispatch this event to maintain
         // 'count consistency' (to not confuse the application developer with a

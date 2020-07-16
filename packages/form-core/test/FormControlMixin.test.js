@@ -1,7 +1,6 @@
-import { expect, html, defineCE, unsafeStatic } from '@open-wc/testing';
+import { expect, html, defineCE, unsafeStatic, fixture } from '@open-wc/testing';
 import { LitElement, SlotMixin } from '@lion/core';
 import sinon from 'sinon';
-import { formFixture as fixture } from '../test-helpers/formFixture.js';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
@@ -219,6 +218,8 @@ describe('FormControlMixin', () => {
           </${groupTag}>
         `);
         const fieldsetEl = formEl.querySelector('[name=fieldset]');
+        await formEl.registrationComplete;
+        await fieldsetEl.registrationComplete;
 
         expect(fieldsetSpy.callCount).to.equal(1);
         const fieldsetEv = fieldsetSpy.firstCall.args[0];

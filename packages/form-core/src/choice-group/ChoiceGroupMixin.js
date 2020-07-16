@@ -30,7 +30,14 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       set modelValue(value) {
-        this._setCheckedElements(value, (el, val) => el.modelValue.value === val);
+        if (this.__isInitialModelValue) {
+          this.__isInitialModelValue = false;
+          this.registrationComplete.then(() => {
+            this._setCheckedElements(value, (el, val) => el.modelValue.value === val);
+          });
+        } else {
+          this._setCheckedElements(value, (el, val) => el.modelValue.value === val);
+        }
       }
 
       get serializedValue() {
@@ -50,13 +57,63 @@ export const ChoiceGroupMixin = dedupeMixin(
       }
 
       set serializedValue(value) {
-        this._setCheckedElements(value, (el, val) => el.serializedValue.value === val);
+        if (this.__isInitialSerializedValue) {
+          this.__isInitialSerializedValue = false;
+          this.registrationComplete.then(() => {
+            this._setCheckedElements(value, (el, val) => el.serializedValue.value === val);
+          });
+        } else {
+          this._setCheckedElements(value, (el, val) => el.serializedValue.value === val);
+        }
       }
 
       constructor() {
         super();
         this.multipleChoice = false;
         this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
+
+        this.__isInitialModelValue = true;
+        this.__isInitialSerializedValue = true;
+        this.registrationComplete = new Promise((resolve, reject) => {
+          this.__resolveRegistrationComplete = resolve;
+          this.__rejectRegistrationComplete = reject;
+        });
+        this.registrationComplete.done = false;
+        this.registrationComplete.then(
+          () => {
+            this.registrationComplete.done = true;
+          },
+          () => {
+            this.registrationComplete.done = true;
+            throw new Error(
+              'Registration could not finish. Please use await el.registrationComplete;',
+            );
+          },
+        );
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.__registrationCompleteTimer = setTimeout(() => {
+          this.__resolveRegistrationComplete();
+        });
+
+        this.registrationComplete.then(() => {
+          this.__isInitialModelValue = false;
+          this.__isInitialSerializedValue = false;
+        });
+      }
+
+      disconnectedCallback() {
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
+
+        clearTimeout(this.__registrationCompleteTimer);
+        if (this.registrationComplete.done === false) {
+          this.__rejectRegistrationComplete();
+        }
       }
 
       /**
@@ -66,6 +123,15 @@ export const ChoiceGroupMixin = dedupeMixin(
         this._throwWhenInvalidChildModelValue(child);
         this.__delegateNameAttribute(child);
         super.addFormElement(child, indexToInsertAt);
+      }
+
+      /**
+       * @override from FormControlMixin
+       */
+      _triggerInitialModelValueChangedEvent() {
+        this.registrationComplete.then(() => {
+          this.__dispatchInitialModelValueChangedEvent();
+        });
       }
 
       /**
@@ -129,11 +195,7 @@ export const ChoiceGroupMixin = dedupeMixin(
         return this.formElements.filter(el => el.checked && !el.disabled);
       }
 
-      async _setCheckedElements(value, check) {
-        if (!this.__readyForRegistration) {
-          await this.registrationReady;
-        }
-
+      _setCheckedElements(value, check) {
         for (let i = 0; i < this.formElements.length; i += 1) {
           if (this.multipleChoice) {
             this.formElements[i].checked = value.includes(this.formElements[i].value);

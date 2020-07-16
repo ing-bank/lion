@@ -1,7 +1,6 @@
-import { formFixture as fixture } from '@lion/form-core/test-helpers.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/input/lion-input.js';
-import { expect, html } from '@open-wc/testing';
+import { expect, html, fixture } from '@open-wc/testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
 
@@ -32,6 +31,7 @@ describe('model value event', () => {
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);
+      await fieldset.registrationComplete;
       fieldset.addEventListener('model-value-changed', spy);
       const input = fieldset.querySelector('lion-input');
       input.modelValue = 'foo';
@@ -50,6 +50,9 @@ describe('model value event', () => {
       `);
       const parent = grandparent.querySelector('[name=parent]');
       const input = grandparent.querySelector('[name=input]');
+      await grandparent.registrationComplete;
+      await parent.registrationComplete;
+
       grandparent.addEventListener('model-value-changed', spy);
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
@@ -73,6 +76,9 @@ describe('model value event', () => {
       `);
       const parent = grandparent.querySelector('[name=parent]');
       const input = grandparent.querySelector('[name=input]');
+      await grandparent.registrationComplete;
+      await parent.registrationComplete;
+
       grandparent.addEventListener('model-value-changed', spy);
       input.modelValue = 'foo';
       const e = spy.firstCall.args[0];
@@ -115,6 +121,9 @@ describe('model value event', () => {
       `);
       const parent = grandparent.querySelector('[name="parent"]');
       const input = grandparent.querySelector('[name="input"]');
+      await grandparent.registrationComplete;
+      await parent.registrationComplete;
+
       const spies = [];
       [grandparent, parent, input].forEach(element => {
         const spy = sinon.spy();
