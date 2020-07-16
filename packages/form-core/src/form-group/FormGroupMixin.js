@@ -76,7 +76,14 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       set modelValue(values) {
-        this._setValueMapForAllFormElements('modelValue', values);
+        if (this.__isInitialModelValue) {
+          this.__isInitialModelValue = false;
+          this.registrationComplete.then(() => {
+            this._setValueMapForAllFormElements('modelValue', values);
+          });
+        } else {
+          this._setValueMapForAllFormElements('modelValue', values);
+        }
       }
 
       get serializedValue() {
@@ -84,7 +91,14 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       set serializedValue(values) {
-        this._setValueMapForAllFormElements('serializedValue', values);
+        if (this.__isInitialSerializedValue) {
+          this.__isInitialSerializedValue = false;
+          this.registrationComplete.then(() => {
+            this._setValueMapForAllFormElements('serializedValue', values);
+          });
+        } else {
+          this._setValueMapForAllFormElements('serializedValue', values);
+        }
       }
 
       get formattedValue() {
@@ -107,6 +121,8 @@ export const FormGroupMixin = dedupeMixin(
         this.touched = false;
         this.focused = false;
         this.__addedSubValidators = false;
+        this.__isInitialModelValue = true;
+        this.__isInitialSerializedValue = true;
 
         this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
 
@@ -116,32 +132,69 @@ export const FormGroupMixin = dedupeMixin(
         this.addEventListener('validate-performed', this.__onChildValidatePerformed);
 
         this.defaultValidators = [new FormElementsHaveNoError()];
+
+        this.registrationComplete = new Promise((resolve, reject) => {
+          this.__resolveRegistrationComplete = resolve;
+          this.__rejectRegistrationComplete = reject;
+        });
+        this.registrationComplete.done = false;
+        this.registrationComplete.then(
+          () => {
+            this.registrationComplete.done = true;
+          },
+          () => {
+            this.registrationComplete.done = true;
+            throw new Error(
+              'Registration could not finish. Please use await el.registrationComplete;',
+            );
+          },
+        );
       }
 
       connectedCallback() {
-        // eslint-disable-next-line wc/guard-super-call
         super.connectedCallback();
         this.setAttribute('role', 'group');
-        this.__initInteractionStates();
+
+        this.__registrationCompleteTimer = setTimeout(() => {
+          this.__resolveRegistrationComplete();
+        });
+
+        this.registrationComplete.then(() => {
+          this.__isInitialModelValue = false;
+          this.__isInitialSerializedValue = false;
+          this.__initInteractionStates();
+        });
       }
 
       disconnectedCallback() {
-        super.disconnectedCallback(); // eslint-disable-line wc/guard-super-call
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
 
         if (this.__hasActiveOutsideClickHandling) {
           document.removeEventListener('click', this._checkForOutsideClick);
           this.__hasActiveOutsideClickHandling = false;
         }
+        clearTimeout(this.__registrationCompleteTimer);
+        if (this.registrationComplete.done === false) {
+          this.__rejectRegistrationComplete();
+        }
       }
 
-      async __initInteractionStates() {
-        if (!this.registrationHasCompleted) {
-          await this.registrationComplete;
-        }
+      __initInteractionStates() {
         this.formElements.forEach(el => {
           if (typeof el.initInteractionState === 'function') {
             el.initInteractionState();
           }
+        });
+      }
+
+      /**
+       * @override from FormControlMixin
+       */
+      _triggerInitialModelValueChangedEvent() {
+        this.registrationComplete.then(() => {
+          this.__dispatchInitialModelValueChangedEvent();
         });
       }
 
@@ -269,20 +322,13 @@ export const FormGroupMixin = dedupeMixin(
         return result;
       }
 
-      async _setValueForAllFormElements(property, value) {
-        if (!this.__readyForRegistration) {
-          await this.registrationReady;
-        }
+      _setValueForAllFormElements(property, value) {
         this.formElements.forEach(el => {
           el[property] = value; // eslint-disable-line no-param-reassign
         });
       }
 
-      async _setValueMapForAllFormElements(property, values) {
-        if (!this.__readyForRegistration) {
-          await this.registrationReady;
-        }
-
+      _setValueMapForAllFormElements(property, values) {
         if (values && typeof values === 'object') {
           Object.keys(values).forEach(name => {
             if (Array.isArray(this.formElements[name])) {

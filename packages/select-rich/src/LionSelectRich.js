@@ -7,7 +7,6 @@ import {
 } from '@lion/form-core';
 import { css, html, LitElement, ScopedElementsMixin, SlotMixin } from '@lion/core';
 
-import { formRegistrarManager } from '@lion/form-core/src/registration/formRegistrarManager.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import './differentKeyNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
@@ -137,24 +136,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
   }
 
-  get modelValue() {
-    const el = this.formElements.find(option => option.checked);
-    return el ? el.modelValue.value : '';
-  }
-
-  set modelValue(value) {
-    const el = this.formElements.find(option => option.modelValue.value === value);
-
-    if (el) {
-      el.checked = true;
-    } else {
-      // cache user set modelValue, and then try it again when registration is done
-      this.__cachedUserSetModelValue = value;
-    }
-
-    this.requestUpdate('modelValue');
-  }
-
   get serializedValue() {
     return this.modelValue;
   }
@@ -209,30 +190,27 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__hasInitialSelectedFormElement = false;
     this.hasNoDefaultSelected = false;
     this._repropagationRole = 'choice-group'; // configures FormControlMixin
-    this.__initInteractionStates();
   }
 
-  firstUpdated(changedProperties) {
-    super.firstUpdated(changedProperties);
+  connectedCallback() {
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
+    this._listboxNode.registrationTarget = this;
+    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+    this.__setupInvokerNode();
+    this.__setupListboxNode();
+    this.__setupEventListeners();
+
+    this.__toggleInvokerDisabled();
+
+    this.registrationComplete.then(() => {
+      this.__initInteractionStates();
+    });
 
     this._overlaySetupComplete.then(() => {
       this.__setupOverlay();
     });
-
-    this.__setupInvokerNode();
-    this.__setupListboxNode();
-    this.__setupEventListeners();
-    this._listboxNode.registrationTarget = this;
-
-    formRegistrarManager.addEventListener('all-forms-open-for-registration', () => {
-      // Now that we have rendered + registered our listbox, try setting the user defined modelValue again
-      if (this.__cachedUserSetModelValue) {
-        this.modelValue = this.__cachedUserSetModelValue;
-      }
-    });
-
-    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
-    this.__toggleInvokerDisabled();
   }
 
   _requestUpdate(name, oldValue) {
@@ -248,13 +226,18 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
   }
 
-  async __initInteractionStates() {
-    await this.registrationComplete;
-    // This timeout is here, so that we know we handle after the initial model-value
-    // event (see firstUpdated method FormConrtolMixin) has fired.
-    setTimeout(() => {
-      this.initInteractionState();
-    });
+  /**
+   * In the select disabled options are still going to a possible value for example
+   * when prefilling or programmatically setting it.
+   *
+   * @override
+   */
+  _getCheckedElements() {
+    return this.formElements.filter(el => el.checked);
+  }
+
+  __initInteractionStates() {
+    this.initInteractionState();
   }
 
   get _inputNode() {

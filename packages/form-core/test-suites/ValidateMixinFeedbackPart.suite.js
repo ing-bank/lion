@@ -240,7 +240,11 @@ export function runValidateMixinFeedbackPart() {
           }
 
           render() {
-            return html`Custom for ${this.feedbackData[0].validator.constructor.validatorName}`;
+            const name =
+              this.feedbackData && this.feedbackData[0]
+                ? this.feedbackData[0].validator.constructor.validatorName
+                : '';
+            return html`Custom for ${name}`;
           }
         },
       );

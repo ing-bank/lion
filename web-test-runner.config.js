@@ -1,4 +1,7 @@
+const { legacyPlugin } = require('@web/dev-server-legacy');
+
 module.exports = {
+  plugins: [legacyPlugin()],
   nodeResolve: true,
   sessionStartTimeout: 30000,
   concurrency: 5,
