@@ -41,6 +41,9 @@ export class LionField extends FormControlMixin(
         type: String,
         reflect: true,
       },
+      value: {
+        type: String,
+      },
     };
   }
 
@@ -79,11 +82,14 @@ export class LionField extends FormControlMixin(
     // if not yet connected to dom can't change the value
     if (this._inputNode) {
       this._setValueAndPreserveCaret(value);
+      this.__value = undefined;
+    } else {
+      this.__value = value;
     }
   }
 
   get value() {
-    return (this._inputNode && this._inputNode.value) || '';
+    return (this._inputNode && this._inputNode.value) || this.__value || '';
   }
 
   constructor() {
@@ -98,13 +104,6 @@ export class LionField extends FormControlMixin(
   }
 
   connectedCallback() {
-    // TODO: Investigate issue below.
-    // Normally we put super calls on top for predictability,
-    // here we temporarily need to do attribute delegation before,
-    // so the FormatMixin uses the right value. Should be solved
-    // when value delegation is part of the calculation loop of
-    // FormatMixin
-    this._delegateInitialValueAttr();
     super.connectedCallback();
     this._onChange = this._onChange.bind(this);
     this._inputNode.addEventListener('change', this._onChange);
@@ -130,17 +129,6 @@ export class LionField extends FormControlMixin(
 
     if (changedProperties.has('autocomplete')) {
       this._inputNode.autocomplete = this.autocomplete;
-    }
-  }
-
-  /**
-   * This is not done via 'get delegations', because this._inputNode.setAttribute('value')
-   * does not trigger a value change
-   */
-  _delegateInitialValueAttr() {
-    const valueAttr = this.getAttribute('value');
-    if (valueAttr !== null) {
-      this.value = valueAttr;
     }
   }
 
