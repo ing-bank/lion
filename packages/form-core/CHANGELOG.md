@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/ing-bank/lion/compare/@lion/form-core@0.2.5...@lion/form-core@0.2.6) (2020-07-16)
+
+
+### Bug Fixes
+
+* **form-core:** remove possible untrusted input value callback ([e06196d](https://github.com/ing-bank/lion/commit/e06196dec86f6d99fda0ed1c5dac3f62e3e34f6d))
+
+
+
+
+
 ## [0.2.5](https://github.com/ing-bank/lion/compare/@lion/form-core@0.2.4...@lion/form-core@0.2.5) (2020-07-13)
 
 **Note:** Version bump only for package @lion/form-core
