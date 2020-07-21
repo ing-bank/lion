@@ -14,8 +14,9 @@ export class LocalizeManager extends LionSingleton {
     this._fallbackLocale = fallbackLocale;
     /** @type {Object.<string, Object.<string, Object>>} */
     this.__storage = {};
+    /** @type {Map.<RegExp|string, Function>} */
     this.__namespacePatternsMap = new Map();
-    /** @type {Object.<string, Function>} */
+    /** @type {Object.<string, Function | null>} */
     this.__namespaceLoadersCache = {};
     /** @type {Object.<string, Object.<string, Promise<Object>>>} */
     this.__namespaceLoaderPromisesCache = {};
@@ -78,7 +79,7 @@ export class LocalizeManager extends LionSingleton {
   }
 
   /**
-   * @return { string}
+   * @returns { string}
    */
   get locale() {
     if (this._supportExternalTranslationTools) {
@@ -369,6 +370,7 @@ export class LocalizeManager extends LionSingleton {
 
   /**
    * @param {string} namespace
+   * @returns {Function | null}
    */
   _lookupNamespaceLoader(namespace) {
     /* eslint-disable no-restricted-syntax */
@@ -386,6 +388,7 @@ export class LocalizeManager extends LionSingleton {
 
   /**
    * @param {string} locale
+   * @returns {string}
    */
   // eslint-disable-next-line class-methods-use-this
   _getLangFromLocale(locale) {
@@ -419,6 +422,7 @@ export class LocalizeManager extends LionSingleton {
   /**
    * @param {string} newLocale
    * @param {string} oldLocale
+   * @returns {Promise<Object>}
    */
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
