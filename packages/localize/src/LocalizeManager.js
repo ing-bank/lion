@@ -190,6 +190,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {Object.<string, Function> | string} namespaceObj
    * @param {Object} [options]
    * @param {string} [options.locale]
+   * @returns {Promise<void | Object>}
    */
   loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
@@ -282,6 +283,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {Object.<string, Function> | string} namespaceObj
    * @param {boolean} isDynamicImport
    * @param {string} namespace
+   * @returns {Promise<void | Object>}
    */
   _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace) {
     const loader = this._getNamespaceLoader(namespaceObj, isDynamicImport, namespace);
@@ -331,7 +333,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {string} locale
    * @param {string} namespace
    * @param {string} [fallbackLocale]
-   * @returns Promise<Object>
+   * @returns {Promise<any>}
    */
   _getNamespaceLoaderPromise(loader, locale, namespace, fallbackLocale = this._fallbackLocale) {
     return loader(locale, namespace).catch(() => {
@@ -427,7 +429,7 @@ export class LocalizeManager extends LionSingleton {
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
     const newLocaleNamespaces = this.__storage[newLocale] || {};
-    /** @type {Array<Promise<Function>>} */
+    /** @type {Array<Promise<Object | void>>} */
     const promises = [];
     Object.keys(oldLocaleNamespaces).forEach(namespace => {
       const newNamespaceData = newLocaleNamespaces[namespace];
