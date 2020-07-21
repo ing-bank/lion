@@ -19,7 +19,7 @@
     "src"
   ],
   "scripts": {
-    "dashboard": "node ./dashboard/src/server.js",
+    "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
     "test:node": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",

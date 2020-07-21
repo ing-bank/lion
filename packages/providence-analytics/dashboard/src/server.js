@@ -6,6 +6,7 @@ const { LogService } = require('../../src/program/services/LogService.js');
 
 // eslint-disable-next-line import/no-dynamic-require
 const providenceConf = require(`${pathLib.join(process.cwd(), 'providence.conf.js')}`);
+
 let outputFilePaths;
 try {
   outputFilePaths = fs.readdirSync(ReportService.outputPath);
@@ -38,23 +39,42 @@ outputFilePaths.forEach(fileName => {
   }
 });
 
+function getPackageJson(projectPath) {
+  let pkgJson;
+  try {
+    const file = pathLib.resolve(projectPath, 'package.json');
+    pkgJson = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (_) {
+    // eslint-disable-next-line no-empty
+  }
+  return pkgJson;
+}
+
 function transformToProjectNames(collections) {
   const res = {};
   // eslint-disable-next-line array-callback-return
   Object.entries(collections).map(([key, val]) => {
-    res[key] = val.map(c => pathLib.basename(c));
+    res[key] = val.map(c => {
+      const pkg = getPackageJson(c);
+      return pkg && pkg.name;
+    });
   });
   return res;
 }
 
 const pathFromServerRootToHere = `/${pathLib.relative(process.cwd(), __dirname)}`;
 
+// Needed for dev purposes (we call it from ./packages/providence-analytics/ instead of ./)
+// Allows es-dev-server to find the right moduleDirs
+const fromPackageRoot = process.argv.includes('--serve-from-package-root');
+const moduleRoot = fromPackageRoot ? pathLib.resolve(process.cwd(), '../../') : process.cwd();
+
 const config = createConfig({
   port: 8080,
-  // appIndex: './dashboard/index.html',
-  // rootDir: process.cwd(),
+  appIndex: pathLib.resolve(__dirname, 'index.html'),
+  rootDir: moduleRoot,
   nodeResolve: true,
-  // moduleDirs: pathLib.resolve(process.cwd(), 'node_modules'),
+  moduleDirs: pathLib.resolve(moduleRoot, 'node_modules'),
   watch: false,
   open: true,
   middlewares: [
