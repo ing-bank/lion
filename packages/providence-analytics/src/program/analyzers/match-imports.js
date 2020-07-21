@@ -201,11 +201,15 @@ class MatchImportsAnalyzer extends Analyzer {
      * @property {GatherFilesConfig} [gatherFilesConfig]
      * @property {array} [referenceProjectPath] reference paths
      * @property {array} [targetProjectPath] search target paths
+     * @property {FindExportsAnalyzerResult} [exportsAnalyzerResult]
+     * @property {FindImportsAnalyzerResult} [importsAnalyzerResult]
      */
     const cfg = {
       gatherFilesConfig: {},
       referenceProjectPath: null,
       targetProjectPath: null,
+      exportsAnalyzerResult: null,
+      importsAnalyzerResult: null,
       ...customConfig,
     };
 
@@ -220,16 +224,23 @@ class MatchImportsAnalyzer extends Analyzer {
     /**
      * Traverse
      */
-    const findExportsAnalyzer = new FindExportsAnalyzer();
-    const exportsAnalyzerResult = await findExportsAnalyzer.execute({
-      metaConfig: cfg.metaConfig,
-      targetProjectPath: cfg.referenceProjectPath,
-    });
-    const findImportsAnalyzer = new FindImportsAnalyzer();
-    const importsAnalyzerResult = await findImportsAnalyzer.execute({
-      metaConfig: cfg.metaConfig,
-      targetProjectPath: cfg.targetProjectPath,
-    });
+    let { exportsAnalyzerResult } = cfg;
+    if (!exportsAnalyzerResult) {
+      const findExportsAnalyzer = new FindExportsAnalyzer();
+      exportsAnalyzerResult = await findExportsAnalyzer.execute({
+        metaConfig: cfg.metaConfig,
+        targetProjectPath: cfg.referenceProjectPath,
+      });
+    }
+
+    let { importsAnalyzerResult } = cfg;
+    if (!importsAnalyzerResult) {
+      const findImportsAnalyzer = new FindImportsAnalyzer();
+      importsAnalyzerResult = await findImportsAnalyzer.execute({
+        metaConfig: cfg.metaConfig,
+        targetProjectPath: cfg.targetProjectPath,
+      });
+    }
 
     const queryOutput = matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, cfg);
 
