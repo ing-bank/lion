@@ -17,16 +17,21 @@ describe('isLocalizeESModule', () => {
   });
 
   it('ignores if there are extra keys to the "default" key', () => {
+    // @ts-ignore
     expect(isLocalizeESModule({ default: {}, otherKey: 'other key' })).to.equal(false);
+    // @ts-ignore
     expect(isLocalizeESModule({ default: {}, otherKey: {} })).to.equal(false);
   });
 
   it('ignores if there is no "default" key', () => {
+    // @ts-ignore
     expect(isLocalizeESModule({ otherKey: 'other key' })).to.equal(false);
+    // @ts-ignore
     expect(isLocalizeESModule({ otherKey: {} })).to.equal(false);
   });
 
   it('ignores if not an object', () => {
+    // @ts-ignore
     expect(isLocalizeESModule(undefined)).to.equal(false);
   });
 });

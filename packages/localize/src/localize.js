@@ -9,6 +9,9 @@ export let localize =
     fallbackLocale: 'en-GB',
   });
 
+/**
+ * @param {LocalizeManager} newLocalize
+ */
 export function setLocalize(newLocalize) {
   localize.teardown();
   localize = newLocalize;

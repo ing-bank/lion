@@ -1,17 +1,20 @@
 import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
-// eslint-disable-next-line import/no-unresolved
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers.js';
 
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
-// useful for IE11 where LTR and RTL symbols are put by Intl when rendering dates
+/**
+ * @param {string} str
+ * Useful for IE11 where LTR and RTL symbols are put by Intl when rendering dates
+ */
 function removeLtrRtl(str) {
   return str.replace(/(\u200E|\u200E)/g, '');
 }
 
 describe('LocalizeManager', () => {
+  /** @type {LocalizeManager} */
   let manager;
 
   beforeEach(() => {
@@ -43,7 +46,10 @@ describe('LocalizeManager', () => {
 
   it('has teardown() method removing all side effects', () => {
     manager = new LocalizeManager();
-    const disconnectObserverSpy = sinon.spy(manager._htmlLangAttributeObserver, 'disconnect');
+    const disconnectObserverSpy = sinon.spy(
+      manager._htmlLangAttributeObserver,
+      /** @type {never} */ ('disconnect'),
+    );
     manager.teardown();
     expect(disconnectObserverSpy.callCount).to.equal(1);
   });
@@ -54,6 +60,7 @@ describe('LocalizeManager', () => {
       setTimeout(() => {
         manager.locale = 'en-US';
       });
+      // @ts-ignore
       const event = await oneEvent(manager, 'localeChanged');
       expect(event.detail.newLocale).to.equal('en-US');
       expect(event.detail.oldLocale).to.equal('en-GB');
@@ -62,6 +69,7 @@ describe('LocalizeManager', () => {
     it('does not fire "localeChanged" event if it was set to the same locale', () => {
       manager = new LocalizeManager();
       const eventSpy = sinon.spy();
+      // @ts-ignore
       manager.addEventListener('localeChanged', eventSpy);
       manager.locale = 'en-US';
       manager.locale = 'en-US';
@@ -127,6 +135,7 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager();
 
       await manager.loadNamespace({
+        /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
       });
 
@@ -145,6 +154,7 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespace(
         {
+          /** @param {string} locale */
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         },
         { locale: 'nl-NL' },
@@ -164,8 +174,14 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager();
 
       await manager.loadNamespaces([
-        { 'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`) },
-        { 'my-send-button': locale => fakeImport(`./my-send-button/${locale}.js`) },
+        {
+          /** @param {string} locale */
+          'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`),
+        },
+        {
+          /** @param {string} locale */
+          'my-send-button': locale => fakeImport(`./my-send-button/${locale}.js`),
+        },
       ]);
 
       expect(manager.__storage).to.deep.equal({
@@ -185,8 +201,14 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespaces(
         [
-          { 'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`) },
-          { 'my-send-button': locale => fakeImport(`./my-send-button/${locale}.js`) },
+          {
+            /** @param {string} locale */
+            'my-defaults': locale => fakeImport(`./my-defaults/${locale}.js`),
+          },
+          {
+            /** @param {string} locale */
+            'my-send-button': locale => fakeImport(`./my-send-button/${locale}.js`),
+          },
         ],
         { locale: 'nl-NL' },
       );
@@ -205,6 +227,7 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager();
 
       await manager.loadNamespace({
+        /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
       });
 
@@ -220,6 +243,7 @@ describe('LocalizeManager', () => {
 
       try {
         await manager.loadNamespace({
+          /** @param {string} locale */
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         });
       } catch (e) {
@@ -242,6 +266,7 @@ describe('LocalizeManager', () => {
         setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
 
         await manager.loadNamespace({
+          /** @param {string} locale */
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         });
 
@@ -259,6 +284,7 @@ describe('LocalizeManager', () => {
         setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
 
         await manager.loadNamespace({
+          /** @param {string} locale */
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         });
 
@@ -275,6 +301,7 @@ describe('LocalizeManager', () => {
 
         try {
           await manager.loadNamespace({
+            /** @param {string} locale */
             'my-component': locale => fakeImport(`./my-component/${locale}.js`),
           });
         } catch (e) {
@@ -315,10 +342,14 @@ describe('LocalizeManager', () => {
 
       manager = new LocalizeManager();
 
-      manager.setupNamespaceLoader('my-component', async locale => {
-        const response = await fetch(`./my-component/${locale}.json`);
-        return response.json();
-      });
+      manager.setupNamespaceLoader(
+        'my-component',
+        /** @param {string} locale */
+        async locale => {
+          const response = await fetch(`./my-component/${locale}.json`);
+          return response.json();
+        },
+      );
 
       await manager.loadNamespace('my-component');
 
@@ -330,26 +361,43 @@ describe('LocalizeManager', () => {
     });
 
     it('loads multiple namespaces via loadNamespaces() using string routes', async () => {
-      fetchMock.get('./my-defaults/en-GB.json', { submit: 'Submit' });
-      fetchMock.get('./my-send-button/en-GB.json', { submit: 'Send' });
+      fetchMock.get('./my-defaults/en-GB.json', {
+        submit: 'Submit',
+      });
+      fetchMock.get('./my-send-button/en-GB.json', {
+        submit: 'Send',
+      });
 
       manager = new LocalizeManager();
 
-      manager.setupNamespaceLoader('my-defaults', async locale => {
-        const response = await fetch(`./my-defaults/${locale}.json`);
-        return response.json();
-      });
-      manager.setupNamespaceLoader('my-send-button', async locale => {
-        const response = await fetch(`./my-send-button/${locale}.json`);
-        return response.json();
-      });
+      manager.setupNamespaceLoader(
+        'my-defaults',
+        /** @param {string} locale */
+        async locale => {
+          const response = await fetch(`./my-defaults/${locale}.json`);
+          return response.json();
+        },
+      );
+
+      manager.setupNamespaceLoader(
+        'my-send-button',
+        /** @param {string} locale */
+        async locale => {
+          const response = await fetch(`./my-send-button/${locale}.json`);
+          return response.json();
+        },
+      );
 
       await manager.loadNamespaces(['my-defaults', 'my-send-button']);
 
       expect(manager.__storage).to.deep.equal({
         'en-GB': {
-          'my-send-button': { submit: 'Send' },
-          'my-defaults': { submit: 'Submit' },
+          'my-send-button': {
+            submit: 'Send',
+          },
+          'my-defaults': {
+            submit: 'Submit',
+          },
         },
       });
     });
@@ -359,10 +407,17 @@ describe('LocalizeManager', () => {
 
       manager = new LocalizeManager();
 
-      manager.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-        const response = await fetch(`./${namespace}/${locale}.json`);
-        return response.json();
-      });
+      manager.setupNamespaceLoader(
+        /my-.+/,
+        /**
+         * @param {string} locale
+         * @param {string} namespace
+         */
+        async (locale, namespace) => {
+          const response = await fetch(`./${namespace}/${locale}.json`);
+          return response.json();
+        },
+      );
 
       await manager.loadNamespace('my-component');
 
@@ -379,10 +434,17 @@ describe('LocalizeManager', () => {
 
       manager = new LocalizeManager();
 
-      manager.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-        const response = await fetch(`./${namespace}/${locale}.json`);
-        return response.json();
-      });
+      manager.setupNamespaceLoader(
+        /my-.+/,
+        /**
+         * @param {string} locale
+         * @param {string} namespace
+         */
+        async (locale, namespace) => {
+          const response = await fetch(`./${namespace}/${locale}.json`);
+          return response.json();
+        },
+      );
 
       await manager.loadNamespaces(['my-defaults', 'my-send-button']);
 
@@ -403,6 +465,7 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
 
       await manager.loadNamespace({
+        /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
       });
 
@@ -426,6 +489,7 @@ describe('LocalizeManager', () => {
       manager = new LocalizeManager();
 
       manager.loadNamespace({
+        /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
       });
       expect(manager.__storage).to.deep.equal({});
@@ -468,6 +532,7 @@ describe('LocalizeManager', () => {
 
       let called = 0;
       await manager.loadNamespace({
+        /** @param {string} locale */
         'my-component': locale => {
           called += 1;
           return fakeImport(`./my-component/${locale}.js`);
@@ -561,6 +626,7 @@ describe('When supporting external translation tools like Google Translate', () 
   let manager;
   const originalLang = document.documentElement.lang;
 
+  /** @param {string} lang */
   async function simulateGoogleTranslateOn(lang) {
     document.documentElement.lang = lang;
   }
@@ -569,6 +635,10 @@ describe('When supporting external translation tools like Google Translate', () 
     document.documentElement.lang = 'auto';
   }
 
+  /**
+   *  @param {...*} [cfg]
+   *  @returns {LocalizeManager}
+   */
   function getInstance(cfg) {
     LocalizeManager.resetInstance();
     return LocalizeManager.getInstance(cfg || {});
@@ -660,6 +730,7 @@ describe('When supporting external translation tools like Google Translate', () 
 });
 
 describe('[deprecated] When not supporting external translation tools like Google Translate', () => {
+  /** @type {LocalizeManager} */
   let manager;
 
   beforeEach(() => {
@@ -677,15 +748,16 @@ describe('[deprecated] When not supporting external translation tools like Googl
   });
 
   it('initializes locale from <html> by default', () => {
-    manager = new LocalizeManager({ supportExternalTranslationTools: false });
+    manager = new LocalizeManager({});
     expect(manager.locale).to.equal('en-GB');
   });
 
   it('fires "localeChanged" event if locale was changed via <html lang> attribute', async () => {
-    manager = new LocalizeManager({ supportExternalTranslationTools: false });
+    manager = new LocalizeManager({});
     setTimeout(() => {
       document.documentElement.lang = 'en-US';
     });
+    // @ts-ignore
     const event = await oneEvent(manager, 'localeChanged');
     expect(event.detail.newLocale).to.equal('en-US');
     expect(event.detail.oldLocale).to.equal('en-GB');
@@ -696,11 +768,11 @@ describe('[deprecated] When not supporting external translation tools like Googl
     setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
 
     manager = new LocalizeManager({
-      supportExternalTranslationTools: false,
       autoLoadOnLocaleChange: true,
     });
 
     await manager.loadNamespace({
+      /** @param {string} locale */
       'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
     });
 
@@ -709,7 +781,7 @@ describe('[deprecated] When not supporting external translation tools like Googl
     });
 
     document.documentElement.lang = 'nl-NL';
-    await aTimeout(); // wait for mutation observer to be called
+    await aTimeout(0); // wait for mutation observer to be called
     await manager.loadingComplete;
 
     expect(manager.__storage).to.deep.equal({

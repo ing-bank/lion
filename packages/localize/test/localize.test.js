@@ -7,7 +7,7 @@ import { LocalizeManager } from '../src/LocalizeManager.js';
 import { localize, setLocalize } from '../src/localize.js';
 
 describe('localize', () => {
-  // this is an importan mindset:
+  // this is an important mindset:
   // we don't test the singleton
   // we check that it is an instance of the right class
   // we test newly created instances of this class separately
@@ -26,7 +26,7 @@ describe('localize', () => {
     const oldLocalizeTeardown = localize.teardown;
     localize.teardown = sinon.spy();
 
-    const newLocalize = { teardown: () => {} };
+    const newLocalize = /** @type {LocalizeManager} */ ({ teardown: () => {} });
     setLocalize(newLocalize);
     expect(localize).to.equal(newLocalize);
     expect(oldLocalize.teardown.callCount).to.equal(1);

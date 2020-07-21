@@ -7,17 +7,21 @@ import isLocalizeESModule from './isLocalizeESModule.js';
  */
 export class LocalizeManager extends LionSingleton {
   // eslint-disable-line no-unused-vars
-  constructor(params = {}) {
-    super(params);
+  constructor({ autoLoadOnLocaleChange = false, fallbackLocale = '' } = {}) {
+    super();
     this._fakeExtendsEventTarget();
-
-    this._autoLoadOnLocaleChange = !!params.autoLoadOnLocaleChange;
-    this._fallbackLocale = params.fallbackLocale;
+    this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
+    this._fallbackLocale = fallbackLocale;
+    /** @type {Object.<string, Object.<string, Object>>} */
     this.__storage = {};
     this.__namespacePatternsMap = new Map();
+    /** @type {Object.<string, Function>} */
     this.__namespaceLoadersCache = {};
+    /** @type {Object.<string, Object.<string, Promise<Object>>>} */
     this.__namespaceLoaderPromisesCache = {};
-    this.formatNumberOptions = { returnIfNaN: '' };
+    this.formatNumberOptions = {
+      returnIfNaN: '',
+    };
 
     /**
      * Via html[data-localize-lang], developers are allowed to set the initial locale, without
@@ -73,18 +77,24 @@ export class LocalizeManager extends LionSingleton {
     this._teardownHtmlLangAttributeObserver();
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  /**
+   * @return { string}
+   */
   get locale() {
     if (this._supportExternalTranslationTools) {
-      return this.__locale;
+      return this.__locale || '';
     }
     return document.documentElement.lang;
   }
 
+  /**
+   * @param {string} value
+   */
   set locale(value) {
+    /** @type {string} */
     let oldLocale;
     if (this._supportExternalTranslationTools) {
-      oldLocale = this.__locale;
+      oldLocale = /** @type {string} */ (this.__locale);
       this.__locale = value;
       if (this._langAttrSetByTranslationTool === null) {
         this._setHtmlLangAttribute(value);
@@ -101,12 +111,18 @@ export class LocalizeManager extends LionSingleton {
     this._onLocaleChanged(value, oldLocale);
   }
 
+  /**
+   * @param {string} locale
+   */
   _setHtmlLangAttribute(locale) {
     this._teardownHtmlLangAttributeObserver();
     document.documentElement.lang = locale;
     this._setupHtmlLangAttributeObserver();
   }
 
+  /**
+   * @param {string} value
+   */
   // eslint-disable-next-line class-methods-use-this
   __handleLanguageOnly(value) {
     throw new Error(`
@@ -116,6 +132,9 @@ export class LocalizeManager extends LionSingleton {
     `);
   }
 
+  /**
+   * @returns {Promise<Object>}
+   */
   get loadingComplete() {
     return Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
   }
@@ -127,6 +146,11 @@ export class LocalizeManager extends LionSingleton {
     this.__namespaceLoaderPromisesCache = {};
   }
 
+  /**
+   * @param {string} locale
+   * @param {string} namespace
+   * @param {object} data
+   */
   addData(locale, namespace, data) {
     if (this._isNamespaceInCache(locale, namespace)) {
       throw new Error(
@@ -138,18 +162,40 @@ export class LocalizeManager extends LionSingleton {
     this.__storage[locale][namespace] = data;
   }
 
+  /**
+   * @param {RegExp | string} pattern
+   * @param {Function} loader
+   */
   setupNamespaceLoader(pattern, loader) {
     this.__namespacePatternsMap.set(pattern, loader);
   }
 
+  /**
+   * @param {Array<string | Object.<string, Function>>} namespaces
+   * @param {Object} [options]
+   * @param {string} [options.locale]
+   * @returns {Promise<Object>}
+   */
   loadNamespaces(namespaces, { locale } = {}) {
-    return Promise.all(namespaces.map(namespace => this.loadNamespace(namespace, { locale })));
+    return Promise.all(
+      namespaces.map(
+        /** @param {Object.<string, Function> | string} namespace */
+        namespace => this.loadNamespace(namespace, { locale }),
+      ),
+    );
   }
 
+  /**
+   * @param {Object.<string, Function> | string} namespaceObj
+   * @param {Object} [options]
+   * @param {string} [options.locale]
+   */
   loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
 
-    const namespace = isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj;
+    const namespace = /** @type {string} */ (isDynamicImport
+      ? Object.keys(namespaceObj)[0]
+      : namespaceObj);
 
     if (this._isNamespaceInCache(locale, namespace)) {
       return Promise.resolve();
@@ -163,6 +209,13 @@ export class LocalizeManager extends LionSingleton {
     return this._loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace);
   }
 
+  /**
+   * @param {string | Array<string>} keys
+   * @param {Object| null} [vars]
+   * @param {Object} [opts]
+   * @param {string} [opts.locale]
+   * @returns {string}
+   */
   msg(keys, vars, opts = {}) {
     const locale = opts.locale ? opts.locale : this.locale;
     const message = this._getMessageForKeys(keys, locale);
@@ -186,7 +239,7 @@ export class LocalizeManager extends LionSingleton {
               this._langAttrSetByTranslationTool = document.documentElement.lang;
             }
           } else {
-            this._onLocaleChanged(document.documentElement.lang, mutation.oldValue);
+            this._onLocaleChanged(document.documentElement.lang, mutation.oldValue || '');
           }
         });
       });
@@ -199,13 +252,23 @@ export class LocalizeManager extends LionSingleton {
   }
 
   _teardownHtmlLangAttributeObserver() {
-    this._htmlLangAttributeObserver.disconnect();
+    if (this._htmlLangAttributeObserver) {
+      this._htmlLangAttributeObserver.disconnect();
+    }
   }
 
+  /**
+   * @param {string} locale
+   * @param {string} namespace
+   */
   _isNamespaceInCache(locale, namespace) {
     return !!(this.__storage[locale] && this.__storage[locale][namespace]);
   }
 
+  /**
+   * @param {string} locale
+   * @param {string} namespace
+   */
   _getCachedNamespaceLoaderPromise(locale, namespace) {
     if (this.__namespaceLoaderPromisesCache[locale]) {
       return this.__namespaceLoaderPromisesCache[locale][namespace];
@@ -213,22 +276,39 @@ export class LocalizeManager extends LionSingleton {
     return null;
   }
 
+  /**
+   * @param {string} locale
+   * @param {Object.<string, Function> | string} namespaceObj
+   * @param {boolean} isDynamicImport
+   * @param {string} namespace
+   */
   _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace) {
     const loader = this._getNamespaceLoader(namespaceObj, isDynamicImport, namespace);
     const loaderPromise = this._getNamespaceLoaderPromise(loader, locale, namespace);
     this._cacheNamespaceLoaderPromise(locale, namespace, loaderPromise);
-    return loaderPromise.then(obj => {
-      const data = isLocalizeESModule(obj) ? obj.default : obj;
-      this.addData(locale, namespace, data);
-    });
+    return loaderPromise.then(
+      /**
+       * @param {Object} obj
+       * @param {Object} obj.default
+       */
+      obj => {
+        const data = isLocalizeESModule(obj) ? obj.default : obj;
+        this.addData(locale, namespace, data);
+      },
+    );
   }
 
+  /**
+   * @param {Object.<string, Function> | string} namespaceObj
+   * @param {boolean} isDynamicImport
+   * @param {string} namespace
+   */
   _getNamespaceLoader(namespaceObj, isDynamicImport, namespace) {
     let loader = this.__namespaceLoadersCache[namespace];
-
     if (!loader) {
       if (isDynamicImport) {
-        loader = namespaceObj[namespace];
+        const _namespaceObj = /** @type {Object.<string, Function>} */ (namespaceObj);
+        loader = _namespaceObj[namespace];
         this.__namespaceLoadersCache[namespace] = loader;
       } else {
         loader = this._lookupNamespaceLoader(namespace);
@@ -245,12 +325,19 @@ export class LocalizeManager extends LionSingleton {
     return loader;
   }
 
+  /**
+   * @param {Function} loader
+   * @param {string} locale
+   * @param {string} namespace
+   * @param {string} [fallbackLocale]
+   * @returns Promise<Object>
+   */
   _getNamespaceLoaderPromise(loader, locale, namespace, fallbackLocale = this._fallbackLocale) {
     return loader(locale, namespace).catch(() => {
       const lang = this._getLangFromLocale(locale);
       return loader(lang, namespace).catch(() => {
         if (fallbackLocale) {
-          return this._getNamespaceLoaderPromise(loader, fallbackLocale, namespace, false).catch(
+          return this._getNamespaceLoaderPromise(loader, fallbackLocale, namespace, '').catch(
             () => {
               const fallbackLang = this._getLangFromLocale(fallbackLocale);
               throw new Error(
@@ -268,6 +355,11 @@ export class LocalizeManager extends LionSingleton {
     });
   }
 
+  /**
+   * @param {string} locale
+   * @param {string} namespace
+   * @param {Promise<Object>} promise
+   */
   _cacheNamespaceLoaderPromise(locale, namespace, promise) {
     if (!this.__namespaceLoaderPromisesCache[locale]) {
       this.__namespaceLoaderPromisesCache[locale] = {};
@@ -275,6 +367,9 @@ export class LocalizeManager extends LionSingleton {
     this.__namespaceLoaderPromisesCache[locale][namespace] = promise;
   }
 
+  /**
+   * @param {string} namespace
+   */
   _lookupNamespaceLoader(namespace) {
     /* eslint-disable no-restricted-syntax */
     for (const [key, value] of this.__namespacePatternsMap) {
@@ -289,6 +384,9 @@ export class LocalizeManager extends LionSingleton {
     /* eslint-enable no-restricted-syntax */
   }
 
+  /**
+   * @param {string} locale
+   */
   // eslint-disable-next-line class-methods-use-this
   _getLangFromLocale(locale) {
     return locale.substring(0, 2);
@@ -297,10 +395,16 @@ export class LocalizeManager extends LionSingleton {
   _fakeExtendsEventTarget() {
     const delegate = document.createDocumentFragment();
     ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
+      // @ts-ignore
       this[funcName] = (...args) => delegate[funcName](...args);
     });
   }
 
+  /**
+   * @param {string} newLocale
+   * @param {string} oldLocale
+   * @returns {undefined}
+   */
   _onLocaleChanged(newLocale, oldLocale) {
     if (newLocale === oldLocale) {
       return;
@@ -308,22 +412,37 @@ export class LocalizeManager extends LionSingleton {
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
     }
+    // @ts-ignore
     this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
   }
 
+  /**
+   * @param {string} newLocale
+   * @param {string} oldLocale
+   */
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
     const newLocaleNamespaces = this.__storage[newLocale] || {};
+    /** @type {Array<Promise<Function>>} */
     const promises = [];
     Object.keys(oldLocaleNamespaces).forEach(namespace => {
       const newNamespaceData = newLocaleNamespaces[namespace];
       if (!newNamespaceData) {
-        promises.push(this.loadNamespace(namespace, { locale: newLocale }));
+        promises.push(
+          this.loadNamespace(namespace, {
+            locale: newLocale,
+          }),
+        );
       }
     });
     return Promise.all(promises);
   }
 
+  /**
+   * @param {string | Array<string>} keys
+   * @param {string} locale
+   * @returns {string | undefined}
+   */
   _getMessageForKeys(keys, locale) {
     if (typeof keys === 'string') {
       return this._getMessageForKey(keys, locale);
@@ -341,16 +460,32 @@ export class LocalizeManager extends LionSingleton {
     return undefined;
   }
 
+  /**
+   * @param {string | undefined} key
+   * @param {string} locale
+   * @returns {string}
+   */
   _getMessageForKey(key, locale) {
-    if (key.indexOf(':') === -1) {
+    if (!key || key.indexOf(':') === -1) {
       throw new Error(
         `Namespace is missing in the key "${key}". The format for keys is "namespace:name".`,
       );
     }
     const [ns, namesString] = key.split(':');
     const namespaces = this.__storage[locale];
-    const messages = namespaces ? namespaces[ns] : null;
+    const messages = namespaces ? namespaces[ns] : {};
     const names = namesString.split('.');
-    return names.reduce((message, n) => (message ? message[n] : null), messages);
+    const result = names.reduce(
+      /**
+       * @param {Object.<string, any> | string} message
+       * @param {string} name
+       * @returns {string}
+       */
+      (message, name) =>
+        typeof message === 'object' ? /** @type {Object.<string, any>} */ message[name] : message,
+      messages,
+    );
+
+    return String(result || '');
   }
 }
