@@ -1,13 +1,41 @@
+const pathLib = require('path');
+const fs = require('fs');
+
 // This file is read by dashboard and cli and needs to be present under process.cwd()
 // It mainly serves as an example and it allows to run the dashboard locally
 // from within this repo.
+
+/**
+ * @returns {string[]}
+ */
+function getAllLionScopedPackagePaths() {
+  const rootPath = pathLib.resolve(__dirname, '../../packages');
+  const filesAndDirs = fs.readdirSync(rootPath);
+  const packages = filesAndDirs.filter(f => {
+    const filePath = pathLib.join(rootPath, f);
+    if (fs.lstatSync(filePath).isDirectory()) {
+      let pkgJson;
+      try {
+        pkgJson = JSON.parse(fs.readFileSync(pathLib.resolve(filePath, './package.json')));
+        // eslint-disable-next-line no-empty
+      } catch (_) {
+        return false;
+      }
+      return pkgJson.name && pkgJson.name.startsWith('@lion/');
+    }
+    return false;
+  });
+  return packages.map(p => pathLib.join(rootPath, p));
+}
+
+const lionScopedPackagePaths = getAllLionScopedPackagePaths();
 
 const providenceConfig = {
   metaConfig: {
     categoryConfig: [
       {
         // This is the name found in package.json
-        project: 'lion-based-ui',
+        project: '@lion/overlays',
         majorVersion: 1,
         // These conditions will be run on overy filePath
         categories: {
@@ -25,20 +53,16 @@ const providenceConfig = {
     ],
   },
   // By predefening groups, we can do a query for programs/collections...
-  // Select via " providence analyze -t 'exampleCollection' "
+  // Select via " providence analyze --search-target-collection 'exampleCollection' "
   searchTargetCollections: {
-    exampleCollection: [
-      './providence-input-data/search-targets/example-project-a',
-      './providence-input-data/search-targets/example-project-b',
-    ],
+    '@lion-targets': lionScopedPackagePaths,
     // ...
   },
   referenceCollections: {
-    // Our products
-    'lion-based-ui': [
-      './providence-input-data/references/lion-based-ui',
-      './providence-input-data/references/lion-based-ui-labs',
-    ],
+    // Usually the references are different from the targets.
+    // In this demo file, we test @lion usage amongst itself
+    // Select via " providence analyze --reference-collection 'exampleCollection' "
+    '@lion-references': lionScopedPackagePaths,
   },
 };
 
