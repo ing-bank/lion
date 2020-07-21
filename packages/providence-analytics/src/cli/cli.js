@@ -39,6 +39,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
   let regexSearchOptions;
 
   const externalConfig = InputDataService.getExternalConfig();
+  console.log('externalConfig', externalConfig);
 
   async function getQueryInputData(
     /* eslint-disable no-shadow */

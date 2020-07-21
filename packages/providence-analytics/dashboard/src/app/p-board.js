@@ -304,14 +304,17 @@ class PBoard extends DecorateMixin(LitElement) {
       const refSearch = `_${ref.replace('#', '_')}_`;
       activeRepos.forEach(dep => {
         const depSearch = `_${dep.replace('#', '_')}_`;
-        const found = this.__resultFiles[activeAnalyzer].find(
-          ({ fileName }) => fileName.includes(refSearch) && fileName.includes(depSearch),
-        );
+        const found = this.__resultFiles[activeAnalyzer].find(({ fileName }) => {
+          return (
+            fileName.includes(encodeURIComponent(refSearch)) &&
+            fileName.includes(encodeURIComponent(depSearch))
+          );
+        });
         if (found) {
           jsonResultsActiveFilter.push(found.content);
         } else {
           // eslint-disable-next-line no-console
-          console.warn(`No result output json for ${refSearch} and ${depSearch}`);
+          console.info(`No result output json for ${refSearch} and ${depSearch}`);
         }
       });
     });
