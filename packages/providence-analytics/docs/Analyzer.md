@@ -4,7 +4,7 @@
 
 ```js script
 export default {
-  title: 'Providence/Analyzer',
+  title: 'Tools/Providence/Analyzer',
 };
 ```
 

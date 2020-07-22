@@ -7,7 +7,7 @@ import { html } from 'lit-html';
 import { providenceFlowSvg, providenceInternalFlowSvg } from './docs/_mermaid.svg.js';
 
 export default {
-  title: 'Providence/Main',
+  title: 'Tools/Providence/Main',
 };
 ```
 

@@ -4,7 +4,7 @@
 
 ```js script
 export default {
-  title: 'Providence/Dashboard',
+  title: 'Tools/Providence/Dashboard',
 };
 ```
 
