@@ -4,7 +4,7 @@
 
 ```js script
 export default {
-  title: 'Providence/LocalConfiguration',
+  title: 'Tools/Providence/LocalConfiguration',
 };
 ```
 

@@ -4,7 +4,7 @@
 
 ```js script
 export default {
-  title: 'Providence/QueryResult',
+  title: 'Tools/Providence/QueryResult',
 };
 ```
 
