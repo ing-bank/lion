@@ -26,7 +26,10 @@ describe('LocalizeMixin', () => {
   });
 
   it('loads namespaces defined in "get localizeNamespaces()" when created before attached to DOM', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
 
     class MyElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -48,9 +51,18 @@ describe('LocalizeMixin', () => {
   });
 
   it('ignores duplicates in "get localizeNamespaces()" chain', async () => {
-    const defaultNs = { default: loc => fakeImport(`./default/${loc}.js`) };
-    const parentElementNs = { 'parent-element': loc => fakeImport(`./parent-element/${loc}.js`) };
-    const childElementNs = { 'child-element': loc => fakeImport(`./child-element/${loc}.js`) };
+    const defaultNs = {
+      /** @param {string} loc */
+      default: loc => fakeImport(`./default/${loc}.js`),
+    };
+    const parentElementNs = {
+      /** @param {string} loc */
+      'parent-element': loc => fakeImport(`./parent-element/${loc}.js`),
+    };
+    const childElementNs = {
+      /** @param {string} loc */
+      'child-element': loc => fakeImport(`./child-element/${loc}.js`),
+    };
 
     class ParentElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -78,7 +90,10 @@ describe('LocalizeMixin', () => {
   });
 
   it('calls "onLocaleReady()" after namespaces were loaded for the first time (only if attached to DOM)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
 
     class MyElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -105,7 +120,10 @@ describe('LocalizeMixin', () => {
   });
 
   it('calls "onLocaleChanged(newLocale, oldLocale)" after locale was changed (only if attached to DOM)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
 
     class MyElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -133,11 +151,15 @@ describe('LocalizeMixin', () => {
     localize.locale = 'ru-RU';
     await localize.loadingComplete;
     expect(onLocaleChangedSpy.callCount).to.equal(1);
+    // FIXME: Expected 0 arguments, but got 2. ts(2554)
     expect(onLocaleChangedSpy.calledWith('ru-RU', 'nl-NL')).to.be.true;
   });
 
   it('calls "onLocaleUpdated()" after both "onLocaleReady()" and "onLocaleChanged()"', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
 
     class MyElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -162,8 +184,11 @@ describe('LocalizeMixin', () => {
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
 
-  it('should have the localizeNamespacesLoaded avaliable within "onLocaleUpdated()"', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+  it('should have the localizeNamespacesLoaded available within "onLocaleUpdated()"', async () => {
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         label: 'one',
@@ -201,7 +226,10 @@ describe('LocalizeMixin', () => {
   });
 
   it('calls "requestUpdate()" after locale was changed', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
 
     class MyElement extends LocalizeMixin(class {}) {
       static get localizeNamespaces() {
@@ -224,7 +252,10 @@ describe('LocalizeMixin', () => {
   });
 
   it('has msgLit() which integrates with lit-html', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
@@ -259,8 +290,11 @@ describe('LocalizeMixin', () => {
     lionLocalizeMessageSpy.restore();
   });
 
-  it('has a Promise "localizeNamespacesLoaded" which resolves once tranlations are available', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
+  it('has a Promise "localizeNamespacesLoaded" which resolves once translations are available', async () => {
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
@@ -284,33 +318,42 @@ describe('LocalizeMixin', () => {
   });
 
   it('renders only once all translations have been loaded (if BaseElement supports it)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
       },
     });
 
-    const tag = defineCE(
-      class extends LocalizeMixin(LitElement) {
-        static get localizeNamespaces() {
-          return [myElementNs, ...super.localizeNamespaces];
-        }
+    class MyLocalizedClass extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
 
-        render() {
-          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
-        }
-      },
+      render() {
+        return html`<p>${this.msgLit('my-element:greeting')}</p>`;
+      }
+    }
+
+    // @ts-ignore
+    const tag = defineCE(MyLocalizedClass);
+    const el = /** @type {MyLocalizedClass} */ (
+      /** @type {unknown} */ (await fixtureSync(`<${tag}></${tag}>`))
     );
 
-    const el = await fixtureSync(`<${tag}></${tag}>`);
     expect(el.shadowRoot.children.length).to.equal(0);
     await el.updateComplete;
     expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
   });
 
-  it('rerender on locale change once all translations are loaded (if BaseElement supports it)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25) };
+  it('re-render on locale change once all translations are loaded (if BaseElement supports it)', async () => {
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`, 25),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
@@ -322,57 +365,66 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    const tag = defineCE(
-      class TestPromise extends LocalizeMixin(LitElement) {
-        static get localizeNamespaces() {
-          return [myElementNs, ...super.localizeNamespaces];
-        }
+    class MyLocalizedClass extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
 
-        render() {
-          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
-        }
-      },
+      render() {
+        return html`<p>${this.msgLit('my-element:greeting')}</p>`;
+      }
+    }
+
+    // @ts-ignore
+    const tag = defineCE(MyLocalizedClass);
+    const el = /** @type {MyLocalizedClass} */ (
+      /** @type {unknown} */ (await fixture(`<${tag}></${tag}>`))
     );
-
-    const el = await fixture(`<${tag}></${tag}>`);
     await el.updateComplete;
-    expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
-
+    const p = el.shadowRoot.querySelector('p');
+    expect(p.innerText).to.equal('Hi!');
     localize.locale = 'en-US';
-    expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
+    expect(p.innerText).to.equal('Hi!');
     await el.updateComplete;
-    expect(el.shadowRoot.querySelector('p').innerText).to.equal('Howdy!');
+    expect(p.innerText).to.equal('Howdy!');
   });
 
   it('it can still render async by setting "static get waitForLocalizeNamespaces() { return false; }" (if BaseElement supports it)', async () => {
-    const myElementNs = { 'my-element': locale => fakeImport(`./my-element/${locale}.js`, 50) };
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`, 50),
+    };
     setupFakeImport('./my-element/en-GB.js', {
       default: {
         greeting: 'Hi!',
       },
     });
 
-    const tag = defineCE(
-      class extends LocalizeMixin(LitElement) {
-        static get waitForLocalizeNamespaces() {
-          return false;
-        }
+    class MyLocalizedClass extends LocalizeMixin(LitElement) {
+      static get waitForLocalizeNamespaces() {
+        return false;
+      }
 
-        static get localizeNamespaces() {
-          return [myElementNs, ...super.localizeNamespaces];
-        }
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
 
-        render() {
-          return html`<p>${this.msgLit('my-element:greeting')}</p>`;
-        }
-      },
+      render() {
+        return html`<p>${this.msgLit('my-element:greeting')}</p>`;
+      }
+    }
+
+    // @ts-ignore
+    const tag = defineCE(MyLocalizedClass);
+
+    const el = /** @type {MyLocalizedClass} */ (
+      /** @type {unknown} */ (await fixture(`<${tag}></${tag}>`))
     );
-
-    const el = await fixture(`<${tag}></${tag}>`);
     await el.updateComplete;
-    expect(el.shadowRoot.querySelector('p').innerText).to.equal('');
+    const p = el.shadowRoot.querySelector('p');
+    expect(p.innerText).to.equal('');
     await el.localizeNamespacesLoaded;
     await el.updateComplete;
-    expect(el.shadowRoot.querySelector('p').innerText).to.equal('Hi!');
+    expect(p.innerText).to.equal('Hi!');
   });
 });

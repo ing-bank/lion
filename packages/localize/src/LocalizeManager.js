@@ -9,7 +9,7 @@ export class LocalizeManager extends LionSingleton {
   // eslint-disable-line no-unused-vars
   constructor({ autoLoadOnLocaleChange = false, fallbackLocale = '' } = {}) {
     super();
-    this._fakeExtendsEventTarget();
+    this.__delegationTarget = document.createDocumentFragment();
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
     this._fallbackLocale = fallbackLocale;
     /** @type {Object.<string, Object.<string, Object>>} */
@@ -397,12 +397,29 @@ export class LocalizeManager extends LionSingleton {
     return locale.substring(0, 2);
   }
 
-  _fakeExtendsEventTarget() {
-    const delegate = document.createDocumentFragment();
-    ['addEventListener', 'dispatchEvent', 'removeEventListener'].forEach(funcName => {
-      // @ts-ignore
-      this[funcName] = (...args) => delegate[funcName](...args);
-    });
+  /**
+   * @param {string} type
+   * @param {EventListener} listener
+   * @param {...Object} options
+   */
+  addEventListener(type, listener, ...options) {
+    this.__delegationTarget.addEventListener(type, listener, ...options);
+  }
+
+  /**
+   * @param {string} type
+   * @param {EventListener} listener
+   * @param {...Object} options
+   */
+  removeEventListener(type, listener, ...options) {
+    this.__delegationTarget.removeEventListener(type, listener, ...options);
+  }
+
+  /**
+   *  @param {CustomEvent} event
+   */
+  dispatchEvent(event) {
+    this.__delegationTarget.dispatchEvent(event);
   }
 
   /**
@@ -417,7 +434,6 @@ export class LocalizeManager extends LionSingleton {
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
     }
-    // @ts-ignore
     this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
   }
 

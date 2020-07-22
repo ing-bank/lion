@@ -60,8 +60,11 @@ describe('LocalizeManager', () => {
       setTimeout(() => {
         manager.locale = 'en-US';
       });
-      // @ts-ignore
-      const event = await oneEvent(manager, 'localeChanged');
+
+      const event = await oneEvent(
+        /** @type {EventTarget} */ (/** @type {unknown} */ (manager)),
+        'localeChanged',
+      );
       expect(event.detail.newLocale).to.equal('en-US');
       expect(event.detail.oldLocale).to.equal('en-GB');
     });
@@ -69,7 +72,7 @@ describe('LocalizeManager', () => {
     it('does not fire "localeChanged" event if it was set to the same locale', () => {
       manager = new LocalizeManager();
       const eventSpy = sinon.spy();
-      // @ts-ignore
+
       manager.addEventListener('localeChanged', eventSpy);
       manager.locale = 'en-US';
       manager.locale = 'en-US';
@@ -757,8 +760,11 @@ describe('[deprecated] When not supporting external translation tools like Googl
     setTimeout(() => {
       document.documentElement.lang = 'en-US';
     });
-    // @ts-ignore
-    const event = await oneEvent(manager, 'localeChanged');
+
+    const event = await oneEvent(
+      /** @type {EventTarget} */ (/** @type {unknown} */ (manager)),
+      'localeChanged',
+    );
     expect(event.detail.newLocale).to.equal('en-US');
     expect(event.detail.oldLocale).to.equal('en-GB');
   });
