@@ -2,6 +2,9 @@ const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
 const { QueryService } = require('../../../src/program/services/QueryService.js');
 const { InputDataService } = require('../../../src/program/services/InputDataService.js');
+const FindExportsAnalyzer = require('../../../src/program/analyzers/find-exports.js');
+const FindImportsAnalyzer = require('../../../src/program/analyzers/find-imports.js');
+
 const {
   mockTargetAndReferenceProject,
   restoreMockedProjects,
@@ -233,6 +236,22 @@ describe('Analyzer "match-imports"', () => {
     restoreMockedProjects();
   });
 
+  function testMatchedEntry(targetExportedId, queryResult, importedByFiles = []) {
+    const matchedEntry = queryResult.queryOutput.find(
+      r => r.exportSpecifier.id === targetExportedId,
+    );
+
+    const [name, filePath, project] = targetExportedId.split('::');
+    expect(matchedEntry.exportSpecifier).to.eql({
+      name,
+      filePath,
+      project,
+      id: targetExportedId,
+    });
+    expect(matchedEntry.matchesPerProject[0].project).to.equal('importing-target-project');
+    expect(matchedEntry.matchesPerProject[0].files).to.eql(importedByFiles);
+  }
+
   describe('Extracting exports', () => {
     it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
@@ -276,24 +295,34 @@ describe('Analyzer "match-imports"', () => {
 
   describe('Matching', () => {
     it(`produces a list of all matches, sorted by project`, async () => {
-      function testMatchedEntry(targetExportedId, queryResult, importedByFiles = []) {
-        const matchedEntry = queryResult.queryOutput.find(
-          r => r.exportSpecifier.id === targetExportedId,
-        );
-
-        const [name, filePath, project] = targetExportedId.split('::');
-        expect(matchedEntry.exportSpecifier).to.eql({
-          name,
-          filePath,
-          project,
-          id: targetExportedId,
-        });
-        expect(matchedEntry.matchesPerProject[0].project).to.equal('importing-target-project');
-        expect(matchedEntry.matchesPerProject[0].files).to.eql(importedByFiles);
-      }
-
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
       await providence(matchImportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+
+      expectedExportIdsDirect.forEach(targetId => {
+        testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
+      });
+
+      expectedExportIdsIndirect.forEach(targetId => {
+        testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
+      });
+    });
+  });
+
+  describe('Configuration', () => {
+    it(`allows to provide results of FindExportsAnalyzer and FindImportsAnalyzer`, async () => {
+      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+      const importsAnalyzerResult = await new FindImportsAnalyzer().execute({
+        targetProjectPath: searchTargetProject.path,
+      });
+      const exportsAnalyzerResult = await new FindExportsAnalyzer().execute({
+        targetProjectPath: referenceProject.path,
+      });
+      await providence(matchImportsQueryConfig, {
+        ..._providenceCfg,
+        importsAnalyzerResult,
+        exportsAnalyzerResult,
+      });
       const queryResult = queryResults[0];
 
       expectedExportIdsDirect.forEach(targetId => {

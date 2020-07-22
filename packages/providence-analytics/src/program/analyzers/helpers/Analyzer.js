@@ -186,7 +186,6 @@ class Analyzer {
     }
 
     LogService.info(`starting ${LogService.pad(this.name, 16)} for ${this.identifier}`);
-
     /**
      * Get reference and search-target data
      */
