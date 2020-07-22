@@ -205,7 +205,7 @@ describe('lion-select-rich', () => {
       <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
         <lion-options slot="input">
           <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
           <lion-option .choiceValue=${'teal'}>Teal</lion-option>
         </lion-options>
       </lion-select-rich>
@@ -213,6 +213,25 @@ describe('lion-select-rich', () => {
 
     expect(el.selectedElement).to.be.undefined;
     expect(el.modelValue).to.equal('');
+  });
+
+  it('supports changing the selection through serializedValue setter', async () => {
+    const el = await fixture(html`
+      <lion-select-rich id="color" name="color" label="Favorite color">
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    expect(el.checkedIndex).to.equal(0);
+    expect(el.serializedValue).to.equal('red');
+
+    el.serializedValue = 'hotpink';
+    expect(el.checkedIndex).to.equal(1);
+    expect(el.serializedValue).to.equal('hotpink');
   });
 
   describe('Invoker', () => {
