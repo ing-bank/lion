@@ -214,23 +214,34 @@ In the code above we have 2 places in where you can do overrides: `./.storybook/
 
 We insert a remarkExtend plugin instance for both the local overrides and the global overrides, and pass the necessary arguments. Then we return the new array of plugins for Mdjs.
 
-In each file you need to add a specifier which section you want to override, as a first step we want to load `lea-tab` and `lea-tab-panel` also in the project:
+In each file you need to add a specifier which section you want to override. As a first step we want to load `lea-tab` and `lea-tab-panel` also in the project. We need to add some imports to the top of the file.
 
-````md
-```
+Use triple backtick \` to create a fenced codeblock ` ``` `, and put inside it:
+
+```md
 ::addMdAfter(':root')
 ```
 
-```js script
+<!-- markdownlint-disable no-space-in-code -->
+
+Then below that, create another fenced codeblock ` ```js script ` with your imports inside it:
+
+<!-- markdownlint-enable no-space-in-code -->
+
+```js
 import '../lea-tab.js';
 import '../lea-tab-panel.js';
 ```
-````
 
 And then replace each reference to `lion-tab` with `lea-tab` inside the documentation content, this also covers `lion-tab` and `lion-tab-panel`. We exclude JS snippets 'nodes', those are handled by the babel plugin already.
 
-````md
-```js ::replaceFrom(':root')
+<!-- markdownlint-disable no-space-in-code -->
+
+Create another fenced codeblock with ` ```js ::replaceFrom(':root') `:
+
+<!-- markdownlint-enable no-space-in-code -->
+
+```js
 module.exports.replaceSection = node => {
   if (node.type !== 'code' && node.value) {
     let newCode = node.value;
@@ -240,28 +251,24 @@ module.exports.replaceSection = node => {
   return node;
 };
 ```
-````
 
-You can remove content:
+You can remove content as well. Create a fenced codeblock ` ``` `:
 
-````md
-```
+```md
 ::removeFrom('heading:has([value=Distribute New Elements])')
 ```
-````
 
-Or you can add an extra paragraph below the content:
+Or you can add an extra paragraph below the content. Create a fenced codeblock ` ``` `:
 
-````md
-```
+```md
 ::removeMdAfter(':scope:last-child')
 ```
 
-> See https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page for more information
+> See [Remark extend](https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page) for more information
 
 ### Lea Tabs Special Feature
 
-```js preview-story
+```js
 export const specialFeature = () =>
   html`
     <lea-tabs>
@@ -276,7 +283,6 @@ export const specialFeature = () =>
     </lea-tabs>
   `;
 ```
-````
 
 ## Summary
 
