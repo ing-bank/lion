@@ -337,7 +337,7 @@ class InputDataService {
     try {
       // eslint-disable-next-line import/no-dynamic-require, global-require
       return require(`${process.cwd()}/providence.conf.js`);
-    } catch (_) {
+    } catch (e) {
       return null;
     }
   }

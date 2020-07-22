@@ -19,7 +19,8 @@
     "src"
   ],
   "scripts": {
-    "dashboard": "node ./dashboard/src/server.js",
+    "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
+    "match-lion-imports": "npm run providence analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
     "test:node": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
