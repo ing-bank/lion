@@ -222,11 +222,7 @@ Use triple backtick \` to create a fenced codeblock ` ``` `, and put inside it:
 ::addMdAfter(':root')
 ```
 
-<!-- markdownlint-disable no-space-in-code -->
-
-Then below that, create another fenced codeblock ` ```js script ` with your imports inside it:
-
-<!-- markdownlint-enable no-space-in-code -->
+Then below that, create another fenced codeblock with `js script` annotation with your imports inside it:
 
 ```js
 import '../lea-tab.js';
@@ -235,11 +231,7 @@ import '../lea-tab-panel.js';
 
 And then replace each reference to `lion-tab` with `lea-tab` inside the documentation content, this also covers `lion-tab` and `lion-tab-panel`. We exclude JS snippets 'nodes', those are handled by the babel plugin already.
 
-<!-- markdownlint-disable no-space-in-code -->
-
-Create another fenced codeblock with ` ```js ::replaceFrom(':root') `:
-
-<!-- markdownlint-enable no-space-in-code -->
+Create another fenced codeblock with `js ::replaceFrom(':root')` annotation:
 
 ```js
 module.exports.replaceSection = node => {
@@ -252,13 +244,13 @@ module.exports.replaceSection = node => {
 };
 ```
 
-You can remove content as well. Create a fenced codeblock ` ``` `:
+You can remove content as well. Create a fenced codeblock:
 
 ```md
 ::removeFrom('heading:has([value=Distribute New Elements])')
 ```
 
-Or you can add an extra paragraph below the content. Create a fenced codeblock ` ``` `:
+Or you can add an extra paragraph below the content. Create a fenced codeblock:
 
 ```md
 ::removeMdAfter(':scope:last-child')
