@@ -2,9 +2,15 @@ import { localize } from '../localize.js';
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
 import { addLeadingZero } from './addLeadingZero.js';
 
+/**
+ *
+ * @param {Function} fn
+ */
 const memoize = fn => {
+  /** @type {Object.<any, any>} */
   const cache = {};
-  return parm => {
+
+  return /** @param {any} parm */ parm => {
     const n = parm;
     if (n in cache) {
       return cache[n];
@@ -20,11 +26,11 @@ const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale);
 /**
  * To parse a date into the right format
  *
- * @param date
- * @returns {Date}
+ * @param {string} dateString
+ * @returns {Date | undefined}
  */
-export function parseDate(date) {
-  const stringToParse = addLeadingZero(date);
+export function parseDate(dateString) {
+  const stringToParse = addLeadingZero(dateString);
   let parsedString;
   switch (memoizedGetDateFormatBasedOnLocale(localize.locale)) {
     case 'day-month-year':
@@ -51,7 +57,7 @@ export function parseDate(date) {
   const parsedDate = new Date(parsedString);
   // Check if parsedDate is not `Invalid Date`
   // eslint-disable-next-line no-restricted-globals
-  if (!isNaN(parsedDate)) {
+  if (!isNaN(parsedDate.getTime())) {
     return parsedDate;
   }
   return undefined;

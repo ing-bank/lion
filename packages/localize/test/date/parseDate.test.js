@@ -3,9 +3,15 @@ import { localizeTearDown } from '../../test-helpers.js';
 
 import { parseDate } from '../../src/date/parseDate.js';
 
+/**
+ *
+ * @param {Date | undefined} value
+ * @param {Date} date
+ */
 function equalsDate(value, date) {
   return (
     Object.prototype.toString.call(value) === '[object Date]' && // is Date Object
+    value &&
     value.getDate() === date.getDate() && // day
     value.getMonth() === date.getMonth() && // month
     value.getFullYear() === date.getFullYear() // year

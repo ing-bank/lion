@@ -2,6 +2,9 @@ import { expect } from '@open-wc/testing';
 
 import { getWeekdayNames } from '../../src/date/getWeekdayNames.js';
 
+/**
+ * @param {TemplateStringsArray} strings
+ */
 function s(strings) {
   return strings[0].split(' ');
 }

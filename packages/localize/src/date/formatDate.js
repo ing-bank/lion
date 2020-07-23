@@ -4,14 +4,20 @@ import { normalizeIntlDate } from './normalizeIntlDate.js';
 /**
  * Formats date based on locale and options
  *
- * @param date
- * @param options
- * @returns {*}
+ * @param {Date | any} date
+ * @param {Object} [options]
+ * @param {string} [options.locale]
+ * @param {string} [options.weekday]
+ * @param {string} [options.day]
+ * @param {string} [options.month]
+ * @param {string} [options.year]
+ * @returns {string}
  */
 export function formatDate(date, options) {
   if (!(date instanceof Date)) {
     return '';
   }
+  /** @type {options} */
   const formatOptions = options || {};
   /**
    * Set smart defaults if:
