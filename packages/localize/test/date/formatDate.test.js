@@ -57,10 +57,10 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localize.locale = 'hu-HU';
-    let date = parseDate('2018-5-28');
+    let date = /** @type {Date} */ (parseDate('2018-5-28'));
     expect(formatDate(date)).to.equal('2018. 05. 28.');
 
-    date = parseDate('1970-11-3');
+    date = /** @type {Date} */ (parseDate('1970-11-3'));
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
 
@@ -73,13 +73,13 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localize.locale = 'bg-BG';
-    let date = parseDate('29-12-2017');
+    let date = /** @type {Date} */ (parseDate('29-12-2017'));
     expect(formatDate(date)).to.equal('29.12.2017 г.');
 
-    date = parseDate('13-1-1940');
+    date = /** @type {Date} */ (parseDate('13-1-1940'));
     expect(formatDate(date)).to.equal('13.01.1940 г.');
 
-    date = parseDate('3-11-1970');
+    date = /** @type {Date} */ (parseDate('3-11-1970'));
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
 
@@ -92,13 +92,13 @@ describe('formatDate', () => {
       locale: 'en-US',
     };
     localize.locale = 'en-US';
-    let date = parseDate('12-29-1940');
+    let date = /** @type {Date} */ (parseDate('12-29-1940'));
     expect(formatDate(date)).to.equal('12/29/1940');
 
-    date = parseDate('1-13-1940');
+    date = /** @type {Date} */ (parseDate('1-13-1940'));
     expect(formatDate(date)).to.equal('01/13/1940');
 
-    date = parseDate('11-3-1970');
+    date = /** @type {Date} */ (parseDate('11-3-1970'));
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');
   });
 
@@ -110,10 +110,10 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    let parsedDate = parseDate('05.11.2017');
+    let parsedDate = /** @type {Date} */ (parseDate('05.11.2017'));
     expect(formatDate(parsedDate, options)).to.equal('Sunday, November 05, 2017');
 
-    parsedDate = parseDate('01-01-1940');
+    parsedDate = /** @type {Date} */ (parseDate('01-01-1940'));
     options = {
       weekday: 'long',
       year: 'numeric',
@@ -130,7 +130,7 @@ describe('formatDate', () => {
       month: 'long',
       day: '2-digit',
     };
-    const parsedDate = parseDate('12.10.2019');
+    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
     expect(formatDate(parsedDate, options)).to.equal('Saturday, 12 October');
   });
 
@@ -140,7 +140,7 @@ describe('formatDate', () => {
       year: 'numeric',
       day: '2-digit',
     };
-    const parsedDate = parseDate('12.10.2019');
+    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
     expect(formatDate(parsedDate, options)).to.equal('Saturday 12 2019');
   });
 
@@ -150,12 +150,14 @@ describe('formatDate', () => {
       year: 'numeric',
       month: 'long',
     };
-    const parsedDate = parseDate('12.10.2019');
+    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
     expect(formatDate(parsedDate, options)).to.equal('October 2019 Saturday');
   });
 
   it('returns empty string when input is not a Date object', async () => {
     const date = '1-1-2016';
+    // that tests what happens if you use a wrong type
+    // @ts-ignore
     expect(formatDate(date)).to.equal('');
   });
 });

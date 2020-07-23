@@ -4,8 +4,8 @@ import { normalizeIntlDate } from './normalizeIntlDate.js';
 /**
  * Formats date based on locale and options
  *
- * @param {Date | any} date
- * @param {Object} options Intl options are available
+ * @param {Date} date
+ * @param {Object} [options] Intl options are available
  * @param {string} [options.locale]
  * @param {string} [options.localeMatcher]
  * @param {string} [options.formatMatcher]
