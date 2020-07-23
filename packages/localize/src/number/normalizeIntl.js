@@ -9,9 +9,13 @@ import { forceTryCurrencyCode } from './forceTryCurrencyCode.js';
 import { forceENAUSymbols } from './forceENAUSymbols.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * Function with all fixes on localize
  *
- * @param {{type: string, value: string}[]} formattedParts
+ * @param {FormatNumberPart[]} formattedParts
  * @param {Object} [options]
  * @param {string} [options.style]
  * @param {string} [options.currency]

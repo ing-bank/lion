@@ -1,13 +1,17 @@
+/**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
 import { normalSpaces } from './normalSpaces.js';
 
 /**
  * Parts with forced "normal" spaces
  *
- * @param {{type: string, value: string}[]} formattedParts
- * @returns {{type: string, value: string}[]}
+ * @param {FormatNumberPart[]} formattedParts
+ * @returns {FormatNumberPart[]}
  */
 export function forceNormalSpaces(formattedParts) {
-  /** @type {{type: string, value: string}[]} */
+  /** @type {FormatNumberPart[]} */
   const result = [];
   formattedParts.forEach(part => {
     result.push({

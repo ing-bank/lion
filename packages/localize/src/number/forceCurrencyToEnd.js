@@ -1,8 +1,12 @@
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * For Dutch and Belgian amounts the currency should be at the end of the string
  *
- * @param {{type: string, value: string}[]} formattedParts
- * @returns {{type: string, value: string}[]}
+ * @param {FormatNumberPart[]} formattedParts
+ * @returns {FormatNumberPart[]}
  */
 export function forceCurrencyToEnd(formattedParts) {
   if (formattedParts[0].type === 'currency') {

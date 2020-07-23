@@ -1,6 +1,10 @@
 import { formatNumberToParts } from './formatNumberToParts.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * Based on number, returns currency name like 'US dollar'
  *
  * @param {string} currencyIso iso code like USD
@@ -8,7 +12,7 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * @returns {string} currency name like 'US dollar'
  */
 export function getCurrencyName(currencyIso, options) {
-  const parts = /** @type {{type: string, value: string}[]} */ (formatNumberToParts(1, {
+  const parts = /** @type {FormatNumberPart[]} */ (formatNumberToParts(1, {
     ...options,
     style: 'currency',
     currency: currencyIso,

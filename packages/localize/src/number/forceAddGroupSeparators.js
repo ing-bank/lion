@@ -1,12 +1,16 @@
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * Add separators when they are not present
  *
- * @param {{type: string, value: string}[]} formattedParts
+ * @param {FormatNumberPart[]} formattedParts
  * @param {string} groupSeparator
- * @returns {{type: string, value: string}[]}
+ * @returns {FormatNumberPart[]}
  */
 export function forceAddGroupSeparators(formattedParts, groupSeparator) {
-  /** @type {{type: string, value: string}[]} */
+  /** @type {FormatNumberPart[]} */
   let concatArray = [];
   let firstPart;
   let integerPart;

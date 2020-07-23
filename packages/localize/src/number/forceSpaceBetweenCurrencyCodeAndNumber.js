@@ -1,11 +1,15 @@
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * When in some locales there is no space between currency and amount it is added
  *
- * @param {{type: string, value: string}[]} formattedParts
+ * @param {FormatNumberPart[]} formattedParts
  * @param {Object} [options]
  * @param {string} [options.currency]
  * @param {string} [options.currencyDisplay]
- * @returns {{type: string, value: string}[]}
+ * @returns {FormatNumberPart[]}
  */
 export function forceSpaceBetweenCurrencyCodeAndNumber(
   formattedParts,

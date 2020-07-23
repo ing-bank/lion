@@ -1,10 +1,13 @@
 /**
- *
- * @param {any} formattedParts
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
+ * @param {FormatNumberPart[]} formattedParts
  * @param {Object} [options]
  * @param {string} [options.currency]
  * @param {string} [options.currencyDisplay]
- * @returns {any}
+ * @returns {FormatNumberPart[]}
  */
 export function forceTryCurrencyCode(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;

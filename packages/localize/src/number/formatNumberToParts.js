@@ -7,6 +7,10 @@ import { normalSpaces } from './normalSpaces.js';
 import { roundNumber } from './roundNumber.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * Splits a number up in parts for integer, fraction, group, literal, decimal and currency.
  *
  * @param {number} number Number to split up
@@ -25,7 +29,7 @@ import { roundNumber } from './roundNumber.js';
  * @param {number} [options.maximumFractionDigits]
  * @param {number} [options.minimumSignificantDigits]
  * @param {number} [options.maximumSignificantDigits]
- * @returns {string | {type: string, value: string}[]} Array with parts or (an empty string or returnIfNaN if not a number)
+ * @returns {string | FormatNumberPart[]} Array with parts or (an empty string or returnIfNaN if not a number)
  */
 export function formatNumberToParts(number, options = {}) {
   let parsedNumber = typeof number === 'string' ? parseFloat(number) : number;

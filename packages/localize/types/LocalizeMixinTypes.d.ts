@@ -1,21 +1,20 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-
-export type NamespaceLocaleMap = {
-  [key: string]: Function;
-};
+import { StringToFunctionMap, PromiseOfObject, PromiseOfVoid } from './localizeTypes';
 
 declare class LocalizeMixinHost {
   constructor();
 
-  static get localizeNamespaces(): NamespaceLocaleMap[];
+  // FIXME: return value type check doesn't seem to be `working!
+  static get localizeNamespaces(): StringToFunctionMap[];
+
   static get waitForLocalizeNamespaces(): boolean;
 
-  public localizeNamespacesLoaded(): Promise<Object>;
+  public localizeNamespacesLoaded(): PromiseOfObject;
 
   /**
    * Hook into LitElement to only render once all translations are loaded
    */
-  public performUpdate(): Promise<void>;
+  public performUpdate(): PromiseOfVoid;
 
   public onLocaleReady(): void;
   public onLocaleChanged(): void;

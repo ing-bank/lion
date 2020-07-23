@@ -2,15 +2,18 @@ import { sanitizedDateTimeFormat } from './sanitizedDateTimeFormat.js';
 import { splitDate } from './splitDate.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').StringToStringMap} StringToStringMap
+ */
+
+/**
  * To compute the localized date format
- *
  * @returns {string}
  */
 export function getDateFormatBasedOnLocale() {
   /**
    *
    * @param {ArrayLike<string>} dateParts
-   * @returns {Array<string>}
+   * @returns {string[]}
    */
   function computePositions(dateParts) {
     /**
@@ -18,7 +21,7 @@ export function getDateFormatBasedOnLocale() {
      * @returns {string}
      */
     function getPartByIndex(index) {
-      /** @type {Object.<string, string>} */
+      /** @type {StringToStringMap} */
       const template = {
         '2012': 'year',
         '12': 'month',

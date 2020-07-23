@@ -1,4 +1,9 @@
-/** @type {Object.<string, string>} */
+/**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../types/localizeTypes').StringToStringMap} StringToStringMap
+ */
+
+/** @type {StringToStringMap} */
 const CURRENCY_CODE_SYMBOL_MAP = {
   EUR: '€',
   USD: '$',
@@ -8,11 +13,11 @@ const CURRENCY_CODE_SYMBOL_MAP = {
 /**
  * Change the symbols for locale 'en-AU', due to bug in Chrome
  *
- * @param {{type: string, value: string}[]} formattedParts
+ * @param {FormatNumberPart[]} formattedParts
  * @param {Object} [options]
  * @param {string} [options.currency]
  * @param {string} [options.currencyDisplay]
- * @returns {{type: string, value: string}[]}
+ * @returns {FormatNumberPart[]}
  */
 export function forceENAUSymbols(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;

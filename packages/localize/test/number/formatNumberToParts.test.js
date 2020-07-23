@@ -1,8 +1,11 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '../../src/localize.js';
 import { localizeTearDown } from '../../test-helpers.js';
-
 import { formatNumberToParts } from '../../src/number/formatNumberToParts.js';
+
+/**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
 
 const c = /** @param {string} v */ v => ({
   type: 'currency',
@@ -17,7 +20,7 @@ const m = { type: 'minusSign', value: '−' };
 
 const stringifyParts =
   /**
-   * @param {{type: string, value: string}[]} parts
+   * @param {FormatNumberPart[]} parts
    * @returns {string}
    */
   parts => parts.map(part => part.value).join('');
@@ -41,7 +44,7 @@ describe('formatNumberToParts', () => {
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
       it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
-        /** @type {{type: string, value: string}[]} */ (expectedResult),
+        /** @type {FormatNumberPart[]} */ (expectedResult),
       )}"`, () => {
         expect(
           formatNumberToParts(Number(amount), {
@@ -70,7 +73,7 @@ describe('formatNumberToParts', () => {
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
       it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
-        /** @type {{type: string, value: string}[]} */ (expectedResult),
+        /** @type {FormatNumberPart[]} */ (expectedResult),
       )}"`, () => {
         expect(
           formatNumberToParts(Number(amount), {
@@ -101,7 +104,7 @@ describe('formatNumberToParts', () => {
 
       specs.forEach(([locale, amount, expectedResult]) => {
         it(`formats ${locale} ${amount} as "${stringifyParts(
-          /** @type {{type: string, value: string}[]} */ (expectedResult),
+          /** @type {FormatNumberPart[]} */ (expectedResult),
         )}"`, () => {
           localize.locale = locale;
           expect(
@@ -129,7 +132,7 @@ describe('formatNumberToParts', () => {
 
       specs.forEach(([locale, amount, expectedResult]) => {
         it(`formats ${locale} ${amount} as "${stringifyParts(
-          /** @type {{type: string, value: string}[]} */ (expectedResult),
+          /** @type {FormatNumberPart[]} */ (expectedResult),
         )}"`, () => {
           localize.locale = locale;
           expect(
@@ -159,7 +162,7 @@ describe('formatNumberToParts', () => {
 
     specs.forEach(([locale, amount, expectedResult]) => {
       it(`formats ${locale} ${amount} as "${stringifyParts(
-        /** @type {{type: string, value: string}[]} */ (expectedResult),
+        /** @type {FormatNumberPart[]} */ (expectedResult),
       )}"`, () => {
         expect(
           formatNumberToParts(Number(amount) / 100, {

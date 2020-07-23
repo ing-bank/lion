@@ -2,6 +2,10 @@ import { localize } from '../localize.js';
 import { formatNumberToParts } from './formatNumberToParts.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * Formats a number based on locale and options. It uses Intl for the formatting.
  *
  * @param {number} number Number to be formatted
@@ -36,7 +40,7 @@ export function formatNumber(number, options = {}) {
   // update numberOfParts because there may be some parts added
   const numberOfParts = formattedToParts && formattedToParts.length;
   for (let i = 0; i < numberOfParts; i += 1) {
-    const part = /** @type {{type: string, value: string}} */ (formattedToParts[i]);
+    const part = /** @type {FormatNumberPart} */ (formattedToParts[i]);
     printNumberOfParts += part.value;
   }
   return printNumberOfParts;

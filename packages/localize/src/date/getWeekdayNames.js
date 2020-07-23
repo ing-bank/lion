@@ -1,12 +1,16 @@
 import { normalizeIntlDate } from './normalizeIntlDate.js';
 
-/** @type {Object.<string, Object.<string, string[]>>} */
+/**
+ * @typedef {import('../../types/localizeTypes').StringToStringArrayMap} StringToStringArrayMap
+ */
+
+/** @type {Object.<string, StringToStringArrayMap>} */
 const weekdayNamesCache = {};
 
 /**
  * @desc Return cached weekday names for locale for all styles ('long', 'short', 'narrow')
  * @param {string} locale locale
- * @returns {Object.<string, string[]>} like { long: ['Sunday', 'Monday'...], short: ['Sun', ...], narrow: ['S', ...] }
+ * @returns {StringToStringArrayMap} - like { long: ['Sunday', 'Monday'...], short: ['Sun', ...], narrow: ['S', ...] }
  */
 function getCachedWeekdayNames(locale) {
   const cachedWeekdayNames = weekdayNamesCache[locale];
@@ -46,7 +50,7 @@ function getCachedWeekdayNames(locale) {
  * @param {string} [options.locale] locale
  * @param {string} [options.style=long] long, short or narrow
  * @param {number} [options.firstDayOfWeek=0] 0 (Sunday), 1 (Monday), etc...
- * @returns {Array<string>} like: ['Sunday', 'Monday', 'Tuesday', ...etc].
+ * @returns {string[]} like: ['Sunday', 'Monday', 'Tuesday', ...etc].
  */
 export function getWeekdayNames({ locale, style = 'long', firstDayOfWeek = 0 } = {}) {
   const weekdays = getCachedWeekdayNames(locale)[style];

@@ -3,7 +3,8 @@ import { localize } from './localize.js';
 
 /**
  * @typedef {import('../types/LocalizeMixinTypes').LocalizeMixin} LocalizeMixin
- * @typedef {import('../types/LocalizeMixinTypes').NamespaceLocaleMap} NamespaceLocaleMap
+ * @typedef {import('../types/localizeTypes').StringToFunctionMap} StringToFunctionMap
+ * @typedef {import('../types/localizeTypes').PromiseOfVoid} PromiseOfVoid
  */
 
 /**
@@ -14,7 +15,7 @@ const LocalizeMixinImplementation = superclass =>
   // eslint-disable-next-line
   class LocalizeMixin extends superclass {
     /**
-     * @returns {Array<NamespaceLocaleMap>}
+     * @returns {StringToFunctionMap[]}
      */
     static get localizeNamespaces() {
       return [];
@@ -46,7 +47,7 @@ const LocalizeMixinImplementation = superclass =>
 
     /**
      * hook into LitElement to only render once all translations are loaded
-     * @returns {Promise<void>}
+     * @returns {PromiseOfVoid}
      */
     async performUpdate() {
       if (Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces) {
@@ -87,10 +88,10 @@ const LocalizeMixinImplementation = superclass =>
     }
 
     /**
-     * @returns {Array<string>}
+     * @returns {string[]}
      */
     __getUniqueNamespaces() {
-      /** @type {Array<string>} */
+      /** @type {string[]} */
       const uniqueNamespaces = [];
 
       // IE11 does not support iterable in the constructor

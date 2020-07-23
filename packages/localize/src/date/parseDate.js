@@ -3,7 +3,6 @@ import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
 import { addLeadingZero } from './addLeadingZero.js';
 
 /**
- *
  * @param {Function} fn
  */
 const memoize = fn => {

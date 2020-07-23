@@ -1,5 +1,10 @@
 /**
- * @type {Object.<string, Object>}
+ * @typedef {import('../types/localizeTypes').StringToObjectMap} StringToObjectMap
+ * @typedef {import('../types/localizeTypes').PromiseOfObject} PromiseOfObject
+ */
+
+/**
+ * @type {StringToObjectMap}
  */
 let fakeImports = {};
 
@@ -14,8 +19,8 @@ export function setupFakeImport(path, data) {
 }
 
 /**
- * @param {Array<string>} namespaces
- * @param {Array<string>} locales
+ * @param {string[]} namespaces
+ * @param {string[]} locales
  */
 export function setupEmptyFakeImportsFor(namespaces, locales) {
   namespaces.forEach(namespace => {
@@ -47,7 +52,7 @@ function resolveOrReject(result, resolve, reject) {
 /**
  * @param {string} path
  * @param {number} [ms=0]
- * @returns {Promise<Object>}
+ * @returns {PromiseOfObject}
  */
 export async function fakeImport(path, ms = 0) {
   const result = fakeImports[path];

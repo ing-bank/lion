@@ -1,6 +1,10 @@
 import { formatNumberToParts } from './formatNumberToParts.js';
 
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * @example
  * getFractionDigits('JOD'); // return 3
  *
@@ -8,7 +12,7 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * @returns {number} fraction for the given currency
  */
 export function getFractionDigits(currency = 'EUR') {
-  const parts = /** @type {{type: string, value: string}[]} */ (formatNumberToParts(123, {
+  const parts = /** @type {FormatNumberPart[]} */ (formatNumberToParts(123, {
     style: 'currency',
     currency,
   }));

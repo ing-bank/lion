@@ -1,8 +1,12 @@
 /**
+ * @typedef {import('../../types/localizeTypes').FormatNumberPart} FormatNumberPart
+ */
+
+/**
  * @desc Intl uses 0 as group separator for bg-BG locale.
  * This should be a ' '
- * @param {{type: string, value: string}[]} formattedParts
- * @returns {{type: string, value: string}[]} corrected formatted parts
+ * @param {FormatNumberPart[]} formattedParts
+ * @returns {FormatNumberPart[]} corrected formatted parts
  */
 export function forceSpaceInsteadOfZeroForGroup(formattedParts) {
   return formattedParts.map(p => {
