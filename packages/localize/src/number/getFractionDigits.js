@@ -5,7 +5,7 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * getFractionDigits('JOD'); // return 3
  *
  * @param {string} [currency="EUR"] Currency code e.g. EUR
- * @return {number} fraction for the given currency
+ * @returns {number} fraction for the given currency
  */
 export function getFractionDigits(currency = 'EUR') {
   const parts = /** @type {{type: string, value: string}[]} */ (formatNumberToParts(123, {

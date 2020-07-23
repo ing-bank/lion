@@ -4,7 +4,7 @@ import { normalSpaces } from './normalSpaces.js';
  * Parts with forced "normal" spaces
  *
  * @param {{type: string, value: string}[]} formattedParts
- * @return {{type: string, value: string}[]}
+ * @returns {{type: string, value: string}[]}
  */
 export function forceNormalSpaces(formattedParts) {
   /** @type {{type: string, value: string}[]} */

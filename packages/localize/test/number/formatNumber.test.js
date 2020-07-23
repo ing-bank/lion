@@ -180,7 +180,6 @@ describe('formatNumber', () => {
 
   it('formats 2-digit decimals correctly', () => {
     localize.locale = 'nl-NL';
-    // @ts-ignore
     Array.from(new Array(100), (val, index) => index).forEach(i => {
       const iString = `${i}`;
       let number = 0.0;

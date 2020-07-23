@@ -5,10 +5,11 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * Formats a number based on locale and options. It uses Intl for the formatting.
  *
  * @param {number} number Number to be formatted
- * @param {Object} [options] Intl options are available extended by roundMode
+ * @param {Object} [options] Intl options are available extended by roundMode and returnIfNaN
  * @param {string} [options.roundMode]
  * @param {string} [options.returnIfNaN]
  * @param {string} [options.locale]
+ * @param {string} [options.localeMatcher]
  * @param {string} [options.numberingSystem]
  * @param {string} [options.style]
  * @param {string} [options.currency]

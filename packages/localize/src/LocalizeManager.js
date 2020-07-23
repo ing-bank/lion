@@ -125,6 +125,7 @@ export class LocalizeManager extends LionSingleton {
 
   /**
    * @param {string} value
+   * @throws {Error} Language only locales are not allowed(Use 'en-GB' instead of 'en')
    */
   // eslint-disable-next-line class-methods-use-this
   __handleLanguageOnly(value) {
@@ -153,6 +154,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {string} locale
    * @param {string} namespace
    * @param {object} data
+   * @throws {Error} Namespace can be added only once, for a given locale
    */
   addData(locale, namespace, data) {
     if (this._isNamespaceInCache(locale, namespace)) {
@@ -307,6 +309,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {Object.<string, Function> | string} namespaceObj
    * @param {boolean} isDynamicImport
    * @param {string} namespace
+   * @throws {Error} Namespace shall setup properly. Check loader!
    */
   _getNamespaceLoader(namespaceObj, isDynamicImport, namespace) {
     let loader = this.__namespaceLoadersCache[namespace];
@@ -336,6 +339,7 @@ export class LocalizeManager extends LionSingleton {
    * @param {string} namespace
    * @param {string} [fallbackLocale]
    * @returns {Promise<any>}
+   * @throws {Error} Data for namespace and (locale or fallback locale) could not be loaded.
    */
   _getNamespaceLoaderPromise(loader, locale, namespace, fallbackLocale = this._fallbackLocale) {
     return loader(locale, namespace).catch(() => {
@@ -488,6 +492,8 @@ export class LocalizeManager extends LionSingleton {
    * @param {string | undefined} key
    * @param {string} locale
    * @returns {string}
+   * @throws {Error} Namespace is missing in the key. The key format is "namespace:name"
+   *
    */
   _getMessageForKey(key, locale) {
     if (!key || key.indexOf(':') === -1) {

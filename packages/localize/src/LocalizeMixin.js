@@ -14,14 +14,14 @@ const LocalizeMixinImplementation = superclass =>
   // eslint-disable-next-line
   class LocalizeMixin extends superclass {
     /**
-     * @returns Array<NamespaceLocaleMap>
+     * @returns {Array<NamespaceLocaleMap>}
      */
     static get localizeNamespaces() {
       return [];
     }
 
     /**
-     * @returns boolean
+     * @returns {boolean}
      */
     static get waitForLocalizeNamespaces() {
       return true;
@@ -46,7 +46,7 @@ const LocalizeMixinImplementation = superclass =>
 
     /**
      * hook into LitElement to only render once all translations are loaded
-     * @returns Promise<void>
+     * @returns {Promise<void>}
      */
     async performUpdate() {
       if (Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces) {

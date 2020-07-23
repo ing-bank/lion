@@ -12,7 +12,7 @@ const CURRENCY_CODE_SYMBOL_MAP = {
  * @param {Object} [options]
  * @param {string} [options.currency]
  * @param {string} [options.currencyDisplay]
- * @return {{type: string, value: string}[]}
+ * @returns {{type: string, value: string}[]}
  */
 export function forceENAUSymbols(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;

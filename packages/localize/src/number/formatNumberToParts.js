@@ -14,6 +14,7 @@ import { roundNumber } from './roundNumber.js';
  * @param {string} [options.roundMode]
  * @param {string} [options.returnIfNaN]
  * @param {string} [options.locale]
+ * @param {string} [options.localeMatcher]
  * @param {string} [options.numberingSystem]
  * @param {string} [options.style]
  * @param {string} [options.currency]
