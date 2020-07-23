@@ -1,19 +1,24 @@
-export function forceENAUSymbols(formattedParts, options) {
+/** @type {Object.<string, string>} */
+const CURRENCY_CODE_SYMBOL_MAP = {
+  EUR: '€',
+  USD: '$',
+  JPY: '¥',
+};
+
+/**
+ * Change the symbols for locale 'en-AU', due to bug in Chrome
+ *
+ * @param {{type: string, value: string}[]} formattedParts
+ * @param {Object} [options]
+ * @param {string} [options.currency]
+ * @param {string} [options.currencyDisplay]
+ * @return {{type: string, value: string}[]}
+ */
+export function forceENAUSymbols(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;
-  const numberOfParts = result.length;
-  // Change the symbols for locale 'en-AU', due to bug in Chrome
-  if (numberOfParts > 1 && options && options.currencyDisplay === 'symbol') {
-    switch (options.currency) {
-      case 'EUR':
-        result[0].value = '€';
-        break;
-      case 'USD':
-        result[0].value = '$';
-        break;
-      case 'JPY':
-        result[0].value = '¥';
-        break;
-      /* no default */
+  if (formattedParts.length > 1 && currencyDisplay === 'symbol') {
+    if (Object.keys(CURRENCY_CODE_SYMBOL_MAP).includes(currency)) {
+      result[0].value = CURRENCY_CODE_SYMBOL_MAP[currency];
     }
     result[1].value = '';
   }

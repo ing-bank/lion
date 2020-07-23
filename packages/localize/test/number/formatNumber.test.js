@@ -3,14 +3,22 @@ import { localize } from '../../src/localize.js';
 import { formatNumber } from '../../src/number/formatNumber.js';
 import { localizeTearDown } from '../../test-helpers.js';
 
-const currencyCode = currency => ({ style: 'currency', currencyDisplay: 'code', currency });
-const currencySymbol = currency => ({ style: 'currency', currencyDisplay: 'symbol', currency });
+const currencyCode = /** @param {string} currency */ currency => ({
+  style: 'currency',
+  currencyDisplay: 'code',
+  currency,
+});
+const currencySymbol = /** @param {string} currency */ currency => ({
+  style: 'currency',
+  currencyDisplay: 'symbol',
+  currency,
+});
 
 describe('formatNumber', () => {
   afterEach(localizeTearDown);
 
   it('displays the appropriate amount of decimal places based on currencies spec http://www.currency-iso.org/en/home/tables/table-a1.html', () => {
-    const clean = str => str.replace(/[a-zA-Z]+/g, '').trim();
+    const clean = /** @param {string} str */ str => str.replace(/[a-zA-Z]+/g, '').trim();
     expect(clean(formatNumber(123456.789, currencyCode('JPY')))).to.equal('123,457');
     expect(clean(formatNumber(123456.789, currencyCode('EUR')))).to.equal('123,456.79');
     expect(clean(formatNumber(123456.789, currencyCode('BHD')))).to.equal('123,456.789');
@@ -55,10 +63,12 @@ describe('formatNumber', () => {
   });
 
   it('returns empty string when NaN', () => {
+    // @ts-ignore
     expect(formatNumber('foo')).to.equal('');
   });
 
   it('returns empty string when number is undefined', () => {
+    // @ts-ignore
     expect(formatNumber(undefined)).to.equal('');
   });
 
@@ -66,12 +76,14 @@ describe('formatNumber', () => {
     const savedReturnIfNaN = localize.formatNumberOptions.returnIfNaN;
 
     localize.formatNumberOptions.returnIfNaN = '-';
+    // @ts-ignore
     expect(formatNumber('foo')).to.equal('-');
 
     localize.formatNumberOptions.returnIfNaN = savedReturnIfNaN;
   });
 
   it("can set what to returns when NaN via `returnIfNaN: 'foo'`", () => {
+    // @ts-ignore
     expect(formatNumber('foo', { returnIfNaN: '-' })).to.equal('-');
   });
 
@@ -168,6 +180,7 @@ describe('formatNumber', () => {
 
   it('formats 2-digit decimals correctly', () => {
     localize.locale = 'nl-NL';
+    // @ts-ignore
     Array.from(new Array(100), (val, index) => index).forEach(i => {
       const iString = `${i}`;
       let number = 0.0;

@@ -2,6 +2,8 @@ import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
 import { LionSingleton } from '@lion/core';
 import isLocalizeESModule from './isLocalizeESModule.js';
 
+const RETURN_IF_NAN = '';
+
 /**
  * `LocalizeManager` manages your translations (includes loading)
  */
@@ -21,7 +23,7 @@ export class LocalizeManager extends LionSingleton {
     /** @type {Object.<string, Object.<string, Promise<Object>>>} */
     this.__namespaceLoaderPromisesCache = {};
     this.formatNumberOptions = {
-      returnIfNaN: '',
+      returnIfNaN: RETURN_IF_NAN,
     };
 
     /**

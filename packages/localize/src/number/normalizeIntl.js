@@ -11,15 +11,18 @@ import { forceENAUSymbols } from './forceENAUSymbols.js';
 /**
  * Function with all fixes on localize
  *
- * @param {Array} formattedParts
- * @param {Object} options
+ * @param {{type: string, value: string}[]} formattedParts
+ * @param {Object} [options]
+ * @param {string} [options.style]
+ * @param {string} [options.currency]
+ * @param {string} [options.currencyDisplay]
  * @param {string} _locale
  * @returns {*}
  */
-export function normalizeIntl(formattedParts, options, _locale) {
-  let normalize = forceNormalSpaces(formattedParts, options);
+export function normalizeIntl(formattedParts, options = {}, _locale) {
+  let normalize = forceNormalSpaces(formattedParts);
   // Dutch and Belgian currency must be moved to end of number
-  if (options && options.style === 'currency') {
+  if (options.style === 'currency') {
     if (options.currencyDisplay === 'code' && _locale.slice(0, 2) === 'nl') {
       normalize = forceCurrencyToEnd(normalize);
     }

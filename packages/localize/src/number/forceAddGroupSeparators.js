@@ -1,11 +1,12 @@
 /**
  * Add separators when they are not present
  *
- * @param {Array} formattedParts
+ * @param {{type: string, value: string}[]} formattedParts
  * @param {string} groupSeparator
- * @returns {Array}
+ * @returns {{type: string, value: string}[]}
  */
 export function forceAddGroupSeparators(formattedParts, groupSeparator) {
+  /** @type {{type: string, value: string}[]} */
   let concatArray = [];
   let firstPart;
   let integerPart;
@@ -29,24 +30,41 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
       numberPart += integerPart[0].value[i];
       // Create first grouping which is < 3
       if (numberPart.length === mod3 && firstGroup === false) {
-        numberArray.push({ type: 'integer', value: numberPart });
+        numberArray.push({
+          type: 'integer',
+          value: numberPart,
+        });
         if (numberOfDigits > 3) {
-          numberArray.push({ type: 'group', value: groupSeparator });
+          numberArray.push({
+            type: 'group',
+            value: groupSeparator,
+          });
         }
         numberPart = '';
         firstGroup = true;
         // Create groupings of 3
       } else if (numberPart.length === 3 && i < numberOfDigits - 1) {
         numberOfGroups += 1;
-        numberArray.push({ type: 'integer', value: numberPart });
+        numberArray.push({
+          type: 'integer',
+          value: numberPart,
+        });
         if (numberOfGroups !== groups) {
-          numberArray.push({ type: 'group', value: groupSeparator });
+          numberArray.push({
+            type: 'group',
+            value: groupSeparator,
+          });
         }
         numberPart = '';
       }
     }
-    numberArray.push({ type: 'integer', value: numberPart });
-    concatArray = firstPart.concat(numberArray, formattedParts);
+    numberArray.push({
+      type: 'integer',
+      value: numberPart,
+    });
+    if (firstPart) {
+      concatArray = firstPart.concat(numberArray, formattedParts);
+    }
   }
   return concatArray;
 }
