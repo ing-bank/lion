@@ -4,7 +4,7 @@ export type NamespaceLocaleMap = {
   [key: string]: Function;
 };
 
-export declare class LocalizeMixinHost {
+declare class LocalizeMixinHost {
   constructor();
 
   static get localizeNamespaces(): NamespaceLocaleMap[];
@@ -31,7 +31,7 @@ export declare class LocalizeMixinHost {
   private __localizeOnLocaleChanged(event: CustomEvent): void;
 }
 
-export declare function LocalizeMixinImplementation<T extends Constructor<HTMLElement>>(
+declare function LocalizeMixinImplementation<T extends Constructor<HTMLElement>>(
   superclass: T,
 ): T & Constructor<LocalizeMixinHost>;
 

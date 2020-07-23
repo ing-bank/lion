@@ -13,7 +13,12 @@
     "types": ["node", "mocha"],
     "esModuleInterop": true
   },
-  "include": ["packages/core/**/*.js", "packages/tabs/**/*.js", "packages/localize/**/*.js"],
+  "include": [
+    "packages/core/**/*.js",
+    "packages/tabs/**/*.js",
+    "packages/singleton-manager/**/*.js",
+    "packages/localize/**/*.js"
+  ],
   "exclude": [
     "node_modules",
     "**/node_modules/*",
