@@ -1,6 +1,7 @@
 import { localize } from '../localize.js';
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
 import { addLeadingZero } from './addLeadingZero.js';
+import { parseISOString, isoFormatDMY } from './isoUTCConverter.js';
 
 const memoize = fn => {
   const cache = {};
@@ -48,7 +49,17 @@ export function parseDate(date) {
     default:
       parsedString = '0000/00/00';
   }
-  const parsedDate = new Date(parsedString);
+  /**
+   * The reason behind converting date string to ISO 8601 format is , date string
+   * with / separator does not trigger the ISO parse, insteaad it presumes that
+   * the date is in current timezone not in UTC
+   * */
+  const parsedStringDate = new Date(parsedString).toISOString();
+
+  const utcDate = parseISOString(parsedStringDate);
+
+  const parsedDate = isoFormatDMY(utcDate);
+
   // Check if parsedDate is not `Invalid Date`
   // eslint-disable-next-line no-restricted-globals
   if (!isNaN(parsedDate)) {
