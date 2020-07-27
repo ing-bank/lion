@@ -8,6 +8,7 @@ import {
   defineCE,
 } from '@open-wc/testing';
 import { spy } from 'sinon';
+import { LitElement } from 'lit-element';
 import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
 import '@lion/form-core/lion-field.js';
@@ -179,5 +180,41 @@ describe('<lion-form>', () => {
     button.click();
     expect(dispatchSpy.args[0][0].type).to.equal('reset');
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
+  });
+
+  it.only('sets serialized value of form', async() => {
+ 
+    const tagWrapperString = defineCE(
+      class extends LitElement {
+        render() {
+          return html`
+            <lion-form>
+              <form>
+                <lion-input name="firstName"></lion-input>
+              </form>
+            </lion-form>
+          `;
+        }
+      },
+    );
+    const tagWrapper = unsafeStatic(tagWrapperString);
+ 
+    const answer = {
+      firstName: "Foo"
+    };
+ 
+    const el = await fixture(html`
+      <lion-form name="test" id="test" .serializedValue=${{firstName: 'Foo'}}>
+        <form>
+          <lion-input name="firstName" id="firstName"></lion-input>
+        </form>
+      </lion-form>
+    `);
+
+    await el.updateComplete;
+
+    const firstNameInput = el.querySelector('#firstName');
+ 
+    expect(firstNameInput.serializedValue).to.equal('Foo');
   });
 });
