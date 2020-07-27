@@ -28,9 +28,10 @@
     "test:browser": "wtr \"packages/**/*/test/**/*.test.js\" --coverage",
     "test:browser:watch": "wtr \"packages/**/*/test/**/*.test.js\" --watch",
     "test:browserstack": "wtr --config ./web-test-runner-browserstack.config.js \"packages/form-core/test/**/*.test.js\"",
-    "test:node": "lerna run test:node"
+    "test:node": "node scripts/workspaces-scripts.mjs run test:node"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.9.2",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
     "@mdjs/core": "^0.3.1",
@@ -49,11 +50,12 @@
     "babel-polyfill": "^6.26.0",
     "bundlesize": "^0.17.1",
     "chai": "^4.2.0",
+    "chalk": "^4.1.0",
+    "concurrently": "^5.2.0",
     "eclint": "^2.8.1",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.11.0",
     "husky": "^1.0.0",
-    "lerna": "3.4.3",
     "lint-staged": "^10.0.0",
     "markdownlint-cli": "^0.17.0",
     "mocha": "^7.1.1",
