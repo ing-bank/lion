@@ -159,6 +159,12 @@ export class LionSelectRich extends ScopedElementsMixin(
     return this.modelValue;
   }
 
+  // Duplicating from FormGroupMixin, because you cannot independently inherit/override getter + setter.
+  // If you override one, gotta override the other, they go in pairs.
+  set serializedValue(value) {
+    super.serializedValue = value;
+  }
+
   get checkedIndex() {
     let checkedIndex = -1;
     this.formElements.forEach((option, i) => {
