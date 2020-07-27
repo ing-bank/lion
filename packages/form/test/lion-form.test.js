@@ -182,39 +182,20 @@ describe('<lion-form>', () => {
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 
-  it.only('sets serialized value of form', async() => {
- 
-    const tagWrapperString = defineCE(
-      class extends LitElement {
-        render() {
-          return html`
-            <lion-form>
-              <form>
-                <lion-input name="firstName"></lion-input>
-              </form>
-            </lion-form>
-          `;
-        }
-      },
-    );
-    const tagWrapper = unsafeStatic(tagWrapperString);
- 
+  it.only('sets serialized value of form', async () => {
     const answer = {
-      firstName: "Foo"
+      firstName: 'Foo',
     };
- 
     const el = await fixture(html`
-      <lion-form name="test" id="test" .serializedValue=${{firstName: 'Foo'}}>
+      <lion-form name="test" id="test" .serializedValue=${{ firstName: 'Foo' }}>
         <form>
           <lion-input name="firstName" id="firstName"></lion-input>
         </form>
       </lion-form>
     `);
 
-    await el.registrationComplete;  
-
+    await el.registrationComplete;
     const firstNameInput = el.querySelector('#firstName');
- 
     expect(firstNameInput.serializedValue).to.equal('Foo');
   });
 });
