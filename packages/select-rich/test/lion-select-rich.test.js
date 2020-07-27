@@ -210,6 +210,7 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
+    await el.registrationComplete;
 
     expect(el.selectedElement).to.be.undefined;
     expect(el.modelValue).to.equal('');
@@ -225,6 +226,7 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
+    await el.registrationComplete;
 
     expect(el.checkedIndex).to.equal(0);
     expect(el.serializedValue).to.equal('red');
