@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.21...@lion/select-rich@0.19.0) (2020-07-27)
+
+
+### Features
+
+* synchronous form registration system ([8698f73](https://github.com/ing-bank/lion/commit/8698f734186eb88c4669bbadf8d5ae461f1c27f5))
+
+
+
+
+
 ## [0.18.21](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.20...@lion/select-rich@0.18.21) (2020-07-27)
 
 

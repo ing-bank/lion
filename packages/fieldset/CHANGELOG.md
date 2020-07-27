@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.13.13...@lion/fieldset@0.14.0) (2020-07-27)
+
+
+### Features
+
+* synchronous form registration system ([8698f73](https://github.com/ing-bank/lion/commit/8698f734186eb88c4669bbadf8d5ae461f1c27f5))
+
+
+
+
+
 ## [0.13.13](https://github.com/ing-bank/lion/compare/@lion/fieldset@0.13.12...@lion/fieldset@0.13.13) (2020-07-16)
 
 **Note:** Version bump only for package @lion/fieldset
