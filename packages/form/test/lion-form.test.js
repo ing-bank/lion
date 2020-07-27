@@ -211,7 +211,7 @@ describe('<lion-form>', () => {
       </lion-form>
     `);
 
-    await el.updateComplete;
+    await el.registrationComplete;  
 
     const firstNameInput = el.querySelector('#firstName');
  
