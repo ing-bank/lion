@@ -29,7 +29,9 @@
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/collapsible/test/**/*.test.js\""
   },
   "sideEffects": [
-    "lion-collapsible.js"
+    "lion-collapsible.js",
+    "demo/applyDemoCollapsibleStyles.js",
+    "demo/custom-collapsible.js"
   ],
   "dependencies": {
     "@lion/core": "0.8.0"
