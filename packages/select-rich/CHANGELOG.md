@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.21](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.20...@lion/select-rich@0.18.21) (2020-07-27)
+
+
+### Bug Fixes
+
+* **select-rich:** add serializedValue setter due to getter override ([23f61eb](https://github.com/ing-bank/lion/commit/23f61eb81379523087aa67c329352a9d99cd556a))
+
+
+
+
+
 ## [0.18.20](https://github.com/ing-bank/lion/compare/@lion/select-rich@0.18.19...@lion/select-rich@0.18.20) (2020-07-16)
 
 **Note:** Version bump only for package @lion/select-rich
