@@ -230,6 +230,7 @@ describe('lion-select-rich', () => {
     expect(el.serializedValue).to.equal('red');
 
     el.serializedValue = 'hotpink';
+    await el.registrationComplete;
     expect(el.checkedIndex).to.equal(1);
     expect(el.serializedValue).to.equal('hotpink');
   });
