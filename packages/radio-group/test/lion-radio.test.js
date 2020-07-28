@@ -1,4 +1,4 @@
-import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import '../lion-radio.js';
 
 describe('<lion-radio>', () => {
@@ -6,7 +6,6 @@ describe('<lion-radio>', () => {
     const el = await fixture(`
       <lion-radio name="radio" value="male"></lion-radio>
     `);
-    await nextFrame();
     expect(el.getAttribute('type')).to.equal('radio');
   });
 });

@@ -14,6 +14,8 @@ export const runRegistrationSuite = customConfig => {
     let parentTag;
     let childTag;
     let portalTag;
+    let parentTagString;
+    let childTagString;
 
     before(async () => {
       if (!cfg.parentTagString) {
@@ -29,6 +31,8 @@ export const runRegistrationSuite = customConfig => {
       parentTag = unsafeStatic(cfg.parentTagString);
       childTag = unsafeStatic(cfg.childTagString);
       portalTag = unsafeStatic(cfg.portalTagString);
+      parentTagString = cfg.parentTagString;
+      childTagString = cfg.childTagString;
     });
 
     it('can register a formElement', async () => {
@@ -37,6 +41,18 @@ export const runRegistrationSuite = customConfig => {
           <${childTag}></${childTag}>
         </${parentTag}>
       `);
+      expect(el.formElements.length).to.equal(1);
+    });
+
+    it('works with document.createElement', async () => {
+      const el = document.createElement(parentTagString);
+      const childEl = document.createElement(childTagString);
+      expect(el.formElements.length).to.equal(0);
+
+      const wrapper = await fixture('<div></div>');
+      el.appendChild(childEl);
+      wrapper.appendChild(el);
+
       expect(el.formElements.length).to.equal(1);
     });
 

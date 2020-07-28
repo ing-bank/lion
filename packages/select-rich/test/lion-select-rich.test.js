@@ -39,7 +39,6 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
-    await el.registrationComplete;
 
     expect(el.formElements[0].name).to.equal('foo');
     expect(el.formElements[1].name).to.equal('foo');
@@ -59,8 +58,6 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
-    await nextFrame();
-
     const invalidChild = await fixture(html` <lion-option .modelValue=${'Lara'}></lion-option> `);
 
     expect(() => {
@@ -79,8 +76,6 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
-    await nextFrame();
-
     const invalidChild = await fixture(html`
       <lion-option name="foo" .choiceValue=${'male'}></lion-option>
     `);
@@ -102,7 +97,6 @@ describe('lion-select-rich', () => {
         </lion-options>
       </lion-select-rich>
     `);
-    await el.registrationComplete;
 
     expect(el.modelValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
@@ -230,7 +224,7 @@ describe('lion-select-rich', () => {
     expect(el.serializedValue).to.equal('red');
 
     el.serializedValue = 'hotpink';
-    await el.registrationComplete;
+
     expect(el.checkedIndex).to.equal(1);
     expect(el.serializedValue).to.equal('hotpink');
   });
@@ -447,7 +441,7 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       // The default is min, so we override that behavior here
       el._overlayCtrl.inheritsReferenceWidth = 'full';
       el._initialInheritsReferenceWidth = 'full';
@@ -558,7 +552,7 @@ describe('lion-select-rich', () => {
       `);
       expect(el.opened).to.be.false;
       el._invokerNode.click();
-      await nextFrame();
+      await nextFrame(); // reflection of click takes some time
       expect(el.opened).to.be.true;
     });
 

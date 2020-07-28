@@ -64,7 +64,6 @@ describe('ChoiceGroupMixin', () => {
         <choice-group-input .choiceValue=${'other'}></choice-group-input>
       </choice-group>
     `);
-    await el.registrationComplete;
 
     expect(el.formElements[0].name).to.equal('gender');
     expect(el.formElements[1].name).to.equal('gender');
@@ -104,7 +103,6 @@ describe('ChoiceGroupMixin', () => {
         <choice-group-input .choiceValue=${'other'}></choice-group-input>
       </choice-group>
     `);
-    await el.registrationComplete;
 
     expect(el.modelValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
@@ -118,7 +116,6 @@ describe('ChoiceGroupMixin', () => {
         <choice-group-input .choiceValue=${'other'}></choice-group-input>
       </choice-group>
     `);
-    await el.registrationComplete;
 
     expect(el.serializedValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
@@ -164,7 +161,6 @@ describe('ChoiceGroupMixin', () => {
         ></choice-group-input>
       </choice-group>
     `);
-    await el.registrationComplete;
 
     expect(el.modelValue).to.equal('female');
     el.modelValue = 'other';
@@ -185,7 +181,6 @@ describe('ChoiceGroupMixin', () => {
         <choice-group-input .choiceValue=${'other'}></choice-group-input>
       </choice-group>
     `);
-    await el.registrationComplete;
 
     counter = 0; // reset after setup which may result in different results
 
@@ -279,7 +274,6 @@ describe('ChoiceGroupMixin', () => {
         </choice-group-multiple>
       `);
 
-      await el.registrationComplete;
       el.modelValue = ['male', 'other'];
       expect(el.modelValue).to.eql(['male', 'other']);
       expect(el.formElements[0].checked).to.be.true;
@@ -295,7 +289,6 @@ describe('ChoiceGroupMixin', () => {
         </choice-group-multiple>
       `);
 
-      await el.registrationComplete;
       expect(el.modelValue).to.eql(['male', 'other']);
       expect(el.formElements[0].checked).to.be.true;
       expect(el.formElements[2].checked).to.be.true;

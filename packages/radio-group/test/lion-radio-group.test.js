@@ -1,4 +1,4 @@
-import { expect, fixture, html, nextFrame } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 import '../lion-radio-group.js';
 import '../lion-radio.js';
@@ -11,7 +11,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio label="female" value="female" checked></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
     expect(el.getAttribute('role')).to.equal('radiogroup');
   });
 
@@ -22,7 +21,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
 
     el.children[1].focus();
     expect(el.touched).to.equal(false, 'initially, touched state is false');
@@ -37,7 +35,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio .modelValue="${{ value: 'female', checked: false }}"></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
     const male = el.formElements[0];
     const maleInput = male.querySelector('input');
     const female = el.formElements[1];
@@ -64,7 +61,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio label="female" value="female" checked></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
     await expect(el).to.be.accessible();
   });
 
@@ -75,7 +71,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio label="female" value="female" checked></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
     await expect(el).to.be.accessible();
   });
 
@@ -86,7 +81,6 @@ describe('<lion-radio-group>', () => {
         <lion-radio label="female" value="female" checked></lion-radio>
       </lion-radio-group>
     `);
-    await nextFrame();
     await expect(el).to.be.accessible();
   });
 });

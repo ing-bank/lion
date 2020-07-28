@@ -81,14 +81,14 @@ const choiceGroupDispatchesCountOnFirstPaint = (groupTagname, itemTagname, count
   const itemTag = unsafeStatic(itemTagname);
   it(getFirstPaintTitle(count), async () => {
     const spy = sinon.spy();
-    const el = await fixture(html`
+    await fixture(html`
       <${groupTag} @model-value-changed="${spy}">
         <${itemTag} .choiceValue="${'option1'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option2'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
       </${groupTag}>
     `);
-    await el.registrationComplete;
+
     expect(spy.callCount).to.equal(count);
   });
 };
@@ -105,7 +105,7 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
       </${groupTag}>
     `);
-    await el.registrationComplete;
+
     el.addEventListener('model-value-changed', spy);
     const option2 = el.querySelector(`${itemTagname}:nth-child(2)`);
     option2.checked = true;
@@ -210,7 +210,7 @@ describe('lion-select-rich', () => {
   describe(featureName, () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
-      const el = await fixture(html`
+      await fixture(html`
         <lion-select-rich @model-value-changed="${spy}">
           <lion-options slot="input">
             <lion-option .choiceValue="${'option1'}"></lion-option>
@@ -219,7 +219,7 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       expect(spy.callCount).to.equal(firstStampCount);
     });
 
@@ -234,7 +234,7 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       el.addEventListener('model-value-changed', spy);
       const option2 = el.querySelector('lion-option:nth-child(2)');
       option2.checked = true;
@@ -253,12 +253,12 @@ describe('lion-fieldset', () => {
   describe(featureName, () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
-      const el = await fixture(html`
+      await fixture(html`
         <lion-fieldset name="parent" @model-value-changed="${spy}">
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);
-      await el.registrationComplete;
+
       expect(spy.callCount).to.equal(firstStampCount);
     });
 
@@ -269,7 +269,7 @@ describe('lion-fieldset', () => {
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);
-      await el.registrationComplete;
+
       el.addEventListener('model-value-changed', spy);
       const input = el.querySelector('lion-input');
       input.modelValue = 'foo';

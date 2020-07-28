@@ -1,4 +1,4 @@
-import { expect, fixture, html, nextFrame, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-step.js';
 import '../lion-steps.js';
@@ -139,7 +139,6 @@ describe('lion-steps', () => {
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
-      await nextFrame();
 
       el.current = 2;
       await checkWorkflow(el, {
@@ -210,7 +209,6 @@ describe('lion-steps', () => {
           </lion-step>
         </lion-steps>
       `);
-      await nextFrame();
       expect(firstEnterSpy).to.have.been.calledOnce;
 
       const firstEnterSpyWithInitial = sinon.spy();
@@ -221,7 +219,6 @@ describe('lion-steps', () => {
           </lion-step>
         </lion-steps>
       `);
-      await nextFrame();
       expect(firstEnterSpyWithInitial).to.have.been.calledOnce;
     });
 
