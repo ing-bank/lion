@@ -94,10 +94,7 @@ export const ChoiceGroupMixin = dedupeMixin(
 
       connectedCallback() {
         super.connectedCallback();
-
-        this.__registrationCompleteTimer = setTimeout(() => {
-          this.__resolveRegistrationComplete();
-        });
+        Promise.resolve().then(() => this.__resolveRegistrationComplete());
 
         this.registrationComplete.then(() => {
           this.__isInitialModelValue = false;
@@ -110,7 +107,6 @@ export const ChoiceGroupMixin = dedupeMixin(
           super.disconnectedCallback();
         }
 
-        clearTimeout(this.__registrationCompleteTimer);
         if (this.registrationComplete.done === false) {
           this.__rejectRegistrationComplete();
         }
