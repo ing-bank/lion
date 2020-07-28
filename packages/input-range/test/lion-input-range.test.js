@@ -60,7 +60,7 @@ describe('<lion-input-range>', () => {
     const el = await fixture(`<lion-input-range min="100" max="200"></lion-input-range>`);
     el.min = '120';
     el.max = '220';
-    await nextFrame();
+    await nextFrame(); // sync to native element takes some time
     expect(el._inputNode.min).to.equal(el.min);
     expect(el._inputNode.max).to.equal(el.max);
   });

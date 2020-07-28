@@ -269,7 +269,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       expect(el.modelValue).to.equal(10);
     });
 
@@ -489,7 +489,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       expect(el.dirty).to.be.false;
       el.modelValue = 20;
       expect(el.dirty).to.be.true;
@@ -542,7 +542,6 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
 
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates).to.have.a.property('error');
@@ -580,7 +579,7 @@ describe('lion-select-rich interactions', () => {
           </lion-options>
         </lion-select-rich>
       `);
-      await el.registrationComplete;
+
       expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('first');
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
       expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('second');
