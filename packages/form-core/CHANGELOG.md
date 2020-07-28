@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/ing-bank/lion/compare/@lion/form-core@0.3.0...@lion/form-core@0.3.1) (2020-07-28)
+
+
+### Bug Fixes
+
+* resolve registrationComplete via microtask to be sync ([6b8daef](https://github.com/ing-bank/lion/commit/6b8daef5099ab7bab40f9bdd8aaa1a0795b56214))
+
+
+
+
+
 # [0.3.0](https://github.com/ing-bank/lion/compare/@lion/form-core@0.2.6...@lion/form-core@0.3.0) (2020-07-27)
 
 
