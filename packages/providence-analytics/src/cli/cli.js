@@ -8,22 +8,18 @@ const providenceModule = require('../program/providence.js');
 const { LogService } = require('../program/services/LogService.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { InputDataService } = require('../program/services/InputDataService.js');
-const { promptAnalyzerMenu, promptAnalyzerConfigMenu } = require('./prompt-analyzer-menu.js');
-const {
-  extensionsFromCs,
-  setQueryMethod,
-  targetDefault,
-  appendProjectDependencyPaths,
-  installDeps,
-  pathsArrayFromCollectionName,
-  pathsArrayFromCs,
-} = require('./cli-helpers.js');
+const promptModule = require('./prompt-analyzer-menu.js');
+const cliHelpers = require('./cli-helpers.js');
 const extendDocsModule = require('./generate-extend-docs-data.js');
+
+const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
+
 const { version } = require('../../package.json');
 
-async function cli({ cwd, addProjectDependencyPaths } = {}) {
+async function cli({ cwd } = {}) {
   let resolveCli;
   let rejectCli;
+
   const cliPromise = new Promise((resolve, reject) => {
     resolveCli = resolve;
     rejectCli = reject;
@@ -39,7 +35,6 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
   let regexSearchOptions;
 
   const externalConfig = InputDataService.getExternalConfig();
-  console.log('externalConfig', externalConfig);
 
   async function getQueryInputData(
     /* eslint-disable no-shadow */
@@ -48,7 +43,6 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
     featureOptions,
     analyzerOptions,
     /* eslint-enable no-shadow */
-    showAnalyzerConfigMenu,
   ) {
     let queryConfig = null;
     let queryMethod = null;
@@ -64,11 +58,14 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
     } else if (searchMode === 'analyzer-query') {
       let { name, config } = analyzerOptions;
       if (!name) {
-        const answers = await promptAnalyzerMenu();
+        const answers = await promptModule.promptAnalyzerMenu();
         name = answers.analyzerName;
       }
-      if (showAnalyzerConfigMenu && !config) {
-        const answers = await promptAnalyzerConfigMenu(name, analyzerOptions.promptOptionalConfig);
+      if (!config) {
+        const answers = await promptModule.promptAnalyzerConfigMenu(
+          name,
+          analyzerOptions.promptOptionalConfig,
+        );
         config = answers.analyzerConfig;
       }
       // Will get metaConfig from ./providence.conf.js
@@ -97,11 +94,18 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       referencePaths = commander.referenceCollection || commander.referencePaths;
     }
 
-    let extendedSearchTargets;
-    if (addProjectDependencyPaths) {
-      extendedSearchTargets = await appendProjectDependencyPaths(searchTargetPaths);
+    /**
+     * May or may not include dependencies of search target
+     * @type {string[]}
+     */
+    let totalSearchTargets;
+    if (commander.includeTargetDeps) {
+      totalSearchTargets = await cliHelpers.appendProjectDependencyPaths(
+        searchTargetPaths,
+        commander.targetDepsFilter,
+      );
     } else {
-      extendedSearchTargets = searchTargetPaths;
+      totalSearchTargets = searchTargetPaths;
     }
 
     // TODO: filter out:
@@ -120,7 +124,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       },
       debugEnabled: commander.debug,
       queryMethod,
-      targetProjectPaths: extendedSearchTargets,
+      targetProjectPaths: totalSearchTargets,
       referenceProjectPaths: referencePaths,
       targetProjectRootPaths: searchTargetPaths,
       writeLogFile: commander.writeLogFile,
@@ -157,7 +161,7 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       '-t, --search-target-paths [targets]',
       `path(s) to project(s) on which analysis/querying should take place. Requires
     a list of comma seperated values relative to project root`,
-      v => pathsArrayFromCs(v, cwd),
+      v => cliHelpers.pathsArrayFromCs(v, cwd),
       targetDefault(),
     )
     .option(
@@ -165,31 +169,41 @@ async function cli({ cwd, addProjectDependencyPaths } = {}) {
       `path(s) to project(s) which serve as a reference (applicable for certain analyzers like
     'match-imports'). Requires a list of comma seperated values relative to
     project root (like 'node_modules/lion-based-ui, node_modules/lion-based-ui-labs').`,
-      v => pathsArrayFromCs(v, cwd),
+      v => cliHelpers.pathsArrayFromCs(v, cwd),
       InputDataService.referenceProjectPaths,
     )
     .option('-w, --whitelist [whitelist]', `whitelisted paths, like './src, ./packages/*'`, v =>
-      pathsArrayFromCs(v, cwd),
+      cliHelpers.pathsArrayFromCs(v, cwd),
     )
     .option(
       '--whitelist-reference [whitelist-reference]',
       `whitelisted paths for reference, like './src, ./packages/*'`,
-      v => pathsArrayFromCs(v, cwd),
+      v => cliHelpers.pathsArrayFromCs(v, cwd),
     )
     .option(
       '--search-target-collection [collection-name]',
       `path(s) to project(s) which serve as a reference (applicable for certain analyzers like
     'match-imports'). Should be a collection defined in providence.conf.js as paths relative to
     project root.`,
-      v => pathsArrayFromCollectionName(v, 'search-target', externalConfig),
+      v => cliHelpers.pathsArrayFromCollectionName(v, 'search-target', externalConfig),
     )
     .option(
       '--reference-collection [collection-name]',
       `path(s) to project(s) on which analysis/querying should take place. Should be a collection
     defined in providence.conf.js as paths relative to project root.`,
-      v => pathsArrayFromCollectionName(v, 'reference', externalConfig),
+      v => cliHelpers.pathsArrayFromCollectionName(v, 'reference', externalConfig),
     )
-    .option('--write-log-file', `Writes all logs to 'providence.log' file`);
+    .option('--write-log-file', `Writes all logs to 'providence.log' file`)
+    .option(
+      '--include-target-deps',
+      `For all search targets, will include all its dependencies
+    (node_modules and bower_components). When --target-deps-filter is applied, a subset
+    will be applied that matches the filter condition`,
+    )
+    .option(
+      '--target-deps-filter [target-deps-filter]',
+      `Regex condition to be applied to dependencies of search targets.`,
+    );
 
   commander
     .command('search <regex>')

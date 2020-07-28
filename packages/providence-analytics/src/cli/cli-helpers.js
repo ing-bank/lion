@@ -60,7 +60,7 @@ function pathsArrayFromCs(t, cwd = process.cwd()) {
  * @param {object} eCfg external configuration. Usually providence.conf.js
  * @returns {string[]}
  */
-function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg) {
+function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd) {
   let collection;
   if (colType === 'search-target') {
     collection = eCfg.searchTargetCollections;
@@ -68,7 +68,7 @@ function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg) {
     collection = eCfg.referenceCollections;
   }
   if (collection && collection[name]) {
-    return pathsArrayFromCs(collection[name].join(','));
+    return pathsArrayFromCs(collection[name].join(','), cwd);
   }
   return undefined;
 }
@@ -107,10 +107,14 @@ function targetDefault() {
 /**
  * @desc Returns all sub projects matching condition supplied in matchFn
  * @param {string[]} searchTargetPaths all search-target project paths
- * @param {function} matchFn filters out packages we're interested in
+ * @param {string} matchPattern base for RegExp
  * @param {string[]} modes
  */
-async function appendProjectDependencyPaths(rootPaths, matchFn, modes = ['npm', 'bower']) {
+async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['npm', 'bower']) {
+  let matchFn;
+  if (matchPattern) {
+    matchFn = (_, d) => new RegExp(matchPattern).test(d);
+  }
   const depProjectPaths = [];
   await aForEach(rootPaths, async targetPath => {
     await aForEach(modes, async mode => {
