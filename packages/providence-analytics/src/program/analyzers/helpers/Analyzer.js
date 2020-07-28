@@ -48,7 +48,7 @@ async function analyzePerAstEntry(projectData, astAnalysis) {
 }
 
 /**
- * @desc This method ensures that the result returned by an analyzer always has a consitent format,
+ * @desc This method ensures that the result returned by an analyzer always has a consistent format.
  * By returning the configuration for the queryOutput, it will be possible to run later queries
  * under the same circumstances
  * @param {array} queryOutput
