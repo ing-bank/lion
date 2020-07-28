@@ -154,10 +154,7 @@ export const FormGroupMixin = dedupeMixin(
       connectedCallback() {
         super.connectedCallback();
         this.setAttribute('role', 'group');
-
-        this.__registrationCompleteTimer = setTimeout(() => {
-          this.__resolveRegistrationComplete();
-        });
+        Promise.resolve().then(() => this.__resolveRegistrationComplete());
 
         this.registrationComplete.then(() => {
           this.__isInitialModelValue = false;
@@ -175,7 +172,6 @@ export const FormGroupMixin = dedupeMixin(
           document.removeEventListener('click', this._checkForOutsideClick);
           this.__hasActiveOutsideClickHandling = false;
         }
-        clearTimeout(this.__registrationCompleteTimer);
         if (this.registrationComplete.done === false) {
           this.__rejectRegistrationComplete();
         }
