@@ -329,7 +329,7 @@ function matchPathsPostprocess(
 }
 
 /**
- * Designed to work in conjunction with npm package `extend-docs`.
+ * Designed to work in conjunction with npm package `babel-plugin-extend-docs`.
  * It will lookup all class exports from reference project A (and store their available paths) and
  * matches them against all imports of project B that extend exported class (and store their
  * available paths).
@@ -426,7 +426,8 @@ class MatchPathsAnalyzer extends Analyzer {
     const targetMatchSubclassesResult = await targetMatchSubclassesAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
       referenceProjectPath: cfg.referenceProjectPath,
-      gatherFilesConfig: cfg.gatherFilesConfigReference,
+      gatherFilesConfig: cfg.gatherFilesConfig,
+      gatherFilesConfigReference: cfg.gatherFilesConfigReference,
     });
 
     // [A2]
@@ -434,6 +435,7 @@ class MatchPathsAnalyzer extends Analyzer {
     /** @type {FindExportsAnalyzerResult} */
     const targetExportsResult = await targetFindExportsAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
+      gatherFilesConfig: cfg.gatherFilesConfig,
     });
 
     // [A3]
@@ -441,6 +443,7 @@ class MatchPathsAnalyzer extends Analyzer {
     /** @type {FindExportsAnalyzerResult} */
     const refFindExportsResult = await refFindExportsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
+      gatherFilesConfig: cfg.gatherFilesConfigReference,
     });
 
     /**
@@ -448,14 +451,14 @@ class MatchPathsAnalyzer extends Analyzer {
      * Automatically generate a mapping from lion docs import paths to extension layer
      * import paths. To be served to extend-docs
      *
-     * [1] Find path variable.to 'WolfCheckbox'
+     * [B1] Find path variable.to 'WolfCheckbox'
      * Run 'match-subclasses' for target project: we find the 'rootFilePath' of class definition,
      * Result: './packages/wolf-checkbox/WolfCheckbox.js'
-     * [B1] Find export path of 'wolf-checkbox'
-     * Run 'find-customelements' on target project and match rootFile of [A1] with rootFile of
+     * [B2] Find export path of 'wolf-checkbox'
+     * Run 'find-customelements' on target project and match rootFile of [B1] with rootFile of
      * constructor.
      * Result: './wolf-checkbox.js'
-     * [B2] Find export path of 'lion-checkbox'
+     * [B3] Find export path of 'lion-checkbox'
      * Run 'find-customelements' and find-exports (for rootpath) on reference project and match
      * rootFile of constructor with rootFiles of where LionCheckbox is defined.
      * Result: './packages/checkbox/lion-checkbox.js',
@@ -467,6 +470,7 @@ class MatchPathsAnalyzer extends Analyzer {
     /** @type {FindCustomelementsAnalyzerResult} */
     const targetFindCustomelementsResult = await targetFindCustomelementsAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
+      gatherFilesConfig: cfg.gatherFilesConfig,
     });
 
     // [B2]
@@ -474,6 +478,7 @@ class MatchPathsAnalyzer extends Analyzer {
     /** @type {FindCustomelementsAnalyzerResult} */
     const refFindCustomelementsResult = await refFindCustomelementsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
+      gatherFilesConfig: cfg.gatherFilesConfigReference,
     });
     // refFindExportsAnalyzer was already created in A3
 
@@ -483,7 +488,6 @@ class MatchPathsAnalyzer extends Analyzer {
     let queryOutput = matchPathsPostprocess(
       targetMatchSubclassesResult,
       targetExportsResult,
-      // refImportsResult,
       targetFindCustomelementsResult,
       refFindCustomelementsResult,
       refFindExportsResult,
