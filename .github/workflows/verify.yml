@@ -3,13 +3,61 @@ name: Verify changes
 on: pull_request
 
 jobs:
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Node Modules
+          path: node_modules
+
   verify:
     name: Verify changes
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: Node Modules
+
+      - uses: actions/checkout@v2
+
+      - name: Setup Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Bundlesize
+        run: yarn bundlesize
+
+  browser-tests:
+    name: Browser tests
+    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x, 14.x]
     steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: Node Modules
+
       - uses: actions/checkout@v2
 
       - name: Setup Node ${{ matrix.node-version }}
@@ -17,14 +65,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: yarn --frozen-lockfile
+      - name: Test
+        run: yarn test:browser
 
-      - name: Lint
-        run: yarn lint
+  node-tests:
+    name: Node tests
+    needs: install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: Node Modules
+
+      - uses: actions/checkout@v2
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Test
-        run: yarn test
-
-      - name: Bundlesize
-        run: yarn bundlesize
+        run: yarn test:node
