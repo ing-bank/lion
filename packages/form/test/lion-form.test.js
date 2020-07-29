@@ -8,13 +8,13 @@ import {
   defineCE,
 } from '@open-wc/testing';
 import { spy } from 'sinon';
-import { LitElement } from 'lit-element';
 import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
 import '@lion/form-core/lion-field.js';
 import '@lion/fieldset/lion-fieldset.js';
 
 import '../lion-form.js';
+import '@lion/input/lion-input.js';
 
 const childTagString = defineCE(
   class extends LionField {
@@ -182,10 +182,7 @@ describe('<lion-form>', () => {
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 
-  it.only('sets serialized value of form', async () => {
-    const answer = {
-      firstName: 'Foo',
-    };
+  it('sets serialized value of form', async () => {
     const el = await fixture(html`
       <lion-form name="test" id="test" .serializedValue=${{ firstName: 'Foo' }}>
         <form>
@@ -194,7 +191,6 @@ describe('<lion-form>', () => {
       </lion-form>
     `);
 
-    await el.registrationComplete;
     const firstNameInput = el.querySelector('#firstName');
     expect(firstNameInput.serializedValue).to.equal('Foo');
   });
