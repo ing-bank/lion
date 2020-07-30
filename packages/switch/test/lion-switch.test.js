@@ -7,6 +7,14 @@ describe('lion-switch', () => {
     expect(Array.from(el.children).find(child => child.slot === 'input')).not.to.be.false;
   });
 
+  it('clicking the label should toggle the checked state', async () => {
+    const el = await fixture(html`<lion-switch label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(el.checked).to.be.true;
+    el._labelNode.click();
+    expect(el.checked).to.be.false;
+  });
+
   it('should sync its "disabled" state to child button', async () => {
     const el = await fixture(html`<lion-switch disabled></lion-switch>`);
     expect(el._inputNode.disabled).to.be.true;

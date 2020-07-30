@@ -81,6 +81,7 @@ export const ChoiceInputMixin = superclass =>
     constructor() {
       super();
       this.modelValue = { value: '', checked: false };
+      this.__toggleChecked = this.__toggleChecked.bind(this);
     }
 
     /**
