@@ -190,6 +190,8 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__hasInitialSelectedFormElement = false;
     this.hasNoDefaultSelected = false;
     this._repropagationRole = 'choice-group'; // configures FormControlMixin
+
+    this.__focusInvokerOnLabelClick = this.__focusInvokerOnLabelClick.bind(this);
   }
 
   connectedCallback() {
@@ -204,6 +206,10 @@ export class LionSelectRich extends ScopedElementsMixin(
 
     this.__toggleInvokerDisabled();
 
+    if (this._labelNode) {
+      this._labelNode.addEventListener('click', this.__focusInvokerOnLabelClick);
+    }
+
     this.registrationComplete.then(() => {
       this.__initInteractionStates();
     });
@@ -211,6 +217,15 @@ export class LionSelectRich extends ScopedElementsMixin(
     this._overlaySetupComplete.then(() => {
       this.__setupOverlay();
     });
+  }
+
+  disconnectedCallback() {
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
+    if (this._labelNode) {
+      this._labelNode.removeEventListener('click', this.__toggleChecked);
+    }
   }
 
   _requestUpdate(name, oldValue) {
@@ -692,6 +707,10 @@ export class LionSelectRich extends ScopedElementsMixin(
         ev.preventDefault();
       /* no default */
     }
+  }
+
+  __focusInvokerOnLabelClick() {
+    this._invokerNode.focus();
   }
 
   /**

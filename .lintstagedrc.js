@@ -2,7 +2,11 @@
 module.exports = {
   '*': ['eclint fix', 'git add'],
   '*.js': ['eslint --fix', 'prettier --write', 'git add'],
-  '{*!(.changeset)/**/*.md,*.md}': ['prettier --write', 'markdownlint', 'git add'],
+  '*.md': [
+    'prettier --write',
+    "markdownlint --ignore '{.changeset/*.md,**/CHANGELOG.md}'",
+    'git add',
+  ],
   'yarn.lock': ['node ./scripts/yarn-lock-scan.js'],
   '*package.json': absolutePaths => {
     const sortPackages = [];
