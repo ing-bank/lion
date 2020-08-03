@@ -1,7 +1,15 @@
-export function forceTryCurrencyCode(formattedParts, options) {
+/**
+ * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @param {FormatNumberPart[]} formattedParts
+ * @param {Object} [options]
+ * @param {string} [options.currency]
+ * @param {string} [options.currencyDisplay]
+ * @returns {FormatNumberPart[]}
+ */
+export function forceTryCurrencyCode(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;
-  // Chage the currencycode from TRY to TL, for Turkey
-  if (options.currency === 'TRY' && options.currencyDisplay === 'code') {
+  // Change the currency code from TRY to TL, for Turkey
+  if (currency === 'TRY' && currencyDisplay === 'code') {
     if (result[0].value === 'TRY') {
       result[0].value = 'TL';
     }

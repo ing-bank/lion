@@ -1,10 +1,14 @@
 import { normalSpaces } from './normalSpaces.js';
 
 /**
- * @param {Array} formattedParts
- * @return {Array} parts with forced "normal" spaces
+ * Parts with forced "normal" spaces
+ *
+ * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @param {FormatNumberPart[]} formattedParts
+ * @returns {FormatNumberPart[]}
  */
 export function forceNormalSpaces(formattedParts) {
+  /** @type {FormatNumberPart[]} */
   const result = [];
   formattedParts.forEach(part => {
     result.push({

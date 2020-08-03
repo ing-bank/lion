@@ -4,8 +4,8 @@ import { clean } from './clean.js';
 /**
  * To sanitize a date from IE11 handling
  *
- * @param date
- * @returns {string|XML}
+ * @param {Date} date
+ * @returns {string}
  */
 export function sanitizedDateTimeFormat(date) {
   const fDate = formatDate(date);

@@ -1,7 +1,7 @@
 /**
  * To filter out some added characters in IE
  *
- * @param str
+ * @param {string} str
  * @returns {string}
  */
 export function normalizeIntlDate(str) {

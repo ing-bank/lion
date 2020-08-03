@@ -1,12 +1,14 @@
 import { normalizeIntlDate } from './normalizeIntlDate.js';
 
+/** @type {Object.<string, Object.<string,string[]>>} */
 const monthsLocaleCache = {};
 
 /**
  * @desc Returns month names for locale
- * @param {string} options.locale locale
+ * @param {Object} [options]
+ * @param {string} [options.locale] locale
  * @param {string} [options.style=long] long, short or narrow
- * @returns {Array} like: ['January', 'February', ...etc].
+ * @returns {string[]} like: ['January', 'February', ...etc].
  */
 export function getMonthNames({ locale, style = 'long' } = {}) {
   let months = monthsLocaleCache[locale] && monthsLocaleCache[locale][style];

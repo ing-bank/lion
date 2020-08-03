@@ -3,8 +3,8 @@ import { trim } from './trim.js';
 /**
  * To clean date from added characters from IE
  *
- * @param dateAsString
- * @returns {string|XML}
+ * @param {string} dateAsString
+ * @returns {string}
  */
 export function clean(dateAsString) {
   // list of separators is from wikipedia https://www.wikiwand.com/en/Date_format_by_country

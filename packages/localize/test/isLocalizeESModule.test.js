@@ -27,6 +27,7 @@ describe('isLocalizeESModule', () => {
   });
 
   it('ignores if not an object', () => {
+    // @ts-ignore passing a non-object is not allowed by ts, but we still want to test the outcome
     expect(isLocalizeESModule(undefined)).to.equal(false);
   });
 });

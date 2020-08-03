@@ -4,8 +4,8 @@ import { pad } from './pad.js';
 /**
  * To add a leading zero to a single number
  *
- * @param dateString
- * @returns {*}
+ * @param {string} dateString
+ * @returns {string}
  */
 export function addLeadingZero(dateString) {
   const dateParts = splitDate(dateString);
