@@ -6,11 +6,13 @@ module.exports = {
   sessionStartTimeout: 30000,
   concurrency: 5,
   coverageConfig: {
+    report: true,
+    reportDir: 'coverage',
     threshold: {
-      statements: 80,
-      branches: 70,
-      functions: 70,
-      lines: 80,
+      statements: 90,
+      branches: 65,
+      functions: 80,
+      lines: 90,
     },
   },
 };

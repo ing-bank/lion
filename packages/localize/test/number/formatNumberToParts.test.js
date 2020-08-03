@@ -1,18 +1,26 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '../../src/localize.js';
 import { localizeTearDown } from '../../test-helpers.js';
-
 import { formatNumberToParts } from '../../src/number/formatNumberToParts.js';
 
-const c = v => ({ type: 'currency', value: v });
-const d = v => ({ type: 'decimal', value: v });
-const i = v => ({ type: 'integer', value: v });
-const f = v => ({ type: 'fraction', value: v });
-const g = v => ({ type: 'group', value: v });
-const l = v => ({ type: 'literal', value: v });
+const c = /** @param {string} v */ v => ({
+  type: 'currency',
+  value: v,
+});
+const d = /** @param {string} v */ v => ({ type: 'decimal', value: v });
+const i = /** @param {string} v */ v => ({ type: 'integer', value: v });
+const f = /** @param {string} v */ v => ({ type: 'fraction', value: v });
+const g = /** @param {string} v */ v => ({ type: 'group', value: v });
+const l = /** @param {string} v */ v => ({ type: 'literal', value: v });
 const m = { type: 'minusSign', value: '−' };
 
-const stringifyParts = parts => parts.map(part => part.value).join('');
+const stringifyParts =
+  /**
+   * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+   * @param {FormatNumberPart[]} parts
+   * @returns {string}
+   */
+  parts => parts.map(part => part.value).join('');
 
 describe('formatNumberToParts', () => {
   afterEach(localizeTearDown);
@@ -32,12 +40,14 @@ describe('formatNumberToParts', () => {
     ];
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
-      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
+        /** @type {FormatNumberPart[]} */ (expectedResult),
+      )}"`, () => {
         expect(
-          formatNumberToParts(amount, {
-            locale,
+          formatNumberToParts(Number(amount), {
             style: 'currency',
-            currency,
+            locale: String(locale),
+            currency: String(currency),
           }),
         ).to.deep.equal(expectedResult);
       });
@@ -59,13 +69,15 @@ describe('formatNumberToParts', () => {
     ];
 
     specs.forEach(([locale, currency, amount, expectedResult]) => {
-      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+      it(`formats ${locale} ${currency} ${amount} as "${stringifyParts(
+        /** @type {FormatNumberPart[]} */ (expectedResult),
+      )}"`, () => {
         expect(
-          formatNumberToParts(amount, {
-            locale,
+          formatNumberToParts(Number(amount), {
             style: 'currency',
             currencyDisplay: 'code',
-            currency,
+            locale: String(locale),
+            currency: String(currency),
           }),
         ).to.deep.equal(expectedResult);
       });
@@ -74,6 +86,7 @@ describe('formatNumberToParts', () => {
 
   describe("style: 'decimal'", () => {
     describe('no minimumFractionDigits', () => {
+      /** @type {Array.<Array.<?>>} */
       const specs = [
         ['en-GB', 3500, [i('3'), g(','), i('500')]],
         ['en-GB', -3500, [m, i('3'), g(','), i('500')]],
@@ -88,10 +101,12 @@ describe('formatNumberToParts', () => {
       ];
 
       specs.forEach(([locale, amount, expectedResult]) => {
-        it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(
+          /** @type {FormatNumberPart[]} */ (expectedResult),
+        )}"`, () => {
           localize.locale = locale;
           expect(
-            formatNumberToParts(amount, {
+            formatNumberToParts(Number(amount), {
               style: 'decimal',
             }),
           ).to.deep.equal(expectedResult);
@@ -100,6 +115,7 @@ describe('formatNumberToParts', () => {
     });
 
     describe('minimumFractionDigits: 2', () => {
+      /** @type {Array.<Array.<?>>} */
       const specs = [
         ['en-GB', 3500, [i('3'), g(','), i('500'), d('.'), f('00')]],
         ['en-GB', -3500, [m, i('3'), g(','), i('500'), d('.'), f('00')]],
@@ -114,10 +130,12 @@ describe('formatNumberToParts', () => {
       ];
 
       specs.forEach(([locale, amount, expectedResult]) => {
-        it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+        it(`formats ${locale} ${amount} as "${stringifyParts(
+          /** @type {FormatNumberPart[]} */ (expectedResult),
+        )}"`, () => {
           localize.locale = locale;
           expect(
-            formatNumberToParts(amount, {
+            formatNumberToParts(Number(amount), {
               style: 'decimal',
               minimumFractionDigits: 2,
             }),
@@ -142,12 +160,14 @@ describe('formatNumberToParts', () => {
     ];
 
     specs.forEach(([locale, amount, expectedResult]) => {
-      it(`formats ${locale} ${amount} as "${stringifyParts(expectedResult)}"`, () => {
+      it(`formats ${locale} ${amount} as "${stringifyParts(
+        /** @type {FormatNumberPart[]} */ (expectedResult),
+      )}"`, () => {
         expect(
-          formatNumberToParts(amount / 100, {
-            locale,
+          formatNumberToParts(Number(amount) / 100, {
             style: 'percent',
             minimumFractionDigits: 2,
+            locale: String(locale),
           }),
         ).to.deep.equal(expectedResult);
       });

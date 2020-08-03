@@ -1,8 +1,8 @@
 /**
  * @desc Makes suitable for date comparisons
- * @param {Date} d
+ * @param {Date} date
  * @returns {Date}
  */
-export function normalizeDateTime(d) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+export function normalizeDateTime(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }

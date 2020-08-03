@@ -1,6 +1,6 @@
 /**
- * @param {Array} value
- * @return {Array} value with forced "normal" space
+ * @param {string} value
+ * @returns {string} value with forced "normal" space
  */
 export function normalSpaces(value) {
   // If non-breaking space (160) or narrow non-breaking space (8239) then return ' '

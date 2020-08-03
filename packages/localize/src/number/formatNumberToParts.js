@@ -9,11 +9,26 @@ import { roundNumber } from './roundNumber.js';
 /**
  * Splits a number up in parts for integer, fraction, group, literal, decimal and currency.
  *
+ * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {number} number Number to split up
- * @param {Object} options Intl options are available extended by roundMode
- * @returns {Array} Array with parts
+ * @param {Object} [options] Intl options are available extended by roundMode,returnIfNaN
+ * @param {string} [options.roundMode]
+ * @param {string} [options.returnIfNaN]
+ * @param {string} [options.locale]
+ * @param {string} [options.localeMatcher]
+ * @param {string} [options.numberingSystem]
+ * @param {string} [options.style]
+ * @param {string} [options.currency]
+ * @param {string} [options.currencyDisplay]
+ * @param {boolean}[options.useGrouping]
+ * @param {number} [options.minimumIntegerDigits]
+ * @param {number} [options.minimumFractionDigits]
+ * @param {number} [options.maximumFractionDigits]
+ * @param {number} [options.minimumSignificantDigits]
+ * @param {number} [options.maximumSignificantDigits]
+ * @returns {string | FormatNumberPart[]} Array with parts or (an empty string or returnIfNaN if not a number)
  */
-export function formatNumberToParts(number, options) {
+export function formatNumberToParts(number, options = {}) {
   let parsedNumber = typeof number === 'string' ? parseFloat(number) : number;
   const computedLocale = getLocale(options && options.locale);
   // when parsedNumber is not a number we should return an empty string or returnIfNaN
@@ -25,6 +40,7 @@ export function formatNumberToParts(number, options) {
     parsedNumber = roundNumber(number, options.roundMode);
   }
   let formattedParts = [];
+
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
   const regexCurrency = /[.,\s0-9]/;
   const regexMinusSign = /[-]/; // U+002D, Hyphen-Minus, &#45;
@@ -95,7 +111,7 @@ export function formatNumberToParts(number, options) {
       if (numberPart) {
         formattedParts.push({ type: 'fraction', value: numberPart });
       }
-      // If there are no fractions but we reached the end write the numberpart as integer
+      // If there are no fractions but we reached the end write the number part as integer
     } else if (i === formattedNumber.length - 1 && numberPart) {
       formattedParts.push({ type: 'integer', value: numberPart });
     }

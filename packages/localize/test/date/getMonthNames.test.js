@@ -2,6 +2,9 @@ import { expect } from '@open-wc/testing';
 
 import { getMonthNames } from '../../src/date/getMonthNames.js';
 
+/**
+ * @param {TemplateStringsArray} strings
+ */
 function s(strings) {
   return strings[0].split(' ');
 }

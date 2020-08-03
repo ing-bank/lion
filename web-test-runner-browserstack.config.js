@@ -20,11 +20,13 @@ module.exports = {
   sessionStartTimeout: 60000,
   concurrency: 1,
   coverageConfig: {
+    report: true,
+    reportDir: 'coverage',
     threshold: {
-      statements: 80,
+      statements: 90,
       branches: 70,
-      functions: 70,
-      lines: 80,
+      functions: 80,
+      lines: 90,
     },
   },
   browsers: [

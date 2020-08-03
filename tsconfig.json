@@ -10,15 +10,24 @@
     "strict": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "types": ["node", "mocha"],
+    "types": ["node", "mocha", "sinon"],
     "esModuleInterop": true
   },
-  "include": ["packages/core/**/*.js", "packages/tabs/**/*.js"],
+  "include": [
+    "packages/core/**/*.js",
+    "packages/tabs/**/*.js",
+    "packages/singleton-manager/**/*.js",
+    "packages/localize/**/*.js",
+    "packages/localize/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "**/node_modules/*",
     "**/coverage/*",
     "**/dist/**/*",
-    "packages/**/test-helpers"
+    "packages/**/test-helpers",
+    // ignore test/demos for singleton manager until overlays are typed as it's used in there
+    "packages/singleton-manager/demo/",
+    "packages/singleton-manager/test/"
   ]
 }

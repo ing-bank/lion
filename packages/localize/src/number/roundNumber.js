@@ -3,7 +3,8 @@
  *
  * @param {number} number
  * @param {string} roundMode
- * @returns {*}
+ * @throws {Error} roundMode can only be round|floor|ceiling
+ * @returns {number}
  */
 export function roundNumber(number, roundMode) {
   switch (roundMode) {
