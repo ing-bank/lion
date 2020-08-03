@@ -109,11 +109,22 @@ describe('lion-select-rich', () => {
     expect(el1.fieldName).to.equal(el1._labelNode.textContent);
 
     const el2 = await fixture(html`
-      <lion-select-rich
-        ><label slot="label">bar</label><lion-options slot="input"></lion-options
-      ></lion-select-rich>
+      <lion-select-rich>
+        <label slot="label">bar</label><lion-options slot="input"></lion-options>
+      </lion-select-rich>
     `);
     expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+  });
+
+  it('clicking the label should focus the invoker', async () => {
+    const el = await fixture(html`
+      <lion-select-rich label="foo">
+        <lion-options slot="input"></lion-options>
+      </lion-select-rich>
+    `);
+    expect(document.activeElement === document.body).to.be.true;
+    el._labelNode.click();
+    expect(document.activeElement === el._invokerNode).to.be.true;
   });
 
   it(`has a fieldName based on the name if no label exists`, async () => {
