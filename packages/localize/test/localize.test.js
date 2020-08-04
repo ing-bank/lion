@@ -1,7 +1,5 @@
 import { expect } from '@open-wc/testing';
 import sinon from 'sinon';
-
-import { LionSingleton } from '@lion/core';
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
 import { localize, setLocalize } from '../src/localize.js';
@@ -12,10 +10,6 @@ describe('localize', () => {
   // we check that it is an instance of the right class
   // we test newly created instances of this class separately
   // this allows to avoid any side effects caused by changing singleton state between tests
-
-  it('is a singleton', () => {
-    expect(localize).to.be.an.instanceOf(LionSingleton);
-  });
 
   it('is an instance of LocalizeManager', () => {
     expect(localize).to.be.an.instanceOf(LocalizeManager);

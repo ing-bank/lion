@@ -7,6 +7,10 @@ import { ajax } from '../src/ajax.js';
 describe('AjaxClass', () => {
   let server;
 
+  function getInstance(cfg) {
+    return new AjaxClass(cfg);
+  }
+
   beforeEach(() => {
     server = sinon.fakeServer.create({ autoRespond: true });
   });
@@ -16,16 +20,16 @@ describe('AjaxClass', () => {
   });
 
   it('sets content type json if passed an object', async () => {
-    const myAjax = AjaxClass.getNewInstance();
+    const myAjax = getInstance();
     server.respondWith('POST', /\/api\/foo/, [200, { 'Content-Type': 'application/json' }, '']);
     await myAjax.post('/api/foo', { a: 1, b: 2 });
     expect(server.requests[0].requestHeaders['Content-Type']).to.include('application/json');
   });
 
-  describe('AjaxClass.getNewInstance({ jsonPrefix: "%prefix%" })', () => {
+  describe('AjaxClass({ jsonPrefix: "%prefix%" })', () => {
     it('adds new transformer to responseDataTransformers', () => {
-      const myAjaxWithout = AjaxClass.getNewInstance({ jsonPrefix: '' });
-      const myAjaxWith = AjaxClass.getNewInstance({ jsonPrefix: 'prefix' });
+      const myAjaxWithout = getInstance({ jsonPrefix: '' });
+      const myAjaxWith = getInstance({ jsonPrefix: 'prefix' });
       const lengthWithout = myAjaxWithout.responseDataTransformers.length;
       const lengthWith = myAjaxWith.responseDataTransformers.length;
       expect(lengthWith - lengthWithout).to.eql(1);
@@ -38,7 +42,7 @@ describe('AjaxClass', () => {
         'for(;;);{"success":true}',
       ]);
 
-      const myAjax = AjaxClass.getNewInstance({ jsonPrefix: 'for(;;);' });
+      const myAjax = getInstance({ jsonPrefix: 'for(;;);' });
       const response = await myAjax.get('data.json');
       expect(response.status).to.equal(200);
       expect(response.data.success).to.equal(true);
@@ -47,24 +51,24 @@ describe('AjaxClass', () => {
     it('works with non-JSON responses', async () => {
       server.respondWith('GET', 'data.txt', [200, { 'Content-Type': 'text/plain' }, 'some text']);
 
-      const myAjax = AjaxClass.getNewInstance({ jsonPrefix: 'for(;;);' });
+      const myAjax = getInstance({ jsonPrefix: 'for(;;);' });
       const response = await myAjax.get('data.txt');
       expect(response.status).to.equal(200);
       expect(response.data).to.equal('some text');
     });
   });
 
-  describe('AjaxClass.getNewInstance({ cancelable: true })', () => {
+  describe('AjaxClass({ cancelable: true })', () => {
     it('adds new interceptor to requestInterceptors', () => {
-      const myAjaxWithout = AjaxClass.getNewInstance();
-      const myAjaxWith = AjaxClass.getNewInstance({ cancelable: true });
+      const myAjaxWithout = getInstance();
+      const myAjaxWith = getInstance({ cancelable: true });
       const lengthWithout = myAjaxWithout.requestInterceptors.length;
       const lengthWith = myAjaxWith.requestInterceptors.length;
       expect(lengthWith - lengthWithout).to.eql(1);
     });
 
     it('allows to cancel single running requests', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+      const myAjax = getInstance({ cancelable: true });
 
       setTimeout(() => {
         myAjax.cancel('is cancelled');
@@ -79,7 +83,7 @@ describe('AjaxClass', () => {
     });
 
     it('allows to cancel multiple running requests', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+      const myAjax = getInstance({ cancelable: true });
       let cancelCount = 0;
 
       setTimeout(() => {
@@ -102,7 +106,7 @@ describe('AjaxClass', () => {
     });
 
     it('does not cancel resolved requests', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+      const myAjax = getInstance({ cancelable: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },
@@ -119,17 +123,17 @@ describe('AjaxClass', () => {
     });
   });
 
-  describe('AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true })', () => {
+  describe('AjaxClass({ cancelPreviousOnNewRequest: true })', () => {
     it('adds new interceptor to requestInterceptors', () => {
-      const myAjaxWithout = AjaxClass.getNewInstance();
-      const myAjaxWith = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjaxWithout = getInstance();
+      const myAjaxWith = getInstance({ cancelPreviousOnNewRequest: true });
       const lengthWithout = myAjaxWithout.requestInterceptors.length;
       const lengthWith = myAjaxWith.requestInterceptors.length;
       expect(lengthWith - lengthWithout).to.eql(1);
     });
 
     it('automatically cancels previous running request', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax = getInstance({ cancelPreviousOnNewRequest: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },
@@ -157,7 +161,7 @@ describe('AjaxClass', () => {
     });
 
     it('automatically cancels multiple previous requests to the same endpoint', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax = getInstance({ cancelPreviousOnNewRequest: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },
@@ -189,7 +193,7 @@ describe('AjaxClass', () => {
     });
 
     it('automatically cancels multiple previous requests to different endpoints', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax = getInstance({ cancelPreviousOnNewRequest: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },
@@ -221,7 +225,7 @@ describe('AjaxClass', () => {
     });
 
     it('does not automatically cancel requests made via generic ajax', async () => {
-      const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax = getInstance({ cancelPreviousOnNewRequest: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },
@@ -257,8 +261,8 @@ describe('AjaxClass', () => {
     });
 
     it('does not automatically cancel requests made via other instances', async () => {
-      const myAjax1 = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
-      const myAjax2 = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax1 = getInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax2 = getInstance({ cancelPreviousOnNewRequest: true });
       server.respondWith('GET', 'data.json', [
         200,
         { 'Content-Type': 'application/json' },

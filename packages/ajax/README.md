@@ -91,7 +91,7 @@ This prefix should be stripped before parsing the string as JSON.
 Pass the prefix with the `jsonPrefix` option.
 
 ```js
-const myAjax = AjaxClass.getNewInstance({ jsonPrefix: ")]}'," });
+const myAjax = new AjaxClass({ jsonPrefix: ")]}'," });
 myAjax
   .get('./packages/ajax/docs/assets/data.json')
   .then(response => {
@@ -110,7 +110,7 @@ Add additional headers to the requests with the `headers` option.
 export const additionalHeaders = () => html`
   <button
     @click=${() => {
-      const myAjax = AjaxClass.getNewInstance({ headers: { 'MY-HEADER': 'SOME-HEADER-VALUE' } });
+      const myAjax = new AjaxClass({ headers: { 'MY-HEADER': 'SOME-HEADER-VALUE' } });
       myAjax
         .get('./packages/ajax/docs/assets/data.json')
         .then(response => {
@@ -136,7 +136,7 @@ It is possible to make an Ajax request cancelable, and then call `cancel()` to m
 export const cancelableRequests = () => html`
   <button
     @click=${() => {
-      const myAjax = AjaxClass.getNewInstance({ cancelable: true });
+      const myAjax = new AjaxClass({ cancelable: true });
       requestAnimationFrame(() => {
         myAjax.cancel('too slow');
       });
@@ -163,7 +163,7 @@ You can cancel concurrent requests with the `cancelPreviousOnNewRequest` option.
 export const cancelConcurrentRequests = () => html`
   <button
     @click=${() => {
-      const myAjax = AjaxClass.getNewInstance({ cancelPreviousOnNewRequest: true });
+      const myAjax = new AjaxClass({ cancelPreviousOnNewRequest: true });
       myAjax
         .get('./packages/ajax/docs/assets/data.json')
         .then(response => {

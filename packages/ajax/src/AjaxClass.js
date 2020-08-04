@@ -1,5 +1,4 @@
 import { axios } from '@bundled-es-modules/axios';
-import { LionSingleton } from '@lion/core';
 import {
   cancelInterceptorFactory,
   cancelPreviousOnNewRequestInterceptorFactory,
@@ -11,7 +10,7 @@ import { jsonPrefixTransformerFactory } from './transformers.js';
  * `AjaxClass` creates the singleton instance {@link:ajax}. It is a promise based system for
  * fetching data, based on [axios](https://github.com/axios/axios).
  */
-export class AjaxClass extends LionSingleton {
+export class AjaxClass {
   /**
    * @property {Object} proxy the axios instance that is bound to the AjaxClass instance
    */
@@ -28,8 +27,6 @@ export class AjaxClass extends LionSingleton {
    * @param {string} config.cancelPreviousOnNewRequest prevents concurrent requests
    */
   constructor(config) {
-    super();
-
     this.__config = {
       lang: document.documentElement.getAttribute('lang'),
       languageHeader: true,

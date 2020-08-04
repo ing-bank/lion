@@ -643,8 +643,7 @@ describe('When supporting external translation tools like Google Translate', () 
    *  @returns {LocalizeManager}
    */
   function getInstance(cfg) {
-    LocalizeManager.resetInstance();
-    return LocalizeManager.getInstance(cfg || {});
+    return new LocalizeManager(cfg || {});
   }
 
   afterEach(() => {

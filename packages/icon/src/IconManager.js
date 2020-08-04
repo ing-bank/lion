@@ -1,9 +1,5 @@
-import { LionSingleton } from '@lion/core';
-
-export class IconManager extends LionSingleton {
-  constructor(params = {}) {
-    super(params);
-
+export class IconManager {
+  constructor() {
     this.__iconResolvers = new Map();
   }
 

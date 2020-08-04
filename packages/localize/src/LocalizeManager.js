@@ -1,5 +1,4 @@
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
-import { LionSingleton } from '@lion/core';
 import isLocalizeESModule from './isLocalizeESModule.js';
 
 /**
@@ -9,10 +8,9 @@ import isLocalizeESModule from './isLocalizeESModule.js';
 /**
  * `LocalizeManager` manages your translations (includes loading)
  */
-export class LocalizeManager extends LionSingleton {
+export class LocalizeManager {
   // eslint-disable-line no-unused-vars
   constructor({ autoLoadOnLocaleChange = false, fallbackLocale = '' } = {}) {
-    super();
     this.__delegationTarget = document.createDocumentFragment();
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
     this._fallbackLocale = fallbackLocale;
