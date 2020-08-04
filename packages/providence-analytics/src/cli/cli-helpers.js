@@ -113,7 +113,13 @@ function targetDefault() {
 async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['npm', 'bower']) {
   let matchFn;
   if (matchPattern) {
-    matchFn = (_, d) => new RegExp(matchPattern).test(d);
+    if (matchPattern.startsWith('/') && matchPattern.endsWith('/')) {
+      matchFn = (_, d) => new RegExp(matchPattern.slice(1, -1)).test(d);
+    } else {
+      LogService.error(
+        `[appendProjectDependencyPaths] Please provide a matchPattern enclosed by '/'. Found: ${matchPattern}`,
+      );
+    }
   }
   const depProjectPaths = [];
   await aForEach(rootPaths, async targetPath => {

@@ -1,6 +1,7 @@
 const sinon = require('sinon');
 const pathLib = require('path');
 const { expect } = require('chai');
+const commander = require('commander');
 const {
   mockProject,
   restoreMockedProjects,
@@ -26,6 +27,9 @@ const {
   pathsArrayFromCollectionName,
   appendProjectDependencyPaths,
 } = cliHelpersModule;
+
+// Prevent (node:2860) MaxListenersExceededWarning
+commander.setMaxListeners(100);
 
 const queryResults = [];
 const rootDir = pathLib.resolve(__dirname, '../../');
@@ -260,14 +264,14 @@ describe('Providence CLI', () => {
       expect(providenceStub.args[0][1].writeLogFile).to.equal(true);
     });
 
-    it('--include-target-deps"', async () => {
+    it('--target-dependencies"', async () => {
       await runCli(`${analyzeCmd}`, rootDir);
       expect(appendProjectDependencyPathsStub.called).to.be.false;
 
       appendProjectDependencyPathsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --include-target-deps`, rootDir);
+      await runCli(`${analyzeCmd} --target-dependencies`, rootDir);
       expect(appendProjectDependencyPathsStub.called).to.be.true;
       expect(providenceStub.args[0][1].targetProjectPaths).to.eql([
         '/mocked/path/example-project',
@@ -276,9 +280,9 @@ describe('Providence CLI', () => {
       ]);
     });
 
-    it('--target-deps-filter"', async () => {
-      await runCli(`${analyzeCmd} --include-target-deps --target-deps-filter ^mock-`, rootDir);
-      expect(appendProjectDependencyPathsStub.args[0][1]).to.equal('^mock-');
+    it('--target-dependencies /^with-regex/"', async () => {
+      await runCli(`${analyzeCmd} --target-dependencies /^mock-/`, rootDir);
+      expect(appendProjectDependencyPathsStub.args[0][1]).to.equal('/^mock-/');
     });
   });
 
@@ -464,7 +468,7 @@ describe('CLI helpers', () => {
     });
 
     it('allows a regex filter', async () => {
-      const result = await appendProjectDependencyPaths(['/mocked/path/example-project'], 'b$');
+      const result = await appendProjectDependencyPaths(['/mocked/path/example-project'], '/b$/');
       expect(result).to.eql([
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',

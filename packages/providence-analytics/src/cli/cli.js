@@ -99,10 +99,10 @@ async function cli({ cwd } = {}) {
      * @type {string[]}
      */
     let totalSearchTargets;
-    if (commander.includeTargetDeps) {
+    if (commander.targetDependencies !== undefined) {
       totalSearchTargets = await cliHelpers.appendProjectDependencyPaths(
         searchTargetPaths,
-        commander.targetDepsFilter,
+        commander.targetDependencies,
       );
     } else {
       totalSearchTargets = searchTargetPaths;
@@ -195,14 +195,12 @@ async function cli({ cwd } = {}) {
     )
     .option('--write-log-file', `Writes all logs to 'providence.log' file`)
     .option(
-      '--include-target-deps',
+      '--target-dependencies [target-dependencies]',
       `For all search targets, will include all its dependencies
-    (node_modules and bower_components). When --target-deps-filter is applied, a subset
-    will be applied that matches the filter condition`,
-    )
-    .option(
-      '--target-deps-filter [target-deps-filter]',
-      `Regex condition to be applied to dependencies of search targets.`,
+    (node_modules and bower_components). When --target-dependencies is applied
+    without argument, it will act as boolean and include all dependencies.
+    When a regex is supplied like --target-dependencies /^my-brand-/, it will filter
+    all packages that comply with the regex`,
     );
 
   commander
