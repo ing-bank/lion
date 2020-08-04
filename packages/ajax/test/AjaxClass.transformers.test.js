@@ -6,6 +6,10 @@ import { AjaxClass } from '../src/AjaxClass.js';
 describe('AjaxClass transformers', () => {
   let server;
 
+  function getInstance(cfg) {
+    return new AjaxClass(cfg);
+  }
+
   beforeEach(() => {
     server = sinon.fakeServer.create({ autoRespond: true });
   });
@@ -24,18 +28,18 @@ describe('AjaxClass transformers', () => {
             this[type] = [...this[type], myInterceptor];
           }
         }
-        const ajaxWithout = AjaxClass.getNewInstance();
-        const ajaxWith = MyApi.getNewInstance();
+        const ajaxWithout = getInstance();
+        const ajaxWith = new MyApi();
         expect(ajaxWithout[type]).to.not.include(myInterceptor);
         expect(ajaxWith[type]).to.include(myInterceptor);
       });
     });
 
-    it('can be added per instance withour changing the class', () => {
+    it('can be added per instance without changing the class', () => {
       ['requestDataTransformers', 'responseDataTransformers'].forEach(type => {
         const myInterceptor = () => {};
-        const ajaxWithout = AjaxClass.getNewInstance();
-        const ajaxWith = AjaxClass.getNewInstance();
+        const ajaxWithout = getInstance();
+        const ajaxWith = getInstance();
         ajaxWith[type].push(myInterceptor);
         expect(ajaxWithout[type]).to.not.include(myInterceptor);
         expect(ajaxWith[type]).to.include(myInterceptor);
@@ -53,7 +57,7 @@ describe('AjaxClass transformers', () => {
 
           const myTransformer = sinon.spy(foo => foo);
 
-          const ajax = AjaxClass.getNewInstance();
+          const ajax = getInstance();
 
           ajax[type].push(myTransformer);
           await ajax.get('data.json');
@@ -75,7 +79,7 @@ describe('AjaxClass transformers', () => {
         '{ "method": "post" }',
       ]);
       const addBarTransformer = data => ({ ...data, bar: 'bar' });
-      const myAjax = AjaxClass.getNewInstance();
+      const myAjax = getInstance();
       myAjax.requestDataTransformers.push(addBarTransformer);
       const response = await myAjax.post('data.json', { foo: 'foo' });
       expect(JSON.parse(response.config.data)).to.deep.equal({
@@ -93,7 +97,7 @@ describe('AjaxClass transformers', () => {
         '{ "method": "get" }',
       ]);
       const addBarTransformer = data => ({ ...data, bar: 'bar' });
-      const myAjax = AjaxClass.getNewInstance();
+      const myAjax = getInstance();
       myAjax.responseDataTransformers.push(addBarTransformer);
       const response = await myAjax.get('data.json');
       expect(response.data).to.deep.equal({ method: 'get', bar: 'bar' });
