@@ -28,9 +28,6 @@ const {
   appendProjectDependencyPaths,
 } = cliHelpersModule;
 
-// Prevent (node:2860) MaxListenersExceededWarning
-commander.setMaxListeners(100);
-
 const queryResults = [];
 const rootDir = pathLib.resolve(__dirname, '../../');
 
@@ -63,6 +60,9 @@ describe('Providence CLI', () => {
   let qConfStub;
 
   before(() => {
+    // Prevent MaxListenersExceededWarning
+    commander.setMaxListeners(100);
+
     mockWriteToJson(queryResults);
     suppressNonCriticalLogs();
 
@@ -105,6 +105,8 @@ describe('Providence CLI', () => {
   });
 
   after(() => {
+    commander.setMaxListeners(10);
+
     restoreSuppressNonCriticalLogs();
     restoreMockedProjects();
     restoreWriteToJson();

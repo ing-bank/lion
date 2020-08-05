@@ -10,26 +10,6 @@ const { aForEach } = require('../../utils/async-array-utils.js');
 const { getFilePathRelativeFromRoot } = require('../../utils/get-file-path-relative-from-root.js');
 
 /**
- * @desc Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
- * output, we 'unwind' before we return...
- * @param {object} config
- * @param {string} config.analyzerName
- * @param {string} config.identifier
- */
-function getCachedAnalyzerResult({ analyzerName, identifier }) {
-  const cachedResult = ReportService.getCachedResult({ analyzerName, identifier });
-  if (!cachedResult) {
-    return;
-  }
-  LogService.success(`cached version found for ${identifier}`);
-
-  const { queryOutput } = cachedResult;
-  const { analyzerMeta } = cachedResult.meta;
-  analyzerMeta.__fromCache = true;
-  return { analyzerMeta, queryOutput }; // eslint-disable-line consistent-return
-}
-
-/**
  * @desc analyzes one entry: the callback can traverse a given ast for each entry
  * @param {AstDataProject[]} astDataProjects
  * @param {function} astAnalysis
@@ -86,6 +66,14 @@ function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
   delete aResult.analyzerMeta.configuration.referenceProjectPath;
   delete aResult.analyzerMeta.configuration.targetProjectPath;
 
+  const { referenceProjectResult, targetProjectResult } = aResult.analyzerMeta.configuration;
+
+  if (referenceProjectResult) {
+    delete aResult.analyzerMeta.configuration.referenceProjectResult;
+  } else if (targetProjectResult) {
+    delete aResult.analyzerMeta.configuration.targetProjectResult;
+  }
+
   if (Array.isArray(aResult.queryOutput)) {
     aResult.queryOutput.forEach(projectOutput => {
       if (projectOutput.project) {
@@ -123,6 +111,16 @@ function checkForMatchCompatibility(referencePath, targetPath) {
   return { compatible: true };
 }
 
+/**
+ * If in json format, 'unwind' to be compatible for analysis...
+ * @param {AnalyzerResult} targetOrReferenceProjectResult
+ */
+function unwindJsonResult(targetOrReferenceProjectResult) {
+  const { queryOutput } = targetOrReferenceProjectResult;
+  const { analyzerMeta } = targetOrReferenceProjectResult.meta;
+  return { queryOutput, analyzerMeta };
+}
+
 class Analyzer {
   constructor() {
     this.requiredAst = 'babel';
@@ -133,14 +131,38 @@ class Analyzer {
   }
 
   /**
+   * In a MatchAnalyzer, two Analyzers (a reference and targer) are run.
+   * For instance, in a MatchImportsAnalyzer, a FindExportsAnalyzer and FinImportsAnalyzer are run.
+   * Their results can be provided as config params.
+   * If they are stored in json format, 'unwind' them to be compatible for analysis...
+   * @param {MatchAnalyzerConfig} cfg
+   */
+  static __unwindProvidedResults(cfg) {
+    if (cfg.targetProjectResult && !cfg.targetProjectResult.analyzerMeta) {
+      cfg.targetProjectResult = unwindJsonResult(cfg.targetProjectResult);
+    }
+    if (cfg.referenceProjectResult && !cfg.referenceProjectResult.analyzerMeta) {
+      cfg.referenceProjectResult = unwindJsonResult(cfg.referenceProjectResult);
+    }
+  }
+
+  /**
    * @param {AnalyzerConfig} cfg
    * @returns {CachedAnalyzerResult|undefined}
    */
   _prepare(cfg) {
-    this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath, true);
+    this.constructor.__unwindProvidedResults(cfg);
 
-    if (cfg.referenceProjectPath) {
+    if (!cfg.targetProjectResult) {
+      this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath, true);
+    } else {
+      this.targetProjectMeta = cfg.targetProjectResult.analyzerMeta.targetProject;
+    }
+
+    if (cfg.referenceProjectPath && !cfg.referenceProjectResult) {
       this.referenceProjectMeta = InputDataService.getProjectMeta(cfg.referenceProjectPath, true);
+    } else if (cfg.referenceProjectResult) {
+      this.referenceProjectMeta = cfg.referenceProjectResult.analyzerMeta.targetProject;
     }
 
     /**
@@ -152,9 +174,9 @@ class Analyzer {
       analyzerConfig: cfg,
     });
 
+    // If we have a provided result cfg.referenceProjectResult, we assume the providing
+    // party provides compatible results for now...
     if (cfg.referenceProjectPath) {
-      this.referenceProjectMeta = InputDataService.getProjectMeta(cfg.referenceProjectPath, true);
-
       const { compatible, reason } = checkForMatchCompatibility(
         cfg.referenceProjectPath,
         cfg.targetProjectPath,
@@ -176,7 +198,7 @@ class Analyzer {
     /**
      * See if we maybe already have our result in cache in the file-system.
      */
-    const cachedResult = getCachedAnalyzerResult({
+    const cachedResult = Analyzer._getCachedAnalyzerResult({
       analyzerName: this.name,
       identifier: this.identifier,
     });
@@ -186,13 +208,16 @@ class Analyzer {
     }
 
     LogService.info(`starting ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+
     /**
      * Get reference and search-target data
      */
-    this.targetData = InputDataService.createDataObject(
-      [cfg.targetProjectPath],
-      cfg.gatherFilesConfig,
-    );
+    if (!cfg.targetProjectResult) {
+      this.targetData = InputDataService.createDataObject(
+        [cfg.targetProjectPath],
+        cfg.gatherFilesConfig,
+      );
+    }
 
     if (cfg.referenceProjectPath) {
       this.referenceData = InputDataService.createDataObject(
@@ -250,6 +275,27 @@ class Analyzer {
      * Finalize
      */
     return this._finalize(queryOutput, cfg);
+  }
+
+  /**
+   * @desc Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
+   * output, we 'unwind' before we return...
+   * @param {object} config
+   * @param {string} config.analyzerName
+   * @param {string} config.identifier
+   * @returns {AnalyzerResult|undefined}
+   */
+  static _getCachedAnalyzerResult({ analyzerName, identifier }) {
+    const cachedResult = ReportService.getCachedResult({ analyzerName, identifier });
+    if (!cachedResult) {
+      return undefined;
+    }
+    LogService.success(`cached version found for ${identifier}`);
+
+    /** @type {AnalyzerResult} */
+    const result = unwindJsonResult(cachedResult);
+    result.analyzerMeta.__fromCache = true;
+    return result;
   }
 }
 

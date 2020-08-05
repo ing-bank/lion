@@ -83,6 +83,10 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
               importEntryResult.importSpecifiers.includes(exportSpecifier) ||
               importEntryResult.importSpecifiers.includes('[*]');
 
+            if (!hasExportSpecifierImported) {
+              return;
+            }
+
             /**
              * @example
              * exportFile './foo.js'
@@ -98,14 +102,13 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
                 externalRootPath: cfg.referenceProjectPath,
               });
 
-            // TODO: transitive deps recognition. Could also be distinct post processor
-            // // export { z } from '../foo.js'
-            // // import { z } from '@reference/foo.js'
-            // (exportEntryResult.normalizedSource === importEntryResult.normalizedSource)
-
-            if (hasExportSpecifierImported && isFromSameSource) {
-              filteredImportsList.add(`${importProject}::${file}`);
+            if (!isFromSameSource) {
+              return;
             }
+
+            // TODO: transitive deps recognition? Could also be distinct post processor
+
+            filteredImportsList.add(`${importProject}::${file}`);
           }),
         );
         storeResult(resultsObj, exportId, filteredImportsList, exportEntry.meta);
@@ -201,15 +204,15 @@ class MatchImportsAnalyzer extends Analyzer {
      * @property {GatherFilesConfig} [gatherFilesConfig]
      * @property {array} [referenceProjectPath] reference paths
      * @property {array} [targetProjectPath] search target paths
-     * @property {FindExportsAnalyzerResult} [exportsAnalyzerResult]
-     * @property {FindImportsAnalyzerResult} [importsAnalyzerResult]
+     * @property {FindImportsAnalyzerResult} [targetProjectResult]
+     * @property {FindExportsAnalyzerResult} [referenceProjectResult]
      */
     const cfg = {
       gatherFilesConfig: {},
       referenceProjectPath: null,
       targetProjectPath: null,
-      exportsAnalyzerResult: null,
-      importsAnalyzerResult: null,
+      targetProjectResult: null,
+      referenceProjectResult: null,
       ...customConfig,
     };
 
@@ -224,25 +227,25 @@ class MatchImportsAnalyzer extends Analyzer {
     /**
      * Traverse
      */
-    let { exportsAnalyzerResult } = cfg;
-    if (!exportsAnalyzerResult) {
+    let { referenceProjectResult } = cfg;
+    if (!referenceProjectResult) {
       const findExportsAnalyzer = new FindExportsAnalyzer();
-      exportsAnalyzerResult = await findExportsAnalyzer.execute({
+      referenceProjectResult = await findExportsAnalyzer.execute({
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.referenceProjectPath,
       });
     }
 
-    let { importsAnalyzerResult } = cfg;
-    if (!importsAnalyzerResult) {
+    let { targetProjectResult } = cfg;
+    if (!targetProjectResult) {
       const findImportsAnalyzer = new FindImportsAnalyzer();
-      importsAnalyzerResult = await findImportsAnalyzer.execute({
+      targetProjectResult = await findImportsAnalyzer.execute({
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.targetProjectPath,
       });
     }
 
-    const queryOutput = matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, cfg);
+    const queryOutput = matchImportsPostprocess(referenceProjectResult, targetProjectResult, cfg);
 
     /**
      * Finalize
