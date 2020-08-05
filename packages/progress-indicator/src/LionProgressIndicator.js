@@ -7,7 +7,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        'lion-loading-indicator': locale => {
+        'lion-progress-indicator': locale => {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
@@ -82,7 +82,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   }
 
   onLocaleUpdated() {
-    const label = localize.msg('lion-loading-indicator:loading');
+    const label = localize.msg('lion-progress-indicator:loading');
     this.setAttribute('aria-label', label);
   }
 }
