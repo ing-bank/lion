@@ -35,7 +35,7 @@ It can also be scaffolded with a basic configuration.
 npm init @open-wc
 ```
 
-In this case, you should add/upgrade `Demoing` in the menu. More details can be found in the documentation of open-wc under [Demoing via storybook](https://open-wc.org/demoing/).
+In this case, you should add/upgrade `Demoing` in the menu. More details are in the documentation of open-wc under [Demoing via storybook](https://open-wc.org/demoing/).
 
 //////
 
