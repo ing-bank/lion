@@ -41,7 +41,7 @@ import '@lion/progress-indicator/lion-progress-indicator.js';
 
 ## Extended indicator with a custom visual
 
-`LionProgressIndicator` is designed to be extended to add visuals. Implement the `_graphicTempplate` method to set the rendered content, and apply styles normally.
+`LionProgressIndicator` is designed to be extended to add visuals. Implement the `_graphicTemplate` method to set the rendered content, and apply styles normally.
 
 ### Example extension
 
