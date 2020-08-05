@@ -1,29 +1,9 @@
-import { svg, css, LitElement } from '@lion/core';
+/* eslint-disable class-methods-use-this */
+
+import { nothing, LitElement } from '@lion/core';
 import { localize, LocalizeMixin } from '@lion/localize';
 
 export class LionProgressIndicator extends LocalizeMixin(LitElement) {
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: inline-block;
-        }
-
-        svg.lion-progress {
-          animation: progress-indicator-rotate 2s linear infinite;
-          height: 40px;
-          width: 40px;
-        }
-
-        @keyframes progress-indicator-rotate {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `,
-    ];
-  }
-
   static get localizeNamespaces() {
     return [
       {
@@ -76,6 +56,9 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
             case 'uk-UA':
             case 'uk':
               return import('../translations/uk.js');
+            case 'zh-CN':
+            case 'zh':
+              return import('../translations/zh.js');
             default:
               return import('../translations/en.js');
           }
@@ -84,17 +67,12 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     ];
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  template() {
-    return svg`
-      <svg class="lion-progress" viewBox="22 22 44 44">
-        <circle cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6" stroke="black" stroke-dasharray="88,25" />
-      </svg>
-    `;
+  _graphicTemplate() {
+    return nothing;
   }
 
   render() {
-    return this.template();
+    return this._graphicTemplate();
   }
 
   connectedCallback() {

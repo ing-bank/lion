@@ -4,6 +4,15 @@
 
 `lion-progress-indicator` implements accessibility requirements for progress indicators.
 
+```js script
+import { html } from 'lit-html';
+import './demo/custom-progress-indicator.js';
+
+export default {
+  title: 'Others/Progress Indicator',
+};
+```
+
 ## Features
 
 - Accessibility compliant
@@ -30,8 +39,52 @@ import '@lion/progress-indicator/lion-progress-indicator.js';
 <lion-progress-indicator></lion-progress-indicator>
 ```
 
-## Basic Usage
+## Extended indicator with a custom visual
+
+`LionProgressIndicator` is designed to be extended to add visuals. Implement the `_graphicTempplate` method to set the rendered content, and apply styles normally.
+
+### Example extension
+
+```js
+class CustomProgressIndicator extends LionProgressIndicator {
+  static get styles() {
+    return [
+      css`
+        svg {
+          animation: spinner-rotate 2s linear infinite;
+          display: inline-block;
+          height: 48px;
+          width: 48px;
+        }
+
+        circle {
+          fill: none;
+          stroke-width: 3.6;
+          stroke: firebrick;
+          stroke-dasharray: 100, 28;
+        }
+
+        @keyframes spinner-rotate {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `,
+    ];
+  }
+
+  _graphicTemplate() {
+    return html`<svg viewBox="22 22 44 44">
+      <circle cx="44" cy="44" r="20.2" />
+    </svg>`;
+  }
+}
+```
+
+### Result
 
 ```js preview-story
-export const progressIndicator = () => html` <lion-progress-indicator></lion-progress-indicator> `;
+export const customProgressDemo = () => html`
+  <custom-progress-indicator></custom-progress-indicator>
+`;
 ```
