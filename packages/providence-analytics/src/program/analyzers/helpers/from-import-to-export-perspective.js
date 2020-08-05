@@ -49,17 +49,21 @@ function fromImportToExportPerspective({
     // we still need to check if we're not dealing with a folder.
     // - '@open-wc/x/y.js' -> '@open-wc/x/y.js' or... '@open-wc/x/y.js/index.js' ?
     // - or 'lion-based-ui/test' -> 'lion-based-ui/test/index.js' or 'lion-based-ui/test' ?
-    const pathToCheck = pathLib.resolve(externalRootPath, `./${localPath}`);
+    if (externalRootPath) {
+      const pathToCheck = pathLib.resolve(externalRootPath, `./${localPath}`);
 
-    if (fs.existsSync(pathToCheck)) {
-      const stat = fs.statSync(pathToCheck);
-      if (stat && stat.isFile()) {
-        return `./${localPath}`; // '/path/to/lion-based-ui/fol.der' is a file
+      if (fs.existsSync(pathToCheck)) {
+        const stat = fs.statSync(pathToCheck);
+        if (stat && stat.isFile()) {
+          return `./${localPath}`; // '/path/to/lion-based-ui/fol.der' is a file
+        }
+        return `./${localPath}/index.js`; // '/path/to/lion-based-ui/fol.der' is a folder
+        // eslint-disable-next-line no-else-return
+      } else if (fs.existsSync(`${pathToCheck}.js`)) {
+        return `./${localPath}.js`; // '/path/to/lion-based-ui/fol.der' is file '/path/to/lion-based-ui/fol.der.js'
       }
-      return `./${localPath}/index.js`; // '/path/to/lion-based-ui/fol.der' is a folder
-      // eslint-disable-next-line no-else-return
-    } else if (fs.existsSync(`${pathToCheck}.js`)) {
-      return `./${localPath}.js`; // '/path/to/lion-based-ui/fol.der' is file '/path/to/lion-based-ui/fol.der.js'
+    } else {
+      return `./${localPath}`;
     }
   } else {
     // like '@lion/core'

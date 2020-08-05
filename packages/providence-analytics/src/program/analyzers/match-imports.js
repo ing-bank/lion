@@ -20,6 +20,20 @@ function storeResult(resultsObj, exportId, filteredList, meta) {
 }
 
 /**
+ * Needed in case fromImportToExportPerspective does not have a
+ * externalRootPath supplied.
+ * @param {string} exportPath exportEntry.file
+ * @param {string} translatedImportPath result of fromImportToExportPerspective
+ */
+function compareImportAndExportPaths(exportPath, translatedImportPath) {
+  return (
+    exportPath === translatedImportPath ||
+    exportPath === `${translatedImportPath}.js` ||
+    exportPath === `${translatedImportPath}/index.js`
+  );
+}
+
+/**
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
  * @param {FindImportsAnalyzerResult} importsAnalyzerResult
  * @param {matchImportsConfig} customConfig
@@ -94,13 +108,15 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
              * importFile 'importing-target-project/file.js'
              * => import { z } from '@reference/foo.js'
              */
-            const isFromSameSource =
-              exportEntry.file ===
-              fromImportToExportPerspective({
-                requestedExternalSource: importEntryResult.normalizedSource,
-                externalProjectMeta: exportsProjectObj,
-                externalRootPath: cfg.referenceProjectPath,
-              });
+            const fromImportToExport = fromImportToExportPerspective({
+              requestedExternalSource: importEntryResult.normalizedSource,
+              externalProjectMeta: exportsProjectObj,
+              externalRootPath: cfg.referenceProjectResult ? null : cfg.referenceProjectPath,
+            });
+            const isFromSameSource = compareImportAndExportPaths(
+              exportEntry.file,
+              fromImportToExport,
+            );
 
             if (!isFromSameSource) {
               return;
