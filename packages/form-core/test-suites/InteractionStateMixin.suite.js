@@ -11,6 +11,9 @@ import {
 import sinon from 'sinon';
 import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
 
+/**
+ * @param {{tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
+ */
 export function runInteractionStateMixinSuite(customConfig) {
   const cfg = {
     tagString: null,
@@ -19,68 +22,66 @@ export function runInteractionStateMixinSuite(customConfig) {
   };
 
   describe(`InteractionStateMixin`, async () => {
-    let tag;
-    before(() => {
-      if (!cfg.tagString) {
-        cfg.tagString = defineCE(
-          class IState extends InteractionStateMixin(LitElement) {
-            connectedCallback() {
-              super.connectedCallback();
-              this.tabIndex = 0;
-            }
-
-            set modelValue(v) {
-              this._modelValue = v;
-              this.dispatchEvent(new CustomEvent('model-value-changed', { bubbles: true }));
-              this.requestUpdate('modelValue');
-            }
-
-            get modelValue() {
-              return this._modelValue;
-            }
-          },
-        );
+    class IState extends InteractionStateMixin(LitElement) {
+      connectedCallback() {
+        super.connectedCallback();
+        this.tabIndex = 0;
       }
-      tag = unsafeStatic(cfg.tagString);
-    });
+
+      set modelValue(v) {
+        /** @type {*} */
+        this._modelValue = v;
+        this.dispatchEvent(new CustomEvent('model-value-changed', { bubbles: true }));
+        this.requestUpdate('modelValue');
+      }
+
+      get modelValue() {
+        return this._modelValue;
+      }
+    }
+
+    cfg.tagString = cfg.tagString ? cfg.tagString : defineCE(IState);
+    const tag = unsafeStatic(cfg.tagString);
 
     it('sets states to false on init', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       expect(el.dirty).to.be.false;
       expect(el.touched).to.be.false;
       expect(el.prefilled).to.be.false;
     });
 
     it('sets dirty when value changed', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       expect(el.dirty).to.be.false;
       el.modelValue = 'foobar';
       expect(el.dirty).to.be.true;
     });
 
     it('sets touched to true when field left after focus', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       await triggerFocusFor(el);
       await triggerBlurFor(el);
       expect(el.touched).to.be.true;
     });
 
     it('sets an attribute "touched', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.touched = true;
       await el.updateComplete;
       expect(el.hasAttribute('touched')).to.be.true;
     });
 
     it('sets an attribute "dirty', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.dirty = true;
       await el.updateComplete;
       expect(el.hasAttribute('dirty')).to.be.true;
     });
 
     it('sets an attribute "filled" if the input has a non-empty modelValue', async () => {
-      const el = await fixture(html`<${tag} .modelValue=${'hello'}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(
+        html`<${tag} .modelValue=${'hello'}></${tag}>`,
+      ));
       expect(el.hasAttribute('filled')).to.equal(true);
       el.modelValue = '';
       await el.updateComplete;
@@ -93,9 +94,9 @@ export function runInteractionStateMixinSuite(customConfig) {
     it('fires "(touched|dirty)-state-changed" event when state changes', async () => {
       const touchedSpy = sinon.spy();
       const dirtySpy = sinon.spy();
-      const el = await fixture(
+      const el = /** @type {IState} */ (await fixture(
         html`<${tag} @touched-changed=${touchedSpy} @dirty-changed=${dirtySpy}></${tag}>`,
-      );
+      ));
 
       el.touched = true;
       expect(touchedSpy.callCount).to.equal(1);
@@ -105,22 +106,29 @@ export function runInteractionStateMixinSuite(customConfig) {
     });
 
     it('sets prefilled once instantiated', async () => {
-      const el = await fixture(html`
+      const el = /** @type {IState} */ (await fixture(html`
         <${tag} .modelValue=${'prefilled'}></${tag}>
-      `);
+      `));
       expect(el.prefilled).to.be.true;
 
-      const nonPrefilled = await fixture(html`
+      const nonPrefilled = /** @type {IState} */ (await fixture(html`
         <${tag} .modelValue=${''}></${tag}>
-      `);
+      `));
       expect(nonPrefilled.prefilled).to.be.false;
     });
 
     // This method actually tests the implementation of the _isPrefilled method.
     it(`can determine "prefilled" based on different modelValue types
       (${cfg.allowedModelValueTypes.map(t => t.name).join(', ')})`, async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      /** @typedef {{_inputNode: HTMLElement}} inputNodeInterface */
 
+      const el = /** @type {IState & inputNodeInterface} */ (await fixture(
+        html`<${tag}></${tag}>`,
+      ));
+
+      /**
+       * @param {*} modelValue
+       */
       const changeModelValueAndLeave = modelValue => {
         const targetEl = el._inputNode || el;
         targetEl.dispatchEvent(new Event('focus', { bubbles: true }));
@@ -164,7 +172,7 @@ export function runInteractionStateMixinSuite(customConfig) {
     });
 
     it('has a method resetInteractionState()', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.dirty = true;
       el.touched = true;
       el.prefilled = true;
@@ -188,7 +196,7 @@ export function runInteractionStateMixinSuite(customConfig) {
     });
 
     it('has a method initInteractionState()', async () => {
-      const el = await fixture(html`<${tag}></${tag}>`);
+      const el = /** @type {IState} */ (await fixture(html`<${tag}></${tag}>`));
       el.modelValue = 'Some value';
       expect(el.dirty).to.be.true;
       expect(el.touched).to.be.false;
@@ -201,16 +209,17 @@ export function runInteractionStateMixinSuite(customConfig) {
 
     describe('SubClassers', () => {
       it('can override the `_leaveEvent`', async () => {
-        const tagLeaveString = defineCE(
-          class IState extends InteractionStateMixin(LitElement) {
-            constructor() {
-              super();
-              this._leaveEvent = 'custom-blur';
-            }
-          },
-        );
+        class IStateCustomBlur extends InteractionStateMixin(LitElement) {
+          constructor() {
+            super();
+            this._leaveEvent = 'custom-blur';
+          }
+        }
+        const tagLeaveString = defineCE(IStateCustomBlur);
         const tagLeave = unsafeStatic(tagLeaveString);
-        const el = await fixture(html`<${tagLeave}></${tagLeave}>`);
+        const el = /** @type {IStateCustomBlur} */ (await fixture(
+          html`<${tagLeave}></${tagLeave}>`,
+        ));
         el.dispatchEvent(new Event('custom-blur'));
         expect(el.touched).to.be.true;
       });

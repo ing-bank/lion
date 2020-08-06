@@ -1,6 +1,6 @@
 import { expect, fixtureSync, defineCE, unsafeStatic, html, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
-import { UpdatingElement } from '@lion/core';
+import { LitElement } from '@lion/core';
 import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
 
 describe('SyncUpdatableMixin', () => {
@@ -8,38 +8,44 @@ describe('SyncUpdatableMixin', () => {
     it('initializes all properties', async () => {
       let hasCalledFirstUpdated = false;
       let hasCalledUpdateSync = false;
+      class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+        static get properties() {
+          return {
+            propA: { type: String },
+            propB: {
+              type: String,
+              attribute: 'prop-b',
+            },
+          };
+        }
 
-      const tagString = defineCE(
-        class extends SyncUpdatableMixin(UpdatingElement) {
-          static get properties() {
-            return {
-              propA: { type: String },
-              propB: {
-                type: String,
-                attribute: 'prop-b',
-              },
-            };
-          }
+        constructor() {
+          super();
+          this.propA = 'init-a';
+          this.propB = 'init-b';
+        }
 
-          constructor() {
-            super();
-            this.propA = 'init-a';
-            this.propB = 'init-b';
-          }
+        /** @param {import('lit-element').PropertyValues } changedProperties */
+        firstUpdated(changedProperties) {
+          super.firstUpdated(changedProperties);
+          hasCalledFirstUpdated = true;
+        }
 
-          firstUpdated(changedProperties) {
-            super.firstUpdated(changedProperties);
-            hasCalledFirstUpdated = true;
-          }
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        updateSync(name, oldValue) {
+          super.updateSync(name, oldValue);
+          hasCalledUpdateSync = true;
+        }
+      }
 
-          updateSync(...args) {
-            super.updateSync(...args);
-            hasCalledUpdateSync = true;
-          }
-        },
-      );
+      const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = fixtureSync(html`<${tag} prop-b="b"></${tag}>`);
+      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
+        html`<${tag} prop-b="b"></${tag}>`,
+      ));
 
       // Getters setters work as expected, without running property effects
       expect(el.propA).to.equal('init-a');
@@ -58,41 +64,47 @@ describe('SyncUpdatableMixin', () => {
     it('guarantees Member Order Independence', async () => {
       let hasCalledRunPropertyEffect = false;
 
-      const tagString = defineCE(
-        class extends SyncUpdatableMixin(UpdatingElement) {
-          static get properties() {
-            return {
-              propA: { type: String },
-              propB: {
-                type: String,
-                attribute: 'prop-b',
-              },
-              derived: { type: String },
-            };
-          }
+      class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+        static get properties() {
+          return {
+            propA: { type: String },
+            propB: {
+              type: String,
+              attribute: 'prop-b',
+            },
+            derived: { type: String },
+          };
+        }
 
-          constructor() {
-            super();
-            this.propA = 'init-a';
-            this.propB = 'init-b';
-          }
+        constructor() {
+          super();
+          this.propA = 'init-a';
+          this.propB = 'init-b';
+        }
 
-          updateSync(name, oldValue) {
-            super.updateSync(name, oldValue);
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        updateSync(name, oldValue) {
+          super.updateSync(name, oldValue);
 
-            if (name === 'propB') {
-              this._runPropertyEffect();
-            }
+          if (name === 'propB') {
+            this._runPropertyEffect();
           }
+        }
 
-          _runPropertyEffect() {
-            hasCalledRunPropertyEffect = true;
-            this.derived = this.propA + this.propB;
-          }
-        },
-      );
+        _runPropertyEffect() {
+          hasCalledRunPropertyEffect = true;
+          this.derived = this.propA + this.propB;
+        }
+      }
+
+      const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = fixtureSync(html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`);
+      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
+        html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`,
+      ));
 
       // Derived
       expect(el.derived).to.be.undefined;
@@ -102,13 +114,19 @@ describe('SyncUpdatableMixin', () => {
       expect(el.derived).to.equal('ab');
       expect(hasCalledRunPropertyEffect).to.be.true;
 
-      const el2 = await fixture(html`<${tag} .propA="${'a'}"></${tag}>`);
+      const el2 = /** @type {UpdatableImplementation} */ (await fixture(
+        html`<${tag} .propA="${'a'}"></${tag}>`,
+      ));
       expect(el2.derived).to.equal('ainit-b');
 
-      const el3 = await fixture(html`<${tag} .propB="${'b'}"></${tag}>`);
+      const el3 = /** @type {UpdatableImplementation} */ (await fixture(
+        html`<${tag} .propB="${'b'}"></${tag}>`,
+      ));
       expect(el3.derived).to.equal('init-ab');
 
-      const el4 = await fixture(html`<${tag} .propA=${'a'} .propB="${'b'}"></${tag}>`);
+      const el4 = /** @type {UpdatableImplementation} */ (await fixture(
+        html`<${tag} .propA=${'a'} .propB="${'b'}"></${tag}>`,
+      ));
       expect(el4.derived).to.equal('ab');
     });
 
@@ -116,36 +134,47 @@ describe('SyncUpdatableMixin', () => {
       let propChangedCount = 0;
       let propUpdateSyncCount = 0;
 
-      const tagString = defineCE(
-        class extends SyncUpdatableMixin(UpdatingElement) {
-          static get properties() {
-            return {
-              prop: { type: String },
-            };
-          }
+      // @ts-ignore the private override is on purpose
+      class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+        static get properties() {
+          return {
+            prop: { type: String },
+          };
+        }
 
-          constructor() {
-            super();
-            this.prop = 'a';
-          }
+        constructor() {
+          super();
+          this.prop = 'a';
+        }
 
-          _requestUpdate(name, oldValue) {
-            super._requestUpdate(name, oldValue);
-            if (name === 'prop') {
-              propChangedCount += 1;
-            }
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        _requestUpdate(name, oldValue) {
+          // @ts-ignore the private override is on purpose
+          super._requestUpdate(name, oldValue);
+          if (name === 'prop') {
+            propChangedCount += 1;
           }
+        }
 
-          updateSync(name, oldValue) {
-            super.updateSync(name, oldValue);
-            if (name === 'prop') {
-              propUpdateSyncCount += 1;
-            }
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        updateSync(name, oldValue) {
+          super.updateSync(name, oldValue);
+          if (name === 'prop') {
+            propUpdateSyncCount += 1;
           }
-        },
-      );
+        }
+      }
+
+      const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = fixtureSync(html`<${tag}></${tag}>`);
+
+      const el = /** @type {UpdatableImplementation} */ (fixtureSync(html`<${tag}></${tag}>`));
       el.prop = 'a';
       // Getters setters work as expected, without running property effects
       expect(propChangedCount).to.equal(2);
@@ -159,40 +188,46 @@ describe('SyncUpdatableMixin', () => {
 
   describe('After firstUpdated', () => {
     it('calls "updateSync" immediately when the observed property is changed (newValue !== oldValue)', async () => {
-      const tagString = defineCE(
-        class extends SyncUpdatableMixin(UpdatingElement) {
-          static get properties() {
-            return {
-              propA: { type: String },
-              propB: {
-                type: String,
-                attribute: 'prop-b',
-              },
-              derived: { type: String },
-            };
-          }
+      class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+        static get properties() {
+          return {
+            propA: { type: String },
+            propB: {
+              type: String,
+              attribute: 'prop-b',
+            },
+            derived: { type: String },
+          };
+        }
 
-          constructor() {
-            super();
-            this.propA = 'init-a';
-            this.propB = 'init-b';
-          }
+        constructor() {
+          super();
+          this.propA = 'init-a';
+          this.propB = 'init-b';
+        }
 
-          updateSync(name, oldValue) {
-            super.updateSync(name, oldValue);
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        updateSync(name, oldValue) {
+          super.updateSync(name, oldValue);
 
-            if (name === 'propB') {
-              this._runPropertyEffect();
-            }
+          if (name === 'propB') {
+            this._runPropertyEffect();
           }
+        }
 
-          _runPropertyEffect() {
-            this.derived = this.propA + this.propB;
-          }
-        },
-      );
+        _runPropertyEffect() {
+          this.derived = this.propA + this.propB;
+        }
+      }
+
+      const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = fixtureSync(html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`);
+      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
+        html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`,
+      ));
       const spy = sinon.spy(el, '_runPropertyEffect');
       expect(spy.callCount).to.equal(0);
 
@@ -208,48 +243,63 @@ describe('SyncUpdatableMixin', () => {
   describe('Features', () => {
     // See: https://lit-element.polymer-project.org/guide/lifecycle#haschanged
     it('supports "hasChanged" from UpdatingElement', async () => {
-      const tagString = defineCE(
-        class extends SyncUpdatableMixin(UpdatingElement) {
-          static get properties() {
-            return {
-              complexProp: {
-                type: Object,
-                hasChanged: (result, prevResult) => {
-                  // Simple way of doing a deep comparison
-                  if (JSON.stringify(result) !== JSON.stringify(prevResult)) {
-                    return true;
-                  }
-                  return false;
-                },
+      class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+        static get properties() {
+          return {
+            complexProp: {
+              type: Object,
+              /**
+               * @param {Object} result
+               * @param {Object} prevResult
+               */
+              hasChanged: (result, prevResult) => {
+                // Simple way of doing a deep comparison
+                if (JSON.stringify(result) !== JSON.stringify(prevResult)) {
+                  return true;
+                }
+                return false;
               },
-            };
-          }
+            },
+          };
+        }
 
-          updateSync(name, oldValue) {
-            super.updateSync(name, oldValue);
+        constructor() {
+          super();
+          this.complexProp = {};
+        }
 
-            if (name === 'complexProp') {
-              this._onComplexPropChanged();
-            }
-          }
+        /**
+         * @param {string} name
+         * @param {*} oldValue
+         */
+        updateSync(name, oldValue) {
+          super.updateSync(name, oldValue);
 
-          _onComplexPropChanged() {
-            // do smth
+          if (name === 'complexProp') {
+            this._onComplexPropChanged();
           }
-        },
-      );
+        }
+
+        _onComplexPropChanged() {
+          // do smth
+        }
+      }
+
+      const tagString = defineCE(UpdatableImplementation);
+
       const tag = unsafeStatic(tagString);
-      const el = fixtureSync(html`<${tag}></${tag}>`);
+      const el = /** @type {UpdatableImplementation} */ (fixtureSync(html`<${tag}></${tag}>`));
       const spy = sinon.spy(el, '_onComplexPropChanged');
       await el.updateComplete;
 
-      expect(spy.callCount).to.equal(0);
-      el.complexProp = { key1: true };
+      // Constructor sets it first, so start at 1
       expect(spy.callCount).to.equal(1);
-      el.complexProp = { key1: false };
+      el.complexProp = { key1: true };
       expect(spy.callCount).to.equal(2);
       el.complexProp = { key1: false };
-      expect(spy.callCount).to.equal(2);
+      expect(spy.callCount).to.equal(3);
+      el.complexProp = { key1: false };
+      expect(spy.callCount).to.equal(3);
     });
   });
 });

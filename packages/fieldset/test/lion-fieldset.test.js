@@ -64,10 +64,10 @@ describe('<lion-fieldset>', () => {
   // TODO: Tests below belong to FormRegistrarMixin. Preferably run suite integration test
   it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
-    expect(el.formElements.keys().length).to.equal(3);
+    expect(el.formElements._keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(2);
     el.removeChild(el.formElements['hobbies[]'][0]);
-    expect(el.formElements.keys().length).to.equal(3);
+    expect(el.formElements._keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(1);
   });
 
@@ -90,7 +90,7 @@ describe('<lion-fieldset>', () => {
     el.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
     el.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
 
-    expect(el.formElements.keys().length).to.equal(3);
+    expect(el.formElements._keys().length).to.equal(3);
     expect(el.formElements['hobbies[]'].length).to.equal(2);
     expect(el.formElements['hobbies[]'][0].modelValue.value).to.equal('chess');
     expect(el.formElements['gender[]'][0].modelValue.value).to.equal('male');
@@ -165,13 +165,13 @@ describe('<lion-fieldset>', () => {
     const el = await fixture(html`<${tag}>${inputSlots}</${tag}>`);
     const newField = await fixture(html`<${childTag} name="lastName"></${childTag}>`);
 
-    expect(el.formElements.keys().length).to.equal(3);
+    expect(el.formElements._keys().length).to.equal(3);
 
     el.appendChild(newField);
-    expect(el.formElements.keys().length).to.equal(4);
+    expect(el.formElements._keys().length).to.equal(4);
 
     el._inputNode.removeChild(newField);
-    expect(el.formElements.keys().length).to.equal(3);
+    expect(el.formElements._keys().length).to.equal(3);
   });
 
   // TODO: Tests below belong to FormGroupMixin. Preferably run suite integration test
@@ -678,8 +678,8 @@ describe('<lion-fieldset>', () => {
       newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
       newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
       fieldset.formElements.comment.modelValue = 'Foo';
-      expect(fieldset.formElements.keys().length).to.equal(2);
-      expect(newFieldset.formElements.keys().length).to.equal(3);
+      expect(fieldset.formElements._keys().length).to.equal(2);
+      expect(newFieldset.formElements._keys().length).to.equal(3);
       expect(fieldset.serializedValue).to.deep.equal({
         comment: 'Foo',
         newfieldset: {
