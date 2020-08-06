@@ -52,7 +52,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
               return import('../translations/ru.js');
             case 'sk-SK':
             case 'sk':
-              return import('./translations/sk.js');
+              return import('../translations/sk.js');
             case 'uk-UA':
             case 'uk':
               return import('../translations/uk.js');
