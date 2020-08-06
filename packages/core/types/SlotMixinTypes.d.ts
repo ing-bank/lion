@@ -25,6 +25,8 @@ export declare class SlotMixinHost {
    * @return {boolean} true if given slot name been created by SlotMixin
    */
   protected _isPrivateSlot(slotName: string): boolean;
+
+  connectedCallback(): void;
 }
 
 /**

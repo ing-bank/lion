@@ -379,7 +379,7 @@ describe('DelegateMixin', () => {
   });
 
   it('works with connectedCallback', async () => {
-    class ConnectedElement extends DelegateMixin(HTMLElement) {
+    class ConnectedElement extends DelegateMixin(LitElement) {
       get delegations() {
         return {
           ...super.delegations,
