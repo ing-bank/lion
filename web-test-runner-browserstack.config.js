@@ -29,6 +29,11 @@ module.exports = {
       lines: 90,
     },
   },
+  testFramework: {
+    config: {
+      timeout: '3000',
+    },
+  },
   browsers: [
     // browserstackLauncher({
     //   capabilities: {
