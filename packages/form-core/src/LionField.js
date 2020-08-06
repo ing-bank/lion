@@ -47,6 +47,7 @@ export class LionField extends FormControlMixin(
     };
   }
 
+  /** @type {number} */
   get selectionStart() {
     const native = this._inputNode;
     if (native && native.selectionStart) {
@@ -62,6 +63,7 @@ export class LionField extends FormControlMixin(
     }
   }
 
+  /** @type {number} */
   get selectionEnd() {
     const native = this._inputNode;
     if (native && native.selectionEnd) {
@@ -78,6 +80,7 @@ export class LionField extends FormControlMixin(
   }
 
   // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+  /** @type {string} */
   set value(value) {
     // if not yet connected to dom can't change the value
     if (this._inputNode) {

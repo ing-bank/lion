@@ -14,6 +14,7 @@
  * - realtime updated with all value changes
  */
 export class Unparseable {
+  /** @param {string} value */
   constructor(value) {
     this.type = 'unparseable';
     this.viewValue = value;

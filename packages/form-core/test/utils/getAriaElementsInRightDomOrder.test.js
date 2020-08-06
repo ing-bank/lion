@@ -19,7 +19,7 @@ describe('getAriaElementsInRightDomOrder', () => {
       </div>
     `);
     // eslint-disable-next-line no-unused-vars
-    const [a, _1, b, _2, bChild, _3, c, _4] = el.querySelectorAll('div');
+    const [a, _1, b, _2, bChild, _3, c, _4] = Array.from(el.querySelectorAll('div'));
     const unorderedNodes = [bChild, c, a, b];
     const result = getAriaElementsInRightDomOrder(unorderedNodes);
     expect(result).to.eql([a, b, bChild, c]);
@@ -40,7 +40,7 @@ describe('getAriaElementsInRightDomOrder', () => {
       </div>
     `);
     // eslint-disable-next-line no-unused-vars
-    const [a, _1, b, _2, bChild, _3, c, _4] = el.querySelectorAll('div');
+    const [a, _1, b, _2, bChild, _3, c, _4] = Array.from(el.querySelectorAll('div'));
     const unorderedNodes = [bChild, c, a, b];
     const result = getAriaElementsInRightDomOrder(unorderedNodes, { reverse: true });
     expect(result).to.eql([c, bChild, b, a]);
@@ -62,7 +62,7 @@ describe('getAriaElementsInRightDomOrder', () => {
       </div>
     `);
     // eslint-disable-next-line no-unused-vars
-    const [a, _1, b, _2, bChild, _3, c, _4] = el.querySelectorAll('div');
+    const [a, _1, b, _2, bChild, _3, c, _4] = Array.from(el.querySelectorAll('div'));
     const unorderedNodes = [bChild, c, a, b];
     const result = getAriaElementsInRightDomOrder(unorderedNodes);
     expect(result).to.eql([c, bChild, b, a]);

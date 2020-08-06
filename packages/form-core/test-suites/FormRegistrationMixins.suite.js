@@ -4,6 +4,19 @@ import { FormRegisteringMixin } from '../src/registration/FormRegisteringMixin.j
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPortalMixin.js';
 
+/**
+ * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
+ * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
+ */
+
+/**
+ *
+ * @param {Object} customConfig
+ * @param {string} customConfig.suffix
+ * @param {string} customConfig.parentTagString
+ * @param {string} customConfig.childTagString
+ * @param {string} customConfig.portalTagString
+ */
 export const runRegistrationSuite = customConfig => {
   const cfg = {
     baseElement: HTMLElement,
@@ -11,41 +24,29 @@ export const runRegistrationSuite = customConfig => {
   };
 
   describe(`FormRegistrationMixins ${cfg.suffix}`, () => {
-    let parentTag;
-    let childTag;
-    let portalTag;
-    let parentTagString;
-    let childTagString;
+    class RegistrarClass extends FormRegistrarMixin(cfg.baseElement) {}
+    cfg.parentTagString = defineCE(RegistrarClass);
+    class RegisteringClass extends FormRegisteringMixin(cfg.baseElement) {}
+    cfg.childTagString = defineCE(RegisteringClass);
+    class PortalClass extends FormRegistrarPortalMixin(cfg.baseElement) {}
+    cfg.portalTagString = defineCE(PortalClass);
 
-    before(async () => {
-      if (!cfg.parentTagString) {
-        cfg.parentTagString = defineCE(class extends FormRegistrarMixin(cfg.baseElement) {});
-      }
-      if (!cfg.childTagString) {
-        cfg.childTagString = defineCE(class extends FormRegisteringMixin(cfg.baseElement) {});
-      }
-      if (!cfg.portalTagString) {
-        cfg.portalTagString = defineCE(class extends FormRegistrarPortalMixin(cfg.baseElement) {});
-      }
-
-      parentTag = unsafeStatic(cfg.parentTagString);
-      childTag = unsafeStatic(cfg.childTagString);
-      portalTag = unsafeStatic(cfg.portalTagString);
-      parentTagString = cfg.parentTagString;
-      childTagString = cfg.childTagString;
-    });
+    const parentTag = unsafeStatic(cfg.parentTagString);
+    const childTag = unsafeStatic(cfg.childTagString);
+    const portalTag = unsafeStatic(cfg.portalTagString);
+    const { parentTagString, childTagString } = cfg;
 
     it('can register a formElement', async () => {
-      const el = await fixture(html`
+      const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `);
+      `));
       expect(el.formElements.length).to.equal(1);
     });
 
     it('works with document.createElement', async () => {
-      const el = document.createElement(parentTagString);
+      const el = /** @type {RegistrarClass} */ (document.createElement(parentTagString));
       const childEl = document.createElement(childTagString);
       expect(el.formElements.length).to.equal(0);
 
@@ -57,59 +58,58 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('can register a formElement with arbitrary dom tree in between registrar and registering', async () => {
-      const el = await fixture(html`
+      const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
           <div>
             <${childTag}></${childTag}>
           </div>
         </${parentTag}>
-      `);
+      `));
       expect(el.formElements.length).to.equal(1);
     });
 
     it('supports nested registration parents', async () => {
-      const el = await fixture(html`
+      const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
           <${parentTag} class="sub-group">
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
           </${parentTag}>
         </${parentTag}>
-      `);
+      `));
       expect(el.formElements.length).to.equal(1);
 
-      const subGroup = el.querySelector('.sub-group');
+      const subGroup = /** @type {RegistrarClass} */ (el.querySelector('.sub-group'));
       expect(subGroup.formElements.length).to.equal(2);
     });
 
     it('works for components that have a delayed render', async () => {
-      const tagWrapperString = defineCE(
-        class extends FormRegistrarMixin(LitElement) {
-          async performUpdate() {
-            await new Promise(resolve => setTimeout(() => resolve(), 10));
-            await super.performUpdate();
-          }
+      class PerformUpdate extends FormRegistrarMixin(LitElement) {
+        async performUpdate() {
+          await new Promise(resolve => setTimeout(() => resolve(), 10));
+          await super.performUpdate();
+        }
 
-          render() {
-            return html`<slot></slot>`;
-          }
-        },
-      );
+        render() {
+          return html`<slot></slot>`;
+        }
+      }
+      const tagWrapperString = defineCE(PerformUpdate);
       const tagWrapper = unsafeStatic(tagWrapperString);
-      const el = await fixture(html`
+      const el = /** @type {PerformUpdate} */ (await fixture(html`
         <${tagWrapper}>
           <${childTag}></${childTag}>
         </${tagWrapper}>
-      `);
+      `));
       expect(el.formElements.length).to.equal(1);
     });
 
     it('can dynamically add/remove elements', async () => {
-      const el = await fixture(html`
+      const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `);
+      `));
       const newField = await fixture(html`
         <${childTag}></${childTag}>
       `);
@@ -123,28 +123,34 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('adds elements to formElements in the right order (DOM)', async () => {
-      const el = await fixture(html`
+      const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
           <${childTag}></${childTag}>
           <${childTag}></${childTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `);
-      const newField = await fixture(html`
+      `));
+      /**
+       * @typedef {Object.<string, string>} prop
+       */
+      const newField = /** @type {RegisteringClass & prop} */ (await fixture(html`
         <${childTag}></${childTag}>
-      `);
+      `));
       newField.myProp = 'test';
 
       el.insertBefore(newField, el.children[1]);
 
       expect(el.formElements.length).to.equal(4);
-      expect(el.children[1].myProp).to.equal('test');
+      const secondChild = /** @type {RegisteringClass & prop} */ (el.children[1]);
+      expect(secondChild.myProp).to.equal('test');
       expect(el.formElements[1].myProp).to.equal('test');
     });
 
     describe('FormRegistrarPortalMixin', () => {
       it('forwards registrations to the .registrationTarget', async () => {
-        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const el = /** @type {RegistrarClass} */ (await fixture(
+          html`<${parentTag}></${parentTag}>`,
+        ));
         await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -155,7 +161,9 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('can dynamically add/remove elements', async () => {
-        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const el = /** @type {RegistrarClass} */ (await fixture(
+          html`<${parentTag}></${parentTag}>`,
+        ));
         const portal = await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -175,22 +183,22 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('adds elements to formElements in the right order', async () => {
-        const el = await fixture(html`
+        const el = /** @type {RegistrarClass} */ (await fixture(html`
           <${parentTag}>
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
           </${parentTag}>
-        `);
+        `));
 
         expect(el.formElements.length).to.equal(3);
 
         // In the middle
-        const secondChild = el.firstElementChild.nextElementSibling;
+        const secondChild = el.firstElementChild?.nextElementSibling;
         const newField = await fixture(html`
           <${childTag}></${childTag}>
         `);
-        secondChild.insertAdjacentElement('beforebegin', newField);
+        secondChild?.insertAdjacentElement('beforebegin', newField);
 
         expect(el.formElements.length).to.equal(4);
         expect(el.formElements[1]).dom.to.equal(newField);
@@ -213,7 +221,9 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('keeps working if moving the portal itself', async () => {
-        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const el = /** @type {RegistrarClass} */ (await fixture(
+          html`<${parentTag}></${parentTag}>`,
+        ));
         const portal = await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -249,7 +259,9 @@ export const runRegistrationSuite = customConfig => {
         );
         const delayedPortalTag = unsafeStatic(delayedPortalString);
 
-        const el = await fixture(html`<${parentTag}></${parentTag}>`);
+        const el = /** @type {RegistrarClass} */ (await fixture(
+          html`<${parentTag}></${parentTag}>`,
+        ));
         await fixture(html`
           <${delayedPortalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>

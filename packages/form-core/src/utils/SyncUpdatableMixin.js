@@ -3,6 +3,11 @@ import { dedupeMixin } from '@lion/core';
 // TODO: will be moved to @Lion/core later?
 
 /**
+ * @typedef {import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableMixin} SyncUpdatableMixin
+ * @typedef {import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableNamespace} SyncUpdatableNamespace
+ */
+
+/**
  * @desc Why this mixin?
  * - it adheres to the "Member Order Independence" web components standard:
  * https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence
@@ -15,79 +20,90 @@ import { dedupeMixin } from '@lion/core';
  * - it is a stable abstaction on top of a protected/non offical lifecycle LitElement api.
  * Whenever the implementation of `_requestUpdate` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
+ * @type {SyncUpdatableMixin}
  */
-export const SyncUpdatableMixin = dedupeMixin(
-  superclass =>
-    class SyncUpdatable extends superclass {
-      constructor() {
-        super();
-        // Namespace for this mixin that guarantees naming clashes will not occur...
-        this.__SyncUpdatableNamespace = {};
-      }
-
-      firstUpdated(changedProperties) {
-        super.firstUpdated(changedProperties);
-        this.__SyncUpdatableNamespace.connected = true;
-        this.__syncUpdatableInitialize();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this.__SyncUpdatableNamespace.connected = false;
-      }
-
+const SyncUpdatableMixinImplementation = superclass =>
+  class SyncUpdatable extends superclass {
+    constructor() {
+      super();
+      // Namespace for this mixin that guarantees naming clashes will not occur...
       /**
-       * Makes the propertyAccessor.`hasChanged` compatible in synchronous updates
-       * @param {string} name
-       * @param {*} oldValue
+       * @type {SyncUpdatableNamespace}
        */
-      static __syncUpdatableHasChanged(name, newValue, oldValue) {
-        const properties = this._classProperties;
-        if (properties.get(name) && properties.get(name).hasChanged) {
-          return properties.get(name).hasChanged(newValue, oldValue);
-        }
-        return newValue !== oldValue;
+      this.__SyncUpdatableNamespace = {};
+    }
+
+    /** @param {import('lit-element').PropertyValues } changedProperties */
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+      this.__SyncUpdatableNamespace.connected = true;
+      this.__syncUpdatableInitialize();
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this.__SyncUpdatableNamespace.connected = false;
+    }
+
+    /**
+     * Makes the propertyAccessor.`hasChanged` compatible in synchronous updates
+     * @param {string} name
+     * @param {*} newValue
+     * @param {*} oldValue
+     */
+    static __syncUpdatableHasChanged(name, newValue, oldValue) {
+      const properties = this._classProperties;
+      if (properties.get(name) && properties.get(name).hasChanged) {
+        return properties.get(name).hasChanged(newValue, oldValue);
       }
+      return newValue !== oldValue;
+    }
 
-      __syncUpdatableInitialize() {
-        const ns = this.__SyncUpdatableNamespace;
-        const ctor = this.constructor;
+    __syncUpdatableInitialize() {
+      const ns = this.__SyncUpdatableNamespace;
+      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
 
-        ns.initialized = true;
-        // Empty queue...
-        if (ns.queue) {
-          Array.from(ns.queue).forEach(name => {
-            if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
-              this.updateSync(name, undefined);
-            }
-          });
-        }
+      ns.initialized = true;
+      // Empty queue...
+      if (ns.queue) {
+        Array.from(ns.queue).forEach(name => {
+          if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
+            this.updateSync(name, undefined);
+          }
+        });
       }
+    }
 
-      _requestUpdate(name, oldValue) {
-        super._requestUpdate(name, oldValue);
+    /**
+     * @param {string} name
+     * @param {*} oldValue
+     */
+    _requestUpdate(name, oldValue) {
+      super._requestUpdate(name, oldValue);
 
-        this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
-        const ns = this.__SyncUpdatableNamespace;
-        const ctor = this.constructor;
+      this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
+      const ns = this.__SyncUpdatableNamespace;
 
-        // Before connectedCallback: queue
-        if (!ns.connected) {
-          ns.queue = ns.queue || new Set();
-          // Makes sure that we only initialize one time, with most up to date value
-          ns.queue.add(name);
-        } // After connectedCallback: guarded proxy to updateSync
-        else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
-          this.updateSync(name, oldValue);
-        }
+      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
+
+      // Before connectedCallback: queue
+      if (!ns.connected) {
+        ns.queue = ns.queue || new Set();
+        // Makes sure that we only initialize one time, with most up to date value
+        ns.queue.add(name);
+      } // After connectedCallback: guarded proxy to updateSync
+      else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
+        this.updateSync(name, oldValue);
       }
+    }
 
-      /**
-       * @desc A public abstraction that has the exact same api as `_requestUpdate`.
-       * All code previously present in _requestUpdate can be placed in this method.
-       * @param {string} name
-       * @param {*} oldValue
-       */
-      updateSync(name, oldValue) {} // eslint-disable-line class-methods-use-this, no-unused-vars
-    },
-);
+    /**
+     * @desc A public abstraction that has the exact same api as `_requestUpdate`.
+     * All code previously present in _requestUpdate can be placed in this method.
+     * @param {string} name
+     * @param {*} oldValue
+     */
+    updateSync(name, oldValue) {} // eslint-disable-line class-methods-use-this, no-unused-vars
+  };
+
+export const SyncUpdatableMixin = dedupeMixin(SyncUpdatableMixinImplementation);
