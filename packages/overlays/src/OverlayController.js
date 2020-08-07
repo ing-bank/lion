@@ -298,7 +298,8 @@ export class OverlayController {
       this._renderTarget.appendChild(this.contentNode);
     } else {
       const isInsideRenderTarget = this._renderTarget === this._contentWrapperNode.parentNode;
-      if (!isInsideRenderTarget) {
+      const elContainsParent = this._contentWrapperNode.contains(this._renderTarget);
+      if (!isInsideRenderTarget && !elContainsParent) {
         // contentWrapperNode becomes the direct (non projected) parent of contentNode
         this._renderTarget.appendChild(this._contentWrapperNode);
       }
