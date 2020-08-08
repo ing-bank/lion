@@ -200,7 +200,7 @@ const FormatMixinImplementation = superclass =>
       if (source !== 'model') {
         if (source === 'serialized') {
           /** @type {?} */
-          this.modelValue = this.deserializer(this.serializedValue);
+          this.modelValue = this.__callDeserializer();
         } else if (source === 'formatted') {
           this.modelValue = this.__callParser();
         }
@@ -211,7 +211,7 @@ const FormatMixinImplementation = superclass =>
       }
       if (source !== 'serialized') {
         /** @type {string} */
-        this.serializedValue = this.serializer(this.modelValue);
+        this.serializedValue = this.__callSerializer();
       }
       this._reflectBackFormattedValueToUser();
       this.__preventRecursiveTrigger = false;
@@ -288,6 +288,27 @@ const FormatMixinImplementation = superclass =>
       }
 
       return this.formatter(this.modelValue, this.formatOptions);
+    }
+
+    /**
+     * @param {string|undefined}
+     * @return {?}
+     */
+    __callDeserializer() {
+      if (this.serializedValue) {
+        const unparseableMatch = this.serializedValue.match(/^\/\/unparseable\/\/(.*)/);
+        if (unparseableMatch && unparseableMatch[1]) {
+          return new Unparseable(unparseableMatch[1]);
+        }
+      }
+      return this.deserializer(this.serializedValue);
+    }
+
+    __callSerializer() {
+      if (this.modelValue instanceof Unparseable) {
+        return `//unparseable//${this.modelValue.viewValue}`;
+      }
+      return this.serializer(this.modelValue);
     }
 
     /**
