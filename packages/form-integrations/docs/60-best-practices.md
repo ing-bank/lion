@@ -28,19 +28,66 @@ import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
+import { model } from './directives/model.js';
+
 export default {
-  title: 'Forms/Features Overview',
+  title: 'Forms/Best Practices',
 };
 ```
 
-## Umbrella Form
+## Model directive
 
-```js story
+```js preview-story
 export const main = () => {
+  const myModel = {
+    full_name: {
+      first_name: 'John',
+      last_name: 'Doe',
+    },
+    date: new Date('2000-12-12'),
+    datepicker: new Date('2000-12-12'),
+    // non prefilled will be syncde back
+  };
+
+  const outputNode = document.createElement('pre');
+  Object.assign(outputNode.style, {
+    position: 'fixed',
+    right: '16px',
+    top: '16px',
+    background: 'white',
+    padding: '16px',
+    outline: '1px solid #eee',
+    width: '400px',
+    boxShadow: '5px 5px 10px #ddd',
+  });
+
+  function updateModelDisplay() {
+    outputNode.innerHTML = JSON.stringify(myModel, null, 2);
+  }
+
+  function onFormModelValueChanged(ev) {
+    updateModelDisplay();
+    setLocalStorage(ev.currentTarget);
+  }
+
+  function setLocalStorage(el) {
+    localStorage.setItem('lion.form-best-practices.model', JSON.stringify(el.serializedValue));
+  }
+
+  function getLocalStorage() {
+    return JSON.parse(localStorage.getItem('lion.form-best-practices.model') || '{}');
+  }
+
   loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';
   return html`
-    <lion-form>
+    ${outputNode}
+
+    <lion-form
+      :="${model(myModel)}"
+      @model-value-changed="${onFormModelValueChanged}}"
+      .serializedValue="${getLocalStorage()}"
+    >
       <form>
         <lion-fieldset name="full_name">
           <lion-input
@@ -57,13 +104,11 @@ export const main = () => {
         <lion-input-date
           name="date"
           label="Date of application"
-          .modelValue="${new Date('2000-12-12')}"
           .validators="${[new Required()]}"
         ></lion-input-date>
         <lion-input-datepicker
           name="datepicker"
           label="Date to be picked"
-          .modelValue="${new Date('2020-12-12')}"
           .validators="${[new Required()]}"
         ></lion-input-datepicker>
         <lion-textarea
@@ -76,9 +121,6 @@ export const main = () => {
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
         <lion-checkbox-group
-          @model-value-changed="${ev => {
-            console.log('lion-cb-group::', ev.target.name, ':', ev.detail.formPath);
-          }}"
           label="What do you like?"
           name="checkers"
           .validators="${[new Required()]}"
