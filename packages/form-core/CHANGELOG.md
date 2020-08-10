@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- fb236975: Add index.d.ts file so that its types can be used across lion. Add package root index.js to TSC build config exclude filter to prevent TSC from erroring on already existing type definition files.
+
 ## 0.4.0
 
 ### Minor Changes
