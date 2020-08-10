@@ -2,6 +2,8 @@
 'providence-analytics': minor
 ---
 
+Providence update to fix some issues with target/reference and to allow filtering target project dependencies.
+
 #### Features
 
 - Allow specifying target project dependencies via CLI using `--target-dependencies` flag:
