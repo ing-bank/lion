@@ -7,6 +7,7 @@ on:
 
 jobs:
   release:
+    # Prevents changesets action from creating a PR on forks
     if: github.repository == 'ing-bank/lion'
     name: Release
     runs-on: ubuntu-latest
@@ -21,6 +22,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 12.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -35,7 +37,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
