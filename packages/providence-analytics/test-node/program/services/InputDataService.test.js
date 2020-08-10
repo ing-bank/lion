@@ -118,7 +118,7 @@ describe('InputDataService', () => {
         ]);
       });
 
-      it('allows passing excludeFolders', async () => {
+      it('allows passing excluded folders', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
           filter: ['!nested/**'],

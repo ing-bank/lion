@@ -312,17 +312,18 @@ describe('Analyzer "match-imports"', () => {
   describe('Configuration', () => {
     it(`allows to provide results of FindExportsAnalyzer and FindImportsAnalyzer`, async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      const importsAnalyzerResult = await new FindImportsAnalyzer().execute({
+      const findImportsResult = await new FindImportsAnalyzer().execute({
         targetProjectPath: searchTargetProject.path,
       });
-      const exportsAnalyzerResult = await new FindExportsAnalyzer().execute({
+      const findExportsResult = await new FindExportsAnalyzer().execute({
         targetProjectPath: referenceProject.path,
       });
-      await providence(matchImportsQueryConfig, {
-        ..._providenceCfg,
-        importsAnalyzerResult,
-        exportsAnalyzerResult,
+
+      const matchImportsQueryConfigExt = QueryService.getQueryConfigFromAnalyzer('match-imports', {
+        targetProjectResult: findImportsResult,
+        referenceProjectResult: findExportsResult,
       });
+      await providence(matchImportsQueryConfigExt, _providenceCfg);
       const queryResult = queryResults[0];
 
       expectedExportIdsDirect.forEach(targetId => {
@@ -333,5 +334,8 @@ describe('Analyzer "match-imports"', () => {
         testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
       });
     });
+
+    // TODO: Test this unwind functionality in a generic MatchAnalyzer test
+    it.skip(`allows to provide results of FindExportsAnalyzer and FindImportsAnalyzer from external jsons`, async () => {});
   });
 });
