@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.2.9
+
+### Patch Changes
+
+- Updated dependencies [fb236975]
+  - @lion/form-core@0.4.1
+
 ## 0.2.8
 
 ### Patch Changes
