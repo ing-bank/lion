@@ -39,7 +39,7 @@
     "chalk": "^4.1.0",
     "commander": "^2.20.0",
     "deepmerge": "^4.0.0",
-    "es-dev-server": "^1.18.1",
+    "es-dev-server": "^1.57.1",
     "es-module-lexer": "^0.3.6",
     "glob": "^7.1.6",
     "htm": "^3.0.3",
