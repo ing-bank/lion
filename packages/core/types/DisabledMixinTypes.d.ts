@@ -1,4 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
+import { LitElement } from 'lit-element';
 
 export declare class DisabledMixinHost {
   static get properties(): {
@@ -22,7 +23,7 @@ export declare class DisabledMixinHost {
   private __internalSetDisabled(value: boolean): void;
 }
 
-export declare function DisabledMixinImplementation<T extends Constructor<HTMLElement>>(
+export declare function DisabledMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T & Constructor<DisabledMixinHost>;
 

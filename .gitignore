@@ -22,7 +22,8 @@ yarn-error.log
 
 ## types
 *.d.ts
-!packages/*/types/*
+!packages/**/*/types/**/*
+!packages/**/index.d.ts
 
 ## temp folders
 /.tmp/

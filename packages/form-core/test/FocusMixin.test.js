@@ -3,28 +3,23 @@ import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-w
 import { FocusMixin } from '../src/FocusMixin.js';
 
 describe('FocusMixin', () => {
-  let tag;
+  class Focusable extends FocusMixin(LitElement) {
+    render() {
+      return html`<slot name="input"></slot>`;
+    }
 
-  before(async () => {
-    const tagString = defineCE(
-      class extends FocusMixin(LitElement) {
-        render() {
-          return html`<slot name="input"></slot>`;
-        }
+    get _inputNode() {
+      return this.querySelector('input');
+    }
+  }
 
-        get _inputNode() {
-          return this.querySelector('input');
-        }
-      },
-    );
-
-    tag = unsafeStatic(tagString);
-  });
+  const tagString = defineCE(Focusable);
+  const tag = unsafeStatic(tagString);
 
   it('focuses/blurs the underlaying native element on .focus()/.blur()', async () => {
-    const el = await fixture(html`
+    const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `);
+    `));
     el.focus();
     expect(document.activeElement === el._inputNode).to.be.true;
     el.blur();
@@ -32,9 +27,9 @@ describe('FocusMixin', () => {
   });
 
   it('has an attribute focused when focused', async () => {
-    const el = await fixture(html`
+    const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `);
+    `));
     el.focus();
     await el.updateComplete;
     expect(el.hasAttribute('focused')).to.be.true;
@@ -45,20 +40,20 @@ describe('FocusMixin', () => {
   });
 
   it('becomes focused/blurred if the native element gets focused/blurred', async () => {
-    const el = await fixture(html`
+    const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `);
+    `));
     expect(el.focused).to.be.false;
-    el._inputNode.focus();
+    el._inputNode?.focus();
     expect(el.focused).to.be.true;
-    el._inputNode.blur();
+    el._inputNode?.blur();
     expect(el.focused).to.be.false;
   });
 
   it('dispatches [focus, blur] events', async () => {
-    const el = await fixture(html`
+    const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `);
+    `));
     setTimeout(() => el.focus());
     const focusEv = await oneEvent(el, 'focus');
     expect(focusEv).to.be.instanceOf(Event);
@@ -78,9 +73,9 @@ describe('FocusMixin', () => {
   });
 
   it('dispatches [focusin, focusout] events with { bubbles: true, composed: true }', async () => {
-    const el = await fixture(html`
+    const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `);
+    `));
     setTimeout(() => el.focus());
     const focusinEv = await oneEvent(el, 'focusin');
     expect(focusinEv).to.be.instanceOf(Event);

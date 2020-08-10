@@ -1,4 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
+import { LitElement } from '../index.js';
 
 export type Delegations = {
   target: Function;
@@ -20,6 +21,9 @@ export declare class DelegateMixinHost {
   private __emptyEventListenerQueue(): void;
 
   private __emptyPropertiesQueue(): void;
+
+  connectedCallback(): void;
+  updated(changedProperties: import('lit-element').PropertyValues): void;
 }
 
 /**
@@ -44,7 +48,7 @@ export declare class DelegateMixinHost {
  *   `;
  * }
  */
-declare function DelegateMixinImplementation<T extends Constructor<HTMLElement>>(
+declare function DelegateMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T & Constructor<DelegateMixinHost>;
 

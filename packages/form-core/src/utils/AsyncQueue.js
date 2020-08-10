@@ -9,14 +9,20 @@
 export class AsyncQueue {
   constructor() {
     this.__running = false;
+    /** @type {function[]} */
     this.__queue = [];
   }
 
+  /**
+   *
+   * @param {function} task
+   */
   add(task) {
     this.__queue.push(task);
     if (!this.__running) {
       // We have a new queue, because before there was nothing in the queue
       this.complete = new Promise(resolve => {
+        /** @type {function} */
         this.__callComplete = resolve;
       });
       this.__run();
@@ -31,7 +37,9 @@ export class AsyncQueue {
       this.__run();
     } else {
       this.__running = false;
-      this.__callComplete();
+      if (this.__callComplete) {
+        this.__callComplete();
+      }
     }
   }
 }

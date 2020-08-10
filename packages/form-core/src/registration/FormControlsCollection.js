@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * @desc This class closely mimics the natively
  * supported HTMLFormControlsCollection. It can be accessed
@@ -91,8 +93,9 @@
 export class FormControlsCollection extends Array {
   /**
    * @desc Gives back the named keys and filters out array indexes
+   * @return {string[]}
    */
-  keys() {
+  _keys() {
     return Object.keys(this).filter(k => Number.isNaN(Number(k)));
   }
 }
