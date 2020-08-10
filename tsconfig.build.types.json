@@ -5,5 +5,13 @@
     "emitDeclarationOnly": true,
     "noEmit": false
   },
-  "exclude": ["packages/*/index.js"]
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "**/coverage/*",
+    "**/dist/**/*",
+    "packages/**/test-helpers",
+    "packages/singleton-manager/demo/",
+    "packages/singleton-manager/test/"
+  ]
 }
