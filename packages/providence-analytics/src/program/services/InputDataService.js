@@ -146,7 +146,25 @@ class InputDataService {
       LogService.warn(e);
     }
     project.commitHash = this._getCommitHash(projectPath);
+    const bowerMeta = this._getBowerMeta(projectPath);
+    if (bowerMeta) {
+      project.bowerMeta = bowerMeta;
+    }
     return project;
+  }
+
+  static _getBowerMeta(projectPath) {
+    try {
+      const file = pathLib.resolve(projectPath, 'bower.json');
+      const bowerJson = JSON.parse(fs.readFileSync(file, 'utf8'));
+      // eslint-disable-next-line no-param-reassign
+      const mainEntry = this.__normalizeMainEntry(bowerJson.main);
+      const { name, dependencies, devDependencies, version } = bowerJson;
+      return { mainEntry, name, dependencies, devDependencies, version };
+      // eslint-disable-next-line no-empty
+    } catch (_) {
+      return undefined;
+    }
   }
 
   static _getCommitHash(projectPath) {

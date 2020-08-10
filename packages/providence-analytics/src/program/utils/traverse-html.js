@@ -1,26 +1,32 @@
 /**
- * @param {ASTNode} curNode Node to start from. Will loop over its children
+ * Creates an api similar to Babel traverse for parse5 trees
+ * @param {Parse5AstNode} curNode Node to start from. Will loop over its children
  * @param {object} processObject Will be executed for every node
- * @param {ASTNode} [parentNode] parent of curNode
  */
-function traverseHtml(curNode, processObject) {
+function traverseHtml(curNode, processObject, config = {}) {
   function pathify(node) {
     return {
       node,
-      traverse(obj) {
+      traverseHtml(obj) {
         traverseHtml(node, obj);
+      },
+      stop() {
+        // eslint-disable-next-line no-param-reassign
+        config.stopped = true;
       },
     };
   }
 
-  // let done = processFn(curNode, parentNode);
+  // Match...
   if (processObject[curNode.nodeName]) {
     processObject[curNode.nodeName](pathify(curNode));
   }
 
-  if (curNode.childNodes) {
+  if (!config.stopped && curNode.childNodes) {
     curNode.childNodes.forEach(childNode => {
-      traverseHtml(childNode, processObject, curNode);
+      if (!config.stopped) {
+        traverseHtml(childNode, processObject, config);
+      }
     });
   }
 }
