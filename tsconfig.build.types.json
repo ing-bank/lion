@@ -5,5 +5,5 @@
     "emitDeclarationOnly": true,
     "noEmit": false
   },
-  "exclude": ["packages/*/index.d.ts"]
+  "exclude": ["packages/*/index.js"]
 }
