@@ -5,6 +5,7 @@ const { performance } = require('perf_hooks');
 const { providence } = require('../program/providence.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { LogService } = require('../program/services/LogService.js');
+const { flatten } = require('./cli-helpers.js');
 
 async function launchProvidenceWithExtendDocs({
   referenceProjectPaths,
@@ -35,11 +36,13 @@ async function launchProvidenceWithExtendDocs({
   );
 
   const outputFilePath = pathLib.join(outputFolder, 'providence-extend-docs-data.json');
-  const queryOutputs = results.map(result => result.queryOutput).flat();
+  const queryOutputs = flatten(
+    results.map(result => result.queryOutput).filter(o => typeof o !== 'string'), // filter out '[no-dependency]' etc.
+  );
   if (fs.existsSync(outputFilePath)) {
     fs.unlinkSync(outputFilePath);
   }
-  fs.writeFile(outputFilePath, JSON.stringify(queryOutputs), err => {
+  fs.writeFile(outputFilePath, JSON.stringify(queryOutputs, null, 2), err => {
     if (err) {
       throw err;
     }
