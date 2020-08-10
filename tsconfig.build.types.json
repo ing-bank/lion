@@ -4,5 +4,6 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "noEmit": false
-  }
+  },
+  "exclude": ["packages/*/index.d.ts"]
 }
