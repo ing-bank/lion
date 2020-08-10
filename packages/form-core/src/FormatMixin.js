@@ -295,7 +295,8 @@ const FormatMixinImplementation = superclass =>
      * @return {?}
      */
     __callDeserializer() {
-      if (this.serializedValue) {
+      if (this.serializedValue && typeof this.serializedValue === 'string') {
+        console.log(this.name, this.serializedValue);
         const unparseableMatch = this.serializedValue.match(/^\/\/unparseable\/\/(.*)/);
         if (unparseableMatch && unparseableMatch[1]) {
           return new Unparseable(unparseableMatch[1]);

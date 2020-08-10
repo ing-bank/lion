@@ -78,12 +78,31 @@ export const main = () => {
     return JSON.parse(localStorage.getItem('lion.form-best-practices.model') || '{}');
   }
 
+  function updateForm() {
+    // Note that in a lit element, a render would be triggered by updating myModel object
+    const lionFormNode = document.getElementById('lionFormBestPracticesModel');
+    lionFormNode.modelValue = myModel;
+  }
+
+  function checkAllSiblingGroup({ target }) {
+    if (target.modelValue[0] === 'all') {
+      // TODO: why not make a function checkAll() and uncheckAll(?)
+      myModel.checkers = ['foo', 'bar', 'baz'];
+    } else {
+      myModel.checkers = [];
+    }
+    // Timeout needed, else we write back old 'all' value
+    // This also aligns with async nature of a regular render
+    setTimeout(updateForm);
+  }
+
   loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';
   return html`
     ${outputNode}
 
     <lion-form
+      id="lionFormBestPracticesModel"
       :="${model(myModel)}"
       @model-value-changed="${onFormModelValueChanged}}"
       .serializedValue="${getLocalStorage()}"
@@ -120,6 +139,9 @@ export const main = () => {
         <lion-input-amount name="money" label="Money"></lion-input-amount>
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
+        <lion-checkbox-group name="select_all" @model-value-changed=${checkAllSiblingGroup}>
+          <lion-checkbox label="All" .choiceValue=${'all'}></lion-checkbox>
+        </lion-checkbox-group>
         <lion-checkbox-group
           label="What do you like?"
           name="checkers"
