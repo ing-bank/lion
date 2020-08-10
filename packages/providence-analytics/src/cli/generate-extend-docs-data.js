@@ -11,8 +11,8 @@ async function launchProvidenceWithExtendDocs({
   prefixCfg,
   outputFolder,
   extensions,
-  whitelist,
-  whitelistReference,
+  allowlist,
+  allowlistReference,
 }) {
   const t0 = performance.now();
 
@@ -21,11 +21,11 @@ async function launchProvidenceWithExtendDocs({
     {
       gatherFilesConfig: {
         extensions: extensions || ['.js'],
-        filter: whitelist || ['!coverage', '!test'],
+        filter: allowlist || ['!coverage', '!test'],
       },
       gatherFilesConfigReference: {
         extensions: extensions || ['.js'],
-        filter: whitelistReference || ['!coverage', '!test'],
+        filter: allowlistReference || ['!coverage', '!test'],
       },
       queryMethod: 'ast',
       report: false,
