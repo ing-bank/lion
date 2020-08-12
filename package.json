@@ -9,7 +9,7 @@
     "build:docs": "wca analyze \"packages/tabs/**/*.js\"",
     "build:types": "tsc -p tsconfig.build.types.json",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
-    "debug": "web-test-runner \"packages/form-core/test/**/*.test.js\" --watch",
+    "debug": "web-test-runner \"packages/form-integrations/test/**/*.test.js\" --watch",
     "dev-server": "es-dev-server",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",

@@ -40,18 +40,9 @@ export const main = () => {
   loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';
   return html`
-    <lion-form
-      @model-value-changed="${ev => {
-        console.log('lion-form::', ev.target.name, ':', ev.detail.formPath);
-      }}"
-    >
+    <lion-form>
       <form>
-        <lion-fieldset
-          name="full_name"
-          @model-value-changed="${ev => {
-            console.log('lion-fieldset::', ev.target.name, ':', ev.detail.formPath);
-          }}"
-        >
+        <lion-fieldset name="full_name">
           <lion-input
             name="first_name"
             label="First Name"
@@ -85,9 +76,6 @@ export const main = () => {
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
         <lion-checkbox-group
-          @model-value-changed="${ev => {
-            console.log('lion-cb-group::', ev.target.name, ':', ev.detail.formPath);
-          }}"
           label="What do you like?"
           name="checkers"
           .validators="${[new Required()]}"
@@ -97,9 +85,6 @@ export const main = () => {
           <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
         </lion-checkbox-group>
         <lion-radio-group
-          @model-value-changed="${ev => {
-            console.log('lion-radio-group::', ev.target.name, ':', ev.detail.formPath);
-          }}"
           name="dinosaurs"
           label="Favorite dinosaur"
           .validators="${[new Required()]}"

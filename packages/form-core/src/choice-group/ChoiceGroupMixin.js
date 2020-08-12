@@ -155,9 +155,13 @@ export const ChoiceGroupMixin = dedupeMixin(
        * @override
        */
       _getFromAllFormElements(property, filterCondition = () => true) {
-        // For modelValue and serializedValue, an exception should be made,
+        // For modelValue, serializedValue and formattedValue, an exception should be made,
         // The reset can be requested from children
-        if (property === 'modelValue' || property === 'serializedValue') {
+        if (
+          property === 'modelValue' ||
+          property === 'serializedValue' ||
+          property === 'formattedValue'
+        ) {
           return this[property];
         }
         return this.formElements.filter(filterCondition).map(el => el.property);
