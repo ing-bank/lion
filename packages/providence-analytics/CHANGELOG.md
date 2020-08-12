@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 623b10a3: Custom '--allowlist' takes precedence over '--allowlist-mode'
+
+  #### Features
+
+  - Custom '--allowlist' takes precedence over '--allowlist-mode' when conflicting.
+    For instance, when running CLI with '--allowlist-mode git --allowlist ./dist'
+    (and .gitignore contained '/dist'), './dist' will still be analyzed.
+
+  #### Patches
+
+  - Align naming conventions between CLI and InputDataService.gatherFilesFromDir
+
 ## 0.5.0
 
 ### Minor Changes
