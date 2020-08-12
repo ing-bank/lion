@@ -67,6 +67,25 @@ export const ChoiceGroupMixin = dedupeMixin(
         }
       }
 
+      get formattedValue() {
+        const elems = this._getCheckedElements();
+        if (this.multipleChoice) {
+          return elems.map(el => el.formattedValue);
+        }
+        return elems[0] ? elems[0].formattedValue : '';
+      }
+
+      set formattedValue(value) {
+        if (this.__isInitialFormattedValue) {
+          this.__isInitialFormattedValue = false;
+          this.registrationComplete.then(() => {
+            this._setCheckedElements(value, (el, val) => el.formattedValue === val);
+          });
+        } else {
+          this._setCheckedElements(value, (el, val) => el.formattedValue === val);
+        }
+      }
+
       constructor() {
         super();
         this.multipleChoice = false;
@@ -74,6 +93,7 @@ export const ChoiceGroupMixin = dedupeMixin(
 
         this.__isInitialModelValue = true;
         this.__isInitialSerializedValue = true;
+        this.__isInitialFormattedValue = true;
         this.registrationComplete = new Promise((resolve, reject) => {
           this.__resolveRegistrationComplete = resolve;
           this.__rejectRegistrationComplete = reject;
@@ -99,6 +119,7 @@ export const ChoiceGroupMixin = dedupeMixin(
         this.registrationComplete.then(() => {
           this.__isInitialModelValue = false;
           this.__isInitialSerializedValue = false;
+          this.__isInitialFormattedValue = false;
         });
       }
 

@@ -38,6 +38,21 @@ describe('ChoiceGroupMixin', () => {
     expect(el.modelValue).to.equal('other');
   });
 
+  it('has a single formattedValue representing the currently checked radio value', async () => {
+    const el = await fixture(html`
+      <choice-group name="gender">
+        <choice-group-input .choiceValue=${'male'}></choice-group-input>
+        <choice-group-input .choiceValue=${'female'} checked></choice-group-input>
+        <choice-group-input .choiceValue=${'other'}></choice-group-input>
+      </choice-group>
+    `);
+    expect(el.formattedValue).to.equal('female');
+    el.formElements[0].checked = true;
+    expect(el.formattedValue).to.equal('male');
+    el.formElements[2].checked = true;
+    expect(el.formattedValue).to.equal('other');
+  });
+
   it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
     const el = await fixture(html`
       <choice-group name="gender">
@@ -118,6 +133,19 @@ describe('ChoiceGroupMixin', () => {
     `);
 
     expect(el.serializedValue).to.equal('other');
+    expect(el.formElements[2].checked).to.be.true;
+  });
+
+  it('can set initial formattedValue on creation', async () => {
+    const el = await fixture(html`
+      <choice-group name="gender" .formattedValue=${'other'}>
+        <choice-group-input .choiceValue=${'male'}></choice-group-input>
+        <choice-group-input .choiceValue=${'female'}></choice-group-input>
+        <choice-group-input .choiceValue=${'other'}></choice-group-input>
+      </choice-group>
+    `);
+
+    expect(el.formattedValue).to.equal('other');
     expect(el.formElements[2].checked).to.be.true;
   });
 
@@ -265,6 +293,38 @@ describe('ChoiceGroupMixin', () => {
       expect(el.modelValue).to.eql(['male', 'female', 'other']);
     });
 
+    it('has a single serializedValue representing all currently checked values', async () => {
+      const el = await fixture(html`
+        <choice-group-multiple name="gender[]">
+          <choice-group-input .choiceValue=${'male'}></choice-group-input>
+          <choice-group-input .choiceValue=${'female'} checked></choice-group-input>
+          <choice-group-input .choiceValue=${'other'}></choice-group-input>
+        </choice-group-multiple>
+      `);
+
+      expect(el.serializedValue).to.eql(['female']);
+      el.formElements[0].checked = true;
+      expect(el.serializedValue).to.eql(['male', 'female']);
+      el.formElements[2].checked = true;
+      expect(el.serializedValue).to.eql(['male', 'female', 'other']);
+    });
+
+    it('has a single formattedValue representing all currently checked values', async () => {
+      const el = await fixture(html`
+        <choice-group-multiple name="gender[]">
+          <choice-group-input .choiceValue=${'male'}></choice-group-input>
+          <choice-group-input .choiceValue=${'female'} checked></choice-group-input>
+          <choice-group-input .choiceValue=${'other'}></choice-group-input>
+        </choice-group-multiple>
+      `);
+
+      expect(el.formattedValue).to.eql(['female']);
+      el.formElements[0].checked = true;
+      expect(el.formattedValue).to.eql(['male', 'female']);
+      el.formElements[2].checked = true;
+      expect(el.formattedValue).to.eql(['male', 'female', 'other']);
+    });
+
     it('can check multiple checkboxes by setting the modelValue', async () => {
       const el = await fixture(html`
         <choice-group-multiple name="gender[]">
@@ -312,7 +372,6 @@ describe('ChoiceGroupMixin', () => {
         </lion-fieldset>
       `);
 
-      await el.updateComplete;
       expect(el.serializedValue).to.eql({
         gender: 'female',
       });
