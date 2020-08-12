@@ -229,7 +229,7 @@ describe('Providence CLI', () => {
     it('"-a --allowlist"', async () => {
       await runCli(`${analyzeCmd} -a /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfig.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
 
@@ -238,7 +238,7 @@ describe('Providence CLI', () => {
 
       await runCli(`${analyzeCmd} --allowlist /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfig.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
     });
@@ -246,7 +246,7 @@ describe('Providence CLI', () => {
     it('"--allowlist-reference"', async () => {
       await runCli(`${analyzeCmd} --allowlist-reference /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfigReference.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
     });

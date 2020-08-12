@@ -117,12 +117,12 @@ async function cli({ cwd } = {}) {
       gatherFilesConfig: {
         extensions: commander.extensions,
         allowlistMode: commander.allowlistMode,
-        filter: commander.allowlist,
+        allowlist: commander.allowlist,
       },
       gatherFilesConfigReference: {
         extensions: commander.extensions,
         allowlistMode: commander.allowlistModeReference,
-        filter: commander.allowlistReference,
+        allowlist: commander.allowlistReference,
       },
       debugEnabled: commander.debug,
       queryMethod,

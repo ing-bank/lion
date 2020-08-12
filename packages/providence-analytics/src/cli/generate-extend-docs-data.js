@@ -22,11 +22,11 @@ async function launchProvidenceWithExtendDocs({
     {
       gatherFilesConfig: {
         extensions: extensions || ['.js'],
-        filter: allowlist || ['!coverage', '!test'],
+        allowlist: allowlist || ['!coverage', '!test'],
       },
       gatherFilesConfigReference: {
         extensions: extensions || ['.js'],
-        filter: allowlistReference || ['!coverage', '!test'],
+        allowlist: allowlistReference || ['!coverage', '!test'],
       },
       queryMethod: 'ast',
       report: false,
