@@ -4,7 +4,7 @@
     "analyzerMeta": {
       "name": "match-imports",
       "requiredAst": "babel",
-      "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__453069400",
+      "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__1498484172",
       "targetProject": {
         "mainEntry": "./target-src/match-imports/root-level-imports.js",
         "name": "importing-target-project",
@@ -18,7 +18,9 @@
         "commitHash": "[not-a-git-root]"
       },
       "configuration": {
-        "gatherFilesConfig": {}
+        "gatherFilesConfig": {},
+        "targetProjectResult": null,
+        "referenceProjectResult": null
       }
     }
   },

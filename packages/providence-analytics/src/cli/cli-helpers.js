@@ -178,4 +178,5 @@ module.exports = {
   spawnProcess,
   installDeps,
   pathsArrayFromCollectionName,
+  flatten,
 };

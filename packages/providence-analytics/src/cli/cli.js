@@ -116,11 +116,13 @@ async function cli({ cwd } = {}) {
     providenceModule.providence(queryConfig, {
       gatherFilesConfig: {
         extensions: commander.extensions,
-        filter: commander.whitelist,
+        allowlistMode: commander.allowlistMode,
+        filter: commander.allowlist,
       },
       gatherFilesConfigReference: {
         extensions: commander.extensions,
-        filter: commander.whitelistReference,
+        allowlistMode: commander.allowlistModeReference,
+        filter: commander.allowlistReference,
       },
       debugEnabled: commander.debug,
       queryMethod,
@@ -172,12 +174,12 @@ async function cli({ cwd } = {}) {
       v => cliHelpers.pathsArrayFromCs(v, cwd),
       InputDataService.referenceProjectPaths,
     )
-    .option('-w, --whitelist [whitelist]', `whitelisted paths, like './src, ./packages/*'`, v =>
+    .option('-a, --allowlist [allowlist]', `allowlisted paths, like './src, ./packages/*'`, v =>
       cliHelpers.pathsArrayFromCs(v, cwd),
     )
     .option(
-      '--whitelist-reference [whitelist-reference]',
-      `whitelisted paths for reference, like './src, ./packages/*'`,
+      '--allowlist-reference [allowlist-reference]',
+      `allowed paths for reference, like './src, ./packages/*'`,
       v => cliHelpers.pathsArrayFromCs(v, cwd),
     )
     .option(
@@ -201,6 +203,19 @@ async function cli({ cwd } = {}) {
     without argument, it will act as boolean and include all dependencies.
     When a regex is supplied like --target-dependencies /^my-brand-/, it will filter
     all packages that comply with the regex`,
+    )
+    .option(
+      '--allowlist-mode [allowlist-mode]',
+      `Depending on whether we are dealing with a published artifact
+      (a dependency installed via npm) or a git repository, different paths will be
+      automatically put in the appropiate mode.
+      A mode of 'npm' will look at the package.json "files" entry and a mode of
+      'git' will look at '.gitignore' entry. The mode will be auto detected, but can be overridden
+      via this option.`,
+    )
+    .option(
+      '--allowlist-mode-reference [allowlist-mode-reference]',
+      `allowlist mode applied to refernce project`,
     );
 
   commander
@@ -286,8 +301,8 @@ async function cli({ cwd } = {}) {
           prefixCfg,
           outputFolder: options.outputFolder,
           extensions: commander.extensions,
-          whitelist: commander.whitelist,
-          whitelistReference: commander.whitelistReference,
+          allowlist: commander.allowlist,
+          allowlistReference: commander.allowlistReference,
         })
         .then(resolveCli)
         .catch(rejectCli);

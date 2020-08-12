@@ -3,26 +3,13 @@ const { expect } = require('chai');
 const { providence } = require('../../../../src/program/providence.js');
 const { QueryService } = require('../../../../src/program/services/QueryService.js');
 const { ReportService } = require('../../../../src/program/services/ReportService.js');
-const { LogService } = require('../../../../src/program/services/LogService.js');
 
 const {
   mockWriteToJson,
   restoreWriteToJson,
 } = require('../../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../../test-helpers/mock-log-service-helpers.js');
 
 describe('Analyzers file-system integration', () => {
-  before(() => {
-    suppressNonCriticalLogs();
-  });
-
-  after(() => {
-    restoreSuppressNonCriticalLogs();
-  });
-
   const generateE2eMode = process.argv.includes('--generate-e2e-mode');
 
   const queryResults = [];
@@ -116,15 +103,16 @@ describe('Analyzers file-system integration', () => {
       const findExportsQueryConfig = QueryService.getQueryConfigFromAnalyzer(analyzerName);
       await providence(findExportsQueryConfig, providenceConfig);
       if (generateE2eMode) {
-        LogService.info(
+        console.info(
           'Successfully created mocks. Do not forget to rerun tests now without "--generate-e2e-mode"',
         );
         return;
       }
       // eslint-disable-next-line import/no-dynamic-require, global-require
       const expectedOutput = require(`../../../../test-helpers/project-mocks-analyzer-outputs/${analyzerName}.json`);
-      const queryResult = JSON.parse(JSON.stringify(queryResults[0])).queryOutput;
-      expect(queryResult).to.eql(expectedOutput.queryOutput);
+      const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
+      expect(queryOutput).not.to.eql([]);
+      expect(queryOutput).to.eql(expectedOutput.queryOutput);
     });
   }
 });
