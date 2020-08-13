@@ -17,4 +17,9 @@ export default {
       'other {{params}}\n' +
       '} {fieldName}.',
   },
+  fieldName: {
+    field: 'iban',
+    article: 'an',
+    gender: 'm',
+  },
 };

@@ -534,26 +534,44 @@ export const ValidateMixin = dedupeMixin(
        */
 
       /**
+       * A .fieldName provided by the user (on the instance or in a validator config)
+       * can be either a string or an object with the field name including meta data.
+       * Based on the object type, we extract the right info here...
+       */
+      __getFieldNameData(fieldNameData) {
+        let fieldName;
+        let fieldNameMeta = {};
+        if (typeof fieldNameData === 'object') {
+          fieldName = fieldNameData.field;
+          // The neutral data make sure that we have a neutral article, gender etc.
+          // unless overridden
+          fieldNameMeta = { ...this.__neutralFieldNameData, ...fieldNameData };
+        } else if (typeof fieldNameData === 'string') {
+          fieldName = fieldNameData;
+        }
+        return { fieldName, fieldNameMeta };
+      }
+
+      /**
        * @param {Validator[]} validators list of objects having a .getMessage method
        * @return {FeedbackMessage[]}
        */
       async __getFeedbackMessages(validators) {
-        let fieldName = await this.fieldName;
-        let article = await this.article;
-
+        const fieldNameData = await this.fieldName;
+        let { fieldName, fieldNameMeta } = this.__getFieldNameData(fieldNameData);
         return Promise.all(
           validators.map(async validator => {
             if (validator.config.fieldName) {
-              fieldName = await validator.config.fieldName;
-            }
-            if (validator.config.article) {
-              article = await validator.config.article;
+              const validatorFieldNameData = await validator.config.fieldName;
+              const validatorFieldNameAndMeta = this.__getFieldNameData(validatorFieldNameData);
+              fieldName = validatorFieldNameAndMeta.fieldName;
+              fieldNameMeta = validatorFieldNameAndMeta.fieldNameMeta;
             }
             const message = await validator._getMessage({
               modelValue: this.modelValue,
               formControl: this,
               fieldName,
-              article,
+              fieldNameMeta,
             });
             return { message, type: validator.type, validator };
           }),

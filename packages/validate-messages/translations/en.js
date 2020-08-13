@@ -49,9 +49,19 @@ export default {
     Changed: 'Changed!',
     OkCorrect: 'Ok, correct.',
   },
-  defaultSubject: {
-    fieldName: 'value',
-    article: 'a',
+  // Field + meta data belonging to 'fieldName'.
+  fieldName: {
+    field: 'value',
+    // Entries below end up in fieldNameMeta of a validator.
+    // Constellation and usage of this object differs per language
+    article: 'a', // a(n) {fieldName} => a {fieldName}
+    gender: 'm', // un(e) {fieldName} correct(e) => un {fieldName} correct
   },
-  defaultNeutralArticle: 'a(n)',
+  // These fallback data will be merged with the object fieldName above
+  neutralFieldName: {
+    // field is not defined here
+    // Entries below end up in fieldNameMeta of a validator.
+    // Constellation and usage of this object differs per language
+    article: 'a(n)',
+  },
 };
