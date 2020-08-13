@@ -15,14 +15,14 @@ describe('loadDefaultFeedbackMessages', () => {
     expect(await el._getMessage({ fieldName: 'password' })).to.equal('Please enter a(n) password.');
   });
 
-  it('will set default fieldName and article', async () => {
+  it('will set default fieldName', async () => {
     const el = new Required();
-    expect(await el._getMessage()).to.equals(
+    expect(await el._getMessage()).to.equal(
       'Please configure an error message for "Required" by overriding "static async getMessage()"',
     );
 
     loadDefaultFeedbackMessages();
-    expect(await el._getMessage()).to.equal('Please enter a value.');
+    expect(await el._getMessage()).to.equal('Please enter a(n) value.');
     expect(await el._getMessage({ fieldName: 'password' })).to.equal('Please enter a(n) password.');
   });
 

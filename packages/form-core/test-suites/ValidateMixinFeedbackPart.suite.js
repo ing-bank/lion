@@ -490,66 +490,6 @@ export function runValidateMixinFeedbackPart() {
           name: 'MinLength',
         });
       });
-
-      it('".getMessage()" gets .article defined on instance', async () => {
-        const constructorValidator = new MinLength(4);
-        const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
-
-        const el = await fixture(html`
-          <${tag}
-            .submitted=${true}
-            .validators=${[constructorValidator]}
-            .modelValue=${'cat'}
-            .fieldName=${new Promise(resolve => resolve('myField'))}
-            .article=${new Promise(resolve => resolve('a'))}
-          >${lightDom}</${tag}>
-        `);
-        await el.updateComplete;
-        await el.feedbackComplete;
-        expect(spy.args[0][0]).to.eql({
-          config: {},
-          params: 4,
-          modelValue: 'cat',
-          formControl: el,
-          fieldName: 'myField',
-          article: 'a',
-          type: 'error',
-          name: 'MinLength',
-        });
-      });
-
-      it('".getMessage()" gets .article defined on Validator config', async () => {
-        const constructorValidator = new MinLength(4, {
-          fieldName: new Promise(resolve => resolve('myFieldViaCfg')),
-        });
-        const spy = sinon.spy(constructorValidator.constructor, 'getMessage');
-
-        const el = await fixture(html`
-          <${tag}
-            .submitted=${true}
-            .validators=${[constructorValidator]}
-            .modelValue=${'cat'}
-            .fieldName=${new Promise(resolve => resolve('myField'))}
-            .article=${new Promise(resolve => resolve('a'))}
-          >${lightDom}</${tag}>
-        `);
-        await el.updateComplete;
-        await el.feedbackComplete;
-
-        // ignore fieldName Promise as it will always be unique
-        const compare = spy.args[0][0];
-        delete compare.config.fieldName;
-        expect(compare).to.eql({
-          config: {},
-          params: 4,
-          modelValue: 'cat',
-          formControl: el,
-          fieldName: 'myFieldViaCfg',
-          article: 'a',
-          type: 'error',
-          name: 'MinLength',
-        });
-      });
     });
 
     it('handles _updateFeedbackComponent with sync and async combinations', async () => {
@@ -591,17 +531,16 @@ export function runValidateMixinFeedbackPart() {
         expect(el._feedbackNode.feedbackData[0].message).to.equal('Fill in something');
       });
 
-      it('can set global validator messages', async () => {
-        Required.getMessage = ({ article, fieldName }) => `Please enter ${article} ${fieldName}`;
+      it('can set global fieldNames', async () => {
+        Required.getMessage = ({ fieldName }) => `Please enter a(n) ${fieldName}`;
         ValidateMixin.fieldName = 'value';
-        ValidateMixin.article = 'a';
 
         const el = await fixture(html`<${tag}
           .validators=${[new Required()]}
         >${lightDom}</${tag}>`);
         await el.feedbackComplete;
 
-        expect(el._feedbackNode.feedbackData[0].message).to.equal('Please enter a value');
+        expect(el._feedbackNode.feedbackData[0].message).to.equal('Please enter a(n) value');
       });
     });
   });

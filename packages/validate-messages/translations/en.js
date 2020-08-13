@@ -49,9 +49,5 @@ export default {
     Changed: 'Changed!',
     OkCorrect: 'Ok, correct.',
   },
-  defaultSubject: {
-    fieldName: 'value',
-    article: 'a',
-  },
-  defaultNeutralArticle: 'a(n)',
+  fieldName: 'value',
 };

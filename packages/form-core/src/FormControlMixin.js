@@ -93,12 +93,12 @@ export const FormControlMixin = dedupeMixin(
         this.requestUpdate('helpText', oldValue);
       }
 
-      set fieldName(value) {
-        this.__fieldName = value;
-      }
+      // set fieldName(value) {
+      //   this.__fieldName = value;
+      // }
 
       get fieldName() {
-        return this.__fieldName || this.label || this.name;
+        return super.fieldName || this.label || this.name;
       }
 
       get slots() {

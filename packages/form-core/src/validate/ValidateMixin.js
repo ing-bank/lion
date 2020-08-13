@@ -100,15 +100,6 @@ export const ValidateMixin = dedupeMixin(
            * error messages. For instance: `Please fill in a(n) {fieldName}`
            */
           fieldName: String,
-
-          /**
-           * @type {Promise<string>|string} will be passed as an argument to the `.getMessage`
-           * method of a Validator. When filled in, this field name can be used to enhance
-           * error messages. For instance: `Please fill in {article} {fieldName}`
-           * The article has a direct relationship with fieldName and should thus only be
-           * provided together with a fieldName
-           */
-          article: String,
         };
       }
 
@@ -164,14 +155,6 @@ export const ValidateMixin = dedupeMixin(
 
       set fieldName(f) {
         this.__fieldName = f;
-      }
-
-      get article() {
-        return this.__article || this.constructor.article;
-      }
-
-      set article(a) {
-        this.__article = a;
       }
 
       constructor() {
@@ -539,21 +522,16 @@ export const ValidateMixin = dedupeMixin(
        */
       async __getFeedbackMessages(validators) {
         let fieldName = await this.fieldName;
-        let article = await this.article;
 
         return Promise.all(
           validators.map(async validator => {
             if (validator.config.fieldName) {
               fieldName = await validator.config.fieldName;
             }
-            if (validator.config.article) {
-              article = await validator.config.article;
-            }
             const message = await validator._getMessage({
               modelValue: this.modelValue,
               formControl: this,
               fieldName,
-              article,
             });
             return { message, type: validator.type, validator };
           }),
