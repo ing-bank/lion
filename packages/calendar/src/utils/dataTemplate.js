@@ -14,7 +14,7 @@ export function dataTemplate(
             data-wrap-cols
             aria-readonly="true"
             class="calendar__grid"
-            aria-labelledby="month_and_year"
+            aria-labelledby="month year"
           >
             <thead>
               <tr role="row">

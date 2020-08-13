@@ -18,10 +18,10 @@ describe('<lion-calendar>', () => {
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
       expect(el.shadowRoot.querySelector('.calendar')).to.exist;
-      expect(el.shadowRoot.querySelector('.calendar__header')).to.exist;
-      expect(el.shadowRoot.querySelector('.calendar__previous-month-button')).to.exist;
-      expect(el.shadowRoot.querySelector('.calendar__next-month-button')).to.exist;
-      expect(el.shadowRoot.querySelector('.calendar__month-heading')).to.exist;
+      expect(el.shadowRoot.querySelector('.calendar__navigation')).to.exist;
+      expect(el.shadowRoot.querySelector('.calendar__previous-button')).to.exist;
+      expect(el.shadowRoot.querySelector('.calendar__next-button')).to.exist;
+      expect(el.shadowRoot.querySelector('.calendar__navigation-heading')).to.exist;
       expect(el.shadowRoot.querySelector('.calendar__grid')).to.exist;
     });
 
@@ -30,25 +30,52 @@ describe('<lion-calendar>', () => {
 
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
 
-      expect(el.shadowRoot.querySelector('.calendar__month-heading')).dom.to.equal(`
+      expect(el.shadowRoot.querySelector('#year')).dom.to.equal(`
         <h2
-          id="month_and_year"
-          class="calendar__month-heading"
+          id="year"
+          class="calendar__navigation-heading"
           aria-atomic="true"
         >
-          December 2000
+          2000
         </h2>
       `);
+      expect(el.shadowRoot.querySelector('#month')).dom.to.equal(`
+      <h2
+        id="month"
+        class="calendar__navigation-heading"
+        aria-atomic="true"
+      >
+        December
+      </h2>
+    `);
 
       clock.restore();
+    });
+
+    it('has previous year button', async () => {
+      const el = await fixture(
+        html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
+      );
+      expect(el.shadowRoot.querySelectorAll('.calendar__previous-button')[0]).dom.to.equal(`
+        <button class="calendar__previous-button" aria-label="Previous year, November 2018" title="Previous year, November 2018">&lt;</button>
+      `);
+    });
+
+    it('has next year button', async () => {
+      const el = await fixture(
+        html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
+      );
+      expect(el.shadowRoot.querySelectorAll('.calendar__next-button')[0]).dom.to.equal(`
+        <button class="calendar__next-button" aria-label="Next year, November 2020" title="Next year, November 2020">&gt;</button>
+      `);
     });
 
     it('has previous month button', async () => {
       const el = await fixture(
         html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
       );
-      expect(el.shadowRoot.querySelector('.calendar__previous-month-button')).dom.to.equal(`
-        <button class="calendar__previous-month-button" aria-label="Previous month, October 2019" title="Previous month, October 2019">&lt;</button>
+      expect(el.shadowRoot.querySelectorAll('.calendar__previous-button')[1]).dom.to.equal(`
+        <button class="calendar__previous-button" aria-label="Previous month, October 2019" title="Previous month, October 2019">&lt;</button>
       `);
     });
 
@@ -56,8 +83,8 @@ describe('<lion-calendar>', () => {
       const el = await fixture(
         html`<lion-calendar .centralDate=${new Date('2019/11/20')}></lion-calendar>`,
       );
-      expect(el.shadowRoot.querySelector('.calendar__next-month-button')).dom.to.equal(`
-        <button class="calendar__next-month-button" aria-label="Next month, December 2019" title="Next month, December 2019">&gt;</button>
+      expect(el.shadowRoot.querySelectorAll('.calendar__next-button')[1]).dom.to.equal(`
+        <button class="calendar__next-button" aria-label="Next month, December 2019" title="Next month, December 2019">&gt;</button>
       `);
     });
   });
@@ -69,7 +96,8 @@ describe('<lion-calendar>', () => {
           <lion-calendar .centralDate="${new Date('2014/05/15')}"></lion-calendar>
         `),
       );
-      expect(elObj.activeMonthAndYear).to.equal('May 2014');
+      expect(elObj.activeMonth).to.equal('May');
+      expect(elObj.activeYear).to.equal('2014');
     });
 
     it('sets "centralDate" to today by default', async () => {
@@ -78,7 +106,8 @@ describe('<lion-calendar>', () => {
       const el = await fixture(html`<lion-calendar></lion-calendar>`);
       const elObj = new CalendarObject(el);
       expect(isSameDate(el.centralDate, new Date())).to.be.true;
-      expect(elObj.activeMonthAndYear).to.equal('March 2013');
+      expect(elObj.activeMonth).to.equal('March');
+      expect(elObj.activeYear).to.equal('2013');
 
       clock.restore();
     });
@@ -125,7 +154,8 @@ describe('<lion-calendar>', () => {
           ></lion-calendar>
         `),
       );
-      expect(elObj.activeMonthAndYear).to.equal('June 2018');
+      expect(elObj.activeMonth).to.equal('June');
+      expect(elObj.activeYear).to.equal('2018');
     });
 
     it('changes "centralDate" from default to "selectedDate" on first render if no other custom "centralDate" is provided', async () => {
@@ -136,8 +166,8 @@ describe('<lion-calendar>', () => {
       `);
       const elObj = new CalendarObject(el);
       expect(isSameDate(el.centralDate, new Date('2016/10/20'))).to.be.true;
-      expect(elObj.activeMonthAndYear).to.equal('October 2016');
-
+      expect(elObj.activeMonth).to.equal('October');
+      expect(elObj.activeYear).to.equal('2016');
       clock.restore();
     });
 
@@ -318,7 +348,8 @@ describe('<lion-calendar>', () => {
         `);
         const elObj = new CalendarObject(el);
         expect(isSameDate(el.centralDate, new Date('2001/01/08'))).to.be.true;
-        expect(elObj.activeMonthAndYear).to.equal('January 2001');
+        expect(elObj.activeMonth).to.equal('January');
+        expect(elObj.activeYear).to.equal('2001');
 
         clock.restore();
       });
@@ -377,14 +408,15 @@ describe('<lion-calendar>', () => {
     });
   });
 
-  describe('Calendar header (month navigation)', () => {
+  describe('Calendar navigation', () => {
     describe('Title', () => {
       it('contains secondary title displaying the current month and year in focus', async () => {
         const el = await fixture(
           html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
         );
         const elObj = new CalendarObject(el);
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+        expect(elObj.activeMonth).to.equal('December');
+        expect(elObj.activeYear).to.equal('2000');
       });
 
       it('updates the secondary title when the displayed month/year changes', async () => {
@@ -394,7 +426,8 @@ describe('<lion-calendar>', () => {
         const elObj = new CalendarObject(el);
         el.centralDate = new Date('1999/10/12');
         await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('October 1999');
+        expect(elObj.activeMonth).to.equal('October');
+        expect(elObj.activeYear).to.equal('1999');
       });
 
       describe('Accessibility', () => {
@@ -406,130 +439,235 @@ describe('<lion-calendar>', () => {
     });
 
     describe('Navigation', () => {
-      it('has a button for navigation to previous month', async () => {
-        const el = await fixture(
-          html`<lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>`,
-        );
-        const elObj = new CalendarObject(el);
-        expect(elObj.previousMonthButtonEl).not.to.equal(null);
-        expect(elObj.activeMonthAndYear).to.equal('January 2001');
+      describe('Year', () => {
+        it('has a button for navigation to previous year', async () => {
+          const el = await fixture(
+            html`<lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>`,
+          );
+          const elObj = new CalendarObject(el);
+          expect(elObj.previousYearButtonEl).not.to.equal(null);
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
 
-        elObj.previousMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+          elObj.previousYearButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2000');
 
-        elObj.previousMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('November 2000');
+          elObj.previousYearButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('1999');
+        });
+
+        it('has a button for navigation to next year', async () => {
+          const el = await fixture(
+            html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
+          );
+          const elObj = new CalendarObject(el);
+          expect(elObj.nextYearButtonEl).not.to.equal(null);
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
+
+          elObj.nextYearButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2001');
+
+          elObj.nextYearButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2002');
+        });
+
+        it('disables previousYearButton and nextYearButton based on disabled days accordingly', async () => {
+          const el = await fixture(html`
+            <lion-calendar .selectedDate="${new Date('2000/06/12')}"></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('June');
+          expect(elObj.activeYear).to.equal('2000');
+          expect(elObj.previousYearButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(elObj.nextYearButtonEl.hasAttribute('disabled')).to.equal(false);
+
+          el.minDate = new Date('2000/01/01');
+          el.maxDate = new Date('2000/12/31');
+          await el.updateComplete;
+
+          expect(elObj.previousYearButtonEl.hasAttribute('disabled')).to.equal(true);
+          expect(elObj.nextYearButtonEl.hasAttribute('disabled')).to.equal(true);
+
+          elObj.previousYearButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('June');
+          expect(elObj.activeYear).to.equal('2000');
+
+          el.minDate = new Date('1999/12/31');
+          el.maxDate = new Date('2001/01/01');
+          await el.updateComplete;
+
+          expect(elObj.previousYearButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(elObj.nextYearButtonEl.hasAttribute('disabled')).to.equal(false);
+        });
+
+        it('sets label to correct month previousYearButton and nextYearButton based on disabled days accordingly', async () => {
+          const el = await fixture(html`
+            <lion-calendar .selectedDate="${new Date('2000/06/12')}"></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          el.minDate = new Date('1999/07/12');
+          el.maxDate = new Date('2001/05/12');
+          await el.updateComplete;
+
+          expect(elObj.previousYearButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(elObj.previousYearButtonEl.ariaLabel).to.equal('Previous year, July 1999');
+          expect(elObj.nextYearButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(elObj.nextYearButtonEl.ariaLabel).to.equal('Next year, May 2001');
+        });
       });
 
-      it('has a button for navigation to next month', async () => {
-        const el = await fixture(
-          html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
-        );
-        const elObj = new CalendarObject(el);
-        expect(elObj.nextMonthButtonEl).not.to.equal(null);
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+      describe('Month', () => {
+        it('has a button for navigation to previous month', async () => {
+          const el = await fixture(
+            html`<lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>`,
+          );
+          const elObj = new CalendarObject(el);
+          expect(elObj.previousMonthButtonEl).not.to.equal(null);
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
 
-        elObj.nextMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('January 2001');
+          elObj.previousMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
-        elObj.nextMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('February 2001');
-      });
+          elObj.previousMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('November');
+          expect(elObj.activeYear).to.equal('2000');
+        });
 
-      it('disables previousMonthButton and nextMonthButton based on disabled days accordingly', async () => {
-        const el = await fixture(html`
-          <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
-        `);
-        const elObj = new CalendarObject(el);
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
-        expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(false);
-        expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(false);
+        it('has a button for navigation to next month', async () => {
+          const el = await fixture(
+            html`<lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>`,
+          );
+          const elObj = new CalendarObject(el);
+          expect(elObj.nextMonthButtonEl).not.to.equal(null);
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
-        el.minDate = new Date('2000/12/01');
-        el.maxDate = new Date('2000/12/31');
-        await el.updateComplete;
+          elObj.nextMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
 
-        expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(true);
-        expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(true);
+          elObj.nextMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('February');
+          expect(elObj.activeYear).to.equal('2001');
+        });
 
-        elObj.previousMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+        it('disables previousMonthButton and nextMonthButton based on disabled days accordingly', async () => {
+          const el = await fixture(html`
+            <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
+          expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(false);
 
-        elObj.previousMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
-      });
+          el.minDate = new Date('2000/12/01');
+          el.maxDate = new Date('2000/12/31');
+          await el.updateComplete;
 
-      it('handles switch to previous month when dates are disabled', async () => {
-        const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
+          expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(true);
+          expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(true);
 
-        const el = await fixture(html`<lion-calendar></lion-calendar>`);
-        const elObj = new CalendarObject(el);
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+          elObj.previousMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
-        el.minDate = new Date('2000/11/20');
-        await el.updateComplete;
+          elObj.previousMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
+        });
 
-        expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(false);
-        expect(isSameDate(el.centralDate, new Date('2000/12/15'))).to.be.true;
+        it('handles switch to previous month when dates are disabled', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-        elObj.previousMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('November 2000');
-        expect(isSameDate(el.centralDate, new Date('2000/11/20'))).to.be.true;
+          const el = await fixture(html`<lion-calendar></lion-calendar>`);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
-        clock.restore();
-      });
+          el.minDate = new Date('2000/11/20');
+          await el.updateComplete;
 
-      it('handles switch to next month when dates are disabled', async () => {
-        const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
+          expect(elObj.previousMonthButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(isSameDate(el.centralDate, new Date('2000/12/15'))).to.be.true;
 
-        const el = await fixture(html`<lion-calendar></lion-calendar>`);
-        const elObj = new CalendarObject(el);
-        expect(elObj.activeMonthAndYear).to.equal('December 2000');
+          elObj.previousMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('November');
+          expect(elObj.activeYear).to.equal('2000');
+          expect(isSameDate(el.centralDate, new Date('2000/11/20'))).to.be.true;
 
-        el.maxDate = new Date('2001/01/10');
-        await el.updateComplete;
+          clock.restore();
+        });
 
-        expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(false);
-        expect(isSameDate(el.centralDate, new Date('2000/12/15'))).to.be.true;
+        it('handles switch to next month when dates are disabled', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
 
-        elObj.nextMonthButtonEl.click();
-        await el.updateComplete;
-        expect(elObj.activeMonthAndYear).to.equal('January 2001');
-        expect(isSameDate(el.centralDate, new Date('2001/01/10'))).to.be.true;
+          const el = await fixture(html`<lion-calendar></lion-calendar>`);
+          const elObj = new CalendarObject(el);
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
-        clock.restore();
-      });
+          el.maxDate = new Date('2001/01/10');
+          await el.updateComplete;
 
-      it('supports navigating from larger months to smaller ones (day counts)', async () => {
-        // given
-        const inputDate = new Date('2019/08/31');
-        const element = await fixture(html`
-          <lion-calendar .centralDate="${inputDate}"> </lion-calendar>
-        `);
-        // when
-        const remote = new CalendarObject(element);
-        remote.nextMonthButtonEl.click();
-        await element.updateComplete;
-        // then
-        expect(remote.activeMonthAndYear).to.equal('September 2019');
-        expect(remote.centralDayObj.el).dom.to.equal(`
-          <button
-            class="calendar__day-button"
-            tabindex="0"
-            aria-label="30 September 2019 Monday"
-            aria-pressed="false"
-            past=""
-            current-month="">
-            30
-          </button>
-        `);
+          expect(elObj.nextMonthButtonEl.hasAttribute('disabled')).to.equal(false);
+          expect(isSameDate(el.centralDate, new Date('2000/12/15'))).to.be.true;
+
+          elObj.nextMonthButtonEl.click();
+          await el.updateComplete;
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
+          expect(isSameDate(el.centralDate, new Date('2001/01/10'))).to.be.true;
+
+          clock.restore();
+        });
+
+        it('supports navigating from larger months to smaller ones (day counts)', async () => {
+          // given
+          const inputDate = new Date('2019/08/31');
+          const element = await fixture(html`
+            <lion-calendar .centralDate="${inputDate}"> </lion-calendar>
+          `);
+          // when
+          const remote = new CalendarObject(element);
+          remote.nextMonthButtonEl.click();
+          await element.updateComplete;
+          // then
+          expect(remote.activeMonth).to.equal('September');
+          expect(remote.activeYear).to.equal('2019');
+          expect(remote.centralDayObj.el).dom.to.equal(`
+            <button
+              class="calendar__day-button"
+              tabindex="0"
+              aria-label="30 September 2019 Monday"
+              aria-pressed="false"
+              past=""
+              current-month="">
+              <span class="calendar__day-button__text">
+                30
+              </span>
+            </button>
+          `);
+        });
       });
 
       describe('Accessibility', () => {
@@ -538,6 +676,7 @@ describe('<lion-calendar>', () => {
             <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
           `);
           const elObj = new CalendarObject(el);
+          // month
           expect(elObj.previousMonthButtonEl.getAttribute('title')).to.equal(
             'Previous month, November 2000',
           );
@@ -549,6 +688,18 @@ describe('<lion-calendar>', () => {
           );
           expect(elObj.nextMonthButtonEl.getAttribute('aria-label')).to.equal(
             'Next month, January 2001',
+          );
+
+          // year
+          expect(elObj.previousYearButtonEl.getAttribute('title')).to.equal(
+            'Previous year, December 1999',
+          );
+          expect(elObj.previousYearButtonEl.getAttribute('aria-label')).to.equal(
+            'Previous year, December 1999',
+          );
+          expect(elObj.nextYearButtonEl.getAttribute('title')).to.equal('Next year, December 2001');
+          expect(elObj.nextYearButtonEl.getAttribute('aria-label')).to.equal(
+            'Next year, December 2001',
           );
         });
       });
@@ -670,17 +821,20 @@ describe('<lion-calendar>', () => {
             <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
           `);
           const elObj = new CalendarObject(el);
-          expect(elObj.activeMonthAndYear).to.equal('January 2001');
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
 
           el.__contentWrapperElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageUp' }));
           await el.updateComplete;
-          expect(elObj.activeMonthAndYear).to.equal('December 2000');
+          expect(elObj.activeMonth).to.equal('December');
+          expect(elObj.activeYear).to.equal('2000');
 
           el.__contentWrapperElement.dispatchEvent(
             new KeyboardEvent('keydown', { key: 'PageDown' }),
           );
           await el.updateComplete;
-          expect(elObj.activeMonthAndYear).to.equal('January 2001');
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
         });
 
         it('navigates through years with [alt + pageup] [alt + pagedown] keys', async () => {
@@ -688,19 +842,22 @@ describe('<lion-calendar>', () => {
             <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
           `);
           const elObj = new CalendarObject(el);
-          expect(elObj.activeMonthAndYear).to.equal('January 2001');
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
 
           el.__contentWrapperElement.dispatchEvent(
             new KeyboardEvent('keydown', { key: 'PageDown', altKey: true }),
           );
           await el.updateComplete;
-          expect(elObj.activeMonthAndYear).to.equal('January 2002');
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2002');
 
           el.__contentWrapperElement.dispatchEvent(
             new KeyboardEvent('keydown', { key: 'PageUp', altKey: true }),
           );
           await el.updateComplete;
-          expect(elObj.activeMonthAndYear).to.equal('January 2001');
+          expect(elObj.activeMonth).to.equal('January');
+          expect(elObj.activeYear).to.equal('2001');
         });
 
         describe('Arrow keys', () => {
@@ -809,13 +966,15 @@ describe('<lion-calendar>', () => {
               <lion-calendar .selectedDate="${new Date('2000/12/31')}"></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
-            expect(elObj.activeMonthAndYear).to.equal('December 2000');
+            expect(elObj.activeMonth).to.equal('December');
+            expect(elObj.activeYear).to.equal('2000');
 
             el.__contentWrapperElement.dispatchEvent(
               new KeyboardEvent('keydown', { key: 'ArrowRight' }),
             );
             await el.updateComplete;
-            expect(elObj.activeMonthAndYear).to.equal('January 2001');
+            expect(elObj.activeMonth).to.equal('January');
+            expect(elObj.activeYear).to.equal('2001');
             expect(elObj.focusedDayObj.monthday).to.equal(1);
           });
 
@@ -824,13 +983,15 @@ describe('<lion-calendar>', () => {
               <lion-calendar .selectedDate="${new Date('2001/01/01')}"></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
-            expect(elObj.activeMonthAndYear).to.equal('January 2001');
+            expect(elObj.activeMonth).to.equal('January');
+            expect(elObj.activeYear).to.equal('2001');
 
             el.__contentWrapperElement.dispatchEvent(
               new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
             );
             await el.updateComplete;
-            expect(elObj.activeMonthAndYear).to.equal('December 2000');
+            expect(elObj.activeMonth).to.equal('December');
+            expect(elObj.activeYear).to.equal('2000');
             expect(elObj.focusedDayObj.monthday).to.equal(31);
           });
 
@@ -839,13 +1000,15 @@ describe('<lion-calendar>', () => {
               <lion-calendar .selectedDate="${new Date('2000/12/30')}"></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
-            expect(elObj.activeMonthAndYear).to.equal('December 2000');
+            expect(elObj.activeMonth).to.equal('December');
+            expect(elObj.activeYear).to.equal('2000');
 
             el.__contentWrapperElement.dispatchEvent(
               new KeyboardEvent('keydown', { key: 'ArrowDown' }),
             );
             await el.updateComplete;
-            expect(elObj.activeMonthAndYear).to.equal('January 2001');
+            expect(elObj.activeMonth).to.equal('January');
+            expect(elObj.activeYear).to.equal('2001');
             expect(elObj.focusedDayObj.monthday).to.equal(6);
           });
 
@@ -854,13 +1017,15 @@ describe('<lion-calendar>', () => {
               <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
-            expect(elObj.activeMonthAndYear).to.equal('January 2001');
+            expect(elObj.activeMonth).to.equal('January');
+            expect(elObj.activeYear).to.equal('2001');
 
             el.__contentWrapperElement.dispatchEvent(
               new KeyboardEvent('keydown', { key: 'ArrowUp' }),
             );
             await el.updateComplete;
-            expect(elObj.activeMonthAndYear).to.equal('December 2000');
+            expect(elObj.activeMonth).to.equal('December');
+            expect(elObj.activeYear).to.equal('2000');
             expect(elObj.focusedDayObj.monthday).to.equal(26);
           });
         });
