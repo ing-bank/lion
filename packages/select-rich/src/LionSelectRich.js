@@ -578,6 +578,9 @@ export class LionSelectRich extends ScopedElementsMixin(
   }
 
   __setupInvokerNodeEventListener() {
+    // Prevents event listeners from being set more than once
+    if (this.__invokerOnClick || this.__invokerOnBlur) this.__teardownInvokerNode();
+
     this.__invokerOnClick = () => {
       if (!this.disabled && !this.readOnly && !this.singleOption) {
         this._overlayCtrl.toggle();
