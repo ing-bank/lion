@@ -2502,10 +2502,10 @@
     chrome-launcher "^0.13.3"
     puppeteer-core "^5.0.0"
 
-"@web/test-runner-cli@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@web/test-runner-cli/-/test-runner-cli-0.5.1.tgz#a0ad9c933dac80e71bb697370c4924ab56397948"
-  integrity sha512-gTKbMB1dqLSnhI3pZ8ZZ2oaeszTGGII+m6QdwaNgyxGpfb5XLtrtqfGpbG532tu/OnzuHf1IwGh0LvkFM1uhVQ==
+"@web/test-runner-cli@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@web/test-runner-cli/-/test-runner-cli-0.5.2.tgz#870a9bd62a342ccc4994e9873ca1018d73fa8009"
+  integrity sha512-igy0lujUzquD9JrXFLEN/HSjhVxIESlvZVlNsYWDfBoZpj1MzURNdGiZJi6GCsyadbEhHsIWVyhu71/h3XwVOQ==
   dependencies:
     "@babel/code-frame" "^7.10.4"
     "@types/babel__code-frame" "^7.0.1"
@@ -2516,6 +2516,7 @@
     chalk "^4.1.0"
     cli-cursor "^3.1.0"
     command-line-args "^5.1.1"
+    command-line-usage "^6.1.0"
     convert-source-map "^1.7.0"
     deepmerge "^4.2.2"
     diff "^4.0.2"
@@ -2527,10 +2528,10 @@
     portfinder "^1.0.26"
     source-map "^0.7.3"
 
-"@web/test-runner-commands@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@web/test-runner-commands/-/test-runner-commands-0.1.1.tgz#c842d3a5b60ad9bc78124a9eb37eda88a53a4ae9"
-  integrity sha512-zRocZ/6yAhpjmTgDdOOka70vbkUusuuGxCkjZsQpvMnvrkPA9zr4mvYLHU1KSEKk51ILRgQYyrST4bwmcefCog==
+"@web/test-runner-commands@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@web/test-runner-commands/-/test-runner-commands-0.1.2.tgz#8a9405cb8fb177a2c5a05f299e699e0da9c36515"
+  integrity sha512-apAvibdIxw5dRXwXP8P3To0fSqfIdP6qxaxOgQx8/RJdksL1s7rZCFmsme6lmEVGbf35I+Cu0QUqbsGWOIWA1A==
   dependencies:
     "@web/test-runner-core" "^0.7.1"
 
@@ -2585,16 +2586,16 @@
     "@web/test-runner-core" "^0.7.1"
     selenium-webdriver "^4.0.0-alpha.7"
 
-"@web/test-runner@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@web/test-runner/-/test-runner-0.7.2.tgz#b8abc38a1d8180e68d881032e152af2a961c9be9"
-  integrity sha512-zdEfn+0lvLAfkcvx1hWlj8Wge4JaOW3WSmqZYnDvSbGHFxSrQToZ3So5dQwrvJsR/lluZcYmBazXRR72Ml3AMA==
+"@web/test-runner@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@web/test-runner/-/test-runner-0.7.3.tgz#b52325e8ce0c967df72631e8faf22d1f09c49fab"
+  integrity sha512-SzdP4efXdP56bZFvGer0Zc0SI2QR5xgGxLK2s9v9xZ6M4g31CiKd6/mHp33G3jxW4ABdJObfmCAL7Fq6N34Byg==
   dependencies:
     "@rollup/plugin-node-resolve" "^8.1.0"
     "@web/dev-server-rollup" "^0.2.1"
     "@web/test-runner-chrome" "^0.6.1"
-    "@web/test-runner-cli" "^0.5.1"
-    "@web/test-runner-commands" "^0.1.1"
+    "@web/test-runner-cli" "^0.5.2"
+    "@web/test-runner-commands" "^0.1.2"
     "@web/test-runner-core" "^0.7.1"
     "@web/test-runner-mocha" "^0.3.1"
     command-line-args "^5.1.1"
