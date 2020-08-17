@@ -79,13 +79,13 @@ describe('<lion-collapsible>', () => {
   describe('Accessibility', () => {
     it('[collapsed] is a11y AXE accessible', async () => {
       const collapsible = await fixture(defaultCollapsible);
-      expect(collapsible).to.be.accessible();
+      await expect(collapsible).to.be.accessible();
     });
 
     it('[expanded] is a11y AXE accessible', async () => {
       const collapsible = await fixture(defaultCollapsible);
       collapsible.show();
-      expect(collapsible).to.be.accessible();
+      await expect(collapsible).to.be.accessible();
     });
 
     describe('Invoker', () => {

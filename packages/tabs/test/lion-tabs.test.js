@@ -66,8 +66,8 @@ describe('<lion-tabs>', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
-    it('throws warning if unequal amount of tabs and panels', async () => {
-      const spy = sinon.spy(console, 'warn');
+    it('logs warning if unequal amount of tabs and panels', async () => {
+      const stub = sinon.stub(console, 'warn');
       await fixture(html`
         <lion-tabs>
           <button slot="tab">tab</button>
@@ -75,8 +75,10 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel 2</div>
         </lion-tabs>
       `);
-      expect(spy.callCount).to.equal(1);
-      spy.restore();
+      expect(stub).to.be.calledOnceWithExactly(
+        `The amount of tabs (1) doesn't match the amount of panels (2).`,
+      );
+      stub.restore();
     });
   });
 
