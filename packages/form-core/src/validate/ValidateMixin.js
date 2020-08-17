@@ -188,7 +188,7 @@ export const ValidateMixin = dedupeMixin(
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        localize.addEventListener('localeChanged', this._updateFeedbackComponent);
+        localize.removeEventListener('localeChanged', this._updateFeedbackComponent);
       }
 
       firstUpdated(changedProperties) {
