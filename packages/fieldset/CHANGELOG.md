@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.14.4
+
+### Patch Changes
+
+- dd021e43: Groups need a valid formattedValue representing the value of it's form elements
+- Updated dependencies [dd021e43]
+- Updated dependencies [07c598fd]
+  - @lion/form-core@0.4.2
+
 ## 0.14.3
 
 ### Patch Changes

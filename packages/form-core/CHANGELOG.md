@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- dd021e43: Groups need a valid formattedValue representing the value of it's form elements
+- 07c598fd: Form should be able to access formattedValue of children
+
 ## 0.4.1
 
 ### Patch Changes
