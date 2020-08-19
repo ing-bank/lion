@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.18
+
+### Patch Changes
+
+- dd021e43: Groups need a valid formattedValue representing the value of it's form elements
+- Updated dependencies [dd021e43]
+  - @lion/fieldset@0.14.4
+
 ## 0.6.17
 
 ### Patch Changes

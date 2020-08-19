@@ -1,5 +1,28 @@
 # Change Log
 
+## 0.2.4
+
+### Patch Changes
+
+- 07c598fd: Form should be able to access formattedValue of children
+- Updated dependencies [dd021e43]
+- Updated dependencies [07c598fd]
+  - @lion/checkbox-group@0.11.11
+  - @lion/fieldset@0.14.4
+  - @lion/form@0.6.18
+  - @lion/form-core@0.4.2
+  - @lion/radio-group@0.11.11
+  - @lion/select-rich@0.19.4
+  - @lion/input@0.8.4
+  - @lion/input-date@0.7.18
+  - @lion/input-datepicker@0.14.22
+  - @lion/input-email@0.8.18
+  - @lion/input-iban@0.9.18
+  - @lion/input-range@0.4.18
+  - @lion/select@0.7.18
+  - @lion/textarea@0.7.18
+  - @lion/validate-messages@0.2.10
+
 ## 0.2.3
 
 ### Patch Changes
