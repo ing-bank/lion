@@ -104,8 +104,7 @@ async function getPage(path, cdp) {
     }
   });
 
-  await page.goto(url);
-  await page.waitForTimeout(500);
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   log(`Page has been created`);
 
@@ -265,7 +264,29 @@ function createCapture() {
     if (!suite.page) {
       suite.page = await getPage(url);
     }
-    await page.waitForTimeout(500);
+    if (selector) {
+      await page.waitForSelector(selector);
+    }
+    if (endClipSelector) {
+      await page.waitForSelector(endClipSelector);
+    }
+    await page.evaluate(
+      async ([sel, endClipSel]) => {
+        if (sel) {
+          const el = document.querySelector(sel);
+          if (el && el.updateComplete) {
+            await el.updateComplete;
+          }
+        }
+        if (endClipSel) {
+          const el = document.querySelector(endClipSel);
+          if (el && el.updateComplete) {
+            await el.updateComplete;
+          }
+        }
+      },
+      [selector, endClipSelector],
+    );
     suite.clip = await getClip(suite);
 
     if (updateScreenshots) {
