@@ -1,5 +1,6 @@
+import { LitElement } from '@lion/core';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { PropertyValues, LitElement } from 'lit-element';
+import { PropertyValues } from 'lit-element';
 
 export declare interface SyncUpdatableNamespace {
   connected?: boolean;
