@@ -31,7 +31,7 @@
   "dependencies": {
     "@open-wc/dedupe-mixin": "^1.2.18",
     "@open-wc/scoped-elements": "^1.0.3",
-    "lit-element": "^2.2.1",
+    "lit-element": "~2.3.0",
     "lit-html": "^1.0.0"
   },
   "keywords": [
