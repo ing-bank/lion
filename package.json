@@ -51,6 +51,7 @@
     "@web/test-runner": "^0.7.3",
     "@web/test-runner-browserstack": "^0.1.1",
     "@web/test-runner-playwright": "^0.5.1",
+    "@web/test-runner-puppeteer": "^0.6.1",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "babel-eslint": "^8.2.6",
     "babel-polyfill": "^6.26.0",

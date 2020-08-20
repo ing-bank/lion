@@ -21,6 +21,7 @@ export declare class DisabledMixinHost {
   public retractRequestToBeDisabled(): void;
 
   private __internalSetDisabled(value: boolean): void;
+  protected _requestedToBeDisabled: boolean;
 }
 
 export declare function DisabledMixinImplementation<T extends Constructor<LitElement>>(
