@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 4b3ac525: Fixed version of "lit-element" for now to "~2.3.0", since breaking
+
 ## 0.6.0
 
 ### Minor Changes
