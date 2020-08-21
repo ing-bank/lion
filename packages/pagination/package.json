@@ -1,0 +1,46 @@
+{
+  "name": "@lion/pagination",
+  "version": "0.0.0",
+  "description": "A component that handles pagination.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/pagination"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/pagination/README.md",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/pagination/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/pagination/test/**/*.test.js\""
+  },
+  "sideEffects": [
+    "lion-pagination.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.10.0",
+    "@lion/localize": "0.14.2"
+  },
+  "keywords": [
+    "lion",
+    "pagination",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
