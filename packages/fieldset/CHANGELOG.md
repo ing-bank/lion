@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.14.6
+
+### Patch Changes
+
+- c347fce4: Field population fix
+
+  #### Bugfixes
+
+  - allow population conditionally rendered fields in formGroup/fieldset/form
+
+- Updated dependencies [c347fce4]
+  - @lion/form-core@0.4.4
+
 ## 0.14.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- bd0439be: feat: add year navigation and styling hooks on the day template
+
 ## 0.9.8
 
 ### Patch Changes

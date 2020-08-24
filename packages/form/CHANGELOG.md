@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.20
+
+### Patch Changes
+
+- Updated dependencies [c347fce4]
+  - @lion/fieldset@0.14.6
+
 ## 0.6.19
 
 ### Patch Changes

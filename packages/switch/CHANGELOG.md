@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.10.21
+
+### Patch Changes
+
+- Updated dependencies [c347fce4]
+  - @lion/form-core@0.4.4
+
 ## 0.10.20
 
 ### Patch Changes

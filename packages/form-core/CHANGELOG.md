@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.4
+
+### Patch Changes
+
+- c347fce4: Field population fix
+
+  #### Bugfixes
+
+  - allow population conditionally rendered fields in formGroup/fieldset/form
+
 ## 0.4.3
 
 ### Patch Changes
