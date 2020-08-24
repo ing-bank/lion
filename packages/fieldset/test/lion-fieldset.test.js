@@ -342,6 +342,33 @@ describe('<lion-fieldset>', () => {
     expect(el.modelValue).to.eql({ lastName: 'Bar' });
   });
 
+  it('does not fail when conditional (not rendered) formElements are populated', async () => {
+    const showC = false;
+    const el = await fixture(html`
+      <${tag}>
+        <label slot="label">My Label</label>
+        <${childTag} name="a"></${childTag}>
+        <${childTag} name="b"></${childTag}>
+        ${showC ? html`<${childTag} name="c"></${childTag}>` : ''}
+      </${tag}>
+    `);
+    expect(el.formElements.a).to.be.not.undefined;
+    expect(el.formElements.b).to.be.not.undefined;
+    expect(el.formElements.c).to.be.undefined;
+
+    let wasSuccessful = false;
+    try {
+      // c does not exist, because it is not render
+      el.serializedValue = { a: 'x', b: 'y', c: 'z' };
+      wasSuccessful = true;
+      // eslint-disable-next-line no-empty
+    } catch (_) {}
+
+    expect(wasSuccessful).to.be.true;
+    expect(el.formElements.a.serializedValue).to.equal('x');
+    expect(el.formElements.b.serializedValue).to.equal('y');
+  });
+
   describe('Validation', () => {
     it('validates on init', async () => {
       class IsCat extends Validator {

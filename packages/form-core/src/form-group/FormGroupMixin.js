@@ -332,7 +332,9 @@ export const FormGroupMixin = dedupeMixin(
                 el[property] = values[name][index]; // eslint-disable-line no-param-reassign
               });
             }
-            this.formElements[name][property] = values[name];
+            if (this.formElements[name]) {
+              this.formElements[name][property] = values[name];
+            }
           });
         }
       }
