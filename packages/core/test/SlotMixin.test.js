@@ -1,5 +1,4 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
-
+import { defineCE, expect, fixture } from '@open-wc/testing';
 import { SlotMixin } from '../src/SlotMixin.js';
 
 describe('SlotMixin', () => {

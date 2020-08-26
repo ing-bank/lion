@@ -5,9 +5,13 @@ import { DisabledMixin } from './DisabledMixin.js';
  * @typedef {import('../types/DisabledWithTabIndexMixinTypes').DisabledWithTabIndexMixin} DisabledWithTabIndexMixin
  */
 
-/** @type {DisabledWithTabIndexMixin} */
+/**
+ * @type {DisabledWithTabIndexMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit-element').LitElement>} superclass
+ */
 const DisabledWithTabIndexMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
+  // @ts-expect-error we're overriding private _requestUpdate
   class DisabledWithTabIndexMixinHost extends DisabledMixin(superclass) {
     static get properties() {
       return {
@@ -31,14 +35,14 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
 
     makeRequestToBeDisabled() {
       super.makeRequestToBeDisabled();
-      if (this.__requestedToBeDisabled === false && this.tabIndex != null) {
+      if (this._requestedToBeDisabled === false && this.tabIndex != null) {
         this.__restoreTabIndexTo = this.tabIndex;
       }
     }
 
     retractRequestToBeDisabled() {
       super.retractRequestToBeDisabled();
-      if (this.__requestedToBeDisabled === true) {
+      if (this._requestedToBeDisabled === true) {
         this.__internalSetTabIndex(this.__restoreTabIndexTo);
       }
     }
@@ -57,6 +61,7 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
      * @param {?} oldValue
      */
     _requestUpdate(name, oldValue) {
+      // @ts-expect-error
       super._requestUpdate(name, oldValue);
 
       if (name === 'disabled') {
@@ -72,7 +77,7 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
           this.__restoreTabIndexTo = this.tabIndex;
         }
 
-        if (this.tabIndex !== -1 && this.__requestedToBeDisabled === true) {
+        if (this.tabIndex !== -1 && this._requestedToBeDisabled === true) {
           this.__internalSetTabIndex(-1);
         }
       }
