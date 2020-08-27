@@ -56,7 +56,7 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   //   // Handle methods
   //   const mBlacklistPlatform = ['constructor', 'connectedCallback', 'disconnectedCallback'];
   //   const mBlacklistLitEl = [
-  //     '_requestUpdate',
+  //     'requestUpdateInternal',
   //     'createRenderRoot',
   //     'render',
   //     'updated',

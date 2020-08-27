@@ -124,8 +124,8 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
    *
    * @override
    */
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
     if (this.isConnected && name === 'checked') {
       this.setAttribute('aria-checked', `${this.checked}`);
     }

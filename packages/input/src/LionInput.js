@@ -53,8 +53,8 @@ export class LionInput extends LionField {
     this.type = 'text';
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
     if (name === 'readOnly') {
       this.__delegateReadOnly();
     }

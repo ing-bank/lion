@@ -48,8 +48,8 @@ export const ChoiceInputMixin = superclass =>
       }
     }
 
-    _requestUpdate(name, oldValue) {
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
 
       if (name === 'modelValue') {
         if (this.modelValue.checked !== this.checked) {
@@ -177,7 +177,7 @@ export const ChoiceInputMixin = superclass =>
     /**
      * @override
      * hasChanged is designed for async (updated) callback, also check for sync
-     * (_requestUpdate) callback
+     * (requestUpdateInternal) callback
      */
     _onModelValueChanged({ modelValue }, { modelValue: old }) {
       if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, old)) {

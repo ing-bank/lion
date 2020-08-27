@@ -40,8 +40,8 @@ export const OverlayMixin = dedupeMixin(
         this.__config = value;
       }
 
-      _requestUpdate(name, oldValue) {
-        super._requestUpdate(name, oldValue);
+      requestUpdateInternal(name, oldValue) {
+        super.requestUpdateInternal(name, oldValue);
         if (name === 'opened') {
           this.dispatchEvent(new Event('opened-changed'));
         }

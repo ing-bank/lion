@@ -234,8 +234,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /**
    * @override
    */
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
 
     const map = {
       disableDates: () => this.__disableDatesChanged(),

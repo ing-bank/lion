@@ -17,8 +17,8 @@ import { dedupeMixin } from '@lion/core';
  * - makes the propertyAccessor.`hasChanged` compatible in synchronous updates:
  * `updateSync` will only be called when new value differs from old value.
  * See: https://lit-element.polymer-project.org/guide/lifecycle#haschanged
- * - it is a stable abstaction on top of a protected/non offical lifecycle LitElement api.
- * Whenever the implementation of `_requestUpdate` changes (this happened in the past for
+ * - it is a stable abstraction on top of a protected/non official lifecycle LitElement api.
+ * Whenever the implementation of `requestUpdateInternal` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
  * @type {SyncUpdatableMixin}
  */
@@ -78,8 +78,8 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {string} name
      * @param {*} oldValue
      */
-    _requestUpdate(name, oldValue) {
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
 
       this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
       const ns = this.__SyncUpdatableNamespace;
@@ -98,8 +98,8 @@ const SyncUpdatableMixinImplementation = superclass =>
     }
 
     /**
-     * @desc A public abstraction that has the exact same api as `_requestUpdate`.
-     * All code previously present in _requestUpdate can be placed in this method.
+     * @desc A public abstraction that has the exact same api as `requestUpdateInternal`.
+     * All code previously present in requestUpdateInternal can be placed in this method.
      * @param {string} name
      * @param {*} oldValue
      */

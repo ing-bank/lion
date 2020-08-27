@@ -213,7 +213,7 @@ describe('Analyzer "find-classes"', () => {
           static get properties() {}
           static get styles() {}
           get updateComplete() {}
-          _requestUpdate() {}
+          requestUpdateInternal() {}
           createRenderRoot() {}
           render() {}
           updated() {}
