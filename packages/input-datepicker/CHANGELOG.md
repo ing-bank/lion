@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 65ecd432: Update to lit-element 2.4.0, changed all uses of \_requestUpdate into requestUpdateInterval
+
+### Patch Changes
+
+- Updated dependencies [65ecd432]
+- Updated dependencies [4dc621a0]
+  - @lion/calendar@0.11.0
+  - @lion/core@0.10.0
+  - @lion/form-core@0.5.0
+  - @lion/overlays@0.17.0
+  - @lion/input-date@0.7.21
+  - @lion/localize@0.14.2
+
 ## 0.14.24
 
 ### Patch Changes

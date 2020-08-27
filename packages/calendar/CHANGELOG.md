@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- 65ecd432: Update to lit-element 2.4.0, changed all uses of \_requestUpdate into requestUpdateInterval
+
+### Patch Changes
+
+- Updated dependencies [65ecd432]
+- Updated dependencies [4dc621a0]
+  - @lion/core@0.10.0
+  - @lion/localize@0.14.2
+
 ## 0.10.0
 
 ### Minor Changes
