@@ -228,8 +228,8 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
     if (name === 'interactionMode') {
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();

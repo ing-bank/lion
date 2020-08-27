@@ -151,9 +151,9 @@ describe('SyncUpdatableMixin', () => {
          * @param {string} name
          * @param {*} oldValue
          */
-        _requestUpdate(name, oldValue) {
+        requestUpdateInternal(name, oldValue) {
           // @ts-ignore the private override is on purpose
-          super._requestUpdate(name, oldValue);
+          super.requestUpdateInternal(name, oldValue);
           if (name === 'prop') {
             propChangedCount += 1;
           }

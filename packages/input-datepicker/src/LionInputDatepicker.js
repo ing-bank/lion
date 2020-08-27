@@ -172,8 +172,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
 
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();

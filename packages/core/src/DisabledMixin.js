@@ -10,7 +10,6 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 const DisabledMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  // @ts-expect-error we're overriding private _requestUpdate
   class DisabledMixinHost extends superclass {
     static get properties() {
       return {
@@ -55,9 +54,8 @@ const DisabledMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {?} oldValue
      */
-    _requestUpdate(name, oldValue) {
-      // @ts-expect-error
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
       if (name === 'disabled') {
         if (this.__isUserSettingDisabled) {
           this.__restoreDisabledTo = this.disabled;

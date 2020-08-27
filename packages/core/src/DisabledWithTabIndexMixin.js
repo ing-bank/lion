@@ -11,7 +11,6 @@ import { DisabledMixin } from './DisabledMixin.js';
  */
 const DisabledWithTabIndexMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  // @ts-expect-error we're overriding private _requestUpdate
   class DisabledWithTabIndexMixinHost extends DisabledMixin(superclass) {
     static get properties() {
       return {
@@ -60,9 +59,8 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {?} oldValue
      */
-    _requestUpdate(name, oldValue) {
-      // @ts-expect-error
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
 
       if (name === 'disabled') {
         if (this.disabled) {
