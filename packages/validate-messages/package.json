@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate-messages",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "A set of localized messages for default Validators",
   "license": "MIT",
   "author": "ing-bank",
@@ -28,9 +28,9 @@
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/validate-messages/test/**/*.test.js\""
   },
   "dependencies": {
-    "@lion/core": "0.9.1",
-    "@lion/form-core": "0.4.4",
-    "@lion/localize": "0.14.1"
+    "@lion/core": "0.10.0",
+    "@lion/form-core": "0.5.0",
+    "@lion/localize": "0.14.2"
   },
   "keywords": [
     "feedback",

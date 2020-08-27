@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- 65ecd432: Update to lit-element 2.4.0, changed all uses of \_requestUpdate into requestUpdateInterval
+
+### Patch Changes
+
+- 4dc621a0: Added @param JSDocs type annotation to make sure that the superclass types are properly inherited inside the mixins
+
 ## 0.9.1
 
 ### Patch Changes
