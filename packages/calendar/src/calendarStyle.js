@@ -56,6 +56,10 @@ export const calendarStyle = css`
     min-height: 40px;
   }
 
+  .calendar__day-button__text {
+    pointer-events: none;
+  }
+
   .calendar__day-button[today] {
     text-decoration: underline;
   }
