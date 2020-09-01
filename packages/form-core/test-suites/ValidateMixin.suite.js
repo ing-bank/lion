@@ -721,7 +721,6 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${''}
           >${lightDom}</${tag}>
         `));
-        console.log(el._inputNode);
         expect(el._inputNode?.getAttribute('aria-required')).to.equal('true');
         el.validators = [];
         expect(el._inputNode?.getAttribute('aria-required')).to.be.null;

@@ -195,10 +195,11 @@ export class LionSelectRich extends ScopedElementsMixin(
   }
 
   connectedCallback() {
+    // need to do this before anything else
+    this._listboxNode.registrationTarget = this;
     if (super.connectedCallback) {
       super.connectedCallback();
     }
-    this._listboxNode.registrationTarget = this;
     this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__setupInvokerNode();
     this.__setupListboxNode();
@@ -213,10 +214,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.registrationComplete.then(() => {
       this.__initInteractionStates();
     });
-
-    this._overlaySetupComplete.then(() => {
-      this.__setupOverlay();
-    });
   }
 
   disconnectedCallback() {
@@ -226,6 +223,10 @@ export class LionSelectRich extends ScopedElementsMixin(
     if (this._labelNode) {
       this._labelNode.removeEventListener('click', this.__toggleChecked);
     }
+    this._scrollTargetNode.removeEventListener('keydown', this.__overlayOnHide);
+    this.__teardownInvokerNode();
+    this.__teardownListboxNode();
+    this.__teardownEventListeners();
   }
 
   requestUpdateInternal(name, oldValue) {
@@ -658,7 +659,8 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
   }
 
-  __setupOverlay() {
+  _setupOverlayCtrl() {
+    super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
     this.__overlayBeforeShow = () => {
       if (this.hasNoDefaultSelected) {
@@ -688,10 +690,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
-    this._scrollTargetNode.removeEventListener('keydown', this.__overlayOnHide);
-    this.__teardownInvokerNode();
-    this.__teardownListboxNode();
-    this.__teardownEventListeners();
   }
 
   __preventScrollingWithArrowKeys(ev) {

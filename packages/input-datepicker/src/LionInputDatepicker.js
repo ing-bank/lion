@@ -207,7 +207,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   /**
-   * Defining this overlay as a templates lets OverlayInteraceMixin
+   * Defining this overlay as a templates from OverlayMixin
    * this is our source to give as .contentNode to OverlayController.
    * Important: do not change the name of this method.
    */
@@ -283,7 +283,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   async __openCalendarOverlay() {
-    this._overlayCtrl.show();
+    await this._overlayCtrl.show();
     await Promise.all([
       this._overlayCtrl.contentNode.updateComplete,
       this._calendarNode.updateComplete,

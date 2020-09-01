@@ -268,8 +268,8 @@ export class OverlayController {
     // }
   }
 
-  async _init({ cfgToAdd }) {
-    this.__initcontentWrapperNode({ cfgToAdd });
+  _init({ cfgToAdd }) {
+    this.__initContentWrapperNode({ cfgToAdd });
     this.__initConnectionTarget();
 
     if (this.placementMode === 'local') {
@@ -310,7 +310,7 @@ export class OverlayController {
    * @desc Cleanup ._contentWrapperNode. We do this, because creating a fresh wrapper
    * can lead to problems with event listeners...
    */
-  __initcontentWrapperNode({ cfgToAdd }) {
+  __initContentWrapperNode({ cfgToAdd }) {
     if (this.config.contentWrapperNode && this.placementMode === 'local') {
       /** config [l2],[l3],[l4] */
       this._contentWrapperNode = this.config.contentWrapperNode;
@@ -568,7 +568,7 @@ export class OverlayController {
    * @param {object} config
    * @param {'init'|'show'|'hide'|'teardown'} config.phase
    */
-  async _handleFeatures({ phase }) {
+  _handleFeatures({ phase }) {
     this._handleZIndex({ phase });
 
     if (this.preventsScroll) {
@@ -856,11 +856,15 @@ export class OverlayController {
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
 
+    if (this.placementMode === 'global' && this.__isContentNodeProjected) {
+      this.__originalContentParent.appendChild(this.contentNode);
+    }
+
     // Remove the content node wrapper from the global rootnode
-    this._teardowncontentWrapperNode();
+    this._teardownContentWrapperNode();
   }
 
-  _teardowncontentWrapperNode() {
+  _teardownContentWrapperNode() {
     if (
       this.placementMode === 'global' &&
       this._contentWrapperNode &&

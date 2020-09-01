@@ -188,6 +188,42 @@ describe('OverlayController', () => {
       ctrl.teardown();
       expect(ctrl.manager.globalRootNode.children.length).to.equal(0);
     });
+
+    it('[global] restores contentNode if it was/is a projected node', async () => {
+      const shadowHost = document.createElement('div');
+      shadowHost.id = 'shadowHost';
+      shadowHost.attachShadow({ mode: 'open' });
+      shadowHost.shadowRoot.innerHTML = `
+        <div id="contentWrapperNode">
+          <slot name="contentNode"></slot>
+          <my-arrow></my-arrow>
+        </div>
+      `;
+      const contentNode = document.createElement('div');
+      contentNode.slot = 'contentNode';
+      shadowHost.appendChild(contentNode);
+
+      const wrapper = await fixture('<div id="wrapper"></div>');
+      // Ensure the contentNode is connected to DOM
+      wrapper.appendChild(shadowHost);
+
+      // has one child = <div slot="contentNode"></div>
+      expect(shadowHost.children.length).to.equal(1);
+
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        placementMode: 'global',
+        contentNode,
+        contentWrapperNode: shadowHost,
+      });
+
+      // has no children as content gets moved to the body
+      expect(shadowHost.children.length).to.equal(0);
+      ctrl.teardown();
+
+      // restores original light dom in teardown
+      expect(shadowHost.children.length).to.equal(1);
+    });
   });
 
   describe('Node Configuration', () => {
@@ -1372,7 +1408,7 @@ describe('OverlayController', () => {
       }).to.throw('[OverlayController] You need to provide a .contentNode');
     });
 
-    it('throws if contentNodewrapper is not provided for projected contentNode', async () => {
+    it('throws if contentNodeWrapper is not provided for projected contentNode', async () => {
       const shadowHost = document.createElement('div');
       shadowHost.attachShadow({ mode: 'open' });
       shadowHost.shadowRoot.innerHTML = `

@@ -195,10 +195,10 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('supports nested overlays', async () => {
       const el = await fixture(html`
-        <${tag}>
+        <${tag} id="main-dialog">
           <div slot="content" id="mainContent">
             open nested overlay:
-            <${tag}>
+            <${tag} id="sub-dialog">
               <div slot="content" id="nestedContent">
                 Nested content
               </div>
@@ -222,6 +222,23 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(nestedOverlayEl._overlayCtrl.contentNode).to.be.displayed;
     });
 
+    it('[global] allows for moving of the element', async () => {
+      const el = await fixture(html`
+        <${tag}>
+          <div slot="content" id="nestedContent">content of the nested overlay</div>
+          <button slot="invoker">invoker nested</button>
+        </${tag}>
+      `);
+      if (el._overlayCtrl.placementMode === 'global') {
+        expect(getGlobalOverlayNodes().length).to.equal(1);
+
+        const moveTarget = await fixture('<div id="target"></div>');
+        moveTarget.appendChild(el);
+        await el.updateComplete;
+        expect(getGlobalOverlayNodes().length).to.equal(1);
+      }
+    });
+
     it('reconstructs the overlay when disconnected and reconnected to DOM (support for nested overlay nodes)', async () => {
       const nestedEl = await fixture(html`
         <${tag} id="nest">
@@ -241,15 +258,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       `);
 
       if (el._overlayCtrl.placementMode === 'global') {
-        // Specifically checking the output in global root node, because the _contentOverlayNode still references
-        // the node that was removed in the teardown but hasn't been garbage collected due to reference to it still existing..
-
         // Find the outlets that are not backdrop outlets
         const overlayContainerNodes = getGlobalOverlayNodes();
         expect(overlayContainerNodes.length).to.equal(2);
-        const lastContentNodeInContainer = overlayContainerNodes[0];
+        const lastContentNodeInContainer = overlayContainerNodes[1];
         // Check that the last container is the nested one with the intended content
-        expect(lastContentNodeInContainer.firstElementChild.innerText).to.equal(
+        expect(lastContentNodeInContainer.firstElementChild.firstChild.textContent).to.equal(
           'content of the nested overlay',
         );
         expect(lastContentNodeInContainer.firstElementChild.slot).to.equal('content');
@@ -258,44 +272,6 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         expect(contentNode).to.not.be.null;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }
-    });
-
-    it("doesn't tear down controller when dom nodes are being moved around", async () => {
-      const nestedEl = await fixture(html`
-        <${tag} id="nest">
-          <div slot="content" id="nestedContent">content of the nested overlay</div>
-          <button slot="invoker">invoker nested</button>
-        </${tag}>
-      `);
-
-      const setupOverlayCtrlSpy = sinon.spy(nestedEl, '_setupOverlayCtrl');
-      const teardownOverlayCtrlSpy = sinon.spy(nestedEl, '_teardownOverlayCtrl');
-
-      const el = await fixture(html`
-        <${tag} id="main">
-          <div slot="content" id="mainContent">
-            open nested overlay:
-            ${nestedEl}
-          </div>
-          <button slot="invoker">invoker button</button>
-        </${tag}>
-      `);
-
-      // Even though many connected/disconnected calls take place,
-      // we detect we are in the middle of a 'move'
-      expect(teardownOverlayCtrlSpy).to.not.have.been.called;
-      expect(setupOverlayCtrlSpy).to.not.have.been.called;
-
-      // Now move nestedEl to an offline node
-      const offlineNode = document.createElement('div');
-      offlineNode.appendChild(nestedEl);
-      await aTimeout();
-      // And we detect this time the disconnect was 'permanent'
-      expect(teardownOverlayCtrlSpy.callCount).to.equal(1);
-
-      el._overlayContentNode.appendChild(nestedEl);
-      await aTimeout();
-      expect(setupOverlayCtrlSpy.callCount).to.equal(1);
     });
   });
 }

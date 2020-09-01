@@ -175,6 +175,7 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
+      await aTimeout();
       expect(isSameDate(elObj.calendarEl.focusedDate, elObj.calendarEl.centralDate)).to.be.true;
     });
 
