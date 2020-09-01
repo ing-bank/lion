@@ -103,9 +103,7 @@ describe('Local Positioning', () => {
         },
       });
       await fixture(html`
-        <div style="position: absolute; top: 0;">
-          ${ctrl.invokerNode}${ctrl.content}
-        </div>
+        <div style="position: absolute; top: 0;">${ctrl.invokerNode}${ctrl.content}</div>
       `);
 
       await ctrl.show();

@@ -11,11 +11,14 @@ describe('lion-select-invoker', () => {
 
   it('renders invoker info based on selectedElement child elements', async () => {
     const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
-    el.selectedElement = await fixture(`<div class="option"><h2>I am</h2><p>2 lines</p></div>`);
+    el.selectedElement = await fixture(
+      `<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`,
+    );
     await el.updateComplete;
 
     expect(el._contentWrapperNode).lightDom.to.equal(
       `
+        Textnode
         <h2>I am</h2>
         <p>2 lines</p>
       `,

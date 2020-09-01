@@ -1,5 +1,9 @@
 import { Validator } from '../Validator.js';
 
+/**
+ * @typedef {import('../../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ */
+
 export class Required extends Validator {
   static get validatorName() {
     return 'Required';
@@ -11,6 +15,9 @@ export class Required extends Validator {
    * FormControl.__isEmpty / FormControl._isEmpty.
    */
 
+  /**
+   * @param {FormControlHost & HTMLElement} formControl
+   */
   // eslint-disable-next-line class-methods-use-this
   onFormControlConnect(formControl) {
     if (formControl._inputNode) {
@@ -18,6 +25,9 @@ export class Required extends Validator {
     }
   }
 
+  /**
+   * @param {FormControlHost & HTMLElement} formControl
+   */
   // eslint-disable-next-line class-methods-use-this
   onFormControlDisconnect(formControl) {
     if (formControl._inputNode) {

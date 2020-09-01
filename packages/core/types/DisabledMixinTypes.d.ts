@@ -1,13 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from 'lit-element';
 
-export declare class DisabledMixinHost {
-  static get properties(): {
-    disabled: {
-      type: BooleanConstructor;
-      reflect: boolean;
-    };
-  };
+export declare class DisabledHost {
   disabled: boolean;
 
   /**
@@ -26,6 +20,6 @@ export declare class DisabledMixinHost {
 
 export declare function DisabledMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<DisabledMixinHost>;
+): T & Constructor<DisabledHost>;
 
 export type DisabledMixin = typeof DisabledMixinImplementation;

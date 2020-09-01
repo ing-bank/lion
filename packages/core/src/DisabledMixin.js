@@ -10,7 +10,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 const DisabledMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  class DisabledMixinHost extends superclass {
+  class extends superclass {
     static get properties() {
       return {
         disabled: {

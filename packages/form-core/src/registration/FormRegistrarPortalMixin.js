@@ -17,10 +17,11 @@ import { dedupeMixin } from '@lion/core';
  * </my-portal>
  * // my-field will be registered within my-form
  * @type {FormRegistrarPortalMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
  */
 const FormRegistrarPortalMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
-  class FormRegistrarPortalMixin extends superclass {
+  class extends superclass {
     constructor() {
       super();
       /** @type {(FormRegistrarPortalHost & HTMLElement) | undefined} */
@@ -30,7 +31,8 @@ const FormRegistrarPortalMixinImplementation = superclass =>
       );
       this.addEventListener(
         'form-element-register',
-        this.__redispatchEventForFormRegistrarPortalMixin,
+        /** @type {EventListenerOrEventListenerObject} */ (this
+          .__redispatchEventForFormRegistrarPortalMixin),
       );
     }
 

@@ -79,11 +79,7 @@ class MyHelloComponent extends LocalizeMixin(LitElement) {
   }
 
   render() {
-    return html`
-      <div>
-        ${this.msgLit('my-hello-component:greeting')}
-      </div>
-    `;
+    return html` <div>${this.msgLit('my-hello-component:greeting')}</div> `;
   }
 }
 ```
@@ -112,9 +108,7 @@ import { localize } from '@lion/localize';
 
 export function myTemplate(someData) {
   return html`
-    <div>
-      ${localize.msg('my-hello-component:feeling', { feeling: someData.feeling })}
-    </div>
+    <div>${localize.msg('my-hello-component:feeling', { feeling: someData.feeling })}</div>
   `;
 }
 ```

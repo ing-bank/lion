@@ -12,7 +12,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 const SlotMixinImplementation = superclass =>
   // eslint-disable-next-line no-unused-vars, no-shadow
-  class SlotMixinHost extends superclass {
+  class extends superclass {
     /**
      * @return {SlotsMap}
      */

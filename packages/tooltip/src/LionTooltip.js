@@ -102,9 +102,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       <slot name="_overlay-shadow-outlet"></slot>
       <div id="overlay-content-node-wrapper">
         <slot name="content"></slot>
-        <div class="arrow" x-arrow>
-          ${this._arrowTemplate()}
-        </div>
+        <div class="arrow" x-arrow>${this._arrowTemplate()}</div>
       </div>
     `;
   }

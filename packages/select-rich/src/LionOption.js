@@ -51,6 +51,14 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     ];
   }
 
+  /**
+   * @override We want to start with a clean slate, so we omit slots inherited from FormControl
+   */
+  // eslint-disable-next-line class-methods-use-this
+  get slots() {
+    return {};
+  }
+
   constructor() {
     super();
     this.active = false;

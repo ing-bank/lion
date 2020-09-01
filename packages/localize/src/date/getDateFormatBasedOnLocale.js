@@ -19,9 +19,9 @@ export function getDateFormatBasedOnLocale() {
     function getPartByIndex(index) {
       /** @type {Object.<string,string>} */
       const template = {
-        '2012': 'year',
-        '12': 'month',
-        '20': 'day',
+        2012: 'year',
+        12: 'month',
+        20: 'day',
       };
       const key = dateParts[index];
       return template[key];

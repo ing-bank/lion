@@ -11,26 +11,15 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "types": ["node", "mocha", "sinon"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": [
     "packages/core/**/*.js",
     "packages/tabs/**/*.js",
     "packages/singleton-manager/**/*.js",
     "packages/localize/**/*.js",
-    "packages/localize/**/*.ts",
-    "packages/form-core/src/registration/*.js",
-    "packages/form-core/test/registration/*.js",
-    "packages/form-core/src/utils/*.js",
-    "packages/form-core/test/utils/*.js",
-    "packages/form-core/src/FocusMixin.js",
-    "packages/form-core/test/FocusMixin.test.js",
-    "packages/form-core/src/FormControlMixin.js",
-    "packages/form-core/test/FormControlMixin.test.js",
-    "packages/form-core/src/InteractionStateMixin.js",
-    "packages/form-core/test/InteractionStateMixin.test.js",
-    "packages/form-core/src/FormatMixin.js",
-    "packages/form-core/test/FormatMixin.test.js"
+    "packages/form-core/**/*.js"
   ],
   "exclude": [
     "node_modules",

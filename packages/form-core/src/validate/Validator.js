@@ -1,10 +1,16 @@
-import { fakeExtendsEventTarget } from '../utils/fakeExtendsEventTarget.js';
-
 export class Validator {
+  /**
+   *
+   * @param {?} [param]
+   * @param {Object.<string,?>} [config]
+   */
   constructor(param, config) {
-    fakeExtendsEventTarget(this);
+    this.__fakeExtendsEventTarget();
 
+    /** @type {?} */
     this.__param = param;
+
+    /** @type {Object.<string,?>} */
     this.__config = config || {};
     this.type = (config && config.type) || 'error'; // Default type supported by ValidateMixin
   }
@@ -19,21 +25,27 @@ export class Validator {
 
   /**
    * @desc The function that returns a Boolean
-   * @param {string|Date|Number|object} modelValue
-   * @param {object} param
+   * @param {?} [modelValue]
+   * @param {?} [param]
+   * @param {{}} [config]
    * @returns {Boolean|Promise<Boolean>}
    */
-  execute(/* modelValue, param */) {
-    if (!this.validatorName) {
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this
+  execute(modelValue, param, config) {
+    const ctor = /** @type {typeof Validator} */ (this.constructor);
+    if (!ctor.validatorName) {
       throw new Error(
         'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
       );
     }
+    return true;
   }
 
   set param(p) {
     this.__param = p;
-    this.dispatchEvent(new Event('param-changed'));
+    if (this.dispatchEvent) {
+      this.dispatchEvent(new Event('param-changed'));
+    }
   }
 
   get param() {
@@ -42,7 +54,9 @@ export class Validator {
 
   set config(c) {
     this.__config = c;
-    this.dispatchEvent(new Event('config-changed'));
+    if (this.dispatchEvent) {
+      this.dispatchEvent(new Event('config-changed'));
+    }
   }
 
   get config() {
@@ -51,16 +65,18 @@ export class Validator {
 
   /**
    * @overridable
-   * @param {object} data
-   * @param {*} data.modelValue
-   * @param {string} data.fieldName
-   * @param {*} data.params
-   * @param {string} data.type
-   * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {HTMLElement} [data.formControl]
+   * @param {*} [data.params]
+   * @param {string|undefined} [data.type]
+   * @returns {Promise<string|Node>}
    */
   async _getMessage(data) {
+    const ctor = /** @type {typeof Validator} */ (this.constructor);
     const composedData = {
-      name: this.constructor.validatorName,
+      name: ctor.validatorName,
       type: this.type,
       params: this.param,
       config: this.config,
@@ -75,29 +91,32 @@ export class Validator {
           .config.getMessage}`,
       );
     }
-    return this.constructor.getMessage(composedData);
+    return ctor.getMessage(composedData);
   }
 
   /**
    * @overridable
-   * @param {object} data
-   * @param {*} data.modelValue
-   * @param {string} data.fieldName
-   * @param {*} data.params
-   * @param {string} data.type
-   * @returns {string|Node|Promise<stringOrNode>|() => stringOrNode)}
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {*} [data.params]
+   * @param {string} [data.type]
+   * @param {Object.<string,?>} [data.config]
+   * @param {string} [data.name]
+   * @returns {Promise<string|Node>}
    */
-  static async getMessage(/* data */) {
+  // eslint-disable-next-line no-unused-vars
+  static async getMessage(data) {
     return `Please configure an error message for "${this.name}" by overriding "static async getMessage()"`;
   }
 
   /**
-   * @param {FormControl} formControl
+   * @param {HTMLElement} formControl
    */
   onFormControlConnect(formControl) {} // eslint-disable-line
 
   /**
-   * @param {FormControl} formControl
+   * @param {HTMLElement} formControl
    */
   onFormControlDisconnect(formControl) {} // eslint-disable-line
 
@@ -111,6 +130,38 @@ export class Validator {
    * - Or, when a webworker was started, its process could be aborted and then restarted.
    */
   abortExecution() {} // eslint-disable-line
+
+  __fakeExtendsEventTarget() {
+    const delegate = document.createDocumentFragment();
+
+    /**
+     *
+     * @param {string} type
+     * @param {EventListener} listener
+     * @param {Object} [opts]
+     */
+    const delegatedAddEventListener = (type, listener, opts) =>
+      delegate.addEventListener(type, listener, opts);
+
+    /**
+     * @param {string} type
+     * @param {EventListener} listener
+     * @param {Object} [opts]
+     */
+    const delegatedRemoveEventListener = (type, listener, opts) =>
+      delegate.removeEventListener(type, listener, opts);
+
+    /**
+     * @param {Event|CustomEvent} event
+     */
+    const delegatedDispatchEvent = event => delegate.dispatchEvent(event);
+
+    this.addEventListener = delegatedAddEventListener;
+
+    this.removeEventListener = delegatedRemoveEventListener;
+
+    this.dispatchEvent = delegatedDispatchEvent;
+  }
 }
 
 // For simplicity, a default validator only handles one state:

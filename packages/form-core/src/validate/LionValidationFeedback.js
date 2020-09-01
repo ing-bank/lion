@@ -1,29 +1,42 @@
 import { html, LitElement } from '@lion/core';
 
 /**
+ * @typedef {import('../validate/Validator').Validator} Validator
+ *
+ * @typedef {Object} messageMap
+ * @property {string | Node} message
+ * @property {string} type
+ * @property {Validator} [validator]
+ */
+
+/**
  * @desc Takes care of accessible rendering of error messages
  * Should be used in conjunction with FormControl having ValidateMixin applied
  */
 export class LionValidationFeedback extends LitElement {
   static get properties() {
     return {
-      /**
-       * @property {FeedbackData} feedbackData
-       */
-      feedbackData: Array,
+      feedbackData: { attribute: false },
     };
   }
 
   /**
    * @overridable
+   * @param {Object} opts
+   * @param {string | Node} opts.message message or feedback node
+   * @param {string} [opts.type]
+   * @param {Validator} [opts.validator]
    */
   // eslint-disable-next-line class-methods-use-this
   _messageTemplate({ message }) {
     return message;
   }
 
-  updated() {
-    super.updated();
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
     if (this.feedbackData && this.feedbackData[0]) {
       this.setAttribute('type', this.feedbackData[0].type);
       this.currentType = this.feedbackData[0].type;
@@ -31,7 +44,8 @@ export class LionValidationFeedback extends LitElement {
       if (this.currentType === 'success') {
         this.removeMessage = window.setTimeout(() => {
           this.removeAttribute('type');
-          this.feedbackData = '';
+          /** @type {messageMap[]} */
+          this.feedbackData = [];
         }, 3000);
       }
     } else if (this.currentType !== 'success') {

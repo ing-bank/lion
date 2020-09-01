@@ -11,7 +11,7 @@ import { DisabledMixin } from './DisabledMixin.js';
  */
 const DisabledWithTabIndexMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  class DisabledWithTabIndexMixinHost extends DisabledMixin(superclass) {
+  class extends DisabledMixin(superclass) {
     static get properties() {
       return {
         // we use a property here as if we use the native tabIndex we can not set a default value

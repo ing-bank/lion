@@ -1,35 +1,16 @@
+import { CSSResult, LitElement, nothing, TemplateResult } from '@lion/core';
+import { SlotsMap, SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { SlotsMap } from '@lion/core/types/SlotMixinTypes';
-import { LitElement, CSSResult, TemplateResult, nothing } from '@lion/core';
+import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 
-export class FormControlMixinHost {
-  static get properties(): {
-    name: {
-      type: StringConstructor;
-      reflect: boolean;
-    };
-    label: {
-      attribute: boolean;
-    };
-    helpText: {
-      type: StringConstructor;
-      attribute: string;
-    };
-    _ariaLabelledNodes: {
-      attribute: boolean;
-    };
-    _ariaDescribedNodes: {
-      attribute: boolean;
-    };
-    _repropagationRole: {
-      attribute: boolean;
-    };
-    _isRepropagationEndpoint: {
-      attribute: boolean;
-    };
-  };
+import { LionValidationFeedback } from '../src/validate/LionValidationFeedback';
+import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
+
+export class FormControlHost {
   static get styles(): CSSResult | CSSResult[];
 
+  name: string;
+  modelValue: unknown;
   set label(arg: string);
   get label(): string;
   __label: string | undefined;
@@ -43,11 +24,12 @@ export class FormControlMixinHost {
   get _inputNode(): HTMLElement;
   get _labelNode(): HTMLElement;
   get _helpTextNode(): HTMLElement;
-  get _feedbackNode(): HTMLElement;
+  get _feedbackNode(): LionValidationFeedback | undefined;
   _inputId: string;
   _ariaLabelledNodes: HTMLElement[];
   _ariaDescribedNodes: HTMLElement[];
-  _repropagationRole: 'child' | 'choice-group' | 'fieldset';
+  _repropagationRole: string; // 'child' | 'choice-group' | 'fieldset';
+  _isRepropagationEndpoint: boolean;
 
   connectedCallback(): void;
   updated(changedProperties: import('lit-element').PropertyValues): void;
@@ -99,6 +81,14 @@ export class FormControlMixinHost {
 
 export declare function FormControlImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<FormControlMixinHost> & FormControlMixinHost;
+): T &
+  Constructor<FormControlHost> &
+  FormControlHost &
+  Constructor<FormRegisteringHost> &
+  typeof FormRegisteringHost &
+  Constructor<DisabledHost> &
+  typeof DisabledHost &
+  Constructor<SlotHost> &
+  typeof SlotHost;
 
 export type FormControlMixin = typeof FormControlImplementation;

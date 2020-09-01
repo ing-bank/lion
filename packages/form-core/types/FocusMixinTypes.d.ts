@@ -1,13 +1,8 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
+import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FocusHost {
-  static properties: {
-    focused: {
-      type: BooleanConstructor;
-      reflect: boolean;
-    };
-  };
   focused: boolean;
 
   connectedCallback(): void;
@@ -23,6 +18,6 @@ export declare class FocusHost {
 
 export declare function FocusImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<FocusHost> & FocusHost;
+): T & Constructor<FocusHost> & FocusHost & Constructor<FormControlHost> & typeof FormControlHost;
 
 export type FocusMixin = typeof FocusImplementation;
