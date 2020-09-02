@@ -22,8 +22,13 @@ function traverseHtml(curNode, processObject, config = {}) {
     processObject[curNode.nodeName](pathify(curNode));
   }
 
-  if (!config.stopped && curNode.childNodes) {
-    curNode.childNodes.forEach(childNode => {
+  let { childNodes } = curNode;
+  if (curNode.nodeName === 'template') {
+    childNodes = curNode.content.childNodes;
+  }
+
+  if (!config.stopped && childNodes) {
+    childNodes.forEach(childNode => {
       if (!config.stopped) {
         traverseHtml(childNode, processObject, config);
       }
@@ -31,4 +36,4 @@ function traverseHtml(curNode, processObject, config = {}) {
   }
 }
 
-module.exports = traverseHtml;
+module.exports = { traverseHtml };

@@ -8,7 +8,7 @@ const {
 const babelParser = require('@babel/parser');
 const esModuleLexer = require('es-module-lexer');
 const parse5 = require('parse5');
-const traverseHtml = require('../utils/traverse-html.js');
+const { traverseHtml } = require('../utils/traverse-html.js');
 const { LogService } = require('./LogService.js');
 
 class AstService {

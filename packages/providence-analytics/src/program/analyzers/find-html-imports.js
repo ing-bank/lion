@@ -3,7 +3,7 @@
 const { isRelativeSourcePath } = require('../utils/relative-source-path.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { Analyzer } = require('./helpers/Analyzer.js');
-const traverseHtml = require('../utils/traverse-html.js');
+const { traverseHtml } = require('../utils/traverse-html.js');
 
 /**
  * Options that allow to filter 'on a file basis'.
@@ -36,7 +36,7 @@ function findHtmlImportsPerAstEntry(ast) {
         p5Path.node.attrs.find(a => a.name === 'rel' && a.value === 'import'),
       );
       if (isHtmlImport) {
-        const hrefAttr = p5Path.node.attrs.find(a => a.href);
+        const hrefAttr = p5Path.node.attrs.find(a => a.name === 'href');
         if (!hrefAttr) {
           return;
         }

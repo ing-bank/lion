@@ -1,13 +1,13 @@
 const { expect } = require('chai');
 const parse5 = require('parse5');
-const traverseHtml = require('../../../src/program/utils/traverse-html.js');
+const { traverseHtml } = require('../../../src/program/utils/traverse-html.js');
 
 function getId(p5Path) {
   return p5Path.node.attrs.find(a => a.name === 'id').value;
 }
 
 describe('traverseHtml', () => {
-  it(`finds different tag names`, async () => {
+  it('finds different tag names', async () => {
     const htmlCode = `
       <div id="a-lvl1">
         <span id="a-lvl2">
@@ -42,7 +42,7 @@ describe('traverseHtml', () => {
     expect(foundMyTags).to.eql(['a-lvl3']);
   });
 
-  it(`traverses different levels in DOM order`, async () => {
+  it('traverses different levels in DOM order', async () => {
     const htmlCode = `
       <div id="a-lvl1">
         <span id="a-lvl2">
@@ -74,7 +74,7 @@ describe('traverseHtml', () => {
     expect(callOrder).to.eql(['div#a-lvl1', 'span#a-lvl2', 'my-tag#a-lvl3', 'div#b']);
   });
 
-  it(`allows to stop traversal (for performance)`, async () => {
+  it('allows to stop traversal (for performance)', async () => {
     const htmlCode = `
       <div id="a-lvl1">
         <span id="a-lvl2">
@@ -106,7 +106,7 @@ describe('traverseHtml', () => {
     expect(callOrder).to.eql(['div#a-lvl1']);
   });
 
-  it(`allows to traverse within a path`, async () => {
+  it('allows to traverse within a path', async () => {
     const htmlCode = `
       <div id="a-lvl1">
         <span id="a-lvl2">
