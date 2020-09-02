@@ -72,27 +72,8 @@ function retrieveHtmlData(htmlCode) {
             // skip <template is="dom-repeat|dom-if">
             return;
           }
-          // p5Path.traverseHtml({
-          //   style(p5Path) {
-          //     const style = {
-          //       value: p5Path.node.childNodes[0].value,
-          //     };
-          //     const includeAttr = p5Path.node.attrs.find(a => a.name === 'include');
-          //     if (includeAttr) {
-          //       // TODO: connect these to other dom modules
-          //       style.include = includeAttr.value.split(' ');
-          //     }
-          //     foundStyles.push(style);
-          //   },
-          // });
-
-          // const location = p5Path.node.sourceCodeLocation;
-          // const tplRaw = htmlCode.slice(location.startOffset, location.endOffset);
-          // const tplWithoutTag = tplRaw.replace(/<template.*>(.*|\n)<\/template>/g, '$1');
-          // const tplWithoutStyle = tplWithoutTag.replace(/<style.*>(.*|\n)<\/style>/g, '');
           tplCount += 1;
           const template = {
-            // value: tplWithoutStyle,
             node: p5Path.node,
             istemplate: tplCount === 1, // first template found will always be main
           };
@@ -122,6 +103,7 @@ function retrieveJsData(jsCode) {
   let foundBehaviors;
   let foundObservers;
   let foundProperties;
+  let foundListeners;
   /** @type {ObjectProperty[]} */
   const foundClassMembers = [];
 
@@ -187,6 +169,7 @@ function retrieveJsData(jsCode) {
     behaviors: foundBehaviors,
     observers: foundObservers,
     properties: foundProperties,
+    listeners: foundListeners,
     classMembers: foundClassMembers,
   };
 }
@@ -591,7 +574,7 @@ function getReadOnlyOutput(props) {
     _set${pascalCase(p.propName)}(v) {
       this.__${p.propName} = v;
     }
-    
+
     `;
   });
   return res;
@@ -606,7 +589,7 @@ function getConstructorOutput(props) {
     constructor() {
       super();
 
-      ${props.value.map(v => `this.${v.propName} = ${v.value};`).join('')}          
+      ${props.value.map(v => `this.${v.propName} = ${v.value};`).join('')}
     }
     `;
 }
@@ -692,10 +675,10 @@ function getTotalOutput(data, parts) {
         ? `
     class ${className} extends ${behaviorNames ? addMixins(behaviorNames) : 'LitElement'} {
       ${properties || ''}
-      
+
       ${styles || ''}
-      
-      ${template ? `render() {\nreturn html\`${template}\`;\n}` : ''}
+
+      ${template ? `render() {\nreturn html\`\n${template}\`;\n}` : ''}
 
       ${constructor || ''}
 

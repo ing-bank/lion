@@ -27,7 +27,7 @@ const tplLit = (body, { template, styles, imports, behaviorNames } = {}) => `
   ${imports || ''}
 
   class TestElement extends ${behaviorNames ? addMixins(behaviorNames) : 'LitElement'} {
-    ${template ? `render() {\nreturn html\`${template}\`;\n}` : ''}
+    ${template ? `render() {\nreturn html\`\n${template}\`;\n}` : ''}
 
     ${
       styles
@@ -41,7 +41,7 @@ const tplLit = (body, { template, styles, imports, behaviorNames } = {}) => `
   `;
 
 const tplPolymerProp = (prop, body = '') => `
-  <dom-module id="test-element">            
+  <dom-module id="test-element">
   </dom-module>
   <script>
     Polymer({
@@ -111,7 +111,7 @@ describe('Component', () => {
       expect(formatJs(result)).to.equal(formatJs(to));
     });
 
-    it.only('omits polymer import', () => {
+    it('omits polymer import', () => {
       const htmlFrom = `
       <link rel="import" href="../polymer/polymer.html" />
       <link rel="import" href="my-local-file.html" />
@@ -180,11 +180,11 @@ describe('Component', () => {
               properties: {
                 /**
                  * Does things
-                 */ 
+                 */
                 propx: { type: String, value: 'init' },
                 /**
                  * Also does things
-                 */ 
+                 */
                 propy: { type: String },
               },
             });
@@ -201,16 +201,16 @@ describe('Component', () => {
                 /**
                  * Does things
                  * @type { string }
-                 */ 
+                 */
                 this.propx = 'init';
                 /**
                  * Also does things
                  * @type { string }
-                 */ 
+                 */
                 this.propy = undefined;
               }
             }
-            customElements.define('test-elem', TestElement);  
+            customElements.define('test-elem', TestElement);
           `;
       });
 
@@ -281,7 +281,7 @@ describe('Component', () => {
               `propx: { type: String, observer: '_myObserver' }`,
               `
               _myObserver: function (propx) {
-                // xyz  
+                // xyz
               },
             `,
             );
@@ -302,7 +302,7 @@ describe('Component', () => {
               }
 
               _myObserver(propx) {
-                // xyz  
+                // xyz
               }
               `,
             );
@@ -479,7 +479,7 @@ describe('Component', () => {
         const from = `
           Polymer({
             is: 'test-elem',
-            listeners:  { 
+            listeners:  {
               'iron-input-ready': '_onIronInputReady',
               'special.tap': '_specialTap',
             },
@@ -519,7 +519,7 @@ describe('Component', () => {
             hostAttributes: {
               'string-attribute': 'Value',
               'boolean-attribute': true,
-              'boolean-attribute-false': true,
+              'boolean-attribute-false': false,
               tabindex: 0
             }
           });
@@ -528,7 +528,7 @@ describe('Component', () => {
           class TestElement extends LitElement {
             connectedCallback() {
               super.connectedCallback();
-              
+
               if (!this.hasAttribute('string-attribute') {
                 this.setAttribute('string-attribute','Value');
               }
@@ -561,7 +561,7 @@ describe('Component', () => {
           }
 
           __setupKeyBindings() {
-            // IE polyfill needs to be loaded            
+            // IE polyfill needs to be loaded
             this.addEventLisener('keydown', (event) => {
               switch (event.key) {
                 case ' ':
@@ -641,6 +641,8 @@ describe('Component', () => {
     it('attributeChanged', () => {}); // attributeChanged and call super first
     // https://polymer-library.polymer-project.org/1.0/docs/devguide/registering-elements#custom-constructor
     it('factoryImpl', () => {}); // constructor
+
+    // beforeRegister?
   });
 });
 
@@ -728,11 +730,11 @@ describe('Template', () => {
       const to = `
         \${this.employees.map(item => html\`
           <div>
-            First name: 
+            First name:
             <span> \${item.first}</span>
           </div>
           <div>
-            Last name: 
+            Last name:
             <span> \${item.last}</span>
           </div>
         \`)}
@@ -748,10 +750,10 @@ describe('Template', () => {
       const to2 = `
         \${this.employees.map(item => html\`
           <div>
-            First name: 
+            First name:
             <span> \${item.first}</span></div>
           <div>
-            Last name: 
+            Last name:
             <span> \${item.last}</span>
           </div>
         \`)}`;
@@ -792,22 +794,22 @@ describe('Template', () => {
 });
 
 describe('Styles', () => {
-  it.only('puts styles inside static getter', () => {
+  it('puts styles inside static getter', () => {
     const from = tplPolymer('', {
       template: `
         <style>
           :host {
             display: block;
           }
-    
+
           :host([focused]) {
             outline: none;
           }
-    
+
           :host([hidden]) {
             display: none !important;
           }
-    
+
           input {
             /* Firefox sets a min-width on the input, which can cause layout issues */
             min-width: 0;
@@ -822,15 +824,15 @@ describe('Styles', () => {
         :host {
           display: block;
         }
-  
+
         :host([focused]) {
           outline: none;
         }
-  
+
         :host([hidden]) {
           display: none !important;
         }
-  
+
         input {
           /* Firefox sets a min-width on the input, which can cause layout issues */
           min-width: 0;
@@ -854,15 +856,15 @@ describe('Styles', () => {
             :host {
               display: block;
             }
-      
+
             :host([focused]) {
               outline: none;
             }
-      
+
             :host([hidden]) {
               display: none !important;
             }
-      
+
             input {
               /* Firefox sets a min-width on the input, which can cause layout issues */
               min-width: 0;
@@ -886,15 +888,15 @@ describe('Styles', () => {
               :host {
                 display: block;
               }
-        
+
               :host([focused]) {
                 outline: none;
               }
-        
+
               :host([hidden]) {
                 display: none !important;
               }
-        
+
               input {
                 /* Firefox sets a min-width on the input, which can cause layout issues */
                 min-width: 0;
@@ -905,36 +907,36 @@ describe('Styles', () => {
   });
 
   it('supports defining css mixins', () => {
-    const from = `      
+    const from = `
       --paper-font-common-base: {
         font-family: 'Roboto', 'Noto', sans-serif;
         color: blue;
       };`;
-    const to = `      
+    const to = `
       --paper-font-common-base--font-family: 'Roboto', 'Noto', sans-serif;
       --paper-font-common-base--color: blue;
     `;
   });
 
   it('supports applying css mixins', () => {
-    const mixinDefinedInPotentialParentChain = `      
+    const mixinDefinedInPotentialParentChain = `
       --paper-font-common-base: {
         font-family: 'Roboto', 'Noto', sans-serif;
         color: blue;
       };`;
-    const mixinDefinedInOtherPotentialParentChain = `      
+    const mixinDefinedInOtherPotentialParentChain = `
       --paper-font-common-base: {
         size: 16px;
       };`;
 
-    const from = `      
+    const from = `
       .target {
         @apply --paper-font-common-base;
       };`;
 
-    const to = ` 
+    const to = `
       .target {
-        /* [start] @apply --paper-font-common-base */     
+        /* [start] @apply --paper-font-common-base */
         font-family: var(--paper-font-common-base--font-family);
         color: var(--paper-font-common-base--color);
         size: var(--paper-font-common-base--size);
@@ -955,7 +957,7 @@ describe('Behavior Mixins', () => {
           a: String,
         },
       }
-      
+
       Polymer.PaperInputBehavior = [
         Polymer.IronA11yKeysBehavior,
         Polymer.PaperInputBehaviorImpl
