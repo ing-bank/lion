@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable import/no-unresolved */
 import { LitElement, html, css } from 'lit-element';
 import { IronFormElementBehavior } from 'iron-form-element-behavior/iron-form-element-behavior.js';
 import 'iron-input/iron-input.js';
@@ -114,15 +114,15 @@ class PaperInput extends PaperInputBehavior(IronFormElementBehavior(LitElement))
       >
         <slot name="prefix" slot="prefix"> </slot>
         <label hidden="${!this.label}" aria-hidden="true" for="${this._inputId}" slot="label">
-          ${this.label}</label
-        >
+          ${this.label}
+        </label>
         <span id="template-placeholder"> </span>
         <slot name="suffix" slot="suffix"> </slot>
         ${this.errorMessage
           ? html`
               <paper-input-error aria-live="assertive" slot="add-on">
-                ${errorMessage}</paper-input-error
-              >
+                ${this.errorMessage}
+              </paper-input-error>
             `
           : ''}
         ${this.charCounter

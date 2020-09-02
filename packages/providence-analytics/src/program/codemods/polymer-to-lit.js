@@ -21,6 +21,7 @@ const {
 const notEqualFn = `
 const notEqual = (value, old) => {
   // This ensures (old==NaN, value==NaN) always returns false
+  // eslint-disable next-line
   return old !== value && (old === old || value === value);
 };
 `;
@@ -223,7 +224,7 @@ function getTemplateOutput(pTemplateEntry) {
       const ifAttr = attrsEnriched.find(a => a.name === 'if');
       res += `
         \${${p2lExpression(ifAttr.binding.expression)} ? html\`
-          ${childNodes.map(c => p2lTagNode(c, { localContext: true })).join('\n')}
+          ${childNodes.map(c => p2lTagNode(c)).join('\n')}
         \` : ''}`;
     }
     // <dom-repeat> or <template is="dom-repeat">
@@ -346,7 +347,7 @@ function getTemplateOutput(pTemplateEntry) {
     }
 
     if (c.tagName !== 'input') {
-      result += `</${c.tagName}>`;
+      result += `\n</${c.tagName}>`;
     }
 
     return result;
