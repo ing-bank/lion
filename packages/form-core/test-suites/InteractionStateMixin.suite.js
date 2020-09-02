@@ -10,6 +10,8 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
+import { ValidateMixin } from '../src/validate/ValidateMixin.js';
+import { MinLength } from '../src/validate/validators/StringValidators.js';
 
 /**
  * @param {{tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]
@@ -22,7 +24,8 @@ export function runInteractionStateMixinSuite(customConfig) {
   };
 
   describe(`InteractionStateMixin`, async () => {
-    class IState extends InteractionStateMixin(LitElement) {
+    // @ts-expect-error base constructors same return type
+    class IState extends InteractionStateMixin(ValidateMixin(LitElement)) {
       connectedCallback() {
         super.connectedCallback();
         this.tabIndex = 0;
@@ -207,8 +210,41 @@ export function runInteractionStateMixinSuite(customConfig) {
       expect(el.prefilled).to.be.true;
     });
 
+    describe('Validation integration with states', () => {
+      it('has .shouldShowFeedbackFor indicating for which type to show messages', async () => {
+        const el = /** @type {IState} */ (await fixture(html`
+          <${tag}></${tag}>
+        `));
+        expect(el.shouldShowFeedbackFor).to.deep.equal([]);
+        el.submitted = true;
+        await el.updateComplete;
+        expect(el.shouldShowFeedbackFor).to.deep.equal(['error']);
+      });
+
+      it('keeps the feedback component in sync', async () => {
+        const el = /** @type {IState} */ (await fixture(html`
+          <${tag} .validators=${[new MinLength(3)]}></${tag}>
+        `));
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+
+        // has error but does not show/forward to component as showCondition is not met
+        el.modelValue = '1';
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+
+        el.submitted = true;
+        await el.updateComplete;
+        await el.feedbackComplete;
+        expect(el._feedbackNode.feedbackData?.length).to.equal(1);
+      });
+    });
+
     describe('SubClassers', () => {
       it('can override the `_leaveEvent`', async () => {
+        // @ts-expect-error base constructor same return type
         class IStateCustomBlur extends InteractionStateMixin(LitElement) {
           constructor() {
             super();

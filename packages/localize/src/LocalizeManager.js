@@ -1,3 +1,4 @@
+// @ts-expect-error no types for this package
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
 import isLocalizeESModule from './isLocalizeESModule.js';
 

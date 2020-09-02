@@ -21,9 +21,10 @@ import { dedupeMixin } from '@lion/core';
  * Whenever the implementation of `requestUpdateInternal` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
  * @type {SyncUpdatableMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const SyncUpdatableMixinImplementation = superclass =>
-  class SyncUpdatable extends superclass {
+  class extends superclass {
     constructor() {
       super();
       // Namespace for this mixin that guarantees naming clashes will not occur...
@@ -52,6 +53,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {*} oldValue
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
+      // @ts-expect-error FIXME: Typescript bug, superclass static method not availabe from static context
       const properties = this._classProperties;
       if (properties.get(name) && properties.get(name).hasChanged) {
         return properties.get(name).hasChanged(newValue, oldValue);
@@ -61,7 +63,8 @@ const SyncUpdatableMixinImplementation = superclass =>
 
     __syncUpdatableInitialize() {
       const ns = this.__SyncUpdatableNamespace;
-      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
+      const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this
+        .constructor);
 
       ns.initialized = true;
       // Empty queue...
@@ -84,7 +87,8 @@ const SyncUpdatableMixinImplementation = superclass =>
       this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
       const ns = this.__SyncUpdatableNamespace;
 
-      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
+      const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this
+        .constructor);
 
       // Before connectedCallback: queue
       if (!ns.connected) {

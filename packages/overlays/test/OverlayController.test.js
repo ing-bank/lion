@@ -67,11 +67,7 @@ describe('OverlayController', () => {
           `);
         }
         if (mode === 'inline') {
-          contentNode = await fixture(html`
-            <div>
-              I should be on top
-            </div>
-          `);
+          contentNode = await fixture(html` <div>I should be on top</div> `);
           contentNode.style.zIndex = zIndexVal;
         }
         return contentNode;

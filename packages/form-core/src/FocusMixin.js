@@ -1,11 +1,13 @@
 import { dedupeMixin } from '@lion/core';
+import { FormControlMixin } from './FormControlMixin.js';
 /**
  * @typedef {import('../types/FocusMixinTypes').FocusMixin} FocusMixin
  * @type {FocusMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FocusMixinImplementation = superclass =>
   // eslint-disable-next-line no-unused-vars, max-len, no-shadow
-  class FocusMixin extends superclass {
+  class FocusMixin extends FormControlMixin(superclass) {
     static get properties() {
       return {
         focused: {
@@ -21,16 +23,12 @@ const FocusMixinImplementation = superclass =>
     }
 
     connectedCallback() {
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
+      super.connectedCallback();
       this.__registerEventsForFocusMixin();
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
+      super.disconnectedCallback();
       this.__teardownEventsForFocusMixin();
     }
 
@@ -101,10 +99,22 @@ const FocusMixinImplementation = superclass =>
     }
 
     __teardownEventsForFocusMixin() {
-      this._inputNode.removeEventListener('focus', this.__redispatchFocus);
-      this._inputNode.removeEventListener('blur', this.__redispatchBlur);
-      this._inputNode.removeEventListener('focusin', this.__redispatchFocusin);
-      this._inputNode.removeEventListener('focusout', this.__redispatchFocusout);
+      this._inputNode.removeEventListener(
+        'focus',
+        /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocus),
+      );
+      this._inputNode.removeEventListener(
+        'blur',
+        /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchBlur),
+      );
+      this._inputNode.removeEventListener(
+        'focusin',
+        /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusin),
+      );
+      this._inputNode.removeEventListener(
+        'focusout',
+        /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusout),
+      );
     }
   };
 

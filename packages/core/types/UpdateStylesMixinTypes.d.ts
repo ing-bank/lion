@@ -3,7 +3,7 @@ import { Constructor } from '@open-wc/dedupe-mixin';
 export type StylesMap = {
   [key: string]: string;
 };
-export declare class UpdateStylesMixinHost {
+export declare class UpdateStylesHost {
   /**
    * @example
    * <my-element>
@@ -29,6 +29,6 @@ export declare class UpdateStylesMixinHost {
  */
 declare function UpdateStylesMixinImplementation<T extends Constructor<HTMLElement>>(
   superclass: T,
-): T & Constructor<UpdateStylesMixinHost>;
+): T & Constructor<UpdateStylesHost>;
 
 export type UpdateStylesMixin = typeof UpdateStylesMixinImplementation;

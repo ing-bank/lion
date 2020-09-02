@@ -367,9 +367,7 @@ You can use this `selectedElement` to then render the content to your own invoke
 ```html
 <lion-select-rich>
   <my-invoker-button slot="invoker"></my-invoker-button>
-  <lion-options slot="input">
-    ...
-  </lion-options>
+  <lion-options slot="input"> ... </lion-options>
 </lion-select-rich>
 ```
 

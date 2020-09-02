@@ -52,9 +52,7 @@ import '@lion/collapsible/lion-collapsible.js';
 ```html
 <lion-collapsible>
   <button slot="invoker">Invoker Text</button>
-  <div slot="content">
-    Extra content
-  </div>
+  <div slot="content">Extra content</div>
 </lion-collapsible>
 ```
 
@@ -97,12 +95,8 @@ export const methods = () => html`
     <button @click=${() => document.querySelector('#car-collapsible').toggle()}>
       Toggle content
     </button>
-    <button @click=${() => document.querySelector('#car-collapsible').show()}>
-      Show content
-    </button>
-    <button @click=${() => document.querySelector('#car-collapsible').hide()}>
-      Hide content
-    </button>
+    <button @click=${() => document.querySelector('#car-collapsible').show()}>Show content</button>
+    <button @click=${() => document.querySelector('#car-collapsible').hide()}>Hide content</button>
   </section>
 `;
 ```
@@ -140,9 +134,7 @@ A custom template can be specified to the `invoker` slot. It can be any button o
 ```js preview-story
 export const customInvokerTemplate = () => html`
   <lion-collapsible>
-    <button class="demo-custom-collapsible-invoker" slot="invoker">
-      MORE ABOUT CARS
-    </button>
+    <button class="demo-custom-collapsible-invoker" slot="invoker">MORE ABOUT CARS</button>
     <div slot="content">
       Most definitions of cars say that they run primarily on roads, seat one to eight people, have
       four tires, and mainly transport people rather than goods.
@@ -170,9 +162,7 @@ export const customAnimation = () => html`
       vehicle.
     </div>
     <custom-collapsible>
-      <button class="demo-custom-collapsible-invoker" slot="invoker">
-        MORE ABOUT MOTORCYCLES
-      </button>
+      <button class="demo-custom-collapsible-invoker" slot="invoker">MORE ABOUT MOTORCYCLES</button>
       <div slot="content">
         Motorcycle design varies greatly to suit a range of different purposes: long distance
         travel, commuting, cruising, sport including racing, and off-road riding. Motorcycling is
@@ -186,9 +176,7 @@ export const customAnimation = () => html`
       A car (or automobile) is a wheeled motor vehicle used for transportation.
     </div>
     <custom-collapsible opened>
-      <button class="demo-custom-collapsible-invoker" slot="invoker">
-        MORE ABOUT CARS
-      </button>
+      <button class="demo-custom-collapsible-invoker" slot="invoker">MORE ABOUT CARS</button>
       <div slot="content">
         Most definitions of cars say that they run primarily on roads, seat one to eight people,
         have four tires, and mainly transport people rather than goods.

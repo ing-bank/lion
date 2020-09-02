@@ -204,9 +204,7 @@ class PBoard extends DecorateMixin(LitElement) {
         <h1 class="heading">providence <span class="heading__part">dashboard</span> (alpha)</h1>
         <div class="u-ml2">
           ${this._activeAnalyzerSelectTemplate()}
-          <button @click="${() => downloadFile('data.csv', this._createCsv())}">
-            get csv
-          </button>
+          <button @click="${() => downloadFile('data.csv', this._createCsv())}">get csv</button>
         </div>
       </div>
       ${this._selectionMenuTemplate(this.__menuData)}

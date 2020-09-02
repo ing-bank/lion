@@ -40,7 +40,9 @@ Since Scoped Elements changes tagnames under the hood, a tagname querySelector s
 like this:
 
 ```js
-this.querySelector(this.constructor.getScopedTagName('lion-input', this.constructor.scopedElements));
+this.querySelector(
+  this.constructor.getScopedTagName('lion-input', this.constructor.scopedElements),
+);
 ```
 
 ## CSS selectors

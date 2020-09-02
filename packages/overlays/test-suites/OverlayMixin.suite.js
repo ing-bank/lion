@@ -167,11 +167,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       function sendCloseEvent(e) {
         e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }));
       }
-      const closeBtn = await fixture(html`
-        <button @click=${sendCloseEvent}>
-          close
-        </button>
-      `);
+      const closeBtn = await fixture(html` <button @click=${sendCloseEvent}>close</button> `);
 
       const el = await fixture(html`
         <${tag} opened>

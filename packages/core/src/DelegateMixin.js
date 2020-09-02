@@ -18,7 +18,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 const DelegateMixinImplementation = superclass =>
   // eslint-disable-next-line
-  class DelegateMixin extends superclass {
+  class extends superclass {
     constructor() {
       super();
 

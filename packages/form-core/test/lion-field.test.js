@@ -16,13 +16,21 @@ import '../lion-field.js';
 
 /**
  * @typedef {import('../src/LionField.js').LionField} LionField
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
+
+/** @typedef {HTMLElement & {shadowRoot: HTMLElement, assignedNodes: Function}} ShadowHTMLElement */
 
 const tagString = 'lion-field';
 const tag = unsafeStatic(tagString);
 const inputSlotString = '<input slot="input" />';
 const inputSlot = unsafeHTML(inputSlotString);
 
+/**
+ * @param {import("../index.js").LionField} formControl
+ * @param {string} newViewValue
+ */
 function mimicUserInput(formControl, newViewValue) {
   formControl.value = newViewValue; // eslint-disable-line no-param-reassign
   formControl._inputNode.dispatchEvent(new CustomEvent('input', { bubbles: true }));
@@ -32,10 +40,19 @@ beforeEach(() => {
   localizeTearDown();
 });
 
+/**
+ * @param {HTMLElement} el
+ * @param {string} slot
+ */
+function getSlot(el, slot) {
+  const children = /** @type {any[]} */ (Array.from(el.children));
+  return children.find(child => child.slot === slot);
+}
+
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(Array.from(el.children).find(child => child.slot === 'input').id).to.equal(el._inputId);
+    expect(getSlot(el, 'input').id).to.equal(el._inputId);
   });
 
   it(`has a fieldName based on the label`, async () => {
@@ -148,15 +165,15 @@ describe('<lion-field>', () => {
     const el = /** @type {LionField} */ (await fixture(
       html`<${tag} value="one">${inputSlot}</${tag}>`,
     ));
-    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('one');
+    expect(getSlot(el, 'input').value).to.equal('one');
   });
 
   it('delegates value property', async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('');
+    expect(getSlot(el, 'input').value).to.equal('');
     el.value = 'one';
     expect(el.value).to.equal('one');
-    expect(Array.from(el.children).find(child => child.slot === 'input').value).to.equal('one');
+    expect(getSlot(el, 'input').value).to.equal('one');
   });
 
   // This is necessary for security, so that _inputNodes autocomplete can be set to 'off'
@@ -189,7 +206,7 @@ describe('<lion-field>', () => {
 
     el.disabled = true;
     await el.updateComplete;
-    await aTimeout();
+    await aTimeout(0);
 
     expect(el._inputNode.hasAttribute('disabled')).to.equal(true);
     const disabledel = /** @type {LionField} */ (await fixture(
@@ -220,7 +237,7 @@ describe('<lion-field>', () => {
             <span slot="feedback">No name entered</span>
           </${tag}>
         `));
-      const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
+      const nativeInput = getSlot(el, 'input');
 
       expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${el._inputId}`);
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${el._inputId}`);
@@ -238,7 +255,7 @@ describe('<lion-field>', () => {
           </${tag}>
         `));
 
-      const nativeInput = Array.from(el.children).find(child => child.slot === 'input');
+      const nativeInput = getSlot(el, 'input');
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
         `before-${el._inputId} after-${el._inputId}`,
       );
@@ -250,7 +267,7 @@ describe('<lion-field>', () => {
     // TODO: Move test below to FormControlMixin.test.js.
     it(`allows to add to aria description or label via addToAriaLabelledBy() and
       addToAriaDescribedBy()`, async () => {
-      const wrapper = /** @type {LionField} */ (await fixture(html`
+      const wrapper = /** @type {HTMLElement} */ (await fixture(html`
         <div id="wrapper">
           <${tag}>
             ${inputSlot}
@@ -260,7 +277,7 @@ describe('<lion-field>', () => {
           <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
           <div id="additionalDescription"> Same for this </div>
         </div>`));
-      const el = wrapper.querySelector(tagString);
+      const el = /** @type {LionField} */ (wrapper.querySelector(tagString));
       // wait until the field element is done rendering
       await el.updateComplete;
       await el.updateComplete;
@@ -270,25 +287,33 @@ describe('<lion-field>', () => {
       // 1. addToAriaLabel()
       // Check if the aria attr is filled initially
       expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
-      el.addToAriaLabelledBy(wrapper.querySelector('#additionalLabel'));
+      const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
+        '#additionalLabel',
+      ));
+      el.addToAriaLabelledBy(additionalLabel);
+      const labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
       // Now check if ids are added to the end (not overridden)
-      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
+      expect(labelledbyAttr).to.contain(`label-${el._inputId}`);
       // Should be placed in the end
       expect(
-        _inputNode.getAttribute('aria-labelledby').indexOf(`label-${el._inputId}`) <
-          _inputNode.getAttribute('aria-labelledby').indexOf('additionalLabel'),
+        labelledbyAttr.indexOf(`label-${el._inputId}`) < labelledbyAttr.indexOf('additionalLabel'),
       );
 
       // 2. addToAriaDescription()
       // Check if the aria attr is filled initially
       expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
-      el.addToAriaDescribedBy(wrapper.querySelector('#additionalDescription'));
+      const additionalDescription = /** @type {HTMLElement} */ (wrapper.querySelector(
+        '#additionalDescription',
+      ));
+      el.addToAriaDescribedBy(additionalDescription);
+      const describedbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-describedby'));
+
       // Now check if ids are added to the end (not overridden)
-      expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
+      expect(describedbyAttr).to.contain(`feedback-${el._inputId}`);
       // Should be placed in the end
       expect(
-        _inputNode.getAttribute('aria-describedby').indexOf(`feedback-${el._inputId}`) <
-          _inputNode.getAttribute('aria-describedby').indexOf('additionalDescription'),
+        describedbyAttr.indexOf(`feedback-${el._inputId}`) <
+          describedbyAttr.indexOf('additionalDescription'),
       );
     });
   });
@@ -310,6 +335,9 @@ describe('<lion-field>', () => {
           return 'HasX';
         }
 
+        /**
+         * @param {string} value
+         */
         execute(value) {
           const result = value.indexOf('x') === -1;
           return result;
@@ -324,6 +352,10 @@ describe('<lion-field>', () => {
         </${tag}>
       `));
 
+      /**
+       * @param {import("../index.js").LionField} _sceneEl
+       * @param {{ index?: number; el: any; wantedShowsFeedbackFor: any; }} scenario
+       */
       const executeScenario = async (_sceneEl, scenario) => {
         const sceneEl = _sceneEl;
         sceneEl.resetInteractionState();
@@ -372,6 +404,9 @@ describe('<lion-field>', () => {
           return 'HasX';
         }
 
+        /**
+         * @param {string} value
+         */
         execute(value) {
           const result = value.indexOf('x') === -1;
           return result;
@@ -396,7 +431,7 @@ describe('<lion-field>', () => {
       `));
 
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
-      expect(el.validationStates.error).to.have.a.property('HasX');
+      expect(el.validationStates.error.HasX).to.exist;
 
       expect(disabledEl.hasFeedbackFor).to.deep.equal([]);
       expect(disabledEl.validationStates.error).to.deep.equal({});
@@ -408,6 +443,9 @@ describe('<lion-field>', () => {
           return 'HasX';
         }
 
+        /**
+         * @param {string} value
+         */
         execute(value) {
           const result = value.indexOf('x') === -1;
           return result;
@@ -422,7 +460,7 @@ describe('<lion-field>', () => {
         </${tag}>
       `));
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
-      expect(el.validationStates.error).to.have.a.property('HasX');
+      expect(el.validationStates.error.HasX).to.exist;
 
       el.disabled = true;
       await el.updateComplete;
@@ -437,10 +475,10 @@ describe('<lion-field>', () => {
         >${inputSlot}</${tag}>
       `));
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
-      expect(el.validationStates.error).to.have.a.property('Required');
+      expect(el.validationStates.error.Required).to.exist;
       el.modelValue = 'cat';
       expect(el.hasFeedbackFor).to.deep.equal([]);
-      expect(el.validationStates.error).not.to.have.a.property('Required');
+      expect(el.validationStates.error.Required).to.not.exist;
     });
 
     it('will only update formattedValue when valid on `user-input-changed`', async () => {
@@ -450,6 +488,9 @@ describe('<lion-field>', () => {
           return 'Bar';
         }
 
+        /**
+         * @param {string} value
+         */
         execute(value) {
           const hasError = value !== 'bar';
           return hasError;
@@ -502,8 +543,12 @@ describe('<lion-field>', () => {
         'feedback',
       ];
       names.forEach(slotName => {
-        el.querySelector(`[slot="${slotName}"]`).setAttribute('test-me', 'ok');
-        const slot = el.shadowRoot.querySelector(`slot[name="${slotName}"]`);
+        const slotLight = /** @type {HTMLElement} */ (el.querySelector(`[slot="${slotName}"]`));
+        slotLight.setAttribute('test-me', 'ok');
+        // @ts-expect-error
+        const slot = /** @type {ShadowHTMLElement} */ (el.shadowRoot.querySelector(
+          `slot[name="${slotName}"]`,
+        ));
         const assignedNodes = slot.assignedNodes();
         expect(assignedNodes.length).to.equal(1);
         expect(assignedNodes[0].getAttribute('test-me')).to.equal('ok');

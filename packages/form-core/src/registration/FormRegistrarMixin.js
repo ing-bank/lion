@@ -1,13 +1,17 @@
 // eslint-disable-next-line max-classes-per-file
 import { dedupeMixin } from '@lion/core';
-import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 import { FormControlsCollection } from './FormControlsCollection.js';
-
-// TODO: rename .formElements to .formControls? (or .$controls ?)
+import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
+ */
+
+/**
+ * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
 /**
@@ -19,10 +23,11 @@ import { FormControlsCollection } from './FormControlsCollection.js';
  * For choice groups, the value will only stay an array.
  * See FormControlsCollection for more information
  * @type {FormRegistrarMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormRegistrarMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
-  class FormRegistrarMixin extends FormRegisteringMixin(superclass) {
+  class extends FormRegisteringMixin(superclass) {
     static get properties() {
       return {
         /**
@@ -45,7 +50,11 @@ const FormRegistrarMixinImplementation = superclass =>
       this._isFormOrFieldset = false;
 
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
-      this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+
+      this.addEventListener(
+        'form-element-register',
+        /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToAddFormElement),
+      );
     }
 
     /**
@@ -57,7 +66,7 @@ const FormRegistrarMixinImplementation = superclass =>
     }
 
     /**
-     * @param {ElementWithParentFormGroup} child the child element (field)
+     * @param {FormControl} child the child element (field)
      * @param {number} indexToInsertAt index to insert the form element at
      */
     addFormElement(child, indexToInsertAt) {
@@ -74,12 +83,12 @@ const FormRegistrarMixinImplementation = superclass =>
 
       // 2. Add children as object key
       if (this._isFormOrFieldset) {
-        // @ts-ignore
-        const { name } = child; // FIXME: <-- ElementWithParentFormGroup should become LionFieldWithParentFormGroup so that "name" exists
+        const { name } = child;
         if (!name) {
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError('You need to define a name');
         }
+        // @ts-expect-error
         if (name === this.name) {
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError(`You can not have the same name "${name}" as your parent`);
@@ -106,7 +115,7 @@ const FormRegistrarMixinImplementation = superclass =>
     }
 
     /**
-     * @param {ElementWithParentFormGroup} child the child element (field)
+     * @param {FormRegisteringHost} child the child element (field)
      */
     removeFormElement(child) {
       // 1. Handle array based children
@@ -117,7 +126,7 @@ const FormRegistrarMixinImplementation = superclass =>
 
       // 2. Handle name based object keys
       if (this._isFormOrFieldset) {
-        // @ts-ignore
+        // @ts-expect-error
         const { name } = child; // FIXME: <-- ElementWithParentFormGroup should become LionFieldWithParentFormGroup so that "name" exists
         if (name.substr(-2) === '[]' && this.formElements[name]) {
           const idx = this.formElements[name].indexOf(child);

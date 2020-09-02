@@ -1,6 +1,9 @@
 /* eslint-disable max-classes-per-file */
 import { Validator } from '../Validator.js';
 
+/**
+ * @param {?} value
+ */
 const isString = value => typeof value === 'string';
 
 export class IsString extends Validator {
@@ -8,6 +11,9 @@ export class IsString extends Validator {
     return 'IsString';
   }
 
+  /**
+   * @param {?} value
+   */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
@@ -23,6 +29,9 @@ export class EqualsLength extends Validator {
     return 'EqualsLength';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, length = this.param) {
     let hasError = false;
     if (!isString(value) || value.length !== length) {
@@ -37,6 +46,9 @@ export class MinLength extends Validator {
     return 'MinLength';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, min = this.param) {
     let hasError = false;
     if (!isString(value) || value.length < min) {
@@ -51,6 +63,9 @@ export class MaxLength extends Validator {
     return 'MaxLength';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, max = this.param) {
     let hasError = false;
     if (!isString(value) || value.length > max) {
@@ -65,6 +80,9 @@ export class MinMaxLength extends Validator {
     return 'MinMaxLength';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
     if (!isString(value) || value.length < min || value.length > max) {
@@ -80,6 +98,9 @@ export class IsEmail extends Validator {
     return 'IsEmail';
   }
 
+  /**
+   * @param {?} value
+   */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
@@ -90,12 +111,19 @@ export class IsEmail extends Validator {
   }
 }
 
+/**
+ * @param {?} value
+ * @param {RegExp} pattern
+ */
 const hasPattern = (value, pattern) => pattern.test(value);
 export class Pattern extends Validator {
   static get validatorName() {
     return 'Pattern';
   }
 
+  /**
+   * @param {?} value
+   */
   // eslint-disable-next-line class-methods-use-this
   execute(value, pattern = this.param) {
     if (!(pattern instanceof RegExp)) {

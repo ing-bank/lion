@@ -94,17 +94,11 @@ export const methods = () => {
       <button @click=${() => document.getElementById('pagination-method').previous()}>
         Previous
       </button>
-      <button @click=${() => document.getElementById('pagination-method').next()}>
-        Next
-      </button>
+      <button @click=${() => document.getElementById('pagination-method').next()}>Next</button>
       <br />
       <br />
-      <button @click=${() => document.getElementById('pagination-method').first()}>
-        First
-      </button>
-      <button @click=${() => document.getElementById('pagination-method').last()}>
-        Last
-      </button>
+      <button @click=${() => document.getElementById('pagination-method').first()}>First</button>
+      <button @click=${() => document.getElementById('pagination-method').last()}>Last</button>
       <br />
       <br />
       <button @click=${() => document.getElementById('pagination-method').goto(55)}>

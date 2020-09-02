@@ -8,6 +8,7 @@ describe('SyncUpdatableMixin', () => {
     it('initializes all properties', async () => {
       let hasCalledFirstUpdated = false;
       let hasCalledUpdateSync = false;
+      // @ts-expect-error base constructors same return type
       class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
         static get properties() {
           return {
@@ -64,6 +65,7 @@ describe('SyncUpdatableMixin', () => {
     it('guarantees Member Order Independence', async () => {
       let hasCalledRunPropertyEffect = false;
 
+      // @ts-expect-error base constructors same return type
       class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
         static get properties() {
           return {
@@ -134,7 +136,7 @@ describe('SyncUpdatableMixin', () => {
       let propChangedCount = 0;
       let propUpdateSyncCount = 0;
 
-      // @ts-ignore the private override is on purpose
+      // @ts-expect-error the private override is on purpose
       class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
         static get properties() {
           return {
@@ -152,7 +154,6 @@ describe('SyncUpdatableMixin', () => {
          * @param {*} oldValue
          */
         requestUpdateInternal(name, oldValue) {
-          // @ts-ignore the private override is on purpose
           super.requestUpdateInternal(name, oldValue);
           if (name === 'prop') {
             propChangedCount += 1;
@@ -188,6 +189,7 @@ describe('SyncUpdatableMixin', () => {
 
   describe('After firstUpdated', () => {
     it('calls "updateSync" immediately when the observed property is changed (newValue !== oldValue)', async () => {
+      // @ts-expect-error
       class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
         static get properties() {
           return {
@@ -243,6 +245,7 @@ describe('SyncUpdatableMixin', () => {
   describe('Features', () => {
     // See: https://lit-element.polymer-project.org/guide/lifecycle#haschanged
     it('supports "hasChanged" from UpdatingElement', async () => {
+      // @ts-expect-error base constructors same return type
       class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
         static get properties() {
           return {

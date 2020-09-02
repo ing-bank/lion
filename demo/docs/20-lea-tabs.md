@@ -23,13 +23,9 @@ export default {
 export const main = () => html`
   <lea-tabs>
     <lea-tab slot="tab">Info</lea-tab>
-    <lea-tab-panel slot="panel">
-      Info page with lots of information about us.
-    </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Info page with lots of information about us. </lea-tab-panel>
     <lea-tab slot="tab">Work</lea-tab>
-    <lea-tab-panel slot="panel">
-      Work page that showcases our work.
-    </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Work page that showcases our work. </lea-tab-panel>
   </lea-tabs>
 `;
 ```
@@ -51,13 +47,9 @@ import '@lion/tabs/lea-tabs.js';
 ```html
 <lea-tabs>
   <lea-tab slot="tab">Info</lea-tab>
-  <lea-tab-panel slot="panel">
-    Info page with lots of information about us.
-  </lea-tab-panel>
+  <lea-tab-panel slot="panel"> Info page with lots of information about us. </lea-tab-panel>
   <lea-tab slot="tab">Work</lea-tab>
-  <lea-tab-panel slot="panel">
-    Work page that showcases our work.
-  </lea-tab-panel>
+  <lea-tab-panel slot="panel"> Work page that showcases our work. </lea-tab-panel>
 </lea-tabs>
 ```
 
@@ -71,13 +63,9 @@ You can set the `selectedIndex` to select a certain tab.
 export const selectedIndex = () => html`
   <lea-tabs .selectedIndex=${1}>
     <lea-tab slot="tab">Info</lea-tab>
-    <lea-tab-panel slot="panel">
-      Info page with lots of information about us.
-    </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Info page with lots of information about us. </lea-tab-panel>
     <lea-tab slot="tab">Work</lea-tab>
-    <lea-tab-panel slot="panel">
-      Work page that showcases our work.
-    </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Work page that showcases our work. </lea-tab-panel>
   </lea-tabs>
 `;
 ```
@@ -93,12 +81,8 @@ export const slotsOrder = () => html`
   <lea-tabs>
     <lea-tab slot="tab">Info</lea-tab>
     <lea-tab slot="tab">Work</lea-tab>
-    <lea-tab-panel slot="panel">
-      Info page with lots of information about us.
-    </lea-tab-panel>
-    <lea-tab-panel slot="panel">
-      Work page that showcases our work.
-    </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Info page with lots of information about us. </lea-tab-panel>
+    <lea-tab-panel slot="panel"> Work page that showcases our work. </lea-tab-panel>
   </lea-tabs>
 `;
 ```
@@ -122,9 +106,7 @@ export const distributeNewElements = () => {
         render() {
           return html`
             <h3>Append</h3>
-            <button @click="${this.__handleAppendClick}">
-              Append
-            </button>
+            <button @click="${this.__handleAppendClick}">Append</button>
             <lea-tabs id="appendTabs">
               <lea-tab slot="tab">tab 1</lea-tab>
               <lea-tab-panel slot="panel">panel 1</lea-tab-panel>
@@ -133,9 +115,7 @@ export const distributeNewElements = () => {
             </lea-tabs>
             <hr />
             <h3>Push</h3>
-            <button @click="${this.__handlePushClick}">
-              Push
-            </button>
+            <button @click="${this.__handlePushClick}">Push</button>
             <lea-tabs id="pushTabs">
               <lea-tab slot="tab">tab 1</lea-tab>
               <lea-tab-panel slot="panel">panel 1</lea-tab-panel>

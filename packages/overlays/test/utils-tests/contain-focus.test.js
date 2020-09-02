@@ -35,9 +35,7 @@ const interactionElementsNode = renderLitAsNode(html`
 const lightDomTemplate = html`
   <div>
     <button id="outside-1">outside 1</button>
-    <div id="rootElement">
-      ${interactionElementsNode}
-    </div>
+    <div id="rootElement">${interactionElementsNode}</div>
     <button id="outside-2">outside 2</button>
   </div>
 `;

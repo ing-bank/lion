@@ -126,9 +126,7 @@ describe('lion-tooltip', () => {
           }}"
           style="position: relative; top: 10px;"
         >
-          <div slot="content" style="height: 30px; background-color: red;">
-            Hey there
-          </div>
+          <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
           <button slot="invoker" style="height: 30px;">Tooltip button</button>
         </lion-tooltip>
       `);

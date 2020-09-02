@@ -95,7 +95,7 @@ export class LionSelectInvoker extends LionButton {
 
   _contentTemplate() {
     if (this.selectedElement) {
-      const labelNodes = Array.from(this.selectedElement.querySelectorAll('*'));
+      const labelNodes = Array.from(this.selectedElement.childNodes);
       if (labelNodes.length > 0) {
         return labelNodes.map(node => node.cloneNode(true));
       }
@@ -113,11 +113,7 @@ export class LionSelectInvoker extends LionButton {
   }
 
   _beforeTemplate() {
-    return html`
-      <div id="content-wrapper">
-        ${this._contentTemplate()}
-      </div>
-    `;
+    return html` <div id="content-wrapper">${this._contentTemplate()}</div> `;
   }
 
   // eslint-disable-next-line class-methods-use-this

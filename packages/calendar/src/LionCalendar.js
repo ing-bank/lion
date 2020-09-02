@@ -276,9 +276,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     return html`
       <div class="calendar__navigation__month">
         ${this.__renderPreviousButton('Month', previousMonth, previousYear)}
-        <h2 class="calendar__navigation-heading" id="month" aria-atomic="true">
-          ${month}
-        </h2>
+        <h2 class="calendar__navigation-heading" id="month" aria-atomic="true">${month}</h2>
         ${this.__renderNextButton('Month', nextMonth, nextYear)}
       </div>
     `;
@@ -291,9 +289,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     return html`
       <div class="calendar__navigation__year">
         ${this.__renderPreviousButton('FullYear', month, previousYear)}
-        <h2 class="calendar__navigation-heading" id="year" aria-atomic="true">
-          ${year}
-        </h2>
+        <h2 class="calendar__navigation-heading" id="year" aria-atomic="true">${year}</h2>
         ${this.__renderNextButton('FullYear', month, nextYear)}
       </div>
     `;

@@ -91,9 +91,7 @@ export const isTooltip = () => {
       <button slot="invoker" @mouseenter="${showTooltip}" @mouseleave="${hideTooltip}">
         Hover me to open the tooltip!
       </button>
-      <div slot="content" class="demo-overlay">
-        Hello!
-      </div>
+      <div slot="content" class="demo-overlay">Hello!</div>
     </demo-overlay-system>
   `;
 };

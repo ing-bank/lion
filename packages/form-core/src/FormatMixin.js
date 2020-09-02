@@ -1,7 +1,9 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@lion/core';
+import { FormControlMixin } from './FormControlMixin.js';
 import { Unparseable } from './validate/Unparseable.js';
+import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
@@ -52,25 +54,12 @@ import { Unparseable } from './validate/Unparseable.js';
  *     Flow: serializedValue (deserializer) -> `.modelValue` (formatter) -> `.formattedValue` -> `._inputNode.value`
  *
  * @type {FormatMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormatMixinImplementation = superclass =>
-  class FormatMixin extends superclass {
+  class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
     static get properties() {
       return {
-        /**
-         * The model value is the result of the parser function(when available).
-         * It should be considered as the internal value used for validation and reasoning/logic.
-         * The model value is 'ready for consumption' by the outside world (think of a Date
-         * object or a float). The modelValue can(and is recommended to) be used as both input
-         * value and output value of the `LionField`.
-         *
-         * Examples:
-         * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
-         * - For a number input: a formatted String '1.234,56' will be converted to a Number:
-         *   1234.56
-         */
-        modelValue: { attribute: false },
-
         /**
          * The view value is the result of the formatter function (when available).
          * The result will be stored in the native _inputNode (usually an input[type=text]).
@@ -296,7 +285,7 @@ const FormatMixinImplementation = superclass =>
      */
     _onModelValueChanged(...args) {
       this._calculateValues({ source: 'model' });
-      // @ts-ignore only passing this so a subclasser can use it, but we do not use it ourselves
+      // @ts-expect-error only passing this so a subclasser can use it, but we do not use it ourselves
       this._dispatchModelValueChangedEvent(...args);
     }
 
@@ -405,7 +394,8 @@ const FormatMixinImplementation = superclass =>
         this._inputNode.removeEventListener('input', this._proxyInputEvent);
         this._inputNode.removeEventListener(
           this.formatOn,
-          this._reflectBackFormattedValueDebounced,
+          /** @type {EventListenerOrEventListenerObject} */ (this
+            ._reflectBackFormattedValueDebounced),
         );
       }
     }

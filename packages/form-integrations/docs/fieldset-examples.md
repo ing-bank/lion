@@ -53,9 +53,7 @@ export const disabled = () => {
         <lion-input name="LastName2" label="Last Name" .modelValue=${'Bar'}></lion-input>
       </lion-fieldset>
     </lion-fieldset>
-    <button @click=${toggleDisabled}>
-      Toggle disabled
-    </button>
+    <button @click=${toggleDisabled}>Toggle disabled</button>
   `;
 };
 ```
