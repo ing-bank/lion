@@ -2513,10 +2513,10 @@
   dependencies:
     semver "^7.3.2"
 
-"@web/dev-server-core@^0.2.2", "@web/dev-server-core@^0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@web/dev-server-core/-/dev-server-core-0.2.6.tgz#522e524056e184d691138a76f0afa605b639160b"
-  integrity sha512-C04oUS5LijC5rLurH/+5uRkgRgD9EVAY9tHi+TZv/57a3QvvPME6ipKbA6MFvkLdeiSdYLKNTY/shjukGfNrcg==
+"@web/dev-server-core@^0.2.2":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@web/dev-server-core/-/dev-server-core-0.2.5.tgz#f05dd29c62f303b20589e439af6a838a831b060b"
+  integrity sha512-t1R1g3/CLwgVjag075dtyCqoX9KRY4gLIXn/12h05Y+wSzuEjFkezOxhZCyDt0qUzDd2eZ60mOuyq+r5SmV7OQ==
   dependencies:
     chokidar "^3.4.0"
     clone "^2.1.2"
@@ -2532,7 +2532,28 @@
     parse5 "^6.0.0"
     picomatch "^2.2.2"
 
-"@web/dev-server-legacy@^0.1.1", "@web/dev-server-legacy@^0.1.2":
+"@web/dev-server-legacy@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@web/dev-server-legacy/-/dev-server-legacy-0.1.1.tgz#1f719610710aaf5608b952defa901c8590173201"
+  integrity sha512-mf/p35fOtT05PTdFQsJy8B69lhXn7JfOaGJTg0bijm1QH7NTkT50ECAL3l76B9bk5ExmYWRSIqLKhq3iFTJOCA==
+  dependencies:
+    "@babel/core" "^7.10.5"
+    "@babel/plugin-proposal-dynamic-import" "^7.10.4"
+    "@babel/plugin-syntax-class-properties" "^7.10.4"
+    "@babel/plugin-syntax-import-meta" "^7.10.4"
+    "@babel/plugin-syntax-numeric-separator" "^7.10.4"
+    "@babel/plugin-transform-modules-systemjs" "^7.10.5"
+    "@babel/plugin-transform-template-literals" "^7.10.5"
+    "@babel/preset-env" "^7.10.4"
+    "@web/dev-server-core" "^0.2.1"
+    browserslist "^4.13.0"
+    browserslist-useragent "^3.0.3"
+    caniuse-api "^3.0.0"
+    parse5 "^6.0.0"
+    polyfills-loader "^1.6.1"
+    valid-url "^1.0.9"
+
+"@web/dev-server-legacy@^0.1.2":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@web/dev-server-legacy/-/dev-server-legacy-0.1.3.tgz#3b508062b14b502a1b8621802875ba01b234d690"
   integrity sha512-PbsDnRKfiCtN5hSrxVpT1EOZofpEl009oF72m30YOu/m+cIef6rAPyk+MgKNXsiq3iob+u/zYqTKj0F5/jVj1A==
@@ -2553,14 +2574,14 @@
     polyfills-loader "^1.6.1"
     valid-url "^1.0.9"
 
-"@web/dev-server-rollup@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@web/dev-server-rollup/-/dev-server-rollup-0.2.4.tgz#45bb4595eee9af1b3f1b23ebd623ee7bc53922b2"
-  integrity sha512-NpW5BRkpzHZXtH73bH4JI/TqIuv4UHxo0LWjqN4V44xweC1mnTL6mzjYDy/HxfscrYs6pp1s2d+hJ2Lb5uldFQ==
+"@web/dev-server-rollup@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@web/dev-server-rollup/-/dev-server-rollup-0.2.3.tgz#e95cc3090cb624084c90f5a7f31bb3fc85fd9b53"
+  integrity sha512-rR7jM4EW1fsTYb2/RksCNPWlDteJXdnoGq7OGAV6+qDk0JvO4GnsIRLcFcKuCEcjgK9oP2ZgqLdv9qMxkzc4ng==
   dependencies:
-    "@web/dev-server-core" "^0.2.6"
+    "@web/dev-server-core" "^0.2.2"
     "@web/test-runner-chrome" "^0.6.4"
-    "@web/test-runner-core" "^0.7.5"
+    "@web/test-runner-core" "^0.7.4"
     chalk "^4.1.0"
     parse5 "^6.0.1"
     rollup "^2.20.0"
@@ -2624,13 +2645,13 @@
   dependencies:
     "@web/test-runner-core" "^0.7.4"
 
-"@web/test-runner-core@^0.7.4", "@web/test-runner-core@^0.7.5":
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/@web/test-runner-core/-/test-runner-core-0.7.5.tgz#8050d97a4e275be122a2dc46334f02c05b52b358"
-  integrity sha512-5V9gEYL8a6nxurXKFR/RigRQdYs67jO7Mo3Uj/XbGO54guZktOLCsCtkPCSsYGuNkerVUpyOAKX76ftuOTwblQ==
+"@web/test-runner-core@^0.7.4":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@web/test-runner-core/-/test-runner-core-0.7.4.tgz#ee8f031c893b32009ce29002f0de865e2aa718da"
+  integrity sha512-DS/BxZTjG64HGObybmSus7GRuWoPaNnPt44pTXSWpIxMvRB3nv/Q2I+wE0Nx66PhC/uM2L74o+CIT+g7qRWsdg==
   dependencies:
     "@babel/code-frame" "^7.10.4"
-    "@web/dev-server-core" "^0.2.6"
+    "@web/dev-server-core" "^0.2.2"
     co-body "^6.0.0"
     debounce "^1.2.0"
     deepmerge "^4.2.2"
@@ -2684,17 +2705,17 @@
     "@web/test-runner-core" "^0.7.4"
     selenium-webdriver "^4.0.0-alpha.7"
 
-"@web/test-runner@^0.7.3":
-  version "0.7.14"
-  resolved "https://registry.yarnpkg.com/@web/test-runner/-/test-runner-0.7.14.tgz#ac5840318d0f725a767b895fabeed83ae1e3fcbb"
-  integrity sha512-tbmEb/1H1KS1vgY6hRMhJgBtynRw+YRufptFkzwxsdAnMM6iHm6lCAGeFOBb96LawDBC+8IWauYtr/IHYLkhhg==
+"@web/test-runner@^0.7.13":
+  version "0.7.13"
+  resolved "https://registry.yarnpkg.com/@web/test-runner/-/test-runner-0.7.13.tgz#8bfb9cd249e1bbd5fb5f0c2716689e137922f2ae"
+  integrity sha512-DOhWTQqKSxUVVq3e409sjCCmZEJo7k1kMv3DqRW8668bsD0KG+YR5SEIWIIg7BuUHDS40cnjWOmnLo4ttRJj7g==
   dependencies:
     "@rollup/plugin-node-resolve" "^8.1.0"
-    "@web/dev-server-rollup" "^0.2.4"
+    "@web/dev-server-rollup" "^0.2.3"
     "@web/test-runner-chrome" "^0.6.4"
     "@web/test-runner-cli" "^0.5.6"
     "@web/test-runner-commands" "^0.1.3"
-    "@web/test-runner-core" "^0.7.5"
+    "@web/test-runner-core" "^0.7.4"
     "@web/test-runner-mocha" "^0.3.3"
     command-line-args "^5.1.1"
     deepmerge "^4.2.2"
@@ -7430,7 +7451,7 @@ lit-element@^2.2.1, lit-element@^2.3.1, lit-element@~2.4.0:
   dependencies:
     lit-html "^1.1.1"
 
-lit-html@^1.0.0, lit-html@^1.1.1, lit-html@^1.2.1:
+lit-html@^1.0.0, lit-html@^1.1.1, lit-html@^1.2.1, lit-html@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.3.0.tgz#c80f3cc5793a6dea6c07172be90a70ab20e56034"
   integrity sha512-0Q1bwmaFH9O14vycPHw8C/IeHMk/uSDldVLIefu/kfbTBGIc44KGH6A8p1bDfxUfHdc8q6Ct7kQklWoHgr4t1Q==

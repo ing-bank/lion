@@ -90,12 +90,6 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     this.__setupRepositionCompletePromise();
   }
 
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
-  }
-
   render() {
     return html`
       <slot name="invoker"></slot>
