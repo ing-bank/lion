@@ -46,6 +46,7 @@ const FormRegistrarMixinImplementation = superclass =>
 
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
       this.addEventListener('form-element-register', this._onRequestToAddFormElement);
+      this.addEventListener('remove-form-element-register', this._onRequestToRemoveFormElement);
     }
 
     /**
@@ -64,6 +65,7 @@ const FormRegistrarMixinImplementation = superclass =>
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
       // eslint-disable-next-line no-param-reassign
       child.__parentFormGroup = this;
+      console.log('FORM REGISTRAR MIXIN ADD FORMELEMENT', child, child.__parentFormGroup);
 
       // 1. Add children as array element
       if (indexToInsertAt > 0) {
@@ -111,6 +113,12 @@ const FormRegistrarMixinImplementation = superclass =>
     removeFormElement(child) {
       // 1. Handle array based children
       const index = this.formElements.indexOf(child);
+      console.log('FORMREGISTRARMIXIN removeFormElement INIT', {
+        child,
+        elements: this.formElements,
+        index,
+      });
+
       if (index > -1) {
         this.formElements.splice(index, 1);
       }
@@ -128,6 +136,11 @@ const FormRegistrarMixinImplementation = superclass =>
           delete this.formElements[name];
         }
       }
+      console.log('FORMREGISTRARMIXIN removeFormElement', {
+        child,
+        elements: this.formElements,
+        index,
+      });
     }
 
     /**
@@ -159,6 +172,7 @@ const FormRegistrarMixinImplementation = superclass =>
      */
     _onRequestToRemoveFormElement(ev) {
       const child = ev.detail.element;
+      console.log('_onRequestToRemoveFormElement', { child });
       if (child === this) {
         // as we fire and listen - don't remove ourselves
         return;

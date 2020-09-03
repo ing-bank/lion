@@ -87,10 +87,12 @@ export const FormGroupMixin = dedupeMixin(
       }
 
       get serializedValue() {
+        console.log('serializedValue', this.formElements.length);
         return this._getFromAllFormElements('serializedValue');
       }
 
       set serializedValue(values) {
+        console.log('setter');
         if (this.__isInitialSerializedValue) {
           this.__isInitialSerializedValue = false;
           this.registrationComplete.then(() => {
