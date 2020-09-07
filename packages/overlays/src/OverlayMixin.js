@@ -84,7 +84,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable method `_defineOverlay`
+     * @overridable method `_defineOverlayConfig`
      * @desc returns an object with default configuration options for your overlay component.
      * This is generally speaking easier to override than _defineOverlay method entirely.
      * @returns {OverlayConfig}
@@ -97,7 +97,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @param {{ has: (arg0: string) => any; }} changedProperties
+     * @param {import('lit-element').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);
@@ -270,7 +270,8 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     __teardownSyncFromOverlayController() {
-      /** @type {OverlayController} */ (this._overlayCtrl).removeEventListener(
+      /** @type {OverlayController} */
+      (this._overlayCtrl).removeEventListener(
         'show',
         /** @type {EventListener} */ (this.__onOverlayCtrlShow),
       );
@@ -290,9 +291,11 @@ export const OverlayMixinImplementation = superclass =>
 
     __syncToOverlayController() {
       if (this.opened) {
-        /** @type {OverlayController} */ (this._overlayCtrl).show();
+        /** @type {OverlayController} */
+        (this._overlayCtrl).show();
       } else {
-        /** @type {OverlayController} */ (this._overlayCtrl).hide();
+        /** @type {OverlayController} */
+        (this._overlayCtrl).hide();
       }
     }
   };

@@ -22,7 +22,6 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  */
-// @ts-expect-error base constructors same return type
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
@@ -64,7 +63,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   get _scrollTargetNode() {
-    // @ts-expect-error _scrollTargetNode not on type
     return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
   }
 
@@ -416,8 +414,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.opened = false;
   }
 
-  _setupListboxNodeInteractions() {
-    super._setupListboxNodeInteractions();
+  _setupListboxNode() {
+    super._setupListboxNode();
     this._listboxNode.addEventListener('click', this._listboxOnClick);
   }
 
