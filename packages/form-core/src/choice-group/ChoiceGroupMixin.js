@@ -7,6 +7,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
  * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
  */
 
 /**
@@ -14,6 +15,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const ChoiceGroupMixinImplementation = superclass =>
+  // @ts-expect-error
   class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
     static get properties() {
       return {
@@ -32,25 +34,27 @@ const ChoiceGroupMixinImplementation = superclass =>
     get modelValue() {
       const elems = this._getCheckedElements();
       if (this.multipleChoice) {
-        return elems.map(el => el.modelValue.value);
+        return elems.map(el => el.choiceValue);
       }
-      return elems[0] ? elems[0].modelValue.value : '';
+      return elems[0] ? elems[0].choiceValue : '';
     }
 
     set modelValue(value) {
       /**
-       * @param {{ modelValue: { value: any; }; }} el
+       * @param {ChoiceInputHost} el
        * @param {any} val
        */
-      const checkCondition = (el, val) => el.modelValue.value === val;
+      const checkCondition = (el, val) => el.choiceValue === val;
 
       if (this.__isInitialModelValue) {
         this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
           this._setCheckedElements(value, checkCondition);
         });
+        this.requestUpdate('modelValue');
       } else {
         this._setCheckedElements(value, checkCondition);
+        this.requestUpdate('modelValue');
       }
     }
 
@@ -72,7 +76,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     set serializedValue(value) {
       /**
-       * @param {{ serializedValue: { value: any; }; }} el
+       * @param {ChoiceInputHost} el
        * @param {string} val
        */
       const checkCondition = (el, val) => el.serializedValue.value === val;
@@ -81,9 +85,11 @@ const ChoiceGroupMixinImplementation = superclass =>
         this.__isInitialSerializedValue = false;
         this.registrationComplete.then(() => {
           this._setCheckedElements(value, checkCondition);
+          this.requestUpdate('serializedValue');
         });
       } else {
         this._setCheckedElements(value, checkCondition);
+        this.requestUpdate('serializedValue');
       }
     }
 

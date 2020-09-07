@@ -10,15 +10,6 @@ import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
  */
 
-// class InputField extends LionField {
-//   get slots() {
-//     return {
-//       ...super.slots,
-//       input: () => document.createElement('input'),
-//     };
-//   }
-// }
-
 describe('ChoiceInputMixin', () => {
   /** @typedef {Element & ChoiceClass} ChoiceInput  */
   class ChoiceClass extends ChoiceInputMixin(LionInput) {

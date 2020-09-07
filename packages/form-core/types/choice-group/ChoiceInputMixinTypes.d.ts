@@ -7,8 +7,15 @@ export interface ChoiceInputModelValue {
   value: any;
 }
 
+/** TODO: legacy code: serialization should happen on choice-group level */
+export interface ChoiceInputSerializedValue {
+  checked: boolean;
+  value: string;
+}
+
 export declare class ChoiceInputHost {
   modelValue: ChoiceInputModelValue;
+  serializedValue: ChoiceInputSerializedValue;
 
   get choiceValue(): any;
 

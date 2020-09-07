@@ -40,11 +40,26 @@ const FormControlMixinImplementation = superclass =>
           reflect: true,
         },
         /**
-         * When no light dom defined and prop set
+         * A Boolean attribute which, if present, indicates that the user should not be able to edit
+         * the value of the input. The difference between disabled and readonly is that read-only
+         * controls can still function, whereas disabled controls generally do not function as
+         * controls until they are enabled.
+         *
+         * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+         */
+        readOnly: {
+          type: Boolean,
+          attribute: 'readonly',
+          reflect: true,
+        },
+        /**
+         * The label text for the input node.
+         * When no light dom defined via [slot=label], this value will be used
          */
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
         /**
-         * When no light dom defined and prop set
+         * The helpt text for the input node.
+         * When no light dom defined via [slot=help-text], this value will be used
          */
         helpText: {
           type: String,
