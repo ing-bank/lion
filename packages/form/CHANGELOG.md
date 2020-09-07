@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.22
+
+### Patch Changes
+
+- Updated dependencies [874ff483]
+  - @lion/core@0.11.0
+  - @lion/fieldset@0.14.8
+
 ## 0.6.21
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- 874ff483: Form-core typings
+
+  #### Features
+
+  Provided typings for the form-core package and core package.
+  This also means that mixins that previously had implicit dependencies, now have explicit ones.
+
+  #### Patches
+
+  - lion-select-rich: invoker selectedElement now also clones text nodes (fix)
+  - fieldset: runs a FormGroup suite
+
 ## 0.10.0
 
 ### Minor Changes

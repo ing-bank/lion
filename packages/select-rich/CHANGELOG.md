@@ -1,5 +1,37 @@
 # Change Log
 
+## 0.21.0
+
+### Minor Changes
+
+- 26f683d0: - Make the OverlayController constructor phase synchronous.
+  - Trigger a setup of the OverlayController on every connectedCallback
+  - Execute a new OverlayController after (shadowDom) rendering of the element is done
+  - Teardown the OverlayController on every disconnectedCallback
+  - This means moving a dialog triggers teardown in the old location and setup in the new location
+  - Restore the original light dom (if needed) in the teardown phase of the OverlayController
+
+### Patch Changes
+
+- 874ff483: Form-core typings
+
+  #### Features
+
+  Provided typings for the form-core package and core package.
+  This also means that mixins that previously had implicit dependencies, now have explicit ones.
+
+  #### Patches
+
+  - lion-select-rich: invoker selectedElement now also clones text nodes (fix)
+  - fieldset: runs a FormGroup suite
+
+- Updated dependencies [874ff483]
+- Updated dependencies [26f683d0]
+  - @lion/form-core@0.6.0
+  - @lion/core@0.11.0
+  - @lion/overlays@0.18.0
+  - @lion/button@0.7.12
+
 ## 0.20.0
 
 ### Minor Changes

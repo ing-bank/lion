@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.18.0
+
+### Minor Changes
+
+- 26f683d0: - Make the OverlayController constructor phase synchronous.
+  - Trigger a setup of the OverlayController on every connectedCallback
+  - Execute a new OverlayController after (shadowDom) rendering of the element is done
+  - Teardown the OverlayController on every disconnectedCallback
+  - This means moving a dialog triggers teardown in the old location and setup in the new location
+  - Restore the original light dom (if needed) in the teardown phase of the OverlayController
+
+### Patch Changes
+
+- Updated dependencies [874ff483]
+  - @lion/core@0.11.0
+
 ## 0.17.0
 
 ### Minor Changes
