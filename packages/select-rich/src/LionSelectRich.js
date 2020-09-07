@@ -1,19 +1,16 @@
-import {
-  ChoiceGroupMixin,
-  FormControlMixin,
-  FormRegistrarMixin,
-  InteractionStateMixin,
-  ValidateMixin,
-} from '@lion/form-core';
-import { css, html, LitElement, ScopedElementsMixin, SlotMixin } from '@lion/core';
-
+import { LionListbox } from '@lion/listbox';
+import { html, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
-import './differentKeyNamesShimIE.js';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
-function uuid() {
-  return Math.random().toString(36).substr(2, 10);
-}
+/**
+ * @typedef {import('@lion/listbox').LionOptions} LionOptions
+ */
+
+/**
+ * @typedef {import('@open-wc/scoped-elements/src/types').ScopedElementsHost} ScopedElementsHost
+ */
 
 function detectInteractionMode() {
   if (navigator.appVersion.indexOf('Mac') !== -1) {
@@ -22,41 +19,11 @@ function detectInteractionMode() {
   return 'windows/linux';
 }
 
-function isInView(container, element, partial = false) {
-  const cTop = container.scrollTop;
-  const cBottom = cTop + container.clientHeight;
-  const eTop = element.offsetTop;
-  const eBottom = eTop + element.clientHeight;
-  const isTotal = eTop >= cTop && eBottom <= cBottom;
-  let isPartial;
-
-  if (partial === true) {
-    isPartial = (eTop < cTop && eBottom > cTop) || (eBottom > cBottom && eTop < cBottom);
-  } else if (typeof partial === 'number') {
-    if (eTop < cTop && eBottom > cTop) {
-      isPartial = ((eBottom - cTop) * 100) / element.clientHeight > partial;
-    } else if (eBottom > cBottom && eTop < cBottom) {
-      isPartial = ((cBottom - eTop) * 100) / element.clientHeight > partial;
-    }
-  }
-  return isTotal || isPartial;
-}
-
 /**
  * LionSelectRich: wraps the <lion-listbox> element
- *
- * @customElement lion-select-rich
- * @extends {LitElement}
  */
-export class LionSelectRich extends ScopedElementsMixin(
-  ChoiceGroupMixin(
-    OverlayMixin(
-      FormRegistrarMixin(
-        InteractionStateMixin(ValidateMixin(FormControlMixin(SlotMixin(LitElement)))),
-      ),
-    ),
-  ),
-) {
+// @ts-expect-error base constructors same return type
+export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
       ...super.scopedElements,
@@ -66,174 +33,109 @@ export class LionSelectRich extends ScopedElementsMixin(
 
   static get properties() {
     return {
-      disabled: {
+      navigateWithinInvoker: {
         type: Boolean,
-        reflect: true,
+        attribute: 'navigate-within-invoker',
       },
-
-      readOnly: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'readonly',
-      },
-
       interactionMode: {
         type: String,
         attribute: 'interaction-mode',
       },
-
-      /**
-       * When setting this to true, on initial render, no option will be selected.
-       * It it advisable to override `_noSelectionTemplate` method in the select-invoker
-       * to render some kind of placeholder initially
-       */
-      hasNoDefaultSelected: {
+      singleOption: {
         type: Boolean,
         reflect: true,
-        attribute: 'has-no-default-selected',
+        attribute: 'single-option',
       },
     };
-  }
-
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-        }
-
-        :host([hidden]) {
-          display: none;
-        }
-
-        :host([disabled]) {
-          color: #adadad;
-        }
-      `,
-    ];
   }
 
   get slots() {
     return {
       ...super.slots,
-      invoker: () =>
-        document.createElement(this.constructor.getScopedTagName('lion-select-invoker')),
+      invoker: () => document.createElement(LionSelectRich.getScopedTagName('lion-select-invoker')),
     };
   }
 
+  /** @type {LionSelectInvoker} */
   get _invokerNode() {
-    return Array.from(this.children).find(child => child.slot === 'invoker');
-  }
-
-  get _listboxNode() {
-    return (
-      (this._overlayCtrl && this._overlayCtrl.contentNode) ||
-      Array.from(this.children).find(child => child.slot === 'input')
-    );
-  }
-
-  get _listboxActiveDescendantNode() {
-    return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
-  }
-
-  get serializedValue() {
-    return this.modelValue;
-  }
-
-  // Duplicating from FormGroupMixin, because you cannot independently inherit/override getter + setter.
-  // If you override one, gotta override the other, they go in pairs.
-  set serializedValue(value) {
-    super.serializedValue = value;
-  }
-
-  get checkedIndex() {
-    let checkedIndex = -1;
-    this.formElements.forEach((option, i) => {
-      if (option.checked) {
-        checkedIndex = i;
-      }
-    });
-    return checkedIndex;
-  }
-
-  set checkedIndex(index) {
-    if (this._listboxNode.children[index]) {
-      this._listboxNode.children[index].checked = true;
-    }
-  }
-
-  get activeIndex() {
-    return this.formElements.findIndex(el => el.active === true);
+    return /** @type {LionSelectInvoker} */ (Array.from(this.children).find(
+      child => child.slot === 'invoker',
+    ));
   }
 
   get _scrollTargetNode() {
+    // @ts-expect-error _scrollTargetNode not on type
     return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
   }
 
-  set activeIndex(index) {
-    if (this.formElements[index]) {
-      const el = this.formElements[index];
-      el.active = true;
+  get checkedIndex() {
+    return /** @type {number} */ (super.checkedIndex);
+  }
 
-      if (!isInView(this._scrollTargetNode, el)) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
+  set checkedIndex(i) {
+    super.checkedIndex = i;
   }
 
   constructor() {
     super();
-    this.interactionMode = 'auto';
-    this.disabled = false;
-    // for interaction states
-    this._listboxActiveDescendant = null;
-    this.__hasInitialSelectedFormElement = false;
-    this.hasNoDefaultSelected = false;
-    this._repropagationRole = 'choice-group'; // configures FormControlMixin
 
+    /**
+     * When invoker has focus, up and down arrow keys changes active state of listbox,
+     * without opening overlay.
+     * @type {Boolean}
+     */
+    this.navigateWithinInvoker = false;
+    /**
+     * Aligns behavior for 'selectionFollowFocus' and 'navigateWithinInvoker' with
+     * platform. When 'auto' (default), platform is automatically detected
+     * @type {'windows/linux'|'mac'|'auto'}
+     */
+    this.interactionMode = 'auto';
+
+    this.singleOption = false;
+
+    this.__onKeyUp = this.__onKeyUp.bind(this);
+    this.__invokerOnBlur = this.__invokerOnBlur.bind(this);
+    this.__overlayOnHide = this.__overlayOnHide.bind(this);
+    this.__overlayOnShow = this.__overlayOnShow.bind(this);
+    this.__invokerOnClick = this.__invokerOnClick.bind(this);
+    this.__overlayBeforeShow = this.__overlayBeforeShow.bind(this);
     this.__focusInvokerOnLabelClick = this.__focusInvokerOnLabelClick.bind(this);
   }
 
   connectedCallback() {
-    // need to do this before anything else
-    this._listboxNode.registrationTarget = this;
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+    super.connectedCallback();
     this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__setupInvokerNode();
-    this.__setupListboxNode();
-    this.__setupEventListeners();
-
     this.__toggleInvokerDisabled();
-
     if (this._labelNode) {
       this._labelNode.addEventListener('click', this.__focusInvokerOnLabelClick);
     }
 
-    this.registrationComplete.then(() => {
-      this.__initInteractionStates();
-    });
+    this.addEventListener('keyup', this.__onKeyUp);
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this.__toggleChecked);
+      this._labelNode.removeEventListener('click', this.__focusInvokerOnLabelClick);
     }
-    this._scrollTargetNode.removeEventListener('keydown', this.__overlayOnHide);
     this.__teardownInvokerNode();
-    this.__teardownListboxNode();
-    this.__teardownEventListeners();
+    this.removeEventListener('keyup', this.__onKeyUp);
   }
 
+  /**
+   * @param {string} name
+   * @param {unknown} oldValue
+   */
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
     if (name === 'interactionMode') {
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();
+      } else {
+        this.selectionFollowsFocus = Boolean(this.interactionMode === 'windows/linux');
+        this.navigateWithinInvoker = Boolean(this.interactionMode === 'windows/linux');
       }
     }
 
@@ -256,35 +158,21 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.initInteractionState();
   }
 
-  get _inputNode() {
-    // In FormControl, we get direct child [slot="input"]. This doesn't work, because the overlay
-    // system wraps it in [slot="_overlay-shadow-outlet"]
-    return this.querySelector('[slot="input"]');
-  }
-
-  render() {
-    return html`
-      ${this._labelTemplate()} ${this._helpTextTemplate()} ${this._inputGroupTemplate()}
-      ${this._feedbackTemplate()}
-      <slot name="_overlay-shadow-outlet"></slot>
-    `;
-  }
-
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
 
     if (this.formElements.length === 1) {
-      this.singleOption = true;
       this._invokerNode.singleOption = true;
     }
 
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this._invokerNode.makeRequestToBeDisabled();
-        this.__requestOptionsToBeDisabled();
       } else {
         this._invokerNode.retractRequestToBeDisabled();
-        this.__retractRequestOptionsToBeDisabled();
       }
     }
 
@@ -299,13 +187,13 @@ export class LionSelectRich extends ScopedElementsMixin(
       if (changedProperties.has('_ariaDescribedNodes')) {
         this._invokerNode.setAttribute(
           'aria-describedby',
-          this._inputNode.getAttribute('aria-describedby'),
+          /** @type {string} */ (this._inputNode.getAttribute('aria-describedby')),
         );
       }
 
       if (changedProperties.has('showsFeedbackFor')) {
         // The ValidateMixin sets aria-invalid on the inputNode, but in this component we also need it on the invoker
-        this._invokerNode.setAttribute('aria-invalid', this._hasFeedbackVisibleFor('error'));
+        this._invokerNode.setAttribute('aria-invalid', `${this._hasFeedbackVisibleFor('error')}`);
       }
     }
 
@@ -314,6 +202,7 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
   }
 
+  /** @deprecated. use _overlayCtrl.toggle */
   toggle() {
     this.opened = !this.opened;
   }
@@ -321,7 +210,7 @@ export class LionSelectRich extends ScopedElementsMixin(
   /**
    * @override
    */
-  // eslint-disable-next-line
+  // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
@@ -334,99 +223,11 @@ export class LionSelectRich extends ScopedElementsMixin(
     `;
   }
 
-  /**
-   * Overrides FormRegistrar adding to make sure children have specific default states when added
-   *
-   * @override
-   * @param {*} child
-   * @param {Number} indexToInsertAt
-   */
-  addFormElement(child, indexToInsertAt) {
-    super.addFormElement(child, indexToInsertAt);
-
-    // we need to adjust the elements being registered
-    /* eslint-disable no-param-reassign */
-    child.id = child.id || `${this.localName}-option-${uuid()}`;
-
-    if (this.disabled) {
-      child.makeRequestToBeDisabled();
-    }
-
-    // the first elements checked by default
-    if (
-      !this.hasNoDefaultSelected &&
-      !this.__hasInitialSelectedFormElement &&
-      (!child.disabled || this.disabled)
-    ) {
-      child.active = true;
-      child.checked = true;
-      this.__hasInitialSelectedFormElement = true;
-    }
-
-    // TODO: small perf improvement could be made if logic below would be scheduled to next update,
-    // so it occurs once for all options
-    this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-    this.formElements.forEach((el, idx) => {
-      el.setAttribute('aria-posinset', idx + 1);
-    });
-
-    this.__proxyChildModelValueChanged({ target: child });
-    this.resetInteractionState();
-    /* eslint-enable no-param-reassign */
-  }
-
-  __setupEventListeners() {
-    this.__onChildActiveChanged = this.__onChildActiveChanged.bind(this);
-    this.__proxyChildModelValueChanged = this.__proxyChildModelValueChanged.bind(this);
-    this.__onKeyUp = this.__onKeyUp.bind(this);
-
-    this._listboxNode.addEventListener('active-changed', this.__onChildActiveChanged);
-    this._listboxNode.addEventListener('model-value-changed', this.__proxyChildModelValueChanged);
-    this.addEventListener('keyup', this.__onKeyUp);
-  }
-
-  __teardownEventListeners() {
-    this._listboxNode.removeEventListener('active-changed', this.__onChildActiveChanged);
-    this._listboxNode.removeEventListener(
-      'model-value-changed',
-      this.__proxyChildModelValueChanged,
-    );
-    this._listboxNode.removeEventListener('keyup', this.__onKeyUp);
-  }
-
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
       this._invokerNode.disabled = this.disabled;
       this._invokerNode.readOnly = this.readOnly;
     }
-  }
-
-  __onChildActiveChanged({ target }) {
-    if (target.active === true) {
-      this.formElements.forEach(formElement => {
-        if (formElement !== target) {
-          // eslint-disable-next-line no-param-reassign
-          formElement.active = false;
-        }
-      });
-      this._listboxNode.setAttribute('aria-activedescendant', target.id);
-    }
-  }
-
-  __setAttributeForAllFormElements(attribute, value) {
-    this.formElements.forEach(formElement => {
-      formElement.setAttribute(attribute, value);
-    });
-  }
-
-  __proxyChildModelValueChanged(ev) {
-    // We need to redispatch the model-value-changed event on 'this', so it will
-    // align with FormControl.__repropagateChildrenValues method. Also, this makes
-    // it act like a portal, in case the listbox is put in a modal overlay on body level.
-    if (ev.stopPropagation) {
-      ev.stopPropagation();
-    }
-    this.dispatchEvent(new CustomEvent('model-value-changed', { detail: { element: ev.target } }));
   }
 
   __syncInvokerElement() {
@@ -436,141 +237,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     }
   }
 
-  __getNextEnabledOption(currentIndex, offset = 1) {
-    for (let i = currentIndex + offset; i < this.formElements.length; i += 1) {
-      if (this.formElements[i] && !this.formElements[i].disabled) {
-        return i;
-      }
-    }
-    return currentIndex;
-  }
-
-  __getPreviousEnabledOption(currentIndex, offset = -1) {
-    for (let i = currentIndex + offset; i >= 0; i -= 1) {
-      if (this.formElements[i] && !this.formElements[i].disabled) {
-        return i;
-      }
-    }
-    return currentIndex;
-  }
-
-  /**
-   * @desc
-   * Handle various keyboard controls; UP/DOWN will shift focus; SPACE selects
-   * an item.
-   *
-   * @param ev - the keydown event object
-   */
-  __listboxOnKeyUp(ev) {
-    if (this.disabled) {
-      return;
-    }
-
-    const { key } = ev;
-
-    switch (key) {
-      case 'Escape':
-        ev.preventDefault();
-        this.opened = false;
-        break;
-      case 'Enter':
-      case ' ':
-        ev.preventDefault();
-        if (this.interactionMode === 'mac') {
-          this.checkedIndex = this.activeIndex;
-        }
-        this.opened = false;
-        break;
-      case 'ArrowUp':
-        ev.preventDefault();
-        this.activeIndex = this.__getPreviousEnabledOption(this.activeIndex);
-        break;
-      case 'ArrowDown':
-        ev.preventDefault();
-        this.activeIndex = this.__getNextEnabledOption(this.activeIndex);
-        break;
-      case 'Home':
-        ev.preventDefault();
-        this.activeIndex = this.__getNextEnabledOption(0, 0);
-        break;
-      case 'End':
-        ev.preventDefault();
-        this.activeIndex = this.__getPreviousEnabledOption(this.formElements.length - 1, 0);
-        break;
-      /* no default */
-    }
-
-    const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
-    if (keys.includes(key) && this.interactionMode === 'windows/linux') {
-      this.checkedIndex = this.activeIndex;
-    }
-  }
-
-  __listboxOnKeyDown(ev) {
-    if (this.disabled) {
-      return;
-    }
-
-    const { key } = ev;
-
-    switch (key) {
-      case 'Tab':
-        // Tab can only be caught in keydown
-        ev.preventDefault();
-        this.opened = false;
-        break;
-      /* no default */
-    }
-  }
-
-  __onKeyUp(ev) {
-    if (this.disabled) {
-      return;
-    }
-
-    if (this.opened) {
-      return;
-    }
-
-    const { key } = ev;
-    switch (key) {
-      case 'ArrowUp':
-        ev.preventDefault();
-
-        if (this.interactionMode === 'mac') {
-          this.opened = true;
-        } else {
-          this.checkedIndex = this.__getPreviousEnabledOption(this.checkedIndex);
-        }
-        break;
-      case 'ArrowDown':
-        ev.preventDefault();
-        if (this.interactionMode === 'mac') {
-          this.opened = true;
-        } else {
-          this.checkedIndex = this.__getNextEnabledOption(this.checkedIndex);
-        }
-        break;
-      /* no default */
-    }
-  }
-
-  __requestOptionsToBeDisabled() {
-    this.formElements.forEach(el => {
-      if (el.makeRequestToBeDisabled) {
-        el.makeRequestToBeDisabled();
-      }
-    });
-  }
-
-  __retractRequestOptionsToBeDisabled() {
-    this.formElements.forEach(el => {
-      if (el.retractRequestToBeDisabled) {
-        el.retractRequestToBeDisabled();
-      }
-    });
-  }
-
   __setupInvokerNode() {
     this._invokerNode.id = `invoker-${this._inputId}`;
     this._invokerNode.setAttribute('aria-haspopup', 'listbox');
@@ -578,17 +244,19 @@ export class LionSelectRich extends ScopedElementsMixin(
     this.__setupInvokerNodeEventListener();
   }
 
+  __invokerOnClick() {
+    if (!this.disabled && !this.readOnly && !this.singleOption && !this.__blockListShow) {
+      this._overlayCtrl.toggle();
+    }
+  }
+
+  __invokerOnBlur() {
+    this.dispatchEvent(new Event('blur'));
+  }
+
   __setupInvokerNodeEventListener() {
-    this.__invokerOnClick = () => {
-      if (!this.disabled && !this.readOnly && !this.singleOption) {
-        this._overlayCtrl.toggle();
-      }
-    };
     this._invokerNode.addEventListener('click', this.__invokerOnClick);
 
-    this.__invokerOnBlur = () => {
-      this.dispatchEvent(new Event('blur'));
-    };
     this._invokerNode.addEventListener('blur', this.__invokerOnBlur);
   }
 
@@ -598,46 +266,8 @@ export class LionSelectRich extends ScopedElementsMixin(
   }
 
   /**
-   * For ShadyDom the listboxNode is available right from the start so we can add those events
-   * immediately.
-   * For native ShadowDom the select gets render before the listboxNode is available so we
-   * will add an event to the slotchange and add the events once available.
+   * @override OverlayMixin
    */
-  __setupListboxNode() {
-    if (this._listboxNode) {
-      this.__setupListboxNodeEventListener();
-    } else {
-      const inputSlot = this.shadowRoot.querySelector('slot[name=input]');
-      if (inputSlot) {
-        inputSlot.addEventListener('slotchange', () => {
-          this.__setupListboxNodeEventListener();
-        });
-      }
-    }
-  }
-
-  __setupListboxNodeEventListener() {
-    this.__listboxOnClick = () => {
-      this.opened = false;
-    };
-
-    this._listboxNode.addEventListener('click', this.__listboxOnClick);
-
-    this.__listboxOnKeyUp = this.__listboxOnKeyUp.bind(this);
-    this._listboxNode.addEventListener('keyup', this.__listboxOnKeyUp);
-
-    this.__listboxOnKeyDown = this.__listboxOnKeyDown.bind(this);
-    this._listboxNode.addEventListener('keydown', this.__listboxOnKeyDown);
-  }
-
-  __teardownListboxNode() {
-    if (this._listboxNode) {
-      this._listboxNode.removeEventListener('click', this.__listboxOnClick);
-      this._listboxNode.removeEventListener('keyup', this.__listboxOnKeyUp);
-      this._listboxNode.removeEventListener('keydown', this.__listboxOnKeyDown);
-    }
-  }
-
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
@@ -653,36 +283,39 @@ export class LionSelectRich extends ScopedElementsMixin(
    */
   _noDefaultSelectedInheritsWidth() {
     if (this.checkedIndex === -1) {
-      this._overlayCtrl.inheritsReferenceWidth = 'min';
+      this._overlayCtrl.updateConfig({ inheritsReferenceWidth: 'min' });
     } else {
-      this._overlayCtrl.inheritsReferenceWidth = this._initialInheritsReferenceWidth;
+      this._overlayCtrl.updateConfig({
+        inheritsReferenceWidth: this._initialInheritsReferenceWidth,
+      });
     }
+  }
+
+  __overlayBeforeShow() {
+    if (this.hasNoDefaultSelected) {
+      this._noDefaultSelectedInheritsWidth();
+    }
+  }
+
+  __overlayOnShow() {
+    if (this.checkedIndex != null) {
+      this.activeIndex = this.checkedIndex;
+    }
+    this._listboxNode.focus();
+  }
+
+  __overlayOnHide() {
+    this._invokerNode.focus();
   }
 
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
-    this.__overlayBeforeShow = () => {
-      if (this.hasNoDefaultSelected) {
-        this._noDefaultSelectedInheritsWidth();
-      }
-    };
-    this.__overlayOnShow = () => {
-      if (this.checkedIndex != null) {
-        this.activeIndex = this.checkedIndex;
-      }
-      this._listboxNode.focus();
-    };
+
     this._overlayCtrl.addEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
 
-    this.__overlayOnHide = () => {
-      this._invokerNode.focus();
-    };
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
-
-    this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
-    this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
   }
 
   _teardownOverlayCtrl() {
@@ -690,21 +323,6 @@ export class LionSelectRich extends ScopedElementsMixin(
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
-  }
-
-  __preventScrollingWithArrowKeys(ev) {
-    if (this.disabled) {
-      return;
-    }
-    const { key } = ev;
-    switch (key) {
-      case 'ArrowUp':
-      case 'ArrowDown':
-      case 'Home':
-      case 'End':
-        ev.preventDefault();
-      /* no default */
-    }
   }
 
   __focusInvokerOnLabelClick() {
@@ -725,14 +343,103 @@ export class LionSelectRich extends ScopedElementsMixin(
     return this._listboxNode;
   }
 
-  set fieldName(value) {
-    this.__fieldName = value;
+  /**
+   * @param {KeyboardEvent} ev
+   */
+  __onKeyUp(ev) {
+    if (this.disabled) {
+      return;
+    }
+
+    if (this.opened) {
+      return;
+    }
+
+    const { key } = ev;
+    switch (key) {
+      case 'ArrowUp':
+        ev.preventDefault();
+
+        if (this.navigateWithinInvoker) {
+          this.setCheckedIndex(this._getPreviousEnabledOption(this.checkedIndex));
+        } else {
+          this.opened = true;
+        }
+        break;
+      case 'ArrowDown':
+        ev.preventDefault();
+        if (this.navigateWithinInvoker) {
+          this.setCheckedIndex(this._getNextEnabledOption(this.checkedIndex));
+        } else {
+          this.opened = true;
+        }
+        break;
+      /* no default */
+    }
   }
 
-  get fieldName() {
-    const label =
-      this.label ||
-      (this.querySelector('[slot=label]') && this.querySelector('[slot=label]').textContent);
-    return this.__fieldName || label || this.name;
+  /**
+   * @desc
+   * Handle various keyboard controls; UP/DOWN will shift focus; SPACE selects
+   * an item.
+   *
+   * @param {KeyboardEvent} ev - the keydown event object
+   */
+  _listboxOnKeyDown(ev) {
+    super._listboxOnKeyDown(ev);
+
+    if (this.disabled) {
+      return;
+    }
+    const { key } = ev;
+
+    switch (key) {
+      case 'Tab':
+        // Tab can only be caught in keydown
+        this.opened = false;
+        break;
+      /* no default */
+      case 'Escape':
+        this.opened = false;
+        this.__blockListShowDuringTransition();
+        break;
+      case 'Enter':
+      case ' ':
+        this.opened = false;
+        this.__blockListShowDuringTransition();
+        break;
+      /* no default */
+    }
+  }
+
+  _listboxOnClick = () => {
+    this.opened = false;
+  };
+
+  _setupListboxNodeInteractions() {
+    super._setupListboxNodeInteractions();
+    this._listboxNode.addEventListener('click', this._listboxOnClick);
+  }
+
+  _teardownListboxNode() {
+    super._teardownListboxNode();
+    if (this._listboxNode) {
+      this._listboxNode.removeEventListener('click', this._listboxOnClick);
+    }
+  }
+
+  /**
+   * Normally, when textbox gets focus or a char is typed, it opens listbox.
+   * In transition phases (like clicking option) we prevent this.
+   */
+  __blockListShowDuringTransition() {
+    this.__blockListShow = true;
+    // We need this timeout to make sure click handler triggered by keyup (space/enter) of
+    // button has been executed.
+    // TODO: alternative would be to let the 'checking' party 'release' this boolean
+    // Or: call 'stopPropagation' on keyup of keys that have been handled in keydown
+    setTimeout(() => {
+      this.__blockListShow = false;
+    }, 200);
   }
 }

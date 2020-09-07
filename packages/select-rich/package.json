@@ -37,6 +37,7 @@
     "@lion/button": "0.7.12",
     "@lion/core": "0.11.0",
     "@lion/form-core": "0.6.0",
+    "@lion/listbox": "0.0.0",
     "@lion/overlays": "0.18.0"
   },
   "keywords": [

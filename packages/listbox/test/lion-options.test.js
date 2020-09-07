@@ -1,13 +1,14 @@
 import { expect, fixture, html } from '@open-wc/testing';
-
+// eslint-disable-next-line no-unused-vars
+import { LionOptions } from '../src/LionOptions.js';
 import '../lion-options.js';
 
 describe('lion-options', () => {
   it('should have role="listbox"', async () => {
     const registrationTargetEl = document.createElement('div');
-    const el = await fixture(html`
+    const el = /** @type {LionOptions} */ (await fixture(html`
       <lion-options .registrationTarget=${registrationTargetEl}></lion-options>
-    `);
+    `));
     expect(el.role).to.equal('listbox');
   });
 });

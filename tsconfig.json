@@ -22,7 +22,8 @@
     "packages/form-core/**/*.js",
     "packages/overlays/**/*.js",
     "packages/tooltip/**/*.js",
-    "packages/button/src/**/*.js"
+    "packages/button/src/**/*.js",
+    "packages/listbox/src/*.js"
   ],
   "exclude": [
     "node_modules",

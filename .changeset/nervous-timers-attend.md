@@ -1,6 +1,6 @@
 ---
 '@lion/button': patch
-'@lion/overlays': patch
+'@lion/overlays': minor
 '@lion/tooltip': patch
 ---
 
