@@ -3,10 +3,16 @@ import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
 
-const withDefaultGlobalConfig = () => ({
-  placementMode: 'global',
-  contentNode: fixtureSync(html`<p>my content</p>`),
-});
+/**
+ * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig').ViewportPlacement} ViewportPlacement
+ */
+
+const withDefaultGlobalConfig = () =>
+  /** @type {OverlayConfig} */ ({
+    placementMode: 'global',
+    contentNode: fixtureSync(html`<p>my content</p>`),
+  });
 
 describe('Global Positioning', () => {
   afterEach(() => {
@@ -50,7 +56,7 @@ describe('Global Positioning', () => {
         const ctrl = new OverlayController({
           ...withDefaultGlobalConfig(),
           viewportConfig: {
-            placement: viewportPlacement,
+            placement: /** @type {ViewportPlacement} */ (viewportPlacement),
           },
         });
         await ctrl.show();

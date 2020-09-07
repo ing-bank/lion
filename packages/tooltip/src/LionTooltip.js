@@ -2,6 +2,10 @@ import { css, html, LitElement } from '@lion/core';
 import { OverlayMixin } from '@lion/overlays';
 
 /**
+ * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
+ */
+
+/**
  * @customElement lion-tooltip
  */
 export class LionTooltip extends OverlayMixin(LitElement) {
@@ -82,7 +86,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     /**
      * Decides whether the tooltip invoker text should be considered a description
      * (sets aria-describedby) or a label (sets aria-labelledby).
-     * @type {'label'\'description'}
+     * @type {'label'|'description'}
      */
     this.invokerRelation = 'description';
     this._mouseActive = false;
@@ -112,9 +116,9 @@ export class LionTooltip extends OverlayMixin(LitElement) {
 
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    return {
+    return /** @type {OverlayConfig} */ ({
       placementMode: 'local',
-      elementToFocusAfterHide: null,
+      elementToFocusAfterHide: undefined,
       hidesOnEsc: true,
       hidesOnOutsideEsc: true,
       popperConfig: {
@@ -137,7 +141,7 @@ export class LionTooltip extends OverlayMixin(LitElement) {
       handlesAccessibility: true,
       isTooltip: true,
       invokerRelation: this.invokerRelation,
-    };
+    });
   }
 
   __setupRepositionCompletePromise() {
@@ -147,15 +151,21 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   get _arrowNode() {
-    return this.shadowRoot.querySelector('[x-arrow]');
+    return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[x-arrow]');
   }
 
+  /**
+   * @param {import("popper.js").default.Data} data
+   */
   __syncFromPopperState(data) {
     if (!data) {
       return;
     }
-    if (this._arrowNode && data.placement !== this._arrowNode.placement) {
-      this.__repositionCompleteResolver(data.placement);
+    if (
+      this._arrowNode &&
+      data.placement !== /** @type {Element & {placement:string}} */ (this._arrowNode).placement
+    ) {
+      /** @type {function} */ (this.__repositionCompleteResolver)(data.placement);
       this.__setupRepositionCompletePromise();
     }
   }

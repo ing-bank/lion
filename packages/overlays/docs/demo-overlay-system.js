@@ -1,19 +1,28 @@
 import { html, LitElement } from '@lion/core';
 import { OverlayMixin } from '../src/OverlayMixin.js';
 
+/**
+ * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ */
 class DemoOverlaySystem extends OverlayMixin(LitElement) {
+  constructor() {
+    super();
+    this.__toggle = this.__toggle.bind(this);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    return {
+    return /** @type {OverlayConfig} */ ({
       placementMode: 'global',
-    };
+    });
+  }
+
+  __toggle() {
+    this.opened = !this.opened;
   }
 
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this.__toggle = () => {
-      this.opened = !this.opened;
-    };
 
     if (this._overlayInvokerNode) {
       this._overlayInvokerNode.addEventListener('click', this.__toggle);

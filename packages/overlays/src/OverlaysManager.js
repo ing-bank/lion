@@ -1,23 +1,11 @@
 import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js';
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
-const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
-
 /**
- * @typedef {object} OverlayController
- * @param {(object) => TemplateResult} contentTemplate the template function
- * which is called on update
- * @param {(boolean, object) => void} sync updates shown state and data all together
- * @param {(object) => void} update updates the overlay (with data if provided as a first argument)
- * @param {Function} show shows the overlay
- * @param {Function} hide hides the overlay
- * @param {boolean} hasBackdrop displays a gray backdrop while the overlay is opened
- * @param {boolean} isBlocking hides all other overlays once shown
- * @param {boolean} preventsScroll prevents scrolling the background
- *   while this overlay is opened
- * @param {boolean} trapsKeyboardFocus keeps focus within the overlay,
- *   and prevents interaction with the overlay background
+ * @typedef {import('./OverlayController.js').OverlayController} OverlayController
  */
+
+const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
 /**
  * `OverlaysManager` which manages overlays which are rendered into the body
@@ -42,12 +30,13 @@ export class OverlaysManager {
    * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
    */
+  // eslint-disable-next-line class-methods-use-this
   get globalRootNode() {
-    if (!this.constructor.__globalRootNode) {
-      this.constructor.__globalRootNode = this.constructor.__createGlobalRootNode();
-      this.constructor.__globalStyleNode = this.constructor.__createGlobalStyleNode();
+    if (!OverlaysManager.__globalRootNode) {
+      OverlaysManager.__globalRootNode = OverlaysManager.__createGlobalRootNode();
+      OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
     }
-    return this.constructor.__globalRootNode;
+    return OverlaysManager.__globalRootNode;
   }
 
   /**
@@ -67,9 +56,12 @@ export class OverlaysManager {
   }
 
   constructor() {
+    /** @type {OverlayController[]} */
     this.__list = [];
+    /** @type {OverlayController[]} */
     this.__shownList = [];
     this.__siblingsInert = false;
+    /** @type {WeakMap<OverlayController, OverlayController[]>} */
     this.__blockingMap = new WeakMap();
   }
 
@@ -86,6 +78,9 @@ export class OverlaysManager {
     return ctrlToAdd;
   }
 
+  /**
+   * @param {OverlayController} ctrlToRemove
+   */
   remove(ctrlToRemove) {
     if (!this.list.find(ctrl => ctrlToRemove === ctrl)) {
       throw new Error('could not find controller to remove');
@@ -93,6 +88,9 @@ export class OverlaysManager {
     this.__list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
   }
 
+  /**
+   * @param {OverlayController} ctrlToShow
+   */
   show(ctrlToShow) {
     if (this.list.find(ctrl => ctrlToShow === ctrl)) {
       this.hide(ctrlToShow);
@@ -108,6 +106,9 @@ export class OverlaysManager {
       });
   }
 
+  /**
+   * @param {any} ctrlToHide
+   */
   hide(ctrlToHide) {
     if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
       throw new Error('could not find controller to hide');
@@ -124,13 +125,17 @@ export class OverlaysManager {
     this.__shownList = [];
     this.__siblingsInert = false;
 
-    const rootNode = this.constructor.__globalRootNode;
+    const rootNode = OverlaysManager.__globalRootNode;
     if (rootNode) {
-      rootNode.parentElement.removeChild(rootNode);
-      this.constructor.__globalRootNode = undefined;
+      if (rootNode.parentElement) {
+        rootNode.parentElement.removeChild(rootNode);
+      }
+      OverlaysManager.__globalRootNode = undefined;
 
-      document.head.removeChild(this.constructor.__globalStyleNode);
-      this.constructor.__globalStyleNode = undefined;
+      document.head.removeChild(
+        /** @type {HTMLStyleElement} */ (OverlaysManager.__globalStyleNode),
+      );
+      OverlaysManager.__globalStyleNode = undefined;
     }
   }
 
@@ -150,13 +155,14 @@ export class OverlaysManager {
 
   informTrapsKeyboardFocusGotEnabled() {
     if (this.siblingsInert === false) {
-      if (this.constructor.__globalRootNode) {
+      if (OverlaysManager.__globalRootNode) {
         setSiblingsInert(this.globalRootNode);
       }
       this.__siblingsInert = true;
     }
   }
 
+  // @ts-ignore
   informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
     const next = this.shownList.find(
       ctrl => ctrl !== disabledCtrl && ctrl.trapsKeyboardFocus === true,
@@ -166,7 +172,7 @@ export class OverlaysManager {
         next.enableTrapsKeyboardFocus();
       }
     } else if (this.siblingsInert === true) {
-      if (this.constructor.__globalRootNode) {
+      if (OverlaysManager.__globalRootNode) {
         unsetSiblingsInert(this.globalRootNode);
       }
       this.__siblingsInert = false;
@@ -195,7 +201,10 @@ export class OverlaysManager {
     }
   }
 
-  /** Blocking */
+  /**
+   * Blocking
+   * @param {OverlayController} blockingCtrl
+   */
   requestToShowOnly(blockingCtrl) {
     const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
 
@@ -203,10 +212,19 @@ export class OverlaysManager {
     this.__blockingMap.set(blockingCtrl, controllersToHide);
   }
 
+  /**
+   * @param {OverlayController} blockingCtrl
+   */
   retractRequestToShowOnly(blockingCtrl) {
     if (this.__blockingMap.has(blockingCtrl)) {
-      const controllersWhichGotHidden = this.__blockingMap.get(blockingCtrl);
+      const controllersWhichGotHidden = /** @type {OverlayController[]} */ (this.__blockingMap.get(
+        blockingCtrl,
+      ));
       controllersWhichGotHidden.map(ctrl => ctrl.show());
     }
   }
 }
+/** @type {HTMLElement | undefined} */
+OverlaysManager.__globalRootNode = undefined;
+/** @type {HTMLStyleElement | undefined} */
+OverlaysManager.__globalStyleNode = undefined;

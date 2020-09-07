@@ -6,7 +6,7 @@
  */
 export function normalizeTransformStyle(cssValue) {
   // eslint-disable-next-line no-unused-vars
-  const [_, transformType, positionPart] = cssValue.match(/(.*)\((.*?)\)/);
+  const [, transformType, positionPart] = cssValue.match(/(.*)\((.*?)\)/) || [];
   const normalizedNumbers = positionPart
     .split(',')
     .map(p => Math.round(Number(p.replace('px', ''))));

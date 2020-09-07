@@ -45,7 +45,7 @@ export function rotateFocus(rootElement, e) {
   const [first, last] = boundaryEls;
 
   // Get the currently focused element
-  const activeElement = getDeepActiveElement();
+  const activeElement = /** @type {HTMLElement} */ (getDeepActiveElement());
 
   /**
    * If currently focused on the root element or an element contained within the root element:
@@ -74,7 +74,8 @@ export function containFocus(rootElement) {
   const focusableElements = getFocusableElements(rootElement);
   // Initial focus goes to first element with autofocus, or the root element
   const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
-  let /** @type {HTMLElement} */ tabDetectionElement;
+  /** @type {HTMLElement} */
+  let tabDetectionElement;
 
   // If root element will receive focus, it should have a tabindex of -1.
   // This makes it focusable through js, but it won't appear in the tab order
@@ -103,7 +104,9 @@ export function containFocus(rootElement) {
   }
 
   function isForwardTabInWindow() {
-    const compareMask = tabDetectionElement.compareDocumentPosition(document.activeElement);
+    const compareMask = tabDetectionElement.compareDocumentPosition(
+      /** @type {Element} */ (document.activeElement),
+    );
     return compareMask === Node.DOCUMENT_POSITION_PRECEDING;
   }
 
