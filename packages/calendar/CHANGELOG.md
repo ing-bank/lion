@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- 5a750408: Make button text clickable by setting pointer-events to none
+- Updated dependencies [874ff483]
+  - @lion/core@0.11.0
+  - @lion/localize@0.14.3
+
 ## 0.11.0
 
 ### Minor Changes
