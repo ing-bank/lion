@@ -1,12 +1,16 @@
-export const withModalDialogConfig = () => ({
-  placementMode: 'global',
-  viewportConfig: {
-    placement: 'center',
-  },
+/**
+ * @typedef {import('../../types/OverlayConfig').OverlayConfig} OverlayConfig
+ */
 
-  hasBackdrop: true,
-  preventsScroll: true,
-  trapsKeyboardFocus: true,
-  hidesOnEsc: true,
-  handlesAccessibility: true,
-});
+export const withModalDialogConfig = () =>
+  /** @type {OverlayConfig} */ ({
+    placementMode: 'global',
+    viewportConfig: {
+      placement: 'center',
+    },
+    hasBackdrop: true,
+    preventsScroll: true,
+    trapsKeyboardFocus: true,
+    hidesOnEsc: true,
+    handlesAccessibility: true,
+  });

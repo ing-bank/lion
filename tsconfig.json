@@ -19,7 +19,10 @@
     "packages/tabs/**/*.js",
     "packages/singleton-manager/**/*.js",
     "packages/localize/**/*.js",
-    "packages/form-core/**/*.js"
+    "packages/form-core/**/*.js",
+    "packages/overlays/**/*.js",
+    "packages/tooltip/**/*.js",
+    "packages/button/src/**/*.js"
   ],
   "exclude": [
     "node_modules",

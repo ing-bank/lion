@@ -1,6 +1,17 @@
 import { expect, fixture, html, nextFrame, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { overlays } from '../src/overlays.js';
+// eslint-disable-next-line no-unused-vars
+import { OverlayController } from '../src/OverlayController.js';
+
+/**
+ * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes').DefineOverlayConfig} DefineOverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes').OverlayHost} OverlayHost
+ * @typedef {import('../types/OverlayMixinTypes').OverlayMixin} OverlayMixin
+ * @typedef {import('@lion/core').LitElement} LitElement
+ * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
+ */
 
 function getGlobalOverlayNodes() {
   return Array.from(overlays.globalRootNode.children).filter(
@@ -8,26 +19,29 @@ function getGlobalOverlayNodes() {
   );
 }
 
+/**
+ * @param {{tagString:string, tag: object, suffix?:string}} config
+ */
 export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
   describe(`OverlayMixin${suffix}`, () => {
     it('should not be opened by default', async () => {
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag}>
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       expect(el.opened).to.be.false;
       expect(el._overlayCtrl.isShown).to.be.false;
     });
 
     it('syncs opened to overlayController', async () => {
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag}>
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       el.opened = true;
       await el.updateComplete;
       await el._overlayCtrl._showComplete;
@@ -42,12 +56,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('syncs OverlayController to opened', async () => {
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag}>
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       expect(el.opened).to.be.false;
       await el._overlayCtrl.show();
       expect(el.opened).to.be.true;
@@ -59,7 +73,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     it('does not change the body size when opened', async () => {
       const parentNode = document.createElement('div');
       parentNode.setAttribute('style', 'height: 10000px; width: 10000px;');
-      const elWithBigParent = await fixture(
+      const elWithBigParent = /** @type {OverlayEl} */ (await fixture(
         html`
         <${tag}>
           <div slot="content">content of the overlay</div>
@@ -67,24 +81,35 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </${tag}>
       `,
         { parentNode },
-      );
-      const { offsetWidth, offsetHeight } = elWithBigParent.offsetParent;
+      ));
+      const {
+        offsetWidth,
+        offsetHeight,
+      } = /** @type {HTMLElement} */ (elWithBigParent.offsetParent);
       await elWithBigParent._overlayCtrl.show();
       expect(elWithBigParent.opened).to.be.true;
-      expect(elWithBigParent.offsetParent.offsetWidth).to.equal(offsetWidth);
-      expect(elWithBigParent.offsetParent.offsetHeight).to.equal(offsetHeight);
+      expect(/** @type {HTMLElement} */ (elWithBigParent?.offsetParent).offsetWidth).to.equal(
+        offsetWidth,
+      );
+      expect(/** @type {HTMLElement} */ (elWithBigParent?.offsetParent).offsetHeight).to.equal(
+        offsetHeight,
+      );
       await elWithBigParent._overlayCtrl.hide();
-      expect(elWithBigParent.offsetParent.offsetWidth).to.equal(offsetWidth);
-      expect(elWithBigParent.offsetParent.offsetHeight).to.equal(offsetHeight);
+      expect(/** @type {HTMLElement} */ (elWithBigParent?.offsetParent).offsetWidth).to.equal(
+        offsetWidth,
+      );
+      expect(/** @type {HTMLElement} */ (elWithBigParent?.offsetParent).offsetHeight).to.equal(
+        offsetHeight,
+      );
     });
 
     it('should respond to initially and dynamically setting the config', async () => {
-      const itEl = await fixture(html`
+      const itEl = /** @type {OverlayEl} */ (await fixture(html`
           <${tag} .config=${{ trapsKeyboardFocus: false, viewportConfig: { placement: 'top' } }}>
             <div slot="content">content of the overlay</div>
             <button slot="invoker">invoker button</button>
           </${tag}>
-        `);
+        `));
       itEl.opened = true;
       await itEl.updateComplete;
       expect(itEl._overlayCtrl.trapsKeyboardFocus).to.be.false;
@@ -95,12 +120,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires "opened-changed" event on hide', async () => {
       const spy = sinon.spy();
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} @opened-changed="${spy}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       expect(spy).not.to.have.been.called;
       await el._overlayCtrl.show();
       await el.updateComplete;
@@ -114,12 +139,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires "before-closed" event on hide', async () => {
       const beforeSpy = sinon.spy();
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} @before-closed="${beforeSpy}" .opened="${true}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       // Wait until it's done opening (handling features is async)
       await nextFrame();
       expect(beforeSpy).not.to.have.been.called;
@@ -130,12 +155,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
     it('fires before-opened" event on show', async () => {
       const beforeSpy = sinon.spy();
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} @before-opened="${beforeSpy}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       expect(beforeSpy).not.to.have.been.called;
       await el._overlayCtrl.show();
       expect(beforeSpy).to.have.been.called;
@@ -143,16 +168,16 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('allows to call `preventDefault()` on "before-opened"/"before-closed" events', async () => {
-      function preventer(ev) {
+      function preventer(/** @type Event */ ev) {
         ev.preventDefault();
       }
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} @before-opened="${preventer}" @before-closed="${preventer}">
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
-      el.querySelector('[slot="invoker"]').click();
+      `));
+      /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]')).click();
       await nextFrame();
       expect(el.opened).to.be.false;
 
@@ -164,12 +189,14 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('hides content on "close-overlay" event within the content ', async () => {
-      function sendCloseEvent(e) {
-        e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }));
+      function sendCloseEvent(/** @type {Event} */ e) {
+        e.target?.dispatchEvent(new Event('close-overlay', { bubbles: true }));
       }
-      const closeBtn = await fixture(html` <button @click=${sendCloseEvent}>close</button> `);
+      const closeBtn = /** @type {OverlayEl} */ (await fixture(
+        html` <button @click=${sendCloseEvent}>close</button> `,
+      ));
 
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} opened>
           <div slot="content">
             content of the overlay
@@ -177,7 +204,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
           </div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
       closeBtn.click();
       expect(el.opened).to.be.false;
     });
@@ -194,7 +221,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('supports nested overlays', async () => {
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} id="main-dialog">
           <div slot="content" id="mainContent">
             open nested overlay:
@@ -207,32 +234,34 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
           </div>
           <button slot="invoker" id="mainInvoker">invoker button</button>
         </${tag}>
-      `);
+      `));
 
       if (el._overlayCtrl.placementMode === 'global') {
         expect(getGlobalOverlayNodes().length).to.equal(2);
       }
 
       el.opened = true;
-      await aTimeout();
+      await aTimeout(0);
       expect(el._overlayCtrl.contentNode).to.be.displayed;
-      const nestedOverlayEl = el._overlayCtrl.contentNode.querySelector(tagString);
+      const nestedOverlayEl = /** @type {OverlayEl} */ (el._overlayCtrl.contentNode.querySelector(
+        tagString,
+      ));
       nestedOverlayEl.opened = true;
-      await aTimeout();
+      await aTimeout(0);
       expect(nestedOverlayEl._overlayCtrl.contentNode).to.be.displayed;
     });
 
     it('[global] allows for moving of the element', async () => {
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag}>
           <div slot="content" id="nestedContent">content of the nested overlay</div>
           <button slot="invoker">invoker nested</button>
         </${tag}>
-      `);
+      `));
       if (el._overlayCtrl.placementMode === 'global') {
         expect(getGlobalOverlayNodes().length).to.equal(1);
 
-        const moveTarget = await fixture('<div id="target"></div>');
+        const moveTarget = /** @type {OverlayEl} */ (await fixture('<div id="target"></div>'));
         moveTarget.appendChild(el);
         await el.updateComplete;
         expect(getGlobalOverlayNodes().length).to.equal(1);
@@ -240,14 +269,14 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     it('reconstructs the overlay when disconnected and reconnected to DOM (support for nested overlay nodes)', async () => {
-      const nestedEl = await fixture(html`
+      const nestedEl = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} id="nest">
           <div slot="content" id="nestedContent">content of the nested overlay</div>
           <button slot="invoker">invoker nested</button>
         </${tag}>
-      `);
+      `));
 
-      const el = await fixture(html`
+      const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag} id="main">
           <div slot="content" id="mainContent">
             open nested overlay:
@@ -255,7 +284,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
           </div>
           <button slot="invoker">invoker button</button>
         </${tag}>
-      `);
+      `));
 
       if (el._overlayCtrl.placementMode === 'global') {
         // Find the outlets that are not backdrop outlets
@@ -268,7 +297,10 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         );
         expect(lastContentNodeInContainer.firstElementChild.slot).to.equal('content');
       } else {
-        const contentNode = el._overlayContentNode.querySelector('#nestedContent');
+        // @ts-ignore allow protected props in tests
+        const contentNode = /** @type {HTMLElement} */ (el._overlayContentNode.querySelector(
+          '#nestedContent',
+        ));
         expect(contentNode).to.not.be.null;
         expect(contentNode.innerText).to.equal('content of the nested overlay');
       }

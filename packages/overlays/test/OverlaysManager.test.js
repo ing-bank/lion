@@ -2,12 +2,18 @@ import { expect, fixture, html } from '@open-wc/testing';
 import { OverlayController } from '../src/OverlayController.js';
 import { OverlaysManager } from '../src/OverlaysManager.js';
 
+/**
+ * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ */
+
 describe('OverlaysManager', () => {
+  /** @type {OverlayConfig} */
   let defaultOptions;
+  /** @type {OverlaysManager} */
   let mngr;
 
   beforeEach(async () => {
-    const contentNode = await fixture(html`<p>my content</p>`);
+    const contentNode = /** @type {HTMLElement} */ (await fixture(html`<p>my content</p>`));
 
     defaultOptions = {
       placementMode: 'global',
@@ -36,8 +42,8 @@ describe('OverlaysManager', () => {
     expect(document.head.querySelector('[data-global-overlays=""]')).be.null;
 
     // safety check via private access (do not use this)
-    expect(mngr.constructor.__globalRootNode).to.be.undefined;
-    expect(mngr.constructor.__globalStyleNode).to.be.undefined;
+    expect(OverlaysManager.__globalRootNode).to.be.undefined;
+    expect(OverlaysManager.__globalStyleNode).to.be.undefined;
   });
 
   it('can add/remove controllers', () => {

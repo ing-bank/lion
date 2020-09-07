@@ -1,15 +1,19 @@
-export const withDropdownConfig = () => ({
-  placementMode: 'local',
+/**
+ * @typedef {import('../../types/OverlayConfig').OverlayConfig} OverlayConfig
+ */
 
-  inheritsReferenceWidth: 'min',
-  hidesOnOutsideClick: true,
-  popperConfig: {
-    placement: 'bottom-start',
-    modifiers: {
-      offset: {
-        enabled: false,
+export const withDropdownConfig = () =>
+  /** @type {OverlayConfig} */ ({
+    placementMode: 'local',
+    inheritsReferenceWidth: 'min',
+    hidesOnOutsideClick: true,
+    popperConfig: {
+      placement: 'bottom-start',
+      modifiers: {
+        offset: {
+          enabled: false,
+        },
       },
     },
-  },
-  handlesAccessibility: true,
-});
+    handlesAccessibility: true,
+  });
