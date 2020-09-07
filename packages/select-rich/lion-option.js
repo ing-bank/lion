@@ -1,3 +1,5 @@
-import { LionOption } from './src/LionOption.js';
-
-customElements.define('lion-option', LionOption);
+/**
+ * @deprecated
+ * Import here for backwards compatibility
+ */
+import '@lion/listbox/lion-option.js';

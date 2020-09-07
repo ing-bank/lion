@@ -2,21 +2,23 @@ import { ChoiceInputMixin, FormRegisteringMixin } from '@lion/form-core';
 import { css, DisabledMixin, html, LitElement } from '@lion/core';
 
 /**
+ * @typedef {import('@lion/form-core/types/choice-group/ChoiceGroupMixinTypes').ChoiceGroupHost } ChoiceGroupHost
+ * @typedef {import('../types/LionOption').LionOptionHost } LionOptionHost
+ */
+
+/**
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
  * Can be a child of datalist/select, or role="listbox"
  *
  * Element gets state supplied externally, reflects this to attributes,
  * enabling SubClassers to style based on those states
  */
+// @ts-expect-error
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
   static get properties() {
     return {
       active: {
         type: Boolean,
-        reflect: true,
-      },
-      name: {
-        type: String,
         reflect: true,
       },
     };
@@ -29,14 +31,17 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
           display: block;
           background-color: white;
           padding: 4px;
+          cursor: default;
         }
 
         :host([hidden]) {
           display: none;
         }
 
-        :host([active]),
         :host(:hover) {
+          background-color: #eee;
+        }
+        :host([active]) {
           background-color: #ddd;
         }
 
@@ -65,6 +70,10 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     this.__registerEventListeners();
   }
 
+  /**
+   * @param {string} name
+   * @param {unknown} oldValue
+   */
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
 
@@ -73,6 +82,9 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     }
   }
 
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('checked')) {
@@ -98,15 +110,22 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   }
 
   __registerEventListeners() {
-    this.__onClick = () => {
-      if (!this.disabled) {
-        this.checked = true;
-      }
-    };
     this.addEventListener('click', this.__onClick);
   }
 
   __unRegisterEventListeners() {
     this.removeEventListener('click', this.__onClick);
   }
+
+  __onClick = () => {
+    if (this.disabled) {
+      return;
+    }
+    const parentForm = /** @type {unknown} */ (this.__parentFormGroup);
+    if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
+      this.checked = !this.checked;
+    } else {
+      this.checked = true;
+    }
+  };
 }
