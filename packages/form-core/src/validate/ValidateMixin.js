@@ -32,7 +32,6 @@ function arrayDiff(array1 = [], array2 = []) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 export const ValidateMixinImplementation = superclass =>
-  // eslint-disable-next-line no-unused-vars, no-shadow
   class extends FormControlMixin(
     SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
   ) {
