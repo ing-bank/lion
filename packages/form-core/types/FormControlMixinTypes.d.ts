@@ -96,8 +96,6 @@ export class FormControlHost {
   _enhanceLightDomA11y(): void;
   _enhanceLightDomA11yForAdditionalSlots(additionalSlots?: string[]): void;
   __reflectAriaAttr(attrName: string, nodes: HTMLElement[], reorder: boolean | undefined): void;
-  _onLabelChanged({ label }: { label: string }): void;
-  _onHelpTextChanged({ helpText }: { helpText: string }): void;
   _isEmpty(modelValue?: unknown): boolean;
   _getAriaDescriptionElements(): HTMLElement[];
   addToAriaLabelledBy(

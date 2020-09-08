@@ -227,7 +227,7 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
-   * The element that is placed behin the contentNode. When not provided and `hasBackdrop` is true,
+   * The element that is placed behind the contentNode. When not provided and `hasBackdrop` is true,
    * a backdropNode will be automatically created
    * @type {HTMLElement}
    */
@@ -312,7 +312,7 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
-   *  For non `isTooltip`:
+   * For non `isTooltip`:
    *  - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
    *  - sets aria-controls on invokerNode
    *  - returns focus to invokerNode on hide
@@ -664,7 +664,8 @@ export class OverlayController extends EventTargetShim {
     }
 
     if (this.isShown) {
-      /** @type {function} */ (this._showResolve)();
+      /** @type {function} */
+      (this._showResolve)();
       return;
     }
 
@@ -679,7 +680,8 @@ export class OverlayController extends EventTargetShim {
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
     }
-    /** @type {function} */ (this._showResolve)();
+    /** @type {function} */
+    (this._showResolve)();
   }
 
   /**

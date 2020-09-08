@@ -1,10 +1,10 @@
 import { Required } from '@lion/form-core';
 import { expect, html, fixture, unsafeStatic } from '@open-wc/testing';
-
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';
 import '../lion-listbox.js';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
 /**
  * @param { {tagString:string, optionTagString:string} } [customConfig]
@@ -300,6 +300,19 @@ export function runListboxMixinSuite(customConfig = {}) {
           active: false,
         });
       });
+
+      it('has a single modelValue representing the currently checked option', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo">
+            <lion-options slot="input">
+              <${optionTag} .choiceValue=${10} checked>Item 1</${optionTag}>
+              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+            </lion-options>
+          </${tag}>
+        `);
+
+        expect(el.modelValue).to.equal(10);
+      });
     });
 
     describe('Instantiation methods', () => {
@@ -307,10 +320,10 @@ export function runListboxMixinSuite(customConfig = {}) {
         let properlyInstantiated = false;
 
         try {
-          const el = document.createElement('lion-listbox');
+          const el = document.createElement(cfg.tagString);
           const optionsEl = document.createElement('lion-options');
           optionsEl.slot = 'input';
-          const optionEl = document.createElement('lion-option');
+          const optionEl = document.createElement(cfg.optionTagString);
           optionsEl.appendChild(optionEl);
           el.appendChild(optionsEl);
           properlyInstantiated = true;
@@ -319,6 +332,23 @@ export function runListboxMixinSuite(customConfig = {}) {
         }
 
         expect(properlyInstantiated).to.be.true;
+      });
+
+      it('can be instantiated without <lion-options>', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo">
+            <${optionTag} .choiceValue=${10} checked>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+
+        expect(el._listboxNode).to.exist;
+        expect(el._listboxNode).to.be.instanceOf(LionOptions);
+        expect(el.querySelector('[role=listbox]')).to.equal(el._listboxNode);
+
+        expect(el.formElements.length).to.equal(2);
+        expect(el._listboxNode.children.length).to.equal(2);
+        expect(el._listboxNode.children[0].tagName).to.equal(cfg.optionTagString);
       });
     });
   });

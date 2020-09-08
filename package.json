@@ -29,7 +29,7 @@
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner \"packages/**/*/test/**/*.test.js\" --coverage",
     "test:browser:all": "web-test-runner \"packages/**/*/test/**/*.test.js\" --playwright --browsers webkit chromium firefox --coverage",
-    "test:browser:watch": "web-test-runner \"packages/**/*/test/**/*.test.js\" --watch",
+    "test:browser:watch": "web-test-runner \"packages/combobox/test/**/*.test.js\" --watch",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js \"packages/form-core/test/**/*.test.js\"",
     "test:node": "node scripts/workspaces-scripts.mjs run test:node",
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",

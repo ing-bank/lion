@@ -18,6 +18,7 @@ import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { listboxData } from '@lion/listbox/docs/listboxData.js';
 import '@lion/listbox/lion-option.js';
 import './lion-combobox.js';
+import './docs/lion-combobox-selection-display.js';
 
 // import './overflow-previews.js';
 
@@ -34,9 +35,7 @@ export default {
 ```js preview-story
 export const main = () => html`
   <lion-combobox name="combo" label="Default">
-    ${listboxData.map(
-      entry => html` <lion-option .choice.choiceValue="${'${entry}'}">${entry}</lion-option> `,
-    )}
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```
@@ -53,9 +52,7 @@ This will:
 ```js preview-story
 export const multipleChoice = () => html`
   <lion-combobox name="combo" label="Multiple" multiple-choice>
-    ${listboxData.map(
-      entry => html` <lion-option .choice.choiceValue="${'${entry}'}">${entry}</lion-option> `,
-    )}
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```
@@ -68,9 +65,7 @@ When "both", an inline completion string will be added to the textbox as well.
 ```js preview-story
 export const autocompleteList = () => html`
   <lion-combobox name="combo" label="Autocomplete 'list'" autocomplete="list">
-    ${listboxData.map(
-      entry => html` <lion-option .choice.choiceValue="${'${entry}'}">${entry}</lion-option> `,
-    )}
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```
@@ -81,9 +76,7 @@ based on the characters typed in the textbox.
 ```js preview-story
 export const autocompleteNone = () => html`
   <lion-combobox name="combo" label="Autocomplete 'none'" autocomplete="none">
-    ${listboxData.map(
-      entry => html` <lion-option .choice.choiceValue="${'${entry}'}">${entry}</lion-option> `,
-    )}
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```
@@ -99,45 +92,16 @@ So 'ch' will both match 'Chard' and 'Artichoke'.
 ```js preview-story
 export const matchModeBegin = () => html`
   <lion-combobox name="combo" label="Match Mode 'begin'" match-mode="begin">
-    ${listboxData.map(
-      entry => html` <lion-option .choice.choiceValue="${'${entry}'}">${entry}</lion-option> `,
-    )}
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```
 
-## Material
-
 ```js preview-story
-export const material = () => html`
-  <md-combobox name="combo" label="Material">
-    <md-option .choiceValue="${'Apple'}">Apple</md-option>
-    <md-option .choiceValue="${'Artichoke'}">Artichoke</md-option>
-    <md-option .choiceValue="${'Asparagus'}">Asparagus</md-option>
-    <md-option .choiceValue="${'Banana'}">Banana</md-option>
-    <md-option .choiceValue="${'Beets'}">Beets</md-option>
-  </md-combobox>
-`;
-```
-
-## Google Search
-
-```js preview-story
-export const googleSearch = () => html`
-  <google-combobox name="combo" label="Google Search">
-    <google-option .choiceValue="${'Apple'}">Apple</google-option>
-    <google-option .choiceValue="${'Artichoke'}">Artichoke</google-option>
-    <google-option .choiceValue="${'Asparagus'}">Asparagus</google-option>
-    <google-option .choiceValue="${'Banana'}">Banana</google-option>
-    <google-option .choiceValue="${'Beets'}">Beets</google-option>
-  </google-combobox>
-`;
-```
-
-## Material Input
-
-```js preview-story
-export const mdInput = () => html`
-  <md-input name="gerrit" label="Gerrit" help-text="Help, text!"></md-input>
+export const selectionDisplay = () => html`
+  <lion-combobox name="combo" label="Selection display" multiple-choice>
+    <lion-combobox-selection-display slot="selection-display"></lion-combobox-selection-display>
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+  </lion-combobox>
 `;
 ```

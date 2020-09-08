@@ -1,9 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { LitElement, html, css, nothing } from '@lion/core';
-import { FocusMixin } from '@lion/form-core';
 
 /**
- * @typedef {import('./LionCombobox.js').LionCombobox} LionCombobox
+ * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
  */
 
 /**
@@ -13,7 +12,7 @@ import { FocusMixin } from '@lion/form-core';
  * LionCombobox
  *
  */
-export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
+export class LionComboboxSelectionDisplay extends LitElement {
   static get properties() {
     return {
       comboboxElement: Object,
@@ -60,30 +59,29 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
   }
 
   /**
-   * @type {LionCombobox}
-   */
-  get comboboxElement() {
-    return /** @type {LionCombobox} */ (this.__comboboxElement);
-  }
-
-  /**
    * @configure FocusMixin
    */
   get _inputNode() {
     return this.comboboxElement._inputNode;
   }
 
-  get selectedElements() {
-    const { formElements, checkedIndex } = this.comboboxElement;
+  _computeSelectedElements() {
+    // TODO: checkedElements ...?
+    const { formElements, checkedIndex } = /** @type {LionCombobox} */ (this.comboboxElement);
     const checkedIndexes = Array.isArray(checkedIndex) ? checkedIndex : [checkedIndex];
-    return formElements.filter((_, /** @type {number} */ i) => checkedIndexes.includes(i));
+    return formElements.filter((_, i) => checkedIndexes.includes(i));
+  }
+
+  get multipleChoice() {
+    return this.comboboxElement?.multipleChoice;
   }
 
   constructor() {
     super();
-    /** @type {LionCombobox|undefined} */
-    this.__comboboxElement = undefined;
+
+    /** @type {EventListener} */
     this.__textboxOnKeyup = this.__textboxOnKeyup.bind(this);
+    /** @type {EventListener} */
     this.__restoreBackspace = this.__restoreBackspace.bind(this);
   }
 
@@ -93,8 +91,7 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
-    const { multipleChoice } = this.comboboxElement;
-    if (multipleChoice) {
+    if (this.multipleChoice) {
       this._inputNode.addEventListener('keyup', this.__textboxOnKeyup);
       this._inputNode.addEventListener('focusout', this.__restoreBackspace);
     }
@@ -103,19 +100,9 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
   /**
    * @param {import('lit-element').PropertyValues } changedProperties
    */
-  updated(changedProperties) {
-    super.updated(changedProperties);
-
-    const { multipleChoice } = this.comboboxElement;
-    if (changedProperties.has('selectedElements')) {
-      if (multipleChoice || !this.selectedElements.length) {
-        this._inputNode.value = '';
-      } else {
-        this._inputNode.value = this.selectedElements[0].value;
-      }
-      if (multipleChoice) {
-        this.__reorderChips();
-      }
+  onComboboxElementUpdated(changedProperties) {
+    if (changedProperties.has('modelValue')) {
+      this.selectedElements = this._computeSelectedElements();
     }
   }
 
@@ -155,7 +142,7 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
   }
 
   _selectedElementsTemplate() {
-    if (!this.comboboxElement.multipleChoice) {
+    if (!this.multipleChoice) {
       return nothing;
     }
     return html`
@@ -182,7 +169,7 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
     // All selectedElements state truth should be kept here and should not go back
     // and forth.
     if (ev.key === 'Backspace') {
-      if (!this._textboxNode.value) {
+      if (!this._inputNode.value) {
         if (this.removeChipOnNextBackspace) {
           this.selectedElements[this.selectedElements.length - 1].checked = false;
         }
@@ -194,7 +181,7 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
 
     // TODO: move to LionCombobox
     if (ev.key === 'Escape') {
-      this._textboxNode.value = '';
+      this._inputNode.value = '';
     }
   }
 
@@ -202,3 +189,4 @@ export class LionComboboxSelectionDisplay extends FocusMixin(LitElement) {
     this.removeChipOnNextBackspace = false;
   }
 }
+customElements.define('lion-combobox-selection-display', LionComboboxSelectionDisplay);

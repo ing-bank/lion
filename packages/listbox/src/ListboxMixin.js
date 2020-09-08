@@ -112,12 +112,28 @@ const ListboxMixinImplementation = superclass =>
       };
     }
 
+    // TODO: inherit from FormControl ?
+    get _inputNode() {
+      return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
+    }
+
     get _listboxNode() {
       return /** @type {LionOptions} */ (this._inputNode);
     }
 
     get _listboxActiveDescendantNode() {
       return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
+    }
+
+    /**
+     * @overridable
+     */
+    get _listboxSlot() {
+      return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('slot[name=input]');
+    }
+
+    get _scrollTargetNode() {
+      return this._listboxNode;
     }
 
     get serializedValue() {
@@ -128,6 +144,21 @@ const ListboxMixinImplementation = superclass =>
     // If you override one, gotta override the other, they go in pairs.
     set serializedValue(value) {
       super.serializedValue = value;
+    }
+
+    get activeIndex() {
+      return this.formElements.findIndex(el => el.active === true);
+    }
+
+    set activeIndex(index) {
+      if (this.formElements[index]) {
+        const el = this.formElements[index];
+        el.active = true;
+
+        if (!isInView(this._scrollTargetNode, el)) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
     }
 
     /**
@@ -167,28 +198,8 @@ const ListboxMixinImplementation = superclass =>
       }
     }
 
-    get activeIndex() {
-      return this.formElements.findIndex(el => el.active === true);
-    }
-
-    get _scrollTargetNode() {
-      return this._listboxNode;
-    }
-
-    set activeIndex(index) {
-      if (this.formElements[index]) {
-        const el = this.formElements[index];
-        el.active = true;
-
-        if (!isInView(this._scrollTargetNode, el)) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }
-    }
-
     constructor() {
       super();
-      // this.disabled = false;
       /**
        * When setting this to true, on initial render, no option will be selected.
        * It it advisable to override `_noSelectionTemplate` method in the select-invoker
@@ -229,17 +240,20 @@ const ListboxMixinImplementation = superclass =>
       this._onChildActiveChanged = this._onChildActiveChanged.bind(this);
       /** @type {EventListener} */
       this.__proxyChildModelValueChanged = this.__proxyChildModelValueChanged.bind(this);
+      /** @type {EventListener} */
+      this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
     }
 
     connectedCallback() {
       if (this._listboxNode) {
-        // if there is none yet, it will be supplied via static get slots
+        // if there is none yet, it will be supplied via 'get slots'
         this._listboxNode.registrationTarget = this;
       }
       super.connectedCallback();
-      this.__setupListboxNode();
+      this._setupListboxNode();
       this.__setupEventListeners();
 
+      // TODO: should this be handled at a more generic level?
       this.registrationComplete.then(() => {
         this.__initInteractionStates();
       });
@@ -250,12 +264,11 @@ const ListboxMixinImplementation = superclass =>
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
-
       this.__moveOptionsToListboxNode();
     }
 
     /**
-     * Moves options put in regulat slot to slot wiht role=listbox
+     * Moves options put in unnamed slot to slot with [role="listbox"]
      */
     __moveOptionsToListboxNode() {
       const slot = /** @type {HTMLSlotElement} */ (
@@ -291,11 +304,6 @@ const ListboxMixinImplementation = superclass =>
       this.initInteractionState();
     }
 
-    // TODO: inherit from FormControl ?
-    get _inputNode() {
-      return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
-    }
-
     /**
      * @param {import('lit-element').PropertyValues } changedProperties
      */
@@ -304,7 +312,6 @@ const ListboxMixinImplementation = superclass =>
 
       if (this.formElements.length === 1) {
         this.singleOption = true;
-        // this._invokerNode.singleOption = true;
       }
 
       if (changedProperties.has('disabled')) {
@@ -533,7 +540,6 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'ArrowLeft':
-          ev.preventDefault();
           if (this.orientation === 'horizontal') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
@@ -545,7 +551,6 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'ArrowRight':
-          ev.preventDefault();
           if (this.orientation === 'horizontal') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
@@ -584,27 +589,61 @@ const ListboxMixinImplementation = superclass =>
       });
     }
 
-    /**
-     * For ShadyDom the listboxNode is available right from the start so we can add those events
-     * immediately.
-     * For native ShadowDom the select gets render before the listboxNode is available so we
-     * will add an event to the slotchange and add the events once available.
-     */
-    __setupListboxNode() {
+    _setupListboxNode() {
       if (this._listboxNode) {
-        this._setupListboxNodeInteractions();
-      } else {
-        const inputSlot = /** @type {ShadowRoot} */ (this.shadowRoot).querySelector(
-          'slot[name=input]',
-        );
-        if (inputSlot) {
-          inputSlot.addEventListener('slotchange', () => {
-            this._setupListboxNodeInteractions();
-          });
-        }
+        this.__setupListboxNodeInteractions();
+      } else if (this._listboxSlot) {
+        /**
+         * For ShadyDom the listboxNode is available right from the start so we can add those events
+         * immediately.
+         * For native ShadowDom the select gets render before the listboxNode is available so we
+         * will add an event to the slotchange and add the events once available.
+         */
+        this._listboxSlot.addEventListener('slotchange', () => {
+          this.__setupListboxNodeInteractions();
+        });
       }
-      this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
+    }
+
+    /**
+     * Helper method used within `._setupListboxNode`
+     */
+    __setupListboxNodeInteractions() {
+      this._listboxNode.setAttribute('role', 'listbox');
+      this._listboxNode.setAttribute('aria-orientation', this.orientation);
+      this._listboxNode.setAttribute('aria-multiselectable', `${this.multipleChoice}`);
+      this._listboxNode.setAttribute('tabindex', '0');
+      this._listboxNode.addEventListener('click', this._listboxOnClick);
+      this._listboxNode.addEventListener('keyup', this._listboxOnKeyUp);
+      this._listboxNode.addEventListener('keydown', this._listboxOnKeyDown);
+      /** Since _scrollTargetNode can be _listboxNode, handle here  */
       this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
+    }
+
+    _teardownListboxNode() {
+      if (this._listboxNode) {
+        this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
+        this._listboxNode.removeEventListener('click', this._listboxOnClick);
+        this._listboxNode.removeEventListener('keyup', this._listboxOnKeyUp);
+      }
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    __preventScrollingWithArrowKeys(ev) {
+      if (this.disabled) {
+        return;
+      }
+      const { key } = ev;
+      switch (key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+        case 'Home':
+        case 'End':
+          ev.preventDefault();
+        /* no default */
+      }
     }
 
     /**
@@ -640,57 +679,6 @@ const ListboxMixinImplementation = superclass =>
         case 'Enter':
           ev.preventDefault();
       }
-    }
-
-    _setupListboxNodeInteractions() {
-      this._listboxNode.setAttribute('role', 'listbox');
-      this._listboxNode.setAttribute('aria-orientation', this.orientation);
-      this._listboxNode.setAttribute('aria-multiselectable', `${this.multipleChoice}`);
-      this._listboxNode.setAttribute('tabindex', '0');
-      this._listboxNode.addEventListener('click', this._listboxOnClick);
-      this._listboxNode.addEventListener('keyup', this._listboxOnKeyUp);
-      this._listboxNode.addEventListener('keydown', this._listboxOnKeyDown);
-    }
-
-    _teardownListboxNode() {
-      if (this._listboxNode) {
-        this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
-        this._listboxNode.removeEventListener('click', this._listboxOnClick);
-        this._listboxNode.removeEventListener('keyup', this._listboxOnKeyUp);
-      }
-    }
-
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    __preventScrollingWithArrowKeys(ev) {
-      if (this.disabled) {
-        return;
-      }
-      const { key } = ev;
-      switch (key) {
-        case 'ArrowUp':
-        case 'ArrowDown':
-        case 'Home':
-        case 'End':
-          ev.preventDefault();
-        /* no default */
-      }
-    }
-
-    // TODO: move to FormControl / ValidateMixin?
-    /**
-     * @param {string} value
-     */
-    set fieldName(value) {
-      this.__fieldName = value;
-    }
-
-    get fieldName() {
-      const label =
-        this.label ||
-        (this.querySelector('[slot=label]') && this.querySelector('[slot=label]')?.textContent);
-      return this.__fieldName || label || this.name;
     }
   };
 

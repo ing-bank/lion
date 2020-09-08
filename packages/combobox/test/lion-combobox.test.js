@@ -1,5 +1,5 @@
 import '@lion/listbox/lion-option.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, aTimeout } from '@open-wc/testing';
 import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
 // eslint-disable-next-line no-unused-vars
@@ -10,11 +10,10 @@ import { LionCombobox } from '../src/LionCombobox.js';
  * @param {string} value
  */
 function mimicUserTyping(el, value) {
-  el._overlayInvokerNode.dispatchEvent(new Event('focusin', { bubbles: true }));
-  // el._
+  el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
   // eslint-disable-next-line no-param-reassign
-  el._comboboxTextNode.value = value;
-  el._comboboxTextNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  el._inputNode.value = value;
+  el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 }
 
 /**
@@ -35,7 +34,7 @@ function getFilteredOptionValues(el) {
 /**
  * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} [config]
  */
-async function fruitFixture({ autocomplete, matchMode }) {
+async function fruitFixture({ autocomplete, matchMode } = {}) {
   const el = /** @type {LionCombobox} */ (await fixture(html`
     <lion-combobox name="foo">
       <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -82,7 +81,7 @@ describe('lion-combobox', () => {
   });
 
   describe('Listbox visibility', () => {
-    it('shows listbox on focusin', async () => {
+    it('does not show listbox on focusin', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -96,15 +95,16 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
-      expect(el.opened).to.equal(true);
+      expect(el.opened).to.equal(false);
     });
 
     it('keeps showing listbox after select', async () => {
       /**
        * Scenario:
-       * [1] user focuses textbox and listbox shows
-       * [2] user selects "Artichocke": listbox closes, textbox gets value "Artichocke" and textbox has still focus
-       * [3] user changes textbox value to "Artichok": the listbox should show again
+       * [1] user focuses textbox: listbox hidden 
+       * [2] user types char: listbox shows
+       * [3] user selects "Artichocke": listbox closes, textbox gets value "Artichocke" and textbox still has focus
+       * [4] user changes textbox value to "Artichok": the listbox should show again
        */
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
@@ -119,17 +119,24 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
 
       // step [1]
-      el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el.updateComplete;
-      expect(el.opened).to.equal(true);
-
-      // step [2]
-      options[0].click();
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
       expect(el.opened).to.equal(false);
 
+      // step [2]
+      mimicUserTyping(el, 'c');
+      // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', bubbles: true, composed: true }));
+      await el.updateComplete;
+      // expect(el.opened).to.equal(true);
+
       // step [3]
-      el._comboboxNode.dispatchEvent(new Event('keydown', { bubbles: true, composed: true }));
+      options[0].click();
+      await el.updateComplete;
+      expect(el.opened).to.equal(false);
+      expect(document.activeElement).to.equal(el._inputNode);
+
+      // step [4]
+      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }));
       await el.updateComplete;
       expect(el.opened).to.equal(true);
     });
@@ -151,10 +158,11 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
 
       mimicUserTyping(el, 'art');
-      expect(el._comboboxTextNode.value).to.equal('art');
-      el._comboboxTextNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      expect(el._inputNode.value).to.equal('art');
+      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      await el.updateComplete;
       expect(el.opened).to.equal(false);
-      expect(el._comboboxTextNode.value).to.equal('');
+      expect(el._inputNode.value).to.equal('');
     });
 
     describe('Accessibility', () => {
@@ -231,15 +239,16 @@ describe('lion-combobox', () => {
   // Notice that the LionComboboxInvoker always needs to be used in conjunction with the
   // LionCombobox, and therefore will be tested integrated,
   describe('Invoker component integration', () => {
-    it('has a textbox', async () => {
+    it('has a combobox with a textbox', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
           <lion-option .choiceValue="${'20'}">Item 2</lion-option>
         </lion-combobox>
       `));
-      const invokerEl = el._comboboxNode;
-      expect(invokerEl.getAttribute('role')).to.equal('combobox');
+      expect(el._comboboxNode.getAttribute('role')).to.equal('combobox');
+      const slot = el._comboboxNode.querySelector('slot[name=input]');
+      expect(slot.assignedNodes()[0]).to.equal(el._inputNode);
     });
 
     describe('Accessibility', () => {
@@ -261,17 +270,6 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `));
         expect(el._listboxNode.hasAttribute('tabindex')).to.be.false;
-      });
-
-      it('couples text node to FormControl', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-          </lion-combobox>
-        `));
-        // _inputNode will get all labelledby/describedby relations
-        expect(el._comboboxTextNode).to.equal(el._inputNode);
       });
     });
   });
@@ -309,14 +307,14 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       mimicUserTyping(el, 'ch');
-      expect(el._comboboxTextNode.value).to.equal('Chard');
-      expect(el._comboboxTextNode.selectionStart).to.equal(2);
-      expect(el._comboboxTextNode.selectionEnd).to.equal(el._comboboxTextNode.value.length);
+      expect(el._inputNode.value).to.equal('Chard');
+      expect(el._inputNode.selectionStart).to.equal(2);
+      expect(el._inputNode.selectionEnd).to.equal(el._inputNode.value.length);
 
       // We don't autocomplete when characters are removed
       mimicUserTyping(el, 'c'); // The user pressed backspace (number of chars decreased)
-      expect(el._comboboxTextNode.value).to.equal('c');
-      expect(el._comboboxTextNode.selectionStart).to.equal(el._comboboxTextNode.value.length);
+      expect(el._inputNode.value).to.equal('c');
+      expect(el._inputNode.selectionStart).to.equal(el._inputNode.value.length);
     });
 
     it('filters options when autocomplete is "list"', async () => {
@@ -330,7 +328,7 @@ describe('lion-combobox', () => {
       `));
       mimicUserTyping(el, 'ch');
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
-      expect(el._comboboxTextNode.value).to.equal('ch');
+      expect(el._inputNode.value).to.equal('ch');
     });
 
     it('does not filter options when autocomplete is "none"', async () => {
@@ -356,13 +354,13 @@ describe('lion-combobox', () => {
         let el;
 
         [el] = await fruitFixture({ autocomplete: 'both' });
-        expect(el._comboboxTextNode.getAttribute('aria-autocomplete')).to.equal('both');
+        expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('both');
 
         [el] = await fruitFixture({ autocomplete: 'list' });
-        expect(el._comboboxTextNode.getAttribute('aria-autocomplete')).to.equal('list');
+        expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('list');
 
         [el] = await fruitFixture({ autocomplete: 'none' });
-        expect(el._comboboxTextNode.getAttribute('aria-autocomplete')).to.equal('none');
+        expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('none');
       });
 
       it('updates aria-activedescendant on textbox node', async () => {
@@ -371,17 +369,17 @@ describe('lion-combobox', () => {
 
         [el, options] = await fruitFixture({ autocomplete: 'none' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._comboboxTextNode.getAttribute('aria-activedescendant')).to.equal('');
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal('');
         expect(options[0].active).to.equal(false);
 
         [el, options] = await fruitFixture({ autocomplete: 'both' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._comboboxTextNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
         expect(options[1].active).to.equal(true);
 
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._comboboxTextNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
         expect(options[1].active).to.equal(true);
       });
     });
@@ -459,9 +457,9 @@ describe('lion-combobox', () => {
       //   options[0].checked = true; // Artichoke
       //   options[1].checked = true; // Chard
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.false;
-      //   el._comboboxTextNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+      //   el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.true;
-      //   el._comboboxTextNode.blur();
+      //   el._inputNode.blur();
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.false;
       // });
       // it('deletes staged chip on [Backspace]', async () => {
@@ -477,16 +475,16 @@ describe('lion-combobox', () => {
       //   options[1].checked = true; // Chard
       //   expect(el._comboboxNode.selectedElements).to.eql([options[0], options[1]]);
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.false;
-      //   el._comboboxTextNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+      //   el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
       //   expect(el._comboboxNode.selectedElements).to.eql([options[0], options[1]]);
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.true;
-      //   el._comboboxTextNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+      //   el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
       //   expect(el._comboboxNode.selectedElements).to.eql([options[0]]);
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.true;
-      //   el._comboboxTextNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+      //   el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
       //   expect(el._comboboxNode.selectedElements).to.eql([]);
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.true;
-      //   el._comboboxTextNode.blur();
+      //   el._inputNode.blur();
       //   expect(el._comboboxNode.removeChipOnNextBackspace).to.be.false;
       // });
     });
@@ -509,7 +507,7 @@ describe('lion-combobox', () => {
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
           </lion-combobox>
         `));
-        el._comboboxTextNode.focus();
+        el._inputNode.focus();
         el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
         expect(el._listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
       });
@@ -572,7 +570,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._comboboxTextNode.focus();
+      el._inputNode.focus();
 
       el.activeIndex = 0;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
@@ -605,7 +603,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._comboboxTextNode.focus();
+      el._inputNode.focus();
 
       el.activeIndex = 0;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
@@ -653,7 +651,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._comboboxTextNode.focus();
+      el._inputNode.focus();
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
       expect(options[0].checked).to.be.false;
       expect(options[1].checked).to.be.true;
@@ -675,7 +673,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._comboboxTextNode.focus();
+      el._inputNode.focus();
       el.activeIndex = 0;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.true;
@@ -698,7 +696,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._comboboxTextNode.focus();
+      el._inputNode.focus();
       el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.false;

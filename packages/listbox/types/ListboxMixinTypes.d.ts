@@ -55,7 +55,7 @@ export declare class ListboxHost {
 
   protected _listboxOnKeyUp(ev: KeyboardEvent): void;
 
-  protected _setupListboxNodeInteractions(): void;
+  protected _setupListboxNode(): void;
 
   protected _teardownListboxNode(): void;
 

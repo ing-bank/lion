@@ -6,8 +6,8 @@
 import { html } from 'lit-html';
 import '@lion/dialog/lion-dialog.js';
 import '@lion/select-rich/lion-select-rich.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-option.js';
+import '@lion/listbox/lion-options.js';
+import '@lion/listbox/lion-option.js';
 
 export default {
   title: 'Forms/System/Dialog integrations',
