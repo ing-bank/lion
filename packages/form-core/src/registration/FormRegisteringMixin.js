@@ -16,8 +16,11 @@ import { dedupeMixin } from '@lion/core';
  */
 const FormRegisteringMixinImplementation = superclass =>
   class extends superclass {
-    /** @type {FormRegistrarHost | undefined} */
-    __parentFormGroup;
+    constructor() {
+      super();
+      /** @type {FormRegistrarHost | undefined} */
+      this.__parentFormGroup = undefined;
+    }
 
     connectedCallback() {
       // @ts-expect-error check it anyway, because could be lit-element extension
