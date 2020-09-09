@@ -1,9 +1,11 @@
 import { LitElement, html, css } from 'lit-element';
 
 export class MyCounter extends LitElement {
-  static properties = {
-    count: { type: Number },
-  };
+  static get properties() {
+    return {
+      count: { type: Number },
+    };
+  }
 
   static styles = css`
     :host {
