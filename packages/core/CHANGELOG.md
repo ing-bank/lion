@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 75107a4b: EventTargetShim
+
+  #### Features
+
+  EventTargetShim is a base class that shims EventTarget for full browser support.
+
 ## 0.11.0
 
 ### Minor Changes

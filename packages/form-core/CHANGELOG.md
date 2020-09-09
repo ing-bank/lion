@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 60d5d1d3: Remove usage of Public Class Fields to not break builds
+- Updated dependencies [75107a4b]
+  - @lion/core@0.12.0
+  - @lion/localize@0.14.4
+
 ## 0.6.0
 
 ### Minor Changes
