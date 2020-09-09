@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [75107a4b]
+  - @lion/core@0.12.0
+  - @lion/localize@0.14.4
+
 ## 0.1.1
 
 ### Patch Changes

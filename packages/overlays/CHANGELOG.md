@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.19.0
+
+### Minor Changes
+
+- e42071d8: Types for overlays, tooltip and button
+
+### Patch Changes
+
+- Updated dependencies [75107a4b]
+  - @lion/core@0.12.0
+
 ## 0.18.0
 
 ### Minor Changes
