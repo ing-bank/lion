@@ -3,4 +3,4 @@
 '@lion/select-rich': patch
 ---
 
-listbox package
+Adds a new listbox package. A listbox widget presents a list of options and allows a user to select one or more of them.
