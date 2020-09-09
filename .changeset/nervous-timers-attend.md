@@ -1,7 +1,7 @@
 ---
 '@lion/button': patch
 '@lion/overlays': minor
-'@lion/tooltip': patch
+'@lion/tooltip': minor
 ---
 
 Types for overlays, tooltip and button

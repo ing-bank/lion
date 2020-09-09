@@ -28,8 +28,6 @@
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/select-rich/test/**/*.test.js\""
   },
   "sideEffects": [
-    "lion-option.js",
-    "lion-options.js",
     "lion-select-invoker.js",
     "lion-select-rich.js"
   ],

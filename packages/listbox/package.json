@@ -28,7 +28,9 @@
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/listbox/test/**/*.test.js\""
   },
   "sideEffects": [
-    "lion-listbox.js"
+    "lion-listbox.js",
+    "lion-option.js",
+    "lion-options.js"
   ],
   "dependencies": {
     "@lion/core": "0.11.0",
