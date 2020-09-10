@@ -20,6 +20,7 @@ export const FormRegisteringMixin = dedupeMixin(
           new CustomEvent('form-element-register', {
             detail: { element: this },
             bubbles: true,
+            composed: true,
           }),
         );
       }
@@ -33,29 +34,35 @@ export const FormRegisteringMixin = dedupeMixin(
         }
       }
 
-      update(changedProperties) {
-        super.update(changedProperties);
-        if (changedProperties.has('name')) {
-          const name = changedProperties.get('name');
-          if (name) {
-            this.dispatchEvent(
-              new CustomEvent('remove-form-element-register', { detail: { name }, bubbles: true }),
-            );
-          }
-        }
-      }
-
-      updated(changedProperties) {
-        super.updated(changedProperties);
-        if (changedProperties.has('name')) {
-          this.dispatchEvent(
-            new CustomEvent('form-element-register', {
-              detail: { element: this },
-              bubbles: true,
-              composed: true,
-            }),
-          );
-        }
-      }
+      // update(changedProperties) {
+      //   super.update(changedProperties);
+      //   if (changedProperties.has('name')) {
+      //     const oldName = changedProperties.get('name');
+      //     if (oldName) {
+      //       this.dispatchEvent(
+      //         // if name change solution
+      //         /* new CustomEvent('change-form-element-name-register', {
+      //           detail: { oldName, newName: this.name },
+      //           bubbles: true,
+      //           composed: true,
+      //         }), */
+      //         // elif remove solution
+      //         new CustomEvent('remove-form-element-name-register', {
+      //           detail: { oldName },
+      //           bubbles: true,
+      //           composed: true,
+      //         }),
+      //       );
+      //       // if remove solution
+      //       this.dispatchEvent(
+      //         new CustomEvent('form-element-register', {
+      //           detail: { element: this },
+      //           bubbles: true,
+      //           composed: true,
+      //         }),
+      //       );
+      //     }
+      //   }
+      // }
     },
 );
