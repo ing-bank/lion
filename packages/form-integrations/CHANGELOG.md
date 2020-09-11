@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.2
+
+### Patch Changes
+
+- @lion/select-rich@0.21.2
+
 ## 0.3.1
 
 ### Patch Changes

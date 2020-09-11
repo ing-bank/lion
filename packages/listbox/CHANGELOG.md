@@ -1,6 +1,13 @@
 # @lion/listbox
 
+## 0.1.1
+
+### Patch Changes
+
+- 27bc8058: Remove usage of public class fields
+
 ## 0.1.0
+
 ### Minor Changes
 
 - 0ec72ac3: Adds a new listbox package. A listbox widget presents a list of options and allows a user to select one or more of them.

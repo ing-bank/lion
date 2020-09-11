@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.21.2
+
+### Patch Changes
+
+- Updated dependencies [27bc8058]
+  - @lion/listbox@0.1.1
+
 ## 0.21.1
 
 ### Patch Changes
