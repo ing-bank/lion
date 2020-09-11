@@ -31,6 +31,22 @@ export const main = () => html`
 `;
 ```
 
+## Features
+
+- Single & Multiple Choice
+- Orientation
+- Rotation when using keyboard for selection
+
+## How to use
+
+### Installation
+
+```bash
+npm i --save @lion/listbox
+```
+
+## Examples
+
 ## Multiple choice
 
 Add `multiple-choice` flag to allow multiple values to be selected.
