@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-integrations",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "license": "MIT",
   "author": "ing-bank",
@@ -44,7 +44,7 @@
     "@lion/localize": "0.14.4",
     "@lion/radio-group": "0.11.16",
     "@lion/select": "0.7.23",
-    "@lion/select-rich": "0.21.2",
+    "@lion/select-rich": "0.21.3",
     "@lion/textarea": "0.7.23",
     "@lion/validate-messages": "0.2.15"
   },

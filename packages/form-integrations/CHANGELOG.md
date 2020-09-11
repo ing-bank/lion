@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [7e02c39a]
+  - @lion/select-rich@0.21.3
+
 ## 0.3.2
 
 ### Patch Changes

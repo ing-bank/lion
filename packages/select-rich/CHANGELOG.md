@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.21.3
+
+### Patch Changes
+
+- 7e02c39a: Remove public class field usage in Select Rich
+
 ## 0.21.2
 
 ### Patch Changes
