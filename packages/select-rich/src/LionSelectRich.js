@@ -101,6 +101,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.__invokerOnClick = this.__invokerOnClick.bind(this);
     this.__overlayBeforeShow = this.__overlayBeforeShow.bind(this);
     this.__focusInvokerOnLabelClick = this.__focusInvokerOnLabelClick.bind(this);
+    this._listboxOnClick = this._listboxOnClick.bind(this);
   }
 
   connectedCallback() {
@@ -412,9 +413,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
-  _listboxOnClick = () => {
+  _listboxOnClick() {
     this.opened = false;
-  };
+  }
 
   _setupListboxNodeInteractions() {
     super._setupListboxNodeInteractions();
