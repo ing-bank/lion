@@ -23,7 +23,8 @@
     "packages/overlays/**/*.js",
     "packages/tooltip/**/*.js",
     "packages/button/src/**/*.js",
-    "packages/listbox/src/*.js"
+    "packages/listbox/src/*.js",
+    "packages/input/**/*.js"
   ],
   "exclude": [
     "node_modules",

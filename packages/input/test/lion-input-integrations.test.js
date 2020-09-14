@@ -7,7 +7,6 @@ const tagString = 'lion-input';
 describe('<lion-input> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,
-    suffix: 'lion-input',
   });
 
   runFormatMixinSuite({
