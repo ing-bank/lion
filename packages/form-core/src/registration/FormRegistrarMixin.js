@@ -47,13 +47,10 @@ const FormRegistrarMixinImplementation = superclass =>
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
       this.addEventListener('form-element-register', this._onRequestToAddFormElement);
       // if name change solution
-      /* this._onRequestToChangeFormElementName = this._onRequestToChangeFormElementName.bind(this);
-      this.addEventListener('change-form-element-name-register', this._onRequestToChangeFormElementName); */
-      // elif remove solution
-      this._onRequestToRemoveFormElementName = this._onRequestToRemoveFormElementName.bind(this);
+      this._onRequestToChangeFormElementName = this._onRequestToChangeFormElementName.bind(this);
       this.addEventListener(
-        'remove-form-element-name-register',
-        this._onRequestToRemoveFormElementName,
+        'change-form-element-name-register',
+        this._onRequestToChangeFormElementName,
       );
     }
 
@@ -147,26 +144,12 @@ const FormRegistrarMixinImplementation = superclass =>
      * @param {String} oldName the child element(s) previous name
      * @param {String} newName the child element(s) current name
      */
-    /* changeFormElementName(oldName, newName) {
-      console.log('changeFormElementName init:', oldName, newName, this.formElements);
+    changeFormElementName(oldName, newName) {
       const element = this.formElements[oldName];
       if (element) {
         this.formElements[newName] = element;
         delete this.formElements[oldName];
       }
-      console.log('changeFormElementName end:', oldName, newName, this.formElements);
-    } */
-    // elif remove solution
-    /**
-     * @param {String} oldName the child element(s) previous name
-     */
-    removeFormElementName(oldName) {
-      console.log('removeFormElementName init:', oldName, this.formElements);
-      const element = this.formElements[oldName];
-      if (element) {
-        this.formElements = this.formElements.filter(formElement => formElement !== element);
-      }
-      console.log('removeFormElementName end:', oldName, this.formElements);
     }
 
     /**
@@ -217,12 +200,8 @@ const FormRegistrarMixinImplementation = superclass =>
      * @param {CustomEvent} ev
      */
     // if name change solution
-    /* _onRequestToChangeFormElementName(ev) {
+    _onRequestToChangeFormElementName(ev) {
       this.changeFormElementName(ev.detail.oldName, ev.detail.newName);
-    } */
-    // elif remove solution
-    _onRequestToRemoveFormElementName(ev) {
-      this.removeFormElementName(ev.detail.oldName);
     }
   };
 

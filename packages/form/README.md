@@ -24,6 +24,27 @@ export const main = () => html`
 `;
 ```
 
+```js story
+export const changeName = () => html`
+  <lion-form id="form">
+    <form>
+      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+      <!-- Just for testing purposes; dom't add to MR -->
+      <lion-button
+        @click=${ev => {
+          ev.preventDefault();
+          const input = ev.path[4].children[0];
+          console.log('@click init:', input.name);
+          input.name === 'firstName' ? (input.name = 'secondName') : (input.name = 'firstName');
+          console.log('@click end:', input.name);
+        }}
+        >Toggle name</lion-button
+      >
+    </form>
+  </lion-form>
+`;
+```
+
 ## Features
 
 - Data synchronization with models
