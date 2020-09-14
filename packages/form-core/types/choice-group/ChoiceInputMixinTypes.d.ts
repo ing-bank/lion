@@ -17,6 +17,8 @@ export declare class ChoiceInputHost {
   modelValue: ChoiceInputModelValue;
   serializedValue: ChoiceInputSerializedValue;
 
+  checked: boolean;
+
   get choiceValue(): any;
 
   set choiceValue(value: any);
