@@ -64,15 +64,19 @@ function getParseMode(value, { mode = 'auto' } = {}) {
  * parseWithLocale('1,234', { locale: 'en-GB' }) => 1234
  *
  * @param {string} value Number to be parsed
- * @param {object} options Locale Options
+ * @param {Object} options Locale Options
+ * @param {string} [options.locale]
  */
 function parseWithLocale(value, options) {
   const locale = options && options.locale ? options.locale : null;
   const separator = getDecimalSeparator(locale);
   const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
-  let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator).join('');
+  let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator)?.join('');
   if (separator === ',') {
-    numberAndLocaleSeparator = numberAndLocaleSeparator.replace(',', '.');
+    numberAndLocaleSeparator = numberAndLocaleSeparator?.replace(',', '.');
+  }
+  if (!numberAndLocaleSeparator) {
+    return NaN;
   }
   return parseFloat(numberAndLocaleSeparator);
 }
@@ -84,7 +88,7 @@ function parseWithLocale(value, options) {
  * Warning: This function works only with numbers that can be heuristically parsed.
  *
  * @param {string} value Number that can be heuristically parsed
- * @return {float} parsed javascript number
+ * @return {number} parsed javascript number
  */
 function parseHeuristic(value) {
   if (value.match(/[0-9., ]/g)) {
@@ -115,7 +119,7 @@ function parseHeuristic(value) {
  * parseAmount('1,234.56'); // method: heuristic => 1234.56
  *
  * @param {string} value Number to be parsed
- * @param {object} options Locale Options
+ * @param {object} [options] Locale Options
  */
 export function parseAmount(value, options) {
   const containsNumbers = value.match(/\d/g);
@@ -129,10 +133,15 @@ export function parseAmount(value, options) {
   const cleanedInput = matchedInput.join('');
   const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
-    case 'unparseable':
-      return parseFloat(cleanedInput.match(/[0-9]/g).join(''));
+    case 'unparseable': {
+      const cleanedInputMatchStr = cleanedInput.match(/[0-9]/g)?.join('');
+      if (!cleanedInputMatchStr) {
+        return NaN;
+      }
+      return parseFloat(cleanedInputMatchStr);
+    }
     case 'withLocale':
-      return parseWithLocale(cleanedInput, options);
+      return parseWithLocale(cleanedInput, options || {});
     case 'heuristic':
       return parseHeuristic(cleanedInput);
     default:

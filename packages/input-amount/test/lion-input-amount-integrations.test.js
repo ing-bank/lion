@@ -7,7 +7,6 @@ const tagString = 'lion-input-amount';
 describe('<lion-input-amount> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,
-    suffix: 'lion-input-amount',
     allowedModelValueTypes: [Number],
   });
 
