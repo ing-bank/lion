@@ -6,6 +6,7 @@ import { LionField } from '@lion/form-core';
  * @customElement lion-input
  * @extends {LionField}
  */
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInput extends LionField {
   static get properties() {
     return {
@@ -39,8 +40,9 @@ export class LionInput extends LionField {
       input: () => {
         // TODO: Find a better way to do value delegation via attr
         const native = document.createElement('input');
-        if (this.hasAttribute('value')) {
-          native.setAttribute('value', this.getAttribute('value'));
+        const value = this.getAttribute('value');
+        if (value) {
+          native.setAttribute('value', value);
         }
         return native;
       },
@@ -51,8 +53,13 @@ export class LionInput extends LionField {
     super();
     this.readOnly = false;
     this.type = 'text';
+    this.placeholder = '';
   }
 
+  /**
+   * @param {PropertyKey} name
+   * @param {?} oldValue
+   */
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
     if (name === 'readOnly') {
@@ -60,11 +67,13 @@ export class LionInput extends LionField {
     }
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__delegateReadOnly();
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('type')) {
