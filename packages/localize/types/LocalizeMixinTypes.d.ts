@@ -5,6 +5,29 @@ export interface FormatNumberPart {
   value: string;
 }
 
+// Take the DateTimeFormat and add the missing resolved options as well as optionals
+export declare interface FormatDateOptions extends Intl.DateTimeFormatOptions {
+  locale?: string;
+  calendar?: string;
+  numberingSystem?: string;
+  timeZone?: string;
+
+  roundMode?: string;
+  returnIfNaN?: string;
+  decimalSeparator?: string;
+  mode?: 'pasted' | 'auto';
+}
+
+// Take the DateTimeFormat and add the missing resolved options as well as optionals, and our own
+export declare interface FormatNumberOptions extends Intl.NumberFormatOptions {
+  locale?: string;
+  numberingSystem?: string;
+  roundMode?: string;
+  returnIfNaN?: string;
+  decimalSeparator?: string;
+  mode?: 'pasted' | 'auto';
+}
+
 interface StringToFunctionMap {
   [key: string]: Function;
 }

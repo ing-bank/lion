@@ -11,21 +11,7 @@ import { roundNumber } from './roundNumber.js';
  *
  * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {number} number Number to split up
- * @param {Object} [options] Intl options are available extended by roundMode,returnIfNaN
- * @param {string} [options.roundMode]
- * @param {string} [options.returnIfNaN]
- * @param {string} [options.locale]
- * @param {string} [options.localeMatcher]
- * @param {string} [options.numberingSystem]
- * @param {string} [options.style]
- * @param {string} [options.currency]
- * @param {string} [options.currencyDisplay]
- * @param {boolean}[options.useGrouping]
- * @param {number} [options.minimumIntegerDigits]
- * @param {number} [options.minimumFractionDigits]
- * @param {number} [options.maximumFractionDigits]
- * @param {number} [options.minimumSignificantDigits]
- * @param {number} [options.maximumSignificantDigits]
+ * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options] Intl options are available extended by roundMode,returnIfNaN
  * @returns {string | FormatNumberPart[]} Array with parts or (an empty string or returnIfNaN if not a number)
  */
 export function formatNumberToParts(number, options = {}) {
