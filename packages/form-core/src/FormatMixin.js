@@ -7,7 +7,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
- * @typedef {import('../types/FormatMixinTypes').FormatOptions} FormatOptions
+ * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
  */
 
 // For a future breaking release:
@@ -357,8 +357,7 @@ const FormatMixinImplementation = superclass =>
     constructor() {
       super();
       this.formatOn = 'change';
-      /** @type {FormatOptions} */
-      this.formatOptions = {};
+      this.formatOptions = /** @type {FormatOptions} */ ({});
     }
 
     connectedCallback() {

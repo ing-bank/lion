@@ -1,24 +1,20 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
+import { FormatNumberOptions } from '@lion/localize/types/LocalizeMixinTypes';
 import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
-
-export declare interface FormatOptions {
-  locale?: string;
-  decimalSeparator?: string;
-}
 
 export declare class FormatHost {
   formattedValue: string;
   serializedValue: string;
   formatOn: string;
-  formatOptions: FormatOptions;
+  formatOptions: FormatNumberOptions;
   value: string;
   __preventRecursiveTrigger: boolean;
   __isHandlingUserInput: boolean;
 
-  parser(v: string, opts: FormatOptions): unknown;
-  formatter(v: unknown, opts: FormatOptions): string;
+  parser(v: string, opts: FormatNumberOptions): unknown;
+  formatter(v: unknown, opts: FormatNumberOptions): string;
   serializer(v: unknown): string;
   deserializer(v: string): unknown;
 
