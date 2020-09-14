@@ -24,7 +24,8 @@
     "packages/tooltip/**/*.js",
     "packages/button/src/**/*.js",
     "packages/listbox/src/*.js",
-    "packages/input/**/*.js"
+    "packages/input/**/*.js",
+    "packages/input-amount/**/*.js"
   ],
   "exclude": [
     "node_modules",
