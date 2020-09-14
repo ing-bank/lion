@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 const { chromium } = require('playwright');
 const looksSame = require('looks-same');

@@ -1,28 +1,37 @@
 import { html } from '@lion/core';
+// @ts-expect-error
 import { LionInput } from '@lion/input';
 import { Required } from '@lion/form-core';
 import { expect, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
+/**
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
+ */
+
 describe('ChoiceInputMixin', () => {
-  before(() => {
-    class ChoiceInput extends ChoiceInputMixin(LionInput) {
-      connectedCallback() {
-        if (super.connectedCallback) super.connectedCallback();
-        this.type = 'checkbox'; // could also be 'radio', should be tested in integration test
-      }
+  /** @typedef {Element & ChoiceClass} ChoiceInput  */
+  class ChoiceClass extends ChoiceInputMixin(LionInput) {
+    constructor() {
+      super();
+      this.type = 'checkbox'; // could also be 'radio', should be tested in integration test
     }
-    customElements.define('choice-input', ChoiceInput);
-  });
+  }
+  // @ts-expect-error base constructors same return type
+  customElements.define('choice-input', ChoiceClass);
 
   it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(html`<choice-input hidden></choice-input>`);
+    const el = /** @type {ChoiceInput} */ (await fixture(
+      html`<choice-input hidden></choice-input>`,
+    ));
     expect(el).not.to.be.displayed;
   });
 
   it('has choiceValue', async () => {
-    const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
+    const el = /** @type {ChoiceInput} */ (await fixture(
+      html`<choice-input .choiceValue=${'foo'}></choice-input>`,
+    ));
 
     expect(el.choiceValue).to.equal('foo');
     expect(el.modelValue).to.deep.equal({
@@ -34,7 +43,9 @@ describe('ChoiceInputMixin', () => {
   it('can handle complex data via choiceValue', async () => {
     const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
-    const el = await fixture(html`<choice-input .choiceValue=${date}></choice-input>`);
+    const el = /** @type {ChoiceInput} */ (await fixture(
+      html`<choice-input .choiceValue=${date}></choice-input>`,
+    ));
 
     expect(el.choiceValue).to.equal(date);
     expect(el.modelValue.value).to.equal(date);
@@ -42,14 +53,14 @@ describe('ChoiceInputMixin', () => {
 
   it('fires one "model-value-changed" event if choiceValue or checked state or modelValue changed', async () => {
     let counter = 0;
-    const el = await fixture(html`
+    const el = /** @type {ChoiceInput} */ (await fixture(html`
       <choice-input
         @model-value-changed=${() => {
           counter += 1;
         }}
         .choiceValue=${'foo'}
       ></choice-input>
-    `);
+    `));
     expect(counter).to.equal(1); // undefined to set value
 
     el.checked = true;
@@ -67,7 +78,7 @@ describe('ChoiceInputMixin', () => {
 
   it('fires one "user-input-changed" event after user interaction', async () => {
     let counter = 0;
-    const el = await fixture(html`
+    const el = /** @type {ChoiceInput} */ (await fixture(html`
       <choice-input
         @user-input-changed="${() => {
           counter += 1;
@@ -75,7 +86,7 @@ describe('ChoiceInputMixin', () => {
       >
         <input slot="input" />
       </choice-input>
-    `);
+    `));
     expect(counter).to.equal(0);
     // Here we try to mimic user interaction by firing browser events
     const nativeInput = el._inputNode;
@@ -86,31 +97,31 @@ describe('ChoiceInputMixin', () => {
   });
 
   it('can be required', async () => {
-    const el = await fixture(html`
+    const el = /** @type {ChoiceInput} */ (await fixture(html`
       <choice-input .choiceValue=${'foo'} .validators=${[new Required()]}></choice-input>
-    `);
+    `));
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('Required');
+    expect(el.validationStates.error).to.exist;
+    expect(el.validationStates.error.Required).to.exist;
     el.checked = true;
     expect(el.hasFeedbackFor).not.to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).not.to.have.a.property('Required');
+    expect(el.validationStates.error).to.exist;
+    expect(el.validationStates.error.Required).not.to.exist;
   });
 
   describe('Checked state synchronization', () => {
     it('synchronizes checked state initially (via attribute or property)', async () => {
-      const el = await fixture(`<choice-input></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(`<choice-input></choice-input>`));
       expect(el.checked).to.equal(false, 'initially unchecked');
 
-      const precheckedElementAttr = await fixture(html`
+      const precheckedElementAttr = /** @type {ChoiceInput} */ (await fixture(html`
         <choice-input .checked=${true}></choice-input>
-      `);
+      `));
       expect(precheckedElementAttr.checked).to.equal(true, 'initially checked via attribute');
     });
 
     it('can be checked and unchecked programmatically', async () => {
-      const el = await fixture(`<choice-input></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(`<choice-input></choice-input>`));
       expect(el.checked).to.be.false;
       el.checked = true;
       expect(el.checked).to.be.true;
@@ -120,7 +131,7 @@ describe('ChoiceInputMixin', () => {
     });
 
     it('can be checked and unchecked via user interaction', async () => {
-      const el = await fixture(`<choice-input></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(`<choice-input></choice-input>`));
       el._inputNode.click();
       expect(el.checked).to.be.true;
       el._inputNode.click();
@@ -128,7 +139,9 @@ describe('ChoiceInputMixin', () => {
     });
 
     it('synchronizes modelValue to checked state and vice versa', async () => {
-      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(
+        html`<choice-input .choiceValue=${'foo'}></choice-input>`,
+      ));
       expect(el.checked).to.be.false;
       expect(el.modelValue).to.deep.equal({
         checked: false,
@@ -145,7 +158,9 @@ describe('ChoiceInputMixin', () => {
     it('ensures optimal synchronize performance by preventing redundant computation steps', async () => {
       /* we are checking private apis here to make sure we do not have cyclical updates
         which can be quite common for these type of connected data */
-      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(
+        html`<choice-input .choiceValue=${'foo'}></choice-input>`,
+      ));
       expect(el.checked).to.be.false;
 
       const spyModelCheckedToChecked = sinon.spy(el, '__syncModelCheckedToChecked');
@@ -168,13 +183,14 @@ describe('ChoiceInputMixin', () => {
     });
 
     it('synchronizes checked state to [checked] attribute for styling purposes', async () => {
+      /** @param {ChoiceInput} el */
       const hasAttr = el => el.hasAttribute('checked');
-      const el = await fixture(`<choice-input></choice-input>`);
-      const elChecked = await fixture(html`
+      const el = /** @type {ChoiceInput} */ (await fixture(`<choice-input></choice-input>`));
+      const elChecked = /** @type {ChoiceInput} */ (await fixture(html`
         <choice-input .checked=${true}>
           <input slot="input" />
         </choice-input>
-      `);
+      `));
 
       // Initial values
       expect(hasAttr(el)).to.equal(false, 'initial unchecked element');
@@ -214,32 +230,38 @@ describe('ChoiceInputMixin', () => {
 
   describe('Format/parse/serialize loop', () => {
     it('creates a modelValue object like { checked: true, value: foo } on init', async () => {
-      const el = await fixture(html`<choice-input .choiceValue=${'foo'}></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(
+        html`<choice-input .choiceValue=${'foo'}></choice-input>`,
+      ));
       expect(el.modelValue).deep.equal({ value: 'foo', checked: false });
 
-      const elChecked = await fixture(html`
+      const elChecked = /** @type {ChoiceInput} */ (await fixture(html`
         <choice-input .choiceValue=${'foo'} .checked=${true}></choice-input>
-      `);
+      `));
       expect(elChecked.modelValue).deep.equal({ value: 'foo', checked: true });
     });
 
     it('creates a formattedValue based on modelValue.value', async () => {
-      const el = await fixture(`<choice-input></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(`<choice-input></choice-input>`));
       expect(el.formattedValue).to.equal('');
 
-      const elementWithValue = await fixture(html`
+      const elementWithValue = /** @type {ChoiceInput} */ (await fixture(html`
         <choice-input .choiceValue=${'foo'}></choice-input>
-      `);
+      `));
       expect(elementWithValue.formattedValue).to.equal('foo');
     });
   });
 
   describe('Interaction states', () => {
     it('is considered prefilled when checked and not considered prefilled when unchecked', async () => {
-      const el = await fixture(html`<choice-input .checked=${true}></choice-input>`);
+      const el = /** @type {ChoiceInput} */ (await fixture(
+        html`<choice-input .checked=${true}></choice-input>`,
+      ));
       expect(el.prefilled).equal(true, 'checked element not considered prefilled');
 
-      const elUnchecked = await fixture(`<choice-input></choice-input>`);
+      const elUnchecked = /** @type {ChoiceInput} */ (await fixture(
+        `<choice-input></choice-input>`,
+      ));
       expect(elUnchecked.prefilled).equal(false, 'unchecked element not considered prefilled');
     });
   });

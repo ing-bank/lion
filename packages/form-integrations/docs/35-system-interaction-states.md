@@ -163,9 +163,7 @@ export const feedbackCondition = () => {
       </form>
     </lion-form>
     <h-output .field="${fieldElement}" .show="${[...props, 'hasFeedbackFor']}"> </h-output>
-    <h3>
-      Set conditions for validation feedback visibility
-    </h3>
+    <h3>Set conditions for validation feedback visibility</h3>
     <lion-checkbox-group name="props[]" @model-value-changed="${fetchConditionsAndReevaluate}">
       ${props.map(p => html` <lion-checkbox .label="${p}" .choiceValue="${p}"> </lion-checkbox> `)}
     </lion-checkbox-group>

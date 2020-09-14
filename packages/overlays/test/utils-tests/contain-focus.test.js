@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
+// @ts-expect-error
 import { renderLitAsNode } from '@lion/helpers';
-
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';
 import { getFocusableElements } from '../../src/utils/get-focusable-elements.js';
 import { keyCodes } from '../../src/utils/key-codes.js';
@@ -8,10 +8,14 @@ import { containFocus } from '../../src/utils/contain-focus.js';
 
 function simulateTabWithinContainFocus() {
   const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
+  // @ts-ignore override keyCode
   event.keyCode = keyCodes.tab;
   window.dispatchEvent(event);
 }
 
+/**
+ * @param {HTMLElement} elToRecieveFocus
+ */
 function simulateTabInWindow(elToRecieveFocus) {
   window.dispatchEvent(new Event('blur'));
   elToRecieveFocus.focus();
@@ -35,9 +39,7 @@ const interactionElementsNode = renderLitAsNode(html`
 const lightDomTemplate = html`
   <div>
     <button id="outside-1">outside 1</button>
-    <div id="rootElement">
-      ${interactionElementsNode}
-    </div>
+    <div id="rootElement">${interactionElementsNode}</div>
     <button id="outside-2">outside 2</button>
   </div>
 `;
@@ -79,7 +81,7 @@ function createShadowDomNode() {
 describe('containFocus()', () => {
   it('starts focus at the root element when there is no element with [autofocus]', async () => {
     await fixture(lightDomTemplate);
-    const root = document.getElementById('rootElement');
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
     const { disconnect } = containFocus(root);
 
     expect(getDeepActiveElement()).to.equal(root);
@@ -91,7 +93,7 @@ describe('containFocus()', () => {
 
   it('starts focus at the element with [autofocus] attribute', async () => {
     await fixture(lightDomAutofocusTemplate);
-    const el = document.querySelector('input[autofocus]');
+    const el = /** @type {HTMLElement} */ (document.querySelector('input[autofocus]'));
     const { disconnect } = containFocus(el);
 
     expect(getDeepActiveElement()).to.equal(el);
@@ -101,11 +103,11 @@ describe('containFocus()', () => {
 
   it('on tab, focuses first focusable element if focus was on element outside root element', async () => {
     await fixture(lightDomTemplate);
-    const root = document.getElementById('rootElement');
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
     const focusableElements = getFocusableElements(root);
     const { disconnect } = containFocus(root);
 
-    document.getElementById('outside-1').focus();
+    /** @type {HTMLElement} */ (document.getElementById('outside-1')).focus();
 
     simulateTabWithinContainFocus();
     expect(getDeepActiveElement()).to.equal(focusableElements[0]);
@@ -115,7 +117,7 @@ describe('containFocus()', () => {
 
   it('on tab, focuses first focusable element if focus was on the last focusable element', async () => {
     await fixture(lightDomTemplate);
-    const root = document.getElementById('rootElement');
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
     const focusableElements = getFocusableElements(root);
     const { disconnect } = containFocus(root);
 
@@ -129,7 +131,7 @@ describe('containFocus()', () => {
 
   it('on tab, does not interfere if focus remains within the root element', async () => {
     await fixture(lightDomTemplate);
-    const root = document.getElementById('rootElement');
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
     const focusableElements = getFocusableElements(root);
     const { disconnect } = containFocus(root);
 
@@ -149,16 +151,16 @@ describe('containFocus()', () => {
   describe('Tabbing into window', () => {
     it('restores focus within root element', async () => {
       await fixture(lightDomTemplate);
-      const root = document.getElementById('rootElement');
+      const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
       const focusableElements = getFocusableElements(root);
       const { disconnect } = containFocus(root);
 
       // Simulate tab in window
-      simulateTabInWindow(document.getElementById('outside-1'));
+      simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-1')));
       expect(getDeepActiveElement()).to.equal(focusableElements[0]);
 
       // Simulate shift+tab in window
-      simulateTabInWindow(document.getElementById('outside-2'));
+      simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-2')));
       expect(getDeepActiveElement()).to.equal(focusableElements[focusableElements.length - 1]);
 
       disconnect();
@@ -166,16 +168,16 @@ describe('containFocus()', () => {
 
     it('restores focus within root element with shadow dom', async () => {
       const el = await fixture(html`${createShadowDomNode()}`);
-      const root = el.querySelector('#rootElementShadow');
+      const root = /** @type {HTMLElement} */ (el.querySelector('#rootElementShadow'));
       const focusableElements = getFocusableElements(root);
       const { disconnect } = containFocus(root);
 
       // Simulate tab in window
-      simulateTabInWindow(document.getElementById('outside-1'));
+      simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-1')));
       expect(getDeepActiveElement()).to.equal(focusableElements[0]);
 
       // Simulate shift+tab in window
-      simulateTabInWindow(document.getElementById('outside-2'));
+      simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-2')));
       expect(getDeepActiveElement()).to.equal(focusableElements[focusableElements.length - 1]);
 
       disconnect();
@@ -183,7 +185,7 @@ describe('containFocus()', () => {
 
     it('keeps focus if already in rootElement', async () => {
       const el = await fixture(html`${createShadowDomNode()}`);
-      const root = el.querySelector('#rootElementShadow');
+      const root = /** @type {HTMLElement} */ (el.querySelector('#rootElementShadow'));
       const focusableElements = getFocusableElements(root);
       const { disconnect } = containFocus(root);
 

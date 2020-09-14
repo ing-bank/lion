@@ -38,4 +38,6 @@ local.log
 ## browserstack
 browserstack.err
 
+debug.log
+
 !packages/singleton-manager/demo/**/node_modules

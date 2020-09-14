@@ -5,7 +5,7 @@ import MyCompMixin from './internalProxy.js';
 
 export class ExtendedComp extends MyCompMixin(RefClass) {
   /**
-   * Whitelisted members
+   * allowed members
    */
   get getterSetter() {}
   set getterSetter(v) {}
@@ -30,7 +30,7 @@ export class ExtendedComp extends MyCompMixin(RefClass) {
   static get properties() {}
   static get styles() {}
   get updateComplete() {}
-  _requestUpdate() {}
+  requestUpdateInternal() {}
   createRenderRoot() {}
   render() {}
   updated() {}

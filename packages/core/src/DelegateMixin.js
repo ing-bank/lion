@@ -8,13 +8,17 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 /**
  * @typedef DelegateEvent
  * @property {string} type - Type of event
- * @property {Array<?>} args - Event arguments
+ * @property {EventHandlerNonNull} handler - Event arguments
+ * @property {boolean | AddEventListenerOptions} [opts]
  */
 
-/** @type {DelegateMixin} */
+/**
+ * @type {DelegateMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit-element').LitElement>} superclass
+ */
 const DelegateMixinImplementation = superclass =>
   // eslint-disable-next-line
-  class DelegateMixin extends superclass {
+  class extends superclass {
     constructor() {
       super();
 
@@ -40,9 +44,7 @@ const DelegateMixinImplementation = superclass =>
     }
 
     connectedCallback() {
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
+      super.connectedCallback();
       this._connectDelegateMixin();
     }
 
@@ -54,18 +56,19 @@ const DelegateMixinImplementation = superclass =>
 
     /**
      * @param {string} type
-     * @param {...Object} args
+     * @param {EventHandlerNonNull} handler
+     * @param {boolean | AddEventListenerOptions} [opts]
      */
-    addEventListener(type, ...args) {
+    addEventListener(type, handler, opts) {
       const delegatedEvents = this.delegations.events;
       if (delegatedEvents.indexOf(type) > -1) {
         if (this.delegationTarget) {
-          this.delegationTarget.addEventListener(type, ...args);
+          this.delegationTarget.addEventListener(type, handler, opts);
         } else {
-          this.__eventsQueue.push({ type, args });
+          this.__eventsQueue.push({ type, handler });
         }
       } else {
-        super.addEventListener(type, ...args);
+        super.addEventListener(type, handler, opts);
       }
     }
 
@@ -163,7 +166,7 @@ const DelegateMixinImplementation = superclass =>
 
     __emptyEventListenerQueue() {
       this.__eventsQueue.forEach(ev => {
-        this.delegationTarget.addEventListener(ev.type, ...ev.args);
+        this.delegationTarget.addEventListener(ev.type, ev.handler, ev.opts);
       });
     }
 

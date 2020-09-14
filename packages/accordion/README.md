@@ -21,9 +21,7 @@ export const main = () => html`
     <h3 slot="invoker">
       <button>Lorem</button>
     </h3>
-    <p slot="content">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-    </p>
+    <p slot="content">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
     <h3 slot="invoker">
       <button>Laboriosam</button>
     </h3>
@@ -56,9 +54,7 @@ import '@lion/accordion/lion-accordion.js';
   <h3 slot="invoker">
     <button>Lorem</button>
   </h3>
-  <p slot="content">
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-  </p>
+  <p slot="content">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
   <h3 slot="invoker">
     <button>Laboriosam</button>
   </h3>
@@ -83,9 +79,7 @@ export const expanded = () => html`
     <h3 slot="invoker">
       <button>Lorem</button>
     </h3>
-    <p slot="content">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-    </p>
+    <p slot="content">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
     <h3 slot="invoker">
       <button>Laboriosam</button>
     </h3>
@@ -109,9 +103,7 @@ export const slotsOrder = () => html`
     <h3 slot="invoker">
       <button>Lorem</button>
     </h3>
-    <p slot="content">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-    </p>
+    <p slot="content">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
     <h3 slot="invoker">
       <button>Laboriosam</button>
     </h3>
@@ -152,9 +144,7 @@ export const distributeNewElement = () => {
               </h4>
               <p slot="content">content 2</p>
             </lion-accordion>
-            <button @click="${this.__handleAppendClick}">
-              Append
-            </button>
+            <button @click="${this.__handleAppendClick}">Append</button>
             <hr />
             <h3>Push</h3>
             <lion-accordion id="pushTabs">
@@ -173,9 +163,7 @@ export const distributeNewElement = () => {
                 `,
               )}
             </lion-accordion>
-            <button @click="${this.__handlePushClick}">
-              Push
-            </button>
+            <button @click="${this.__handlePushClick}">Push</button>
           `;
         }
         constructor() {

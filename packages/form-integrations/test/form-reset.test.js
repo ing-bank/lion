@@ -113,9 +113,7 @@ describe(`Submitting/Resetting Form`, async () => {
           ></lion-textarea>
           <div class="buttons">
             <lion-button id="submit_button" type="submit" raised>Submit</lion-button>
-            <lion-button id="reset_button" type="reset" raised>
-              Reset
-            </lion-button>
+            <lion-button id="reset_button" type="reset" raised> Reset </lion-button>
           </div>
         </form>
       </lion-form>

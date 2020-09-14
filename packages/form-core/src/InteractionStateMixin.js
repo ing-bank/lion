@@ -13,11 +13,9 @@ import { FormControlMixin } from './FormControlMixin.js';
  * - leaves a form field(blur) -> 'touched' will be set to true. 'prefilled' when a
  *   field is left non-empty
  * - on keyup (actually, on the model-value-changed event) -> 'dirty' will be set to true
- * @param {HTMLElement} superclass
- */
-
-/**
+ *
  * @type {InteractionStateMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const InteractionStateMixinImplementation = superclass =>
   class InteractionStateMixin extends FormControlMixin(superclass) {
@@ -67,14 +65,14 @@ const InteractionStateMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {*} oldVal
      */
-    _requestUpdate(name, oldVal) {
-      super._requestUpdate(name, oldVal);
+    requestUpdateInternal(name, oldVal) {
+      super.requestUpdateInternal(name, oldVal);
       if (name === 'touched' && this.touched !== oldVal) {
         this._onTouchedChanged();
       }
 
       if (name === 'modelValue') {
-        // We do this in _requestUpdate because we don't want to fire another re-render (e.g. when doing this in updated)
+        // We do this in requestUpdateInternal because we don't want to fire another re-render (e.g. when doing this in updated)
         // Furthermore, we cannot do it on model-value-changed event because it isn't fired initially.
         this.filled = !this._isEmpty();
       }
@@ -105,18 +103,14 @@ const InteractionStateMixinImplementation = superclass =>
      * Register event handlers and validate prefilled inputs
      */
     connectedCallback() {
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
+      super.connectedCallback();
       this.addEventListener(this._leaveEvent, this._iStateOnLeave);
       this.addEventListener(this._valueChangedEvent, this._iStateOnValueChange);
       this.initInteractionState();
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
+      super.disconnectedCallback();
       this.removeEventListener(this._leaveEvent, this._iStateOnLeave);
       this.removeEventListener(this._valueChangedEvent, this._iStateOnValueChange);
     }
@@ -168,6 +162,27 @@ const InteractionStateMixinImplementation = superclass =>
 
     _onDirtyChanged() {
       this.dispatchEvent(new CustomEvent('dirty-changed', { bubbles: true, composed: true }));
+    }
+
+    /**
+     * Show the validity feedback when one of the following conditions is met:
+     *
+     * - submitted
+     *   If the form is submitted, always show the error message.
+     *
+     * - prefilled
+     *   the user already filled in something, or the value is prefilled
+     *   when the form is initially rendered.
+     *
+     * - touched && dirty
+     *   When a user starts typing for the first time in a field with for instance `required`
+     *   validation, error message should not be shown until a field becomes `touched`
+     *   (a user leaves(blurs) a field).
+     *   When a user enters a field without altering the value(making it `dirty`),
+     *   an error message shouldn't be shown either.
+     */
+    _showFeedbackConditionFor() {
+      return (this.touched && this.dirty) || this.prefilled || this.submitted;
     }
   };
 

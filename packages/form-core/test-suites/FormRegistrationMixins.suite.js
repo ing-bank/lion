@@ -6,28 +6,35 @@ import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPorta
 
 /**
  * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
- * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
  */
 
 /**
- *
- * @param {Object} customConfig
- * @param {string} customConfig.suffix
- * @param {string} customConfig.parentTagString
- * @param {string} customConfig.childTagString
- * @param {string} customConfig.portalTagString
+ * @typedef {Object} customConfig
+ * @property {typeof HTMLElement | typeof import('@lion/core').UpdatingElement | typeof LitElement} [baseElement]
+ * @property {string} [customConfig.suffix]
+ * @property {string} [customConfig.parentTagString]
+ * @property {string} [customConfig.childTagString]
+ * @property {string} [customConfig.portalTagString]
+ */
+
+/**
+ * @param {customConfig} customConfig
  */
 export const runRegistrationSuite = customConfig => {
   const cfg = {
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/38535
     baseElement: HTMLElement,
     ...customConfig,
   };
 
   describe(`FormRegistrationMixins ${cfg.suffix}`, () => {
+    // @ts-expect-error base constructors same return type & type cannot be assigned like this
     class RegistrarClass extends FormRegistrarMixin(cfg.baseElement) {}
     cfg.parentTagString = defineCE(RegistrarClass);
+    // @ts-expect-error base constructors same return type & type cannot be assigned like this
     class RegisteringClass extends FormRegisteringMixin(cfg.baseElement) {}
     cfg.childTagString = defineCE(RegisteringClass);
+    // @ts-expect-error base constructors same return type & type cannot be assigned like this
     class PortalClass extends FormRegistrarPortalMixin(cfg.baseElement) {}
     cfg.portalTagString = defineCE(PortalClass);
 
@@ -84,6 +91,7 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('works for components that have a delayed render', async () => {
+      // @ts-expect-error base constructors same return type
       class PerformUpdate extends FormRegistrarMixin(LitElement) {
         async performUpdate() {
           await new Promise(resolve => setTimeout(() => resolve(), 10));

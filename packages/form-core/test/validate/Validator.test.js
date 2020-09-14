@@ -1,9 +1,13 @@
-import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
-import sinon from 'sinon';
 import { LitElement } from '@lion/core';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import { ValidateMixin } from '../../src/validate/ValidateMixin.js';
 import { Validator } from '../../src/validate/Validator.js';
 
+/**
+ * @param {function} method
+ * @param {string} errorMessage
+ */
 async function expectThrowsAsync(method, errorMessage) {
   let error = null;
   try {
@@ -20,6 +24,10 @@ async function expectThrowsAsync(method, errorMessage) {
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
     class MyValidator extends Validator {
+      /**
+       * @param {string} [modelValue]
+       * @param {string} [param]
+       */
       execute(modelValue, param) {
         const hasError = modelValue === 'test' && param === 'me';
         return hasError;
@@ -79,20 +87,24 @@ describe('Validator', () => {
   });
 
   it('has access to name, type, params, config in static get getMessage', () => {
-    let staticArgs;
+    let data;
     class MyValidator extends Validator {
       static get validatorName() {
         return 'MyValidator';
       }
 
-      static getMessage(...args) {
-        staticArgs = args;
+      /**
+       * @param {Object.<string,?>} _data
+       */
+      static async getMessage(_data) {
+        data = _data;
+        return '';
       }
     }
     const vali = new MyValidator('myParam', { my: 'config' });
     vali._getMessage();
 
-    expect(staticArgs[0]).to.deep.equal({
+    expect(data).to.deep.equal({
       name: 'MyValidator',
       type: 'error',
       params: 'myParam',
@@ -103,7 +115,9 @@ describe('Validator', () => {
   it('fires "param-changed" event on param change', async () => {
     const vali = new Validator('foo');
     const cb = sinon.spy(() => {});
-    vali.addEventListener('param-changed', cb);
+    if (vali.addEventListener) {
+      vali.addEventListener('param-changed', cb);
+    }
     vali.param = 'bar';
     expect(cb.callCount).to.equal(1);
   });
@@ -111,47 +125,41 @@ describe('Validator', () => {
   it('fires "config-changed" event on config change', async () => {
     const vali = new Validator('foo', { foo: 'bar' });
     const cb = sinon.spy(() => {});
-    vali.addEventListener('config-changed', cb);
+    if (vali.addEventListener) {
+      vali.addEventListener('config-changed', cb);
+    }
     vali.config = { bar: 'foo' };
     expect(cb.callCount).to.equal(1);
   });
 
   it('has access to FormControl', async () => {
     const lightDom = '';
-    const tagString = defineCE(
-      class extends ValidateMixin(LitElement) {
-        static get properties() {
-          return { modelValue: String };
-        }
-      },
-    );
+    // @ts-expect-error base constructors same return type
+    class ValidateElement extends ValidateMixin(LitElement) {
+      static get properties() {
+        return { modelValue: String };
+      }
+    }
+    const tagString = defineCE(ValidateElement);
     const tag = unsafeStatic(tagString);
 
     class MyValidator extends Validator {
+      /**
+       * @param {string} modelValue
+       * @param {string} param
+       */
       execute(modelValue, param) {
         const hasError = modelValue === 'forbidden' && param === 'values';
         return hasError;
-      }
-
-      // eslint-disable-next-line
-      onFormControlConnect(formControl) {
-        // I could do something like:
-        // - add aria-required="true"
-        // - add type restriction for MaxLength(3, { isBlocking: true })
-      }
-
-      // eslint-disable-next-line
-      onFormControlDisconnect(formControl) {
-        // I will cleanup what I did in connect
       }
     }
     const myVal = new MyValidator();
     const connectSpy = sinon.spy(myVal, 'onFormControlConnect');
     const disconnectSpy = sinon.spy(myVal, 'onFormControlDisconnect');
 
-    const el = await fixture(html`
+    const el = /** @type {ValidateElement} */ (await fixture(html`
       <${tag} .validators=${[myVal]}>${lightDom}</${tag}>
-    `);
+    `));
 
     expect(connectSpy.callCount).to.equal(1);
     expect(connectSpy.calledWith(el)).to.equal(true);
@@ -171,6 +179,9 @@ describe('Validator', () => {
     it('supports customized types', async () => {
       // This test shows the best practice of adding custom types
       class MyValidator extends Validator {
+        /**
+         * @param  {...any} args
+         */
         constructor(...args) {
           super(...args);
           this.type = 'my-type';

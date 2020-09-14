@@ -5,14 +5,15 @@ const { performance } = require('perf_hooks');
 const { providence } = require('../program/providence.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { LogService } = require('../program/services/LogService.js');
+const { flatten } = require('./cli-helpers.js');
 
 async function launchProvidenceWithExtendDocs({
   referenceProjectPaths,
   prefixCfg,
   outputFolder,
   extensions,
-  whitelist,
-  whitelistReference,
+  allowlist,
+  allowlistReference,
 }) {
   const t0 = performance.now();
 
@@ -21,11 +22,11 @@ async function launchProvidenceWithExtendDocs({
     {
       gatherFilesConfig: {
         extensions: extensions || ['.js'],
-        filter: whitelist || ['!coverage', '!test'],
+        allowlist: allowlist || ['!coverage', '!test'],
       },
       gatherFilesConfigReference: {
         extensions: extensions || ['.js'],
-        filter: whitelistReference || ['!coverage', '!test'],
+        allowlist: allowlistReference || ['!coverage', '!test'],
       },
       queryMethod: 'ast',
       report: false,
@@ -35,11 +36,13 @@ async function launchProvidenceWithExtendDocs({
   );
 
   const outputFilePath = pathLib.join(outputFolder, 'providence-extend-docs-data.json');
-  const queryOutputs = results.map(result => result.queryOutput).flat();
+  const queryOutputs = flatten(
+    results.map(result => result.queryOutput).filter(o => typeof o !== 'string'), // filter out '[no-dependency]' etc.
+  );
   if (fs.existsSync(outputFilePath)) {
     fs.unlinkSync(outputFilePath);
   }
-  fs.writeFile(outputFilePath, JSON.stringify(queryOutputs), err => {
+  fs.writeFile(outputFilePath, JSON.stringify(queryOutputs, null, 2), err => {
     if (err) {
       throw err;
     }

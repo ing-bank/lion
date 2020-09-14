@@ -2,17 +2,18 @@ import { LitElement } from '@lion/core';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { FormatMixin } from '../src/FormatMixin.js';
-// FIXME: revert once validate is typed
-// import { Unparseable, Validator } from '../index.js';
+import { Unparseable, Validator } from '../index.js';
 
 /**
- * @typedef {import('../types/FormatMixinTypes').FormatHost} FormatHost
- * @typedef {{ _inputNode: HTMLElement }} inputNodeHost
- * @typedef {{ errorState: boolean, hasFeedbackFor: string[], validators: ?[] }} validateHost // FIXME: replace with ValidateMixinHost once typed
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  */
 
+// @ts-expect-error base constructor same return type
 class FormatClass extends FormatMixin(LitElement) {
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
+  }
+
   render() {
     return html`<slot name="input"></slot>`;
   }
@@ -29,15 +30,10 @@ class FormatClass extends FormatMixin(LitElement) {
     }
     return '';
   }
-
-  get _inputNode() {
-    return this.querySelector('input');
-  }
 }
 
 /**
- *
- * @param {FormatClass & inputNodeHost} formControl
+ * @param {FormatClass} formControl
  * @param {?} newViewValue
  */
 function mimicUserInput(formControl, newViewValue) {
@@ -46,7 +42,7 @@ function mimicUserInput(formControl, newViewValue) {
 }
 
 /**
- * @param {{tagString?: string, modelValueType: modelValueType}} [customConfig]
+ * @param {{tagString?: string, modelValueType?: modelValueType}} [customConfig]
  */
 export function runFormatMixinSuite(customConfig) {
   const cfg = {
@@ -95,7 +91,7 @@ export function runFormatMixinSuite(customConfig) {
     let elem;
     /** @type {FormatClass} */
     let nonFormat;
-    /** @type {FormatClass & inputNodeHost} */
+    /** @type {FormatClass} */
     let fooFormat;
 
     before(async () => {
@@ -128,7 +124,7 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('fires `model-value-changed` for every change on the input', async () => {
-      const formatEl = /** @type {FormatClass & inputNodeHost} */ (await fixture(
+      const formatEl = /** @type {FormatClass} */ (await fixture(
         html`<${elem}><input slot="input"></${elem}>`,
       ));
 
@@ -215,7 +211,7 @@ export function runFormatMixinSuite(customConfig) {
 
     it('synchronizes _inputNode.value as a fallback mechanism', async () => {
       // Note that in lion-field, the attribute would be put on <lion-field>, not on <input>
-      const formatElem = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
+      const formatElem = /** @type {FormatClass} */ (await fixture(html`
         <${elem}
           value="string"
           .formatter=${/** @param {string} value */ value => `foo: ${value}`}
@@ -237,7 +233,7 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('reflects back formatted value to user on leave', async () => {
-      const formatEl = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
+      const formatEl = /** @type {FormatClass} */ (await fixture(html`
         <${elem} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
           <input slot="input" />
         </${elem}>
@@ -255,14 +251,14 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
-      const el = /** @type {FormatClass & inputNodeHost & validateHost} */ (await fixture(html`
+      const el = /** @type {FormatClass} */ (await fixture(html`
         <${elem} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
           <input slot="input" />
         </${elem}>
       `));
       // The FormatMixin can be used in conjunction with the ValidateMixin, in which case
       // it can hold errorState (affecting the formatting)
-      el.errorState = true;
+      el.hasFeedbackFor = ['error'];
 
       // users types value 'test'
       mimicUserInput(el, 'test');
@@ -274,6 +270,7 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('works if there is no underlying _inputNode', async () => {
+      // @ts-expect-error base constructor same return type
       const tagNoInputString = defineCE(class extends FormatMixin(LitElement) {});
       const tagNoInput = unsafeStatic(tagNoInputString);
       expect(async () => {
@@ -300,7 +297,9 @@ export function runFormatMixinSuite(customConfig) {
 
       it('should have formatOptions available in formatter', async () => {
         const formatterSpy = sinon.spy(value => `foo: ${value}`);
-        const generatedViewValue = generateValueBasedOnType({ viewValue: true });
+        const generatedViewValue = /** @type {string} */ (generateValueBasedOnType({
+          viewValue: true,
+        }));
         await fixture(html`
           <${elem} value="${generatedViewValue}" .formatter="${formatterSpy}"
             .formatOptions="${{ locale: 'en-GB', decimalSeparator: '-' }}">
@@ -319,7 +318,7 @@ export function runFormatMixinSuite(customConfig) {
         /** @type {?} */
         const generatedValue = generateValueBasedOnType();
         const parserSpy = sinon.spy();
-        const el = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
+        const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem} .parser="${parserSpy}">
             <input slot="input" value="${generatedValue}">
           </${elem}>
@@ -335,7 +334,7 @@ export function runFormatMixinSuite(customConfig) {
       });
 
       it('will not return Unparseable when empty strings are inputted', async () => {
-        const el = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
+        const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem}>
             <input slot="input" value="string">
           </${elem}>
@@ -359,7 +358,7 @@ export function runFormatMixinSuite(customConfig) {
           toggleValue: true,
         });
 
-        const el = /** @type {FormatClass & inputNodeHost & validateHost} */ (await fixture(html`
+        const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem} .formatter=${formatterSpy}>
             <input slot="input" value="${generatedViewValue}">
           </${elem}>
@@ -371,7 +370,7 @@ export function runFormatMixinSuite(customConfig) {
         // Setting hasError = true is not enough if the element has errorValidators (uses ValidateMixin)
         // that set hasError back to false when the user input is mimicked.
 
-        /* const AlwaysInvalid = class extends Validator {
+        const AlwaysInvalid = class extends Validator {
           static get validatorName() {
             return 'AlwaysInvalid';
           }
@@ -379,9 +378,9 @@ export function runFormatMixinSuite(customConfig) {
           execute() {
             return true;
           }
-        }; */
-        // @ts-ignore // FIXME: remove this ignore after Validator class is typed
-        // el.validators = [new AlwaysInvalid()];
+        };
+
+        el.validators = [new AlwaysInvalid()];
         mimicUserInput(el, generatedViewValueAlt);
 
         expect(formatterSpy.callCount).to.equal(1);
@@ -398,19 +397,21 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     describe('Unparseable values', () => {
-      // it('should convert to Unparseable when wrong value inputted by user', async () => {
-      //   const el = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
-      //     <${elem} .parser=${viewValue => Number(viewValue) || undefined}
-      //       >
-      //       <input slot="input">
-      //     </${elem}>
-      //   `));
-      //   mimicUserInput(el, 'test');
-      //   expect(el.modelValue).to.be.an.instanceof(Unparseable);
-      // });
+      it('should convert to Unparseable when wrong value inputted by user', async () => {
+        const el = /** @type {FormatClass} */ (await fixture(html`
+          <${elem} .parser=${
+          /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
+        }
+            >
+            <input slot="input">
+          </${elem}>
+        `));
+        mimicUserInput(el, 'test');
+        expect(el.modelValue).to.be.an.instanceof(Unparseable);
+      });
 
       it('should preserve the viewValue when not parseable', async () => {
-        const el = /** @type {FormatClass & inputNodeHost} */ (await fixture(html`
+        const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem}
             .parser=${/** @param {string} viewValue */ viewValue => Number(viewValue) || undefined}
           >
@@ -422,17 +423,17 @@ export function runFormatMixinSuite(customConfig) {
         expect(el.value).to.equal('test');
       });
 
-      // it('should display the viewValue when modelValue is of type Unparseable', async () => {
-      //   const el = /** @type {FormatClass} */ (await fixture(html`
-      //     <${elem}
-      //       .parser=${/** @param {string} viewValue */ viewValue => Number(viewValue) || undefined}
-      //     >
-      //       <input slot="input">
-      //     </${elem}>
-      //   `));
-      //   el.modelValue = new Unparseable('foo');
-      //   expect(el.value).to.equal('foo');
-      // });
+      it('should display the viewValue when modelValue is of type Unparseable', async () => {
+        const el = /** @type {FormatClass} */ (await fixture(html`
+          <${elem}
+            .parser=${/** @param {string} viewValue */ viewValue => Number(viewValue) || undefined}
+          >
+            <input slot="input">
+          </${elem}>
+        `));
+        el.modelValue = new Unparseable('foo');
+        expect(el.value).to.equal('foo');
+      });
     });
   });
 }

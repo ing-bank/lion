@@ -13,9 +13,9 @@ describe('getDeepActiveElement()', () => {
       </div>
     `);
 
-    const el1 = element.querySelector('#el-1');
-    const el2 = element.querySelector('#el-2');
-    const el3 = element.querySelector('#el-3');
+    const el1 = /** @type {HTMLElement} */ (element.querySelector('#el-1'));
+    const el2 = /** @type {HTMLElement} */ (element.querySelector('#el-2'));
+    const el3 = /** @type {HTMLElement} */ (element.querySelector('#el-3'));
 
     el1.focus();
     expect(getDeepActiveElement()).to.eql(el1);
@@ -59,13 +59,16 @@ describe('getDeepActiveElement()', () => {
       </div>
     `);
 
-    const elA = element.querySelector(elTag).shadowRoot;
-    const elB = elA.querySelector(elNestedTag).shadowRoot;
-    const elA1 = elA.querySelector('#el-a-1');
-    const elA2 = elA.querySelector('#el-a-2');
-    const elB1 = elB.querySelector('#el-b-1');
-    const elB2 = elB.querySelector('#el-b-1');
-    const el1 = element.querySelector('#el-1');
+    const elTagEl = /** @type {HTMLElement} */ (element.querySelector(elTag));
+    const elA = /** @type {ShadowRoot} */ (elTagEl.shadowRoot);
+    const elNestedTagEl = /** @type {HTMLElement} */ (elA.querySelector(elNestedTag));
+    const elB = /** @type {ShadowRoot} */ (elNestedTagEl.shadowRoot);
+
+    const elA1 = /** @type {HTMLElement} */ (elA.querySelector('#el-a-1'));
+    const elA2 = /** @type {HTMLElement} */ (elA.querySelector('#el-a-2'));
+    const elB1 = /** @type {HTMLElement} */ (elB.querySelector('#el-b-1'));
+    const elB2 = /** @type {HTMLElement} */ (elB.querySelector('#el-b-1'));
+    const el1 = /** @type {HTMLElement} */ (element.querySelector('#el-1'));
 
     elA1.focus();
     expect(getDeepActiveElement()).to.eql(elA1);

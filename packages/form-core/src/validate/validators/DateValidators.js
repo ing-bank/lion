@@ -3,6 +3,9 @@
 import { normalizeDateTime } from '@lion/localize';
 import { Validator } from '../Validator.js';
 
+/**
+ * @param {?} value
+ */
 function isDate(value) {
   return (
     Object.prototype.toString.call(value) === '[object Date]' && !Number.isNaN(value.getTime())
@@ -14,6 +17,9 @@ export class IsDate extends Validator {
     return 'IsDate';
   }
 
+  /**
+   * @param {?} value
+   */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
@@ -29,6 +35,9 @@ export class MinDate extends Validator {
     return 'MinDate';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, min = this.param) {
     let hasError = false;
     if (!isDate(value) || value < normalizeDateTime(min)) {
@@ -43,6 +52,9 @@ export class MaxDate extends Validator {
     return 'MaxDate';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, max = this.param) {
     let hasError = false;
     if (!isDate(value) || value > normalizeDateTime(max)) {
@@ -57,6 +69,9 @@ export class MinMaxDate extends Validator {
     return 'MinMaxDate';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
     if (!isDate(value) || value < normalizeDateTime(min) || value > normalizeDateTime(max)) {
@@ -71,6 +86,9 @@ export class IsDateDisabled extends Validator {
     return 'IsDateDisabled';
   }
 
+  /**
+   * @param {?} value
+   */
   execute(value, isDisabledFn = this.param) {
     let hasError = false;
     if (!isDate(value) || isDisabledFn(value)) {

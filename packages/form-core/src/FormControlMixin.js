@@ -1,7 +1,8 @@
 import { css, dedupeMixin, html, nothing, SlotMixin } from '@lion/core';
-import { Unparseable } from './validate/Unparseable.js';
+import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
+import { Unparseable } from './validate/Unparseable.js';
 
 /**
  * Generates random unique identifier (for dom elements)
@@ -17,16 +18,17 @@ function uuid(prefix) {
  * This Mixin is a shared fundament for all form components, it's applied on:
  * - LionField (which is extended to LionInput, LionTextarea, LionSelect etc. etc.)
  * - LionFieldset (which is extended to LionRadioGroup, LionCheckboxGroup, LionForm)
- * @typedef {import('lit-html').TemplateResult} TemplateResult
- * @typedef {import('lit-element').CSSResult} CSSResult
- * @typedef {import('lit-html').nothing} nothing
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @type {FormControlMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
-  class FormControlMixin extends FormRegisteringMixin(SlotMixin(superclass)) {
+  class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
     static get properties() {
       return {
         /**
@@ -38,16 +40,46 @@ const FormControlMixinImplementation = superclass =>
           reflect: true,
         },
         /**
-         * When no light dom defined and prop set
+         * A Boolean attribute which, if present, indicates that the user should not be able to edit
+         * the value of the input. The difference between disabled and readonly is that read-only
+         * controls can still function, whereas disabled controls generally do not function as
+         * controls until they are enabled.
+         *
+         * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+         */
+        readOnly: {
+          type: Boolean,
+          attribute: 'readonly',
+          reflect: true,
+        },
+        /**
+         * The label text for the input node.
+         * When no light dom defined via [slot=label], this value will be used
          */
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
         /**
-         * When no light dom defined and prop set
+         * The helpt text for the input node.
+         * When no light dom defined via [slot=help-text], this value will be used
          */
         helpText: {
           type: String,
           attribute: 'help-text',
         },
+
+        /**
+         * The model value is the result of the parser function(when available).
+         * It should be considered as the internal value used for validation and reasoning/logic.
+         * The model value is 'ready for consumption' by the outside world (think of a Date
+         * object or a float). The modelValue can(and is recommended to) be used as both input
+         * value and output value of the `LionField`.
+         *
+         * Examples:
+         * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
+         * - For a number input: a formatted String '1.234,56' will be converted to a Number:
+         *   1234.56
+         */
+        modelValue: { attribute: false },
+
         /**
          * Contains all elements that should end up in aria-labelledby of `._inputNode`
          */
@@ -112,7 +144,8 @@ const FormControlMixinImplementation = superclass =>
      * @return {string}
      */
     get fieldName() {
-      return this.__fieldName || this.label || this.name;
+      // @ts-expect-error
+      return this.__fieldName || this.label || this.name; // FIXME: when LionField is typed we can inherit this prop
     }
 
     /**
@@ -184,7 +217,9 @@ const FormControlMixinImplementation = superclass =>
     }
 
     get _feedbackNode() {
-      return this.__getDirectSlotChild('feedback');
+      return /** @type {import('./validate/LionValidationFeedback').LionValidationFeedback | undefined} */ (this.__getDirectSlotChild(
+        'feedback',
+      ));
     }
 
     constructor() {
@@ -197,7 +232,11 @@ const FormControlMixinImplementation = superclass =>
       this._ariaDescribedNodes = [];
       /** @type {'child' | 'choice-group' | 'fieldset'} */
       this._repropagationRole = 'child';
-      this.addEventListener('model-value-changed', this.__repropagateChildrenValues);
+      this._isRepropagationEndpoint = false;
+      this.addEventListener(
+        'model-value-changed',
+        /** @type {EventListenerOrEventListenerObject} */ (this.__repropagateChildrenValues),
+      );
     }
 
     connectedCallback() {
@@ -339,12 +378,8 @@ const FormControlMixinImplementation = superclass =>
      */
     render() {
       return html`
-        <div class="form-field__group-one">
-          ${this._groupOneTemplate()}
-        </div>
-        <div class="form-field__group-two">
-          ${this._groupTwoTemplate()}
-        </div>
+        <div class="form-field__group-one">${this._groupOneTemplate()}</div>
+        <div class="form-field__group-two">${this._groupTwoTemplate()}</div>
       `;
     }
 
@@ -479,10 +514,15 @@ const FormControlMixinImplementation = superclass =>
     /**
      * @param {?} modelValue
      * @return {boolean}
+     *
+     * FIXME: Move to FormatMixin? Since there we have access to modelValue prop
      */
+    // @ts-expect-error
     _isEmpty(modelValue = this.modelValue) {
       let value = modelValue;
+      // @ts-expect-error
       if (this.modelValue instanceof Unparseable) {
+        // @ts-expect-error
         value = this.modelValue.viewValue;
       }
 
@@ -629,7 +669,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {HTMLElement[]}
+     * @return {Array.<HTMLElement|undefined>}
      */
     // Returns dom references to all elements that should be referred to by field(s)
     _getAriaDescriptionElements() {
@@ -681,10 +721,12 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @param {string} slotName
-     * @return {HTMLElement}
+     * @return {HTMLElement | undefined}
      */
     __getDirectSlotChild(slotName) {
-      return [...this.children].find(el => el.slot === slotName);
+      return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+        el => el.slot === slotName,
+      );
     }
 
     __dispatchInitialModelValueChangedEvent() {
@@ -756,6 +798,7 @@ const FormControlMixinImplementation = superclass =>
       // We only send the checked changed up (not the unchecked). In this way a choice group
       // (radio-group, checkbox-group, select/listbox) acts as an 'endpoint' (a single Field)
       // just like the native <select>
+      // @ts-expect-error multipleChoice is not directly available but only as side effect
       if (this._repropagationRole === 'choice-group' && !this.multipleChoice && !target.checked) {
         return;
       }

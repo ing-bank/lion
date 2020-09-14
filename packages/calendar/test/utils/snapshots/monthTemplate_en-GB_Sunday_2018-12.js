@@ -3,7 +3,7 @@ const html = strings => strings[0];
 export default html`
   <div id="js-content-wrapper">
     <table
-      aria-labelledby="month_and_year"
+      aria-labelledby="month year"
       aria-readonly="true"
       class="calendar__grid"
       data-wrap-cols=""
@@ -51,14 +51,14 @@ export default html`
       </thead>
       <tbody>
         <tr role="row">
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <button
               aria-label="25 November 2018 Sunday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              25
+              <span class="calendar__day-button__text">25</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -68,7 +68,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              26
+              <span class="calendar__day-button__text">26</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -78,7 +78,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              27
+              <span class="calendar__day-button__text">27</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -88,7 +88,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              28
+              <span class="calendar__day-button__text">28</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -98,39 +98,39 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              29
+              <span class="calendar__day-button__text">29</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" last-day>
             <button
               aria-label="30 November 2018 Friday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              30
+              <span class="calendar__day-button__text">30</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" end-of-first-week first-day>
             <button
               aria-label="1 December 2018 Saturday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              1
+              <span class="calendar__day-button__text">1</span>
             </button>
           </td>
         </tr>
         <tr role="row">
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" start-of-first-full-week>
             <button
               aria-label="2 December 2018 Sunday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              2
+              <span class="calendar__day-button__text">2</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -140,7 +140,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              3
+              <span class="calendar__day-button__text">3</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -150,7 +150,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              4
+              <span class="calendar__day-button__text">4</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -160,7 +160,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              5
+              <span class="calendar__day-button__text">5</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -170,7 +170,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              6
+              <span class="calendar__day-button__text">6</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -180,7 +180,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              7
+              <span class="calendar__day-button__text">7</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -190,7 +190,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              8
+              <span class="calendar__day-button__text">8</span>
             </button>
           </td>
         </tr>
@@ -202,7 +202,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              9
+              <span class="calendar__day-button__text">9</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -212,7 +212,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              10
+              <span class="calendar__day-button__text">10</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -222,7 +222,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              11
+              <span class="calendar__day-button__text">11</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -232,7 +232,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              12
+              <span class="calendar__day-button__text">12</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -242,7 +242,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              13
+              <span class="calendar__day-button__text">13</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -252,7 +252,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              14
+              <span class="calendar__day-button__text">14</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -262,7 +262,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              15
+              <span class="calendar__day-button__text">15</span>
             </button>
           </td>
         </tr>
@@ -274,7 +274,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              16
+              <span class="calendar__day-button__text">16</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -284,7 +284,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              17
+              <span class="calendar__day-button__text">17</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -294,7 +294,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              18
+              <span class="calendar__day-button__text">18</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -304,7 +304,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              19
+              <span class="calendar__day-button__text">19</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -314,7 +314,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              20
+              <span class="calendar__day-button__text">20</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -324,7 +324,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              21
+              <span class="calendar__day-button__text">21</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -334,7 +334,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              22
+              <span class="calendar__day-button__text">22</span>
             </button>
           </td>
         </tr>
@@ -346,7 +346,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              23
+              <span class="calendar__day-button__text">23</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -356,7 +356,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              24
+              <span class="calendar__day-button__text">24</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -366,7 +366,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              25
+              <span class="calendar__day-button__text">25</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -376,7 +376,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              26
+              <span class="calendar__day-button__text">26</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -386,7 +386,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              27
+              <span class="calendar__day-button__text">27</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -396,49 +396,49 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              28
+              <span class="calendar__day-button__text">28</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" end-of-last-full-week>
             <button
               aria-label="29 December 2018 Saturday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              29
+              <span class="calendar__day-button__text">29</span>
             </button>
           </td>
         </tr>
         <tr role="row">
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <button
               aria-label="30 December 2018 Sunday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              30
+              <span class="calendar__day-button__text">30</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" last-day role="gridcell">
             <button
               aria-label="31 December 2018 Monday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              31
+              <span class="calendar__day-button__text">31</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" first-day>
             <button
               aria-label="1 January 2019 Tuesday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              1
+              <span class="calendar__day-button__text">1</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -448,7 +448,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              2
+              <span class="calendar__day-button__text">2</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -458,7 +458,7 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              3
+              <span class="calendar__day-button__text">3</span>
             </button>
           </td>
           <td class="calendar__day-cell" role="gridcell">
@@ -468,17 +468,17 @@ export default html`
               class="calendar__day-button"
               tabindex="-1"
             >
-              4
+              <span class="calendar__day-button__text">4</span>
             </button>
           </td>
-          <td class="calendar__day-cell" role="gridcell">
+          <td class="calendar__day-cell" role="gridcell" end-of-first-week>
             <button
               aria-label="5 January 2019 Saturday"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
-              5
+              <span class="calendar__day-button__text">5</span>
             </button>
           </td>
         </tr>

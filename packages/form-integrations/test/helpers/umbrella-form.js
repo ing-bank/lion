@@ -64,11 +64,11 @@ export class UmbrellaForm extends LitElement {
           <lion-input-email name="email" label="Email"></lion-input-email>
           <lion-checkbox-group
             label="What do you like?"
-            name="checkers[]"
+            name="checkers"
             .validators="${[new Required()]}"
           >
-            <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
-            <lion-checkbox .choiceValue=${'bar'} label="I like bar"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'foo'} checked label="I like foo"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'bar'} checked label="I like bar"></lion-checkbox>
             <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
           </lion-checkbox-group>
           <lion-radio-group
@@ -77,7 +77,7 @@ export class UmbrellaForm extends LitElement {
             .validators="${[new Required()]}"
           >
             <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
-            <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'brontosaurus'} checked label="brontosaurus"></lion-radio>
             <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
           </lion-radio-group>
           <lion-select-rich name="favoriteColor" label="Favorite color">

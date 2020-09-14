@@ -18,19 +18,31 @@ export class CalendarObject {
   }
 
   get headerEl() {
-    return this.el.shadowRoot.querySelector('.calendar__header');
+    return this.el.shadowRoot.querySelector('.calendar__navigation');
+  }
+
+  get yearHeadingEl() {
+    return this.el.shadowRoot.querySelector('#year');
   }
 
   get monthHeadingEl() {
-    return this.el.shadowRoot.querySelector('.calendar__month-heading');
+    return this.el.shadowRoot.querySelector('#month');
+  }
+
+  get nextYearButtonEl() {
+    return this.el.shadowRoot.querySelectorAll('.calendar__next-button')[0];
+  }
+
+  get previousYearButtonEl() {
+    return this.el.shadowRoot.querySelectorAll('.calendar__previous-button')[0];
   }
 
   get nextMonthButtonEl() {
-    return this.el.shadowRoot.querySelector('.calendar__next-month-button');
+    return this.el.shadowRoot.querySelectorAll('.calendar__next-button')[1];
   }
 
   get previousMonthButtonEl() {
-    return this.el.shadowRoot.querySelector('.calendar__previous-month-button');
+    return this.el.shadowRoot.querySelectorAll('.calendar__previous-button')[1];
   }
 
   get gridEl() {
@@ -117,15 +129,11 @@ export class CalendarObject {
   /**
    * States
    */
-  get activeMonthAndYear() {
+  get activeMonth() {
     return this.monthHeadingEl.textContent.trim();
   }
 
-  get activeMonth() {
-    return this.activeMonthAndYear.split(' ')[0];
-  }
-
   get activeYear() {
-    return this.activeMonthAndYear.split(' ')[1];
+    return this.yearHeadingEl.textContent.trim();
   }
 }

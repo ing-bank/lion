@@ -226,29 +226,39 @@ describe('Providence CLI', () => {
       ]);
     });
 
-    it('"-w --whitelist"', async () => {
-      await runCli(`${analyzeCmd} -w /mocked/path/example-project`, rootDir);
+    it('"-a --allowlist"', async () => {
+      await runCli(`${analyzeCmd} -a /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfig.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
 
       pathsArrayFromCsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --whitelist /mocked/path/example-project`, rootDir);
+      await runCli(`${analyzeCmd} --allowlist /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfig.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
     });
 
-    it('"--whitelist-reference"', async () => {
-      await runCli(`${analyzeCmd} --whitelist-reference /mocked/path/example-project`, rootDir);
+    it('"--allowlist-reference"', async () => {
+      await runCli(`${analyzeCmd} --allowlist-reference /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].gatherFilesConfigReference.filter).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.eql([
         '/mocked/path/example-project',
       ]);
+    });
+
+    it('--allowlist-mode', async () => {
+      await runCli(`${analyzeCmd} --allowlist-mode git`, rootDir);
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlistMode).to.equal('git');
+    });
+
+    it('--allowlist-mode-reference', async () => {
+      await runCli(`${analyzeCmd} --allowlist-mode-reference npm`, rootDir);
+      expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlistMode).to.equal('npm');
     });
 
     it('"-D --debug"', async () => {
@@ -356,7 +366,7 @@ describe('Providence CLI', () => {
             '--prefix-from pfrom --prefix-to pto',
             '--output-folder /outp',
             '--extensions bla',
-            '--whitelist wl --whitelist-reference wlr',
+            '--allowlist al --allowlist-reference alr',
           ].join(' '),
           rootDir,
         );
@@ -369,8 +379,8 @@ describe('Providence CLI', () => {
           },
           outputFolder: '/outp',
           extensions: ['.bla'],
-          whitelist: [`${rootDir}/wl`],
-          whitelistReference: [`${rootDir}/wlr`],
+          allowlist: [`${rootDir}/al`],
+          allowlistReference: [`${rootDir}/alr`],
         });
       });
     });

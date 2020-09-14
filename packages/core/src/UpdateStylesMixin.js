@@ -6,10 +6,13 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @typedef {import('../types/UpdateStylesMixinTypes').StylesMap} StylesMap
  */
 
-/** @type {UpdateStylesMixin} */
+/**
+ * @type {UpdateStylesMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
+ */
 const UpdateStylesMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  class UpdateStylesMixinHost extends superclass {
+  class extends superclass {
     /**
      * @example
      * <my-element>

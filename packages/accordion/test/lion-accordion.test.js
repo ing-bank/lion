@@ -77,8 +77,8 @@ describe('<lion-accordion>', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
-    it('throws warning if unequal amount of invokers and contents', async () => {
-      const spy = sinon.spy(console, 'warn');
+    it('logs warning if unequal amount of invokers and contents', async () => {
+      const stub = sinon.stub(console, 'warn');
       await fixture(html`
         <lion-accordion>
           <h2 slot="invoker"><button>invoker</button></h2>
@@ -86,8 +86,10 @@ describe('<lion-accordion>', () => {
           <div slot="content">content 2</div>
         </lion-accordion>
       `);
-      expect(spy.callCount).to.equal(1);
-      console.warn.restore();
+      expect(stub).to.be.calledOnceWithExactly(
+        `The amount of invokers (1) doesn't match the amount of contents (2).`,
+      );
+      stub.restore();
     });
   });
 

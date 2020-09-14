@@ -1,54 +1,59 @@
 import { dedupeMixin } from '@lion/core';
 
 /**
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringMixin} FormRegisteringMixin
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
+ */
+
+/**
  * #FormRegisteringMixin:
  *
  * This Mixin registers a form element to a Registrar
  *
- * @polymerMixin
- * @mixinFunction
+ * @type {FormRegisteringMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
  */
-export const FormRegisteringMixin = dedupeMixin(
-  superclass =>
-    // eslint-disable-next-line no-shadow, no-unused-vars
-    class FormRegisteringMixin extends superclass {
-      connectedCallback() {
-        if (super.connectedCallback) {
-          super.connectedCallback();
-        }
-        this.dispatchEvent(
-          new CustomEvent('form-element-register', {
-            detail: { element: this },
-            bubbles: true,
-            composed: true,
-          }),
-        );
-      }
+const FormRegisteringMixinImplementation = superclass =>
+  class extends superclass {
+    constructor() {
+      super();
+      /** @type {FormRegistrarHost | undefined} */
+      this.__parentFormGroup = undefined;
+    }
 
-      disconnectedCallback() {
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback();
-        }
-        if (this.__parentFormGroup) {
-          this.__parentFormGroup.removeFormElement(this);
-        }
+    connectedCallback() {
+      // @ts-expect-error check it anyway, because could be lit-element extension
+      if (super.connectedCallback) {
+        // @ts-expect-error check it anyway, because could be lit-element extension
+        super.connectedCallback();
       }
+    }
 
-      update(changedProperties) {
-        super.update(changedProperties);
-        if (changedProperties.has('name')) {
-          const oldName = changedProperties.get('name');
-          if (oldName) {
-            this.dispatchEvent(
-              // if name change solution
-              new CustomEvent('change-form-element-name-register', {
-                detail: { oldName, newName: this.name },
-                bubbles: true,
-                composed: true,
-              }),
-            );
-          }
+    disconnectedCallback() {
+      // @ts-expect-error check it anyway, because could be lit-element extension
+      if (super.disconnectedCallback) {
+        // @ts-expect-error check it anyway, because could be lit-element extension
+        super.disconnectedCallback();
+      }
+    }
+
+    update(changedProperties) {
+      super.update(changedProperties);
+      if (changedProperties.has('name')) {
+        const oldName = changedProperties.get('name');
+        if (oldName) {
+          this.dispatchEvent(
+            // if name change solution
+            new CustomEvent('change-form-element-name-register', {
+              detail: { oldName, newName: this.name },
+              bubbles: true,
+              composed: true,
+            }),
+          );
         }
       }
-    },
-);
+    }
+  };
+
+export const FormRegisteringMixin = dedupeMixin(FormRegisteringMixinImplementation);

@@ -27,9 +27,7 @@ describe('lion-dialog', () => {
     it('should show content on invoker click', async () => {
       const el = await fixture(html`
         <lion-dialog>
-          <div slot="content" class="dialog">
-            Hey there
-          </div>
+          <div slot="content" class="dialog">Hey there</div>
           <button slot="invoker">Popup button</button>
         </lion-dialog>
       `);
@@ -45,9 +43,7 @@ describe('lion-dialog', () => {
           <div slot="content">
             open nested overlay:
             <lion-dialog>
-              <div slot="content">
-                Nested content
-              </div>
+              <div slot="content">Nested content</div>
               <button slot="invoker">nested invoker button</button>
             </lion-dialog>
           </div>

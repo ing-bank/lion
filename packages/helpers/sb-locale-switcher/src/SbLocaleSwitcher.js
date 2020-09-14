@@ -21,9 +21,7 @@ export class SbLocaleSwitcher extends LitElement {
     return html`
       ${this.showLocales.map(
         showLocale => html`
-          <button @click=${() => this.callback(showLocale)}>
-            ${showLocale}
-          </button>
+          <button @click=${() => this.callback(showLocale)}>${showLocale}</button>
         `,
       )}
     `;

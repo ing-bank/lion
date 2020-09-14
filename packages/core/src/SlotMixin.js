@@ -6,10 +6,13 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @typedef {import('../types/SlotMixinTypes').SlotsMap} SlotsMap
  */
 
-/** @type {SlotMixin} */
+/**
+ * @type {SlotMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
+ */
 const SlotMixinImplementation = superclass =>
   // eslint-disable-next-line no-unused-vars, no-shadow
-  class SlotMixinHost extends superclass {
+  class extends superclass {
     /**
      * @return {SlotsMap}
      */
@@ -23,7 +26,9 @@ const SlotMixinImplementation = superclass =>
     }
 
     connectedCallback() {
+      // @ts-ignore checking this in case we pass LitElement, found no good way to type this...
       if (super.connectedCallback) {
+        // @ts-ignore checking this in case we pass LitElement, found no good way to type this...
         super.connectedCallback();
       }
       this._connectSlotMixin();

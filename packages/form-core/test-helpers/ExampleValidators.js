@@ -17,6 +17,9 @@ export class AlwaysValid extends Validator {
     return 'AlwaysValid';
   }
 
+  /**
+   * @return {Promise<boolean> | boolean}
+   */
   execute() {
     const showMessage = false;
     return showMessage;
@@ -28,7 +31,10 @@ export class AsyncAlwaysValid extends AlwaysValid {
     return true;
   }
 
-  execute() {
+  /**
+   * @return {Promise<boolean>}
+   */
+  async execute() {
     return true;
   }
 }
@@ -38,6 +44,9 @@ export class AsyncAlwaysInvalid extends AlwaysValid {
     return true;
   }
 
+  /**
+   * @return {Promise<boolean>}
+   */
   async execute() {
     return false;
   }

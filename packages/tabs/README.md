@@ -18,13 +18,9 @@ export default {
 export const main = () => html`
   <lion-tabs>
     <button slot="tab">Info</button>
-    <p slot="panel">
-      Info page with lots of information about us.
-    </p>
+    <p slot="panel">Info page with lots of information about us.</p>
     <button slot="tab">Work</button>
-    <p slot="panel">
-      Work page that showcases our work.
-    </p>
+    <p slot="panel">Work page that showcases our work.</p>
   </lion-tabs>
 `;
 ```
@@ -48,13 +44,9 @@ import '@lion/tabs/lion-tabs.js';
 ```html
 <lion-tabs>
   <button slot="tab">Info</button>
-  <p slot="panel">
-    Info page with lots of information about us.
-  </p>
+  <p slot="panel">Info page with lots of information about us.</p>
   <button slot="tab">Work</button>
-  <p slot="panel">
-    Work page that showcases our work.
-  </p>
+  <p slot="panel">Work page that showcases our work.</p>
 </lion-tabs>
 ```
 
@@ -68,13 +60,9 @@ You can set the `selectedIndex` to select a certain tab.
 export const selectedIndex = () => html`
   <lion-tabs .selectedIndex=${1}>
     <button slot="tab">Info</button>
-    <p slot="panel">
-      Info page with lots of information about us.
-    </p>
+    <p slot="panel">Info page with lots of information about us.</p>
     <button slot="tab">Work</button>
-    <p slot="panel">
-      Work page that showcases our work.
-    </p>
+    <p slot="panel">Work page that showcases our work.</p>
   </lion-tabs>
 `;
 ```
@@ -90,12 +78,8 @@ export const slotsOrder = () => html`
   <lion-tabs>
     <button slot="tab">Info</button>
     <button slot="tab">Work</button>
-    <p slot="panel">
-      Info page with lots of information about us.
-    </p>
-    <p slot="panel">
-      Work page that showcases our work.
-    </p>
+    <p slot="panel">Info page with lots of information about us.</p>
+    <p slot="panel">Work page that showcases our work.</p>
   </lion-tabs>
 `;
 ```
@@ -125,9 +109,7 @@ export const distributeNewElement = () => {
               <button slot="tab">tab 2</button>
               <p slot="panel">panel 2</p>
             </lion-tabs>
-            <button @click="${this.__handleAppendClick}">
-              Append
-            </button>
+            <button @click="${this.__handleAppendClick}">Append</button>
             <hr />
             <h3>Push</h3>
             <lion-tabs id="pushTabs">
@@ -142,9 +124,7 @@ export const distributeNewElement = () => {
                 `,
               )}
             </lion-tabs>
-            <button @click="${this.__handlePushClick}">
-              Push
-            </button>
+            <button @click="${this.__handlePushClick}">Push</button>
           `;
         }
         constructor() {

@@ -13,8 +13,8 @@ import { html } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
-import './lion-option.js';
-import './lion-options.js';
+import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-options.js';
 import './lion-select-rich.js';
 
 export default {
@@ -55,8 +55,8 @@ npm i --save @lion/select-rich
 import { LionSelectRich, LionOptions, LionOption } from '@lion/select-rich';
 // or
 import '@lion/select-rich/lion-select-rich.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-option.js';
+import '@lion/listbox/lion-options.js';
+import '@lion/listbox/lion-option.js';
 ```
 
 > No need to npm install `@lion/option` separately, it comes with the rich select as a dependency
@@ -367,9 +367,7 @@ You can use this `selectedElement` to then render the content to your own invoke
 ```html
 <lion-select-rich>
   <my-invoker-button slot="invoker"></my-invoker-button>
-  <lion-options slot="input">
-    ...
-  </lion-options>
+  <lion-options slot="input"> ... </lion-options>
 </lion-select-rich>
 ```
 
@@ -387,7 +385,7 @@ class MyInvokerButton extends LitElement() {
 
   _contentTemplate() {
     if (this.selectedElement) {
-      const labelNodes = Array.from(this.selectedElement.querySelectorAll('*'));
+      const labelNodes = Array.from(this.selectedElement.childNodes);
       // Nested html in the selected option
       if (labelNodes.length > 0) {
         // Cloning is important if you plan on passing nodes straight to a lit template

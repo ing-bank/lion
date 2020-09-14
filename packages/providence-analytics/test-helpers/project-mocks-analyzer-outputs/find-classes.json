@@ -4,7 +4,7 @@
     "analyzerMeta": {
       "name": "find-classes",
       "requiredAst": "babel",
-      "identifier": "importing-target-project_0.0.2-target-mock__-297820780",
+      "identifier": "importing-target-project_0.0.2-target-mock__1364353669",
       "targetProject": {
         "mainEntry": "./target-src/match-imports/root-level-imports.js",
         "name": "importing-target-project",
@@ -179,7 +179,7 @@
                 "accessType": "public"
               },
               {
-                "name": "_requestUpdate",
+                "name": "requestUpdateInternal",
                 "accessType": "protected"
               },
               {

@@ -1,5 +1,6 @@
+import { LitElement } from '@lion/core';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { PropertyValues, LitElement } from 'lit-element';
+import { PropertyValues } from 'lit-element';
 
 export declare interface SyncUpdatableNamespace {
   connected?: boolean;
@@ -22,6 +23,6 @@ export type SyncUpdatableHostType = typeof SyncUpdatableHost;
 
 export declare function SyncUpdatableImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<SyncUpdatableHost> & SyncUpdatableHost;
+): T & Constructor<SyncUpdatableHost> & typeof SyncUpdatableHost;
 
 export type SyncUpdatableMixin = typeof SyncUpdatableImplementation;

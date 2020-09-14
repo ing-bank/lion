@@ -1,20 +1,14 @@
 import { expect, html, defineCE, unsafeStatic, fixture } from '@open-wc/testing';
-import { LitElement, SlotMixin } from '@lion/core';
+import { LitElement } from '@lion/core';
 import sinon from 'sinon';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
 describe('FormControlMixin', () => {
   const inputSlot = '<input slot="input" />';
-  class FormControlMixinClass extends FormControlMixin(SlotMixin(LitElement)) {
-    static get properties() {
-      return {
-        modelValue: {
-          type: String,
-        },
-      };
-    }
-  }
+
+  // @ts-expect-error base constructor same return type
+  class FormControlMixinClass extends FormControlMixin(LitElement) {}
 
   const tagString = defineCE(FormControlMixinClass);
   const tag = unsafeStatic(tagString);
@@ -207,17 +201,10 @@ describe('FormControlMixin', () => {
   });
 
   describe('Model-value-changed event propagation', () => {
+    // @ts-expect-error base constructor same return type
     const FormControlWithRegistrarMixinClass = class extends FormControlMixin(
-      FormRegistrarMixin(SlotMixin(LitElement)),
-    ) {
-      static get properties() {
-        return {
-          modelValue: {
-            type: String,
-          },
-        };
-      }
-    };
+      FormRegistrarMixin(LitElement),
+    ) {};
 
     const groupElem = defineCE(FormControlWithRegistrarMixinClass);
     const groupTag = unsafeStatic(groupElem);

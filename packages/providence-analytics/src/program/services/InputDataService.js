@@ -12,11 +12,17 @@ const { LogService } = require('./LogService.js');
 const { AstService } = require('./AstService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 
-function getGitIgnorePaths(rootPath) {
-  let fileContent;
+function getGitignoreFile(rootPath) {
   try {
-    fileContent = fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
+    return fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
   } catch (_) {
+    return undefined;
+  }
+}
+
+function getGitIgnorePaths(rootPath) {
+  const fileContent = getGitignoreFile(rootPath);
+  if (!fileContent) {
     return [];
   }
 
@@ -25,9 +31,28 @@ function getGitIgnorePaths(rootPath) {
     if (entry.startsWith('#')) {
       return false;
     }
+    if (entry.startsWith('!')) {
+      return false; // negated folders will be kept
+    }
     return entry.trim().length;
   });
-  return entries;
+
+  // normalize entries to be compatible with anymatch
+  const normalizedEntries = entries.map(e => {
+    let entry = e;
+
+    if (entry.startsWith('/')) {
+      entry = entry.slice(1);
+    }
+    const isFile = entry.indexOf('.') > 0; // index of 0 means hidden file.
+    if (entry.endsWith('/')) {
+      entry += '**';
+    } else if (!isFile) {
+      entry += '/**';
+    }
+    return entry;
+  });
+  return normalizedEntries;
 }
 
 /**
@@ -256,7 +281,7 @@ class InputDataService {
   static get defaultGatherFilesConfig() {
     return {
       extensions: ['.js'],
-      filter: ['!node_modules/**', '!bower_components/**', '!**/*.conf.js', '!**/*.config.js'],
+      allowlist: ['!node_modules/**', '!bower_components/**', '!**/*.conf.js', '!**/*.config.js'],
       depth: Infinity,
     };
   }
@@ -287,21 +312,41 @@ class InputDataService {
       ...this.defaultGatherFilesConfig,
       ...customConfig,
     };
-    if (!customConfig.omitDefaultFilter) {
-      cfg.filter = [...this.defaultGatherFilesConfig.filter, ...(customConfig.filter || [])];
+    if (!customConfig.omitDefaultAllowlist) {
+      cfg.allowlist = [
+        ...this.defaultGatherFilesConfig.allowlist,
+        ...(customConfig.allowlist || []),
+      ];
+    }
+    const allowlistModes = ['npm', 'git', 'all'];
+    if (customConfig.allowlistMode && !allowlistModes.includes(customConfig.allowlistMode)) {
+      throw new Error(
+        `[gatherFilesConfig] Please provide a valid allowListMode like "${allowlistModes.join(
+          '|',
+        )}". Found: "${customConfig.allowlistMode}"`,
+      );
     }
 
-    const gitIgnorePaths = getGitIgnorePaths(startPath);
-    const npmPackagePaths = getNpmPackagePaths(startPath);
-    const removeFilter = gitIgnorePaths.map(p => `!${p}`);
+    let gitIgnorePaths = [];
+    let npmPackagePaths = [];
+
+    const hasGitIgnore = getGitignoreFile(startPath);
+    const allowlistMode = cfg.allowlistMode || (hasGitIgnore ? 'git' : 'npm');
+
+    if (allowlistMode === 'git') {
+      gitIgnorePaths = getGitIgnorePaths(startPath);
+    } else if (allowlistMode === 'npm') {
+      npmPackagePaths = getNpmPackagePaths(startPath);
+    }
+    const removeFilter = gitIgnorePaths;
     const keepFilter = npmPackagePaths;
 
-    cfg.filter.forEach(filterEntry => {
-      const { negated, pattern } = isNegatedGlob(filterEntry);
+    cfg.allowlist.forEach(allowEntry => {
+      const { negated, pattern } = isNegatedGlob(allowEntry);
       if (negated) {
         removeFilter.push(pattern);
       } else {
-        keepFilter.push(filterEntry);
+        keepFilter.push(allowEntry);
       }
     });
 
@@ -309,24 +354,37 @@ class InputDataService {
     globPattern += `.{${cfg.extensions.map(e => e.slice(1)).join(',')},}`;
     const globRes = multiGlobSync(globPattern);
 
-    const filteredGlobRes = globRes.filter(filePath => {
-      const localFilePath = filePath.replace(`${startPath}/`, '');
-      if (removeFilter.length) {
-        const remove = anymatch(removeFilter, localFilePath);
-        if (remove) {
+    let filteredGlobRes;
+    if (removeFilter.length || keepFilter.length) {
+      filteredGlobRes = globRes.filter(filePath => {
+        const localFilePath = filePath.replace(`${startPath}/`, '');
+        let shouldRemove = removeFilter.length && anymatch(removeFilter, localFilePath);
+        let shouldKeep = keepFilter.length && anymatch(keepFilter, localFilePath);
+
+        if (shouldRemove && shouldKeep) {
+          // Contradicting configs: the one defined by end user takes highest precedence
+          // If the match came from allowListMode, it loses.
+          if (allowlistMode === 'git' && anymatch(gitIgnorePaths, localFilePath)) {
+            // shouldRemove was caused by .gitignore, shouldKeep by custom allowlist
+            shouldRemove = false;
+          } else if (allowlistMode === 'npm' && anymatch(npmPackagePaths, localFilePath)) {
+            // shouldKeep was caused by npm "files", shouldRemove by custom allowlist
+            shouldKeep = false;
+          }
+        }
+
+        if (removeFilter.length && shouldRemove) {
           return false;
         }
-      }
-      if (!keepFilter.length) {
-        return true;
-      }
-      return anymatch(keepFilter, localFilePath);
-    });
-
+        if (!keepFilter.length) {
+          return true;
+        }
+        return shouldKeep;
+      });
+    }
     if (!filteredGlobRes || !filteredGlobRes.length) {
       LogService.warn(`No files found for path '${startPath}'`);
     }
-
     return filteredGlobRes;
   }
 

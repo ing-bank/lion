@@ -1,0 +1,48 @@
+{
+  "name": "@lion/listbox",
+  "version": "0.1.1",
+  "description": "A listbox widget presents a list of options and allows a user to select one or more of them",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/listbox"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-suites",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/listbox/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/listbox/test/**/*.test.js\""
+  },
+  "sideEffects": [
+    "lion-listbox.js",
+    "lion-option.js",
+    "lion-options.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.12.0",
+    "@lion/form-core": "0.6.1"
+  },
+  "keywords": [
+    "form",
+    "lion",
+    "listbox",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

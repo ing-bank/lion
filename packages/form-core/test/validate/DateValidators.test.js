@@ -13,7 +13,7 @@ describe('Date Validation', () => {
   it('provides new isDate() to allow only dates', () => {
     let isEnabled;
     const validator = new IsDate();
-    expect(validator.constructor.validatorName).to.equal('IsDate');
+    expect(IsDate.validatorName).to.equal('IsDate');
 
     isEnabled = validator.execute(new Date());
     expect(isEnabled).to.be.false;
@@ -28,7 +28,7 @@ describe('Date Validation', () => {
   it('provides new minDate(x) to allow only dates after min', () => {
     let isEnabled;
     const validator = new MinDate(new Date('2018/02/02'));
-    expect(validator.constructor.validatorName).to.equal('MinDate');
+    expect(MinDate.validatorName).to.equal('MinDate');
 
     isEnabled = validator.execute(new Date('2018-02-03'));
     expect(isEnabled).to.be.false;
@@ -46,7 +46,7 @@ describe('Date Validation', () => {
   it('provides maxDate() to allow only dates before max', () => {
     let isEnabled;
     const validator = new MaxDate(new Date('2018/02/02'));
-    expect(validator.constructor.validatorName).to.equal('MaxDate');
+    expect(MaxDate.validatorName).to.equal('MaxDate');
 
     isEnabled = validator.execute(new Date('2018-02-01'));
     expect(isEnabled).to.be.false;
@@ -67,7 +67,7 @@ describe('Date Validation', () => {
       min: new Date('2018/02/02'),
       max: new Date('2018/02/04'),
     });
-    expect(validator.constructor.validatorName).to.equal('MinMaxDate');
+    expect(MinMaxDate.validatorName).to.equal('MinMaxDate');
 
     isEnabled = validator.execute(new Date('2018/02/03'));
     expect(isEnabled).to.be.false;
@@ -87,8 +87,8 @@ describe('Date Validation', () => {
 
   it('provides new IsDateDisabled() to disable dates matching specified condition', () => {
     let isDisabled;
-    const validator = new IsDateDisabled(d => d.getDate() === 3);
-    expect(validator.constructor.validatorName).to.equal('IsDateDisabled');
+    const validator = new IsDateDisabled(/** @param {Date} d */ d => d.getDate() === 3);
+    expect(IsDateDisabled.validatorName).to.equal('IsDateDisabled');
 
     isDisabled = validator.execute(new Date('2018/02/04'));
     expect(isDisabled).to.be.false;

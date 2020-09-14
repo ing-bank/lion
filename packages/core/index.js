@@ -56,3 +56,4 @@ export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
 export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
 export { browserDetection } from './src/browserDetection.js';
+export { EventTargetShim } from './src/EventTargetShim.js';

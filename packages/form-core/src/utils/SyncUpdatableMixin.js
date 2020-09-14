@@ -17,13 +17,14 @@ import { dedupeMixin } from '@lion/core';
  * - makes the propertyAccessor.`hasChanged` compatible in synchronous updates:
  * `updateSync` will only be called when new value differs from old value.
  * See: https://lit-element.polymer-project.org/guide/lifecycle#haschanged
- * - it is a stable abstaction on top of a protected/non offical lifecycle LitElement api.
- * Whenever the implementation of `_requestUpdate` changes (this happened in the past for
+ * - it is a stable abstraction on top of a protected/non official lifecycle LitElement api.
+ * Whenever the implementation of `requestUpdateInternal` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
  * @type {SyncUpdatableMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const SyncUpdatableMixinImplementation = superclass =>
-  class SyncUpdatable extends superclass {
+  class extends superclass {
     constructor() {
       super();
       // Namespace for this mixin that guarantees naming clashes will not occur...
@@ -52,6 +53,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {*} oldValue
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
+      // @ts-expect-error FIXME: Typescript bug, superclass static method not availabe from static context
       const properties = this._classProperties;
       if (properties.get(name) && properties.get(name).hasChanged) {
         return properties.get(name).hasChanged(newValue, oldValue);
@@ -61,7 +63,8 @@ const SyncUpdatableMixinImplementation = superclass =>
 
     __syncUpdatableInitialize() {
       const ns = this.__SyncUpdatableNamespace;
-      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
+      const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this
+        .constructor);
 
       ns.initialized = true;
       // Empty queue...
@@ -78,13 +81,14 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {string} name
      * @param {*} oldValue
      */
-    _requestUpdate(name, oldValue) {
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
 
       this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
       const ns = this.__SyncUpdatableNamespace;
 
-      const ctor = /** @type {SyncUpdatableMixin & SyncUpdatable} */ (this.constructor);
+      const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this
+        .constructor);
 
       // Before connectedCallback: queue
       if (!ns.connected) {
@@ -98,8 +102,8 @@ const SyncUpdatableMixinImplementation = superclass =>
     }
 
     /**
-     * @desc A public abstraction that has the exact same api as `_requestUpdate`.
-     * All code previously present in _requestUpdate can be placed in this method.
+     * @desc A public abstraction that has the exact same api as `requestUpdateInternal`.
+     * All code previously present in requestUpdateInternal can be placed in this method.
      * @param {string} name
      * @param {*} oldValue
      */

@@ -1,6 +1,11 @@
 import { directive } from '@lion/core';
 
-const cache = new WeakMap();
+/**
+ * @typedef {import('lit-html').PropertyPart} PropertyPart
+ */
+
+/** @type {WeakSet<Element>} */
+const cache = new WeakSet();
 
 /**
  * @desc Allows to have references to different parts of your lit template.
@@ -21,11 +26,11 @@ const cache = new WeakMap();
  *
  * @param {object} refObj will be used to store reference to attribute names like #myElement
  */
-export const ref = directive(refObj => part => {
+export const ref = directive(refObj => (/** @type {PropertyPart} */ part) => {
   if (cache.has(part.committer.element)) {
     return;
   }
-  cache.set(part.committer.element);
+  cache.add(part.committer.element);
   const attrName = part.committer.name;
   const key = attrName.replace(/^#/, '');
   // eslint-disable-next-line no-param-reassign

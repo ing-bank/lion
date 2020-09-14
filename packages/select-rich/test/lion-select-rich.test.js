@@ -1,6 +1,5 @@
 import { LitElement } from '@lion/core';
 import { OverlayController } from '@lion/overlays';
-import { Required } from '@lion/form-core';
 import {
   aTimeout,
   defineCE,
@@ -11,111 +10,13 @@ import {
   fixture,
 } from '@open-wc/testing';
 import { LionSelectInvoker, LionSelectRich } from '../index.js';
-import '../lion-option.js';
-import '../lion-options.js';
+
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-options.js';
 import '../lion-select-rich.js';
-import './keyboardEventShimIE.js';
 
 describe('lion-select-rich', () => {
-  it('has a single modelValue representing the currently checked option', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="foo">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${10} checked>Item 1</lion-option>
-          <lion-option .choiceValue=${20}>Item 2</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.modelValue).to.equal(10);
-  });
-
-  it('automatically sets the name attribute of child checkboxes to its own name', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="foo">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${10} checked>Item 1</lion-option>
-          <lion-option .choiceValue=${20}>Item 2</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.formElements[0].name).to.equal('foo');
-    expect(el.formElements[1].name).to.equal('foo');
-
-    const validChild = await fixture(html` <lion-option .choiceValue=${30}>Item 3</lion-option> `);
-    el.appendChild(validChild);
-
-    expect(el.formElements[2].name).to.equal('foo');
-  });
-
-  it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="foo">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${10} checked>Item 1</lion-option>
-          <lion-option .choiceValue=${20}>Item 2</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-    const invalidChild = await fixture(html` <lion-option .modelValue=${'Lara'}></lion-option> `);
-
-    expect(() => {
-      el.addFormElement(invalidChild);
-    }).to.throw(
-      'The lion-select-rich name="foo" does not allow to register lion-option with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }',
-    );
-  });
-
-  it('throws if a child element with a different name than the group tries to register', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="gender">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'female'} checked></lion-option>
-          <lion-option .choiceValue=${'other'}></lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-    const invalidChild = await fixture(html`
-      <lion-option name="foo" .choiceValue=${'male'}></lion-option>
-    `);
-
-    expect(() => {
-      el.addFormElement(invalidChild);
-    }).to.throw(
-      'The lion-select-rich name="gender" does not allow to register lion-option with custom names (name="foo" given)',
-    );
-  });
-
-  it('can set initial modelValue on creation', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="gender" .modelValue=${'other'}>
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'male'}></lion-option>
-          <lion-option .choiceValue=${'female'}></lion-option>
-          <lion-option .choiceValue=${'other'}></lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.modelValue).to.equal('other');
-    expect(el.formElements[2].checked).to.be.true;
-  });
-
-  it(`has a fieldName based on the label`, async () => {
-    const el1 = await fixture(html`
-      <lion-select-rich label="foo"><lion-options slot="input"></lion-options></lion-select-rich>
-    `);
-    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
-
-    const el2 = await fixture(html`
-      <lion-select-rich>
-        <label slot="label">bar</label><lion-options slot="input"></lion-options>
-      </lion-select-rich>
-    `);
-    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
-  });
-
   it('clicking the label should focus the invoker', async () => {
     const el = await fixture(html`
       <lion-select-rich label="foo">
@@ -125,119 +26,6 @@ describe('lion-select-rich', () => {
     expect(document.activeElement === document.body).to.be.true;
     el._labelNode.click();
     expect(document.activeElement === el._invokerNode).to.be.true;
-  });
-
-  it(`has a fieldName based on the name if no label exists`, async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="foo"><lion-options slot="input"></lion-options></lion-select-rich>
-    `);
-    expect(el.fieldName).to.equal(el.name);
-  });
-
-  it(`can override fieldName`, async () => {
-    const el = await fixture(html`
-      <lion-select-rich label="foo" .fieldName="${'bar'}"
-        ><lion-options slot="input"></lion-options
-      ></lion-select-rich>
-    `);
-    expect(el.__fieldName).to.equal(el.fieldName);
-  });
-
-  it('does not have a tabindex', async () => {
-    const el = await fixture(html`
-      <lion-select-rich>
-        <lion-options slot="input"></lion-options>
-      </lion-select-rich>
-    `);
-    expect(el.hasAttribute('tabindex')).to.be.false;
-  });
-
-  it('delegates the name attribute to its children options', async () => {
-    const el = await fixture(html`
-      <lion-select-rich name="foo">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${10}>Item 1</lion-option>
-          <lion-option .choiceValue=${20}>Item 2</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    const optOne = el.querySelectorAll('lion-option')[0];
-    const optTwo = el.querySelectorAll('lion-option')[1];
-
-    expect(optOne.name).to.equal('foo');
-    expect(optTwo.name).to.equal('foo');
-  });
-
-  it('supports validation', async () => {
-    const el = await fixture(html`
-      <lion-select-rich
-        id="color"
-        name="color"
-        label="Favorite color"
-        .validators="${[new Required()]}"
-      >
-        <lion-options slot="input">
-          <lion-option .choiceValue=${null}>select a color</lion-option>
-          <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.hasFeedbackFor.includes('error')).to.be.true;
-    expect(el.showsFeedbackFor.includes('error')).to.be.false;
-
-    // test submitted prop explicitly, since we dont extend field, we add the prop manually
-    el.submitted = true;
-    await el.updateComplete;
-    expect(el.showsFeedbackFor.includes('error')).to.be.true;
-
-    el._listboxNode.children[1].checked = true;
-    await el.updateComplete;
-    expect(el.hasFeedbackFor.includes('error')).to.be.false;
-    expect(el.showsFeedbackFor.includes('error')).to.be.false;
-
-    el._listboxNode.children[0].checked = true;
-    await el.updateComplete;
-    expect(el.hasFeedbackFor.includes('error')).to.be.true;
-    expect(el.showsFeedbackFor.includes('error')).to.be.true;
-  });
-
-  it('supports having no default selection initially', async () => {
-    const el = await fixture(html`
-      <lion-select-rich id="color" name="color" label="Favorite color" has-no-default-selected>
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.selectedElement).to.be.undefined;
-    expect(el.modelValue).to.equal('');
-  });
-
-  it('supports changing the selection through serializedValue setter', async () => {
-    const el = await fixture(html`
-      <lion-select-rich id="color" name="color" label="Favorite color">
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-        </lion-options>
-      </lion-select-rich>
-    `);
-
-    expect(el.checkedIndex).to.equal(0);
-    expect(el.serializedValue).to.equal('red');
-
-    el.serializedValue = 'hotpink';
-
-    expect(el.checkedIndex).to.equal(1);
-    expect(el.serializedValue).to.equal('hotpink');
   });
 
   describe('Invoker', () => {
@@ -454,7 +242,7 @@ describe('lion-select-rich', () => {
       `);
 
       // The default is min, so we override that behavior here
-      el._overlayCtrl.inheritsReferenceWidth = 'full';
+      el._overlayCtrl.updateConfig({ inheritsReferenceWidth: 'full' });
       el._initialInheritsReferenceWidth = 'full';
 
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
@@ -486,7 +274,7 @@ describe('lion-select-rich', () => {
 
       elSingleoption._invokerNode.click();
       await elSingleoption.updateComplete;
-      expect(elSingleoption.singleOption).to.be.undefined;
+      expect(elSingleoption.singleOption).to.be.false;
 
       const optionELm = elSingleoption.querySelectorAll('lion-option')[0];
       optionELm.parentNode.removeChild(optionELm);
@@ -538,7 +326,7 @@ describe('lion-select-rich', () => {
           <lion-options slot="input"></lion-options>
         </lion-select-rich>
       `);
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(el.opened).to.be.false;
     });
 
@@ -588,7 +376,7 @@ describe('lion-select-rich', () => {
           <lion-options slot="input"></lion-options>
         </lion-select-rich>
       `);
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.be.false;
     });
   });
@@ -608,7 +396,7 @@ describe('lion-select-rich', () => {
       el.activeIndex = 1;
       expect(el.checkedIndex).to.equal(0);
 
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.be.false;
       expect(el.checkedIndex).to.equal(1);
     });
@@ -667,71 +455,9 @@ describe('lion-select-rich', () => {
 
       expect(el._invokerNode.getAttribute('aria-expanded')).to.equal('true');
     });
-
-    it('is accessible when closed', async () => {
-      const el = await fixture(html`
-        <lion-select-rich label="age">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-      await expect(el).to.be.accessible();
-    });
-
-    it('is accessible when opened', async () => {
-      const el = await fixture(html`
-        <lion-select-rich label="age">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-      el.opened = true;
-      await el.updateComplete;
-      await el.updateComplete; // need 2 awaits as overlay.show is an async function
-
-      await expect(el).to.be.accessible();
-    });
   });
 
   describe('Use cases', () => {
-    it('works for complex array data', async () => {
-      const objs = [
-        { type: 'mastercard', label: 'Master Card', amount: 12000, active: true },
-        { type: 'visacard', label: 'Visa Card', amount: 0, active: false },
-      ];
-      const el = await fixture(html`
-        <lion-select-rich label="Favorite color" name="color">
-          <lion-options slot="input">
-            ${objs.map(
-              obj => html`
-                <lion-option .modelValue=${{ value: obj, checked: false }}
-                  >${obj.label}</lion-option
-                >
-              `,
-            )}
-          </lion-options>
-        </lion-select-rich>
-      `);
-      expect(el.modelValue).to.deep.equal({
-        type: 'mastercard',
-        label: 'Master Card',
-        amount: 12000,
-        active: true,
-      });
-
-      el.checkedIndex = 1;
-      expect(el.modelValue).to.deep.equal({
-        type: 'visacard',
-        label: 'Visa Card',
-        amount: 0,
-        active: false,
-      });
-    });
-
     it('keeps showing the selected item after a new item has been added in the selectedIndex position', async () => {
       const mySelectContainerTagString = defineCE(
         class extends LitElement {
@@ -878,26 +604,6 @@ describe('lion-select-rich', () => {
         `<div id="content-wrapper">Please select an option..</div>`,
       );
       expect(el.modelValue).to.equal('');
-    });
-  });
-
-  describe('Instantiation methods', () => {
-    it('can be instantiated via "document.createElement"', async () => {
-      let properlyInstantiated = false;
-
-      try {
-        const el = document.createElement('lion-select-rich');
-        const optionsEl = document.createElement('lion-options');
-        optionsEl.slot = 'input';
-        const optionEl = document.createElement('lion-option');
-        optionsEl.appendChild(optionEl);
-        el.appendChild(optionsEl);
-        properlyInstantiated = true;
-      } catch (e) {
-        throw Error(e);
-      }
-
-      expect(properlyInstantiated).to.be.true;
     });
   });
 });

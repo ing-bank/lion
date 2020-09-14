@@ -1,14 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { DisabledMixinHost } from './DisabledMixinTypes';
+import { DisabledHost } from './DisabledMixinTypes';
 import { LitElement } from 'lit-element';
-export declare class DisabledWithTabIndexMixinHost {
-  static get properties(): {
-    tabIndex: {
-      type: NumberConstructor;
-      reflect: boolean;
-      attribute: string;
-    };
-  };
+export declare class DisabledWithTabIndexHost {
   tabIndex: number;
   /**
    * Makes request to make the element disabled and set the tabindex
@@ -27,6 +20,6 @@ export declare class DisabledWithTabIndexMixinHost {
 
 export declare function DisabledWithTabIndexMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<DisabledWithTabIndexMixinHost> & Constructor<DisabledMixinHost>;
+): T & Constructor<DisabledWithTabIndexHost> & Constructor<DisabledHost>;
 
 export type DisabledWithTabIndexMixin = typeof DisabledWithTabIndexMixinImplementation;

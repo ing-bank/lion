@@ -1,12 +1,14 @@
-import { LionButton } from '@lion/button';
+import { LionButton } from '@lion/button/src/LionButton.js';
 import { css, html } from '@lion/core';
 
 /**
- * LionSelectInvoker: invoker button consuming a selected element
- *
- * @customElement lion-select-invoker
- * @extends {LionButton}
+ * @typedef {import('@lion/core').CSSResult} CSSResult
  */
+
+/**
+ * LionSelectInvoker: invoker button consuming a selected element
+ */
+// @ts-expect-error static get sryles return type
 export class LionSelectInvoker extends LionButton {
   static get styles() {
     return [
@@ -21,25 +23,15 @@ export class LionSelectInvoker extends LionButton {
 
   static get properties() {
     return {
-      /**
-       * @desc the option Element that is currently selected
-       */
+      ...super.properties,
       selectedElement: {
         type: Object,
       },
-      /**
-       * @desc When the connected LionSelectRich instance is readOnly,
-       * this should be reflected in the invoker as well
-       */
       readOnly: {
         type: Boolean,
         reflect: true,
         attribute: 'readonly',
       },
-      /**
-       * @desc When the connected LionSelectRich instance has only one option,
-       * this should be reflected in the invoker as well
-       */
       singleOption: {
         type: Boolean,
         reflect: true,
@@ -54,48 +46,61 @@ export class LionSelectInvoker extends LionButton {
       after: () => {
         const icon = document.createElement('span');
         icon.textContent = '▼';
+        icon.setAttribute('role', 'img');
+        icon.setAttribute('aria-hidden', 'true');
         return icon;
       },
     };
   }
 
   get _contentWrapperNode() {
-    return this.shadowRoot.getElementById('content-wrapper');
+    return /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('content-wrapper');
   }
 
   constructor() {
     super();
+
+    /**
+     * When the connected LionSelectRich instance is readOnly,
+     * this should be reflected in the invoker as well
+     */
+    this.readOnly = false;
+    /**
+     * The option Element that is currently selected
+     * @type {HTMLElement | null}
+     */
     this.selectedElement = null;
+    /**
+     * When the connected LionSelectRich instance has only one option,
+     * this should be reflected in the invoker as well
+     */
+    this.singleOption = false;
     this.type = 'button';
   }
 
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+  // eslint-disable-next-line class-methods-use-this
+  __handleKeydown(/** @type {KeyboardEvent} */ event) {
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'ArrowUp':
+        event.preventDefault();
+      /* no default */
     }
+  }
 
-    const handleKeydown = event => {
-      switch (event.key) {
-        case 'ArrowDown':
-        case 'ArrowUp':
-          event.preventDefault();
-        /* no default */
-      }
-    };
-    this.handleKeydown = handleKeydown;
-    this.addEventListener('keydown', this.handleKeydown);
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('keydown', this.__handleKeydown);
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
-    this.removeEventListener('keydown', this.handleKeydown);
+    super.disconnectedCallback();
+    this.removeEventListener('keydown', this.__handleKeydown);
   }
 
   _contentTemplate() {
     if (this.selectedElement) {
-      const labelNodes = Array.from(this.selectedElement.querySelectorAll('*'));
+      const labelNodes = Array.from(this.selectedElement.childNodes);
       if (labelNodes.length > 0) {
         return labelNodes.map(node => node.cloneNode(true));
       }
@@ -113,11 +118,7 @@ export class LionSelectInvoker extends LionButton {
   }
 
   _beforeTemplate() {
-    return html`
-      <div id="content-wrapper">
-        ${this._contentTemplate()}
-      </div>
-    `;
+    return html` <div id="content-wrapper">${this._contentTemplate()}</div> `;
   }
 
   // eslint-disable-next-line class-methods-use-this

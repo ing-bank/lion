@@ -1,6 +1,6 @@
 {
   "name": "@lion/steps",
-  "version": "0.5.4",
+  "version": "0.5.9",
   "description": "Breaks a single goal down into dependable sub-tasks.",
   "license": "MIT",
   "author": "ing-bank",
@@ -33,7 +33,7 @@
     "lion-steps.js"
   ],
   "dependencies": {
-    "@lion/core": "0.8.0"
+    "@lion/core": "0.12.0"
   },
   "keywords": [
     "lion",

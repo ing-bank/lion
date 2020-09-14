@@ -8,11 +8,14 @@ import { Validator } from './Validator.js';
  */
 export class ResultValidator extends Validator {
   /**
-   * @param {object} context
-   * @param {Validator[]} context.validationResult
-   * @param {Validator[]} context.prevValidationResult
-   * @param {Validator[]} context.validators
-   * @returns {Feedback[]}
+   * @param {Object} context
+   * @param {Validator[]} context.regularValidationResult
+   * @param {Validator[] | undefined} context.prevValidationResult
+   * @param {Validator[]} [context.validators]
+   * @returns {boolean}
    */
-  executeOnResults({ validationResult, prevValidationResult, validators }) {} // eslint-disable-line
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this
+  executeOnResults({ regularValidationResult, prevValidationResult, validators }) {
+    return true;
+  }
 }

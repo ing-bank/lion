@@ -172,8 +172,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
 
-  _requestUpdate(name, oldValue) {
-    super._requestUpdate(name, oldValue);
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
 
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
@@ -207,7 +207,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   /**
-   * Defining this overlay as a templates lets OverlayInteraceMixin
+   * Defining this overlay as a templates from OverlayMixin
    * this is our source to give as .contentNode to OverlayController.
    * Important: do not change the name of this method.
    */
@@ -225,9 +225,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
 
   render() {
     return html`
-      <div class="form-field__group-one">
-        ${this._groupOneTemplate()}
-      </div>
+      <div class="form-field__group-one">${this._groupOneTemplate()}</div>
       <div class="form-field__group-two">
         ${this._groupTwoTemplate()} ${this._overlayTemplate()}
       </div>
@@ -285,7 +283,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   async __openCalendarOverlay() {
-    this._overlayCtrl.show();
+    await this._overlayCtrl.show();
     await Promise.all([
       this._overlayCtrl.contentNode.updateComplete,
       this._calendarNode.updateComplete,

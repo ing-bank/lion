@@ -4,10 +4,13 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @typedef {import('../types/DisabledMixinTypes').DisabledMixin} DisabledMixin
  */
 
-/** @type {DisabledMixin} */
+/**
+ * @type {DisabledMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit-element').LitElement>} superclass
+ */
 const DisabledMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
-  class DisabledMixinHost extends superclass {
+  class extends superclass {
     static get properties() {
       return {
         disabled: {
@@ -19,23 +22,23 @@ const DisabledMixinImplementation = superclass =>
 
     constructor() {
       super();
-      this.__requestedToBeDisabled = false;
+      this._requestedToBeDisabled = false;
       this.__isUserSettingDisabled = true;
       this.__restoreDisabledTo = false;
       this.disabled = false;
     }
 
     makeRequestToBeDisabled() {
-      if (this.__requestedToBeDisabled === false) {
-        this.__requestedToBeDisabled = true;
+      if (this._requestedToBeDisabled === false) {
+        this._requestedToBeDisabled = true;
         this.__restoreDisabledTo = this.disabled;
         this.__internalSetDisabled(true);
       }
     }
 
     retractRequestToBeDisabled() {
-      if (this.__requestedToBeDisabled === true) {
-        this.__requestedToBeDisabled = false;
+      if (this._requestedToBeDisabled === true) {
+        this._requestedToBeDisabled = false;
         this.__internalSetDisabled(this.__restoreDisabledTo);
       }
     }
@@ -51,13 +54,13 @@ const DisabledMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {?} oldValue
      */
-    _requestUpdate(name, oldValue) {
-      super._requestUpdate(name, oldValue);
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
       if (name === 'disabled') {
         if (this.__isUserSettingDisabled) {
           this.__restoreDisabledTo = this.disabled;
         }
-        if (this.disabled === false && this.__requestedToBeDisabled === true) {
+        if (this.disabled === false && this._requestedToBeDisabled === true) {
           this.__internalSetDisabled(true);
         }
       }

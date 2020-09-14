@@ -1,10 +1,26 @@
 /* eslint-disable class-methods-use-this */
 
-import { css, html, nothing } from '@lion/core';
+import { css, html, nothing, dedupeMixin } from '@lion/core';
 import { FormatMixin } from '../FormatMixin.js';
 
-export const ChoiceInputMixin = superclass =>
-  // eslint-disable-next-line
+/**
+ * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputMixin} ChoiceInputMixin
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputModelValue} ChoiceInputModelValue
+ */
+
+/**
+ * @param {ChoiceInputModelValue} nw\
+ * @param {{value?:any, checked?:boolean}} old
+ */
+const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== old.checked;
+
+/**
+ * @type {ChoiceInputMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ */
+const ChoiceInputMixinImplementation = superclass =>
   class ChoiceInputMixin extends FormatMixin(superclass) {
     static get properties() {
       return {
@@ -25,7 +41,7 @@ export const ChoiceInputMixin = superclass =>
          */
         modelValue: {
           type: Object,
-          hasChanged: (nw, old = {}) => nw.value !== old.value || nw.checked !== old.checked,
+          hasChanged,
         },
         /**
          * The value property of the modelValue. It provides an easy interface for storing
@@ -44,12 +60,17 @@ export const ChoiceInputMixin = superclass =>
     set choiceValue(value) {
       this.requestUpdate('choiceValue', this.choiceValue);
       if (this.modelValue.value !== value) {
+        /** @type {ChoiceInputModelValue} */
         this.modelValue = { value, checked: this.modelValue.checked };
       }
     }
 
-    _requestUpdate(name, oldValue) {
-      super._requestUpdate(name, oldValue);
+    /**
+     * @param {string} name
+     * @param {any} oldValue
+     */
+    requestUpdateInternal(name, oldValue) {
+      super.requestUpdateInternal(name, oldValue);
 
       if (name === 'modelValue') {
         if (this.modelValue.checked !== this.checked) {
@@ -62,6 +83,9 @@ export const ChoiceInputMixin = superclass =>
       }
     }
 
+    /**
+     * @param {import('lit-element').PropertyValues } changedProperties
+     */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
       if (changedProperties.has('checked')) {
@@ -71,6 +95,9 @@ export const ChoiceInputMixin = superclass =>
       }
     }
 
+    /**
+     * @param {import('lit-element').PropertyValues } changedProperties
+     */
     updated(changedProperties) {
       super.updated(changedProperties);
       if (changedProperties.has('modelValue')) {
@@ -118,9 +145,7 @@ export const ChoiceInputMixin = superclass =>
     render() {
       return html`
         <slot name="input"></slot>
-        <div class="choice-field__graphic-container">
-          ${this._choiceGraphicTemplate()}
-        </div>
+        <div class="choice-field__graphic-container">${this._choiceGraphicTemplate()}</div>
         <div class="choice-field__label">
           <slot name="label"></slot>
         </div>
@@ -148,10 +173,16 @@ export const ChoiceInputMixin = superclass =>
       this.checked = !this.checked;
     }
 
+    /**
+     * @param {boolean} checked
+     */
     __syncModelCheckedToChecked(checked) {
       this.checked = checked;
     }
 
+    /**
+     * @param {any} checked
+     */
     __syncCheckedToModel(checked) {
       this.modelValue = { value: this.choiceValue, checked };
     }
@@ -160,7 +191,8 @@ export const ChoiceInputMixin = superclass =>
       // ._inputNode might not be available yet(slot content)
       // or at all (no reliance on platform construct, in case of [role=option])
       if (this._inputNode) {
-        this._inputNode.checked = this.checked;
+        /** @type {HTMLInputElement} */
+        (this._inputNode).checked = this.checked;
       }
     }
 
@@ -177,9 +209,13 @@ export const ChoiceInputMixin = superclass =>
     /**
      * @override
      * hasChanged is designed for async (updated) callback, also check for sync
-     * (_requestUpdate) callback
+     * (requestUpdateInternal) callback
+     * @param {{ modelValue:unknown }} newV
+     * @param {{ modelValue:unknown }} [oldV]
      */
+    // @ts-expect-error
     _onModelValueChanged({ modelValue }, { modelValue: old }) {
+      // @ts-expect-error
       if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, old)) {
         super._onModelValueChanged({ modelValue });
       }
@@ -195,8 +231,8 @@ export const ChoiceInputMixin = superclass =>
     }
 
     /**
-     * @override
-     * Overridden from FormatMixin, since a different modelValue is used for choice inputs.
+     * @override Overridden from FormatMixin, since a different modelValue is used for choice inputs.
+     * @param {ChoiceInputModelValue } modelValue
      */
     formatter(modelValue) {
       return modelValue && modelValue.value !== undefined ? modelValue.value : modelValue;
@@ -216,3 +252,5 @@ export const ChoiceInputMixin = superclass =>
      */
     _syncValueUpwards() {}
   };
+
+export const ChoiceInputMixin = dedupeMixin(ChoiceInputMixinImplementation);

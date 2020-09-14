@@ -7,8 +7,11 @@ import {
   SlotMixin,
 } from '@lion/core';
 
-const isKeyboardClickEvent = e => e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
-const isSpaceKeyboardClickEvent = e => e.keyCode === 32 || e.key === 32; /* space */
+const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) =>
+  e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
+const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) =>
+  // @ts-expect-error
+  e.keyCode === 32 || e.key === 32; /* space */
 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
@@ -131,8 +134,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     ];
   }
 
+  /** @type {HTMLButtonElement} */
   get _nativeButtonNode() {
-    return Array.from(this.children).find(child => child.slot === '_button');
+    return /** @type {HTMLButtonElement} */ (Array.from(this.children).find(
+      child => child.slot === '_button',
+    ));
   }
 
   get _form() {
@@ -143,12 +149,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     return {
       ...super.slots,
       _button: () => {
-        if (!this.constructor._button) {
-          this.constructor._button = document.createElement('button');
-          this.constructor._button.setAttribute('tabindex', '-1');
-          this.constructor._button.setAttribute('aria-hidden', 'true');
-        }
-        return this.constructor._button.cloneNode();
+        /** @type {HTMLButtonElement} */
+        const buttonEl = document.createElement('button');
+        buttonEl.setAttribute('tabindex', '-1');
+        buttonEl.setAttribute('aria-hidden', 'true');
+        return buttonEl;
       },
     };
   }
@@ -176,6 +181,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.__teardownEvents();
   }
 
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('type')) {
@@ -193,6 +201,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * Delegate click, by flashing a native button as a direct child
    * of the form, and firing click on this button. This will fire the form submit
    * without side effects caused by the click bubbling back up to lion-button.
+   * @param {Event} e
    */
   __clickDelegationHandler(e) {
     if ((this.type === 'submit' || this.type === 'reset') && e.target === this) {
@@ -235,6 +244,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.addEventListener('mouseup', mouseupHandler);
   }
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   __keydownHandler(e) {
     if (this.active || !isKeyboardClickEvent(e)) {
       if (isSpaceKeyboardClickEvent(e)) {
@@ -248,6 +260,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     }
 
     this.active = true;
+    /**
+     * @param {KeyboardEvent} keyupEvent
+     */
     const keyupHandler = keyupEvent => {
       if (isKeyboardClickEvent(keyupEvent)) {
         this.active = false;
@@ -257,6 +272,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     document.addEventListener('keyup', keyupHandler, true);
   }
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   __keyupHandler(e) {
     if (isKeyboardClickEvent(e)) {
       // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>

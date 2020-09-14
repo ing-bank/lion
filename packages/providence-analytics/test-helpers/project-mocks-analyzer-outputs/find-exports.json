@@ -4,7 +4,7 @@
     "analyzerMeta": {
       "name": "find-exports",
       "requiredAst": "babel",
-      "identifier": "exporting-ref-project_1.0.0__-1083884764",
+      "identifier": "exporting-ref-project_1.0.0__309114983",
       "targetProject": {
         "mainEntry": "./index.js",
         "name": "exporting-ref-project",
@@ -12,7 +12,7 @@
         "commitHash": "[not-a-git-root]"
       },
       "configuration": {
-        "metaConfig": null,
+        "skipFileImports": false,
         "gatherFilesConfig": {}
       }
     }

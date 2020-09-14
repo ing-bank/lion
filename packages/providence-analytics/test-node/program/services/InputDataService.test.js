@@ -54,10 +54,10 @@ describe('InputDataService', () => {
           '/test-helpers/project-mocks/importing-target-project',
         ),
       ).to.equal(true);
-      expect(inputDataPerProject[0].entries.length).to.equal(11);
+      expect(inputDataPerProject[0].entries.length).to.equal(6);
       expect(inputDataPerProject[0].entries[0].context.code).to.not.be.undefined;
       expect(inputDataPerProject[0].entries[0].file).to.equal(
-        './node_modules/exporting-ref-project/index.js',
+        './target-src/find-customelements/multiple.js',
       );
     });
 
@@ -121,7 +121,7 @@ describe('InputDataService', () => {
       it('allows passing excluded folders', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          filter: ['!nested/**'],
+          allowlist: ['!nested/**'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -135,7 +135,7 @@ describe('InputDataService', () => {
       it('allows passing excluded files', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          filter: ['!index.js', '!**/*/index.js'],
+          allowlist: ['!index.js', '!**/*/index.js'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -149,7 +149,7 @@ describe('InputDataService', () => {
       it('allows passing exclude globs', async () => {
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
           extensions: ['.html', '.js'],
-          filter: ['!**/*.test.{html,js}'],
+          allowlist: ['!**/*.test.{html,js}'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/index.html',
@@ -183,7 +183,7 @@ describe('InputDataService', () => {
           './added/file.js': '',
         });
         const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-          filter: ['*', 'added/**/*'],
+          allowlist: ['*', 'added/**/*'],
         });
         expect(globOutput).to.eql([
           '/fictional/project/added/file.js',
@@ -215,7 +215,7 @@ describe('InputDataService', () => {
           expect(globOutput).to.eql(['/fictional/project/index.js']);
         });
 
-        it('filters npm files entries', async () => {
+        it('filters npm "files" entries when allowlistMode is "npm"', async () => {
           mockProject({
             './docs/x.js': '',
             './src/y.js': '',
@@ -225,7 +225,9 @@ describe('InputDataService', () => {
               files: ['*.add.js', 'docs', 'src'],
             }),
           });
-          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+            allowlistMode: 'npm',
+          });
           expect(globOutput).to.eql([
             '/fictional/project/docs/x.js',
             '/fictional/project/file.add.js',
@@ -233,24 +235,100 @@ describe('InputDataService', () => {
           ]);
         });
 
-        it('filters .gitignore entries', async () => {
+        it('filters .gitignore entries when allowlistMode is "git"', async () => {
           mockProject({
             './coverage/file.js': '',
             './storybook-static/index.js': '',
             './build/index.js': '',
+            './shall/pass.js': '',
+            './keep/it.js': '',
             '.gitignore': `
 /coverage
 # comment
 /storybook-static/
 
 build/
+!keep/
+            `,
+          });
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+            allowlistMode: 'git',
+          });
+          expect(globOutput).to.eql([
+            '/fictional/project/keep/it.js',
+            '/fictional/project/shall/pass.js',
+          ]);
+        });
+
+        it('filters no entries when allowlistMode is "all"', async () => {
+          mockProject({
+            './dist/bundle.js': '',
+            './src/file.js': '',
+            './package.json': JSON.stringify({
+              files: ['dist', 'src'],
+            }),
+            '.gitignore': `
+/dist
+            `,
+          });
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+            allowlistMode: 'all',
+          });
+          expect(globOutput).to.eql([
+            '/fictional/project/dist/bundle.js',
+            '/fictional/project/src/file.js',
+          ]);
+        });
+
+        it('autodetects allowlistMode', async () => {
+          mockProject({
+            './dist/bundle.js': '',
+            './package.json': JSON.stringify({
+              files: ['dist'],
+            }),
+            '.gitignore': `
+/dist
             `,
           });
           const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
-          expect(globOutput).to.eql([]);
+          expect(globOutput).to.eql([
+            // This means allowlistMode is 'git'
+          ]);
+
+          restoreOriginalInputDataPaths();
+          restoreMockedProjects();
+
+          mockProject({
+            './dist/bundle.js': '',
+            './package.json': JSON.stringify({
+              files: ['dist'],
+            }),
+          });
+          const globOutput2 = InputDataService.gatherFilesFromDir('/fictional/project');
+          expect(globOutput2).to.eql([
+            // This means allowlistMode is 'npm'
+            '/fictional/project/dist/bundle.js',
+          ]);
         });
 
-        describe('Default filter', () => {
+        it('custom "allowlist" will take precedence over "allowlistMode"', async () => {
+          mockProject({
+            './dist/bundle.js': '', // generated by build step
+            './src/a.js': '',
+            './src/b.js': '',
+            '.gitignore': '/dist', // Because we have a .gitignore, allowlistMode will be git
+            './package.json': JSON.stringify({
+              files: ['dist'], // This will not be considered by default, unless explicitly configured in allowlist
+            }),
+          });
+          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+            allowlist: ['dist/**'],
+            allowlistMode: 'git', // for clarity, (would also be autodetected if not provided)
+          });
+          expect(globOutput).to.eql(['/fictional/project/dist/bundle.js']);
+        });
+
+        describe('Default allowlist', () => {
           it('merges default config filter with configured filter', async () => {
             mockProject({
               './node_modules/root-lvl.js': '',
@@ -259,7 +337,7 @@ build/
               './omit.js': '',
             });
             const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-              filter: ['added*'],
+              allowlist: ['added*'],
             });
             expect(globOutput).to.eql(['/fictional/project/added.js']);
           });
@@ -274,8 +352,8 @@ build/
               './omit.js': '',
             });
             const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-              filter: ['!omit*'],
-              omitDefaultFilter: true,
+              allowlist: ['!omit*'],
+              omitDefaultAllowlist: true,
             });
             expect(globOutput).to.eql([
               '/fictional/project/abc.config.js',
