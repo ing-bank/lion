@@ -29,7 +29,6 @@ export const changeName = () => html`
   <lion-form id="form">
     <form>
       <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <!-- Just for testing purposes; dom't add to MR -->
       <lion-button
         @click=${ev => {
           ev.preventDefault();
