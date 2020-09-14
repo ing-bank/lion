@@ -13,16 +13,81 @@ This article explains how to extend both components and documentation.
 
 ## Table of Contents
 
+<<<<<<< HEAD
 0. Setting up, and Extending Lion
+=======
+0. Extending Lion
+>>>>>>> 5c40b43c42c7423a46dd13ed115bb4dd191f177e
 1. Make a selection
 2. Alter input paths
 3. Override the original
 4. Remove, add and replace sections
 5. Run locally
 
+<<<<<<< HEAD
 ## Setting up, and extending Lion
 
 This article assumes some basic terminal knowledge, and a working installation of npm. Yarn would work as well.
+=======
+## Extending Lion
+
+```sh
+mkdir example-components
+```
+
+```sh
+npm init @open-wc
+```
+
+```sh
+What would you like to do today? › Scaffold a new project
+✔ What would you like to scaffold? › Web Component
+✔ What would you like to add? › Demoing (storybook)
+✔ Would you like to use typescript? › No
+✔ Would you like to scaffold examples files for? › Demoing (storybook)
+✔ What is the tag name of your application/web component? example-button
+```
+
+```sh
+npm i @lion/button
+```
+
+```sh
+example-button/src/ExampleButton.js
+```
+
+```js
+import { css } from 'lit-element';
+import { LionButton } from '@lion/button';
+
+export class ExampleButton extends LionButton {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        /* your styles go here */
+      `
+    ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._setupFeature();
+  }
+
+  _setupFeature() {
+    // your code goes here
+  }
+}
+```
+
+
+## Make a Selection
+
+If you already have a repository, you can add Storybook.
+
+`@open-wc/demoing-storybook` uses [Prebuilt Storybook](https://open-wc.org/demoing/) with [MDJS](https://open-wc.org/mdjs/) starting from version 2. This tooling is assumed for this article.
+>>>>>>> 5c40b43c42c7423a46dd13ed115bb4dd191f177e
 
 Create a new folder for your components using the terminal.
 
@@ -219,6 +284,131 @@ To ensure babel actually runs for your Storybook, you will have to add it to you
 
 ```js
 module.exports = {
+  stories: ['../node_modules/@lion/button/README.md', '../packages/**/!(*.override)*.md'],
+  esDevServer: {
+    nodeResolve: true,
+    watch: true,
+    open: true,
+    babel: true,
+  },
+};
+```
+
+You should now see the `LionTabs` instances transformed into your own `LeaTabs`!
+
+<<<<<<< HEAD
+## Adjust documentation content
+
+In some cases you don't want to show all examples of how to use a component. Sometimes information is `Lion` specific, or perhaps in your design system you are not allowed to use a certain feature that we documented in `Lion`.
+=======
+So here we only extend the documentation of `LionButton`, for our own `ExampleButton`. But our repository is a monorepository with multiple other packages that don't use `Lion`, which we want to include as well, so we also add the second line to include those.
+
+This step alone should already give you the `LionButton` docs inside your own Storybook, but not yet transformed to your `ExampleButton` extension of it, which we will explain next.
+>>>>>>> 5c40b43c42c7423a46dd13ed115bb4dd191f177e
+
+In our example, we will show you have to remove the `Rationale` section that you would normally inherit from the `Lion` documentation.
+
+For this step we make use of a remark plugin for the MD content, similar to how you would use a babel plugin for JS content. It is called [Remark extend](https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page).
+It will let you add, remove or replace sections or specific words.
+
+First of all we need to add the plugin to the `.storybook/main.js`:
+
+```js
+const fs = require('fs');
+const { remarkExtend } = require('remark-extend');
+
+<<<<<<< HEAD
+=======
+## Conclusion
+
+
+
+## Replacing imports and tagnames
+
+### Analysing paths
+
+Potentially the hardest part is to analyse your extension `LeaTabs`, and to figure out how we should transform the import paths for `LionTabs` to new paths to your `LeaTabs`.
+
+To do this we make use of [Providence](https://lion-web-components.netlify.app/?path=/docs/tools-providence-main--run-providence). This tool has a command that creates a full map of all the import paths of a reference project (`Lion`) and can replace them with the correct paths of a target project (`Lea`).
+
+So lets install it:
+
+```sh
+yarn add providence-analytics --dev
+```
+
+And to use it, let's add a script to your projects `package.json`:
+
+```json
+"scripts": {
+  "providence:extend": "providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to lea"
+}
+```
+
+The `--prefix-from` and `--prefix-to` are the prefixes of the project you extend from (most of the times `lion`) and your own projects prefix (in this case `lea`). For classnames it will look for `Lion*` and `Lea*` respectively, for tagnames it will look for `lion-*` and `lea-*` respectively.
+
+If you know you only use a single component from lion, you can reduce the time the tool needs for analysis, by specifying this package `-r 'node_modules/@lion/tabs'`.
+
+Running the script will create a `providence-extend-docs-data.json` file, with all from/to information. You can change the name / location of the output file, refer to [Providence Documentation](https://lion-web-components.netlify.app/?path=/docs/tools-providence-main--run-providence) for this.
+
+#### Running it automatically when upgrading lion dependency
+
+Inside ING, our design system also makes use of this providence tool to create this data JSON file. But since the analysis takes a few minutes, we only run it, automatically, when we upgrade our lion dependencies. We do this with the following two `package.json` scripts:
+
+```json
+"scripts": {
+  "upgrade:lion": "yarn upgrade --scope @lion --latest --exact && yarn providence:extend",
+  "providence:extend": "providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to ing"
+}
+```
+
+### Replacing paths & template tagnames
+
+Now that we have a JSON file with all the information we need to know about to replace import paths and tagnames inside templates, we can start transforming the `LionTabs` documentation to `LeaTabs` documentation.
+
+For this, we created a `babel-plugin` called [babel-plugin-extend-docs](https://lion-web-components.netlify.app/?path=/docs/tools-babelpluginextenddocs--page).
+
+This will analyse the JavaScript script and story content inside the markdown files, which uses [MDJS](https://open-wc.org/mdjs/) syntax, and transform it on the fly in `es-dev-server`, as well as on rollup build for production.
+
+So all you need to do is to install this plugin:
+
+```sh
+yarn add babel-plugin-extend-docs --dev
+```
+
+and create a `babel.config.js` file in the root of your project:
+
+```js
+const path = require('path');
+const providenceExtendConfig = require('./providence-extend-docs-data.json');
+
+const extendDocsConfig = {
+  rootPath: path.resolve('.'),
+  changes: providenceExtendConfig,
+};
+
+module.exports = {
+  overrides: [
+    {
+      test: ['./node_modules/@lion/*/README.md', './node_modules/@lion/*/docs/*.md'],
+      plugins: [['babel-plugin-extend-docs', extendDocsConfig]],
+    },
+  ],
+};
+```
+
+As you can see, we import the providence output file and pass it to the plugin options as the `changes` property.
+
+Now, the babel plugin will run for the files that we specify in `test` property, and replace the imports properly, as well as the tag names inside JavaScript code snippets!
+
+> For the JavaScript code snippets, it only transforms the ones that use [MDJS](https://open-wc.org/mdjs/) syntax, e.g. \`\`\`js script, \`\`\`js story and \`\`\`js preview-story
+
+To ensure babel actually runs for your Storybook, you will have to add it to your es-dev-server configuration:
+
+`.storybook/main.js`:
+
+```js
+module.exports = {
   stories: ['../node_modules/@lion/tabs/README.md', '../packages/**/!(*.override)*.md'],
   esDevServer: {
     nodeResolve: true,
@@ -246,6 +436,7 @@ First of all we need to add the plugin to the `.storybook/main.js`:
 const fs = require('fs');
 const { remarkExtend } = require('remark-extend');
 
+>>>>>>> 5c40b43c42c7423a46dd13ed115bb4dd191f177e
 function isLion(filePath) {
   return filePath.indexOf('@lion/') !== -1;
 }
@@ -359,4 +550,8 @@ Writing good extensive documentation is hard and time consuming, so being able t
 
 We showed you how to set it up and how you can adjust the documentation to fit your extended component.
 
+<<<<<<< HEAD
 And since this can be achieved with 3 separate tools, you can also use it to extend other documentation.
+=======
+And since this can be achieved with 3 separate tools, you can also use it to extend other documentation.
+>>>>>>> 5c40b43c42c7423a46dd13ed115bb4dd191f177e
