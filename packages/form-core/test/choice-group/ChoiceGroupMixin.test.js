@@ -1,5 +1,4 @@
 import { html, LitElement } from '@lion/core';
-// @ts-expect-error
 import { LionInput } from '@lion/input';
 import '@lion/fieldset/lion-fieldset.js';
 import { FormGroupMixin, Required } from '@lion/form-core';
@@ -19,7 +18,6 @@ import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
 describe('ChoiceGroupMixin', () => {
   class ChoiceInput extends ChoiceInputMixin(LionInput) {}
-  // @ts-expect-error base constructors same return type
   customElements.define('choice-group-input', ChoiceInput);
   // @ts-expect-error
   class ChoiceGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
