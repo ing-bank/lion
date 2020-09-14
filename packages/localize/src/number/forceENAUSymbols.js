@@ -10,14 +10,12 @@ const CURRENCY_CODE_SYMBOL_MAP = {
  *
  * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {Object} [options]
- * @param {string} [options.currency]
- * @param {string} [options.currencyDisplay]
+ * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
  * @returns {FormatNumberPart[]}
  */
 export function forceENAUSymbols(formattedParts, { currency, currencyDisplay } = {}) {
   const result = formattedParts;
-  if (formattedParts.length > 1 && currencyDisplay === 'symbol') {
+  if (formattedParts.length > 1 && currencyDisplay === 'symbol' && currency) {
     if (Object.keys(CURRENCY_CODE_SYMBOL_MAP).includes(currency)) {
       result[0].value = CURRENCY_CODE_SYMBOL_MAP[currency];
     }

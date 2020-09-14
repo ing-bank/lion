@@ -13,10 +13,7 @@ import { forceENAUSymbols } from './forceENAUSymbols.js';
  *
  * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {Object} options
- * @param {string} [options.style]
- * @param {string} [options.currency]
- * @param {string} [options.currencyDisplay]
+ * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} options
  * @param {string} _locale
  * @returns {FormatNumberPart[]}
  */
