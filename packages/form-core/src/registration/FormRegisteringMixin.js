@@ -38,14 +38,18 @@ const FormRegisteringMixinImplementation = superclass =>
       }
     }
 
-    update(changedProperties) {
+    update(/** @type {Object} */ changedProperties) {
+      // @ts-ignore
       super.update(changedProperties);
+      // @ts-ignore
       if (changedProperties.has('name')) {
+        // @ts-ignore
         const oldName = changedProperties.get('name');
         if (oldName) {
           this.dispatchEvent(
             // if name change solution
             new CustomEvent('change-form-element-name-register', {
+              // @ts-ignore
               detail: { oldName, newName: this.name },
               bubbles: true,
               composed: true,

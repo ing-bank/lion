@@ -74,7 +74,6 @@ const FormRegistrarMixinImplementation = superclass =>
      * @param {number} indexToInsertAt index to insert the form element at
      */
     addFormElement(child, indexToInsertAt) {
-      console.log('addFormElement init:', child, indexToInsertAt, this.formElements);
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
       // eslint-disable-next-line no-param-reassign
       child.__parentFormGroup = this;
@@ -117,7 +116,6 @@ const FormRegistrarMixinImplementation = superclass =>
           );
         }
       }
-      console.log('addFormElement end:', child, indexToInsertAt, this.formElements);
     }
 
     /**
@@ -162,7 +160,6 @@ const FormRegistrarMixinImplementation = superclass =>
      * @param {CustomEvent} ev
      */
     _onRequestToAddFormElement(ev) {
-      console.log('_onRequestToAddFormElement init:', ev.detail.element.name, ev.detail.element);
       const child = ev.detail.element;
       if (child === this) {
         // as we fire and listen - don't add ourselves
@@ -181,7 +178,6 @@ const FormRegistrarMixinImplementation = superclass =>
         indexToInsertAt = this.formElements.indexOf(child.nextElementSibling);
       }
       this.addFormElement(child, indexToInsertAt);
-      console.log('_onRequestToAddFormElement end:', ev.detail.element.name, ev.detail.element);
     }
 
     /**
