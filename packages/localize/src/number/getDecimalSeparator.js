@@ -3,7 +3,7 @@ import { getLocale } from './getLocale.js';
 /**
  * To get the decimal separator
  *
- * @param {string|null} locale To override the browser locale
+ * @param {string} [locale] To override the browser locale
  * @returns {string} The separator
  */
 export function getDecimalSeparator(locale) {
