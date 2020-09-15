@@ -28,6 +28,12 @@ const FormRegisteringMixinImplementation = superclass =>
         // @ts-expect-error check it anyway, because could be lit-element extension
         super.connectedCallback();
       }
+      this.dispatchEvent(
+        new CustomEvent('form-element-register', {
+          detail: { element: this },
+          bubbles: true,
+        }),
+      );
     }
 
     disconnectedCallback() {
@@ -35,6 +41,9 @@ const FormRegisteringMixinImplementation = superclass =>
       if (super.disconnectedCallback) {
         // @ts-expect-error check it anyway, because could be lit-element extension
         super.disconnectedCallback();
+      }
+      if (this.__parentFormGroup) {
+        this.__parentFormGroup.removeFormElement(this);
       }
     }
 
