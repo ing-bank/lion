@@ -50,10 +50,14 @@ const FormRegistrarMixinImplementation = superclass =>
       this._isFormOrFieldset = false;
 
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
-
       this.addEventListener(
         'form-element-register',
         /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToAddFormElement),
+      );
+      this._onRequestToChangeFormElementName = this._onRequestToChangeFormElementName.bind(this);
+      this.addEventListener(
+        'change-form-element-name-register',
+        /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToChangeFormElementName),
       );
     }
 
@@ -120,6 +124,7 @@ const FormRegistrarMixinImplementation = superclass =>
     removeFormElement(child) {
       // 1. Handle array based children
       const index = this.formElements.indexOf(child);
+
       if (index > -1) {
         this.formElements.splice(index, 1);
       }
@@ -136,6 +141,18 @@ const FormRegistrarMixinImplementation = superclass =>
         } else if (this.formElements[name]) {
           delete this.formElements[name];
         }
+      }
+    }
+
+    /**
+     * @param {String} oldName the child element(s) previous name
+     * @param {String} newName the child element(s) current name
+     */
+    changeFormElementName(oldName, newName) {
+      const element = this.formElements[oldName];
+      if (element) {
+        this.formElements[newName] = element;
+        delete this.formElements[oldName];
       }
     }
 
@@ -179,6 +196,14 @@ const FormRegistrarMixinImplementation = superclass =>
       ev.stopPropagation();
 
       this.removeFormElement(child);
+    }
+
+    /**
+     * @param {CustomEvent} ev
+     */
+    // if name change solution
+    _onRequestToChangeFormElementName(ev) {
+      this.changeFormElementName(ev.detail.oldName, ev.detail.newName);
     }
   };
 
