@@ -28,6 +28,12 @@ const FormRegisteringMixinImplementation = superclass =>
         // @ts-expect-error check it anyway, because could be lit-element extension
         super.connectedCallback();
       }
+      this.dispatchEvent(
+        new CustomEvent('form-element-register', {
+          detail: { element: this },
+          bubbles: true,
+        }),
+      );
     }
 
     disconnectedCallback() {
@@ -36,26 +42,8 @@ const FormRegisteringMixinImplementation = superclass =>
         // @ts-expect-error check it anyway, because could be lit-element extension
         super.disconnectedCallback();
       }
-    }
-
-    update(/** @type {Object} */ changedProperties) {
-      // @ts-ignore
-      super.update(changedProperties);
-      // @ts-ignore
-      if (changedProperties.has('name')) {
-        // @ts-ignore
-        const oldName = changedProperties.get('name');
-        if (oldName) {
-          this.dispatchEvent(
-            // if name change solution
-            new CustomEvent('change-form-element-name-register', {
-              // @ts-ignore
-              detail: { oldName, newName: this.name },
-              bubbles: true,
-              composed: true,
-            }),
-          );
-        }
+      if (this.__parentFormGroup) {
+        this.__parentFormGroup.removeFormElement(this);
       }
     }
   };
