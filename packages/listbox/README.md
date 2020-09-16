@@ -77,7 +77,7 @@ export const multiple = () => html`
 
 When `orientation="horizontal"`, left and right arrow keys will be enabled, plus the screenreader
 will be informed about the direction of the options.
-By default, `orientation="horizontal"` is set, which enables up and down arrow keys.
+By default, `orientation="vertical"` is set, which enables up and down arrow keys.
 
 ```js preview-story
 export const orientationHorizontal = () => html`
@@ -146,7 +146,7 @@ export const selectionFollowsFocus = () => html`
 
 ## Rotate keyboard navigation
 
-Will give first option active state when navigated to the next option from last option.
+`rotate-keyboard-navigation` attribute on the listbox will give the first option active state when navigated to the next option from last option.
 
 ```js preview-story
 export const rotateKeyboardNavigation = () => html`

@@ -36,7 +36,7 @@ export class LionComboboxSelectionDisplay extends LitElement {
         flex: none;
       }
       .combobox__input {
-        flex: 1;
+        display: block;
       }
       .selection-chip {
         border-radius: 4px;

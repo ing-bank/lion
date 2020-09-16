@@ -48,12 +48,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         :host ::slotted([role='listbox']) {
           max-height: 200px;
           display: block;
-          overflow: hidden;
-        }
-
-        .combobox__input {
-          display: flex;
-          flex: 1;
+          overflow: auto;
         }
       `,
     ];
