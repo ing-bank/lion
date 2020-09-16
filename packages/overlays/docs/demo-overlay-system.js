@@ -40,7 +40,6 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
       <div id="overlay-content-node-wrapper">
         <slot name="content"></slot>
       </div>

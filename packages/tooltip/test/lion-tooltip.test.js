@@ -185,11 +185,6 @@ describe('lion-tooltip', () => {
       const initialPopperModifiers = el._overlayCtrl.config.popperConfig.modifiers;
       // @ts-expect-error allow protected props in tests
       expect(el._overlayCtrl.config.popperConfig.placement).to.equal('top');
-      // TODO: this fails in CI, we need to investigate why in CI
-      // the value of the transform is: translate3d(16px, -26px, 0px)'
-      // expect(el.querySelector('[slot=_overlay-shadow-outlet]').style.transform).to.equal(
-      //   'translate3d(15px, -26px, 0px)',
-      // );
 
       el.config = {
         popperConfig: {
@@ -205,11 +200,6 @@ describe('lion-tooltip', () => {
       expect(updatedPopperModifiers).to.deep.equal(initialPopperModifiers);
       // @ts-expect-error allow protected props in tests
       expect(el._overlayCtrl.config.popperConfig.placement).to.equal('bottom');
-      // TODO: this fails in CI, we need to investigate why in CI
-      // the value of the transform is: translate3d(16px, 26px, 0px)'
-      // expect(el.querySelector('[slot=_overlay-shadow-outlet]').style.transform).to.equal(
-      //   'translate3d(15px, 26px, 0px)',
-      // );
     });
   });
 

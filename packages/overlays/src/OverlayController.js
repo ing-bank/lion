@@ -895,7 +895,6 @@ export class OverlayController extends EventTargetShim {
             /** @type {HTMLElement} */
             (this.backdropNode).classList.add('local-overlays__backdrop');
           }
-          this.backdropNode.slot = '_overlay-shadow-outlet';
           /** @type {HTMLElement} */
           (this.contentNode.parentNode).insertBefore(this.backdropNode, this.contentNode);
           break;

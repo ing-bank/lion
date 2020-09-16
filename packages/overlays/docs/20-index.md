@@ -4,7 +4,9 @@
 
 ```js script
 import { html } from 'lit-html';
+import { render, LitElement } from '@lion/core';
 import {
+  ArrowMixin,
   OverlayMixin,
   withBottomSheetConfig,
   withDropdownConfig,
@@ -94,8 +96,8 @@ or in your Web Component with `OverlayMixin`, make sure you override these metho
 - Handle the tearing down of those event listeners
 - Define a template which includes:
   - invoker slot for your user to provide the invoker node (the element that invokes the overlay content)
-  - content slot for your user to provide the content that shows when the overlay is opened
-  - \_overlay-shadow-outlet, this slot is currently necessary under the hood for acting as a wrapper element for placement purposes, but is not something your end user should be concerned with, unless they are extending your component.
+  - content slot for your user to provide the content that shows when the overlay is opened,
+    make sure to put it inside a div with id `overlay-content-node-wrapper` which is necessary for positioning logic to work properly.
 
 ```js
 _defineOverlayConfig() {
@@ -126,7 +128,6 @@ _teardownOpenCloseListeners() {
 render() {
   return html`
     <slot name="invoker"></slot>
-    <slot name="_overlay-shadow-outlet"></slot>
     <div id="overlay-content-node-wrapper">
       <slot name="content"></slot>
     </div>
@@ -356,7 +357,7 @@ Under the hood, the `OverlayMixin` will instantiate an OverlayController with th
 
 By default, there are only a few `OverlayMixin` methods you need to override to create a working Web Component using an overlay:
 
-- `render`, the template needs to include a `<slot name="content">`, `<slot name="invoker">` and `<slot name="_overlay-shadow-outlet">`.
+- `render`, the template needs to include a `<slot name="invoker">` and `<slot name="content">` inside a div with id `overlay-content-node-wrapper` (for positioning).
 - `_defineOverlayConfig`, in this protected method, return an object that contains the default configuration for your Web Component's overlay. See configuration section of OverlayController.
 - `_setupOpenCloseListeners`, use this lifecycle hook to setup the open and close event listeners on your `_overlayInvokerNode`.
 - `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
@@ -397,7 +398,6 @@ class MyOverlayWC extends OverlayMixin(LitElement) {
   render() {
     return html`
       <slot name="invoker"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
       <div id="overlay-content-node-wrapper">
         <slot name="content"></slot>
       </div>
@@ -565,6 +565,60 @@ export const nestedOverlays = () => {
       </div>
       <button slot="invoker" id="mainInvoker">invoker button</button>
     </demo-overlay-system>
+  `;
+};
+```
+
+## Local overlay with an arrow
+
+To add an arrow to the localOverlay you can add `ArrowMixin` to your component.
+And add the `arrowPopperConfig` to the `_defineOverlayConfig`.
+
+```js preview-story
+export const LocalWithArrow = () => {
+  class ArrowExample extends ArrowMixin(OverlayMixin(LitElement)) {
+    // Alternatively, set `this.config = { popperConfig: { placement: 'bottom' } }` on connectedCallback
+    _defineOverlayConfig() {
+      return {
+        ...super._defineOverlayConfig(),
+        popperConfig: {
+          ...super._defineOverlayConfig().popperConfig,
+          placement: 'bottom',
+        },
+      };
+    }
+
+    constructor() {
+      super();
+      this.__toggle = this.__toggle.bind(this);
+    }
+
+    __toggle() {
+      this.opened = !this.opened;
+    }
+
+    _setupOpenCloseListeners() {
+      super._setupOpenCloseListeners();
+      if (this._overlayInvokerNode) {
+        this._overlayInvokerNode.addEventListener('click', this.__toggle);
+      }
+    }
+
+    _teardownOpenCloseListeners() {
+      super._teardownOpenCloseListeners();
+      if (this._overlayInvokerNode) {
+        this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+      }
+    }
+  }
+  if (!customElements.get('arrow-example')) {
+    customElements.define('arrow-example', ArrowExample);
+  }
+  return html`
+    <arrow-example>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content">This is a tooltip with an arrow<div>
+    </arrow-example>
   `;
 };
 ```
