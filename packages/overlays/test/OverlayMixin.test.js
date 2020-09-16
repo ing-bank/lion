@@ -8,7 +8,6 @@ const tagString = defineCE(
     render() {
       return html`
         <button slot="invoker">invoker button</button>
-        <slot name="_overlay-shadow-outlet"></slot>
         <div id="overlay-content-node-wrapper">
           <div slot="content">content of the overlay</div>
         </div>

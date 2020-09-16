@@ -180,7 +180,7 @@ Modifier explanations:
 
 By default, the arrow is disabled for our tooltip. Via the `has-arrow` property it can be enabled.
 
-> As a Subclasser, you can decide to turn the arrow on by default if this fits your Design System
+> As a Subclasser, you can decide to turn the arrow on by default if this fits your Design System, by setting `this.hasArrow = true;` in the constructor.
 
 ```js preview-story
 export const arrow = () => html`

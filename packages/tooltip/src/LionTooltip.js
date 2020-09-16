@@ -1,21 +1,18 @@
-import { css, html, LitElement } from '@lion/core';
-import { OverlayMixin } from '@lion/overlays';
+import { css, LitElement } from '@lion/core';
+import { ArrowMixin, OverlayMixin } from '@lion/overlays';
 
 /**
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('lit-element').CSSResultArray} CSSResultArray
  */
 
 /**
  * @customElement lion-tooltip
  */
-export class LionTooltip extends OverlayMixin(LitElement) {
+export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
   static get properties() {
     return {
-      hasArrow: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'has-arrow',
-      },
       invokerRelation: {
         type: String,
         attribute: 'invoker-relation',
@@ -24,56 +21,18 @@ export class LionTooltip extends OverlayMixin(LitElement) {
   }
 
   static get styles() {
-    return css`
-      :host {
-        --tooltip-arrow-width: 12px;
-        --tooltip-arrow-height: 8px;
-        display: inline-block;
-      }
+    return [
+      /** @type {CSSResult | CSSStyleSheet | CSSResultArray} */ (super.styles),
+      css`
+        :host {
+          display: inline-block;
+        }
 
-      :host([hidden]) {
-        display: none;
-      }
-
-      .arrow {
-        position: absolute;
-        width: var(--tooltip-arrow-width);
-        height: var(--tooltip-arrow-height);
-      }
-
-      .arrow svg {
-        display: block;
-      }
-
-      [x-placement^='bottom'] .arrow {
-        top: calc(-1 * var(--tooltip-arrow-height));
-        transform: rotate(180deg);
-      }
-
-      [x-placement^='left'] .arrow {
-        right: calc(
-          -1 * (var(--tooltip-arrow-height) +
-                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
-        );
-        transform: rotate(270deg);
-      }
-
-      [x-placement^='right'] .arrow {
-        left: calc(
-          -1 * (var(--tooltip-arrow-height) +
-                (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
-        );
-        transform: rotate(90deg);
-      }
-
-      .arrow {
-        display: none;
-      }
-
-      :host([has-arrow]) .arrow {
-        display: block;
-      }
-    `;
+        :host([hidden]) {
+          display: none;
+        }
+      `,
+    ];
   }
 
   constructor() {
@@ -91,83 +50,20 @@ export class LionTooltip extends OverlayMixin(LitElement) {
     this.invokerRelation = 'description';
     this._mouseActive = false;
     this._keyActive = false;
-    this.__setupRepositionCompletePromise();
-  }
-
-  render() {
-    return html`
-      <slot name="invoker"></slot>
-      <slot name="_overlay-shadow-outlet"></slot>
-      <div id="overlay-content-node-wrapper">
-        <slot name="content"></slot>
-        <div class="arrow" x-arrow>${this._arrowTemplate()}</div>
-      </div>
-    `;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  _arrowTemplate() {
-    return html`
-      <svg viewBox="0 0 12 8">
-        <path d="M 0,0 h 12 L 6,8 z"></path>
-      </svg>
-    `;
   }
 
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
+      ...super._defineOverlayConfig(),
       placementMode: 'local',
       elementToFocusAfterHide: undefined,
       hidesOnEsc: true,
       hidesOnOutsideEsc: true,
-      popperConfig: {
-        placement: 'top', // default
-        modifiers: {
-          keepTogether: {
-            enabled: true,
-          },
-          arrow: {
-            enabled: this.hasArrow,
-          },
-        },
-        onCreate: data => {
-          this.__syncFromPopperState(data);
-        },
-        onUpdate: data => {
-          this.__syncFromPopperState(data);
-        },
-      },
       handlesAccessibility: true,
       isTooltip: true,
       invokerRelation: this.invokerRelation,
     });
-  }
-
-  __setupRepositionCompletePromise() {
-    this.repositionComplete = new Promise(resolve => {
-      this.__repositionCompleteResolver = resolve;
-    });
-  }
-
-  get _arrowNode() {
-    return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[x-arrow]');
-  }
-
-  /**
-   * @param {import("popper.js").default.Data} data
-   */
-  __syncFromPopperState(data) {
-    if (!data) {
-      return;
-    }
-    if (
-      this._arrowNode &&
-      data.placement !== /** @type {Element & {placement:string}} */ (this._arrowNode).placement
-    ) {
-      /** @type {function} */ (this.__repositionCompleteResolver)(data.placement);
-      this.__setupRepositionCompletePromise();
-    }
   }
 
   _setupOpenCloseListeners() {
