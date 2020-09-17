@@ -144,6 +144,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (changedProperties.has('autocomplete')) {
       this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     }
+    if (changedProperties.has('disabled')) {
+      this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places
+    }
     if (
       changedProperties.has('__shouldAutocompleteNextUpdate') &&
       this.__shouldAutocompleteNextUpdate
@@ -249,6 +252,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
     // Alternatively, an extension can add an animation here
     option.style.display = 'none';
+    option.disabled = true;
   }
 
   /* eslint-enable no-param-reassign, class-methods-use-this */
@@ -486,7 +490,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const { key } = ev;
     switch (key) {
       case 'Escape':
+        this.__blockListShowDuringTransition();
+        this.opened = false;
+        this.__shouldAutocompleteNextUpdate = true;
         this._inputNode.value = '';
+        this.__cboxInputValue = '';
         break;
       case ' ':
       case 'Enter':
@@ -504,9 +512,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * Normally, when textbox gets focus or a char is typed, it opens listbox.
-   * In transition phases (like clicking option) we prevent this.
+   * In transition phases (like clicking option or escape key for clearing) we prevent this.
    */
   __blockListShowDuringTransition() {
+    this._blockListShowComplete = new Promise(resolve => {
+      this.__blockListShowResolve = resolve;
+    });
     this.__blockListShow = true;
     // We need this timeout to make sure click handler triggered by keyup (space/enter) of
     // button has been executed.
@@ -514,6 +525,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     // Or: call 'stopPropagation' on keyup of keys that have been handled in keydown
     setTimeout(() => {
       this.__blockListShow = false;
+      this.__blockListShowResolve();
     }, 200);
   }
 }

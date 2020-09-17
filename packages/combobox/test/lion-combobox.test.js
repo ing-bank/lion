@@ -16,6 +16,7 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  el._overlayInvokerNode.dispatchEvent(new Event('keyup'));
 }
 
 /**
@@ -105,8 +106,8 @@ describe('lion-combobox', () => {
        * Scenario:
        * [1] user focuses textbox: listbox hidden
        * [2] user types char: listbox shows
-       * [3] user selects "Artichocke": listbox closes, textbox gets value "Artichocke" and textbox still has focus
-       * [4] user changes textbox value to "Artichok": the listbox should show again
+       * [3] user selects "Artichoke": listbox closes, textbox gets value "Artichoke" and textbox still has focus
+       * [4] user changes textbox value to "Artichoke": the listbox should show again
        */
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
@@ -123,18 +124,18 @@ describe('lion-combobox', () => {
       // step [1]
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
+      // Await this otherwise the overlay won't be opened on typing
+      await el._blockListShowComplete;
       expect(el.opened).to.equal(false);
 
       // step [2]
       mimicUserTyping(el, 'c');
-      // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', bubbles: true, composed: true }));
       await el.updateComplete;
-      // expect(el.opened).to.equal(true);
 
       // step [3]
       options[0].click();
       await el.updateComplete;
-      expect(el.opened).to.equal(false);
+      expect(el.opened).to.equal(true);
       expect(document.activeElement).to.equal(el._inputNode);
 
       // step [4]
@@ -157,12 +158,14 @@ describe('lion-combobox', () => {
       // open
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
-      expect(el.opened).to.equal(true);
+      await el._blockListShowComplete;
 
       mimicUserTyping(el, 'art');
-      expect(el._inputNode.value).to.equal('art');
-      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(el._inputNode.value).to.equal('Artichoke');
+
+      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(el.opened).to.equal(false);
       expect(el._inputNode.value).to.equal('');
     });
@@ -183,9 +186,11 @@ describe('lion-combobox', () => {
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
-        expect(el.opened).to.equal(true);
+        await el._blockListShowComplete;
+
         mimicUserTyping(el, 'art');
         await el.updateComplete;
+        expect(el.opened).to.equal(true);
 
         const visibleOptions = options.filter(o => o.style.display !== 'none');
         visibleOptions.forEach((o, i) => {
@@ -220,19 +225,21 @@ describe('lion-combobox', () => {
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
-        expect(el.opened).to.equal(true);
+        await el._blockListShowComplete;
+
         mimicUserTyping(el, 'art');
+        expect(el.opened).to.equal(true);
         await el.updateComplete;
 
         const visibleOptions = options.filter(o => o.style.display !== 'none');
         visibleOptions.forEach(o => {
-          expect(o.getAttribute('disabled')).to.not.equal(null);
-          expect(o.getAttribute('aria-disabled')).to.equal('true');
+          expect(o.hasAttribute('disabled')).to.be.false;
+          expect(o.getAttribute('aria-disabled')).to.equal('false');
         });
         const hiddenOptions = options.filter(o => o.style.display === 'none');
         hiddenOptions.forEach(o => {
-          expect(o.hasAttribute('disabled')).to.equal(false);
-          expect(o.hasAttribute('aria-disabled')).to.equal(false);
+          expect(o.hasAttribute('disabled')).to.be.true;
+          expect(o.hasAttribute('aria-disabled')).to.equal(true);
         });
       });
     });
@@ -296,6 +303,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       mimicUserTyping(el, 'ch');
+      await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
     });
 
@@ -309,6 +317,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       mimicUserTyping(el, 'ch');
+      await el.updateComplete;
       expect(el._inputNode.value).to.equal('Chard');
       expect(el._inputNode.selectionStart).to.equal(2);
       expect(el._inputNode.selectionEnd).to.equal(el._inputNode.value.length);
@@ -329,6 +338,7 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       mimicUserTyping(el, 'ch');
+      await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
       expect(el._inputNode.value).to.equal('ch');
     });
@@ -371,17 +381,20 @@ describe('lion-combobox', () => {
 
         [el, options] = await fruitFixture({ autocomplete: 'none' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal('');
-        expect(options[0].active).to.equal(false);
+        await el.updateComplete;
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(null);
+        expect(options[1].active).to.equal(false);
 
         [el, options] = await fruitFixture({ autocomplete: 'both' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
+        await el.updateComplete;
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[1].id);
         expect(options[1].active).to.equal(true);
 
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[0].id);
+        await el.updateComplete;
+        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[1].id);
         expect(options[1].active).to.equal(true);
       });
     });
@@ -416,8 +429,11 @@ describe('lion-combobox', () => {
       `));
 
       // activate opened listbox
+      el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
+
       expect(el.opened).to.equal(true);
       const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
       visibleOptions[0].click();
@@ -525,7 +541,8 @@ describe('lion-combobox', () => {
 
     it('will suggest partial matches (in the middle of the word) when set to "all"', async () => {
       const [el] = await fruitFixture();
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+      await el.updateComplete;
       expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
         'Artichoke',
         'Chard',
@@ -537,6 +554,7 @@ describe('lion-combobox', () => {
     it('will only suggest beginning matches when set to "begin"', async () => {
       const [el] = await fruitFixture({ matchMode: 'begin' });
       mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+      await el.updateComplete;
       expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
         'Chard',
         'Chicory',
@@ -555,8 +573,10 @@ describe('lion-combobox', () => {
         }
         el.filterOptionCondition = onlyExactMatches;
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicory');
+        await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql(['Chicory']);
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicor');
+        await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
       });
     });
@@ -566,33 +586,35 @@ describe('lion-combobox', () => {
   describe('Orientation', () => {
     it('has a default value of "vertical"', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" orientation="horizontal">
+        <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>
       `));
+      expect(el.orientation).to.equal('vertical');
       const options = el.formElements;
-      el._inputNode.focus();
 
-      el.activeIndex = 0;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
 
-      el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
 
       // No response to horizontal arrows...
 
-      el.activeIndex = 0;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
 
       el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
     });
@@ -604,28 +626,29 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>
       `));
+      expect(el.orientation).to.equal('horizontal');
       const options = el.formElements;
-      el._inputNode.focus();
 
-      el.activeIndex = 0;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
 
-      el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
 
       // No response to vertical arrows...
-
-      el.activeIndex = 0;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
 
       el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
     });
@@ -653,12 +676,15 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._inputNode.focus();
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].checked).to.be.false;
       expect(options[1].checked).to.be.true;
 
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(options[0].checked).to.be.true;
       expect(options[1].checked).to.be.false;
     });
@@ -675,15 +701,18 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._inputNode.focus();
-      el.activeIndex = 0;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
       expect(options[2].active).to.be.false;
 
       el.activeIndex = 2;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.false;
       expect(options[2].active).to.be.true;
@@ -691,26 +720,29 @@ describe('lion-combobox', () => {
 
     it('when "rotate-navigation" provided, selects first option after navigated to next from last and vice versa', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" rotate-navigation>
+        <lion-combobox name="foo" rotate-keyboard-navigation>
           <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
           <lion-option .choiceValue="${'Bla'}">Bla</lion-option>
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>
       `));
       const options = el.formElements;
-      el._inputNode.focus();
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      await el._blockListShowComplete;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.false;
       expect(options[2].active).to.be.true;
 
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].active).to.be.true;
       expect(options[1].active).to.be.false;
       expect(options[2].active).to.be.false;
 
       // Extra check: regular navigation
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
       expect(options[2].active).to.be.false;

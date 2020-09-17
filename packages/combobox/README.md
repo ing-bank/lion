@@ -34,7 +34,7 @@ export default {
 
 ```js preview-story
 export const main = () => html`
-  <lion-combobox name="combo" label="Default">
+  <lion-combobox name="combo" label="Default" rotate-navigation>
     ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
