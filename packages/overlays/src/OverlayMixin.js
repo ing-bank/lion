@@ -1,4 +1,5 @@
 import { dedupeMixin } from '@lion/core';
+import { DisclosureMixin } from '@lion/collapsible';
 import { OverlayController } from './OverlayController.js';
 
 /**
@@ -12,20 +13,20 @@ import { OverlayController } from './OverlayController.js';
  * @type {OverlayMixin}
  */
 export const OverlayMixinImplementation = superclass =>
-  class OverlayMixin extends superclass {
-    static get properties() {
-      return {
-        opened: {
-          type: Boolean,
-          reflect: true,
-        },
-      };
-    }
+  class OverlayMixin extends DisclosureMixin(superclass) {
+    // static get properties() {
+    //   return {
+    //     opened: {
+    //       type: Boolean,
+    //       reflect: true,
+    //     },
+    //   };
+    // }
 
     constructor() {
       super();
-      this.opened = false;
-      this.__needsSetup = true;
+      // this.opened = false;
+      // this.__needsSetup = true;
       /** @type {OverlayConfig} */
       this.config = {};
     }
@@ -42,17 +43,17 @@ export const OverlayMixinImplementation = superclass =>
       this.__config = value;
     }
 
-    /**
-     * @override
-     * @param {string} name
-     * @param {any} oldValue
-     */
-    requestUpdateInternal(name, oldValue) {
-      super.requestUpdateInternal(name, oldValue);
-      if (name === 'opened') {
-        this.dispatchEvent(new Event('opened-changed'));
-      }
-    }
+    // /**
+    //  * @override
+    //  * @param {string} name
+    //  * @param {any} oldValue
+    //  */
+    // requestUpdateInternal(name, oldValue) {
+    //   super.requestUpdateInternal(name, oldValue);
+    //   if (name === 'opened') {
+    //     this.dispatchEvent(new Event('opened-changed'));
+    //   }
+    // }
 
     /**
      * @overridable method `_defineOverlay`
@@ -63,21 +64,19 @@ export const OverlayMixinImplementation = superclass =>
      */
     // eslint-disable-next-line
     _defineOverlay({ contentNode, invokerNode, backdropNode, contentWrapperNode }) {
+      // Get the merged configs from Subclasser and Application Developers
+      const overlayCfg = { ...this._defineOverlayConfig(), ...this.config };
+
       return new OverlayController({
         contentNode,
         invokerNode,
         backdropNode,
         contentWrapperNode,
-        ...this._defineOverlayConfig(), // wc provided in the class as defaults
-        ...this.config, // user provided (e.g. in template)
+        ...overlayCfg,
         popperConfig: {
-          ...(this._defineOverlayConfig().popperConfig || {}),
-          ...(this.config.popperConfig || {}),
+          ...(overlayCfg.popperConfig || {}),
           modifiers: {
-            ...((this._defineOverlayConfig().popperConfig &&
-              this._defineOverlayConfig()?.popperConfig?.modifiers) ||
-              {}),
-            ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
+            ...((overlayCfg.popperConfig && overlayCfg.popperConfig.modifiers) || {}),
           },
         },
       });
@@ -96,13 +95,22 @@ export const OverlayMixinImplementation = superclass =>
       };
     }
 
-    /**
-     * @param {import('lit-element').PropertyValues } changedProperties
-     */
-    updated(changedProperties) {
-      super.updated(changedProperties);
+    // /**
+    //  * @param {import('lit-element').PropertyValues } changedProperties
+    //  */
+    // updated(changedProperties) {
+    //   super.updated(changedProperties);
 
-      if (changedProperties.has('opened') && this._overlayCtrl && !this.__blockSyncToOverlayCtrl) {
+    //   if (changedProperties.has('opened') && this._overlayCtrl && !this.__blockSyncToOverlayCtrl) {
+    //     this.__syncToOverlayController();
+    //   }
+    // }
+
+    /**
+     * @override DisclosureMixin
+     */
+    async _onOpenedChanged() {
+      if (this._overlayCtrl && !this.__blockSyncToOverlayCtrl) {
         this.__syncToOverlayController();
       }
     }
@@ -114,12 +122,14 @@ export const OverlayMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     _setupOpenCloseListeners() {
+      super._setupOpenCloseListeners();
       /**
        * @param {{ stopPropagation: () => void; }} ev
        */
       this.__closeEventInContentNodeHandler = ev => {
         ev.stopPropagation();
-        /** @type {OverlayController} */ (this._overlayCtrl).hide();
+        /** @type {OverlayController} */
+        (this._overlayCtrl).hide();
       };
       if (this._overlayContentNode) {
         this._overlayContentNode.addEventListener(
@@ -135,6 +145,7 @@ export const OverlayMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     _teardownOpenCloseListeners() {
+      super._teardownOpenCloseListeners();
       if (this._overlayContentNode) {
         this._overlayContentNode.removeEventListener(
           'close-overlay',
@@ -143,29 +154,30 @@ export const OverlayMixinImplementation = superclass =>
       }
     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      // we do a setup after every connectedCallback as firstUpdated will only be called once
-      this.__needsSetup = true;
-      this.updateComplete.then(() => {
-        if (this.__needsSetup) {
-          this._setupOverlayCtrl();
-        }
-        this.__needsSetup = false;
-      });
-    }
+    // connectedCallback() {
+    //   super.connectedCallback();
+    //   // we do a setup after every connectedCallback as firstUpdated will only be called once
+    //   this.__needsSetup = true;
+    //   this.updateComplete.then(() => {
+    //     if (this.__needsSetup) {
+    //       this._setupOverlayCtrl();
+    //     }
+    //     this.__needsSetup = false;
+    //   });
+    // }
 
-    disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
-      if (this._overlayCtrl) {
-        this._teardownOverlayCtrl();
-      }
-    }
+    // disconnectedCallback() {
+    //   if (super.disconnectedCallback) {
+    //     super.disconnectedCallback();
+    //   }
+    //   if (this._overlayCtrl) {
+    //     this._teardownOverlayCtrl();
+    //   }
+    // }
 
     get _overlayInvokerNode() {
-      return Array.from(this.children).find(child => child.slot === 'invoker');
+      // return Array.from(this.children).find(child => child.slot === 'invoker');
+      return this._invokerNode;
     }
 
     get _overlayBackdropNode() {
@@ -173,16 +185,32 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     get _overlayContentNode() {
-      if (!this._cachedOverlayContentNode) {
-        this._cachedOverlayContentNode = Array.from(this.children).find(
-          child => child.slot === 'content',
-        );
-      }
-      return this._cachedOverlayContentNode;
+      // if (!this._cachedOverlayContentNode) {
+      //   this._cachedOverlayContentNode = Array.from(this.children).find(
+      //     child => child.slot === 'content',
+      //   );
+      // }
+      return this._contentNode;
     }
 
     get _overlayContentWrapperNode() {
       return this.shadowRoot.querySelector('#overlay-content-node-wrapper');
+    }
+
+    /**
+     * @override DisclosureMixin
+     */
+    _setupDisclosure() {
+      this._setupOverlayCtrl();
+    }
+
+    /**
+     * @override DisclosureMixin
+     */
+    _teardownDisclosure() {
+      if (this._overlayCtrl) {
+        this._teardownOverlayCtrl();
+      }
     }
 
     _setupOverlayCtrl() {
@@ -196,6 +224,14 @@ export const OverlayMixinImplementation = superclass =>
       this.__syncToOverlayController();
       this.__setupSyncFromOverlayController();
       this._setupOpenCloseListeners();
+
+      this._overlayCtrl.showAnimation = async cfg => {
+        await this._showAnimation(cfg);
+      };
+
+      this._overlayCtrl.hideAnimation = async cfg => {
+        await this._hideAnimation(cfg);
+      };
     }
 
     _teardownOverlayCtrl() {
@@ -206,7 +242,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * When the opened state is changed by an Application Developer,cthe OverlayController is
+     * When the opened state is changed by an Application Developer, the OverlayController is
      * requested to show/hide. It might happen that this request is not honoured
      * (intercepted in before-hide for instance), so that we need to sync the controller state
      * to this webcomponent again, preventing eternal loops.
@@ -291,7 +327,6 @@ export const OverlayMixinImplementation = superclass =>
 
     __syncToOverlayController() {
       if (this.opened) {
-        console.log('show');
         /** @type {OverlayController} */
         (this._overlayCtrl).show();
       } else {

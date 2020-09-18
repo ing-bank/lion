@@ -97,6 +97,8 @@ export const matchModeBegin = () => html`
 `;
 ```
 
+## Selection display
+
 ```js preview-story
 export const selectionDisplay = () => html`
   <lion-combobox name="combo" label="Selection display" multiple-choice>

@@ -4,13 +4,15 @@ import { EventTargetShim } from '@lion/core';
 import { overlays } from './overlays.js';
 import { containFocus } from './utils/contain-focus.js';
 
+import { HidesOnOutsideClickHandler } from './handlers/HidesOnOutsideClickHandler.js';
+
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayConfig').ViewportConfig} ViewportConfig
  * @typedef {import('popper.js').default} Popper
  * @typedef {import('popper.js').PopperOptions} PopperOptions
  * @typedef {{ default: Popper }} PopperModule
- * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
+ * @typedef {'init'|'teardown'|'before-show'|'show'|'hide'} OverlayPhase
  */
 
 /**
@@ -145,6 +147,9 @@ export class OverlayController extends EventTargetShim {
         placement: 'center',
       },
     };
+
+    this._handlers = [];
+    this._handlers.push(new HidesOnOutsideClickHandler(this));
 
     this.manager.add(this);
     this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
@@ -573,7 +578,7 @@ export class OverlayController extends EventTargetShim {
       return;
     }
 
-    if (phase === 'setup') {
+    if (phase === 'init') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
         this.contentWrapperNode.style.zIndex = '1';
@@ -679,6 +684,7 @@ export class OverlayController extends EventTargetShim {
       await this._handlePosition({ phase: 'show' });
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
+      this.showAnimation({ backdropNode: this.backdropNode, contentNode: this.contentNode });
     }
     /** @type {function} */
     (this._showResolve)();
@@ -784,7 +790,7 @@ export class OverlayController extends EventTargetShim {
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      // await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+      await this.hideAnimation({ backdropNode: this.backdropNode, contentNode: this.contentNode });
       this.contentWrapperNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
@@ -798,7 +804,13 @@ export class OverlayController extends EventTargetShim {
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} config
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionHide(config) {}
+  async showAnimation(config) {}
+
+  /**
+   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} config
+   */
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async hideAnimation(config) {}
 
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' it.
@@ -846,6 +858,18 @@ export class OverlayController extends EventTargetShim {
     if (this.inheritsReferenceWidth) {
       this._handleInheritsReferenceWidth();
     }
+
+    // this._handlers.forEach(h => {
+    //   if (phase === 'init') {
+    //     h.onInit(this);
+    //   } else if (phase === 'show') {
+    //     h.onShow(this);
+    //   } else if (phase === 'hide') {
+    //     h.onHide(this);
+    //   } else if (phase === 'teardown') {
+    //     h.onTeardown(this);
+    //   }
+    // });
   }
 
   /**
@@ -1083,7 +1107,6 @@ export class OverlayController extends EventTargetShim {
    */
   _handleHidesOnOutsideClick({ phase }) {
     const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
-
     if (phase === 'show') {
       let wasClickInside = false;
       let wasIndirectSynchronousClick = false;
@@ -1115,7 +1138,6 @@ export class OverlayController extends EventTargetShim {
         });
       };
     }
-
     this.contentWrapperNode[addOrRemoveListener](
       'click',
       /** @type {EventListenerOrEventListenerObject} */

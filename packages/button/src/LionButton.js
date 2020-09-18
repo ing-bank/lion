@@ -74,6 +74,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           background: #eee; /* minimal styling to make it recognizable as btn */
           padding: 8px; /* vertical padding to fix with host min-height */
           outline: none; /* focus style handled below, else it follows boundaries of click-area */
+
+          cursor: default;
+          pointer-events: none;
         }
 
         :host .btn ::slotted(button) {

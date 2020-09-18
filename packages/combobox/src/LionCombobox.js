@@ -32,7 +32,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   static get styles() {
-    // TODO: share input-group css?
     return [
       super.styles,
       css`
@@ -49,6 +48,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           max-height: 200px;
           display: block;
           overflow: hidden;
+          overflow-y: auto;
         }
 
         .combobox__input {
@@ -287,6 +287,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       }
 
       // [2]. If ._inputNode is empty, no filtering will be applied
+      console.log('curValue', curValue);
       if (!curValue) {
         visibleOptions.push(option);
         return;
@@ -448,7 +449,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {Event} ev
    */
   __showOverlay(ev) {
-    if (/** @type {KeyboardEvent} */ (ev).key === 'Tab' || this.__blockListShow) {
+    if (/** @type {KeyboardEvent} */ (ev).key === 'Tab') {
       return;
     }
     this.opened = true;

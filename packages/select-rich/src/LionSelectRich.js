@@ -6,9 +6,6 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
- */
-
-/**
  * @typedef {import('@open-wc/scoped-elements/src/types').ScopedElementsHost} ScopedElementsHost
  */
 

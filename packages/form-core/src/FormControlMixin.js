@@ -631,7 +631,7 @@ const FormControlMixinImplementation = superclass =>
           }
 
           /***** {state} :disabled *****/
-          :host([disabled]) .input-group ::slotted(slot='input') {
+          :host([disabled]) .input-group ::slotted([slot='input']) {
             color: var(--disabled-text-color, #adadad);
           }
 
@@ -639,10 +639,14 @@ const FormControlMixinImplementation = superclass =>
             {block} .form-control
            **********************/
 
-          .input-group__container > .input-group__input ::slotted(.form-control) {
+          .input-group__container > .input-group__input ::slotted([slot='input']) {
             flex: 1 1 auto;
             margin: 0; /* remove input margin in Safari */
             font-size: 100%; /* normalize default input font-size */
+          }
+
+          .input-group__container .input-group__suffix ::slotted(*) {
+            height: 100%;
           }
         `,
       ];

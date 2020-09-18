@@ -30,10 +30,10 @@ export class LionComboboxSelectionDisplay extends LitElement {
     // TODO: share input-group css?
     return css`
       :host {
-        display: flex;
+        display: block;
       }
       .combobox__selection {
-        flex: none;
+        display: flex;
       }
       .combobox__input {
         flex: 1;

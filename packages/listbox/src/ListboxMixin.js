@@ -3,10 +3,6 @@ import { css, html, dedupeMixin, ScopedElementsMixin, SlotMixin } from '@lion/co
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { LionOptions } from './LionOptions.js';
 
-// TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
-// having children with [role="menuitem|menuitemcheckbox|menuitemradio|option"] and
-// list items that can be found via MutationObserver or registration (.formElements)
-
 /**
  * @typedef {import('./LionOption').LionOption} LionOption
  * @typedef {import('../types/ListboxMixinTypes').ListboxMixin} ListboxMixin
@@ -67,6 +63,7 @@ const ListboxMixinImplementation = superclass =>
           reflect: true,
           attribute: 'has-no-default-selected',
         },
+        __shouldUpdateChildrenAria: Boolean,
       };
     }
 
@@ -300,6 +297,7 @@ const ListboxMixinImplementation = superclass =>
       return this.formElements.filter(el => el.checked);
     }
 
+    // TODO: wrapper method needed?
     __initInteractionStates() {
       this.initInteractionState();
     }
@@ -316,12 +314,15 @@ const ListboxMixinImplementation = superclass =>
 
       if (changedProperties.has('disabled')) {
         if (this.disabled) {
-          // this._invokerNode.makeRequestToBeDisabled();
           this.__requestOptionsToBeDisabled();
         } else {
-          // this._invokerNode.retractRequestToBeDisabled();
           this.__retractRequestOptionsToBeDisabled();
         }
+      }
+
+      if (changedProperties.has('__shouldUpdateChildrenAria') && this.__shouldUpdateChildrenAria) {
+        this.__updateChildrenAria();
+        this.__shouldUpdateChildrenAria = false;
       }
     }
 
@@ -369,18 +370,38 @@ const ListboxMixinImplementation = superclass =>
         this.__hasInitialSelectedFormElement = true;
       }
 
-      // TODO: small perf improvement could be made if logic below would be scheduled to next update,
-      // so it occurs once for all options
-      this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
-      this.formElements.forEach((el, idx) => {
-        el.setAttribute('aria-posinset', idx + 1);
-      });
+      this.__shouldUpdateChildrenAria = true;
 
       this.__proxyChildModelValueChanged(
         /** @type {Event & { target: LionOption; }} */ ({ target: child }),
       );
       this.resetInteractionState();
       /* eslint-enable no-param-reassign */
+    }
+
+    /**
+     * Overrides FormRegistrar adding to make sure children have specific default states when added
+     *
+     * @override
+     * @param {LionOption} child
+     */
+    removeFormElement(child) {
+      super.removeFormElement(child);
+      this.__shouldUpdateChildrenAria = true;
+    }
+
+    /**
+     * Update aria-setsize aria-posinset of children
+     */
+    __updateChildrenAria() {
+      // sort form elements on chronological dom order (not order of registration)
+      this.formElements.sort(
+        (a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_PRECEDING,
+      );
+      this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
+      this.formElements.forEach((el, idx) => {
+        el.setAttribute('aria-posinset', idx + 1);
+      });
     }
 
     __setupEventListeners() {
