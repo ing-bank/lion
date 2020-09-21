@@ -164,3 +164,24 @@ export const rotateKeyboardNavigation = () => html`
   </lion-listbox>
 `;
 ```
+
+## Disabled options
+
+Navigation will skip over disabled options. Let's disable Artichoke and Brussel sprout, because they're gross.
+
+```js preview-story
+export const disabledRotateNavigation = () => html`
+  <lion-listbox name="combo" label="Rotate with disabled options" rotate-keyboard-navigation>
+    <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
+    <lion-option .choiceValue=${'Artichoke'} disabled>Artichoke</lion-option>
+    <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
+    <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
+    <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
+    <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
+    <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
+    <lion-option .choiceValue=${'Brussel sprout'} disabled>Brussels sprout</lion-option>
+    <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
+    <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  </lion-listbox>
+`;
+```
