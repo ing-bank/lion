@@ -200,7 +200,7 @@ describe('lion-combobox', () => {
         });
       });
 
-      it('sets "disabled" on hidden entries', async () => {
+      it('sets aria-hidden="true" on hidden entries', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -220,13 +220,11 @@ describe('lion-combobox', () => {
 
         const visibleOptions = options.filter(o => o.style.display !== 'none');
         visibleOptions.forEach(o => {
-          expect(o.hasAttribute('disabled')).to.be.false;
-          expect(o.getAttribute('aria-disabled')).to.equal('false');
+          expect(o.hasAttribute('aria-hidden')).to.be.false;
         });
         const hiddenOptions = options.filter(o => o.style.display === 'none');
         hiddenOptions.forEach(o => {
-          expect(o.hasAttribute('disabled')).to.be.true;
-          expect(o.hasAttribute('aria-disabled')).to.equal(true);
+          expect(o.getAttribute('aria-hidden')).to.equal('true');
         });
       });
     });

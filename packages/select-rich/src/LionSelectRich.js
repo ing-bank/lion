@@ -144,6 +144,29 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
+   * Overrides FormRegistrar adding to make sure children have specific default states when added
+   *
+   * @override
+   * @param {LionOption} child
+   * @param {Number} indexToInsertAt
+   */
+  addFormElement(child, indexToInsertAt) {
+    super.addFormElement(child, indexToInsertAt);
+    // the first elements checked by default
+    if (
+      !this.hasNoDefaultSelected &&
+      !this.__hasInitialSelectedFormElement &&
+      (!child.disabled || this.disabled)
+    ) {
+      /* eslint-disable no-param-reassign */
+      child.active = true;
+      child.checked = true;
+      /* eslint-enable no-param-reassign */
+      this.__hasInitialSelectedFormElement = true;
+    }
+  }
+
+  /**
    * In the select disabled options are still going to a possible value for example
    * when prefilling or programmatically setting it.
    *

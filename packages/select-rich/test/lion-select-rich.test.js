@@ -28,6 +28,34 @@ describe('lion-select-rich', () => {
     expect(document.activeElement === el._invokerNode).to.be.true;
   });
 
+  it('checks the first enabled option', async () => {
+    const el = await fixture(html`
+      <lion-select-rich>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'Red'}></lion-option>
+          <lion-option .choiceValue=${'Hotpink'}></lion-option>
+          <lion-option .choiceValue=${'Blue'}></lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+    expect(el.activeIndex).to.equal(1);
+    expect(el.checkedIndex).to.equal(1);
+  });
+
+  it('still has a checked value while disabled', async () => {
+    const el = await fixture(html`
+      <lion-select-rich disabled>
+        <lion-options slot="input">
+          <lion-option .choiceValue=${'Red'}>Red</lion-option>
+          <lion-option .choiceValue=${'Hotpink'}>Hotpink</lion-option>
+          <lion-option .choiceValue=${'Blue'}>Blue</lion-option>
+        </lion-options>
+      </lion-select-rich>
+    `);
+
+    expect(el.modelValue).to.equal('Red');
+  });
+
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
       const el = await fixture(html`

@@ -60,11 +60,31 @@ export const multipleChoice = () => html`
 ## Autocomplete
 
 When "list", will filter listbox suggestions based on textbox value.
-When "both", an inline completion string will be added to the textbox as well.
 
 ```js preview-story
 export const autocompleteList = () => html`
   <lion-combobox name="combo" label="Autocomplete 'list'" autocomplete="list">
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+  </lion-combobox>
+`;
+```
+
+When "inline", will present a value completion prediction inside the text input itself.
+
+```js preview-story
+export const autocompleteInline = () => html`
+  <lion-combobox name="combo" label="Autocomplete 'inline'" autocomplete="inline">
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+  </lion-combobox>
+`;
+```
+
+When `autocomplete="both"` is configured, it combines the filtered list from `'list'` with the text input value completion prediction from `'inline'`.
+This is the default value for `autocomplete`.
+
+```js preview-story
+export const autocompleteBoth = () => html`
+  <lion-combobox name="combo" label="Autocomplete 'list'">
     ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
