@@ -65,9 +65,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
        */
       input: () => document.createElement('input'),
       /**
-       * The reason that [slot=input] points to [role=listbox]
-       * (as opposed to [slot=listbox] in LionListbox and LionSelectRich):
-       * the end user doesn't interact with the [role=listbox], but with the text box ([slot=input]).
+       * As opposed to our parent (LionListbox), the end user doesn't interact with the
+       * element that has [role=listbox] (in a combobox, it has no tabindex), but with
+       * the text box (<input>) element.
        */
       listbox: super.slots.input,
     };
@@ -138,9 +138,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-    // if (changedProperties.has('modelValue')) {
-    //   this.__syncSelectionDisplayElement();
-    // }
+
     if (changedProperties.has('autocomplete')) {
       this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     }
@@ -331,7 +329,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       /* eslint-enable no-param-reassign */
     });
     /** @type {number} */
-    const { selectionStart } = this._inputNode.selectionStart;
+    const { selectionStart } = this._inputNode;
     this.__prevCboxValueNonSelected = curValue.slice(0, selectionStart);
 
     if (this._overlayCtrl && this._overlayCtrl._popper) {
@@ -348,9 +346,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (name === 'disabled' || name === 'readOnly') {
       this.__setComboboxDisabledAndReadOnly();
     }
-    if (name === 'modelValue') {
-      // this.__blockListShowDuringTransition();
-    }
   }
 
   __setComboboxDisabledAndReadOnly() {
@@ -363,7 +358,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * @override FormControlMixin
    */
-  // eslint-disable-next-line
+  // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
@@ -375,7 +370,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     `;
   }
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
     return html`
       <slot name="_overlay-shadow-outlet"></slot>
@@ -400,17 +395,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       elementToFocusAfterHide: undefined,
     });
   }
-
-  // __syncSelectionDisplayElement() {
-  //   // sync to invoker
-  //   if (this._selectionDisplayNode) {
-  //     if (!this.multipleChoice && this.checkedIndex !== -1) {
-  //       this._selectionDisplayNode.selectedElements = [this.formElements[this.checkedIndex]];
-  //     } else {
-  //       this._selectionDisplayNode.selectedElements = this._getCheckedElements();
-  //     }
-  //   }
-  // }
 
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
