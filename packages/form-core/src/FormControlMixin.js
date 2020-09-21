@@ -208,6 +208,8 @@ const FormControlMixinImplementation = superclass =>
         'model-value-changed',
         /** @type {EventListenerOrEventListenerObject} */ (this.__repropagateChildrenValues),
       );
+      /** @type {EventListener} */
+      this._onLabelClick = this._onLabelClick.bind(this);
     }
 
     connectedCallback() {
@@ -215,6 +217,17 @@ const FormControlMixinImplementation = superclass =>
       this._enhanceLightDomClasses();
       this._enhanceLightDomA11y();
       this._triggerInitialModelValueChangedEvent();
+
+      if (this._labelNode) {
+        this._labelNode.addEventListener('click', this._onLabelClick);
+      }
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      if (this._labelNode) {
+        this._labelNode.removeEventListener('click', this._onLabelClick);
+      }
     }
 
     /** @param {import('lit-element').PropertyValues } changedProperties */
@@ -800,6 +813,20 @@ const FormControlMixinImplementation = superclass =>
         new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
       );
     }
+
+    /**
+     * @overridable
+     * A Subclasser should only override this method if the interactive element
+     * ([slot=input]) is not a native element(like input, textarea, select)
+     * that already receives focus on label click.
+     *
+     * @example
+     * _onLabelClick() {
+     *   this._invokerNode.focus();
+     * }
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _onLabelClick() {}
   };
 
 export const FormControlMixin = dedupeMixin(FormControlMixinImplementation);
