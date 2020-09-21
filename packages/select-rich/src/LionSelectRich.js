@@ -98,7 +98,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.__overlayOnShow = this.__overlayOnShow.bind(this);
     this.__invokerOnClick = this.__invokerOnClick.bind(this);
     this.__overlayBeforeShow = this.__overlayBeforeShow.bind(this);
-    this.__focusInvokerOnLabelClick = this.__focusInvokerOnLabelClick.bind(this);
     this._listboxOnClick = this._listboxOnClick.bind(this);
   }
 
@@ -107,18 +106,11 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
-    if (this._labelNode) {
-      this._labelNode.addEventListener('click', this.__focusInvokerOnLabelClick);
-    }
-
     this.addEventListener('keyup', this.__onKeyUp);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this.__focusInvokerOnLabelClick);
-    }
     this.__teardownInvokerNode();
     this.removeEventListener('keyup', this.__onKeyUp);
   }
@@ -323,7 +315,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
   }
 
-  __focusInvokerOnLabelClick() {
+  /**
+   * @configure FormControlMixin
+   */
+  _onLabelClick() {
     this._invokerNode.focus();
   }
 

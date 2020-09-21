@@ -522,6 +522,7 @@ const ListboxMixinImplementation = superclass =>
      * @param {KeyboardEvent} ev - the keydown event object
      */
     _listboxOnKeyDown(ev) {
+      console.log('_listboxOnKeyDown', this.disabled);
       if (this.disabled) {
         return;
       }
@@ -547,7 +548,9 @@ const ListboxMixinImplementation = superclass =>
         case 'ArrowDown':
           ev.preventDefault();
           if (this.orientation === 'vertical') {
+            console.log('activeIndex voor', this.activeIndex);
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
+            console.log('activeIndex na', this.activeIndex);
           }
           break;
         case 'ArrowRight':
@@ -665,6 +668,8 @@ const ListboxMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _listboxOnKeyUp(ev) {
+      console.log('_listboxOnKeyDown', this.disabled);
+
       if (this.disabled) {
         return;
       }
@@ -678,6 +683,14 @@ const ListboxMixinImplementation = superclass =>
         case 'Enter':
           ev.preventDefault();
       }
+    }
+
+    /**
+     * @configure FormControlMixin
+     */
+    _onLabelClick() {
+      console.log('_onLabelClick');
+      this._listboxNode.focus();
     }
   };
 
