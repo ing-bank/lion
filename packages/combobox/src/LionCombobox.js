@@ -187,6 +187,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {Event} ev
    */
   _textboxOnInput(ev) {
+    console.log(`*${ev.target.value}*`);
     this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
     // Schedules autocompletion of options
     this.__shouldAutocompleteNextUpdate = true;
@@ -198,7 +199,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
     this._inputNode.focus();
-    this.__blockListShowDuringTransition();
     this.__syncCheckedWithTextboxOnInteraction();
   }
 
@@ -346,14 +346,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
     if (name === 'disabled' || name === 'readOnly') {
-      this.__toggleComboboxDisabled();
+      this.__setComboboxDisabledAndReadOnly();
     }
     if (name === 'modelValue') {
-      this.__blockListShowDuringTransition();
+      // this.__blockListShowDuringTransition();
     }
   }
 
-  __toggleComboboxDisabled() {
+  __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
       this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
       this._comboboxNode.setAttribute('readonly', `${this.readOnly}`);
@@ -448,7 +448,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {Event} ev
    */
   __showOverlay(ev) {
-    if (/** @type {KeyboardEvent} */ (ev).key === 'Tab' || this.__blockListShow) {
+    if (
+      /** @type {KeyboardEvent} */ (ev).key === 'Tab' ||
+      /** @type {KeyboardEvent} */ (ev).key === 'Esc' ||
+      /** @type {KeyboardEvent} */ (ev).key === 'Enter' ||
+      this.__blockListShow
+    ) {
       return;
     }
     this.opened = true;
@@ -459,7 +464,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this._overlayInvokerNode.addEventListener('focusin', this.__showOverlay);
     this._overlayInvokerNode.addEventListener('keyup', this.__showOverlay);
   }
 
@@ -468,7 +472,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
-    this._overlayInvokerNode.removeEventListener('focusin', this.__showOverlay);
     this._overlayInvokerNode.removeEventListener('keyup', this.__showOverlay);
   }
 
@@ -490,13 +493,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const { key } = ev;
     switch (key) {
       case 'Escape':
-        this.__blockListShowDuringTransition();
         this.opened = false;
         this.__shouldAutocompleteNextUpdate = true;
         this._inputNode.value = '';
         this.__cboxInputValue = '';
         break;
-      case ' ':
       case 'Enter':
         this.__syncCheckedWithTextboxOnInteraction();
       /* no default */
@@ -508,24 +509,5 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
       this.opened = false;
     }
-  }
-
-  /**
-   * Normally, when textbox gets focus or a char is typed, it opens listbox.
-   * In transition phases (like clicking option or escape key for clearing) we prevent this.
-   */
-  __blockListShowDuringTransition() {
-    this._blockListShowComplete = new Promise(resolve => {
-      this.__blockListShowResolve = resolve;
-    });
-    this.__blockListShow = true;
-    // We need this timeout to make sure click handler triggered by keyup (space/enter) of
-    // button has been executed.
-    // TODO: alternative would be to let the 'checking' party 'release' this boolean
-    // Or: call 'stopPropagation' on keyup of keys that have been handled in keydown
-    setTimeout(() => {
-      this.__blockListShow = false;
-      this.__blockListShowResolve();
-    }, 200);
   }
 }

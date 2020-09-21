@@ -124,8 +124,6 @@ describe('lion-combobox', () => {
       // step [1]
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
-      // Await this otherwise the overlay won't be opened on typing
-      await el._blockListShowComplete;
       expect(el.opened).to.equal(false);
 
       // step [2]
@@ -158,7 +156,6 @@ describe('lion-combobox', () => {
       // open
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       await el.updateComplete;
-      await el._blockListShowComplete;
 
       mimicUserTyping(el, 'art');
       await el.updateComplete;
@@ -186,7 +183,6 @@ describe('lion-combobox', () => {
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
-        await el._blockListShowComplete;
 
         mimicUserTyping(el, 'art');
         await el.updateComplete;
@@ -225,7 +221,6 @@ describe('lion-combobox', () => {
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
-        await el._blockListShowComplete;
 
         mimicUserTyping(el, 'art');
         expect(el.opened).to.equal(true);
@@ -430,7 +425,6 @@ describe('lion-combobox', () => {
 
       // activate opened listbox
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
 
@@ -595,7 +589,6 @@ describe('lion-combobox', () => {
       const options = el.formElements;
 
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'a');
       await el.updateComplete;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -630,7 +623,6 @@ describe('lion-combobox', () => {
       const options = el.formElements;
 
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'a');
       await el.updateComplete;
 
@@ -677,7 +669,6 @@ describe('lion-combobox', () => {
       `));
       const options = el.formElements;
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'a');
       await el.updateComplete;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -702,7 +693,6 @@ describe('lion-combobox', () => {
       `));
       const options = el.formElements;
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'a');
       await el.updateComplete;
 
@@ -728,7 +718,6 @@ describe('lion-combobox', () => {
       `));
       const options = el.formElements;
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el._blockListShowComplete;
       mimicUserTyping(el, 'a');
       await el.updateComplete;
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
