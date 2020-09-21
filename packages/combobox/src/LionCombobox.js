@@ -234,6 +234,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     option.innerHTML = innerHTML.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
     // Alternatively, an extension can add an animation here
     option.style.display = '';
+    option.removeAttribute('aria-hidden');
   }
 
   /**
@@ -249,7 +250,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
     // Alternatively, an extension can add an animation here
     option.style.display = 'none';
-    option.disabled = true;
+    option.setAttribute('aria-hidden', 'true');
   }
 
   /* eslint-enable no-param-reassign, class-methods-use-this */
@@ -289,11 +290,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       }
 
       // [3]. Cleanup previous visibility and a11y states
-      /* eslint-disable no-param-reassign */
-      option.disabled = true; // makes it compatible with keyboard interaction methods
+      option.setAttribute('aria-hidden', 'true');
       option.removeAttribute('aria-posinset');
       option.removeAttribute('aria-setsize');
-      /* eslint-enable no-param-reassign */
 
       // [4]. Add options that meet matching criteria
       const show = this.filterOptionCondition(option, curValue);
@@ -321,11 +320,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     // [6]. enable a11y, visibility and user interaction for visible options
     visibleOptions.forEach((option, idx) => {
-      /* eslint-disable no-param-reassign */
       option.setAttribute('aria-posinset', `${idx + 1}`);
       option.setAttribute('aria-setsize', `${visibleOptions.length}`);
-      option.disabled = false;
-      /* eslint-enable no-param-reassign */
+      option.removeAttribute('aria-hidden');
     });
     /** @type {number} */
     const { selectionStart } = this._inputNode;

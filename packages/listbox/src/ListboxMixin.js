@@ -480,20 +480,33 @@ const ListboxMixinImplementation = superclass =>
        */
       const until = i => (offset === 1 ? i < this.formElements.length : i >= 0);
 
+      // Try to find the next / previous option
       for (let i = currentIndex + offset; until(i); i += offset) {
-        if (this.formElements[i] && !this.formElements[i].disabled) {
+        if (
+          this.formElements[i] &&
+          !this.formElements[i].disabled &&
+          !this.formElements[i].hasAttribute('aria-hidden')
+        ) {
           return i;
         }
       }
 
+      // If above was unsuccessful
+      // Try to find the next/previous either from end --> start or start --> end
       if (this.rotateKeyboardNavigation) {
         const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
-        for (let i = startIndex; until(i); i += 1) {
-          if (this.formElements[i] && !this.formElements[i].disabled) {
+        for (let i = startIndex; until(i); i += offset) {
+          if (
+            this.formElements[i] &&
+            !this.formElements[i].disabled &&
+            !this.formElements[i].hasAttribute('aria-hidden')
+          ) {
             return i;
           }
         }
       }
+
+      // If above was unsuccessful, return currentIndex that we started with
       return currentIndex;
     }
 
