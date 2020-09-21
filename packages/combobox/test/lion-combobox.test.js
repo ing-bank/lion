@@ -93,7 +93,6 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
         </lion-combobox>
       `));
-      await el.updateComplete;
 
       expect(el.opened).to.equal(false);
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
@@ -118,7 +117,6 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       const options = el.formElements;
-      await el.updateComplete;
       expect(el.opened).to.equal(false);
 
       // step [1]
@@ -151,11 +149,9 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
         </lion-combobox>
       `));
-      await el.updateComplete;
 
       // open
       el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      await el.updateComplete;
 
       mimicUserTyping(el, 'art');
       await el.updateComplete;
@@ -178,11 +174,9 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `));
         const options = el.formElements;
-        await el.updateComplete;
         expect(el.opened).to.equal(false);
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-        await el.updateComplete;
 
         mimicUserTyping(el, 'art');
         await el.updateComplete;
@@ -216,11 +210,9 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `));
         const options = el.formElements;
-        await el.updateComplete;
         expect(el.opened).to.equal(false);
 
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-        await el.updateComplete;
 
         mimicUserTyping(el, 'art');
         expect(el.opened).to.equal(true);

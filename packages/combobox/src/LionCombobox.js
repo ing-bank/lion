@@ -185,7 +185,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {Event} ev
    */
   _textboxOnInput(ev) {
-    console.log(`*${ev.target.value}*`);
     this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
     // Schedules autocompletion of options
     this.__shouldAutocompleteNextUpdate = true;

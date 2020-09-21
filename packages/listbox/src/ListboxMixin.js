@@ -530,7 +530,6 @@ const ListboxMixinImplementation = superclass =>
 
       switch (key) {
         case 'Enter':
-        case ' ':
           ev.preventDefault();
           this.setCheckedIndex(this.activeIndex);
           break;
@@ -676,7 +675,6 @@ const ListboxMixinImplementation = superclass =>
         case 'ArrowDown':
         case 'Home':
         case 'End':
-        case ' ':
         case 'Enter':
           ev.preventDefault();
       }
