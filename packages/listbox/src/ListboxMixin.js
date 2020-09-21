@@ -1,6 +1,7 @@
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
 import { css, html, dedupeMixin, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import '@lion/core/src/closestPolyfill.js';
 import { LionOptions } from './LionOptions.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
