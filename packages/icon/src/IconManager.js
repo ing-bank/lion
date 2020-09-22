@@ -1,4 +1,4 @@
-const sym = Symbol.for('@lion/icon@0');
+const sym = Symbol.for('@lion/icon::icons::0.5.x');
 if (!document[sym]) {
   document[sym] = new Map();
 }
