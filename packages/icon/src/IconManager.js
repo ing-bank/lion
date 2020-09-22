@@ -1,8 +1,9 @@
-export class IconManager {
-  constructor() {
-    this.__iconResolvers = new Map();
-  }
+const sym = Symbol.for('@lion/icon@0');
+if (!document[sym]) {
+  document[sym] = new Map();
+}
 
+export class IconManager {
   /**
    * Adds an icon resolver for the given namespace. An icon resolver is a
    * function which takes an icon set and an icon name and returns an svg
@@ -12,10 +13,10 @@ export class IconManager {
    * @param {(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult>} iconResolver
    */
   addIconResolver(namespace, iconResolver) {
-    if (this.__iconResolvers.has(namespace)) {
+    if (document[sym].has(namespace)) {
       throw new Error(`An icon resolver has already been registered for namespace: ${namespace}`);
     }
-    this.__iconResolvers.set(namespace, iconResolver);
+    document[sym].set(namespace, iconResolver);
   }
 
   /**
@@ -23,7 +24,7 @@ export class IconManager {
    * @param {string} namespace
    */
   removeIconResolver(namespace) {
-    this.__iconResolvers.delete(namespace);
+    document[sym].delete(namespace);
   }
 
   /**
@@ -35,7 +36,7 @@ export class IconManager {
    * @returns {Promise<TemplateResult>}
    */
   resolveIcon(namespace, iconset, icon) {
-    const resolver = this.__iconResolvers.get(namespace);
+    const resolver = document[sym].get(namespace);
     if (resolver) {
       return resolver(iconset, icon);
     }
