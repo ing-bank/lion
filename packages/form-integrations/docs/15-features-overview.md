@@ -17,6 +17,7 @@ import '@lion/input-datepicker/lion-input-datepicker.js';
 import '@lion/input-email/lion-input-email.js';
 import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input-range/lion-input-range.js';
+import '@lion/input-stepper/lion-input-stepper.js';
 import '@lion/input/lion-input.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio-group/lion-radio.js';
@@ -123,6 +124,12 @@ export const main = () => {
         >
           <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
         </lion-checkbox-group>
+        <lion-input-stepper max="5" min="0" name="rsvp">
+          <label slot="label">RSVP</label>
+          <div slot="help-text">
+            Max. 5 guests
+          </div>
+        </lion-input-stepper>
         <lion-textarea name="comments" label="Comments"></lion-textarea>
         <div class="buttons">
           <lion-button raised>Submit</lion-button>
