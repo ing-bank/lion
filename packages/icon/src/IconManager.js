@@ -4,6 +4,9 @@ if (!document[sym]) {
 }
 
 export class IconManager {
+  get __iconResolvers() {
+    return document[sym];
+  }
   /**
    * Adds an icon resolver for the given namespace. An icon resolver is a
    * function which takes an icon set and an icon name and returns an svg
@@ -12,21 +15,19 @@ export class IconManager {
    * @param {string} namespace
    * @param {(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult>} iconResolver
    */
-  // eslint-disable-next-line class-methods-use-this
   addIconResolver(namespace, iconResolver) {
     if (document[sym].has(namespace)) {
       throw new Error(`An icon resolver has already been registered for namespace: ${namespace}`);
     }
-    document[sym].set(namespace, iconResolver);
+    this.__iconResolvers.set(namespace, iconResolver);
   }
 
   /**
    * Removes an icon resolver for a namespace.
    * @param {string} namespace
    */
-  // eslint-disable-next-line class-methods-use-this
   removeIconResolver(namespace) {
-    document[sym].delete(namespace);
+    this.__iconResolvers.delete(namespace);
   }
 
   /**
@@ -37,9 +38,8 @@ export class IconManager {
    * @param {string} icon
    * @returns {Promise<TemplateResult>}
    */
-  // eslint-disable-next-line class-methods-use-this
   resolveIcon(namespace, iconset, icon) {
-    const resolver = document[sym].get(namespace);
+    const resolver = this.__iconResolvers.get(namespace);
     if (resolver) {
       return resolver(iconset, icon);
     }
