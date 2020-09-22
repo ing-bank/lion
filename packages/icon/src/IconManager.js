@@ -4,9 +4,11 @@ if (!document[sym]) {
 }
 
 export class IconManager {
+  // eslint-disable-next-line class-methods-use-this
   get __iconResolvers() {
     return document[sym];
   }
+  
   /**
    * Adds an icon resolver for the given namespace. An icon resolver is a
    * function which takes an icon set and an icon name and returns an svg
