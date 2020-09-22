@@ -137,6 +137,14 @@ const ListboxMixinImplementation = superclass =>
       return this._listboxNode;
     }
 
+    /**
+     * @overridable
+     * @type {HTMLElement}
+     */
+    get _activeDescendantOwnerNode() {
+      return this._listboxNode;
+    }
+
     get serializedValue() {
       return this.modelValue;
     }
@@ -154,11 +162,7 @@ const ListboxMixinImplementation = superclass =>
     set activeIndex(index) {
       if (this.formElements[index]) {
         const el = this.formElements[index];
-        el.active = true;
-
-        if (!isInView(this._scrollTargetNode, el)) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+        this.__setChildActive(el);
       }
     }
 
@@ -393,8 +397,6 @@ const ListboxMixinImplementation = superclass =>
         'model-value-changed',
         /** @type {EventListener} */ (this.__proxyChildModelValueChanged),
       );
-
-      // this._listboxNode.addEventListener('checked-changed', this.__onChildCheckedChanged);
     }
 
     __teardownEventListeners() {
@@ -409,17 +411,27 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
+     * @overridable
      * @param {Event & { target: LionOption }} ev
      */
+    // eslint-disable-next-line no-unused-vars, class-methods-use-this
     _onChildActiveChanged({ target }) {
       if (target.active === true) {
-        this.formElements.forEach(formElement => {
-          if (formElement !== target) {
-            // eslint-disable-next-line no-param-reassign
-            formElement.active = false;
-          }
-        });
-        this._listboxNode.setAttribute('aria-activedescendant', target.id);
+        this.__setChildActive(target);
+      }
+    }
+
+    /**
+     * @param {LionOption} el
+     */
+    __setChildActive(el) {
+      this.formElements.forEach(formElement => {
+        // eslint-disable-next-line no-param-reassign
+        formElement.active = el === formElement;
+      });
+      this._activeDescendantOwnerNode.setAttribute('aria-activedescendant', el.id);
+      if (!isInView(this._scrollTargetNode, el)) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
 
@@ -475,7 +487,7 @@ const ListboxMixinImplementation = superclass =>
      * @param {number} currentIndex
      * @param {number} offset
      */
-    __getNextOption(currentIndex, offset) {
+    __getEnabledOption(currentIndex, offset) {
       /**
        * @param {number} i
        */
@@ -516,7 +528,7 @@ const ListboxMixinImplementation = superclass =>
      * @param {number} [offset=1]
      */
     _getNextEnabledOption(currentIndex, offset = 1) {
-      return this.__getNextOption(currentIndex, offset);
+      return this.__getEnabledOption(currentIndex, offset);
     }
 
     /**
@@ -524,7 +536,7 @@ const ListboxMixinImplementation = superclass =>
      * @param {number} [offset=-1]
      */
     _getPreviousEnabledOption(currentIndex, offset = -1) {
-      return this.__getNextOption(currentIndex, offset);
+      return this.__getEnabledOption(currentIndex, offset);
     }
 
     /**
@@ -535,7 +547,6 @@ const ListboxMixinImplementation = superclass =>
      * @param {KeyboardEvent} ev - the keydown event object
      */
     _listboxOnKeyDown(ev) {
-      console.log('_listboxOnKeyDown', this.disabled);
       if (this.disabled) {
         return;
       }
@@ -561,9 +572,7 @@ const ListboxMixinImplementation = superclass =>
         case 'ArrowDown':
           ev.preventDefault();
           if (this.orientation === 'vertical') {
-            console.log('activeIndex voor', this.activeIndex);
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
-            console.log('activeIndex na', this.activeIndex);
           }
           break;
         case 'ArrowRight':
@@ -681,8 +690,6 @@ const ListboxMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _listboxOnKeyUp(ev) {
-      console.log('_listboxOnKeyDown', this.disabled);
-
       if (this.disabled) {
         return;
       }
@@ -702,7 +709,6 @@ const ListboxMixinImplementation = superclass =>
      * @configure FormControlMixin
      */
     _onLabelClick() {
-      console.log('_onLabelClick');
       this._listboxNode.focus();
     }
   };

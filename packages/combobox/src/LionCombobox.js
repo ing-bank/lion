@@ -99,6 +99,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     return this.querySelector('[slot="selection-display"]');
   }
 
+  /**
+   * @configure ListboxMixin
+   * @type {HTMLElement}
+   */
+  get _activeDescendantOwnerNode() {
+    return this._inputNode;
+  }
+
   constructor() {
     super();
     /**
@@ -455,15 +463,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._overlayInvokerNode.removeEventListener('keyup', this.__showOverlay);
   }
 
-  /**
-   * @param {Event & { target:LionOption }} ev
-   */
-  _onChildActiveChanged(ev) {
-    super._onChildActiveChanged(ev);
-    if (ev.target.active) {
-      this._inputNode.setAttribute('aria-activedescendant', ev.target.id);
-    }
-  }
+  // /**
+  //  * @param {Event & { target:LionOption }} ev
+  //  */
+  // _onChildActiveChanged(ev) {
+  //   super._onChildActiveChanged(ev);
+  //   if (ev.target.active) {
+  //     this._inputNode.setAttribute('aria-activedescendant', ev.target.id);
+  //   }
+  // }
 
   /**
    * @param {KeyboardEvent} ev
