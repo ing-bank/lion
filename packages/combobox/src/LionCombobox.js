@@ -36,7 +36,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     return [
       super.styles,
       css`
-        :host [role='combobox'] ::slotted(input) {
+        :host ::slotted([slot='input']) {
           outline: none;
           width: 100%;
           height: 100%;
@@ -63,7 +63,30 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       /**
        * The interactive element that can receive focus
        */
-      input: () => document.createElement('input'),
+      input: () => {
+        /**
+         * For Safari, aria-owns="textbox-id ..." does not work.
+         * We therefore need to wrap [role=combobox] around the input textbox.
+         * Since we now have two level depth light dom (needed for a11y), we might get into trouble
+         * styling the input node. All styles that would previously go to
+         */
+        const combobox = document.createElement('div');
+        const textbox = document.createElement('input');
+
+        // Reset textbox styles so that it 'merges' with parent [role=combobox]
+        // that is styled by Subclassers
+        textbox.style.cssText = `
+          border: none;
+          outline: none;
+          width: 100%;
+          height: 100%;
+          display: block;
+          box-sizing: border-box;
+          padding: 0;`;
+
+        combobox.appendChild(textbox);
+        return combobox;
+      },
       /**
        * As opposed to our parent (LionListbox), the end user doesn't interact with the
        * element that has [role=listbox] (in a combobox, it has no tabindex), but with
@@ -78,9 +101,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @type {HTMLElement}
    */
   get _comboboxNode() {
-    return /** @type {HTMLElement} */ (
-      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[data-ref="combobox"]')
-    );
+    return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
   }
 
   /**
@@ -89,7 +110,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * should be applied here.
    */
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ (this.querySelector('[slot=input]'));
+    return /** @type {HTMLInputElement} */ (this._comboboxNode.querySelector('input'));
   }
 
   /**
@@ -244,7 +265,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _onFilterMatch(option, matchingString) {
     const { innerHTML } = option;
     option.__originalInnerHTML = innerHTML;
-    option.innerHTML = innerHTML.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
+    const newInnerHTML = innerHTML.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
+    // For Safari, we need to add a label to the element
+    option.innerHTML = `<span aria-label="${option.textContent}">${newInnerHTML}</span>`;
     // Alternatively, an extension can add an animation here
     option.style.display = '';
   }
@@ -307,7 +330,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       }
 
       // [2]. Cleanup previous matching states
-
       if (option.onFilterUnmatch) {
         option.onFilterUnmatch(curValue, prevValue);
       } else {
@@ -376,10 +398,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
-        <div class="combobox__input" data-ref="combobox">
-          <slot name="selection-display"></slot>
-          <slot name="input"></slot>
-        </div>
+        <slot name="_combobox"></slot>
+        <slot name="selection-display"></slot>
+        <slot name="input"></slot>
       </div>
     `;
   }
@@ -427,7 +448,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @override Configures OverlayMixin
    */
   get _overlayInvokerNode() {
-    return this._comboboxNode;
+    return this._inputNode;
   }
 
   /**
