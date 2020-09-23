@@ -26,11 +26,9 @@ loadDefaultFeedbackMessages();
 ```js preview-story
 export const main = () => html`
   <lion-select-rich name="favoriteColor" label="Favorite color">
-    <lion-options slot="input">
-      <lion-option .choiceValue=${'red'}>Red</lion-option>
-      <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-    </lion-options>
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
+    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -78,20 +76,18 @@ The main feature of this rich select that makes it rich, is that your options ca
 ```js preview-story
 export const optionsWithHTML = () => html`
   <lion-select-rich label="Favorite color" name="color">
-    <lion-options slot="input" class="demo-listbox">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>
-        <p style="color: red;">I am red</p>
-        <p>and multi Line</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
-        <p style="color: hotpink;">I am hotpink</p>
-        <p>and multi Line</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>
-        <p style="color: teal;">I am teal</p>
-        <p>and multi Line</p>
-      </lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>
+      <p style="color: red;">I am red</p>
+      <p>and multi Line</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
+      <p style="color: hotpink;">I am hotpink</p>
+      <p>and multi Line</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>
+      <p style="color: teal;">I am teal</p>
+      <p>and multi Line</p>
+    </lion-option>
   </lion-select-rich>
 `;
 ```
@@ -108,23 +104,21 @@ export const manyOptionsWithScrolling = () => html`
     }
   </style>
   <lion-select-rich id="scrollSelectRich" label="Favorite color" name="color">
-    <lion-options slot="input" class="demo-listbox">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>
-        <p style="color: red;">I am red</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
-        <p style="color: hotpink;">I am hotpink</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>
-        <p style="color: teal;">I am teal</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'green', checked: false }}>
-        <p style="color: green;">I am green</p>
-      </lion-option>
-      <lion-option .modelValue=${{ value: 'blue', checked: false }}>
-        <p style="color: blue;">I am blue</p>
-      </lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>
+      <p style="color: red;">I am red</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
+      <p style="color: hotpink;">I am hotpink</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>
+      <p style="color: teal;">I am teal</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'green', checked: false }}>
+      <p style="color: green;">I am green</p>
+    </lion-option>
+    <lion-option .modelValue=${{ value: 'blue', checked: false }}>
+      <p style="color: blue;">I am blue</p>
+    </lion-option>
   </lion-select-rich>
 `;
 ```
@@ -139,11 +133,9 @@ The readonly attribute is delegated to the invoker for disabling opening the ove
 ```js preview-story
 export const readOnlyPrefilled = () => html`
   <lion-select-rich label="Read-only select" readonly name="color">
-    <lion-options slot="input">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -157,11 +149,9 @@ If you disable the entire select, the disabled attribute is also delegated to th
 ```js preview-story
 export const disabledSelect = () => html`
   <lion-select-rich label="Disabled select" disabled name="color">
-    <lion-options slot="input">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -169,13 +159,11 @@ export const disabledSelect = () => html`
 ```js preview-story
 export const disabledOption = () => html`
   <lion-select-rich label="Disabled options" name="color">
-    <lion-options slot="input">
-      <lion-option .choiceValue=${'red'} disabled>Red</lion-option>
-      <lion-option .choiceValue=${'blue'}>Blue</lion-option>
-      <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-      <lion-option .choiceValue=${'green'}>Green</lion-option>
-      <lion-option .choiceValue=${'teal'} disabled>Teal</lion-option>
-    </lion-options>
+    <lion-option .choiceValue=${'red'} disabled>Red</lion-option>
+    <lion-option .choiceValue=${'blue'}>Blue</lion-option>
+    <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+    <lion-option .choiceValue=${'green'}>Green</lion-option>
+    <lion-option .choiceValue=${'teal'} disabled>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -194,12 +182,10 @@ export const validation = () => {
       label="Favorite color"
       .validators="${[new Required()]}"
     >
-      <lion-options slot="input" class="demo-listbox">
-        <lion-option .choiceValue=${null}>select a color</lion-option>
-        <lion-option .choiceValue=${'red'}>Red</lion-option>
-        <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-        <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-      </lion-options>
+      <lion-option .choiceValue=${null}>select a color</lion-option>
+      <lion-option .choiceValue=${'red'}>Red</lion-option>
+      <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
     </lion-select-rich>
   `;
 };
@@ -217,22 +203,20 @@ export const renderOptions = () => {
     { type: 'mastercard', label: 'Master Card', amount: 12000, active: true },
     { type: 'visacard', label: 'Visa Card', amount: 0, active: false },
   ];
-  function showOutput() {
+  function showOutput(ev) {
     document.getElementById('demoRenderOutput').innerHTML = JSON.stringify(
-      this.checkedValue,
+      ev.target.modelValue,
       null,
       2,
     );
   }
   return html`
-    <lion-select-rich label="Credit Card" name="color" @select-model-value-changed=${showOutput}>
-      <lion-options slot="input">
-        ${objs.map(
-          obj => html`
-            <lion-option .modelValue=${{ value: obj, checked: false }}>${obj.label}</lion-option>
-          `,
-        )}
-      </lion-options>
+    <lion-select-rich label="Credit Card" name="color" @model-value-changed=${showOutput}>
+      ${objs.map(
+        obj => html`
+          <lion-option .modelValue=${{ value: obj, checked: false }}>${obj.label}</lion-option>
+        `,
+      )}
     </lion-select-rich>
     <p>Full value:</p>
     <pre id="demoRenderOutput"></pre>
@@ -250,18 +234,14 @@ This changes the keyboard interaction.
 ```js preview-story
 export const interactionMode = () => html`
   <lion-select-rich label="Mac mode" name="color" interaction-mode="mac">
-    <lion-options slot="input">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
   </lion-select-rich>
   <lion-select-rich label="Windows/Linux mode" name="color" interaction-mode="windows/linux">
-    <lion-options slot="input">
-      <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
-      <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
-      <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
-    </lion-options>
+    <lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>Hotpink</lion-option>
+    <lion-option .modelValue=${{ value: 'teal', checked: false }}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -302,11 +282,9 @@ export const checkedIndexAndValue = () => html`
     Console log checked index and value
   </button>
   <lion-select-rich id="checkedRichSelect" name="favoriteColor" label="Favorite color">
-    <lion-options slot="input">
-      <lion-option .choiceValue=${'red'}>Red</lion-option>
-      <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-    </lion-options>
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
+    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -331,11 +309,9 @@ Both methods work with the `Required` validator.
 ```js preview-story
 export const noDefaultSelection = () => html`
   <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
-    <lion-options slot="input">
-      <lion-option .choiceValue=${'red'}>Red</lion-option>
-      <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-    </lion-options>
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
+    <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -350,9 +326,7 @@ If there is a single option rendered, then `singleOption` property is set to `tr
 ```js preview-story
 export const singleOption = () => html`
   <lion-select-rich label="Single Option" name="color">
-    <lion-options slot="input">
-      <lion-option .choiceValue=${'red'}>Red</lion-option>
-    </lion-options>
+    <lion-option .choiceValue=${'red'}>Red</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -367,7 +341,7 @@ You can use this `selectedElement` to then render the content to your own invoke
 ```html
 <lion-select-rich>
   <my-invoker-button slot="invoker"></my-invoker-button>
-  <lion-options slot="input"> ... </lion-options>
+  ...
 </lion-select-rich>
 ```
 
