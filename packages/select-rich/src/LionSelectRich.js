@@ -231,6 +231,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         <slot name="invoker"></slot>
         <div id="overlay-content-node-wrapper">
           <slot name="input"></slot>
+          <slot id="options-outlet"></slot>
         </div>
       </div>
     `;

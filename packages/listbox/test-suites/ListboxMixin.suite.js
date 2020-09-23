@@ -7,7 +7,12 @@ import '../lion-listbox.js';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
 /**
- * @param {LionCombobox} el
+ * @typedef {import('@lion/combobox/src/LionCombobox').LionCombobox} LionCombobox
+ * @typedef {import('../src/LionListbox').LionListbox} LionListbox
+ */
+
+/**
+ * @param {LionCombobox | LionListbox} el
  * @param {string} value
  */
 function mimicUserTyping(el, value) {
@@ -15,7 +20,7 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  el._overlayInvokerNode.dispatchEvent(new Event('keyup'));
+  el._overlayInvokerNode?.dispatchEvent(new Event('keyup'));
 }
 
 /**
@@ -541,7 +546,9 @@ export function runListboxMixinSuite(customConfig = {}) {
         `);
         const opt = el.querySelectorAll('lion-option')[1];
         opt.active = true;
-        expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('myId');
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
+          'myId',
+        );
       });
 
       it('can set checked state', async () => {
@@ -672,11 +679,19 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20} checked id="second">Item 2</${optionTag}>
           </${tag}>
         `);
-        expect(el._listboxNode.getAttribute('aria-activedescendant')).to.be.null;
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('first');
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('second');
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.be.null;
+        el._activeDescendantOwnerNode.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+        );
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
+          'first',
+        );
+        el._activeDescendantOwnerNode.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+        );
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
+          'second',
+        );
       });
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {

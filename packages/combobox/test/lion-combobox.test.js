@@ -367,19 +367,24 @@ describe('lion-combobox', () => {
         [el, options] = await fruitFixture({ autocomplete: 'none' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(null);
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(null);
         expect(options[1].active).to.equal(false);
 
-        [el, options] = await fruitFixture({ autocomplete: 'both' });
+        [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'begin' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[1].id);
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
+          options[1].id,
+        );
         expect(options[1].active).to.equal(true);
 
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        expect(el._inputNode.getAttribute('aria-activedescendant')).to.equal(options[1].id);
+        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
+          options[1].id,
+        );
         expect(options[1].active).to.equal(true);
       });
     });
@@ -581,8 +586,14 @@ describe('lion-combobox', () => {
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       mimicUserTyping(el, 'a');
       await el.updateComplete;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      expect(options[0].active).to.be.false;
+      expect(options[1].active).to.be.false;
 
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      expect(options[0].active).to.be.true;
+      expect(options[1].active).to.be.false;
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].active).to.be.false;
       expect(options[1].active).to.be.true;
 
@@ -615,6 +626,10 @@ describe('lion-combobox', () => {
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       mimicUserTyping(el, 'a');
       await el.updateComplete;
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      expect(options[0].active).to.be.true;
+      expect(options[1].active).to.be.false;
 
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
       expect(options[0].active).to.be.false;
@@ -661,6 +676,11 @@ describe('lion-combobox', () => {
       el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       mimicUserTyping(el, 'a');
       await el.updateComplete;
+
+      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      expect(options[0].checked).to.be.true;
+      expect(options[1].checked).to.be.false;
+
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       expect(options[0].checked).to.be.false;
       expect(options[1].checked).to.be.true;
