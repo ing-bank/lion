@@ -23,7 +23,7 @@ export default {
 export const main = () => html`
   <lion-listbox name="listbox" label="Default">
     <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-    <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
+    <lion-option checked .choiceValue=${'Artichoke'}>Artichoke</lion-option>
     <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
     <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
     <lion-option .choiceValue=${'Beets'}>Beets</lion-option>

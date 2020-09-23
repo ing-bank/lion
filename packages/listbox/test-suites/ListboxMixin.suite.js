@@ -7,6 +7,18 @@ import '../lion-listbox.js';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
 /**
+ * @param {LionCombobox} el
+ * @param {string} value
+ */
+function mimicUserTyping(el, value) {
+  el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
+  // eslint-disable-next-line no-param-reassign
+  el._inputNode.value = value;
+  el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  el._overlayInvokerNode.dispatchEvent(new Event('keyup'));
+}
+
+/**
  * @param { {tagString:string, optionTagString:string} } [customConfig]
  */
 export function runListboxMixinSuite(customConfig = {}) {
@@ -203,8 +215,8 @@ export function runListboxMixinSuite(customConfig = {}) {
         </${tag}>
       `);
 
-      expect(el.checkedIndex).to.equal(0);
-      expect(el.serializedValue).to.equal('red');
+      expect(el.checkedIndex).to.equal(-1);
+      expect(el.serializedValue).to.equal('');
 
       el.serializedValue = 'hotpink';
 
@@ -255,6 +267,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             )}
           </${tag}>
         `);
+        el.checkedIndex = 0;
         expect(el.modelValue).to.deep.equal({
           type: 'mastercard',
           label: 'Master Card',
@@ -337,26 +350,10 @@ export function runListboxMixinSuite(customConfig = {}) {
         ]);
       });
 
-      it('has the first element by default checked and active', async () => {
-        const el = await fixture(html`
-          <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
-        `);
-
-        expect(el.querySelector('lion-option').checked).to.be.true;
-        expect(el.querySelector('lion-option').active).to.be.true;
-        expect(el.modelValue).to.equal(10);
-
-        expect(el.checkedIndex).to.equal(0);
-        expect(el.activeIndex).to.equal(0);
-      });
-
       it('allows null choiceValue', async () => {
         const el = await fixture(html`
           <${tag}>
-            <${optionTag} .choiceValue=${null}>Please select value</${optionTag}>
+            <${optionTag} checked .choiceValue=${null}>Please select value</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
@@ -380,7 +377,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        expect(el.activeIndex).to.equal(0);
+        expect(el.activeIndex).to.equal(-1);
 
         el.querySelectorAll('lion-option')[1].active = true;
         expect(el.querySelectorAll('lion-option')[0].active).to.be.false;
@@ -395,11 +392,14 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
           </${tag}>
         `);
+
+        mimicUserTyping(el, '1');
+        await el.updateComplete;
         expect(() => {
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         }).to.not.throw();
-        expect(el.checkedIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(-1);
         expect(el.activeIndex).to.equal(0);
       });
 
@@ -441,86 +441,57 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
           </${tag}>
         `);
+        mimicUserTyping(el, '0');
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(-1);
+        expect(el.checkedIndex).to.equal(-1);
+
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el.activeIndex).to.equal(0);
-        expect(el.checkedIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(-1);
 
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el.activeIndex).to.equal(1);
-        expect(el.checkedIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(-1);
 
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
         expect(el.activeIndex).to.equal(0);
-        expect(el.checkedIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(-1);
       });
     });
 
     describe('Disabled', () => {
-      it('still has a checked value', async () => {
-        const el = await fixture(html`
-          <${tag} disabled>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
-        `);
-
-        expect(el.modelValue).to.equal(10);
-      });
-
       it('cannot be navigated with keyboard if disabled', async () => {
         const el = await fixture(html`
           <${tag} disabled>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+            <${optionTag} checked .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
+        mimicUserTyping(el, '0');
+        await el.updateComplete;
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el.modelValue).to.equal(10);
+        expect(el.modelValue).to.equal(20);
       });
 
-      it('skips disabled options while navigating through list with [ArrowDown] [ArrowUp] keys', async () => {
+      it('does not skip disabled options but prevents checking them', async () => {
         const el = await fixture(html`
-          <${tag} opened>
+          <${tag}>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20} disabled>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
           </${tag}>
         `);
+        mimicUserTyping(el, '0');
+        await el.updateComplete;
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el.activeIndex).to.equal(2);
-
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
         expect(el.activeIndex).to.equal(0);
-      });
 
-      // flaky test
-      it.skip('skips disabled options while navigates to first and last option with [Home] and [End] keys', async () => {
-        const el = await fixture(html`
-          <${tag} opened>
-            <${optionTag} .choiceValue=${10} disabled>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30} checked>Item 3</${optionTag}>
-            <${optionTag} .choiceValue=${40} disabled>Item 4</${optionTag}>
-          </${tag}>
-        `);
-        expect(el.activeIndex).to.equal(2);
-
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
-        expect(el.activeIndex).to.equal(2);
-
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el.activeIndex).to.equal(1);
-      });
 
-      it('checks the first enabled option', async () => {
-        const el = await fixture(html`
-          <${tag} opened>
-            <${optionTag} .choiceValue=${10} disabled>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-          </${tag}>
-        `);
-        expect(el.activeIndex).to.equal(1);
-        expect(el.checkedIndex).to.equal(1);
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.checkedIndex).to.equal(-1);
       });
 
       it('sync its disabled state to all options', async () => {
@@ -597,14 +568,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.checkedIndex = -1;
           el.checkedIndex = 1;
         }).to.not.throw();
-        expect(el.checkedIndex).to.equal(0);
-        expect(el.activeIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(-1);
+        expect(el.activeIndex).to.equal(-1);
       });
 
       it('unsets checked on other options when option becomes checked', async () => {
         const el = await fixture(html`
           <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+            <${optionTag} checked .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
@@ -617,7 +588,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       it('unsets active on other options when option becomes active', async () => {
         const el = await fixture(html`
           <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+            <${optionTag} active .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
@@ -645,7 +616,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       it('is prefilled if there is a value on init', async () => {
         const el = await fixture(html`
           <${tag}>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+            <${optionTag} checked .choiceValue=${10}>Item 1</${optionTag}>
           </${tag}>
         `);
         expect(el.prefilled).to.be.true;
@@ -694,14 +665,15 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(el.querySelectorAll('lion-option')[2].id).to.equal('predefined');
       });
 
-      it('has a reference to the selected option', async () => {
+      it('has a reference to the active option', async () => {
         const el = await fixture(html`
           <${tag}>
             <${optionTag} .choiceValue=${10} id="first">Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20} checked id="second">Item 2</${optionTag}>
           </${tag}>
         `);
-
+        expect(el._listboxNode.getAttribute('aria-activedescendant')).to.be.null;
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('first');
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el._listboxNode.getAttribute('aria-activedescendant')).to.equal('second');

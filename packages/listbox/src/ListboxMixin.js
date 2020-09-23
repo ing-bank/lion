@@ -363,17 +363,6 @@ const ListboxMixinImplementation = superclass =>
         child.makeRequestToBeDisabled();
       }
 
-      // the first elements checked by default
-      if (
-        !this.hasNoDefaultSelected &&
-        !this.__hasInitialSelectedFormElement &&
-        (!child.disabled || this.disabled)
-      ) {
-        child.active = true;
-        child.checked = true;
-        this.__hasInitialSelectedFormElement = true;
-      }
-
       // TODO: small perf improvement could be made if logic below would be scheduled to next update,
       // so it occurs once for all options
       this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
@@ -495,11 +484,7 @@ const ListboxMixinImplementation = superclass =>
 
       // Try to find the next / previous option
       for (let i = currentIndex + offset; until(i); i += offset) {
-        if (
-          this.formElements[i] &&
-          !this.formElements[i].disabled &&
-          !this.formElements[i].hasAttribute('aria-hidden')
-        ) {
+        if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
           return i;
         }
       }
@@ -509,11 +494,7 @@ const ListboxMixinImplementation = superclass =>
       if (this.rotateKeyboardNavigation) {
         const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
         for (let i = startIndex; until(i); i += offset) {
-          if (
-            this.formElements[i] &&
-            !this.formElements[i].disabled &&
-            !this.formElements[i].hasAttribute('aria-hidden')
-          ) {
+          if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
             return i;
           }
         }
@@ -554,10 +535,18 @@ const ListboxMixinImplementation = superclass =>
       const { key } = ev;
 
       switch (key) {
-        case 'Enter':
+        case 'Enter': {
           ev.preventDefault();
+          if (!this.formElements[this.activeIndex]) {
+            return;
+          }
+
+          if (this.formElements[this.activeIndex].disabled) {
+            return;
+          }
           this.setCheckedIndex(this.activeIndex);
           break;
+        }
         case 'ArrowUp':
           ev.preventDefault();
           if (this.orientation === 'vertical') {

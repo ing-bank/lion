@@ -22,7 +22,7 @@ import { LionListbox } from '@lion/listbox';
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
-      autocomplete: String,
+      autocomplete: { type: String, reflect: true },
       matchMode: {
         type: String,
         attribute: 'match-mode',
@@ -112,7 +112,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     /**
      * @desc When "list", will filter listbox suggestions based on textbox value.
      * When "both", an inline completion string will be added to the textbox as well.
-     * @type {'list'|'both'|'none'}
+     * @type {'none'|'list'|'inline'|'both'}
      */
     this.autocomplete = 'both';
     /**
@@ -204,6 +204,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
     this._inputNode.focus();
+    this.__resetActive();
+    this.opened = false;
     this.__syncCheckedWithTextboxOnInteraction();
   }
 
@@ -222,7 +224,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string} curValue current ._inputNode value
    */
   filterOptionCondition(option, curValue) {
-    const idx = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase());
+    const idx = option.choiceValue
+      .toString()
+      .toLowerCase()
+      .indexOf(curValue.toString().toLowerCase());
     if (this.matchMode === 'all') {
       return idx > -1; // matches part of word
     }
@@ -242,7 +247,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     option.innerHTML = innerHTML.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
     // Alternatively, an extension can add an animation here
     option.style.display = '';
-    option.removeAttribute('aria-hidden');
   }
 
   /**
@@ -258,7 +262,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
     // Alternatively, an extension can add an animation here
     option.style.display = 'none';
-    option.setAttribute('aria-hidden', 'true');
   }
 
   /* eslint-enable no-param-reassign, class-methods-use-this */
@@ -283,27 +286,46 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const userIsAddingChars = prevValue.length < curValue.length;
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
-    this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, index) => {
-      // [1]. Cleanup previous matching states
+    this.formElements.forEach((/** @type {OptionWithFilterFn} */ option) => {
+      const show = this.filterOptionCondition(option, curValue);
+
+      // [1]. Synchronize ._inputNode value and active descendant with closest match
+      const beginsWith =
+        option.choiceValue.toString().toLowerCase().indexOf(curValue.toString().toLowerCase()) ===
+        0;
+      if (beginsWith && !hasAutoFilled && show && userIsAddingChars) {
+        if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+          this._inputNode.value = option.choiceValue;
+          this._inputNode.selectionStart = this.__cboxInputValue.length;
+          this._inputNode.selectionEnd = this._inputNode.value.length;
+        }
+        hasAutoFilled = true;
+      }
+
+      if (this.autocomplete === 'none' || this.autocomplete === 'inline') {
+        return;
+      }
+
+      // [2]. Cleanup previous matching states
+
       if (option.onFilterUnmatch) {
         option.onFilterUnmatch(curValue, prevValue);
       } else {
         this._onFilterUnmatch(option, curValue, prevValue);
       }
 
-      // [2]. If ._inputNode is empty, no filtering will be applied
+      // [3]. If ._inputNode is empty, no filtering will be applied
       if (!curValue) {
         visibleOptions.push(option);
         return;
       }
 
-      // [3]. Cleanup previous visibility and a11y states
+      // [4]. Cleanup previous visibility and a11y states
       option.setAttribute('aria-hidden', 'true');
       option.removeAttribute('aria-posinset');
       option.removeAttribute('aria-setsize');
 
-      // [4]. Add options that meet matching criteria
-      const show = this.filterOptionCondition(option, curValue);
+      // [5]. Add options that meet matching criteria
       if (show) {
         visibleOptions.push(option);
         if (option.onFilterMatch) {
@@ -311,18 +333,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         } else {
           this._onFilterMatch(option, curValue);
         }
-      }
-
-      // [5]. Synchronize ._inputNode value and active descendant with closest match
-      const beginsWith = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
-      if (beginsWith && !hasAutoFilled && show && userIsAddingChars) {
-        if (this.autocomplete === 'both') {
-          this._inputNode.value = option.choiceValue;
-          this._inputNode.selectionStart = this.__cboxInputValue.length;
-          this._inputNode.selectionEnd = this._inputNode.value.length;
-        }
-        this.activeIndex = index;
-        hasAutoFilled = true;
       }
     });
 
@@ -439,8 +449,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (
       /** @type {KeyboardEvent} */ (ev).key === 'Tab' ||
       /** @type {KeyboardEvent} */ (ev).key === 'Esc' ||
-      /** @type {KeyboardEvent} */ (ev).key === 'Enter' ||
-      this.__blockListShow
+      /** @type {KeyboardEvent} */ (ev).key === 'Enter'
     ) {
       return;
     }
@@ -485,17 +494,40 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         this.__shouldAutocompleteNextUpdate = true;
         this._inputNode.value = '';
         this.__cboxInputValue = '';
+        this.activeIndex = -1;
+        this.__resetActive();
+        this.checkedIndex = -1;
         break;
       case 'Enter':
+        if (!this.formElements[this.activeIndex]) {
+          return;
+        }
         this.__syncCheckedWithTextboxOnInteraction();
+        this.__resetActive();
+        this.opened = false;
+        break;
+      default:
+        if (
+          this.activeIndex === -1 &&
+          (this.autocomplete === 'inline' || this.autocomplete === 'both')
+        ) {
+          this.activeIndex = 0;
+        }
       /* no default */
     }
   }
 
   __syncCheckedWithTextboxOnInteraction() {
-    if (!this.multipleChoice) {
+    if (!this.multipleChoice && this.checkedIndex !== -1) {
       this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
-      this.opened = false;
+      this.__cboxInputValue = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
     }
+  }
+
+  __resetActive() {
+    this.formElements.forEach(el => {
+      // eslint-disable-next-line no-param-reassign
+      el.active = false;
+    });
   }
 }
