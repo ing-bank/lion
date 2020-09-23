@@ -2,6 +2,7 @@ import '@lion/listbox/lion-option.js';
 import { expect, fixture, html } from '@open-wc/testing';
 import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
+import { browserDetection } from '@lion/core';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
@@ -433,6 +434,29 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `));
         expect(el._comboboxNode).to.equal(el._inputNode);
+      });
+
+      it('autodetects aria version and sets it to 1.1 on Chromium browsers', async () => {
+        const browserDetectionIsChromiumOriginal = browserDetection.isChromium;
+
+        browserDetection.isChromium = true;
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el._ariaVersion).to.equal('1.1');
+
+        browserDetection.isChromium = false;
+        const el2 = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el2._ariaVersion).to.equal('1.0');
+
+        // restore...
+        browserDetection.isChromium = browserDetectionIsChromiumOriginal;
       });
     });
   });
