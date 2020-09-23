@@ -4,7 +4,7 @@ module.exports = {
   '*.js': ['eslint --fix', 'prettier --write', 'git add'],
   '*.md': [
     'prettier --write',
-    "markdownlint --ignore '{.changeset/*.md,**/CHANGELOG.md}'",
+    "markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md}'",
     'git add',
   ],
   'yarn.lock': ['node ./scripts/yarn-lock-scan.js'],

@@ -17,7 +17,7 @@
     "lint": "run-p lint:*",
     "lint:eclint": "git ls-files | xargs eclint check",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.changeset/*.md,**/CHANGELOG.md}'",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md}'",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "tsc",
     "lint:versions": "node ./scripts/lint-versions.js",
