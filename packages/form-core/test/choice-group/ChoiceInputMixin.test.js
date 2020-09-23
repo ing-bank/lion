@@ -1,6 +1,6 @@
 import { html } from '@lion/core';
-import { LionInput } from '@lion/input';
 import { Required } from '@lion/form-core';
+import { LionInput } from '@lion/input';
 import { expect, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
@@ -242,6 +242,13 @@ describe('ChoiceInputMixin', () => {
         <choice-input .choiceValue=${'foo'}></choice-input>
       `));
       expect(elementWithValue.formattedValue).to.equal('foo');
+    });
+
+    it('can clear the checked state', async () => {
+      const el = /** @type {ChoiceClass} */ (await fixture(`<choice-input></choice-input>`));
+      el.modelValue = { value: 'foo', checked: true };
+      el.clear();
+      expect(el.modelValue).deep.equal({ value: 'foo', checked: false });
     });
   });
 

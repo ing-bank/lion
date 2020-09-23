@@ -239,6 +239,14 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
+     * @override
+     * Overridden from LionField, since the modelValue should not be cleared.
+     */
+    clear() {
+      this.checked = false;
+    }
+
+    /**
      * Used for required validator.
      */
     _isEmpty() {
