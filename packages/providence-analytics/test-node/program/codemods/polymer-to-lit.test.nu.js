@@ -68,6 +68,9 @@ const tplLitProp = (prop, body = '') => `
   customElements.define('test-element', TestElement);
 `;
 
+const tplPolymerInMethod = code => tplPolymer(`someMethod: function() {\n${code}\n},`);
+const tplLitInMethod = code => tplLit(`someMethod() {\n${code}\n}`);
+
 describe('Component', () => {
   describe('Imports', () => {
     it('rewrites local and external lib/module imports', () => {
@@ -261,6 +264,7 @@ describe('Component', () => {
 
                 const notEqual = (value, old) => {
                   // This ensures (old==NaN, value==NaN) always returns false
+                  // eslint-disable-next-line
                   return old !== value && (old === old || value === value);
                 };
 
@@ -293,6 +297,7 @@ describe('Component', () => {
 
                 const notEqual = (value, old) => {
                   // This ensures (old==NaN, value==NaN) always returns false
+                  // eslint-disable-next-line
                   return old !== value && (old === old || value === value);
                 };
 
@@ -333,6 +338,7 @@ describe('Component', () => {
 
                 const notEqual = (value, old) => {
                   // This ensures (old==NaN, value==NaN) always returns false
+                  // eslint-disable-next-line
                   return old !== value && (old === old || value === value);
                 };
 
@@ -398,6 +404,7 @@ describe('Component', () => {
 
             const notEqual = (value, old) => {
               // This ensures (old==NaN, value==NaN) always returns false
+              // eslint-disable-next-line
               return old !== value && (old === old || value === value);
             };
 
@@ -434,6 +441,7 @@ describe('Component', () => {
 
               const notEqual = (value, old) => {
                 // This ensures (old==NaN, value==NaN) always returns false
+                // eslint-disable-next-line
                 return old !== value && (old === old || value === value);
               };
 
@@ -524,6 +532,7 @@ describe('Component', () => {
             }
           });
           `;
+
         const to = `
           class TestElement extends LitElement {
             connectedCallback() {
@@ -532,8 +541,8 @@ describe('Component', () => {
               if (!this.hasAttribute('string-attribute') {
                 this.setAttribute('string-attribute','Value');
               }
-              this.setAttribute('string-attribute', '');
-              this.removeAttribute('string-attribute-false');
+              this.setAttribute('boolean-attribute', '');
+              this.removeAttribute('boolean-attribute-false');
               if (!this.hasAttribute('tabindex') {
                 this.setAttribute('tabindex', 0);
               }
@@ -562,7 +571,7 @@ describe('Component', () => {
 
           __setupKeyBindings() {
             // IE polyfill needs to be loaded
-            this.addEventLisener('keydown', (event) => {
+            this.addEventListener('keydown', (event) => {
               switch (event.key) {
                 case ' ':
                   this._onKeyDown(event);
@@ -577,7 +586,7 @@ describe('Component', () => {
               }
             });
 
-            this.addEventLisener('keypress', (event) => {
+            this.addEventListener('keypress', (event) => {
               switch (event.key) {
                 case 'Enter':
                   this._onKeyPress(event);
@@ -587,7 +596,7 @@ describe('Component', () => {
               }
             });
 
-            this.addEventLisener('keyup', (event) => {
+            this.addEventListener('keyup', (event) => {
               switch (event.key) {
                 case 'Escape':
                   this._onKeyUp(event);
@@ -603,20 +612,40 @@ describe('Component', () => {
 
     describe('ShadowRoot selectors', () => {
       it('ID selectors', () => {
-        const from = 'this.$.nativeInput';
-        const to = "this.shadowRoot.getElementById('nativeInput')";
+        const from = tplPolymerInMethod(`
+          const x = this.$.nativeInput;
+          this.$.nativeInput.y = 3;
+        `);
+        const to = tplLitInMethod(`
+          const x = this.shadowRoot.getElementById('nativeInput');
+          this.shadowRoot.getElementById('nativeInput').y = 3;
+        `);
+        const { result } = polymerToLitCodemod(from);
+        expect(formatJs(result)).to.equal(formatJs(to));
       });
+
       it('Query selectors', () => {
-        const from = "this.$$('input')";
-        const to = "this.shadowRoot.querySelector('input')";
+        const from = tplPolymerInMethod(`
+          const x = this.$$('input');
+          this.$$('input').y = 2;
+        `);
+        const to = tplLitInMethod(`
+          const x = this.shadowRoot.querySelector('input');
+          this.shadowRoot.querySelector('input').y = 2;
+        `);
+        const { result } = polymerToLitCodemod(from);
+        expect(formatJs(result)).to.equal(formatJs(to));
       });
     });
 
     describe('Methods', () => {
-      it('fire', () => {
-        const from = "this.fire('my-event')";
-        const to =
-          "this.dispatchEvent(new CustomEvent('my-event', { bubbles: true, composed: true }))";
+      it.only('fire', () => {
+        const from = tplPolymerInMethod("this.fire('my-event')");
+        const to = tplLitInMethod(
+          "this.dispatchEvent(new CustomEvent('my-event', { bubbles: true, composed: true }))",
+        );
+        const { result } = polymerToLitCodemod(from);
+        expect(formatJs(result)).to.equal(formatJs(to));
       });
       it('async', () => {
         const from = `
@@ -731,11 +760,11 @@ describe('Template', () => {
         \${this.employees.map(item => html\`
           <div>
             First name:
-            <span> \${item.first}</span>
+            <span> \${item.first} </span>
           </div>
           <div>
             Last name:
-            <span> \${item.last}</span>
+            <span> \${item.last} </span>
           </div>
         \`)}
       `;
@@ -751,10 +780,10 @@ describe('Template', () => {
         \${this.employees.map(item => html\`
           <div>
             First name:
-            <span> \${item.first}</span></div>
+            <span> \${item.first} </span></div>
           <div>
             Last name:
-            <span> \${item.last}</span>
+            <span> \${item.last} </span>
           </div>
         \`)}`;
 
@@ -913,8 +942,8 @@ describe('Styles', () => {
         color: blue;
       };`;
     const to = `
-      --paper-font-common-base--font-family: 'Roboto', 'Noto', sans-serif;
-      --paper-font-common-base--color: blue;
+      --paper-font-common-base__font-family: 'Roboto', 'Noto', sans-serif;
+      --paper-font-common-base__color: blue;
     `;
   });
 
@@ -969,12 +998,13 @@ describe('Behavior Mixins', () => {
     import { dedupeMixin } from '@lion/core';
     import { ironA11yKeysBehavior } from 'iron-a11y-keys-behavior/ironA11yKeysBehavior.js';
 
-    export const PaperInputBehavior = dedupeMixin((superClass) => class PaperInputBehavior extends IronA11yKeysBehavior(superClass) {
+    const PaperInputBehaviorImplementation = superClass => class extends IronA11yKeysBehavior(superClass) {
       static get properties() {
         return {
           a: String,
         }
       },
-    });
+    };
+    export const PaperInputBehavior = dedupeMixin(PaperInputBehaviorImplementation);
     `;
 });

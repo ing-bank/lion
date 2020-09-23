@@ -21,7 +21,7 @@ const {
 const notEqualFn = `
 const notEqual = (value, old) => {
   // This ensures (old==NaN, value==NaN) always returns false
-  // eslint-disable next-line
+  // eslint-disable-next-line
   return old !== value && (old === old || value === value);
 };
 `;
@@ -95,6 +95,10 @@ function retrieveHtmlData(htmlCode) {
   };
 }
 
+/**
+ * Gather al needed info found in <script> tag of Polymer .html file
+ * @param {string} jsCode
+ */
 function retrieveJsData(jsCode) {
   if (!jsCode) {
     return null;
@@ -110,59 +114,88 @@ function retrieveJsData(jsCode) {
 
   const babelAst = babelParser.parse(jsCode, {});
 
+  function handleCallExpressionPolymer(path) {
+    if (path.node.callee.name !== 'Polymer') {
+      return;
+    }
+    const polymerComponentObj = path.node.arguments[0];
+
+    polymerComponentObj.properties.forEach(prop => {
+      // eslint-disable-next-line default-case
+      switch (prop.key.name) {
+        case 'is':
+          foundCustomElementName = prop.value.value;
+          break;
+        case 'behaviors':
+          foundBehaviors = prop.value;
+          break;
+        case 'properties':
+          foundProperties = prop.value;
+          break;
+        case 'observers':
+          foundObservers = prop.value;
+          break;
+        case 'listeners':
+          foundListeners = prop.value;
+          break;
+        case 'keyBindings':
+          break;
+        case 'hostAttributes':
+          break;
+        default:
+          foundClassMembers.push(prop);
+          break;
+      }
+    });
+  }
+
+  function handleCallExpressionFire(path) {
+    const { node } = path;
+    if (!node.callee.property || node.callee.property.name !== 'fire') {
+      return;
+    }
+    const eventName = node.arguments[0].value;
+    console.log('fire', node.arguments);
+    // path.replaceWithSourceString(`x.y = 2`);
+    path.replaceWithSourceString(
+      `this.dispatchEvent(new CustomEvent("${eventName}", { bubbles: true, composed: true }))`,
+    );
+  }
+
   traverse(babelAst, {
     CallExpression(path) {
-      if (path.node.callee.name !== 'Polymer') {
-        return;
-      }
-      const polymerComponentObj = path.node.arguments[0];
-
-      polymerComponentObj.properties.forEach(prop => {
-        // eslint-disable-next-line default-case
-        switch (prop.key.name) {
-          case 'is':
-            foundCustomElementName = prop.value.value;
-            break;
-          case 'behaviors':
-            foundBehaviors = prop.value;
-            break;
-          case 'properties':
-            foundProperties = prop.value;
-            break;
-          case 'observers':
-            foundObservers = prop.value;
-            break;
-          case 'listeners':
-            foundListeners = prop.value;
-            break;
-          case 'keyBindings':
-            break;
-          case 'hostAttributes':
-            break;
-          default:
-            foundClassMembers.push(prop);
-            break;
-        }
-      });
+      handleCallExpressionPolymer(path);
+      handleCallExpressionFire(path);
     },
-    // ExpressionStatement(path) {
-    //   const name = path.node?.expression?.callee?.property?.name;
-    //   let to;
-    //   if (name) {
-    //     const { value } = path.node.expression.arguments[0];
-    //     const o = path.node.expression.callee.object;
-    //     const objName = o.type === 'Identifier' ? o.name : 'this';
-    //     if (name === '$$') {
-    //       to = `${objName}.shadowRoot.querySelector('${value}')`;
-    //     } else if (name === '$') {
-    //       to = `${objName}.shadowRoot.getElementById('${value}')`;
-    //     }
-    //   }
+    MemberExpression(path) {
+      let to;
+      const { node } = path;
+      // Find $: like `this.$.id`
+      const isIdSelector = node.object && node.object.property && node.object.property.name === '$';
+      if (isIdSelector) {
+        const value = node.property.name;
+        const o = node.object.object;
+        const objName = o.type === 'Identifier' ? o.name : 'this';
+        to = `${objName}.shadowRoot.getElementById('${value}')`;
+      } else {
+        // Find $$: like `this.$$('query')`
+        const isQuerySelector = node.property.name === '$$';
+        if (!isQuerySelector) {
+          return;
+        }
+        const o = node.object;
+        const objName = o.type === 'Identifier' ? o.name : 'this';
+        to = `${objName}.shadowRoot.querySelector`;
+      }
 
-    //   if (to) {
-    //     // parse(to)
-    //   }
-    // },
+      // TODO: since this method (retrieveJsData) should actually not modify data right away,
+      // it would strictly be neater to just export found entries and alter the AST tree in a
+      // different processing method.
+      if (to) {
+        // https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#toc-replacing-a-node-with-a-source-string        path.node.
+        path.replaceWithSourceString(to);
+      }
+    },
   });
 
   return {
@@ -707,7 +740,7 @@ function getBehaviorNames(behaviorsNode) {
     if (e.type === 'MemberExpression') {
       return e.property.name; // My.global.namespace.MyBehavior => MyBehavior
     }
-    if (e.type === Identifier) {
+    if (e.type === 'Identifier') {
       return e.name;
     }
   });
