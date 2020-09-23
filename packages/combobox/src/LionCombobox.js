@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { html, css } from '@lion/core';
+import { html, css, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { LionListbox } from '@lion/listbox';
 
@@ -64,18 +64,19 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
        * The interactive element that can receive focus
        */
       input: () => {
-        /**
-         * For Safari, aria-owns="textbox-id ..." does not work.
-         * We therefore need to wrap [role=combobox] around the input textbox.
-         * Since we now have two level depth light dom (needed for a11y), we might get into trouble
-         * styling the input node. All styles that would previously go to
-         */
-        const combobox = document.createElement('div');
-        const textbox = document.createElement('input');
+        if (this._ariaVersion === '1.1') {
+          /**
+           * For Safari, aria-owns="textbox-id ..." does not work.
+           * We therefore need to wrap [role=combobox] around the input textbox.
+           * Since we now have two level depth light dom (needed for a11y), we might get into trouble
+           * styling the input node. All styles that would previously go to
+           */
+          const combobox = document.createElement('div');
+          const textbox = document.createElement('input');
 
-        // Reset textbox styles so that it 'merges' with parent [role=combobox]
-        // that is styled by Subclassers
-        textbox.style.cssText = `
+          // Reset textbox styles so that it 'merges' with parent [role=combobox]
+          // that is styled by Subclassers
+          textbox.style.cssText = `
           border: none;
           outline: none;
           width: 100%;
@@ -84,8 +85,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           box-sizing: border-box;
           padding: 0;`;
 
-        combobox.appendChild(textbox);
-        return combobox;
+          combobox.appendChild(textbox);
+          return combobox;
+        }
+        // ._ariaVersion === '1.0'
+        /**
+         * For full browser support, we implement the aria 1.0 spec.
+         * That means that the input element will have [role-"combobox"]
+         */
+        return document.createElement('input');
       },
       /**
        * As opposed to our parent (LionListbox), the end user doesn't interact with the
@@ -110,7 +118,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * should be applied here.
    */
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ (this._comboboxNode.querySelector('input'));
+    if (this._ariaVersion === '1.1') {
+      return /** @type {HTMLInputElement} */ (this._comboboxNode.querySelector('input'));
+    }
+    return /** @type {HTMLInputElement} */ (this._comboboxNode);
   }
 
   /**
@@ -145,6 +156,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      * @type {'begin'|'all'}
      */
     this.matchMode = 'all';
+
+    /**
+     * For optimal support, we allow aria v1.1 on newer browsers
+     * @type {'1.1'|'1.0'}
+     */
+    this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
 
     this.__cboxInputValue = '';
     this.__prevCboxValueNonSelected = '';
