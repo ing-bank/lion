@@ -1,4 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import sinon from 'sinon';
 import '../lion-switch.js';
 
 describe('lion-switch', () => {
@@ -66,6 +67,34 @@ describe('lion-switch', () => {
       checked: true,
       value: 'foo',
     });
+  });
+
+  it('should dispatch "checked-changed" event when toggled via button or label', async () => {
+    const handlerSpy = sinon.spy();
+    const el = await fixture(html`<lion-switch .choiceValue=${'foo'}></lion-switch>`);
+    el.addEventListener('checked-changed', handlerSpy);
+    el._inputNode.click();
+    el._labelNode.click();
+    await el.updateComplete;
+    expect(handlerSpy.callCount).to.equal(2);
+    const checkCall = call => {
+      expect(call.args).to.have.a.lengthOf(1);
+      const e = call.args[0];
+      expect(e).to.be.an.instanceof(Event);
+      expect(e.bubbles).to.be.true;
+      expect(e.composed).to.be.true;
+    };
+    checkCall(handlerSpy.getCall(0), true);
+    checkCall(handlerSpy.getCall(1), false);
+  });
+
+  it('should dispatch "checked-changed" event when checked changed', async () => {
+    const handlerSpy = sinon.spy();
+    const el = await fixture(html`<lion-switch .choiceValue=${'foo'}></lion-switch>`);
+    el.addEventListener('checked-changed', handlerSpy);
+    el.checked = true;
+    await el.updateComplete;
+    expect(handlerSpy.callCount).to.equal(1);
   });
 
   it('is submitted by default', async () => {

@@ -74,29 +74,43 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     super();
     this.role = 'switch';
     this.checked = false;
-    this.addEventListener('click', this.__handleToggleStateChange);
-    this.addEventListener('keydown', this.__handleKeydown);
-    this.addEventListener('keyup', this.__handleKeyup);
+    this.__toggleChecked = this.__toggleChecked.bind(this);
+    this.__handleKeydown = this.__handleKeydown.bind(this);
+    this.__handleKeyup = this.__handleKeyup.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('aria-checked', `${this.checked}`);
+    this.addEventListener('click', this.__toggleChecked);
+    this.addEventListener('keydown', this.__handleKeydown);
+    this.addEventListener('keyup', this.__handleKeyup);
   }
 
-  __handleToggleStateChange() {
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('click', this.__toggleChecked);
+    this.removeEventListener('keydown', this.__handleKeydown);
+    this.removeEventListener('keyup', this.__handleKeyup);
+  }
+
+  __toggleChecked() {
     if (this.disabled) {
       return;
     }
     // Force IE11 to focus the component.
     this.focus();
     this.checked = !this.checked;
+  }
+
+  __checkedStateChange() {
     this.dispatchEvent(
       new Event('checked-changed', {
         composed: true,
         bubbles: true,
       }),
     );
+    this.setAttribute('aria-checked', `${this.checked}`);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -109,7 +123,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   __handleKeyup(e) {
     if ([32 /* space */, 13 /* enter */].indexOf(e.keyCode) !== -1) {
-      this.__handleToggleStateChange();
+      this.__toggleChecked();
     }
   }
 
@@ -126,8 +140,8 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
    */
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
-    if (this.isConnected && name === 'checked') {
-      this.setAttribute('aria-checked', `${this.checked}`);
+    if (this.isConnected && name === 'checked' && this.checked !== oldValue) {
+      this.__checkedStateChange();
     }
   }
 }
