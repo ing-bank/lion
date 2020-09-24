@@ -15,6 +15,7 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "include": [
+    "packages/accordion/**/*.js",
     "packages/core/**/*.js",
     "packages/tabs/**/*.js",
     "packages/singleton-manager/**/*.js",
