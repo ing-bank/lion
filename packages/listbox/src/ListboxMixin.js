@@ -589,75 +589,12 @@ const ListboxMixinImplementation = superclass =>
         case 'Home':
           preventDefault(ev);
           this.activeIndex = this._getNextEnabledOption(0, 0);
-          if (ev.shiftKey && ev[ctrlOrMetaKey] && this.multipleChoice) {
-            const delta = this.activeIndex - prevActiveIndex;
-            for (let i = 1; i <= delta; i += 1) {
-              this.setCheckedIndex(this.activeIndex - i);
-            }
-          }
           break;
         case 'End':
           preventDefault(ev);
           this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
-          if (ev.shiftKey && ev[ctrlOrMetaKey] && this.multipleChoice) {
-            const delta = this.activeIndex - prevActiveIndex;
-            for (let i = 1; i <= delta; i += 1) {
-              this.setCheckedIndex(this.activeIndex + i);
-            }
-          }
-          break;
-        case 'a':
-          preventDefault(ev);
-          if (ev[ctrlOrMetaKey] && this.multipleChoice) {
-            const allChecked =
-              /** @type {number[]} */ (this.checkedIndex).length === this.formElements.length;
-            const mode = allChecked ? 'unset' : 'set';
-            for (let i = 0, len = this.formElements.length; i <= len; i += 1) {
-              this.setCheckedIndex(i, mode);
-            }
-          }
           break;
         /* no default */
-      }
-
-      // Multiselect on shiftKey. Works for Arrow{Up|Down|Left|Right}
-      const activeIndexDelta = this.activeIndex - prevActiveIndex;
-      if (this.multipleChoice && ev.shiftKey && activeIndexDelta !== 0) {
-        // Whether it is the first keydown for shift in combination with Arrow{Up|Down|Left|Right}
-        // This first shift press determines the behavior for up and down keys that are pressed
-        // while shift is still down
-        const isInitialShiftPress = !this.__shiftStartDir;
-
-        /** @type {'forward'|'backward'} */
-        const direction = key === 'ArrowUp' || key === 'ArrowLeft' ? 'backward' : 'forward';
-
-        if (isInitialShiftPress) {
-          this.__shiftStartDir = direction;
-          this.__shiftStartIdx = prevActiveIndex;
-          // Don't forget to include the current activedescendant (that might not be selected yet)
-          this.setCheckedIndex(prevActiveIndex, 'set');
-        }
-
-        const isDirectionSwitch = this.__prevDirection && this.__prevDirection !== direction;
-        if (isDirectionSwitch) {
-          this.setCheckedIndex(prevActiveIndex, 'unset');
-        }
-
-        // This will be read on next keypress
-        /** @type {'forward'|'backward'|null} */
-        this.__prevDirection = direction;
-
-        /** @type {number} */
-        const startDelta = this.__shiftStartIdx ? this.__shiftStartIdx - prevActiveIndex : 0;
-        const pastStartIndex = true; // direction === 'forward' ? startDelta <= 0 : startDelta >= 0;
-
-        /** @type {'set'|'unset'} */
-        const mode = this.__shiftStartDir === direction && pastStartIndex ? 'set' : 'unset';
-        this.setCheckedIndex(this.activeIndex, mode);
-      } else {
-        this.__shiftStartDir = null;
-        this.__shiftStartIdx = null;
-        this.__prevDirection = null;
       }
 
       const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
