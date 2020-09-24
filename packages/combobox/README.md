@@ -40,23 +40,6 @@ export const main = () => html`
 `;
 ```
 
-## Multiple choice
-
-Add `multiple-choice` flag to allow multiple values to be selected.
-This will:
-
-- keep the listbox overlay open on click of an option
-- display a list of selected option representations next to the text box
-- make the value of type `Array` instead of `String`
-
-```js preview-story
-export const multipleChoice = () => html`
-  <lion-combobox name="combo" label="Multiple" multiple-choice>
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
-  </lion-combobox>
-`;
-```
-
 ## Autocomplete
 
 When "list", will filter listbox suggestions based on textbox value.

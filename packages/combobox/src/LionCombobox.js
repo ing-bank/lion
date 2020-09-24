@@ -55,7 +55,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           border-bottom: 1px solid;
         }
 
-        .form-field__group-two ::slotted([role='listbox']) {
+        div ::slotted([role='listbox']) {
           max-height: 200px;
           display: block;
           overflow: auto;
@@ -238,6 +238,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.addEventListener('input', this._textboxOnInput);
+
+    this.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
+    this.addEventListener('keyup', this.__preventScrollingWithArrowKeys);
   }
 
   __teardownCombobox() {
