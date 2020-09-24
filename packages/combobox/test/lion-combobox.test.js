@@ -378,31 +378,42 @@ describe('lion-combobox', () => {
       });
 
       it('updates aria-activedescendant on textbox node', async () => {
-        let el;
-        let options;
+        let el = await fixture(html`
+          <lion-combobox name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `);
 
-        [el, options] = await fruitFixture({ autocomplete: 'none' });
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(null);
-        expect(options[1].active).to.equal(false);
+        expect(el.formElements[1].active).to.equal(false);
 
-        [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'begin' });
+        el = await fixture(html`
+          <lion-combobox name="foo" autocomplete="both" match-mode="begin">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `);
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
-          options[1].id,
+          el.formElements[1].id,
         );
-        expect(options[1].active).to.equal(true);
+        expect(el.formElements[1].active).to.equal(true);
 
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
-          options[1].id,
+          el.formElements[1].id,
         );
-        expect(options[1].active).to.equal(true);
+        expect(el.formElements[1].active).to.equal(true);
       });
 
       it('adds aria-label to highlighted options', async () => {
@@ -646,7 +657,7 @@ describe('lion-combobox', () => {
   describe('Orientation', () => {
     it('has a default value of "vertical"', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
+        <lion-combobox name="foo" autocomplete="list">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>
@@ -686,7 +697,7 @@ describe('lion-combobox', () => {
 
     it('uses left and right arrow keys when "horizontal"', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" orientation="horizontal">
+        <lion-combobox name="foo" orientation="horizontal" autocomplete="list">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>
@@ -738,7 +749,7 @@ describe('lion-combobox', () => {
   describe('Selection follows focus', () => {
     it('syncs activate option to checked', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" selection-follows-focus>
+        <lion-combobox name="foo" selection-follows-focus autocomplete="list">
           <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
           <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         </lion-combobox>

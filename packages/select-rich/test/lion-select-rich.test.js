@@ -18,11 +18,7 @@ import '../lion-select-rich.js';
 
 describe('lion-select-rich', () => {
   it('clicking the label should focus the invoker', async () => {
-    const el = await fixture(html`
-      <lion-select-rich label="foo">
-        <lion-options slot="input"></lion-options>
-      </lion-select-rich>
-    `);
+    const el = await fixture(html` <lion-select-rich label="foo"> </lion-select-rich> `);
     expect(document.activeElement === document.body).to.be.true;
     el._labelNode.click();
     expect(document.activeElement === el._invokerNode).to.be.true;
@@ -31,25 +27,21 @@ describe('lion-select-rich', () => {
   it('checks the first enabled option', async () => {
     const el = await fixture(html`
       <lion-select-rich>
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'Red'}></lion-option>
-          <lion-option .choiceValue=${'Hotpink'}></lion-option>
-          <lion-option .choiceValue=${'Blue'}></lion-option>
-        </lion-options>
+        <lion-option .choiceValue=${'Red'}></lion-option>
+        <lion-option .choiceValue=${'Hotpink'}></lion-option>
+        <lion-option .choiceValue=${'Blue'}></lion-option>
       </lion-select-rich>
     `);
-    expect(el.activeIndex).to.equal(1);
-    expect(el.checkedIndex).to.equal(1);
+    expect(el.activeIndex).to.equal(0);
+    expect(el.checkedIndex).to.equal(0);
   });
 
   it('still has a checked value while disabled', async () => {
     const el = await fixture(html`
       <lion-select-rich disabled>
-        <lion-options slot="input">
-          <lion-option .choiceValue=${'Red'}>Red</lion-option>
-          <lion-option .choiceValue=${'Hotpink'}>Hotpink</lion-option>
-          <lion-option .choiceValue=${'Blue'}>Blue</lion-option>
-        </lion-options>
+        <lion-option .choiceValue=${'Red'}>Red</lion-option>
+        <lion-option .choiceValue=${'Hotpink'}>Hotpink</lion-option>
+        <lion-option .choiceValue=${'Blue'}>Blue</lion-option>
       </lion-select-rich>
     `);
 
@@ -58,11 +50,7 @@ describe('lion-select-rich', () => {
 
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
 
       expect(el._invokerNode).to.exist;
       expect(el._invokerNode.tagName).to.include('LION-SELECT-INVOKER');
@@ -71,10 +59,8 @@ describe('lion-select-rich', () => {
     it('sets the first option as the selectedElement if no option is checked', async () => {
       const el = await fixture(html`
         <lion-select-rich name="foo">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
       const options = Array.from(el.querySelectorAll('lion-option'));
@@ -84,10 +70,8 @@ describe('lion-select-rich', () => {
     it('syncs the selected element to the invoker', async () => {
       const el = await fixture(html`
         <lion-select-rich name="foo">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
       const options = el.querySelectorAll('lion-option');
@@ -101,10 +85,8 @@ describe('lion-select-rich', () => {
     it('delegates readonly to the invoker', async () => {
       const el = await fixture(html`
         <lion-select-rich readonly>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
 
@@ -115,9 +97,7 @@ describe('lion-select-rich', () => {
     it('delegates singleOption to the invoker', async () => {
       const el = await fixture(html`
         <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
 
@@ -128,20 +108,12 @@ describe('lion-select-rich', () => {
 
   describe('overlay', () => {
     it('should be closed by default', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
       expect(el.opened).to.be.false;
     });
 
     it('shows/hides the listbox via opened attribute', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
       el.opened = true;
       await el.updateComplete;
       expect(el._overlayCtrl.isShown).to.be.true;
@@ -152,11 +124,7 @@ describe('lion-select-rich', () => {
     });
 
     it('syncs opened state with overlay shown', async () => {
-      const el = await fixture(html`
-        <lion-select-rich .opened=${true}>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich .opened=${true}></lion-select-rich> `);
       const outerEl = await fixture('<button>somewhere</button>');
 
       expect(el.opened).to.be.true;
@@ -168,11 +136,7 @@ describe('lion-select-rich', () => {
     });
 
     it('will focus the listbox on open and invoker on close', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
       await el._overlayCtrl.show();
       await el.updateComplete;
       expect(document.activeElement === el._listboxNode).to.be.true;
@@ -187,10 +151,8 @@ describe('lion-select-rich', () => {
     it('opens the listbox with checked option as active', async () => {
       const el = await fixture(html`
         <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
       await el._overlayCtrl.show();
@@ -204,27 +166,21 @@ describe('lion-select-rich', () => {
     it('stays closed on click if it is disabled or readonly or has a single option', async () => {
       const elReadOnly = await fixture(html`
         <lion-select-rich readonly>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
 
       const elDisabled = await fixture(html`
         <lion-select-rich disabled>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20} checked>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
 
       const elSingleoption = await fixture(html`
         <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
 
@@ -244,11 +200,9 @@ describe('lion-select-rich', () => {
     it('sets inheritsReferenceWidth to min by default', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${'red'}>Red</lion-option>
-            <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
         </lion-select-rich>
       `);
 
@@ -261,11 +215,9 @@ describe('lion-select-rich', () => {
     it('should override the inheritsWidth prop when no default selected feature is used', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${'red'}>Red</lion-option>
-            <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
         </lion-select-rich>
       `);
 
@@ -293,10 +245,8 @@ describe('lion-select-rich', () => {
     it('should set singleOption to true when options change dynamically to 1 option', async () => {
       const elSingleoption = await fixture(html`
         <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
 
@@ -317,9 +267,7 @@ describe('lion-select-rich', () => {
   describe('interaction-mode', () => {
     it('allows to specify an interaction-mode which determines other behaviors', async () => {
       const el = await fixture(html`
-        <lion-select-rich interaction-mode="mac">
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
+        <lion-select-rich interaction-mode="mac"> </lion-select-rich>
       `);
       expect(el.interactionMode).to.equal('mac');
     });
@@ -327,43 +275,27 @@ describe('lion-select-rich', () => {
 
   describe('Keyboard navigation', () => {
     it('opens the listbox with [Enter] key via click handler', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
       el._invokerNode.click();
       await aTimeout();
       expect(el.opened).to.be.true;
     });
 
     it('opens the listbox with [ ](Space) key via click handler', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
       el._invokerNode.click();
       await aTimeout();
       expect(el.opened).to.be.true;
     });
 
     it('closes the listbox with [Escape] key once opened', async () => {
-      const el = await fixture(html`
-        <lion-select-rich opened>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(el.opened).to.be.false;
     });
 
     it('closes the listbox with [Tab] key once opened', async () => {
-      const el = await fixture(html`
-        <lion-select-rich opened>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
       // tab can only be caught via keydown
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.be.false;
@@ -372,11 +304,7 @@ describe('lion-select-rich', () => {
 
   describe('Mouse navigation', () => {
     it('opens the listbox via click on invoker', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
       expect(el.opened).to.be.false;
       el._invokerNode.click();
       await nextFrame(); // reflection of click takes some time
@@ -386,9 +314,7 @@ describe('lion-select-rich', () => {
     it('closes the listbox when an option gets clicked', async () => {
       const el = await fixture(html`
         <lion-select-rich opened>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
       expect(el.opened).to.be.true;
@@ -399,11 +325,7 @@ describe('lion-select-rich', () => {
 
   describe('Keyboard navigation Windows', () => {
     it('closes the listbox with [Enter] key once opened', async () => {
-      const el = await fixture(html`
-        <lion-select-rich opened>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
       el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.be.false;
     });
@@ -413,10 +335,8 @@ describe('lion-select-rich', () => {
     it('checks active item and closes the listbox with [Enter] key via click handler once opened', async () => {
       const el = await fixture(html`
         <lion-select-rich opened interaction-mode="mac">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
 
@@ -431,9 +351,7 @@ describe('lion-select-rich', () => {
 
     it('opens the listbox with [ArrowUp] key', async () => {
       const el = await fixture(html`
-        <lion-select-rich interaction-mode="mac">
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
+        <lion-select-rich interaction-mode="mac"> </lion-select-rich>
       `);
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       await el.updateComplete;
@@ -442,9 +360,7 @@ describe('lion-select-rich', () => {
 
     it('opens the listbox with [ArrowDown] key', async () => {
       const el = await fixture(html`
-        <lion-select-rich interaction-mode="mac">
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
+        <lion-select-rich interaction-mode="mac"> </lion-select-rich>
       `);
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
       await el.updateComplete;
@@ -456,10 +372,8 @@ describe('lion-select-rich', () => {
     it('has the right references to its inner elements', async () => {
       const el = await fixture(html`
         <lion-select-rich label="age">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
       expect(el._invokerNode.getAttribute('aria-labelledby')).to.contain(el._labelNode.id);
@@ -471,11 +385,7 @@ describe('lion-select-rich', () => {
 
     it('notifies when the listbox is expanded or not', async () => {
       // smoke test for overlay functionality
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `);
+      const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
       expect(el._invokerNode.getAttribute('aria-expanded')).to.equal('false');
       el.opened = true;
       await el.updateComplete;
@@ -519,16 +429,13 @@ describe('lion-select-rich', () => {
           render() {
             return html`
               <lion-select-rich label="Favorite color" name="color">
-                <lion-options slot="input">
-                  ${this.colorList.map(
-                    colorObj => html`
-                      <lion-option
-                        .modelValue=${{ value: colorObj.value, checked: colorObj.checked }}
-                        >${colorObj.label}</lion-option
-                      >
-                    `,
-                  )}
-                </lion-options>
+                ${this.colorList.map(
+                  colorObj => html`
+                    <lion-option .modelValue=${{ value: colorObj.value, checked: colorObj.checked }}
+                      >${colorObj.label}</lion-option
+                    >
+                  `,
+                )}
               </lion-select-rich>
             `;
           }
@@ -581,13 +488,13 @@ describe('lion-select-rich', () => {
 
       const el = await fixture(html`
         <${mySelectTag} label="Favorite color" name="color">
-          <lion-options slot="input">
+
             ${Array(2).map(
               (_, i) => html`
                 <lion-option .modelValue="${{ value: i, checked: false }}">value ${i}</lion-option>
               `,
             )}
-          </lion-options>
+
         </${mySelectTag}>
       `);
       await el.updateComplete;
@@ -620,11 +527,11 @@ describe('lion-select-rich', () => {
 
       const el = await fixture(html`
         <${selectTag} id="color" name="color" label="Favorite color" has-no-default-selected>
-          <lion-options slot="input">
+
             <lion-option .choiceValue=${'red'}>Red</lion-option>
             <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
             <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-          </lion-options>
+
         </${selectTag}>
       `);
 
