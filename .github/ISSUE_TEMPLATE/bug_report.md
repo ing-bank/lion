@@ -6,35 +6,18 @@ labels: ''
 assignees: ''
 ---
 
-## Describe the bug
-
-A clear and concise description of what the bug is.
-
-## To Reproduce
-
-This is the most important part. Without a simple way of reproducing the issue, we can not verify your bug.
-
-Here are a few ways you can help us to reproduce the issue:
-
-1. If you provide us with a Merge Request that has a failing test describing your issue, you are awesome :tada:
-2. Alternatively, if it's a more complex bug, it would be even better to create a dedicated repository that we can work on. Please share the link here.
-3. If none of the above is possible, please provide us with a list of actions to reproduce the issue (Beware that we will prioritize issues we can reproduce)
-
-Steps to reproduce the behavior:
-
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
 ## Expected behavior
 
 A clear and concise description of what you expected to happen.
 
-## Screenshots
+## Actual Behavior
 
-If applicable, add screenshots to help explain your problem.
+Describe what happens instead. Best via a live code reproduction.
+To create one click the link below and edit away.
+Once the error is reproduced fork/safe and link it.
+
+https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?sv=1&pm=1
 
 ## Additional context
 
-Add any other context about the problem here.
+Which component and version of it are you using.
