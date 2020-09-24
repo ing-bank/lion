@@ -2,6 +2,9 @@ import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 
 import '../lion-accordion.js';
+/**
+ * @typedef {import('../src/LionAccordion.js').LionAccordion} LionAccordion
+ */
 
 const basicAccordion = html`
   <lion-accordion>
@@ -17,36 +20,36 @@ const basicAccordion = html`
 describe('<lion-accordion>', () => {
   describe('Accordion', () => {
     it('sets expanded to [] by default', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       expect(el.expanded).to.deep.equal([]);
     });
 
     it('can programmatically set expanded', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion .expanded=${[1]}>
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
           <h2 slot="invoker"><button>invoker 2</button></h2>
           <div slot="content">content 2</div>
         </lion-accordion>
-      `);
+      `));
       expect(el.expanded).to.deep.equal([1]);
       expect(
         Array.from(el.children).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
-        ).textContent,
+        )?.textContent,
       ).to.equal('invoker 2');
 
       el.expanded = [0];
       expect(
         Array.from(el.children).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
-        ).textContent,
+        )?.textContent,
       ).to.equal('invoker 1');
     });
 
     it('has [expanded] on current expanded invoker which serves as styling hook', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.expanded = [0];
       expect(invokers[0]).to.have.attribute('expanded');
@@ -58,7 +61,7 @@ describe('<lion-accordion>', () => {
     });
 
     it('has [expanded] on current expanded invoker first child which serves as styling hook', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.expanded = [0];
       expect(invokers[0].firstElementChild).to.have.attribute('expanded');
@@ -70,7 +73,7 @@ describe('<lion-accordion>', () => {
     });
 
     it('sends event "expanded-changed" for every expanded state change', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const spy = sinon.spy();
       el.addEventListener('expanded-changed', spy);
       el.expanded = [1];
@@ -95,44 +98,44 @@ describe('<lion-accordion>', () => {
 
   describe('Accordion navigation', () => {
     it('sets focusedIndex to null by default', async () => {
-      const el = await fixture(basicAccordion);
-      expect(el.focusedIndex).to.be.null;
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      expect(el.focusedIndex).to.equal(-1);
     });
 
     it('can programmatically set focusedIndex', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion .focusedIndex=${1}>
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
           <h2 slot="invoker"><button>invoker 2</button></h2>
           <div slot="content">content 2</div>
         </lion-accordion>
-      `);
+      `));
       expect(el.focusedIndex).to.equal(1);
       expect(
         Array.from(el.children).find(
-          child => child.slot === 'invoker' && child.firstElementChild.hasAttribute('focused'),
-        ).textContent,
+          child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
+        )?.textContent,
       ).to.equal('invoker 2');
 
       el.focusedIndex = 0;
       expect(
         Array.from(el.children).find(
-          child => child.slot === 'invoker' && child.firstElementChild.hasAttribute('focused'),
-        ).textContent,
+          child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
+        )?.textContent,
       ).to.equal('invoker 1');
     });
 
     it('has [focused] on current focused invoker first child which serves as styling hook', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      el.focusedIndex = [0];
+      el.focusedIndex = 0;
       expect(invokers[0]).to.not.have.attribute('focused');
       expect(invokers[1]).to.not.have.attribute('focused');
       expect(invokers[0].firstElementChild).to.have.attribute('focused');
       expect(invokers[1].firstElementChild).to.not.have.attribute('focused');
 
-      el.focusedIndex = [1];
+      el.focusedIndex = 1;
       expect(invokers[0]).to.not.have.attribute('focused');
       expect(invokers[1]).to.not.have.attribute('focused');
       expect(invokers[0].firstElementChild).to.not.have.attribute('focused');
@@ -140,7 +143,7 @@ describe('<lion-accordion>', () => {
     });
 
     it('sends event "focused-changed" for every focused state change', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const spy = sinon.spy();
       el.addEventListener('focused-changed', spy);
       el.focusedIndex = 1;
@@ -150,7 +153,7 @@ describe('<lion-accordion>', () => {
 
   describe('Accordion Contents (slot=content)', () => {
     it('are visible when corresponding invoker is expanded', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const contents = el.querySelectorAll('[slot=content]');
       el.expanded = [0];
       expect(contents[0]).to.be.visible;
@@ -174,44 +177,44 @@ describe('<lion-accordion>', () => {
    */
   describe('User interaction', () => {
     it('opens a invoker on click', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[1].firstElementChild.dispatchEvent(new Event('click'));
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.deep.equal([1]);
     });
 
     it('selects a invoker on click', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[1].firstElementChild.dispatchEvent(new Event('click'));
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.focusedIndex).to.equal(1);
     });
 
     it.skip('opens/close invoker on [enter] and [space]', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
       expect(el.expanded).to.deep.equal([0]);
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
       expect(el.expanded).to.deep.equal([]);
     });
 
     it('selects next invoker on [arrow-right] and [arrow-down]', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.focusedIndex = 0;
-      invokers[0].firstElementChild.dispatchEvent(
+      invokers[0].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
       expect(el.focusedIndex).to.equal(1);
-      invokers[0].firstElementChild.dispatchEvent(
+      invokers[0].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowDown' }),
       );
       expect(el.focusedIndex).to.equal(2);
     });
 
     it('selects previous invoker on [arrow-left] and [arrow-up]', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion .focusedIndex=${1}>
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
@@ -220,40 +223,42 @@ describe('<lion-accordion>', () => {
           <h2 slot="invoker"><button>invoker 3</button></h2>
           <div slot="content">content 3</div>
         </lion-accordion>
-      `);
+      `));
       const invokers = el.querySelectorAll('[slot=invoker]');
       el.focusedIndex = 2;
-      invokers[2].firstElementChild.dispatchEvent(
+      invokers[2].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
       );
       expect(el.focusedIndex).to.equal(1);
-      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      invokers[1].firstElementChild?.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowUp' }),
+      );
       expect(el.focusedIndex).to.equal(0);
     });
 
     it('selects first invoker on [home]', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion .focusedIndex=${1}>
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
           <h2 slot="invoker"><button>invoker 2</button></h2>
           <div slot="content">content 2</div>
         </lion-accordion>
-      `);
+      `));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[1].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+      invokers[1].firstElementChild?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
       expect(el.focusedIndex).to.equal(0);
     });
 
     it('selects last invoker on [end]', async () => {
-      const el = await fixture(basicAccordion);
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[0].firstElementChild.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
       expect(el.focusedIndex).to.equal(2);
     });
 
     it('stays on last invoker on [arrow-right]', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion focusedIndex="2">
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
@@ -262,16 +267,16 @@ describe('<lion-accordion>', () => {
           <h2 slot="invoker"><button>invoker 3</button></h2>
           <div slot="content">content 3</div>
         </lion-accordion>
-      `);
+      `));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[2].firstElementChild.dispatchEvent(
+      invokers[2].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
       expect(el.focusedIndex).to.equal(2);
     });
 
     it('stays on first invoker on [arrow-left]', async () => {
-      const el = await fixture(html`
+      const el = /** @type {LionAccordion} */ (await fixture(html`
         <lion-accordion>
           <h2 slot="invoker"><button>invoker 1</button></h2>
           <div slot="content">content 1</div>
@@ -280,21 +285,19 @@ describe('<lion-accordion>', () => {
           <h2 slot="invoker"><button>invoker 3</button></h2>
           <div slot="content">content 3</div>
         </lion-accordion>
-      `);
+      `));
       const invokers = el.querySelectorAll('[slot=invoker]');
-      invokers[0].firstElementChild.dispatchEvent(
+      invokers[0].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
       );
-      expect(el.focusedIndex).to.equal(null);
+      expect(el.focusedIndex).to.equal(-1);
     });
   });
 
   describe('Content distribution', () => {
     it('should work with append children', async () => {
-      const el = await fixture(basicAccordion);
-      const c = 2;
-      const n = el.children.length / 2;
-      for (let i = n + 1; i < n + c + 1; i += 1) {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      for (let i = 4; i < 6; i += 1) {
         const invoker = document.createElement('h2');
         const button = document.createElement('button');
         invoker.setAttribute('slot', 'invoker');
@@ -306,25 +309,23 @@ describe('<lion-accordion>', () => {
         el.append(invoker);
         el.append(content);
       }
-      el.expanded = [el.children.length / 2 - 1];
+      el.expanded = [4];
       await el.updateComplete;
       expect(
         Array.from(el.children).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
-        ).textContent,
+        )?.textContent,
       ).to.equal('invoker 5');
       expect(
         Array.from(el.children).find(
           child => child.slot === 'content' && child.hasAttribute('expanded'),
-        ).textContent,
+        )?.textContent,
       ).to.equal('content 5');
     });
 
     it('should add order style property to each invoker and content', async () => {
-      const el = await fixture(basicAccordion);
-      const c = 2;
-      const n = el.children.length / 2;
-      for (let i = n + 1; i < n + c + 1; i += 1) {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      for (let i = 4; i < 6; i += 1) {
         const invoker = document.createElement('h2');
         const button = document.createElement('button');
         invoker.setAttribute('slot', 'invoker');
@@ -336,10 +337,13 @@ describe('<lion-accordion>', () => {
         el.append(invoker);
         el.append(content);
       }
-      el.expanded = [el.children.length / 2 - 1];
       await el.updateComplete;
-      const invokers = el.querySelectorAll('[slot=invoker]');
-      const contents = el.querySelectorAll('[slot=content]');
+      const invokers = /** @type {HTMLElement[]} */ (Array.from(
+        el.querySelectorAll('[slot=invoker]'),
+      ));
+      const contents = /** @type {HTMLElement[]} */ (Array.from(
+        el.querySelectorAll('[slot=content]'),
+      ));
       invokers.forEach((invoker, index) => {
         const content = contents[index];
         expect(invoker.style.getPropertyValue('order')).to.equal(`${index + 1}`);
@@ -378,10 +382,10 @@ describe('<lion-accordion>', () => {
         `);
         const invokers = el.querySelectorAll('[slot=invoker]');
         const contents = el.querySelectorAll('[slot=content]');
-        expect(invokers[0].firstElementChild.getAttribute('aria-controls')).to.equal(
+        expect(invokers[0].firstElementChild?.getAttribute('aria-controls')).to.equal(
           contents[0].id,
         );
-        expect(invokers[1].firstElementChild.getAttribute('aria-controls')).to.equal(
+        expect(invokers[1].firstElementChild?.getAttribute('aria-controls')).to.equal(
           contents[1].id,
         );
       });
@@ -394,20 +398,20 @@ describe('<lion-accordion>', () => {
           </lion-accordion>
         `);
         expect(
-          Array.from(el.children).find(child => child.slot === 'invoker').firstElementChild,
+          Array.from(el.children).find(child => child.slot === 'invoker')?.firstElementChild,
         ).to.have.attribute('aria-expanded', 'false');
       });
 
       it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
-        const el = await fixture(html`
+        const el = /** @type {LionAccordion} */ (await fixture(html`
           <lion-accordion>
             <h2 slot="invoker"><button>invoker</button></h2>
             <div slot="content">content</div>
           </lion-accordion>
-        `);
+        `));
         el.expanded = [0];
         expect(
-          Array.from(el.children).find(child => child.slot === 'invoker').firstElementChild,
+          Array.from(el.children).find(child => child.slot === 'invoker')?.firstElementChild,
         ).to.have.attribute('aria-expanded', 'true');
       });
     });
@@ -424,8 +428,8 @@ describe('<lion-accordion>', () => {
         `);
         const contents = el.querySelectorAll('[slot=content]');
         const invokers = el.querySelectorAll('[slot=invoker]');
-        expect(contents[0]).to.have.attribute('aria-labelledby', invokers[0].firstElementChild.id);
-        expect(contents[1]).to.have.attribute('aria-labelledby', invokers[1].firstElementChild.id);
+        expect(contents[0]).to.have.attribute('aria-labelledby', invokers[0].firstElementChild?.id);
+        expect(contents[1]).to.have.attribute('aria-labelledby', invokers[1].firstElementChild?.id);
       });
     });
   });
