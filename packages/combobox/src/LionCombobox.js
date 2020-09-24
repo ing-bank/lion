@@ -47,7 +47,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           display: flex;
         }
 
-        .input-group__input ::slotted([slot='input']) {
+        * > ::slotted([slot='input']) {
           outline: none;
           flex: 1;
           box-sizing: border-box;
@@ -55,10 +55,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           border-bottom: 1px solid;
         }
 
-        div ::slotted([role='listbox']) {
+        * > ::slotted([role='listbox']) {
           max-height: 200px;
           display: block;
           overflow: auto;
+          z-index: 1;
         }
       `,
     ];
@@ -99,7 +100,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         }
         // ._ariaVersion === '1.0'
         /**
-         * For full browser support, we implement the aria 1.0 spec.
+         * For browsers not supporting aria 1.1 spec, we implement the 1.0 spec.
          * That means we have one (input) element that has [role=combobox]
          */
         return document.createElement('input');
@@ -227,20 +228,21 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   __setupCombobox() {
+    // With regard to accessibility: aria-expanded and -labelledby will
+    // be handled by OverlatMixin and FormControlMixin respectively.
+
     this._comboboxNode.setAttribute('role', 'combobox');
     this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
-    // this._comboboxNode.setAttribute('aria-expanded', 'false');
     this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
 
     this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
-    // this._inputNode.setAttribute('aria-labelledby', this._labelNode.id);
+
+    // Although not according to wai-aria specs, axe expects this...
+    this._listboxNode.setAttribute('aria-labelledby', this._labelNode.id);
 
     this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.addEventListener('input', this._textboxOnInput);
-
-    this.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
-    this.addEventListener('keyup', this.__preventScrollingWithArrowKeys);
   }
 
   __teardownCombobox() {
@@ -285,10 +287,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string} curValue current ._inputNode value
    */
   filterOptionCondition(option, curValue) {
-    const idx = option.choiceValue
-      .toString()
-      .toLowerCase()
-      .indexOf(curValue.toString().toLowerCase());
+    let idx;
+    if (typeof option.choiceValue !== 'string') {
+      idx = -1;
+    } else {
+      idx = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase());
+    }
+
     if (this.matchMode === 'all') {
       return idx > -1; // matches part of word
     }
@@ -354,8 +359,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
       const beginsWith =
-        option.choiceValue.toString().toLowerCase().indexOf(curValue.toString().toLowerCase()) ===
-        0;
+        typeof option.choiceValue === 'string' &&
+        option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
+
       if (beginsWith && !hasAutoFilled && show && userIsAddingChars && !option.disabled) {
         if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
           this._inputNode.value = option.choiceValue;
@@ -363,7 +369,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           this._inputNode.selectionEnd = this._inputNode.value.length;
         }
         hasAutoFilled = true;
-        this.activeIndex = i;
+        // this.activeIndex = i;
       }
 
       if (this.autocomplete === 'none' || this.autocomplete === 'inline') {

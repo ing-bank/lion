@@ -125,5 +125,5 @@ export const multipleChoice = () => html`
 
 ## Listbox compatibility
 
-All options that can be applied to `lion-listbox`, can be applied to `lion-combobox` as well.
+All configurations that can be applied to `lion-listbox`, can be applied to `lion-combobox` as well.
 See the [listbox documentation](?path=/docs/forms-listbox--main) for more information.

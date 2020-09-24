@@ -282,7 +282,6 @@ const ListboxMixinImplementation = superclass =>
       const slot = /** @type {HTMLSlotElement} */ (
         /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('options-outlet')
       );
-      console.log('slot', slot);
 
       if (slot) {
         slot.assignedNodes().forEach(node => {
