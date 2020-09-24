@@ -229,6 +229,7 @@ export class LionTabs extends LitElement {
     this.__store.forEach(entry => {
       cleanButton(entry);
     });
+    this.__store = [];
   }
 
   /**
