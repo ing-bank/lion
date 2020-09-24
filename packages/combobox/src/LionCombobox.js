@@ -8,6 +8,13 @@ import { LionListbox } from '@lion/listbox';
 // on Listbox or ListNavigationWithActiveDescendantMixin
 
 /**
+ * TODO: set active to the first matched item if the user has not set active through keyboard interaction
+ * Needs to happen whenever autocomplete --> 'inline' | 'both' and either:
+ * - opened becomes true
+ * - autocomplete was handled and now the activeIndex is no longer on a matched item
+ */
+
+/**
  * @typedef {import('@lion/listbox').LionOption} LionOption
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
@@ -147,6 +154,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('opened')) {
+      if (this.opened && (this.autocomplete === 'both' || this.autocomplete === 'inline')) {
+        this.__setActiveToClosestMatch();
+      }
+
+      if (!this.opened && changedProperties.get('opened') !== undefined) {
+        this.activeIndex = -1;
+      }
+    }
     if (changedProperties.has('autocomplete')) {
       this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     }
@@ -203,9 +219,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
+    if (!this.multipleChoice) {
+      this.activeIndex = -1;
+      this.opened = false;
+    }
     this._inputNode.focus();
-    this.__resetActive();
-    this.opened = false;
     this.__syncCheckedWithTextboxOnInteraction();
   }
 
@@ -293,7 +311,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       const beginsWith =
         option.choiceValue.toString().toLowerCase().indexOf(curValue.toString().toLowerCase()) ===
         0;
-      if (beginsWith && !hasAutoFilled && show && userIsAddingChars) {
+      if (beginsWith && !hasAutoFilled && show && userIsAddingChars && !option.disabled) {
         if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
           this._inputNode.value = option.choiceValue;
           this._inputNode.selectionStart = this.__cboxInputValue.length;
@@ -307,7 +325,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       }
 
       // [2]. Cleanup previous matching states
-
       if (option.onFilterUnmatch) {
         option.onFilterUnmatch(curValue, prevValue);
       } else {
@@ -348,6 +365,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     if (this._overlayCtrl && this._overlayCtrl._popper) {
       this._overlayCtrl._popper.update();
+    }
+
+    // [7]. if active is now suddenly on an invisible option, set active it to the closest match
+    if (
+      !visibleOptions.includes(this.formElements[this.activeIndex]) &&
+      (this.autocomplete === 'both' || this.autocomplete === 'inline')
+    ) {
+      this.__setActiveToClosestMatch();
     }
   }
 
@@ -494,8 +519,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         this.__shouldAutocompleteNextUpdate = true;
         this._inputNode.value = '';
         this.__cboxInputValue = '';
-        this.activeIndex = -1;
-        this.__resetActive();
         this.checkedIndex = -1;
         break;
       case 'Enter':
@@ -503,16 +526,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           return;
         }
         this.__syncCheckedWithTextboxOnInteraction();
-        this.__resetActive();
-        this.opened = false;
-        break;
-      default:
-        if (
-          this.activeIndex === -1 &&
-          (this.autocomplete === 'inline' || this.autocomplete === 'both')
-        ) {
-          this.activeIndex = 0;
+        if (!this.multipleChoice) {
+          this.opened = false;
         }
+        break;
       /* no default */
     }
   }
@@ -524,10 +541,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
-  __resetActive() {
-    this.formElements.forEach(el => {
-      // eslint-disable-next-line no-param-reassign
-      el.active = false;
+  __setActiveToClosestMatch() {
+    let matchIndex = -1;
+    this.formElements.find((el, index) => {
+      if (!el.hasAttribute('aria-hidden') && !el.disabled) {
+        matchIndex = index;
+        return true;
+      }
+      return false;
     });
+    this.activeIndex = matchIndex;
   }
 }

@@ -213,7 +213,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
     it('supports changing the selection through serializedValue setter', async () => {
       const el = await fixture(html`
-        <${tag} id="color" name="color" label="Favorite color">
+        <${tag} id="color" name="color" label="Favorite color" has-no-default-selected>
           <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
           <${optionTag} .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
           <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
@@ -377,7 +377,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('has an activeIndex', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} has-no-default-selected autocomplete="list">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
@@ -393,7 +393,7 @@ export function runListboxMixinSuite(customConfig = {}) {
     describe('Keyboard navigation', () => {
       it('does not allow to navigate above the first or below the last option', async () => {
         const el = await fixture(html`
-          <${tag} opened>
+          <${tag} opened has-no-default-selected>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
           </${tag}>
         `);
@@ -440,7 +440,7 @@ export function runListboxMixinSuite(customConfig = {}) {
     describe('Keyboard navigation Mac', () => {
       it('navigates through open list with [ArrowDown] [ArrowUp] keys activates the option', async () => {
         const el = await fixture(html`
-          <${tag} opened interaction-mode="mac">
+          <${tag} opened interaction-mode="mac" has-no-default-selected autocomplete="list">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -481,7 +481,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('does not skip disabled options but prevents checking them', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} has-no-default-selected autocomplete="list">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20} disabled>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -565,7 +565,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} has-no-default-selected autocomplete="list">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
           </${tag}>
         `);
@@ -674,7 +674,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} has-no-default-selected autocomplete="list">
             <${optionTag} .choiceValue=${10} id="first">Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20} checked id="second">Item 2</${optionTag}>
           </${tag}>
