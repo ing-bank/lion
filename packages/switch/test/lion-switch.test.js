@@ -16,6 +16,12 @@ describe('lion-switch', () => {
     expect(el.checked).to.be.false;
   });
 
+  it('clicking the label should not toggle the checked state when disabled', async () => {
+    const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(el.checked).to.be.false;
+  });
+
   it('should sync its "disabled" state to child button', async () => {
     const el = await fixture(html`<lion-switch disabled></lion-switch>`);
     expect(el._inputNode.disabled).to.be.true;

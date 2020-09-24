@@ -131,6 +131,14 @@ describe('ChoiceInputMixin', () => {
       expect(el.checked).to.be.false;
     });
 
+    it('can not toggle the checked state when disabled via user interaction', async () => {
+      const el = /** @type {ChoiceClass} */ (await fixture(
+        html`<choice-input disabled></choice-input>`,
+      ));
+      el._inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+      expect(el.checked).to.be.false;
+    });
+
     it('synchronizes modelValue to checked state and vice versa', async () => {
       const el = /** @type {ChoiceClass} */ (await fixture(
         html`<choice-input .choiceValue=${'foo'}></choice-input>`,
