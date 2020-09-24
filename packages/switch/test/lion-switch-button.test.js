@@ -73,6 +73,23 @@ describe('lion-switch-button', () => {
     checkCall(handlerSpy.getCall(1), false);
   });
 
+  it('should dispatch "checked-changed" event when checked changed', () => {
+    const handlerSpy = sinon.spy();
+    el.addEventListener('checked-changed', handlerSpy);
+    el.checked = true;
+    el.checked = false;
+    expect(handlerSpy.callCount).to.equal(2);
+    const checkCall = call => {
+      expect(call.args).to.have.a.lengthOf(1);
+      const e = call.args[0];
+      expect(e).to.be.an.instanceof(Event);
+      expect(e.bubbles).to.be.true;
+      expect(e.composed).to.be.true;
+    };
+    checkCall(handlerSpy.getCall(0), true);
+    checkCall(handlerSpy.getCall(1), false);
+  });
+
   it('should not dispatch "checked-changed" event if disabled', () => {
     const handlerSpy = sinon.spy();
     el.disabled = true;
