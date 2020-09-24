@@ -36,16 +36,19 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     return [
       super.styles,
       css`
-        :host ::slotted([slot='input']) {
+        .input-group__input {
+          display: flex;
+        }
+
+        .input-group__input ::slotted([slot='input']) {
           outline: none;
-          width: 100%;
-          height: 100%;
+          flex: 1;
           box-sizing: border-box;
           border: none;
           border-bottom: 1px solid;
         }
 
-        :host ::slotted([role='listbox']) {
+        .form-field__group-two ::slotted([role='listbox']) {
           max-height: 200px;
           display: block;
           overflow: auto;
@@ -66,10 +69,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       input: () => {
         if (this._ariaVersion === '1.1') {
           /**
-           * For Safari, aria-owns="textbox-id ..." does not work.
-           * We therefore need to wrap [role=combobox] around the input textbox.
-           * Since we now have two level depth light dom (needed for a11y), we might get into trouble
-           * styling the input node. All styles that would previously go to
+           * According to the 1.1 specs, the input should be either wrapped in an element with
+           * [role=combobox], or element with [role=combobox] should have [aria-owns=input-id].
+           * For best cross browser compatibility, we choose the first option.
            */
           const combobox = document.createElement('div');
           const textbox = document.createElement('input');
@@ -91,7 +93,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         // ._ariaVersion === '1.0'
         /**
          * For full browser support, we implement the aria 1.0 spec.
-         * That means that the input element will have [role-"combobox"]
+         * That means we have one (input) element that has [role=combobox]
          */
         return document.createElement('input');
       },
@@ -113,7 +115,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override FormControlMixin
+   * @override configures FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
    */
@@ -142,13 +144,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   constructor() {
     super();
     /**
-     * @desc When "list", will filter listbox suggestions based on textbox value.
+     * When "list", will filter listbox suggestions based on textbox value.
      * When "both", an inline completion string will be added to the textbox as well.
      * @type {'none'|'list'|'inline'|'both'}
      */
     this.autocomplete = 'both';
     /**
-     * @desc When typing in the textbox, will by default be set on 'begin',
+     * When typing in the textbox, will by default be set on 'begin',
      * only matching the beginning part in suggestion list.
      * => 'a' will match 'apple' from ['apple', 'pear', 'citrus'].
      * When set to 'all', will match middle of the word as well
@@ -211,12 +213,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   __setupCombobox() {
     this._comboboxNode.setAttribute('role', 'combobox');
     this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
-    this._comboboxNode.setAttribute('aria-expanded', 'false');
+    // this._comboboxNode.setAttribute('aria-expanded', 'false');
     this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
 
     this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
     this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
-    this._inputNode.setAttribute('aria-labelledby', this._labelNode.id);
+    // this._inputNode.setAttribute('aria-labelledby', this._labelNode.id);
 
     this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.addEventListener('input', this._textboxOnInput);
@@ -330,9 +332,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       const show = this.filterOptionCondition(option, curValue);
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
-      const beginsWith =
-        option.choiceValue.toString().toLowerCase().indexOf(curValue.toString().toLowerCase()) ===
-        0;
+      const beginsWith = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
       if (beginsWith && !hasAutoFilled && show && userIsAddingChars) {
         if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
           this._inputNode.value = option.choiceValue;
@@ -376,9 +376,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     });
 
     // [6]. enable a11y, visibility and user interaction for visible options
+    const setSize = visibleOptions.length;
     visibleOptions.forEach((option, idx) => {
       option.setAttribute('aria-posinset', `${idx + 1}`);
-      option.setAttribute('aria-setsize', `${visibleOptions.length}`);
+      option.setAttribute('aria-setsize', `${setSize}`);
       option.removeAttribute('aria-hidden');
     });
     /** @type {number} */
@@ -415,7 +416,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
-        <slot name="_combobox"></slot>
         <slot name="selection-display"></slot>
         <slot name="input"></slot>
       </div>
@@ -462,14 +462,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override Configures OverlayMixin
+   * @override configures OverlayMixin
    */
   get _overlayInvokerNode() {
     return this._inputNode;
   }
 
   /**
-   * @override Configures OverlayMixin
+   * @override configures OverlayMixin
    */
   get _overlayContentNode() {
     return this._listboxNode;
@@ -481,14 +481,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {Event} ev
+   * @param {KeyboardEvent} ev
    */
   __showOverlay(ev) {
-    if (
-      /** @type {KeyboardEvent} */ (ev).key === 'Tab' ||
-      /** @type {KeyboardEvent} */ (ev).key === 'Esc' ||
-      /** @type {KeyboardEvent} */ (ev).key === 'Enter'
-    ) {
+    if (ev.key === 'Tab' || ev.key === 'Esc' || ev.key === 'Enter') {
       return;
     }
     this.opened = true;
@@ -509,16 +505,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     super._teardownOpenCloseListeners();
     this._overlayInvokerNode.removeEventListener('keyup', this.__showOverlay);
   }
-
-  // /**
-  //  * @param {Event & { target:LionOption }} ev
-  //  */
-  // _onChildActiveChanged(ev) {
-  //   super._onChildActiveChanged(ev);
-  //   if (ev.target.active) {
-  //     this._inputNode.setAttribute('aria-activedescendant', ev.target.id);
-  //   }
-  // }
 
   /**
    * @param {KeyboardEvent} ev
