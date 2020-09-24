@@ -32,6 +32,13 @@ const ChoiceInputMixinImplementation = superclass =>
           reflect: true,
         },
         /**
+         * Boolean indicating whether or not this element is disabled.
+         */
+        disabled: {
+          type: Boolean,
+          reflect: true,
+        },
+        /**
          * Whereas 'normal' `.modelValue`s usually store a complex/typed version
          * of a view value, choice inputs have a slightly different approach.
          * In order to remain their Single Source of Truth characteristic, choice inputs
@@ -108,6 +115,7 @@ const ChoiceInputMixinImplementation = superclass =>
     constructor() {
       super();
       this.modelValue = { value: '', checked: false };
+      this.disabled = false;
       this.__toggleChecked = this.__toggleChecked.bind(this);
     }
 
@@ -170,6 +178,9 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     __toggleChecked() {
+      if (this.disabled) {
+        return;
+      }
       this.checked = !this.checked;
     }
 
