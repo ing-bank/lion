@@ -4,6 +4,18 @@ import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '@lion/core/src/closestPolyfill.js';
 import { LionOptions } from './LionOptions.js';
 
+function preventDefault(ev) {
+  // if (ev.preventDefault) {
+  ev.preventDefault();
+  // } else {
+  ev.stop && ev.stop();
+  ev.stopPropagation();
+
+  // console.log('IE');
+  ev.returnValue = false;
+  // }
+}
+
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
 // having children with [role="menuitem|menuitemcheckbox|menuitemradio|option"] and
 // list items that can be found via MutationObserver or registration (.formElements)
@@ -190,13 +202,16 @@ const ListboxMixinImplementation = superclass =>
     /**
      * When `multipleChoice` is false, will toggle, else will check provided index
      * @param {Number} index
+     * @param {'set'|'unset'|'toggle'} mode
      */
-    setCheckedIndex(index) {
+    setCheckedIndex(index, mode = 'toggle') {
       if (this.formElements[index]) {
         if (!this.multipleChoice) {
           this.formElements[index].checked = true;
-        } else {
+        } else if (mode === 'toggle') {
           this.formElements[index].checked = !this.formElements[index].checked;
+        } else {
+          this.formElements[index].checked = mode === 'set';
           // __onChildCheckedChanged, which also responds to programmatic (model)value changes
           // of children, will do the rest
         }
@@ -533,10 +548,12 @@ const ListboxMixinImplementation = superclass =>
       }
 
       const { key } = ev;
+      const ctrlOrMetaKey = navigator.appVersion.includes('Mac') ? 'metaKey' : 'ctrlKey';
+      const prevActiveIndex = this.activeIndex;
 
       switch (key) {
         case 'Enter': {
-          ev.preventDefault();
+          preventDefault(ev);
           if (!this.formElements[this.activeIndex]) {
             return;
           }
@@ -548,7 +565,7 @@ const ListboxMixinImplementation = superclass =>
           break;
         }
         case 'ArrowUp':
-          ev.preventDefault();
+          preventDefault(ev);
           if (this.orientation === 'vertical') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
@@ -559,7 +576,7 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'ArrowDown':
-          ev.preventDefault();
+          preventDefault(ev);
           if (this.orientation === 'vertical') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
@@ -570,11 +587,11 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'Home':
-          ev.preventDefault();
+          preventDefault(ev);
           this.activeIndex = this._getNextEnabledOption(0, 0);
           break;
         case 'End':
-          ev.preventDefault();
+          preventDefault(ev);
           this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
           break;
         /* no default */
@@ -655,7 +672,7 @@ const ListboxMixinImplementation = superclass =>
         case 'ArrowDown':
         case 'Home':
         case 'End':
-          ev.preventDefault();
+          preventDefault(ev);
         /* no default */
       }
     }
@@ -669,7 +686,7 @@ const ListboxMixinImplementation = superclass =>
       const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
       const foundIndex = this.formElements.indexOf(option);
       if (foundIndex > -1) {
-        this.activIndex = foundIndex;
+        this.activeIndex = foundIndex;
       }
     }
 
@@ -690,7 +707,7 @@ const ListboxMixinImplementation = superclass =>
         case 'Home':
         case 'End':
         case 'Enter':
-          ev.preventDefault();
+          preventDefault(ev);
       }
     }
 

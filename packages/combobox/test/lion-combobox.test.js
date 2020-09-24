@@ -2,6 +2,7 @@ import '@lion/listbox/lion-option.js';
 import { expect, fixture, html } from '@open-wc/testing';
 import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
+import { browserDetection } from '@lion/core';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
@@ -233,18 +234,6 @@ describe('lion-combobox', () => {
   // Notice that the LionComboboxInvoker always needs to be used in conjunction with the
   // LionCombobox, and therefore will be tested integrated,
   describe('Invoker component integration', () => {
-    it('has a combobox with a textbox', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-        </lion-combobox>
-      `));
-      expect(el._comboboxNode.getAttribute('role')).to.equal('combobox');
-      const slot = el._comboboxNode.querySelector('slot[name=input]');
-      expect(slot.assignedNodes()[0]).to.equal(el._inputNode);
-    });
-
     describe('Accessibility', () => {
       it('sets role="combobox" on textbox wrapper/listbox sibling', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
@@ -346,6 +335,34 @@ describe('lion-combobox', () => {
       ]);
     });
 
+    it('highlights matching options', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" match-mode="all">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      const options = el.formElements;
+
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>ch</b>oke</span>`);
+      expect(options[1]).lightDom.to.equal(`<span aria-label="Chard"><b>Ch</b>ard</span>`);
+      expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>Ch</b>icory</span>`);
+      expect(options[3]).lightDom.to.equal(`Victoria Plum`);
+
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(`Artichoke`);
+      expect(options[1]).lightDom.to.equal(`<span aria-label="Chard">Char<b>d</b></span>`);
+      expect(options[2]).lightDom.to.equal(`Chicory`);
+      expect(options[3]).lightDom.to.equal(`Victoria Plum`);
+    });
+
     describe('Accessibility', () => {
       it('synchronizes autocomplete option to textbox', async () => {
         let el;
@@ -397,6 +414,60 @@ describe('lion-combobox', () => {
           el.formElements[1].id,
         );
         expect(el.formElements[1].active).to.equal(true);
+      });
+
+      it('adds aria-label to highlighted options', async () => {
+        const [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'all' });
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
+        await el.updateComplete;
+        const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
+        expect(labelledElement).to.not.be.null;
+        expect(labelledElement.innerText).to.equal('Artichoke');
+      });
+    });
+  });
+
+  describe('Accessibility', () => {
+    describe('Aria versions', () => {
+      it('[role=combobox] wraps input node in v1.1', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el._comboboxNode.contains(el._inputNode)).to.be.true;
+      });
+
+      it('has one input node with [role=combobox] in v1.0', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el._comboboxNode).to.equal(el._inputNode);
+      });
+
+      it('autodetects aria version and sets it to 1.1 on Chromium browsers', async () => {
+        const browserDetectionIsChromiumOriginal = browserDetection.isChromium;
+
+        browserDetection.isChromium = true;
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el._ariaVersion).to.equal('1.1');
+
+        browserDetection.isChromium = false;
+        const el2 = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `));
+        expect(el2._ariaVersion).to.equal('1.0');
+
+        // restore...
+        browserDetection.isChromium = browserDetectionIsChromiumOriginal;
       });
     });
   });

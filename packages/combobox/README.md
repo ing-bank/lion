@@ -117,11 +117,30 @@ export const matchModeBegin = () => html`
 `;
 ```
 
+## Multiple choice
+
+Add `multiple-choice` flag to allow multiple values to be selected.
+This will:
+
+- keep the listbox overlay open on click of an option
+- display a list of selected option representations next to the text box
+- make the value of type `Array` instead of `String`
+
+Also note that example below uses an example implementation of a selection display.
+
 ```js preview-story
-export const selectionDisplay = () => html`
-  <lion-combobox name="combo" label="Selection display" multiple-choice>
+export const multipleChoice = () => html`
+  <lion-combobox name="combo" label="Multiple" multiple-choice>
     <lion-combobox-selection-display slot="selection-display"></lion-combobox-selection-display>
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${listboxData.map(
+      (entry, i) =>
+        html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+    )}
   </lion-combobox>
 `;
 ```
+
+## Listbox compatibility
+
+All options that can be applied to `lion-listbox`, can be applied to `lion-combobox` as well.
+See the [listbox documentation](?path=/docs/forms-listbox--main) for more information.
