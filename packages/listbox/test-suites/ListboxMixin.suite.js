@@ -48,6 +48,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.modelValue).to.equal(10);
     });
 
+    // TODO: run ChoiceGroupSuite instead?
     it('automatically sets the name attribute of child checkboxes to its own name', async () => {
       const el = await fixture(html`
         <${tag} name="foo">
@@ -67,6 +68,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.formElements[2].name).to.equal('foo');
     });
 
+    // TODO: run ChoiceGroupSuite instead?
     it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
       const el = await fixture(html`
         <${tag} name="foo">
@@ -85,6 +87,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       );
     });
 
+    // TODO: run ChoiceGroupSuite instead?
     it('throws if a child element with a different name than the group tries to register', async () => {
       const el = await fixture(html`
         <${tag} name="gender">
@@ -116,6 +119,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.formElements[2].checked).to.be.true;
     });
 
+    // TODO: run FormControlSuite instead?
     it(`has a fieldName based on the label`, async () => {
       const el1 = await fixture(html`
         <${tag} label="foo"></${tag}>
@@ -130,6 +134,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el2.fieldName).to.equal(el2._labelNode.textContent);
     });
 
+    // TODO: run FormControlSuite instead?
     it(`has a fieldName based on the name if no label exists`, async () => {
       const el = await fixture(html`
         <${tag} name="foo"></${tag}>
@@ -137,6 +142,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.fieldName).to.equal(el.name);
     });
 
+    // TODO: run FormControlSuite instead?
     it(`can override fieldName`, async () => {
       const el = await fixture(html`
         <${tag} label="foo" .fieldName="${'bar'}"></${tag}>
@@ -149,6 +155,8 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.hasAttribute('tabindex')).to.be.false;
     });
 
+    // TODO: run ChoiceGroupSuite instead?
+    // TODO: duplicate of "automatically sets the name attribute of child checkboxes to its own name"?
     it('delegates the name attribute to its children options', async () => {
       const el = await fixture(html`
         <${tag} name="foo">
@@ -211,6 +219,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       expect(el.modelValue).to.equal('');
     });
 
+    // TODO: run ChoiceGroupSuite instead?
     it('supports changing the selection through serializedValue setter', async () => {
       const el = await fixture(html`
         <${tag} id="color" name="color" label="Favorite color">
@@ -289,6 +298,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         });
       });
 
+      // TODO: duplicate of "has a single modelValue representing the currently checked option" ?
       it('has a single modelValue representing the currently checked option', async () => {
         const el = await fixture(html`
           <${tag} name="foo">
@@ -341,6 +351,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
   describe('lion-listbox interactions', () => {
     describe('values', () => {
+      // TODO: ChoiceGroupSuite
       it('registers options', async () => {
         const el = await fixture(html`
           <${tag}>
@@ -365,6 +376,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(el.modelValue).to.be.null;
       });
 
+      // TODO: duplicate of "has a single modelValue representing the currently checked option" ?
       it('has the checked option as modelValue', async () => {
         const el = await fixture(html`
           <${tag}>
@@ -375,6 +387,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(el.modelValue).to.equal(20);
       });
 
+      // TODO: ChoiceGroupSuite
       it('has an activeIndex', async () => {
         const el = await fixture(html`
           <${tag}>
@@ -391,24 +404,45 @@ export function runListboxMixinSuite(customConfig = {}) {
     });
 
     describe('Keyboard navigation', () => {
-      it('does not allow to navigate above the first or below the last option', async () => {
-        const el = await fixture(html`
-          <${tag} opened>
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-          </${tag}>
-        `);
+      // TODO: add multiselect
 
-        mimicUserTyping(el, '1');
-        await el.updateComplete;
-        expect(() => {
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        }).to.not.throw();
-        expect(el.checkedIndex).to.equal(-1);
-        expect(el.activeIndex).to.equal(0);
+      // TODO: add key combinations like shift+home/ctrl+A etc etc.
+
+      describe('Arrow Keys', () => {
+        // TODO: add test for regular navigation with and without selectionFollowsFocus
+
+        describe('Rotate Keyboard Navigation', () => {
+          it('does not allow to navigate above the first or below the last option', async () => {
+            const el = await fixture(html`
+            <${tag} opened>
+              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+            </${tag}>
+          `);
+
+            mimicUserTyping(el, '1');
+            await el.updateComplete;
+            expect(() => {
+              el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+              el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            }).to.not.throw();
+            expect(el.checkedIndex).to.equal(-1);
+            expect(el.activeIndex).to.equal(0);
+          });
+
+          // TODO: move test from Combobox here
+        });
       });
 
-      // TODO: nice to have
+      describe('Enter', () => {});
+
+      describe('Space', () => {
+        it('selects active option when listbox is focusable', async () => {
+          // When listbox is not focusable (in case of a combobox), the user should be allowed
+          // to enter a space in the focusable element (texbox)
+        });
+      });
+
+      // TODO: nice to have. Get from menu impl.
       it.skip('selects a value with single [character] key', async () => {
         const el = await fixture(html`
           <${tag} opened>
@@ -437,7 +471,9 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
     });
 
+    // TODO: rename to selectionFollowsFocus and test connection to interaction-mode in select-rich
     describe('Keyboard navigation Mac', () => {
+      // TODO:
       it('navigates through open list with [ArrowDown] [ArrowUp] keys activates the option', async () => {
         const el = await fixture(html`
           <${tag} opened interaction-mode="mac">
@@ -536,6 +572,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
     });
 
+    // TODO: ChoiceGroupMixin?
     describe('Programmatic interaction', () => {
       it('can set active state', async () => {
         const el = await fixture(html`
@@ -606,6 +643,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
     });
 
+    // TODO: ChoiceGroup suite?
     describe('Interaction states', () => {
       it('becomes dirty if value changed once', async () => {
         const el = await fixture(html`
@@ -638,6 +676,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
     });
 
+    // TODO: ChoiceGroup suite?
     describe('Validation', () => {
       it('can be required', async () => {
         const el = await fixture(html`

@@ -102,8 +102,6 @@ export class LionComboboxSelectionDisplay extends LitElement {
    */
   onComboboxElementUpdated(changedProperties) {
     if (changedProperties.has('modelValue')) {
-      console.log('asdad');
-
       this.selectedElements = this._computeSelectedElements();
     }
   }

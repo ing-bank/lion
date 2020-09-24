@@ -201,7 +201,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * When `multipleChoice` is false, will toggle, else will check provided index
-     * @param {Number} index
+     * @param {number} index
      * @param {'set'|'unset'|'toggle'} mode
      */
     setCheckedIndex(index, mode = 'toggle') {
@@ -212,9 +212,9 @@ const ListboxMixinImplementation = superclass =>
           this.formElements[index].checked = !this.formElements[index].checked;
         } else {
           this.formElements[index].checked = mode === 'set';
-          // __onChildCheckedChanged, which also responds to programmatic (model)value changes
-          // of children, will do the rest
         }
+        // In __onChildCheckedChanged, which also responds to programmatic (model)value changes
+        // of children, we will do the rest
       }
     }
 
@@ -222,7 +222,7 @@ const ListboxMixinImplementation = superclass =>
       super();
       /**
        * When setting this to true, on initial render, no option will be selected.
-       * It it advisable to override `_noSelectionTemplate` method in the select-invoker
+       * It is advisable to override `_noSelectionTemplate` method in the select-invoker
        * to render some kind of placeholder initially
        */
       this.hasNoDefaultSelected = false;
@@ -336,10 +336,8 @@ const ListboxMixinImplementation = superclass =>
 
       if (changedProperties.has('disabled')) {
         if (this.disabled) {
-          // this._invokerNode.makeRequestToBeDisabled();
           this.__requestOptionsToBeDisabled();
         } else {
-          // this._invokerNode.retractRequestToBeDisabled();
           this.__retractRequestOptionsToBeDisabled();
         }
       }
@@ -548,10 +546,9 @@ const ListboxMixinImplementation = superclass =>
       }
 
       const { key } = ev;
-      const ctrlOrMetaKey = navigator.appVersion.includes('Mac') ? 'metaKey' : 'ctrlKey';
-      const prevActiveIndex = this.activeIndex;
 
       switch (key) {
+        case ' ':
         case 'Enter': {
           preventDefault(ev);
           if (!this.formElements[this.activeIndex]) {
@@ -627,7 +624,7 @@ const ListboxMixinImplementation = superclass =>
         /**
          * For ShadyDom the listboxNode is available right from the start so we can add those events
          * immediately.
-         * For native ShadowDom the select gets render before the listboxNode is available so we
+         * For native ShadowDom the select gets rendered before the listboxNode is available so we
          * will add an event to the slotchange and add the events once available.
          */
         this._listboxSlot.addEventListener('slotchange', () => {

@@ -328,7 +328,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const userIsAddingChars = prevValue.length < curValue.length;
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
-    this.formElements.forEach((/** @type {OptionWithFilterFn} */ option) => {
+    this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
       const show = this.filterOptionCondition(option, curValue);
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
@@ -340,6 +340,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           this._inputNode.selectionEnd = this._inputNode.value.length;
         }
         hasAutoFilled = true;
+        this.activeIndex = i;
       }
 
       if (this.autocomplete === 'none' || this.autocomplete === 'inline') {
