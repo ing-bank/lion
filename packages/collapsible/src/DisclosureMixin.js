@@ -188,7 +188,7 @@ const DisclosureMixinImplementation = superclass =>
       super.firstUpdated(changedProperties);
       this._onOpenedChanged();
 
-      if (this.handleFocus) {
+      if (this.handleFocus && !this._contentNode.hasAttribute('tabindex')) {
         this._contentNode.setAttribute('tabindex', '-1');
       }
     }

@@ -683,8 +683,8 @@ export class OverlayController extends EventTargetShim {
       this._keepBodySize({ phase: 'show' });
       await this._handlePosition({ phase: 'show' });
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
+      await this.showAnimation({ backdropNode: this.backdropNode, contentNode: this.contentNode });
       this.dispatchEvent(new Event('show'));
-      this.showAnimation({ backdropNode: this.backdropNode, contentNode: this.contentNode });
     }
     /** @type {function} */
     (this._showResolve)();
