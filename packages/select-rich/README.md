@@ -9,7 +9,7 @@ Its implementation is based on the following Design pattern:
 <https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html>
 
 ```js script
-import { html } from '@lion/core';
+import { LitElement, html } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
@@ -355,6 +355,55 @@ export const singleOption = () => html`
     </lion-options>
   </lion-select-rich>
 `;
+```
+
+When adding/removing options the `singleOption` will only be `true` when there is exactly one option.
+
+```js preview-story
+class SingleOptionRemoveAdd extends LitElement {
+  static get properties() {
+    return {
+      options: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.options = ['Option 1'];
+  }
+
+  render() {
+    return html`
+      <button @click=${this.addOption}>Add an option</button>
+      <button @click=${this.removeOption}>Remove last option</button>
+      <lion-select-rich name="favoriteColor" label="Favorite color">
+        <lion-options slot="input">
+          ${this.options.map(
+            option => html` <lion-option .choiceValue=${option}>${option}</lion-option> `,
+          )}
+        </lion-options>
+      </lion-select-rich>
+    `;
+  }
+
+  addOption() {
+    this.options.push(`Option ${this.options.length + 1}`);
+    this.options = [...this.options];
+    this.requestUpdate();
+  }
+
+  removeOption() {
+    this.options.pop();
+    this.options = [...this.options];
+    this.requestUpdate();
+  }
+}
+
+customElements.define('single-option-remove-add', SingleOptionRemoveAdd);
+
+export const singleOptionRemoveAdd = () => {
+  return html`<single-option-remove-add></single-option-remove-add>`;
+};
 ```
 
 ### Custom Invoker

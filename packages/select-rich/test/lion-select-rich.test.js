@@ -83,19 +83,6 @@ describe('lion-select-rich', () => {
       expect(el.hasAttribute('readonly')).to.be.true;
       expect(el._invokerNode.hasAttribute('readonly')).to.be.true;
     });
-
-    it('delegates singleOption to the invoker', async () => {
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-
-      expect(el.singleOption).to.be.true;
-      expect(el._invokerNode.hasAttribute('single-option')).to.be.true;
-    });
   });
 
   describe('overlay', () => {
@@ -262,8 +249,8 @@ describe('lion-select-rich', () => {
       expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
     });
 
-    it('should set singleOption to true when options change dynamically to 1 option', async () => {
-      const elSingleoption = await fixture(html`
+    it('should have singleOption only if there is exactly one option', async () => {
+      const el = await fixture(html`
         <lion-select-rich>
           <lion-options slot="input">
             <lion-option .choiceValue=${10}>Item 1</lion-option>
@@ -271,18 +258,23 @@ describe('lion-select-rich', () => {
           </lion-options>
         </lion-select-rich>
       `);
+      expect(el.singleOption).to.be.false;
+      expect(el._invokerNode.singleOption).to.be.false;
 
-      elSingleoption._invokerNode.click();
-      await elSingleoption.updateComplete;
-      expect(elSingleoption.singleOption).to.be.false;
-
-      const optionELm = elSingleoption.querySelectorAll('lion-option')[0];
+      const optionELm = el.querySelectorAll('lion-option')[0];
       optionELm.parentNode.removeChild(optionELm);
-      elSingleoption.requestUpdate();
+      el.requestUpdate();
+      await el.updateComplete;
+      expect(el.singleOption).to.be.true;
+      expect(el._invokerNode.singleOption).to.be.true;
 
-      elSingleoption._invokerNode.click();
-      await elSingleoption.updateComplete;
-      expect(elSingleoption.singleOption).to.be.true;
+      const newOption = document.createElement('lion-option');
+      newOption.choiceValue = 30;
+      el._inputNode.appendChild(newOption);
+      el.requestUpdate();
+      await el.updateComplete;
+      expect(el.singleOption).to.be.false;
+      expect(el._invokerNode.singleOption).to.be.false;
     });
   });
 

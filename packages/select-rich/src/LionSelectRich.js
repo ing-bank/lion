@@ -160,14 +160,39 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
+   * @override
+   * @param {FormControl} child the child element (field)
+   * @param {number} indexToInsertAt index to insert the form element at
+   */
+  addFormElement(child, indexToInsertAt) {
+    super.addFormElement(child, indexToInsertAt);
+    this._onFormElementsChanged();
+  }
+
+  /**
+   * @param {FormRegisteringHost} child the child element (field)
+   */
+  removeFormElement(child) {
+    super.removeFormElement(child);
+    this._onFormElementsChanged();
+  }
+
+  _onFormElementsChanged() {
+    if (this.formElements.length === 1 && this.singleOption === false) {
+      this.singleOption = true;
+      this._invokerNode.singleOption = true;
+    }
+    if (this.formElements.length !== 1 && this.singleOption === true) {
+      this.singleOption = false;
+      this._invokerNode.singleOption = false;
+    }
+  }
+
+  /**
    * @param {import('lit-element').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-
-    if (this.formElements.length === 1) {
-      this._invokerNode.singleOption = true;
-    }
 
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
