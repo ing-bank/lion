@@ -161,6 +161,11 @@ export class LionIcon extends LitElement {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  get _iconManager() {
+    return icons;
+  }
+
   /**
    * @param {string} prevIconId
    */
@@ -172,7 +177,7 @@ export class LionIcon extends LitElement {
       }
     } else {
       const iconIdBeforeResolve = this.iconId;
-      const svg = await icons.resolveIconForId(iconIdBeforeResolve);
+      const svg = await this._iconManager.resolveIconForId(iconIdBeforeResolve);
 
       // update SVG if it did not change in the meantime to avoid race conditions
       if (this.iconId === iconIdBeforeResolve) {
