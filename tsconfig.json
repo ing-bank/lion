@@ -20,6 +20,7 @@
     "packages/checkbox-group/**/*.js",
     "packages/collapsible/**/*.js",
     "packages/core/**/*.js",
+    "packages/dialog/**/*.js",
     "packages/fieldset/**/*.js",
     "packages/form/**/*.js",
     "packages/form-core/**/*.js",

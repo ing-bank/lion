@@ -1,6 +1,13 @@
 import { runOverlayMixinSuite } from '@lion/overlays/test-suites/OverlayMixin.suite.js';
-import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import '../lion-dialog.js';
+
+/**
+
+ * @typedef {import('../src/LionDialog').LionDialog} LionDialog
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);
 
 describe('lion-dialog', () => {
   // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
@@ -31,7 +38,7 @@ describe('lion-dialog', () => {
           <button slot="invoker">Popup button</button>
         </lion-dialog>
       `);
-      const invoker = el.querySelector('[slot="invoker"]');
+      const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
       invoker.click();
 
       expect(el.opened).to.be.true;
@@ -51,12 +58,17 @@ describe('lion-dialog', () => {
         </lion-dialog>
       `);
 
+      // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
       el._overlayInvokerNode.click();
       expect(el.opened).to.be.true;
 
-      const wrapperNode = Array.from(document.querySelector('.global-overlays').children)[1];
-      const nestedDialog = wrapperNode.querySelector('lion-dialog');
-      nestedDialog._overlayInvokerNode.click();
+      const overlaysContainer = /** @type {HTMLElement} */ (document.querySelector(
+        '.global-overlays',
+      ));
+      const wrapperNode = Array.from(overlaysContainer.children)[1];
+      const nestedDialog = /** @type {LionDialog} */ (wrapperNode.querySelector('lion-dialog'));
+      // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
+      nestedDialog?._overlayInvokerNode.click();
       expect(nestedDialog.opened).to.be.true;
     });
   });
