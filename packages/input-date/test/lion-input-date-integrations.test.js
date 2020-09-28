@@ -6,7 +6,6 @@ const tagString = 'lion-input-date';
 describe('<lion-input-date> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,
-    suffix: tagString,
     allowedModelValueTypes: [Date],
   });
 

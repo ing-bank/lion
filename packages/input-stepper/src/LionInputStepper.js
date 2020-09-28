@@ -6,8 +6,8 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
  * `LionInputStepper` is a class for custom input-stepper element (`<lion-input-stepper>` web component).
  *
  * @customElement lion-input-stepper
- * @extends LitElement
  */
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputStepper extends LionInput {
   static get styles() {
     return [
@@ -22,30 +22,53 @@ export class LionInputStepper extends LionInput {
 
   static get properties() {
     return {
-      min: Number,
-      max: Number,
-      step: Number,
-      modelValue: Number,
-      __disableIncrementor: Boolean,
-      __disableDecrementor: Boolean,
+      min: {
+        type: Number,
+        reflect: true,
+      },
+      max: {
+        type: Number,
+        reflect: true,
+      },
+      step: {
+        type: Number,
+        reflect: true,
+      },
+      __disableIncrementor: { attribute: false },
+      __disableDecrementor: { attribute: false },
     };
   }
 
+  /**
+   * @returns {number}
+   */
   get currentValue() {
-    return parseFloat(this.value || 0);
+    return parseFloat(this.value) || 0;
   }
 
   constructor() {
     super();
+    /** @param {string} modelValue */
     this.parser = modelValue => parseFloat(modelValue);
     this.__disableIncrementor = false;
     this.__disableDecrementor = false;
+    this.min = Infinity;
+    this.max = Infinity;
+    this.step = 1;
+    this.values = {
+      max: this.max,
+      min: this.min,
+      step: this.step,
+    };
   }
 
   connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+    super.connectedCallback();
+    this.values = {
+      max: this.max,
+      min: this.min,
+      step: this.step,
+    };
     this.role = 'spinbutton';
     this.addEventListener('keydown', this.__keyDownHandler);
     this._inputNode.setAttribute('inputmode', 'decimal');
@@ -56,29 +79,27 @@ export class LionInputStepper extends LionInput {
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     this.removeEventListener('keydown', this.__keyDownHandler);
   }
 
-  /**
-   * Update native input values
-   * @param {Object} changedProps - changed props
-   */
-  updated(changedProps) {
-    super.updated(changedProps);
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
 
-    if (changedProps.has('min')) {
-      this._inputNode.min = this.min;
+    if (changedProperties.has('min')) {
+      this._inputNode.min = `${this.min}`;
+      this.values.min = this.min;
     }
 
-    if (changedProps.has('max')) {
-      this._inputNode.max = this.max;
+    if (changedProperties.has('max')) {
+      this._inputNode.max = `${this.max}`;
+      this.values.max = this.max;
     }
 
-    if (changedProps.has('step')) {
-      this._inputNode.step = this.step;
+    if (changedProperties.has('step')) {
+      this._inputNode.step = `${this.step}`;
+      this.values.step = this.step;
     }
   }
 
@@ -87,27 +108,23 @@ export class LionInputStepper extends LionInput {
    * @private
    */
   __setAriaLabelsAndValidator() {
-    this.values = {
-      max: parseFloat(this.max || Infinity),
-      min: parseFloat(this.min || Infinity),
-      step: parseFloat(this.step),
-    };
-
     const ariaAttributes = {
       'aria-valuemax': this.values.max,
       'aria-valuemin': this.values.min,
     };
 
-    let validators = Object.entries(ariaAttributes)
+    const minMaxValidators = /** @type {(MaxNumber | MinNumber)[]} */ (Object.entries(
+      ariaAttributes,
+    )
       .map(([key, val]) => {
         if (val !== Infinity) {
-          this.setAttribute(key, val);
+          this.setAttribute(key, `${val}`);
           return key === 'aria-valuemax' ? new MaxNumber(val) : new MinNumber(val);
         }
         return null;
       })
-      .filter(validator => validator);
-    validators = [new IsNumber(), ...validators];
+      .filter(validator => validator !== null));
+    const validators = [new IsNumber(), ...minMaxValidators];
     this.defaultValidators.push(...validators);
   }
 
@@ -134,7 +151,7 @@ export class LionInputStepper extends LionInput {
     const { min, max } = this.values;
     this.__disableIncrementor = this.currentValue >= max && max !== Infinity;
     this.__disableDecrementor = this.currentValue <= min && min !== Infinity;
-    this.setAttribute('aria-valuenow', this.currentValue);
+    this.setAttribute('aria-valuenow', `${this.currentValue}`);
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
@@ -150,7 +167,7 @@ export class LionInputStepper extends LionInput {
     const { step, max } = this.values;
     const newValue = this.currentValue + step;
     if (newValue <= max || max === Infinity) {
-      this.value = newValue;
+      this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
     }
   }
@@ -163,7 +180,7 @@ export class LionInputStepper extends LionInput {
     const { step, min } = this.values;
     const newValue = this.currentValue - step;
     if (newValue >= min || min === Infinity) {
-      this.value = newValue;
+      this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
     }
   }

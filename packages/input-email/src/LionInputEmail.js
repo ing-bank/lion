@@ -6,8 +6,8 @@ import { LocalizeMixin } from '@lion/localize';
  * LionInputEmail: extension of lion-input
  *
  * @customElement lion-input-email
- * @extends {LionInput}
  */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionInputEmail extends LocalizeMixin(LionInput) {
   constructor() {
     super();

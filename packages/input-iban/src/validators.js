@@ -11,7 +11,7 @@ const loadTranslations = async () => {
   }
   await localize.loadNamespace(
     {
-      'lion-validate+iban': locale => {
+      'lion-validate+iban': /** @param {string} locale */ locale => {
         switch (locale) {
           case 'bg-BG':
             return import('../translations/bg-BG.js');
@@ -86,7 +86,7 @@ const loadTranslations = async () => {
         }
       },
     },
-    { locale: localize.localize },
+    { locale: localize.locale },
   );
   loaded = true;
 };
@@ -96,11 +96,22 @@ export class IsIBAN extends Validator {
     return 'IsIBAN';
   }
 
+  /** @param {string} value */
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
     return !isValidIBAN(value);
   }
 
+  /**
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {*} [data.params]
+   * @param {string} [data.type]
+   * @param {Object.<string,?>} [data.config]
+   * @param {string} [data.name]
+   * @returns {Promise<string|Node>}
+   */
   static async getMessage(data) {
     await loadTranslations();
     return localize.msg('lion-validate+iban:error.IsIBAN', data);
@@ -112,6 +123,10 @@ export class IsCountryIBAN extends IsIBAN {
     return 'IsCountryIBAN';
   }
 
+  /**
+   * @param {?} [value]
+   * @returns {Boolean}
+   */
   execute(value) {
     const notIBAN = super.execute(value);
     if (value.slice(0, 2) !== this.param) {
@@ -123,6 +138,16 @@ export class IsCountryIBAN extends IsIBAN {
     return false;
   }
 
+  /**
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {*} [data.params]
+   * @param {string} [data.type]
+   * @param {Object.<string,?>} [data.config]
+   * @param {string} [data.name]
+   * @returns {Promise<string|Node>}
+   */
   static async getMessage(data) {
     await loadTranslations();
     return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);

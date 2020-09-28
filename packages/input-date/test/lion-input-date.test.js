@@ -2,8 +2,14 @@ import { html } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { MaxDate } from '@lion/form-core';
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
 import '../lion-input-date.js';
+
+/**
+ * @typedef {import('../src/LionInputDate').LionInputDate} LionInputDate
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (_fixture);
 
 describe('<lion-input-date>', () => {
   beforeEach(() => {
@@ -24,16 +30,16 @@ describe('<lion-input-date>', () => {
     const el = await fixture(html`<lion-input-date></lion-input-date>`);
     el.modelValue = '2005/11/10';
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('IsDate');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).to.have.property('IsDate');
 
     el.modelValue = new Date('2005/11/10');
     expect(el.hasFeedbackFor).not.to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).not.to.have.a.property('IsDate');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).not.to.have.property('IsDate');
   });
 
-  it("does not throw on invalid dates like new Date('foo')", async () => {
+  it("does not throw on invalid dates like new Date('20.10.'), which could happen while the user types", async () => {
     const el = await fixture(html`<lion-input-date></lion-input-date>`);
     expect(() => {
       el.modelValue = new Date('foo');
@@ -48,13 +54,13 @@ describe('<lion-input-date>', () => {
       ></lion-input-date>
     `);
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('MaxDate');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).to.have.property('MaxDate');
 
     el.modelValue = new Date('2017/06/14');
     expect(el.hasFeedbackFor).not.to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).not.to.have.a.property('MaxDate');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).not.to.have.property('MaxDate');
   });
 
   it('uses formatOptions.locale', async () => {

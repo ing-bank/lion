@@ -1,6 +1,12 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
 
 import '../lion-input-email.js';
+
+/**
+ * @typedef {import('../src/LionInputEmail').LionInputEmail} LionInputEmail
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmail>} */ (_fixture);
 
 describe('<lion-input-email>', () => {
   it('has a type = text', async () => {
