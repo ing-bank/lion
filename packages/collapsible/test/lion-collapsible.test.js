@@ -1,6 +1,13 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 
 import '../lion-collapsible.js';
+
+/**
+
+ * @typedef {import('../src/LionCollapsible').LionCollapsible} LionCollapsible
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
 
 const collapsibleTemplate = html`
   <button slot="invoker">More about cars</button>
@@ -10,12 +17,16 @@ const collapsibleTemplate = html`
   </div>
 `;
 let isCollapsibleOpen = false;
+/** @param {boolean} state */
 const collapsibleToggle = state => {
   isCollapsibleOpen = state;
 };
 const defaultCollapsible = html` <lion-collapsible>${collapsibleTemplate}</lion-collapsible> `;
 const collapsibleWithEvents = html`
-  <lion-collapsible @opened-changed=${e => collapsibleToggle(e.target.opened)}>
+  <lion-collapsible
+    @opened-changed=${/** @param {Event} e */ e =>
+      collapsibleToggle(/** @type {LionCollapsible} */ (e.target)?.opened)}
+  >
     ${collapsibleTemplate}
   </lion-collapsible>
 `;
@@ -47,7 +58,7 @@ describe('<lion-collapsible>', () => {
     it('opens a invoker on click', async () => {
       const collapsible = await fixture(defaultCollapsible);
       const invoker = collapsible.querySelector('[slot=invoker]');
-      invoker.dispatchEvent(new Event('click'));
+      invoker?.dispatchEvent(new Event('click'));
       expect(collapsible.opened).to.equal(true);
     });
 
@@ -93,7 +104,7 @@ describe('<lion-collapsible>', () => {
         const collapsibleElement = await fixture(defaultCollapsible);
         const invoker = collapsibleElement.querySelector('[slot=invoker]');
         const content = collapsibleElement.querySelector('[slot=content]');
-        expect(invoker.getAttribute('aria-controls')).to.equal(content.id);
+        expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
       });
 
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
@@ -116,7 +127,7 @@ describe('<lion-collapsible>', () => {
         const collapsibleElement = await fixture(defaultCollapsible);
         const invoker = collapsibleElement.querySelector('[slot=invoker]');
         const content = collapsibleElement.querySelector('[slot=content]');
-        expect(content).to.have.attribute('aria-labelledby', invoker.id);
+        expect(content).to.have.attribute('aria-labelledby', invoker?.id);
       });
     });
   });
