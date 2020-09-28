@@ -1,6 +1,6 @@
 import {
   expect,
-  fixture,
+  fixture as _fixture,
   html,
   oneEvent,
   aTimeout,
@@ -15,6 +15,13 @@ import '@lion/fieldset/lion-fieldset.js';
 
 import '../lion-form.js';
 
+/**
+
+ * @typedef {import('../src/LionForm').LionForm} LionForm
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);
+
 const childTagString = defineCE(
   class extends LionField {
     get slots() {
@@ -25,40 +32,38 @@ const childTagString = defineCE(
   },
 );
 const childTag = unsafeStatic(childTagString);
-const formTagString = 'lion-form';
-const formTag = unsafeStatic(formTagString);
 
 describe('<lion-form>', () => {
   it('is an instance of LionFieldSet', async () => {
     const el = await fixture(html`
-      <${formTag}>
-        <form>
-        </form>
-      </${formTag}>
+      <lion-form>
+        <form></form>
+      </lion-form>
     `);
     expect(el).to.be.instanceOf(LionFieldset);
   });
 
   it('relies on the native form for its accessible role', async () => {
     const el = await fixture(html`
-      <${formTag}>
-        <form>
-        </form>
-      </${formTag}>
+      <lion-form>
+        <form></form>
+      </lion-form>
     `);
     expect(el.getAttribute('role')).to.be.null;
   });
 
   it('has a custom reset that gets triggered by native reset', async () => {
     const withDefaults = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
           <input type="reset" value="reset-button" />
         </form>
-      </${formTag}>
+      </lion-form>
     `);
-    const resetButton = withDefaults.querySelector('input[type=reset]');
+    const resetButton = /** @type {HTMLInputElement} */ (withDefaults.querySelector(
+      'input[type=reset]',
+    ));
 
     withDefaults.formElements.firstName.modelValue = 'updatedFoo';
     expect(withDefaults.modelValue).to.deep.equal({
@@ -84,11 +89,11 @@ describe('<lion-form>', () => {
 
   it('dispatches reset events', async () => {
     const el = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <${childTag} name="firstName" .modelValue="${'Foo'}"></${childTag}>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
 
     setTimeout(() => el.reset());
@@ -103,27 +108,27 @@ describe('<lion-form>', () => {
   it('works with the native submit event (triggered via a button)', async () => {
     const submitSpy = spy();
     const el = await fixture(html`
-      <${formTag} @submit=${submitSpy}>
+      <lion-form @submit=${submitSpy}>
         <form>
           <button type="submit">submit</button>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
 
-    const button = el.querySelector('button');
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     button.click();
     expect(submitSpy.callCount).to.equal(1);
   });
 
   it('dispatches submit events', async () => {
     const el = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <button type="submit">submit</button>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
-    const button = el.querySelector('button');
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     setTimeout(() => button.click());
     const submitEv = await oneEvent(el, 'submit');
     expect(submitEv).to.be.instanceOf(Event);
@@ -135,29 +140,29 @@ describe('<lion-form>', () => {
 
   it('handles internal submit handler before dispatch', async () => {
     const el = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <button type="submit">submit</button>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
-    const button = el.querySelector('button');
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const internalHandlerSpy = spy(el, 'submitGroup');
     const dispatchSpy = spy(el, 'dispatchEvent');
-    await aTimeout();
+    await aTimeout(0);
     button.click();
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
   });
 
   it('handles internal submit handler before dispatch', async () => {
     const el = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <button type="submit">submit</button>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
-    const button = el.querySelector('button');
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const internalHandlerSpy = spy(el, 'submitGroup');
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
@@ -167,13 +172,13 @@ describe('<lion-form>', () => {
 
   it('handles internal reset handler before dispatch', async () => {
     const el = await fixture(html`
-      <${formTag}>
+      <lion-form>
         <form>
           <button type="reset">submit</button>
         </form>
-      </${formTag}>
+      </lion-form>
     `);
-    const button = el.querySelector('button');
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     const internalHandlerSpy = spy(el, 'resetGroup');
     const dispatchSpy = spy(el, 'dispatchEvent');
     button.click();
