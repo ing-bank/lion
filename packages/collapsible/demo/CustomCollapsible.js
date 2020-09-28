@@ -71,7 +71,7 @@ export class CustomCollapsible extends LionCollapsible {
     if (this._contentHeight === '0px') {
       return;
     }
-    ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, `${0}`));
+    ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, '0'));
     await this._waitForTransition({ contentNode });
   }
 
