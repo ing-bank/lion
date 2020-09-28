@@ -18,6 +18,7 @@
     "packages/accordion/**/*.js",
     "packages/button/src/**/*.js",
     "packages/checkbox-group/**/*.js",
+    "packages/collapsible/**/*.js",
     "packages/core/**/*.js",
     "packages/fieldset/**/*.js",
     "packages/form/**/*.js",

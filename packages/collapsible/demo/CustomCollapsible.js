@@ -6,10 +6,9 @@ const EVENT = {
 };
 /**
  * `CustomCollapsible` is a class for custom collapsible element (`<custom-collapsible>` web component).
- *
  * @customElement custom-collapsible
- * @extends LionCollapsible
  */
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class CustomCollapsible extends LionCollapsible {
   static get properties() {
     return {
@@ -26,15 +25,13 @@ export class CustomCollapsible extends LionCollapsible {
   }
 
   connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
-    this._contentNode.style.setProperty(
+    super.connectedCallback();
+    this._contentNode?.style.setProperty(
       'transition',
       'max-height 0.35s, padding 0.35s, opacity 0.35s',
     );
     if (this.opened) {
-      this._contentNode.style.setProperty('padding', '12px 0');
+      this._contentNode?.style.setProperty('padding', '12px 0');
     }
   }
 
@@ -51,6 +48,7 @@ export class CustomCollapsible extends LionCollapsible {
   /**
    * Trigger show animation and wait for transition to be finished.
    * @param {Object} options - element node and its options
+   * @param {HTMLElement} options.contentNode
    * @override
    */
   async _showAnimation({ contentNode }) {
@@ -66,20 +64,22 @@ export class CustomCollapsible extends LionCollapsible {
   /**
    * Trigger hide animation and wait for transition to be finished.
    * @param {Object} options - element node and its options
+   * @param {HTMLElement} options.contentNode
    * @override
    */
   async _hideAnimation({ contentNode }) {
     if (this._contentHeight === '0px') {
       return;
     }
-    ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, 0));
+    ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, `${0}`));
     await this._waitForTransition({ contentNode });
   }
 
   /**
    *  Wait until the transition event is finished.
    * @param {Object} options - element node and its options
-   * @returns {Promise} transition event
+   * @param {HTMLElement} options.contentNode
+   * @returns {Promise<void>} transition event
    */
   _waitForTransition({ contentNode }) {
     return new Promise(resolve => {
@@ -100,7 +100,7 @@ export class CustomCollapsible extends LionCollapsible {
 
   /**
    * Calculate total content height after collapsible opens
-   * @param {Object} contentNode content node
+   * @param {HTMLElement} contentNode content node
    * @private
    */
   async __calculateHeight(contentNode) {

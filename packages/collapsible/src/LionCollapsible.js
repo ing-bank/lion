@@ -44,34 +44,40 @@ export class LionCollapsible extends LitElement {
   }
 
   connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+    super.connectedCallback();
+
     const uid = uuid();
-    this._invokerNode.addEventListener('click', this.toggle.bind(this));
+
+    if (this._invokerNode) {
+      this._invokerNode.addEventListener('click', this.toggle.bind(this));
+      this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
+      this._invokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
+      this._invokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
+    }
+
+    if (this._contentNode) {
+      this._contentNode.setAttribute('aria-labelledby', `collapsible-invoker-${uid}`);
+      this._contentNode.setAttribute('id', `collapsible-content-${uid}`);
+    }
+
     this.__setDefaultState();
-    this._invokerNode.setAttribute('aria-expanded', this.opened);
-    this._invokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
-    this._invokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
-    this._contentNode.setAttribute('aria-labelledby', `collapsible-invoker-${uid}`);
-    this._contentNode.setAttribute('id', `collapsible-content-${uid}`);
   }
 
   /**
    * Update aria labels on state change.
-   * @param {Object} changedProps - changed props
+   * @param {import('lit-element').PropertyValues } changedProperties
    */
-  updated(changedProps) {
-    if (changedProps.has('opened')) {
+  updated(changedProperties) {
+    if (changedProperties.has('opened')) {
       this.__openedChanged();
     }
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
+    super.disconnectedCallback();
+    if (this._invokerNode) {
+      this._invokerNode.removeEventListener('click', this.toggle);
     }
-    this._invokerNode.removeEventListener('click', this.toggle);
   }
 
   /**
@@ -105,28 +111,34 @@ export class LionCollapsible extends LitElement {
 
   /**
    * Show animation implementation in sub-classer.
+   * @param {Object} opts
    * @protected
    */
-  // eslint-disable-next-line class-methods-use-this, no-empty-function
-  async _showAnimation() {}
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async _showAnimation(opts) {}
 
   /**
    * Hide animation implementation in sub-classer.
+   * @param {Object} opts
    * @protected
    */
-  // eslint-disable-next-line class-methods-use-this, no-empty-function
-  async _hideAnimation() {}
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async _hideAnimation(opts) {}
 
   get _invokerNode() {
-    return Array.from(this.children).find(child => child.slot === 'invoker');
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'invoker',
+    );
   }
 
   get _contentNode() {
-    return Array.from(this.children).find(child => child.slot === 'content');
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'content',
+    );
   }
 
   get _contentHeight() {
-    const size = this._contentNode.getBoundingClientRect().height;
+    const size = this._contentNode?.getBoundingClientRect().height || 0;
     return `${size}px`;
   }
 
@@ -136,7 +148,9 @@ export class LionCollapsible extends LitElement {
    */
   __openedChanged() {
     this.__updateContentSize();
-    this._invokerNode.setAttribute('aria-expanded', this.opened);
+    if (this._invokerNode) {
+      this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
+    }
     this.dispatchEvent(new CustomEvent('opened-changed'));
   }
 
@@ -145,12 +159,14 @@ export class LionCollapsible extends LitElement {
    * @private
    */
   async __updateContentSize() {
-    if (this.opened) {
-      this._contentNode.style.setProperty('display', '');
-      await this._showAnimation({ contentNode: this._contentNode });
-    } else {
-      await this._hideAnimation({ contentNode: this._contentNode });
-      this._contentNode.style.setProperty('display', 'none');
+    if (this._contentNode) {
+      if (this.opened) {
+        this._contentNode.style.setProperty('display', '');
+        await this._showAnimation({ contentNode: this._contentNode });
+      } else {
+        await this._hideAnimation({ contentNode: this._contentNode });
+        this._contentNode.style.setProperty('display', 'none');
+      }
     }
   }
 
@@ -159,7 +175,7 @@ export class LionCollapsible extends LitElement {
    * @private
    */
   __setDefaultState() {
-    if (!this.opened) {
+    if (!this.opened && this._contentNode) {
       this._contentNode.style.setProperty('display', 'none');
     }
   }
