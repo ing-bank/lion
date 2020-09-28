@@ -16,17 +16,19 @@
   },
   "include": [
     "packages/accordion/**/*.js",
-    "packages/core/**/*.js",
-    "packages/tabs/**/*.js",
-    "packages/singleton-manager/**/*.js",
-    "packages/localize/**/*.js",
-    "packages/form-core/**/*.js",
-    "packages/overlays/**/*.js",
-    "packages/tooltip/**/*.js",
     "packages/button/src/**/*.js",
-    "packages/listbox/src/*.js",
+    "packages/checkbox-group/**/*.js",
+    "packages/core/**/*.js",
+    "packages/form-core/**/*.js",
     "packages/input/**/*.js",
-    "packages/input-amount/**/*.js"
+    "packages/input-amount/**/*.js",
+    "packages/listbox/src/*.js",
+    "packages/localize/**/*.js",
+    "packages/overlays/**/*.js",
+    "packages/radio-group/**/*.js",
+    "packages/singleton-manager/**/*.js",
+    "packages/tabs/**/*.js",
+    "packages/tooltip/**/*.js"
   ],
   "exclude": [
     "node_modules",
