@@ -3,12 +3,10 @@ import { ChoiceGroupMixin, FormGroupMixin } from '@lion/form-core';
 
 /**
  * A wrapper around multiple radios.
- *
- * @extends {LionFieldset}
  */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {
   connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.setAttribute('role', 'radiogroup');
   }

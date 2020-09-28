@@ -1,7 +1,14 @@
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import '../lion-checkbox-group.js';
 import '../lion-checkbox.js';
+
+/**
+ * @typedef {import('../src/LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionCheckboxGroup>} */ (_fixture);
 
 beforeEach(() => {
   localizeTearDown();
