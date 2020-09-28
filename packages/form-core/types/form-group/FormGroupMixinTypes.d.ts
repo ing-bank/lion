@@ -8,7 +8,8 @@ import { ValidateHost } from '../validate/ValidateMixinTypes';
 
 export declare class FormGroupHost {
   protected static _addDescriptionElementIdsToField(): void;
-  get _inputNode(): HTMLElement;
+  _inputNode: HTMLElement;
+  submitGroup(): void;
   resetGroup(): void;
   prefilled: boolean;
   touched: boolean;
