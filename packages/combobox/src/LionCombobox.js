@@ -45,6 +45,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       css`
         .input-group__input {
           display: flex;
+          flex: 1;
+        }
+
+        .input-group__container {
+          display: flex;
+          border-bottom: 1px solid;
         }
 
         * > ::slotted([slot='input']) {
@@ -52,7 +58,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           flex: 1;
           box-sizing: border-box;
           border: none;
-          border-bottom: 1px solid;
+          width: 100%;
+          /* border-bottom: 1px solid; */
         }
 
         * > ::slotted([role='listbox']) {
@@ -113,6 +120,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
        */
       listbox: super.slots.input,
     };
+  }
+
+  get _overlayReferenceNode() {
+    return this.shadowRoot.querySelector('.input-group__container');
   }
 
   /**

@@ -125,8 +125,8 @@ This will:
 - make the value of type `Array` instead of `String`
 
 > Please note that the lion-combobox-selection-display below is not exposed and only serves
-> as an example. The selection part of a multiselect combobox is not yet accessible, please make
-> keep in mind that for now, as a Subclasser, you would have to take care of this part yourself.
+> as an example. The selection part of a multiselect combobox is not yet accessible, please keep
+> in mind that for now, as a Subclasser, you would have to take care of this part yourself.
 
 ```js preview-story
 export const multipleChoice = () => html`
@@ -144,8 +144,16 @@ export const multipleChoice = () => html`
 
 ```js preview-story
 export const invokerButton = () => html`
-  <lion-combobox name="combo" label="Invoker Button" .selectionFollowsFocus="${false}">
-    <div slot="suffix" role="button" tabindex="-1"></div>
+  <lion-combobox
+    autocomplete="none"
+    name="combo"
+    label="Invoker Button"
+    .selectionFollowsFocus="${false}"
+    @click="${({ currentTarget }) => {
+      currentTarget.opened = !currentTarget.opened;
+    }}"
+  >
+    <button slot="suffix" type="button" tabindex="-1">▼</button>
     ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;

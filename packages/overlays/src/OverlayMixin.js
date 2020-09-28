@@ -62,10 +62,11 @@ export const OverlayMixinImplementation = superclass =>
      * @returns {OverlayController}
      */
     // eslint-disable-next-line
-    _defineOverlay({ contentNode, invokerNode, backdropNode, contentWrapperNode }) {
+    _defineOverlay({ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }) {
       return new OverlayController({
         contentNode,
         invokerNode,
+        referenceNode,
         backdropNode,
         contentWrapperNode,
         ...this._defineOverlayConfig(), // wc provided in the class as defaults
@@ -168,6 +169,14 @@ export const OverlayMixinImplementation = superclass =>
       return Array.from(this.children).find(child => child.slot === 'invoker');
     }
 
+    /**
+     * @overridable
+     */
+    // eslint-disable-next-line class-methods-use-this
+    get _overlayReferenceNode() {
+      return undefined;
+    }
+
     get _overlayBackdropNode() {
       return Array.from(this.children).find(child => child.slot === 'backdrop');
     }
@@ -191,6 +200,7 @@ export const OverlayMixinImplementation = superclass =>
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
         invokerNode: this._overlayInvokerNode,
+        referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
       });
       this.__syncToOverlayController();
