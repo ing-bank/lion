@@ -1,7 +1,14 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 
 import '../lion-radio-group.js';
 import '../lion-radio.js';
+
+/**
+ * @typedef {import('../src/LionRadioGroup').LionRadioGroup} LionRadioGroup
+ * @typedef {import('../src/LionRadio').LionRadio} LionRadio
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ (_fixture);
 
 describe('<lion-radio-group>', () => {
   it('should have role = radiogroup', async () => {
@@ -24,7 +31,7 @@ describe('<lion-radio-group>', () => {
 
     el.children[1].focus();
     expect(el.touched).to.equal(false, 'initially, touched state is false');
-    el.children[1].checked = true;
+    /** @type {LionRadio} */ (el.children[1]).checked = true;
     expect(el.touched, `focused via a mouse click, group should be touched`).to.be.true;
   });
 

@@ -19,11 +19,10 @@ import { LionInput } from '@lion/input';
  *   <lion-radio checked>
  *
  * @customElement lion-radio
- * @extends {LionInput}
  */
 export class LionRadio extends ChoiceInputMixin(LionInput) {
   connectedCallback() {
-    if (super.connectedCallback) super.connectedCallback();
+    super.connectedCallback();
     this.type = 'radio';
   }
 }
