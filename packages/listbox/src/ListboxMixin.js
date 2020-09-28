@@ -238,6 +238,12 @@ const ListboxMixinImplementation = superclass =>
       this.__hasInitialSelectedFormElement = false;
       this._repropagationRole = 'choice-group'; // configures FormControlMixin
 
+      /**
+       * When listbox is coupled to a textbox (in case we are dealing with a combobox),
+       * spaces should not select an element (they need to be put in the textbox)
+       */
+      this._noListInteractionOnSpace = false;
+
       /** @type {EventListener} */
       this._listboxOnKeyDown = this._listboxOnKeyDown.bind(this);
       /** @type {EventListener} */
@@ -359,7 +365,6 @@ const ListboxMixinImplementation = superclass =>
     addFormElement(child, indexToInsertAt) {
       // @ts-expect-error
       super.addFormElement(/** @type {FormControl} */ child, indexToInsertAt);
-
       // we need to adjust the elements being registered
       /* eslint-disable no-param-reassign */
       child.id = child.id || `${this.localName}-option-${uuid()}`;
@@ -542,6 +547,9 @@ const ListboxMixinImplementation = superclass =>
       switch (key) {
         case ' ':
         case 'Enter': {
+          if (key === ' ' && this._noListInteractionOnSpace) {
+            return;
+          }
           ev.preventDefault();
           if (!this.formElements[this.activeIndex]) {
             return;
@@ -567,7 +575,10 @@ const ListboxMixinImplementation = superclass =>
         case 'ArrowDown':
           ev.preventDefault();
           if (this.orientation === 'vertical') {
+            console.log('sleutel tot benededn voor', this.activeIndex);
+
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
+            console.log('sleutel tot benededn na', this.activeIndex);
           }
           break;
         case 'ArrowRight':

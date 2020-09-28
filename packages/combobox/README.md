@@ -67,7 +67,7 @@ This is the default value for `autocomplete`.
 
 ```js preview-story
 export const autocompleteBoth = () => html`
-  <lion-combobox name="combo" label="Autocomplete 'list'">
+  <lion-combobox name="combo" label="Autocomplete 'both'" autocomplete="both">
     ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
@@ -100,6 +100,21 @@ export const matchModeBegin = () => html`
 `;
 ```
 
+## Selection follows focus
+
+By default `selection-follows-focus` will be configured (think of the
+wai-aria examples and the natve `<datalist>`).
+Note that, (just like in a listbox), selection-follows-focus will never be applicable for
+multiselect comboboxes.
+
+```js preview-story
+export const selectionFollowsFocus = () => html`
+  <lion-combobox name="combo" label="Selection Follows focus" .selectionFollowsFocus="${false}">
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+  </lion-combobox>
+`;
+```
+
 ## Multiple choice
 
 Add `multiple-choice` flag to allow multiple values to be selected.
@@ -109,7 +124,9 @@ This will:
 - display a list of selected option representations next to the text box
 - make the value of type `Array` instead of `String`
 
-Also note that example below uses an example implementation of a selection display.
+> Please note that the lion-combobox-selection-display below is not exposed and only serves
+> as an example. The selection part of a multiselect combobox is not yet accessible, please make
+> keep in mind that for now, as a Subclasser, you would have to take care of this part yourself.
 
 ```js preview-story
 export const multipleChoice = () => html`
@@ -119,6 +136,17 @@ export const multipleChoice = () => html`
       (entry, i) =>
         html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
     )}
+  </lion-combobox>
+`;
+```
+
+## Invoker button
+
+```js preview-story
+export const invokerButton = () => html`
+  <lion-combobox name="combo" label="Invoker Button" .selectionFollowsFocus="${false}">
+    <div slot="suffix" role="button" tabindex="-1"></div>
+    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
 ```

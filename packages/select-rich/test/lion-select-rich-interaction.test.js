@@ -1,5 +1,6 @@
 import { Required } from '@lion/form-core';
 import { expect, html, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
+import { browserDetection } from '@lion/core';
 
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '@lion/listbox/lion-option.js';
@@ -7,66 +8,56 @@ import '@lion/listbox/lion-options.js';
 import '../lion-select-rich.js';
 
 describe('lion-select-rich interactions', () => {
-  describe('Keyboard navigation', () => {
-    it('navigates to first and last option with [Home] and [End] keys', async () => {
+  describe('Interaction mode', () => {
+    it('autodetects interactionMode if not defined', async () => {
+      const originalIsMac = browserDetection.isMac;
+
+      browserDetection.isMac = true;
       const el = await fixture(html`
-        <lion-select-rich opened interaction-mode="windows/linux">
-          <lion-options slot="input" name="foo">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-            <lion-option .choiceValue=${30} checked>Item 3</lion-option>
-            <lion-option .choiceValue=${40}>Item 4</lion-option>
-          </lion-options>
-        </lion-select-rich>
+        <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
       `);
-      expect(el.modelValue).to.equal(30);
+      expect(el.interactionMode).to.equal('mac');
+      const el2 = await fixture(html`
+        <lion-select-rich interaction-mode="windows/linux"
+          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+        >
+      `);
+      expect(el2.interactionMode).to.equal('windows/linux');
 
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
-      expect(el.modelValue).to.equal(10);
+      browserDetection.isMac = false;
+      const el3 = await fixture(html`
+        <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
+      `);
+      expect(el3.interactionMode).to.equal('windows/linux');
+      const el4 = await fixture(html`
+        <lion-select-rich interaction-mode="mac"
+          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+        >
+      `);
+      expect(el4.interactionMode).to.equal('mac');
+      browserDetection.isMac = originalIsMac;
+    });
 
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
-      expect(el.modelValue).to.equal(40);
+    it('derives selectionFollowsFocus and navigateWithinInvoker from interactionMode', async () => {
+      const el = await fixture(html`
+        <lion-select-rich interaction-mode="windows/linux"
+          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+        >
+      `);
+      expect(el.selectionFollowsFocus).to.be.true;
+      expect(el.navigateWithinInvoker).to.be.true;
+
+      const el2 = await fixture(html`
+        <lion-select-rich interaction-mode="mac"
+          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+        >
+      `);
+      expect(el2.selectionFollowsFocus).to.be.false;
+      expect(el2.navigateWithinInvoker).to.be.false;
     });
   });
 
-  describe('Keyboard navigation Windows', () => {
-    it('navigates through list with [ArrowDown] [ArrowUp] keys activates and checks the option', async () => {
-      function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
-        options.forEach((option, i) => {
-          if (i === selectedIndex) {
-            expect(option.checked).to.be.true;
-          } else {
-            expect(option.checked).to.be.false;
-          }
-        });
-      }
-
-      const el = await fixture(html`
-        <lion-select-rich opened interaction-mode="windows/linux">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-            <lion-option .choiceValue=${30}>Item 3</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
-
-      const options = Array.from(el.querySelectorAll('lion-option'));
-      expect(el.activeIndex).to.equal(0);
-      expect(el.checkedIndex).to.equal(0);
-      expectOnlyGivenOneOptionToBeChecked(options, 0);
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(el.activeIndex).to.equal(1);
-      expect(el.checkedIndex).to.equal(1);
-      expectOnlyGivenOneOptionToBeChecked(options, 1);
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(el.activeIndex).to.equal(0);
-      expect(el.checkedIndex).to.equal(0);
-      expectOnlyGivenOneOptionToBeChecked(options, 0);
-    });
-
+  describe('Invoker Keyboard navigation Windows', () => {
     it('navigates through list with [ArrowDown] [ArrowUp] keys checks the option while listbox unopened', async () => {
       function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
         options.forEach((option, i) => {
@@ -103,7 +94,7 @@ describe('lion-select-rich interactions', () => {
   });
 
   describe('Disabled', () => {
-    it('cannot be focused if disabled', async () => {
+    it('invoker cannot be focused if disabled', async () => {
       const el = await fixture(html`
         <lion-select-rich disabled>
           <lion-options slot="input"></lion-options>

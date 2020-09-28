@@ -1,4 +1,3 @@
-const isIE11 = /Trident/.test(window.navigator.userAgent);
 /**
  * From https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
  * @param {string} [flavor]
@@ -34,8 +33,9 @@ function checkChrome(flavor = 'google-chrome') {
 }
 
 export const browserDetection = {
-  isIE11,
+  isIE11: /Trident/.test(window.navigator.userAgent),
   isChrome: checkChrome(),
   isIOSChrome: checkChrome('ios'),
   isChromium: checkChrome('chromium'),
+  isMac: navigator.appVersion.indexOf('Mac') !== -1,
 };

@@ -60,6 +60,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           display: block;
           overflow: auto;
           z-index: 1;
+          background: white;
         }
       `,
     ];
@@ -123,7 +124,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override configures FormControlMixin
+   * @configures FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
    */
@@ -142,7 +143,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @configure ListboxMixin
+   * @configures ListboxMixin
    * @type {HTMLElement}
    */
   get _activeDescendantOwnerNode() {
@@ -173,6 +174,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      */
     this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
 
+    /**
+     * @configures ListboxMixin
+     */
+    this._noListInteractionOnSpace = true;
+
     this.__cboxInputValue = '';
     this.__prevCboxValueNonSelected = '';
 
@@ -180,6 +186,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this.__showOverlay = this.__showOverlay.bind(this);
     /** @type {EventListener} */
     this._textboxOnInput = this._textboxOnInput.bind(this);
+    /** @type {EventListener} */
+    this._textboxOnFocusOut = this._textboxOnFocusOut.bind(this);
   }
 
   connectedCallback() {
@@ -196,12 +204,21 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     super.updated(changedProperties);
 
     if (changedProperties.has('opened')) {
-      if (this.opened && (this.autocomplete === 'both' || this.autocomplete === 'inline')) {
-        this.__setActiveToClosestMatch();
+      if (this.opened) {
+        // this.__setActiveToClosestMatch();
+        if (!this.multipleChoice && this.checkedIndex !== -1) {
+          this.activeIndex = this.checkedIndex;
+        } else if (this.multipleChoice && this.checkedIndex.length) {
+          // eslint-disable-next-line prefer-destructuring
+          this.activeIndex = this.checkedIndex[0];
+        } else {
+          this.activeIndex = 0;
+        }
       }
 
       if (!this.opened && changedProperties.get('opened') !== undefined) {
         this.activeIndex = -1;
+        this._syncCheckedWithTextboxOnInteraction();
       }
     }
     if (changedProperties.has('autocomplete')) {
@@ -233,21 +250,26 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     this._comboboxNode.setAttribute('role', 'combobox');
     this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
-    this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
-
     this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
-    this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
 
-    // Although not according to wai-aria specs, axe expects this...
+    if (this._ariaVersion === '1.1') {
+      this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
+      this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
+    } else {
+      this._inputNode.setAttribute('aria-owns', this._listboxNode.id);
+    }
+
     this._listboxNode.setAttribute('aria-labelledby', this._labelNode.id);
 
     this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.addEventListener('input', this._textboxOnInput);
+    this._inputNode.addEventListener('focusout', this._textboxOnFocusOut);
   }
 
   __teardownCombobox() {
     this._inputNode.removeEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.removeEventListener('input', this._textboxOnInput);
+    this._inputNode.removeEventListener('focusout', this._textboxOnFocusOut);
   }
 
   /**
@@ -260,6 +282,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * @param {Event} ev
+   */
+  _textboxOnFocusOut() {
+    this.opened = false;
+  }
+
+  /**
    * @param {MouseEvent} ev
    */
   _listboxOnClick(ev) {
@@ -269,11 +298,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this.opened = false;
     }
     this._inputNode.focus();
-    this.__syncCheckedWithTextboxOnInteraction();
+    // this._syncCheckedWithTextboxOnInteraction();
   }
 
   /**
-   * @override
+   * @enhance ListboxMixin
    */
   _setupListboxNode() {
     super._setupListboxNode();
@@ -335,7 +364,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /* eslint-enable no-param-reassign, class-methods-use-this */
 
   /**
-   * @desc Matches visibility of listbox options against current ._inputNode contents
+   * Matches visibility of listbox options against current ._inputNode contents
    * @param {object} config
    * @param {string} config.curValue current ._inputNode value
    * @param {string} config.prevValue previous ._inputNode value
@@ -367,14 +396,18 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           this._inputNode.value = option.choiceValue;
           this._inputNode.selectionStart = this.__cboxInputValue.length;
           this._inputNode.selectionEnd = this._inputNode.value.length;
+
+          this.activeIndex = i;
+          if (this.selectionFollowsFocus && !this.multipleChoice) {
+            this.setCheckedIndex(this.activeIndex);
+          }
         }
         hasAutoFilled = true;
-        // this.activeIndex = i;
       }
 
-      if (this.autocomplete === 'none' || this.autocomplete === 'inline') {
-        return;
-      }
+      // if (this.autocomplete === 'none' || this.autocomplete === 'inline') {
+      //   return;
+      // }
 
       // [2]. Cleanup previous matching states
       if (option.onFilterUnmatch) {
@@ -420,13 +453,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this._overlayCtrl._popper.update();
     }
 
-    // [7]. if active is now suddenly on an invisible option, set active it to the closest match
-    if (
-      !visibleOptions.includes(this.formElements[this.activeIndex]) &&
-      (this.autocomplete === 'both' || this.autocomplete === 'inline')
-    ) {
-      this.__setActiveToClosestMatch();
-    }
+    // // [7]. if active is now suddenly on an invisible option, set active it to the closest match
+    // if (
+    //   !visibleOptions.includes(this.formElements[this.activeIndex]) &&
+    //   (this.autocomplete === 'both' || this.autocomplete === 'inline')
+    // ) {
+    //   this.__setActiveToClosestMatch();
+    // }
   }
 
   /**
@@ -471,12 +504,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     `;
   }
 
+  /**
+   * @enhances FormControlMixin
+   */
   _groupTwoTemplate() {
     return html` ${super._groupTwoTemplate()} ${this._overlayListboxTemplate()}`;
   }
 
   /**
-   * @override OverlayMixin
+   * @configures OverlayMixin
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
@@ -500,19 +536,22 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override configures OverlayMixin
+   * @configures OverlayMixin
    */
   get _overlayInvokerNode() {
     return this._inputNode;
   }
 
   /**
-   * @override configures OverlayMixin
+   * @configures OverlayMixin
    */
   get _overlayContentNode() {
     return this._listboxNode;
   }
 
+  /**
+   * @configures ListboxMixin
+   */
   get _listboxNode() {
     return /** @type {LionOptions} */ ((this._overlayCtrl && this._overlayCtrl.contentNode) ||
       Array.from(this.children).find(child => child.slot === 'listbox'));
@@ -529,19 +568,19 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override OverlayMixin
+   * @enhances OverlayMixin
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this._overlayInvokerNode.addEventListener('keyup', this.__showOverlay);
+    this._overlayInvokerNode.addEventListener('keydown', this.__showOverlay);
   }
 
   /**
-   * @override OverlayMixin
+   * @enhances OverlayMixin
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
-    this._overlayInvokerNode.removeEventListener('keyup', this.__showOverlay);
+    this._overlayInvokerNode.removeEventListener('keydown', this.__showOverlay);
   }
 
   /**
@@ -562,7 +601,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         if (!this.formElements[this.activeIndex]) {
           return;
         }
-        this.__syncCheckedWithTextboxOnInteraction();
+        // this._syncCheckedWithTextboxOnInteraction();
         if (!this.multipleChoice) {
           this.opened = false;
         }
@@ -571,22 +610,27 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
-  __syncCheckedWithTextboxOnInteraction() {
+  /**
+   * @overridable
+   */
+  _syncCheckedWithTextboxOnInteraction() {
     if (!this.multipleChoice && this.checkedIndex !== -1) {
       this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
       this.__cboxInputValue = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
     }
+    // For multiple choice, a subclasser could do something like:
+    // this._inputNode.value = this.checkedElements.map(o => o.value).join(', ');
   }
 
-  __setActiveToClosestMatch() {
-    let matchIndex = -1;
-    this.formElements.find((el, index) => {
-      if (!el.hasAttribute('aria-hidden') && !el.disabled) {
-        matchIndex = index;
-        return true;
-      }
-      return false;
-    });
-    this.activeIndex = matchIndex;
-  }
+  // __setActiveToClosestMatch() {
+  //   let matchIndex = -1;
+  //   this.formElements.find((el, index) => {
+  //     if (!el.hasAttribute('aria-hidden') && !el.disabled) {
+  //       matchIndex = index;
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  //   this.activeIndex = matchIndex;
+  // }
 }

@@ -1,5 +1,5 @@
 import { LionListbox } from '@lion/listbox';
-import { html, ScopedElementsMixin, SlotMixin } from '@lion/core';
+import { html, ScopedElementsMixin, SlotMixin, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
@@ -13,7 +13,7 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
  */
 
 function detectInteractionMode() {
-  if (navigator.appVersion.indexOf('Mac') !== -1) {
+  if (browserDetection.isMac) {
     return 'mac';
   }
   return 'windows/linux';

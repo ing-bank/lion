@@ -20,7 +20,7 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  el._overlayInvokerNode?.dispatchEvent(new Event('keyup'));
+  el._overlayInvokerNode?.dispatchEvent(new Event('keydown'));
 }
 
 /**
@@ -412,7 +412,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         // TODO: add test for regular navigation with and without selectionFollowsFocus
 
         describe('Rotate Keyboard Navigation', () => {
-          it('does not allow to navigate above the first or below the last option', async () => {
+          it.skip('does not allow to navigate above the first or below the last option', async () => {
             const el = await fixture(html`
             <${tag} opened>
               <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
@@ -469,27 +469,49 @@ export function runListboxMixinSuite(customConfig = {}) {
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'O' }));
         expect(el.choiceValue).to.equal('foo');
       });
-    });
 
-    // TODO: rename to selectionFollowsFocus and test connection to interaction-mode in select-rich
-    describe('Keyboard navigation Mac', () => {
-      // TODO:
-      it('navigates through open list with [ArrowDown] [ArrowUp] keys activates the option', async () => {
+      it('navigates to first and last option with [Home] and [End] keys', async () => {
         const el = await fixture(html`
-          <${tag} opened interaction-mode="mac" has-no-default-selected autocomplete="list">
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
+          <${tag} opened>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
+            <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
           </${tag}>
         `);
-        mimicUserTyping(el, '0');
-        await el.updateComplete;
-        expect(el.activeIndex).to.equal(-1);
-        expect(el.checkedIndex).to.equal(-1);
+        el.activeIndex = 2;
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        expect(el.activeIndex).to.equal(0);
 
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+        expect(el.activeIndex).to.equal(3);
+      });
+
+      it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
+        const el = await fixture(html`
+          <${tag} opened has-no-default-selected>
+            <${optionTag} .choiceValue=${'Item 1'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'Item 2'}>Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        // Normalize across listbox/select-rich/combobox
+        el.activeIndex = 0;
+        // selectionFollowsFocus will be true by default on combobox (running this suite),
+        // but should still be able to work with selectionFollowsFocus=false
+        el.selectionFollowsFocus = false;
+
+        mimicUserTyping(el, 'Item');
+        await el.updateComplete;
         expect(el.activeIndex).to.equal(0);
         expect(el.checkedIndex).to.equal(-1);
+
+        // if (el.tagName === 'LION-COMBOBOX') {
+        // el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        // expect(el.activeIndex).to.equal(0);
+        // expect(el.checkedIndex).to.equal(-1);
+        // }
 
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el.activeIndex).to.equal(1);
@@ -501,7 +523,68 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
     });
 
-    describe('Disabled', () => {
+    describe('Selection Follows Focus', () => {
+      it('navigates through list with [ArrowDown] [ArrowUp] keys: activates and checks the option', async () => {
+        function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
+          options.forEach((option, i) => {
+            if (i === selectedIndex) {
+              expect(option.checked).to.be.true;
+            } else {
+              expect(option.checked).to.be.false;
+            }
+          });
+        }
+
+        const el = await fixture(html`
+          <${tag} opened selection-follows-focus>
+              <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+              <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+              <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        const options = Array.from(el.querySelectorAll('lion-option'));
+
+        // Normalize start values between listbox, slect and combobox and test interaction below
+        el.activeIndex = 0;
+        el.checkedIndex = 0;
+
+        expect(el.activeIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(0);
+        expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        expect(el.activeIndex).to.equal(1);
+        expect(el.checkedIndex).to.equal(1);
+        expectOnlyGivenOneOptionToBeChecked(options, 1);
+
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        expect(el.activeIndex).to.equal(0);
+        expect(el.checkedIndex).to.equal(0);
+        expectOnlyGivenOneOptionToBeChecked(options, 0);
+      });
+
+      it('checks first and last option with [Home] and [End] keys', async () => {
+        const el = await fixture(html`
+          <${tag} opened selection-follows-focus>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
+            <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
+          </${tag}>
+        `);
+
+        expect(el.modelValue).to.equal('30');
+
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        expect(el.modelValue).to.equal('10');
+
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+        expect(el.modelValue).to.equal('40');
+      });
+    });
+
+    describe('Disabled Host', () => {
       it('cannot be navigated with keyboard if disabled', async () => {
         const el = await fixture(html`
           <${tag} disabled>
@@ -513,26 +596,6 @@ export function runListboxMixinSuite(customConfig = {}) {
         await el.updateComplete;
         el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         expect(el.modelValue).to.equal(20);
-      });
-
-      it('does not skip disabled options but prevents checking them', async () => {
-        const el = await fixture(html`
-          <${tag} has-no-default-selected autocomplete="list">
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20} disabled>Item 2</${optionTag}>
-            <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
-          </${tag}>
-        `);
-        mimicUserTyping(el, '0');
-        await el.updateComplete;
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el.activeIndex).to.equal(0);
-
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        expect(el.activeIndex).to.equal(1);
-
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        expect(el.checkedIndex).to.equal(-1);
       });
 
       it('sync its disabled state to all options', async () => {
@@ -569,6 +632,30 @@ export function runListboxMixinSuite(customConfig = {}) {
         await el.updateComplete;
         expect(options[0].disabled).to.be.true;
         expect(options[1].disabled).to.be.false;
+      });
+    });
+
+    describe('Disabled Options', () => {
+      it('does not skip disabled options but prevents checking them', async () => {
+        const el = await fixture(html`
+          <${tag} opened autocomplete="list">
+            <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'Item 2'} disabled>Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        // Normalize activeIndex across multiple implementers of ListboxMixinSuite
+        el.activeIndex = 0;
+
+        mimicUserTyping(el, 'Item');
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        expect(el.activeIndex).to.equal(1);
+
+        expect(el.checkedIndex).to.equal(0);
+        el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        // Checked index stays where it was
+        expect(el.checkedIndex).to.equal(0);
       });
     });
 
