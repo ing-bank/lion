@@ -1,4 +1,4 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
 
 import { IsCountryIBAN } from '../src/validators.js';
@@ -6,6 +6,12 @@ import { formatIBAN } from '../src/formatters.js';
 import { parseIBAN } from '../src/parsers.js';
 
 import '../lion-input-iban.js';
+
+/**
+ * @typedef {import('../src/LionInputIban').LionInputIban} LionInputIban
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ (_fixture);
 
 describe('<lion-input-iban>', () => {
   it('uses formatIBAN for formatting', async () => {
@@ -27,12 +33,12 @@ describe('<lion-input-iban>', () => {
     const el = await fixture(`<lion-input-iban></lion-input-iban>`);
     el.modelValue = 'FOO';
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('IsIBAN');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).to.have.property('IsIBAN');
     el.modelValue = 'DE89370400440532013000';
     expect(el.hasFeedbackFor).not.to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).not.to.have.a.property('IsIBAN');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).not.to.have.property('IsIBAN');
   });
 
   it('can apply validator "IsCountryIBAN" to restrict countries', async () => {
@@ -41,17 +47,17 @@ describe('<lion-input-iban>', () => {
     `);
     el.modelValue = 'DE89370400440532013000';
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('IsCountryIBAN');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).to.have.property('IsCountryIBAN');
     el.modelValue = 'NL17INGB0002822608';
     expect(el.hasFeedbackFor).not.to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).not.to.have.a.property('IsCountryIBAN');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).not.to.have.property('IsCountryIBAN');
     el.modelValue = 'FOO';
     expect(el.hasFeedbackFor).to.include('error');
-    expect(el.validationStates).to.have.a.property('error');
-    expect(el.validationStates.error).to.have.a.property('IsIBAN');
-    expect(el.validationStates.error).to.have.a.property('IsCountryIBAN');
+    expect(el.validationStates).to.have.property('error');
+    expect(el.validationStates.error).to.have.property('IsIBAN');
+    expect(el.validationStates.error).to.have.property('IsCountryIBAN');
   });
 
   it('is accessible', async () => {
