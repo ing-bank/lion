@@ -19,6 +19,8 @@
     "packages/button/src/**/*.js",
     "packages/checkbox-group/**/*.js",
     "packages/core/**/*.js",
+    "packages/fieldset/**/*.js",
+    "packages/form/**/*.js",
     "packages/form-core/**/*.js",
     "packages/input/**/*.js",
     "packages/input-amount/**/*.js",

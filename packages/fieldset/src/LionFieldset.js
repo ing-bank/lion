@@ -18,13 +18,14 @@ import { FormGroupMixin } from '@lion/form-core';
  * cannot be accessed individually via object keys.
  *
  * @customElement lion-fieldset
- * @extends {LitElement}
  */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionFieldset extends FormGroupMixin(LitElement) {
   constructor() {
     super();
-    /** @override from FormRegistrarMixin */
+    /** @override FormRegistrarMixin */
     this._isFormOrFieldset = true;
-    this._repropagationRole = 'fieldset'; // configures FormControlMixin
+    /** @override FormControlMixin */
+    this._repropagationRole = 'fieldset';
   }
 }
