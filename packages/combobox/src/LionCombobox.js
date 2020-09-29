@@ -511,7 +511,30 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (this._overlayCtrl && this._overlayCtrl._popper) {
       this._overlayCtrl._popper.update();
     }
+
+    /*
+    // [7]. if active is now suddenly on an invisible option, set active it to the closest match
+    if (!visibleOptions.includes(this.formElements[this.activeIndex])) {
+      if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+        this.__setActiveToClosestMatch();
+      } else {
+        this.activeIndex = -1;
+      }
+    }
+     */
   }
+
+  /* __setActiveToClosestMatch() {
+    let matchIndex = -1;
+    this.formElements.find((el, index) => {
+      if (!el.hasAttribute('aria-hidden') && !el.disabled) {
+        matchIndex = index;
+        return true;
+      }
+      return false;
+    });
+    this.activeIndex = matchIndex;
+  } */
 
   /**
    * @enhance ListboxMixin
@@ -604,8 +627,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     } else if (this.multipleChoice && this.checkedIndex.length) {
       // eslint-disable-next-line prefer-destructuring
       this.activeIndex = this.checkedIndex[0];
+      // } else if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+      //  this.__setActiveToClosestMatch();
     } else {
-      this.activeIndex = 0;
+      this.activeIndex = 0 /* -1 */;
     }
   }
 

@@ -543,6 +543,128 @@ describe('lion-combobox', () => {
       expect(options[3]).lightDom.to.equal(`Victoria Plum`);
     });
 
+    describe('Active index behavior', () => {
+      it('sets the active index to the closest match on open by default', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(1);
+      });
+
+      it('changes whether active index is set to the closest match automatically depending on autocomplete', async () => {
+        /**
+         * Automatic selection (setting activeIndex to closest matching option) in lion is set for inline & both autocomplete,
+         * because it is unavoidable there
+         * For list & none autocomplete, it is turned off and manual selection is required.
+         * TODO: Make this configurable for list & none autocomplete?
+         */
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        // https://www.w3.org/TR/wai-aria-practices-1.1/examples/combobox/aria1.1pattern/grid-combo.html
+        // first example, does not set active at all until user selects
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.activeIndex).to.equal(-1);
+        expect(el.opened).to.be.true;
+
+        // https://www.w3.org/TR/wai-aria-practices-1.1/examples/combobox/aria1.1pattern/grid-combo.html
+        // first example, does not set active at all until user selects
+        el.autocomplete = 'list';
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.activeIndex).to.equal(-1);
+        expect(el.opened).to.be.true;
+
+        // https://www.w3.org/TR/wai-aria-practices-1.1/examples/combobox/aria1.1pattern/listbox-combo.html
+        // automatic selection example (2)
+        el.autocomplete = 'inline';
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.activeIndex).to.equal(1);
+        expect(el.opened).to.be.false;
+
+        // https://www.w3.org/TR/wai-aria-practices-1.1/examples/combobox/aria1.1pattern/listbox-combo.html
+        // automatic selection example (2)
+        el.autocomplete = 'both';
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.activeIndex).to.equal(1);
+        expect(el.opened).to.be.false;
+      });
+
+      it('sets the active index to the closest match on autocomplete', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(1);
+
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'chi');
+        // Chard no longer matches, so should switch active to Chicory
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(2);
+
+        // select artichoke
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        // change selection, active index should update to closest match
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(3);
+      });
+
+      it('supports clearing by ESC key and resets active state on all options', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        // Select something
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await el.updateComplete;
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(el.activeIndex).to.equal(1);
+
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        await el.updateComplete;
+        expect(el._inputNode.textContent).to.equal('');
+        el.formElements.forEach(option => expect(option.active).to.be.false);
+
+        // change selection, active index should update to closest match
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
+        await el.updateComplete;
+        expect(el.activeIndex).to.equal(3);
+      });
+    });
+
     describe('Accessibility', () => {
       it('synchronizes autocomplete option to textbox', async () => {
         let el;

@@ -202,6 +202,8 @@ const ListboxMixinImplementation = superclass =>
       if (this.formElements[index]) {
         const el = this.formElements[index];
         this.__setChildActive(el);
+        // } else {
+        //  this.__setChildActive(null);
       }
     }
 
@@ -571,13 +573,17 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {LionOption} el
+     * @param {LionOption | null} el
      */
     __setChildActive(el) {
       this.formElements.forEach(formElement => {
         // eslint-disable-next-line no-param-reassign
         formElement.active = el === formElement;
       });
+      // if (!el) {
+      //   this._activeDescendantOwnerNode.removeAttribute('aria-activedescendant');
+      //   return;
+      // }
       this._activeDescendantOwnerNode.setAttribute('aria-activedescendant', el.id);
       if (!isInView(this._scrollTargetNode, el)) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
