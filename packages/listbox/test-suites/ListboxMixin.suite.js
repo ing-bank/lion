@@ -336,6 +336,47 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(el.modelValue).to.be.null;
       });
 
+      it('should reset selected value to initial value', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'} checked>Item 2</${optionTag}>
+          </${tag}>
+        `);
+        expect(el.modelValue).to.equal('20');
+        el.setCheckedIndex(0);
+        expect(el.modelValue).to.equal('10');
+        el.reset();
+        expect(el.modelValue).to.equal('20');
+      });
+
+      it('should reset selected value to "Please select account" with has-no-default-selected attribute', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        expect(el.modelValue).to.equal('20');
+        el.reset();
+        expect(el.modelValue).to.equal('');
+      });
+
+      it('should reset selected value to initial values when multiple-choice', async () => {
+        const el = await fixture(html`
+          <${tag} multiple-choice has-no-default-selected>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'} checked>Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
+          </${tag}>
+        `);
+        el.setCheckedIndex(2);
+        expect(el.modelValue).to.deep.equal(['20']);
+        el.reset();
+        expect(el.modelValue).to.deep.equal(['20', '30']);
+      });
+
       it('has an activeIndex', async () => {
         const el = await fixture(html`
           <${tag} has-no-default-selected autocomplete="list">
@@ -348,6 +389,20 @@ export function runListboxMixinSuite(customConfig = {}) {
         el.querySelectorAll('lion-option')[1].active = true;
         expect(el.querySelectorAll('lion-option')[0].active).to.be.false;
         expect(el.activeIndex).to.equal(1);
+      });
+
+      it('should reset activeIndex value', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+        expect(el.activeIndex).to.equal(-1);
+        el.querySelectorAll('lion-option')[1].active = true;
+        expect(el.activeIndex).to.equal(1);
+        el.reset();
+        expect(el.activeIndex).to.equal(-1);
       });
     });
 

@@ -301,6 +301,10 @@ const ListboxMixinImplementation = superclass =>
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
       this.__moveOptionsToListboxNode();
+      this.registrationComplete.then(() => {
+        /** @type {any[]} */
+        this._initialModelValue = this.modelValue;
+      });
     }
 
     /**
@@ -379,6 +383,17 @@ const ListboxMixinImplementation = superclass =>
       );
       this.resetInteractionState();
       /* eslint-enable no-param-reassign */
+    }
+
+    resetInteractionState() {
+      super.resetInteractionState();
+      this.submitted = false;
+    }
+
+    reset() {
+      this.modelValue = this._initialModelValue;
+      this.activeIndex = -1;
+      this.resetInteractionState();
     }
 
     /**
