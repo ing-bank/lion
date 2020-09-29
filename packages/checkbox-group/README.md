@@ -220,7 +220,7 @@ export const event = () => html`
     name="scientists[]"
     label="Favorite scientists"
     @model-value-changed=${e =>
-      (document.getElementById('selectedDinosaur').innerHTML = JSON.stringify(
+      (document.getElementById('selectedDinosaur').innerText = JSON.stringify(
         e.target.modelValue,
         null,
         4,
