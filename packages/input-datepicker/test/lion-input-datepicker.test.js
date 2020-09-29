@@ -2,7 +2,7 @@ import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
 import { html, LitElement } from '@lion/core';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
-import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-input-datepicker.js';
 import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
@@ -73,6 +73,7 @@ describe('<lion-input-datepicker>', () => {
       elObj.overlayController.contentNode.dispatchEvent(
         new KeyboardEvent('keyup', { key: 'Escape' }),
       );
+      await nextFrame();
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
@@ -83,6 +84,7 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(true);
 
       elObj.overlayCloseButtonEl.click();
+      await nextFrame();
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
