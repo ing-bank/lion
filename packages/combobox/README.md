@@ -20,13 +20,6 @@ import '@lion/listbox/lion-option.js';
 import './lion-combobox.js';
 import './docs/lion-combobox-selection-display.js';
 
-// import './overflow-previews.js';
-
-// import './md-combobox/MdCombobox.js';
-// import './google-combobox/GoogleCombobox.js';
-
-// import './md-combobox/MdInput.js';
-
 export default {
   title: 'Forms/Combobox',
 };

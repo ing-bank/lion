@@ -93,6 +93,19 @@ const ListboxMixinImplementation = superclass =>
       ];
     }
 
+    /**
+     * @override FormControlMixin
+     */
+    // eslint-disable-next-line
+    _inputGroupInputTemplate() {
+      return html`
+        <div class="input-group__input">
+          <slot name="input"></slot>
+          <slot id="options-outlet"></slot>
+        </div>
+      `;
+    }
+
     static get scopedElements() {
       return {
         ...super.scopedElements,
@@ -100,6 +113,7 @@ const ListboxMixinImplementation = superclass =>
       };
     }
 
+    // @ts-expect-error
     get slots() {
       return {
         ...super.slots,
@@ -113,26 +127,45 @@ const ListboxMixinImplementation = superclass =>
       };
     }
 
-    // TODO: inherit from FormControl ?
+    /**
+     * @configure FormControlMixin
+     */
     get _inputNode() {
       return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
     }
 
+    /**
+     * @overridable
+     * @type {LionOptions}
+     */
     get _listboxNode() {
       return /** @type {LionOptions} */ (this._inputNode);
     }
 
+    /**
+     * @overridable
+     * @type {HTMLElement}
+     */
     get _listboxActiveDescendantNode() {
-      return this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`);
+      return /** @type {HTMLElement} */ (this._listboxNode.querySelector(
+        `#${this._listboxActiveDescendant}`,
+      ));
     }
 
     /**
      * @overridable
+     * @type {HTMLElement}
      */
     get _listboxSlot() {
-      return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('slot[name=input]');
+      return /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('slot[name=input]')
+      );
     }
 
+    /**
+     * @overridable
+     * @type {HTMLElement}
+     */
     get _scrollTargetNode() {
       return this._listboxNode;
     }
@@ -145,12 +178,18 @@ const ListboxMixinImplementation = superclass =>
       return this._listboxNode;
     }
 
+    /**
+     * @override ChoiceGroupMixin
+     */
     get serializedValue() {
       return this.modelValue;
     }
 
     // Duplicating from FormGroupMixin, because you cannot independently inherit/override getter + setter.
     // If you override one, gotta override the other, they go in pairs.
+    /**
+     * @override ChoiceGroupMixin
+     */
     set serializedValue(value) {
       super.serializedValue = value;
     }
@@ -185,25 +224,6 @@ const ListboxMixinImplementation = superclass =>
      */
     set checkedIndex(index) {
       this.setCheckedIndex(index);
-    }
-
-    /**
-     * When `multipleChoice` is false, will toggle, else will check provided index
-     * @param {number} index
-     * @param {'set'|'unset'|'toggle'} mode
-     */
-    setCheckedIndex(index, mode = 'toggle') {
-      if (this.formElements[index]) {
-        if (!this.multipleChoice) {
-          this.formElements[index].checked = true;
-        } else if (mode === 'toggle') {
-          this.formElements[index].checked = !this.formElements[index].checked;
-        } else {
-          this.formElements[index].checked = mode === 'set';
-        }
-        // In __onChildCheckedChanged, which also responds to programmatic (model)value changes
-        // of children, we will do the rest
-      }
     }
 
     constructor() {
@@ -282,47 +302,6 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * Moves options put in unnamed slot to slot with [role="listbox"]
-     */
-    __moveOptionsToListboxNode() {
-      const slot = /** @type {HTMLSlotElement} */ (
-        /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('options-outlet')
-      );
-
-      if (slot) {
-        slot.assignedNodes().forEach(node => {
-          this._listboxNode.appendChild(node);
-        });
-        slot.addEventListener('slotchange', () => {
-          slot.assignedNodes().forEach(node => {
-            this._listboxNode.appendChild(node);
-          });
-        });
-      }
-    }
-
-    disconnectedCallback() {
-      super.disconnectedCallback();
-
-      this._teardownListboxNode();
-      this.__teardownEventListeners();
-    }
-
-    /**
-     * In the select disabled options are still going to a possible value for example
-     * when prefilling or programmatically setting it.
-     *
-     * @override
-     */
-    _getCheckedElements() {
-      return this.formElements.filter(el => el.checked);
-    }
-
-    __initInteractionStates() {
-      this.initInteractionState();
-    }
-
-    /**
      * @param {import('lit-element').PropertyValues } changedProperties
      */
     updated(changedProperties) {
@@ -341,23 +320,34 @@ const ListboxMixinImplementation = superclass =>
       }
     }
 
-    /**
-     * @override
-     */
-    // eslint-disable-next-line
-    _inputGroupInputTemplate() {
-      return html`
-        <div class="input-group__input">
-          <slot name="input"></slot>
-          <slot id="options-outlet"></slot>
-        </div>
-      `;
+    disconnectedCallback() {
+      super.disconnectedCallback();
+
+      this._teardownListboxNode();
+      this.__teardownEventListeners();
     }
 
     /**
-     * Overrides FormRegistrar adding to make sure children have specific default states when added
-     *
-     * @override
+     * When `multipleChoice` is false, will toggle, else will check provided index
+     * @param {number} index
+     * @param {'set'|'unset'|'toggle'} mode
+     */
+    setCheckedIndex(index, mode = 'toggle') {
+      if (this.formElements[index]) {
+        if (!this.multipleChoice) {
+          this.formElements[index].checked = true;
+          // In __onChildCheckedChanged, which also responds to programmatic (model)value changes
+          // of children, we do the rest (uncheck siblings)
+        } else if (mode === 'toggle') {
+          this.formElements[index].checked = !this.formElements[index].checked;
+        } else {
+          this.formElements[index].checked = mode === 'set';
+        }
+      }
+    }
+
+    /**
+     * @enhance FormRegistrarMixin: make sure children have specific default states when added
      * @param {LionOption} child
      * @param {Number} indexToInsertAt
      */
@@ -387,6 +377,177 @@ const ListboxMixinImplementation = superclass =>
       /* eslint-enable no-param-reassign */
     }
 
+    /**
+     * @override ChoiceGroupMixin: in the select disabled options are still going to a possible
+     * value, for example when prefilling or programmatically setting it.
+     */
+    _getCheckedElements() {
+      return this.formElements.filter(el => el.checked);
+    }
+
+    _setupListboxNode() {
+      if (this._listboxNode) {
+        this.__setupListboxNodeInteractions();
+      } else if (this._listboxSlot) {
+        /**
+         * For ShadyDom the listboxNode is available right from the start so we can add those events
+         * immediately.
+         * For native ShadowDom the select gets rendered before the listboxNode is available so we
+         * will add an event to the slotchange and add the events once available.
+         */
+        this._listboxSlot.addEventListener('slotchange', () => {
+          this.__setupListboxNodeInteractions();
+        });
+      }
+    }
+
+    _teardownListboxNode() {
+      if (this._listboxNode) {
+        this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
+        this._listboxNode.removeEventListener('click', this._listboxOnClick);
+        this._listboxNode.removeEventListener('keyup', this._listboxOnKeyUp);
+      }
+    }
+
+    /**
+     * @param {number} currentIndex
+     * @param {number} [offset=1]
+     */
+    _getNextEnabledOption(currentIndex, offset = 1) {
+      return this.__getEnabledOption(currentIndex, offset);
+    }
+
+    /**
+     * @param {number} currentIndex
+     * @param {number} [offset=-1]
+     */
+    _getPreviousEnabledOption(currentIndex, offset = -1) {
+      return this.__getEnabledOption(currentIndex, offset);
+    }
+
+    /**
+     * @overridable
+     * @param {Event & { target: LionOption }} ev
+     */
+    // eslint-disable-next-line no-unused-vars, class-methods-use-this
+    _onChildActiveChanged({ target }) {
+      if (target.active === true) {
+        this.__setChildActive(target);
+      }
+    }
+
+    /**
+     * @desc
+     * Handle various keyboard controls; UP/DOWN will shift focus; SPACE selects
+     * an item.
+     *
+     * @param {KeyboardEvent} ev - the keydown event object
+     */
+    _listboxOnKeyDown(ev) {
+      if (this.disabled) {
+        return;
+      }
+
+      const { key } = ev;
+
+      switch (key) {
+        case ' ':
+        case 'Enter': {
+          if (key === ' ' && this._noListInteractionOnSpace) {
+            return;
+          }
+          ev.preventDefault();
+          if (!this.formElements[this.activeIndex]) {
+            return;
+          }
+
+          if (this.formElements[this.activeIndex].disabled) {
+            return;
+          }
+          this.setCheckedIndex(this.activeIndex);
+          break;
+        }
+        case 'ArrowUp':
+          ev.preventDefault();
+          if (this.orientation === 'vertical') {
+            this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
+          }
+          break;
+        case 'ArrowLeft':
+          if (this.orientation === 'horizontal') {
+            this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
+          }
+          break;
+        case 'ArrowDown':
+          ev.preventDefault();
+          if (this.orientation === 'vertical') {
+            this.activeIndex = this._getNextEnabledOption(this.activeIndex);
+          }
+          break;
+        case 'ArrowRight':
+          if (this.orientation === 'horizontal') {
+            this.activeIndex = this._getNextEnabledOption(this.activeIndex);
+          }
+          break;
+        case 'Home':
+          ev.preventDefault();
+          this.activeIndex = this._getNextEnabledOption(0, 0);
+          break;
+        case 'End':
+          ev.preventDefault();
+          this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
+          break;
+        /* no default */
+      }
+
+      const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (keys.includes(key) && this.selectionFollowsFocus && !this.multipleChoice) {
+        this.setCheckedIndex(this.activeIndex);
+      }
+    }
+
+    /**
+     * @overridable
+     * @param {MouseEvent} ev
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _listboxOnClick(ev) {
+      const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
+      const foundIndex = this.formElements.indexOf(option);
+      if (foundIndex > -1) {
+        this.activeIndex = foundIndex;
+        this.setCheckedIndex(foundIndex);
+      }
+    }
+
+    /**
+     * @overridable
+     * @param {KeyboardEvent} ev
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _listboxOnKeyUp(ev) {
+      if (this.disabled) {
+        return;
+      }
+      const { key } = ev;
+      // eslint-disable-next-line default-case
+      switch (key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+        case 'Home':
+        case 'End':
+        case 'Enter':
+          ev.preventDefault();
+      }
+    }
+
+    /**
+     * @configure FormControlMixin
+     */
+    _onLabelClick() {
+      this._listboxNode.focus();
+    }
+
     __setupEventListeners() {
       this._listboxNode.addEventListener(
         'active-changed',
@@ -407,17 +568,6 @@ const ListboxMixinImplementation = superclass =>
         'model-value-changed',
         /** @type {EventListener} */ (this.__proxyChildModelValueChanged),
       );
-    }
-
-    /**
-     * @overridable
-     * @param {Event & { target: LionOption }} ev
-     */
-    // eslint-disable-next-line no-unused-vars, class-methods-use-this
-    _onChildActiveChanged({ target }) {
-      if (target.active === true) {
-        this.__setChildActive(target);
-      }
     }
 
     /**
@@ -499,8 +649,8 @@ const ListboxMixinImplementation = superclass =>
         }
       }
 
-      // If above was unsuccessful
-      // Try to find the next/previous either from end --> start or start --> end
+      // If above was unsuccessful, try to find the next/previous either
+      // from end --> start or start --> end
       if (this.rotateKeyboardNavigation) {
         const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
         for (let i = startIndex; until(i); i += offset) {
@@ -515,147 +665,22 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {number} currentIndex
-     * @param {number} [offset=1]
+     * Moves options put in unnamed slot to slot with [role="listbox"]
      */
-    _getNextEnabledOption(currentIndex, offset = 1) {
-      return this.__getEnabledOption(currentIndex, offset);
-    }
+    __moveOptionsToListboxNode() {
+      const slot = /** @type {HTMLSlotElement} */ (
+        /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('options-outlet')
+      );
 
-    /**
-     * @param {number} currentIndex
-     * @param {number} [offset=-1]
-     */
-    _getPreviousEnabledOption(currentIndex, offset = -1) {
-      return this.__getEnabledOption(currentIndex, offset);
-    }
-
-    /**
-     * @desc
-     * Handle various keyboard controls; UP/DOWN will shift focus; SPACE selects
-     * an item.
-     *
-     * @param {KeyboardEvent} ev - the keydown event object
-     */
-    _listboxOnKeyDown(ev) {
-      if (this.disabled) {
-        return;
-      }
-
-      const { key } = ev;
-
-      switch (key) {
-        case ' ':
-        case 'Enter': {
-          if (key === ' ' && this._noListInteractionOnSpace) {
-            return;
-          }
-          ev.preventDefault();
-          if (!this.formElements[this.activeIndex]) {
-            return;
-          }
-
-          if (this.formElements[this.activeIndex].disabled) {
-            return;
-          }
-          this.setCheckedIndex(this.activeIndex);
-          break;
-        }
-        case 'ArrowUp':
-          ev.preventDefault();
-          if (this.orientation === 'vertical') {
-            this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
-          }
-          break;
-        case 'ArrowLeft':
-          if (this.orientation === 'horizontal') {
-            this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
-          }
-          break;
-        case 'ArrowDown':
-          ev.preventDefault();
-          if (this.orientation === 'vertical') {
-            console.log('sleutel tot benededn voor', this.activeIndex);
-
-            this.activeIndex = this._getNextEnabledOption(this.activeIndex);
-            console.log('sleutel tot benededn na', this.activeIndex);
-          }
-          break;
-        case 'ArrowRight':
-          if (this.orientation === 'horizontal') {
-            this.activeIndex = this._getNextEnabledOption(this.activeIndex);
-          }
-          break;
-        case 'Home':
-          ev.preventDefault();
-          this.activeIndex = this._getNextEnabledOption(0, 0);
-          break;
-        case 'End':
-          ev.preventDefault();
-          this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
-          break;
-        /* no default */
-      }
-
-      const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
-      if (keys.includes(key) && this.selectionFollowsFocus && !this.multipleChoice) {
-        this.setCheckedIndex(this.activeIndex);
-      }
-    }
-
-    // TODO: move to ChoiceGroupMixin?
-    __requestOptionsToBeDisabled() {
-      this.formElements.forEach(el => {
-        if (el.makeRequestToBeDisabled) {
-          el.makeRequestToBeDisabled();
-        }
-      });
-    }
-
-    __retractRequestOptionsToBeDisabled() {
-      this.formElements.forEach(el => {
-        if (el.retractRequestToBeDisabled) {
-          el.retractRequestToBeDisabled();
-        }
-      });
-    }
-
-    _setupListboxNode() {
-      if (this._listboxNode) {
-        this.__setupListboxNodeInteractions();
-      } else if (this._listboxSlot) {
-        /**
-         * For ShadyDom the listboxNode is available right from the start so we can add those events
-         * immediately.
-         * For native ShadowDom the select gets rendered before the listboxNode is available so we
-         * will add an event to the slotchange and add the events once available.
-         */
-        this._listboxSlot.addEventListener('slotchange', () => {
-          this.__setupListboxNodeInteractions();
+      if (slot) {
+        slot.assignedNodes().forEach(node => {
+          this._listboxNode.appendChild(node);
         });
-      }
-    }
-
-    /**
-     * Helper method used within `._setupListboxNode`
-     */
-    __setupListboxNodeInteractions() {
-      this._listboxNode.setAttribute('role', 'listbox');
-      this._listboxNode.setAttribute('aria-orientation', this.orientation);
-      this._listboxNode.setAttribute('aria-multiselectable', `${this.multipleChoice}`);
-      this._listboxNode.setAttribute('tabindex', '0');
-      this._listboxNode.addEventListener('click', this._listboxOnClick);
-      this._listboxNode.addEventListener('keyup', this._listboxOnKeyUp);
-      this._listboxNode.addEventListener('keydown', this._listboxOnKeyDown);
-      /** Since _scrollTargetNode can be _listboxNode, handle here  */
-      this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
-    }
-
-    _teardownListboxNode() {
-      if (this._listboxNode) {
-        this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
-        this._listboxNode.removeEventListener('click', this._listboxOnClick);
-        this._listboxNode.removeEventListener('keyup', this._listboxOnKeyUp);
+        slot.addEventListener('slotchange', () => {
+          slot.assignedNodes().forEach(node => {
+            this._listboxNode.appendChild(node);
+          });
+        });
       }
     }
 
@@ -678,44 +703,39 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable
-     * @param {MouseEvent} ev
+     * Helper method used within `._setupListboxNode`
      */
-    // eslint-disable-next-line class-methods-use-this, no-unused-vars
-    _listboxOnClick(ev) {
-      const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
-      const foundIndex = this.formElements.indexOf(option);
-      if (foundIndex > -1) {
-        this.activeIndex = foundIndex;
-      }
+    __setupListboxNodeInteractions() {
+      this._listboxNode.setAttribute('role', 'listbox');
+      this._listboxNode.setAttribute('aria-orientation', this.orientation);
+      this._listboxNode.setAttribute('aria-multiselectable', `${this.multipleChoice}`);
+      this._listboxNode.setAttribute('tabindex', '0');
+      this._listboxNode.addEventListener('click', this._listboxOnClick);
+      this._listboxNode.addEventListener('keyup', this._listboxOnKeyUp);
+      this._listboxNode.addEventListener('keydown', this._listboxOnKeyDown);
+      /** Since _scrollTargetNode can be _listboxNode, handle here  */
+      this._scrollTargetNode.addEventListener('keydown', this.__preventScrollingWithArrowKeys);
     }
 
-    /**
-     * @overridable
-     * @param {KeyboardEvent} ev
-     */
-    // eslint-disable-next-line class-methods-use-this, no-unused-vars
-    _listboxOnKeyUp(ev) {
-      if (this.disabled) {
-        return;
-      }
-      const { key } = ev;
-      // eslint-disable-next-line default-case
-      switch (key) {
-        case 'ArrowUp':
-        case 'ArrowDown':
-        case 'Home':
-        case 'End':
-        case 'Enter':
-          ev.preventDefault();
-      }
+    // TODO: move to ChoiceGroupMixin?
+    __requestOptionsToBeDisabled() {
+      this.formElements.forEach(el => {
+        if (el.makeRequestToBeDisabled) {
+          el.makeRequestToBeDisabled();
+        }
+      });
     }
 
-    /**
-     * @configure FormControlMixin
-     */
-    _onLabelClick() {
-      this._listboxNode.focus();
+    __retractRequestOptionsToBeDisabled() {
+      this.formElements.forEach(el => {
+        if (el.retractRequestToBeDisabled) {
+          el.retractRequestToBeDisabled();
+        }
+      });
+    }
+
+    __initInteractionStates() {
+      this.initInteractionState();
     }
   };
 

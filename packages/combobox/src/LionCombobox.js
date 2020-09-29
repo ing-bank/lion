@@ -8,13 +8,6 @@ import { LionListbox } from '@lion/listbox';
 // on Listbox or ListNavigationWithActiveDescendantMixin
 
 /**
- * TODO: set active to the first matched item if the user has not set active through keyboard interaction
- * Needs to happen whenever autocomplete --> 'inline' | 'both' and either:
- * - opened becomes true
- * - autocomplete was handled and now the activeIndex is no longer on a matched item
- */
-
-/**
  * @typedef {import('@lion/listbox').LionOption} LionOption
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
@@ -25,7 +18,6 @@ import { LionListbox } from '@lion/listbox';
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
@@ -39,7 +31,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   static get styles() {
-    // TODO: share input-group css?
     return [
       super.styles,
       css`
@@ -71,6 +62,37 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         }
       `,
     ];
+  }
+
+  /**
+   * @override FormControlMixin
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _inputGroupInputTemplate() {
+    return html`
+      <div class="input-group__input">
+        <slot name="selection-display"></slot>
+        <slot name="input"></slot>
+      </div>
+    `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _overlayListboxTemplate() {
+    return html`
+      <slot name="_overlay-shadow-outlet"></slot>
+      <div id="overlay-content-node-wrapper" role="dialog">
+        <slot name="listbox"></slot>
+      </div>
+      <slot id="options-outlet"></slot>
+    `;
+  }
+
+  /**
+   * @enhance FormControlMixin
+   */
+  _groupTwoTemplate() {
+    return html` ${super._groupTwoTemplate()} ${this._overlayListboxTemplate()}`;
   }
 
   /**
@@ -122,10 +144,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     };
   }
 
-  get _overlayReferenceNode() {
-    return this.shadowRoot.querySelector('.input-group__container');
-  }
-
   /**
    * Wrapper with combobox role for the text input that the end user controls the listbox with.
    * @type {HTMLElement}
@@ -135,7 +153,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @configures FormControlMixin
+   * @type {HTMLElement | null}
+   */
+  get _selectionDisplayNode() {
+    return this.querySelector('[slot="selection-display"]');
+  }
+
+  /**
+   * @configure FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
    */
@@ -147,15 +172,36 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @type {HTMLElement | null}
+   * @configure OverlayMixin
    */
-  get _selectionDisplayNode() {
-    return this.querySelector('[slot="selection-display"]');
+  get _overlayContentNode() {
+    return this._listboxNode;
   }
 
   /**
-   * @configures ListboxMixin
-   * @type {HTMLElement}
+   * @configure OverlayMixin
+   */
+  get _overlayReferenceNode() {
+    return this.shadowRoot.querySelector('.input-group__container');
+  }
+
+  /**
+   * @configure OverlayMixin
+   */
+  get _overlayInvokerNode() {
+    return this._inputNode;
+  }
+
+  /**
+   * @configure ListboxMixin
+   */
+  get _listboxNode() {
+    return /** @type {LionOptions} */ ((this._overlayCtrl && this._overlayCtrl.contentNode) ||
+      Array.from(this.children).find(child => child.slot === 'listbox'));
+  }
+
+  /**
+   * @configure ListboxMixin
    */
   get _activeDescendantOwnerNode() {
     return this._inputNode;
@@ -180,13 +226,22 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this.matchMode = 'all';
 
     /**
+     * @configure ListboxMixin: the wai-aria pattern and <datalist> rotate
+     */
+    this.rotateKeyboardNavigation = true;
+    /**
+     * @configure ListboxMixin: the wai-aria pattern and <datalist> have selection follow focus
+     */
+    this.selectionFollowsFocus = true;
+
+    /**
      * For optimal support, we allow aria v1.1 on newer browsers
      * @type {'1.1'|'1.0'}
      */
     this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
 
     /**
-     * @configures ListboxMixin
+     * @configure ListboxMixin
      */
     this._noListInteractionOnSpace = true;
 
@@ -198,13 +253,24 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     /** @type {EventListener} */
     this._textboxOnInput = this._textboxOnInput.bind(this);
     /** @type {EventListener} */
-    this._textboxOnFocusOut = this._textboxOnFocusOut.bind(this);
+    this._textboxOnKeydown = this._textboxOnKeydown.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
+    }
+  }
+
+  /**
+   * @param {'disabled'|'modelValue'|'readOnly'} name
+   * @param {unknown} oldValue
+   */
+  requestUpdateInternal(name, oldValue) {
+    super.requestUpdateInternal(name, oldValue);
+    if (name === 'disabled' || name === 'readOnly') {
+      this.__setComboboxDisabledAndReadOnly();
     }
   }
 
@@ -216,20 +282,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     if (changedProperties.has('opened')) {
       if (this.opened) {
-        // this.__setActiveToClosestMatch();
-        if (!this.multipleChoice && this.checkedIndex !== -1) {
-          this.activeIndex = this.checkedIndex;
-        } else if (this.multipleChoice && this.checkedIndex.length) {
-          // eslint-disable-next-line prefer-destructuring
-          this.activeIndex = this.checkedIndex[0];
-        } else {
-          this.activeIndex = 0;
-        }
+        this.__handleActiveIndexOnOpen();
       }
 
       if (!this.opened && changedProperties.get('opened') !== undefined) {
-        this.activeIndex = -1;
         this._syncCheckedWithTextboxOnInteraction();
+        this.activeIndex = -1;
       }
     }
     if (changedProperties.has('autocomplete')) {
@@ -255,72 +313,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
-  __setupCombobox() {
-    // With regard to accessibility: aria-expanded and -labelledby will
-    // be handled by OverlatMixin and FormControlMixin respectively.
-
-    this._comboboxNode.setAttribute('role', 'combobox');
-    this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
-    this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
-
-    if (this._ariaVersion === '1.1') {
-      this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
-      this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
-    } else {
-      this._inputNode.setAttribute('aria-owns', this._listboxNode.id);
-    }
-
-    this._listboxNode.setAttribute('aria-labelledby', this._labelNode.id);
-
-    this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
-    this._inputNode.addEventListener('input', this._textboxOnInput);
-    this._inputNode.addEventListener('focusout', this._textboxOnFocusOut);
-  }
-
-  __teardownCombobox() {
-    this._inputNode.removeEventListener('keydown', this._listboxOnKeyDown);
-    this._inputNode.removeEventListener('input', this._textboxOnInput);
-    this._inputNode.removeEventListener('focusout', this._textboxOnFocusOut);
-  }
-
-  /**
-   * @param {Event} ev
-   */
-  _textboxOnInput(ev) {
-    this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
-    // Schedules autocompletion of options
-    this.__shouldAutocompleteNextUpdate = true;
-  }
-
-  /**
-   * @param {Event} ev
-   */
-  _textboxOnFocusOut() {
-    this.opened = false;
-  }
-
-  /**
-   * @param {MouseEvent} ev
-   */
-  _listboxOnClick(ev) {
-    super._listboxOnClick(ev);
-    if (!this.multipleChoice) {
-      this.activeIndex = -1;
-      this.opened = false;
-    }
-    this._inputNode.focus();
-    // this._syncCheckedWithTextboxOnInteraction();
-  }
-
-  /**
-   * @enhance ListboxMixin
-   */
-  _setupListboxNode() {
-    super._setupListboxNode();
-    // Only the textbox should be focusable
-    this._listboxNode.removeAttribute('tabindex');
-  }
-
   /**
    * @overridable
    * @param {LionOption} option
@@ -338,6 +330,56 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       return idx > -1; // matches part of word
     }
     return idx === 0; // matches beginning of value
+  }
+
+  /**
+   * @param {Event} ev
+   */
+  _textboxOnInput(ev) {
+    this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
+    // Schedules autocompletion of options
+    this.__shouldAutocompleteNextUpdate = true;
+  }
+
+  /**
+   * @param {Event} ev
+   */
+  _textboxOnKeydown(ev) {
+    if (ev.key === 'Tab') {
+      this.opened = false;
+    }
+  }
+
+  /**
+   * @param {MouseEvent} ev
+   */
+  _listboxOnClick(ev) {
+    super._listboxOnClick(ev);
+    if (!this.multipleChoice) {
+      this.activeIndex = -1;
+      this.opened = false;
+    }
+    this._inputNode.focus();
+  }
+
+  /**
+   * For multiple choice, a subclasser could do something like:
+   * @example
+   * _syncCheckedWithTextboxOnInteraction() {
+   *   super._syncCheckedWithTextboxOnInteraction();
+   *   if (this.multipleChoice) {
+   *     this._inputNode.value = this.checkedElements.map(o => o.value).join(', ');
+   *   }
+   * }
+   * @overridable
+   */
+  _syncCheckedWithTextboxOnInteraction() {
+    if (!this.multipleChoice && this.checkedIndex !== -1) {
+      // setTimeout(() => {
+      this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
+      this.__cboxInputValue = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
+      // });
+    }
   }
 
   /* eslint-disable no-param-reassign, class-methods-use-this */
@@ -416,10 +458,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         hasAutoFilled = true;
       }
 
-      // if (this.autocomplete === 'none' || this.autocomplete === 'inline') {
-      //   return;
-      // }
-
       // [2]. Cleanup previous matching states
       if (option.onFilterUnmatch) {
         option.onFilterUnmatch(curValue, prevValue);
@@ -463,67 +501,19 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (this._overlayCtrl && this._overlayCtrl._popper) {
       this._overlayCtrl._popper.update();
     }
-
-    // // [7]. if active is now suddenly on an invisible option, set active it to the closest match
-    // if (
-    //   !visibleOptions.includes(this.formElements[this.activeIndex]) &&
-    //   (this.autocomplete === 'both' || this.autocomplete === 'inline')
-    // ) {
-    //   this.__setActiveToClosestMatch();
-    // }
   }
 
   /**
-   * @param {'disabled'|'modelValue'|'readOnly'} name
-   * @param {unknown} oldValue
+   * @enhance ListboxMixin
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
-    if (name === 'disabled' || name === 'readOnly') {
-      this.__setComboboxDisabledAndReadOnly();
-    }
-  }
-
-  __setComboboxDisabledAndReadOnly() {
-    if (this._comboboxNode) {
-      this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
-      this._comboboxNode.setAttribute('readonly', `${this.readOnly}`);
-    }
+  _setupListboxNode() {
+    super._setupListboxNode();
+    // Only the textbox should be focusable
+    this._listboxNode.removeAttribute('tabindex');
   }
 
   /**
-   * @override FormControlMixin
-   */
-  // eslint-disable-next-line class-methods-use-this
-  _inputGroupInputTemplate() {
-    return html`
-      <div class="input-group__input">
-        <slot name="selection-display"></slot>
-        <slot name="input"></slot>
-      </div>
-    `;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  _overlayListboxTemplate() {
-    return html`
-      <slot name="_overlay-shadow-outlet"></slot>
-      <div id="overlay-content-node-wrapper" role="dialog">
-        <slot name="listbox"></slot>
-      </div>
-      <slot id="options-outlet"></slot>
-    `;
-  }
-
-  /**
-   * @enhances FormControlMixin
-   */
-  _groupTwoTemplate() {
-    return html` ${super._groupTwoTemplate()} ${this._overlayListboxTemplate()}`;
-  }
-
-  /**
-   * @configures OverlayMixin
+   * @configure OverlayMixin
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
@@ -533,53 +523,17 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     });
   }
 
+  /**
+   * @enhance OverlayMixin
+   */
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
     this.__initFilterListbox();
     this.__setupCombobox();
   }
 
-  __initFilterListbox() {
-    this._handleAutocompletion({
-      curValue: this.__cboxInputValue,
-      prevValue: this.__prevCboxValueNonSelected,
-    });
-  }
-
   /**
-   * @configures OverlayMixin
-   */
-  get _overlayInvokerNode() {
-    return this._inputNode;
-  }
-
-  /**
-   * @configures OverlayMixin
-   */
-  get _overlayContentNode() {
-    return this._listboxNode;
-  }
-
-  /**
-   * @configures ListboxMixin
-   */
-  get _listboxNode() {
-    return /** @type {LionOptions} */ ((this._overlayCtrl && this._overlayCtrl.contentNode) ||
-      Array.from(this.children).find(child => child.slot === 'listbox'));
-  }
-
-  /**
-   * @param {KeyboardEvent} ev
-   */
-  __showOverlay(ev) {
-    if (ev.key === 'Tab' || ev.key === 'Esc' || ev.key === 'Enter') {
-      return;
-    }
-    this.opened = true;
-  }
-
-  /**
-   * @enhances OverlayMixin
+   * @enhance OverlayMixin
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
@@ -587,7 +541,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @enhances OverlayMixin
+   * @enhance OverlayMixin
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
@@ -621,27 +575,66 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
-  /**
-   * @overridable
-   */
-  _syncCheckedWithTextboxOnInteraction() {
-    if (!this.multipleChoice && this.checkedIndex !== -1) {
-      this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
-      this.__cboxInputValue = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
-    }
-    // For multiple choice, a subclasser could do something like:
-    // this._inputNode.value = this.checkedElements.map(o => o.value).join(', ');
+  __initFilterListbox() {
+    this._handleAutocompletion({
+      curValue: this.__cboxInputValue,
+      prevValue: this.__prevCboxValueNonSelected,
+    });
   }
 
-  // __setActiveToClosestMatch() {
-  //   let matchIndex = -1;
-  //   this.formElements.find((el, index) => {
-  //     if (!el.hasAttribute('aria-hidden') && !el.disabled) {
-  //       matchIndex = index;
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  //   this.activeIndex = matchIndex;
-  // }
+  __setComboboxDisabledAndReadOnly() {
+    if (this._comboboxNode) {
+      this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
+      this._comboboxNode.setAttribute('readonly', `${this.readOnly}`);
+    }
+  }
+
+  __handleActiveIndexOnOpen() {
+    if (!this.multipleChoice && this.checkedIndex !== -1) {
+      this.activeIndex = this.checkedIndex;
+    } else if (this.multipleChoice && this.checkedIndex.length) {
+      // eslint-disable-next-line prefer-destructuring
+      this.activeIndex = this.checkedIndex[0];
+    } else {
+      this.activeIndex = 0;
+    }
+  }
+
+  __setupCombobox() {
+    // With regard to accessibility: aria-expanded and -labelledby will
+    // be handled by OverlatMixin and FormControlMixin respectively.
+
+    this._comboboxNode.setAttribute('role', 'combobox');
+    this._comboboxNode.setAttribute('aria-haspopup', 'listbox');
+    this._inputNode.setAttribute('aria-autocomplete', this.autocomplete);
+
+    if (this._ariaVersion === '1.1') {
+      this._comboboxNode.setAttribute('aria-owns', this._listboxNode.id);
+      this._inputNode.setAttribute('aria-controls', this._listboxNode.id);
+    } else {
+      this._inputNode.setAttribute('aria-owns', this._listboxNode.id);
+    }
+
+    this._listboxNode.setAttribute('aria-labelledby', this._labelNode.id);
+
+    this._inputNode.addEventListener('keydown', this._listboxOnKeyDown);
+    this._inputNode.addEventListener('input', this._textboxOnInput);
+    this._inputNode.addEventListener('keydown', this._textboxOnKeydown);
+  }
+
+  __teardownCombobox() {
+    this._inputNode.removeEventListener('keydown', this._listboxOnKeyDown);
+    this._inputNode.removeEventListener('input', this._textboxOnInput);
+    this._inputNode.removeEventListener('keydown', this._textboxOnKeydown);
+  }
+
+  /**
+   * @param {KeyboardEvent} ev
+   */
+  __showOverlay(ev) {
+    if (ev.key === 'Tab' || ev.key === 'Esc' || ev.key === 'Enter') {
+      return;
+    }
+    this.opened = true;
+  }
 }

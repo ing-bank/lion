@@ -47,8 +47,7 @@ function mimicUserInput(formControl, newViewValue) {
 export function runFormatMixinSuite(customConfig) {
   const cfg = {
     tagString: null,
-    modelValueType: String,
-    suffix: '',
+    childTagString: null,
     ...customConfig,
   };
 

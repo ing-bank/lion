@@ -167,6 +167,53 @@ describe('lion-combobox', () => {
       expect(el._inputNode.value).to.equal('');
     });
 
+    it('hides listbox on [Tab]', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      // open
+      el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(el._inputNode.value).to.equal('Artichoke');
+
+      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      expect(el.opened).to.equal(false);
+      expect(el._inputNode.value).to.equal('Artichoke');
+    });
+
+    it.skip('clears checkedIndex on empty text', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      // open
+      el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(el._inputNode.value).to.equal('Artichoke');
+      expect(el.checkedIndex).to.equal(1);
+
+      el._inputNode = '';
+      mimicUserTyping(el, '');
+      expect(el.checkedIndex).to.equal(-1);
+    });
+
     describe('Accessibility', () => {
       it('sets "aria-posinset" and "aria-setsize" on visible entries', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
@@ -205,7 +252,7 @@ describe('lion-combobox', () => {
       });
 
       /**
-       * Note that we use aria-hidden instead of display:none to allow for animations
+       * Note that we use aria-hidden instead of 'display:none' to allow for animations
        * (like fade in/out)
        */
       it('sets aria-hidden="true" on hidden entries', async () => {
@@ -592,24 +639,8 @@ describe('lion-combobox', () => {
     });
   });
 
-  // TODO: move parts to ListboxMixin test
   describe('Multiple Choice', () => {
-    it('does not uncheck siblings', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" multiple-choice>
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
-      const options = el.formElements;
-      options[0].checked = true;
-      options[1].checked = true;
-      expect(options[0].checked).to.equal(true);
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
-    });
-
+    // TODO: possibly later share test with select-rich if it officially supports multipleChoice
     it('does not close listbox on click/enter/space', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
@@ -634,33 +665,8 @@ describe('lion-combobox', () => {
       // visibleOptions[2].dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
       // expect(el.opened).to.equal(true);
     });
-
-    describe('Accessibility', () => {
-      it('adds aria-multiselectable="true" to listbox node', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" multiple-choice>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          </lion-combobox>
-        `));
-        expect(el._listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
-      });
-
-      it('does not allow "selectionFollowsFocus"', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" multiple-choice>
-            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          </lion-combobox>
-        `));
-        el._inputNode.focus();
-        el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-        expect(el._listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
-      });
-    });
   });
 
-  //
   describe('Match Mode', () => {
     it('has a default value of "all"', async () => {
       const [el] = await fruitFixture();
@@ -707,176 +713,6 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
       });
-    });
-  });
-
-  // TODO: move to ListboxMixin tests
-  describe('Orientation', () => {
-    it('has a default value of "vertical"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="list">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-        </lion-combobox>
-      `));
-      expect(el.orientation).to.equal('vertical');
-      const options = el.formElements;
-
-      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      mimicUserTyping(el, 'a');
-      await el.updateComplete;
-      expect(options[0].active).to.be.true;
-      expect(options[1].active).to.be.false;
-
-      // el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      // expect(options[0].active).to.be.true;
-      // expect(options[1].active).to.be.false;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(options[0].active).to.be.false;
-      expect(options[1].active).to.be.true;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(options[0].active).to.be.true;
-      expect(options[1].active).to.be.false;
-
-      // No response to horizontal arrows...
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
-      expect(options[0].active).to.be.true;
-      expect(options[1].active).to.be.false;
-
-      el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
-      expect(options[0].active).to.be.false;
-      expect(options[1].active).to.be.true;
-    });
-
-    it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" orientation="horizontal" autocomplete="list">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-        </lion-combobox>
-      `));
-      expect(el.orientation).to.equal('horizontal');
-
-      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      mimicUserTyping(el, 'a');
-      await el.updateComplete;
-
-      // el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
-      // expect(el.activeIndex).to.equal(0);
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
-      expect(el.activeIndex).to.equal(1);
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
-      expect(el.activeIndex).to.equal(0);
-
-      // No response to vertical arrows...
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(el.activeIndex).to.equal(0);
-
-      el.activeIndex = 1;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(el.activeIndex).to.equal(1);
-    });
-
-    describe('Accessibility', () => {
-      it('adds aria-orientation attribute to listbox node', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" orientation="horizontal">
-            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          </lion-combobox>
-        `));
-        expect(el._listboxNode.getAttribute('aria-orientation')).to.equal('horizontal');
-      });
-    });
-  });
-
-  // TODO: Move to Listbox
-  describe('Selection follows focus', () => {
-    it('syncs activate option to checked', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" selection-follows-focus autocomplete="list">
-          <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-        </lion-combobox>
-      `));
-      const options = el.formElements;
-      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      mimicUserTyping(el, 'a');
-      await el.updateComplete;
-
-      // el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      // expect(options[0].checked).to.be.true;
-      // expect(options[1].checked).to.be.false;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(options[0].checked).to.be.false;
-      expect(options[1].checked).to.be.true;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(options[0].checked).to.be.true;
-      expect(options[1].checked).to.be.false;
-    });
-  });
-
-  // TODO: move to ListboxMixin
-  describe('Rotate Navigation', () => {
-    it('stops navigation by default at end of option list', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Bla'}">Bla</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-        </lion-combobox>
-      `));
-      const options = el.formElements;
-      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      mimicUserTyping(el, 'a');
-      await el.updateComplete;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(options[0].active).to.be.true;
-      expect(options[1].active).to.be.false;
-      expect(options[2].active).to.be.false;
-
-      el.activeIndex = 2;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(options[0].active).to.be.false;
-      expect(options[1].active).to.be.false;
-      expect(options[2].active).to.be.true;
-    });
-
-    it('when "rotate-navigation" provided, selects first option after navigated to next from last and vice versa', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" rotate-keyboard-navigation>
-          <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Bla'}">Bla</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-        </lion-combobox>
-      `));
-      const options = el.formElements;
-      el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-      mimicUserTyping(el, 'a');
-      await el.updateComplete;
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-      expect(options[0].active).to.be.false;
-      expect(options[1].active).to.be.false;
-      expect(options[2].active).to.be.true;
-
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(options[0].active).to.be.true;
-      expect(options[1].active).to.be.false;
-      expect(options[2].active).to.be.false;
-
-      // Extra check: regular navigation
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      expect(options[0].active).to.be.false;
-      expect(options[1].active).to.be.true;
-      expect(options[2].active).to.be.false;
     });
   });
 });
