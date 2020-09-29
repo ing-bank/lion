@@ -209,15 +209,15 @@ export const helpText = () => html`
 
 ### Event
 
-You can listen to the `user-input-changed` event whenever the value of the radio group is changed.
+You can listen to the `model-value-changed` event whenever the value of the radio group is changed.
 
 ```js preview-story
 export const event = () => html`
   <lion-radio-group
     name="dinosTwo"
     label="Favourite dinosaur"
-    @user-input-changed=${e =>
-      (document.getElementById('selectedDinosaur').innerHTML = e.target.choiceValue)}
+    @model-value-changed=${e =>
+      (document.getElementById('selectedDinosaur').innerHTML = e.target.modelValue)}
   >
     <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
     <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>

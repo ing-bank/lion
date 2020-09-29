@@ -212,14 +212,14 @@ export const helpText = () => html`
 
 ### Event
 
-You can listen to the `user-input-changed` event whenever the value of the checkbox group is changed.
+You can listen to the `model-value-changed` event whenever the value of the checkbox group is changed.
 
 ```js preview-story
 export const event = () => html`
   <lion-checkbox-group
     name="scientists[]"
     label="Favorite scientists"
-    @user-input-changed=${e =>
+    @model-value-changed=${e =>
       (document.getElementById('selectedDinosaur').innerHTML = JSON.stringify(
         e.target.modelValue,
         null,
