@@ -217,7 +217,7 @@ export const event = () => html`
     name="dinosTwo"
     label="Favourite dinosaur"
     @model-value-changed=${e =>
-      (document.getElementById('selectedDinosaur').innerHTML = e.target.modelValue)}
+      (document.getElementById('selectedDinosaur').innerText = e.target.modelValue)}
   >
     <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
     <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
