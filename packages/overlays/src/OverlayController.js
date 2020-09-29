@@ -678,6 +678,7 @@ export class OverlayController extends EventTargetShim {
       await this._handlePosition({ phase: 'show' });
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
+      await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
     }
     /** @type {function} */ (this._showResolve)();
   }
@@ -782,7 +783,7 @@ export class OverlayController extends EventTargetShim {
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      // await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+      await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
       this.contentWrapperNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
@@ -797,6 +798,12 @@ export class OverlayController extends EventTargetShim {
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async transitionHide(config) {}
+
+  /**
+   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} config
+   */
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async transitionShow(config) {}
 
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' it.

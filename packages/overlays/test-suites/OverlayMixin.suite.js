@@ -206,6 +206,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         </${tag}>
       `));
       closeBtn.click();
+      await nextFrame(); // hide takes at least a frame
       expect(el.opened).to.be.false;
     });
   });

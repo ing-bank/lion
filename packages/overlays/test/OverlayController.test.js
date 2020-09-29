@@ -1100,6 +1100,60 @@ describe('OverlayController', () => {
       await ctrl0.show();
       expect(getTopEl()).to.equal(ctrl0.contentNode);
     });
+
+    it('awaits a "transitionHide" hook before hiding for real', done => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      ctrl.show();
+
+      /** @type {{ (): void; (value?: void | PromiseLike<void> | undefined): void; }} */
+      let hideTransitionFinished;
+      ctrl.transitionHide = () =>
+        new Promise(resolve => {
+          hideTransitionFinished = resolve;
+        });
+
+      ctrl.hide();
+
+      expect(getComputedStyle(ctrl.contentWrapperNode).display).to.equal('block');
+      setTimeout(() => {
+        hideTransitionFinished();
+        setTimeout(() => {
+          expect(getComputedStyle(ctrl.contentWrapperNode).display).to.equal('none');
+          done();
+        }, 0);
+      }, 0);
+    });
+
+    it('awaits a "transitionShow" hook before finishing the show method', done => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+
+      /** @type {{ (): void; (value?: void | PromiseLike<void> | undefined): void; }} */
+      let showTransitionFinished;
+      ctrl.transitionShow = () =>
+        new Promise(resolve => {
+          showTransitionFinished = resolve;
+        });
+      ctrl.show();
+
+      let showIsDone = false;
+
+      /** @type {Promise<void>} */ (ctrl._showComplete).then(() => {
+        showIsDone = true;
+      });
+
+      expect(showIsDone).to.be.false;
+      setTimeout(() => {
+        showTransitionFinished();
+        setTimeout(() => {
+          expect(showIsDone).to.be.true;
+          done();
+        }, 0);
+      }, 0);
+    });
   });
 
   describe('Update Configuration', () => {
