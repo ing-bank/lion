@@ -27,7 +27,7 @@ export default {
 
 ```js preview-story
 export const main = () => html`
-  <lion-combobox name="combo" autocomplete="none" label="Default" rotate-keyboard-navigation>
+  <lion-combobox name="combo" label="Default">
     ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
   </lion-combobox>
 `;
@@ -138,12 +138,12 @@ export const multipleChoice = () => html`
 ```js preview-story
 export const invokerButton = () => html`
   <lion-combobox
+    .modelValue="${listboxData[1]}"
     autocomplete="none"
     name="combo"
     label="Invoker Button"
-    .selectionFollowsFocus="${false}"
-    @click="${({ currentTarget }) => {
-      currentTarget.opened = !currentTarget.opened;
+    @click="${({ currentTarget: el }) => {
+      el.opened = !el.opened;
     }}"
   >
     <button slot="suffix" type="button" tabindex="-1">▼</button>

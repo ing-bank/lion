@@ -280,6 +280,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('modelValue') && !this.multipleChoice) {
+      this._setTextboxValue(this.modelValue);
+    }
     if (changedProperties.has('opened')) {
       if (this.opened) {
         this.__handleActiveIndexOnOpen();
@@ -362,23 +365,30 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._inputNode.focus();
   }
 
+  _setTextboxValue(v) {
+    this._inputNode.value = v;
+    // TODO: see if we can refactor out the need for double bookkeeping ...?
+    this.__cboxInputValue = v;
+  }
+
   /**
    * For multiple choice, a subclasser could do something like:
    * @example
    * _syncCheckedWithTextboxOnInteraction() {
    *   super._syncCheckedWithTextboxOnInteraction();
    *   if (this.multipleChoice) {
-   *     this._inputNode.value = this.checkedElements.map(o => o.value).join(', ');
+   *     this._texttboxValue = this.checkedElements.map(o => o.value).join(', ');
    *   }
    * }
    * @overridable
    */
   _syncCheckedWithTextboxOnInteraction() {
+    if (!this.multipleChoice && this._inputNode.value === '') {
+      this._uncheckChildren();
+    }
+
     if (!this.multipleChoice && this.checkedIndex !== -1) {
-      // setTimeout(() => {
-      this._inputNode.value = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
-      this.__cboxInputValue = this.formElements[/** @type {number} */ (this.checkedIndex)].value;
-      // });
+      this._setTextboxValue(this.formElements[/** @type {number} */ (this.checkedIndex)].value);
     }
   }
 
@@ -558,9 +568,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       case 'Escape':
         this.opened = false;
         this.__shouldAutocompleteNextUpdate = true;
-        this._inputNode.value = '';
-        this.__cboxInputValue = '';
-        this.checkedIndex = -1;
+        this._setTextboxValue('');
+        // this.checkedIndex = -1;
         break;
       case 'Enter':
         if (!this.formElements[this.activeIndex]) {

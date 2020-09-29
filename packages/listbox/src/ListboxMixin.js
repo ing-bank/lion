@@ -330,18 +330,18 @@ const ListboxMixinImplementation = superclass =>
     /**
      * When `multipleChoice` is false, will toggle, else will check provided index
      * @param {number} index
-     * @param {'set'|'unset'|'toggle'} mode
+     * @param {'set'|'unset'|'toggle'} multiMode
      */
-    setCheckedIndex(index, mode = 'toggle') {
+    setCheckedIndex(index, multiMode = 'toggle') {
       if (this.formElements[index]) {
         if (!this.multipleChoice) {
           this.formElements[index].checked = true;
           // In __onChildCheckedChanged, which also responds to programmatic (model)value changes
           // of children, we do the rest (uncheck siblings)
-        } else if (mode === 'toggle') {
+        } else if (multiMode === 'toggle') {
           this.formElements[index].checked = !this.formElements[index].checked;
         } else {
-          this.formElements[index].checked = mode === 'set';
+          this.formElements[index].checked = multiMode === 'set';
         }
       }
     }
@@ -585,6 +585,19 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
+     * @param {LionOption|LionOption[]} [exclude]
+     */
+    _uncheckChildren(exclude = []) {
+      const excludes = Array.isArray(exclude) ? exclude : [exclude];
+      this.formElements.forEach(option => {
+        if (!excludes.includes(option)) {
+          // eslint-disable-next-line no-param-reassign
+          option.checked = false;
+        }
+      });
+    }
+
+    /**
      * @param {Event & { target: LionOption }} cfgOrEvent
      */
     __onChildCheckedChanged(cfgOrEvent) {
@@ -592,15 +605,8 @@ const ListboxMixinImplementation = superclass =>
       if (cfgOrEvent.stopPropagation) {
         cfgOrEvent.stopPropagation();
       }
-      if (target.checked) {
-        if (!this.multipleChoice) {
-          this.formElements.forEach(formElement => {
-            if (formElement !== target) {
-              // eslint-disable-next-line no-param-reassign
-              formElement.checked = false;
-            }
-          });
-        }
+      if (target.checked && !this.multipleChoice) {
+        this._uncheckChildren(target);
       }
     }
 

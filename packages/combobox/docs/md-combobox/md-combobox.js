@@ -1,7 +1,6 @@
 import { css, html } from '@lion/core';
 import { LionOption } from '@lion/listbox';
 import { LionCombobox } from '../../src/LionCombobox.js';
-// import { LionComboboxInvoker } from '../../src/LionComboboxInvoker.js';
 import { MdFieldMixin } from './MdFieldMixin.js';
 import './style/md-ripple.js';
 import './style/load-roboto.js';
@@ -66,20 +65,6 @@ export class MdOption extends LionOption {
   }
 }
 customElements.define('md-option', MdOption);
-
-// export class MdComboboxInvoker extends LionComboboxInvoker {
-//   static get styles() {
-//     return [
-//       super.styles,
-//       css`
-//         :host {
-//           flex: 1;
-//         }
-//       `,
-//     ];
-//   }
-// }
-// customElements.define('md-combobox-invoker', MdComboboxInvoker);
 
 export class MdCombobox extends MdFieldMixin(LionCombobox) {
   static get styles() {

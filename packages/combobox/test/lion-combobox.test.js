@@ -84,6 +84,22 @@ describe('lion-combobox', () => {
     });
   });
 
+  describe('Values', () => {
+    it('syncs modelValue with textbox', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" .modelValue="${'10'}">
+          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.equal('10');
+
+      el.modelValue = '20';
+      await el.updateComplete;
+      expect(el._inputNode.value).to.equal('20');
+    });
+  });
+
   describe('Listbox visibility', () => {
     it('does not show listbox on focusin', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
@@ -190,7 +206,7 @@ describe('lion-combobox', () => {
       expect(el._inputNode.value).to.equal('Artichoke');
     });
 
-    it.skip('clears checkedIndex on empty text', async () => {
+    it('clears checkedIndex on empty text', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -207,10 +223,12 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(el._inputNode.value).to.equal('Artichoke');
-      expect(el.checkedIndex).to.equal(1);
+      expect(el.checkedIndex).to.equal(0);
 
-      el._inputNode = '';
+      el._inputNode.value = '';
       mimicUserTyping(el, '');
+      el.opened = false;
+      await el.updateComplete;
       expect(el.checkedIndex).to.equal(-1);
     });
 
