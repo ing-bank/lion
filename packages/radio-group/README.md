@@ -206,3 +206,24 @@ export const helpText = () => html`
   </lion-radio-group>
 `;
 ```
+
+### Event
+
+You can listen to the `model-value-changed` event whenever the value of the radio group is changed.
+
+```js preview-story
+export const event = () => html`
+  <lion-radio-group
+    name="dinosTwo"
+    label="Favourite dinosaur"
+    @model-value-changed=${e =>
+      (document.getElementById('selectedDinosaur').innerText = e.target.modelValue)}
+  >
+    <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+    <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+    <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+  </lion-radio-group>
+  <br />
+  <span>Selected dinosaur: <strong id="selectedDinosaur">N/A</strong></span>
+`;
+```

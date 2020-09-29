@@ -209,3 +209,28 @@ export const helpText = () => html`
   </lion-checkbox-group>
 `;
 ```
+
+### Event
+
+You can listen to the `model-value-changed` event whenever the value of the checkbox group is changed.
+
+```js preview-story
+export const event = () => html`
+  <lion-checkbox-group
+    name="scientists[]"
+    label="Favorite scientists"
+    @model-value-changed=${e =>
+      (document.getElementById('selectedDinosaur').innerText = JSON.stringify(
+        e.target.modelValue,
+        null,
+        4,
+      ))}
+  >
+    <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+    <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  </lion-checkbox-group>
+  <br />
+  <span>Selected scientists: <strong id="selectedDinosaur">N/A</strong></span>
+`;
+```
