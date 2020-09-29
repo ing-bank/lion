@@ -12,18 +12,6 @@ import '@lion/core/src/differentKeyEventNamesShimIE.js';
  */
 
 /**
- * @param {LionCombobox | LionListbox} el
- * @param {string} value
- */
-function mimicUserTyping(el, value) {
-  el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
-  // eslint-disable-next-line no-param-reassign
-  el._inputNode.value = value;
-  el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  el._overlayInvokerNode?.dispatchEvent(new Event('keydown'));
-}
-
-/**
  * @param { {tagString:string, optionTagString:string} } [customConfig]
  */
 export function runListboxMixinSuite(customConfig = {}) {
@@ -366,8 +354,8 @@ export function runListboxMixinSuite(customConfig = {}) {
 
             const options = el.formElements;
             // el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-            mimicUserTyping(el, 'a');
-            await el.updateComplete;
+            // mimicUserTyping(el, 'a');
+            // await el.updateComplete;
 
             el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             expect(options[0].active).to.be.true;
@@ -391,7 +379,6 @@ export function runListboxMixinSuite(customConfig = {}) {
             `));
             const options = el.formElements;
             el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-            mimicUserTyping(el, 'a');
             await el.updateComplete;
             el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             expect(options[0].active).to.be.false;
@@ -523,8 +510,6 @@ export function runListboxMixinSuite(customConfig = {}) {
           // but should still be able to work with selectionFollowsFocus=false
           el.selectionFollowsFocus = false;
 
-          mimicUserTyping(el, 'Item');
-          await el.updateComplete;
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
 
@@ -551,7 +536,6 @@ export function runListboxMixinSuite(customConfig = {}) {
           // Normalize for suite tests
           el.activeIndex = 0;
 
-          mimicUserTyping(el, 'a');
           await el.updateComplete;
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
@@ -587,7 +571,6 @@ export function runListboxMixinSuite(customConfig = {}) {
           // Normalize for suite tests
           el.activeIndex = 0;
 
-          mimicUserTyping(el, 'a');
           await el.updateComplete;
 
           el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
@@ -729,7 +712,6 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} checked .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          mimicUserTyping(el, '0');
           await el.updateComplete;
           el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.modelValue).to.equal(20);
@@ -785,7 +767,6 @@ export function runListboxMixinSuite(customConfig = {}) {
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          mimicUserTyping(el, 'Item');
           el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.activeIndex).to.equal(1);
 

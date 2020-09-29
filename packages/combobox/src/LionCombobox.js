@@ -245,7 +245,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      */
     this._noListInteractionOnSpace = true;
 
-    this.__cboxInputValue = '';
     this.__prevCboxValueNonSelected = '';
 
     /** @type {EventListener} */
@@ -272,6 +271,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (name === 'disabled' || name === 'readOnly') {
       this.__setComboboxDisabledAndReadOnly();
     }
+    if (name === 'modelValue' && this.modelValue !== oldValue) {
+      if (this.modelValue) {
+        this._setTextboxValue(this.modelValue);
+      }
+    }
   }
 
   /**
@@ -280,12 +284,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if (changedProperties.has('modelValue') && !this.multipleChoice) {
-      this._setTextboxValue(this.modelValue);
-    }
     if (changedProperties.has('opened')) {
       if (this.opened) {
-        this.__handleActiveIndexOnOpen();
+        // this.__handleActiveIndexOnOpen();
+        this.activeIndex = -1;
       }
 
       if (!this.opened && changedProperties.get('opened') !== undefined) {
@@ -305,7 +307,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     ) {
       // Only update list in render cycle
       this._handleAutocompletion({
-        curValue: this.__cboxInputValue,
+        curValue: this._inputNode.value,
         prevValue: this.__prevCboxValueNonSelected,
       });
       this.__shouldAutocompleteNextUpdate = false;
@@ -322,10 +324,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string} curValue current ._inputNode value
    */
   filterOptionCondition(option, curValue) {
-    let idx;
-    if (typeof option.choiceValue !== 'string') {
-      idx = -1;
-    } else {
+    let idx = -1;
+    if (typeof option.choiceValue === 'string' && typeof curValue === 'string') {
       idx = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase());
     }
 
@@ -339,7 +339,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {Event} ev
    */
   _textboxOnInput(ev) {
-    this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
+    // this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
     // Schedules autocompletion of options
     this.__shouldAutocompleteNextUpdate = true;
   }
@@ -368,7 +368,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _setTextboxValue(v) {
     this._inputNode.value = v;
     // TODO: see if we can refactor out the need for double bookkeeping ...?
-    this.__cboxInputValue = v;
+    // this.__cboxInputValue = v;
   }
 
   /**
@@ -450,16 +450,17 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       const show = this.filterOptionCondition(option, curValue);
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
+      const stringValues = typeof option.choiceValue === 'string' && typeof curValue === 'string';
+
       const beginsWith =
-        typeof option.choiceValue === 'string' &&
-        option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
+        stringValues && option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
 
       if (beginsWith && !hasAutoFilled && show && userIsAddingChars && !option.disabled) {
         if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+          const prevLen = this._inputNode.value.length;
           this._inputNode.value = option.choiceValue;
-          this._inputNode.selectionStart = this.__cboxInputValue.length;
+          this._inputNode.selectionStart = prevLen;
           this._inputNode.selectionEnd = this._inputNode.value.length;
-
           this.activeIndex = i;
           if (this.selectionFollowsFocus && !this.multipleChoice) {
             this.setCheckedIndex(this.activeIndex);
@@ -512,29 +513,28 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this._overlayCtrl._popper.update();
     }
 
-    /*
-    // [7]. if active is now suddenly on an invisible option, set active it to the closest match
-    if (!visibleOptions.includes(this.formElements[this.activeIndex])) {
-      if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
-        this.__setActiveToClosestMatch();
-      } else {
-        this.activeIndex = -1;
-      }
-    }
-     */
+    // // [7]. if active is now suddenly on an invisible option, set active it to the closest match
+    // // TODO: how can it be on invisble option, since we only set activeIndex above if "show === true"
+    // if (!visibleOptions.includes(this.formElements[this.activeIndex])) {
+    //   if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+    //     this.__setActiveToClosestMatch();
+    //   } else {
+    //     this.activeIndex = -1;
+    //   }
+    // }
   }
 
-  /* __setActiveToClosestMatch() {
-    let matchIndex = -1;
-    this.formElements.find((el, index) => {
-      if (!el.hasAttribute('aria-hidden') && !el.disabled) {
-        matchIndex = index;
-        return true;
-      }
-      return false;
-    });
-    this.activeIndex = matchIndex;
-  } */
+  // __setActiveToClosestMatch() {
+  //   let matchIndex = -1;
+  //   this.formElements.find((el, index) => {
+  //     if (!el.hasAttribute('aria-hidden') && !el.disabled) {
+  //       matchIndex = index;
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  //   this.activeIndex = matchIndex;
+  // }
 
   /**
    * @enhance ListboxMixin
@@ -609,7 +609,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   __initFilterListbox() {
     this._handleAutocompletion({
-      curValue: this.__cboxInputValue,
+      curValue: this._inputNode.value,
       prevValue: this.__prevCboxValueNonSelected,
     });
   }
@@ -622,16 +622,21 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   __handleActiveIndexOnOpen() {
-    if (!this.multipleChoice && this.checkedIndex !== -1) {
-      this.activeIndex = this.checkedIndex;
-    } else if (this.multipleChoice && this.checkedIndex.length) {
-      // eslint-disable-next-line prefer-destructuring
-      this.activeIndex = this.checkedIndex[0];
-      // } else if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
-      //  this.__setActiveToClosestMatch();
-    } else {
-      this.activeIndex = 0 /* -1 */;
-    }
+    // if (!this.multipleChoice && this.checkedIndex !== -1) {
+    //   this.activeIndex = this.checkedIndex;
+    // } else
+
+    // if (this.multipleChoice && this.checkedIndex.length) {
+    //   // eslint-disable-next-line prefer-destructuring
+    //   this.activeIndex = this.checkedIndex[0];
+    // } else if (this.autocomplete === 'both' || this.autocomplete === 'inline') {
+    //   this.__setActiveToClosestMatch();
+    // } else {
+    //   this.activeIndex = -1;
+    // }
+
+    // rest will be handled by _handleAutocomplete
+    this.activeIndex = -1;
   }
 
   __setupCombobox() {
