@@ -1,5 +1,25 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 06123918: Add types for switch package.
+
+### Patch Changes
+
+- 85720654: - prevent toggle of checked state when disabled
+  - dispatch checked-changed on label click
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+
 ## 0.11.2
 
 ### Patch Changes

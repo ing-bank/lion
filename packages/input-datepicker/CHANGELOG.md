@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.16.2
+
+### Patch Changes
+
+- 6394c080: Cleanup and remove shadow outlet slot. This should not be used anymore
+- Updated dependencies [cfa2daf6]
+- Updated dependencies [27879863]
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a9d6971c]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+  - @lion/input-date@0.8.0
+  - @lion/overlays@0.20.0
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+  - @lion/localize@0.14.5
+  - @lion/calendar@0.11.3
+
 ## 0.16.1
 
 ### Patch Changes

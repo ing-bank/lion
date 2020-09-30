@@ -1,5 +1,61 @@
 # Change Log
 
+## 0.3.4
+
+### Patch Changes
+
+- 01a798e5: Combobox package
+
+  ## Features
+
+  - combobox: new combobox package
+  - core: expanded browsers detection utils
+  - core: closest() polyfill for IE
+  - overlays: allow OverlayMixin to specify reference node (when invokerNode should not be positioned against)
+  - form-core: add `_onLabelClick` to FormControlMixin. Subclassers should override this
+
+  ## Patches
+
+  - form-core: make ChoiceGroupMixin a suite
+  - listbox: move generic tests from combobox to listbox
+  - select-rich: enhance tests
+
+- Updated dependencies [50287fba]
+- Updated dependencies [e2d772f5]
+- Updated dependencies [cfa2daf6]
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [30223d4c]
+- Updated dependencies [a31b7217]
+- Updated dependencies [6394c080]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [9263f397]
+- Updated dependencies [6f08e929]
+- Updated dependencies [66c5f2cd]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+- Updated dependencies [32202a88]
+- Updated dependencies [98fa7ad6]
+  - @lion/radio-group@0.12.0
+  - @lion/select-rich@0.21.4
+  - @lion/input-date@0.8.0
+  - @lion/input-email@0.9.0
+  - @lion/input-iban@0.10.0
+  - @lion/input-range@0.5.0
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+  - @lion/validate-messages@0.3.0
+  - @lion/input-datepicker@0.16.2
+  - @lion/checkbox-group@0.12.0
+  - @lion/fieldset@0.15.0
+  - @lion/form@0.7.0
+  - @lion/select@0.8.0
+  - @lion/localize@0.14.5
+  - @lion/input@0.10.0
+  - @lion/textarea@0.8.0
+  - @lion/button@0.7.14
+
 ## 0.3.3
 
 ### Patch Changes

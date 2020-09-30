@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.5.6
+
+### Patch Changes
+
+- bef7d961: Only look for tabs and panels as direct children, this allows to have nested tabs.
+- 56cc174c: The store of invoker and content slottables was not properly cleared before repopulating, on slotchange event. This would cause duplicate entries.
+- Updated dependencies [01a798e5]
+  - @lion/core@0.13.0
+
 ## 0.5.5
 
 ### Patch Changes

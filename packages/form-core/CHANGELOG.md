@@ -1,5 +1,37 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 4b7bea96: Added some type fixes/adjustments.
+- 01a798e5: Combobox package
+
+  ## Features
+
+  - combobox: new combobox package
+  - core: expanded browsers detection utils
+  - core: closest() polyfill for IE
+  - overlays: allow OverlayMixin to specify reference node (when invokerNode should not be positioned against)
+  - form-core: add `_onLabelClick` to FormControlMixin. Subclassers should override this
+
+  ## Patches
+
+  - form-core: make ChoiceGroupMixin a suite
+  - listbox: move generic tests from combobox to listbox
+  - select-rich: enhance tests
+
+- a31b7217: Added submitGroup to types definition file for FormGroupMixin.
+- 85720654: - prevent toggle of checked state when disabled
+  - dispatch checked-changed on label click
+- 32202a88: Added index definition file to git, to allow for importing LionField module definition. Adjust some types now that LionInput will be typed
+- b9327627: These packages were using out of sync type definitions for FormatOptions, and the types were missing a bunch of options that Intl would normally accept. We now extend Intl's NumberFormatOptions and DateTimeFormatOptions properly, so we always have the right types and are more consistent on it.
+- 02145a06: for ChoiceInputs override clear() so modelValue doesn't get erased
+- Updated dependencies [01a798e5]
+- Updated dependencies [b9327627]
+  - @lion/core@0.13.0
+  - @lion/localize@0.14.5
+
 ## 0.6.1
 
 ### Patch Changes

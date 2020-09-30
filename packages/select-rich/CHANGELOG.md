@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.21.4
+
+### Patch Changes
+
+- e2d772f5: The singleOption setting should only be true if there is exactly one option. This also needs to be true if there are dynamic additions or removals.
+- 01a798e5: Combobox package
+
+  ## Features
+
+  - combobox: new combobox package
+  - core: expanded browsers detection utils
+  - core: closest() polyfill for IE
+  - overlays: allow OverlayMixin to specify reference node (when invokerNode should not be positioned against)
+  - form-core: add `_onLabelClick` to FormControlMixin. Subclassers should override this
+
+  ## Patches
+
+  - form-core: make ChoiceGroupMixin a suite
+  - listbox: move generic tests from combobox to listbox
+  - select-rich: enhance tests
+
+- 6394c080: Cleanup and remove shadow outlet slot. This should not be used anymore
+- Updated dependencies [27879863]
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a9d6971c]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+  - @lion/overlays@0.20.0
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+  - @lion/listbox@0.1.2
+  - @lion/button@0.7.14
+
 ## 0.21.3
 
 ### Patch Changes

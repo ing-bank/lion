@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- 98fa7ad6: Add types for textarea package
+
+### Patch Changes
+
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+
 ## 0.7.23
 
 ### Patch Changes

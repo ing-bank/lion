@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.2.0
+
+### Minor Changes
+
+- 175e6bea: Added types for the accordion package.
+
+### Patch Changes
+
+- Updated dependencies [01a798e5]
+  - @lion/core@0.13.0
+
 ## 0.1.8
 
 ### Patch Changes

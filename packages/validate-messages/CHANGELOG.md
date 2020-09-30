@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+- 30223d4c: Add types for validate-messages package.
+
+### Patch Changes
+
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+  - @lion/localize@0.14.5
+
 ## 0.2.15
 
 ### Patch Changes
