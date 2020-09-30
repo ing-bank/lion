@@ -109,7 +109,9 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    * Override this function from ChoiceInputMixin.
    */
   // eslint-disable-next-line class-methods-use-this
-  _isEmpty() {}
+  _isEmpty() {
+    return false;
+  }
 
   __handleButtonSwitchCheckedChanged() {
     this.checked = this._inputNode.checked;
