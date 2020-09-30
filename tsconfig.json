@@ -35,6 +35,7 @@
     "packages/localize/**/*.js",
     "packages/overlays/**/*.js",
     "packages/pagination/**/*.js",
+    "packages/progress-indicator/**/*.js",
     "packages/radio-group/**/*.js",
     "packages/select/**/*.js",
     "packages/singleton-manager/**/*.js",
