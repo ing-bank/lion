@@ -33,6 +33,7 @@
   "dependencies": {
     "@lion/core": "0.12.0",
     "@lion/form-core": "0.6.1",
+    "@types/autosize": "^3.0.7",
     "autosize": "4.0.2"
   },
   "keywords": [
