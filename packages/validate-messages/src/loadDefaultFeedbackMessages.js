@@ -19,6 +19,16 @@ import {
   Pattern,
 } from '@lion/form-core';
 
+/**
+ * @typedef {object} MessageData
+ * @property {*} [MessageData.modelValue]
+ * @property {string} [MessageData.fieldName]
+ * @property {*} [MessageData.formControl]
+ * @property {string} [MessageData.type]
+ * @property {Object.<string,?>} [MessageData.config]
+ * @property {string} [MessageData.name]
+ */
+
 let loaded = false;
 
 export function loadDefaultFeedbackMessages() {
@@ -29,7 +39,7 @@ export function loadDefaultFeedbackMessages() {
   const forMessagesToBeReady = () =>
     localize.loadNamespace(
       {
-        'lion-validate': locale => {
+        'lion-validate': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
               return import('../translations/bg-BG.js');
@@ -104,29 +114,52 @@ export function loadDefaultFeedbackMessages() {
           }
         },
       },
-      { locale: localize.localize },
+      { locale: localize.locale },
     );
 
+  /**
+   * @param {MessageData} data
+   * @returns {Promise<string|Node>}
+   */
   const getLocalizedMessage = async data => {
     await forMessagesToBeReady();
-    return localize.msg(`lion-validate:${data.type}.${data.name}`, data);
+    if (data) {
+      return localize.msg(`lion-validate:${data.type}.${data.name}`, data);
+    }
+    return '';
   };
 
+  /** @param {MessageData} data */
   Required.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   EqualsLength.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinLength.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MaxLength.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinMaxLength.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   Pattern.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   IsEmail.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   IsNumber.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinNumber.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MaxNumber.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinMaxNumber.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   IsDate.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinDate.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MaxDate.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   MinMaxDate.getMessage = async data => getLocalizedMessage(data);
+  /** @param {MessageData} data */
   IsDateDisabled.getMessage = async data => getLocalizedMessage(data);
 
   DefaultSuccess.getMessage = async data => {
