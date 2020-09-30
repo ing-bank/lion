@@ -36,9 +36,14 @@
     "packages/overlays/**/*.js",
     "packages/pagination/**/*.js",
     "packages/radio-group/**/*.js",
+    "packages/select/**/*.js",
     "packages/singleton-manager/**/*.js",
+    "packages/steps/**/*.js",
+    "packages/switch/**/*.js",
     "packages/tabs/**/*.js",
-    "packages/tooltip/**/*.js"
+    "packages/textarea/**/*.js",
+    "packages/tooltip/**/*.js",
+    "packages/validate-messages/**/*.js"
   ],
   "exclude": [
     "node_modules",
