@@ -2,6 +2,7 @@ import { css, html, ScopedElementsMixin } from '@lion/core';
 import { ChoiceInputMixin, LionField } from '@lion/form-core';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
@@ -25,10 +26,26 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     };
   }
 
+  /**
+   * Input node here is the lion-switch-button, which is not compatible with LionField _inputNode --> HTMLInputElement
+   * Therefore we do a full override and typecast to an intersection type that includes LionSwitchButton
+   * @returns {HTMLInputElement & LionSwitchButton}
+   */
+  get _inputNode() {
+    return /** @type {HTMLInputElement  & LionSwitchButton} */ (Array.from(this.children).find(
+      el => el.slot === 'input',
+    ));
+  }
+
   get slots() {
     return {
       ...super.slots,
-      input: () => document.createElement(this.constructor.getScopedTagName('lion-switch-button')),
+      input: () =>
+        document.createElement(
+          /** @type {typeof LionSwitch} */ (this.constructor).getScopedTagName(
+            'lion-switch-button',
+          ),
+        ),
     };
   }
 
@@ -82,6 +99,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     }
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     this._syncButtonSwitch();

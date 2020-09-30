@@ -1,8 +1,16 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-switch-button.js';
 
+/**
+ * @typedef {import('../src/LionSwitchButton').LionSwitchButton} LionSwitchButton
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitchButton>} */ (_fixture);
+
 describe('lion-switch-button', () => {
+  /** @type {LionSwitchButton} */
   let el;
   beforeEach(async () => {
     el = await fixture(html`<lion-switch-button></lion-switch-button>`);
@@ -62,15 +70,15 @@ describe('lion-switch-button', () => {
     el.click();
     el.click();
     expect(handlerSpy.callCount).to.equal(2);
-    const checkCall = call => {
-      expect(call.args).to.have.a.lengthOf(1);
+    const checkCall = /** @param {import('sinon').SinonSpyCall} call */ call => {
+      expect(call.args).to.have.lengthOf(1);
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
       expect(e.composed).to.be.true;
     };
-    checkCall(handlerSpy.getCall(0), true);
-    checkCall(handlerSpy.getCall(1), false);
+    checkCall(handlerSpy.getCall(0));
+    checkCall(handlerSpy.getCall(1));
   });
 
   it('should dispatch "checked-changed" event when checked changed', () => {
@@ -79,15 +87,15 @@ describe('lion-switch-button', () => {
     el.checked = true;
     el.checked = false;
     expect(handlerSpy.callCount).to.equal(2);
-    const checkCall = call => {
-      expect(call.args).to.have.a.lengthOf(1);
+    const checkCall = /** @param {import('sinon').SinonSpyCall} call */ call => {
+      expect(call.args).to.have.lengthOf(1);
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
       expect(e.composed).to.be.true;
     };
-    checkCall(handlerSpy.getCall(0), true);
-    checkCall(handlerSpy.getCall(1), false);
+    checkCall(handlerSpy.getCall(0));
+    checkCall(handlerSpy.getCall(1));
   });
 
   it('should not dispatch "checked-changed" event if disabled', () => {
@@ -117,7 +125,7 @@ describe('lion-switch-button', () => {
       await el.updateComplete;
       expect(el.getAttribute('aria-checked')).to.equal('false');
 
-      el.setAttribute('checked', true);
+      el.setAttribute('checked', '');
       await el.updateComplete;
       expect(el.getAttribute('aria-checked')).to.equal('true');
       el.removeAttribute('checked');

@@ -1,6 +1,13 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-switch.js';
+
+/**
+ * @typedef {import('../src/LionSwitch').LionSwitch} LionSwitch
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitch>} */ (_fixture);
 
 describe('lion-switch', () => {
   it('should have default "input" element', async () => {
@@ -83,15 +90,15 @@ describe('lion-switch', () => {
     el._labelNode.click();
     await el.updateComplete;
     expect(handlerSpy.callCount).to.equal(2);
-    const checkCall = call => {
-      expect(call.args).to.have.a.lengthOf(1);
+    const checkCall = /** @param {import('sinon').SinonSpyCall} call */ call => {
+      expect(call.args).to.have.lengthOf(1);
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
       expect(e.composed).to.be.true;
     };
-    checkCall(handlerSpy.getCall(0), true);
-    checkCall(handlerSpy.getCall(1), false);
+    checkCall(handlerSpy.getCall(0));
+    checkCall(handlerSpy.getCall(1));
   });
 
   it('should dispatch "checked-changed" event when checked changed', async () => {
