@@ -13,7 +13,7 @@ describe('lion-select', () => {
         </select>
       </lion-select>
     `);
-    expect(lionSelect.querySelector('select').value).to.equal('nr2');
+    expect(lionSelect.querySelector('select')?.value).to.equal('nr2');
   });
 
   it('is accessible', async () => {
