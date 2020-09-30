@@ -29,6 +29,7 @@
     "packages/listbox/src/*.js",
     "packages/localize/**/*.js",
     "packages/overlays/**/*.js",
+    "packages/pagination/**/*.js",
     "packages/radio-group/**/*.js",
     "packages/singleton-manager/**/*.js",
     "packages/tabs/**/*.js",
