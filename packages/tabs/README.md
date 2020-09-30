@@ -84,6 +84,35 @@ export const slotsOrder = () => html`
 `;
 ```
 
+### Nesting tabs
+
+You can include tabs within tabs
+
+```js preview-story
+export const nestedTabs = () => html`
+  <lion-tabs>
+    <button slot="tab">Movies</button>
+    <button slot="tab">Work</button>
+    <div slot="panel">
+      <p>Find some more info about our favorite movies:</p>
+      <lion-tabs>
+        <button slot="tab">Info about Cars</button>
+        <button slot="tab">Info about Toy Story</button>
+        <p slot="panel">
+          Cars is a 2006 American computer-animated comedy film produced by Pixar Animation Studios
+          and released by Walt Disney Pictures.
+        </p>
+        <p slot="panel">
+          The feature film directorial debut of John Lasseter, it was the first entirely
+          computer-animated feature film, as well as the first feature film from Pixar.
+        </p>
+      </lion-tabs>
+    </div>
+    <p slot="panel">Work page that showcases our work.</p>
+  </lion-tabs>
+`;
+```
+
 ### Distribute New Elements
 
 Below, we demonstrate on how you could dynamically add new tab + panels.
