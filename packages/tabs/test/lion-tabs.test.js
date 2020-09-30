@@ -80,6 +80,25 @@ describe('<lion-tabs>', () => {
       );
       stub.restore();
     });
+
+    it('only takes direct children into account', async () => {
+      const el = /** @type {LionTabs} */ (await fixture(html`
+        <lion-tabs>
+          <button slot="tab">tab 1</button>
+          <div slot="panel">
+            <button slot="tab">nested tab</button>
+            <div slot="panel">nested panel</div>
+          </div>
+          <button slot="tab">tab 2</button>
+          <div slot="panel">panel 2</div>
+        </lion-tabs>
+      `));
+      el.selectedIndex = 1;
+      const selectedTab = /** @type {Element} */ (Array.from(el.children).find(
+        child => child.slot === 'tab' && child.hasAttribute('selected'),
+      ));
+      expect(selectedTab.textContent).to.equal('tab 2');
+    });
   });
 
   describe('Tabs ([slot=tab])', () => {

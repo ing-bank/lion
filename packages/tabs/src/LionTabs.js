@@ -184,12 +184,12 @@ export class LionTabs extends LitElement {
   __setupStore() {
     /** @type {StoreEntry[]} */
     this.__store = [];
-    const buttons = /** @type {HTMLElement[]} */ (Array.from(
-      this.querySelectorAll('[slot="tab"]'),
-    ));
-    const panels = /** @type {HTMLElement[]} */ (Array.from(
-      this.querySelectorAll('[slot="panel"]'),
-    ));
+    const buttons = /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
+      child => child.slot === 'tab',
+    );
+    const panels = /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
+      child => child.slot === 'panel',
+    );
     if (buttons.length !== panels.length) {
       // eslint-disable-next-line no-console
       console.warn(
