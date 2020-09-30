@@ -244,7 +244,7 @@ export function runValidateMixinFeedbackPart() {
           let name = '';
           if (this.feedbackData && this.feedbackData.length > 0) {
             const ctor = /** @type {typeof Validator} */ (this.feedbackData[0]?.validator
-              .constructor);
+              ?.constructor);
             name = ctor.validatorName;
           }
           return html`Custom for ${name}`;
@@ -467,7 +467,7 @@ export function runValidateMixinFeedbackPart() {
 
       // ignore fieldName Promise as it will always be unique
       const compare = spy.args[0][0];
-      delete compare?.config.fieldName;
+      delete compare?.config?.fieldName;
       expect(compare).to.eql({
         config: {},
         params: 4,
