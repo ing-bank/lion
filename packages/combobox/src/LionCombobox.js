@@ -246,6 +246,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._listboxReceivesNoFocus = true;
 
     this.__prevCboxValueNonSelected = '';
+    this.__prevCboxValue = '';
 
     /** @type {EventListener} */
     this.__showOverlay = this.__showOverlay.bind(this);
@@ -307,27 +308,27 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this.__shouldAutocompleteNextUpdate
     ) {
       // Only update list in render cycle
-      this._handleAutocompletion({
-        curValue: this._inputNode.value,
-        prevValue: this.__prevCboxValueNonSelected,
-      });
+      this._handleAutocompletion();
       this.__shouldAutocompleteNextUpdate = false;
     }
 
-    if (this._selectionDisplayNode) {
+    if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
       this._selectionDisplayNode.onComboboxElementUpdated(changedProperties);
     }
   }
 
   /**
+   * When the preconfigurable `match-mode` conditions are not sufficient,
+   * one can define a custom matching function.
+   *
    * @overridable
    * @param {LionOption} option
-   * @param {string} curValue current ._inputNode value
+   * @param {string} textboxValue current ._inputNode value
    */
-  filterOptionCondition(option, curValue) {
+  matchCondition(option, textboxValue) {
     let idx = -1;
-    if (typeof option.choiceValue === 'string' && typeof curValue === 'string') {
-      idx = option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase());
+    if (typeof option.choiceValue === 'string' && typeof textboxValue === 'string') {
+      idx = option.choiceValue.toLowerCase().indexOf(textboxValue.toLowerCase());
     }
 
     if (this.matchMode === 'all') {
@@ -353,6 +354,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (ev.key === 'Tab') {
       this.opened = false;
     }
+    this.__hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
   }
 
   /**
@@ -424,9 +426,16 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     option.style.display = 'none';
   }
 
+  /**
+   *
+   * @overridable whether a user int
+   */
   _computeUserIntendsAutoFill({ prevValue, curValue }) {
     const userIsAddingChars = prevValue.length < curValue.length;
-    const userStartsNewWord = prevValue.length && curValue.length && prevValue[0] !== curValue[0];
+    const userStartsNewWord =
+      prevValue.length &&
+      curValue.length &&
+      prevValue[0].toLowerCase() !== curValue[0].toLowerCase();
     return userIsAddingChars || userStartsNewWord;
   }
 
@@ -434,14 +443,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * Matches visibility of listbox options against current ._inputNode contents
-   * @param {object} config
-   * @param {string} config.curValue current ._inputNode value
-   * @param {string} config.prevValue previous ._inputNode value
    */
-  _handleAutocompletion({ curValue, prevValue }) {
+  _handleAutocompletion() {
     if (this.autocomplete === 'none') {
       return;
     }
+
+    const curValue = this._inputNode.value;
+    const prevValue = this.__hasSelection ? this.__prevCboxValueNonSelected : this.__prevCboxValue;
 
     /**
      * The filtered list of options that will match in this autocompletion cycle
@@ -454,8 +463,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
-      const show =
-        this.autocomplete === 'inline' ? true : this.filterOptionCondition(option, curValue);
+      const show = this.autocomplete === 'inline' ? true : this.matchCondition(option, curValue);
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
       if (isAutoFillCandidate) {
@@ -515,8 +523,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       option.removeAttribute('aria-hidden');
     });
     /** @type {number} */
-    const { selectionStart } = this._inputNode;
-    this.__prevCboxValueNonSelected = curValue.slice(0, selectionStart);
+
+    this.__prevCboxValueNonSelected = curValue;
+    // See test "computation of "user intends autofill" works correctly afer autofill"
+    this.__prevCboxValue = this._inputNode.value;
+    this.__hasSelection = hasAutoFilled;
 
     if (this._overlayCtrl && this._overlayCtrl._popper) {
       this._overlayCtrl._popper.update();
@@ -600,10 +611,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   __initFilterListbox() {
-    this._handleAutocompletion({
-      curValue: this._inputNode.value,
-      prevValue: this.__prevCboxValueNonSelected,
-    });
+    this._handleAutocompletion();
   }
 
   __setComboboxDisabledAndReadOnly() {
