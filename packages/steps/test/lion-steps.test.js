@@ -1,22 +1,40 @@
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-step.js';
 import '../lion-steps.js';
 
+/**
+ * @typedef {import('../src/LionSteps').LionSteps} LionSteps
+ * @typedef {import('../src/LionStep').LionStep} LionStep
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {{[key: string]: ?}} UnknownData
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionSteps>} */ (_fixture);
+
+/**
+ *
+ * @param {LionSteps} steps
+ * @param {Object} expected
+ * @param {string} expected.transitions
+ * @param {string} expected.statuses
+ */
 async function checkWorkflow(steps, expected) {
   return new Promise(resolve => {
+    /** @type {number[]} */
     const transitions = [];
     steps.addEventListener('transition', event => {
+      const _event = /** @type {CustomEvent} */ (event);
       if (!transitions.length) {
-        transitions.push(event.detail.fromStep.number);
+        transitions.push(_event.detail.fromStep.number);
       }
-      transitions.push(event.detail.toStep.number);
+      transitions.push(_event.detail.toStep.number);
     });
     setTimeout(() => {
       // allow time for other transitions to happen if any
       const transitionsString = transitions.join(' => ');
       expect(transitionsString).to.equal(expected.transitions, 'transition flow is different');
-      const statusesString = Array.from(steps.children)
+      const statusesString = /** @type {LionStep[]} */ (Array.from(steps.children))
         .map(step => step.status)
         .join(' ');
       expect(statusesString).to.equal(expected.statuses, 'steps statuses are different');
@@ -60,7 +78,7 @@ describe('lion-steps', () => {
         </lion-steps>
       `);
       expect(el.current).to.equal(0);
-      expect(el.children[0].status).to.equal('entered');
+      expect(/** @type {LionStep} */ (el.children[0]).status).to.equal('entered');
     });
   });
 
@@ -133,9 +151,13 @@ describe('lion-steps', () => {
       const el = await fixture(html`
         <lion-steps .data=${{ age: 25 }}>
           <lion-step initial-step>Step 0</lion-step>
-          <lion-step .condition=${data => data.age < 18}>Step 1</lion-step>
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+            >Step 1</lion-step
+          >
           <lion-step>Step 2</lion-step>
-          <lion-step .condition=${data => data.age < 22}>Step 3</lion-step>
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age < 22}
+            >Step 3</lion-step
+          >
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
@@ -170,8 +192,8 @@ describe('lion-steps', () => {
   describe('events', () => {
     it('will fire lion-step @leave event before changing .current', async () => {
       let currentInLeaveEvent;
-      const onLeave = ev => {
-        currentInLeaveEvent = ev.target.controller.current;
+      const onLeave = /** @param {Event} ev */ ev => {
+        currentInLeaveEvent = /** @type {LionStep} */ (ev.target).controller?.current;
       };
       const el = await fixture(html`
         <lion-steps>
@@ -186,8 +208,8 @@ describe('lion-steps', () => {
 
     it('will fire lion-step @enter event after changing .current', async () => {
       let currentInEnterEvent;
-      const onEnter = ev => {
-        currentInEnterEvent = ev.target.controller.current;
+      const onEnter = /** @param {Event} ev */ ev => {
+        currentInEnterEvent = /** @type {LionStep} */ (ev.target).controller?.current;
       };
       const el = await fixture(html`
         <lion-steps>
@@ -245,9 +267,16 @@ describe('lion-steps', () => {
       const el = await fixture(html`
         <lion-steps .data=${{ age: 25 }}>
           <lion-step initial-step>Step 0</lion-step>
-          <lion-step .condition=${data => data.age < 18}>Step 1</lion-step>
-          <lion-step .condition=${data => data.age >= 18 && data.age < 21}>Step 2</lion-step>
-          <lion-step .condition=${data => data.age >= 21}>Step 3</lion-step>
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+            >Step 1</lion-step
+          >
+          <lion-step
+            .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
+            >Step 2</lion-step
+          >
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+            >Step 3</lion-step
+          >
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
@@ -264,9 +293,16 @@ describe('lion-steps', () => {
       const el = await fixture(html`
         <lion-steps .data=${{ age: 19 }}>
           <lion-step initial-step>Step 0</lion-step>
-          <lion-step .condition=${data => data.age < 18}>Step 1</lion-step>
-          <lion-step .condition=${data => data.age >= 18 && data.age < 21}>Step 2</lion-step>
-          <lion-step .condition=${data => data.age >= 21}>Step 3</lion-step>
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+            >Step 1</lion-step
+          >
+          <lion-step
+            .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
+            >Step 2</lion-step
+          >
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+            >Step 3</lion-step
+          >
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
@@ -285,9 +321,16 @@ describe('lion-steps', () => {
       const el = await fixture(html`
         <lion-steps .data=${{ age: 15 }}>
           <lion-step initial-step>Step 0</lion-step>
-          <lion-step .condition=${data => data.age < 18}>Step 1</lion-step>
-          <lion-step .condition=${data => data.age >= 18 && data.age < 21}>Step 2</lion-step>
-          <lion-step .condition=${data => data.age >= 21}>Step 3</lion-step>
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+            >Step 1</lion-step
+          >
+          <lion-step
+            .condition=${/** @param {UnknownData} data */ data => data.age >= 18 && data.age < 21}
+            >Step 2</lion-step
+          >
+          <lion-step .condition=${/** @param {UnknownData} data */ data => data.age >= 21}
+            >Step 3</lion-step
+          >
           <lion-step>Step 4</lion-step>
         </lion-steps>
       `);
@@ -309,7 +352,11 @@ describe('lion-steps', () => {
       const el = await fixture(html`
         <lion-steps .data=${{}}>
           <lion-step initial-step>Step 0</lion-step>
-          <lion-step .condition=${data => data.age < 18} invert-condition>Step 1</lion-step>
+          <lion-step
+            .condition=${/** @param {UnknownData} data */ data => data.age < 18}
+            invert-condition
+            >Step 1</lion-step
+          >
           <lion-step>Step 2</lion-step>
         </lion-steps>
       `);
@@ -332,7 +379,7 @@ describe('lion-steps', () => {
     });
 
     it('behaves like "if/else" in case both condition and inverted condition are present', async () => {
-      const condition = data => data.age < 18;
+      const condition = /** @param {UnknownData} data */ data => data.age < 18;
       const el = await fixture(html`
         <lion-steps .data=${{}}>
           <lion-step initial-step>Step 0</lion-step>
@@ -411,7 +458,7 @@ describe('lion-steps', () => {
       el.next();
       el.previous();
 
-      expect(el.children[1].status).to.equal('left');
+      expect(/** @type {LionStep} */ (el.children[1]).status).to.equal('left');
     });
   });
 });
