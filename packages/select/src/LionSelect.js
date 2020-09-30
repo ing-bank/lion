@@ -27,8 +27,6 @@ import { LionField } from '@lion/form-core';
  * @customElement lion-select
  * @extends {LionField}
  */
-
-// eslint-disable-next-line no-unused-vars
 export class LionSelect extends LionField {
   connectedCallback() {
     super.connectedCallback();
