@@ -1,3 +1,13 @@
+/**
+ * @typedef {object} MessageData
+ * @property {*} [MessageData.modelValue]
+ * @property {string} [MessageData.fieldName]
+ * @property {HTMLElement} [MessageData.formControl]
+ * @property {string} [MessageData.type]
+ * @property {Object.<string,?>} [MessageData.config]
+ * @property {string} [MessageData.name]
+ */
+
 export class Validator {
   /**
    *
@@ -65,12 +75,7 @@ export class Validator {
 
   /**
    * @overridable
-   * @param {object} [data]
-   * @param {*} [data.modelValue]
-   * @param {string} [data.fieldName]
-   * @param {HTMLElement} [data.formControl]
-   * @param {*} [data.params]
-   * @param {string|undefined} [data.type]
+   * @param {MessageData} [data]
    * @returns {Promise<string|Node>}
    */
   async _getMessage(data) {
@@ -96,13 +101,7 @@ export class Validator {
 
   /**
    * @overridable
-   * @param {object} [data]
-   * @param {*} [data.modelValue]
-   * @param {string} [data.fieldName]
-   * @param {*} [data.params]
-   * @param {string} [data.type]
-   * @param {Object.<string,?>} [data.config]
-   * @param {string} [data.name]
+   * @param {MessageData} [data]
    * @returns {Promise<string|Node>}
    */
   // eslint-disable-next-line no-unused-vars
