@@ -507,6 +507,26 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
       mimicUserTyping(el, 'ch');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql([
+        'Artichoke',
+        'Chard',
+        'Chicory',
+        'Victoria Plum',
+      ]);
+    });
+
+    it('does not filter options when autocomplete is "inline"', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="inline">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      mimicUserTyping(el, 'ch');
+      await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql([
         'Artichoke',
         'Chard',

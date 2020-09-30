@@ -338,6 +338,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * @param {Event} ev
    */
+  // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     // this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
     // Schedules autocompletion of options
@@ -447,7 +448,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
-      const show = this.filterOptionCondition(option, curValue);
+      const show =
+        this.autocomplete === 'inline' ? true : this.filterOptionCondition(option, curValue);
 
       // [1]. Synchronize ._inputNode value and active descendant with closest match
       const stringValues = typeof option.choiceValue === 'string' && typeof curValue === 'string';
