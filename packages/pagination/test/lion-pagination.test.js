@@ -1,7 +1,14 @@
-import { html, fixture, expect } from '@open-wc/testing';
+import { html, fixture as _fixture, expect } from '@open-wc/testing';
 import sinon from 'sinon';
 
 import '../lion-pagination.js';
+
+/**
+ * @typedef {import('../src/LionPagination').LionPagination} LionPagination
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);
 
 describe('Pagination', () => {
   it('has states for count and current', async () => {
@@ -17,34 +24,44 @@ describe('Pagination', () => {
 
   it('disables the previous button if on first page', async () => {
     const el = await fixture(html` <lion-pagination count="4"></lion-pagination> `);
-    const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+    const buttons = Array.from(
+      /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+    );
     expect(buttons[0]).to.has.attribute('disabled');
   });
 
   it('disables the next button if on last page', async () => {
     const el = await fixture(html` <lion-pagination count="4" current="4"></lion-pagination> `);
-    const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+    const buttons = Array.from(
+      /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+    );
     expect(buttons[buttons.length - 1]).to.has.attribute('disabled');
   });
 
   describe('User interaction', () => {
     it('can go to previous page with previous button', async () => {
       const el = await fixture(html` <lion-pagination count="6" current="2"></lion-pagination> `);
-      const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
       buttons[0].click();
       expect(el.current).to.equal(1);
     });
 
     it('can go to next page with next button', async () => {
       const el = await fixture(html` <lion-pagination count="6" current="2"></lion-pagination> `);
-      const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
       buttons[buttons.length - 1].click();
       expect(el.current).to.equal(3);
     });
 
     it('goes to the page when clicking on its button', async () => {
       const el = await fixture(html` <lion-pagination count="6" current="2"></lion-pagination> `);
-      const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
       buttons[5].click();
       expect(el.current).to.equal(5);
     });
@@ -54,7 +71,9 @@ describe('Pagination', () => {
       const el = await fixture(html`
         <lion-pagination count="6" current="2" @current-changed=${changeSpy}></lion-pagination>
       `);
-      const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
       const previous = buttons[0];
       const next = buttons[buttons.length - 1];
       const page5 = buttons[5];
@@ -77,7 +96,9 @@ describe('Pagination', () => {
       const el = await fixture(html`
         <lion-pagination count="6" current="2" @current-changed=${changeSpy}></lion-pagination>
       `);
-      const page2 = el.shadowRoot.querySelector("button[aria-current='true']");
+      const page2 = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector(
+        "button[aria-current='true']",
+      ));
       page2.click();
       expect(changeSpy).to.not.be.called;
       expect(el.current).to.equal(2);
@@ -111,7 +132,9 @@ describe('Pagination', () => {
   describe('Accessibility', () => {
     it('sets aria-current to the current page', async () => {
       const el = await fixture(html` <lion-pagination count="3"></lion-pagination> `);
-      const buttons = Array.from(el.shadowRoot.querySelectorAll('button'));
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
       // button[0] is the previous button
       expect(buttons[1].getAttribute('aria-current')).to.equal('true');
       expect(buttons[2].getAttribute('aria-current')).to.equal('false');

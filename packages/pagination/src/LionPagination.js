@@ -1,11 +1,16 @@
 import { LitElement, html, css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
+
+/**
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
 /**
  * `LionPagination` is a class for custom Pagination element (`<lion-pagination>` web component).
  *
  * @customElement lion-pagination
- * @extends LitElement
  */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionPagination extends LocalizeMixin(LitElement) {
   static get styles() {
     return css`
@@ -32,7 +37,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        'lion-pagination': locale => {
+        'lion-pagination': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
               return import('../translations/bg.js');
@@ -92,6 +97,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     };
   }
 
+  /** @param {number} value */
   set current(value) {
     if (value !== this.current) {
       const oldValue = this.current;
@@ -101,8 +107,9 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     }
   }
 
+  /** @returns {number} */
   get current() {
-    return this.__current;
+    return this.__current || 0;
   }
 
   constructor() {
@@ -144,6 +151,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   /**
    * Go to the specific page
+   * @param {number} pageNumber
    * @public
    */
   goto(pageNumber) {
@@ -175,7 +183,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   /**
    * Calculate nav list based on current page selection.
-   * @returns {Array}
+   * @returns {(number|'...')[]}
    * @private
    */
   __calculateNavList() {
@@ -190,29 +198,27 @@ export class LionPagination extends LocalizeMixin(LitElement) {
       const pos5 = this.current + 1;
       //  if pos 3 is lower than 4 we have a predefined list of elements
       if (pos4 <= 4) {
-        const list = Array(this.__visiblePages)
-          .fill()
-          .map((_, idx) => start + idx);
+        const list = /** @type {(number|'...')[]} */ ([...Array(this.__visiblePages)].map(
+          (_, idx) => start + idx,
+        ));
         list.push('...');
         list.push(this.count);
         return list;
       }
       //  if we are close to the end of the list with the current page then we have again a predefined list
       if (finish - pos4 <= 3) {
-        const list = [];
+        const list = /** @type {(number|'...')[]} */ ([]);
         list.push(1);
         list.push('...');
-        const listRemaining = Array(this.__visiblePages)
-          .fill()
-          .map((_, idx) => this.count - this.__visiblePages + 1 + idx);
+        const listRemaining = [...Array(this.__visiblePages)].map(
+          (_, idx) => this.count - this.__visiblePages + 1 + idx,
+        );
         return list.concat(listRemaining);
       }
 
       return [start, '...', pos3, pos4, pos5, '...', finish];
     }
-    return Array(finish - start + 1)
-      .fill()
-      .map((_, idx) => start + idx);
+    return [...Array(finish - start + 1)].map((_, idx) => start + idx);
   }
 
   /**
@@ -266,7 +272,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   /**
    * Render navigation list
-   * @returns {TemplateResult} nav list template
+   * @returns {TemplateResult[]} nav list template
    * @protected
    */
   _renderNavList() {
