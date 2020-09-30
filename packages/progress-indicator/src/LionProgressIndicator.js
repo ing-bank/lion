@@ -3,11 +3,12 @@
 import { nothing, LitElement } from '@lion/core';
 import { localize, LocalizeMixin } from '@lion/localize';
 
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        'lion-progress-indicator': locale => {
+        'lion-progress-indicator': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
