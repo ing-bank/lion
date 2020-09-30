@@ -1,3 +1,4 @@
+// @ts-expect-error https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
 import autosize from 'autosize/src/autosize.js';
 import { LionField } from '@lion/form-core';
 import { css } from '@lion/core';
@@ -8,6 +9,7 @@ import { css } from '@lion/core';
  * @customElement lion-textarea
  * @extends {LionField}
  */
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionTextarea extends LionField {
   static get properties() {
     return {
@@ -47,11 +49,23 @@ export class LionTextarea extends LionField {
     };
   }
 
+  /**
+   * Input node here is the textarea, which is not compatible with LionField _inputNode --> HTMLInputElement
+   * Therefore we do a full override and typecast to an intersection type that includes HTMLTextAreaElement
+   * @returns {HTMLTextAreaElement & HTMLInputElement}
+   */
+  get _inputNode() {
+    return /** @type {HTMLTextAreaElement & HTMLInputElement} */ (Array.from(this.children).find(
+      el => el.slot === 'input',
+    ));
+  }
+
   constructor() {
     super();
     this.rows = 2;
     this.maxRows = 6;
     this.readOnly = false;
+    this.placeholder = '';
   }
 
   connectedCallback() {
@@ -61,12 +75,11 @@ export class LionTextarea extends LionField {
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     autosize.destroy(this._inputNode);
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('rows')) {
@@ -121,7 +134,7 @@ export class LionTextarea extends LionField {
 
   static get styles() {
     return [
-      ...super.styles,
+      super.styles,
       css`
         .input-group__container > .input-group__input ::slotted(.form-control) {
           overflow-x: hidden; /* for FF adds height to the TextArea to reserve place for scroll-bars */
@@ -142,6 +155,7 @@ export class LionTextarea extends LionField {
   }
 
   __initializeAutoresize() {
+    // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
     if (this.__shady_native_contains) {
       this.__textareaUpdateComplete = this.__waitForTextareaRenderedInRealDOM().then(() => {
         this.__startAutoresize();
@@ -154,6 +168,7 @@ export class LionTextarea extends LionField {
 
   async __waitForTextareaRenderedInRealDOM() {
     let count = 3; // max tasks to wait for
+    // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
     while (count !== 0 && !this.__shady_native_contains(this._inputNode)) {
       // eslint-disable-next-line no-await-in-loop
       await new Promise(resolve => setTimeout(resolve));

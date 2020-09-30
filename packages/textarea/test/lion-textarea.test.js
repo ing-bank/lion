@@ -1,5 +1,12 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import '../lion-textarea.js';
+
+/**
+ * @typedef {import('../src/LionTextarea').LionTextarea} LionTextarea
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionTextarea>} */ (_fixture);
 
 function hasBrowserResizeSupport() {
   const textarea = document.createElement('textarea');
@@ -12,7 +19,7 @@ describe('<lion-textarea>', () => {
   <lion-textarea></lion-textarea>
   ~~~`, async () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
-    expect(el.querySelector('textarea').nodeName).to.equal('TEXTAREA');
+    expect(el.querySelector('textarea')?.nodeName).to.equal('TEXTAREA');
   });
 
   it('has .rows=2 and .maxRows=6', async () => {
@@ -42,7 +49,7 @@ describe('<lion-textarea>', () => {
   it('sync readOnly to the native textarea', async () => {
     const el = await fixture(`<lion-textarea readonly>foo</lion-textarea>`);
     expect(el.readOnly).to.be.true;
-    expect(el.querySelector('textarea').readOnly).to.be.true;
+    expect(el.querySelector('textarea')?.readOnly).to.be.true;
   });
 
   it('disables user resize behavior', async () => {
@@ -59,7 +66,7 @@ describe('<lion-textarea>', () => {
     const el = await fixture(
       html`<lion-textarea .modelValue="${'From value attribute'}"></lion-textarea>`,
     );
-    expect(el.querySelector('textarea').value).to.equal('From value attribute');
+    expect(el.querySelector('textarea')?.value).to.equal('From value attribute');
   });
 
   it('adjusts height based on content', async () => {
