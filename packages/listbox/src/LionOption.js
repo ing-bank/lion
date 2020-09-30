@@ -78,7 +78,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
 
-    if (name === 'active') {
+    if (name === 'active' && this.active !== oldValue) {
       this.dispatchEvent(new Event('active-changed', { bubbles: true }));
     }
   }

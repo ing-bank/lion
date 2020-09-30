@@ -253,7 +253,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     _getCheckedElements() {
-      // We want to filter out disabled values out by default
+      // We want to filter out disabled values by default
       return this.formElements.filter(el => el.checked && !el.disabled);
     }
 

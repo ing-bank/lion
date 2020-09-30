@@ -22,8 +22,8 @@ import '@lion/input/lion-input.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio-group/lion-radio.js';
 import '@lion/select/lion-select.js';
-import '@lion/select-rich/lion-option.js';
-import '@lion/select-rich/lion-options.js';
+import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-options.js';
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/form-core';
@@ -126,9 +126,7 @@ export const main = () => {
         </lion-checkbox-group>
         <lion-input-stepper max="5" min="0" name="rsvp">
           <label slot="label">RSVP</label>
-          <div slot="help-text">
-            Max. 5 guests
-          </div>
+          <div slot="help-text">Max. 5 guests</div>
         </lion-input-stepper>
         <lion-textarea name="comments" label="Comments"></lion-textarea>
         <div class="buttons">

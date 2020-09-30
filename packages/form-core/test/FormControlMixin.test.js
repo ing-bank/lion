@@ -104,22 +104,22 @@ describe('FormControlMixin', () => {
   });
 
   it('does not duplicate aria-describedby and aria-labelledby ids', async () => {
-    const lionField = /** @type {FormControlMixinClass} */ (await fixture(`
+    const el = /** @type {FormControlMixinClass} */ (await fixture(`
       <${tagString} help-text="This element will be disconnected/reconnected">${inputSlot}</${tagString}>
     `));
 
     const wrapper = /** @type {LitElement} */ (await fixture(`<div></div>`));
-    lionField.parentElement?.appendChild(wrapper);
-    wrapper.appendChild(lionField);
+    el.parentElement?.appendChild(wrapper);
+    wrapper.appendChild(el);
     await wrapper.updateComplete;
 
     ['aria-describedby', 'aria-labelledby'].forEach(ariaAttributeName => {
-      const ariaAttribute = Array.from(lionField.children)
+      const ariaAttribute = Array.from(el.children)
         .find(child => child.slot === 'input')
         ?.getAttribute(ariaAttributeName)
         ?.trim()
         .split(' ');
-      const hasDuplicate = !!ariaAttribute?.find((el, i) => ariaAttribute.indexOf(el) !== i);
+      const hasDuplicate = !!ariaAttribute?.find((elm, i) => ariaAttribute.indexOf(elm) !== i);
       expect(hasDuplicate).to.be.false;
     });
   });
@@ -186,18 +186,30 @@ describe('FormControlMixin', () => {
   });
 
   it('adds aria-live="polite" to the feedback slot', async () => {
-    const lionField = await fixture(html`
+    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
       <${tag}>
         ${inputSlot}
         <div slot="feedback">Added to see attributes</div>
       </${tag}>
-    `);
+    `));
 
     expect(
-      Array.from(lionField.children)
+      Array.from(el.children)
         .find(child => child.slot === 'feedback')
         ?.getAttribute('aria-live'),
     ).to.equal('polite');
+  });
+
+  it('clicking the label should call `_onLabelClick`', async () => {
+    const spy = sinon.spy();
+    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      <${tag} ._onLabelClick="${spy}">
+        ${inputSlot}
+      </${tag}>
+    `));
+    expect(spy).to.not.have.been.called;
+    el._labelNode.click();
+    expect(spy).to.have.been.calledOnce;
   });
 
   describe('Model-value-changed event propagation', () => {

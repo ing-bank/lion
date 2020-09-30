@@ -1,5 +1,5 @@
 import { LionListbox } from '@lion/listbox';
-import { html, ScopedElementsMixin, SlotMixin } from '@lion/core';
+import { html, ScopedElementsMixin, SlotMixin, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
@@ -13,7 +13,7 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
  */
 
 function detectInteractionMode() {
-  if (navigator.appVersion.indexOf('Mac') !== -1) {
+  if (browserDetection.isMac) {
     return 'mac';
   }
   return 'windows/linux';
@@ -22,7 +22,6 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  */
-// @ts-expect-error base constructors same return type
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
@@ -64,7 +63,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   get _scrollTargetNode() {
-    // @ts-expect-error _scrollTargetNode not on type
     return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
   }
 
@@ -100,7 +98,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.__overlayOnShow = this.__overlayOnShow.bind(this);
     this.__invokerOnClick = this.__invokerOnClick.bind(this);
     this.__overlayBeforeShow = this.__overlayBeforeShow.bind(this);
-    this.__focusInvokerOnLabelClick = this.__focusInvokerOnLabelClick.bind(this);
     this._listboxOnClick = this._listboxOnClick.bind(this);
   }
 
@@ -109,18 +106,11 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
-    if (this._labelNode) {
-      this._labelNode.addEventListener('click', this.__focusInvokerOnLabelClick);
-    }
-
     this.addEventListener('keyup', this.__onKeyUp);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this.__focusInvokerOnLabelClick);
-    }
     this.__teardownInvokerNode();
     this.removeEventListener('keyup', this.__onKeyUp);
   }
@@ -146,6 +136,30 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
+   * Overrides FormRegistrar adding to make sure children have specific default states when added
+   *
+   * @override
+   * @param {LionOption} child
+   * @param {Number} indexToInsertAt
+   */
+  addFormElement(child, indexToInsertAt) {
+    super.addFormElement(child, indexToInsertAt);
+    // the first elements checked by default
+    if (
+      !this.hasNoDefaultSelected &&
+      !this.__hasInitialSelectedFormElement &&
+      (!child.disabled || this.disabled)
+    ) {
+      /* eslint-disable no-param-reassign */
+      child.active = true;
+      child.checked = true;
+      /* eslint-enable no-param-reassign */
+      this.__hasInitialSelectedFormElement = true;
+    }
+    this._onFormElementsChanged();
+  }
+
+  /**
    * In the select disabled options are still going to a possible value for example
    * when prefilling or programmatically setting it.
    *
@@ -160,16 +174,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @override
-   * @param {FormControl} child the child element (field)
-   * @param {number} indexToInsertAt index to insert the form element at
-   */
-  addFormElement(child, indexToInsertAt) {
-    super.addFormElement(child, indexToInsertAt);
-    this._onFormElementsChanged();
-  }
-
-  /**
    * @param {FormRegisteringHost} child the child element (field)
    */
   removeFormElement(child) {
@@ -178,14 +182,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   _onFormElementsChanged() {
-    if (this.formElements.length === 1 && this.singleOption === false) {
-      this.singleOption = true;
-      this._invokerNode.singleOption = true;
-    }
-    if (this.formElements.length !== 1 && this.singleOption === true) {
-      this.singleOption = false;
-      this._invokerNode.singleOption = false;
-    }
+    this.singleOption = this.formElements.length === 1;
+    this._invokerNode.singleOption = this.singleOption;
   }
 
   /**
@@ -243,6 +241,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         <slot name="invoker"></slot>
         <div id="overlay-content-node-wrapper">
           <slot name="input"></slot>
+          <slot id="options-outlet"></slot>
         </div>
       </div>
     `;
@@ -350,7 +349,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
   }
 
-  __focusInvokerOnLabelClick() {
+  /**
+   * @configure FormControlMixin
+   */
+  _onLabelClick() {
     this._invokerNode.focus();
   }
 
@@ -441,8 +443,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.opened = false;
   }
 
-  _setupListboxNodeInteractions() {
-    super._setupListboxNodeInteractions();
+  _setupListboxNode() {
+    super._setupListboxNode();
     this._listboxNode.addEventListener('click', this._listboxOnClick);
   }
 
