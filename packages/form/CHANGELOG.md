@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- 6f08e929: Added types for form and fieldset packages.
+
+### Patch Changes
+
+- Updated dependencies [01a798e5]
+- Updated dependencies [6f08e929]
+  - @lion/core@0.13.0
+  - @lion/fieldset@0.15.0
+
 ## 0.6.23
 
 ### Patch Changes

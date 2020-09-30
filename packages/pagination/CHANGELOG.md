@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.2.0
+
+### Minor Changes
+
+- 0ed995ad: Add types for pagination package.
+
+### Patch Changes
+
+- bcc809b6: fix(pagination): extract nav list template to reuse in derived component
+- Updated dependencies [01a798e5]
+- Updated dependencies [b9327627]
+  - @lion/core@0.13.0
+  - @lion/localize@0.14.5
+
 ## 0.1.2
 
 ### Patch Changes

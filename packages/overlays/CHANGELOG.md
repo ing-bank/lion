@@ -1,5 +1,33 @@
 # Change Log
 
+## 0.20.0
+
+### Minor Changes
+
+- 01a798e5: Combobox package
+
+  ## Features
+
+  - combobox: new combobox package
+  - core: expanded browsers detection utils
+  - core: closest() polyfill for IE
+  - overlays: allow OverlayMixin to specify reference node (when invokerNode should not be positioned against)
+  - form-core: add `_onLabelClick` to FormControlMixin. Subclassers should override this
+
+  ## Patches
+
+  - form-core: make ChoiceGroupMixin a suite
+  - listbox: move generic tests from combobox to listbox
+  - select-rich: enhance tests
+
+- a9d6971c: Abstracted the tooltip arrow related logic to a mixin, so it can be used in other overlays. Also created some demos to show this.
+
+### Patch Changes
+
+- 27879863: Adds `async transitionShow` and `async transitionHide` to OverlayController to enable basic support for transitions/animations
+- Updated dependencies [01a798e5]
+  - @lion/core@0.13.0
+
 ## 0.19.0
 
 ### Minor Changes

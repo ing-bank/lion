@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- a9d6971c: Abstracted the tooltip arrow related logic to a mixin, so it can be used in other overlays. Also created some demos to show this.
+
+### Patch Changes
+
+- Updated dependencies [27879863]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a9d6971c]
+  - @lion/overlays@0.20.0
+  - @lion/core@0.13.0
+
 ## 0.14.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 7d4b6d32: Add types for steps package.
+- 7d4b6d32: Add types for steps package.
+
+### Patch Changes
+
+- Updated dependencies [01a798e5]
+  - @lion/core@0.13.0
+
 ## 0.5.9
 
 ### Patch Changes

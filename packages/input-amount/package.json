@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-amount",
-  "version": "0.7.23",
+  "version": "0.8.0",
   "description": "Provide a way for users to fill in an amount",
   "license": "MIT",
   "author": "ing-bank",
@@ -31,13 +31,13 @@
     "lion-input-amount.js"
   ],
   "dependencies": {
-    "@lion/core": "0.12.0",
-    "@lion/form-core": "0.6.1",
-    "@lion/input": "0.9.2",
-    "@lion/localize": "0.14.4"
+    "@lion/core": "0.13.0",
+    "@lion/form-core": "0.6.2",
+    "@lion/input": "0.10.0",
+    "@lion/localize": "0.14.5"
   },
   "devDependencies": {
-    "@lion/validate-messages": "0.2.15"
+    "@lion/validate-messages": "0.3.0"
   },
   "keywords": [
     "input-amount",

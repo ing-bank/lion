@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 9263f397: Added types for checkbox-group package.
+
+### Patch Changes
+
+- Updated dependencies [4b7bea96]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a31b7217]
+- Updated dependencies [85720654]
+- Updated dependencies [32202a88]
+- Updated dependencies [6f08e929]
+- Updated dependencies [b9327627]
+- Updated dependencies [02145a06]
+- Updated dependencies [32202a88]
+  - @lion/form-core@0.6.2
+  - @lion/core@0.13.0
+  - @lion/fieldset@0.15.0
+  - @lion/input@0.10.0
+
 ## 0.11.16
 
 ### Patch Changes

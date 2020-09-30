@@ -1,5 +1,18 @@
 # @lion/progress-indicator
 
+## 0.2.0
+
+### Minor Changes
+
+- 10666897: Add types for progress-indicator package.
+
+### Patch Changes
+
+- Updated dependencies [01a798e5]
+- Updated dependencies [b9327627]
+  - @lion/core@0.13.0
+  - @lion/localize@0.14.5
+
 ## 0.1.4
 
 ### Patch Changes

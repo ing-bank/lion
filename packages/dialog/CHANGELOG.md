@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- b06c85bb: Added types for dialog package.
+
+### Patch Changes
+
+- 6394c080: Cleanup and remove shadow outlet slot. This should not be used anymore
+- Updated dependencies [27879863]
+- Updated dependencies [01a798e5]
+- Updated dependencies [a9d6971c]
+  - @lion/overlays@0.20.0
+  - @lion/core@0.13.0
+
 ## 0.8.1
 
 ### Patch Changes

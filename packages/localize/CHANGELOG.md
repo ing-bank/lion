@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.14.5
+
+### Patch Changes
+
+- b9327627: These packages were using out of sync type definitions for FormatOptions, and the types were missing a bunch of options that Intl would normally accept. We now extend Intl's NumberFormatOptions and DateTimeFormatOptions properly, so we always have the right types and are more consistent on it.
+- Updated dependencies [01a798e5]
+  - @lion/core@0.13.0
+
 ## 0.14.4
 
 ### Patch Changes
