@@ -1,12 +1,30 @@
 import { css, html, LitElement } from '@lion/core';
 
 /**
+ * @typedef {import('./LionStep.js').LionStep} LionStep
+ */
+
+/**
  * `LionSteps` is a controller for a multi step system.
  *
  * @customElement lion-steps
  * @extends {LitElement}
  */
 export class LionSteps extends LitElement {
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+      `,
+    ];
+  }
+
   static get properties() {
     /**
      * Fired when a transition between steps happens.
@@ -31,43 +49,19 @@ export class LionSteps extends LitElement {
     };
   }
 
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has('current')) {
-      this._onCurrentChanged(
-        { current: this.current },
-        { current: changedProperties.get('current') },
-      );
-    }
-  }
-
   constructor() {
     super();
+    /** @type {{[key: string]: ?}} */
     this.data = {};
     this._internalCurrentSync = true; // necessary for preventing side effects on initialization
+    /** @type {number} */
     this.current = 0;
+    this._max = 0;
   }
 
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-        }
-
-        :host([hidden]) {
-          display: none;
-        }
-      `,
-    ];
-  }
-
-  render() {
-    return html`<slot></slot>`;
-  }
-
-  firstUpdated() {
-    super.firstUpdated();
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this._max = this.steps.length - 1;
 
     let hasInitial = false;
@@ -82,6 +76,21 @@ export class LionSteps extends LitElement {
     }
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('current')) {
+      this._onCurrentChanged(
+        { current: this.current },
+        { current: /** @type {number} */ (changedProperties.get('current')) },
+      );
+    }
+  }
+
+  render() {
+    return html`<slot></slot>`;
+  }
+
   next() {
     this._goTo(this.current + 1, this.current);
   }
@@ -91,10 +100,18 @@ export class LionSteps extends LitElement {
   }
 
   get steps() {
-    const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
-    return defaultSlot.assignedNodes().filter(node => node.nodeType === Node.ELEMENT_NODE);
+    const defaultSlot = /** @type {HTMLSlotElement} */ (this.shadowRoot?.querySelector(
+      'slot:not([name])',
+    ));
+    return /** @type {LionStep[]} */ (defaultSlot.assignedNodes()).filter(
+      node => node.nodeType === Node.ELEMENT_NODE,
+    );
   }
 
+  /**
+   * @param {number} newCurrent
+   * @param {number} oldCurrent
+   */
   _goTo(newCurrent, oldCurrent) {
     if (newCurrent < 0 || newCurrent > this._max) {
       throw new Error(`There is no step at index ${newCurrent}.`);
@@ -119,6 +136,10 @@ export class LionSteps extends LitElement {
     }
   }
 
+  /**
+   * @param {number} newCurrent
+   * @param {number} oldCurrent
+   */
   _changeStep(newCurrent, oldCurrent) {
     const oldStepElement = this.steps[oldCurrent];
     const newStepElement = this.steps[newCurrent];
@@ -137,6 +158,10 @@ export class LionSteps extends LitElement {
     this._dispatchTransitionEvent(fromStep, toStep);
   }
 
+  /**
+   * @param {{number: number, element: LionStep}} fromStep
+   * @param {{number: number, element: LionStep}} toStep
+   */
   _dispatchTransitionEvent(fromStep, toStep) {
     this.dispatchEvent(
       new CustomEvent('transition', {
@@ -147,6 +172,10 @@ export class LionSteps extends LitElement {
     );
   }
 
+  /**
+   * @param {{current: number}} newValues
+   * @param {{current: number}} oldValues
+   */
   _onCurrentChanged(newValues, oldValues) {
     if (this._internalCurrentSync) {
       this._internalCurrentSync = false;
