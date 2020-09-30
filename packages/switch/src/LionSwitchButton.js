@@ -113,6 +113,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.setAttribute('aria-checked', `${this.checked}`);
   }
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   // eslint-disable-next-line class-methods-use-this
   __handleKeydown(e) {
     // prevent "space" scrolling on "macOS"
@@ -121,12 +124,16 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     }
   }
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   __handleKeyup(e) {
     if ([32 /* space */, 13 /* enter */].indexOf(e.keyCode) !== -1) {
       this.__toggleChecked();
     }
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     if (changedProperties.has('disabled')) {
       this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places
@@ -136,6 +143,8 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   /**
    * We synchronously update aria-checked to support voice over on safari.
    *
+   * @param {PropertyKey} name
+   * @param {?} oldValue
    * @override
    */
   requestUpdateInternal(name, oldValue) {
