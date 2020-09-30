@@ -175,35 +175,6 @@ const FormControlMixinImplementation = superclass =>
       };
     }
 
-    /** @param {import('lit-element').PropertyValues } changedProperties */
-    updated(changedProperties) {
-      super.updated(changedProperties);
-
-      if (changedProperties.has('_ariaLabelledNodes')) {
-        this.__reflectAriaAttr(
-          'aria-labelledby',
-          this._ariaLabelledNodes,
-          this.__reorderAriaLabelledNodes,
-        );
-      }
-
-      if (changedProperties.has('_ariaDescribedNodes')) {
-        this.__reflectAriaAttr(
-          'aria-describedby',
-          this._ariaDescribedNodes,
-          this.__reorderAriaDescribedNodes,
-        );
-      }
-
-      if (changedProperties.has('label')) {
-        this._onLabelChanged({ label: this.label });
-      }
-
-      if (changedProperties.has('helpText')) {
-        this._onHelpTextChanged({ helpText: this.helpText });
-      }
-    }
-
     get _inputNode() {
       return this.__getDirectSlotChild('input');
     }
@@ -230,13 +201,15 @@ const FormControlMixinImplementation = superclass =>
       this._ariaLabelledNodes = [];
       /** @type {HTMLElement[]} */
       this._ariaDescribedNodes = [];
-      /** @type {'child' | 'choice-group' | 'fieldset'} */
+      /** @type {'child'|'choice-group'|'fieldset'} */
       this._repropagationRole = 'child';
       this._isRepropagationEndpoint = false;
       this.addEventListener(
         'model-value-changed',
         /** @type {EventListenerOrEventListenerObject} */ (this.__repropagateChildrenValues),
       );
+      /** @type {EventListener} */
+      this._onLabelClick = this._onLabelClick.bind(this);
     }
 
     connectedCallback() {
@@ -244,6 +217,46 @@ const FormControlMixinImplementation = superclass =>
       this._enhanceLightDomClasses();
       this._enhanceLightDomA11y();
       this._triggerInitialModelValueChangedEvent();
+
+      if (this._labelNode) {
+        this._labelNode.addEventListener('click', this._onLabelClick);
+      }
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      if (this._labelNode) {
+        this._labelNode.removeEventListener('click', this._onLabelClick);
+      }
+    }
+
+    /** @param {import('lit-element').PropertyValues } changedProperties */
+    updated(changedProperties) {
+      super.updated(changedProperties);
+
+      if (changedProperties.has('_ariaLabelledNodes')) {
+        this.__reflectAriaAttr(
+          'aria-labelledby',
+          this._ariaLabelledNodes,
+          this.__reorderAriaLabelledNodes,
+        );
+      }
+
+      if (changedProperties.has('_ariaDescribedNodes')) {
+        this.__reflectAriaAttr(
+          'aria-describedby',
+          this._ariaDescribedNodes,
+          this.__reorderAriaDescribedNodes,
+        );
+      }
+
+      if (changedProperties.has('label') && this._labelNode) {
+        this._labelNode.textContent = this.label;
+      }
+
+      if (changedProperties.has('helpText') && this._helpTextNode) {
+        this._helpTextNode.textContent = this.helpText;
+      }
     }
 
     _triggerInitialModelValueChangedEvent() {
@@ -318,26 +331,6 @@ const FormControlMixinImplementation = superclass =>
         }
         const string = nodes.map(n => n.id).join(' ');
         this._inputNode.setAttribute(attrName, string);
-      }
-    }
-
-    /**
-     *
-     * @param {{label:string}} opts
-     */
-    _onLabelChanged({ label }) {
-      if (this._labelNode) {
-        this._labelNode.textContent = label;
-      }
-    }
-
-    /**
-     *
-     * @param {{helpText:string}} opts
-     */
-    _onHelpTextChanged({ helpText }) {
-      if (this._helpTextNode) {
-        this._helpTextNode.textContent = helpText;
       }
     }
 
@@ -820,6 +813,20 @@ const FormControlMixinImplementation = superclass =>
         new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
       );
     }
+
+    /**
+     * @overridable
+     * A Subclasser should only override this method if the interactive element
+     * ([slot=input]) is not a native element(like input, textarea, select)
+     * that already receives focus on label click.
+     *
+     * @example
+     * _onLabelClick() {
+     *   this._invokerNode.focus();
+     * }
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _onLabelClick() {}
   };
 
 export const FormControlMixin = dedupeMixin(FormControlMixinImplementation);

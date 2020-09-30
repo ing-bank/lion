@@ -22,8 +22,6 @@ export class LionOptions extends FormRegistrarPortalMixin(LitElement) {
   constructor() {
     super();
     this.role = 'listbox';
-    // we made it a Lit-Element property because of this
-    // eslint-disable-next-line wc/no-constructor-attributes
     this.tabIndex = 0;
   }
 

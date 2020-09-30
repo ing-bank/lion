@@ -62,10 +62,11 @@ export const OverlayMixinImplementation = superclass =>
      * @returns {OverlayController}
      */
     // eslint-disable-next-line
-    _defineOverlay({ contentNode, invokerNode, backdropNode, contentWrapperNode }) {
+    _defineOverlay({ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }) {
       return new OverlayController({
         contentNode,
         invokerNode,
+        referenceNode,
         backdropNode,
         contentWrapperNode,
         ...this._defineOverlayConfig(), // wc provided in the class as defaults
@@ -84,7 +85,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable method `_defineOverlay`
+     * @overridable method `_defineOverlayConfig`
      * @desc returns an object with default configuration options for your overlay component.
      * This is generally speaking easier to override than _defineOverlay method entirely.
      * @returns {OverlayConfig}
@@ -97,7 +98,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @param {{ has: (arg0: string) => any; }} changedProperties
+     * @param {import('lit-element').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);
@@ -168,6 +169,14 @@ export const OverlayMixinImplementation = superclass =>
       return Array.from(this.children).find(child => child.slot === 'invoker');
     }
 
+    /**
+     * @overridable
+     */
+    // eslint-disable-next-line class-methods-use-this
+    get _overlayReferenceNode() {
+      return undefined;
+    }
+
     get _overlayBackdropNode() {
       return Array.from(this.children).find(child => child.slot === 'backdrop');
     }
@@ -191,6 +200,7 @@ export const OverlayMixinImplementation = superclass =>
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
         invokerNode: this._overlayInvokerNode,
+        referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
       });
       this.__syncToOverlayController();
@@ -270,7 +280,8 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     __teardownSyncFromOverlayController() {
-      /** @type {OverlayController} */ (this._overlayCtrl).removeEventListener(
+      /** @type {OverlayController} */
+      (this._overlayCtrl).removeEventListener(
         'show',
         /** @type {EventListener} */ (this.__onOverlayCtrlShow),
       );
@@ -290,9 +301,11 @@ export const OverlayMixinImplementation = superclass =>
 
     __syncToOverlayController() {
       if (this.opened) {
-        /** @type {OverlayController} */ (this._overlayCtrl).show();
+        /** @type {OverlayController} */
+        (this._overlayCtrl).show();
       } else {
-        /** @type {OverlayController} */ (this._overlayCtrl).hide();
+        /** @type {OverlayController} */
+        (this._overlayCtrl).hide();
       }
     }
   };

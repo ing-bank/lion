@@ -23,7 +23,7 @@ export default {
 export const main = () => html`
   <lion-listbox name="listbox" label="Default">
     <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-    <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
+    <lion-option checked .choiceValue=${'Artichoke'}>Artichoke</lion-option>
     <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
     <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
     <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
@@ -77,7 +77,7 @@ export const multiple = () => html`
 
 When `orientation="horizontal"`, left and right arrow keys will be enabled, plus the screenreader
 will be informed about the direction of the options.
-By default, `orientation="horizontal"` is set, which enables up and down arrow keys.
+By default, `orientation="vertical"` is set, which enables up and down arrow keys.
 
 ```js preview-story
 export const orientationHorizontal = () => html`
@@ -146,7 +146,7 @@ export const selectionFollowsFocus = () => html`
 
 ## Rotate keyboard navigation
 
-Will give first option active state when navigated to the next option from last option.
+`rotate-keyboard-navigation` attribute on the listbox will give the first option active state when navigated to the next option from last option.
 
 ```js preview-story
 export const rotateKeyboardNavigation = () => html`
@@ -159,6 +159,27 @@ export const rotateKeyboardNavigation = () => html`
     <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
     <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
     <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
+    <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
+    <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  </lion-listbox>
+`;
+```
+
+## Disabled options
+
+Navigation will skip over disabled options. Let's disable Artichoke and Brussel sprout, because they're gross.
+
+```js preview-story
+export const disabledRotateNavigation = () => html`
+  <lion-listbox name="combo" label="Rotate with disabled options" rotate-keyboard-navigation>
+    <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
+    <lion-option .choiceValue=${'Artichoke'} disabled>Artichoke</lion-option>
+    <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
+    <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
+    <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
+    <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
+    <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
+    <lion-option .choiceValue=${'Brussel sprout'} disabled>Brussels sprout</lion-option>
     <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
     <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
   </lion-listbox>
