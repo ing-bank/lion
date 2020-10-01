@@ -33,6 +33,14 @@ Additionally imports like `import '@lion/form/lion-form.js'` need to be transfor
 > Note: These demos may look a little bland but that is on purpose. They only come with functional stylings.
 > This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
 
+## Issues
+
+If you encouter an issue with any of the packages we are offering please open a [new bug issue](https://github.com/ing-bank/lion/issues/new?assignees=&labels=&template=bug_report.md&title=). Be sure to include a description of the expected and the current behavior - additional adding a [reproduction](https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?pm=1) always helps.
+
+## Feature requests
+
+When you have an idea on how we could improve, please check our [discussions](https://github.com/ing-bank/lion/discussions) to see if there are similar ideas or feature requests. If there are none, please [start](https://github.com/ing-bank/lion/discussions/new) your feature request as a new discussion topic. Add the title `[Feature Request] My awesome feature` and a description of what you expect from the improvement and what the use case is.
+
 ## Content
 
 Lion web components is logically organized in groups of systems.
