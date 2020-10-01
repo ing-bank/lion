@@ -19,7 +19,9 @@ import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { listboxData } from '@lion/listbox/docs/listboxData.js';
 import '@lion/listbox/lion-option.js';
 import './lion-combobox.js';
-import './docs/lion-combobox-selection-display.js';
+import './docs/demo-selection-display.js';
+import { lazyRender } from './docs/lazyRender.js';
+import levenshtein from './docs/levenshtein.js';
 
 export default {
   title: 'Forms/Combobox',
@@ -29,7 +31,9 @@ export default {
 ```js preview-story
 export const main = () => html`
   <lion-combobox name="combo" label="Default">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -47,7 +51,7 @@ to the configurable values `none`, `list`, `inline` and `both`.
 |   both |  ✓   |   ✓    |   ✓   |   ✓   |    ✓     |
 
 - **list** shows a list on keydown character press
-- **filter** filters list of potential matches according to `matchmode` or provided `filterOptionCondition`
+- **filter** filters list of potential matches according to `matchmode` or provided `matchCondition`
 - **focus** automatically focuses closest match (makes it the activedescendant)
 - **check** automatically checks/selects closest match when `selection-follows-focus` is enabled (this is the default configuration)
 - **complete** completes the textbox value inline (the 'missing characters' will be added as selected text)
@@ -59,7 +63,9 @@ Selection will happen manually by the user.
 ```js preview-story
 export const autocompleteNone = () => html`
   <lion-combobox name="combo" label="Autocomplete 'none'" autocomplete="none">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -69,7 +75,9 @@ When `autocomplete="list"` is configured, it will filter listbox suggestions bas
 ```js preview-story
 export const autocompleteList = () => html`
   <lion-combobox name="combo" label="Autocomplete 'list'" autocomplete="list">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -80,7 +88,9 @@ It does NOT filter list of potential matches.
 ```js preview-story
 export const autocompleteInline = () => html`
   <lion-combobox name="combo" label="Autocomplete 'inline'" autocomplete="inline">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -91,7 +101,9 @@ This is the default value for `autocomplete`.
 ```js preview-story
 export const autocompleteBoth = () => html`
   <lion-combobox name="combo" label="Autocomplete 'both'" autocomplete="both">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -107,7 +119,9 @@ So 'ch' will both match 'Chard' and 'Artichoke'.
 ```js preview-story
 export const matchModeBegin = () => html`
   <lion-combobox name="combo" label="Match Mode 'begin'" match-mode="begin">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -115,7 +129,33 @@ export const matchModeBegin = () => html`
 ```js preview-story
 export const matchModeAll = () => html`
   <lion-combobox name="combo" label="Match Mode 'all'" match-mode="all">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
+  </lion-combobox>
+`;
+```
+
+When the preconfigurable `match-mode` conditions are not sufficient,
+one can define a custom matching function.
+The example below matches when the Levenshtein distance is below 3 (including some other conditions).
+
+```js preview-story
+export const customMatchCondition = () => html`
+  <lion-combobox
+    name="combo"
+    label="Custom Match Mode 'levenshtein'"
+    help-text="Spelling mistakes will be forgiven. Try typing 'Aple' instead of 'Apple'"
+    .matchCondition="${({ choiceValue }, textboxValue) => {
+      const oVal = choiceValue.toLowerCase();
+      const tVal = textboxValue.toLowerCase();
+      const t = 1; // treshold
+      return oVal.slice(0, t) === tVal.slice(0, t) && levenshtein(oVal, tVal) < 3;
+    }}"
+  >
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -133,7 +173,9 @@ will be kept track of independently.
 ```js preview-story
 export const noSelectionFollowsFocus = () => html`
   <lion-combobox name="combo" label="No Selection Follows focus" .selectionFollowsFocus="${false}">
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -149,7 +191,9 @@ export const noRotateKeyboardNavigation = () => html`
     label="No Rotate Keyboard Navigation"
     .rotateKeyboardNavigation="${false}"
   >
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
@@ -170,10 +214,12 @@ This will:
 ```js preview-story
 export const multipleChoice = () => html`
   <lion-combobox name="combo" label="Multiple" multiple-choice>
-    <lion-combobox-selection-display slot="selection-display"></lion-combobox-selection-display>
-    ${listboxData.map(
-      (entry, i) =>
-        html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+    <demo-selection-display slot="selection-display"></demo-selection-display>
+    ${lazyRender(
+      listboxData.map(
+        (entry, i) =>
+          html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+      ),
     )}
   </lion-combobox>
 `;
@@ -193,7 +239,9 @@ export const invokerButton = () => html`
     }}"
   >
     <button slot="suffix" type="button" tabindex="-1">▼</button>
-    ${listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `)}
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
   </lion-combobox>
 `;
 ```
