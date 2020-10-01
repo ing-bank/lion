@@ -38,10 +38,6 @@ export class LionField extends FormControlMixin(
     };
   }
 
-  get _inputNode() {
-    return /** @type {HTMLElement} */ (super._inputNode); // casts type
-  }
-
   constructor() {
     super();
     this.name = '';

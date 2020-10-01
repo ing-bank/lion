@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
 import { LionField } from '@lion/form-core';
-import { ValueMixin } from '@lion/form-core/src/ValueMixin';
 
 class LionFieldWithSelect extends LionField {
   /**
@@ -38,12 +37,46 @@ class LionFieldWithSelect extends LionField {
  * usability for keyboard and screen reader users.
  *
  * @customElement lion-select
- * @extends {LionField}
  */
-export class LionSelect extends ValueMixin(LionFieldWithSelect) {
+export class LionSelect extends LionFieldWithSelect {
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
+  }
+
+  // FIXME: For some reason we have to override this FormatMixin getter/setter pair for the tests to pass
+  get value() {
+    return (this._inputNode && this._inputNode.value) || this.__value || '';
+  }
+
+  // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+  /** @type {string} */
+  set value(value) {
+    // if not yet connected to dom can't change the value
+    if (this._inputNode) {
+      this._inputNode.value = value;
+      /** @type {string | undefined} */
+      this.__value = undefined;
+    } else {
+      this.__value = value;
+    }
+  }
+
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('disabled')) {
+      this._inputNode.disabled = this.disabled;
+      this.validate();
+    }
+
+    if (changedProperties.has('name')) {
+      this._inputNode.name = this.name;
+    }
+
+    if (changedProperties.has('autocomplete')) {
+      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
+    }
   }
 
   disconnectedCallback() {

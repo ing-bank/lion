@@ -3,7 +3,7 @@
 import autosize from 'autosize/src/autosize.js';
 import { LionField } from '@lion/form-core';
 import { css } from '@lion/core';
-import { ValueMixin } from '@lion/form-core/src/ValueMixin';
+import { NativeTextFieldMixin } from '@lion/form-core/src/NativeTextFieldMixin';
 
 class LionFieldWithTextArea extends LionField {
   /**
@@ -22,7 +22,7 @@ class LionFieldWithTextArea extends LionField {
  * @customElement lion-textarea
  */
 // @ts-expect-error false positive, parent properties get merged by lit-element already
-export class LionTextarea extends ValueMixin(LionFieldWithTextArea) {
+export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
   static get properties() {
     return {
       maxRows: {
@@ -78,6 +78,15 @@ export class LionTextarea extends ValueMixin(LionFieldWithTextArea) {
   /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    if (changedProperties.has('name')) {
+      this._inputNode.name = this.name;
+    }
+
+    if (changedProperties.has('autocomplete')) {
+      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
+    }
+
     if (changedProperties.has('disabled')) {
       this._inputNode.disabled = this.disabled;
       this.validate();

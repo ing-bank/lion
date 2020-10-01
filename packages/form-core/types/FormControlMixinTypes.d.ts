@@ -6,6 +6,10 @@ import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 import { LionValidationFeedback } from '../src/validate/LionValidationFeedback';
 import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
 
+declare interface HTMLElementWithValue extends HTMLElement {
+  value: string;
+}
+
 export class FormControlHost {
   static get styles(): CSSResult | CSSResult[];
   /**
@@ -52,7 +56,7 @@ export class FormControlHost {
   get fieldName(): string;
   __fieldName: string | undefined;
   get slots(): SlotsMap;
-  get _inputNode(): HTMLElement;
+  get _inputNode(): HTMLElementWithValue;
   get _labelNode(): HTMLElement;
   get _helpTextNode(): HTMLElement;
   get _feedbackNode(): LionValidationFeedback | undefined;

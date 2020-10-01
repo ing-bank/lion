@@ -9,6 +9,7 @@ import { LionOptions } from './LionOptions.js';
 // list items that can be found via MutationObserver or registration (.formElements)
 
 /**
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').HTMLElementWithValue} HTMLElementWithValue
  * @typedef {import('./LionOption').LionOption} LionOption
  * @typedef {import('../types/ListboxMixinTypes').ListboxMixin} ListboxMixin
  * @typedef {import('../types/ListboxMixinTypes').ListboxHost} ListboxHost
@@ -131,15 +132,15 @@ const ListboxMixinImplementation = superclass =>
      * @configure FormControlMixin
      */
     get _inputNode() {
-      return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
+      return /** @type {HTMLElementWithValue} */ (this.querySelector('[slot="input"]'));
     }
 
     /**
      * @overridable
-     * @type {LionOptions}
      */
     get _listboxNode() {
-      return /** @type {LionOptions} */ (this._inputNode);
+      // Cast to unknown first, since HTMLElementWithValue is not compatible with LionOptions
+      return /** @type {LionOptions} */ (/** @type {unknown} */ (this._inputNode));
     }
 
     /**

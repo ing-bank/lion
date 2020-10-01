@@ -1,18 +1,50 @@
 import { dedupeMixin } from '@lion/core';
 
 /**
- * @typedef {import('../types/ValueMixinTypes').ValueMixin} ValueMixin
- * @type {ValueMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('../types/ValueMixinTypes').LionFieldWithValue>} superclass} superclass
+ * @typedef {import('../types/NativeTextFieldMixinTypes').NativeTextFieldMixin} NativeTextFieldMixin
+ * @type {NativeTextFieldMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('../types/NativeTextFieldMixinTypes').NativeTextField>} superclass} superclass
  */
-const ValueMixinImplementation = superclass =>
-  class ValueMixin extends superclass {
+const NativeTextFieldMixinImplementation = superclass =>
+  class NativeTextFieldMixin extends superclass {
+    /** @type {number} */
+    get selectionStart() {
+      const native = this._inputNode;
+      if (native && native.selectionStart) {
+        return native.selectionStart;
+      }
+      return 0;
+    }
+
+    set selectionStart(value) {
+      const native = this._inputNode;
+      if (native && native.selectionStart) {
+        native.selectionStart = value;
+      }
+    }
+
+    /** @type {number} */
+    get selectionEnd() {
+      const native = this._inputNode;
+      if (native && native.selectionEnd) {
+        return native.selectionEnd;
+      }
+      return 0;
+    }
+
+    set selectionEnd(value) {
+      const native = this._inputNode;
+      if (native && native.selectionEnd) {
+        native.selectionEnd = value;
+      }
+    }
+
     get value() {
       return (this._inputNode && this._inputNode.value) || this.__value || '';
     }
 
     // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
-    /** @type {string} */
+    /** @param {string} value */
     set value(value) {
       // if not yet connected to dom can't change the value
       if (this._inputNode) {
@@ -54,4 +86,4 @@ const ValueMixinImplementation = superclass =>
     }
   };
 
-export const ValueMixin = dedupeMixin(ValueMixinImplementation);
+export const NativeTextFieldMixin = dedupeMixin(NativeTextFieldMixinImplementation);

@@ -1,14 +1,13 @@
 import { LionField } from '@lion/form-core';
-import { ValueMixin } from '@lion/form-core/src/ValueMixin';
+import { NativeTextFieldMixin } from '@lion/form-core/src/NativeTextFieldMixin';
 
 /**
  * LionInput: extension of lion-field with native input element in place and user friendly API.
  *
  * @customElement lion-input
- * @extends {LionField}
  */
 // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionInput extends ValueMixin(LionField) {
+export class LionInput extends NativeTextFieldMixin(LionField) {
   static get properties() {
     return {
       /**
@@ -52,38 +51,6 @@ export class LionInput extends ValueMixin(LionField) {
 
   get _inputNode() {
     return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
-  }
-
-  /** @type {number} */
-  get selectionStart() {
-    const native = this._inputNode;
-    if (native && native.selectionStart) {
-      return native.selectionStart;
-    }
-    return 0;
-  }
-
-  set selectionStart(value) {
-    const native = this._inputNode;
-    if (native && native.selectionStart) {
-      native.selectionStart = value;
-    }
-  }
-
-  /** @type {number} */
-  get selectionEnd() {
-    const native = this._inputNode;
-    if (native && native.selectionEnd) {
-      return native.selectionEnd;
-    }
-    return 0;
-  }
-
-  set selectionEnd(value) {
-    const native = this._inputNode;
-    if (native && native.selectionEnd) {
-      native.selectionEnd = value;
-    }
   }
 
   constructor() {

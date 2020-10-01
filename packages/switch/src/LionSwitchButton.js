@@ -72,6 +72,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   constructor() {
     super();
+    // inputNode = this, which always requires a value prop
+    this.value = '';
+
     this.role = 'switch';
     this.checked = false;
     this.__toggleChecked = this.__toggleChecked.bind(this);
