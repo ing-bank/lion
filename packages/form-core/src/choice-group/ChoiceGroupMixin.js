@@ -268,6 +268,8 @@ const ChoiceGroupMixinImplementation = superclass =>
         } else if (check(this.formElements[i], value)) {
           // Allows checking against custom values e.g. formattedValue or serializedValue
           this.formElements[i].checked = true;
+        } else {
+          this.formElements[i].checked = false;
         }
       }
     }

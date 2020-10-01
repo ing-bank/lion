@@ -9,6 +9,7 @@ For usage and installation please see the appropriate packages.
 import { html } from 'lit-html';
 import '@lion/checkbox-group/lion-checkbox-group.js';
 import '@lion/checkbox-group/lion-checkbox.js';
+import '@lion/combobox/lion-combobox.js';
 import '@lion/fieldset/lion-fieldset.js';
 import '@lion/form/lion-form.js';
 import '@lion/input-amount/lion-input-amount.js';
@@ -19,11 +20,12 @@ import '@lion/input-iban/lion-input-iban.js';
 import '@lion/input-range/lion-input-range.js';
 import '@lion/input-stepper/lion-input-stepper.js';
 import '@lion/input/lion-input.js';
+import '@lion/listbox/lion-listbox.js';
+import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-options.js';
 import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio-group/lion-radio.js';
 import '@lion/select/lion-select.js';
-import '@lion/listbox/lion-option.js';
-import '@lion/listbox/lion-options.js';
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/form-core';
@@ -94,12 +96,23 @@ export const main = () => {
           <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
           <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
         </lion-radio-group>
+        <lion-listbox name="favoriteFruit" label="Favorite fruit">
+          <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
+          <lion-option checked .choiceValue=${'Banana'}>Banana</lion-option>
+          <lion-option .choiceValue=${'Mango'}>Mango</lion-option>
+        </lion-listbox>
+        <lion-combobox name="favoriteMovie" label="Favorite movie" autocomplete="both">
+          <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
+          <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
+          <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
+          <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
+          <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
+          <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+        </lion-combobox>
         <lion-select-rich name="favoriteColor" label="Favorite color">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${'red'}>Red</lion-option>
-            <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-          </lion-options>
+          <lion-option .choiceValue=${'red'}>Red</lion-option>
+          <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
         </lion-select-rich>
         <lion-select label="Lyrics" name="lyrics" .validators="${[new Required()]}">
           <select slot="input">
