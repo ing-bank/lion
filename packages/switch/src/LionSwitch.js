@@ -29,10 +29,10 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   /**
    * Input node here is the lion-switch-button, which is not compatible with LionField _inputNode --> HTMLInputElement
    * Therefore we do a full override and typecast to an intersection type that includes LionSwitchButton
-   * @returns {HTMLInputElement & LionSwitchButton}
+   * @returns {LionSwitchButton}
    */
   get _inputNode() {
-    return /** @type {HTMLInputElement  & LionSwitchButton} */ (Array.from(this.children).find(
+    return /** @type {LionSwitchButton} */ (Array.from(this.children).find(
       el => el.slot === 'input',
     ));
   }

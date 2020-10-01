@@ -1,16 +1,28 @@
+/* eslint-disable max-classes-per-file */
 // @ts-expect-error https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
 import autosize from 'autosize/src/autosize.js';
 import { LionField } from '@lion/form-core';
 import { css } from '@lion/core';
+import { ValueMixin } from '@lion/form-core/src/ValueMixin';
+
+class LionFieldWithTextArea extends LionField {
+  /**
+   * @returns {HTMLTextAreaElement}
+   */
+  get _inputNode() {
+    return /** @type {HTMLTextAreaElement} */ (Array.from(this.children).find(
+      el => el.slot === 'input',
+    ));
+  }
+}
 
 /**
  * LionTextarea: extension of lion-field with native input element in place and user friendly API
  *
  * @customElement lion-textarea
- * @extends {LionField}
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionTextarea extends LionField {
+// @ts-expect-error false positive, parent properties get merged by lit-element already
+export class LionTextarea extends ValueMixin(LionFieldWithTextArea) {
   static get properties() {
     return {
       maxRows: {
@@ -49,17 +61,6 @@ export class LionTextarea extends LionField {
     };
   }
 
-  /**
-   * Input node here is the textarea, which is not compatible with LionField _inputNode --> HTMLInputElement
-   * Therefore we do a full override and typecast to an intersection type that includes HTMLTextAreaElement
-   * @returns {HTMLTextAreaElement & HTMLInputElement}
-   */
-  get _inputNode() {
-    return /** @type {HTMLTextAreaElement & HTMLInputElement} */ (Array.from(this.children).find(
-      el => el.slot === 'input',
-    ));
-  }
-
   constructor() {
     super();
     this.rows = 2;
@@ -74,14 +75,14 @@ export class LionTextarea extends LionField {
     this.__initializeAutoresize();
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    autosize.destroy(this._inputNode);
-  }
-
   /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
+    if (changedProperties.has('disabled')) {
+      this._inputNode.disabled = this.disabled;
+      this.validate();
+    }
+
     if (changedProperties.has('rows')) {
       const native = this._inputNode;
       if (native) {
@@ -110,6 +111,11 @@ export class LionTextarea extends LionField {
     if (changedProperties.has('maxRows') || changedProperties.has('rows')) {
       this.setTextareaMaxHeight();
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    autosize.destroy(this._inputNode);
   }
 
   /**

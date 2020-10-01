@@ -63,7 +63,7 @@ export declare class ChoiceInputHost {
 
   type: string;
 
-  _inputNode: HTMLInputElement;
+  _inputNode: HTMLElement;
 }
 
 export declare function ChoiceInputImplementation<T extends Constructor<LitElement>>(

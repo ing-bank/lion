@@ -1,4 +1,17 @@
+/* eslint-disable max-classes-per-file */
 import { LionField } from '@lion/form-core';
+import { ValueMixin } from '@lion/form-core/src/ValueMixin';
+
+class LionFieldWithSelect extends LionField {
+  /**
+   * @returns {HTMLSelectElement}
+   */
+  get _inputNode() {
+    return /** @type {HTMLSelectElement} */ (Array.from(this.children).find(
+      el => el.slot === 'input',
+    ));
+  }
+}
 
 /**
  * LionSelectNative: wraps the native HTML element select
@@ -27,7 +40,7 @@ import { LionField } from '@lion/form-core';
  * @customElement lion-select
  * @extends {LionField}
  */
-export class LionSelect extends LionField {
+export class LionSelect extends ValueMixin(LionFieldWithSelect) {
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);

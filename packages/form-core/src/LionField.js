@@ -39,56 +39,7 @@ export class LionField extends FormControlMixin(
   }
 
   get _inputNode() {
-    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
-  }
-
-  /** @type {number} */
-  get selectionStart() {
-    const native = this._inputNode;
-    if (native && native.selectionStart) {
-      return native.selectionStart;
-    }
-    return 0;
-  }
-
-  set selectionStart(value) {
-    const native = this._inputNode;
-    if (native && native.selectionStart) {
-      native.selectionStart = value;
-    }
-  }
-
-  /** @type {number} */
-  get selectionEnd() {
-    const native = this._inputNode;
-    if (native && native.selectionEnd) {
-      return native.selectionEnd;
-    }
-    return 0;
-  }
-
-  set selectionEnd(value) {
-    const native = this._inputNode;
-    if (native && native.selectionEnd) {
-      native.selectionEnd = value;
-    }
-  }
-
-  // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
-  /** @type {string} */
-  set value(value) {
-    // if not yet connected to dom can't change the value
-    if (this._inputNode) {
-      this._setValueAndPreserveCaret(value);
-      /** @type {string | undefined} */
-      this.__value = undefined;
-    } else {
-      this.__value = value;
-    }
-  }
-
-  get value() {
-    return (this._inputNode && this._inputNode.value) || this.__value || '';
+    return /** @type {HTMLElement} */ (super._inputNode); // casts type
   }
 
   constructor() {
@@ -119,26 +70,6 @@ export class LionField extends FormControlMixin(
     this._inputNode.removeEventListener('change', this._onChange);
   }
 
-  /**
-   * @param {import('lit-element').PropertyValues } changedProperties
-   */
-  updated(changedProperties) {
-    super.updated(changedProperties);
-
-    if (changedProperties.has('disabled')) {
-      this._inputNode.disabled = this.disabled;
-      this.validate();
-    }
-
-    if (changedProperties.has('name')) {
-      this._inputNode.name = this.name;
-    }
-
-    if (changedProperties.has('autocomplete')) {
-      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
-    }
-  }
-
   resetInteractionState() {
     super.resetInteractionState();
     this.submitted = false;
@@ -163,31 +94,5 @@ export class LionField extends FormControlMixin(
         bubbles: true,
       }),
     );
-  }
-
-  /**
-   * Restores the cursor to its original position after updating the value.
-   * @param {string} newValue The value that should be saved.
-   */
-  _setValueAndPreserveCaret(newValue) {
-    // Only preserve caret if focused (changing selectionStart will move focus in Safari)
-    if (this.focused) {
-      // Not all elements might have selection, and even if they have the
-      // right properties, accessing them might throw an exception (like for
-      // <input type=number>)
-      try {
-        const start = this._inputNode.selectionStart;
-        this._inputNode.value = newValue;
-        // The cursor automatically jumps to the end after re-setting the value,
-        // so restore it to its original position.
-        this._inputNode.selectionStart = start;
-        this._inputNode.selectionEnd = start;
-      } catch (error) {
-        // Just set the value and give up on the caret.
-        this._inputNode.value = newValue;
-      }
-    } else {
-      this._inputNode.value = newValue;
-    }
   }
 }

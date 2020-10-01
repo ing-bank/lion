@@ -1,4 +1,5 @@
 import { LionField } from '@lion/form-core';
+import { ValueMixin } from '@lion/form-core/src/ValueMixin';
 
 /**
  * LionInput: extension of lion-field with native input element in place and user friendly API.
@@ -7,7 +8,7 @@ import { LionField } from '@lion/form-core';
  * @extends {LionField}
  */
 // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionInput extends LionField {
+export class LionInput extends ValueMixin(LionField) {
   static get properties() {
     return {
       /**
@@ -49,6 +50,42 @@ export class LionInput extends LionField {
     };
   }
 
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
+  }
+
+  /** @type {number} */
+  get selectionStart() {
+    const native = this._inputNode;
+    if (native && native.selectionStart) {
+      return native.selectionStart;
+    }
+    return 0;
+  }
+
+  set selectionStart(value) {
+    const native = this._inputNode;
+    if (native && native.selectionStart) {
+      native.selectionStart = value;
+    }
+  }
+
+  /** @type {number} */
+  get selectionEnd() {
+    const native = this._inputNode;
+    if (native && native.selectionEnd) {
+      return native.selectionEnd;
+    }
+    return 0;
+  }
+
+  set selectionEnd(value) {
+    const native = this._inputNode;
+    if (native && native.selectionEnd) {
+      native.selectionEnd = value;
+    }
+  }
+
   constructor() {
     super();
     this.readOnly = false;
@@ -79,8 +116,22 @@ export class LionInput extends LionField {
     if (changedProperties.has('type')) {
       this._inputNode.type = this.type;
     }
+
     if (changedProperties.has('placeholder')) {
       this._inputNode.placeholder = this.placeholder;
+    }
+
+    if (changedProperties.has('disabled')) {
+      this._inputNode.disabled = this.disabled;
+      this.validate();
+    }
+
+    if (changedProperties.has('name')) {
+      this._inputNode.name = this.name;
+    }
+
+    if (changedProperties.has('autocomplete')) {
+      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
     }
   }
 
