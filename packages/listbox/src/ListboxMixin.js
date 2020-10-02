@@ -537,12 +537,20 @@ const ListboxMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _listboxOnClick(ev) {
-      const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
-      const foundIndex = this.formElements.indexOf(option);
-      if (foundIndex > -1) {
-        this.activeIndex = foundIndex;
-        this.setCheckedIndex(foundIndex);
-      }
+      /**
+      For now we disable, handling click interactions via delegated click handlers, since
+      LionOption detects clicks itself and could now potentially be checked as offline dom.
+      When we enable both methods in multiple choice mode, we would 'cancel out' each other.
+      TODO: If we want to allow 'less smart' options (think of role=menu), we should enable this
+      again and disable click handling inside LionOption (since there would be no use case for
+      'orphan' options)
+       */
+      // const option = /** @type {HTMLElement} */ (ev.target).closest('[role=option]');
+      // const foundIndex = this.formElements.indexOf(option);
+      // if (foundIndex > -1) {
+      //   this.activeIndex = foundIndex;
+      //   this.setCheckedIndex(foundIndex, 'toggle', );
+      // }
     }
 
     /**

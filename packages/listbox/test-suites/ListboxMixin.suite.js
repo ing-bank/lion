@@ -476,6 +476,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             expect(options[1].checked).to.be.true;
           });
         });
+
         describe('Space', () => {
           it('selects active option when "_listboxReceivesNoFocus" is true', async () => {
             // When listbox is not focusable (in case of a combobox), the user should be allowed
@@ -663,6 +664,57 @@ export function runListboxMixinSuite(customConfig = {}) {
           const options = el.formElements;
           options[0].checked = true;
           options[1].checked = true;
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+        });
+
+        it('works via different interaction mechanisms (click, enter, spaces)', async () => {
+          const el = /** @type {Listbox} */ (await fixture(html`
+            <${tag} name="foo" multiple-choice>
+              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
+              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
+              <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
+              <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
+            </${tag}>
+          `));
+          const options = el.formElements;
+
+          // feature detection select-rich
+          if (el.navigateWithinInvoker !== undefined) {
+            // Note we don't have multipleChoice in the select-rich yet.
+            // TODO: implement in future when requested
+            return;
+          }
+
+          // click
+          options[0].click();
+          options[1].click();
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+
+          // Reset
+          el._uncheckChildren();
+
+          // Enter
+          el.activeIndex = 0;
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          el.activeIndex = 1;
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+
+          if (el._listboxReceivesNoFocus) {
+            return; // if suite is run for combobox, we don't respond to [Space]
+          }
+
+          // Reset
+          el._uncheckChildren();
+
+          // Space
+          el.activeIndex = 0;
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          el.activeIndex = 1;
+          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
         });
