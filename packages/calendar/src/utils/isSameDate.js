@@ -4,7 +4,7 @@
  * @param {Date} day1
  * @param {Date} day2
  *
- * returns {boolean}
+ * @returns {boolean}
  */
 export function isSameDate(day1, day2) {
   return (

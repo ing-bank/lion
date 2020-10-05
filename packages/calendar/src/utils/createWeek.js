@@ -1,5 +1,11 @@
 import { createDay } from './createDay.js';
 
+/**
+ * @param {Date} date
+ * @param {Object} opts
+ * @param {number} [opts.firstDayOfWeek]
+ * @returns {import('../../types/day').Week}
+ */
 export function createWeek(date, { firstDayOfWeek = 0 } = {}) {
   if (Object.prototype.toString.call(date) !== '[object Date]') {
     throw new Error('invalid date provided');
@@ -13,6 +19,7 @@ export function createWeek(date, { firstDayOfWeek = 0 } = {}) {
   }
 
   const week = {
+    /** @type {import('../../types/day').Day[]} */
     days: [],
   };
   for (let i = 0; i < 7; i += 1) {

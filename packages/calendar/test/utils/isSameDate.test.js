@@ -9,11 +9,4 @@ describe('isSameDate', () => {
     expect(isSameDate(day1, day2)).to.be.true;
     expect(isSameDate(day1, day3)).to.be.false;
   });
-
-  it('returns false if not a date is provided', () => {
-    const day = new Date('2001/01/01');
-    expect(isSameDate(day, undefined)).to.be.false;
-    expect(isSameDate(undefined, day)).to.be.false;
-    expect(isSameDate(undefined, undefined)).to.be.false;
-  });
 });

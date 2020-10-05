@@ -6,8 +6,8 @@ import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
  * @customElement lion-input-datepicker
- * @extends {LionInputDate}
  */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionInputDate)) {
   static get scopedElements() {
     return {
@@ -33,19 +33,19 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
        * Default will be 'suffix'.
        */
       _calendarInvokerSlot: {
-        type: String,
+        attribute: false,
       },
 
       __calendarMinDate: {
-        type: Date,
+        attribute: false,
       },
 
       __calendarMaxDate: {
-        type: Date,
+        attribute: false,
       },
 
       __calendarDisableDates: {
-        type: Function,
+        attribute: false,
       },
     };
   }
@@ -55,10 +55,14 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
       ...super.slots,
       [this._calendarInvokerSlot]: () => {
         const renderParent = document.createElement('div');
-        this.constructor.render(this._invokerTemplate(), renderParent, {
-          scopeName: this.localName,
-          eventContext: this,
-        });
+        /** @type {typeof LionInputDatepicker} */ (this.constructor).render(
+          this._invokerTemplate(),
+          renderParent,
+          {
+            scopeName: this.localName,
+            eventContext: this,
+          },
+        );
         return renderParent.firstElementChild;
       },
     };
@@ -67,7 +71,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   static get localizeNamespaces() {
     return [
       {
-        'lion-input-datepicker': locale => {
+        'lion-input-datepicker': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
               return import('../translations/bg-BG.js');
@@ -147,11 +151,13 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   }
 
   get _invokerNode() {
-    return this.querySelector(`#${this.__invokerId}`);
+    return /** @type {HTMLElement} */ (this.querySelector(`#${this.__invokerId}`));
   }
 
   get _calendarNode() {
-    return this._overlayCtrl.contentNode.querySelector('[slot="content"]');
+    return /** @type {LionCalendar} */ (this._overlayCtrl.contentNode.querySelector(
+      '[slot="content"]',
+    ));
   }
 
   constructor() {
@@ -172,6 +178,10 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
 
+  /**
+   * @param {PropertyKey} name
+   * @param {?} oldValue
+   */
   requestUpdateInternal(name, oldValue) {
     super.requestUpdateInternal(name, oldValue);
 
@@ -182,19 +192,19 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
 
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
+      // @ts-expect-error even though disabled may not exist on the invoker node
+      // set it anyway, it doesn't harm, and is needed in case of invoker elements that do have disabled prop
       this._invokerNode.disabled = this.disabled || this.readOnly;
     }
   }
 
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__toggleInvokerDisabled();
   }
 
-  /**
-   * @override
-   * @param {Map} changedProperties - changed properties
-   */
+  /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('validators')) {
@@ -241,7 +251,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     return html`
       <lion-calendar
         slot="content"
-        .selectedDate="${this.constructor.__getSyncDownValue(this.modelValue)}"
+        .selectedDate="${/** @type {typeof LionInputDatepicker} */ (this
+          .constructor).__getSyncDownValue(this.modelValue)}"
         .minDate="${this.__calendarMinDate}"
         .maxDate="${this.__calendarMaxDate}"
         .disableDates="${ifDefined(this.__calendarDisableDates)}"
@@ -285,7 +296,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   async __openCalendarOverlay() {
     await this._overlayCtrl.show();
     await Promise.all([
-      this._overlayCtrl.contentNode.updateComplete,
+      /** @type {import('@lion/core').LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
       this._calendarNode.updateComplete,
     ]);
     this._onCalendarOverlayOpened();
@@ -304,6 +315,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     }
   }
 
+  /**
+   * @param {{ target: { selectedDate: Date }}} opts
+   */
   _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
     if (this._hideOnUserSelect) {
       this._overlayCtrl.hide();
@@ -317,6 +331,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   /**
    * The LionCalendar shouldn't know anything about the modelValue;
    * it can't handle Unparseable dates, but does handle 'undefined'
+   * @param {?} modelValue
    * @returns {Date|undefined} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {
@@ -326,20 +341,21 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
   /**
    * Validators contain the information to synchronize the input with
    * the min, max and enabled dates of the calendar.
-   * @param {Array} validators - errorValidators or warningValidators array
+   * @param {import('@lion/form-core').Validator[]} validators - errorValidators or warningValidators array
    */
   __syncDisabledDates(validators) {
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
-      if (v.constructor.validatorName === 'MinDate') {
+      const vctor = /** @type {typeof import('@lion/form-core').Validator} */ (v.constructor);
+      if (vctor.validatorName === 'MinDate') {
         this.__calendarMinDate = v.param;
-      } else if (v.constructor.validatorName === 'MaxDate') {
+      } else if (vctor.validatorName === 'MaxDate') {
         this.__calendarMaxDate = v.param;
-      } else if (v.constructor.validatorName === 'MinMaxDate') {
+      } else if (vctor.validatorName === 'MinMaxDate') {
         this.__calendarMinDate = v.param.min;
         this.__calendarMaxDate = v.param.max;
-      } else if (v.constructor.validatorName === 'IsDateDisabled') {
+      } else if (vctor.validatorName === 'IsDateDisabled') {
         this.__calendarDisableDates = v.param;
       }
     });
@@ -359,7 +375,9 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     if (this._cachedOverlayContentNode) {
       return this._cachedOverlayContentNode;
     }
-    this._cachedOverlayContentNode = this.shadowRoot.querySelector('.calendar__overlay-frame');
+    this._cachedOverlayContentNode = /** @type {HTMLElement} */ (
+      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.calendar__overlay-frame')
+    );
     return this._cachedOverlayContentNode;
   }
 }

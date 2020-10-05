@@ -1,6 +1,7 @@
 import { CalendarObject } from '@lion/calendar/test-helpers.js';
 
 export class DatepickerInputObject {
+  /** @param {import('../src/LionInputDatepicker').LionInputDatepicker} el */
   constructor(el) {
     this.el = el;
   }
@@ -27,6 +28,9 @@ export class DatepickerInputObject {
     this.overlayCloseButtonEl.click();
   }
 
+  /**
+   * @param {number} day
+   */
   async selectMonthDay(day) {
     this.overlayController.show();
     await this.calendarEl.updateComplete;
@@ -43,19 +47,22 @@ export class DatepickerInputObject {
   }
 
   get overlayEl() {
-    return this.el._overlayCtrl.contentNode;
+    // @ts-expect-error not supposed to call _overlayCtrl publicly here on this.el
+    return /** @type {LitElement} */ (this.el._overlayCtrl.contentNode);
   }
 
   get overlayHeadingEl() {
-    return this.overlayEl && this.overlayEl.shadowRoot.querySelector('.calendar-overlay__heading');
+    return /** @type {HTMLElement} */ (this.overlayEl &&
+      this.overlayEl.shadowRoot?.querySelector('.calendar-overlay__heading'));
   }
 
   get overlayCloseButtonEl() {
-    return this.calendarEl && this.overlayEl.shadowRoot.querySelector('#close-button');
+    return /** @type {HTMLElement} */ (this.calendarEl &&
+      this.overlayEl.shadowRoot?.querySelector('#close-button'));
   }
 
   get calendarEl() {
-    return this.el && this.el._calendarNode;
+    return /** @type {import('@lion/calendar').LionCalendar} */ (this.el && this.el._calendarNode);
   }
 
   /**
@@ -70,6 +77,7 @@ export class DatepickerInputObject {
    */
 
   get overlayController() {
+    // @ts-expect-error not supposed to call _overlayCtrl publicly here on this.el
     return this.el._overlayCtrl;
   }
 }

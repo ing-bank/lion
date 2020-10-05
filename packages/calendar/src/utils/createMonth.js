@@ -1,5 +1,12 @@
 import { createWeek } from './createWeek.js';
 
+/**
+ *
+ * @param {Date} date
+ * @param {Object} opts
+ * @param {number} [opts.firstDayOfWeek]
+ * @returns {import('../../types/day').Month}
+ */
 export function createMonth(date, { firstDayOfWeek = 0 } = {}) {
   if (Object.prototype.toString.call(date) !== '[object Date]') {
     throw new Error('invalid date provided');
@@ -10,6 +17,7 @@ export function createMonth(date, { firstDayOfWeek = 0 } = {}) {
   const weekOptions = { firstDayOfWeek };
 
   const month = {
+    /** @type {{days: import('../../types/day').Day[]}[]} */
     weeks: [],
   };
 

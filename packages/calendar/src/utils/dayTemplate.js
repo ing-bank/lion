@@ -17,11 +17,16 @@ const defaultMonthLabels = [
 const firstWeekDays = [1, 2, 3, 4, 5, 6, 7];
 const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels } = {}) {
+/**
+ *
+ * @param {import('../../types/day').Day} day
+ * @param {{ weekdays: string[], monthsLabels?: string[] }} opts
+ */
+export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {
   const dayNumber = day.date.getDate();
   const monthName = monthsLabels[day.date.getMonth()];
   const year = day.date.getFullYear();
-  const weekdayName = weekdays[day.weekOrder];
+  const weekdayName = day.weekOrder ? weekdays[day.weekOrder] : weekdays[0];
 
   const firstDay = dayNumber === 1;
   const endOfFirstWeek = day.weekOrder === 6 && firstWeekDays.includes(dayNumber);
@@ -54,9 +59,9 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
       <button
         .date=${day.date}
         class="calendar__day-button"
-        tabindex=${day.tabindex}
+        tabindex=${ifDefined(day.tabindex)}
         aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
-        aria-pressed=${day.ariaPressed}
+        aria-pressed=${ifDefined(day.ariaPressed)}
         aria-current=${ifDefined(day.ariaCurrent)}
         ?disabled=${day.disabled}
         ?selected=${day.selected}

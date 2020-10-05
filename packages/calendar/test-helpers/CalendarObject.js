@@ -5,6 +5,9 @@ import { DayObject } from './DayObject.js';
  * allows for writing readable, 'DOM structure agnostic' tests
  */
 export class CalendarObject {
+  /**
+   * @param {import('../src/LionCalendar').LionCalendar} calendarEl
+   */
   constructor(calendarEl) {
     this.el = calendarEl;
   }
@@ -14,59 +17,73 @@ export class CalendarObject {
    */
 
   get rootEl() {
-    return this.el.shadowRoot.querySelector('.calendar');
+    return this.el.shadowRoot?.querySelector('.calendar');
   }
 
   get headerEl() {
-    return this.el.shadowRoot.querySelector('.calendar__navigation');
+    return this.el.shadowRoot?.querySelector('.calendar__navigation');
   }
 
   get yearHeadingEl() {
-    return this.el.shadowRoot.querySelector('#year');
+    return this.el.shadowRoot?.querySelector('#year');
   }
 
   get monthHeadingEl() {
-    return this.el.shadowRoot.querySelector('#month');
+    return this.el.shadowRoot?.querySelector('#month');
   }
 
   get nextYearButtonEl() {
-    return this.el.shadowRoot.querySelectorAll('.calendar__next-button')[0];
+    return /** @type {HTMLElement & { ariaLabel: string }} */ (this.el.shadowRoot?.querySelectorAll(
+      '.calendar__next-button',
+    )[0]);
   }
 
   get previousYearButtonEl() {
-    return this.el.shadowRoot.querySelectorAll('.calendar__previous-button')[0];
+    return /** @type {HTMLElement & { ariaLabel: string }} */ (this.el.shadowRoot?.querySelectorAll(
+      '.calendar__previous-button',
+    )[0]);
   }
 
   get nextMonthButtonEl() {
-    return this.el.shadowRoot.querySelectorAll('.calendar__next-button')[1];
+    return this.el.shadowRoot?.querySelectorAll('.calendar__next-button')[1];
   }
 
   get previousMonthButtonEl() {
-    return this.el.shadowRoot.querySelectorAll('.calendar__previous-button')[1];
+    return this.el.shadowRoot?.querySelectorAll('.calendar__previous-button')[1];
   }
 
   get gridEl() {
-    return this.el.shadowRoot.querySelector('.calendar__grid');
+    return this.el.shadowRoot?.querySelector('.calendar__grid');
   }
 
   get weekdayHeaderEls() {
-    return [].slice.call(this.el.shadowRoot.querySelectorAll('.calendar__weekday-header'));
+    return /** @type {HTMLElement[]} */ (Array.from(
+      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll('.calendar__weekday-header'),
+    ));
   }
 
   get dayEls() {
-    return [].slice.call(
-      this.el.shadowRoot.querySelectorAll('.calendar__day-button[current-month]'),
-    );
+    return /** @type {HTMLElement[]} */ (Array.from(
+      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+        '.calendar__day-button[current-month]',
+      ),
+    ));
   }
 
   get previousMonthDayEls() {
-    return [].slice.call(
-      this.el.shadowRoot.querySelectorAll('.calendar__day-button[previous-month]'),
-    );
+    return /** @type {HTMLElement[]} */ (Array.from(
+      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+        '.calendar__day-button[previous-month]',
+      ),
+    ));
   }
 
   get nextMonthDayEls() {
-    return [].slice.call(this.el.shadowRoot.querySelectorAll('.calendar__day-button[next-month]'));
+    return /** @type {HTMLElement[]} */ (Array.from(
+      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+        '.calendar__day-button[next-month]',
+      ),
+    ));
   }
 
   get dayObjs() {
@@ -81,19 +98,25 @@ export class CalendarObject {
     return this.nextMonthDayEls.map(d => new DayObject(d));
   }
 
+  /**
+   * @param {number} monthDayNumber
+   */
   getDayEl(monthDayNumber) {
     // Relies on the fact that empty cells don't have .calendar__day-button[current-month]
-    return this.el.shadowRoot.querySelectorAll('.calendar__day-button[current-month]')[
-      monthDayNumber - 1
-    ];
+    return /** @type {HTMLElement} */ (this.el.shadowRoot?.querySelectorAll(
+      '.calendar__day-button[current-month]',
+    )[monthDayNumber - 1]);
   }
 
+  /**
+   * @param {number} monthDayNumber
+   */
   getDayObj(monthDayNumber) {
-    return new DayObject(this.getDayEl(monthDayNumber));
+    return new DayObject(/** @type{HTMLElement} */ (this.getDayEl(monthDayNumber)));
   }
 
   get selectedDayObj() {
-    return this.dayObjs.find(d => d.selected);
+    return this.dayObjs.find(d => d.isSelected);
   }
 
   get centralDayObj() {
@@ -101,7 +124,7 @@ export class CalendarObject {
   }
 
   get focusedDayObj() {
-    return this.dayObjs.find(d => d.el === this.el.shadowRoot.activeElement);
+    return this.dayObjs.find(d => d.el === this.el.shadowRoot?.activeElement);
   }
 
   /**
@@ -109,7 +132,7 @@ export class CalendarObject {
    *
    * @param {function} condition : condition that should apply for "filter" days
    * - Example: "(dayObj) => dayObj.selected"
-   * @param {array|function} filter - month day numbers for which condition should apply.
+   * @param {number[]|function} [filter] - month day numbers for which condition should apply.
    * - Example 1: "[15, 20]"
    * - Example 2: "(dayNumber) => dayNumber === 15" (1 based ,not zero based)
    */
@@ -130,10 +153,10 @@ export class CalendarObject {
    * States
    */
   get activeMonth() {
-    return this.monthHeadingEl.textContent.trim();
+    return this.monthHeadingEl?.textContent?.trim();
   }
 
   get activeYear() {
-    return this.yearHeadingEl.textContent.trim();
+    return this.yearHeadingEl?.textContent?.trim();
   }
 }

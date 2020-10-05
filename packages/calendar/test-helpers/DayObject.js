@@ -5,6 +5,9 @@ import { weekdayNames } from './weekdayNames.js';
  * allows for writing readable, 'DOM structure agnostic' tests
  */
 export class DayObject {
+  /**
+   * @param {HTMLElement} dayEl
+   */
   constructor(dayEl) {
     this.el = dayEl;
   }
@@ -14,11 +17,12 @@ export class DayObject {
    */
 
   get calendarShadowRoot() {
-    return this.el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    return this.el.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode
+      ?.parentNode;
   }
 
   get cellEl() {
-    return this.el.parentElement;
+    return /** @type {HTMLElement} */ (this.el.parentElement);
   }
 
   get buttonEl() {
@@ -46,7 +50,7 @@ export class DayObject {
   }
 
   get isFocused() {
-    return this.calendarShadowRoot.activeElement === this.buttonEl;
+    return /** @type {ShadowRoot} */ (this.calendarShadowRoot).activeElement === this.buttonEl;
   }
 
   get monthday() {
@@ -59,17 +63,21 @@ export class DayObject {
 
   get weekdayNameShort() {
     const weekdayEls = Array.from(
-      this.el.parentElement.parentElement.querySelectorAll('.calendar__day-cell'),
+      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement).querySelectorAll(
+        '.calendar__day-cell',
+      ),
     );
-    const dayIndex = weekdayEls.indexOf(this.el.parentElement);
+    const dayIndex = weekdayEls.indexOf(/** @type {HTMLElement} */ (this.el.parentElement));
     return weekdayNames['en-GB'].Sunday.short[dayIndex];
   }
 
   get weekdayNameLong() {
     const weekdayEls = Array.from(
-      this.el.parentElement.parentElement.querySelectorAll('.calendar__day-cell'),
+      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement).querySelectorAll(
+        '.calendar__day-cell',
+      ),
     );
-    const dayIndex = weekdayEls.indexOf(this.el.parentElement);
+    const dayIndex = weekdayEls.indexOf(/** @type {HTMLElement} */ (this.el.parentElement));
     return weekdayNames['en-GB'].Sunday.long[dayIndex];
   }
 
@@ -77,6 +85,8 @@ export class DayObject {
    * Other
    */
   get cellIndex() {
-    return Array.from(this.cellEl.parentElement.children).indexOf(this.cellEl);
+    return Array.from(/** @type {HTMLElement} */ (this.cellEl.parentElement).children).indexOf(
+      this.cellEl,
+    );
   }
 }

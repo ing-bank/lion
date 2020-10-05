@@ -2,9 +2,13 @@ import { expect } from '@open-wc/testing';
 import { createMonth } from '../../src/utils/createMonth.js';
 import { createWeek } from '../../src/utils/createWeek.js';
 
+/**
+ * @param {import('../../types/day').Month} obj
+ */
 function compareMonth(obj) {
   obj.weeks.forEach((week, weeki) => {
     week.days.forEach((day, dayi) => {
+      // @ts-expect-error since we are converting Date to ISO string, but that's okay for our test Date comparisons
       // eslint-disable-next-line no-param-reassign
       obj.weeks[weeki].days[dayi].date = obj.weeks[weeki].days[dayi].date.toISOString();
     });

@@ -6,7 +6,6 @@ const tagString = 'lion-input-datepicker';
 describe('<lion-input-datepicker> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,
-    suffix: tagString,
     allowedModelValueTypes: [Date],
   });
 

@@ -2,10 +2,14 @@ import { expect } from '@open-wc/testing';
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { createMonth } from '../../src/utils/createMonth.js';
 
+/**
+ * @param {{ months: import('../../types/day').Month[]}} obj
+ */
 function compareMultipleMonth(obj) {
   obj.months.forEach((month, monthi) => {
     month.weeks.forEach((week, weeki) => {
       week.days.forEach((day, dayi) => {
+        // @ts-expect-error since we are converting Date to ISO string, but that's okay for our test Date comparisons
         // eslint-disable-next-line no-param-reassign
         obj.months[monthi].weeks[weeki].days[dayi].date = obj.months[monthi].weeks[weeki].days[
           dayi
