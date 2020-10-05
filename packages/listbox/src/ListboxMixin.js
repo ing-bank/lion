@@ -732,6 +732,7 @@ const ListboxMixinImplementation = superclass =>
           slot.assignedNodes().forEach(node => {
             this._listboxNode.appendChild(node);
           });
+          this._onListboxContentChanged();
         });
       }
     }

@@ -1,9 +1,12 @@
-import { LitElement, html } from '@lion/core';
+import { LitElement, html, repeat } from '@lion/core';
 
-function fetchMyData() {
+import { listboxData } from '@lion/listbox/docs/listboxData.js';
+
+function fetchMyData(val) {
+  const results = listboxData.filter(item => item.toLowerCase().includes(val.toLowerCase()));
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve('abcdefghijk'.split(''));
+      resolve(results);
     }, 1000);
   });
 }
@@ -22,12 +25,12 @@ class DemoServerSide extends LitElement {
     return this.shadowRoot.querySelector('lion-combobox');
   }
 
-  async fetchMyDataAndRender() {
+  async fetchMyDataAndRender(e) {
     this.loading = true;
-    this.myData = await fetchMyData();
+    this.myData = await fetchMyData(e.target.value);
     this.loading = false;
-    await this.updateComplete;
-    this._combobox._handleAutocompletion();
+    // await this.updateComplete;
+    // this._combobox._handleAutocompletion();
   }
 
   render() {
@@ -38,9 +41,13 @@ class DemoServerSide extends LitElement {
         @input="${this.fetchMyDataAndRender}"
       >
         ${this.loading ? html`<span slot="after" data-description>loading...</span>` : ''}
-        ${this.myData.map(
-          entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
-        )}
+        <lion-options slot="listbox">
+          ${repeat(
+            this.myData,
+            entry => entry,
+            entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
+          )}
+        </lion-options>
       </lion-combobox>
     `;
   }
