@@ -379,6 +379,12 @@ const ListboxMixinImplementation = superclass =>
         /** @type {any[]} */
         this._initialModelValue = this.modelValue;
       });
+
+      // Every time new options are rendered from outside context, notify our parents
+      const observer = new MutationObserver(() => {
+        this._onListboxContentChanged();
+      });
+      observer.observe(this._listboxNode, { childList: true });
     }
 
     /**
@@ -511,7 +517,15 @@ const ListboxMixinImplementation = superclass =>
       }
     }
 
-    /** @protected */
+    /**
+     * A Subclasser can perform additional logic whenever the elements inside the listbox are
+     * updated. For instance, when a combobox does server side autocomplete, we want to
+     * match highlighted parts client side.
+     * @configurable
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _onListboxContentChanged() {}
+
     _teardownListboxNode() {
       if (this._listboxNode) {
         this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);

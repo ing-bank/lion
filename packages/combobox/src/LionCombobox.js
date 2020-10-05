@@ -431,12 +431,17 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {Event} ev
+   * @configure ListboxMixin whenever the options are changed (potentially due to external causes
+   * like server side filtering of nodes), schedule autocompletion for proper highlighting
    * @protected
    */
+  _onListboxContentChanged() {
+    super._onListboxContentChanged();
+    this.__shouldAutocompleteNextUpdate = true;
+  }
+
   // eslint-disable-next-line no-unused-vars
-  _textboxOnInput(ev) {
-    // Schedules autocompletion of options
+  _textboxOnInput() {
     this.__shouldAutocompleteNextUpdate = true;
   }
 
@@ -577,9 +582,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _handleAutocompletion() {
-    // TODO: this is captured by 'noFilter'
-    // It should be removed and failing tests should be fixed. Currently, this line causes
-    // an empty box to keep showing its options when autocomplete is 'none'.
     if (this.autocomplete === 'none') {
       return;
     }

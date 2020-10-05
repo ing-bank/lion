@@ -13,7 +13,7 @@ availability of the popup.
 > Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
 
 ```js script
-import { html } from '@lion/core';
+import { LitElement, html, repeat } from '@lion/core';
 import { listboxData } from '../../../../packages/listbox/docs/listboxData.js';
 import '@lion/listbox/define';
 import '@lion/combobox/define';
@@ -248,6 +248,82 @@ export const invokerButton = () => html`
     )}
   </lion-combobox>
 `;
+```
+
+### Server interaction
+
+It's possible to fetch data from server side.
+
+```js preview-story
+const comboboxData = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+let rejectPrev;
+/**
+ * @param {string} val
+ */
+function fetchMyData(val) {
+  if (rejectPrev) {
+    rejectPrev();
+  }
+  const results = comboboxData.filter(item => item.toLowerCase().includes(val.toLowerCase()));
+  return new Promise((resolve, reject) => {
+    rejectPrev = reject;
+    setTimeout(() => {
+      resolve(results);
+    }, 1000);
+  });
+}
+class DemoServerSide extends LitElement {
+  static get properties() {
+    return { options: { type: Array } };
+  }
+
+  constructor() {
+    super();
+    /** @type {string[]} */
+    this.options = [];
+  }
+
+  get combobox() {
+    return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
+  }
+
+  /**
+   * @param {InputEvent & {target: HTMLInputElement}} e
+   */
+  async fetchMyDataAndRender(e) {
+    this.loading = true;
+    this.requestUpdate();
+    try {
+      this.options = await fetchMyData(e.target.value);
+      this.loading = false;
+      this.requestUpdate();
+    } catch (_) {}
+  }
+
+  render() {
+    return html`
+      <lion-combobox
+        .showAllOnEmpty="${true}"
+        id="combobox"
+        @input="${this.fetchMyDataAndRender}"
+        .helpText="Returned from server: [${this.options.join(', ')}]"
+      >
+        <label slot="label" aria-live="polite"
+          >Server side completion ${this.loading
+            ? html`<span style="font-style: italic;">(loading...)</span>`
+            : ''}</label
+        >
+        ${repeat(
+          this.options,
+          entry => entry,
+          entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
+        )}
+      </lion-combobox>
+    `;
+  }
+}
+customElements.define('demo-server-side', DemoServerSide);
+export const serverSideCompletion = () => html`<demo-server-side></demo-server-side>`;
 ```
 
 ## Listbox compatibility

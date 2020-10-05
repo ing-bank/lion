@@ -1209,6 +1209,60 @@ describe('lion-combobox', () => {
       expect(_inputNode.selectionEnd).to.equal('Ch'.length);
     });
 
+    describe('Server side completion support', () => {
+      const listboxData = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+
+      class MyEl extends LitElement {
+        constructor() {
+          super();
+          /** @type {string[]} */
+          this.options = [...listboxData];
+        }
+
+        clearOptions() {
+          /** @type {string[]} */
+          this.options = [];
+          this.requestUpdate();
+        }
+
+        addOption() {
+          this.options.push(`option ${this.options.length + 1}`);
+          this.requestUpdate();
+        }
+
+        get combobox() {
+          return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
+        }
+
+        render() {
+          return html`
+            <lion-combobox id="combobox" label="Server side completion">
+              ${this.options.map(
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </lion-combobox>
+          `;
+        }
+      }
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
+
+      it('calls "_handleAutocompletion" after externally changing options', async () => {
+        const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        await el.combobox.registrationComplete;
+        // @ts-ignore [allow-protected] in test
+        const spy = sinon.spy(el.combobox, '_handleAutocompletion');
+        el.addOption();
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(spy).to.have.been.calledOnce;
+        el.clearOptions();
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(spy).to.have.been.calledTwice;
+      });
+    });
+
     describe('Subclassers', () => {
       it('allows to configure autoselect', async () => {
         class X extends LionCombobox {

@@ -3,7 +3,7 @@ import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
-import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getListboxMembers } from '../test-helpers/index.js';
 
@@ -1420,8 +1420,8 @@ export function runListboxMixinSuite(customConfig = {}) {
           `;
         }
       }
-
-      customElements.define('my-el', MyEl);
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
 
       it('works with array map and repeat directive', async () => {
         const choiceVals = (/** @type {LionListbox} */ elm) =>
@@ -1431,7 +1431,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           elm.formElements.filter(fel => elm._listboxNode.contains(fel)).length ===
           elm.formElements.length;
 
-        const el = /** @type {MyEl} */ (await _fixture(html`<my-el></my-el>`));
+        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
 
         expect(choiceVals(el.withMap)).to.eql(el.options);
         expect(el.withMap.formElements.length).to.equal(2);
@@ -1457,6 +1457,56 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(choiceVals(el.withRepeat)).to.eql(el.options);
         expect(el.withRepeat.formElements.length).to.equal(0);
         expect(insideListboxNode(el.withRepeat)).to.be.true;
+      });
+    });
+
+    describe('Subclassers', () => {
+      class MyEl extends LitElement {
+        constructor() {
+          super();
+          /** @type {string[]} */
+          this.options = ['option 1', 'option 2'];
+        }
+
+        clearOptions() {
+          /** @type {string[]} */
+          this.options = [];
+          this.requestUpdate();
+        }
+
+        addOption() {
+          this.options.push(`option ${this.options.length + 1}`);
+          this.requestUpdate();
+        }
+
+        get listbox() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#listbox'));
+        }
+
+        render() {
+          return html`
+            <${tag} id="listbox">
+              ${this.options.map(
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+          `;
+        }
+      }
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
+
+      it('calls "_onListboxContentChanged" after externally changing options', async () => {
+        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        await el.listbox.registrationComplete;
+        // @ts-ignore [allow-protected] in test
+        const spy = sinon.spy(el.listbox, '_onListboxContentChanged');
+        el.addOption();
+        await el.updateComplete;
+        expect(spy).to.have.been.calledOnce;
+        el.clearOptions();
+        await el.updateComplete;
+        expect(spy).to.have.been.calledTwice;
       });
     });
   });
