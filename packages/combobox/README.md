@@ -20,8 +20,11 @@ import { listboxData } from '@lion/listbox/docs/listboxData.js';
 import '@lion/listbox/lion-option.js';
 import './lion-combobox.js';
 import './docs/demo-selection-display.js';
+import './docs/demo-server-side.js';
+
 import { lazyRender } from './docs/lazyRender.js';
 import levenshtein from './docs/levenshtein.js';
+import { render } from '@lion/core';
 
 export default {
   title: 'Forms/Combobox',
@@ -244,6 +247,12 @@ export const invokerButton = () => html`
     )}
   </lion-combobox>
 `;
+```
+
+## Server side completion
+
+```js preview-story
+export const serverSideCompletion = () => html`<demo-server-side></demo-server-side>`;
 ```
 
 ## Listbox compatibility

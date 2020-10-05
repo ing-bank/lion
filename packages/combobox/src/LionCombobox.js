@@ -338,12 +338,16 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {Event} ev
+   * @configure ListboxMixin
    */
+  _onListboxContentChanged() {
+    super._onListboxContentChanged();
+    console.log('_onListboxContentChanged');
+    this.__shouldAutocompleteNextUpdate = true;
+  }
+
   // eslint-disable-next-line no-unused-vars
-  _textboxOnInput(ev) {
-    // this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
-    // Schedules autocompletion of options
+  _textboxOnInput() {
     this.__shouldAutocompleteNextUpdate = true;
   }
 
@@ -445,6 +449,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * Matches visibility of listbox options against current ._inputNode contents
    */
   _handleAutocompletion() {
+    console.log('_handleAutocompletion');
     if (this.autocomplete === 'none') {
       return;
     }
