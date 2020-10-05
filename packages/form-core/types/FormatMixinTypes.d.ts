@@ -9,7 +9,6 @@ export declare class FormatHost {
   serializedValue: string;
   formatOn: string;
   formatOptions: FormatNumberOptions;
-  value: string;
   __preventRecursiveTrigger: boolean;
   __isHandlingUserInput: boolean;
 
@@ -17,6 +16,9 @@ export declare class FormatHost {
   formatter(v: unknown, opts: FormatNumberOptions): string;
   serializer(v: unknown): string;
   deserializer(v: string): unknown;
+
+  get value(): string;
+  set value(value: string);
 
   _calculateValues(opts: { source: 'model' | 'serialized' | 'formatted' | null }): void;
   __callParser(value: string | undefined): object;

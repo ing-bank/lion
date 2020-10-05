@@ -1,13 +1,13 @@
 import { LionField } from '@lion/form-core';
+import { NativeTextFieldMixin } from '@lion/form-core/src/NativeTextFieldMixin';
 
 /**
  * LionInput: extension of lion-field with native input element in place and user friendly API.
  *
  * @customElement lion-input
- * @extends {LionField}
  */
 // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionInput extends LionField {
+export class LionInput extends NativeTextFieldMixin(LionField) {
   static get properties() {
     return {
       /**
@@ -49,6 +49,10 @@ export class LionInput extends LionField {
     };
   }
 
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
+  }
+
   constructor() {
     super();
     this.readOnly = false;
@@ -79,8 +83,22 @@ export class LionInput extends LionField {
     if (changedProperties.has('type')) {
       this._inputNode.type = this.type;
     }
+
     if (changedProperties.has('placeholder')) {
       this._inputNode.placeholder = this.placeholder;
+    }
+
+    if (changedProperties.has('disabled')) {
+      this._inputNode.disabled = this.disabled;
+      this.validate();
+    }
+
+    if (changedProperties.has('name')) {
+      this._inputNode.name = this.name;
+    }
+
+    if (changedProperties.has('autocomplete')) {
+      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
     }
   }
 

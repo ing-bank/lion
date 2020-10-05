@@ -125,6 +125,9 @@ const FormGroupMixinImplementation = superclass =>
 
     constructor() {
       super();
+      // inputNode = this, which always requires a value prop
+      this.value = '';
+
       this.disabled = false;
       this.submitted = false;
       this.dirty = false;

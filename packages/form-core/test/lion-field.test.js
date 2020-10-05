@@ -3,7 +3,6 @@ import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers.js';
 import { Required, Validator } from '@lion/form-core';
 import {
-  aTimeout,
   expect,
   fixture,
   html,
@@ -123,21 +122,6 @@ describe('<lion-field>', () => {
     expect(el.focused).to.equal(false);
   });
 
-  it('can be disabled via attribute', async () => {
-    const elDisabled = /** @type {LionField} */ (await fixture(
-      html`<${tag} disabled>${inputSlot}</${tag}>`,
-    ));
-    expect(elDisabled.disabled).to.equal(true);
-    expect(elDisabled._inputNode.disabled).to.equal(true);
-  });
-
-  it('can be disabled via property', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    el.disabled = true;
-    await el.updateComplete;
-    expect(el._inputNode.disabled).to.equal(true);
-  });
-
   it('can be cleared which erases value, validation and interaction states', async () => {
     const el = /** @type {LionField} */ (await fixture(
       html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`,
@@ -159,60 +143,6 @@ describe('<lion-field>', () => {
     el.modelValue = 'bar';
     el.reset();
     expect(el.modelValue).to.equal('foo');
-  });
-
-  it('reads initial value from attribute value', async () => {
-    const el = /** @type {LionField} */ (await fixture(
-      html`<${tag} value="one">${inputSlot}</${tag}>`,
-    ));
-    expect(getSlot(el, 'input').value).to.equal('one');
-  });
-
-  it('delegates value property', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(getSlot(el, 'input').value).to.equal('');
-    el.value = 'one';
-    expect(el.value).to.equal('one');
-    expect(getSlot(el, 'input').value).to.equal('one');
-  });
-
-  // This is necessary for security, so that _inputNodes autocomplete can be set to 'off'
-  it('delegates autocomplete property', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(el._inputNode.autocomplete).to.equal('');
-    expect(el._inputNode.hasAttribute('autocomplete')).to.be.false;
-    el.autocomplete = 'off';
-    await el.updateComplete;
-    expect(el._inputNode.autocomplete).to.equal('off');
-    expect(el._inputNode.getAttribute('autocomplete')).to.equal('off');
-  });
-
-  it('preserves the caret position on value change for native text fields (input|textarea)', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    await triggerFocusFor(el);
-    await el.updateComplete;
-    el._inputNode.value = 'hello world';
-    el._inputNode.selectionStart = 2;
-    el._inputNode.selectionEnd = 2;
-    el.value = 'hey there universe';
-    expect(el._inputNode.selectionStart).to.equal(2);
-    expect(el._inputNode.selectionEnd).to.equal(2);
-  });
-
-  // TODO: Add test that css pointerEvents is none if disabled.
-  it('is disabled when disabled property is passed', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(el._inputNode.hasAttribute('disabled')).to.equal(false);
-
-    el.disabled = true;
-    await el.updateComplete;
-    await aTimeout(0);
-
-    expect(el._inputNode.hasAttribute('disabled')).to.equal(true);
-    const disabledel = /** @type {LionField} */ (await fixture(
-      html`<${tag} disabled>${inputSlot}</${tag}>`,
-    ));
-    expect(disabledel._inputNode.hasAttribute('disabled')).to.equal(true);
   });
 
   describe('Accessibility', () => {
@@ -437,37 +367,6 @@ describe('<lion-field>', () => {
       expect(disabledEl.validationStates.error).to.deep.equal({});
     });
 
-    it('should remove validation when disabled state toggles', async () => {
-      const HasX = class extends Validator {
-        static get validatorName() {
-          return 'HasX';
-        }
-
-        /**
-         * @param {string} value
-         */
-        execute(value) {
-          const result = value.indexOf('x') === -1;
-          return result;
-        }
-      };
-      const el = /** @type {LionField} */ (await fixture(html`
-        <${tag}
-          .validators=${[new HasX()]}
-          .modelValue=${'a@b.nl'}
-        >
-          ${inputSlot}
-        </${tag}>
-      `));
-      expect(el.hasFeedbackFor).to.deep.equal(['error']);
-      expect(el.validationStates.error.HasX).to.exist;
-
-      el.disabled = true;
-      await el.updateComplete;
-      expect(el.hasFeedbackFor).to.deep.equal([]);
-      expect(el.validationStates.error).to.deep.equal({});
-    });
-
     it('can be required', async () => {
       const el = /** @type {LionField} */ (await fixture(html`
         <${tag}
@@ -553,29 +452,6 @@ describe('<lion-field>', () => {
         expect(assignedNodes.length).to.equal(1);
         expect(assignedNodes[0].getAttribute('test-me')).to.equal('ok');
       });
-    });
-  });
-
-  describe('Delegation', () => {
-    it('delegates property value', async () => {
-      const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-      expect(el._inputNode.value).to.equal('');
-      el.value = 'one';
-      expect(el.value).to.equal('one');
-      expect(el._inputNode.value).to.equal('one');
-    });
-
-    it('delegates property selectionStart and selectionEnd', async () => {
-      const el = /** @type {LionField} */ (await fixture(html`
-        <${tag}
-          .modelValue=${'Some text to select'}
-        >${unsafeHTML(inputSlotString)}</${tag}>
-      `));
-
-      el.selectionStart = 5;
-      el.selectionEnd = 12;
-      expect(el._inputNode.selectionStart).to.equal(5);
-      expect(el._inputNode.selectionEnd).to.equal(12);
     });
   });
 });

@@ -122,6 +122,23 @@ const FormatMixinImplementation = superclass =>
       }
     }
 
+    get value() {
+      return (this._inputNode && this._inputNode.value) || this.__value || '';
+    }
+
+    // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+    /** @type {string} */
+    set value(value) {
+      // if not yet connected to dom can't change the value
+      if (this._inputNode) {
+        this._inputNode.value = value;
+        /** @type {string | undefined} */
+        this.__value = undefined;
+      } else {
+        this.__value = value;
+      }
+    }
+
     /**
      * Converts formattedValue to modelValue
      * For instance, a localized date to a Date Object
