@@ -1,5 +1,5 @@
 import { Required } from '@lion/form-core';
-import { expect, html, fixture, unsafeStatic } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';
@@ -7,12 +7,33 @@ import '../lion-listbox.js';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
 /**
- * @typedef {import('@lion/combobox/src/LionCombobox').LionCombobox} LionCombobox
  * @typedef {import('../src/LionListbox').LionListbox} LionListbox
+ * @typedef {import('../src/LionOption').LionOption} LionOption
+ * @typedef {import('@lion/select-rich').LionSelectInvoker} LionSelectInvoker
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
  */
 
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
+
 /**
- * @param { {tagString:string, optionTagString:string} } [customConfig]
+ * @param {LionListbox} lionListboxEl
+ */
+function getProtectedMembers(lionListboxEl) {
+  // @ts-ignore protected members allowed in test
+  const {
+    _inputNode: input,
+    _activeDescendantOwnerNode: activeDescendantOwner,
+    _listboxNode: listbox,
+  } = lionListboxEl;
+  return {
+    input,
+    activeDescendantOwner,
+    listbox,
+  };
+}
+
+/**
+ * @param { {tagString?:string, optionTagString?:string} } [customConfig]
  */
 export function runListboxMixinSuite(customConfig = {}) {
   const cfg = {
@@ -157,12 +178,12 @@ export function runListboxMixinSuite(customConfig = {}) {
         await el.updateComplete;
         expect(el.showsFeedbackFor.includes('error')).to.be.true;
 
-        el._listboxNode.children[1].checked = true;
+        el.formElements[1].checked = true;
         await el.updateComplete;
         expect(el.hasFeedbackFor.includes('error')).to.be.false;
         expect(el.showsFeedbackFor.includes('error')).to.be.false;
 
-        el._listboxNode.children[0].checked = true;
+        el.formElements[0].checked = true;
         await el.updateComplete;
         expect(el.hasFeedbackFor.includes('error')).to.be.true;
         expect(el.showsFeedbackFor.includes('error')).to.be.true;
@@ -170,19 +191,6 @@ export function runListboxMixinSuite(customConfig = {}) {
     });
 
     describe('Selection', () => {
-      it('supports having no default selection initially', async () => {
-        const el = await fixture(html`
-        <${tag} id="color" name="color" label="Favorite color" has-no-default-selected>
-          <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
-          <${optionTag} .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
-          <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
-        </${tag}>
-      `);
-
-        expect(el.selectedElement).to.be.undefined;
-        expect(el.modelValue).to.equal('');
-      });
-
       it('supports changing the selection through serializedValue setter', async () => {
         const el = await fixture(html`
         <${tag} id="color" name="color" label="Favorite color" has-no-default-selected>
@@ -203,27 +211,27 @@ export function runListboxMixinSuite(customConfig = {}) {
     });
 
     describe('Accessibility', () => {
-      it('[axe]: is accessible when closed', async () => {
-        const el = await fixture(html`
-          <${tag} label="age">
-            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-          </${tag}>
-        `);
-        await expect(el).to.be.accessible();
-      });
-
       it('[axe]: is accessible when opened', async () => {
         const el = await fixture(html`
-          <${tag} label="age">
+          <${tag} label="age" opened>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        el.opened = true;
         await el.updateComplete;
         await el.updateComplete; // need 2 awaits as overlay.show is an async function
 
+        await expect(el).to.be.accessible();
+      });
+
+      // NB: regular listbox is always 'opened', but needed for combobox and select-rich
+      it('[axe]: is accessible when closed', async () => {
+        const el = await fixture(html`
+                <${tag} label="age">
+                  <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+                  <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+                </${tag}>
+              `);
         await expect(el).to.be.accessible();
       });
 
@@ -252,7 +260,9 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
           </${tag}>
         `);
-        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.be.null;
+        const { activeDescendantOwner } = getProtectedMembers(el);
+
+        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.be.null;
         await el.updateComplete;
 
         // Normalize
@@ -262,16 +272,10 @@ export function runListboxMixinSuite(customConfig = {}) {
         //   new KeyboardEvent('keydown', { key: 'ArrowDown' }),
         // );
         await el.updateComplete;
-        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
-          'first',
-        );
-        el._activeDescendantOwnerNode.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowDown' }),
-        );
+        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('first');
+        activeDescendantOwner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await el.updateComplete;
-        expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
-          'second',
-        );
+        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('second');
       });
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
@@ -288,15 +292,14 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
-        const el = /** @type {LionListbox} */ (await fixture(html`
+        const el = await fixture(html`
           <${tag} autocomplete="none">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
           </${tag}>
-        `));
-        const optionEls = [].slice.call(el.querySelectorAll('lion-option'));
-        optionEls.forEach((oEl, i) => {
+        `);
+        el.formElements.forEach((oEl, i) => {
           expect(oEl.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
         });
       });
@@ -326,6 +329,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
 
+        // @ts-ignore feature detect LionCombobox
         if (el._comboboxNode) {
           // note that the modelValue can only be supplied as string if we have a textbox
           // (parsers not supported atm)
@@ -383,10 +387,11 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        expect(el.activeIndex).to.equal(-1);
+        const options = el.formElements;
 
-        el.querySelectorAll('lion-option')[1].active = true;
-        expect(el.querySelectorAll('lion-option')[0].active).to.be.false;
+        expect(el.activeIndex).to.equal(-1);
+        options[1].active = true;
+        expect(options[0].active).to.be.false;
         expect(el.activeIndex).to.equal(1);
       });
 
@@ -397,8 +402,10 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
           </${tag}>
         `);
+        const options = el.formElements;
+
         expect(el.activeIndex).to.equal(-1);
-        el.querySelectorAll('lion-option')[1].active = true;
+        options[1].active = true;
         expect(el.activeIndex).to.equal(1);
         el.reset();
         expect(el.activeIndex).to.equal(-1);
@@ -416,15 +423,17 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
                 </${tag}>
               `));
+            const { listbox } = getProtectedMembers(el);
+
             // Normalize
             el.activeIndex = 0;
             const options = el.formElements;
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             expect(options[0].active).to.be.true;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.false;
             el.activeIndex = 2;
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
             expect(options[0].active).to.be.false;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.true;
@@ -466,12 +475,14 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
             `));
+            const { listbox } = getProtectedMembers(el);
+
             // Normalize suite
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             expect(options[1].checked).to.be.true;
           });
         });
@@ -487,17 +498,20 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
                 </${tag}>
               `));
+            const { listbox } = getProtectedMembers(el);
+
             // Normalize suite
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
             expect(options[1].checked).to.be.true;
             el.checkedIndex = 0;
+            // @ts-ignore allow protected member access in test
             el._listboxReceivesNoFocus = true;
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
             expect(options[1].checked).to.be.false;
           });
         });
@@ -511,9 +525,9 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'c'}>C</${optionTag}>
               </${tag}>
             `);
-          expect(el.choiceValue).to.equal('a');
+          expect(el.modelValue).to.equal('a');
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'C' }));
-          expect(el.choiceValue).to.equal('c');
+          expect(el.modelValue).to.equal('c');
         });
         it.skip('selects a value with multiple [character] keys', async () => {
           const el = await fixture(html`
@@ -524,9 +538,9 @@ export function runListboxMixinSuite(customConfig = {}) {
               </${tag}>
             `);
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'F' }));
-          expect(el.choiceValue).to.equal('far');
+          expect(el.modelValue).to.equal('far');
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'O' }));
-          expect(el.choiceValue).to.equal('foo');
+          expect(el.modelValue).to.equal('foo');
         });
         it('navigates to first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
@@ -537,15 +551,17 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
               </${tag}>
             `);
+          const { listbox } = getProtectedMembers(el);
 
+          // @ts-ignore allow protected members in tests
           if (el._listboxReceivesNoFocus) {
             return;
           }
 
           el.activeIndex = 2;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
           expect(el.activeIndex).to.equal(0);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
           expect(el.activeIndex).to.equal(3);
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
@@ -556,6 +572,8 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
               </${tag}>
             `));
+          const { listbox } = getProtectedMembers(el);
+
           // Normalize across listbox/select-rich/combobox
           el.activeIndex = 0;
           // selectionFollowsFocus will be true by default on combobox (running this suite),
@@ -563,10 +581,10 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.selectionFollowsFocus = false;
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
         });
@@ -580,6 +598,8 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
           `));
+          const { listbox } = getProtectedMembers(el);
+
           expect(el.orientation).to.equal('vertical');
           const options = el.formElements;
           // Normalize for suite tests
@@ -589,21 +609,21 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
 
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           // No response to horizontal arrows...
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           el.activeIndex = 1;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
         });
@@ -615,6 +635,8 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
           `));
+          const { listbox } = getProtectedMembers(el);
+
           expect(el.orientation).to.equal('horizontal');
 
           // Normalize for suite tests
@@ -622,44 +644,45 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           await el.updateComplete;
 
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
           expect(el.activeIndex).to.equal(1);
 
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
           expect(el.activeIndex).to.equal(0);
 
           // No response to vertical arrows...
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.activeIndex).to.equal(0);
 
           el.activeIndex = 1;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
           expect(el.activeIndex).to.equal(1);
         });
 
         describe('Accessibility', () => {
           it('adds aria-orientation attribute to listbox node', async () => {
-            const el = /** @type {Listbox} */ (await fixture(html`
+            const el = await fixture(html`
               <${tag} name="foo" orientation="horizontal">
                 <${optionTag} checked .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
-            `));
-            expect(el._listboxNode.getAttribute('aria-orientation')).to.equal('horizontal');
+            `);
+            const { listbox } = getProtectedMembers(el);
+            expect(listbox.getAttribute('aria-orientation')).to.equal('horizontal');
           });
         });
       });
 
       describe('Multiple Choice', () => {
         it('does not uncheck siblings', async () => {
-          const el = /** @type {Listbox} */ (await fixture(html`
+          const el = await fixture(html`
             <${tag} name="foo" multiple-choice>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
               <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
             </${tag}>
-          `));
+          `);
           const options = el.formElements;
           options[0].checked = true;
           options[1].checked = true;
@@ -668,17 +691,18 @@ export function runListboxMixinSuite(customConfig = {}) {
         });
 
         it('works via different interaction mechanisms (click, enter, spaces)', async () => {
-          const el = /** @type {Listbox} */ (await fixture(html`
+          const el = await fixture(html`
             <${tag} name="foo" multiple-choice>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
               <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
             </${tag}>
-          `));
+          `);
+          const { listbox } = getProtectedMembers(el);
           const options = el.formElements;
 
-          // feature detection select-rich
+          // @ts-ignore feature detection select-rich
           if (el.navigateWithinInvoker !== undefined) {
             // Note we don't have multipleChoice in the select-rich yet.
             // TODO: implement in future when requested
@@ -692,59 +716,69 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
 
           // Reset
+          // @ts-ignore allow protected members in tests
           el._uncheckChildren();
 
           // Enter
           el.activeIndex = 0;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           el.activeIndex = 1;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
 
+          // @ts-ignore allow protected
           if (el._listboxReceivesNoFocus) {
             return; // if suite is run for combobox, we don't respond to [Space]
           }
 
           // Reset
+          // @ts-ignore allow protected members in tests
           el._uncheckChildren();
 
           // Space
           el.activeIndex = 0;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
           el.activeIndex = 1;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
         });
 
         describe('Accessibility', () => {
           it('adds aria-multiselectable="true" to listbox node', async () => {
-            const el = /** @type {Listbox} */ (await fixture(html`
+            const el = await fixture(html`
               <${tag} name="foo" multiple-choice>
                 <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
-            `));
-            expect(el._listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
+            `);
+            const { listbox } = getProtectedMembers(el);
+            expect(listbox.getAttribute('aria-multiselectable')).to.equal('true');
           });
 
           it('does not allow "selectionFollowsFocus"', async () => {
-            const el = /** @type {Listbox} */ (await fixture(html`
+            const el = await fixture(html`
               <${tag} name="foo" multiple-choice>
                 <${optionTag} checked .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
-            `));
-            el._inputNode.focus();
-            el._listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-            expect(el._listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
+            `);
+            const { listbox, input } = getProtectedMembers(el);
+
+            input.focus();
+            listbox.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+            expect(listbox.getAttribute('aria-multiselectable')).to.equal('true');
           });
         });
       });
 
       describe('Selection Follows Focus', () => {
         it('navigates through list with [ArrowDown] [ArrowUp] keys: activates and checks the option', async () => {
+          /**
+           * @param {LionOption[]} options
+           * @param {number} selectedIndex
+           */
           function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
             options.forEach((option, i) => {
               if (i === selectedIndex) {
@@ -761,18 +795,20 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
               </${tag}>
             `));
-          const options = Array.from(el.querySelectorAll('lion-option'));
+
+          const { listbox } = getProtectedMembers(el);
+          const options = el.formElements;
           // Normalize start values between listbox, slect and combobox and test interaction below
           el.activeIndex = 0;
           el.checkedIndex = 0;
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
@@ -786,15 +822,17 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
               </${tag}>
             `);
+          const { listbox } = getProtectedMembers(el);
 
+          // @ts-ignore allow protected
           if (el._listboxReceivesNoFocus) {
             return;
           }
 
           expect(el.modelValue).to.equal('30');
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
           expect(el.modelValue).to.equal('10');
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
           expect(el.modelValue).to.equal('40');
         });
       });
@@ -807,9 +845,11 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} checked .choiceValue=${'20'}>Item 2</${optionTag}>
             </${tag}>
           `);
+          const { listbox } = getProtectedMembers(el);
+
           await el.updateComplete;
           const { checkedIndex } = el;
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.checkedIndex).to.equal(checkedIndex);
         });
 
@@ -820,7 +860,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const options = [...el.querySelectorAll('lion-option')];
+          const options = el.formElements;
           el.disabled = true;
           await el.updateComplete;
           expect(options[0].disabled).to.be.true;
@@ -839,7 +879,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const options = [...el.querySelectorAll('lion-option')];
+          const options = el.formElements;
           expect(options[0].disabled).to.be.true;
           expect(options[1].disabled).to.be.true;
 
@@ -860,14 +900,16 @@ export function runListboxMixinSuite(customConfig = {}) {
             </${tag}>
           `);
 
+          const { listbox } = getProtectedMembers(el);
+
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
           expect(el.activeIndex).to.equal(1);
 
           expect(el.checkedIndex).to.equal(0);
-          el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           // Checked index stays where it was
           expect(el.checkedIndex).to.equal(0);
         });
@@ -881,11 +923,11 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20} id="myId">Item 2</${optionTag}>
             </${tag}>
           `);
-          const opt = el.querySelectorAll('lion-option')[1];
+          const { activeDescendantOwner } = getProtectedMembers(el);
+
+          const opt = el.formElements[1];
           opt.active = true;
-          expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
-            'myId',
-          );
+          expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('myId');
         });
 
         it('can set checked state', async () => {
@@ -895,7 +937,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const option = el.querySelectorAll('lion-option')[1];
+          const option = el.formElements[1];
           option.checked = true;
           expect(el.modelValue).to.equal(20);
         });
@@ -923,7 +965,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const options = el.querySelectorAll('lion-option');
+          const options = el.formElements;
           options[0].checked = true;
           expect(options[0].checked).to.be.true;
           expect(options[1].checked).to.be.false;
@@ -939,7 +981,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const options = el.querySelectorAll('lion-option');
+          const options = el.formElements;
           expect(options[0].active).to.be.true;
           options[1].active = true;
           expect(options[0].active).to.be.false;
@@ -990,12 +1032,16 @@ export function runListboxMixinSuite(customConfig = {}) {
           `);
 
           expect(el.hasFeedbackFor).to.include('error');
+          // @ts-expect-error no types for 'have.a.property'
           expect(el.validationStates).to.have.a.property('error');
+          // @ts-expect-error no types for 'have.a.property'
           expect(el.validationStates.error).to.have.a.property('Required');
 
           el.modelValue = 20;
           expect(el.hasFeedbackFor).not.to.include('error');
+          // @ts-expect-error no types for 'have.a.property'
           expect(el.validationStates).to.have.a.property('error');
+          // @ts-expect-error no types for 'have.a.property'
           expect(el.validationStates.error).not.to.have.a.property('Required');
         });
       });
@@ -1062,14 +1108,15 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
+        const { listbox } = getProtectedMembers(el);
 
-        expect(el._listboxNode).to.exist;
-        expect(el._listboxNode).to.be.instanceOf(LionOptions);
-        expect(el.querySelector('[role=listbox]')).to.equal(el._listboxNode);
+        expect(listbox).to.exist;
+        expect(listbox).to.be.instanceOf(LionOptions);
+        expect(el.querySelector('[role=listbox]')).to.equal(listbox);
 
         expect(el.formElements.length).to.equal(2);
-        expect(el._listboxNode.children.length).to.equal(2);
-        expect(el._listboxNode.children[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
+        expect(listbox.children.length).to.equal(2);
+        expect(listbox.children[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
       });
     });
   });
