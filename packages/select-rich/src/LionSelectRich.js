@@ -63,7 +63,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   get _scrollTargetNode() {
-    return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
+    return this._listboxNode._scrollTargetNode || this._listboxNode;
   }
 
   get checkedIndex() {
