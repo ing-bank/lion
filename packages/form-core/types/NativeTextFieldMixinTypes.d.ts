@@ -14,6 +14,6 @@ export declare class NativeTextFieldHost {
 
 export declare function NativeTextFieldImplementation<T extends Constructor<NativeTextField>>(
   superclass: T,
-): T & Constructor<NativeTextFieldHost> & NativeTextFieldHost;
+): T & Constructor<NativeTextFieldHost> & NativeTextFieldHost & typeof NativeTextField;
 
 export type NativeTextFieldMixin = typeof NativeTextFieldImplementation;

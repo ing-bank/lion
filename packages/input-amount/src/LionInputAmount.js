@@ -53,11 +53,14 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   static get styles() {
-    return css`
-      .input-group__container > .input-group__input ::slotted(.form-control) {
-        text-align: right;
-      }
-    `;
+    return [
+      super.styles,
+      css`
+        .input-group__container > .input-group__input ::slotted(.form-control) {
+          text-align: right;
+        }
+      `,
+    ];
   }
 
   constructor() {

@@ -46,7 +46,6 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
           <${childTag} name="custom[]"></${childTag}>
         </${tag}>
       `));
-      console.log(fieldset.formElements['custom[]'][1]);
       fieldset.formElements['custom[]'][0].modelValue = 'custom 1';
       fieldset.formElements['custom[]'][1].modelValue = undefined;
 
