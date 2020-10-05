@@ -3,7 +3,7 @@
  *
  * @param {Date} date
  *
- * returns {Date}
+ * @returns {Date}
  */
 export function getFirstDayNextMonth(date) {
   const result = new Date(date);

@@ -2,11 +2,17 @@ import { LionCalendar } from '@lion/calendar';
 import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
 import { html, LitElement } from '@lion/core';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
-import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-input-datepicker.js';
 import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
 import { DatepickerInputObject } from '../test-helpers.js';
+
+/**
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDatepicker>} */ (_fixture);
 
 describe('<lion-input-datepicker>', () => {
   describe('Calendar Overlay', () => {
@@ -46,7 +52,9 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(
-        elObj.overlayHeadingEl.querySelector('slot[name="heading"]').assignedNodes()[0],
+        /** @type {HTMLSlotElement} */ (elObj.overlayHeadingEl.querySelector(
+          'slot[name="heading"]',
+        )).assignedNodes()[0],
       ).lightDom.to.equal('Pick your date');
     });
 
@@ -60,7 +68,9 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(
-        elObj.overlayHeadingEl.querySelector('slot[name="heading"]').assignedNodes()[0],
+        /** @type {HTMLSlotElement} */ (elObj.overlayHeadingEl.querySelector(
+          'slot[name="heading"]',
+        )).assignedNodes()[0],
       ).lightDom.to.equal('foo');
     });
 
@@ -95,7 +105,7 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(true);
 
       document.body.click();
-      await aTimeout();
+      await aTimeout(0);
       expect(elObj.overlayController.isShown).to.be.false;
     });
 
@@ -149,7 +159,7 @@ describe('<lion-input-datepicker>', () => {
       await elObj.openCalendar();
       expect(elObj.calendarEl.selectedDate).to.equal(myDate);
       await elObj.selectMonthDay(myOtherDate.getDate());
-      expect(isSameDate(el.modelValue, myOtherDate)).to.be.true;
+      expect(isSameDate(/** @type {Date} */ (el.modelValue), myOtherDate)).to.be.true;
     });
 
     it('closes the calendar overlay on "user-selected-date-changed"', async () => {
@@ -169,16 +179,26 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      await aTimeout();
-      expect(isSameDate(elObj.calendarEl.focusedDate, elObj.calendarEl.selectedDate)).to.be.true;
+      await aTimeout(0);
+      expect(
+        isSameDate(
+          /** @type {Date} */ (elObj.calendarEl.focusedDate),
+          /** @type {Date} */ (elObj.calendarEl.selectedDate),
+        ),
+      ).to.be.true;
     });
 
     it('focuses central date on opening of calendar if no date selected', async () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      await aTimeout();
-      expect(isSameDate(elObj.calendarEl.focusedDate, elObj.calendarEl.centralDate)).to.be.true;
+      await aTimeout(0);
+      expect(
+        isSameDate(
+          /** @type {Date} */ (elObj.calendarEl.focusedDate),
+          elObj.calendarEl.centralDate,
+        ),
+      ).to.be.true;
     });
 
     describe('Validators', () => {
@@ -189,9 +209,9 @@ describe('<lion-input-datepicker>', () => {
        *   lion-calendar
        */
       it('converts IsDateDisabled validator to "disableDates" property', async () => {
-        const no15th = d => d.getDate() !== 15;
-        const no16th = d => d.getDate() !== 16;
-        const no15thOr16th = d => no15th(d) && no16th(d);
+        const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
+        const no16th = /** @param {Date} d */ d => d.getDate() !== 16;
+        const no15thOr16th = /** @param {Date} d */ d => no15th(d) && no16th(d);
         const el = await fixture(html`
           <lion-input-datepicker .validators="${[new IsDateDisabled(no15thOr16th)]}">
           </lion-input-datepicker>
@@ -204,9 +224,10 @@ describe('<lion-input-datepicker>', () => {
 
       it('converts MinDate validator to "minDate" property', async () => {
         const myMinDate = new Date('2019/06/15');
-        const el = await fixture(html`
-          <lion-input-datepicker .validators="${[new MinDate(myMinDate)]}">
-          </lion-input-date>`);
+        const el = await fixture(html` <lion-input-datepicker
+          .validators="${[new MinDate(myMinDate)]}"
+        >
+        </lion-input-datepicker>`);
         const elObj = new DatepickerInputObject(el);
         await elObj.openCalendar();
 
@@ -309,7 +330,7 @@ describe('<lion-input-datepicker>', () => {
     });
 
     it('is accessible with a disabled date', async () => {
-      const no15th = d => d.getDate() !== 15;
+      const no15th = /** @param {Date} d */ d => d.getDate() !== 15;
       const el = await fixture(html`
         <lion-input-datepicker .validators=${[new IsDateDisabled(no15th)]}> </lion-input-datepicker>
       `);
@@ -333,7 +354,7 @@ describe('<lion-input-datepicker>', () => {
           },
         );
 
-        const myEl = await fixture(`<${myTag}></${myTag}>`);
+        const myEl = await fixture(html`<${myTag}></${myTag}>`);
         const myElObj = new DatepickerInputObject(myEl);
         expect(myElObj.invokerEl.tagName.toLowerCase()).to.equal('my-button');
 
@@ -363,7 +384,7 @@ describe('<lion-input-datepicker>', () => {
           },
         );
 
-        const myEl = await fixture(`<${myTag}></${myTag}>`);
+        const myEl = await fixture(html`<${myTag}></${myTag}>`);
         const myElObj = new DatepickerInputObject(myEl);
         expect(myElObj.invokerEl.getAttribute('slot')).to.equal('prefix');
       });
@@ -391,7 +412,7 @@ describe('<lion-input-datepicker>', () => {
           },
         );
 
-        const myEl = await fixture(`<${myTag}></${myTag}>`);
+        const myEl = await fixture(html`<${myTag}></${myTag}>`);
         const myElObj = new DatepickerInputObject(myEl);
 
         // All other tests will still pass. Small checkup:
@@ -434,26 +455,28 @@ describe('<lion-input-datepicker>', () => {
               return html`
                 <my-calendar-overlay-frame id="calendar-overlay">
                   <span slot="heading">${this.calendarHeading}</span>
-                  ${this._calendarTemplateConfig(this._calendarTemplate())}
                 </my-calendar-overlay-frame>
               `;
             }
 
             /** @override */
-            _onCalendarOverlayOpened(...args) {
-              super._onCalendarOverlayOpened(...args);
+            _onCalendarOverlayOpened() {
+              super._onCalendarOverlayOpened();
               myOverlayOpenedCbHandled = true;
             }
 
-            /** @override */
-            _onCalendarUserSelectedChanged(...args) {
-              super._onCalendarUserSelectedChanged(...args);
+            /**
+             * @override
+             * @param {{ target: { selectedDate: Date }}} opts
+             */
+            _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
+              super._onCalendarUserSelectedChanged({ target: { selectedDate } });
               myUserSelectedChangedCbHandled = true;
             }
           },
         );
 
-        const myEl = await fixture(`<${myTag}></${myTag}>`);
+        const myEl = await fixture(html`<${myTag}></${myTag}>`);
         const myElObj = new DatepickerInputObject(myEl);
 
         // All other tests will still pass. Small checkup:
@@ -476,7 +499,7 @@ describe('<lion-input-datepicker>', () => {
           <lion-input-datepicker></lion-input-datepicker>
         </form>
       `);
-      const el = form.children[0];
+      const el = /** @type {LionInputDatepicker} */ (form.children[0]);
       await el.updateComplete;
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();

@@ -3,7 +3,7 @@
  *
  * @param {Date} date
  *
- * returns {Date}
+ * @returns {Date}
  */
 export function getLastDayPreviousMonth(date) {
   const previous = new Date(date);

@@ -17,6 +17,7 @@
   "include": [
     "packages/accordion/**/*.js",
     "packages/button/src/**/*.js",
+    "packages/calendar/**/*.js",
     "packages/checkbox-group/**/*.js",
     "packages/collapsible/**/*.js",
     "packages/core/**/*.js",
@@ -27,6 +28,7 @@
     "packages/input/**/*.js",
     "packages/input-amount/**/*.js",
     "packages/input-date/**/*.js",
+    "packages/input-datepicker/**/*.js",
     "packages/input-email/**/*.js",
     "packages/input-iban/**/*.js",
     "packages/input-range/**/*.js",

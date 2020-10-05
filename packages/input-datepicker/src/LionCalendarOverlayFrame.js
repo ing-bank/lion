@@ -1,6 +1,7 @@
 import { css, html, LitElement } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get styles() {
     return [
@@ -42,7 +43,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [
       {
-        'lion-calendar-overlay-frame': locale => {
+        'lion-calendar-overlay-frame': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
               return import('@lion/overlays/translations/bg-BG.js');
@@ -94,7 +95,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   }
 
   __dispatchCloseEvent() {
-    this.dispatchEvent(new Event('close-overlay'), { bubbles: true });
+    this.dispatchEvent(new Event('close-overlay'));
   }
 
   render() {
