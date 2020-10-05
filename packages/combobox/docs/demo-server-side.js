@@ -29,8 +29,8 @@ class DemoServerSide extends LitElement {
     this.loading = true;
     this.myData = await fetchMyData(e.target.value);
     this.loading = false;
-    // await this.updateComplete;
-    // this._combobox._handleAutocompletion();
+    await this.updateComplete;
+    this._combobox._handleAutocompletion();
   }
 
   render() {

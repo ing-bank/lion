@@ -342,7 +342,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _onListboxContentChanged() {
     super._onListboxContentChanged();
-    console.log('_onListboxContentChanged');
     this.__shouldAutocompleteNextUpdate = true;
   }
 
@@ -449,7 +448,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * Matches visibility of listbox options against current ._inputNode contents
    */
   _handleAutocompletion() {
-    console.log('_handleAutocompletion');
     if (this.autocomplete === 'none') {
       return;
     }
