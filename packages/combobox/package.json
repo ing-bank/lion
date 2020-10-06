@@ -28,7 +28,15 @@
     "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/combobox/test/**/*.test.js\""
   },
   "sideEffects": [
-    "lion-combobox.js"
+    "lion-combobox.js",
+    "docs/demo-selection-display.js",
+    "docs/gh-combobox/gh-combobox.js",
+    "docs/gh-combobox/gh-button.js",
+    "docs/wa-combobox/wa-combobox.js",
+    "docs/md-combobox/md-combobox.js",
+    "docs/md-combobox/md-input.js",
+    "docs/md-combobox/style/md-ripple.js",
+    "docs/md-combobox/style/load-roboto.js"
   ],
   "dependencies": {
     "@lion/core": "0.13.0",
