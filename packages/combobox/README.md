@@ -160,7 +160,24 @@ export const customMatchCondition = () => html`
 `;
 ```
 
-## Changing defaults
+## Options
+
+```js preview-story
+export const showAllOnEmpty = () => html`
+  <lion-combobox
+    name="combo"
+    label="Show all on empty"
+    help-text="Shows all (options) on empty (textbox has no value)"
+    show-all-on-empty
+  >
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
+  </lion-combobox>
+`;
+```
+
+### Changing defaults
 
 By default `selection-follows-focus` will be true (aligned with the
 wai-aria examples and the natve `<datalist>`).
