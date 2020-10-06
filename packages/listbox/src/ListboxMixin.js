@@ -670,7 +670,7 @@ const ListboxMixinImplementation = superclass =>
         ev.stopPropagation();
       }
       this.__onChildCheckedChanged(ev);
-      this.requestUpdate('modelValue');
+      this.requestUpdate('modelValue', this.modelValue);
       this.dispatchEvent(
         new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
       );
