@@ -98,6 +98,75 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
 }
 
 describe('lion-combobox', () => {
+  describe('Options', () => {
+    describe('showAllOnEmpty', () => {
+      it('hides options when text in input node is cleared after typing something by default', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        const options = el.formElements;
+        const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
+        async function performChecks() {
+          mimicUserTyping(el, 'c');
+          await el.updateComplete;
+          expect(visibleOptions().length).to.equal(4);
+          mimicUserTyping(el, '');
+          await el.updateComplete;
+          expect(visibleOptions().length).to.equal(0);
+        }
+
+        // FIXME: autocomplete 'none' should have this behavior as well
+        // el.autocomplete = 'none';
+        // await performChecks();
+        el.autocomplete = 'list';
+        await performChecks();
+        el.autocomplete = 'inline';
+        await performChecks();
+        el.autocomplete = 'both';
+        await performChecks();
+      });
+
+      it('keeps showing options when text in input node is cleared after typing something', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" autocomplete="list" show-all-on-empty>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        const options = el.formElements;
+        const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
+        async function performChecks() {
+          mimicUserTyping(el, 'c');
+          await el.updateComplete;
+          expect(visibleOptions().length).to.equal(4);
+          mimicUserTyping(el, '');
+          await el.updateComplete;
+          expect(visibleOptions().length).to.equal(options.length);
+        }
+
+        el.autocomplete = 'none';
+        await performChecks();
+        el.autocomplete = 'list';
+        await performChecks();
+        el.autocomplete = 'inline';
+        await performChecks();
+        el.autocomplete = 'both';
+        await performChecks();
+      });
+    });
+  });
+
   describe('Structure', () => {
     it('has a listbox node', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`

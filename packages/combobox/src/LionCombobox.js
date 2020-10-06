@@ -26,6 +26,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         type: String,
         attribute: 'match-mode',
       },
+      showAllOnEmpty: {
+        type: Boolean,
+        attribute: 'show-all-on-empty',
+      },
       __shouldAutocompleteNextUpdate: Boolean,
     };
   }
@@ -65,7 +69,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @override FormControlMixin
+   * @enhance FormControlMixin - add slot[name=selection-display]
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
@@ -80,7 +84,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
     return html`
-      <slot name="_overlay-shadow-outlet"></slot>
       <div id="overlay-content-node-wrapper" role="dialog">
         <slot name="listbox"></slot>
       </div>
@@ -121,7 +124,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           outline: none;
           width: 100%;
           height: 100%;
-          display: block;
+          font-size: inherit;
           box-sizing: border-box;
           padding: 0;`;
 
@@ -226,6 +229,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this.matchMode = 'all';
 
     /**
+     * When true, the listbox is open and textbox goes from a value to empty, all options are shown.
+     * By default, the listbox closes on empty, similar to wai-aria example and <datalist>
+     */
+    this.showAllOnEmpty = false;
+
+    /**
      * @configure ListboxMixin: the wai-aria pattern and <datalist> rotate
      */
     this.rotateKeyboardNavigation = true;
@@ -288,7 +297,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (changedProperties.has('opened')) {
       if (this.opened) {
         // Note we always start with -1 as a 'fundament'
-        // For [autocomplete="inline|both"] activeIndex might be changed by
+        // For [autocomplete="inline|both"] activeIndex might be changed by a match
         this.activeIndex = -1;
       }
 
@@ -342,7 +351,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
-    // this.__cboxInputValue = /** @type {LionOption} */ (ev.target).value;
     // Schedules autocompletion of options
     this.__shouldAutocompleteNextUpdate = true;
   }
@@ -427,8 +435,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   *
-   * @overridable whether a user int
+   * Computes whether a user intends to autofill (inline autocomplete textbox)
+   * @overridable
    */
   _computeUserIntendsAutoFill({ prevValue, curValue }) {
     const userIsAddingChars = prevValue.length < curValue.length;
@@ -445,12 +453,16 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * Matches visibility of listbox options against current ._inputNode contents
    */
   _handleAutocompletion() {
+    // TODO: this is captured by 'noFilter'
+    // It should be removed and failing tests should be fixed. Currently, this line causes
+    // an empty box to keep showing its options when autocomplete is 'none'.
     if (this.autocomplete === 'none') {
       return;
     }
 
     const curValue = this._inputNode.value;
     const prevValue = this.__hasSelection ? this.__prevCboxValueNonSelected : this.__prevCboxValue;
+    const isEmpty = !curValue;
 
     /**
      * The filtered list of options that will match in this autocompletion cycle
@@ -459,21 +471,26 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const visibleOptions = [];
     let hasAutoFilled = false;
     const userIntendsAutoFill = this._computeUserIntendsAutoFill({ prevValue, curValue });
-    const isAutoFillCandidate = this.autocomplete === 'both' || this.autocomplete === 'inline';
+    const isCandidate = this.autocomplete === 'both' || this.autocomplete === 'inline';
+    const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
-      const show = this.autocomplete === 'inline' ? true : this.matchCondition(option, curValue);
+      // [1]. Decide whether otion should be shown
+      let show = false;
+      if (isEmpty) {
+        show = this.showAllOnEmpty;
+      } else {
+        show = noFilter ? true : this.matchCondition(option, curValue);
+      }
 
-      // [1]. Synchronize ._inputNode value and active descendant with closest match
-      if (isAutoFillCandidate) {
+      // [2]. Synchronize ._inputNode value and active descendant with closest match
+      if (isCandidate && !hasAutoFilled && show && userIntendsAutoFill && !option.disabled) {
         const stringValues = typeof option.choiceValue === 'string' && typeof curValue === 'string';
         const beginsWith =
           stringValues && option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
-        const shouldAutoFill =
-          beginsWith && !hasAutoFilled && show && userIntendsAutoFill && !option.disabled;
 
-        if (shouldAutoFill) {
+        if (beginsWith) {
           const prevLen = this._inputNode.value.length;
           this._inputNode.value = option.choiceValue;
           this._inputNode.selectionStart = prevLen;
@@ -486,17 +503,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         }
       }
 
-      // [2]. Cleanup previous matching states
+      // [3]. Cleanup previous matching states
       if (option.onFilterUnmatch) {
         option.onFilterUnmatch(curValue, prevValue);
       } else {
         this._onFilterUnmatch(option, curValue, prevValue);
-      }
-
-      // [3]. If ._inputNode is empty, no filtering will be applied
-      if (!curValue) {
-        visibleOptions.push(option);
-        return;
       }
 
       // [4]. Cleanup previous visibility and a11y states
@@ -515,27 +526,29 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       }
     });
 
-    // [6]. enable a11y, visibility and user interaction for visible options
+    // [6]. Enable a11y, visibility and user interaction for visible options
     const setSize = visibleOptions.length;
     visibleOptions.forEach((option, idx) => {
       option.setAttribute('aria-posinset', `${idx + 1}`);
       option.setAttribute('aria-setsize', `${setSize}`);
       option.removeAttribute('aria-hidden');
     });
-    /** @type {number} */
 
+    // [7]. If no autofill took place, we are left with the previously matched option; correct this
+    if (!hasAutoFilled && isCandidate && !this.multipleChoice) {
+      // This means there is no match for checkedIndex
+      this.checkedIndex = -1;
+    }
+
+    // [8]. These values will help computing autofill intentions next autocomplete cycle
     this.__prevCboxValueNonSelected = curValue;
-    // See test "computation of "user intends autofill" works correctly afer autofill"
+    // See test 'computation of "user intends autofill" works correctly afer autofill'
     this.__prevCboxValue = this._inputNode.value;
     this.__hasSelection = hasAutoFilled;
 
+    // [9]. Reposition overlay
     if (this._overlayCtrl && this._overlayCtrl._popper) {
       this._overlayCtrl._popper.update();
-    }
-
-    if (!hasAutoFilled && isAutoFillCandidate && !this.multipleChoice) {
-      // This means there is no match for checkedIndex
-      this.checkedIndex = -1;
     }
   }
 
@@ -585,6 +598,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * @enhance ListboxMixin
    * @param {KeyboardEvent} ev
    */
   _listboxOnKeyDown(ev) {
@@ -601,7 +615,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         if (!this.formElements[this.activeIndex]) {
           return;
         }
-        // this._syncCheckedWithTextboxOnInteraction();
         if (!this.multipleChoice) {
           this.opened = false;
         }
@@ -623,7 +636,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   __setupCombobox() {
     // With regard to accessibility: aria-expanded and -labelledby will
-    // be handled by OverlatMixin and FormControlMixin respectively.
+    // be handled by OverlayMixin and FormControlMixin respectively.
 
     this._comboboxNode.setAttribute('role', 'combobox');
     this._comboboxNode.setAttribute('aria-haspopup', 'listbox');

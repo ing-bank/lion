@@ -275,27 +275,26 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
-        const el = await fixture(html`
-          <${tag}>
+        const el = /** @type {LionListbox} */ (await fixture(html`
+          <${tag} autocomplete="none">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
           </${tag}>
-        `);
-        const optionEls = [].slice.call(el.querySelectorAll('lion-option'));
-        optionEls.forEach(optionEl => {
+        `));
+        el.formElements.forEach(optionEl => {
           expect(optionEl.getAttribute('aria-setsize')).to.equal('3');
         });
       });
 
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
-        const el = await fixture(html`
-          <${tag}>
+        const el = /** @type {LionListbox} */ (await fixture(html`
+          <${tag} autocomplete="none">
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
           </${tag}>
-        `);
+        `));
         const optionEls = [].slice.call(el.querySelectorAll('lion-option'));
         optionEls.forEach((oEl, i) => {
           expect(oEl.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
@@ -550,13 +549,13 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.activeIndex).to.equal(3);
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
-          const el = await fixture(html`
-              <${tag} opened has-no-default-selected>
+          const el = /** @type {LionListbox} */ (await fixture(html`
+              <${tag} opened has-no-default-selected autocomplete="none">
                 <${optionTag} .choiceValue=${'Item 1'}>Item 1</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 2'}>Item 2</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
               </${tag}>
-            `);
+            `));
           // Normalize across listbox/select-rich/combobox
           el.activeIndex = 0;
           // selectionFollowsFocus will be true by default on combobox (running this suite),
@@ -575,8 +574,8 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       describe('Orientation', () => {
         it('has a default value of "vertical"', async () => {
-          const el = /** @type {Listbox} */ (await fixture(html`
-            <${tag} opened name="foo" autocomplete="list">
+          const el = /** @type {LionListbox} */ (await fixture(html`
+            <${tag} opened name="foo" autocomplete="none">
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -610,8 +609,8 @@ export function runListboxMixinSuite(customConfig = {}) {
         });
 
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
-          const el = /** @type {Listbox} */ (await fixture(html`
-            <${tag} opened name="foo" orientation="horizontal" autocomplete="list">
+          const el = /** @type {LionListbox} */ (await fixture(html`
+            <${tag} opened name="foo" orientation="horizontal" autocomplete="none">
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -755,13 +754,13 @@ export function runListboxMixinSuite(customConfig = {}) {
               }
             });
           }
-          const el = await fixture(html`
-              <${tag} opened selection-follows-focus>
+          const el = /** @type {LionListbox} */ (await fixture(html`
+              <${tag} opened selection-follows-focus autocomplete="none">
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
               </${tag}>
-            `);
+            `));
           const options = Array.from(el.querySelectorAll('lion-option'));
           // Normalize start values between listbox, slect and combobox and test interaction below
           el.activeIndex = 0;
