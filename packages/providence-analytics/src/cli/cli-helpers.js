@@ -6,6 +6,7 @@ const readPackageTree = require('../program/utils/read-package-tree-with-bower-s
 const { InputDataService } = require('../program/services/InputDataService.js');
 const { LogService } = require('../program/services/LogService.js');
 const { aForEach } = require('../program/utils/async-array-utils.js');
+const { toPosixPath } = require('../program/utils/to-posix-path.js');
 
 function flatten(arr) {
   return Array.prototype.concat.apply([], arr);
@@ -47,9 +48,9 @@ function pathsArrayFromCs(t, cwd = process.cwd()) {
           // eslint-disable-next-line no-param-reassign
           t = `${t}/`;
         }
-        return glob.sync(t, { cwd, absolute: true });
+        return glob.sync(t, { cwd, absolute: true }).map(toPosixPath);
       }
-      return pathLib.resolve(cwd, t.trim());
+      return toPosixPath(pathLib.resolve(cwd, t.trim()));
     }),
   );
 }
@@ -144,7 +145,7 @@ async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['n
   //   depProjectPaths.filter(depP => depP.startsWith(rootP)).;
   // });
 
-  return depProjectPaths.concat(rootPaths);
+  return depProjectPaths.concat(rootPaths).map(toPosixPath);
 }
 
 async function installDeps(searchTargetPaths) {

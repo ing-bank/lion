@@ -1,3 +1,5 @@
+const { toPosixPath } = require('./to-posix-path.js');
+
 /**
  * @desc determines for a source path of an import- or export specifier, whether
  * it is relative (an internal import/export) or absolute (external)
@@ -18,7 +20,7 @@ function isRelativeSourcePath(source) {
  * @param {string} rootPath like '/path/to/repo'
  */
 function toRelativeSourcePath(fullPath, rootPath) {
-  return fullPath.replace(rootPath, '.');
+  return toPosixPath(fullPath).replace(rootPath, '.');
 }
 
 module.exports = { isRelativeSourcePath, toRelativeSourcePath };
