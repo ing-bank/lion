@@ -6,6 +6,7 @@ const {
 } = require('../../utils/relative-source-path.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 const { aMap } = require('../../utils/async-array-utils.js');
+const { toPosixPath } = require('../../utils/to-posix-path.js');
 
 function toLocalPath(currentDirPath, resolvedPath) {
   let relativeSourcePath = pathLib.relative(currentDirPath, resolvedPath);
@@ -15,7 +16,7 @@ function toLocalPath(currentDirPath, resolvedPath) {
     // so 'my-local-files.js' -> './my-local-files.js'
     relativeSourcePath = `./${relativeSourcePath}`;
   }
-  return relativeSourcePath;
+  return toPosixPath(relativeSourcePath);
 }
 
 /**

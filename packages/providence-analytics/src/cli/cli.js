@@ -11,6 +11,7 @@ const { InputDataService } = require('../program/services/InputDataService.js');
 const promptModule = require('./prompt-analyzer-menu.js');
 const cliHelpers = require('./cli-helpers.js');
 const extendDocsModule = require('./generate-extend-docs-data.js');
+const { toPosixPath } = require('../program/utils/to-posix-path.js');
 
 const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
 
@@ -282,7 +283,7 @@ async function cli({ cwd } = {}) {
     .option(
       '--output-folder [output-folder]',
       `This is the file path where the result file "providence-extend-docs-data.json" will be written to`,
-      p => pathLib.resolve(process.cwd(), p.trim()),
+      p => toPosixPath(pathLib.resolve(process.cwd(), p.trim())),
       process.cwd(),
     )
     .action(options => {

@@ -21,6 +21,7 @@ const extendDocsModule = require('../../src/cli/generate-extend-docs-data.js');
 const cliHelpersModule = require('../../src/cli/cli-helpers.js');
 const { cli } = require('../../src/cli/cli.js');
 const promptAnalyzerModule = require('../../src/cli/prompt-analyzer-menu.js');
+const { toPosixPath } = require('../../src/program/utils/to-posix-path.js');
 
 const {
   pathsArrayFromCs,
@@ -29,7 +30,8 @@ const {
 } = cliHelpersModule;
 
 const queryResults = [];
-const rootDir = pathLib.resolve(__dirname, '../../');
+
+const rootDir = toPosixPath(pathLib.resolve(__dirname, '../../'));
 
 const externalCfgMock = {
   searchTargetCollections: {
@@ -429,7 +431,7 @@ describe('CLI helpers', () => {
         pathsArrayFromCollectionName('lion-collection', 'search-target', externalCfgMock, rootDir),
       ).to.eql(
         externalCfgMock.searchTargetCollections['lion-collection'].map(p =>
-          pathLib.join(rootDir, p),
+          toPosixPath(pathLib.join(rootDir, p)),
         ),
       );
     });
@@ -444,7 +446,7 @@ describe('CLI helpers', () => {
         ),
       ).to.eql(
         externalCfgMock.referenceCollections['lion-based-ui-collection'].map(p =>
-          pathLib.join(rootDir, p),
+          toPosixPath(pathLib.join(rootDir, p)),
         ),
       );
     });
