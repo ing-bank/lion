@@ -124,7 +124,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           outline: none;
           width: 100%;
           height: 100%;
-          font-size: inherit;
+          font: inherit;
+          color: inherit;
+          border-radius: inherit;
           box-sizing: border-box;
           padding: 0;`;
 
