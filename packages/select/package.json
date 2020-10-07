@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group select",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group select",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group select",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/select/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/select/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group select"
   },
   "sideEffects": [
     "lion-select.js"

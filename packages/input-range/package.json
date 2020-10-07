@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group input-range",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group input-range",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group input-range",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/input-range/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/input-range/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group input-range"
   },
   "sideEffects": [
     "lion-input-range.js"

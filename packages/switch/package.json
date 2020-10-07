@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group switch",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group switch",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group switch",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/switch/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/switch/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/switch/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group switch"
   },
   "sideEffects": [
     "lion-switch.js",

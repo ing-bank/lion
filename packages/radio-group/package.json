@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group radio-group",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group radio-group",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group radio-group",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/radio-group/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/radio-group/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group radio-group"
   },
   "sideEffects": [
     "lion-radio.js",

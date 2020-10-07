@@ -20,9 +20,11 @@
     "sortEachDepth"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group helpers",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group helpers",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group helpers",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/helpers/*/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/helpers/*/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group helpers"
   },
   "sideEffects": [
     "sb-action-logger.js",

@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group checkbox-group",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group checkbox-group",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group checkbox-group",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/checkbox-group/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/checkbox-group/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/checkbox-group/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group checkbox-group"
   },
   "sideEffects": [
     "lion-checkbox.js",

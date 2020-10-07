@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group form-core",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group form-core",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group form-core",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/form-core/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/form-core/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group form-core"
   },
   "sideEffects": [
     "lion-field.js",

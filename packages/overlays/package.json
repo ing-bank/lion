@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group overlays",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group overlays",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group overlays",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/overlays/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/overlays/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group overlays"
   },
   "sideEffects": [
     "./docs/demo-overlay-system.js",

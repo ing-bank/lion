@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group input-iban",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group input-iban",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group input-iban",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/input-iban/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/input-iban/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group input-iban"
   },
   "sideEffects": [
     "lion-input-iban.js"

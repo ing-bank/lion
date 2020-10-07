@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group fieldset",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group fieldset",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group fieldset",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/fieldset/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/fieldset/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group fieldset"
   },
   "sideEffects": [
     "lion-fieldset.js",

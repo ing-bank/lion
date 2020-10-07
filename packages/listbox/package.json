@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group listbox",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group listbox",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group listbox",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/listbox/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/listbox/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group listbox"
   },
   "sideEffects": [
     "lion-listbox.js",

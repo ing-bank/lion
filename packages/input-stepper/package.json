@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group input-stepper",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group input-stepper",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group input-stepper",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/input-stepper/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/input-stepper/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/input-stepper/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group input-stepper"
   },
   "sideEffects": [
     "lion-input-stepper.js"

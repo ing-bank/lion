@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group dialog",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group dialog",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group dialog",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/dialog/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/dialog/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/dialog/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group dialog"
   },
   "sideEffects": [
     "lion-dialog.js",
