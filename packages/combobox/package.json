@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group combobox",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group combobox",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group combobox",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/combobox/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/combobox/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group combobox"
   },
   "sideEffects": [
     "lion-combobox.js",

@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group pagination",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group pagination",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group pagination",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/pagination/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/pagination/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/pagination/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group pagination"
   },
   "sideEffects": [
     "lion-pagination.js"

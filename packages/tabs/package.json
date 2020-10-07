@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group tabs",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group tabs",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group tabs",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/tabs/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/tabs/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tabs/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group tabs"
   },
   "sideEffects": [
     "lion-tabs.js"

@@ -23,7 +23,11 @@
     "types"
   ],
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js"
+    "debug": "cd ../../ && yarn debug --group form-integration",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group form-integration",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group form-integration",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && yarn test:browser --group form-integration"
   },
   "sideEffects": [
     "./docs/helper-wc/h-output.js"

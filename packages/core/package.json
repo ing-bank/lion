@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group core",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group core",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group core",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/core/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/core/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group core"
   },
   "sideEffects": false,
   "dependencies": {

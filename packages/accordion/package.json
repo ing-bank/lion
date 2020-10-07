@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group accordion",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group accordion",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group accordion",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/tabs/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/tabs/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tabs/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group accordion"
   },
   "sideEffects": [
     "lion-accordion.js"

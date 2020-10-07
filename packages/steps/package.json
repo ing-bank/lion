@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group steps",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group steps",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group steps",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/steps/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/steps/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/steps/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group steps"
   },
   "sideEffects": [
     "lion-step.js",

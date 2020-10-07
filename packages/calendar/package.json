@@ -23,10 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group calendar",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group calendar",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group calendar",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "start": "cd ../../ && yarn dev-server --open packages/calendar/README.md",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/calendar/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/calendar/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group calendar"
   },
   "sideEffects": [
     "lion-calendar.js"

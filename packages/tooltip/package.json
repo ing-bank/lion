@@ -23,9 +23,11 @@
     "types"
   ],
   "scripts": {
+    "debug": "cd ../../ && yarn debug --group tooltip",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group tooltip",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group tooltip",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/tooltip/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/tooltip/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --group tooltip"
   },
   "sideEffects": [
     "lion-tooltip.js",
