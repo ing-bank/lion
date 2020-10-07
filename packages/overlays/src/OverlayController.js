@@ -160,6 +160,8 @@ export class OverlayController extends EventTargetShim {
     this.updateConfig(config);
     this.__hasActiveTrapsKeyboardFocus = false;
     this.__hasActiveBackdrop = true;
+    /** @type {HTMLElement | undefined} */
+    this.__backdropNodeToBeTornDown = undefined;
 
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
   }
@@ -418,7 +420,7 @@ export class OverlayController extends EventTargetShim {
    */
   updateConfig(cfgToAdd) {
     // Teardown all previous configs
-    this._handleFeatures({ phase: 'teardown' });
+    this.teardown();
 
     /** @type {OverlayConfig} */
     this.__prevConfig = this.config || {};
@@ -896,52 +898,30 @@ export class OverlayController extends EventTargetShim {
    * @param {{ animation?: boolean, phase: OverlayPhase }} config
    */
   _handleBackdrop({ animation = true, phase }) {
-    if (this.placementMode === 'local') {
-      switch (phase) {
-        case 'init':
-          if (!this.backdropNode) {
-            this.__backdropNode = document.createElement('div');
-            /** @type {HTMLElement} */
-            (this.backdropNode).classList.add('local-overlays__backdrop');
-          }
-          this.backdropNode.slot = '_overlay-shadow-outlet';
-          /** @type {HTMLElement} */
-          (this.contentNode.parentNode).insertBefore(this.backdropNode, this.contentNode);
-          break;
-        case 'show':
-          this.__hasActiveBackdrop = true;
-          break;
-        case 'hide':
-          if (!this.backdropNode) {
-            return;
-          }
-          this.__hasActiveBackdrop = false;
-          break;
-        case 'teardown':
-          if (!this.backdropNode || !this.backdropNode.parentNode) {
-            return;
-          }
-          this.backdropNode.parentNode.removeChild(this.backdropNode);
-          this.__backdropNode = undefined;
-          break;
-        /* no default */
-      }
-      return;
-    }
     switch (phase) {
-      case 'init':
-        this.__backdropNode = document.createElement('div');
-        this.backdropNode.classList.add('global-overlays__backdrop');
-        /** @type {HTMLElement} */
-        (this.contentWrapperNode.parentElement).insertBefore(
-          this.backdropNode,
-          this.contentWrapperNode,
-        );
+      case 'init': {
+        if (!this.backdropNode) {
+          this.__backdropNode = document.createElement('div');
+          /** @type {HTMLElement} */
+          (this.backdropNode).classList.add(`${this.placementMode}-overlays__backdrop`);
+        }
+        this.backdropNode.slot = '_overlay-shadow-outlet';
+
+        let insertionAnchor = /** @type {HTMLElement} */ (this.contentNode.parentNode);
+        let insertionBefore = this.contentNode;
+        if (this.placementMode === 'global') {
+          insertionAnchor = /** @type {HTMLElement} */ (this.contentWrapperNode.parentElement);
+          insertionBefore = this.contentWrapperNode;
+        }
+        insertionAnchor.insertBefore(this.backdropNode, insertionBefore);
         break;
+      }
       case 'show':
-        this.backdropNode.classList.add('global-overlays__backdrop--visible');
-        if (animation === true) {
-          this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
+        if (this.placementMode === 'global') {
+          this.backdropNode.classList.add('global-overlays__backdrop--visible');
+          if (animation === true) {
+            this.backdropNode.classList.add('global-overlays__backdrop--fade-in');
+          }
         }
         this.__hasActiveBackdrop = true;
         break;
@@ -949,39 +929,50 @@ export class OverlayController extends EventTargetShim {
         if (!this.backdropNode) {
           return;
         }
-        this.backdropNode.classList.remove('global-overlays__backdrop--fade-in');
-
-        if (animation) {
-          /** @type {(ev:AnimationEvent) => void} */
-          let afterFadeOut;
-          this.backdropNode.classList.add('global-overlays__backdrop--fade-out');
-          this.__backDropAnimation = new Promise(resolve => {
-            afterFadeOut = () => {
-              this.backdropNode.classList.remove('global-overlays__backdrop--fade-out');
-              this.backdropNode.classList.remove('global-overlays__backdrop--visible');
-              this.backdropNode.removeEventListener('animationend', afterFadeOut);
-              resolve();
-            };
-          });
-          // @ts-expect-error
-          this.backdropNode.addEventListener('animationend', afterFadeOut);
-        } else {
-          this.backdropNode.classList.remove('global-overlays__backdrop--visible');
-        }
         this.__hasActiveBackdrop = false;
+
+        if (this.placementMode === 'global') {
+          this.backdropNode.classList.remove('global-overlays__backdrop--fade-in');
+          if (animation) {
+            /** @type {(ev:AnimationEvent) => void} */
+            let afterFadeOut;
+            this.backdropNode.classList.add('global-overlays__backdrop--fade-out');
+            this.__backDropAnimation = new Promise(resolve => {
+              afterFadeOut = () => {
+                if (this.backdropNode) {
+                  this.backdropNode.classList.remove('global-overlays__backdrop--fade-out');
+                  this.backdropNode.classList.remove('global-overlays__backdrop--visible');
+                  this.backdropNode.removeEventListener('animationend', afterFadeOut);
+                }
+                resolve();
+              };
+            });
+            // @ts-expect-error
+            this.backdropNode.addEventListener('animationend', afterFadeOut);
+          } else {
+            this.backdropNode.classList.remove('global-overlays__backdrop--visible');
+          }
+        }
+
         break;
       case 'teardown':
         if (!this.backdropNode || !this.backdropNode.parentNode) {
           return;
         }
         if (animation && this.__backDropAnimation) {
+          this.__backdropNodeToBeTornDown = this.backdropNode;
+
           this.__backDropAnimation.then(() => {
-            /** @type {HTMLElement} */
-            (this.backdropNode.parentNode).removeChild(this.backdropNode);
+            if (this.__backdropNodeToBeTornDown) {
+              /** @type {HTMLElement} */ (this.__backdropNodeToBeTornDown.parentNode).removeChild(
+                this.__backdropNodeToBeTornDown,
+              );
+            }
           });
         } else {
           this.backdropNode.parentNode.removeChild(this.backdropNode);
         }
+        this.__backdropNode = undefined;
         break;
       /* no default */
     }
