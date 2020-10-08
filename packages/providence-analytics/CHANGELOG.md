@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.3
+
+### Patch Changes
+
+- b71bd7f2: Providence windows support
+
+  - fix: make all tests run on Windows
+
 ## 0.6.2
 
 ### Patch Changes

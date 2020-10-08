@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- e9cee039: Add types for calendar and datepicker packages.
+
 ## 0.11.3
 
 ### Patch Changes

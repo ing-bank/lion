@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.15
+
+### Patch Changes
+
+- 6679fe77: Types button and combobox
+
 ## 0.7.14
 
 ### Patch Changes
