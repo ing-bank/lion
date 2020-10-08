@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [0aa4480e]
+  - @lion/fieldset@0.15.1
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.17.0
+
+### Minor Changes
+
+- e9cee039: Add types for calendar and datepicker packages.
+
+### Patch Changes
+
+- Updated dependencies [d83f7fc5]
+- Updated dependencies [e9cee039]
+- Updated dependencies [d5faa459]
+- Updated dependencies [a4c4f1ee]
+- Updated dependencies [0aa4480e]
+  - @lion/overlays@0.21.0
+  - @lion/calendar@0.12.0
+  - @lion/form-core@0.6.3
+  - @lion/input-date@0.8.1
+
 ## 0.16.2
 
 ### Patch Changes

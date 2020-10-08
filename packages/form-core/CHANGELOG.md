@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.3
+
+### Patch Changes
+
+- d5faa459: ChoiceGroupMixin: On value change uncheck all formElements that do not meet the requested condition
+- 0aa4480e: Refactor of some fields to ensure that \_inputNode has the right type. It starts as HTMLElement for LionField, and all HTMLInputElement, HTMLSelectElement and HTMLTextAreaElement logic, are moved to the right places.
+
 ## 0.6.2
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- 0aa4480e: Refactor of some fields to ensure that \_inputNode has the right type. It starts as HTMLElement for LionField, and all HTMLInputElement, HTMLSelectElement and HTMLTextAreaElement logic, are moved to the right places.
+- Updated dependencies [d5faa459]
+- Updated dependencies [0aa4480e]
+  - @lion/form-core@0.6.3
+
 ## 0.15.0
 
 ### Minor Changes

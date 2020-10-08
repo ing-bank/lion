@@ -1,5 +1,24 @@
 ## 0.1.0
 
+## 0.1.2
+
+### Patch Changes
+
+- 533417f2: form-control class to correct node
+- 928a673a: Add a new option showAllOnEmpty which shows the full list if the input has an empty value
+- 6679fe77: Types button and combobox
+- c76c0786: add inherited styles in combobox (aria 1.1) \_inputNode to allow styling
+- Updated dependencies [d83f7fc5]
+- Updated dependencies [d1c6b18c]
+- Updated dependencies [d5faa459]
+- Updated dependencies [17a0d6bf]
+- Updated dependencies [a4c4f1ee]
+- Updated dependencies [d5faa459]
+- Updated dependencies [0aa4480e]
+  - @lion/overlays@0.21.0
+  - @lion/listbox@0.2.0
+  - @lion/form-core@0.6.3
+
 ## 0.1.1
 
 ### Patch Changes
