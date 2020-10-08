@@ -203,8 +203,8 @@ Boolean property. When true, will add a backdrop when the overlay is opened.
 The backdrop styling can be configured by targeting the `.global-overlays .global-overlays__backdrop` css selector.
 
 The backdrop animation can be configured by targeting the
-`.global-overlays .global-overlays__backdrop--fade-in` and
-`.global-overlays .global-overlays__backdrop--fade-out` css selector.
+`.global-overlays .global-overlays__backdrop--animation-in` and
+`.global-overlays .global-overlays__backdrop--animation-out` css selector.
 This currently only supports CSS Animations, because it relies on the `animationend` event to add/remove classes.
 
 ```js preview-story
@@ -235,8 +235,8 @@ Boolean property. When true, will add a backdrop when the overlay is opened.
 The backdrop styling can be configured by targeting the `.global-overlays .global-overlays__backdrop` css selector.
 
 The backdrop animation can be configured by targeting the
-`.global-overlays .global-overlays__backdrop--fade-in` and
-`.global-overlays .global-overlays__backdrop--fade-out` css selector.
+`.global-overlays .global-overlays__backdrop--animation-in` and
+`.global-overlays .global-overlays__backdrop--animation-out` css selector.
 This currently only supports CSS Animations, because it relies on the `animationend` event to add/remove classes.
 
 ```js preview-story

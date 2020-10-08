@@ -85,11 +85,11 @@ export const globalOverlaysStyle = css`
     display: block;
   }
 
-  .global-overlays .global-overlays__backdrop--fade-in {
+  .global-overlays .global-overlays__backdrop--animation-in {
     animation: global-overlays-backdrop-fade-in 300ms;
   }
 
-  .global-overlays .global-overlays__backdrop--fade-out {
+  .global-overlays .global-overlays__backdrop--animation-out {
     animation: global-overlays-backdrop-fade-out 300ms;
     opacity: 0;
   }
