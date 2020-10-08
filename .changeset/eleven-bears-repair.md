@@ -1,5 +1,5 @@
 ---
-"@lion/combobox": patch
+'@lion/combobox': patch
 ---
 
-fix(combobox): form-control class to correct node
+form-control class to correct node
