@@ -183,9 +183,9 @@ export const OverlayMixinImplementation = superclass =>
 
     get _overlayContentNode() {
       if (!this._cachedOverlayContentNode) {
-        this._cachedOverlayContentNode = Array.from(this.children).find(
-          child => child.slot === 'content',
-        );
+        this._cachedOverlayContentNode =
+          Array.from(this.children).find(child => child.slot === 'content') ||
+          this.config.contentNode;
       }
       return this._cachedOverlayContentNode;
     }
