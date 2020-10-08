@@ -69,6 +69,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * @enhance FormControlMixin - add form-control to [slot=input] instead of _inputNode
+   */
+  _enhanceLightDomClasses() {
+    if (this.querySelector('[slot=input]')) {
+      this.querySelector('[slot=input]').classList.add('form-control');
+    }
+  }
+
+  /**
    * @enhance FormControlMixin - add slot[name=selection-display]
    */
   // eslint-disable-next-line class-methods-use-this
