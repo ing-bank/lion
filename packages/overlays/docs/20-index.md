@@ -5,6 +5,7 @@
 ```js script
 import { html } from 'lit-html';
 import { render, LitElement } from '@lion/core';
+import { renderLitAsNode } from '@lion/helpers';
 import {
   ArrowMixin,
   OverlayMixin,
@@ -14,6 +15,7 @@ import {
 } from '../index.js';
 
 import '../docs/demo-overlay-system.js';
+import '../docs/demo-overlay-backdrop.js';
 import '../docs/applyDemoOverlayStyles.js';
 import { ref as r } from '../docs/directives/ref.js';
 
@@ -29,7 +31,7 @@ On top of this, the system was built having accessibility in mind.
 
 For a detailed rationale, please consult [Rationale](/?path=/docs/overlays-system-rationale--page).
 
-```js story
+```js preview-story
 export const main = () => html`
   <demo-overlay-system>
     <button slot="invoker">Click me to open the overlay!</button>
@@ -151,6 +153,100 @@ or declaratively in your template with the `.config` property
 </demo-overlay-system>
 ```
 
+### Backdrop
+
+There are multiple ways to pass a backdrop node for your overlay.
+
+The easiest way is declarative. This can be achieved by adding a `<slot name="backdrop">` to your `render` method. The component user can then insert a backdrop slottable declaratively:
+
+```js preview-story
+export const backdrop = () => html`
+  <demo-overlay-system .config=${{ ...withModalDialogConfig() }}>
+    <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
+    <button slot="invoker">Click me to open the overlay!</button>
+    <div slot="content" class="demo-overlay">
+      Hello! You can close this notification here:
+      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
+        ⨯
+      </button>
+    </div>
+  </demo-overlay-system>
+`;
+```
+
+You can also pass a backdropNode imperatively to the OverlayConfig. Either use `hasBackdrop: true`, which will spawn a default `backdropNode`.
+For more control, pass a `backdropNode` yourself, e.g. a webcomponent so you can easily encapsulate styles.
+
+```js preview-story
+export const backdropImperative = () => {
+  const backdropNode = document.createElement('demo-overlay-backdrop');
+  return html`
+    <demo-overlay-system .config=${{ ...withModalDialogConfig(), backdropNode }}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-overlay-system>
+  `;
+};
+```
+
+#### Backdrop animation
+
+By default our overlay system comes with a backdrop animation.
+This will add `global-overlays__backdrop--animation-in` and `global-overlays__backdrop--animation-out` classes to your backdrop node.
+If you have `placementMode: 'local'` it will replace those `global` strings in the CSS classes with `local`.
+
+It expects from you that you act on these classes in your CSS with an animation. For example if you have your own backdrop webcomponent (to encapsulate styles):
+
+```css
+:host(.local-overlays__backdrop--animation-in) {
+  animation: local-overlays-backdrop-fade-in 300ms;
+}
+
+:host(.local-overlays__backdrop--animation-out) {
+  animation: local-overlays-backdrop-fade-out 300ms;
+  opacity: 0;
+}
+
+@keyframes local-overlays-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes local-overlays-backdrop-fade-out {
+  from {
+    opacity: 0.3;
+  }
+}
+```
+
+Under the hood, the OverlayController listens to `animationend` event, only then it will remove the animation-out/animation-in classes.
+
+> If you don't intend on having a backdrop animation at all, as a subclasser you should override `transitionHide` and `transitionShow` OverlayMixin methods.
+> Otherwise the `hide` will await an `animationend` event that will never happen.
+
+```js preview-story
+export const backdropAnimation = () => html`
+  <demo-overlay-system .config=${{ ...withModalDialogConfig() }}>
+    <button slot="invoker">Click me to open the overlay!</button>
+    <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
+    <div slot="content" class="demo-overlay">
+      Hello! You can close this notification here:
+      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
+        ⨯
+      </button>
+    </div>
+  </demo-overlay-system>
+`;
+```
+
 ### Responsive switching
 
 Currently we support switching between overlay configurations.
@@ -174,12 +270,6 @@ export const responsiveSwitching = () => html`
     }}
   >
     <button slot="invoker">Click me to open the overlay!</button>
-    <div slot="content" class="demo-overlay">
-      Hello! You can close this notification here:
-      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
-        ⨯
-      </button>
-    </div>
   </demo-overlay-system>
 `;
 ```
@@ -454,73 +544,9 @@ Here is the example below
 
 ```js preview-story
 export const localBackdrop = () => {
-  let backdropNode = document.createElement('div');
-  backdropNode.classList.add('local-backdrop-01');
   return html`
-    <style>
-      .local-backdrop-01 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background-color: red;
-        opacity: 0.3;
-        display: none;
-      }
-    </style>
-    <demo-overlay-system
-      @before-opened=${e => (backdropNode.style.display = 'block')}
-      @before-closed=${e => (backdropNode.style.display = 'none')}
-      .config=${{ hasBackdrop: true, placementMode: 'local', backdropNode }}
-    >
-      <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content" class="demo-overlay">
-        Hello! You can close this notification here:
-        <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-        >
-          ⨯
-        </button>
-      </div>
-    </demo-overlay-system>
-  `;
-};
-```
-
-## Declarative Local Backdrop
-
-Another way to add custom backdrop is declaratively add an element with `slot="backdrop"`.
-
-```js preview-story
-export const declarativeLocalBackdrop = () => {
-  const beforeOpened = () => {
-    document.querySelector('.local-backdrop-02').style.display = 'block';
-  };
-  const beforeClosed = () => {
-    document.querySelector('.local-backdrop-02').style.display = 'none';
-  };
-  return html`
-    <style>
-      .local-backdrop-02 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background-color: red;
-        opacity: 0.3;
-        display: none;
-      }
-    </style>
-    <demo-overlay-system
-      @before-opened=${beforeOpened}
-      @before-closed=${beforeClosed}
-      .config=${{ hasBackdrop: true, placementMode: 'local' }}
-    >
-      <div slot="backdrop" class="local-backdrop-02"></div>
+    <demo-overlay-system .config=${{ placementMode: 'local' }}>
+      <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
