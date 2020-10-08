@@ -636,7 +636,9 @@ export const ValidateMixinImplementation = superclass =>
         .constructor);
       const types = ctor.validationTypes;
       // Sort all validators based on the type provided.
-      const res = validationResult.sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
+      const res = validationResult
+        .filter(v => this._showFeedbackConditionFor(v.type))
+        .sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
       return res.slice(0, this._visibleMessagesAmount);
     }
   };
