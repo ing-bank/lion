@@ -44,9 +44,9 @@ export declare class ListboxHost {
   /** Reset interaction states and modelValue */
   public reset(): void;
 
-  protected _scrollTargetNode: LionOptions;
+  protected get _scrollTargetNode(): LionOptions;
 
-  protected _listboxNode: LionOptions;
+  protected get _listboxNode(): LionOptions;
 
   protected _listboxReceivesNoFocus: boolean;
 
@@ -72,7 +72,7 @@ export declare class ListboxHost {
 
   protected _onChildActiveChanged(ev: Event): void;
 
-  protected _activeDescendantOwnerNode: HTMLElement;
+  protected get _activeDescendantOwnerNode(): HTMLElement;
 }
 
 export declare function ListboxImplementation<T extends Constructor<LitElement>>(

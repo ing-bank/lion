@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* globals capture getStoryPage */
 
 const selector = 'lion-button';

@@ -1,6 +1,7 @@
 import { css, html } from '@lion/core';
 import { LionButton } from '@lion/button';
 
+// @ts-expect-error
 export class GhButton extends LionButton {
   static get properties() {
     return {
@@ -64,6 +65,11 @@ export class GhButton extends LionButton {
       ${this.value}
       <slot name="after"></slot>
       <slot name="_button"></slot>`;
+  }
+
+  constructor() {
+    super();
+    this.value = '';
   }
 }
 customElements.define('gh-button', GhButton);

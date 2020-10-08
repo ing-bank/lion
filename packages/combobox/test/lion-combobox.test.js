@@ -7,6 +7,7 @@ import { browserDetection, LitElement } from '@lion/core';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
+ * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
  */
 
 /**
@@ -23,10 +24,10 @@ function mimicUserTyping(el, value) {
 
 /**
  * @param {LionCombobox} el
- * @param {string[]} value
+ * @param {string[]} values
  */
 async function mimicUserTypingAdvanced(el, values) {
-  const inputNode = el._inputNode;
+  const inputNode = /** @type {HTMLInputElement & {selectionStart:number, selectionEnd:number}} */ (el._inputNode);
   inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
 
   let hasSelection = inputNode.selectionStart !== inputNode.selectionEnd;
@@ -439,8 +440,15 @@ describe('lion-combobox', () => {
 
   describe('Selection display', () => {
     class MySelectionDisplay extends LitElement {
+      /**
+       * @param {import('lit-element').PropertyValues } changedProperties
+       */
       onComboboxElementUpdated(changedProperties) {
-        if (changedProperties.has('modelValue') && this.comboboxElement.multipleChoice) {
+        if (
+          changedProperties.has('modelValue') &&
+          // @ts-ignore
+          this.comboboxElement.multipleChoice
+        ) {
           // do smth..
         }
       }
@@ -464,6 +472,7 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
       `));
+      // @ts-ignore allow protected members
       expect(el._selectionDisplayNode.comboboxElement).to.equal(el);
     });
 
@@ -474,6 +483,7 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
       `));
+      // @ts-expect-error sinon not typed correctly?
       const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
       el.requestUpdate('modelValue');
       await el.updateComplete;
@@ -974,14 +984,14 @@ describe('lion-combobox', () => {
       });
 
       it('updates aria-activedescendant on textbox node', async () => {
-        let el = await fixture(html`
+        let el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo" autocomplete="none">
             <lion-option .choiceValue="${'Artichoke'}" id="artichoke-option">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}" id="chard-option">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </lion-combobox>
-        `);
+        `));
 
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(null);
         expect(el.formElements[1].active).to.equal(false);
@@ -995,14 +1005,14 @@ describe('lion-combobox', () => {
         );
         expect(el.formElements[1].active).to.equal(false);
 
-        el = await fixture(html`
+        el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo" autocomplete="both" match-mode="begin">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </lion-combobox>
-        `);
+        `));
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(

@@ -1,21 +1,12 @@
 import { browserDetection } from '@lion/core';
 import { aTimeout, expect, fixture, html, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '../lion-button.js';
 
 /**
  * @typedef {import('@lion/button/src/LionButton').LionButton} LionButton
  */
-
-/**
- * @param {HTMLElement} el
- */
-function getClickArea(el) {
-  if (el.shadowRoot) {
-    return el.shadowRoot.querySelector('.click-area');
-  }
-  return undefined;
-}
 
 describe('lion-button', () => {
   it('behaves like native `button` in terms of a11y', async () => {
@@ -103,12 +94,12 @@ describe('lion-button', () => {
     it('updates "active" attribute on host when space keydown/keyup on button', async () => {
       const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 32 }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
       expect(el.active).to.be.true;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.true;
 
-      el.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 32 }));
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
       expect(el.active).to.be.false;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.false;
@@ -117,12 +108,12 @@ describe('lion-button', () => {
     it('updates "active" attribute on host when space keydown on button and space keyup anywhere else', async () => {
       const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 32 }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
       expect(el.active).to.be.true;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.true;
 
-      el.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 32 }));
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
       expect(el.active).to.be.false;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.false;
@@ -131,12 +122,12 @@ describe('lion-button', () => {
     it('updates "active" attribute on host when enter keydown/keyup on button', async () => {
       const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13 }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.active).to.be.true;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.true;
 
-      el.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 13 }));
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
       expect(el.active).to.be.false;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.false;
@@ -145,12 +136,12 @@ describe('lion-button', () => {
     it('updates "active" attribute on host when enter keydown on button and space keyup anywhere else', async () => {
       const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13 }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.active).to.be.true;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.true;
 
-      document.body.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 13 }));
+      document.body.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
       expect(el.active).to.be.false;
       await el.updateComplete;
       expect(el.hasAttribute('active')).to.be.false;
@@ -213,8 +204,8 @@ describe('lion-button', () => {
       const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
       expect(el.hasAttribute('aria-labelledby')).to.be.true;
       const wrapperId = el.getAttribute('aria-labelledby');
-      expect(el.shadowRoot.querySelector(`#${wrapperId}`)).to.exist;
-      expect(el.shadowRoot.querySelector(`#${wrapperId}`)).dom.to.equal(
+      expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).to.exist;
+      expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).dom.to.equal(
         `<div id="${wrapperId}"><slot></slot></div>`,
       );
       browserDetectionStub.restore();
@@ -248,11 +239,11 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-
-        const button = form.querySelector('lion-button');
-        getClickArea(button).click();
-
-        expect(formSubmitSpy.callCount).to.equal(1);
+        const button = /** @type {LionButton} */ (
+          /** @type {LionButton} */ (form.querySelector('lion-button'))
+        );
+        button.click();
+        expect(formSubmitSpy).to.have.been.calledOnce;
       });
 
       it('behaves like native `button` when interacted with keyboard space', async () => {
@@ -262,13 +253,13 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-
-        form
-          .querySelector('lion-button')
-          .dispatchEvent(new KeyboardEvent('keyup', { keyCode: 32 }));
-        await aTimeout();
-        await aTimeout();
-        expect(formSubmitSpy.callCount).to.equal(1);
+        const button = /** @type {LionButton} */ (
+          /** @type {LionButton} */ (form.querySelector('lion-button'))
+        );
+        button.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+        await aTimeout(0);
+        await aTimeout(0);
+        expect(formSubmitSpy).to.have.been.calledOnce;
       });
 
       it('behaves like native `button` when interacted with keyboard enter', async () => {
@@ -279,13 +270,12 @@ describe('lion-button', () => {
           </form>
         `);
 
-        form
-          .querySelector('lion-button')
-          .dispatchEvent(new KeyboardEvent('keyup', { keyCode: 13 }));
-        await aTimeout();
-        await aTimeout();
+        const button = /** @type {LionButton} */ (form.querySelector('lion-button'));
+        button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        await aTimeout(0);
 
-        expect(formSubmitSpy.callCount).to.equal(1);
+        expect(formSubmitSpy).to.have.been.calledOnce;
       });
 
       it('supports resetting form inputs in a native form', async () => {
@@ -296,9 +286,15 @@ describe('lion-button', () => {
             <lion-button type="reset">reset</lion-button>
           </form>
         `);
-        const btn = form.querySelector('lion-button');
-        const firstName = form.querySelector('input[name=firstName]');
-        const lastName = form.querySelector('input[name=lastName]');
+        const btn = /** @type {LionButton} */ (
+          /** @type {LionButton} */ (form.querySelector('lion-button'))
+        );
+        const firstName = /** @type {HTMLInputElement} */ (form.querySelector(
+          'input[name=firstName]',
+        ));
+        const lastName = /** @type {HTMLInputElement} */ (form.querySelector(
+          'input[name=lastName]',
+        ));
         firstName.value = 'Foo';
         lastName.value = 'Bar';
 
@@ -322,13 +318,12 @@ describe('lion-button', () => {
           </form>
         `);
 
-        form
-          .querySelector('input[name="foo2"]')
-          .dispatchEvent(new KeyboardEvent('keyup', { key: 13 }));
-        await aTimeout();
-        await aTimeout();
+        const input2 = /** @type {HTMLInputElement} */ (form.querySelector('input[name="foo2"]'));
+        input2.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        await aTimeout(0);
 
-        expect(formSubmitSpy.callCount).to.equal(1);
+        expect(formSubmitSpy).to.have.been.calledOnce;
       });
     });
 
@@ -336,69 +331,67 @@ describe('lion-button', () => {
       it('behaves like native `button` when clicked', async () => {
         const formButtonClickedSpy = /** @type {EventListener} */ (sinon.spy());
         const form = await fixture(html`
-          <form @submit=${ev => ev.preventDefault()}>
+          <form @submit=${/** @type {EventListener} */ ev => ev.preventDefault()}>
             <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
           </form>
         `);
 
-        const button = form.querySelector('lion-button');
-        getClickArea(button).click();
+        const button = /** @type {LionButton} */ (form.querySelector('lion-button'));
+        button.click();
 
-        expect(formButtonClickedSpy.callCount).to.equal(1);
+        expect(formButtonClickedSpy).to.have.been.calledOnce;
       });
 
       it('behaves like native `button` when interacted with keyboard space', async () => {
         const formButtonClickedSpy = /** @type {EventListener} */ (sinon.spy());
         const form = await fixture(html`
-          <form @submit=${ev => ev.preventDefault()}>
+          <form @submit=${/** @type {EventListener} */ ev => ev.preventDefault()}>
             <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
           </form>
         `);
 
-        form
-          .querySelector('lion-button')
-          .dispatchEvent(new KeyboardEvent('keyup', { keyCode: 32 }));
-        await aTimeout();
-        await aTimeout();
+        /** @type {LionButton} */ (form.querySelector('lion-button')).dispatchEvent(
+          new KeyboardEvent('keyup', { key: ' ' }),
+        );
+        await aTimeout(0);
+        await aTimeout(0);
 
-        expect(formButtonClickedSpy.callCount).to.equal(1);
+        expect(formButtonClickedSpy).to.have.been.calledOnce;
       });
 
       it('behaves like native `button` when interacted with keyboard enter', async () => {
         const formButtonClickedSpy = /** @type {EventListener} */ (sinon.spy());
         const form = await fixture(html`
-          <form @submit=${ev => ev.preventDefault()}>
+          <form @submit=${/** @type {EventListener} */ ev => ev.preventDefault()}>
             <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
           </form>
         `);
 
-        form
-          .querySelector('lion-button')
-          .dispatchEvent(new KeyboardEvent('keyup', { keyCode: 13 }));
-        await aTimeout();
-        await aTimeout();
+        const button = /** @type {LionButton} */ (form.querySelector('lion-button'));
+        button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        await aTimeout(0);
 
-        expect(formButtonClickedSpy.callCount).to.equal(1);
+        expect(formButtonClickedSpy).to.have.been.calledOnce;
       });
 
       // input "enter" keypress mock doesn't seem to work right now, but should be tested in the future (maybe with Selenium)
       it.skip('works with implicit form submission on-enter inside an input', async () => {
         const formButtonClickedSpy = /** @type {EventListener} */ (sinon.spy());
         const form = await fixture(html`
-          <form @submit=${ev => ev.preventDefault()}>
+          <form @submit=${/** @type {EventListener} */ ev => ev.preventDefault()}>
             <input name="foo" />
             <input name="foo2" />
             <lion-button @click="${formButtonClickedSpy}" type="submit">foo</lion-button>
           </form>
         `);
 
-        form
-          .querySelector('input[name="foo2"]')
-          .dispatchEvent(new KeyboardEvent('keyup', { key: 13 }));
-        await aTimeout();
-        await aTimeout();
+        const input2 = /** @type {HTMLInputElement} */ (form.querySelector('input[name="foo2"]'));
+        input2.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+        await aTimeout(0);
+        await aTimeout(0);
 
-        expect(formButtonClickedSpy.callCount).to.equal(1);
+        expect(formButtonClickedSpy).to.have.been.calledOnce;
       });
     });
   });
@@ -410,28 +403,28 @@ describe('lion-button', () => {
         html`<lion-button @click="${clickSpy}">foo</lion-button>`,
       ));
 
-      getClickArea(el).click();
+      el.click();
 
       // trying to wait for other possible redispatched events
-      await aTimeout();
-      await aTimeout();
+      await aTimeout(0);
+      await aTimeout(0);
 
-      expect(clickSpy.callCount).to.equal(1);
+      expect(clickSpy).to.have.been.calledOnce;
     });
 
     describe('native button behavior', async () => {
+      /**
+       * @param {HTMLButtonElement | LionButton} el
+       */
       async function prepareClickEvent(el) {
         setTimeout(() => {
-          if (getClickArea(el)) {
-            getClickArea(el).click();
-          } else {
-            el.click();
-          }
+          el.click();
         });
         return oneEvent(el, 'click');
       }
-
+      /** @type {Event} */
       let nativeButtonEvent;
+      /** @type {Event} */
       let lionButtonEvent;
 
       before(async () => {
