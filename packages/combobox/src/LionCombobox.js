@@ -1,4 +1,4 @@
-// eslint-disable-next-line max-classes-per-file
+// @ts-nocheck there's an error in cli that cannot be reproduced locally
 import { html, css, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { LionListbox } from '@lion/listbox';
@@ -12,12 +12,14 @@ import { LionListbox } from '@lion/listbox';
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
  */
 
 /**
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
+// @ts-ignore
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
@@ -82,6 +84,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
+    // @ts-ignore
     return html`
       <div class="input-group__input">
         <slot name="selection-display"></slot>
@@ -110,6 +113,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * @type {SlotsMap}
    */
+  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -167,7 +171,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @type {HTMLElement | null}
+   * @type {SelectionDisplay | null}
    */
   get _selectionDisplayNode() {
     return this.querySelector('[slot="selection-display"]');
@@ -196,7 +200,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @configure OverlayMixin
    */
   get _overlayReferenceNode() {
-    return this.shadowRoot.querySelector('.input-group__container');
+    return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.input-group__container');
   }
 
   /**
@@ -367,7 +371,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {Event} ev
+   * @param {KeyboardEvent} ev
    */
   _textboxOnKeydown(ev) {
     if (ev.key === 'Tab') {
@@ -388,6 +392,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._inputNode.focus();
   }
 
+  /**
+   * @param {string} v
+   */
   _setTextboxValue(v) {
     this._inputNode.value = v;
   }
@@ -448,6 +455,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * Computes whether a user intends to autofill (inline autocomplete textbox)
    * @overridable
+   * @param {{ prevValue:string, curValue:string }} config
    */
   _computeUserIntendsAutoFill({ prevValue, curValue }) {
     const userIsAddingChars = prevValue.length < curValue.length;
@@ -483,6 +491,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     let hasAutoFilled = false;
     const userIntendsAutoFill = this._computeUserIntendsAutoFill({ prevValue, curValue });
     const isCandidate = this.autocomplete === 'both' || this.autocomplete === 'inline';
+    // @ts-ignore this.autocomplete === 'none' needs to be there if statement above is removed
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */

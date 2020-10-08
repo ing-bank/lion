@@ -6,12 +6,20 @@ import {
   LitElement,
   SlotMixin,
 } from '@lion/core';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
-const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) =>
-  e.keyCode === 32 /* space */ || e.keyCode === 13; /* enter */
-const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) =>
-  // @ts-expect-error
-  e.keyCode === 32 || e.key === 32; /* space */
+// TODO: several improvements:
+// [1] remove click-area
+// [2] remove the native _button slot. We can detect and submit parent form without the slot.
+// [3] reduce css so that extending styles makes sense. Merge .btn with host
+// [4] reduce the template and remove the if else construction inside the template (an extra
+// div by default to support IE is fine) => <div id="${this._buttonId}"><slot></slot></div>
+// should be all needed
+// [5] do we need the before and after templates? Could be added by subclasser
+// [6] extract all functionality (except for form submission) into LionButtonMixin
+
+const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
+const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
@@ -145,6 +153,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     return this._nativeButtonNode.form;
   }
 
+  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -165,8 +174,8 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.active = false;
     this.__setupDelegationInConstructor();
 
+    this._buttonId = `button-${Math.random().toString(36).substr(2, 10)}`;
     if (browserDetection.isIE11) {
-      this._buttonId = `button-${Math.random().toString(36).substr(2, 10)}`;
       this.updateComplete.then(() => this.setAttribute('aria-labelledby', this._buttonId));
     }
   }

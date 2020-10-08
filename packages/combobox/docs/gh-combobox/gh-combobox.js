@@ -5,6 +5,7 @@ import { renderLitAsNode } from '@lion/helpers';
 import { LionCombobox } from '../../src/LionCombobox.js';
 import './gh-button.js';
 
+// @ts-expect-error
 export class GhOption extends LionOption {
   static get properties() {
     return {
