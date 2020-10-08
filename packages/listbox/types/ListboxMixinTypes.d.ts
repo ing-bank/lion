@@ -41,9 +41,16 @@ export declare class ListboxHost {
 
   public setCheckedIndex(index: number): void;
 
+  /** Reset interaction states and modelValue */
+  public reset(): void;
+
   protected _scrollTargetNode: LionOptions;
 
   protected _listboxNode: LionOptions;
+
+  protected _listboxReceivesNoFocus: boolean;
+
+  protected _uncheckChildren(): void;
 
   private __setupListboxNode(): void;
 
@@ -64,6 +71,8 @@ export declare class ListboxHost {
   protected _setupListboxInteractions(): void;
 
   protected _onChildActiveChanged(ev: Event): void;
+
+  protected _activeDescendantOwnerNode: HTMLElement;
 }
 
 export declare function ListboxImplementation<T extends Constructor<LitElement>>(

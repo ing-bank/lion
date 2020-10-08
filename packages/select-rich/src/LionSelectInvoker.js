@@ -8,6 +8,7 @@ import { css, html } from '@lion/core';
 /**
  * LionSelectInvoker: invoker button consuming a selected element
  */
+// @ts-expect-error
 export class LionSelectInvoker extends LionButton {
   static get styles() {
     return [

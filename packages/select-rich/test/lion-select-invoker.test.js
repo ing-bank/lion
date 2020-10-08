@@ -10,10 +10,12 @@ describe('lion-select-invoker', () => {
   });
 
   it('renders invoker info based on selectedElement child elements', async () => {
-    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
-    el.selectedElement = await fixture(
+    const el = /** @type {LionSelectInvoker} */ (await fixture(
+      html`<lion-select-invoker></lion-select-invoker>`,
+    ));
+    el.selectedElement = /** @type {HTMLElement} */ (await fixture(
       `<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`,
-    );
+    ));
     await el.updateComplete;
 
     expect(el._contentWrapperNode).lightDom.to.equal(
@@ -29,31 +31,40 @@ describe('lion-select-invoker', () => {
   });
 
   it('renders invoker info based on selectedElement textContent', async () => {
-    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
-    el.selectedElement = await fixture(`<div class="option">just textContent</div>`);
+    const el = /** @type {LionSelectInvoker} */ (await fixture(
+      html`<lion-select-invoker></lion-select-invoker>`,
+    ));
+    el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+      `<div class="option">just textContent</div>`,
+    ));
     await el.updateComplete;
 
     expect(el._contentWrapperNode).lightDom.to.equal('just textContent');
   });
 
   it('has tabindex="0"', async () => {
-    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
+    const el = /** @type {LionSelectInvoker} */ (await fixture(
+      html`<lion-select-invoker></lion-select-invoker>`,
+    ));
     expect(el.tabIndex).to.equal(0);
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
   it('should not render after slot when singleOption is true', async () => {
-    const el = await fixture(html`
+    const el = /** @type {LionSelectInvoker} */ (await fixture(html`
       <lion-select-invoker .singleOption="${true}"></lion-select-invoker>
-    `);
+    `));
 
-    expect(el.shadowRoot.querySelector('slot[name="after"]')).to.not.exist;
+    expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to.not
+      .exist;
   });
 
   it('should render after slot when singleOption is not true', async () => {
-    const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
+    const el = /** @type {LionSelectInvoker} */ (await fixture(
+      html`<lion-select-invoker></lion-select-invoker>`,
+    ));
 
-    expect(el.shadowRoot.querySelector('slot[name="after"]')).to.exist;
+    expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to.exist;
   });
 
   describe('Subclassers', () => {
@@ -68,13 +79,17 @@ describe('lion-select-invoker', () => {
           }
         },
       );
-      const el = await fixture(`<${myTag}></${myTag}>`);
+      const el = /** @type {LionSelectInvoker} */ (await fixture(`<${myTag}></${myTag}>`));
 
-      el.selectedElement = await fixture(`<div class="option">cat</div>`);
+      el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+        `<div class="option">cat</div>`,
+      ));
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('cat selected');
 
-      el.selectedElement = await fixture(`<div class="option">dog</div>`);
+      el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+        `<div class="option">dog</div>`,
+      ));
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('no valid selection');
     });

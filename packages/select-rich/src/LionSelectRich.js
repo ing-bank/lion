@@ -6,10 +6,11 @@ import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
- */
-
-/**
+ * @typedef {import('@lion/listbox').LionOption} LionOption
  * @typedef {import('@open-wc/scoped-elements/src/types').ScopedElementsHost} ScopedElementsHost
+ * @typedef {import('@lion/form-core/types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  */
 
 function detectInteractionMode() {
@@ -22,6 +23,7 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  */
+// @ts-expect-error
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
@@ -48,6 +50,23 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     };
   }
 
+  /**
+   * @enhance FormControlMixin
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _inputGroupInputTemplate() {
+    return html`
+      <div class="input-group__input">
+        <slot name="invoker"></slot>
+        <div id="overlay-content-node-wrapper">
+          <slot name="input"></slot>
+          <slot id="options-outlet"></slot>
+        </div>
+      </div>
+    `;
+  }
+
+  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -55,23 +74,25 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     };
   }
 
-  /** @type {LionSelectInvoker} */
+  /**
+   * @protected
+   * @type {LionSelectInvoker}
+   */
   get _invokerNode() {
     return /** @type {LionSelectInvoker} */ (Array.from(this.children).find(
       child => child.slot === 'invoker',
     ));
   }
 
+  /**
+   * @configure ListboxMixin
+   * @protected
+   */
+  // @ts-ignore
   get _scrollTargetNode() {
-    return this._listboxNode._scrollTargetNode || this._listboxNode;
-  }
-
-  get checkedIndex() {
-    return /** @type {number} */ (super.checkedIndex);
-  }
-
-  set checkedIndex(i) {
-    super.checkedIndex = i;
+    // TODO: should this be defined here or in extension layer?
+    // @ts-expect-error we allow the _overlayContentNode to define its own _scrollTargetNode
+    return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
   }
 
   constructor() {
@@ -103,7 +124,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   connectedCallback() {
     super.connectedCallback();
-    this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+    this._invokerNode.selectedElement = this.formElements[
+      /**  @type {number} */ (this.checkedIndex)
+    ];
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
     this.addEventListener('keyup', this.__onKeyUp);
@@ -133,57 +156,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     if (name === 'disabled' || name === 'readOnly') {
       this.__toggleInvokerDisabled();
     }
-  }
-
-  /**
-   * Overrides FormRegistrar adding to make sure children have specific default states when added
-   *
-   * @override
-   * @param {LionOption} child
-   * @param {Number} indexToInsertAt
-   */
-  addFormElement(child, indexToInsertAt) {
-    super.addFormElement(child, indexToInsertAt);
-    // the first elements checked by default
-    if (
-      !this.hasNoDefaultSelected &&
-      !this.__hasInitialSelectedFormElement &&
-      (!child.disabled || this.disabled)
-    ) {
-      /* eslint-disable no-param-reassign */
-      child.active = true;
-      child.checked = true;
-      /* eslint-enable no-param-reassign */
-      this.__hasInitialSelectedFormElement = true;
-    }
-    this._onFormElementsChanged();
-  }
-
-  /**
-   * In the select disabled options are still going to a possible value for example
-   * when prefilling or programmatically setting it.
-   *
-   * @override
-   */
-  _getCheckedElements() {
-    return this.formElements.filter(el => el.checked);
-  }
-
-  __initInteractionStates() {
-    this.initInteractionState();
-  }
-
-  /**
-   * @param {FormRegisteringHost} child the child element (field)
-   */
-  removeFormElement(child) {
-    super.removeFormElement(child);
-    this._onFormElementsChanged();
-  }
-
-  _onFormElementsChanged() {
-    this.singleOption = this.formElements.length === 1;
-    this._invokerNode.singleOption = this.singleOption;
   }
 
   /**
@@ -226,25 +198,58 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
-  /** @deprecated. use _overlayCtrl.toggle */
+  /**
+   * @enhance FprmRegistrarMixin make sure children have specific default states when added
+   * @param {LionOption & FormControlHost} child
+   * @param {Number} indexToInsertAt
+   */
+  addFormElement(child, indexToInsertAt) {
+    super.addFormElement(child, indexToInsertAt);
+    // the first elements checked by default
+    if (
+      !this.hasNoDefaultSelected &&
+      !this.__hasInitialSelectedFormElement &&
+      (!child.disabled || this.disabled)
+    ) {
+      /* eslint-disable no-param-reassign */
+      child.active = true;
+      child.checked = true;
+      /* eslint-enable no-param-reassign */
+      this.__hasInitialSelectedFormElement = true;
+    }
+    this._onFormElementsChanged();
+  }
+
+  /**
+   * @enhance FprmRegistrarMixin
+   * @param {FormRegisteringHost} child the child element (field)
+   */
+  removeFormElement(child) {
+    super.removeFormElement(child);
+    this._onFormElementsChanged();
+  }
+
+  // TODO: move to overlayMixin and offer open and close
   toggle() {
     this.opened = !this.opened;
   }
 
   /**
-   * @override
+   * In the select disabled options are still going to a possible value for example
+   * when prefilling or programmatically setting it.
+   * @override ChoiceGroupMixin
    */
-  // eslint-disable-next-line class-methods-use-this
-  _inputGroupInputTemplate() {
-    return html`
-      <div class="input-group__input">
-        <slot name="invoker"></slot>
-        <div id="overlay-content-node-wrapper">
-          <slot name="input"></slot>
-          <slot id="options-outlet"></slot>
-        </div>
-      </div>
-    `;
+  _getCheckedElements() {
+    return this.formElements.filter(el => el.checked);
+  }
+
+  _onFormElementsChanged() {
+    this.singleOption = this.formElements.length === 1;
+    this._invokerNode.singleOption = this.singleOption;
+  }
+
+  __initInteractionStates() {
+    this.initInteractionState();
   }
 
   __toggleInvokerDisabled() {
@@ -257,7 +262,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   __syncInvokerElement() {
     // sync to invoker
     if (this._invokerNode) {
-      this._invokerNode.selectedElement = this.formElements[this.checkedIndex];
+      this._invokerNode.selectedElement = this.formElements[
+        /**  @type {number} */ (this.checkedIndex)
+      ];
     }
   }
 
@@ -290,7 +297,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @override OverlayMixin
+   * @configure OverlayMixin
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
@@ -323,7 +330,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   __overlayOnShow() {
     if (this.checkedIndex != null) {
-      this.activeIndex = this.checkedIndex;
+      this.activeIndex = /**  @type {number} */ (this.checkedIndex);
     }
     this._listboxNode.focus();
   }
@@ -332,6 +339,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._invokerNode.focus();
   }
 
+  /**
+   * @enhance OverlayMixin
+   */
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
@@ -342,6 +352,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.addEventListener('hide', this.__overlayOnHide);
   }
 
+  /**
+   * @enhance OverlayMixin
+   */
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
@@ -357,14 +370,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @override Configures OverlayMixin
+   * @configure OverlayMixin
    */
   get _overlayInvokerNode() {
     return this._invokerNode;
   }
 
   /**
-   * @override Configures OverlayMixin
+   * @configure OverlayMixin
    */
   get _overlayContentNode() {
     return this._listboxNode;
@@ -388,7 +401,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         ev.preventDefault();
 
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(this._getPreviousEnabledOption(this.checkedIndex));
+          this.setCheckedIndex(
+            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+          );
         } else {
           this.opened = true;
         }
@@ -396,7 +411,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       case 'ArrowDown':
         ev.preventDefault();
         if (this.navigateWithinInvoker) {
-          this.setCheckedIndex(this._getNextEnabledOption(this.checkedIndex));
+          this.setCheckedIndex(
+            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+          );
         } else {
           this.opened = true;
         }
