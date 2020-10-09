@@ -12,6 +12,7 @@ describe('getAriaElementsInRightDomOrder', () => {
         <div id="b">
           <div></div>
           <div id="b-child"></div>
+          <div id="b-child2"></div>
         </div>
         <div></div>
         <div id="c"></div>
@@ -19,10 +20,10 @@ describe('getAriaElementsInRightDomOrder', () => {
       </div>
     `);
     // eslint-disable-next-line no-unused-vars
-    const [a, _1, b, _2, bChild, _3, c, _4] = Array.from(el.querySelectorAll('div'));
-    const unorderedNodes = [bChild, c, a, b];
+    const [a, _1, b, _2, bChild, child2, _3, c, _4] = Array.from(el.querySelectorAll('div'));
+    const unorderedNodes = [bChild, c, a, b, child2];
     const result = getAriaElementsInRightDomOrder(unorderedNodes);
-    expect(result).to.eql([a, b, bChild, c]);
+    expect(result).to.eql([a, b, bChild, child2, c]);
   });
 
   it('can order reversely', async () => {

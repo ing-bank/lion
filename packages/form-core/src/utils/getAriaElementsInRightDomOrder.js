@@ -1,4 +1,11 @@
+/* eslint-disable no-bitwise */
 import { browserDetection } from '@lion/core';
+
+const moveDownConditions = [
+  Node.DOCUMENT_POSITION_PRECEDING,
+  Node.DOCUMENT_POSITION_CONTAINS,
+  Node.DOCUMENT_POSITION_CONTAINS | Node.DOCUMENT_POSITION_PRECEDING,
+];
 
 /**
  * @desc Let the order of adding ids to aria element by DOM order, so that the screen reader
@@ -19,8 +26,9 @@ export function getAriaElementsInRightDomOrder(descriptionElements, { reverse } 
   const putPrecedingSiblingsAndLocalParentsFirst = (a, b) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
     const pos = a.compareDocumentPosition(b);
+
     // Unfortunately, for IE, we have to switch the order (?)
-    if (pos === Node.DOCUMENT_POSITION_PRECEDING || pos === Node.DOCUMENT_POSITION_CONTAINED_BY) {
+    if (moveDownConditions.includes(pos)) {
       return browserDetection.isIE11 ? -1 : 1;
     }
     return browserDetection.isIE11 ? 1 : -1;
