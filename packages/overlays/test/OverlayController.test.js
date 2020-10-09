@@ -1,14 +1,6 @@
 /* eslint-disable no-new */
 import '@lion/core/test-helpers/keyboardEventShimIE.js';
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  html,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
 import { OverlayController } from '../src/OverlayController.js';
@@ -676,7 +668,6 @@ describe('OverlayController', () => {
         expect(document.activeElement).to.equal(input);
 
         await ctrl.hide();
-        await nextFrame(); // moving focus to body takes time?
         expect(document.activeElement).to.equal(document.body);
       });
 
