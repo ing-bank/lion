@@ -73,7 +73,7 @@ describe('<lion-input-amount>', () => {
     const el = /** @type {LionInputAmount} */ (await fixture(
       `<lion-input-amount></lion-input-amount>`,
     ));
-    expect(el._inputNode.inputMode).to.equal('decimal');
+    expect(el._inputNode.getAttribute('inputmode')).to.equal('decimal');
   });
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
