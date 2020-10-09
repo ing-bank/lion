@@ -329,6 +329,16 @@ describe('formatNumber', () => {
         expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123.457');
         expect(formatNumber(123456.789, currencySymbol('TRY'))).to.equal('₺123.456,79');
       });
+
+      it('forces turkish currency code ', () => {
+        localize.locale = 'tr-TR';
+        expect(
+          formatNumber(1234.56, { style: 'currency', currencyDisplay: 'code', currency: 'TRY' }),
+        ).to.equal('1.234,56 TL');
+        expect(
+          formatNumber(-1234.56, { style: 'currency', currencyDisplay: 'code', currency: 'TRY' }),
+        ).to.equal('−1.234,56 TL');
+      });
     });
   });
 });
