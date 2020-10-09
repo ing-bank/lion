@@ -847,6 +847,11 @@ export class OverlayController extends EventTargetShim {
     // Otherwise we assume the 'outside world' has, purposefully, taken over
     if (this.elementToFocusAfterHide) {
       this.elementToFocusAfterHide.focus();
+    } else if (
+      document.activeElement &&
+      this.__contentWrapperNode?.contains(document.activeElement)
+    ) {
+      /** @type {HTMLElement} */ (document.activeElement).blur();
     }
   }
 
