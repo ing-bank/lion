@@ -531,9 +531,11 @@ describe('<lion-calendar>', () => {
           await el.updateComplete;
 
           expect(elObj.previousYearButtonEl?.hasAttribute('disabled')).to.equal(false);
-          expect(elObj.previousYearButtonEl.ariaLabel).to.equal('Previous year, July 1999');
+          expect(elObj.previousYearButtonEl.getAttribute('aria-label')).to.equal(
+            'Previous year, July 1999',
+          );
           expect(elObj.nextYearButtonEl?.hasAttribute('disabled')).to.equal(false);
-          expect(elObj.nextYearButtonEl.ariaLabel).to.equal('Next year, May 2001');
+          expect(elObj.nextYearButtonEl.getAttribute('aria-label')).to.equal('Next year, May 2001');
         });
       });
 

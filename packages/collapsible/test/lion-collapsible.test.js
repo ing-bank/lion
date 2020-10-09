@@ -11,7 +11,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */
 
 const collapsibleTemplate = html`
   <button slot="invoker">More about cars</button>
-  <div slot="content">
+  <div slot="content" style="font-size: 12px; line-height: 16px; font-family: Arial;">
     Most definitions of cars say that they run primarily on roads, seat one to eight people, have
     four tires, and mainly transport people rather than goods.
   </div>
@@ -50,7 +50,7 @@ describe('<lion-collapsible>', () => {
       expect(collapsible._contentHeight).to.equal('0px');
       collapsible.show();
       await collapsible.requestUpdate();
-      expect(collapsible._contentHeight).to.equal('36px');
+      expect(collapsible._contentHeight).to.equal('32px');
     });
   });
 

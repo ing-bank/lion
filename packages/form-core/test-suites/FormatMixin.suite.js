@@ -69,7 +69,7 @@ export function runFormatMixinSuite(customConfig) {
         if (options.viewValue) {
           return !options.toggleValue ? '5-5-2005' : '10-10-2010';
         }
-        return !options.toggleValue ? new Date('5-5-2005') : new Date('10-10-2010');
+        return !options.toggleValue ? new Date('5/5/2005') : new Date('10/10/2010');
       case Array:
         return !options.toggleValue ? ['foo', 'bar'] : ['baz', 'yay'];
       case Object:
