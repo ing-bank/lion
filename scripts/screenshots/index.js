@@ -81,12 +81,17 @@ process.on('beforeExit', () => {
   serverPromise.then(server => server.close());
 });
 
-async function getPage(path) {
+async function getPage(path, cdp) {
   const browser = await browserPromise;
   const server = await serverPromise;
   const url = `http://127.0.0.1:${server.server.address().port}${path}`;
   log(`Creating a page for ${url}`);
   const page = await browser.newPage();
+
+  if (cdp) {
+    const client = await page.context().newCDPSession(page);
+    await client.send(cdp.command, cdp.parameters);
+  }
 
   // eslint-disable-next-line no-unused-vars
   page.on('console', msg => {
@@ -99,16 +104,15 @@ async function getPage(path) {
     }
   });
 
-  await page.goto(url);
-  await page.waitForTimeout(500);
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   log(`Page has been created`);
 
   return page;
 }
 
-async function getStoryPage(id) {
-  return getPage(`/iframe.html?id=${id}&viewMode=story`);
+async function getStoryPage(id, cdp) {
+  return getPage(`/iframe.html?id=${id}&viewMode=story`, cdp);
 }
 
 async function getClip({ page, selector, endClipSelector }) {
@@ -260,7 +264,29 @@ function createCapture() {
     if (!suite.page) {
       suite.page = await getPage(url);
     }
-    await page.waitForTimeout(500);
+    if (selector) {
+      await page.waitForSelector(selector);
+    }
+    if (endClipSelector) {
+      await page.waitForSelector(endClipSelector);
+    }
+    await page.evaluate(
+      async ([sel, endClipSel]) => {
+        if (sel) {
+          const el = document.querySelector(sel);
+          if (el && el.updateComplete) {
+            await el.updateComplete;
+          }
+        }
+        if (endClipSel) {
+          const el = document.querySelector(endClipSel);
+          if (el && el.updateComplete) {
+            await el.updateComplete;
+          }
+        }
+      },
+      [selector, endClipSelector],
+    );
     suite.clip = await getClip(suite);
 
     if (updateScreenshots) {
