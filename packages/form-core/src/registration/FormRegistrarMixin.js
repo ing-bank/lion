@@ -50,10 +50,15 @@ const FormRegistrarMixinImplementation = superclass =>
       this._isFormOrFieldset = false;
 
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
+      this._onRequestToChangeFormElementName = this._onRequestToChangeFormElementName.bind(this);
 
       this.addEventListener(
         'form-element-register',
         /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToAddFormElement),
+      );
+      this.addEventListener(
+        'form-element-name-changed',
+        /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToChangeFormElementName),
       );
     }
 
@@ -161,6 +166,17 @@ const FormRegistrarMixinImplementation = superclass =>
         indexToInsertAt = this.formElements.indexOf(child.nextElementSibling);
       }
       this.addFormElement(child, indexToInsertAt);
+    }
+
+    /**
+     * @param {CustomEvent} ev
+     */
+    _onRequestToChangeFormElementName(ev) {
+      const element = this.formElements[ev.detail.oldName];
+      if (element) {
+        this.formElements[ev.detail.newName] = element;
+        delete this.formElements[ev.detail.oldName];
+      }
     }
 
     /**

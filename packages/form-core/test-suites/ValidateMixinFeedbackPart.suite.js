@@ -390,7 +390,7 @@ export function runValidateMixinFeedbackPart() {
           params: 4,
           modelValue: 'cat',
           formControl: el,
-          fieldName: undefined,
+          fieldName: '',
           type: 'x',
           name: 'MinLength',
         });
@@ -414,7 +414,7 @@ export function runValidateMixinFeedbackPart() {
           params: 4,
           modelValue: 'cat',
           formControl: el,
-          fieldName: undefined,
+          fieldName: '',
           type: 'error',
           name: 'MinLength',
         });

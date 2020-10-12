@@ -15,7 +15,6 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const ChoiceGroupMixinImplementation = superclass =>
-  // @ts-expect-error
   class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
     static get properties() {
       return {
@@ -121,6 +120,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     constructor() {
       super();
       this.multipleChoice = false;
+      /** @type {'child'|'choice-group'|'fieldset'} */
       this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
 
       this.__isInitialModelValue = true;

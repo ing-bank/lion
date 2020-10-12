@@ -15,7 +15,7 @@ export declare class FormGroupHost {
   touched: boolean;
   dirty: boolean;
   submitted: boolean;
-  serializedValue: string;
+  serializedValue: { [key: string]: any };
   modelValue: { [x: string]: any };
   formattedValue: string;
   children: Array<HTMLElement & FormControlHost>;
