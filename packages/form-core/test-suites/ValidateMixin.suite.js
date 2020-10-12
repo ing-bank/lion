@@ -1165,6 +1165,61 @@ export function runValidateMixinSuite(customConfig) {
             expect(spy.callCount).to.equal(counter);
           }
         });
+
+        it('filters feedback visibility according interaction states', async () => {
+          const elTagString = defineCE(
+            // @ts-expect-error base constructor same return type
+            class extends ValidateMixin(LitElement) {
+              static get validationTypes() {
+                return ['error', 'info'];
+              }
+
+              static get properties() {
+                return {
+                  modelValue: { type: String },
+                };
+              }
+
+              // @ts-ignore
+              _showFeedbackConditionFor(type) {
+                switch (type) {
+                  case 'error':
+                    // @ts-ignore
+                    return ['A', 'B'].includes(this.modelValue);
+                  default:
+                    // @ts-ignore
+                    return ['B', 'C'].includes(this.modelValue);
+                }
+              }
+            },
+          );
+          const elTag = unsafeStatic(elTagString);
+          const el = /** @type {ValidateElement} */ (await fixture(html`
+            <${elTag}
+              .validators=${[
+                new AlwaysInvalid({}, { type: 'error' }),
+                new AlwaysInvalid({}, { type: 'info' }),
+              ]}
+            >${lightDom}</${elTag}>
+          `));
+
+          for (const [modelValue, expected] of [
+            ['A', ['error']],
+            ['B', ['error']],
+            ['C', ['info']],
+            ['D', []],
+          ]) {
+            el.modelValue = modelValue;
+            // eslint-disable-next-line no-await-in-loop
+            await el.updateComplete;
+            // eslint-disable-next-line no-await-in-loop
+            await el.feedbackComplete;
+
+            // @ts-ignore
+            const resultOrder = el._feedbackNode.feedbackData.map(v => v.type);
+            expect(resultOrder).to.deep.equal(expected);
+          }
+        });
       });
 
       describe('Changing feedback messages globally', () => {
