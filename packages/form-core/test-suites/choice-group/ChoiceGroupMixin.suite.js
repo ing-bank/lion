@@ -112,6 +112,23 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString } = {
       expect(el.formElements[1].name).to.equal('gender2');
     });
 
+    it('prevents updating the name property of a child if it is different from its parent', async () => {
+      const el = /** @type {ChoiceGroup} */ (await fixture(html`
+        <${parentTag} name="gender">
+          <${childTag}></${childTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `));
+
+      expect(el.formElements[0].name).to.equal('gender');
+      expect(el.formElements[1].name).to.equal('gender');
+
+      el.formElements[0].name = 'gender2';
+
+      await el.formElements[0].updateComplete;
+      expect(el.formElements[0].name).to.equal('gender');
+    });
+
     it('adjusts the name of a child element if it has a different name than the group', async () => {
       const el = /** @type {ChoiceGroup} */ (await fixture(html`
         <${parentTag} name="gender">
