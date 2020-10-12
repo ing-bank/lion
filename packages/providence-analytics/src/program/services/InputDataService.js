@@ -14,6 +14,57 @@ const { AstService } = require('./AstService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 const { toPosixPath } = require('../utils/to-posix-path.js');
 
+// TODO: memoize
+function getPackageJson(rootPath) {
+  try {
+    const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
+    return JSON.parse(fileContent);
+  } catch (_) {
+    return undefined;
+  }
+}
+
+function getLernaJson(rootPath) {
+  try {
+    const fileContent = fs.readFileSync(`${rootPath}/lerna.json`, 'utf8');
+    return JSON.parse(fileContent);
+  } catch (_) {
+    return undefined;
+  }
+}
+
+/**
+ *
+ * @param {string[]} list
+ * @param {string} rootPath
+ * @returns {{path:string, name:string}[]}
+ */
+function getPathsFromGlobList(list, rootPath) {
+  const results = [];
+  list.forEach(pathOrGlob => {
+    if (!pathOrGlob.endsWith('/')) {
+      // eslint-disable-next-line no-param-reassign
+      pathOrGlob = `${pathOrGlob}/`;
+    }
+
+    if (pathOrGlob.includes('*')) {
+      const globResults = glob.sync(pathOrGlob, { cwd: rootPath, absolute: false });
+      globResults.forEach(r => {
+        results.push(r);
+      });
+    } else {
+      results.push(pathOrGlob);
+    }
+  });
+  return results.map(path => {
+    const packageRoot = pathLib.resolve(rootPath, path);
+    const basename = pathLib.basename(path);
+    const pkgJson = getPackageJson(packageRoot);
+    const name = (pkgJson && pkgJson.name) || basename;
+    return { name, path };
+  });
+}
+
 function getGitignoreFile(rootPath) {
   try {
     return fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
@@ -61,11 +112,8 @@ function getGitIgnorePaths(rootPath) {
  * Gives back all files and folders that need to be added to npm artifact
  */
 function getNpmPackagePaths(rootPath) {
-  let pkgJson;
-  try {
-    const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
-    pkgJson = JSON.parse(fileContent);
-  } catch (_) {
+  const pkgJson = getPackageJson(rootPath);
+  if (!pkgJson) {
     return [];
   }
   if (pkgJson.files) {
@@ -154,6 +202,7 @@ class InputDataService {
 
   /**
    * @param {string} projectPath
+   * @returns { { path:string, name?:string, mainEntry?:string, version?: string, commitHash?:string }}
    */
   static getProjectMeta(projectPath) {
     const project = { path: projectPath };
@@ -413,6 +462,24 @@ class InputDataService {
     } catch (e) {
       return null;
     }
+  }
+
+  /**
+   * Gives back all monorepo package paths
+   */
+  static getMonoRepoPackages(rootPath) {
+    // [1] Look for yarn workspaces
+    const pkgJson = getPackageJson(rootPath);
+    if (pkgJson && pkgJson.workspaces) {
+      return getPathsFromGlobList(pkgJson.workspaces, rootPath);
+    }
+    // [2] Look for lerna packages
+    const lernaJson = getLernaJson(rootPath);
+    if (lernaJson && lernaJson.packages) {
+      return getPathsFromGlobList(lernaJson.packages, rootPath);
+    }
+    // TODO: support forward compatibility for npm?
+    return undefined;
   }
 }
 InputDataService.cacheDisabled = false;

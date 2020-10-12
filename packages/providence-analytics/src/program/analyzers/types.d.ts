@@ -1,6 +1,4 @@
-import { ClassMethod } from "@babel/types";
-import { ProjectReference } from "typescript";
-
+import { ProjectReference } from 'typescript';
 
 export interface RootFile {
   /** the file path containing declaration, for instance './target-src/direct-imports.js'. Can also contain keyword '[current]' */
@@ -8,7 +6,6 @@ export interface RootFile {
   /** the specifier/identifier that was exported in root file, for instance 'MyClass' */
   specifier: string;
 }
-
 
 export interface AnalyzerResult {
   /** meta info object */
@@ -23,7 +20,6 @@ export interface AnalyzerOutputFile {
   /** result of AST traversal for file in project */
   result: array;
 }
-
 
 // TODO: make sure that data structures of JSON output (generated in ReportService)
 // and data structure generated in Analyzer.prototype._finalize match exactly (move logic from ReportSerivce to _finalize)
@@ -80,26 +76,26 @@ export interface MatchSubclassesAnalyzerOutputEntryMatch {
 
 export interface MatchSubclassesAnalyzerOutputEntryMatchFile {
   /**
-  * The local filepath that contains the matched class inside the target project
-  * like `./src/ExtendedClass.js`
-  */
+   * The local filepath that contains the matched class inside the target project
+   * like `./src/ExtendedClass.js`
+   */
   file: string;
   /**
-  * The local Identifier inside matched file that is exported
-  * @example
-  * - `ExtendedClass` for `export ExtendedClass extends RefClass {};`
-  * - `[default]` for `export default ExtendedClass extends RefClass {};`
-  */
+   * The local Identifier inside matched file that is exported
+   * @example
+   * - `ExtendedClass` for `export ExtendedClass extends RefClass {};`
+   * - `[default]` for `export default ExtendedClass extends RefClass {};`
+   */
   identifier: string;
 }
 
 export interface MatchedExportSpecifier extends AnalyzerResult {
   /** The exported Identifier name.
-  *
-  * For instance
-  * - `export { X as Y } from 'q'` => `Y`
-  * - `export default class Z {}` => `[default]`
-  */
+   *
+   * For instance
+   * - `export { X as Y } from 'q'` => `Y`
+   * - `export default class Z {}` => `[default]`
+   */
   name: string;
   /** Project name as found in package.json */
   project: string;
@@ -108,7 +104,6 @@ export interface MatchedExportSpecifier extends AnalyzerResult {
   /** "[default]::./index.js::exporting-ref-project" */
   id: string;
 }
-
 
 // "find-customelements"
 
@@ -125,14 +120,14 @@ export interface FindCustomelementsAnalyzerOutputFile extends AnalyzerOutputFile
 
 export interface FindCustomelementsAnalyzerEntry {
   /**
-  * Tag name found in CE definition:
-  * `customElements.define('my-name', MyConstructor)` => 'my-name'
-  */
+   * Tag name found in CE definition:
+   * `customElements.define('my-name', MyConstructor)` => 'my-name'
+   */
   tagName: string;
   /**
-  * Identifier found in CE definition:
-  * `customElements.define('my-name', MyConstructor)` => MyConstructor
-  */
+   * Identifier found in CE definition:
+   * `customElements.define('my-name', MyConstructor)` => MyConstructor
+   */
   constructorIdentifier: string;
   /** Rootfile traced for constuctorIdentifier found in CE definition */
   rootFile: RootFile;
@@ -153,42 +148,41 @@ export interface FindExportsAnalyzerOutputFile extends AnalyzerOutputFile {
 
 export interface FindExportsAnalyzerEntry {
   /**
-  * The specifiers found in an export statement.
-  *
-  * For example:
-  * - file `export class X {}` gives `['X']`
-  * - file `export default const y = 0` gives `['[default]']`
-  * - file `export { y, z } from 'project'` gives `['y', 'z']`
-  */
+   * The specifiers found in an export statement.
+   *
+   * For example:
+   * - file `export class X {}` gives `['X']`
+   * - file `export default const y = 0` gives `['[default]']`
+   * - file `export { y, z } from 'project'` gives `['y', 'z']`
+   */
   exportSpecifiers: string[];
   /**
-  * The original "source" string belonging to specifier.
-  * For example:
-  * - file `export { x } from './my/file';` gives `"./my/file"`
-  * - file `export { x } from 'project';` gives `"project"`
-  */
+   * The original "source" string belonging to specifier.
+   * For example:
+   * - file `export { x } from './my/file';` gives `"./my/file"`
+   * - file `export { x } from 'project';` gives `"project"`
+   */
   source: string;
   /**
-  * The normalized "source" string belonging to specifier
-  * (based on file system information, resolves right names and extensions).
-  * For example:
-  * - file `export { x } from './my/file';` gives `"./my/file.js"`
-  * - file `export { x } from 'project';` gives `"project"` (only files in current project are resolved)
-  * - file `export { x } from '../';` gives `"../index.js"`
-  */
+   * The normalized "source" string belonging to specifier
+   * (based on file system information, resolves right names and extensions).
+   * For example:
+   * - file `export { x } from './my/file';` gives `"./my/file.js"`
+   * - file `export { x } from 'project';` gives `"project"` (only files in current project are resolved)
+   * - file `export { x } from '../';` gives `"../index.js"`
+   */
   normalizedSource: string;
   /** map of tracked down Identifiers */
   rootFileMap: RootFileMapEntry[];
 }
 
-
 export interface RootFileMapEntry {
   /** This is the local name in the file we track from */
   currentFileSpecifier: string;
   /**
-  * The file that contains the original declaration of a certain Identifier/Specifier.
-  * Contains file(filePath) and specifier keys
-  */
+   * The file that contains the original declaration of a certain Identifier/Specifier.
+   * Contains file(filePath) and specifier keys
+   */
   rootFile: RootFile;
 }
 
@@ -207,29 +201,29 @@ export interface FindImportsAnalyzerOutputFile extends AnalyzerOutputFile {
 
 export interface FindImportsAnalyzerEntry {
   /**
-  * The specifiers found in an import statement.
-  *
-  * For example:
-  * - file `import { X } from 'project'` gives `['X']`
-  * - file `import X from 'project'` gives `['[default]']`
-  * - file `import x, { y, z } from 'project'` gives `['[default]', 'y', 'z']`
-  */
+   * The specifiers found in an import statement.
+   *
+   * For example:
+   * - file `import { X } from 'project'` gives `['X']`
+   * - file `import X from 'project'` gives `['[default]']`
+   * - file `import x, { y, z } from 'project'` gives `['[default]', 'y', 'z']`
+   */
   importSpecifiers: string[];
   /**
-  * The original "source" string belonging to specifier.
-  * For example:
-  * - file `import { x } from './my/file';` gives `"./my/file"`
-  * - file `import { x } from 'project';` gives `"project"`
-  */
+   * The original "source" string belonging to specifier.
+   * For example:
+   * - file `import { x } from './my/file';` gives `"./my/file"`
+   * - file `import { x } from 'project';` gives `"project"`
+   */
   source: string;
   /**
-  * The normalized "source" string belonging to specifier
-  * (based on file system information, resolves right names and extensions).
-  * For example:
-  * - file `import { x } from './my/file';` gives `"./my/file.js"`
-  * - file `import { x } from 'project';` gives `"project"` (only files in current project are resolved)
-  * - file `import { x } from '../';` gives `"../index.js"`
-  */
+   * The normalized "source" string belonging to specifier
+   * (based on file system information, resolves right names and extensions).
+   * For example:
+   * - file `import { x } from './my/file';` gives `"./my/file.js"`
+   * - file `import { x } from 'project';` gives `"project"` (only files in current project are resolved)
+   * - file `import { x } from '../';` gives `"../index.js"`
+   */
   normalizedSource: string;
 }
 
@@ -287,8 +281,6 @@ export interface SuperClass {
   rootFile: RootFile;
 }
 
-
-
 export interface FindClassesConfig {
   /** search target paths */
   targetProjectPath: string;
@@ -299,9 +291,6 @@ export interface AnalyzerConfig {
   targetProjectPath: string;
   gatherFilesConfig: GatherFilesConfig;
 }
-
-
-
 
 export interface MatchAnalyzerConfig extends AnalyzerConfig {
   /** reference project path, used to match reference against target */

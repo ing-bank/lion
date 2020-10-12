@@ -10,7 +10,7 @@ const { QueryService } = require('../program/services/QueryService.js');
 const { InputDataService } = require('../program/services/InputDataService.js');
 const promptModule = require('./prompt-analyzer-menu.js');
 const cliHelpers = require('./cli-helpers.js');
-const extendDocsModule = require('./generate-extend-docs-data.js');
+const extendDocsModule = require('./launch-providence-with-extend-docs.js');
 const { toPosixPath } = require('../program/utils/to-posix-path.js');
 
 const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
@@ -304,6 +304,7 @@ async function cli({ cwd } = {}) {
           extensions: commander.extensions,
           allowlist: commander.allowlist,
           allowlistReference: commander.allowlistReference,
+          cwd,
         })
         .then(resolveCli)
         .catch(rejectCli);

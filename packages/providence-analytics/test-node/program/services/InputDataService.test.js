@@ -61,14 +61,52 @@ describe('InputDataService', () => {
       );
     });
 
-    it('mocked "createDataObject"', async () => {
-      // By testing the output of our mocked method against the data of the real method, we
-      // make sure the tests don't run sucessfully undeserved
-    });
-
     it('"getTargetProjectPaths"', async () => {});
 
     it('"getReferenceProjectPaths"', async () => {});
+
+    describe('"getMonoRepoPackages"', async () => {
+      it('supports yarn workspaces', async () => {
+        mockProject({
+          './package.json': JSON.stringify({
+            workspaces: ['packages/*', 'another-folder/another-package'],
+          }),
+          './packages/pkg1/package.json': '{ "name": "package1" }',
+          './packages/pkg2/package.json': '',
+          './packages/pkg3/package.json': '{ "name": "@scope/pkg3" }',
+          './another-folder/another-package/package.json':
+            '{ "name": "@another-scope/another-package" }',
+        });
+
+        expect(InputDataService.getMonoRepoPackages('/fictional/project')).to.eql([
+          { path: 'packages/pkg1/', name: 'package1' },
+          { path: 'packages/pkg2/', name: 'pkg2' }, // fallback when no package.json
+          { path: 'packages/pkg3/', name: '@scope/pkg3' },
+          { path: 'another-folder/another-package/', name: '@another-scope/another-package' },
+        ]);
+      });
+
+      it('supports lerna', async () => {
+        mockProject({
+          './package.json': JSON.stringify({}),
+          './lerna.json': JSON.stringify({
+            packages: ['packages/*', 'another-folder/another-package'],
+          }),
+          './packages/pkg1/package.json': '{ "name": "package1" }',
+          './packages/pkg2/package.json': '',
+          './packages/pkg3/package.json': '{ "name": "@scope/pkg3" }',
+          './another-folder/another-package/package.json':
+            '{ "name": "@another-scope/another-package" }',
+        });
+
+        expect(InputDataService.getMonoRepoPackages('/fictional/project')).to.eql([
+          { path: 'packages/pkg1/', name: 'package1' },
+          { path: 'packages/pkg2/', name: 'pkg2' }, // fallback when no package.json
+          { path: 'packages/pkg3/', name: '@scope/pkg3' },
+          { path: 'another-folder/another-package/', name: '@another-scope/another-package' },
+        ]);
+      });
+    });
 
     describe('"gatherFilesFromDir"', async () => {
       beforeEach(() => {
