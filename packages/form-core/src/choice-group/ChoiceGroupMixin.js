@@ -156,6 +156,17 @@ const ChoiceGroupMixinImplementation = superclass =>
       });
     }
 
+    /** @param {import('lit-element').PropertyValues} changedProperties */
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has('name') && this.name !== changedProperties.get('name')) {
+        this.formElements.forEach(child => {
+          // eslint-disable-next-line no-param-reassign
+          child.name = this.name;
+        });
+      }
+    }
+
     disconnectedCallback() {
       super.disconnectedCallback();
 
@@ -171,7 +182,8 @@ const ChoiceGroupMixinImplementation = superclass =>
      */
     addFormElement(child, indexToInsertAt) {
       this._throwWhenInvalidChildModelValue(child);
-      this.__delegateNameAttribute(child);
+      // eslint-disable-next-line no-param-reassign
+      child.name = this.name;
       super.addFormElement(child, indexToInsertAt);
     }
 
@@ -280,24 +292,6 @@ const ChoiceGroupMixinImplementation = superclass =>
         // TODO: what happens here exactly? Needs to be based on user interaction (?)
         this.touched = true;
         this.__previousCheckedValue = value;
-      }
-    }
-
-    /**
-     * @param {FormControl} child
-     */
-    __delegateNameAttribute(child) {
-      if (!child.name || child.name === this.name) {
-        // eslint-disable-next-line no-param-reassign
-        child.name = this.name;
-      } else {
-        throw new Error(
-          `The ${this.tagName.toLowerCase()} name="${
-            this.name
-          }" does not allow to register ${child.tagName.toLowerCase()} with custom names (name="${
-            child.name
-          }" given)`,
-        );
       }
     }
 

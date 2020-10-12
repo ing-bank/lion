@@ -74,7 +74,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString } = {
       );
     });
 
-    it('automatically sets the name property of child radios to its own name', async () => {
+    it('automatically sets the name property of child fields to its own name', async () => {
       const el = /** @type {ChoiceGroup} */ (await fixture(html`
         <${parentTag} name="gender">
           <${childTag} .choiceValue=${'female'} checked></${childTag}>
@@ -93,7 +93,26 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString } = {
       expect(el.formElements[2].name).to.equal('gender');
     });
 
-    it('throws if a child element with a different name than the group tries to register', async () => {
+    it('automatically updates the name property of child fields to its own name', async () => {
+      const el = /** @type {ChoiceGroup} */ (await fixture(html`
+        <${parentTag} name="gender">
+          <${childTag}></${childTag}>
+          <${childTag}></${childTag}>
+        </${parentTag}>
+      `));
+
+      expect(el.formElements[0].name).to.equal('gender');
+      expect(el.formElements[1].name).to.equal('gender');
+
+      el.name = 'gender2';
+
+      await el.updateComplete;
+
+      expect(el.formElements[0].name).to.equal('gender2');
+      expect(el.formElements[1].name).to.equal('gender2');
+    });
+
+    it('adjusts the name of a child element if it has a different name than the group', async () => {
       const el = /** @type {ChoiceGroup} */ (await fixture(html`
         <${parentTag} name="gender">
           <${childTag} .choiceValue=${'female'} checked></${childTag}>
@@ -104,12 +123,9 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString } = {
       const invalidChild = /** @type {ChoiceGroup} */ (await fixture(html`
         <${childTag} name="foo" .choiceValue=${'male'}></${childTag}>
       `));
-
-      expect(() => {
-        el.addFormElement(invalidChild);
-      }).to.throw(
-        'The choice-group name="gender" does not allow to register choice-group-input with custom names (name="foo" given)',
-      );
+      el.addFormElement(invalidChild);
+      await invalidChild.updateComplete;
+      expect(invalidChild.name).to.equal('gender');
     });
 
     it('can set initial modelValue on creation', async () => {
