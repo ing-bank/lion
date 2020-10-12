@@ -101,7 +101,12 @@ export const main = () => {
           <lion-option checked .choiceValue=${'Banana'}>Banana</lion-option>
           <lion-option .choiceValue=${'Mango'}>Mango</lion-option>
         </lion-listbox>
-        <lion-combobox name="favoriteMovie" label="Favorite movie" autocomplete="both">
+        <lion-combobox
+          .validators="${[new Required()]}"
+          name="favoriteMovie"
+          label="Favorite movie"
+          autocomplete="both"
+        >
           <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
           <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
           <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>

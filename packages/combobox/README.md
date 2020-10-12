@@ -263,6 +263,36 @@ export const invokerButton = () => html`
 `;
 ```
 
+## Validation
+
+Validation can be used as normal, below is an example of a combobox with a `Required` validator.
+
+```js story
+export const validation = () => {
+  loadDefaultFeedbackMessages();
+  Required.getMessage = () => 'Please enter a value';
+  return html`
+    <lion-form>
+      <form>
+        <lion-combobox
+          .validators="${[new Required()]}"
+          name="favoriteMovie"
+          label="Favorite movie"
+          autocomplete="both"
+        >
+          <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
+          <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
+          <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
+          <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
+          <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
+          <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+        </lion-combobox>
+      </form>
+    </lion-form>
+  `;
+};
+```
+
 ## Listbox compatibility
 
 All configurations that can be applied to `lion-listbox`, can be applied to `lion-combobox` as well.

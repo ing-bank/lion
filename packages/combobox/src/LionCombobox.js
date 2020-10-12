@@ -420,13 +420,30 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
-  /* eslint-disable no-param-reassign, class-methods-use-this */
+  /**
+   * We need to extend the repropagation prevention conditions here.
+   * Usually form groups with single choice will not repropagate model-value-changed of an option upwards
+   * if this option itself is not the checked one. We want to prevent duplicates. However, for combobox
+   * it is reasonable that an option can become unchecked without another one becoming checked, because
+   * users can enter any text they want, whether it matches an option or not.
+   *
+   * Therefore, extend the condition to fail by checking if there is any elements checked. If so, then we
+   * should indeed not repropagate as normally. If there is no elements checked, this will be the only
+   * model-value-changed event that gets received, and we should repropagate it.
+   *
+   * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
+   */
+  _repropagationConditionFails(target) {
+    return super._repropagationConditionFails(target) && this.formElements?.some(el => el.checked);
+  }
 
+  /* eslint-disable no-param-reassign */
   /**
    * @overridable
    * @param {LionOption & {__originalInnerHTML?:string}} option
    * @param {string} matchingString
    */
+  // eslint-disable-next-line class-methods-use-this
   _onFilterMatch(option, matchingString) {
     const { innerHTML } = option;
     option.__originalInnerHTML = innerHTML;
@@ -443,7 +460,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string} [curValue]
    * @param {string} [prevValue]
    */
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this
   _onFilterUnmatch(option, curValue, prevValue) {
     if (option.__originalInnerHTML) {
       option.innerHTML = option.__originalInnerHTML;
@@ -451,12 +468,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     // Alternatively, an extension can add an animation here
     option.style.display = 'none';
   }
+  /* eslint-enable no-param-reassign */
 
   /**
    * Computes whether a user intends to autofill (inline autocomplete textbox)
    * @overridable
    * @param {{ prevValue:string, curValue:string }} config
    */
+  // eslint-disable-next-line class-methods-use-this
   _computeUserIntendsAutoFill({ prevValue, curValue }) {
     const userIsAddingChars = prevValue.length < curValue.length;
     const userStartsNewWord =

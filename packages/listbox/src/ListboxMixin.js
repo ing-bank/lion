@@ -267,6 +267,9 @@ const ListboxMixinImplementation = superclass =>
        */
       this._listboxReceivesNoFocus = false;
 
+      /** @type {string | string[] | undefined} */
+      this.__oldModelValue = undefined;
+
       /** @type {EventListener} */
       this._listboxOnKeyDown = this._listboxOnKeyDown.bind(this);
       /** @type {EventListener} */
@@ -670,10 +673,13 @@ const ListboxMixinImplementation = superclass =>
         ev.stopPropagation();
       }
       this.__onChildCheckedChanged(ev);
-      this.requestUpdate('modelValue', this.modelValue);
+
+      // don't send this.modelValue as oldValue, since it will take modelValue getter which takes it from child elements, which is already the updated value
+      this.requestUpdate('modelValue', this.__oldModelValue);
       this.dispatchEvent(
         new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
       );
+      this.__oldModelValue = this.modelValue;
     }
 
     /**

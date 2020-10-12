@@ -794,13 +794,14 @@ const FormControlMixinImplementation = superclass =>
         return;
       }
 
-      // B2. Are we a single choice choice-group? If so, halt when unchecked
+      // B2. Are we a single choice choice-group? If so, halt when target unchecked
+      // and something else is checked, meaning we will get
+      // another model-value-changed dispatch for the checked target
       //
       // We only send the checked changed up (not the unchecked). In this way a choice group
       // (radio-group, checkbox-group, select/listbox) acts as an 'endpoint' (a single Field)
       // just like the native <select>
-      // @ts-expect-error multipleChoice is not directly available but only as side effect
-      if (this._repropagationRole === 'choice-group' && !this.multipleChoice && !target.checked) {
+      if (this._repropagationConditionFails(target)) {
         return;
       }
 
@@ -819,6 +820,20 @@ const FormControlMixinImplementation = superclass =>
       // Since for a11y everything needs to be in lightdom, we don't add 'composed:true'
       this.dispatchEvent(
         new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
+      );
+    }
+
+    /**
+     * TODO: Extend this in choice group so that target is always a choice input and multipleChoice exists.
+     * This will fix the types and reduce the need for ignores/expect-errors
+     * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
+     */
+    _repropagationConditionFails(target) {
+      return (
+        this._repropagationRole === 'choice-group' &&
+        // @ts-expect-error multipleChoice is not directly available but only as side effect
+        !this.multipleChoice &&
+        !target.checked
       );
     }
 

@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
 import { browserDetection, LitElement } from '@lion/core';
+import { Required } from '@lion/form-core';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
@@ -408,6 +409,31 @@ describe('lion-combobox', () => {
         hiddenOptions.forEach(o => {
           expect(o.getAttribute('aria-hidden')).to.equal('true');
         });
+      });
+
+      it('works with validation', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .validators=${[new Required()]}>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        // open
+        el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+
+        mimicUserTyping(el, 'art');
+        await el.updateComplete;
+        expect(el.checkedIndex).to.equal(0);
+
+        mimicUserTyping(el, '');
+        await el.updateComplete;
+        expect(el.checkedIndex).to.equal(-1);
+        await el.feedbackComplete;
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.showsFeedbackFor).to.include('error');
       });
     });
   });
