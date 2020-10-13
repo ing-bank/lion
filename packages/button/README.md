@@ -16,7 +16,7 @@ export default {
 ```
 
 ```js preview-story
-export const main = () => html` <lion-button>Default</lion-button> `;
+export const main = () => html`<lion-button>Default</lion-button>`;
 ```
 
 ## Features
@@ -60,20 +60,43 @@ export const handler = () => html`
 ### Icon button
 
 ```js preview-story
-export const iconButton = () => html` <lion-button>${iconSvg(html)} Bug</lion-button> `;
+export const iconButton = () => html`<lion-button>${iconSvg(html)}Bug</lion-button>`;
 ```
 
 ### Icon only button
 
 ```js preview-story
-export const iconOnly = () =>
-  html` <lion-button aria-label="Bug"> ${iconSvg(html)} </lion-button> `;
+export const iconOnly = () => html`<lion-button aria-label="Bug">${iconSvg(html)}</lion-button>`;
 ```
 
 ### Disabled button
 
 ```js preview-story
-export const disabled = () => html` <lion-button disabled>Disabled</lion-button> `;
+export const disabled = () => html`<lion-button disabled>Disabled</lion-button>`;
+```
+
+### Multiple buttons inline
+
+```js preview-story
+export const mainAndIconButton = () => html`
+  <lion-button>Default</lion-button>
+  <lion-button>${iconSvg(html)} Bug</lion-button>
+`;
+```
+
+### Small button (minimum click area showed)
+
+```js preview-story
+export const smallButton = () => html` <style>
+    .small {
+      padding: 4px;
+      line-height: 1em;
+    }
+    .small::before {
+      border: 1px dashed #000;
+    }
+  </style>
+  <lion-button class="small">xs</lion-button>`;
 ```
 
 ### Usage with native form
@@ -90,14 +113,14 @@ export const withinForm = () => html`
   <form
     @submit=${ev => {
       ev.preventDefault();
-      console.log('submit handler');
+      console.log('submit handler', ev.target);
     }}
   >
     <label for="firstNameId">First name</label>
     <input id="firstNameId" name="firstName" />
     <label for="lastNameId">Last name</label>
     <input id="lastNameId" name="lastName" />
-    <lion-button @click=${() => console.log('click handler')}>Submit</lion-button>
+    <lion-button @click=${ev => console.log('click handler', ev.target)}>Submit</lion-button>
   </form>
 `;
 ```

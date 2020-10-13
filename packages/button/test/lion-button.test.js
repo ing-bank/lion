@@ -1,5 +1,5 @@
 import { browserDetection } from '@lion/core';
-import { aTimeout, expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '../lion-button.js';
@@ -206,7 +206,7 @@ describe('lion-button', () => {
       const wrapperId = el.getAttribute('aria-labelledby');
       expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).to.exist;
       expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).dom.to.equal(
-        `<div id="${wrapperId}"><slot></slot></div>`,
+        `<div class="button-content" id="${wrapperId}"><slot></slot></div>`,
       );
       browserDetectionStub.restore();
     });
@@ -397,6 +397,16 @@ describe('lion-button', () => {
   });
 
   describe('click event', () => {
+    /**
+     * @param {HTMLButtonElement | LionButton} el
+     */
+    async function prepareClickEvent(el) {
+      setTimeout(() => {
+        el.click();
+      });
+      return oneEvent(el, 'click');
+    }
+
     it('is fired once', async () => {
       const clickSpy = /** @type {EventListener} */ (sinon.spy());
       const el = /** @type {LionButton} */ (await fixture(
@@ -412,16 +422,25 @@ describe('lion-button', () => {
       expect(clickSpy).to.have.been.calledOnce;
     });
 
+    it('is fired one inside a form', async () => {
+      const formClickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const el = /** @type {HTMLFormElement} */ (await fixture(
+        html`<form @click="${formClickSpy}">
+          <lion-button>foo</lion-button>
+        </form>`,
+      ));
+
+      // @ts-ignore
+      el.querySelector('lion-button').click();
+
+      // trying to wait for other possible redispatched events
+      await aTimeout(0);
+      await aTimeout(0);
+
+      expect(formClickSpy).to.have.been.calledOnce;
+    });
+
     describe('native button behavior', async () => {
-      /**
-       * @param {HTMLButtonElement | LionButton} el
-       */
-      async function prepareClickEvent(el) {
-        setTimeout(() => {
-          el.click();
-        });
-        return oneEvent(el, 'click');
-      }
       /** @type {Event} */
       let nativeButtonEvent;
       /** @type {Event} */
@@ -450,11 +469,42 @@ describe('lion-button', () => {
           expect(lionButtonEvent[property]).to.equal(nativeButtonEvent[property]);
         });
       });
+    });
 
-      it('has host in the target property', async () => {
+    describe('event target', async () => {
+      it('is host by default', async () => {
         const el = /** @type {LionButton} */ (await fixture('<lion-button>foo</lion-button>'));
         const event = await prepareClickEvent(el);
         expect(event.target).to.equal(el);
+      });
+
+      const useCases = [
+        { container: 'div', type: 'submit', targetHost: true },
+        { container: 'div', type: 'reset', targetHost: true },
+        { container: 'div', type: 'button', targetHost: true },
+        { container: 'form', type: 'submit', targetHost: false },
+        { container: 'form', type: 'reset', targetHost: false },
+        { container: 'form', type: 'button', targetHost: true },
+      ];
+
+      useCases.forEach(useCase => {
+        const { container, type, targetHost } = useCase;
+        const targetName = targetHost ? 'host' : 'native button';
+        it(`is ${targetName} with type ${type} and it is inside a ${container}`, async () => {
+          const clickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+          const el = /** @type {LionButton} */ (await fixture(
+            `<lion-button type="${type}">foo</lion-button>`,
+          ));
+          const tag = unsafeStatic(container);
+          await fixture(html`<${tag} @click="${clickSpy}">${el}</${tag}>`);
+          const event = await prepareClickEvent(el);
+
+          if (targetHost) {
+            expect(event.target).to.equal(el);
+          } else {
+            expect(event.target).to.equal(el._nativeButtonNode);
+          }
+        });
       });
     });
   });
