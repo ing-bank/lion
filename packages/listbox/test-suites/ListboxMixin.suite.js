@@ -96,24 +96,6 @@ export function runListboxMixinSuite(customConfig = {}) {
         );
       });
 
-      it('throws if a child element with a different name than the group tries to register', async () => {
-        const el = await fixture(html`
-        <${tag} name="gender">
-          <${optionTag} .choiceValue=${'female'} checked></${optionTag}>
-          <${optionTag} .choiceValue=${'other'}></${optionTag}>
-        </${tag}>
-      `);
-        const invalidChild = await fixture(html`
-        <${optionTag} name="foo" .choiceValue=${'male'}></${optionTag}>
-      `);
-
-        expect(() => {
-          el.addFormElement(invalidChild);
-        }).to.throw(
-          `The ${cfg.tagString} name="gender" does not allow to register lion-option with custom names (name="foo" given)`,
-        );
-      });
-
       it('can set initial modelValue on creation', async () => {
         const el = await fixture(html`
         <${tag} name="gender" .modelValue=${'other'}>

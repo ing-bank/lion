@@ -23,8 +23,8 @@ function uuid(prefix) {
  * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
- * @type {FormControlMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @type {FormControlMixin}
  */
 const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
@@ -144,8 +144,7 @@ const FormControlMixinImplementation = superclass =>
      * @return {string}
      */
     get fieldName() {
-      // @ts-expect-error
-      return this.__fieldName || this.label || this.name; // FIXME: when LionField is typed we can inherit this prop
+      return this.__fieldName || this.label || this.name || '';
     }
 
     /**
@@ -195,6 +194,8 @@ const FormControlMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /** @type {string | undefined} */
+      this.name = undefined;
       /** @type {string} */
       this._inputId = uuid(this.localName);
       /** @type {HTMLElement[]} */
@@ -256,6 +257,15 @@ const FormControlMixinImplementation = superclass =>
 
       if (changedProperties.has('helpText') && this._helpTextNode) {
         this._helpTextNode.textContent = this.helpText;
+      }
+
+      if (changedProperties.has('name')) {
+        this.dispatchEvent(
+          new CustomEvent('form-element-name-changed', {
+            detail: { oldName: changedProperties.get('name'), newName: this.name },
+            bubbles: true,
+          }),
+        );
       }
     }
 

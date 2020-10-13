@@ -10,7 +10,7 @@ declare interface HTMLElementWithValue extends HTMLElement {
   value: string;
 }
 
-export class FormControlHost {
+export declare class FormControlHost {
   static get styles(): CSSResult | CSSResult[];
   /**
    * A Boolean attribute which, if present, indicates that the user should not be able to edit
@@ -129,7 +129,7 @@ export declare function FormControlImplementation<T extends Constructor<LitEleme
   superclass: T,
 ): T &
   Constructor<FormControlHost> &
-  FormControlHost &
+  typeof FormControlHost &
   Constructor<FormRegisteringHost> &
   typeof FormRegisteringHost &
   Constructor<DisabledHost> &

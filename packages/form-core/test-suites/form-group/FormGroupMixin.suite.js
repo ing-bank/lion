@@ -18,26 +18,27 @@ import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
  * @param {{ tagString?: string, childTagString?:string }} [cfg]
  */
 export function runFormGroupMixinSuite(cfg = {}) {
-  const FormChild = class extends LionField {
+  class FormChild extends LionField {
     get slots() {
       return {
         ...super.slots,
         input: () => document.createElement('input'),
       };
     }
-  };
+  }
 
   const childTagString = cfg.childTagString || defineCE(FormChild);
 
-  // @ts-expect-error
-  const FormGroup = class extends FormGroupMixin(LitElement) {
+  // @ts-expect-error base constructors same return type
+  class FormGroup extends FormGroupMixin(LitElement) {
     constructor() {
       super();
       /** @override from FormRegistrarMixin */
       this._isFormOrFieldset = true;
+      /** @type {'child'|'choice-group'|'fieldset'} */
       this._repropagationRole = 'fieldset'; // configures FormControlMixin
     }
-  };
+  }
 
   const tagString = cfg.tagString || defineCE(FormGroup);
   const tag = unsafeStatic(tagString);
@@ -803,6 +804,19 @@ export function runFormGroupMixinSuite(cfg = {}) {
             color: { checked: false, value: 'blue' },
           },
         });
+      });
+
+      it('updates the formElements keys when a name attribute changes', async () => {
+        const fieldset = /**  @type {FormGroup} */ (await fixture(html`
+          <${tag}>
+            <${childTag} name="foo" .modelValue=${'qux'}></${childTag}>
+          </${tag}>
+        `));
+        expect(fieldset.serializedValue.foo).to.equal('qux');
+        fieldset.formElements[0].name = 'bar';
+        await fieldset.updateComplete;
+        await fieldset.formElements[0].updateComplete;
+        expect(fieldset.serializedValue.bar).to.equal('qux');
       });
     });
 
