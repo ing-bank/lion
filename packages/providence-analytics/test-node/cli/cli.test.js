@@ -5,6 +5,7 @@ const commander = require('commander');
 const {
   mockProject,
   restoreMockedProjects,
+  mockTargetAndReferenceProject,
 } = require('../../test-helpers/mock-project-helpers.js');
 const {
   mockWriteToJson,
@@ -17,11 +18,12 @@ const {
 const { InputDataService } = require('../../src/program/services/InputDataService.js');
 const { QueryService } = require('../../src/program/services/QueryService.js');
 const providenceModule = require('../../src/program/providence.js');
-const extendDocsModule = require('../../src/cli/generate-extend-docs-data.js');
+const extendDocsModule = require('../../src/cli/launch-providence-with-extend-docs.js');
 const cliHelpersModule = require('../../src/cli/cli-helpers.js');
 const { cli } = require('../../src/cli/cli.js');
 const promptAnalyzerModule = require('../../src/cli/prompt-analyzer-menu.js');
 const { toPosixPath } = require('../../src/program/utils/to-posix-path.js');
+const { getExtendDocsResults } = require('../../src/cli/launch-providence-with-extend-docs.js');
 
 const {
   pathsArrayFromCs,
@@ -383,6 +385,7 @@ describe('Providence CLI', () => {
           extensions: ['.bla'],
           allowlist: [`${rootDir}/al`],
           allowlistReference: [`${rootDir}/alr`],
+          cwd: undefined,
         });
       });
     });
@@ -504,6 +507,138 @@ describe('CLI helpers', () => {
       expect(result2).to.eql([
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
+      ]);
+    });
+  });
+
+  describe('Extend docs', () => {
+    afterEach(() => {
+      restoreMockedProjects();
+    });
+
+    it('rewrites monorepo package paths when analysis is run from monorepo root', async () => {
+      const theirProjectFiles = {
+        './package.json': JSON.stringify({
+          name: 'their-components',
+          version: '1.0.0',
+        }),
+        './src/TheirButton.js': `export class TheirButton extends HTMLElement {}`,
+        './src/TheirTooltip.js': `export class TheirTooltip extends HTMLElement {}`,
+        './their-button.js': `
+            import { TheirButton } from './src/TheirButton.js';
+
+            customElements.define('their-button', TheirButton);
+          `,
+        './demo.js': `
+          import { TheirTooltip } from './src/TheirTooltip.js';
+          import './their-button.js';
+        `,
+      };
+
+      const myProjectFiles = {
+        './package.json': JSON.stringify({
+          name: '@my/root',
+          workspaces: ['packages/*', 'another-folder/my-tooltip'],
+          dependencies: {
+            'their-components': '1.0.0',
+          },
+        }),
+        // Package 1: @my/button
+        './packages/button/package.json': JSON.stringify({
+          name: '@my/button',
+        }),
+        './packages/button/src/MyButton.js': `
+            import { TheirButton } from 'their-components/src/TheirButton.js';
+
+            export class MyButton extends TheirButton {}
+            `,
+        './packages/button/src/my-button.js': `
+          import { MyButton } from './MyButton.js';
+
+          customElements.define('my-button', MyButton);
+        `,
+
+        // Package 2: @my/tooltip
+        './packages/tooltip/package.json': JSON.stringify({
+          name: '@my/tooltip',
+        }),
+        './packages/tooltip/src/MyTooltip.js': `
+          import { TheirTooltip } from 'their-components/src/TheirTooltip.js';
+
+          export class MyTooltip extends TheirTooltip {}
+          `,
+      };
+
+      const theirProject = {
+        path: '/their-components',
+        name: 'their-components',
+        files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      const myProject = {
+        path: '/my-components',
+        name: 'my-components',
+        files: Object.entries(myProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      mockTargetAndReferenceProject(theirProject, myProject);
+
+      const result = await getExtendDocsResults({
+        referenceProjectPaths: ['/their-components'],
+        prefixCfg: { from: 'their', to: 'my' },
+        extensions: ['.js'],
+        cwd: '/my-components',
+      });
+
+      expect(result).to.eql([
+        {
+          name: 'TheirButton',
+          variable: {
+            from: 'TheirButton',
+            to: 'MyButton',
+            paths: [
+              {
+                from: './src/TheirButton.js',
+                to: '@my/button/src/MyButton.js', // rewritten from './packages/button/src/MyButton.js',
+              },
+              {
+                from: 'their-components/src/TheirButton.js',
+                to: '@my/button/src/MyButton.js', // rewritten from './packages/button/src/MyButton.js',
+              },
+            ],
+          },
+          tag: {
+            from: 'their-button',
+            to: 'my-button',
+            paths: [
+              {
+                from: './their-button.js',
+                to: '@my/button/src/my-button.js', // rewritten from './packages/button/src/MyButton.js',
+              },
+              {
+                from: 'their-components/their-button.js',
+                to: '@my/button/src/my-button.js', // rewritten from './packages/button/src/MyButton.js',
+              },
+            ],
+          },
+        },
+        {
+          name: 'TheirTooltip',
+          variable: {
+            from: 'TheirTooltip',
+            to: 'MyTooltip',
+            paths: [
+              {
+                from: './src/TheirTooltip.js',
+                to: '@my/tooltip/src/MyTooltip.js', // './packages/tooltip/src/MyTooltip.js',
+              },
+              {
+                from: 'their-components/src/TheirTooltip.js',
+                to: '@my/tooltip/src/MyTooltip.js', // './packages/tooltip/src/MyTooltip.js',
+              },
+            ],
+          },
+        },
       ]);
     });
   });

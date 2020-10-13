@@ -7,9 +7,9 @@ const path = require('path');
  * "InputDataService.createDataObject", it gives back a mocked response.
  * @param {string[]|object} files all the code that will be run trhough AST
  * @param {object} [cfg]
- * @param {string} [cfg.project='fictional-project']
+ * @param {string} [cfg.projectName='fictional-project']
  * @param {string} [cfg.projectPath='/fictional/project']
- * @param {string[]} [cfg.filePath=`/fictional/project/test-file-${i}.js`] The indexes of the file
+ * @param {string[]} [cfg.filePaths=`[/fictional/project/test-file-${i}.js]`] The indexes of the file
  * paths match with the indexes of the files
  * @param {object} existingMock config for mock-fs, so the previous config is not overridden
  */
@@ -18,6 +18,9 @@ function mockProject(files, cfg = {}, existingMock = {}) {
   const projPath = cfg.projectPath || '/fictional/project';
 
   // Create obj structure for mock-fs
+  /**
+   * @param {object} files
+   */
   // eslint-disable-next-line no-shadow
   function createFilesObjForFolder(files) {
     let projFilesObj = {};

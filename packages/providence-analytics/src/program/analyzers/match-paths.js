@@ -216,7 +216,8 @@ function getTagPaths(
   let targetResult;
   targetFindCustomelementsResult.queryOutput.some(({ file, result }) => {
     const targetPathMatch = result.find(entry => {
-      const sameRoot = entry.rootFile.file === targetMatchedFile;
+      const sameRoot =
+        entry.rootFile.file === targetMatchedFile || entry.rootFile.file === '[current]';
       const sameIdentifier = entry.rootFile.specifier === toClass;
       return sameRoot && sameIdentifier;
     });

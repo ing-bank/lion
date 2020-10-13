@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 /**
  * This is a modified version of https://github.com/npm/read-package-tree/blob/master/rpt.js

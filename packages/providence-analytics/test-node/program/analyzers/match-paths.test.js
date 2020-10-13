@@ -543,6 +543,81 @@ describe('Analyzer "match-paths"', () => {
       expect(queryResult.queryOutput[1].tag).to.eql(expectedMatches[1]);
     });
 
+    // TODO: test works in isolation, but some side effects occur when run in suite
+    it.skip(`allows class definition and customElement to be in same file`, async () => {
+      const theirProjectFiles = {
+        './package.json': JSON.stringify({
+          name: 'their-components',
+          version: '1.0.0',
+        }),
+        './src/TheirButton.js': `export class TheirButton extends HTMLElement {}`,
+        './src/TheirTooltip.js': `export class TheirTooltip extends HTMLElement {}`,
+        './their-button.js': `
+            import { TheirButton } from './src/TheirButton.js';
+
+            customElements.define('their-button', TheirButton);
+          `,
+        './demo.js': `
+          import { TheirTooltip } from './src/TheirTooltip.js';
+          import './their-button.js';
+        `,
+      };
+
+      const myProjectFiles = {
+        './package.json': JSON.stringify({
+          name: 'my-components',
+          dependencies: {
+            'their-components': '1.0.0',
+          },
+        }),
+        './src/button/MyButton.js': `
+            import { TheirButton } from 'their-components/src/TheirButton.js';
+
+            export class MyButton extends TheirButton {}
+            customElements.define('my-button', MyButton);
+            `,
+      };
+
+      const theirProject = {
+        path: '/their-components',
+        name: 'their-components',
+        files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      const myProject = {
+        path: '/my-components',
+        name: 'my-components',
+        files: Object.entries(myProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      mockTargetAndReferenceProject(theirProject, myProject);
+
+      const providenceCfg = {
+        targetProjectPaths: ['/my-components'],
+        referenceProjectPaths: ['/their-components'],
+      };
+
+      await providence(
+        { ...matchPathsQueryConfig, prefix: { from: 'their', to: 'my' } },
+        providenceCfg,
+      );
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput[0].tag).to.eql({
+        from: 'their-button',
+        to: 'my-button',
+        paths: [
+          {
+            from: './their-button.js',
+            to: './src/button/MyButton.js',
+          },
+          {
+            from: 'their-components/their-button.js',
+            to: './src/button/MyButton.js',
+          },
+        ],
+      });
+    });
+
     describe('Features', () => {
       it(`identifies all "from" and "to" tagnames`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
