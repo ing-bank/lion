@@ -28,7 +28,7 @@ export const main = () => html`
   <lion-select-rich name="favoriteColor" label="Favorite color">
     <lion-option .choiceValue=${'red'}>Red</lion-option>
     <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+    <lion-option .choiceValue=${'blue'}>Blue</lion-option>
   </lion-select-rich>
 `;
 ```

@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group form-integration",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group form-integration",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group form-integration",
+    "debug": "cd ../../ && yarn debug --group form-integrations",
+    "debug:firefox": "cd ../../ && yarn debug:firefox --group form-integrations",
+    "debug:webkit": "cd ../../ && yarn debug:webkit --group form-integrations",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group form-integration"
+    "test": "cd ../../ && yarn test:browser --group form-integrations"
   },
   "sideEffects": [
     "./docs/helper-wc/h-output.js"

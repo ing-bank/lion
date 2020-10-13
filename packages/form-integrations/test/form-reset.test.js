@@ -123,6 +123,7 @@ describe(`Submitting/Resetting Form`, async () => {
   it('Submitting a form should make submitted true for all fields', async () => {
     el.querySelector('#submit_button').click();
     await elementUpdated(el);
+    await el.updateComplete;
     el.formElements.forEach(field => {
       expect(field.submitted).to.be.true;
     });
@@ -132,6 +133,7 @@ describe(`Submitting/Resetting Form`, async () => {
     el.querySelector('#submit_button').click();
     el.querySelector('#reset_button').click();
     await elementUpdated(el);
+    await el.updateComplete;
     expect(el.submitted).to.be.false;
     el.formElements.forEach(field => {
       expect(field.submitted).to.be.false;

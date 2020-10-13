@@ -50,12 +50,13 @@ const ChoiceGroupMixinImplementation = superclass =>
         this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
           this._setCheckedElements(value, checkCondition);
-          this.requestUpdate('modelValue');
+          this.requestUpdate('modelValue', this.__oldModelValue);
         });
       } else {
         this._setCheckedElements(value, checkCondition);
-        this.requestUpdate('modelValue');
+        this.requestUpdate('modelValue', this.__oldModelValue);
       }
+      this.__oldModelValue = this.modelValue;
     }
 
     get serializedValue() {
@@ -148,7 +149,10 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      Promise.resolve().then(() => this.__resolveRegistrationComplete());
+      // Double microtask queue to account for Webkit race condition
+      Promise.resolve().then(() =>
+        Promise.resolve().then(() => this.__resolveRegistrationComplete()),
+      );
 
       this.registrationComplete.then(() => {
         this.__isInitialModelValue = false;
@@ -313,7 +317,8 @@ const ChoiceGroupMixinImplementation = superclass =>
         }
       });
       this.__setChoiceGroupTouched();
-      this.requestUpdate('modelValue');
+      this.requestUpdate('modelValue', this.__oldModelValue);
+      this.__oldModelValue = this.modelValue;
     }
   };
 

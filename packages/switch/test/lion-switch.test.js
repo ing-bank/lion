@@ -35,6 +35,7 @@ describe('lion-switch', () => {
     expect(el._inputNode.hasAttribute('disabled')).to.be.true;
     el.disabled = false;
     await el.updateComplete;
+    await el.updateComplete; // safari takes longer
     expect(el._inputNode.disabled).to.be.false;
     expect(el._inputNode.hasAttribute('disabled')).to.be.false;
   });

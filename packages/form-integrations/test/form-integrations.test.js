@@ -5,6 +5,7 @@ import './helpers/umbrella-form.js';
 describe('Form Integrations', () => {
   it('".serializedValue" returns all non disabled fields based on form structure', async () => {
     const el = await fixture(html`<umbrella-form></umbrella-form>`);
+    await el.updateComplete;
     const formEl = el._lionFormNode;
     expect(formEl.serializedValue).to.eql({
       bio: '',
@@ -29,6 +30,7 @@ describe('Form Integrations', () => {
 
   it('".formattedValue" returns all non disabled fields based on form structure', async () => {
     const el = await fixture(html`<umbrella-form></umbrella-form>`);
+    await el.updateComplete;
     const formEl = el._lionFormNode;
     expect(formEl.formattedValue).to.eql({
       bio: '',

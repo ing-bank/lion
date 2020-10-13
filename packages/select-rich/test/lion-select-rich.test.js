@@ -184,6 +184,7 @@ describe('lion-select-rich', () => {
       expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('10');
 
       firstOption.modelValue = { value: 30, checked: true };
+      await firstOption.updateComplete;
       await el.updateComplete;
       // @ts-ignore allow protected access in tests
       expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('30');
@@ -209,6 +210,7 @@ describe('lion-select-rich', () => {
 
       el.opened = false;
       await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
       // @ts-ignore allow protected access in tests
       expect(el._overlayCtrl.isShown).to.be.false;
     });
@@ -243,6 +245,7 @@ describe('lion-select-rich', () => {
 
       el.opened = false;
       await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
       // @ts-ignore allow protected access in tests
       expect(document.activeElement === el._listboxNode).to.be.false;
       // @ts-ignore allow protected access in tests
@@ -346,8 +349,10 @@ describe('lion-select-rich', () => {
       el.modelValue = 'hotpink';
       el.opened = false;
       await el.updateComplete; // necessary for overlay controller to actually close and re-open
+      await el.updateComplete; // safari takes a little longer
       el.opened = true;
       await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
 
       // noDefaultSelected will now flip the override back to what was the initial reference width
       // @ts-ignore allow protected access in tests
