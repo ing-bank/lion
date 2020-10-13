@@ -192,7 +192,17 @@ export const ValidateMixinImplementation = superclass =>
         this.validate({ clearCurrentResult: true });
       }
 
-      if (['touched', 'dirty', 'prefilled', 'submitted', 'hasFeedbackFor'].includes(name)) {
+      if (
+        [
+          'touched',
+          'dirty',
+          'prefilled',
+          'focused',
+          'submitted',
+          'hasFeedbackFor',
+          'filled',
+        ].includes(name)
+      ) {
         this._updateShouldShowFeedbackFor();
       }
 

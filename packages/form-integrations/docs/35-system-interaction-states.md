@@ -93,15 +93,11 @@ In the following example we will demonstrate this with interaction states, the m
 
 ```js preview-story
 export const feedbackCondition = () => {
-  // 1. Initialize variables...
-  // properties on InteractionStateMixin we want to check conditions for
+  // 1. Initialize variables
+  // properties we want to check conditions for
   const props = ['touched', 'dirty', 'prefilled', 'focused', 'filled', 'submitted'];
-  // Here we will store the conditions (trigger for validation feedback)
-  // provided via the UI of the demo
-  let conditions = [];
-  // 2. Create a validator...
-  // Define a demo validator that should only be visible on an odd amount of characters
-  // const OddValidator = [modelValue => ({ odd: modelValue.length % 2 !== 0 })];
+
+  // 2. Create a validator
   class OddValidator extends Validator {
     static get validatorName() {
       return 'OddValidator';
@@ -118,9 +114,7 @@ export const feedbackCondition = () => {
       return 'Add or remove one character';
     }
   }
-  // 3. Create field overriding .showErrorCondition...
-  // Here we will store a reference to the Field element that overrides the default condition
-  // (function `showErrorCondition`) for triggering validation feedback of `.validators`
+  // 3. Create field that applies the validator and store the node reference
   const fieldElement = renderLitAsNode(html`
     <lion-input
       name="interactionField"
@@ -128,33 +122,18 @@ export const feedbackCondition = () => {
       help-text="Change feedback condition"
       .modelValue="${'notodd'}"
       .validators="${[new OddValidator()]}"
-    >
-      <input slot="input" />
-    </lion-input>
+    ></lion-input>
   `);
-  fieldElement._showFeedbackConditionFor = type => {
-    return conditions.every(condition => {
-      /**
-       * This here shows bug for focused state.
-       * Focused is set to true AFTER we already evaluate feedback conditions
-       * Bug report: https://github.com/ing-bank/lion/issues/455
-       */
-      // setTimeout(() => console.log(fieldElement[condition])); //
-      return fieldElement[condition];
-    });
+
+  // 4. When checkboxes change, set the showFeedbackConditionFor method to a new method that checks
+  // whether every condition that is checked, is true on the field. Otherwise, don't show the feedback.
+  const fetchConditionsAndReevaluate = ({ currentTarget: { modelValue } }) => {
+    fieldElement._showFeedbackConditionFor = type => {
+      return modelValue.every(condition => fieldElement[condition]);
+    };
+    fieldElement.validate();
   };
-  function fetchConditionsAndReevaluate({ currentTarget: { modelValue } }) {
-    if (!modelValue['props[]']) {
-      return;
-    }
-    // Create props list like: ['touched', 'submitted']
-    conditions = modelValue['props[]'].filter(p => p.checked).map(p => p.value);
-    // Reevaluate
-    fieldElement.validate();
-  }
-  fieldElement.addEventListener('focus', () => {
-    fieldElement.validate();
-  });
+
   return html`
     <lion-form>
       <form>
