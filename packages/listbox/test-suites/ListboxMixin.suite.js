@@ -413,8 +413,8 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${'30'} checked>Item 3</${optionTag}>
           </${tag}>
         `);
-        el.setCheckedIndex(2);
-        expect(el.modelValue).to.deep.equal(['20']);
+        el.setCheckedIndex(0);
+        expect(el.modelValue).to.deep.equal(['10', '20', '30']);
         el.reset();
         expect(el.modelValue).to.deep.equal(['20', '30']);
       });

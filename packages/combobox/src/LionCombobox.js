@@ -648,7 +648,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         this.opened = false;
         this.__shouldAutocompleteNextUpdate = true;
         this._setTextboxValue('');
-        // this.checkedIndex = -1;
         break;
       case 'Enter':
         if (!this.formElements[this.activeIndex]) {

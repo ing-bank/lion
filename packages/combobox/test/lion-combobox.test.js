@@ -208,6 +208,42 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el._inputNode.value).to.equal('20');
     });
+
+    it('sets modelValue to empty string if no option is selected', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.true;
+      el.checkedIndex = -1;
+      await el.updateComplete;
+      expect(el.modelValue).to.equal('');
+      expect(el.formElements[0].checked).to.be.false;
+    });
+
+    it('sets modelValue to empty array if no option is selected for multiple choice', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      expect(el.modelValue).to.eql(['Artichoke']);
+      expect(el.formElements[0].checked).to.be.true;
+      el.checkedIndex = [];
+      await el.updateComplete;
+      expect(el.modelValue).to.eql([]);
+      expect(el.formElements[0].checked).to.be.false;
+    });
   });
 
   describe('Listbox visibility', () => {

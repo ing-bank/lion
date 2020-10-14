@@ -39,7 +39,7 @@ export declare class ListboxHost {
 
   public formElements: LionOption[];
 
-  public setCheckedIndex(index: number): void;
+  public setCheckedIndex(index: number | number[]): void;
 
   /** Reset interaction states and modelValue */
   public reset(): void;
