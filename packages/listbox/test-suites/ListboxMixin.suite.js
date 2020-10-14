@@ -119,9 +119,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
         expect(el.checkedIndex).to.equal(2);
-        const spy = sinon.spy(el, 'requestUpdate');
+        const requestSpy = sinon.spy(el, 'requestUpdate');
+        const updatedSpy = sinon.spy(el, 'updated');
         el.setCheckedIndex(1);
-        expect(spy).to.have.been.calledWith('modelValue', 'other');
+        await el.updateComplete;
+        expect(requestSpy).to.have.been.calledWith('modelValue', 'other');
+        expect(updatedSpy).to.have.been.calledWith(
+          sinon.match.map.contains(new Map([['modelValue', 'other']])),
+        );
       });
 
       it('requests update for modelValue after click', async () => {
@@ -133,9 +138,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
         expect(el.checkedIndex).to.equal(2);
-        const spy = sinon.spy(el, 'requestUpdate');
+        const requestSpy = sinon.spy(el, 'requestUpdate');
+        const updatedSpy = sinon.spy(el, 'updated');
         el.formElements[0].click();
-        expect(spy).to.have.been.calledWith('modelValue', 'other');
+        await el.updateComplete;
+        expect(requestSpy).to.have.been.calledWith('modelValue', 'other');
+        expect(updatedSpy).to.have.been.calledWith(
+          sinon.match.map.contains(new Map([['modelValue', 'other']])),
+        );
       });
 
       it('requests update for modelValue when checkedIndex changes for multiple choice', async () => {
@@ -147,9 +157,17 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
         expect(el.checkedIndex).to.eql([2]);
-        const spy = sinon.spy(el, 'requestUpdate');
+        const requestSpy = sinon.spy(el, 'requestUpdate');
+        const updatedSpy = sinon.spy(el, 'updated');
         el.setCheckedIndex(1);
-        expect(spy).to.have.been.calledWith('modelValue', sinon.match.array.deepEquals(['other']));
+        await el.updateComplete;
+        expect(requestSpy).to.have.been.calledWith(
+          'modelValue',
+          sinon.match.array.deepEquals(['other']),
+        );
+        expect(updatedSpy).to.have.been.calledOnce;
+        // reference values vs real values suck :( had to do it like this, sinon matchers did not match because 'other' is inside an array so it's not a "real" match
+        expect([...updatedSpy.args[0][0].entries()]).to.deep.include(['modelValue', ['other']]);
       });
 
       it('requests update for modelValue after click for multiple choice', async () => {
@@ -161,9 +179,17 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
         expect(el.checkedIndex).to.eql([2]);
-        const spy = sinon.spy(el, 'requestUpdate');
+        const requestSpy = sinon.spy(el, 'requestUpdate');
+        const updatedSpy = sinon.spy(el, 'updated');
         el.formElements[0].click();
-        expect(spy).to.have.been.calledWith('modelValue', sinon.match.array.deepEquals(['other']));
+        await el.updateComplete;
+        expect(requestSpy).to.have.been.calledWith(
+          'modelValue',
+          sinon.match.array.deepEquals(['other']),
+        );
+        expect(updatedSpy).to.have.been.calledOnce;
+        // reference values vs real values suck :( had to do it like this, sinon matchers did not match because 'other' is inside an array so it's not a "real" match
+        expect([...updatedSpy.args[0][0].entries()]).to.deep.include(['modelValue', ['other']]);
       });
 
       it(`has a fieldName based on the label`, async () => {

@@ -79,7 +79,7 @@ export declare function ListboxImplementation<T extends Constructor<LitElement>>
   superclass: T,
 ): T &
   Constructor<ListboxHost> &
-  ListboxHost &
+  typeof ListboxHost &
   Constructor<ChoiceGroupHost> &
   typeof ChoiceGroupHost &
   Constructor<SlotHost> &

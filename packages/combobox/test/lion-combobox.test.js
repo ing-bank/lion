@@ -545,7 +545,6 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
       `));
-      // @ts-expect-error sinon not typed correctly?
       const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
       el.requestUpdate('modelValue');
       await el.updateComplete;
