@@ -1,4 +1,5 @@
 import { Required } from '@lion/form-core';
+import sinon from 'sinon';
 import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/lion-option.js';
@@ -107,6 +108,62 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         expect(el.modelValue).to.equal('other');
         expect(el.formElements[2].checked).to.be.true;
+      });
+
+      it('requests update for modelValue when checkedIndex changes', async () => {
+        const el = await fixture(html`
+          <${tag} name="gender" .modelValue=${'other'}>
+            <${optionTag} .choiceValue=${'male'}></${optionTag}>
+            <${optionTag} .choiceValue=${'female'}></${optionTag}>
+            <${optionTag} .choiceValue=${'other'}></${optionTag}>
+          </${tag}>
+        `);
+        expect(el.checkedIndex).to.equal(2);
+        const spy = sinon.spy(el, 'requestUpdate');
+        el.setCheckedIndex(1);
+        expect(spy).to.have.been.calledWith('modelValue', 'other');
+      });
+
+      it('requests update for modelValue after click', async () => {
+        const el = await fixture(html`
+          <${tag} name="gender" .modelValue=${'other'}>
+            <${optionTag} .choiceValue=${'male'}></${optionTag}>
+            <${optionTag} .choiceValue=${'female'}></${optionTag}>
+            <${optionTag} .choiceValue=${'other'}></${optionTag}>
+          </${tag}>
+        `);
+        expect(el.checkedIndex).to.equal(2);
+        const spy = sinon.spy(el, 'requestUpdate');
+        el.formElements[0].click();
+        expect(spy).to.have.been.calledWith('modelValue', 'other');
+      });
+
+      it('requests update for modelValue when checkedIndex changes for multiple choice', async () => {
+        const el = await fixture(html`
+          <${tag} name="gender" multiple-choice .modelValue=${['other']}>
+            <${optionTag} .choiceValue=${'male'}></${optionTag}>
+            <${optionTag} .choiceValue=${'female'}></${optionTag}>
+            <${optionTag} .choiceValue=${'other'}></${optionTag}>
+          </${tag}>
+        `);
+        expect(el.checkedIndex).to.eql([2]);
+        const spy = sinon.spy(el, 'requestUpdate');
+        el.setCheckedIndex(1);
+        expect(spy).to.have.been.calledWith('modelValue', sinon.match.array.deepEquals(['other']));
+      });
+
+      it('requests update for modelValue after click for multiple choice', async () => {
+        const el = await fixture(html`
+          <${tag} name="gender" multiple-choice .modelValue=${['other']}>
+            <${optionTag} .choiceValue=${'male'}></${optionTag}>
+            <${optionTag} .choiceValue=${'female'}></${optionTag}>
+            <${optionTag} .choiceValue=${'other'}></${optionTag}>
+          </${tag}>
+        `);
+        expect(el.checkedIndex).to.eql([2]);
+        const spy = sinon.spy(el, 'requestUpdate');
+        el.formElements[0].click();
+        expect(spy).to.have.been.calledWith('modelValue', sinon.match.array.deepEquals(['other']));
       });
 
       it(`has a fieldName based on the label`, async () => {

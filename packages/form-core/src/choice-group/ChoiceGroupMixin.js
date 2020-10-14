@@ -49,8 +49,8 @@ const ChoiceGroupMixinImplementation = superclass =>
         this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
           this._setCheckedElements(value, checkCondition);
+          this.requestUpdate('modelValue');
         });
-        this.requestUpdate('modelValue');
       } else {
         this._setCheckedElements(value, checkCondition);
         this.requestUpdate('modelValue');
