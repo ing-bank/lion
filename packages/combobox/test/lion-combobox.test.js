@@ -450,22 +450,23 @@ describe('lion-combobox', () => {
       it('works with validation', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo" .validators=${[new Required()]}>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </lion-combobox>
         `));
-
-        // open
-        el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-
-        mimicUserTyping(el, 'art');
-        await el.updateComplete;
         expect(el.checkedIndex).to.equal(0);
 
-        mimicUserTyping(el, '');
+        // Simulate backspace deleting the char at the end of the string
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+        el._inputNode.dispatchEvent(new Event('input'));
+        const arr = el._inputNode.value.split('');
+        arr.splice(el._inputNode.value.length - 1, 1);
+        el._inputNode.value = arr.join('');
         await el.updateComplete;
+        el.dispatchEvent(new Event('blur'));
+
         expect(el.checkedIndex).to.equal(-1);
         await el.feedbackComplete;
         expect(el.hasFeedbackFor).to.include('error');

@@ -801,7 +801,7 @@ const FormControlMixinImplementation = superclass =>
       // We only send the checked changed up (not the unchecked). In this way a choice group
       // (radio-group, checkbox-group, select/listbox) acts as an 'endpoint' (a single Field)
       // just like the native <select>
-      if (this._repropagationConditionFails(target)) {
+      if (!this._repropagationCondition(target)) {
         return;
       }
 
@@ -828,8 +828,8 @@ const FormControlMixinImplementation = superclass =>
      * This will fix the types and reduce the need for ignores/expect-errors
      * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
      */
-    _repropagationConditionFails(target) {
-      return (
+    _repropagationCondition(target) {
+      return !(
         this._repropagationRole === 'choice-group' &&
         // @ts-expect-error multipleChoice is not directly available but only as side effect
         !this.multipleChoice &&

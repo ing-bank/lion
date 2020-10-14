@@ -267,7 +267,7 @@ export const invokerButton = () => html`
 
 Validation can be used as normal, below is an example of a combobox with a `Required` validator.
 
-```js story
+```js preview-story
 export const validation = () => {
   loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';
@@ -278,7 +278,6 @@ export const validation = () => {
           .validators="${[new Required()]}"
           name="favoriteMovie"
           label="Favorite movie"
-          autocomplete="both"
         >
           <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
           <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>

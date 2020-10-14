@@ -433,8 +433,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *
    * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
    */
-  _repropagationConditionFails(target) {
-    return super._repropagationConditionFails(target) && this.formElements?.some(el => el.checked);
+  _repropagationCondition(target) {
+    return super._repropagationCondition(target) || this.formElements.every(el => !el.checked);
   }
 
   /* eslint-disable no-param-reassign */
@@ -482,6 +482,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       prevValue.length &&
       curValue.length &&
       prevValue[0].toLowerCase() !== curValue[0].toLowerCase();
+
     return userIsAddingChars || userStartsNewWord;
   }
 

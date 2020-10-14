@@ -18,6 +18,7 @@ import { FormControlMixin } from './FormControlMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const InteractionStateMixinImplementation = superclass =>
+  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class InteractionStateMixin extends FormControlMixin(superclass) {
     static get properties() {
       return {
