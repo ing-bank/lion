@@ -1,5 +1,8 @@
 import { LitElement } from '@lion/core';
+// @ts-expect-error
+import { renderLitAsNode } from '@lion/helpers';
 import { OverlayController } from '@lion/overlays';
+import { LionOption } from '@lion/listbox';
 import {
   aTimeout,
   defineCE,
@@ -15,10 +18,6 @@ import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';
 import '../lion-select-rich.js';
-
-/**
- * @typedef {import('@lion/listbox').LionOption} LionOption
- */
 
 /**
  * @param {LionSelectRich} lionSelectEl
@@ -154,6 +153,40 @@ describe('lion-select-rich', () => {
       expect(el.singleOption).to.be.true;
       // @ts-ignore allow protected access in tests
       expect(el._invokerNode.hasAttribute('single-option')).to.be.true;
+    });
+
+    it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
+      const tag = defineCE(
+        class LionCustomOption extends LionOption {
+          render() {
+            return html`${this.modelValue.value}`;
+          }
+
+          createRenderRoot() {
+            return this;
+          }
+        },
+      );
+      const tagString = unsafeStatic(tag);
+
+      const firstOption = renderLitAsNode(
+        html`<${tagString} checked .choiceValue=${10}></${tagString}>`,
+      );
+
+      const el = /** @type {LionSelectRich} */ (await fixture(html`
+        <lion-select-rich>
+          ${firstOption}
+          <${tagString} .choiceValue=${20}></${tagString}>
+        </lion-select-rich>
+      `));
+
+      // @ts-ignore allow protected access in tests
+      expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('10');
+
+      firstOption.modelValue = { value: 30, checked: true };
+      await el.updateComplete;
+      // @ts-ignore allow protected access in tests
+      expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('30');
     });
   });
 
