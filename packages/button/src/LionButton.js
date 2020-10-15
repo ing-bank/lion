@@ -8,16 +8,6 @@ import {
 } from '@lion/core';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
-// TODO: several improvements:
-// [1] remove click-area
-// [2] remove the native _button slot. We can detect and submit parent form without the slot.
-// [3] reduce css so that extending styles makes sense. Merge .btn with host
-// [4] reduce the template and remove the if else construction inside the template (an extra
-// div by default to support IE is fine) => <div id="${this._buttonId}"><slot></slot></div>
-// should be all needed
-// [5] do we need the before and after templates? Could be added by subclasser
-// [6] extract all functionality (except for form submission) into LionButtonMixin
-
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
@@ -41,15 +31,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
   render() {
     return html`
-      <div class="btn">
-        <div class="click-area"></div>
-        ${this._beforeTemplate()}
-        ${browserDetection.isIE11
-          ? html`<div id="${this._buttonId}"><slot></slot></div>`
-          : html`<slot></slot>`}
-        ${this._afterTemplate()}
-        <slot name="_button"></slot>
-      </div>
+      ${this._beforeTemplate()}
+      <div class="button-content" id="${this._buttonId}"><slot></slot></div>
+      ${this._afterTemplate()}
+      <slot name="_button"></slot>
     `;
   }
 
@@ -67,24 +52,39 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     return [
       css`
         :host {
+          position: relative;
           display: inline-block;
-          min-height: 40px; /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
-          outline: 0;
-          background-color: transparent;
           box-sizing: border-box;
+          vertical-align: middle;
+          line-height: 24px;
+          background: #eee; /* minimal styling to make it recognizable as btn */
+          padding: 8px; /* padding to fix with min-height */
+          outline: none; /* focus style handled below */
+          cursor: default; /* /* we should always see the default arrow, never a caret */
         }
 
-        .btn {
-          min-height: 24px;
+        :host::before {
+          content: '';
+
+          /* center vertically and horizontally */
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+
+          /* touch area (comes into play when button height goes below this one) */
+          /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
+          min-height: 40px;
+          min-width: 40px;
+        }
+
+        .button-content {
           display: flex;
           align-items: center;
-          position: relative;
-          background: #eee; /* minimal styling to make it recognizable as btn */
-          padding: 8px; /* vertical padding to fix with host min-height */
-          outline: none; /* focus style handled below, else it follows boundaries of click-area */
+          justify-content: center;
         }
 
-        :host .btn ::slotted(button) {
+        :host ::slotted(button) {
           position: absolute;
           top: 0;
           left: 0;
@@ -98,41 +98,36 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           border: 0; /* reset default agent styles */
         }
 
-        .click-area {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          margin: 0;
-          padding: 0;
-        }
-
-        :host(:focus:not([disabled])) .btn {
+        /* Show focus styles on keyboard focus. */
+        :host(:focus:not([disabled])),
+        :host(:focus-visible) {
           /* if you extend, please overwrite */
           outline: 2px solid #bde4ff;
         }
 
-        :host(:hover) .btn {
+        /* Hide focus styles if they're not needed, for example,
+        when an element receives focus via the mouse. */
+        :host(:focus:not(:focus-visible)) {
+          outline: 0;
+        }
+
+        :host(:hover) {
           /* if you extend, please overwrite */
           background: #f4f6f7;
         }
 
-        :host(:active) .btn, /* keep native :active to render quickly where possible */
-        :host([active]) .btn /* use custom [active] to fix IE11 */ {
+        :host(:active), /* keep native :active to render quickly where possible */
+        :host([active]) /* use custom [active] to fix IE11 */ {
           /* if you extend, please overwrite */
           background: gray;
-        }
-
-        :host([disabled]) {
-          pointer-events: none;
         }
 
         :host([hidden]) {
           display: none;
         }
 
-        :host([disabled]) .btn {
+        :host([disabled]) {
+          pointer-events: none;
           /* if you extend, please overwrite */
           background: lightgray;
           color: #adadad;
@@ -213,14 +208,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * @param {Event} e
    */
   __clickDelegationHandler(e) {
-    if ((this.type === 'submit' || this.type === 'reset') && e.target === this) {
-      if (this._form) {
-        const nativeButton = document.createElement('button');
-        nativeButton.type = this.type;
-        this._form.appendChild(nativeButton);
-        nativeButton.click();
-        this._form.removeChild(nativeButton);
-      }
+    if ((this.type === 'submit' || this.type === 'reset') && e.target === this && this._form) {
+      e.stopImmediatePropagation();
+      this._nativeButtonNode.click();
     }
   }
 
@@ -240,6 +230,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.removeEventListener('mousedown', this.__mousedownHandler);
     this.removeEventListener('keydown', this.__keydownHandler);
     this.removeEventListener('keyup', this.__keyupHandler);
+    this.removeEventListener('click', this.__clickDelegationHandler);
   }
 
   __mousedownHandler() {
