@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, nextFrame } from '@open-wc/testing';
+import sinon from 'sinon';
 import '../lion-textarea.js';
 
 /**
@@ -145,6 +146,21 @@ describe('<lion-textarea>', () => {
     await el.updateComplete;
     expect(el.getAttribute('placeholder')).to.equal('foo');
     expect(el._inputNode.getAttribute('placeholder')).to.equal('foo');
+  });
+
+  it('fires resize textarea when a visibility change has been detected', async () => {
+    const el = await fixture(`
+      <div style="display: none">
+        <lion-textarea placeholder="text"></lion-textarea>
+      </div>
+    `);
+    const textArea = /** @type {LionTextarea} */ (el.firstElementChild);
+    await textArea.updateComplete;
+
+    const resizeSpy = sinon.spy(textArea, 'resizeTextarea');
+    el.style.display = 'block';
+    await nextFrame();
+    expect(resizeSpy.calledOnce).to.be.true;
   });
 
   it('is accessible', async () => {
