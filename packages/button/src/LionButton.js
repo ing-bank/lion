@@ -53,7 +53,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       css`
         :host {
           position: relative;
-          display: inline-block;
+          display: inline-flex;
           box-sizing: border-box;
           vertical-align: middle;
           line-height: 24px;
