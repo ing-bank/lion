@@ -265,6 +265,13 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       this._invokerNode.selectedElement = this.formElements[
         /**  @type {number} */ (this.checkedIndex)
       ];
+      /**
+       * Manually update this, as the node reference may be the same, but the modelValue might not.
+       * This would mean that it won't pass the LitElement dirty check.
+       * hasChanged in selectedElement won't work, since the oldValue and the newValue's modelValues will be the same,
+       * as they are referenced through the same node reference.
+       */
+      this._invokerNode.requestUpdate('selectedElement');
     }
   }
 

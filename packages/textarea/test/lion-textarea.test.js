@@ -1,4 +1,4 @@
-import { expect, fixture as _fixture, html, nextFrame } from '@open-wc/testing';
+import { aTimeout, expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-textarea.js';
 
@@ -159,7 +159,7 @@ describe('<lion-textarea>', () => {
 
     const resizeSpy = sinon.spy(textArea, 'resizeTextarea');
     el.style.display = 'block';
-    await nextFrame();
+    await aTimeout(0);
     expect(resizeSpy.calledOnce).to.be.true;
   });
 
