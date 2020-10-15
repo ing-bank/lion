@@ -12,6 +12,27 @@ declare interface HTMLElementWithValue extends HTMLElement {
 
 export declare class FormControlHost {
   static get styles(): CSSResult | CSSResult[];
+  static get properties(): {
+    name: {
+      type: StringConstructor;
+      reflect: boolean;
+    };
+    readOnly: {
+      type: BooleanConstructor;
+      attribute: string;
+      reflect: boolean;
+    };
+    label: StringConstructor;
+    helpText: {
+      type: StringConstructor;
+      attribute: string;
+    };
+    modelValue: { attribute: boolean };
+    _ariaLabelledNodes: { attribute: boolean };
+    _ariaDescribedNodes: { attribute: boolean };
+    _repropagationRole: { attribute: boolean };
+    _isRepropagationEndpoint: { attribute: boolean };
+  };
   /**
    * A Boolean attribute which, if present, indicates that the user should not be able to edit
    * the value of the input. The difference between disabled and readonly is that read-only

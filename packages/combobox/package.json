@@ -46,6 +46,9 @@
     "@lion/listbox": "0.2.0",
     "@lion/overlays": "0.21.0"
   },
+  "devDependencies": {
+    "@lion/validate-messages": "0.3.1"
+  },
   "keywords": [
     "combobox",
     "form",

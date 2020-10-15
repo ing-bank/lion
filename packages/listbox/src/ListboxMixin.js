@@ -223,7 +223,7 @@ const ListboxMixinImplementation = superclass =>
      * @deprecated
      * This setter exists for backwards compatibility of single choice groups.
      * A setter api would be confusing for a multipleChoice group. Use `setCheckedIndex` instead.
-     * @param {number} index
+     * @param {number|number[]} index
      */
     set checkedIndex(index) {
       this.setCheckedIndex(index);
@@ -266,6 +266,9 @@ const ListboxMixinImplementation = superclass =>
        * spaces should not select an element (they need to be put in the textbox)
        */
       this._listboxReceivesNoFocus = false;
+
+      /** @type {string | string[] | undefined} */
+      this.__oldModelValue = undefined;
 
       /** @type {EventListener} */
       this._listboxOnKeyDown = this._listboxOnKeyDown.bind(this);
@@ -335,23 +338,29 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * When `multipleChoice` is false, will toggle, else will check provided index
-     * @param {number} index
-     * @param {'set'|'unset'|'toggle'} multiMode
+     * If an array is passed for multiple-choice, it will check the indexes in array, and uncheck the rest
+     * If a number is passed, the item with the passed index is checked without unchecking others
+     * For single choice, __onChildCheckedChanged we ensure that we uncheck siblings
+     * @param {number|number[]} index
      */
-    setCheckedIndex(index, multiMode = 'toggle') {
-      if (this.formElements[index]) {
-        if (!this.multipleChoice) {
-          this.formElements[index].checked = true;
-          // In __onChildCheckedChanged, which also responds to programmatic (model)value changes
-          // of children, we do the rest (uncheck siblings)
-        } else if (multiMode === 'toggle') {
-          this.formElements[index].checked = !this.formElements[index].checked;
-        } else {
-          this.formElements[index].checked = multiMode === 'set';
+    setCheckedIndex(index) {
+      if (this.multipleChoice && Array.isArray(index)) {
+        this._uncheckChildren(this.formElements.filter(i => i === index));
+        index.forEach(i => {
+          if (this.formElements[i]) {
+            this.formElements[i].checked = true;
+          }
+        });
+        return;
+      }
+
+      if (typeof index === 'number') {
+        if (index === -1) {
+          this._uncheckChildren();
         }
-      } else if (!this.multipleChoice) {
-        this._uncheckChildren();
+        if (this.formElements[index]) {
+          this.formElements[index].checked = true;
+        }
       }
     }
 
@@ -670,10 +679,13 @@ const ListboxMixinImplementation = superclass =>
         ev.stopPropagation();
       }
       this.__onChildCheckedChanged(ev);
-      this.requestUpdate('modelValue', this.modelValue);
+
+      // don't send this.modelValue as oldValue, since it will take modelValue getter which takes it from child elements, which is already the updated value
+      this.requestUpdate('modelValue', this.__oldModelValue);
       this.dispatchEvent(
         new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
       );
+      this.__oldModelValue = this.modelValue;
     }
 
     /**

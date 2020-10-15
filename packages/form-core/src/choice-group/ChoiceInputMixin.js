@@ -21,6 +21,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const ChoiceInputMixinImplementation = superclass =>
+  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class ChoiceInputMixin extends FormatMixin(superclass) {
     static get properties() {
       return {

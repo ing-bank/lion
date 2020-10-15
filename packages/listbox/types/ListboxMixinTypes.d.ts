@@ -39,7 +39,7 @@ export declare class ListboxHost {
 
   public formElements: LionOption[];
 
-  public setCheckedIndex(index: number): void;
+  public setCheckedIndex(index: number | number[]): void;
 
   /** Reset interaction states and modelValue */
   public reset(): void;
@@ -79,7 +79,7 @@ export declare function ListboxImplementation<T extends Constructor<LitElement>>
   superclass: T,
 ): T &
   Constructor<ListboxHost> &
-  ListboxHost &
+  typeof ListboxHost &
   Constructor<ChoiceGroupHost> &
   typeof ChoiceGroupHost &
   Constructor<SlotHost> &

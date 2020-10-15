@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
 import { browserDetection, LitElement } from '@lion/core';
+import { Required } from '@lion/form-core';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
@@ -207,6 +208,42 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el._inputNode.value).to.equal('20');
     });
+
+    it('sets modelValue to empty string if no option is selected', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.true;
+      el.checkedIndex = -1;
+      await el.updateComplete;
+      expect(el.modelValue).to.equal('');
+      expect(el.formElements[0].checked).to.be.false;
+    });
+
+    it('sets modelValue to empty array if no option is selected for multiple choice', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      expect(el.modelValue).to.eql(['Artichoke']);
+      expect(el.formElements[0].checked).to.be.true;
+      el.checkedIndex = [];
+      await el.updateComplete;
+      expect(el.modelValue).to.eql([]);
+      expect(el.formElements[0].checked).to.be.false;
+    });
   });
 
   describe('Listbox visibility', () => {
@@ -409,6 +446,32 @@ describe('lion-combobox', () => {
           expect(o.getAttribute('aria-hidden')).to.equal('true');
         });
       });
+
+      it('works with validation', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .validators=${[new Required()]}>
+            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        expect(el.checkedIndex).to.equal(0);
+
+        // Simulate backspace deleting the char at the end of the string
+        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+        el._inputNode.dispatchEvent(new Event('input'));
+        const arr = el._inputNode.value.split('');
+        arr.splice(el._inputNode.value.length - 1, 1);
+        el._inputNode.value = arr.join('');
+        await el.updateComplete;
+        el.dispatchEvent(new Event('blur'));
+
+        expect(el.checkedIndex).to.equal(-1);
+        await el.feedbackComplete;
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.showsFeedbackFor).to.include('error');
+      });
     });
   });
 
@@ -483,7 +546,6 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
       `));
-      // @ts-expect-error sinon not typed correctly?
       const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
       el.requestUpdate('modelValue');
       await el.updateComplete;

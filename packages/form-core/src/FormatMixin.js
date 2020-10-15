@@ -57,6 +57,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormatMixinImplementation = superclass =>
+  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
     static get properties() {
       return {
