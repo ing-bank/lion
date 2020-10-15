@@ -38,6 +38,27 @@ export const main = () => html`
 `;
 ```
 
+## Features
+
+- Multiple autocomplete behaviors
+- Supports multiple choice
+- Multiple matching modes
+- Different interaction behaviors
+
+## How to use
+
+### Installation
+
+```bash
+npm i --save @lion/combobox
+```
+
+```js
+import { LionCombobox } from '@lion/combobox';
+// or
+import '@lion/combobox/lion-combobox.js';
+```
+
 ## Autocomplete
 
 Below you will find an overview of all possible `autocomplete` behaviors and how they correspond
