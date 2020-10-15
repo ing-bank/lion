@@ -66,6 +66,16 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     });
   }
 
+  _hasDisabledInvoker() {
+    if (this._overlayCtrl && this._overlayCtrl.invoker) {
+      return (
+        /** @type {HTMLElement & { disabled: boolean }} */ (this._overlayCtrl.invoker).disabled ||
+        this._overlayCtrl.invoker.getAttribute('aria-disabled') === 'true'
+      );
+    }
+    return false;
+  }
+
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     this.__resetActive = this.__resetActive.bind(this);
@@ -98,7 +108,9 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
   _showMouse() {
     if (!this._keyActive) {
       this._mouseActive = true;
-      this.opened = true;
+      if (!this._hasDisabledInvoker()) {
+        this.opened = true;
+      }
     }
   }
 
@@ -111,7 +123,9 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
   _showKey() {
     if (!this._mouseActive) {
       this._keyActive = true;
-      this.opened = true;
+      if (!this._hasDisabledInvoker()) {
+        this.opened = true;
+      }
     }
   }
 

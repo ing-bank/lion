@@ -102,6 +102,50 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(true);
     });
 
+    it('stays hidden on disabled invoker', async () => {
+      const el = /** @type {LionTooltip} */ (await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <button slot="invoker" disabled>Tooltip button</button>
+        </lion-tooltip>
+      `));
+      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
+        child => child.slot === 'invoker',
+      ));
+      const eventMouseEnter = new Event('mouseenter');
+      el.dispatchEvent(eventMouseEnter);
+      await el.updateComplete;
+      // @ts-expect-error allow protected props in tests
+      expect(el._overlayCtrl.isShown).to.equal(false);
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
+      await el.updateComplete;
+      // @ts-expect-error allow protected props in tests
+      expect(el._overlayCtrl.isShown).to.equal(false);
+    });
+
+    it('stays hidden on aria-disabled invoker', async () => {
+      const el = /** @type {LionTooltip} */ (await fixture(html`
+        <lion-tooltip>
+          <div slot="content">Hey there</div>
+          <button slot="invoker" aria-disabled="true">Tooltip button</button>
+        </lion-tooltip>
+      `));
+      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
+        child => child.slot === 'invoker',
+      ));
+      const eventMouseEnter = new Event('mouseenter');
+      el.dispatchEvent(eventMouseEnter);
+      await el.updateComplete;
+      // @ts-expect-error allow protected props in tests
+      expect(el._overlayCtrl.isShown).to.equal(false);
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
+      await el.updateComplete;
+      // @ts-expect-error allow protected props in tests
+      expect(el._overlayCtrl.isShown).to.equal(false);
+    });
+
     it('contains html when specified in tooltip content body', async () => {
       const el = /** @type {LionTooltip} */ (await fixture(html`
         <lion-tooltip>

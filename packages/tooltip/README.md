@@ -47,18 +47,21 @@ const tooltipDemoStyles = css`
 
 ```js preview-story
 export const main = () => html`
-    <style>${tooltipDemoStyles}</style>
-    <lion-tooltip>
-      <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
-      <div slot="content" class="demo-tooltip-content">This is a tooltip<div>
-    </lion-tooltip>
-  `;
+  <style>
+    ${tooltipDemoStyles}
+  </style>
+  <lion-tooltip>
+    <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
+    <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
+  </lion-tooltip>
+`;
 ```
 
 ## Features
 
 - Show content when hovering the invoker
 - Show content when the invoker is focused
+- Does not show content when invoker is disabled
 - Uses Popper.js under the hood, to have the content pop up relative to the invoker
 - Use `.config` to override the overlay configuration
 - Config has `popperConfig` property that has a one to one relation with Popper.js configuration API.
