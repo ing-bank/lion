@@ -159,7 +159,7 @@ describe('<lion-textarea>', () => {
 
     const resizeSpy = sinon.spy(textArea, 'resizeTextarea');
     el.style.display = 'block';
-    await aTimeout(0);
+    await aTimeout(20);
     expect(resizeSpy.calledOnce).to.be.true;
   });
 
