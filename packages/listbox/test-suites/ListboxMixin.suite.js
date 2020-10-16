@@ -1184,5 +1184,48 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(listbox.children[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
       });
     });
+
+    describe('Href Options', () => {
+      it('allows anchors to be clicked when a [href] attribute is present', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag}>Google</${optionTag}>
+            <${optionTag} .href=${'https://duckduckgo.com'}>DuckDuck Go</${optionTag}>
+          </${tag}>
+        `);
+
+        const { listbox } = getProtectedMembers(el);
+
+        el.activeIndex = 1;
+
+        // Allow options that behave like anchors (think of Google Search) to trigger the anchor behavior
+        const activeOption = el.formElements[1];
+        const clickSpy = sinon.spy(activeOption, 'click');
+
+        listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        expect(clickSpy).to.have.been.calledOnce;
+      });
+
+      it('does not allow anchors to be clicked when a [href] attribute is not present', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag}>Google</${optionTag}>
+            <${optionTag} .href=${'https://duckduckgo.com'}>DuckDuck Go</${optionTag}>
+          </${tag}>
+        `);
+
+        const { listbox } = getProtectedMembers(el);
+
+        el.activeIndex = 0;
+
+        const activeOption = el.formElements[0];
+        const clickSpy = sinon.spy(activeOption, 'click');
+
+        listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        expect(clickSpy).to.not.have.been.called;
+      });
+    });
   });
 }
