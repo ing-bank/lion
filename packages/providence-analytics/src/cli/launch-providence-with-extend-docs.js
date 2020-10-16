@@ -2,7 +2,7 @@
 const fs = require('fs');
 const pathLib = require('path');
 const { performance } = require('perf_hooks');
-const { providence } = require('../program/providence.js');
+const providenceModule = require('../program/providence.js');
 const { QueryService } = require('../program/services/QueryService.js');
 const { InputDataService } = require('../program/services/InputDataService.js');
 const { LogService } = require('../program/services/LogService.js');
@@ -16,7 +16,9 @@ async function getExtendDocsResults({
   allowlistReference,
   cwd,
 }) {
-  const results = await providence(
+  const monoPkgs = InputDataService.getMonoRepoPackages(cwd);
+
+  const results = await providenceModule.providence(
     QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixCfg }),
     {
       gatherFilesConfig: {
@@ -31,6 +33,9 @@ async function getExtendDocsResults({
       report: false,
       targetProjectPaths: [pathLib.resolve(cwd)],
       referenceProjectPaths,
+      // For mono repos, a match between root package.json and ref project will not exist.
+      // Disable this check, so it won't be a blocker for extendin docs
+      skipCheckMatchCompatibility: Boolean(monoPkgs),
     },
   );
 
@@ -57,20 +62,18 @@ async function getExtendDocsResults({
     return result;
   }
 
-  const pkgs = InputDataService.getMonoRepoPackages(cwd);
-
-  if (pkgs) {
+  if (monoPkgs) {
     queryOutputs.forEach(resultObj => {
       if (resultObj.variable) {
         resultObj.variable.paths.forEach(pathObj => {
           // eslint-disable-next-line no-param-reassign
-          pathObj.to = replaceToMonoRepoPath(pathObj.to, pkgs);
+          pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
         });
       }
       if (resultObj.tag) {
         resultObj.tag.paths.forEach(pathObj => {
           // eslint-disable-next-line no-param-reassign
-          pathObj.to = replaceToMonoRepoPath(pathObj.to, pkgs);
+          pathObj.to = replaceToMonoRepoPath(pathObj.to, monoPkgs);
         });
       }
     });

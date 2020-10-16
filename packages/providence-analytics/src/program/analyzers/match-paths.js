@@ -216,8 +216,7 @@ function getTagPaths(
   let targetResult;
   targetFindCustomelementsResult.queryOutput.some(({ file, result }) => {
     const targetPathMatch = result.find(entry => {
-      const sameRoot =
-        entry.rootFile.file === targetMatchedFile || entry.rootFile.file === '[current]';
+      const sameRoot = entry.rootFile.file === targetMatchedFile;
       const sameIdentifier = entry.rootFile.specifier === toClass;
       return sameRoot && sameIdentifier;
     });
@@ -429,6 +428,7 @@ class MatchPathsAnalyzer extends Analyzer {
       referenceProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
       gatherFilesConfigReference: cfg.gatherFilesConfigReference,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
     // [A2]
@@ -437,6 +437,7 @@ class MatchPathsAnalyzer extends Analyzer {
     const targetExportsResult = await targetFindExportsAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
     // [A3]
@@ -445,6 +446,7 @@ class MatchPathsAnalyzer extends Analyzer {
     const refFindExportsResult = await refFindExportsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
     /**
@@ -472,6 +474,7 @@ class MatchPathsAnalyzer extends Analyzer {
     const targetFindCustomelementsResult = await targetFindCustomelementsAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
     // [B2]
@@ -480,6 +483,7 @@ class MatchPathsAnalyzer extends Analyzer {
     const refFindCustomelementsResult = await refFindCustomelementsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
     // refFindExportsAnalyzer was already created in A3
 

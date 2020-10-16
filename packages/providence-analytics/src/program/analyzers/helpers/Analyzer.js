@@ -205,7 +205,7 @@ class Analyzer {
 
     // If we have a provided result cfg.referenceProjectResult, we assume the providing
     // party provides compatible results for now...
-    if (cfg.referenceProjectPath) {
+    if (cfg.referenceProjectPath && !cfg.skipCheckMatchCompatibility) {
       const { compatible, reason } = checkForMatchCompatibility(
         cfg.referenceProjectPath,
         cfg.targetProjectPath,
