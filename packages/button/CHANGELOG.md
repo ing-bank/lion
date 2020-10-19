@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- b910d6f7: On top of the 40x40px min height and width, set width/height to 100% so that the clickarea covers the entire width or height of the button.
+
 ## 0.8.0
 
 ### Minor Changes
