@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies [b910d6f7]
+  - @lion/button@0.8.1
+  - @lion/select-rich@0.21.7
+
 ## 0.3.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- ca210dae: add option skipCheckMatchCompatibility and enable for monorepos in extend-docs
+
 ## 0.7.0
 
 ### Minor Changes

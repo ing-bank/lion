@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.21.7
+
+### Patch Changes
+
+- Updated dependencies [b910d6f7]
+  - @lion/button@0.8.1
+
 ## 0.21.6
 
 ### Patch Changes
