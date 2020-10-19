@@ -5,6 +5,7 @@ import { html } from 'lit-html';
 import './md-combobox/md-combobox.js';
 import './gh-combobox/gh-combobox.js';
 import './wa-combobox/wa-combobox.js';
+import './lm-option/lm-option.js';
 
 export default {
   title: 'Forms/Combobox/Extensions',
@@ -77,5 +78,47 @@ export const Whatsapp = () => html`
       .choiceValue=${'Bill Clinton'}
     ></wa-option>
   </wa-combobox>
+`;
+```
+
+```js preview-story
+export const LinkMixinBox = () => html`
+  <lion-combobox name="combo" label="Default">
+    <lm-option
+      href="https://www.google.com/search?query=apple"
+      target="_blank"
+      rel="noopener noreferrer"
+      .choiceValue=${'Apple'}
+      >Apple</lm-option
+    >
+    <lm-option
+      href="https://www.google.com/search?query=Artichoke"
+      target="_blank"
+      rel="noopener noreferrer"
+      .choiceValue=${'Artichoke'}
+      >Artichoke</lm-option
+    >
+    <lm-option
+      href="https://www.google.com/search?query=Asparagus"
+      target="_blank"
+      rel="noopener noreferrer"
+      .choiceValue=${'Asparagus'}
+      >Asparagus</lm-option
+    >
+    <lm-option
+      href="https://www.google.com/search?query=Banana"
+      target="_blank"
+      rel="noopener noreferrer"
+      .choiceValue=${'Banana'}
+      >Banana</lm-option
+    >
+    <lm-option
+      href="https://www.google.com/search?query=Beets"
+      target="_blank"
+      rel="noopener noreferrer"
+      .choiceValue=${'Beets'}
+      >Beets</lm-option
+    >
+  </lion-combobox>
 `;
 ```

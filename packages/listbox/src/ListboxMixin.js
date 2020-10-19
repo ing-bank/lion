@@ -493,6 +493,11 @@ const ListboxMixinImplementation = superclass =>
           if (this.formElements[this.activeIndex].disabled) {
             return;
           }
+
+          if (this.formElements[this.activeIndex].href) {
+            this.formElements[this.activeIndex].click();
+          }
+
           this.setCheckedIndex(this.activeIndex);
           break;
         }

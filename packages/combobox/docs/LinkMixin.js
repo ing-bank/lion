@@ -51,6 +51,9 @@ const LinkMixinImplementation = superclass =>
       if (changedProperties.has('target')) {
         this._nativeAnchor.target = this.target;
       }
+      if (changedProperties.has('rel')) {
+        this._nativeAnchor.rel = this.rel;
+      }
     }
 
     __navigate() {
