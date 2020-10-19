@@ -515,7 +515,6 @@ describe('CLI helpers', () => {
     afterEach(() => {
       restoreMockedProjects();
     });
-
     it('rewrites monorepo package paths when analysis is run from monorepo root', async () => {
       const theirProjectFiles = {
         './package.json': JSON.stringify({
@@ -640,6 +639,96 @@ describe('CLI helpers', () => {
           },
         },
       ]);
+    });
+
+    it('does not check for match compatibility (target and reference) in monorepo targets', async () => {
+      // ===== REFERENCE AND TARGET PROJECTS =====
+
+      const theirProjectFiles = {
+        './package.json': JSON.stringify({
+          name: 'their-components',
+          version: '1.0.0',
+        }),
+        './src/TheirButton.js': `export class TheirButton extends HTMLElement {}`,
+      };
+
+      // This will be detected as being a monorepo
+      const monoProjectFiles = {
+        './package.json': JSON.stringify({
+          name: '@mono/root',
+          workspaces: ['packages/*'],
+          dependencies: {
+            'their-components': '1.0.0',
+          },
+        }),
+        // Package: @mono/button
+        './packages/button/package.json': JSON.stringify({
+          name: '@mono/button',
+        }),
+      };
+
+      // This will be detected as NOT being a monorepo
+      const nonMonoProjectFiles = {
+        './package.json': JSON.stringify({
+          name: 'non-mono',
+          dependencies: {
+            'their-components': '1.0.0',
+          },
+        }),
+      };
+
+      const theirProject = {
+        path: '/their-components',
+        name: 'their-components',
+        files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      const monoProject = {
+        path: '/mono-components',
+        name: 'mono-components',
+        files: Object.entries(monoProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      const nonMonoProject = {
+        path: '/non-mono-components',
+        name: 'non-mono-components',
+        files: Object.entries(nonMonoProjectFiles).map(([file, code]) => ({ file, code })),
+      };
+
+      // ===== TESTS =====
+
+      const providenceStub = sinon.stub(providenceModule, 'providence').returns(
+        new Promise(resolve => {
+          resolve([]);
+        }),
+      );
+
+      // ===== mono =====
+
+      mockTargetAndReferenceProject(theirProject, monoProject);
+      await getExtendDocsResults({
+        referenceProjectPaths: ['/their-components'],
+        prefixCfg: { from: 'their', to: 'my' },
+        extensions: ['.js'],
+        cwd: '/mono-components',
+      });
+
+      expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(true);
+      providenceStub.resetHistory();
+      restoreMockedProjects();
+
+      // ===== non mono =====
+
+      mockTargetAndReferenceProject(theirProject, nonMonoProject);
+      await getExtendDocsResults({
+        referenceProjectPaths: ['/their-components'],
+        prefixCfg: { from: 'their', to: 'my' },
+        extensions: ['.js'],
+        cwd: '/non-mono-components',
+      });
+      expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(false);
+
+      providenceStub.restore();
     });
   });
 });

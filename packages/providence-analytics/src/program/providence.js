@@ -63,6 +63,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
   const queryResult = await QueryService.astSearch(slicedQConfig, {
     gatherFilesConfig: cfg.gatherFilesConfig,
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
+    skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     ...slicedQConfig.analyzerConfig,
   });
   if (queryResult) {
@@ -179,6 +180,7 @@ async function providenceMain(queryConfig, customConfig) {
       report: true,
       debugEnabled: false,
       writeLogFile: false,
+      skipCheckMatchCompatibility: false,
     },
     customConfig,
   );

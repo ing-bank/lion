@@ -249,6 +249,7 @@ class MatchImportsAnalyzer extends Analyzer {
       referenceProjectResult = await findExportsAnalyzer.execute({
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.referenceProjectPath,
+        skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
       });
     }
 
@@ -258,6 +259,7 @@ class MatchImportsAnalyzer extends Analyzer {
       targetProjectResult = await findImportsAnalyzer.execute({
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.targetProjectPath,
+        skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
       });
     }
 

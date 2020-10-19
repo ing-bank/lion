@@ -297,17 +297,20 @@ class MatchSubclassesAnalyzer extends Analyzer {
     const exportsAnalyzerResult = await findExportsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
     const findClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
     const targetClassesAnalyzerResult = await findClassesAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
     const findRefClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
     const refClassesAnalyzerResult = await findRefClassesAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
+      skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
     const queryOutput = matchSubclassesPostprocess(
