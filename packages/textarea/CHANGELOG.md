@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.8.2
+
+### Patch Changes
+
+- c3a581e2: Added Intersection Observer to ensure textarea gets recalculated on visibility changes, e.g. when it is inside a dialog, tabs, or accordion when they are hidden initially.
+- Updated dependencies [2907649b]
+- Updated dependencies [68e3e749]
+- Updated dependencies [fd297a28]
+- Updated dependencies [9fcb67f0]
+- Updated dependencies [247e64a3]
+- Updated dependencies [e92b98a4]
+  - @lion/form-core@0.6.4
+  - @lion/core@0.13.1
+
 ## 0.8.1
 
 ### Patch Changes

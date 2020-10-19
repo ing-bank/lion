@@ -1,5 +1,41 @@
 # Change Log
 
+## 0.3.6
+
+### Patch Changes
+
+- 68e3e749: Add missing interaction states that could act as feedback conditions. Fix the interactive demo that showcases dynamic feedback conditions.
+- 9fcb67f0: Allow flexibility for extending the repropagation prevention conditions, which is needed for combobox, so that a model-value-changed event is propagated when no option matches after an input change. This allows validation to work properly e.g. for Required.
+- Updated dependencies [7682e520]
+- Updated dependencies [2907649b]
+- Updated dependencies [68e3e749]
+- Updated dependencies [fd297a28]
+- Updated dependencies [c3a581e2]
+- Updated dependencies [9fcb67f0]
+- Updated dependencies [247e64a3]
+- Updated dependencies [e92b98a4]
+- Updated dependencies [f7ab5391]
+- Updated dependencies [1671c705]
+- Updated dependencies [26b60593]
+  - @lion/localize@0.14.6
+  - @lion/form-core@0.6.4
+  - @lion/textarea@0.8.2
+  - @lion/core@0.13.1
+  - @lion/button@0.8.0
+  - @lion/select-rich@0.21.6
+  - @lion/input-date@0.8.2
+  - @lion/input-datepicker@0.17.1
+  - @lion/input-email@0.9.2
+  - @lion/input-iban@0.10.2
+  - @lion/input-range@0.5.2
+  - @lion/validate-messages@0.3.2
+  - @lion/checkbox-group@0.12.2
+  - @lion/fieldset@0.15.2
+  - @lion/input@0.10.2
+  - @lion/radio-group@0.12.2
+  - @lion/select@0.8.2
+  - @lion/form@0.7.2
+
 ## 0.3.5
 
 ### Patch Changes

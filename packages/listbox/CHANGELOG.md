@@ -1,5 +1,23 @@
 # @lion/listbox
 
+## 0.3.0
+
+### Minor Changes
+
+- c844c017: Add click on enter for options with href, to ensure that anchors are navigated towards, for example when applying LinkMixin to LionOption as part of a listbox.
+
+### Patch Changes
+
+- 9fcb67f0: Allow flexibility for extending the repropagation prevention conditions, which is needed for combobox, so that a model-value-changed event is propagated when no option matches after an input change. This allows validation to work properly e.g. for Required.
+- Updated dependencies [2907649b]
+- Updated dependencies [68e3e749]
+- Updated dependencies [fd297a28]
+- Updated dependencies [9fcb67f0]
+- Updated dependencies [247e64a3]
+- Updated dependencies [e92b98a4]
+  - @lion/form-core@0.6.4
+  - @lion/core@0.13.1
+
 ## 0.2.0
 
 ### Minor Changes

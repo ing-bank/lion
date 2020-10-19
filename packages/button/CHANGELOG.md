@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- 26b60593: Several button improvements
+
+  - remove click-area --> move styles to host::before
+  - reduce css so that extending styles makes sense. Merge .btn with host.
+  - reduce the template and remove the if else construction inside the template.
+  - hide focus styles if they're not needed, for example, when an element receives focus via the mouse.
+  - improve \_\_clickDelegationHandler. Use current slotted native button instead of create new one.
+  - fix vertical alignment when 2 buttons are inline and one has icon. Example included.
+
+### Patch Changes
+
+- f7ab5391: Set button host to inline-flex as a better default for when button content contains a before or after icon
+- Updated dependencies [e92b98a4]
+  - @lion/core@0.13.1
+
 ## 0.7.15
 
 ### Patch Changes

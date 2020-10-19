@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.6.4
+
+### Patch Changes
+
+- 2907649b: filter feedback messages according feedback conditions
+- 68e3e749: Add missing interaction states that could act as feedback conditions. Fix the interactive demo that showcases dynamic feedback conditions.
+- fd297a28: Properly update formElements when the name attribute changes, in order to get an updated serializedValue.
+- 9fcb67f0: Allow flexibility for extending the repropagation prevention conditions, which is needed for combobox, so that a model-value-changed event is propagated when no option matches after an input change. This allows validation to work properly e.g. for Required.
+- 247e64a3: Ensure that the name of a child choice field is always synced with the parent choice field(set) when it changes. No longer error when a child is added with a different name than the parent, simply sync it.
+- Updated dependencies [7682e520]
+- Updated dependencies [e92b98a4]
+  - @lion/localize@0.14.6
+  - @lion/core@0.13.1
+
 ## 0.6.3
 
 ### Patch Changes

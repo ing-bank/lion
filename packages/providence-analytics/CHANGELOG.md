@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- 2dc85b14: Monorepo support for extend-docs
+
+  ### Features
+
+  - add monorepo support for extend-docs
+
+  ### Fixes
+
+  - allow custom element and class definitions to be in same file for 'match-paths'
+
 ## 0.6.3
 
 ### Patch Changes
