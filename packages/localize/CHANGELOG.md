@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.14.6
+
+### Patch Changes
+
+- 7682e520: Fix formatting negative values for Turkish locale.
+- Updated dependencies [e92b98a4]
+  - @lion/core@0.13.1
+
 ## 0.14.5
 
 ### Patch Changes

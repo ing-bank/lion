@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.21.1
+
+### Patch Changes
+
+- bdf1cfb2: When closing an overlays we check if the active element is/was within the overalys content. If so we blur it to make sure the focus returns to the body.
+- Updated dependencies [e92b98a4]
+  - @lion/core@0.13.1
+
 ## 0.21.0
 
 ### Minor Changes

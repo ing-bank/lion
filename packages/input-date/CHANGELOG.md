@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.8.2
+
+### Patch Changes
+
+- Updated dependencies [7682e520]
+- Updated dependencies [2907649b]
+- Updated dependencies [68e3e749]
+- Updated dependencies [fd297a28]
+- Updated dependencies [9fcb67f0]
+- Updated dependencies [247e64a3]
+- Updated dependencies [e92b98a4]
+  - @lion/localize@0.14.6
+  - @lion/form-core@0.6.4
+  - @lion/core@0.13.1
+  - @lion/input@0.10.2
+
 ## 0.8.1
 
 ### Patch Changes

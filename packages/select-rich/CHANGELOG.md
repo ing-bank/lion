@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.21.6
+
+### Patch Changes
+
+- 1671c705: Fix select rich to manually request update for the invoker selected element when it synchronizes, as the modelValue could be changed but would not trigger a change since the old and new value are both referenced from the updated node reference, meaning they will always be the same and never pass the dirty check.
+- Updated dependencies [2907649b]
+- Updated dependencies [c844c017]
+- Updated dependencies [bdf1cfb2]
+- Updated dependencies [68e3e749]
+- Updated dependencies [fd297a28]
+- Updated dependencies [9fcb67f0]
+- Updated dependencies [247e64a3]
+- Updated dependencies [e92b98a4]
+- Updated dependencies [f7ab5391]
+- Updated dependencies [26b60593]
+  - @lion/form-core@0.6.4
+  - @lion/listbox@0.3.0
+  - @lion/overlays@0.21.1
+  - @lion/core@0.13.1
+  - @lion/button@0.8.0
+
 ## 0.21.5
 
 ### Patch Changes

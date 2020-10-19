@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.1
+
+### Patch Changes
+
+- e92b98a4: Ordering aria elements according to dom structure in all browsers
+
 ## 0.13.0
 
 ### Minor Changes
