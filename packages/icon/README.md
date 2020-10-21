@@ -73,8 +73,8 @@ export const iconSets = () => html`
           font-size: 10px;
         }
       </style>
-      <div class="demo-icon__container" title="lion:space:${name}">
-        <lion-icon icon-id="lion:space:${name}" aria-label="icon: ${name}"></lion-icon>
+      <div class="demo-icon__container">
+        <lion-icon icon-id="lion:space:${name}" aria-label="${name}"></lion-icon>
         <span class="demo-icon__name">${name}</span>
       </div>
     `,
