@@ -1,4 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
+import { LitElement } from 'lit-element';
 
 export interface FormatNumberPart {
   type: string;
@@ -68,7 +69,7 @@ declare class LocalizeMixinHost {
   private __localizeOnLocaleChanged(event: CustomEvent): void;
 }
 
-declare function LocalizeMixinImplementation<T extends Constructor<HTMLElement>>(
+declare function LocalizeMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T & Constructor<LocalizeMixinHost> & typeof LocalizeMixinHost;
 

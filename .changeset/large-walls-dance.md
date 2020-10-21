@@ -34,4 +34,7 @@
 '@lion/validate-messages': patch
 ---
 
-Add index.d.ts to all packages
+Type enhancements
+
+- Add index.d.ts to all packages
+- LocalizeMixinTypes.d.ts extend from LitElement
