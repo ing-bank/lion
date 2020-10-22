@@ -1,7 +1,7 @@
-import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
-import { css, html, dedupeMixin, ScopedElementsMixin, SlotMixin } from '@lion/core';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import { css, dedupeMixin, html, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import '@lion/core/src/closestPolyfill.js';
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
 import { LionOptions } from './LionOptions.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
@@ -389,7 +389,7 @@ const ListboxMixinImplementation = superclass =>
       });
 
       this.__proxyChildModelValueChanged(
-        /** @type {Event & { target: LionOption; }} */ ({ target: child }),
+        /** @type {CustomEvent & { target: LionOption; }} */ ({ target: child }),
       );
       this.resetInteractionState();
       /* eslint-enable no-param-reassign */
@@ -674,7 +674,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {Event & { target: LionOption; }} ev
+     * @param {CustomEvent & { target: LionOption; }} ev
      */
     __proxyChildModelValueChanged(ev) {
       // We need to redispatch the model-value-changed event on 'this', so it will
@@ -687,9 +687,12 @@ const ListboxMixinImplementation = superclass =>
 
       // don't send this.modelValue as oldValue, since it will take modelValue getter which takes it from child elements, which is already the updated value
       this.requestUpdate('modelValue', this.__oldModelValue);
-      this.dispatchEvent(
-        new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
-      );
+      // only send model-value-changed if the event is caused by one of its children
+      if (ev.detail && ev.detail.formPath) {
+        this.dispatchEvent(
+          new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
+        );
+      }
       this.__oldModelValue = this.modelValue;
     }
 

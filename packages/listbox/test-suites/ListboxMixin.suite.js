@@ -1,11 +1,11 @@
+import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { Required } from '@lion/form-core';
-import sinon from 'sinon';
-import { expect, html, fixture as _fixture, unsafeStatic } from '@open-wc/testing';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';
+import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import '../lion-listbox.js';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
 
 /**
  * @typedef {import('../src/LionListbox').LionListbox} LionListbox
@@ -58,6 +58,56 @@ export function runListboxMixinSuite(customConfig = {}) {
       `);
 
         expect(el.modelValue).to.equal('10');
+      });
+
+      it('should dispatch model-value-changed 1 time on first paint', async () => {
+        const spy = sinon.spy();
+        await fixture(html`
+          <${tag} @model-value-changed="${spy}">
+            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
+            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
+            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
+          </${tag}>
+        `);
+        expect(spy.callCount).to.equal(1);
+      });
+
+      it('should dispatch model-value-changed 1 time on interaction', async () => {
+        const spy = sinon.spy();
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
+            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
+            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        el.addEventListener('model-value-changed', spy);
+        el.formElements[1].checked = true;
+        expect(spy.callCount).to.equal(1);
+
+        spy.resetHistory();
+
+        el.formElements[2].checked = true;
+        expect(spy.callCount).to.equal(1);
+      });
+
+      it('should not dispatch model-value-changed on reappend checked child', async () => {
+        const spy = sinon.spy();
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
+            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
+            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        el.addEventListener('model-value-changed', spy);
+        el.formElements[1].checked = true;
+        expect(spy.callCount).to.equal(1);
+
+        el.appendChild(el.formElements[1]);
+        expect(spy.callCount).to.equal(1);
       });
 
       it('automatically sets the name attribute of child checkboxes to its own name', async () => {
