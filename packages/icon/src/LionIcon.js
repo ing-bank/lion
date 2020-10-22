@@ -145,6 +145,9 @@ export class LionIcon extends LitElement {
   _renderSvg(svgObject) {
     validateSvg(svgObject);
     render(svgObject, this);
+    if (this.firstElementChild) {
+      this.firstElementChild.setAttribute('aria-hidden', 'true');
+    }
   }
 
   async _onIconIdChanged(prevIconId) {
