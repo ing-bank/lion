@@ -3,6 +3,10 @@ import { defineCE, expect, fixture, html } from '@open-wc/testing';
 import '../lion-select-invoker.js';
 import { LionSelectInvoker } from '../src/LionSelectInvoker.js';
 
+/**
+ * @typedef {import('@lion/listbox').LionOption} LionOption
+ */
+
 describe('lion-select-invoker', () => {
   it('should behave as a button', async () => {
     const el = await fixture(html`<lion-select-invoker></lion-select-invoker>`);
@@ -13,7 +17,7 @@ describe('lion-select-invoker', () => {
     const el = /** @type {LionSelectInvoker} */ (await fixture(
       html`<lion-select-invoker></lion-select-invoker>`,
     ));
-    el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+    el.selectedElement = /** @type {LionOption} */ (await fixture(
       `<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`,
     ));
     await el.updateComplete;
@@ -34,7 +38,7 @@ describe('lion-select-invoker', () => {
     const el = /** @type {LionSelectInvoker} */ (await fixture(
       html`<lion-select-invoker></lion-select-invoker>`,
     ));
-    el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+    el.selectedElement = /** @type {LionOption} */ (await fixture(
       `<div class="option">just textContent</div>`,
     ));
     await el.updateComplete;
@@ -81,13 +85,13 @@ describe('lion-select-invoker', () => {
       );
       const el = /** @type {LionSelectInvoker} */ (await fixture(`<${myTag}></${myTag}>`));
 
-      el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+      el.selectedElement = /** @type {LionOption} */ (await fixture(
         `<div class="option">cat</div>`,
       ));
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('cat selected');
 
-      el.selectedElement = /** @type {HTMLElement} */ (await fixture(
+      el.selectedElement = /** @type {LionOption} */ (await fixture(
         `<div class="option">dog</div>`,
       ));
       await el.updateComplete;
