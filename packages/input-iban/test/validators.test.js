@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { IsIBAN, IsCountryIBAN } from '../src/validators.js';
+import { IsIBAN, IsCountryIBAN, IsBlacklistedCountryIBAN } from '../src/validators.js';
 
 import '../lion-input-iban.js';
 
@@ -18,5 +18,15 @@ describe('IBAN validation', () => {
     expect(deValidator.execute('DE89370400440532013000')).to.be.false;
     expect(nlValidator.execute('DE89370400440532013000')).to.be.true;
     expect(nlValidator.execute('foo')).to.be.true;
+  });
+
+  it('provides IsBlackListedCountryIBAN to prevent IBANs from specific countries', () => {
+    const nlValidator = new IsBlacklistedCountryIBAN('NL');
+    const deValidator = new IsBlacklistedCountryIBAN('DE');
+    expect(nlValidator.execute('NL17INGB0002822608')).to.be.true;
+    expect(deValidator.execute('DE89370400440532013000')).to.be.true;
+    expect(nlValidator.execute('DE89370400440532013000')).to.be.false;
+    expect(deValidator.execute('NL17INGB0002822608')).to.be.false;
+    expect(nlValidator.execute('foo')).to.be.false;
   });
 });
