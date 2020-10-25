@@ -153,3 +153,42 @@ export class IsCountryIBAN extends IsIBAN {
     return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
   }
 }
+
+export class IsBlacklistedCountryIBAN extends IsIBAN {
+  static get validatorName() {
+    return 'IsBlacklistedCountryIBAN';
+  }
+
+  /**
+   * @param {?} [value]
+   * @returns {Boolean}
+   */
+  execute(value) {
+    const notIBAN = super.execute(value);
+    if (value.slice(0, 2) === this.param) {
+      return true;
+    }
+    if (notIBAN) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {*} [data.params]
+   * @param {string} [data.type]
+   * @param {Object.<string,?>} [data.config]
+   * @param {string} [data.name]
+   * @returns {Promise<string|Node>}
+   */
+  static async getMessage(data) {
+    await loadTranslations();
+    // Change to lion-validate+iban:error.IsBlaklistedCountryIBAN
+    // once the ../translations/ files have been updated
+    // if you want different translations for this type of validation error
+    return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+  }
+}

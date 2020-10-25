@@ -90,3 +90,23 @@ export const countryRestrictions = () => html`
   <small>Demo instructions: you can use NL20 INGB 0001 2345 67</small>
 `;
 ```
+
+### Blacklisted Country
+
+By default, we validate the input to ensure the IBAN is valid.
+To get the default feedback message for this default validator, use `loadDefaultFeedbackMessages` from `@lion/form-core`.
+
+In the example below, we show how to use an additional validator that restricts the `input-iban` to IBANs from certain countries.
+
+```js preview-story
+export const blacklistedCountry = () => html`
+  <lion-input-iban
+    .modelValue=${'RO89RZBR6997372848645577'}
+    .validators=${[new IsBlacklistedCountryIBAN('RO')]}
+    name="iban"
+    label="IBAN"
+  ></lion-input-iban>
+  <br />
+  <small>Demo instructions: you can use RO 89 RZBR 6997 3728 4864 5577</small>
+`;
+```
