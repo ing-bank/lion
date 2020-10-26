@@ -7,7 +7,7 @@ const { joinPaths } = require('./helpers.js');
  * @param {*} filePath
  */
 function getFolderDepth(filePath) {
-  return [...filePath.match(new RegExp('/', 'g'))].length - 1;
+  return [...filePath.match(new RegExp(/\/|\\/, 'g'))].length - 1;
 }
 
 function getImportAs(specifier, newImportName) {
