@@ -34,8 +34,6 @@ export class LionInputStepper extends LionInput {
         type: Number,
         reflect: true,
       },
-      __disableIncrementor: { attribute: false },
-      __disableDecrementor: { attribute: false },
     };
   }
 
@@ -50,8 +48,6 @@ export class LionInputStepper extends LionInput {
     super();
     /** @param {string} modelValue */
     this.parser = modelValue => parseFloat(modelValue);
-    this.__disableIncrementor = false;
-    this.__disableDecrementor = false;
     this.min = Infinity;
     this.max = Infinity;
     this.step = 1;
@@ -103,6 +99,15 @@ export class LionInputStepper extends LionInput {
     }
   }
 
+  // @ts-ignore
+  get slots() {
+    return {
+      ...super.slots,
+      prefix: () => this.__getButtonNode(),
+      suffix: () => this.__getButtonNode(true),
+    };
+  }
+
   /**
    * Set aria labels and apply validators
    * @private
@@ -149,13 +154,30 @@ export class LionInputStepper extends LionInput {
    */
   __toggleSpinnerButtonsState() {
     const { min, max } = this.values;
-    this.__disableIncrementor = this.currentValue >= max && max !== Infinity;
-    this.__disableDecrementor = this.currentValue <= min && min !== Infinity;
+    const decrementButton = this.__getSlot('prefix');
+    const incrementButton = this.__getSlot('suffix');
+    const disableIncrementor = this.currentValue >= max && max !== Infinity;
+    const disableDecrementor = this.currentValue <= min && min !== Infinity;
+    decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
+    incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     this.setAttribute('aria-valuenow', `${this.currentValue}`);
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
       }),
+    );
+  }
+
+  /**
+   * Get slotted element
+   * @param {String} slotName - slot name
+   * @returns {HTMLButtonElement|Object}
+   */
+  __getSlot(slotName) {
+    return (
+      /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+        child => child.slot === slotName,
+      ) || {}
     );
   }
 
@@ -186,21 +208,30 @@ export class LionInputStepper extends LionInput {
   }
 
   /**
+   * Get the button node
+   * @param {Boolean} isIncrement flag to differentiate the template
+   * @returns {Element|null}
+   */
+  __getButtonNode(isIncrement = false) {
+    const renderParent = document.createElement('div');
+    /** @type {typeof LionInputStepper} */ (this.constructor).render(
+      isIncrement ? this._incrementorTemplate() : this._decrementorTemplate(),
+      renderParent,
+      {
+        scopeName: this.localName,
+        eventContext: this,
+      },
+    );
+    return renderParent.firstElementChild;
+  }
+
+  /**
    * Toggle +/- buttons on change
    * @override
    */
   _onChange() {
     super._onChange();
     this.__toggleSpinnerButtonsState();
-  }
-
-  /**
-   * Override after template to none
-   * @override
-   */
-  // eslint-disable-next-line class-methods-use-this
-  _inputGroupAfterTemplate() {
-    return html``;
   }
 
   /**
@@ -213,43 +244,58 @@ export class LionInputStepper extends LionInput {
   }
 
   /**
-   * Override prefix template for the increment button
-   * @override
+   * Get the decrementor button sign template
+   * @returns {String|import('lit-element').TemplateResult}
    */
   // eslint-disable-next-line class-methods-use-this
-  _inputGroupPrefixTemplate() {
+  _decrementorSignTemplate() {
+    return '－';
+  }
+
+  /**
+   * Get the incrementor button sign template
+   * @returns {String|import('lit-element').TemplateResult}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _incrementorSignTemplate() {
+    return '＋';
+  }
+
+  /**
+   * Get the increment button template
+   * @returns {import('lit-element').TemplateResult}
+   */
+  _decrementorTemplate() {
     return html`
       <button
-        ?disabled=${this.disabled || this.readOnly || this.__disableDecrementor}
+        ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
         tabindex="-1"
         name="decrement"
         type="button"
         aria-label="decrement"
       >
-        -
+        ${this._decrementorSignTemplate()}
       </button>
     `;
   }
 
   /**
-   * Override suffix template for the decrement button and add after slot
-   * @override
+   * Get the decrement button template
+   * @returns {import('lit-element').TemplateResult}
    */
-  // eslint-disable-next-line class-methods-use-this
-  _inputGroupSuffixTemplate() {
+  _incrementorTemplate() {
     return html`
       <button
-        ?disabled=${this.disabled || this.readOnly || this.__disableIncrementor}
+        ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
         tabindex="-1"
         name="increment"
         type="button"
         aria-label="increment"
       >
-        +
+        ${this._incrementorSignTemplate()}
       </button>
-      <slot name="after"></slot>
     `;
   }
 }
