@@ -3,6 +3,7 @@ import { css, html } from '@lion/core';
 
 /**
  * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('@lion/listbox').LionOption} LionOption
  */
 
 /**
@@ -66,8 +67,8 @@ export class LionSelectInvoker extends LionButton {
      */
     this.readOnly = false;
     /**
-     * The option Element that is currently selected
-     * @type {HTMLElement | null}
+     * The option element that is currently selected
+     * @type {LionOption | null}
      */
     this.selectedElement = null;
     /**
