@@ -20,9 +20,10 @@ import '@lion/radio-group/lion-radio.js';
 
 import '@lion/select/lion-select.js';
 
+import '@lion/combobox/lion-combobox.js';
+import '@lion/listbox/lion-listbox.js';
+import '@lion/listbox/lion-option.js';
 import '@lion/select-rich/lion-select-rich.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-option.js';
 
 import '@lion/fieldset/lion-fieldset.js';
 
@@ -206,45 +207,45 @@ describe('lion-select', () => {
   });
 });
 
-describe('lion-select-rich', () => {
-  describe(featureName, () => {
-    it(getFirstPaintTitle(firstStampCount), async () => {
-      const spy = sinon.spy();
-      await fixture(html`
-        <lion-select-rich @model-value-changed="${spy}">
-          <lion-options slot="input">
+['combobox', 'listbox', 'select-rich'].forEach(chunk => {
+  const tagname = `lion-${chunk}`;
+  const tag = unsafeStatic(tagname);
+  describe(`${tagname}`, () => {
+    describe(featureName, () => {
+      it(getFirstPaintTitle(firstStampCount), async () => {
+        const spy = sinon.spy();
+        await fixture(html`
+          <${tag} @model-value-changed="${spy}">
             <lion-option .choiceValue="${'option1'}"></lion-option>
             <lion-option .choiceValue="${'option2'}"></lion-option>
             <lion-option .choiceValue="${'option3'}"></lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
+          </${tag}>
+        `);
 
-      expect(spy.callCount).to.equal(firstStampCount);
-    });
+        expect(spy.callCount).to.equal(firstStampCount);
+      });
 
-    it(getInteractionTitle(interactionCount), async () => {
-      const spy = sinon.spy();
-      const el = await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue="${'option1'}"></lion-option>
-            <lion-option .choiceValue="${'option2'}"></lion-option>
-            <lion-option .choiceValue="${'option3'}"></lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `);
+      it(getInteractionTitle(interactionCount), async () => {
+        const spy = sinon.spy();
+        const el = await fixture(html`
+          <${tag}>
+            <lion-option .choiceValue="${'option1'}">Option 1</lion-option>
+            <lion-option .choiceValue="${'option2'}">Option 2</lion-option>
+            <lion-option .choiceValue="${'option3'}">Option 3</lion-option>
+          </${tag}>
+        `);
 
-      el.addEventListener('model-value-changed', spy);
-      const option2 = el.querySelector('lion-option:nth-child(2)');
-      option2.checked = true;
-      expect(spy.callCount).to.equal(interactionCount);
+        el.addEventListener('model-value-changed', spy);
+        const option2 = el.querySelector('lion-option:nth-child(2)');
+        option2.checked = true;
+        expect(spy.callCount).to.equal(interactionCount);
 
-      spy.resetHistory();
+        spy.resetHistory();
 
-      const option3 = el.querySelector('lion-option:nth-child(3)');
-      option3.checked = true;
-      expect(spy.callCount).to.equal(interactionCount);
+        const option3 = el.querySelector('lion-option:nth-child(3)');
+        option3.checked = true;
+        expect(spy.callCount).to.equal(interactionCount);
+      });
     });
   });
 });
