@@ -1,5 +1,31 @@
 # Change Log
 
+## 0.3.8
+
+### Patch Changes
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+- Updated dependencies [618f2698]
+  - @lion/core@0.13.2
+  - @lion/localize@0.14.7
+  - @lion/select-rich@0.21.8
+  - @lion/form-core@0.6.5
+  - @lion/form@0.7.3
+  - @lion/input-date@0.8.3
+  - @lion/input-datepicker@0.17.2
+  - @lion/input@0.10.3
+  - @lion/select@0.8.3
+  - @lion/button@0.8.2
+  - @lion/checkbox-group@0.12.3
+  - @lion/fieldset@0.15.3
+  - @lion/input-email@0.9.3
+  - @lion/input-iban@0.10.3
+  - @lion/input-range@0.5.3
+  - @lion/radio-group@0.12.3
+  - @lion/textarea@0.8.3
+  - @lion/validate-messages@0.3.3
+
 ## 0.3.7
 
 ### Patch Changes

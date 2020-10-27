@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.14.7
+
+### Patch Changes
+
+- 20ba0ca8: Type enhancements
+
+  - LocalizeMixinTypes.d.ts extend from LitElement
+  - Make `slots` a getter in SlotMixin types
+  - selectedElement of type 'LionOption' in SelectRichInvoker
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+  - @lion/core@0.13.2
+
 ## 0.14.6
 
 ### Patch Changes

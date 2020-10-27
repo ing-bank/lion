@@ -1,5 +1,15 @@
 # @lion/listbox
 
+## 0.3.1
+
+### Patch Changes
+
+- 16dd0cec: Only send model-value-changed if the event is caused by one of its children
+- Updated dependencies [20ba0ca8]
+- Updated dependencies [618f2698]
+  - @lion/core@0.13.2
+  - @lion/form-core@0.6.5
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- 978af941: fix(icon): single pronounciation in JAWS/FF
+
+### Patch Changes
+
+- Updated dependencies [20ba0ca8]
+  - @lion/core@0.13.2
+
 ## 0.7.6
 
 ### Patch Changes
