@@ -66,7 +66,7 @@ describe('InputDataService', () => {
     it('"getReferenceProjectPaths"', async () => {});
 
     describe('"getMonoRepoPackages"', async () => {
-      it('supports yarn workspaces', async () => {
+      it('supports npm/yarn workspaces', async () => {
         mockProject({
           './package.json': JSON.stringify({
             workspaces: ['packages/*', 'another-folder/another-package'],

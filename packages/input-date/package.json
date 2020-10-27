@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group input-date",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group input-date",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group input-date",
+    "debug": "cd ../../ && npm run debug --group input-date",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-date",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-date",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group input-date"
+    "test": "cd ../../ && npm run test:browser --group input-date"
   },
   "sideEffects": [
     "lion-input-date.js"

@@ -30,7 +30,7 @@ For step 1, we can use `@open-wc/demoing-storybook` version 2 or higher, which u
 Install it manually (and see the docs for configuring):
 
 ```sh
-yarn add @open-wc/demoing-storybook --dev
+npm i @open-wc/demoing-storybook --save-dev
 ```
 
 Or scaffold it with basic configuration by doing
@@ -71,7 +71,7 @@ To do this we make use of [Providence](https://lion-web-components.netlify.app/?
 So lets install it:
 
 ```sh
-yarn add providence-analytics --dev
+npm i providence-analytics --save-dev
 ```
 
 And to use it, let's add a script to your projects `package.json`:
@@ -94,10 +94,12 @@ Inside ING, our design system also makes use of this providence tool to create t
 
 ```json
 "scripts": {
-  "upgrade:lion": "yarn upgrade --scope @lion --latest --exact && yarn providence:extend",
+  "upgrade:lion": "npx update-by-scope @lion && npm run providence:extend",
   "providence:extend": "providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to ing"
 }
 ```
+
+> Note that if you want to fix your lion versions, you have to do this manually or write your own script for updating by scope. `update-by-scope` does not support passing `--save-exact` flag sadly (or any flag for that matter).
 
 ### Replacing paths & template tagnames
 
@@ -110,7 +112,7 @@ This will analyse the JavaScript script and story content inside the markdown fi
 So all you need to do is to install this plugin:
 
 ```sh
-yarn add babel-plugin-extend-docs --dev
+npm i babel-plugin-extend-docs --save-dev
 ```
 
 and create a `babel.config.js` file in the root of your project:

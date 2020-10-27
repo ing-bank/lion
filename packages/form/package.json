@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group form",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group form",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group form",
+    "debug": "cd ../../ && npm run debug --group form",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group form",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group form",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group form"
+    "test": "cd ../../ && npm run test:browser --group form"
   },
   "sideEffects": [
     "lion-form.js"

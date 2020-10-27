@@ -27,8 +27,8 @@
     "start:fail": "es-dev-server -c demo/fail/server.js",
     "start:singleton": "es-dev-server -c demo/singleton/server.js",
     "start:singleton-complex": "es-dev-server -c demo/singleton-complex/server.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/singleton-manager/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/singleton-manager/test/**/*.test.js\""
+    "test": "cd ../../ && npm run test:browser --grep \"packages/singleton-manager/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && npm run test:browser:watch --grep \"packages/singleton-manager/test/**/*.test.js\""
   },
   "sideEffects": false,
   "keywords": [

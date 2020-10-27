@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group icon",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group icon",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group icon",
+    "debug": "cd ../../ && npm run debug --group icon",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group icon",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group icon",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group icon"
+    "test": "cd ../../ && npm run test:browser --group icon"
   },
   "sideEffects": [
     "lion-icon.js",

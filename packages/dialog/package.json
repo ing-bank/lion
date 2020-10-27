@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group dialog",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group dialog",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group dialog",
+    "debug": "cd ../../ && npm run debug --group dialog",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group dialog",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group dialog",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group dialog"
+    "test": "cd ../../ && npm run test:browser --group dialog"
   },
   "sideEffects": [
     "lion-dialog.js",

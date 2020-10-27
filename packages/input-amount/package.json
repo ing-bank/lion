@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group input-amount",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group input-amount",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group input-amount",
+    "debug": "cd ../../ && npm run debug --group input-amount",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-amount",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-amount",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group input-amount"
+    "test": "cd ../../ && npm run test:browser --group input-amount"
   },
   "sideEffects": [
     "lion-input-amount.js"
