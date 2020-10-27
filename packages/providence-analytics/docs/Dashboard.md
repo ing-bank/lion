@@ -14,7 +14,7 @@ application.
 
 ## Run
 
-Start the dashboard via `yarn dashboard` to automatically open the browser and start the dashboard.
+Start the dashboard via `npm run dashboard` to automatically open the browser and start the dashboard.
 
 ## Interface
 

@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group accordion",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group accordion",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group accordion",
+    "debug": "cd ../../ && npm run debug --group accordion",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group accordion",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group accordion",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group accordion"
+    "test": "cd ../../ && npm run test:browser --group accordion"
   },
   "sideEffects": [
     "lion-accordion.js"

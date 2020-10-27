@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group checkbox-group",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group checkbox-group",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group checkbox-group",
+    "debug": "cd ../../ && npm run debug --group checkbox-group",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group checkbox-group",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group checkbox-group",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group checkbox-group"
+    "test": "cd ../../ && npm run test:browser --group checkbox-group"
   },
   "sideEffects": [
     "lion-checkbox.js",

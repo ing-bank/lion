@@ -21,11 +21,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group progress-indicator",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group progress-indicator",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group progress-indicator",
+    "debug": "cd ../../ && npm run debug --group progress-indicator",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group progress-indicator",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group progress-indicator",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group progress-indicator"
+    "test": "cd ../../ && npm run test:browser --group progress-indicator"
   },
   "sideEffects": [
     "lion-progress-indicator.js"

@@ -33,7 +33,7 @@ const packagesWithScript = [...findPackagesWithScript(packagesDir)];
 
 const commands = packagesWithScript.map(pkgPath => ({
   name: basename(pkgPath),
-  command: `cd ${pkgPath} && yarn ${script}`,
+  command: `cd ${pkgPath} && npm run ${script}`,
 }));
 
 concurrently(commands, { maxProcesses: 5 })

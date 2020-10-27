@@ -468,7 +468,7 @@ class InputDataService {
    * Gives back all monorepo package paths
    */
   static getMonoRepoPackages(rootPath) {
-    // [1] Look for yarn workspaces
+    // [1] Look for npm/yarn workspaces
     const pkgJson = getPackageJson(rootPath);
     if (pkgJson && pkgJson.workspaces) {
       return getPathsFromGlobList(pkgJson.workspaces, rootPath);

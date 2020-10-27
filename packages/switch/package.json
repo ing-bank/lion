@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group switch",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group switch",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group switch",
+    "debug": "cd ../../ && npm run debug --group switch",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group switch",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group switch",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group switch"
+    "test": "cd ../../ && npm run test:browser --group switch"
   },
   "sideEffects": [
     "lion-switch.js",

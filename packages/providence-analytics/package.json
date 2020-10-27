@@ -24,7 +24,7 @@
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
     "test:node": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
-    "test:node:watch": "yarn test:node --watch"
+    "test:node:watch": "npm run test:node --watch"
   },
   "dependencies": {
     "@babel/core": "^7.10.1",

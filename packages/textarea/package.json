@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && yarn debug --group textarea",
-    "debug:firefox": "cd ../../ && yarn debug:firefox --group textarea",
-    "debug:webkit": "cd ../../ && yarn debug:webkit --group textarea",
+    "debug": "cd ../../ && npm run debug --group textarea",
+    "debug:firefox": "cd ../../ && npm run debug:firefox --group textarea",
+    "debug:webkit": "cd ../../ && npm run debug:webkit --group textarea",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --group textarea"
+    "test": "cd ../../ && npm run test:browser --group textarea"
   },
   "sideEffects": [
     "lion-textarea.js"
