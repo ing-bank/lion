@@ -73,6 +73,7 @@ export class LionInputStepper extends LionInput {
     this.addEventListener('keydown', this.__keyDownHandler);
     this._inputNode.setAttribute('inputmode', 'decimal');
     this._inputNode.setAttribute('autocomplete', 'off');
+    this.setAttribute('aria-label', this.label);
     this.step = this.hasAttribute('step') ? this.step : 1;
     this.__setAriaLabelsAndValidator();
     this.__toggleSpinnerButtonsState();

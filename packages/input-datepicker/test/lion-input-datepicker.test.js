@@ -170,6 +170,7 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(true);
       // Mimic user input: should fire the 'user-selected-date-changed' event
       await elObj.selectMonthDay(12);
+      await el.updateComplete; // safari take a little longer
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 

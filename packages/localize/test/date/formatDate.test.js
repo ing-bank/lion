@@ -5,6 +5,40 @@ import { localizeTearDown } from '../../test-helpers.js';
 import { formatDate } from '../../src/date/formatDate.js';
 import { parseDate } from '../../src/date/parseDate.js';
 
+const SUPPORTED_LOCALES = {
+  'bg-BG': 'Bulgarian',
+  'cs-CZ': 'Czech',
+  'de-DE': 'German (Germany)',
+  'en-AU': 'English (Australia)',
+  'en-GB': 'English (United Kingdom)',
+  'en-PH': 'English (Philippines)',
+  'en-US': 'English (United States)',
+  'es-ES': 'Spanish (Spain)',
+  'fr-FR': 'French (France)',
+  'fr-BE': 'French (Belgium)',
+  'hu-HU': 'Hungarian (Hungary)',
+  'id-ID': 'Indonesian (Indonesia)',
+  'it-IT': 'Italian (Italy)',
+  'nl-NL': 'Dutch (Netherlands)',
+  'nl-BE': 'Dutch (Belgium)',
+  'pl-PL': 'Polish (Poland)',
+  'ro-RO': 'Romanian (Romania)',
+  'ru-RU': 'Russian (Russia)',
+  'sk-SK': 'Slovak (Slovakia)',
+  'tr-TR': 'Turkish (Turkey)',
+  'uk-UA': 'Ukrainian (Ukraine)',
+  'zh-CN': 'Chinese (China)',
+  'zh-Hans': 'Chinese (Simplified Han)',
+  'zh-Hans-CN': 'Chinese (Simplified Han, China)',
+  'zh-Hans-HK': 'Chinese (Simplified Han, Hong Kong SAR China)',
+  'zh-Hans-MO': 'Chinese (Simplified Han, Macau SAR China)',
+  'zh-Hans-SG': 'Chinese (Simplified Han, Singapore)',
+  'zh-Hant': 'Chinese (Traditional Han)',
+  'zh-Hant-HK': 'Chinese (Traditional Han, Hong Kong SAR China)',
+  'zh-Hant-MO': 'Chinese (Traditional Han, Macau SAR China)',
+  'zh-Hant-TW': 'Chinese (Traditional Han, Taiwan)',
+};
+
 describe('formatDate', () => {
   beforeEach(() => {
     localizeTearDown();
@@ -124,14 +158,53 @@ describe('formatDate', () => {
     expect(formatDate(parsedDate, options)).to.equal('maandag 01 januari 1940');
   });
 
-  it('handles options without year', async () => {
-    const options = {
-      weekday: 'long',
-      month: 'long',
-      day: '2-digit',
+  describe('Date format options without "year"', () => {
+    const LOCALE_FORMATTED_DATE_MAP = {
+      'bg-BG': 'събота, 12 октомври',
+      'cs-CZ': 'sobota 12. října',
+      'de-DE': 'Samstag, 12. Oktober',
+      'en-AU': 'Saturday, 12 October',
+      'en-GB': 'Saturday, 12 October',
+      'en-PH': 'Saturday, 12 October',
+      'en-US': 'Saturday, October 12',
+      'es-ES': 'sábado, 12 de octubre',
+      'fr-FR': 'samedi 12 octobre',
+      'fr-BE': 'samedi 12 octobre',
+      'hu-HU': 'október 12., szombat',
+      'id-ID': 'Sabtu, 12 Oktober',
+      'it-IT': 'sabato 12 ottobre',
+      'nl-NL': 'zaterdag 12 oktober',
+      'nl-BE': 'zaterdag 12 oktober',
+      'pl-PL': 'sobota, 12 października',
+      'ro-RO': 'sâmbătă, 12 octombrie',
+      'ru-RU': 'суббота, 12 октября',
+      'sk-SK': 'sobota 12. októbra',
+      'tr-TR': '12 Ekim Cumartesi',
+      'uk-UA': 'субота, 12 жовтня',
+      'zh-CN': '10月12日星期六',
+      'zh-Hans': '10月12日星期六',
+      'zh-Hans-CN': '10月12日星期六',
+      'zh-Hans-HK': '10月12日星期六',
+      'zh-Hans-MO': '10月12日星期六',
+      'zh-Hans-SG': '10月12日星期六',
+      'zh-Hant': '10月12日 星期六',
+      'zh-Hant-HK': '10月12日星期六',
+      'zh-Hant-MO': '10月12日星期六',
+      'zh-Hant-TW': '10月12日 星期六',
     };
-    const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
-    expect(formatDate(parsedDate, options)).to.equal('Saturday, 12 October');
+
+    Object.keys(SUPPORTED_LOCALES).forEach(locale => {
+      it(`handles options without year for locale: ${locale}`, async () => {
+        const options = {
+          weekday: 'long',
+          month: 'long',
+          day: '2-digit',
+          locale,
+        };
+        const parsedDate = /** @type {Date} */ (parseDate('12.10.2019'));
+        expect(formatDate(parsedDate, options)).to.equal(LOCALE_FORMATTED_DATE_MAP[locale]);
+      });
+    });
   });
 
   it('handles options without month', async () => {

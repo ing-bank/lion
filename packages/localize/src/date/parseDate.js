@@ -31,6 +31,7 @@ const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale);
 export function parseDate(dateString) {
   const stringToParse = addLeadingZero(dateString);
   let parsedString;
+
   switch (memoizedGetDateFormatBasedOnLocale(localize.locale)) {
     case 'day-month-year':
       parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
@@ -53,11 +54,10 @@ export function parseDate(dateString) {
     default:
       parsedString = '0000/00/00';
   }
-  const parsedDate = new Date(parsedString);
-  // Check if parsedDate is not `Invalid Date`
-  // eslint-disable-next-line no-restricted-globals
-  if (!isNaN(parsedDate.getTime())) {
-    return parsedDate;
+
+  const [year, month, day] = parsedString.split('/').map(Number);
+  if (year > 0 && month > 0 && day > 0) {
+    return new Date(Date.UTC(year, month - 1, day));
   }
   return undefined;
 }

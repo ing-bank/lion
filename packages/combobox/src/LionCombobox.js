@@ -397,7 +397,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string} v
    */
   _setTextboxValue(v) {
-    this._inputNode.value = v;
+    if (this._inputNode.value !== v) {
+      this._inputNode.value = v;
+    }
   }
 
   /**

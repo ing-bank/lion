@@ -35,6 +35,7 @@ describe('lion-tooltip', () => {
       const eventMouseLeave = new Event('mouseleave');
       el.dispatchEvent(eventMouseLeave);
       await el.updateComplete;
+      await el.updateComplete; // webkit needs longer
       // @ts-expect-error allow protected props in tests
       expect(el._overlayCtrl.isShown).to.equal(false);
     });
@@ -76,6 +77,7 @@ describe('lion-tooltip', () => {
       const eventFocusOut = new Event('focusout');
       invoker.dispatchEvent(eventFocusOut);
       await el.updateComplete;
+      await el.updateComplete; // webkit needs longer
       // @ts-expect-error allow protected props in tests
       expect(el._overlayCtrl.isShown).to.equal(false);
     });
