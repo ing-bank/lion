@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.5
+
+### Patch Changes
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+- Updated dependencies [618f2698]
+  - @lion/core@0.13.2
+  - @lion/localize@0.14.7
+
 ## 0.6.4
 
 ### Patch Changes

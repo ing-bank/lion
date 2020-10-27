@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.12.3
+
+### Patch Changes
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+- Updated dependencies [618f2698]
+  - @lion/core@0.13.2
+  - @lion/form-core@0.6.5
+
 ## 0.12.2
 
 ### Patch Changes

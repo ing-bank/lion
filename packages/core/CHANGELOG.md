@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.13.2
+
+### Patch Changes
+
+- 20ba0ca8: Type enhancements
+
+  - LocalizeMixinTypes.d.ts extend from LitElement
+  - Make `slots` a getter in SlotMixin types
+  - selectedElement of type 'LionOption' in SelectRichInvoker
+
 ## 0.13.1
 
 ### Patch Changes

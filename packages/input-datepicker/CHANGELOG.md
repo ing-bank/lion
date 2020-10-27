@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.17.2
+
+### Patch Changes
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+- Updated dependencies [618f2698]
+  - @lion/core@0.13.2
+  - @lion/localize@0.14.7
+  - @lion/form-core@0.6.5
+  - @lion/input-date@0.8.3
+  - @lion/calendar@0.12.2
+  - @lion/overlays@0.21.2
+
 ## 0.17.1
 
 ### Patch Changes

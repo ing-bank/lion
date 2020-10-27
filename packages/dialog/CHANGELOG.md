@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [20ba0ca8]
+  - @lion/core@0.13.2
+  - @lion/overlays@0.21.2
+
 ## 0.9.2
 
 ### Patch Changes

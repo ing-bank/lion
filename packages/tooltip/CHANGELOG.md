@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.15.3
+
+### Patch Changes
+
+- 618f2698: Run tests also on webkit
+- Updated dependencies [20ba0ca8]
+  - @lion/core@0.13.2
+  - @lion/overlays@0.21.2
+
 ## 0.15.2
 
 ### Patch Changes
