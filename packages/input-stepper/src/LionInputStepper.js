@@ -103,8 +103,8 @@ export class LionInputStepper extends LionInput {
   get slots() {
     return {
       ...super.slots,
-      prefix: () => this.__getButtonNode(),
-      suffix: () => this.__getButtonNode(true),
+      prefix: () => this.__getDecrementButtonNode(),
+      suffix: () => this.__getIncrementButtonNode(),
     };
   }
 
@@ -208,14 +208,30 @@ export class LionInputStepper extends LionInput {
   }
 
   /**
-   * Get the button node
-   * @param {Boolean} isIncrement flag to differentiate the template
+   * Get the increment button node
    * @returns {Element|null}
    */
-  __getButtonNode(isIncrement = false) {
+  __getIncrementButtonNode() {
     const renderParent = document.createElement('div');
     /** @type {typeof LionInputStepper} */ (this.constructor).render(
-      isIncrement ? this._incrementorTemplate() : this._decrementorTemplate(),
+      this._incrementorTemplate(),
+      renderParent,
+      {
+        scopeName: this.localName,
+        eventContext: this,
+      },
+    );
+    return renderParent.firstElementChild;
+  }
+
+  /**
+   * Get the decrement button node
+   * @returns {Element|null}
+   */
+  __getDecrementButtonNode() {
+    const renderParent = document.createElement('div');
+    /** @type {typeof LionInputStepper} */ (this.constructor).render(
+      this._decrementorTemplate(),
       renderParent,
       {
         scopeName: this.localName,
@@ -271,7 +287,6 @@ export class LionInputStepper extends LionInput {
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
         tabindex="-1"
-        name="decrement"
         type="button"
         aria-label="decrement"
       >
@@ -290,7 +305,6 @@ export class LionInputStepper extends LionInput {
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
         tabindex="-1"
-        name="increment"
         type="button"
         aria-label="increment"
       >
