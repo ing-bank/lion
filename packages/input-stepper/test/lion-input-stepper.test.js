@@ -24,7 +24,7 @@ describe('<lion-input-stepper>', () => {
     it('should increment the value to 1 on + button click', async () => {
       const el = await fixture(defaultInputStepper);
       expect(el.value).to.equal('');
-      const incrementButton = el.shadowRoot?.querySelector('[name=increment]');
+      const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
       expect(el.value).to.equal('1');
     });
@@ -32,8 +32,8 @@ describe('<lion-input-stepper>', () => {
     it('should decrement the value to -1 on - button click', async () => {
       const el = await fixture(defaultInputStepper);
       expect(el.value).to.equal('');
-      const incrementButton = el.shadowRoot?.querySelector('[name=decrement]');
-      incrementButton?.dispatchEvent(new Event('click'));
+      const decrementButton = el.querySelector('[slot=prefix]');
+      decrementButton?.dispatchEvent(new Event('click'));
       expect(el.value).to.equal('-1');
     });
 
@@ -66,7 +66,7 @@ describe('<lion-input-stepper>', () => {
 
     it('updates aria-valuenow when stepper is changed', async () => {
       const el = await fixture(inputStepperWithAttrs);
-      const incrementButton = el.shadowRoot?.querySelector('[name=increment]');
+      const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
       expect(el).to.have.attribute('aria-valuenow', '1');
     });
