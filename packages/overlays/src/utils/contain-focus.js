@@ -132,13 +132,13 @@ export function containFocus(rootElement) {
   function disconnect() {
     window.removeEventListener('keydown', handleKeydown);
     window.removeEventListener('focusin', setFocusInRootElement);
-    window.removeEventListener('blur', addFocusinListener);
+    window.removeEventListener('focusout', addFocusinListener);
     rootElement.removeChild(tabDetectionElement);
     rootElement.style.removeProperty('outline');
   }
 
   window.addEventListener('keydown', handleKeydown);
-  window.addEventListener('blur', addFocusinListener);
+  window.addEventListener('focusout', addFocusinListener);
   createHelpersDetectingTabDirection();
 
   return { disconnect };

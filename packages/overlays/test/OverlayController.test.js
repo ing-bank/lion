@@ -358,7 +358,7 @@ describe('OverlayController', () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           contentNode,
-          trapsKeyboardFocus: true,
+          trapsKeyboardFocus: false,
         });
         // add element to dom to allow focus
         /** @type {HTMLElement} */ (await fixture(html`${ctrl.content}`));
