@@ -841,10 +841,10 @@ describe('lion-combobox', () => {
       await performChecks('both', 0, 'Artichoke');
 
       el.multipleChoice = true;
-      // await performChecks('none', [0, 1], 'Chard');
-      // await performChecks('list', [0, 1], 'Chard');
-      // await performChecks('inline', [0, 1], 'Chard');
-      // await performChecks('both', [0, 1], 'Chard');
+      await performChecks('none', [0, 1], '');
+      await performChecks('list', [0, 1], '');
+      await performChecks('inline', [0, 1], '');
+      await performChecks('both', [0, 1], '');
     });
 
     it('does inline autocompletion when adding chars', async () => {
@@ -913,10 +913,10 @@ describe('lion-combobox', () => {
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(el._inputNode.value).to.equal('Chard');
-      expect(el._inputNode.selectionStart).to.equal('ch'.length);
+      expect(el._inputNode.selectionStart).to.equal('Ch'.length);
       expect(el._inputNode.selectionEnd).to.equal('Chard'.length);
 
-      // Autocompletion happened. When we go backwards ('Char'), we should not
+      // Autocompletion happened. When we go backwards ('Ch[ard]' => 'Ch'), we should not
       // autocomplete to 'Chard' anymore.
       await mimicUserTypingAdvanced(el, ['Backspace']);
       await el.updateComplete;

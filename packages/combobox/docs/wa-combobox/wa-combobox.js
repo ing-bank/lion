@@ -167,9 +167,9 @@ class WaOption extends LionOption {
         :host([is-user-text-read]) .wa-option__content-row2-text-inner-icon {
           color: lightblue;
         }
-        /*
-      .wa-option__content-row2-menu {
-      } */
+        .wa-selected {
+          color: #009688;
+        }
       `,
     ];
   }
@@ -178,13 +178,7 @@ class WaOption extends LionOption {
     return html`<div class="wa-option">
       <div class="wa-option__image">
         <div class="wa-option__image-inner">
-          <img
-            src="${this.image}"
-            alt=""
-            draggable="false"
-            class="_2goTk _1Jdop _3Whw5"
-            style="visibility: visible;"
-          />
+          <img src="${this.image}" alt="" draggable="false" style="visibility: visible;" />
           ${this.image
             ? ''
             : html`<div class="wa-option__image-inner-inner">
@@ -213,11 +207,9 @@ class WaOption extends LionOption {
       <div class="wa-option__content">
         <div class="wa-option__content-row1">
           <div class="wa-option__content-row1-title">
-            <span class="_357i8">
-              <span dir="auto" title="${this.title}" class="_3ko75 _5h6Y_ _3Whw5">
-                ${this.title}
-              </span>
-              <div class="_3XFan"></div>
+            <span>
+              <span dir="auto" title="${this.title}"> ${this.title} </span>
+              <div></div>
             </span>
           </div>
           <div class="wa-option__content-row1-time">${this.time}</div>
@@ -226,7 +218,7 @@ class WaOption extends LionOption {
           <div class="wa-option__content-row2-text">
             <span class="wa-option__content-row2-text-inner" title="‪${this.text}‬">
               <div class="wa-option__content-row2-text-inner-icon">
-                <span data-testid="status-dblcheck" data-icon="status-dblcheck" class="">
+                <span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 18 18"
@@ -240,7 +232,7 @@ class WaOption extends LionOption {
                   </svg>
                 </span>
               </div>
-              <span dir="ltr" class="_3ko75 _5h6Y_ _3Whw5">${this.text}</span></span
+              <span dir="ltr">${this.text}</span></span
             >
           </div>
           <div class="wa-option__content-row2-menu"><span></span><span></span><span></span></div>
@@ -255,11 +247,23 @@ class WaOption extends LionOption {
    */
   onFilterMatch(matchingString) {
     this.__originalTitle = this.title;
-    const newInnerHTML = this.title.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
+    this.__originalText = this.text;
+    const newTitle = this.__originalTitle.replace(
+      new RegExp(`(${matchingString})`, 'i'),
+      `<b class="wa-selected">$1</b>`,
+    );
+    const newText = this.__originalText.replace(
+      new RegExp(`(${matchingString})`, 'i'),
+      `<b class="wa-selected">$1</b>`,
+    );
+
     const helperNode = document.createElement('div');
     // For Safari, we need to add a label to the element
-    helperNode.innerHTML = `<span aria-label="${this.title}">${newInnerHTML}</span>`;
+    helperNode.innerHTML = `<span aria-label="${this.title}">${newTitle}</span>`;
     [this.title] = helperNode.children;
+    helperNode.innerHTML = `<span aria-label="${this.text}">${newText}</span>`;
+    [this.text] = helperNode.children;
+    // Show animation
     this.style.cssText = `
     max-height: 500px;
     opacity: 1;
@@ -275,6 +279,9 @@ class WaOption extends LionOption {
   onFilterUnmatch() {
     if (this.__originalTitle) {
       this.title = this.__originalTitle;
+    }
+    if (this.__originalText) {
+      this.text = this.__originalText;
     }
     this.style.cssText = `
     max-height: 0;
@@ -363,6 +370,38 @@ class WaCombobox extends LionCombobox {
     this.showAllOnEmpty = true;
     /** @configure LionCombobox */
     this.rotateKeyboardNavigation = false;
+    /** @configure LionCombobox */
+    this.autocomplete = 'list';
+  }
+
+  /**
+   * @override LionCombobox - also match option.text
+   * @param {LionOption} option
+   * @param {string} textboxValue current ._inputNode value
+   */
+  matchCondition(option, textboxValue) {
+    let idx = -1;
+    if (typeof option.choiceValue === 'string' && typeof textboxValue === 'string') {
+      idx = option.choiceValue.toLowerCase().indexOf(textboxValue.toLowerCase());
+      // enhance LionCombobox: also match option.text
+      const text = option.__originalText || option.text;
+      if (idx === -1 && typeof text === 'string') {
+        idx = text.toLowerCase().indexOf(textboxValue.toLowerCase());
+      }
+    }
+
+    if (this.matchMode === 'all') {
+      return idx > -1; // matches part of word
+    }
+    return idx === 0; // matches beginning of value
+  }
+
+  /**
+   * @override LionCombobox - always sync textbox when selected value changes
+   */
+  // eslint-disable-next-line no-unused-vars
+  _syncToTextboxCondition() {
+    return true;
   }
 }
 customElements.define('wa-combobox', WaCombobox);
