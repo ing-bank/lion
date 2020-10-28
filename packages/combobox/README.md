@@ -67,7 +67,7 @@ to the configurable values `none`, `list`, `inline` and `both`.
 |        | list | filter | focus | check | complete |
 | -----: | :--: | :----: | :---: | :---: | :------: |
 |   none |  ✓   |        |       |       |          |
-|   list |  ✓   |   ✓    |   ✓   |   ✓   |          |
+|   list |  ✓   |   ✓    |       |       |          |
 | inline |  ✓   |        |   ✓   |   ✓   |    ✓     |
 |   both |  ✓   |   ✓    |   ✓   |   ✓   |    ✓     |
 

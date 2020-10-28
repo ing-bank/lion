@@ -5,6 +5,7 @@ import '../lion-combobox.js';
 import { LionOptions } from '@lion/listbox/src/LionOptions.js';
 import { browserDetection, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
+import { LionCombobox } from '../src/LionCombobox.js';
 
 /**
  * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
@@ -20,7 +21,7 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  el._overlayInvokerNode.dispatchEvent(new Event('keydown'));
+  el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
 }
 
 /**
@@ -31,31 +32,32 @@ async function mimicUserTypingAdvanced(el, values) {
   const inputNode = /** @type {HTMLInputElement & {selectionStart:number, selectionEnd:number}} */ (el._inputNode);
   inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
 
-  let hasSelection = inputNode.selectionStart !== inputNode.selectionEnd;
-
   for (const key of values) {
     // eslint-disable-next-line no-await-in-loop, no-loop-func
     await new Promise(resolve => {
-      setTimeout(() => {
-        if (key === 'Backspace') {
-          if (hasSelection) {
-            inputNode.value =
-              inputNode.value.slice(0, inputNode.selectionStart) +
-              inputNode.value.slice(inputNode.selectionEnd, inputNode.value.length);
-          } else {
-            inputNode.value = inputNode.value.slice(0, -1);
-          }
-        } else if (hasSelection) {
+      const hasSelection = inputNode.selectionStart !== inputNode.selectionEnd;
+
+      if (key === 'Backspace') {
+        if (hasSelection) {
           inputNode.value =
             inputNode.value.slice(0, inputNode.selectionStart) +
-            key +
             inputNode.value.slice(inputNode.selectionEnd, inputNode.value.length);
         } else {
-          inputNode.value += key;
+          inputNode.value = inputNode.value.slice(0, -1);
         }
-        hasSelection = false;
-        inputNode.dispatchEvent(new KeyboardEvent('keydown', { key }));
-        el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      } else if (hasSelection) {
+        inputNode.value =
+          inputNode.value.slice(0, inputNode.selectionStart) +
+          key +
+          inputNode.value.slice(inputNode.selectionEnd, inputNode.value.length);
+      } else {
+        inputNode.value += key;
+      }
+
+      inputNode.dispatchEvent(new KeyboardEvent('keydown', { key }));
+      el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+
+      el.updateComplete.then(() => {
         resolve();
       });
     });
@@ -246,8 +248,8 @@ describe('lion-combobox', () => {
     });
   });
 
-  describe('Listbox visibility', () => {
-    it('does not show listbox on focusin', async () => {
+  describe('Overlay visibility', () => {
+    it('does not show overlay on focusin', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -263,14 +265,14 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
     });
 
-    it('shows listbox again after select and char keydown', async () => {
+    it('shows overlay again after select and char keydown', async () => {
       /**
        * Scenario:
-       * [1] user focuses textbox: listbox hidden
-       * [2] user types char: listbox shows
-       * [3] user selects "Artichoke": listbox closes, textbox gets value "Artichoke" and textbox
+       * [1] user focuses textbox: overlay hidden
+       * [2] user types char: overlay shows
+       * [3] user selects "Artichoke": overlay closes, textbox gets value "Artichoke" and textbox
        * still has focus
-       * [4] user changes textbox value to "Artichoke": the listbox should show again
+       * [4] user changes textbox value to "Artichoke": the overlay should show again
        */
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo">
@@ -306,7 +308,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
     });
 
-    it('hides (and clears) listbox on [Escape]', async () => {
+    it('hides (and clears) overlay on [Escape]', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -329,7 +331,7 @@ describe('lion-combobox', () => {
       expect(el._inputNode.value).to.equal('');
     });
 
-    it('hides listbox on [Tab]', async () => {
+    it('hides overlay on [Tab]', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -371,11 +373,38 @@ describe('lion-combobox', () => {
       expect(el._inputNode.value).to.equal('Artichoke');
       expect(el.checkedIndex).to.equal(0);
 
-      el._inputNode.value = '';
       mimicUserTyping(el, '');
+      await el.updateComplete;
       el.opened = false;
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(-1);
+    });
+
+    // NB: If this becomes a suite, move to separate file
+    describe('Subclassers', () => {
+      it('allows to control overlay visibility via "_showOverlayCondition"', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          _showOverlayCondition(options) {
+            return this.focused || super.showOverlayCondition(options);
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        expect(el.opened).to.equal(false);
+        el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        await el.updateComplete;
+        expect(el.opened).to.equal(true);
+      });
     });
 
     describe('Accessibility', () => {
@@ -783,7 +812,42 @@ describe('lion-combobox', () => {
       expect(el._inputNode.selectionEnd).to.equal('ch'.length);
     });
 
-    it('does autocompletion when adding chars', async () => {
+    it('synchronizes textbox on overlay close', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="none">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.equal('');
+
+      async function performChecks(autocomplete, index, valueOnClose) {
+        await el.updateComplete;
+        el.opened = true;
+        el.setCheckedIndex(-1);
+        await el.updateComplete;
+        el.autocomplete = autocomplete;
+        el.setCheckedIndex(index);
+        el.opened = false;
+        await el.updateComplete;
+        expect(el._inputNode.value).to.equal(valueOnClose);
+      }
+
+      await performChecks('none', 0, 'Artichoke');
+      await performChecks('list', 0, 'Artichoke');
+      await performChecks('inline', 0, 'Artichoke');
+      await performChecks('both', 0, 'Artichoke');
+
+      el.multipleChoice = true;
+      // await performChecks('none', [0, 1], 'Chard');
+      // await performChecks('list', [0, 1], 'Chard');
+      // await performChecks('inline', [0, 1], 'Chard');
+      // await performChecks('both', [0, 1], 'Chard');
+    });
+
+    it('does inline autocompletion when adding chars', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" autocomplete="inline">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -809,7 +873,7 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.equal(1);
     });
 
-    it('does autocompletion when changing the word', async () => {
+    it('does inline autocompletion when changing the word', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" autocomplete="inline">
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -824,7 +888,7 @@ describe('lion-combobox', () => {
       expect(el.activeIndex).to.equal(1);
       expect(el.checkedIndex).to.equal(1);
 
-      await mimicUserTypingAdvanced(el, 'ic'.split(''));
+      await mimicUserTypingAdvanced(el, ['i']);
       await el.updateComplete;
       expect(el.activeIndex).to.equal(2);
       expect(el.checkedIndex).to.equal(2);
@@ -854,11 +918,37 @@ describe('lion-combobox', () => {
 
       // Autocompletion happened. When we go backwards ('Char'), we should not
       // autocomplete to 'Chard' anymore.
-      mimicUserTyping(el, 'Char');
+      await mimicUserTypingAdvanced(el, ['Backspace']);
       await el.updateComplete;
-      expect(el._inputNode.value).to.equal('Char'); // so not 'Chard'
-      expect(el._inputNode.selectionStart).to.equal('Char'.length);
-      expect(el._inputNode.selectionEnd).to.equal('Char'.length);
+      expect(el._inputNode.value).to.equal('Ch'); // so not 'Chard'
+      expect(el._inputNode.selectionStart).to.equal('Ch'.length);
+      expect(el._inputNode.selectionEnd).to.equal('Ch'.length);
+    });
+
+    describe('Subclassers', () => {
+      it('allows to configure autoselect', async () => {
+        class X extends LionCombobox {
+          _autoSelectCondition() {
+            return true;
+          }
+        }
+        const tagName = defineCE(X);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo" autocomplete="list" opened>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+        // This ensures autocomplete would be off originally
+        el.autocomplete = 'list';
+        await mimicUserTypingAdvanced(el, 'vi'); // so we have options ['Victoria Plum']
+        await el.updateComplete;
+        expect(el.checkedIndex).to.equal(3);
+      });
     });
 
     it('highlights matching options', async () => {
@@ -887,6 +977,125 @@ describe('lion-combobox', () => {
       expect(options[1]).lightDom.to.equal(`<span aria-label="Chard">Char<b>d</b></span>`);
       expect(options[2]).lightDom.to.equal(`Chicory`);
       expect(options[3]).lightDom.to.equal(`Victoria Plum`);
+    });
+
+    it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="none">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.equal('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'none';
+      el.setCheckedIndex(0);
+      expect(el._inputNode.value).to.equal('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'list';
+      el.setCheckedIndex(0);
+      expect(el._inputNode.value).to.equal('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'inline';
+      el.setCheckedIndex(0);
+      expect(el._inputNode.value).to.equal('Artichoke');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'both';
+      el.setCheckedIndex(0);
+      expect(el._inputNode.value).to.equal('Artichoke');
+    });
+
+    it('synchronizes last index to textbox when autocomplete is "inline" or "both" when multipleChoice', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="none" multiple-choice>
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.eql('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'none';
+      el.setCheckedIndex([0]);
+      el.setCheckedIndex([1]);
+      expect(el._inputNode.value).to.equal('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'list';
+      el.setCheckedIndex([0]);
+      el.setCheckedIndex([1]);
+      expect(el._inputNode.value).to.equal('');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'inline';
+      el.setCheckedIndex([0]);
+      expect(el._inputNode.value).to.equal('Artichoke');
+      el.setCheckedIndex([1]);
+      expect(el._inputNode.value).to.equal('Chard');
+
+      el.setCheckedIndex(-1);
+      el.autocomplete = 'both';
+      el.setCheckedIndex([0]);
+      expect(el._inputNode.value).to.equal('Artichoke');
+      el.setCheckedIndex([1]);
+      expect(el._inputNode.value).to.equal('Chard');
+    });
+
+    describe('Subclassers', () => {
+      it('allows to override "_syncCheckedWithTextboxMultiple"', async () => {
+        class X extends LionCombobox {
+          // eslint-disable-next-line no-unused-vars
+          _syncToTextboxCondition() {
+            return true;
+          }
+
+          // eslint-disable-next-line no-unused-vars
+          _syncToTextboxMultiple(modelValue, oldModelValue) {
+            // In a real scenario (depending on how selection display works),
+            // you could override the default (last selected option) with '' for instance
+            this._setTextboxValue(`${modelValue}-${oldModelValue}-multi`);
+          }
+        }
+        const tagName = defineCE(X);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo" autocomplete="none" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'none';
+        el.setCheckedIndex([0]);
+        expect(el._inputNode.value).to.equal('Artichoke--multi');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'list';
+        el.setCheckedIndex([0]);
+        expect(el._inputNode.value).to.equal('Artichoke--multi');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'inline';
+        el.setCheckedIndex([0]);
+        expect(el._inputNode.value).to.equal('Artichoke--multi');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'both';
+        el.setCheckedIndex([0]);
+        expect(el._inputNode.value).to.equal('Artichoke--multi');
+      });
     });
 
     describe('Active index behavior', () => {
@@ -919,9 +1128,19 @@ describe('lion-combobox', () => {
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </lion-combobox>
         `));
+
+        /** @param {LionCombobox} elm */
+        function reset(elm) {
+          // eslint-disable-next-line no-param-reassign
+          elm.activeIndex = -1;
+          // eslint-disable-next-line no-param-reassign
+          elm.checkedIndex = -1;
+        }
+
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 1. List Autocomplete with Manual Selection:
         // does not set active at all until user selects
+        reset(el);
         el.autocomplete = 'none';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
@@ -932,6 +1151,7 @@ describe('lion-combobox', () => {
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 2. List Autocomplete with Automatic Selection:
         // does not set active at all until user selects
+        reset(el);
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
@@ -941,6 +1161,7 @@ describe('lion-combobox', () => {
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 3. List with Inline Autocomplete (mostly, but with aria-autocomplete="inline")
+        reset(el);
         el.autocomplete = 'inline';
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
@@ -948,11 +1169,10 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         await el.updateComplete;
 
-        // TODO: enable this, so it does not open listbox and is different from [autocomplete=both]?
-        // expect(el.opened).to.be.false;
         expect(el.activeIndex).to.equal(1);
 
         el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await el.updateComplete;
         await el.updateComplete;
 
         expect(el.activeIndex).to.equal(-1);
@@ -960,6 +1180,7 @@ describe('lion-combobox', () => {
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 3. List with Inline Autocomplete
+        reset(el);
         el.autocomplete = 'both';
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
@@ -1022,6 +1243,7 @@ describe('lion-combobox', () => {
         el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         await el.updateComplete;
         expect(el._inputNode.textContent).to.equal('');
+
         el.formElements.forEach(option => expect(option.active).to.be.false);
 
         // change selection, active index should update to closest match
