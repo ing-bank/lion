@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.4
+
+### Patch Changes
+
+- 51d2f4d2: fix(input-stepper): make use of prefix and suffix slots
+
 ## 0.1.3
 
 ### Patch Changes
