@@ -1,4 +1,4 @@
-# Extending Lion Documentation
+# A speedy Design System by extending a component library and it's documentation
 
 (rewrite of original)
 TODO: Check medium support for IDs in MarkDown
@@ -6,28 +6,28 @@ TODO: Add IDs
 TODO: Make TOC
 TODO: Consistent person
 
-Lion is a set of white label cross-platform Web Components you can use as the base for your own design system. You can extend them with your own styling for an accessible, performant and complete design system. 
+Lion is a set of white label cross-platform Web Components with accessibility and performance built-in. You can extend them with your own styling to create your own complete Design System with little effort! 
 - [Read more about Lion](https://medium.com/ing-blog/ing-open-sources-lion-a-library-for-performant-accessible-flexible-web-components-22ad165b1d3d)
 - [A demo of Lion](https://lion-web-components.netlify.app)
 - [Lion on Github]()
 
-Extending Lion is not limited to extending components. Documentation and demos can be reused as well. This removes removes duplicate work such as writing and maintenance.
+Extending Lion is not limited to extending components. Documentation and demos can be reused as well. This removes duplicate work such as writing and maintaining documentation.
 
-This article explains how to extend both components and documentation.
+This article explains how to extend both components as well as documentation.
 
-> A naming convention that is similar to `Lion*` for class names and `lion-*` for tag names is required for this to work. We use the example of `Example` e.g. `ExampleButton` and `example-tabs`.
+> A naming convention that is similar to `Lion*` for class names and `lion-*` for tag names is required for this to work. For this demo, we use the the names `ExampleButton` and `example-button`.
 
 ## Table of Contents
 
 0. Setting up, and Extending Lion
-1. Make a selection
+1. Select documentation to re-use
 2. Change input paths
 3. Remove, add and replace sections
 4. Conclusion
 
 ## Setting up, and extending Lion
 
-This article assumes some basic terminal knowledge, and a working installation of npm. Yarn would work as well.
+This article assumes some basic terminal knowledge, and a working installation of npm. Yarn can work as well.
 
 Create a new folder for our components using the terminal.
 
@@ -41,7 +41,7 @@ Enter the folder `example-components` and run the following command to scaffold 
 npm init @open-wc
 ```
 
-When presented with a menu, (at least) pick the following options.
+When presented with a menu, pick (at least) the following options.
 
 ```sh
 What would you like to do today? › Scaffold a new project
@@ -75,7 +75,7 @@ export class ExampleButton extends LionButton {
     return [
       super.styles,
       css`
-        /* your styles can go here */
+        /* our styles can go here */
       `
     ];
   }
@@ -86,7 +86,7 @@ export class ExampleButton extends LionButton {
   }
 
   _setupFeature() {
-    // your code can go here
+    // our code can go here
   }
 }
 ```
@@ -106,7 +106,7 @@ And pick 'upgrade an existing project'. Or install it manually by entering the f
 npm i @open-wc/demoing-storybook --save-dev
 ```
 
-## Make a selection
+## Select documentation to re-use
 
 We need to specify which stories to load in `.storybook/main.js`.
 
@@ -122,20 +122,20 @@ to add the Lion readme
   stories: ['../stories/**/*.stories.{js,md,mdx}', '../node_modules/@lion/button/README.md'],
 ```
 
-Here we extend the documentation of `LionButton`, for our own `ExampleButton`. This step alone should already give you the `LionButton` docs inside your own Storybook.
+This is where we extend the documentation of `LionButton`, for our own `ExampleButton`. This step, by itself, gives you the `LionButton` docs inside your own Storybook.
 
 
 ## Change input paths
 
-You can change the import paths from `LionButton` to the new paths of `ExampleButton`. We use [Providence](https://lion-web-components.netlify.app/?path=/docs/tools-providence-main--run-providence) for this. This tool has a command that creates a full map of all the import paths of a reference project (`Lion`) and can replace them with the correct paths of a target project (`Example`).
+We can change the import paths from `LionButton` to the new paths of `ExampleButton`. We use [Providence](https://lion-web-components.netlify.app/?path=/docs/tools-providence-main--run-providence) for this. This tool has a command that creates a full map of all the import paths of a reference project (`Lion`) and can replace them with the correct paths of a target project (`Example`).
 
-Navigate your terminal to `example-button` and install this tool by adding it to our `package.json`:
+Navigate the terminal to `example-button` and install this tool by adding it to our `package.json`:
 
 ```sh
 npm i providence-analytics --save-dev
 ```
 
-You can use it by adding a script to your `package.json`:
+We can use it by adding a script to your `package.json`:
 
 ```json
 "scripts": {
@@ -143,12 +143,12 @@ You can use it by adding a script to your `package.json`:
 }
 ```
 
-The `--prefix-from` is the prefix of the project you extend from (in this case `lion`). `--prefix-to` is the prefix of your own project (in this case `example`).
+The `--prefix-from` is the prefix of the project you extend from (in this case `lion`). `--prefix-to` is the prefix of our own project (in this case `example`).
 It will look for the classnames `Lion*` and `Example*`, and for the tagnames `lion-*` and `example-*`.
 
 As we only use a single component from Lion, we can reduce the time the tool needs for analysis. Specify the single package by replacing `-r 'node_modules/@lion/*'` with  `-r 'node_modules/@lion/button'`.
 
-You can review all from/to information in `providence-extend-docs-data.json`. Providenc creates this critical file.
+We can review all from/to information in `providence-extend-docs-data.json`. Providence creates this critical file.
 
 
 ### Replacing paths and names
@@ -188,9 +188,9 @@ We import the providence output file (`providence-extend-docs-data.json'`) and p
 
 The babel plugin runs for the files that we specify in the `test` property, replaces the imports, and replaces the tag names inside JavaScript code snippets!
 
-> It will only transforms JavaScript snippets that use [MDJS](https://open-wc.org/mdjs/) syntax such as \`\`\`js script, \`\`\`js story and \`\`\`js preview-story
+> It will only transform JavaScript snippets that use [MDJS](https://open-wc.org/mdjs/) syntax such as \`\`\`js script, \`\`\`js story and \`\`\`js preview-story
 
-We have to add Babel to our `es-dev-server`-configuration to make it run for Storybook.
+We also have to add Babel to our `es-dev-server`-configuration to make it work with Storybook.
 
 Create a `.storybook/main.js` with the following content:
 
@@ -211,12 +211,12 @@ We should now see the `LionButton` instances transformed into our own `ExampleBu
 
 ## Remove, add and replace sections
 
-You might not want to show all examples of how to use a component. Sometimes information is `Lion` specific, or perhaps in your design system people are not allowed to use a certain feature that we documented in `Lion`.
+We might not want to show all examples of how to use a component. Sometimes information is `Lion` specific, or perhaps in your Design System people are not allowed to use a certain feature that we documented in `Lion`.
 
 In our example, we will remove the `Rationale` section that we would normally inherit from the `Lion` documentation.
 
-For this step we make use of a remark plugin for the MD content, similar to how you would use a babel plugin for JS content. It is called [Remark extend](https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page).
-It lets you add, remove or replace sections or specific words.
+For this step we make use of a remark plugin for the MD content, similar to how we use a babel plugin for JS content. It is called [Remark extend](https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page).
+It lets us add, remove or replace sections or specific words.
 
 Remark extend needs the following content added to `.storybook/main.js`:
 
@@ -262,7 +262,7 @@ module.exports = {
 };
 ```
 
-In the code example mentioned, we have 2 places in where you can do overrides: `./.storybook/all.override.md` for generic overrides and via `getLocalOverridePath` for each component. When needed, the `rel` needs to be the same in `lion` and our own project to be able to override the right file.
+In the code example mentioned, we have two places in where we can do overrides: `./.storybook/all.override.md` for generic overrides and via `getLocalOverridePath` for each component. When needed, the `rel` needs to be the same in `lion` and our own project to be able to override the right file.
 
 In each file we need to specify which section we want to override. We want to load `example-button` in the project:
 
@@ -291,7 +291,7 @@ module.exports.replaceSection = node => {
 ```
 ````
 
-You can remove content by targetting a specific heading:
+We can remove content by targeting a specific heading:
 
 ````md
 ```
@@ -299,12 +299,13 @@ You can remove content by targetting a specific heading:
 ```
 ````
 
-Or you can add an extra paragraph below the content:
+Or we can add an extra paragraph below the content:
 
 ````md
 ```
 ::addMdAfter(':scope:last-child')
 ```
+````
 
 The documentation of [Remark extend](https://lion-web-components.netlify.app/?path=/docs/tools-remark-extend--page) has many more options and insights
 
