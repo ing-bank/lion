@@ -11,6 +11,46 @@ import '../lion-radio.js';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ (_fixture);
 
 describe('<lion-radio-group>', () => {
+  describe('resetGroup', () => {
+    // TODO move to FormGroupMixin test suite and let CheckboxGroup make use of them
+    it('restores to empty modelValue if changes were made', async () => {
+      const el = await fixture(html`
+        <lion-radio-group name="gender" label="Gender">
+          <lion-radio label="Male" .choiceValue=${'male'}></lion-radio>
+          <lion-radio label="Female" .choiceValue=${'female'}></lion-radio>
+        </lion-radio-group>
+      `);
+      el.formElements[0].checked = true;
+      expect(el.modelValue).to.deep.equal('male');
+
+      el.resetGroup();
+      expect(el.modelValue).to.deep.equal('');
+    });
+
+    it('restores default values if changes were made', async () => {
+      const el = await fixture(html`
+        <lion-radio-group name="gender" label="Gender">
+          <lion-radio label="Male" .choiceValue=${'male'}></lion-radio>
+          <lion-radio label="Female" .modelValue=${{ value: 'female', checked: true }}></lion-radio>
+          <lion-radio label="Other" .choiceValue=${'other'}></lion-radio>
+        </lion-radio-group>
+      `);
+      el.formElements[0].checked = true;
+      expect(el.modelValue).to.deep.equal('male');
+
+      el.resetGroup();
+      expect(el.modelValue).to.deep.equal('female');
+
+      el.formElements[2].checked = true;
+      expect(el.modelValue).to.deep.equal('other');
+
+      el.resetGroup();
+      await el.formElements[1].updateComplete;
+      await el.updateComplete;
+      expect(el.modelValue).to.deep.equal('female');
+    });
+  });
+
   it('should have role = radiogroup', async () => {
     const el = await fixture(html`
       <lion-radio-group label="Gender" name="gender">
