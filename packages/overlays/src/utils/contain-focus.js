@@ -8,6 +8,7 @@
 
 import { getDeepActiveElement } from './get-deep-active-element.js';
 import { getFocusableElements } from './get-focusable-elements.js';
+import { deepContains } from './deep-contains.js';
 import { keyCodes } from './key-codes.js';
 
 /**
@@ -111,34 +112,62 @@ export function containFocus(rootElement) {
   }
 
   /**
+   * @param {Object} [opts]
+   * @param {boolean} [opts.resetToRoot]
    * @desc When we simulate a modal dialog, we need to restore the focus to the first or last
    * element of the rootElement
    */
-  function setFocusInRootElement() {
-    window.removeEventListener('focusin', setFocusInRootElement);
-    if (rootElement.contains(document.activeElement)) {
+  function setFocusInRootElement({ resetToRoot = false } = {}) {
+    if (deepContains(rootElement, /** @type {HTMLElement} */ (getDeepActiveElement()))) {
       return;
     }
-    const nextActive = focusableElements[isForwardTabInWindow() ? 0 : focusableElements.length - 1];
+
+    let nextActive;
+    if (resetToRoot) {
+      nextActive = rootElement;
+    } else {
+      nextActive = focusableElements[isForwardTabInWindow() ? 0 : focusableElements.length - 1];
+    }
+
     if (nextActive) {
       nextActive.focus();
     }
   }
 
-  function addFocusinListener() {
-    window.addEventListener('focusin', setFocusInRootElement);
+  function handleFocusin() {
+    window.removeEventListener('focusin', handleFocusin);
+    setFocusInRootElement();
+  }
+
+  function handleFocusout() {
+    /**
+     * There is a moment in time between focusout and focusin (when focus shifts)
+     * where the activeElement is reset to body first. So we use an async task to check
+     * a little bit later for activeElement, so we don't get a false positive.
+     *
+     * We used to check for focusin event for this, however,
+     * it can happen that focusout happens, but focusin never does, e.g. click outside but no focusable
+     * element is found to focus. If this happens, we should take the focus back to the rootElement.
+     */
+    setTimeout(() => {
+      if (!deepContains(rootElement, /** @type {HTMLElement} */ (getDeepActiveElement()))) {
+        setFocusInRootElement({ resetToRoot: true });
+      }
+    });
+
+    window.addEventListener('focusin', handleFocusin);
   }
 
   function disconnect() {
     window.removeEventListener('keydown', handleKeydown);
-    window.removeEventListener('focusin', setFocusInRootElement);
-    window.removeEventListener('focusout', addFocusinListener);
+    window.removeEventListener('focusin', handleFocusin);
+    window.removeEventListener('focusout', handleFocusout);
     rootElement.removeChild(tabDetectionElement);
     rootElement.style.removeProperty('outline');
   }
 
   window.addEventListener('keydown', handleKeydown);
-  window.addEventListener('focusout', addFocusinListener);
+  window.addEventListener('focusout', handleFocusout);
   createHelpersDetectingTabDirection();
 
   return { disconnect };
