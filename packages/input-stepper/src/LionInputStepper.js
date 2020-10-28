@@ -251,15 +251,6 @@ export class LionInputStepper extends LionInput {
   }
 
   /**
-   * Override before template to none
-   * @override
-   */
-  // eslint-disable-next-line class-methods-use-this
-  _inputGroupBeforeTemplate() {
-    return html``;
-  }
-
-  /**
    * Get the decrementor button sign template
    * @returns {String|import('lit-element').TemplateResult}
    */
