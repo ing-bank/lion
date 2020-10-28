@@ -348,7 +348,7 @@ const ListboxMixinImplementation = superclass =>
         this._uncheckChildren(this.formElements.filter(i => i === index));
         index.forEach(i => {
           if (this.formElements[i]) {
-            this.formElements[i].checked = true;
+            this.formElements[i].checked = !this.formElements[i].checked;
           }
         });
         return;
@@ -359,7 +359,11 @@ const ListboxMixinImplementation = superclass =>
           this._uncheckChildren();
         }
         if (this.formElements[index]) {
-          this.formElements[index].checked = true;
+          if (this.multipleChoice) {
+            this.formElements[index].checked = !this.formElements[index].checked;
+          } else {
+            this.formElements[index].checked = true;
+          }
         }
       }
     }
