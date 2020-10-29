@@ -7,6 +7,7 @@ import { FormRegistrarPortalMixin } from '@lion/form-core';
 export class LionOptions extends FormRegistrarPortalMixin(LitElement) {
   static get properties() {
     return {
+      ...super.properties,
       role: {
         type: String,
         reflect: true,

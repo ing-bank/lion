@@ -79,10 +79,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   static get properties() {
     return {
+      ...super.properties,
       /**
        * Minimum date. All dates before will be disabled
-       */
-      minDate: { attribute: false },
+       */ minDate: { attribute: false },
 
       /**
        * Maximum date. All dates after will be disabled

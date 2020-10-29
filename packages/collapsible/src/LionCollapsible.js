@@ -24,6 +24,7 @@ export class LionCollapsible extends LitElement {
 
   static get properties() {
     return {
+      ...super.properties,
       opened: {
         type: Boolean,
         reflect: true,

@@ -15,9 +15,7 @@ import { html, LitElement } from '@lion/core';
  */
 export class LionValidationFeedback extends LitElement {
   static get properties() {
-    return {
-      feedbackData: { attribute: false },
-    };
+    return { ...super.properties, feedbackData: { attribute: false } };
   }
 
   /**

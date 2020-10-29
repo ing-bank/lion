@@ -17,6 +17,7 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
   static get properties() {
     return {
+      ...super.properties,
       active: {
         type: Boolean,
         reflect: true,

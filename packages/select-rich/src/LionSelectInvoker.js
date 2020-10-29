@@ -25,6 +25,7 @@ export class LionSelectInvoker extends LionButton {
   static get properties() {
     return {
       ...super.properties,
+      ...super.properties,
       selectedElement: {
         type: Object,
       },

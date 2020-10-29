@@ -34,6 +34,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   static get properties() {
     return {
+      ...super.properties,
       navigateWithinInvoker: {
         type: Boolean,
         attribute: 'navigate-within-invoker',

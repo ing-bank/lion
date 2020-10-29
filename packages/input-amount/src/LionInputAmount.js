@@ -15,12 +15,12 @@ import { parseAmount } from './parsers.js';
 export class LionInputAmount extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
+      ...super.properties,
       /**
        * @desc an iso code like 'EUR' or 'USD' that will be displayed next to the input
        * and from which an accessible label (like 'euros') is computed for screen
        * reader users
-       */
-      currency: String,
+       */ currency: String,
       /**
        * @desc the modelValue of the input-amount has the 'Number' type. This allows
        * Application Developers to easily read from and write to this input or write custom

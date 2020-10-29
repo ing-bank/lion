@@ -5,6 +5,7 @@ import { css, html, LitElement, render } from '@lion/core';
 export class SbActionLogger extends LitElement {
   static get properties() {
     return {
+      ...super.properties,
       title: { type: String, reflect: true },
       simple: { type: Boolean, reflect: true },
       __logCounter: { type: Number },

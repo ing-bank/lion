@@ -2,9 +2,7 @@ import { LitElement, html } from '@lion/core';
 
 export class SbLocaleSwitcher extends LitElement {
   static get properties() {
-    return {
-      showLocales: { type: Array, attribute: 'show-locales' },
-    };
+    return { ...super.properties, showLocales: { type: Array, attribute: 'show-locales' } };
   }
 
   constructor() {

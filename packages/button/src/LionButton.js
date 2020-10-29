@@ -14,6 +14,7 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
     return {
+      ...super.properties,
       role: {
         type: String,
         reflect: true,

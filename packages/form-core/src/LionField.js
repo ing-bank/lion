@@ -28,6 +28,7 @@ export class LionField extends FormControlMixin(
 ) {
   static get properties() {
     return {
+      ...super.properties,
       autocomplete: {
         type: String,
         reflect: true,

@@ -21,9 +21,7 @@ function isValidDate(date) {
 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionInputDate extends LocalizeMixin(LionInput) {
   static get properties() {
-    return {
-      modelValue: Date,
-    };
+    return { ...super.properties, modelValue: Date };
   }
 
   constructor() {

@@ -13,10 +13,10 @@ import { css, html, LitElement } from '@lion/core';
 export class LionStep extends LitElement {
   static get properties() {
     return {
+      ...super.properties,
       /**
        * Step status, one of: "untouched", "entered", "left", "skipped".
-       */
-      status: {
+       */ status: {
         type: String,
         reflect: true,
       },

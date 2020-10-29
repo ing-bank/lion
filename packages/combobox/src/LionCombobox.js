@@ -23,6 +23,7 @@ import { LionListbox } from '@lion/listbox';
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
+      ...super.properties,
       autocomplete: { type: String, reflect: true },
       matchMode: {
         type: String,

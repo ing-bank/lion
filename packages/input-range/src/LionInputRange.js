@@ -16,6 +16,7 @@ import { formatNumber, LocalizeMixin } from '@lion/localize';
 export class LionInputRange extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
+      ...super.properties,
       min: {
         type: Number,
         reflect: true,

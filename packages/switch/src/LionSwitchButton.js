@@ -3,6 +3,7 @@ import { html, css, LitElement, DisabledWithTabIndexMixin } from '@lion/core';
 export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {
+      ...super.properties,
       role: {
         type: String,
         reflect: true,

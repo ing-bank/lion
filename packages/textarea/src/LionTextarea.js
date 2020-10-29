@@ -25,6 +25,7 @@ class LionFieldWithTextArea extends LionField {
 export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
   static get properties() {
     return {
+      ...super.properties,
       maxRows: {
         type: Number,
         attribute: 'max-rows',

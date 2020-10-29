@@ -86,6 +86,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   static get properties() {
     return {
+      ...super.properties,
       current: {
         type: Number,
         reflect: true,

@@ -5,6 +5,7 @@ import { DecorateMixin } from '../../utils/DecorateMixin.js';
 export class PTable extends DecorateMixin(LitElement) {
   static get properties() {
     return {
+      ...super.properties,
       mobile: {
         reflect: true,
         type: Boolean,

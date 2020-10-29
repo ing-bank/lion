@@ -26,7 +26,7 @@ function checkedValues(checkboxOrNodeList) {
 class PBoard extends DecorateMixin(LitElement) {
   static get properties() {
     return {
-      // Transformed data from fetch
+      ...super.properties, // Transformed data from fetch
       tableData: Object,
       __resultFiles: Array,
       __menuData: Object,

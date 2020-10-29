@@ -22,6 +22,7 @@ export class LionInputStepper extends LionInput {
 
   static get properties() {
     return {
+      ...super.properties,
       min: {
         type: Number,
         reflect: true,

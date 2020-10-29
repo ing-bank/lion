@@ -105,6 +105,7 @@ function handleButtonKeydown(ev) {
 export class LionTabs extends LitElement {
   static get properties() {
     return {
+      ...super.properties,
       selectedIndex: {
         type: Number,
         attribute: 'selected-index',

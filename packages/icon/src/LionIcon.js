@@ -21,6 +21,7 @@ function validateSvg(svg) {
 export class LionIcon extends LitElement {
   static get properties() {
     return {
+      ...super.properties,
       /**
        * @desc When icons are not loaded as part of an iconset defined on iconManager,
        * it's possible to directly load an svg.

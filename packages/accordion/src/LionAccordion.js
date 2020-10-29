@@ -126,10 +126,10 @@ const collapseContent = element => {
 export class LionAccordion extends LitElement {
   static get properties() {
     return {
+      ...super.properties,
       /**
        * index number of the focused accordion
-       */
-      focusedIndex: {
+       */ focusedIndex: {
         type: Number,
       },
       /**

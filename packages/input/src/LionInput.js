@@ -10,6 +10,7 @@ import { NativeTextFieldMixin } from '@lion/form-core/src/NativeTextFieldMixin';
 export class LionInput extends NativeTextFieldMixin(LionField) {
   static get properties() {
     return {
+      ...super.properties,
       /**
        * A Boolean attribute which, if present, indicates that the user should not be able to edit
        * the value of the input. The difference between disabled and readonly is that read-only
@@ -17,8 +18,7 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
        * controls until they are enabled.
        *
        * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
-       */
-      readOnly: {
+       */ readOnly: {
         type: Boolean,
         attribute: 'readonly',
         reflect: true,
