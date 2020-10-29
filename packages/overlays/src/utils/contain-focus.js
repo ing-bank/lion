@@ -116,7 +116,7 @@ export function containFocus(rootElement) {
    */
   function setFocusInRootElement() {
     window.removeEventListener('focusin', setFocusInRootElement);
-    if (rootElement.contains(document.activeElement)) {
+    if (rootElement.contains(rootElement.getRootNode().activeElement)) {
       return;
     }
     const nextActive = focusableElements[isForwardTabInWindow() ? 0 : focusableElements.length - 1];
