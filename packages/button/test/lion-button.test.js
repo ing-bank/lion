@@ -3,6 +3,7 @@ import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-w
 import sinon from 'sinon';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import '../lion-button.js';
+import '../../form/lion-form.js';
 
 /**
  * @typedef {import('@lion/button/src/LionButton').LionButton} LionButton
@@ -475,6 +476,17 @@ describe('lion-button', () => {
       it('is host by default', async () => {
         const el = /** @type {LionButton} */ (await fixture('<lion-button>foo</lion-button>'));
         const event = await prepareClickEvent(el);
+        expect(event.target).to.equal(el);
+      });
+
+      it(`is host when used inside a lion-form`, async () => {
+        const clickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+        const el = /** @type {LionButton} */ (await fixture(
+          `<lion-button type="submit" @click="${clickSpy}">foo</lion-button>`,
+        ));
+        await fixture(html`<lion-form><form>${el}</form></lion-form>`);
+        const event = await prepareClickEvent(el);
+
         expect(event.target).to.equal(el);
       });
 
