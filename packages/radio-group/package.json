@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group radio-group",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group radio-group",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group radio-group",
+    "debug": "cd ../../ && npm run debug -- --group radio-group",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group radio-group",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group radio-group",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group radio-group"
+    "test": "cd ../../ && npm run test:browser -- --group radio-group"
   },
   "sideEffects": [
     "lion-radio.js",

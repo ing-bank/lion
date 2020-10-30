@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input-datepicker",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-datepicker",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-datepicker",
+    "debug": "cd ../../ && npm run debug -- --group input-datepicker",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-datepicker",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-datepicker",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input-datepicker"
+    "test": "cd ../../ && npm run test:browser -- --group input-datepicker"
   },
   "sideEffects": [
     "lion-input-datepicker.js"

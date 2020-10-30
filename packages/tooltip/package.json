@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group tooltip",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group tooltip",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group tooltip",
+    "debug": "cd ../../ && npm run debug -- --group tooltip",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group tooltip",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group tooltip",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group tooltip"
+    "test": "cd ../../ && npm run test:browser -- --group tooltip"
   },
   "sideEffects": [
     "lion-tooltip.js",

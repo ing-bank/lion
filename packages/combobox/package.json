@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group combobox",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group combobox",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group combobox",
+    "debug": "cd ../../ && npm run debug -- --group combobox",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group combobox",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group combobox",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group combobox"
+    "test": "cd ../../ && npm run test:browser -- --group combobox"
   },
   "sideEffects": [
     "lion-combobox.js",

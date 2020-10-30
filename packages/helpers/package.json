@@ -20,11 +20,11 @@
     "sortEachDepth"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group helpers",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group helpers",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group helpers",
+    "debug": "cd ../../ && npm run debug -- --group helpers",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group helpers",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group helpers",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group helpers"
+    "test": "cd ../../ && npm run test:browser -- --group helpers"
   },
   "sideEffects": [
     "sb-action-logger.js",

@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input-iban",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-iban",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-iban",
+    "debug": "cd ../../ && npm run debug -- --group input-iban",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-iban",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-iban",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input-iban"
+    "test": "cd ../../ && npm run test:browser -- --group input-iban"
   },
   "sideEffects": [
     "lion-input-iban.js"

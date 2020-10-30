@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group ajax",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group ajax",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group ajax",
+    "debug": "cd ../../ && npm run -- --debug ajax",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group ajax",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group ajax",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group ajax"
+    "test": "cd ../../ && npm run test:browser -- --group ajax"
   },
   "sideEffects": false,
   "dependencies": {

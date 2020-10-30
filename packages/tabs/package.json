@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group tabs",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group tabs",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group tabs",
+    "debug": "cd ../../ && npm run debug -- --group tabs",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group tabs",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group tabs",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group tabs"
+    "test": "cd ../../ && npm run test:browser -- --group tabs"
   },
   "sideEffects": [
     "lion-tabs.js"

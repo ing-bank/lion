@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group pagination",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group pagination",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group pagination",
+    "debug": "cd ../../ && npm run debug -- --group pagination",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group pagination",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group pagination",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group pagination"
+    "test": "cd ../../ && npm run test:browser -- --group pagination"
   },
   "sideEffects": [
     "lion-pagination.js"

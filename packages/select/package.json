@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group select",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group select",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group select",
+    "debug": "cd ../../ && npm run debug -- --group select",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group select",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group select",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group select"
+    "test": "cd ../../ && npm run test:browser -- --group select"
   },
   "sideEffects": [
     "lion-select.js"

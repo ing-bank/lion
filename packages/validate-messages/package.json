@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group validate-messages",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group validate-messages",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group validate-messages",
+    "debug": "cd ../../ && npm run debug -- --group validate-messages",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group validate-messages",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group validate-messages",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group validate-messages"
+    "test": "cd ../../ && npm run test:browser -- --group validate-messages"
   },
   "dependencies": {
     "@lion/core": "0.13.2",

@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input-stepper",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-stepper",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-stepper",
+    "debug": "cd ../../ && npm run debug -- --group input-stepper",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-stepper",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-stepper",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input-stepper"
+    "test": "cd ../../ && npm run test:browser -- --group input-stepper"
   },
   "sideEffects": [
     "lion-input-stepper.js"

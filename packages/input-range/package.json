@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input-range",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-range",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-range",
+    "debug": "cd ../../ && npm run debug -- --group input-range",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-range",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-range",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input-range"
+    "test": "cd ../../ && npm run test:browser -- --group input-range"
   },
   "sideEffects": [
     "lion-input-range.js"

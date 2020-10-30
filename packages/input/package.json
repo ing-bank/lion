@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input",
+    "debug": "cd ../../ && npm run debug -- --group input",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input"
+    "test": "cd ../../ && npm run test:browser -- --group input"
   },
   "sideEffects": [
     "lion-input.js"

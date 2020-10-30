@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group input-email",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group input-email",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group input-email",
+    "debug": "cd ../../ && npm run debug -- --group input-email",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-email",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-email",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group input-email"
+    "test": "cd ../../ && npm run test:browser -- --group input-email"
   },
   "sideEffects": [
     "lion-input-email.js"

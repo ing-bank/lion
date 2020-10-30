@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group listbox",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group listbox",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group listbox",
+    "debug": "cd ../../ && npm run debug -- --group listbox",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group listbox",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group listbox",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group listbox"
+    "test": "cd ../../ && npm run test:browser -- --group listbox"
   },
   "sideEffects": [
     "lion-listbox.js",

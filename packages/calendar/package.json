@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group calendar",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group calendar",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group calendar",
+    "debug": "cd ../../ && npm run debug -- --group calendar",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group calendar",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group calendar",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group calendar"
+    "test": "cd ../../ && npm run test:browser -- --group calendar"
   },
   "sideEffects": [
     "lion-calendar.js"

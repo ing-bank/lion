@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group localize",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group localize",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group localize",
+    "debug": "cd ../../ && npm run debug -- --group localize",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group localize",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group localize",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group localize"
+    "test": "cd ../../ && npm run test:browser -- --group localize"
   },
   "sideEffects": false,
   "dependencies": {

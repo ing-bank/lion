@@ -23,11 +23,11 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run debug --group core",
-    "debug:firefox": "cd ../../ && npm run debug:firefox --group core",
-    "debug:webkit": "cd ../../ && npm run debug:webkit --group core",
+    "debug": "cd ../../ && npm run debug -- --group core",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group core",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group core",
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && npm run test:browser --group core"
+    "test": "cd ../../ && npm run test:browser -- --group core"
   },
   "sideEffects": false,
   "dependencies": {
