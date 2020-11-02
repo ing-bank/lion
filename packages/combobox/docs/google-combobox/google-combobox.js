@@ -3,9 +3,9 @@ import { LionOption } from '@lion/listbox';
 import { renderLitAsNode } from '@lion/helpers';
 import { LionCombobox } from '../../src/LionCombobox.js';
 import { LinkMixin } from '../LinkMixin.js';
+import googleClearIcon from './assets/google-clear-icon.js';
 import googleSearchIcon from './assets/google-search-icon.js';
 import googleVoiceSearchIcon from './assets/google-voice-search-icon.js';
-import googleClearIcon from './assets/google-clear-icon.js';
 
 const googleSearchLogoUrl = new URL('./assets/googlelogo_color_272x92dp.png', import.meta.url).href;
 
