@@ -4,6 +4,7 @@ import { html, LitElement } from '@lion/core';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
+import { setViewport } from '@web/test-runner-commands';
 import '../lion-input-datepicker.js';
 import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
 import { DatepickerInputObject } from '../test-helpers.js';
@@ -515,7 +516,55 @@ describe('<lion-input-datepicker>', () => {
       await myElObj.openCalendar();
       myElObj.overlayEl.hidden = true;
       await el.updateComplete;
-      expect(myElObj.overlayEl).not.to.be.displayed;
+      expect(getComputedStyle(myElObj.overlayEl).display).to.equal('none', 'Display is not none');
+    });
+  });
+
+  describe('responsive', async () => {
+    it('opens as bottom sheet on mobile', async () => {
+      await setViewport({ width: 360, height: 640 });
+      const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
+      const myElObj = new DatepickerInputObject(el);
+      await myElObj.openCalendar();
+      expect(el.hasArrow).to.be.false;
+      expect(
+        el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
+        'Datepicker does not get rendered as bottom sheet',
+      ).to.be.false;
+    });
+
+    it('opens as popover on desktop', async () => {
+      await setViewport({ width: 1200, height: 640 });
+      const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
+      const myElObj = new DatepickerInputObject(el);
+      await myElObj.openCalendar();
+      expect(el.hasArrow).to.be.true;
+      expect(
+        el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
+        'Datepicker does not get rendered as a popover',
+      ).to.be.true;
+    });
+
+    // TODO: fix a bug in overlays which does not move global nodes back to the local dom
+    it.skip('can switch between bottom sheet and popover', async () => {
+      const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
+      await el.updateComplete;
+      const myElObj = new DatepickerInputObject(el);
+
+      await setViewport({ width: 360, height: 640 });
+      await myElObj.openCalendar();
+      expect(
+        el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
+        'Datepicker does not get rendered as bottom sheet',
+      ).to.be.false;
+
+      await myElObj.closeCalendar();
+      await setViewport({ width: 1200, height: 640 });
+      await myElObj.openCalendar();
+      expect(
+        el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
+        'Datepicker does not get rendered as a popover',
+      ).to.be.true;
     });
   });
 });
