@@ -186,9 +186,6 @@ export class IsBlacklistedCountryIBAN extends IsIBAN {
    */
   static async getMessage(data) {
     await loadTranslations();
-    // Change to lion-validate+iban:error.IsBlaklistedCountryIBAN
-    // once the ../translations/ files have been updated
-    // if you want different translations for this type of validation error
-    return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+    return localize.msg('lion-validate+iban:error.IsBlaklistedCountryIBAN', data);
   }
 }
