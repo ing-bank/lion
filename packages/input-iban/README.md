@@ -102,7 +102,7 @@ In the example below, we show how to use an additional validator that restricts 
 export const blacklistedCountry = () => html`
   <lion-input-iban
     .modelValue=${'RO89RZBR6997372848645577'}
-    .validators=${[new IsBlacklistedCountryIBAN('RO')]}
+    .validators=${([new IsBlacklistedCountryIBAN('RO')], [new IsBlacklistedCountryIBAN('ES')])}
     name="iban"
     label="IBAN"
   ></lion-input-iban>
