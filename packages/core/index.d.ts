@@ -49,4 +49,6 @@ export {
   svg,
   SVGTemplateResult,
   TemplateResult,
+  removeNodes,
+  reparentNodes,
 } from 'lit-html';
