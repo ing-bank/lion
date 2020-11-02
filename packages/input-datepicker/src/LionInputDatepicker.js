@@ -1,14 +1,21 @@
 import { LionCalendar } from '@lion/calendar/src/LionCalendar';
 import { html, ifDefined, ScopedElementsMixin } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
-import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
+import {
+  OverlayMixin,
+  withBottomSheetConfig,
+  withModalDialogConfig,
+  ArrowMixin,
+} from '@lion/overlays';
 import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
  * @customElement lion-input-datepicker
  */
 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
-export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionInputDate)) {
+export class LionInputDatepicker extends ScopedElementsMixin(
+  ArrowMixin(OverlayMixin(LionInputDate)),
+) {
   static get scopedElements() {
     return {
       ...super.scopedElements,
@@ -226,10 +233,13 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     // When not opened (usually on init), it does not need to be rendered.
     // This would make first paint quicker
     return html`
-      <lion-calendar-overlay-frame class="calendar__overlay-frame">
-        <span slot="heading">${this.calendarHeading}</span>
-        ${this._calendarTemplate()}
-      </lion-calendar-overlay-frame>
+      <div id="overlay-content-node-wrapper">
+        <lion-calendar-overlay-frame class="calendar__overlay-frame">
+          <span slot="heading">${this.calendarHeading}</span>
+          ${this._calendarTemplate()}
+        </lion-calendar-overlay-frame>
+        ${this._arrowNodeTemplate()}
+      </div>
     `;
   }
 
@@ -280,6 +290,15 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
     `;
   }
 
+  _setupOverlayCtrl() {
+    super._setupOverlayCtrl();
+
+    this.__datepickerBeforeShow = () => {
+      this._overlayCtrl.updateConfig(this._defineOverlayConfig());
+    };
+    this._overlayCtrl.addEventListener('before-show', this.__datepickerBeforeShow);
+  }
+
   /**
    * @override Configures OverlayMixin
    * @desc overrides default configuration options for this component
@@ -287,10 +306,20 @@ export class LionInputDatepicker extends ScopedElementsMixin(OverlayMixin(LionIn
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    return {
-      ...withModalDialogConfig(),
-      hidesOnOutsideClick: true,
-    };
+    if (window.innerWidth >= 600) {
+      this.hasArrow = true;
+      return {
+        ...withModalDialogConfig(),
+        hidesOnOutsideClick: true,
+        ...super._defineOverlayConfig(),
+        popperConfig: {
+          ...super._defineOverlayConfig().popperConfig,
+          placement: 'bottom',
+        },
+      };
+    }
+    this.hasArrow = false;
+    return withBottomSheetConfig();
   }
 
   async __openCalendarOverlay() {

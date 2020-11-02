@@ -19,6 +19,7 @@ export declare class ArrowHost {
 
   render(): TemplateResult;
   _arrowTemplate(): TemplateResult;
+  _arrowNodeTemplate(): TemplateResult;
   _defineOverlayConfig(): OverlayConfig;
   __setupRepositionCompletePromise(): void;
   get _arrowNode(): Element | null;
