@@ -1,6 +1,6 @@
 {
   "name": "@lion/validate-messages",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A set of localized messages for default Validators",
   "license": "MIT",
   "author": "ing-bank",
@@ -30,9 +30,9 @@
     "test": "cd ../../ && npm run test:browser -- --group validate-messages"
   },
   "dependencies": {
-    "@lion/core": "0.13.2",
-    "@lion/form-core": "0.6.5",
-    "@lion/localize": "0.14.7"
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6",
+    "@lion/localize": "0.14.8"
   },
   "keywords": [
     "feedback",

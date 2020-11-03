@@ -1,6 +1,6 @@
 {
   "name": "@lion/listbox",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A listbox widget presents a list of options and allows a user to select one or more of them",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,8 +35,8 @@
     "lion-options.js"
   ],
   "dependencies": {
-    "@lion/core": "0.13.2",
-    "@lion/form-core": "0.6.5"
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6"
   },
   "keywords": [
     "form",

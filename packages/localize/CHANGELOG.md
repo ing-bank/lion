@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.14.8
+
+### Patch Changes
+
+- 8ca71b8f: `parseDate('31.02.2020')` returned `'Mon Mar 02 2020 00:00:00 GMT+0100....'`. But not anymore, now it returns `undefined`.
+- Updated dependencies [e2e4deec]
+  - @lion/core@0.13.3
+
 ## 0.14.7
 
 ### Patch Changes
