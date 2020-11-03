@@ -1,6 +1,6 @@
 {
   "name": "@lion/combobox",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A widget made up of a single-line textbox and an associated pop-up listbox element",
   "license": "MIT",
   "author": "ing-bank",
@@ -41,13 +41,13 @@
     "docs/md-combobox/style/load-roboto.js"
   ],
   "dependencies": {
-    "@lion/core": "0.13.2",
-    "@lion/form-core": "0.6.5",
-    "@lion/listbox": "0.3.1",
-    "@lion/overlays": "0.21.2"
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6",
+    "@lion/listbox": "0.3.2",
+    "@lion/overlays": "0.21.3"
   },
   "devDependencies": {
-    "@lion/validate-messages": "0.3.3"
+    "@lion/validate-messages": "0.3.4"
   },
   "keywords": [
     "combobox",

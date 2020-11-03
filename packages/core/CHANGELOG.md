@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.3
+
+### Patch Changes
+
+- e2e4deec: Export reparentNodes and removeNodes
+
 ## 0.13.2
 
 ### Patch Changes

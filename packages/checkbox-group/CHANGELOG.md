@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.12.4
+
+### Patch Changes
+
+- Updated dependencies [e2e4deec]
+  - @lion/core@0.13.3
+  - @lion/fieldset@0.15.4
+  - @lion/form-core@0.6.6
+  - @lion/input@0.10.4
+
 ## 0.12.3
 
 ### Patch Changes
