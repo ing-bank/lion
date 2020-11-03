@@ -370,7 +370,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
-          <${tag} opened has-no-default-selected autocomplete="list">
+          <${tag} opened has-no-default-selected autocomplete="none">
             <${optionTag} .choiceValue=${'10'} id="first">Item 1</${optionTag}>
             <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
           </${tag}>
@@ -382,10 +382,6 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         // Normalize
         el.activeIndex = 0;
-
-        // el._activeDescendantOwnerNode.dispatchEvent(
-        //   new KeyboardEvent('keydown', { key: 'ArrowDown' }),
-        // );
         await el.updateComplete;
         expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('first');
         activeDescendantOwner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -829,6 +825,10 @@ export function runListboxMixinSuite(customConfig = {}) {
           options[1].click();
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+          // also deselect
+          options[1].click();
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke']);
 
           // Reset
           // @ts-ignore allow protected members in tests
@@ -841,6 +841,10 @@ export function runListboxMixinSuite(customConfig = {}) {
           listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+          // also deselect
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke']);
 
           // @ts-ignore allow protected
           if (el._listboxReceivesNoFocus) {
@@ -858,6 +862,10 @@ export function runListboxMixinSuite(customConfig = {}) {
           listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
+          // also deselect
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke']);
         });
 
         describe('Accessibility', () => {

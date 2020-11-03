@@ -38,7 +38,8 @@
     "docs/md-combobox/md-combobox.js",
     "docs/md-combobox/md-input.js",
     "docs/md-combobox/style/md-ripple.js",
-    "docs/md-combobox/style/load-roboto.js"
+    "docs/md-combobox/style/load-roboto.js",
+    "docs/google-combobox/google-combobox.js"
   ],
   "dependencies": {
     "@lion/core": "0.13.3",
