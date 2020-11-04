@@ -1,44 +1,48 @@
 {
   "name": "@lion/fieldset",
-  "version": "0.1.6",
+  "version": "0.15.4",
   "description": "Allows to groups multiple input fields or other fieldsets together",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/fieldset"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "fieldset"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
-    "*.js"
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group fieldset",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group fieldset",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group fieldset",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group fieldset"
+  },
+  "sideEffects": [
+    "lion-fieldset.js",
+    "./docs/helpers/demo-fieldset-child.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.3",
-    "@lion/field": "^0.1.6",
-    "@lion/validate": "^0.1.6"
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6"
   },
-  "devDependencies": {
-    "@lion/input": "^0.1.6",
-    "@lion/localize": "^0.1.6",
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1",
-    "sinon": "^7.2.2"
+  "keywords": [
+    "fieldset",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

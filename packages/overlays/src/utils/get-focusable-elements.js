@@ -36,13 +36,12 @@ function getTabindex(element) {
 }
 
 /**
- * @param {HTMLElement} element
+ * @param {HTMLElement|HTMLSlotElement} element
  */
 function getChildNodes(element) {
   if (element.localName === 'slot') {
-    /** @type {HTMLSlotElement} */
-    const slot = element;
-    return slot.assignedNodes();
+    const slot = /** @type {HTMLSlotElement} */ (element);
+    return slot.assignedNodes({ flatten: true });
   }
 
   const { children } = element.shadowRoot || element;
@@ -51,48 +50,46 @@ function getChildNodes(element) {
 }
 
 /**
- * @param {Node} node
+ * @param {Element} element
  * @returns {boolean}
  */
-function isVisibleElement(node) {
-  if (node.nodeType !== Node.ELEMENT_NODE) {
+function isVisibleElement(element) {
+  if (element.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
 
   // A slot is not visible, but it's children might so we need
   // to treat is as such.
-  if (node.localName === 'slot') {
+  if (element.localName === 'slot') {
     return true;
   }
 
-  return isVisible(/** @type {HTMLElement} */ (node));
+  return isVisible(/** @type {HTMLElement} */ (element));
 }
 
 /**
  * Recursive function that traverses the children of the target node and finds
  * elements that can receive focus. Mutates the nodes property for performance.
  *
- * @param {Node} node
+ * @param {Element} element
  * @param {HTMLElement[]} nodes
  * @returns {boolean} whether the returned node list should be sorted. This happens when
  *                    there is an element with tabindex > 0
  */
-function collectFocusableElements(node, nodes) {
+function collectFocusableElements(element, nodes) {
   // If not an element or not visible, no need to explore children.
-  if (!isVisibleElement(node)) {
+  if (!isVisibleElement(element)) {
     return false;
   }
 
-  /** @type {HTMLElement} */
-  const element = node;
-
-  const tabIndex = getTabindex(element);
+  const el = /** @type {HTMLElement} */ (element);
+  const tabIndex = getTabindex(el);
   let needsSort = tabIndex > 0;
   if (tabIndex >= 0) {
-    nodes.push(element);
+    nodes.push(el);
   }
 
-  const childNodes = getChildNodes(element);
+  const childNodes = /** @type {Element[]} */ (getChildNodes(el));
   for (let i = 0; i < childNodes.length; i += 1) {
     needsSort = collectFocusableElements(childNodes[i], nodes) || needsSort;
   }
@@ -100,13 +97,13 @@ function collectFocusableElements(node, nodes) {
 }
 
 /**
- * @param {Node} node
+ * @param {Element} element
  * @returns {HTMLElement[]}
  */
-export function getFocusableElements(node) {
+export function getFocusableElements(element) {
   /** @type {HTMLElement[]} */
   const nodes = [];
 
-  const needsSort = collectFocusableElements(node, nodes);
+  const needsSort = collectFocusableElements(element, nodes);
   return needsSort ? sortByTabIndex(nodes) : nodes;
 }

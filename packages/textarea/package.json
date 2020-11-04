@@ -1,41 +1,49 @@
 {
   "name": "@lion/textarea",
-  "version": "0.1.6",
+  "version": "0.8.4",
   "description": "Provide a way for users to write text that is multiple lines long",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/textarea"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "textarea"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
-    "*.js"
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group textarea",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group textarea",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group textarea",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group textarea"
+  },
+  "sideEffects": [
+    "lion-textarea.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.3",
-    "@lion/input": "^0.1.6",
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6",
+    "@types/autosize": "^3.0.7",
     "autosize": "4.0.2"
   },
-  "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1"
+  "keywords": [
+    "lion",
+    "textarea",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

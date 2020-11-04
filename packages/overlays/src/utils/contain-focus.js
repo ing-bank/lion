@@ -45,7 +45,7 @@ export function rotateFocus(rootElement, e) {
   const [first, last] = boundaryEls;
 
   // Get the currently focused element
-  const activeElement = getDeepActiveElement();
+  const activeElement = /** @type {HTMLElement} */ (getDeepActiveElement());
 
   /**
    * If currently focused on the root element or an element contained within the root element:
@@ -74,6 +74,8 @@ export function containFocus(rootElement) {
   const focusableElements = getFocusableElements(rootElement);
   // Initial focus goes to first element with autofocus, or the root element
   const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
+  /** @type {HTMLElement} */
+  let tabDetectionElement;
 
   // If root element will receive focus, it should have a tabindex of -1.
   // This makes it focusable through js, but it won't appear in the tab order
@@ -95,12 +97,49 @@ export function containFocus(rootElement) {
     }
   }
 
+  function createHelpersDetectingTabDirection() {
+    tabDetectionElement = document.createElement('div');
+    tabDetectionElement.style.display = 'none';
+    rootElement.insertBefore(tabDetectionElement, rootElement.children[0]);
+  }
+
+  function isForwardTabInWindow() {
+    const compareMask = tabDetectionElement.compareDocumentPosition(
+      /** @type {Element} */ (document.activeElement),
+    );
+    return compareMask === Node.DOCUMENT_POSITION_PRECEDING;
+  }
+
+  /**
+   * @desc When we simulate a modal dialog, we need to restore the focus to the first or last
+   * element of the rootElement
+   */
+  function setFocusInRootElement() {
+    window.removeEventListener('focusin', setFocusInRootElement);
+    if (rootElement.contains(document.activeElement)) {
+      return;
+    }
+    const nextActive = focusableElements[isForwardTabInWindow() ? 0 : focusableElements.length - 1];
+    if (nextActive) {
+      nextActive.focus();
+    }
+  }
+
+  function addFocusinListener() {
+    window.addEventListener('focusin', setFocusInRootElement);
+  }
+
   function disconnect() {
     window.removeEventListener('keydown', handleKeydown);
+    window.removeEventListener('focusin', setFocusInRootElement);
+    window.removeEventListener('blur', addFocusinListener);
+    rootElement.removeChild(tabDetectionElement);
     rootElement.style.removeProperty('outline');
   }
 
   window.addEventListener('keydown', handleKeydown);
+  window.addEventListener('blur', addFocusinListener);
+  createHelpersDetectingTabDirection();
 
   return { disconnect };
 }

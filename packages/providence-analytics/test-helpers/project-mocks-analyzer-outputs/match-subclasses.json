@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "match-subclasses",
+      "requiredAst": "babel",
+      "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__-933483072",
+      "targetProject": {
+        "mainEntry": "./target-src/match-imports/root-level-imports.js",
+        "name": "importing-target-project",
+        "version": "0.0.2-target-mock",
+        "commitHash": "[not-a-git-root]"
+      },
+      "referenceProject": {
+        "mainEntry": "./index.js",
+        "name": "exporting-ref-project",
+        "version": "1.0.0",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {}
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "exportSpecifier": {
+        "name": "[default]",
+        "project": "exporting-ref-project",
+        "filePath": "./index.js",
+        "id": "[default]::./index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            {
+              "file": "./target-src/match-subclasses/ExtendedComp.js",
+              "identifier": "ExtendedComp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "RefClass",
+        "project": "exporting-ref-project",
+        "filePath": "./index.js",
+        "id": "RefClass::./index.js::exporting-ref-project"
+      },
+      "matchesPerProject": [
+        {
+          "project": "importing-target-project",
+          "files": [
+            {
+              "file": "./target-src/match-subclasses/ExtendedComp.js",
+              "identifier": "ExtendedComp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

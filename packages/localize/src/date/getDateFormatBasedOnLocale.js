@@ -3,13 +3,28 @@ import { splitDate } from './splitDate.js';
 
 /**
  * To compute the localized date format
- *
  * @returns {string}
  */
 export function getDateFormatBasedOnLocale() {
+  /**
+   *
+   * @param {ArrayLike.<string>} dateParts
+   * @returns {string[]}
+   */
   function computePositions(dateParts) {
+    /**
+     * @param {number} index
+     * @returns {string}
+     */
     function getPartByIndex(index) {
-      return { 2012: 'year', 12: 'month', 20: 'day' }[dateParts[index]];
+      /** @type {Object.<string,string>} */
+      const template = {
+        2012: 'year',
+        12: 'month',
+        20: 'day',
+      };
+      const key = dateParts[index];
+      return template[key];
     }
 
     return [1, 3, 5].map(getPartByIndex);
@@ -28,6 +43,8 @@ export function getDateFormatBasedOnLocale() {
   const dateParts = splitDate(formattedDate);
 
   const dateFormat = {};
-  dateFormat.positions = computePositions(dateParts);
+  if (dateParts) {
+    dateFormat.positions = computePositions(dateParts);
+  }
   return `${dateFormat.positions[0]}-${dateFormat.positions[1]}-${dateFormat.positions[2]}`;
 }

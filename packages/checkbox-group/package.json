@@ -1,44 +1,50 @@
 {
   "name": "@lion/checkbox-group",
-  "version": "0.1.6",
+  "version": "0.12.4",
   "description": "A container for multiple checkboxes",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/checkbox-group"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "checkbox-group"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
-    "*.js"
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group checkbox-group",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group checkbox-group",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group checkbox-group",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group checkbox-group"
+  },
+  "sideEffects": [
+    "lion-checkbox.js",
+    "lion-checkbox-group.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.3",
-    "@lion/fieldset": "^0.1.6"
+    "@lion/core": "0.13.3",
+    "@lion/fieldset": "0.15.4",
+    "@lion/form-core": "0.6.6",
+    "@lion/input": "0.10.4"
   },
-  "devDependencies": {
-    "@lion/checkbox": "^0.1.6",
-    "@lion/form": "^0.1.6",
-    "@lion/localize": "^0.1.6",
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1",
-    "sinon": "^7.2.2"
+  "keywords": [
+    "checkbox-group",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

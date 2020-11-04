@@ -1,0 +1,47 @@
+{
+  "name": "@lion/progress-indicator",
+  "version": "0.2.3",
+  "description": "A progress indicator that is easily styleable and accessible in all contexts",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/progress-indicator"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "src",
+    "test",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group progress-indicator",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group progress-indicator",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group progress-indicator",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group progress-indicator"
+  },
+  "sideEffects": [
+    "lion-progress-indicator.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.13.3",
+    "@lion/localize": "0.14.8"
+  },
+  "keywords": [
+    "lion",
+    "loading-indicator",
+    "progress-indicator",
+    "spinner",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

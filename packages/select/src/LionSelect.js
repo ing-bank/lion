@@ -1,4 +1,16 @@
-import { LionField } from '@lion/field';
+/* eslint-disable max-classes-per-file */
+import { LionField } from '@lion/form-core';
+
+class LionFieldWithSelect extends LionField {
+  /**
+   * @returns {HTMLSelectElement}
+   */
+  get _inputNode() {
+    return /** @type {HTMLSelectElement} */ (Array.from(this.children).find(
+      el => el.slot === 'input',
+    ));
+  }
+}
 
 /**
  * LionSelectNative: wraps the native HTML element select
@@ -24,24 +36,56 @@ import { LionField } from '@lion/field';
  * where each option name starts with the same word or phrase can also significantly degrade
  * usability for keyboard and screen reader users.
  *
- * @customElement
- * @extends LionField
+ * @customElement lion-select
  */
-
-// eslint-disable-next-line no-unused-vars
-export class LionSelect extends LionField {
+export class LionSelect extends LionFieldWithSelect {
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('change', this._proxyChangeEvent);
+    this._inputNode.addEventListener('change', this._proxyChangeEvent);
+  }
+
+  // FIXME: For some reason we have to override this FormatMixin getter/setter pair for the tests to pass
+  get value() {
+    return (this._inputNode && this._inputNode.value) || this.__value || '';
+  }
+
+  // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+  /** @type {string} */
+  set value(value) {
+    // if not yet connected to dom can't change the value
+    if (this._inputNode) {
+      this._inputNode.value = value;
+      /** @type {string | undefined} */
+      this.__value = undefined;
+    } else {
+      this.__value = value;
+    }
+  }
+
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('disabled')) {
+      this._inputNode.disabled = this.disabled;
+      this.validate();
+    }
+
+    if (changedProperties.has('name')) {
+      this._inputNode.name = this.name;
+    }
+
+    if (changedProperties.has('autocomplete')) {
+      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('change', this._proxyChangeEvent);
+    this._inputNode.removeEventListener('change', this._proxyChangeEvent);
   }
 
   _proxyChangeEvent() {
-    this.inputElement.dispatchEvent(
+    this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,
         composed: true,

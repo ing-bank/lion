@@ -1,40 +1,46 @@
 {
   "name": "@lion/core",
-  "version": "0.1.3",
+  "version": "0.13.3",
   "description": "Core functionality that is shared across all Lion Web Components",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/core"
   },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
   "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
+    "debug": "cd ../../ && npm run debug -- --group core",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group core",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group core",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group core"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@open-wc/dedupe-mixin": "^1.2.18",
+    "@open-wc/scoped-elements": "^1.2.2",
+    "lit-element": "~2.4.0",
+    "lit-html": "^1.3.0"
   },
   "keywords": [
     "lion",
     "web-components"
   ],
-  "main": "index.js",
-  "module": "index.js",
-  "files": [
-    "src",
-    "stories",
-    "test",
-    "*.js"
-  ],
-  "dependencies": {
-    "lit-element": "2.1.0",
-    "lit-html": "1.0.0"
-  },
-  "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1",
-    "sinon": "^7.2.2"
+  "publishConfig": {
+    "access": "public"
   }
 }

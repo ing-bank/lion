@@ -1,34 +1,31 @@
 import { getLocale } from './getLocale.js';
-import { normalizeDate } from './normalizeDate.js';
+import { normalizeIntlDate } from './normalizeIntlDate.js';
 
 /**
  * Formats date based on locale and options
  *
- * @param date
- * @param options
- * @returns {*}
+ * @param {Date} date
+ * @param {import('@lion/localize/types/LocalizeMixinTypes').FormatDateOptions} [options] Intl options are available
+ * @returns {string}
  */
 export function formatDate(date, options) {
   if (!(date instanceof Date)) {
-    return '0000-00-00';
-  }
-  const formatOptions = options || {};
-  // make sure months and days are always 2-digits
-  if (!options) {
-    formatOptions.year = 'numeric';
-    formatOptions.month = '2-digit';
-    formatOptions.day = '2-digit';
-  }
-  if (options && !(options && options.year)) {
-    formatOptions.year = 'numeric';
-  }
-  if (options && !(options && options.month)) {
-    formatOptions.month = '2-digit';
-  }
-  if (options && !(options && options.day)) {
-    formatOptions.day = '2-digit';
+    return '';
   }
 
+  const formatOptions =
+    options ||
+    /** @type {import('@lion/localize/types/LocalizeMixinTypes').FormatDateOptions} */ ({});
+  /**
+   * Set smart defaults if:
+   * 1) no options object is passed
+   * 2) options object is passed, but none of the following props on it: day, month, year.
+   */
+  if (!options || (options && !options.day && !options.month && !options.year)) {
+    formatOptions.year = 'numeric';
+    formatOptions.month = '2-digit';
+    formatOptions.day = '2-digit';
+  }
   const computedLocale = getLocale(formatOptions && formatOptions.locale);
   let formattedDate = '';
   try {
@@ -36,5 +33,5 @@ export function formatDate(date, options) {
   } catch (e) {
     formattedDate = '';
   }
-  return normalizeDate(formattedDate);
+  return normalizeIntlDate(formattedDate, computedLocale, formatOptions);
 }

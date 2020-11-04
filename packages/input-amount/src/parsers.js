@@ -11,9 +11,10 @@ function isDecimalSeparator(value) {
 /**
  * Determines the best possible parsing mode.
  *
- * Parsemode depends mostely on the last 4 chars.
- * - 1234 => xxx1234 (heuristic)
+ * - If there is only one separator (withLocale)
  * - 1,23 => xxx1.23 (heuristic)
+ * - else parse mode depends mostly on the last 4 chars
+ * - 1234 => xxx1234 (heuristic)
  * - [space]123 => xxx123 (heuristic)
  * - ,123 => unclear
  *   - if 1.000,123 (we find a different separator) => 1000.123 (heuristic)
@@ -30,7 +31,13 @@ function isDecimalSeparator(value) {
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
  * @return {string} unparseable|withLocale|heuristic
  */
-function getParseMode(value) {
+function getParseMode(value, { mode = 'auto' } = {}) {
+  const separators = value.match(/[., ]/g);
+
+  if (mode === 'auto' && separators && separators.length === 1) {
+    return 'withLocale';
+  }
+
   if (value.length > 4) {
     const charAtLastSeparatorPosition = value[value.length - 4];
     if (isDecimalSeparator(charAtLastSeparatorPosition)) {
@@ -57,14 +64,19 @@ function getParseMode(value) {
  * parseWithLocale('1,234', { locale: 'en-GB' }) => 1234
  *
  * @param {string} value Number to be parsed
- * @param {object} options Locale Options
+ * @param {Object} options Locale Options
+ * @param {string} [options.locale]
  */
 function parseWithLocale(value, options) {
-  const separator = getDecimalSeparator(options);
-  const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}]`, 'g');
-  let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator).join('');
+  const locale = options && options.locale ? options.locale : undefined;
+  const separator = getDecimalSeparator(locale);
+  const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
+  let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator)?.join('');
   if (separator === ',') {
-    numberAndLocaleSeparator = numberAndLocaleSeparator.replace(',', '.');
+    numberAndLocaleSeparator = numberAndLocaleSeparator?.replace(',', '.');
+  }
+  if (!numberAndLocaleSeparator) {
+    return NaN;
   }
   return parseFloat(numberAndLocaleSeparator);
 }
@@ -76,7 +88,7 @@ function parseWithLocale(value, options) {
  * Warning: This function works only with numbers that can be heuristically parsed.
  *
  * @param {string} value Number that can be heuristically parsed
- * @return {float} parsed javascript number
+ * @return {number} parsed javascript number
  */
 function parseHeuristic(value) {
   if (value.match(/[0-9., ]/g)) {
@@ -107,20 +119,29 @@ function parseHeuristic(value) {
  * parseAmount('1,234.56'); // method: heuristic => 1234.56
  *
  * @param {string} value Number to be parsed
- * @param {object} options Locale Options
+ * @param {object} [options] Locale Options
  */
 export function parseAmount(value, options) {
-  const matchedInput = value.match(/[0-9,. ]/g);
+  const containsNumbers = value.match(/\d/g);
+  if (!containsNumbers) {
+    return undefined;
+  }
+  const matchedInput = value.match(/[0-9,.\- ]/g);
   if (!matchedInput) {
     return undefined;
   }
   const cleanedInput = matchedInput.join('');
-  const parseMode = getParseMode(cleanedInput);
+  const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
-    case 'unparseable':
-      return parseFloat(cleanedInput.match(/[0-9]/g).join(''));
+    case 'unparseable': {
+      const cleanedInputMatchStr = cleanedInput.match(/[0-9]/g)?.join('');
+      if (!cleanedInputMatchStr) {
+        return NaN;
+      }
+      return parseFloat(cleanedInputMatchStr);
+    }
     case 'withLocale':
-      return parseWithLocale(cleanedInput, options);
+      return parseWithLocale(cleanedInput, options || {});
     case 'heuristic':
       return parseHeuristic(cleanedInput);
     default:

@@ -1,13 +1,30 @@
-import { html, css } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
-import { ObserverMixin } from '@lion/core/src/ObserverMixin.js';
+import { css, html, LitElement } from '@lion/core';
+
+/**
+ * @typedef {import('./LionStep.js').LionStep} LionStep
+ */
 
 /**
  * `LionSteps` is a controller for a multi step system.
  *
- * @customElement
+ * @customElement lion-steps
+ * @extends {LitElement}
  */
-export class LionSteps extends ObserverMixin(LionLitElement) {
+export class LionSteps extends LitElement {
+  static get styles() {
+    return [
+      css`
+        :host {
+          display: block;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+      `,
+    ];
+  }
+
   static get properties() {
     /**
      * Fired when a transition between steps happens.
@@ -32,38 +49,46 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     };
   }
 
-  static get asyncObservers() {
-    return {
-      _onCurrentChanged: ['current'],
-    };
-  }
-
   constructor() {
     super();
+    /** @type {{[key: string]: ?}} */
     this.data = {};
     this._internalCurrentSync = true; // necessary for preventing side effects on initialization
+    /** @type {number} */
     this.current = 0;
+    this._max = 0;
   }
 
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-        }
-      `,
-    ];
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this._max = this.steps.length - 1;
+
+    let hasInitial = false;
+    this.steps.forEach((step, i) => {
+      if (step.initialStep && i !== 0) {
+        this.current = i;
+        hasInitial = true;
+      }
+    });
+    if (!hasInitial && this.steps[0]) {
+      this.steps[0].enter();
+    }
+  }
+
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('current')) {
+      this._onCurrentChanged(
+        { current: this.current },
+        { current: /** @type {number} */ (changedProperties.get('current')) },
+      );
+    }
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
-  }
-
-  firstUpdated() {
-    super.firstUpdated();
-    this._max = this.children.length - 1;
+    return html`<slot></slot>`;
   }
 
   next() {
@@ -74,12 +99,25 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     this._goTo(this.current - 1, this.current);
   }
 
+  get steps() {
+    const defaultSlot = /** @type {HTMLSlotElement} */ (this.shadowRoot?.querySelector(
+      'slot:not([name])',
+    ));
+    return /** @type {LionStep[]} */ (defaultSlot.assignedNodes()).filter(
+      node => node.nodeType === Node.ELEMENT_NODE,
+    );
+  }
+
+  /**
+   * @param {number} newCurrent
+   * @param {number} oldCurrent
+   */
   _goTo(newCurrent, oldCurrent) {
     if (newCurrent < 0 || newCurrent > this._max) {
       throw new Error(`There is no step at index ${newCurrent}.`);
     }
 
-    const nextStep = this.children[newCurrent];
+    const nextStep = this.steps[newCurrent];
     const back = newCurrent < oldCurrent;
 
     if (nextStep.passesCondition(this.data)) {
@@ -98,23 +136,32 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     }
   }
 
+  /**
+   * @param {number} newCurrent
+   * @param {number} oldCurrent
+   */
   _changeStep(newCurrent, oldCurrent) {
-    const oldStepElement = this.children[oldCurrent];
-    const newStepElement = this.children[newCurrent];
+    const oldStepElement = this.steps[oldCurrent];
+    const newStepElement = this.steps[newCurrent];
     const fromStep = { number: oldCurrent, element: oldStepElement };
     const toStep = { number: newCurrent, element: newStepElement };
 
     oldStepElement.leave();
-    newStepElement.enter();
 
     if (this.current !== newCurrent) {
       this._internalCurrentSync = true;
       this.current = newCurrent;
     }
 
+    newStepElement.enter();
+
     this._dispatchTransitionEvent(fromStep, toStep);
   }
 
+  /**
+   * @param {{number: number, element: LionStep}} fromStep
+   * @param {{number: number, element: LionStep}} toStep
+   */
   _dispatchTransitionEvent(fromStep, toStep) {
     this.dispatchEvent(
       new CustomEvent('transition', {
@@ -125,6 +172,10 @@ export class LionSteps extends ObserverMixin(LionLitElement) {
     );
   }
 
+  /**
+   * @param {{current: number}} newValues
+   * @param {{current: number}} oldValues
+   */
   _onCurrentChanged(newValues, oldValues) {
     if (this._internalCurrentSync) {
       this._internalCurrentSync = false;

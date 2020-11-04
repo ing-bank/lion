@@ -1,31 +1,17 @@
-import { html, css } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { css, html, LitElement } from '@lion/core';
+
+/**
+ * @typedef {import('./LionSteps').LionSteps} LionSteps
+ */
 
 /**
  * `LionStep` is one of many in a LionSteps Controller
  *
- * @customElement
+ * @customElement lion-step
+ * @extends {LitElement}
  */
-export class LionStep extends LionLitElement {
+export class LionStep extends LitElement {
   static get properties() {
-    /**
-     * Fired when the step is entered.
-     *
-     * @event enter
-     */
-
-    /**
-     * Fired when the step is left.
-     *
-     * @event left
-     */
-
-    /**
-     * Fired when the step is skipped.
-     *
-     * @event skipped
-     */
-
     return {
       /**
        * Step status, one of: "untouched", "entered", "left", "skipped".
@@ -39,13 +25,14 @@ export class LionStep extends LionLitElement {
        * Takes lion-steps data as a first argument `myConditionFunc(data)`.
        */
       condition: {
-        type: Function,
+        attribute: false,
       },
       /**
        * Allows to invert condition function result.
        */
       invertCondition: {
         type: Boolean,
+        reflect: true,
         attribute: 'invert-condition',
       },
       /**
@@ -55,6 +42,7 @@ export class LionStep extends LionLitElement {
        */
       forwardOnly: {
         type: Boolean,
+        reflect: true,
         attribute: 'forward-only',
       },
       /**
@@ -63,6 +51,7 @@ export class LionStep extends LionLitElement {
        */
       initialStep: {
         type: Boolean,
+        reflect: true,
         attribute: 'initial-step',
       },
     };
@@ -71,7 +60,8 @@ export class LionStep extends LionLitElement {
   constructor() {
     super();
     this.status = 'untouched';
-    this.condition = () => true;
+    // eslint-disable-next-line no-unused-vars
+    this.condition = /** @param {Object} [data] */ data => true;
     this.invertCondition = false;
     this.forwardOnly = false;
     this.initialStep = false;
@@ -84,6 +74,10 @@ export class LionStep extends LionLitElement {
           display: none;
         }
 
+        :host([hidden]) {
+          display: none;
+        }
+
         :host([status='entered']) {
           display: block;
         }
@@ -92,35 +86,17 @@ export class LionStep extends LionLitElement {
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html`<slot></slot>`;
   }
 
-  connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.connectedCallback();
-    this.controller = this.parentNode;
-    if (this.initialStep === true) {
-      this.enter(true);
-    }
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this.controller = /** @type {LionSteps} */ (this.parentNode);
   }
 
-  getControllerIndex() {
-    const controllerChildren = this.controller.children;
-    for (let i = 0; i < controllerChildren.length; i += 1) {
-      if (controllerChildren[i] === this) {
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  enter(updateController) {
+  enter() {
     this.status = 'entered';
-    if (updateController === true) {
-      this.controller.current = this.getControllerIndex();
-    }
     this.dispatchEvent(new CustomEvent('enter', { bubbles: true, composed: true }));
   }
 
@@ -134,6 +110,7 @@ export class LionStep extends LionLitElement {
     this.dispatchEvent(new CustomEvent('skip', { bubbles: true, composed: true }));
   }
 
+  /** @param {Object} [data] */
   passesCondition(data) {
     const result = this.condition(data);
     return this.invertCondition ? !result : result;

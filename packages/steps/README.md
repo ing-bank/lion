@@ -1,10 +1,19 @@
 # Steps
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
-
 `lion-steps` breaks a single goal down into dependable sub-tasks.
 
+```js script
+import { html } from 'lit-html';
+import './lion-step.js';
+import './lion-steps.js';
+
+export default {
+  title: 'Navigation/Steps',
+};
+```
+
 ## Features
+
 - navigate between different steps with 'previous' and 'next' functions.
 - keeps status of each step
   - untouched
@@ -21,40 +30,111 @@ In many application you build multi-step workflows like multi-step forms where y
 ## How to use
 
 ### Installation
-```
-npm i --save @lion/select
+
+```bash
+npm i --save @lion/steps
 ```
 
 ```js
+import { LionSteps, LionStep } from '@lion/steps';
+// or
 import '@lion/steps/lion-steps.js';
 import '@lion/steps/lion-step.js';
+```
+
+### Example
+
+```js story
+export const main = () => html`
+  <lion-steps>
+    <lion-step initial-step>
+      <p>Welcome</p>
+      <button disabled>previous</button> &nbsp;
+      <input type="button" value="next" @click=${ev => ev.target.parentElement.controller.next()} />
+    </lion-step>
+    <lion-step>
+      <p>Are you single?</p>
+      <input
+        type="button"
+        value="yes"
+        @click=${ev => {
+          ev.target.parentElement.controller.data.isSingle = true;
+          ev.target.parentElement.controller.next();
+        }}
+      />
+      &nbsp;
+      <input
+        type="button"
+        value="no"
+        @click=${ev => {
+          ev.target.parentElement.controller.data.isSingle = false;
+          ev.target.parentElement.controller.next();
+        }}
+      />
+      <br /><br />
+      <input
+        type="button"
+        value="previous"
+        @click=${ev => ev.target.parentElement.controller.previous()}
+      />
+    </lion-step>
+    <lion-step id="is-single" .condition="${data => data.isSingle}">
+      <p>You are single</p>
+      <input
+        type="button"
+        value="previous"
+        @click=${ev => ev.target.parentElement.controller.previous()}
+      />
+      &nbsp;
+      <input type="button" value="next" @click=${ev => ev.target.parentElement.controller.next()} />
+    </lion-step>
+    <lion-step id="is-not-single" .condition="${data => data.isSingle}" invert-condition>
+      <p>You are NOT single.</p>
+      <input
+        type="button"
+        value="previous"
+        @click=${ev => ev.target.parentElement.controller.previous()}
+      />
+      &nbsp;
+      <input type="button" value="next" @click=${ev => ev.target.parentElement.controller.next()} />
+    </lion-step>
+    <lion-step>
+      <p>Finish</p>
+      <input
+        type="button"
+        value="previous"
+        @click=${ev => ev.target.parentElement.controller.previous()}
+      />
+    </lion-step>
+  </lion-steps>
+`;
 ```
 
 ### Define steps
 
 We provide two components: `lion-steps` and `lion-step`. Steps need to be direct children of `lion-steps`.
 
-```html
-<lion-steps id="steps">
-  <lion-step initial-step>Step 1</lion-step>
-  <lion-step>Step 2</lion-step>
-  <lion-step>......</lion-step>
-  <lion-step>Step N</lion-step>
-</lion-steps>
+```js preview-story
+export const defineSteps = () => html`
+  <lion-steps id="steps">
+    <lion-step initial-step>Step 1</lion-step>
+    <lion-step>Step 2</lion-step>
+    <lion-step>......</lion-step>
+    <lion-step>Step N</lion-step>
+  </lion-steps>
+`;
 ```
 
 The first step needs to be explicitely set via `initial-step` so that it get status `entered`, while others are `untouched` by default. You can navigate between steps using `next()` and `previous()` methods, so that next step gets `entered` status, while previous one becomes `left`:
 
-```javascript
-...
+```js
 next() {
-  return this.$id('steps').next();
+  return this.shadowRoot.getElementById('steps').next();
 }
 
 previous() {
-  return this.$id('steps').previous();
+  return this.shadowRoot.getElementById('steps').previous();
 }
-...
 ```
 
 ### Conditions
@@ -90,7 +170,8 @@ If you have an intermediate step loading data via AJAX request and then automati
 <lion-steps>
   <lion-step>preliminary step</lion-step>
   <lion-step forward-only>data is loaded and next() is called automatically afterwards</lion-step>
-  <lion-step>do smth with data</lion-step><!-- user decides to go to previous step here -->
+  <!-- user decides to go to previous step here -->
+  <lion-step>do smth with data</lion-step>
 </lion-steps>
 ```
 
@@ -99,7 +180,7 @@ If you have an intermediate step loading data via AJAX request and then automati
 If you need to be notified when transition between steps happens use `transition` event providing steps data:
 
 ```html
-<lion-steps on-transition="onTransition">
+<lion-steps @transition="${onTransition}">
   <lion-step>Step 1</lion-step>
   <lion-step>Step 2</lion-step>
   <lion-step>Step 3</lion-step>
@@ -121,8 +202,8 @@ For notifications about specific step status change you can use individual event
 
 ```html
 <lion-steps>
-  <lion-step on-left="onLeft">Step 1</lion-step>
-  <lion-step on-skipped="onSkipped">Step 2</lion-step>
-  <lion-step on-entered="onEntered">Step 3</lion-step>
+  <lion-step @leave="${onLeave}">Step 1</lion-step>
+  <lion-step @skip="${onSkip}">Step 2</lion-step>
+  <lion-step @enter="${onEnter}">Step 3</lion-step>
 </lion-steps>
 ```

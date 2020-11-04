@@ -1,0 +1,62 @@
+{
+  "name": "@lion/combobox",
+  "version": "0.1.5",
+  "description": "A widget made up of a single-line textbox and an associated pop-up listbox element",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/combobox"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group combobox",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group combobox",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group combobox",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group combobox"
+  },
+  "sideEffects": [
+    "lion-combobox.js",
+    "docs/demo-selection-display.js",
+    "docs/gh-combobox/gh-combobox.js",
+    "docs/gh-combobox/gh-button.js",
+    "docs/wa-combobox/wa-combobox.js",
+    "docs/md-combobox/md-combobox.js",
+    "docs/md-combobox/md-input.js",
+    "docs/md-combobox/style/md-ripple.js",
+    "docs/md-combobox/style/load-roboto.js",
+    "docs/google-combobox/google-combobox.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6",
+    "@lion/listbox": "0.3.2",
+    "@lion/overlays": "0.21.3"
+  },
+  "devDependencies": {
+    "@lion/validate-messages": "0.3.4"
+  },
+  "keywords": [
+    "combobox",
+    "form",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

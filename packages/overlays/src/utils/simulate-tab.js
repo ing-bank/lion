@@ -1,7 +1,7 @@
 import { getFocusableElements } from './get-focusable-elements.js';
 
 export function simulateTab(node = document.body) {
-  const current = document.activeElement;
+  const current = /** @type {HTMLElement} */ (document.activeElement);
   const all = getFocusableElements(node);
 
   const currentIndex = all.indexOf(current);

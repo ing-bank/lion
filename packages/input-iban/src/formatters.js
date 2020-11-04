@@ -1,4 +1,4 @@
-import { friendlyFormatIBAN } from '@bundled-es-modules/ibantools';
+import { friendlyFormatIBAN } from 'ibantools';
 
 /**
  * Takes an unformatted IBAN and returns a formatted one.
@@ -7,5 +7,9 @@ import { friendlyFormatIBAN } from '@bundled-es-modules/ibantools';
  * @return {string} formatted value
  */
 export function formatIBAN(modelValue) {
+  // defensive code because of ibantools
+  if (!modelValue) {
+    return '';
+  }
   return friendlyFormatIBAN(modelValue);
 }

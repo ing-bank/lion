@@ -1,0 +1,63 @@
+{
+  "name": "@lion/form-integrations",
+  "version": "0.3.9",
+  "description": "The Form System allows you to create complex forms with various validation in an easy way",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/form-integrations"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group form-integrations",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-integrations",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-integrations",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group form-integrations"
+  },
+  "sideEffects": [
+    "./docs/helper-wc/h-output.js"
+  ],
+  "dependencies": {
+    "@lion/button": "0.8.3",
+    "@lion/checkbox-group": "0.12.4",
+    "@lion/core": "0.13.3",
+    "@lion/fieldset": "0.15.4",
+    "@lion/form": "0.7.4",
+    "@lion/form-core": "0.6.6",
+    "@lion/input": "0.10.4",
+    "@lion/input-date": "0.8.4",
+    "@lion/input-datepicker": "0.17.3",
+    "@lion/input-email": "0.9.4",
+    "@lion/input-iban": "0.10.4",
+    "@lion/input-range": "0.5.4",
+    "@lion/localize": "0.14.8",
+    "@lion/radio-group": "0.12.4",
+    "@lion/select": "0.8.4",
+    "@lion/select-rich": "0.21.9",
+    "@lion/textarea": "0.8.4",
+    "@lion/validate-messages": "0.3.4"
+  },
+  "keywords": [
+    "form",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

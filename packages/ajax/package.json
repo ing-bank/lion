@@ -1,41 +1,46 @@
 {
   "name": "@lion/ajax",
-  "version": "0.1.5",
+  "version": "0.5.8",
   "description": "Thin wrapper around axios to allow for custom interceptors",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/ajax"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "ajax"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
-    "*.js"
+    "test-helpers",
+    "translations",
+    "types"
   ],
-  "dependencies": {
-    "@bundled-es-modules/axios": "0.18.0",
-    "@lion/core": "^0.1.3"
+  "scripts": {
+    "debug": "cd ../../ && npm run -- --debug ajax",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group ajax",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group ajax",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group ajax"
   },
-  "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1",
-    "sinon": "^7.2.2"
+  "sideEffects": false,
+  "dependencies": {
+    "@bundled-es-modules/axios": "0.18.1",
+    "@lion/core": "0.13.3",
+    "singleton-manager": "1.1.2"
+  },
+  "keywords": [
+    "ajax",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

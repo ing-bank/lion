@@ -1,5 +1,4 @@
 import { axios } from '@bundled-es-modules/axios';
-import { LionSingleton } from '@lion/core';
 import {
   cancelInterceptorFactory,
   cancelPreviousOnNewRequestInterceptorFactory,
@@ -11,7 +10,7 @@ import { jsonPrefixTransformerFactory } from './transformers.js';
  * `AjaxClass` creates the singleton instance {@link:ajax}. It is a promise based system for
  * fetching data, based on [axios](https://github.com/axios/axios).
  */
-export class AjaxClass extends LionSingleton {
+export class AjaxClass {
   /**
    * @property {Object} proxy the axios instance that is bound to the AjaxClass instance
    */
@@ -28,8 +27,6 @@ export class AjaxClass extends LionSingleton {
    * @param {string} config.cancelPreviousOnNewRequest prevents concurrent requests
    */
   constructor(config) {
-    super();
-
     this.__config = {
       lang: document.documentElement.getAttribute('lang'),
       languageHeader: true,
@@ -75,7 +72,6 @@ export class AjaxClass extends LionSingleton {
 
   /**
    * Sets the config for the instance
-   * TODO: rename to 'config', because of conflict with options() request method on axios
    */
   set options(config) {
     this.__config = config;
@@ -130,7 +126,6 @@ export class AjaxClass extends LionSingleton {
    * @param {string} url the endpoint location
    * @param {AxiosRequestConfig} config the config specific for this request
    * @returns {AxiosResponseSchema}
-   * TODO: consider reenable after rename of options to config
    */
   // options(url, config) {
   //   return this.proxy.options.apply(this, [url, { ...this.__config, ...config }]);

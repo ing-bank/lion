@@ -1,45 +1,53 @@
 {
   "name": "@lion/input-iban",
-  "version": "0.1.6",
+  "version": "0.10.4",
   "description": "Provide a way for users to fill in an iban",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/input-iban"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "input-iban"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
+    "test-helpers",
     "translations",
-    "*.js"
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group input-iban",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-iban",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-iban",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group input-iban"
+  },
+  "sideEffects": [
+    "lion-input-iban.js"
   ],
   "dependencies": {
-    "@bundled-es-modules/ibantools": "2.0.0",
-    "@lion/core": "^0.1.3",
-    "@lion/field": "^0.1.6",
-    "@lion/input": "^0.1.6",
-    "@lion/localize": "^0.1.6"
+    "@lion/core": "0.13.3",
+    "@lion/form-core": "0.6.6",
+    "@lion/input": "0.10.4",
+    "@lion/localize": "0.14.8",
+    "ibantools": "^2.2.0"
   },
   "devDependencies": {
-    "@lion/validate": "^0.1.6",
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1"
+    "@lion/validate-messages": "0.3.4"
+  },
+  "keywords": [
+    "input-iban",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -1,26 +1,59 @@
-import { html, css, render, unsafeHTML, until } from '@lion/core';
-import { LionLitElement } from '@lion/core/src/LionLitElement.js';
+import { css, html, LitElement, nothing, render, TemplateResult } from '@lion/core';
+import { icons } from './icons.js';
 
-const isDefinedPromise = action => typeof action === 'object' && Promise.resolve(action) === action;
+function unwrapSvg(wrappedSvgObject) {
+  const svgObject =
+    wrappedSvgObject && wrappedSvgObject.default ? wrappedSvgObject.default : wrappedSvgObject;
+  return typeof svgObject === 'function' ? svgObject(html) : svgObject;
+}
+
+function validateSvg(svg) {
+  if (!(svg === nothing || svg instanceof TemplateResult)) {
+    throw new Error(
+      'icon accepts only lit-html templates or functions like "tag => tag`<svg>...</svg>`"',
+    );
+  }
+}
 
 /**
  * Custom element for rendering SVG icons
- * @polymerElement
  */
-export class LionIcon extends LionLitElement {
+export class LionIcon extends LitElement {
   static get properties() {
     return {
+      /**
+       * @desc When icons are not loaded as part of an iconset defined on iconManager,
+       * it's possible to directly load an svg.
+       * @type {TemplateResult|function}
+       */
       svg: {
-        type: String,
+        type: Object,
       },
-      role: {
-        type: String,
-        attribute: 'role',
-        reflect: true,
-      },
+      /**
+       * @desc The iconId allows to access icons that are registered to the IconManager
+       * For instance, "lion:space:alienSpaceship"
+       * @type {string}
+       */
       ariaLabel: {
         type: String,
         attribute: 'aria-label',
+        reflect: true,
+      },
+      /**
+       * @desc The iconId allows to access icons that are registered to the IconManager
+       * For instance, "lion:space:alienSpaceship"
+       * @type {string}
+       */
+      iconId: {
+        type: String,
+        attribute: 'icon-id',
+      },
+      /**
+       * @private
+       */
+      role: {
+        type: String,
+        attribute: 'role',
         reflect: true,
       },
     };
@@ -34,6 +67,10 @@ export class LionIcon extends LionLitElement {
           display: inline-block;
           width: 1em;
           height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
         }
 
         :host:first-child {
@@ -60,22 +97,17 @@ export class LionIcon extends LionLitElement {
 
   update(changedProperties) {
     super.update(changedProperties);
-    if (changedProperties.has('svg')) {
-      if (isDefinedPromise(this.svg)) {
-        this._setDynamicSvg();
-      } else {
-        this._setSvg();
-      }
-    }
     if (changedProperties.has('ariaLabel')) {
       this._onLabelChanged(changedProperties);
+    }
+
+    if (changedProperties.has('iconId')) {
+      this._onIconIdChanged(changedProperties.get('iconId'));
     }
   }
 
   render() {
-    return html`
-      <slot></slot>
-    `;
+    return html`<slot></slot>`;
   }
 
   connectedCallback() {
@@ -88,24 +120,17 @@ export class LionIcon extends LionLitElement {
    * On IE11, svgs without focusable false appear in the tab order
    * so make sure to have <svg focusable="false"> in svg files
    */
-  _setSvg() {
-    this.innerHTML = this.svg;
+  set svg(svg) {
+    this.__svg = svg;
+    if (svg === undefined || svg === null) {
+      this._renderSvg(nothing);
+    } else {
+      this._renderSvg(unwrapSvg(svg));
+    }
   }
 
-  // TODO: find a better way to render dynamic icons without the need for unsafeHTML
-  _setDynamicSvg() {
-    const template = html`
-      ${until(
-        this.svg.then(_svg => {
-          // If the export was not made explicit, take the default
-          if (typeof _svg !== 'string') {
-            return unsafeHTML(_svg.default);
-          }
-          return unsafeHTML(_svg);
-        }),
-      )}
-    `;
-    render(template, this);
+  get svg() {
+    return this.__svg;
   }
 
   _onLabelChanged() {
@@ -114,6 +139,31 @@ export class LionIcon extends LionLitElement {
     } else {
       this.setAttribute('aria-hidden', 'true');
       this.removeAttribute('aria-label');
+    }
+  }
+
+  _renderSvg(svgObject) {
+    validateSvg(svgObject);
+    render(svgObject, this);
+    if (this.firstElementChild) {
+      this.firstElementChild.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  async _onIconIdChanged(prevIconId) {
+    if (!this.iconId) {
+      // clear if switching from iconId to no iconId
+      if (prevIconId) {
+        this.svg = null;
+      }
+    } else {
+      const iconIdBeforeResolve = this.iconId;
+      const svg = await icons.resolveIconForId(iconIdBeforeResolve);
+
+      // update SVG if it did not change in the meantime to avoid race conditions
+      if (this.iconId === iconIdBeforeResolve) {
+        this.svg = svg;
+      }
     }
   }
 }

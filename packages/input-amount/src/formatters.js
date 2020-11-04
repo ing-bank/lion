@@ -1,19 +1,22 @@
-import { formatNumber, getFractionDigits } from '@lion/localize';
+import { formatNumber, getFractionDigits, normalizeCurrencyLabel } from '@lion/localize';
 
 /**
- * Formats a number considering the default fraction digits provided by Intl
+ * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ */
+
+/**
+ * Formats a number considering the default fraction digits provided by Intl.
  *
- * @param {float} modelValue Number to format
- * @param {object} givenOptions Options for Intl
+ * @param {number} modelValue Number to format
+ * @param {FormatOptions} [givenOptions]
  */
 export function formatAmount(modelValue, givenOptions) {
-  if (modelValue === '') {
-    return '';
-  }
+  /** @type {FormatOptions} */
   const options = {
     currency: 'EUR',
     ...givenOptions,
   };
+
   if (typeof options.minimumFractionDigits === 'undefined') {
     options.minimumFractionDigits = getFractionDigits(options.currency);
   }
@@ -22,4 +25,16 @@ export function formatAmount(modelValue, givenOptions) {
   }
 
   return formatNumber(modelValue, options);
+}
+
+/**
+ *
+ * @param {string} currency
+ * @param {string} locale
+ */
+export function formatCurrencyLabel(currency, locale) {
+  if (currency === '') {
+    return '';
+  }
+  return normalizeCurrencyLabel(currency, locale);
 }

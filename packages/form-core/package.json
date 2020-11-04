@@ -1,0 +1,48 @@
+{
+  "name": "@lion/form-core",
+  "version": "0.6.6",
+  "description": "Form-core contains all essential building blocks for creating form fields and fieldsets",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/field"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group form-core",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-core",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-core",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group form-core"
+  },
+  "sideEffects": [
+    "lion-field.js",
+    "lion-validation-feedback.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.13.3",
+    "@lion/localize": "0.14.8"
+  },
+  "keywords": [
+    "field",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -6,6 +6,10 @@ import { AjaxClass } from '../src/AjaxClass.js';
 describe('AjaxClass interceptors', () => {
   let server;
 
+  function getInstance(cfg) {
+    return new AjaxClass(cfg);
+  }
+
   beforeEach(() => {
     server = sinon.fakeServer.create({ autoRespond: true });
   });
@@ -24,8 +28,8 @@ describe('AjaxClass interceptors', () => {
             this[type] = [...this[type], myInterceptor];
           }
         }
-        const ajaxWithout = AjaxClass.getNewInstance();
-        const ajaxWith = MyApi.getNewInstance();
+        const ajaxWithout = getInstance();
+        const ajaxWith = new MyApi();
         expect(ajaxWithout[type]).to.not.include(myInterceptor);
         expect(ajaxWith[type]).to.include(myInterceptor);
       });
@@ -34,8 +38,8 @@ describe('AjaxClass interceptors', () => {
     it('can be added per instance without changing the class', () => {
       ['requestInterceptors', 'responseInterceptors'].forEach(type => {
         const myInterceptor = () => {};
-        const ajaxWithout = AjaxClass.getNewInstance();
-        const ajaxWith = AjaxClass.getNewInstance();
+        const ajaxWithout = getInstance();
+        const ajaxWith = getInstance();
         ajaxWith[type].push(myInterceptor);
         expect(ajaxWithout[type]).to.not.include(myInterceptor);
         expect(ajaxWith[type]).to.include(myInterceptor);
@@ -53,7 +57,7 @@ describe('AjaxClass interceptors', () => {
 
           const myInterceptor = sinon.spy(foo => foo);
 
-          const ajax = AjaxClass.getNewInstance();
+          const ajax = getInstance();
 
           ajax[type].push(myInterceptor);
           await ajax.get('data.json');
@@ -68,7 +72,7 @@ describe('AjaxClass interceptors', () => {
 
     it('has access to provided instance config(options) on requestInterceptors', async () => {
       server.respondWith('GET', 'data.json', [200, { 'Content-Type': 'application/json' }, '{}']);
-      const ajax = AjaxClass.getNewInstance();
+      const ajax = getInstance();
       ajax.options.myCustomValue = 'foo';
       let customValueAccess = false;
       const myInterceptor = config => {
@@ -94,7 +98,7 @@ describe('AjaxClass interceptors', () => {
         '{ "method": "put" }',
       ]);
       const enforcePutInterceptor = config => ({ ...config, method: 'PUT' });
-      const myAjax = AjaxClass.getNewInstance();
+      const myAjax = getInstance();
       myAjax.requestInterceptors.push(enforcePutInterceptor);
       const response = await myAjax.post('data.json');
       expect(response.data).to.deep.equal({ method: 'put' });
@@ -112,7 +116,7 @@ describe('AjaxClass interceptors', () => {
         ...response,
         data: { ...response.data, foo: 'bar' },
       });
-      const myAjax = AjaxClass.getNewInstance();
+      const myAjax = getInstance();
       myAjax.responseInterceptors.push(addDataInterceptor);
       const response = await myAjax.get('data.json');
       expect(response.data).to.deep.equal({ method: 'get', foo: 'bar' });

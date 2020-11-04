@@ -1,23 +1,45 @@
 # Form
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+`lion-form` is a webcomponent that enhances the functionality of the native `form` component.
+It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview--page).
 
-`lion-form` is a webcomponent that enhances the functionality of the native `form` component. It is designed to interact with (instances of) the [form controls](../field/docs/FormFundaments.md).
+```js script
+import { html } from 'lit-html';
+import '@lion/input/lion-input.js';
+import './lion-form.js';
+
+export default {
+  title: 'Forms/Form/Overview',
+};
+```
+
+```js story
+export const main = () => html`
+  <lion-form id="form">
+    <form>
+      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+      <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    </form>
+  </lion-form>
+`;
+```
 
 ## Features
 
-- data synchronization with models
-- easy retrieval of form data based on field names
-- advanced validation possibilities
-- advanced user interaction scenarios via [interaction states](../field/docs/InteractionStates.md)
-- registration mechanism for [form controls](../field/).
-- accessible out of the box
+- Data synchronization with models
+- Easy retrieval of form data based on field names
+- Advanced validation possibilities
+- Advanced user interaction scenarios via [interaction states](?path=/docs/forms-system-interaction-states--interaction-states)
+- Registration mechanism for [form controls](?path=/docs/forms-system-overview--page)
+- Accessible out of the box
+
+For more information about fields that are designed for lion-form, please read [forms](?path=/docs/forms-system-overview--page).
 
 ## How to use
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/form
 ```
 
@@ -28,16 +50,11 @@ import '@lion/form/lion-form.js';
 ### Example
 
 ```html
-<lion-form><form>
-  <lion-fieldset name="fullName">
-    <lion-input label="First Name" name="firstName" .modelValue=${model.firstName}></lion-input>
-    <lion-input label="Last Name" name="lastName" .modelValue=${model.lastName}></lion-input>
-  </lion-fieldset>
-  <lion-textarea label="Description" name="description" .modelValue=${model.description}></lion-textarea>
-</form></lion-form>
+<lion-form>
+  <form>
+    <lion-fieldset name="fullName">
+      <lion-input label="First Name" name="firstName"></lion-input>
+    </lion-fieldset>
+  </form>
+</lion-form>
 ```
-
-Note that the example above is rendered using [lit-html](https://github.com/Polymer/lit-html)
-
-For more information about fields that are designed for lion-form, please read
-[Forms](../../docs/forms.md).

@@ -1,17 +1,50 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Core
 
-[//]: # (AUTO INSERT HEADER PREPUBLISH)
+The `@lion/core` package is mostly for in depth usage.
+It handles the version of `lit-element` and `lit-html`.
 
-## Deprecations
+In order to be sure a compatible version is used import it via this package.
 
-The following files/features are deprecated
+```js script
+export default {
+  title: 'Others/System/Core',
+};
+```
 
-- CssClassMixin
-- DomHelpersMixin (only $$id, $$slot is deprecated)
-- ElementMixin
-- EventMixin
-- ObserverMixin
-- lit-html.js
+```js
+import { LitElement, html, render } from '@lion/core';
+```
+
+## Features
+
+- [function to deduplicate mixins (dedupeMixin)](#deduping-of-mixins)
+- Mixin to handle disabled (DisabledMixin)
+- Mixin to handle disabled AND tabIndex (DisabledWithTabIndexMixin)
+- Mixin to manage auto generated needed slot elements in light dom (SlotMixin)
+
+> These features are not well documented - care to help out?
+
+## How to use
+
+### Installation
+
+```bash
+npm i --save @lion/core
+```
+
+```js
+import { dedupeMixin, LitElement } from '@lion/core';
+```
+
+### Example
+
+```js
+const BaseMixin = dedupeMixin((superClass) => {
+  return class extends superClass { ... };
+});
+```
 
 ## Deduping of mixins
 
@@ -28,7 +61,7 @@ The more generic the mixin is, the higher the chance of being appliend more than
 
 This is an example of how to make a conventional ES mixin deduping.
 
-```javascript
+```js
 const BaseMixin = dedupeMixin((superClass) => {
   return class extends superClass { ... };
 });

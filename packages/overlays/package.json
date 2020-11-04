@@ -1,41 +1,49 @@
 {
   "name": "@lion/overlays",
-  "version": "0.1.4",
+  "version": "0.21.3",
   "description": "Overlays System using lit-html for rendering",
+  "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/overlays"
   },
-  "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
-  },
-  "keywords": [
-    "lion",
-    "web-components",
-    "overlays"
-  ],
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
     "src",
-    "stories",
     "test",
-    "*.js"
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "debug": "cd ../../ && npm run debug -- --group overlays",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group overlays",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group overlays",
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "test": "cd ../../ && npm run test:browser -- --group overlays"
+  },
+  "sideEffects": [
+    "./docs/demo-overlay-system.js",
+    "./docs/applyDemoOverlayStyles.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.1.3"
+    "@lion/core": "0.13.3",
+    "popper.js": "^1.15.0",
+    "singleton-manager": "1.1.2"
   },
-  "devDependencies": {
-    "@open-wc/demoing-storybook": "^0.2.0",
-    "@open-wc/testing": "^0.11.1",
-    "@polymer/iron-test-helpers": "^3.0.1",
-    "sinon": "^7.2.2"
+  "keywords": [
+    "lion",
+    "overlays",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

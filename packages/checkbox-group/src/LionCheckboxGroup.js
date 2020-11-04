@@ -1,88 +1,21 @@
-import { LionFieldset } from '@lion/fieldset';
+import { LitElement } from '@lion/core';
+import { ChoiceGroupMixin, FormGroupMixin } from '@lion/form-core';
 
-export class LionCheckboxGroup extends LionFieldset {
+/**
+ * A wrapper around multiple checkboxes
+ */
+// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
+export class LionCheckboxGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {
   constructor() {
     super();
-    this._checkboxGroupTouched = false;
-    this._setTouchedAndPrefilled = this._setTouchedAndPrefilled.bind(this);
-    this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
-    this._checkForChildrenClick = this._checkForChildrenClick.bind(this);
+    this.multipleChoice = true;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    // We listen for focusin(instead of foxus), because it bubbles and gives the right event order
-    window.addEventListener('focusin', this._setTouchedAndPrefilled);
-
-    document.addEventListener('click', this._checkForOutsideClick);
-    this.addEventListener('click', this._checkForChildrenClick);
-
-    // checks for any of the children to be prefilled
-    this._checkboxGroupPrefilled = super.prefilled;
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('focusin', this._setTouchedAndPrefilled);
-    document.removeEventListener('click', this._checkForOutsideClick);
-    this.removeEventListener('click', this._checkForChildrenClick);
-  }
-
-  get touched() {
-    return this._checkboxGroupTouched;
-  }
-
-  /**
-   * Leave event will be fired when previous document.activeElement
-   * is inside group and current document.activeElement is outside.
-   */
-  _setTouchedAndPrefilled() {
-    const groupHasFocus = this.focused;
-    if (this.__groupHadFocus && !groupHasFocus) {
-      this._checkboxGroupTouched = true;
-      this._checkboxGroupPrefilled = super.prefilled; // right time to reconsider prefilled
-      this.__checkboxGroupPrefilledHasBeenSet = true;
+  /** @param {import('lit-element').PropertyValues } changedProperties */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('name') && !String(this.name).match(/\[\]$/)) {
+      throw new Error('Names should end in "[]".');
     }
-    this.__groupHadFocus = groupHasFocus;
-  }
-
-  _checkForOutsideClick(event) {
-    const outsideGroupClicked = !this.contains(event.target);
-    if (outsideGroupClicked) {
-      this._setTouchedAndPrefilled();
-    }
-  }
-
-  // Whenever a user clicks a checkbox, error messages should become visible
-  _checkForChildrenClick(event) {
-    const childClicked = this._childArray.some(c => c === event.target || c.contains(event.target));
-    if (childClicked) {
-      this._checkboxGroupTouched = true;
-    }
-  }
-
-  get _childArray() {
-    // We assume here that the fieldset has one set of checkboxes/radios that are grouped via attr
-    // name="groupName[]"
-    const arrayKey = Object.keys(this.formElements).filter(k => k.substr(-2) === '[]')[0];
-    return this.formElements[arrayKey] || [];
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  __isRequired(modelValues) {
-    const keys = Object.keys(modelValues);
-    for (let i = 0; i < keys.length; i += 1) {
-      const modelValue = modelValues[keys[i]];
-      if (Array.isArray(modelValue)) {
-        // grouped via myName[]
-        return {
-          required: modelValue.some(node => node.checked),
-        };
-      }
-      return {
-        required: modelValue.checked,
-      };
-    }
-    return { required: false };
   }
 }

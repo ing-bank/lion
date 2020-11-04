@@ -1,6 +1,5 @@
 import { axios } from '@bundled-es-modules/axios';
 
-// FIXME: lang must be dynamic, fallback to html tag lang attribute or use the user-provided one
 export function addAcceptLanguageHeaderInterceptorFactory(lang) {
   return config => {
     const result = config;

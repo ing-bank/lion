@@ -7,20 +7,37 @@
 ## system files
 .DS_Store
 
-## npm
+## npm/yarn
 node_modules/
 npm-debug.log
+yarn-error.log
 
-# we do prefer yarn.lock so we do not want npms version of it
-/package-lock.json
+# we prefer package-lock.json
+/yarn.lock
 
 ## build artifacts
 /lib/
 /build/
+/bundlesize/dist/
+
+## types
+*.d.ts
+!packages/**/*/types/**/*
+!packages/**/index.d.ts
 
 ## temp folders
 /.tmp/
 /coverage/
+/storybook-static/
+/screenshots/.current/
+/screenshots/.diff/
 
 ## temp files
 local.log
+
+## browserstack
+browserstack.err
+
+debug.log
+
+!packages/singleton-manager/demo/**/node_modules
