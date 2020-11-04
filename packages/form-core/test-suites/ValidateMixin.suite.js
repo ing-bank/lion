@@ -78,7 +78,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(stub.args[0][0]).to.equal(errorMessage);
 
         const errorMessage2 =
-          'Validators array only accepts class instances of Validator. Type "string" found.';
+          'Validators array only accepts class instances of Validator. Type "String" found.';
         expect(() => {
           // @ts-expect-error because we purposely put a wrong type
           el.validators = ['required'];

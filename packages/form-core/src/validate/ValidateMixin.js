@@ -8,6 +8,7 @@ import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
+// eslint-disable-next-line no-unused-vars
 import { Validator } from './Validator.js';
 import { Required } from './validators/Required.js';
 import { FormControlMixin } from '../FormControlMixin.js';
@@ -466,10 +467,14 @@ export const ValidateMixinImplementation = superclass =>
           v.onFormControlDisconnect(this);
         });
       }
+
+      const isValidator = (/** @type {Validator} */ v) =>
+        /** @type {typeof Validator} */ (v.constructor).validatorName !== undefined && v.execute;
+
       this._allValidators.forEach(v => {
-        if (!(v instanceof Validator)) {
+        if (!isValidator(v)) {
           // throws in constructor are not visible to end user so we do both
-          const errorType = Array.isArray(v) ? 'array' : typeof v;
+          const errorType = Array.isArray(v) ? 'array' : v.constructor.name;
           const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found.`;
           // eslint-disable-next-line no-console
           console.error(errorMessage, this);
