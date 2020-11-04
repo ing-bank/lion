@@ -1,19 +1,28 @@
-import { until } from '@lion/core';
-import { aTimeout, expect, fixture, fixtureSync, html } from '@open-wc/testing';
+import { nothing, until } from '@lion/core';
+import { aTimeout, expect, fixture as _fixture, fixtureSync, html } from '@open-wc/testing';
 import '../lion-icon.js';
 import { icons } from '../src/icons.js';
 import hammerSvg from './hammer.svg.js';
 import heartSvg from './heart.svg.js';
 
+/**
+ * @typedef {(strings: TemplateStringsArray, ... expr: string[]) => string} TaggedTemplateLiteral
+ * @typedef {import('../src/LionIcon').LionIcon} LionIcon
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ */
+const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */ (_fixture);
+
 describe('lion-icon', () => {
   it('supports svg icon as a function which recieves a tag function as an argument and returns a tagged template literal', async () => {
-    const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
+    const iconFunction = /** @param {TaggedTemplateLiteral} tag */ tag =>
+      tag`<svg data-test-id="svg"></svg>`;
     const el = await fixture(html`<lion-icon .svg=${iconFunction}></lion-icon>`);
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg');
   });
 
   it('is hidden when attribute hidden is true', async () => {
-    const iconFunction = tag => tag`<svg data-test-id="svg"></svg>`;
+    const iconFunction = /** @param {TaggedTemplateLiteral} tag */ tag =>
+      tag`<svg data-test-id="svg"></svg>`;
     const el = await fixture(html`<lion-icon .svg=${iconFunction} hidden></lion-icon>`);
     expect(el).not.to.be.displayed;
   });
@@ -126,7 +135,7 @@ describe('lion-icon', () => {
     await svgLoading;
     // We need to await the until directive is resolved and rendered to the dom
     // You can not use updateComplete as until renders on it's own
-    await aTimeout();
+    await aTimeout(0);
 
     expect(el.children[0].getAttribute('data-test-id')).to.equal('svg-heart');
   });
@@ -134,7 +143,7 @@ describe('lion-icon', () => {
   it('does not render "undefined" if changed from valid input to undefined', async () => {
     const el = await fixture(html`<lion-icon .svg=${heartSvg}></lion-icon>`);
     await el.updateComplete;
-    el.svg = undefined;
+    el.svg = nothing;
     await el.updateComplete;
     expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
@@ -142,7 +151,7 @@ describe('lion-icon', () => {
   it('does not render "null" if changed from valid input to null', async () => {
     const el = await fixture(html`<lion-icon .svg=${heartSvg}></lion-icon>`);
     await el.updateComplete;
-    el.svg = null;
+    el.svg = nothing;
     await el.updateComplete;
     expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
@@ -152,7 +161,7 @@ describe('lion-icon', () => {
       icons.addIconResolver('foo', () => heartSvg);
       const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);
 
-      expect(el.children[0].dataset.testId).to.equal('svg-heart');
+      expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-heart');
     } finally {
       icons.removeIconResolver('foo');
     }
@@ -189,10 +198,10 @@ describe('lion-icon', () => {
       await aTimeout(4);
 
       // heart is still loading at this point, but hammer came later so that should be later
-      expect(el.children[0].dataset.testId).to.equal('svg-hammer');
+      expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
       await aTimeout(10);
       // heart finished loading, but it should not be rendered because hammer came later
-      expect(el.children[0].dataset.testId).to.equal('svg-hammer');
+      expect(/** @type {HTMLElement} */ (el.children[0]).dataset.testId).to.equal('svg-hammer');
     } finally {
       icons.removeIconResolver('foo');
       icons.removeIconResolver('bar');

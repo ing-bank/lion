@@ -25,7 +25,6 @@
     "packages/babel-plugin-extend-docs/**/*.js",
     "packages/providence-analytics/**/*.js",
     "packages/remark-extend/**/*.js",
-    "packages/icon/**/*.js", // FIXME: Needs to get typed!
     "packages/select-rich/test/**/*.js", // TODO: Needs to get typed!
     "packages/overlays/test/utils-tests/**/*.js", // TODO: Needs to get typed!
     "packages/helpers/**/*.js", // FIXME: Needs to get typed!

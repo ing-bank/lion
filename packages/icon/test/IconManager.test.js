@@ -1,6 +1,11 @@
+import { nothing } from '@lion/core';
 import { expect } from '@open-wc/testing';
 import { stub } from 'sinon';
 import { IconManager } from '../src/IconManager.js';
+
+/**
+ * @typedef {import("lit-html").TemplateResult} TemplateResult
+ */
 
 describe('IconManager', () => {
   it('starts off with an empty map of resolvers', () => {
@@ -10,7 +15,15 @@ describe('IconManager', () => {
 
   it('allows adding an icon resolver', () => {
     const manager = new IconManager();
-    const resolver = () => {};
+    /**
+     * @param {string} iconset
+     * @param {string} icon
+     * @return {TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing>}
+     */
+    // eslint-disable-next-line no-unused-vars
+    const resolver = (iconset, icon) => {
+      return nothing;
+    };
     manager.addIconResolver('foo', resolver);
 
     expect(manager.__iconResolvers.get('foo')).to.equal(resolver);
