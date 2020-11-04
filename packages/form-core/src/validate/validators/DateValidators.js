@@ -40,7 +40,7 @@ export class MinDate extends Validator {
    */
   execute(value, min = this.param) {
     let hasError = false;
-    if (!isDate(value) || value < normalizeDateTime(min)) {
+    if (!isDate(value) || normalizeDateTime(value) < normalizeDateTime(min)) {
       hasError = true;
     }
     return hasError;
@@ -57,7 +57,7 @@ export class MaxDate extends Validator {
    */
   execute(value, max = this.param) {
     let hasError = false;
-    if (!isDate(value) || value > normalizeDateTime(max)) {
+    if (!isDate(value) || normalizeDateTime(value) > normalizeDateTime(max)) {
       hasError = true;
     }
     return hasError;
@@ -74,7 +74,11 @@ export class MinMaxDate extends Validator {
    */
   execute(value, { min = 0, max = 0 } = this.param) {
     let hasError = false;
-    if (!isDate(value) || value < normalizeDateTime(min) || value > normalizeDateTime(max)) {
+    if (
+      !isDate(value) ||
+      normalizeDateTime(value) < normalizeDateTime(min) ||
+      normalizeDateTime(value) > normalizeDateTime(max)
+    ) {
       hasError = true;
     }
     return hasError;
