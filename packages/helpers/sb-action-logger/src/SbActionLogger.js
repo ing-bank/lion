@@ -122,11 +122,14 @@ export class SbActionLogger extends LitElement {
   constructor() {
     super();
     this.title = 'Action Logger';
+    this.simple = false;
     this.__logCounter = 0;
   }
 
   get loggerEl() {
-    return this.shadowRoot.querySelector('.logger');
+    return /** @type {HTMLElement} */ (
+      /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.logger')
+    );
   }
 
   /**
@@ -134,7 +137,7 @@ export class SbActionLogger extends LitElement {
    * Only supports simple values, will be interpreted to a String
    * E.g. an Object will become '[object Object]'
    *
-   * @param {} content Content to be logged to the action logger
+   * @param {string} content Content to be logged to the action logger
    */
   log(content) {
     this.__animateCue();
@@ -147,7 +150,10 @@ export class SbActionLogger extends LitElement {
       this.__handleConsecutiveDuplicateLog();
     } else {
       this.__appendLog(content);
-      this.loggerEl.scrollTo({ top: this.loggerEl.scrollHeight, behavior: 'smooth' });
+      this.loggerEl.scrollTo({
+        top: this.loggerEl.scrollHeight,
+        behavior: 'smooth',
+      });
     }
 
     this.__logCounter += 1; // increment total log counter
@@ -156,6 +162,7 @@ export class SbActionLogger extends LitElement {
   /**
    * Protected getter that returns the template of a single log
    *
+   * @param {string} content
    * @return {TemplateResult} TemplateResult that uses the content passed to create a log
    */
   // eslint-disable-next-line class-methods-use-this
@@ -183,16 +190,24 @@ export class SbActionLogger extends LitElement {
     `;
   }
 
+  /**
+   * @param {string} content
+   */
   __appendLog(content) {
     const offlineRenderContainer = document.createElement('div');
     render(this._logTemplate(content), offlineRenderContainer);
-    this.loggerEl.appendChild(offlineRenderContainer.firstElementChild);
+    if (offlineRenderContainer.firstElementChild) {
+      this.loggerEl.appendChild(offlineRenderContainer.firstElementChild);
+    }
   }
 
+  /**
+   * @param {string} content
+   */
   __isConsecutiveDuplicateLog(content) {
     if (
       this.loggerEl.lastElementChild &&
-      this.loggerEl.lastElementChild.querySelector('code').textContent.trim() === content
+      this.loggerEl.lastElementChild.querySelector('code')?.textContent?.trim() === content
     ) {
       return true;
     }
@@ -200,41 +215,51 @@ export class SbActionLogger extends LitElement {
   }
 
   __handleConsecutiveDuplicateLog() {
-    if (!this.loggerEl.lastElementChild.querySelector('.logger__log-count')) {
+    if (!this.loggerEl.lastElementChild?.querySelector('.logger__log-count')) {
       this.__prependLogCounterElement();
     }
 
     // Increment log counter for these duplicate logs
-    const logCounter = this.loggerEl.lastElementChild.querySelector('.logger__log-count');
-    let incrementedLogCount = logCounter.textContent;
-    incrementedLogCount = parseInt(incrementedLogCount, 10) + 1;
-    logCounter.innerText = incrementedLogCount;
+
+    const logCounter = this.loggerEl.lastElementChild?.querySelector('.logger__log-count');
+    if (logCounter instanceof HTMLElement) {
+      const logCount = logCounter.textContent;
+      if (logCount != null) {
+        const incrementedLogCount = parseInt(logCount, 10) + 1;
+        logCounter.innerText = incrementedLogCount.toString();
+      }
+    }
   }
 
   __prependLogCounterElement() {
     const countEl = document.createElement('div');
     countEl.classList.add('logger__log-count');
-    countEl.innerText = 1;
-    this.loggerEl.lastElementChild.insertBefore(
-      countEl,
-      this.loggerEl.lastElementChild.firstElementChild,
-    );
+    countEl.innerText = (1).toString();
+
+    const loggerLastElementChild = this.loggerEl.lastElementChild;
+    if (loggerLastElementChild) {
+      loggerLastElementChild.insertBefore(countEl, loggerLastElementChild.firstElementChild);
+    }
   }
 
   __animateCue() {
-    const cueEl = this.shadowRoot.querySelector('.header__log-cue-overlay');
-    cueEl.classList.remove('header__log-cue-overlay--slide');
-    // This triggers browser to stop batching changes because it has to evaluate something.
-    // eslint-disable-next-line no-void
-    void this.offsetWidth;
-    // So that when we arrive here, the browser sees this adding as an actual 'change'
-    // and this means the animation gets refired.
-    cueEl.classList.add('header__log-cue-overlay--slide');
+    const cueEl = this.shadowRoot?.querySelector('.header__log-cue-overlay');
+    if (cueEl) {
+      cueEl.classList.remove('header__log-cue-overlay--slide');
+      // This triggers browser to stop batching changes because it has to evaluate something.
+      // eslint-disable-next-line no-void
+      void this.offsetWidth;
+      // So that when we arrive here, the browser sees this adding as an actual 'change'
+      // and this means the animation gets refired.
+      cueEl.classList.add('header__log-cue-overlay--slide');
+    }
   }
 
   __clearLogs() {
-    const loggerEl = this.shadowRoot.querySelector('.logger');
-    loggerEl.innerHTML = '';
-    this.__logCounter = 0;
+    const loggerEl = this.shadowRoot?.querySelector('.logger');
+    if (loggerEl) {
+      loggerEl.innerHTML = '';
+      this.__logCounter = 0;
+    }
   }
 }

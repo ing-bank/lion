@@ -1,3 +1,8 @@
+/**
+ * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('lit-html').nothing} nothing
+ */
+
 export class IconManager {
   constructor() {
     this.__iconResolvers = new Map();
@@ -9,7 +14,7 @@ export class IconManager {
    * icon as a TemplateResult. This function can be sync or async.
    *
    * @param {string} namespace
-   * @param {(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult>} iconResolver
+   * @param {(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing> } iconResolver
    */
   addIconResolver(namespace, iconResolver) {
     if (this.__iconResolvers.has(namespace)) {
@@ -54,6 +59,6 @@ export class IconManager {
       throw new Error(`Incorrect iconId: ${iconId}. Format: <namespace>:<iconset>:<icon>`);
     }
 
-    return this.resolveIcon(...splitIconId);
+    return this.resolveIcon(splitIconId[0], splitIconId[1], splitIconId[2]);
   }
 }

@@ -1,12 +1,18 @@
 import { css, html, LitElement, nothing, render, TemplateResult } from '@lion/core';
 import { icons } from './icons.js';
 
+/**
+ * @param {?} wrappedSvgObject
+ */
 function unwrapSvg(wrappedSvgObject) {
   const svgObject =
     wrappedSvgObject && wrappedSvgObject.default ? wrappedSvgObject.default : wrappedSvgObject;
   return typeof svgObject === 'function' ? svgObject(html) : svgObject;
 }
 
+/**
+ * @param {TemplateResult|nothing} svg
+ */
 function validateSvg(svg) {
   if (!(svg === nothing || svg instanceof TemplateResult)) {
     throw new Error(
@@ -24,15 +30,13 @@ export class LionIcon extends LitElement {
       /**
        * @desc When icons are not loaded as part of an iconset defined on iconManager,
        * it's possible to directly load an svg.
-       * @type {TemplateResult|function}
        */
       svg: {
-        type: Object,
+        attribute: false,
       },
       /**
        * @desc The iconId allows to access icons that are registered to the IconManager
        * For instance, "lion:space:alienSpaceship"
-       * @type {string}
        */
       ariaLabel: {
         type: String,
@@ -42,7 +46,6 @@ export class LionIcon extends LitElement {
       /**
        * @desc The iconId allows to access icons that are registered to the IconManager
        * For instance, "lion:space:alienSpaceship"
-       * @type {string}
        */
       iconId: {
         type: String,
@@ -93,16 +96,20 @@ export class LionIcon extends LitElement {
   constructor() {
     super();
     this.role = 'img';
+    this.ariaLabel = '';
+    this.iconId = '';
+    this.__svg = nothing;
   }
 
+  /** @param {import('lit-element').PropertyValues} changedProperties */
   update(changedProperties) {
     super.update(changedProperties);
     if (changedProperties.has('ariaLabel')) {
-      this._onLabelChanged(changedProperties);
+      this._onLabelChanged();
     }
 
     if (changedProperties.has('iconId')) {
-      this._onIconIdChanged(changedProperties.get('iconId'));
+      this._onIconIdChanged(/** @type {string} */ (changedProperties.get('iconId')));
     }
   }
 
@@ -119,6 +126,7 @@ export class LionIcon extends LitElement {
   /**
    * On IE11, svgs without focusable false appear in the tab order
    * so make sure to have <svg focusable="false"> in svg files
+   * @param {TemplateResult|nothing} svg
    */
   set svg(svg) {
     this.__svg = svg;
@@ -142,6 +150,9 @@ export class LionIcon extends LitElement {
     }
   }
 
+  /**
+   * @param {TemplateResult | nothing} svgObject
+   */
   _renderSvg(svgObject) {
     validateSvg(svgObject);
     render(svgObject, this);
@@ -150,11 +161,14 @@ export class LionIcon extends LitElement {
     }
   }
 
+  /**
+   * @param {string} prevIconId
+   */
   async _onIconIdChanged(prevIconId) {
     if (!this.iconId) {
       // clear if switching from iconId to no iconId
       if (prevIconId) {
-        this.svg = null;
+        this.svg = nothing;
       }
     } else {
       const iconIdBeforeResolve = this.iconId;
