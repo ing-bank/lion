@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.22.0
+
+### Minor Changes
+
+- 9c3224b4: - ArrowMixin needs to extend styles and not overwrite them
+  - ArrowMixin add an `_arrowNodeTemplate` which can be used to only override the arrow content
+  - InputDatepicker switch between bottomsheet style (on mobile) popover (on desktop/table with screensize bigger then 600px)
+
+### Patch Changes
+
+- fff79915: Added a fix for focus not being restored to the root element when only a focusout event happens, without a subsequent focusin event. Added a fix to use getDeepActiveElement util instead of document.activeElement which fixes focus trap in elements with shadowRoots that contain focusable elements.
+
 ## 0.21.3
 
 ### Patch Changes
