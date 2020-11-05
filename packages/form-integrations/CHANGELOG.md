@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies [9c3224b4]
+  - @lion/input-datepicker@0.18.0
+  - @lion/select-rich@0.21.10
+
 ## 0.3.9
 
 ### Patch Changes

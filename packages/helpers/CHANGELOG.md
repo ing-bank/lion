@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.13
+
+### Patch Changes
+
+- 9da2aa20: Fix types for helpers
+
 ## 0.5.12
 
 ### Patch Changes

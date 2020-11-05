@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.18.0
+
+### Minor Changes
+
+- 9c3224b4: - ArrowMixin needs to extend styles and not overwrite them
+  - ArrowMixin add an `_arrowNodeTemplate` which can be used to only override the arrow content
+  - InputDatepicker switch between bottomsheet style (on mobile) popover (on desktop/table with screensize bigger then 600px)
+
+### Patch Changes
+
+- Updated dependencies [9c3224b4]
+- Updated dependencies [fff79915]
+  - @lion/overlays@0.22.0
+
 ## 0.17.3
 
 ### Patch Changes
