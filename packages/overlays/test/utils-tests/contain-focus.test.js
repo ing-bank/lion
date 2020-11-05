@@ -148,6 +148,20 @@ describe('containFocus()', () => {
     disconnect();
   });
 
+  it.skip('restores focus to root element if focusout event happens where activeElement goes outside', async () => {
+    await fixture(lightDomTemplate);
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
+    const focusableElements = getFocusableElements(root);
+    const { disconnect } = containFocus(root);
+
+    focusableElements[2].focus();
+    expect(getDeepActiveElement()).to.equal(focusableElements[2]);
+    document.body.click(); // this does not cause focusout event :( doesn't seem possible to mock
+    expect(getDeepActiveElement()).to.equal(root);
+
+    disconnect();
+  });
+
   describe('Tabbing into window', () => {
     it('restores focus within root element', async () => {
       await fixture(lightDomTemplate);
