@@ -18,7 +18,7 @@ import '../lion-form.js';
 /**
 
  * @typedef {import('../src/LionForm').LionForm} LionForm
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);
 

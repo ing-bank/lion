@@ -2,7 +2,7 @@ import { html, LitElement } from '@lion/core';
 
 /**
  * @typedef {import('../validate/Validator').Validator} Validator
- *
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {Object} messageMap
  * @property {string | Node} message
  * @property {string} type
@@ -23,7 +23,7 @@ export class LionValidationFeedback extends LitElement {
   /**
    * @overridable
    * @param {Object} opts
-   * @param {string | Node} opts.message message or feedback node
+   * @param {string | Node | TemplateResult } opts.message message or feedback node or TemplateResult
    * @param {string} [opts.type]
    * @param {Validator} [opts.validator]
    */

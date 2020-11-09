@@ -3,7 +3,7 @@ import '../../sb-action-logger.js';
 
 /**
  * @typedef {import('../src/SbActionLogger').SbActionLogger} SbActionLogger
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<SbActionLogger>} */ (_fixture);
 

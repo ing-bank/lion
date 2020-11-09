@@ -9,7 +9,6 @@ import { parseAmount } from './parsers.js';
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
  *
  * @customElement lion-input-amount
- * @extends {LionInput}
  */
 // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputAmount extends LocalizeMixin(LionInput) {
@@ -43,7 +42,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
           el.textContent = this.__currencyLabel;
           return el;
         }
-        return null;
+        return undefined;
       },
     };
   }

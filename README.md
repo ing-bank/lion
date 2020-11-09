@@ -17,6 +17,8 @@ For some more details see the [announcement blog post](https://medium.com/ing-bl
 
 We do have a [live Storybook](http://lion-web-components.netlify.com) which shows all our components.
 
+**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all dependencies by executing `yarn install`.
+
 The code examples make use of [Javascript tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) which are a key component of the [lit-html engine](https://lit-html.polymer-project.org/) used in Lion.
 Additionally imports like `import '@lion/form/lion-form.js'` need to be transformed somehow, for example by [es-dev-server](https://open-wc.org/developing/es-dev-server.html#node-resolve).
 
@@ -142,6 +144,7 @@ Lion Web Components aims to be future proof and use well-supported proven techno
 
 - [lit-html](https://lit-html.polymer-project.org) and [lit-element](https://lit-element.polymer-project.org)
 - [npm](http://npmjs.com)
+- [yarn](https://yarnpkg.com)
 - [open-wc](https://open-wc.org)
 - [Karma](https://karma-runner.github.io)
 - [Mocha](https://mochajs.org)

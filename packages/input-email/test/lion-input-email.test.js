@@ -4,7 +4,7 @@ import '../lion-input-email.js';
 
 /**
  * @typedef {import('../src/LionInputEmail').LionInputEmail} LionInputEmail
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmail>} */ (_fixture);
 

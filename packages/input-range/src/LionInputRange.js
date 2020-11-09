@@ -4,7 +4,7 @@ import { LionInput } from '@lion/input';
 import { formatNumber, LocalizeMixin } from '@lion/localize';
 
 /**
- * @typedef {import('lit-element').CSSResult} CSSResult
+ * @typedef {import('@lion/core').CSSResult} CSSResult
  */
 
 /**
@@ -51,6 +51,10 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
         outline: none;
       }
     `;
+  }
+
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
   constructor() {

@@ -10,7 +10,7 @@ import { CalendarObject, DayObject } from '../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionCalendar').LionCalendar} LionCalendar
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);

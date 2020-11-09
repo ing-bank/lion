@@ -10,7 +10,7 @@ import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
 import { DatepickerInputObject } from '../test-helpers.js';
 
 /**
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDatepicker>} */ (_fixture);

@@ -11,7 +11,7 @@ import '../lion-listbox.js';
  * @typedef {import('../src/LionListbox').LionListbox} LionListbox
  * @typedef {import('../src/LionOption').LionOption} LionOption
  * @typedef {import('@lion/select-rich').LionSelectInvoker} LionSelectInvoker
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);

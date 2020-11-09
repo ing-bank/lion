@@ -7,7 +7,7 @@ module.exports = {
     "markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md}'",
     'git add',
   ],
-  'package-lock.json': ['node ./scripts/package-lock-scan.js'],
+  'yarn.lock': ['node ./scripts/yarn-lock-scan.js'],
   '*package.json': absolutePaths => {
     const sortPackages = [];
     absolutePaths.forEach(p => {

@@ -14,7 +14,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
  * @type {DelegateMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit-element').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('../index').LitElement>} superclass
  */
 const DelegateMixinImplementation = superclass =>
   // eslint-disable-next-line
