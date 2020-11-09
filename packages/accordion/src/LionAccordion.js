@@ -333,7 +333,7 @@ export class LionAccordion extends LitElement {
     if (!(this.__store && this.__store[this.focusedIndex])) {
       return;
     }
-    const previousInvoker = /** @type {HTMLElement | null} */ (Array.from(this.children).find(
+    const previousInvoker = /** @type {HTMLElement | undefined} */ (Array.from(this.children).find(
       child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
     ));
     if (previousInvoker) {

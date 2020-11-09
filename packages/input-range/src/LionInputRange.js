@@ -53,6 +53,10 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     `;
   }
 
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode);
+  }
+
   constructor() {
     super();
     this.min = Infinity;

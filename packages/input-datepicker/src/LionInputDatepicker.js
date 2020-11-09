@@ -70,7 +70,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
             eventContext: this,
           },
         );
-        return renderParent.firstElementChild;
+        return /** @type {HTMLElement} */ (renderParent.firstElementChild);
       },
     };
   }

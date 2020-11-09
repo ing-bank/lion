@@ -12,7 +12,8 @@
     "alwaysStrict": true,
     "types": ["node", "mocha", "sinon"],
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true
   },
   "include": ["packages/**/*.js"],
   "exclude": [

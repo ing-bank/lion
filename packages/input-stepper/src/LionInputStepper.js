@@ -7,7 +7,6 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
  *
  * @customElement lion-input-stepper
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputStepper extends LionInput {
   static get styles() {
     return [
@@ -42,6 +41,10 @@ export class LionInputStepper extends LionInput {
    */
   get currentValue() {
     return parseFloat(this.value) || 0;
+  }
+
+  get _inputNode() {
+    return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
   constructor() {
