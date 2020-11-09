@@ -3,7 +3,7 @@ import '../lion-input-stepper.js';
 
 /**
  * @typedef {import('../src/LionInputStepper').LionInputStepper} LionInputStepper
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStepper>} */ (_fixture);
 

@@ -4,7 +4,7 @@ import { LionInput } from '@lion/input';
 import { formatNumber, LocalizeMixin } from '@lion/localize';
 
 /**
- * @typedef {import('lit-element').CSSResult} CSSResult
+ * @typedef {import('@lion/core').CSSResult} CSSResult
  */
 
 /**

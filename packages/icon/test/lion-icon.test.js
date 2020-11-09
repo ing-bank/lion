@@ -8,7 +8,7 @@ import heartSvg from './heart.svg.js';
 /**
  * @typedef {(strings: TemplateStringsArray, ... expr: string[]) => string} TaggedTemplateLiteral
  * @typedef {import('../src/LionIcon').LionIcon} LionIcon
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */ (_fixture);
 

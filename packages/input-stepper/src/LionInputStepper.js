@@ -7,6 +7,7 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
  *
  * @customElement lion-input-stepper
  */
+// @ts-expect-error false positive, lit-element already merges properties for you
 export class LionInputStepper extends LionInput {
   static get styles() {
     return [
@@ -256,7 +257,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the decrementor button sign template
-   * @returns {String|import('lit-element').TemplateResult}
+   * @returns {String|import('@lion/core').TemplateResult}
    */
   // eslint-disable-next-line class-methods-use-this
   _decrementorSignTemplate() {
@@ -265,7 +266,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the incrementor button sign template
-   * @returns {String|import('lit-element').TemplateResult}
+   * @returns {String|import('@lion/core').TemplateResult}
    */
   // eslint-disable-next-line class-methods-use-this
   _incrementorSignTemplate() {
@@ -274,7 +275,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the increment button template
-   * @returns {import('lit-element').TemplateResult}
+   * @returns {import('@lion/core').TemplateResult}
    */
   _decrementorTemplate() {
     return html`
@@ -292,7 +293,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the decrement button template
-   * @returns {import('lit-element').TemplateResult}
+   * @returns {import('@lion/core').TemplateResult}
    */
   _incrementorTemplate() {
     return html`

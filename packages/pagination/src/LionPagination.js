@@ -2,7 +2,7 @@ import { LitElement, html, css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
 /**
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 /**

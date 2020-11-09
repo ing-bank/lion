@@ -9,7 +9,7 @@ import '../lion-input-iban.js';
 
 /**
  * @typedef {import('../src/LionInputIban').LionInputIban} LionInputIban
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ (_fixture);
 

@@ -4,7 +4,7 @@ import '../lion-switch.js';
 
 /**
  * @typedef {import('../src/LionSwitch').LionSwitch} LionSwitch
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitch>} */ (_fixture);

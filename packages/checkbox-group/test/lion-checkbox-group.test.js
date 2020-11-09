@@ -5,7 +5,7 @@ import '../lion-checkbox.js';
 
 /**
  * @typedef {import('../src/LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup
- * @typedef {import('lit-html').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCheckboxGroup>} */ (_fixture);
