@@ -24,9 +24,6 @@ jobs:
           node-version: 14.x
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install npm 7
-        run: npm i -g npm@7
-
       - name: Get npm cache directory
         id: npm-cache-dir
         run: |
@@ -40,7 +37,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Install Dependencies
-        run: npm ci
+        run:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

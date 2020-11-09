@@ -12,8 +12,8 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
-# we prefer package-lock.json
-/yarn.lock
+# we use yarn.lock for now until npm 7 is stable
+/package-lock.json
 
 ## build artifacts
 /lib/

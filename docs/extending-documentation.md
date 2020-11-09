@@ -94,12 +94,10 @@ Inside ING, our design system also makes use of this providence tool to create t
 
 ```json
 "scripts": {
-  "upgrade:lion": "npx update-by-scope @lion && npm run providence:extend",
+  "upgrade:lion": "yarn upgrade --scope @lion --latest --exact && npm run providence:extend",
   "providence:extend": "providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to ing"
 }
 ```
-
-> Note that if you want to fix your lion versions, you have to do this manually or write your own script for updating by scope. `update-by-scope` does not support passing `--save-exact` flag sadly (or any flag for that matter).
 
 ### Replacing paths & template tagnames
 
