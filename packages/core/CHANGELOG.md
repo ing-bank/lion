@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.4
+
+### Patch Changes
+
+- cfbcccb5: Fix type imports to reuse lion where possible, in case Lit updates with new types that may break us.
+
 ## 0.13.3
 
 ### Patch Changes

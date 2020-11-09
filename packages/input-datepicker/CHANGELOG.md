@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.18.1
+
+### Patch Changes
+
+- cfbcccb5: Fix type imports to reuse lion where possible, in case Lit updates with new types that may break us.
+- Updated dependencies [cfbcccb5]
+  - @lion/calendar@0.12.4
+  - @lion/core@0.13.4
+  - @lion/form-core@0.6.7
+  - @lion/input-date@0.8.5
+  - @lion/localize@0.14.9
+  - @lion/overlays@0.22.1
+
 ## 0.18.0
 
 ### Minor Changes
