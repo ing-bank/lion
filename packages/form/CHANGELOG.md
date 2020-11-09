@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.5
+
+### Patch Changes
+
+- cfbcccb5: Fix type imports to reuse lion where possible, in case Lit updates with new types that may break us.
+- Updated dependencies [cfbcccb5]
+  - @lion/core@0.13.4
+  - @lion/fieldset@0.15.5
+
 ## 0.7.4
 
 ### Patch Changes

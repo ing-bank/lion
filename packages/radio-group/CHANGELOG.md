@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.12.5
+
+### Patch Changes
+
+- cfbcccb5: Fix type imports to reuse lion where possible, in case Lit updates with new types that may break us.
+- Updated dependencies [cfbcccb5]
+  - @lion/core@0.13.4
+  - @lion/form-core@0.6.7
+  - @lion/fieldset@0.15.5
+  - @lion/input@0.10.5
+
 ## 0.12.4
 
 ### Patch Changes
