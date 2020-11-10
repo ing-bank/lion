@@ -1,4 +1,5 @@
-import { CSSResult, LitElement, nothing, TemplateResult } from '@lion/core';
+import { CSSResultArray } from 'lit-element';
+import { LitElement, nothing, TemplateResult } from '@lion/core';
 import { SlotsMap, SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
@@ -11,7 +12,7 @@ declare interface HTMLElementWithValue extends HTMLElement {
 }
 
 export declare class FormControlHost {
-  static get styles(): CSSResult | CSSResult[];
+  static get styles(): CSSResultArray;
   static get properties(): {
     name: {
       type: StringConstructor;

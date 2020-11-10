@@ -1,5 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { CSSResult, LitElement, TemplateResult } from '@lion/core';
+import { LitElement, TemplateResult } from '@lion/core';
+import { CSSResultArray } from 'lit-element';
 import { FormatHost } from '../FormatMixinTypes';
 
 export interface ChoiceInputModelValue {
@@ -29,7 +30,7 @@ export declare class ChoiceInputHost {
 
   updated(changedProperties: Map<string, any>): void;
 
-  static get styles(): CSSResult | CSSResult[];
+  static get styles(): CSSResultArray;
 
   render(): TemplateResult;
 
