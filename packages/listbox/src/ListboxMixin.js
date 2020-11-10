@@ -73,7 +73,9 @@ const ListboxMixinImplementation = superclass =>
     }
 
     static get styles() {
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
       return [
+        superCtor.styles ? superCtor.styles : [],
         css`
           :host {
             display: block;

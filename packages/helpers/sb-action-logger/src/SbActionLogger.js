@@ -12,111 +12,113 @@ export class SbActionLogger extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        --sb-action-logger-title-color: black;
-        --sb-action-logger-text-color: black;
-        --sb-action-logger-cue-color-primary: #3f51b5;
-        --sb-action-logger-cue-color-secondary: #c5cae9;
-        --sb-action-logger-cue-duration: 1000ms;
+    return [
+      css`
+        :host {
+          --sb-action-logger-title-color: black;
+          --sb-action-logger-text-color: black;
+          --sb-action-logger-cue-color-primary: #3f51b5;
+          --sb-action-logger-cue-color-secondary: #c5cae9;
+          --sb-action-logger-cue-duration: 1000ms;
 
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        display: block;
-        font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
-          BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      }
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          display: block;
+          font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
+            BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
 
-      .header__info {
-        color: var(--sb-action-logger-title-color);
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        font-size: 16px;
-      }
+        .header__info {
+          color: var(--sb-action-logger-title-color);
+          display: flex;
+          align-items: center;
+          padding: 16px;
+          font-size: 16px;
+        }
 
-      .header__clear {
-        margin-left: 16px;
-        border-radius: 0px;
-        background-color: rgba(0, 0, 0, 0.05);
-        border: none;
-        cursor: pointer;
-        padding: 8px;
-      }
+        .header__clear {
+          margin-left: 16px;
+          border-radius: 0px;
+          background-color: rgba(0, 0, 0, 0.05);
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+        }
 
-      .header__clear:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-      }
+        .header__clear:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
 
-      .header__title {
-        margin: 0;
-        font-weight: bold;
-        flex-grow: 1;
-      }
+        .header__title {
+          margin: 0;
+          font-weight: bold;
+          flex-grow: 1;
+        }
 
-      .header__log-cue {
-        position: relative;
-        height: 3px;
-        background-color: var(--sb-action-logger-cue-color-secondary);
-        overflow: hidden;
-      }
+        .header__log-cue {
+          position: relative;
+          height: 3px;
+          background-color: var(--sb-action-logger-cue-color-secondary);
+          overflow: hidden;
+        }
 
-      .header__log-cue-overlay {
-        position: absolute;
-        height: 3px;
-        width: 50px;
-        left: -50px;
-        background-color: var(--sb-action-logger-cue-color-primary);
-      }
-
-      .header__log-cue-overlay--slide {
-        animation: slidethrough var(--sb-action-logger-cue-duration) ease-in;
-      }
-
-      @keyframes slidethrough {
-        from {
-          left: -50px;
+        .header__log-cue-overlay {
+          position: absolute;
+          height: 3px;
           width: 50px;
+          left: -50px;
+          background-color: var(--sb-action-logger-cue-color-primary);
         }
 
-        to {
-          left: 100%;
-          width: 500px;
+        .header__log-cue-overlay--slide {
+          animation: slidethrough var(--sb-action-logger-cue-duration) ease-in;
         }
-      }
 
-      .logger {
-        overflow-y: auto;
-        max-height: 110px;
-      }
+        @keyframes slidethrough {
+          from {
+            left: -50px;
+            width: 50px;
+          }
 
-      .logger__log {
-        padding: 16px;
-        display: flex;
-      }
+          to {
+            left: 100%;
+            width: 500px;
+          }
+        }
 
-      .logger__log:not(:last-child) {
-        border-bottom: 1px solid lightgrey;
-      }
+        .logger {
+          overflow-y: auto;
+          max-height: 110px;
+        }
 
-      .logger__log code {
-        color: var(--sb-action-logger-text-color);
-        white-space: pre-wrap; /* css-3 */
-        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-        white-space: -pre-wrap; /* Opera 4-6 */
-        white-space: -o-pre-wrap; /* Opera 7 */
-        word-wrap: break-word; /* Internet Explorer 5.5+ */
-      }
+        .logger__log {
+          padding: 16px;
+          display: flex;
+        }
 
-      .logger__log-count {
-        line-height: 8px;
-        font-size: 12px;
-        padding: 4px;
-        border-radius: 4px;
-        margin-right: 8px;
-        color: white;
-        background-color: #777;
-      }
-    `;
+        .logger__log:not(:last-child) {
+          border-bottom: 1px solid lightgrey;
+        }
+
+        .logger__log code {
+          color: var(--sb-action-logger-text-color);
+          white-space: pre-wrap; /* css-3 */
+          white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+          white-space: -pre-wrap; /* Opera 4-6 */
+          white-space: -o-pre-wrap; /* Opera 7 */
+          word-wrap: break-word; /* Internet Explorer 5.5+ */
+        }
+
+        .logger__log-count {
+          line-height: 8px;
+          font-size: 12px;
+          padding: 4px;
+          border-radius: 4px;
+          margin-right: 8px;
+          color: white;
+          background-color: #777;
+        }
+      `,
+    ];
   }
 
   constructor() {

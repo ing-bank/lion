@@ -613,60 +613,62 @@ const FormControlMixinImplementation = superclass =>
      *  - {element} .input-group__bottom (optional) : placeholder element for additional styling
      *               (like an animated line for material design input)
      * - {element} .input-group__after (optional) :  a suffix that resides outside the container
-     *
-     * @return {CSSResult | CSSResult[]}
      */
     static get styles() {
-      return css`
-        /**********************
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
+      return [
+        superCtor.styles ? superCtor.styles : [],
+        css`
+          /**********************
             {block} .form-field
-         ********************/
+           ********************/
 
-        :host {
-          display: block;
-        }
+          :host {
+            display: block;
+          }
 
-        :host([hidden]) {
-          display: none;
-        }
+          :host([hidden]) {
+            display: none;
+          }
 
-        :host([disabled]) {
-          pointer-events: none;
-        }
+          :host([disabled]) {
+            pointer-events: none;
+          }
 
-        :host([disabled]) .form-field__label ::slotted(*),
-        :host([disabled]) .form-field__help-text ::slotted(*) {
-          color: var(--disabled-text-color, #767676);
-        }
+          :host([disabled]) .form-field__label ::slotted(*),
+          :host([disabled]) .form-field__help-text ::slotted(*) {
+            color: var(--disabled-text-color, #767676);
+          }
 
-        /***********************
+          /***********************
             {block} .input-group
-         *********************/
+           *********************/
 
-        .input-group__container {
-          display: flex;
-        }
+          .input-group__container {
+            display: flex;
+          }
 
-        .input-group__input {
-          flex: 1;
-          display: flex;
-        }
+          .input-group__input {
+            flex: 1;
+            display: flex;
+          }
 
-        /***** {state} :disabled *****/
-        :host([disabled]) .input-group ::slotted(slot='input') {
-          color: var(--disabled-text-color, #767676);
-        }
+          /***** {state} :disabled *****/
+          :host([disabled]) .input-group ::slotted(slot='input') {
+            color: var(--disabled-text-color, #767676);
+          }
 
-        /***********************
+          /***********************
             {block} .form-control
-         **********************/
+           **********************/
 
-        .input-group__container > .input-group__input ::slotted(.form-control) {
-          flex: 1 1 auto;
-          margin: 0; /* remove input margin in Safari */
-          font-size: 100%; /* normalize default input font-size */
-        }
-      `;
+          .input-group__container > .input-group__input ::slotted(.form-control) {
+            flex: 1 1 auto;
+            margin: 0; /* remove input margin in Safari */
+            font-size: 100%; /* normalize default input font-size */
+          }
+        `,
+      ];
     }
 
     /**
