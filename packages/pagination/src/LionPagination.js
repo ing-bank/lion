@@ -13,25 +13,27 @@ import { LocalizeMixin } from '@lion/localize';
 // @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionPagination extends LocalizeMixin(LitElement) {
   static get styles() {
-    return css`
-      :host {
-        cursor: default;
-      }
+    return [
+      css`
+        :host {
+          cursor: default;
+        }
 
-      ul {
-        list-style: none;
-        padding: 0;
-        text-align: center;
-      }
+        ul {
+          list-style: none;
+          padding: 0;
+          text-align: center;
+        }
 
-      li {
-        display: inline-block;
-      }
+        li {
+          display: inline-block;
+        }
 
-      button[aria-current='true'] {
-        font-weight: bold;
-      }
-    `;
+        button[aria-current='true'] {
+          font-weight: bold;
+        }
+      `,
+    ];
   }
 
   static get localizeNamespaces() {

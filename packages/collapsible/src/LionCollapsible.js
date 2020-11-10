@@ -11,15 +11,17 @@ const uuid = () => Math.random().toString(36).substr(2, 10);
  */
 export class LionCollapsible extends LitElement {
   static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
+    return [
+      css`
+        :host {
+          display: block;
+        }
 
-      :host ::slotted([slot='content']) {
-        overflow: hidden;
-      }
-    `;
+        :host ::slotted([slot='content']) {
+          overflow: hidden;
+        }
+      `,
+    ];
   }
 
   static get properties() {

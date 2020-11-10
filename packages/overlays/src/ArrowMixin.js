@@ -1,4 +1,5 @@
 import { css, html, dedupeMixin } from '@lion/core';
+import { OverlayMixin } from './OverlayMixin.js';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
@@ -8,9 +9,10 @@ import { css, html, dedupeMixin } from '@lion/core';
 
 /**
  * @type {ArrowMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 export const ArrowMixinImplementation = superclass =>
-  class ArrowMixin extends superclass {
+  class ArrowMixin extends OverlayMixin(superclass) {
     static get properties() {
       return {
         hasArrow: {
@@ -22,8 +24,9 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     static get styles() {
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
       return [
-        super.styles ? super.styles : [],
+        superCtor.styles ? superCtor.styles : [],
         css`
           :host {
             --tooltip-arrow-width: 12px;

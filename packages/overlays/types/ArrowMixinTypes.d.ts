@@ -15,7 +15,7 @@ export declare class ArrowHost {
   hasArrow: boolean;
   repositionComplete: Promise<void>;
 
-  static styles: CSSResultArray;
+  static get styles(): CSSResultArray;
 
   render(): TemplateResult;
   _arrowTemplate(): TemplateResult;

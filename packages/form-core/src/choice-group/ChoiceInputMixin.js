@@ -136,7 +136,9 @@ const ChoiceInputMixinImplementation = superclass =>
      * For [role=option] extensions, please override completely
      */
     static get styles() {
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
       return [
+        superCtor.styles ? superCtor.styles : [],
         css`
           :host {
             display: flex;
