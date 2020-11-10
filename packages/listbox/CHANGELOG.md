@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.3.5
+
+### Patch Changes
+
+- b222fd78: Always use CSSResultArray for styles getters and be consistent. This makes typing for subclassers significantly easier. Also added some fixes for missing types in mixins where the superclass was not typed properly. This highlighted some issues with incomplete mixin contracts
+- Updated dependencies [b222fd78]
+  - @lion/form-core@0.6.8
+
 ## 0.3.4
 
 ### Patch Changes
