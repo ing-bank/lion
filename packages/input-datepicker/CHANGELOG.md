@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.18.2
+
+### Patch Changes
+
+- Updated dependencies [b222fd78]
+  - @lion/form-core@0.6.8
+  - @lion/overlays@0.22.2
+  - @lion/input-date@0.8.6
+
 ## 0.18.1
 
 ### Patch Changes

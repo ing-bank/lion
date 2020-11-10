@@ -1,6 +1,6 @@
 {
   "name": "@lion/pagination",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A component that handles pagination.",
   "license": "MIT",
   "author": "ing-bank",
