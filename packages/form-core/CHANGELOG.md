@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.9
+
+### Patch Changes
+
+- cf0967fe: Fix type definition file for CSSResultArray
+
 ## 0.6.8
 
 ### Patch Changes

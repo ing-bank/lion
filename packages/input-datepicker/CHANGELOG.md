@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.18.3
+
+### Patch Changes
+
+- Updated dependencies [cf0967fe]
+  - @lion/form-core@0.6.9
+  - @lion/input-date@0.8.7
+
 ## 0.18.2
 
 ### Patch Changes
