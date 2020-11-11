@@ -5,6 +5,8 @@ const { traverseHtml } = require('../../../src/program/utils/traverse-html.js');
 const {
   createEnrichedP5AstForTemplate,
   createBabelTemplateLiteralFromP5Ast,
+  findAndProcessAttrMatchInP5Ast,
+  replaceAttrValueInP5Ast,
 } = require('../../../src/program/utils/template-p5-ast-utils.js');
 
 function getTplExpression(code) {
@@ -136,25 +138,60 @@ describe('createEnrichedP5AstForTemplate', () => {
   });
 
   describe('Convert back to TemplateLiteralExpression string', () => {
-    it('creates output string for a templateLiteralExpression', async () => {
+    it('preserves output string for a templateLiteralExpression', async () => {
       const literal =
         // eslint-disable-next-line no-template-curly-in-string
         'html`<el-x .prop="${identifier}" ?bool="${identifier}" @event="${identifier}" attr="a"></el-x>`';
       const templateLiteral = getTplExpression(literal);
       const enrichedP5Ast = createEnrichedP5AstForTemplate(templateLiteral);
-      console.log('enrichedP5Ast', enrichedP5Ast.childNodes[0]);
       const result = createBabelTemplateLiteralFromP5Ast(enrichedP5Ast);
       expect(result).to.equal(literal);
     });
 
-    it('can output string for a transformed parse5 ast', async () => {
-      const literal =
-        // eslint-disable-next-line no-template-curly-in-string
-        'html`<el-x .prop="${identifier}" ?bool="${identifier}" @event="${identifier}" attr="a"></el-x>`';
-      const templateLiteral = getTplExpression(literal);
-      const enrichedP5Ast = createEnrichedP5AstForTemplate(templateLiteral);
-      const result = createBabelTemplateLiteralFromP5Ast(enrichedP5Ast);
-      expect(result).to.equal(literal);
+    describe.only('Transforms', () => {
+      const attrMatchConfigs = [
+        {
+          attrName: '.prop',
+          onAttrMatch: replaceAttrValueInP5Ast,
+        },
+        {
+          attrName: 'attr',
+          onAttrMatch: replaceAttrValueInP5Ast,
+        },
+      ];
+      const oldToNewMap = {
+        prop: 'replacedProp',
+        a: 'replacedA',
+      };
+
+      it('outputs string for a transformed parse5 ast', async () => {
+        const from =
+          // eslint-disable-next-line no-template-curly-in-string
+          'html`<el-x .prop="${\'prop\'}" ?bool="${identifier}" @event="${identifier}" attr="a"></el-x>`';
+        const templateLiteral = getTplExpression(from);
+        const enrichedP5Ast = createEnrichedP5AstForTemplate(templateLiteral);
+        findAndProcessAttrMatchInP5Ast(enrichedP5Ast, {
+          oldToNewMap,
+          attrMatchConfigs,
+          tagName: 'el-x',
+        });
+        const result = createBabelTemplateLiteralFromP5Ast(enrichedP5Ast);
+        const to =
+          // eslint-disable-next-line no-template-curly-in-string
+          'html`<el-x .prop="${\'replacedProp\'}" ?bool="${identifier}" @event="${identifier}" attr="replacedA"></el-x>`';
+        expect(result).to.equal(to);
+      });
+
+      it.only('tracks multiple expressions in attr', async () => {
+        const from =
+          // eslint-disable-next-line no-template-curly-in-string
+          "html`<el-x a=\"before${'expr1'}middle${'expr2'}after\" b=\"${'exprBegin'}smth\" b=\"smth${'exprAfter'}\"></el-x>`";
+        const templateLiteral = getTplExpression(from);
+        const enrichedP5Ast = createEnrichedP5AstForTemplate(templateLiteral);
+        const result = createBabelTemplateLiteralFromP5Ast(enrichedP5Ast);
+        // We can't transform these (yet)
+        expect(result).to.equal(from);
+      });
     });
   });
 });

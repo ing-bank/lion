@@ -1,0 +1,46 @@
+{
+  "name": "codemods",
+  "version": "0.0.0",
+  "description": "codemods for lion components",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/codemods"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "cd ../../ && yarn dev-server --open packages/codemods/README.md",
+    "test": "cd ../../ && yarn test:browser --grep \"packages/codemods/test/**/*.test.js\"",
+    "test:node": "mocha test-node",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/codemods/test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@babel/core": "^7.10.1",
+    "@lion/core": "0.13.2",
+    "providence-analytics": "0.8.0"
+  },
+  "keywords": [
+    "codemod",
+    "lion",
+    "migration",
+    "upgrade"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
