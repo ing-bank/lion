@@ -109,7 +109,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @override of FormatMixin
+   * @enhance FormatMixin, LionField
    */
   _reflectBackOn() {
     return super._reflectBackOn() || this.__isPasting;

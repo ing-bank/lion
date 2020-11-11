@@ -7,7 +7,7 @@ import { FormControlHost } from './FormControlMixinTypes';
 export declare class FormatHost {
   formattedValue: string;
   serializedValue: string;
-  formatOn: string;
+  private formatOn: string;
   formatOptions: FormatNumberOptions;
   __preventRecursiveTrigger: boolean;
   __isHandlingUserInput: boolean;

@@ -245,6 +245,7 @@ export function runFormatMixinSuite(customConfig) {
       expect(formatEl._inputNode.value).to.not.equal(`foo: ${generatedModelValue}`);
 
       // user leaves field
+      // @ts-ignore formatOn is private
       formatEl._inputNode.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
       await aTimeout(0);
       expect(formatEl._inputNode.value).to.equal(`foo: ${generatedModelValue}`);
