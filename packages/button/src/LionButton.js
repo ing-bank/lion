@@ -146,10 +146,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     ));
   }
 
-  get _form() {
-    return this._nativeButtonNode.form;
-  }
-
   // @ts-ignore
   get slots() {
     return {
@@ -179,16 +175,24 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
         }
       });
     }
+
+    /** @type {HTMLButtonElement} */
+    this.__submitAndResetHelperButton = document.createElement('button');
+
+    /** @type {EventListener} */
+    this.__preventEventLeakage = this.__preventEventLeakage.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.__setupEvents();
+    this.__setupSubmitAndResetHelperOnConnected();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.__teardownEvents();
+    this.__teardownSubmitAndResetHelperOnDisconnected();
   }
 
   /**
@@ -211,12 +215,24 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * Delegate click, by flashing a native button as a direct child
    * of the form, and firing click on this button. This will fire the form submit
    * without side effects caused by the click bubbling back up to lion-button.
-   * @param {Event} e
+   * @param {Event} ev
    */
-  __clickDelegationHandler(e) {
-    if ((this.type === 'submit' || this.type === 'reset') && e.target === this && this._form) {
-      e.stopImmediatePropagation();
-      this._nativeButtonNode.click();
+  __clickDelegationHandler(ev) {
+    if ((this.type === 'submit' || this.type === 'reset') && ev.target === this && this._form) {
+      /**
+       * Here, we make sure our button is compatible with a native form, by firing a click
+       * from a native button that our form responds to. The native button we spawn will be a direct
+       * child of the form, plus the click event that will be sent will be prevented from
+       * propagating outside of the form. This will keep the amount of 'noise' (click events
+       * from 'ghost elements' that can be intercepted by listeners in the bubble chain) to an
+       * absolute minimum.
+       */
+      this.__submitAndResetHelperButton.type = this.type;
+
+      this._form.appendChild(this.__submitAndResetHelperButton);
+      // Form submission or reset will happen
+      this.__submitAndResetHelperButton.click();
+      this._form.removeChild(this.__submitAndResetHelperButton);
     }
   }
 
@@ -289,6 +305,30 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
       }
       // dispatch click
       this.click();
+    }
+  }
+
+  /**
+   * Prevents that someone who listens outside or on form catches the click event
+   * @param {Event} e
+   */
+  __preventEventLeakage(e) {
+    if (e.target === this.__submitAndResetHelperButton) {
+      e.stopImmediatePropagation();
+    }
+  }
+
+  __setupSubmitAndResetHelperOnConnected() {
+    this._form = this._nativeButtonNode.form;
+
+    if (this._form) {
+      this._form.addEventListener('click', this.__preventEventLeakage);
+    }
+  }
+
+  __teardownSubmitAndResetHelperOnDisconnected() {
+    if (this._form) {
+      this._form.removeEventListener('click', this.__preventEventLeakage);
     }
   }
 }
