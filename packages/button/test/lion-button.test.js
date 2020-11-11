@@ -211,6 +211,15 @@ describe('lion-button', () => {
       browserDetectionStub.restore();
     });
 
+    it('does not override aria-labelledby when provided by user', async () => {
+      const browserDetectionStub = sinon.stub(browserDetection, 'isIE11').value(true);
+      const el = /** @type {LionButton} */ (await fixture(
+        `<lion-button aria-labelledby="some-id another-id">foo</lion-button>`,
+      ));
+      expect(el.getAttribute('aria-labelledby')).to.equal('some-id another-id');
+      browserDetectionStub.restore();
+    });
+
     it('has a native button node with aria-hidden set to true', async () => {
       const el = /** @type {LionButton} */ (await fixture('<lion-button></lion-button>'));
 
@@ -239,9 +248,9 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-        const button = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const button /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         button.click();
         expect(formSubmitSpy).to.have.been.calledOnce;
       });
@@ -253,9 +262,9 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-        const button = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const button /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         button.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
@@ -286,9 +295,9 @@ describe('lion-button', () => {
             <lion-button type="reset">reset</lion-button>
           </form>
         `);
-        const btn = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const btn /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         const firstName = /** @type {HTMLInputElement} */ (form.querySelector(
           'input[name=firstName]',
         ));
@@ -350,9 +359,9 @@ describe('lion-button', () => {
           </form>
         `);
 
-        /** @type {LionButton} */ (form.querySelector('lion-button')).dispatchEvent(
-          new KeyboardEvent('keyup', { key: ' ' }),
-        );
+        /** @type {LionButton} */ form
+          .querySelector('lion-button')
+          .dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
 
@@ -410,7 +419,7 @@ describe('lion-button', () => {
     it('is fired once', async () => {
       const clickSpy = /** @type {EventListener} */ (sinon.spy());
       const el = /** @type {LionButton} */ (await fixture(
-        html`<lion-button @click="${clickSpy}">foo</lion-button>`,
+        html` <lion-button @click="${clickSpy}">foo</lion-button> `,
       ));
 
       el.click();
@@ -425,9 +434,11 @@ describe('lion-button', () => {
     it('is fired one inside a form', async () => {
       const formClickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
       const el = /** @type {HTMLFormElement} */ (await fixture(
-        html`<form @click="${formClickSpy}">
-          <lion-button>foo</lion-button>
-        </form>`,
+        html`
+          <form @click="${formClickSpy}">
+            <lion-button>foo</lion-button>
+          </form>
+        `,
       ));
 
       // @ts-ignore
