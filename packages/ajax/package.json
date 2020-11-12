@@ -23,7 +23,7 @@
     "types"
   ],
   "scripts": {
-    "debug": "cd ../../ && npm run -- --debug ajax",
+    "debug": "cd ../../ && npm run debug -- --group ajax",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group ajax",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group ajax",
     "prepublishOnly": "../../scripts/npm-prepublish.js",

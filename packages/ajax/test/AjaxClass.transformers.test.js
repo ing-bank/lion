@@ -4,8 +4,20 @@ import sinon from 'sinon';
 import { AjaxClass } from '../src/AjaxClass.js';
 
 describe('AjaxClass transformers', () => {
+  /** @type {import('sinon').SinonFakeServer} */
   let server;
 
+  /**
+   * @param {Object} [cfg] configuration for the AjaxClass instance
+   * @param {string} [cfg.jsonPrefix] prefixing the JSON string in this manner is used to help
+   * prevent JSON Hijacking. The prefix renders the string syntactically invalid as a script so
+   * that it cannot be hijacked. This prefix should be stripped before parsing the string as JSON.
+   * @param {string} [cfg.lang] language
+   * @param {boolean} [cfg.languageHeader] the Accept-Language request HTTP header advertises
+   * which languages the client is able to understand, and which locale variant is preferred.
+   * @param {boolean} [cfg.cancelable] if request can be canceled
+   * @param {boolean} [cfg.cancelPreviousOnNewRequest] prevents concurrent requests
+   */
   function getInstance(cfg) {
     return new AjaxClass(cfg);
   }
@@ -62,7 +74,7 @@ describe('AjaxClass transformers', () => {
           ajax[type].push(myTransformer);
           await ajax.get('data.json');
 
-          ajax[type] = ajax[type].filter(item => item !== myTransformer);
+          ajax[type] = ajax[type].filter(/** @param {?} item */ item => item !== myTransformer);
           await ajax.get('data.json');
 
           expect(myTransformer.callCount).to.eql(1);
@@ -78,7 +90,7 @@ describe('AjaxClass transformers', () => {
         { 'Content-Type': 'application/json' },
         '{ "method": "post" }',
       ]);
-      const addBarTransformer = data => ({ ...data, bar: 'bar' });
+      const addBarTransformer = /** @param {?} data */ data => ({ ...data, bar: 'bar' });
       const myAjax = getInstance();
       myAjax.requestDataTransformers.push(addBarTransformer);
       const response = await myAjax.post('data.json', { foo: 'foo' });
@@ -96,7 +108,7 @@ describe('AjaxClass transformers', () => {
         { 'Content-Type': 'application/json' },
         '{ "method": "get" }',
       ]);
-      const addBarTransformer = data => ({ ...data, bar: 'bar' });
+      const addBarTransformer = /** @param {?} data */ data => ({ ...data, bar: 'bar' });
       const myAjax = getInstance();
       myAjax.responseDataTransformers.push(addBarTransformer);
       const response = await myAjax.get('data.json');

@@ -5,8 +5,20 @@ import { AjaxClass } from '../src/AjaxClass.js';
 import { ajax } from '../src/ajax.js';
 
 describe('AjaxClass', () => {
+  /** @type {import('sinon').SinonFakeServer} */
   let server;
 
+  /**
+   * @param {Object} [cfg] configuration for the AjaxClass instance
+   * @param {string} [cfg.jsonPrefix] prefixing the JSON string in this manner is used to help
+   * prevent JSON Hijacking. The prefix renders the string syntactically invalid as a script so
+   * that it cannot be hijacked. This prefix should be stripped before parsing the string as JSON.
+   * @param {string} [cfg.lang] language
+   * @param {boolean} [cfg.languageHeader] the Accept-Language request HTTP header advertises
+   * which languages the client is able to understand, and which locale variant is preferred.
+   * @param {boolean} [cfg.cancelable] if request can be canceled
+   * @param {boolean} [cfg.cancelPreviousOnNewRequest] prevents concurrent requests
+   */
   function getInstance(cfg) {
     return new AjaxClass(cfg);
   }
@@ -200,7 +212,7 @@ describe('AjaxClass', () => {
         '{ "method": "get" }',
       ]);
 
-      const makeRequest = async url => {
+      const makeRequest = /** @param {string} url */ async url => {
         try {
           await myAjax.get(url);
           throw new Error('is resolved');
