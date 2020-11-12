@@ -211,6 +211,15 @@ describe('lion-button', () => {
       browserDetectionStub.restore();
     });
 
+    it('does not override aria-labelledby when provided by user', async () => {
+      const browserDetectionStub = sinon.stub(browserDetection, 'isIE11').value(true);
+      const el = /** @type {LionButton} */ (await fixture(
+        `<lion-button aria-labelledby="some-id another-id">foo</lion-button>`,
+      ));
+      expect(el.getAttribute('aria-labelledby')).to.equal('some-id another-id');
+      browserDetectionStub.restore();
+    });
+
     it('has a native button node with aria-hidden set to true', async () => {
       const el = /** @type {LionButton} */ (await fixture('<lion-button></lion-button>'));
 
@@ -239,9 +248,9 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-        const button = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const button /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         button.click();
         expect(formSubmitSpy).to.have.been.calledOnce;
       });
@@ -253,9 +262,9 @@ describe('lion-button', () => {
             <lion-button type="submit">foo</lion-button>
           </form>
         `);
-        const button = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const button /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         button.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
@@ -286,9 +295,9 @@ describe('lion-button', () => {
             <lion-button type="reset">reset</lion-button>
           </form>
         `);
-        const btn = /** @type {LionButton} */ (
-          /** @type {LionButton} */ (form.querySelector('lion-button'))
-        );
+        const btn /** @type {LionButton} */ = /** @type {LionButton} */ (form.querySelector(
+          'lion-button',
+        ));
         const firstName = /** @type {HTMLInputElement} */ (form.querySelector(
           'input[name=firstName]',
         ));
@@ -350,9 +359,8 @@ describe('lion-button', () => {
           </form>
         `);
 
-        /** @type {LionButton} */ (form.querySelector('lion-button')).dispatchEvent(
-          new KeyboardEvent('keyup', { key: ' ' }),
-        );
+        const lionButton = /** @type {LionButton} */ (form.querySelector('lion-button'));
+        lionButton.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         await aTimeout(0);
         await aTimeout(0);
 
@@ -410,7 +418,7 @@ describe('lion-button', () => {
     it('is fired once', async () => {
       const clickSpy = /** @type {EventListener} */ (sinon.spy());
       const el = /** @type {LionButton} */ (await fixture(
-        html`<lion-button @click="${clickSpy}">foo</lion-button>`,
+        html` <lion-button @click="${clickSpy}">foo</lion-button> `,
       ));
 
       el.click();
@@ -422,22 +430,82 @@ describe('lion-button', () => {
       expect(clickSpy).to.have.been.calledOnce;
     });
 
-    it('is fired one inside a form', async () => {
-      const formClickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
-      const el = /** @type {HTMLFormElement} */ (await fixture(
-        html`<form @click="${formClickSpy}">
-          <lion-button>foo</lion-button>
-        </form>`,
+    it('is fired once outside and inside the form', async () => {
+      const outsideSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const insideSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const formSpyEarly = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const formSpyLater = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+
+      const el = /** @type {HTMLDivElement} */ (await fixture(
+        html`
+          <div @click="${outsideSpy}">
+            <form @click="${formSpyEarly}">
+              <div @click="${insideSpy}">
+                <lion-button>foo</lion-button>
+              </div>
+            </form>
+          </div>
+        `,
       ));
+      const lionButton = /** @type {LionButton} */ (el.querySelector('lion-button'));
+      const form = /** @type {HTMLFormElement} */ (el.querySelector('form'));
+      form.addEventListener('click', formSpyLater);
 
-      // @ts-ignore
-      el.querySelector('lion-button').click();
-
+      lionButton.click();
       // trying to wait for other possible redispatched events
       await aTimeout(0);
       await aTimeout(0);
 
-      expect(formClickSpy).to.have.been.calledOnce;
+      expect(insideSpy).to.have.been.calledOnce;
+      expect(outsideSpy).to.have.been.calledOnce;
+      // A small sacrifice for event listeners registered early: we get the native button evt.
+      expect(formSpyEarly).to.have.been.calledTwice;
+      expect(formSpyLater).to.have.been.calledOnce;
+    });
+
+    it('works when connected to different form', async () => {
+      const form1El = /** @type {HTMLFormElement} */ (await fixture(
+        html`
+          <form>
+            <lion-button>foo</lion-button>
+          </form>
+        `,
+      ));
+      const lionButton = /** @type {LionButton} */ (form1El.querySelector('lion-button'));
+
+      expect(lionButton._form).to.equal(form1El);
+
+      // Now we add the lionButton to a different form.
+      // We disconnect and connect and check if everything still works as expected
+      const outsideSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const insideSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const formSpyEarly = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+      const formSpyLater = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
+
+      const form2El = /** @type {HTMLFormElement} */ (await fixture(
+        html`
+          <div @click="${outsideSpy}">
+            <form @click="${formSpyEarly}">
+              <div @click="${insideSpy}">${lionButton}</div>
+            </form>
+          </div>
+        `,
+      ));
+      const form2Node = /** @type {HTMLFormElement} */ (form2El.querySelector('form'));
+
+      expect(lionButton._form).to.equal(form2Node);
+
+      form2Node.addEventListener('click', formSpyLater);
+      lionButton.click();
+      // trying to wait for other possible redispatched events
+      await aTimeout(0);
+      await aTimeout(0);
+
+      expect(insideSpy).to.have.been.calledOnce;
+      expect(outsideSpy).to.have.been.calledOnce;
+      // A small sacrifice for event listeners registered early: we get the native button evt.
+      expect(formSpyEarly).to.have.been.calledTwice;
+      expect(formSpyLater).to.have.been.calledOnce;
     });
 
     describe('native button behavior', async () => {
@@ -479,17 +547,17 @@ describe('lion-button', () => {
       });
 
       const useCases = [
-        { container: 'div', type: 'submit', targetHost: true },
-        { container: 'div', type: 'reset', targetHost: true },
-        { container: 'div', type: 'button', targetHost: true },
-        { container: 'form', type: 'submit', targetHost: false },
-        { container: 'form', type: 'reset', targetHost: false },
-        { container: 'form', type: 'button', targetHost: true },
+        { container: 'div', type: 'submit' },
+        { container: 'div', type: 'reset' },
+        { container: 'div', type: 'button' },
+        { container: 'form', type: 'submit' },
+        { container: 'form', type: 'reset' },
+        { container: 'form', type: 'button' },
       ];
 
       useCases.forEach(useCase => {
-        const { container, type, targetHost } = useCase;
-        const targetName = targetHost ? 'host' : 'native button';
+        const { container, type } = useCase;
+        const targetName = 'host';
         it(`is ${targetName} with type ${type} and it is inside a ${container}`, async () => {
           const clickSpy = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
           const el = /** @type {LionButton} */ (await fixture(
@@ -499,11 +567,7 @@ describe('lion-button', () => {
           await fixture(html`<${tag} @click="${clickSpy}">${el}</${tag}>`);
           const event = await prepareClickEvent(el);
 
-          if (targetHost) {
-            expect(event.target).to.equal(el);
-          } else {
-            expect(event.target).to.equal(el._nativeButtonNode);
-          }
+          expect(event.target).to.equal(el);
         });
       });
     });
