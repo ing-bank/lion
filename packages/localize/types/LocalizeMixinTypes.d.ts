@@ -6,6 +6,10 @@ export interface FormatNumberPart {
   value: string;
 }
 
+declare function DatePostProcessorImplementation(date: string): string;
+
+export type DatePostProcessor = typeof DatePostProcessorImplementation;
+
 // Take the DateTimeFormat and add the missing resolved options as well as optionals
 export declare interface FormatDateOptions extends Intl.DateTimeFormatOptions {
   locale?: string;
@@ -17,7 +21,13 @@ export declare interface FormatDateOptions extends Intl.DateTimeFormatOptions {
   returnIfNaN?: string;
   decimalSeparator?: string;
   mode?: 'pasted' | 'auto';
+
+  postProcessors?: Map<string, DatePostProcessor>;
 }
+
+declare function NumberPostProcessorImplementation(number: string): string;
+
+export type NumberPostProcessor = typeof NumberPostProcessorImplementation;
 
 // Take the DateTimeFormat and add the missing resolved options as well as optionals, and our own
 export declare interface FormatNumberOptions extends Intl.NumberFormatOptions {
@@ -27,6 +37,8 @@ export declare interface FormatNumberOptions extends Intl.NumberFormatOptions {
   returnIfNaN?: string;
   decimalSeparator?: string;
   mode?: 'pasted' | 'auto';
+
+  postProcessors?: Map<string, NumberPostProcessor>;
 }
 
 interface StringToFunctionMap {

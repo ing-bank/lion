@@ -1,5 +1,8 @@
 import { localize } from '../localize.js';
+import { getLocale } from './getLocale.js';
 import { formatNumberToParts } from './formatNumberToParts.js';
+
+/** @typedef {import('../../types/LocalizeMixinTypes').NumberPostProcessor} NumberPostProcessor */
 
 /**
  * Formats a number based on locale and options. It uses Intl for the formatting.
@@ -27,5 +30,24 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
     const part = /** @type {FormatNumberPart} */ (formattedToParts[i]);
     printNumberOfParts += part.value;
   }
+
+  const computedLocale = getLocale(options && options.locale);
+
+  if (localize.formatNumberOptions.postProcessors.size > 0) {
+    Array.from(localize.formatNumberOptions.postProcessors).forEach(([locale, fn]) => {
+      if (locale === computedLocale) {
+        printNumberOfParts = fn(printNumberOfParts);
+      }
+    });
+  }
+
+  if (options.postProcessors && options.postProcessors.size > 0) {
+    Array.from(options.postProcessors).forEach(([locale, fn]) => {
+      if (locale === computedLocale) {
+        printNumberOfParts = fn(printNumberOfParts);
+      }
+    });
+  }
+
   return printNumberOfParts;
 }
