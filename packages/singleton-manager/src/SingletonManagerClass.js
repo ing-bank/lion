@@ -1,6 +1,8 @@
+const sym = Symbol.for('lion::SingletonManagerClassStorage');
+
 export class SingletonManagerClass {
   constructor() {
-    this._map = new Map();
+    this._map = window[sym] ? window[sym] : window[sym] = new Map();
   }
 
   /**
