@@ -1,5 +1,8 @@
+/**
+ * @param {string} prefix
+ */
 export function jsonPrefixTransformerFactory(prefix) {
-  return data => {
+  return /** @param {string} data */ data => {
     let result = data;
     if (typeof result === 'string') {
       if (prefix.length > 0 && result.indexOf(prefix) === 0) {

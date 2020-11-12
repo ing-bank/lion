@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import { ajax } from '../src/ajax.js';
 
 describe('ajax', () => {
+  /** @type {import('sinon').SinonFakeServer} */
   let server;
 
   beforeEach(() => {
@@ -32,7 +33,7 @@ describe('ajax', () => {
       { 'Content-Type': 'application/json' },
       '{"success": true}',
     ]);
-    const makeRequest = async method => {
+    const makeRequest = /** @param {string} method */ async method => {
       const response = await ajax[method]('data.json', { foo: 'bar' });
       expect(response.status).to.equal(200);
       expect(response.data).to.deep.equal({ success: true });
@@ -46,7 +47,7 @@ describe('ajax', () => {
       { 'Content-Type': 'application/json' },
       '{"success": true}',
     ]);
-    const makeRequest = async method => {
+    const makeRequest = /** @param {string} method */ async method => {
       const response = await ajax[method]('data.json', { data: 'foobar' }, { foo: 'bar' });
       expect(response.status).to.equal(200);
       expect(response.data).to.deep.equal({ success: true });
@@ -62,7 +63,7 @@ describe('ajax', () => {
       '{"success": true}',
     ]);
 
-    const makeRequest = async method => {
+    const makeRequest = /** @param {string} method */ async method => {
       const response = await ajax[method]('data.json');
       expect(response.config.headers['X-XSRF-TOKEN']).to.equal('test');
       expect(response.status).to.equal(200);
@@ -82,7 +83,7 @@ describe('ajax', () => {
       '{"success": true}',
     ]);
 
-    const makeRequest = async method => {
+    const makeRequest = /** @param {string} method */ async method => {
       const response = await ajax[method]('data.json');
       expect(response.config.headers['X-XSRF-TOKEN']).to.equal(undefined);
       expect(response.status).to.equal(200);
