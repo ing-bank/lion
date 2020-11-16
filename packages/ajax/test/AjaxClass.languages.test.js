@@ -23,9 +23,7 @@ describe('AjaxClass languages', () => {
   });
 
   it('sets "Accept-Language" header to "en-GB" for one request if <html lang="en-GB">', async () => {
-    console.log('setting lang');
     document.documentElement.lang = 'en-GB';
-    console.log('after setting lang');
     const req = new AjaxClass();
     req.get('data.json');
     await aTimeout(0);
