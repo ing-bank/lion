@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.10
+
+### Patch Changes
+
+- c5c4d4ba: Normalize input values in date comparison validators
+- Updated dependencies [3ada1aef]
+  - @lion/localize@0.15.0
+
 ## 0.6.9
 
 ### Patch Changes

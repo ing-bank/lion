@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.10
+
+### Patch Changes
+
+- 6cc8b95c: Added types for ajax package, although they are mostly quite butchered. This is due to the complexity of interceptor factories and bundled-es-modules/axios not exporting types, which makes it really difficult to type it properly.
+- 1cb604c6: enable types for ajax
+
 ## 0.5.9
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.8.5
+
+### Patch Changes
+
+- 27020f12: Button fixes
+
+  - make click event target predictable (always host)
+  - do not override aria-labelledby from user
+
 ## 0.8.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 3ada1aef: Localize set date and number postProcessors for locale
+
 ## 0.14.9
 
 ### Patch Changes
