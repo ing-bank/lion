@@ -232,4 +232,104 @@ describe('formatDate', () => {
     // @ts-ignore tests what happens if you use a wrong type
     expect(formatDate(date)).to.equal('');
   });
+
+  describe('Date post processors', () => {
+    /**
+     * Uppercase processor
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    const upperCaseProcessor = str => {
+      return str.toUpperCase();
+    };
+
+    /**
+     * Lowercase processor
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    const lowerCaseProcessor = str => {
+      return str.toLocaleLowerCase();
+    };
+
+    it('displays the appropriate date after post processor set in options', async () => {
+      const testDate = new Date('2012/05/21');
+      const postProcessors = new Map();
+      postProcessors.set('nl-NL', upperCaseProcessor);
+      postProcessors.set('de-DE', lowerCaseProcessor);
+
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        postProcessors,
+      };
+
+      // locale is en-GB
+      expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
+      localize.locale = 'nl-NL';
+      expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
+      localize.locale = 'de-DE';
+      expect(formatDate(testDate, options)).to.equal('montag, 21. mai 2012');
+      localize.locale = 'en-US';
+      expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
+    });
+
+    it('displays the appropriate date after post processor set in localize', async () => {
+      const testDate = new Date('2012/05/21');
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+      };
+      localize.setDatePostProcessorForLocale({
+        locale: 'nl-NL',
+        postProcessor: upperCaseProcessor,
+      });
+      localize.setDatePostProcessorForLocale({
+        locale: 'de-DE',
+        postProcessor: upperCaseProcessor,
+      });
+
+      expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
+      localize.locale = 'nl-NL';
+      expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
+      localize.locale = 'de-DE';
+      expect(formatDate(testDate, options)).to.equal('MONTAG, 21. MAI 2012');
+      localize.locale = 'en-US';
+      expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
+    });
+
+    it('displays the appropriate date after post processors set in options and localize', async () => {
+      const testDate = new Date('2012/05/21');
+      const postProcessors = new Map();
+      postProcessors.set('nl-NL', upperCaseProcessor);
+      postProcessors.set('de-DE', upperCaseProcessor);
+
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        postProcessors,
+      };
+
+      localize.setDatePostProcessorForLocale({
+        locale: 'de-DE',
+        postProcessor: lowerCaseProcessor,
+      });
+
+      expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
+      localize.locale = 'nl-NL';
+      expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
+      localize.locale = 'de-DE';
+      expect(formatDate(testDate, options)).to.equal('MONTAG, 21. MAI 2012');
+      localize.locale = 'en-US';
+      expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
+    });
+  });
 });

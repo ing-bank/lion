@@ -6,6 +6,9 @@ import isLocalizeESModule from './isLocalizeESModule.js';
  * @typedef {import('../types/LocalizeMixinTypes').NamespaceObject} NamespaceObject
  */
 
+/** @typedef {import('../types/LocalizeMixinTypes').DatePostProcessor} DatePostProcessor */
+/** @typedef {import('../types/LocalizeMixinTypes').NumberPostProcessor} NumberPostProcessor */
+
 /**
  * `LocalizeManager` manages your translations (includes loading)
  */
@@ -30,6 +33,13 @@ export class LocalizeManager {
 
     this.formatNumberOptions = {
       returnIfNaN: '',
+      /** @type {Map<string,DatePostProcessor>} */
+      postProcessors: new Map(),
+    };
+
+    this.formatDateOptions = {
+      /** @type {Map<string,DatePostProcessor>} */
+      postProcessors: new Map(),
     };
 
     /**
@@ -522,5 +532,19 @@ export class LocalizeManager {
     );
 
     return String(result || '');
+  }
+
+  /**
+   * @param {{locale:string, postProcessor:DatePostProcessor}} options
+   */
+  setDatePostProcessorForLocale({ locale, postProcessor }) {
+    this.formatDateOptions.postProcessors.set(locale, postProcessor);
+  }
+
+  /**
+   * @param {{locale:string, postProcessor:NumberPostProcessor}} options
+   */
+  setNumberPostProcessorForLocale({ locale, postProcessor }) {
+    this.formatNumberOptions.postProcessors.set(locale, postProcessor);
   }
 }

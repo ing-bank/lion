@@ -362,4 +362,69 @@ describe('formatNumber', () => {
       });
     });
   });
+
+  describe('postProcessors', () => {
+    /** @type {Map<string, import('../../types/LocalizeMixinTypes.js').NumberPostProcessor>} */
+    let savedpostProcessors;
+    beforeEach(() => {
+      savedpostProcessors = localize.formatNumberOptions.postProcessors;
+    });
+    afterEach(() => {
+      localize.formatNumberOptions.postProcessors = savedpostProcessors;
+    });
+
+    /**
+     * Comma to spaces processor
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    const commaToSpaceProcessor = str => {
+      return str.replace(/,/g, ' ');
+    };
+
+    /**
+     * First space to dot processor
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    const firstSpaceToDotProcessor = str => {
+      return str.replace(' ', '.');
+    };
+
+    it('uses `options.postProcessors`', () => {
+      const postProcessors = new Map();
+      postProcessors.set('en-GB', commaToSpaceProcessor);
+      expect(
+        formatNumber(112345678, {
+          postProcessors,
+        }),
+      ).to.equal('112 345 678');
+    });
+
+    it('uses `localize.formatNumberOptions.postProcessors`', () => {
+      localize.setNumberPostProcessorForLocale({
+        locale: 'en-GB',
+        postProcessor: commaToSpaceProcessor,
+      });
+
+      expect(formatNumber(112345678)).to.equal('112 345 678');
+    });
+
+    it('uses `options.postProcessors` and `localize.formatNumberOptions.postProcessors`', () => {
+      const postProcessors = new Map();
+      postProcessors.set('en-GB', commaToSpaceProcessor);
+
+      localize.setNumberPostProcessorForLocale({
+        locale: 'en-GB',
+        postProcessor: firstSpaceToDotProcessor,
+      });
+      expect(
+        formatNumber(112345678, {
+          postProcessors,
+        }),
+      ).to.equal('112 345 678');
+    });
+  });
 });
