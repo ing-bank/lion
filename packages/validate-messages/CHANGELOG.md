@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies [c5c4d4ba]
+- Updated dependencies [3ada1aef]
+  - @lion/form-core@0.6.10
+  - @lion/localize@0.15.0
+
 ## 0.3.7
 
 ### Patch Changes
