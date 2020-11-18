@@ -80,7 +80,7 @@ const FormRegistrarMixinImplementation = superclass =>
       child.__parentFormGroup = this;
 
       // 1. Add children as array element
-      if (indexToInsertAt > 0) {
+      if (indexToInsertAt >= 0) {
         this.formElements.splice(indexToInsertAt, 0, child);
       } else {
         this.formElements.push(child);
