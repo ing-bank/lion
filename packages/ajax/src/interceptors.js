@@ -6,8 +6,6 @@ import { axios } from '@bundled-es-modules/axios';
  * @return {(config: {[key:string]: ?}) => {[key:string]: ?}}
  */
 export function addAcceptLanguageHeaderInterceptorFactory(lang) {
-  console.log('add language header');
-  console.log(lang);
   return /** @param {{[key:string]: ?}} config */ config => {
     const result = config;
     if (typeof lang === 'string' && lang !== '') {
