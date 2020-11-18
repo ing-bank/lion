@@ -53,16 +53,17 @@ import { mySingleton } from 'my-singleton'; // will no always be what is "define
 ### Warning
 
 Overriding version is an App level concern hence components or "features" are not allowed to use it.
-If you try to call multiple times for the same key then it will throw an error.
+If you try to call it multiple times for the same key then it will be ignored.
 
 ```js
 // on app level
 singletonManager.set('my-singleton/index.js::1.x', compatibleSingleton);
 
 // somewhere in a dependency
-singletonManager.set('my-singleton/index.js::1.x', compatibleSingleton);
+singletonManager.set('my-singleton/index.js::1.x', otherSingleton);
 
-// will throw an error that it is already defined
+// .get('my-singleton/index.js::1.x') will always return the first set value
+// e.g. the app can set it and no one can later override it
 ```
 
 ### Example Singleton Maintainers

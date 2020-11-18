@@ -1,18 +1,20 @@
+const sym = Symbol.for('lion::SingletonManagerClassStorage');
+
 export class SingletonManagerClass {
   constructor() {
-    this._map = new Map();
+    this._map = window[sym] ? window[sym] : (window[sym] = new Map());
   }
 
   /**
+   * Ignores already existing keys (e.g. it will not override)
+   *
    * @param {string} key
    * @param {any} value
-   * @throws {Error} Will throw if the key is already defined
    */
   set(key, value) {
-    if (this.has(key)) {
-      throw new Error(`The key "${key}" is already defined and can not be overridden.`);
+    if (!this.has(key)) {
+      this._map.set(key, value);
     }
-    this._map.set(key, value);
   }
 
   /**

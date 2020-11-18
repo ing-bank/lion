@@ -19,13 +19,18 @@ describe('SingletonManagerClass', () => {
     expect(mngr.has('overlays/overlays.js::0.14.x')).to.be.false;
   });
 
-  it('throws if an app tries to set an existing key again', () => {
+  it('does not override existing keys (e.g. subsequentual calls for the same keys are ignored)', () => {
     const mngr = new SingletonManagerClass();
-    mngr.set('overlays/overlays.js::0.13.x', 'is-set');
-    expect(() => {
-      mngr.set('overlays/overlays.js::0.13.x', 'new-set');
-    }).to.throw(
-      'The key "overlays/overlays.js::0.13.x" is already defined and can not be overridden.',
-    );
+    mngr.set('overlays/overlays.js::0.14.x', 'is-set');
+    mngr.set('overlays/overlays.js::0.14.x', 'new-set');
+    expect(mngr.get('overlays/overlays.js::0.14.x')).to.equal('is-set');
+  });
+
+  it('should return the same value with two SingletonManager instances', () => {
+    const mngr1 = new SingletonManagerClass();
+    const mngr2 = new SingletonManagerClass();
+
+    mngr1.set('overlays/overlays.js::0.15.x', 'is-set');
+    expect(mngr2.get('overlays/overlays.js::0.15.x')).to.equal('is-set');
   });
 });
