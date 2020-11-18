@@ -133,25 +133,37 @@ export const runRegistrationSuite = customConfig => {
     it('adds elements to formElements in the right order (DOM)', async () => {
       const el = /** @type {RegistrarClass} */ (await fixture(html`
         <${parentTag}>
-          <${childTag}></${childTag}>
-          <${childTag}></${childTag}>
-          <${childTag}></${childTag}>
+          <${childTag} pos="0"></${childTag}>
+          <${childTag} pos="1"></${childTag}>
+          <${childTag} pos="2"></${childTag}>
         </${parentTag}>
       `));
+      /** INSERT field before the pos=1 */
       /**
        * @typedef {Object.<string, string>} prop
        */
       const newField = /** @type {RegisteringClass & prop} */ (await fixture(html`
         <${childTag}></${childTag}>
       `));
-      newField.myProp = 'test';
-
+      newField.setAttribute('pos', 'inserted-before-1');
       el.insertBefore(newField, el.children[1]);
 
       expect(el.formElements.length).to.equal(4);
       const secondChild = /** @type {RegisteringClass & prop} */ (el.children[1]);
-      expect(secondChild.myProp).to.equal('test');
-      expect(el.formElements[1].myProp).to.equal('test');
+      expect(secondChild.getAttribute('pos')).to.equal('inserted-before-1');
+      expect(el.formElements[1].getAttribute('pos')).to.equal('inserted-before-1');
+
+      /** INSERT field before the pos=0 (e.g. at the top) */
+      const topField = /** @type {RegisteringClass & prop} */ (await fixture(html`
+        <${childTag}></${childTag}>
+      `));
+      topField.setAttribute('pos', 'inserted-before-0');
+      el.insertBefore(topField, el.children[0]);
+
+      // expect(el.formElements.length).to.equal(5);
+      const firstChild = /** @type {RegisteringClass & prop} */ (el.children[0]);
+      expect(firstChild.getAttribute('pos')).to.equal('inserted-before-0');
+      expect(el.formElements[0].getAttribute('pos')).to.equal('inserted-before-0');
     });
 
     describe('FormRegistrarPortalMixin', () => {
