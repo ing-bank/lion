@@ -518,7 +518,8 @@ export class OverlayController extends EventTargetShim {
       return;
     }
 
-    if (this.__isContentNodeProjected && this.placementMode === 'local') {
+    const prevPlacement = this.__prevConfig?.placementMode;
+    if (prevPlacement !== 'local' && this.placementMode === 'local') {
       // We add the contentNode in its slot, so that it will be projected by contentWrapperNode
       this._renderTarget.appendChild(this.contentNode);
     } else {
@@ -973,7 +974,7 @@ export class OverlayController extends EventTargetShim {
           this.__backdropNodeToBeTornDown = this.backdropNode;
 
           this.__backdropAnimation.then(() => {
-            if (this.__backdropNodeToBeTornDown) {
+            if (this.__backdropNodeToBeTornDown && this.__backdropNodeToBeTornDown.parentNode) {
               /** @type {HTMLElement} */ (this.__backdropNodeToBeTornDown.parentNode).removeChild(
                 this.__backdropNodeToBeTornDown,
               );
