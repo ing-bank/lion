@@ -4,7 +4,7 @@ import { OverlayMixin } from './OverlayMixin.js';
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('../types/ArrowMixinTypes').ArrowMixin} ArrowMixin
- *
+ * @typedef {import('popper.js').PopperOptions} PopperOptions
  */
 
 /**
@@ -109,35 +109,45 @@ export const ArrowMixinImplementation = superclass =>
      */
     // eslint-disable-next-line
     _defineOverlayConfig() {
+      const superConfig = super._defineOverlayConfig() || {};
       if (!this.hasArrow) {
-        return super._defineOverlayConfig();
+        return superConfig;
       }
       return {
-        ...super._defineOverlayConfig(),
+        ...superConfig,
         popperConfig: {
-          ...super._defineOverlayConfig()?.popperConfig,
-          placement: 'top',
+          ...this._getPopperArrowConfig(superConfig.popperConfig),
+        },
+      };
+    }
 
-          modifiers: {
-            ...super._defineOverlayConfig()?.popperConfig?.modifiers,
-            keepTogether: {
-              ...super._defineOverlayConfig()?.popperConfig?.modifiers?.keepTogether,
-              enabled: true,
-            },
-            arrow: {
-              ...super._defineOverlayConfig()?.popperConfig?.modifiers?.arrow,
-              enabled: true,
-            },
-          },
+    /**
+     * @param {PopperOptions} popperConfigToExtendFrom
+     * @returns {PopperOptions}
+     */
+    _getPopperArrowConfig(popperConfigToExtendFrom = {}) {
+      return {
+        placement: 'top',
 
-          /** @param {import("popper.js").default.Data} data */
-          onCreate: data => {
-            this.__syncFromPopperState(data);
+        modifiers: {
+          ...popperConfigToExtendFrom.modifiers,
+          keepTogether: {
+            ...popperConfigToExtendFrom.modifiers?.keepTogether,
+            enabled: true,
           },
-          /** @param {import("popper.js").default.Data} data */
-          onUpdate: data => {
-            this.__syncFromPopperState(data);
+          arrow: {
+            ...popperConfigToExtendFrom.modifiers?.arrow,
+            enabled: true,
           },
+        },
+
+        /** @param {import("popper.js").default.Data} data */
+        onCreate: data => {
+          this.__syncFromPopperState(data);
+        },
+        /** @param {import("popper.js").default.Data} data */
+        onUpdate: data => {
+          this.__syncFromPopperState(data);
         },
       };
     }
