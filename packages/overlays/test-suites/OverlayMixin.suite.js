@@ -209,6 +209,32 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       await nextFrame(); // hide takes at least a frame
       expect(el.opened).to.be.false;
     });
+
+    // See https://github.com/ing-bank/lion/discussions/1095
+    it('exposes open(), close() and toggle() methods', async () => {
+      const el = /** @type {OverlayEl} */ (await fixture(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `));
+      expect(el.opened).to.be.false;
+      el.open();
+      await nextFrame();
+      expect(el.opened).to.be.true;
+
+      el.close();
+      await nextFrame();
+      expect(el.opened).to.be.false;
+
+      el.toggle();
+      await nextFrame();
+      expect(el.opened).to.be.true;
+
+      el.toggle();
+      await nextFrame();
+      expect(el.opened).to.be.false;
+    });
   });
 
   describe(`OverlayMixin${suffix} nested`, () => {

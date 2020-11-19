@@ -28,6 +28,13 @@ export const OverlayMixinImplementation = superclass =>
       this.__needsSetup = true;
       /** @type {OverlayConfig} */
       this.config = {};
+
+      /** @type {EventListener} */
+      this.toggle = this.toggle.bind(this);
+      /** @type {EventListener} */
+      this.open = this.open.bind(this);
+      /** @type {EventListener} */
+      this.close = this.close.bind(this);
     }
 
     get config() {
@@ -307,6 +314,27 @@ export const OverlayMixinImplementation = superclass =>
         /** @type {OverlayController} */
         (this._overlayCtrl).hide();
       }
+    }
+
+    /**
+     * Toggles the overlay
+     */
+    toggle() {
+      /** @type {OverlayController} */ (this._overlayCtrl).toggle();
+    }
+
+    /**
+     * Shows the overlay
+     */
+    open() {
+      /** @type {OverlayController} */ (this._overlayCtrl).show();
+    }
+
+    /**
+     * Hides the overlay
+     */
+    close() {
+      /** @type {OverlayController} */ (this._overlayCtrl).hide();
     }
   };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

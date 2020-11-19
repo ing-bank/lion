@@ -22,6 +22,10 @@ export declare class OverlayHost {
   public get config(): OverlayConfig;
   public set config(value: OverlayConfig);
 
+  public open(): void;
+  public close(): void;
+  public toggle(): void;
+
   protected _overlayCtrl: OverlayController;
 
   protected get _overlayInvokerNode(): HTMLElement;
