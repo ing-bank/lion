@@ -47,13 +47,17 @@ but you want to do some design tweaks, so that your application better aligns wi
 experienced provided by the platform.
 For instance, an Android button might need a ripple effect on Android. Or, the options of a select
 should be opened in a bottomsheet on iOS.
+This approach can do that. Not by forking and maintaining three codebases, but by maintaining one
+codebase and two small decoration layers.
 
-### Benefits of not forking
+## Haven't I seen this before?
 
--
--
--
+Being able to restyle an app completely purely with CSS is not new.
+This is basically the philosophy of Zen Garden: http://dv.csszengarden.com/
 
-## I've seen this before
+But... the approach as described above add two very powerful features on top:
 
-Being able to restyle an app completely without
+- Although this is a very powerful start, some designs cannot be created without **changing the HTML**
+  as well (especially this is important for accessibility, with regard to DOM order).
+- Most important, this approach allows to add **functionality via JS**, which is also an essential
+  part of creating the exact user interactions you aim for.
