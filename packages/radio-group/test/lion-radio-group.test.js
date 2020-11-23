@@ -1,5 +1,4 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
-
 import '../lion-radio-group.js';
 import '../lion-radio.js';
 
