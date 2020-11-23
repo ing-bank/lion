@@ -96,13 +96,13 @@ export const countryRestrictions = () => html`
 By default, we validate the input to ensure the IBAN is valid.
 To get the default feedback message for this default validator, use `loadDefaultFeedbackMessages` from `@lion/form-core`.
 
-In the example below, we show how to use an additional validator that restricts the `input-iban` to IBANs from certain countries.
+In the example below, we show how to use an additional validator that blocks IBANs from certain countries.
 
 ```js preview-story
 export const blacklistedCountry = () => html`
   <lion-input-iban
     .modelValue=${'RO89RZBR6997372848645577'}
-    .validators=${([new IsBlacklistedCountryIBAN('RO')], [new IsBlacklistedCountryIBAN('ES')])}
+    .validators=${([new IsNotCountryIBAN('RO')], [new IsNotCountryIBAN('ES')])}
     name="iban"
     label="IBAN"
   ></lion-input-iban>

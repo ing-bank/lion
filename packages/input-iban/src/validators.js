@@ -154,9 +154,9 @@ export class IsCountryIBAN extends IsIBAN {
   }
 }
 
-export class IsBlacklistedCountryIBAN extends IsIBAN {
+export class IsNotCountryIBAN extends IsIBAN {
   static get validatorName() {
-    return 'IsBlacklistedCountryIBAN';
+    return 'IsNotCountryIBAN';
   }
 
   /**
