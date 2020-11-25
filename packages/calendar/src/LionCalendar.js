@@ -162,6 +162,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     /** @type {Date | null} */
     this.__focusedDate = null;
     this.__connectedCallbackDone = false;
+    this.__eventsAdded = false;
     this.locale = '';
   }
 
@@ -237,16 +238,58 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
      * this acts as a firstUpdated that runs on every reconnect as well
      */
     await this.updateComplete;
-    this.__contentWrapperElement = this.shadowRoot?.getElementById('js-content-wrapper');
-    this.__addEventDelegationForClickDate();
-    this.__addEventDelegationForFocusDate();
-    this.__addEventDelegationForBlurDate();
-    this.__addEventForKeyboardNavigation();
+
+    /**
+     * Flow goes like:
+     * 1) first connectedCallback before updateComplete
+     * 2) disconnectedCallback
+     * 3) second connectedCallback before updateComplete
+     * 4) first connectedCallback after updateComplete
+     * 5) second connectedCallback after updateComplete
+     *
+     * The __eventsAdded property tracks whether events are added / removed and here
+     * we can guard against adding events twice
+     */
+    if (!this.__eventsAdded) {
+      this.__contentWrapperElement = /** @type {HTMLButtonElement} */ (this.shadowRoot?.getElementById(
+        'js-content-wrapper',
+      ));
+      this.__contentWrapperElement.addEventListener('click', this.__clickDateDelegation.bind(this));
+      this.__contentWrapperElement.addEventListener('focus', this.__focusDateDelegation.bind(this));
+      this.__contentWrapperElement.addEventListener('blur', this.__blurDateDelegation.bind(this));
+      this.__contentWrapperElement.addEventListener(
+        'keydown',
+        this.__keyboardNavigationEvent.bind(this),
+      );
+      this.__eventsAdded = true;
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.__removeEventDelegations();
+    if (this.__contentWrapperElement) {
+      this.__contentWrapperElement.removeEventListener(
+        'click',
+        this.__clickDateDelegation.bind(this),
+      );
+      this.__contentWrapperElement.removeEventListener(
+        'focus',
+        this.__focusDateDelegation.bind(this),
+        true,
+      );
+      this.__contentWrapperElement.removeEventListener(
+        'blur',
+        this.__blurDateDelegation.bind(this),
+        true,
+      );
+
+      this.__contentWrapperElement.removeEventListener(
+        'keydown',
+        this.__keyboardNavigationEvent.bind(this),
+      );
+
+      this.__eventsAdded = false;
+    }
   }
 
   /** @param {import('lit-element').PropertyValues } changedProperties */
@@ -618,124 +661,88 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     );
   }
 
-  __addEventDelegationForClickDate() {
+  /**
+   * @param {Event} ev
+   */
+  __clickDateDelegation(ev) {
     const isDayButton = /** @param {HTMLElement} el */ el =>
       el.classList.contains('calendar__day-button');
 
-    this.__clickDateDelegation = /** @param {Event} ev */ ev => {
-      const el = /** @type {HTMLElement & { date: Date }} */ (ev.target);
-      if (isDayButton(el)) {
-        this.__dateSelectedByUser(el.date);
-      }
-    };
-
-    const contentWrapper = /** @type {HTMLButtonElement} */ (this.__contentWrapperElement);
-    contentWrapper.addEventListener('click', this.__clickDateDelegation);
-  }
-
-  __addEventDelegationForFocusDate() {
-    const isDayButton = /** @param {HTMLElement} el */ el =>
-      el.classList.contains('calendar__day-button');
-
-    this.__focusDateDelegation = () => {
-      if (
-        !this.__focusedDate &&
-        isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
-      ) {
-        this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (this.shadowRoot
-          ?.activeElement).date;
-      }
-    };
-
-    const contentWrapper = /** @type {HTMLButtonElement} */ (this.__contentWrapperElement);
-    contentWrapper.addEventListener('focus', this.__focusDateDelegation, true);
-  }
-
-  __addEventDelegationForBlurDate() {
-    const isDayButton = /** @param {HTMLElement} el */ el =>
-      el.classList.contains('calendar__day-button');
-
-    this.__blurDateDelegation = () => {
-      setTimeout(() => {
-        if (
-          this.shadowRoot?.activeElement &&
-          !isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
-        ) {
-          this.__focusedDate = null;
-        }
-      }, 1);
-    };
-
-    const contentWrapper = /** @type {HTMLButtonElement} */ (this.__contentWrapperElement);
-    contentWrapper.addEventListener('blur', this.__blurDateDelegation, true);
-  }
-
-  __removeEventDelegations() {
-    if (!this.__contentWrapperElement) {
-      return;
+    const el = /** @type {HTMLElement & { date: Date }} */ (ev.target);
+    if (isDayButton(el)) {
+      this.__dateSelectedByUser(el.date);
     }
-    this.__contentWrapperElement.removeEventListener(
-      'click',
-      /** @type {EventListener} */ (this.__clickDateDelegation),
-    );
-    this.__contentWrapperElement.removeEventListener(
-      'focus',
-      /** @type {EventListener} */ (this.__focusDateDelegation),
-    );
-    this.__contentWrapperElement.removeEventListener(
-      'blur',
-      /** @type {EventListener} */ (this.__blurDateDelegation),
-    );
-    this.__contentWrapperElement.removeEventListener(
-      'keydown',
-      /** @type {EventListener} */ (this.__keyNavigationEvent),
-    );
   }
 
-  __addEventForKeyboardNavigation() {
-    this.__keyNavigationEvent = /** @param {KeyboardEvent} ev */ ev => {
-      const preventedKeys = ['ArrowUp', 'ArrowDown', 'PageDown', 'PageUp'];
+  __focusDateDelegation() {
+    const isDayButton = /** @param {HTMLElement} el */ el =>
+      el.classList.contains('calendar__day-button');
 
-      if (preventedKeys.includes(ev.key)) {
-        ev.preventDefault();
+    if (
+      !this.__focusedDate &&
+      isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
+    ) {
+      this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (this.shadowRoot
+        ?.activeElement).date;
+    }
+  }
+
+  __blurDateDelegation() {
+    const isDayButton = /** @param {HTMLElement} el */ el =>
+      el.classList.contains('calendar__day-button');
+
+    setTimeout(() => {
+      if (
+        this.shadowRoot?.activeElement &&
+        !isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
+      ) {
+        this.__focusedDate = null;
       }
+    }, 1);
+  }
 
-      switch (ev.key) {
-        case 'ArrowUp':
-          this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date', mode: 'past' });
-          break;
-        case 'ArrowDown':
-          this.__modifyDate(7, { dateType: '__focusedDate', type: 'Date', mode: 'future' });
-          break;
-        case 'ArrowLeft':
-          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Date', mode: 'past' });
-          break;
-        case 'ArrowRight':
-          this.__modifyDate(1, { dateType: '__focusedDate', type: 'Date', mode: 'future' });
-          break;
-        case 'PageDown':
-          if (ev.altKey === true) {
-            this.__modifyDate(1, { dateType: '__focusedDate', type: 'FullYear', mode: 'future' });
-          } else {
-            this.__modifyDate(1, { dateType: '__focusedDate', type: 'Month', mode: 'future' });
-          }
-          break;
-        case 'PageUp':
-          if (ev.altKey === true) {
-            this.__modifyDate(-1, { dateType: '__focusedDate', type: 'FullYear', mode: 'past' });
-          } else {
-            this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Month', mode: 'past' });
-          }
-          break;
-        case 'Tab':
-          this.__focusedDate = null;
-          break;
-        // no default
-      }
-    };
+  /**
+   * @param {KeyboardEvent} ev
+   */
+  __keyboardNavigationEvent(ev) {
+    const preventedKeys = ['ArrowUp', 'ArrowDown', 'PageDown', 'PageUp'];
 
-    const contentWrapper = /** @type {HTMLButtonElement} */ (this.__contentWrapperElement);
-    contentWrapper.addEventListener('keydown', this.__keyNavigationEvent);
+    if (preventedKeys.includes(ev.key)) {
+      ev.preventDefault();
+    }
+
+    switch (ev.key) {
+      case 'ArrowUp':
+        this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date', mode: 'past' });
+        break;
+      case 'ArrowDown':
+        this.__modifyDate(7, { dateType: '__focusedDate', type: 'Date', mode: 'future' });
+        break;
+      case 'ArrowLeft':
+        this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Date', mode: 'past' });
+        break;
+      case 'ArrowRight':
+        this.__modifyDate(1, { dateType: '__focusedDate', type: 'Date', mode: 'future' });
+        break;
+      case 'PageDown':
+        if (ev.altKey === true) {
+          this.__modifyDate(1, { dateType: '__focusedDate', type: 'FullYear', mode: 'future' });
+        } else {
+          this.__modifyDate(1, { dateType: '__focusedDate', type: 'Month', mode: 'future' });
+        }
+        break;
+      case 'PageUp':
+        if (ev.altKey === true) {
+          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'FullYear', mode: 'past' });
+        } else {
+          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Month', mode: 'past' });
+        }
+        break;
+      case 'Tab':
+        this.__focusedDate = null;
+        break;
+      // no default
+    }
   }
 
   /**

@@ -270,6 +270,59 @@ describe('<lion-input-datepicker>', () => {
     });
   });
 
+  describe('Calendar smoke tests', () => {
+    it('responds properly to keyboard events', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker calendar-heading="foo"></lion-input-datepicker>
+      `);
+      const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
+        '[data-tag-name="lion-calendar"]',
+      ));
+      // First set a fixed date as if selected by a user
+      calendarEl.__dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
+      await el.updateComplete;
+      const elObj = new DatepickerInputObject(el);
+
+      // Open the calendar
+      await elObj.openCalendar();
+
+      // Move focus to 18th of December
+      calendarEl.shadowRoot
+        ?.querySelector('#js-content-wrapper')
+        ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+
+      expect(/** @type {Date} */ (calendarEl.focusedDate).getTime()).to.equal(
+        new Date('December 18, 2020 03:24:00 GMT+0000').getTime(),
+      );
+    });
+
+    it('responds properly to click events', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker calendar-heading="foo"></lion-input-datepicker>
+      `);
+      const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
+        '[data-tag-name="lion-calendar"]',
+      ));
+      // First set a fixed date as if selected by a user
+      calendarEl.__dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
+      await el.updateComplete;
+      const elObj = new DatepickerInputObject(el);
+
+      // Open the calendar
+      await elObj.openCalendar();
+
+      // Select the first date button, which is 29th of previous month (November)
+      const firstDateBtn = /** @type {HTMLButtonElement} */ (calendarEl?.shadowRoot?.querySelector(
+        '.calendar__day-button',
+      ));
+      firstDateBtn.click();
+
+      expect(/** @type {Date} */ (el.modelValue).getTime()).to.equal(
+        new Date('November 29, 2020 03:24:00 GMT+0000').getTime(),
+      );
+    });
+  });
+
   describe('Accessibility', () => {
     it('has a heading of level 1', async () => {
       const el = await fixture(html`
