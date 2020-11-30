@@ -81,12 +81,13 @@ export const OverlayMixinImplementation = superclass =>
         popperConfig: {
           ...(this._defineOverlayConfig().popperConfig || {}),
           ...(this.config.popperConfig || {}),
-          modifiers: {
+          // TODO: Fix modifiers merging logic
+          modifiers: [
             ...((this._defineOverlayConfig().popperConfig &&
               this._defineOverlayConfig()?.popperConfig?.modifiers) ||
-              {}),
-            ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
-          },
+              []),
+            ...((this.config.popperConfig && this.config.popperConfig.modifiers) || []),
+          ],
         },
       });
     }

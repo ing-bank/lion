@@ -50,7 +50,7 @@ export const main = () => html`
   <style>
     ${tooltipDemoStyles}
   </style>
-  <lion-tooltip>
+  <lion-tooltip has-arrow .config=${{ popperConfig: { placement: 'right' } }}>
     <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
     <div slot="content" class="demo-tooltip-content">This is a tooltip</div>
   </lion-tooltip>
