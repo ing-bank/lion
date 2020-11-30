@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.7
+
+### Patch Changes
+
+- @lion/localize@0.15.1
+
 ## 0.2.6
 
 ### Patch Changes

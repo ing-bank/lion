@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.18.5
+
+### Patch Changes
+
+- 1981eb0d: Fix an issue with events being added more than once in datepicker overlay. Also fix a bug where useCapture resulted in weird click behavior when clicking dates in previous or next month.
+- Updated dependencies [aa8ad0e6]
+- Updated dependencies [1981eb0d]
+- Updated dependencies [9142a53d]
+- Updated dependencies [4bacc17b]
+- Updated dependencies [3944c5e8]
+  - @lion/form-core@0.6.11
+  - @lion/calendar@0.12.6
+  - @lion/overlays@0.22.3
+  - @lion/input-date@0.8.9
+  - @lion/localize@0.15.1
+
 ## 0.18.4
 
 ### Patch Changes

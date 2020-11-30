@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.22.3
+
+### Patch Changes
+
+- 9142a53d: overlays: make arrow config more composable
+- 3944c5e8: Overlays: open, close and toggle methods on host (OverlayMixin)
+- Updated dependencies [39d5e767]
+  - singleton-manager@1.2.0
+
 ## 0.22.2
 
 ### Patch Changes

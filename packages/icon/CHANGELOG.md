@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.4
+
+### Patch Changes
+
+- Updated dependencies [39d5e767]
+  - singleton-manager@1.2.0
+
 ## 0.8.3
 
 ### Patch Changes
