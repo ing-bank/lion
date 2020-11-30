@@ -1,6 +1,6 @@
 {
   "name": "@lion/localize",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "The localization system helps to manage localization data split into locales and automate its loading",
   "license": "MIT",
   "author": "ing-bank",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@bundled-es-modules/message-format": "6.0.4",
     "@lion/core": "0.13.4",
-    "singleton-manager": "1.1.2"
+    "singleton-manager": "1.2.0"
   },
   "devDependencies": {
     "@bundled-es-modules/fetch-mock": "^6.5.2"

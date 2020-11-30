@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.12.6
+
+### Patch Changes
+
+- 1981eb0d: Fix an issue with events being added more than once in datepicker overlay. Also fix a bug where useCapture resulted in weird click behavior when clicking dates in previous or next month.
+  - @lion/localize@0.15.1
+
 ## 0.12.5
 
 ### Patch Changes

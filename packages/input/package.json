@@ -1,6 +1,6 @@
 {
   "name": "@lion/input",
-  "version": "0.10.8",
+  "version": "0.10.9",
   "description": "It enhances the functionality of the native `<input>` element",
   "license": "MIT",
   "author": "ing-bank",
@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.13.4",
-    "@lion/form-core": "0.6.10"
+    "@lion/form-core": "0.6.11"
   },
   "keywords": [
     "input",

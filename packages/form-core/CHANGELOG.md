@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.11
+
+### Patch Changes
+
+- aa8ad0e6: - (RadioGroup) fix reset bug when selected value was behind inital value
+  - Add ChoiceInputMixin test suite
+  - Make use of ChoiceGroupMixin test suite
+- 4bacc17b: Adding form elements at the top of a form now adds them to the beginning of the `.formElements` to keep it in sync with the dom order.
+  - @lion/localize@0.15.1
+
 ## 0.6.10
 
 ### Patch Changes

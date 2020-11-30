@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- Updated dependencies [39d5e767]
+  - singleton-manager@1.2.0
+
 ## 0.15.0
 
 ### Minor Changes
