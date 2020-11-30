@@ -2,6 +2,7 @@ import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement, TemplateResult } from '@lion/core';
 import { CSSResultArray } from 'lit-element';
 import Data from 'popper.js';
+import { Options as PopperOptions } from '@popperjs/core/lib/popper';
 import { OverlayConfig } from '../types/OverlayConfig';
 
 export declare class ArrowHost {
@@ -21,6 +22,7 @@ export declare class ArrowHost {
   _arrowTemplate(): TemplateResult;
   _arrowNodeTemplate(): TemplateResult;
   _defineOverlayConfig(): OverlayConfig;
+  _getPopperArrowConfig(popperConfigToExtendFrom: Partial<PopperOptions>): Partial<PopperOptions>;
   __setupRepositionCompletePromise(): void;
   get _arrowNode(): Element | null;
   __syncFromPopperState(data: Data): void;

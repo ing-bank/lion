@@ -5,6 +5,16 @@ const packages = fs
   .readdirSync('packages')
   .filter(
     dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
+  )
+  .concat(
+    fs
+      .readdirSync('packages/helpers')
+      .filter(
+        dir =>
+          fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
+          fs.existsSync(`packages/helpers/${dir}/test`),
+      )
+      .map(dir => `helpers/${dir}`),
   );
 
 export default {

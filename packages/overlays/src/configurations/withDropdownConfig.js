@@ -9,11 +9,12 @@ export const withDropdownConfig = () =>
     hidesOnOutsideClick: true,
     popperConfig: {
       placement: 'bottom-start',
-      modifiers: {
-        offset: {
+      modifiers: [
+        {
+          name: 'offset',
           enabled: false,
         },
-      },
+      ],
     },
     handlesAccessibility: true,
   });

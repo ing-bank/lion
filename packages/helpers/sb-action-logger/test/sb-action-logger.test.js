@@ -117,17 +117,19 @@ describe('sb-action-logger', () => {
       el.log('Hello, World!');
       const loggerEl = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('.logger'));
       const loggerCountEl = loggerEl.firstElementChild?.querySelector('.logger__log-count');
-      const codeEl = /** @type {HTMLElement} */ (loggerEl.firstElementChild?.querySelector('code'));
+      let codeEl = /** @type {HTMLElement} */ (loggerEl.firstElementChild?.querySelector('code'));
 
       expect(loggerEl.children.length).to.equal(1);
       expect(codeEl.innerText).to.equal('Hello, World!');
 
       el.log('Hello, Earth!');
+      codeEl = /** @type {HTMLElement} */ (loggerEl.firstElementChild?.querySelector('code'));
       expect(loggerEl.children.length).to.equal(1);
       expect(codeEl.innerText).to.equal('Hello, Earth!');
 
       el.log('Hello, Planet!');
       el.log('Hello, Planet!');
+      codeEl = /** @type {HTMLElement} */ (loggerEl.firstElementChild?.querySelector('code'));
       expect(loggerEl.children.length).to.equal(1);
       expect(codeEl.innerText).to.equal('Hello, Planet!');
       expect(loggerCountEl).to.be.null;

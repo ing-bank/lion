@@ -7,9 +7,10 @@ import { containFocus } from './utils/contain-focus.js';
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayConfig').ViewportConfig} ViewportConfig
- * @typedef {import('popper.js').default} Popper
- * @typedef {import('popper.js').PopperOptions} PopperOptions
- * @typedef {{ default: Popper }} PopperModule
+ * @typedef {import('@popperjs/core/lib/popper').createPopper} Popper
+ * @typedef {import('@popperjs/core/lib/popper').Options} PopperOptions
+ * @typedef {import('@popperjs/core/lib/enums').Placement} Placement
+ * @typedef {{ createPopper: Popper }} PopperModule
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
@@ -17,8 +18,8 @@ import { containFocus } from './utils/contain-focus.js';
  * @returns {Promise<PopperModule>}
  */
 async function preloadPopper() {
-  // @ts-ignore
-  return /** @type {Promise<PopperModule>} */ (import('popper.js/dist/esm/popper.min.js'));
+  // @ts-ignore import complains about untyped module, but we typecast it ourselves
+  return /** @type {Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
@@ -118,28 +119,35 @@ export class OverlayController extends EventTargetShim {
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
-        positionFixed: false,
-        modifiers: {
-          keepTogether: {
+        strategy: 'absolute',
+        modifiers: [
+          {
+            name: 'preventOverflow',
+            enabled: true,
+            options: {
+              boundariesElement: 'viewport',
+              padding: 8, // viewport-margin for shifting/sliding
+            },
+          },
+          {
+            name: 'flip',
+            options: {
+              boundariesElement: 'viewport',
+              padding: 16, // viewport-margin for flipping
+            },
+          },
+          {
+            name: 'offset',
+            enabled: true,
+            options: {
+              offset: [0, 8], // horizontal and vertical margin (distance between popper and referenceElement)
+            },
+          },
+          {
+            name: 'arrow',
             enabled: false,
           },
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: 'viewport',
-            padding: 8, // viewport-margin for shifting/sliding
-          },
-          flip: {
-            boundariesElement: 'viewport',
-            padding: 16, // viewport-margin for flipping
-          },
-          offset: {
-            enabled: true,
-            offset: `0, 8px`, // horizontal and vertical margin (distance between popper and referenceElement)
-          },
-          arrow: {
-            enabled: false,
-          },
-        },
+        ],
       },
       viewportConfig: {
         placement: 'center',
@@ -425,6 +433,7 @@ export class OverlayController extends EventTargetShim {
     /** @type {OverlayConfig} */
     this.__prevConfig = this.config || {};
 
+    /** @type {OverlayConfig} */
     this.config = {
       ...this._defaultConfig, // our basic ingredients
       ...this.__sharedConfig, // the initial configured overlayController
@@ -433,17 +442,17 @@ export class OverlayController extends EventTargetShim {
         ...(this._defaultConfig.popperConfig || {}),
         ...(this.__sharedConfig.popperConfig || {}),
         ...(cfgToAdd.popperConfig || {}),
-        modifiers: {
+        modifiers: [
           ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
-            {}),
+            []),
           ...((this.__sharedConfig.popperConfig && this.__sharedConfig.popperConfig.modifiers) ||
-            {}),
-          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || {}),
-        },
+            []),
+          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || []),
+        ],
       },
     };
 
-    this.__validateConfiguration(this.config);
+    this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
     // TODO: remove this, so we only have the getters (no setters)
     // Object.assign(this, this.config);
     this._init({ cfgToAdd });
@@ -714,7 +723,7 @@ export class OverlayController extends EventTargetShim {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      /** @type {Popper} */ (this._popper).update();
+      /** @type {Popper} */ (this._popper).forceUpdate();
     }
   }
 
@@ -845,7 +854,7 @@ export class OverlayController extends EventTargetShim {
             );
             hideConfig.backdropNode.removeEventListener('animationend', afterFadeOut);
           }
-          resolve();
+          resolve(undefined);
         };
       });
       // @ts-expect-error
@@ -1217,12 +1226,13 @@ export class OverlayController extends EventTargetShim {
       this._popper.destroy();
       this._popper = undefined;
     }
-    // @ts-expect-error
-    const { default: Popper } = await OverlayController.popperModule;
-    /** @type {Popper} */
-    this._popper = new Popper(this._referenceNode, this.contentWrapperNode, {
-      ...this.config?.popperConfig,
-    });
+
+    if (OverlayController.popperModule !== undefined) {
+      const { createPopper } = await OverlayController.popperModule;
+      this._popper = createPopper(this._referenceNode, this.contentWrapperNode, {
+        ...this.config?.popperConfig,
+      });
+    }
   }
 }
 /** @type {PopperModule | undefined} */
