@@ -24,7 +24,8 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     static get styles() {
-      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
+        .constructor);
       return [
         superCtor.styles ? superCtor.styles : [],
         css`
@@ -102,9 +103,9 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable method `_defineOverlay`
-     * @desc Overrides arrow and keepTogether modifier to be enabled,
+     * Overrides arrow and keepTogether modifier to be enabled,
      * and adds onCreate and onUpdate hooks to sync from popper state
+     * @configure OverlayMixin
      * @returns {OverlayConfig}
      */
     // eslint-disable-next-line
