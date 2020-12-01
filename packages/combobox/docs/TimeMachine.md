@@ -55,7 +55,7 @@ codebase and two small decoration layers.
 Being able to restyle an app completely purely with CSS is not new.
 This is basically the philosophy of Zen Garden: http://dv.csszengarden.com/
 
-But... the approach as described above add two very powerful features on top:
+But... the approach as described above adds two very powerful features on top:
 
 - Although this is a very powerful start, some designs cannot be created without **changing the HTML**
   as well (especially this is important for accessibility, with regard to DOM order).
