@@ -164,6 +164,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this.__connectedCallbackDone = false;
     this.__eventsAdded = false;
     this.locale = '';
+    this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
+    this.__boundClickDateDelegation = this.__clickDateDelegation.bind(this);
+    this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
+    this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
   }
 
   static get styles() {
@@ -254,13 +258,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       this.__contentWrapperElement = /** @type {HTMLButtonElement} */ (this.shadowRoot?.getElementById(
         'js-content-wrapper',
       ));
-      this.__contentWrapperElement.addEventListener('click', this.__clickDateDelegation.bind(this));
-      this.__contentWrapperElement.addEventListener('focus', this.__focusDateDelegation.bind(this));
-      this.__contentWrapperElement.addEventListener('blur', this.__blurDateDelegation.bind(this));
-      this.__contentWrapperElement.addEventListener(
-        'keydown',
-        this.__keyboardNavigationEvent.bind(this),
-      );
+      this.__contentWrapperElement.addEventListener('click', this.__boundClickDateDelegation);
+      this.__contentWrapperElement.addEventListener('focus', this.__boundFocusDateDelegation);
+      this.__contentWrapperElement.addEventListener('blur', this.__boundBlurDateDelegation);
+      this.__contentWrapperElement.addEventListener('keydown', this.__boundKeyboardNavigationEvent);
       this.__eventsAdded = true;
     }
   }
@@ -268,24 +269,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.__contentWrapperElement) {
-      this.__contentWrapperElement.removeEventListener(
-        'click',
-        this.__clickDateDelegation.bind(this),
-      );
-      this.__contentWrapperElement.removeEventListener(
-        'focus',
-        this.__focusDateDelegation.bind(this),
-        true,
-      );
-      this.__contentWrapperElement.removeEventListener(
-        'blur',
-        this.__blurDateDelegation.bind(this),
-        true,
-      );
-
+      this.__contentWrapperElement.removeEventListener('click', this.__boundClickDateDelegation);
+      this.__contentWrapperElement.removeEventListener('focus', this.__boundFocusDateDelegation);
+      this.__contentWrapperElement.removeEventListener('blur', this.__boundBlurDateDelegation);
       this.__contentWrapperElement.removeEventListener(
         'keydown',
-        this.__keyboardNavigationEvent.bind(this),
+        this.__boundKeyboardNavigationEvent,
       );
 
       this.__eventsAdded = false;
