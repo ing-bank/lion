@@ -1,6 +1,6 @@
 {
   "name": "@lion/tooltip",
-  "version": "0.15.8",
+  "version": "0.15.9",
   "description": "Show relative overlay content on hover",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.13.4",
-    "@lion/overlays": "0.22.3"
+    "@lion/overlays": "0.22.4"
   },
   "keywords": [
     "lion",
