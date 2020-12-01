@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.12
+
+### Patch Changes
+
+- 5553e43e: fix: point to parent constructor in styles getter
+
 ## 0.6.11
 
 ### Patch Changes

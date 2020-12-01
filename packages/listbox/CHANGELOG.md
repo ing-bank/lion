@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.3.9
+
+### Patch Changes
+
+- 5553e43e: fix: point to parent constructor in styles getter
+- Updated dependencies [5553e43e]
+  - @lion/form-core@0.6.12
+
 ## 0.3.8
 
 ### Patch Changes

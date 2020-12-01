@@ -1,6 +1,6 @@
 {
   "name": "@lion/select",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "Provide a set of options where you can select one",
   "license": "MIT",
   "author": "ing-bank",
@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.13.4",
-    "@lion/form-core": "0.6.11"
+    "@lion/form-core": "0.6.12"
   },
   "keywords": [
     "lion",
