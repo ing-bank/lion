@@ -30,6 +30,7 @@
     "test": "cd ../../ && npm run test:browser -- --group overlays"
   },
   "sideEffects": [
+    "./docs/demo-overlay-backdrop.js",
     "./docs/demo-overlay-system.js",
     "./docs/applyDemoOverlayStyles.js"
   ],
