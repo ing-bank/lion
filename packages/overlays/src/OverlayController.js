@@ -681,7 +681,10 @@ export class OverlayController extends EventTargetShim {
       await this._handlePosition({ phase: 'show' });
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
       this.dispatchEvent(new Event('show'));
-      await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+      await this._transitionShow({
+        backdropNode: this.backdropNode,
+        contentNode: this.contentNode,
+      });
     }
     /** @type {function} */
     (this._showResolve)();
@@ -787,7 +790,11 @@ export class OverlayController extends EventTargetShim {
     const event = new CustomEvent('before-hide', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+      await this._transitionHide({
+        backdropNode: this.backdropNode,
+        contentNode: this.contentNode,
+      });
+
       this.contentWrapperNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
@@ -798,10 +805,21 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
+   * Method to be overriden by subclassers
+   *
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionHide(hideConfig) {
+  async transitionHide(hideConfig) {}
+
+  /**
+   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
+   */
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async _transitionHide(hideConfig) {
+    // `this.transitionHide` is a hook for our users
+    await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+
     if (hideConfig.backdropNode) {
       hideConfig.backdropNode.classList.remove(
         `${this.placementMode}-overlays__backdrop--animation-in`,
@@ -831,10 +849,21 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
+   * To be overridden by subclassers
+   *
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} showConfig
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionShow(showConfig) {
+  async transitionShow(showConfig) {}
+
+  /**
+   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} showConfig
+   */
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async _transitionShow(showConfig) {
+    // `this.transitionShow` is a hook for our users
+    await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
+
     if (showConfig.backdropNode) {
       showConfig.backdropNode.classList.add(
         `${this.placementMode}-overlays__backdrop--animation-in`,
