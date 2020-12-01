@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.7
+
+### Patch Changes
+
+- 69e38a76: Fix event handler bind so the events are cleaned up properly in disconnectedCallback
+
 ## 0.12.6
 
 ### Patch Changes

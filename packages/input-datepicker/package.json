@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-datepicker",
-  "version": "0.18.5",
+  "version": "0.18.6",
   "description": "Provide a way for users to fill in a date via a calendar overlay",
   "license": "MIT",
   "author": "ing-bank",
@@ -33,7 +33,7 @@
     "lion-input-datepicker.js"
   ],
   "dependencies": {
-    "@lion/calendar": "0.12.6",
+    "@lion/calendar": "0.12.7",
     "@lion/core": "0.13.4",
     "@lion/form-core": "0.6.11",
     "@lion/input-date": "0.8.9",

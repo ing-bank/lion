@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.18.6
+
+### Patch Changes
+
+- Updated dependencies [69e38a76]
+  - @lion/calendar@0.12.7
+
 ## 0.18.5
 
 ### Patch Changes
