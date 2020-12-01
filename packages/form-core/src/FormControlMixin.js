@@ -615,7 +615,8 @@ const FormControlMixinImplementation = superclass =>
      * - {element} .input-group__after (optional) :  a suffix that resides outside the container
      */
     static get styles() {
-      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
+        .constructor);
       return [
         superCtor.styles ? superCtor.styles : [],
         css`
