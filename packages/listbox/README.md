@@ -131,7 +131,7 @@ See [wai aria spec](https://www.w3.org/TR/wai-aria-practices/#kbd_selection_foll
 export const selectionFollowsFocus = () => html`
   <lion-listbox name="combo" label="Selection follows focus" selection-follows-focus>
     <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-    <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
+    <lion-option .choiceValue=${'Artichoke'} disabled>Artichoke</lion-option>
     <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
     <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
     <lion-option .choiceValue=${'Beets'}>Beets</lion-option>

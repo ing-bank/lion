@@ -912,7 +912,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none">
+              <${tag} opened selection-follows-focus autocomplete="none">
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -951,7 +951,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus autocomplete="none">
+              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none">
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -1074,6 +1074,28 @@ export function runListboxMixinSuite(customConfig = {}) {
           listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           // Checked index stays where it was
           expect(el.checkedIndex).to.equal(0);
+        });
+        it('does not check disabled options when selection-follow-focus is enabled', async () => {
+          const el = await fixture(html`
+            <${tag} opened autocomplete="inline" .selectionFollowsFocus="${true}">
+              <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
+              <${optionTag} .choiceValue=${'Item 2'} disabled>Item 2</${optionTag}>
+              <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
+            </${tag}>
+          `);
+
+          const { listbox } = getProtectedMembers(el);
+
+          // Normalize activeIndex across multiple implementers of ListboxMixinSuite
+          el.activeIndex = 0;
+
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          expect(el.activeIndex).to.equal(1);
+          expect(el.checkedIndex).to.equal(-1);
+
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          expect(el.activeIndex).to.equal(2);
+          expect(el.checkedIndex).to.equal(2);
         });
       });
 

@@ -86,14 +86,16 @@ describe('lion-option', () => {
       expect(el.hasAttribute('active')).to.be.false;
     });
 
-    it('does become checked on [click]', async () => {
+    it('does become checked and active on [click]', async () => {
       const el = /** @type {LionOption} */ (await fixture(
         html`<lion-option .choiceValue=${10}></lion-option>`,
       ));
       expect(el.checked).to.be.false;
+      expect(el.active).to.be.false;
       el.click();
       await el.updateComplete;
       expect(el.checked).to.be.true;
+      expect(el.active).to.be.true;
     });
 
     it('fires active-changed event', async () => {
