@@ -1,5 +1,14 @@
 # @lion/listbox
 
+## 0.3.10
+
+### Patch Changes
+
+- 3c2a33a7: 
+  - Fix keyboard navigation when `selection-follows-focus` and `orientation="horizontal"` are set on a `<lion-listbox>`
+  - Fix keyboard navigation with `selection-follows-focus` and disabled options
+  - On click of an option, it become active
+
 ## 0.3.9
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.22.5
+
+### Patch Changes
+
+- 83359ac2: Only set inert when placementMode is global, otherwise events are broken inside local overlay content
+- 7709d7c2: Fix deep contains util to properly check multiple nested shadow roots, and do not set containsTarget to false when children deepContains returns false. This would undo a found target in another child somewhere that was found in an earlier recursion.
+- 2eeace23: Keep transitionShow and transitionHide as user hooks
+
 ## 0.22.4
 
 ### Patch Changes
