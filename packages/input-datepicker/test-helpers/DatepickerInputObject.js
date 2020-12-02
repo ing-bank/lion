@@ -26,6 +26,7 @@ export class DatepickerInputObject {
 
   async closeCalendar() {
     this.overlayCloseButtonEl.click();
+    await this.overlayEl.updateComplete;
   }
 
   /**

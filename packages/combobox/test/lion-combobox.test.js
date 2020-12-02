@@ -302,8 +302,8 @@ describe('lion-combobox', () => {
       expect(document.activeElement).to.equal(el._inputNode);
 
       // step [4]
-      el._inputNode.value = '';
-      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }));
+      await el.updateComplete;
+      mimicUserTyping(el, 'c');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
     });
