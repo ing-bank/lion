@@ -936,6 +936,45 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
         });
+        it('navigates through list with [ArrowLeft] [ArrowRight] keys when horizontal: activates and checks the option', async () => {
+          /**
+           * @param {LionOption[]} options
+           * @param {number} selectedIndex
+           */
+          function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
+            options.forEach((option, i) => {
+              if (i === selectedIndex) {
+                expect(option.checked).to.be.true;
+              } else {
+                expect(option.checked).to.be.false;
+              }
+            });
+          }
+          const el = /** @type {LionListbox} */ (await fixture(html`
+              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none">
+                  <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+                  <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+                  <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
+              </${tag}>
+            `));
+
+          const { listbox } = getProtectedMembers(el);
+          const options = el.formElements;
+          // Normalize start values between listbox, slect and combobox and test interaction below
+          el.activeIndex = 0;
+          el.checkedIndex = 0;
+          expect(el.activeIndex).to.equal(0);
+          expect(el.checkedIndex).to.equal(0);
+          expectOnlyGivenOneOptionToBeChecked(options, 0);
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          expect(el.activeIndex).to.equal(1);
+          expect(el.checkedIndex).to.equal(1);
+          expectOnlyGivenOneOptionToBeChecked(options, 1);
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          expect(el.activeIndex).to.equal(0);
+          expect(el.checkedIndex).to.equal(0);
+          expectOnlyGivenOneOptionToBeChecked(options, 0);
+        });
         it('checks first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
               <${tag} opened selection-follows-focus>
@@ -1035,6 +1074,28 @@ export function runListboxMixinSuite(customConfig = {}) {
           listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           // Checked index stays where it was
           expect(el.checkedIndex).to.equal(0);
+        });
+        it('does not check disabled options when selection-follow-focus is enabled', async () => {
+          const el = await fixture(html`
+            <${tag} opened autocomplete="inline" .selectionFollowsFocus="${true}">
+              <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
+              <${optionTag} .choiceValue=${'Item 2'} disabled>Item 2</${optionTag}>
+              <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
+            </${tag}>
+          `);
+
+          const { listbox } = getProtectedMembers(el);
+
+          // Normalize activeIndex across multiple implementers of ListboxMixinSuite
+          el.activeIndex = 0;
+
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          expect(el.activeIndex).to.equal(1);
+          expect(el.checkedIndex).to.equal(-1);
+
+          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          expect(el.activeIndex).to.equal(2);
+          expect(el.checkedIndex).to.equal(2);
         });
       });
 

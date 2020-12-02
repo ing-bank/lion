@@ -125,8 +125,10 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     const parentForm = /** @type {unknown} */ (this.__parentFormGroup);
     if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
       this.checked = !this.checked;
+      this.active = !this.active;
     } else {
       this.checked = true;
+      this.active = true;
     }
   }
 }

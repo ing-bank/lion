@@ -362,7 +362,9 @@ const ListboxMixinImplementation = superclass =>
           this._uncheckChildren();
         }
         if (this.formElements[index]) {
-          if (this.multipleChoice) {
+          if (this.formElements[index].disabled) {
+            this._uncheckChildren();
+          } else if (this.multipleChoice) {
             this.formElements[index].checked = !this.formElements[index].checked;
           } else {
             this.formElements[index].checked = true;
@@ -547,7 +549,7 @@ const ListboxMixinImplementation = superclass =>
         /* no default */
       }
 
-      const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
       if (keys.includes(key) && this.selectionFollowsFocus && !this.multipleChoice) {
         this.setCheckedIndex(this.activeIndex);
       }
