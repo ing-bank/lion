@@ -10,15 +10,13 @@ export function deepContains(el, targetEl) {
     return true;
   }
 
-  /** @param {HTMLElement} elem */
+  /** @param {HTMLElement|ShadowRoot} elem */
   function checkChildren(elem) {
     for (let i = 0; i < elem.children.length; i += 1) {
       const child = /** @type {HTMLElement}  */ (elem.children[i]);
-      if (child.shadowRoot) {
-        containsTarget = deepContains(child.shadowRoot, targetEl);
-        if (containsTarget) {
-          break;
-        }
+      if (child.shadowRoot && deepContains(child.shadowRoot, targetEl)) {
+        containsTarget = true;
+        break;
       }
       if (child.children.length > 0) {
         checkChildren(child);
@@ -27,14 +25,12 @@ export function deepContains(el, targetEl) {
   }
 
   // If element is not shadowRoot itself
-  if (el instanceof HTMLElement) {
-    if (el.shadowRoot) {
-      containsTarget = deepContains(el.shadowRoot, targetEl);
-      if (containsTarget) {
-        return true;
-      }
+  if (el instanceof HTMLElement && el.shadowRoot) {
+    containsTarget = deepContains(el.shadowRoot, targetEl);
+    if (containsTarget) {
+      return true;
     }
-    checkChildren(el);
   }
+  checkChildren(el);
   return containsTarget;
 }

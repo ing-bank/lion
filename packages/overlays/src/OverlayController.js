@@ -1042,7 +1042,7 @@ export class OverlayController extends EventTargetShim {
     this._containFocusHandler = containFocus(this.contentNode);
     this.__hasActiveTrapsKeyboardFocus = true;
     if (this.manager) {
-      this.manager.informTrapsKeyboardFocusGotEnabled();
+      this.manager.informTrapsKeyboardFocusGotEnabled(this.placementMode);
     }
   }
 

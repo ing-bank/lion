@@ -153,8 +153,11 @@ export class OverlaysManager {
     });
   }
 
-  informTrapsKeyboardFocusGotEnabled() {
-    if (this.siblingsInert === false) {
+  /**
+   * @param {'local' | 'global' | undefined} placementMode
+   */
+  informTrapsKeyboardFocusGotEnabled(placementMode) {
+    if (this.siblingsInert === false && placementMode === 'global') {
       if (OverlaysManager.__globalRootNode) {
         setSiblingsInert(this.globalRootNode);
       }
