@@ -547,7 +547,7 @@ const ListboxMixinImplementation = superclass =>
         /* no default */
       }
 
-      const keys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+      const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
       if (keys.includes(key) && this.selectionFollowsFocus && !this.multipleChoice) {
         this.setCheckedIndex(this.activeIndex);
       }
