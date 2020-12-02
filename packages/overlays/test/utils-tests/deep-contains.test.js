@@ -19,14 +19,20 @@ describe('deepContains()', () => {
         <button id="light-el-1"></button>
       </div>
     `));
-    const lightEl = /** @type {HTMLElement} */ (element.querySelector('#light-el-1'));
+    const lightChildEl = /** @type {HTMLElement} */ (element.querySelector('#light-el-1'));
 
+    expect(deepContains(element, element)).to.be.true;
     expect(deepContains(element, shadowElement)).to.be.true;
     expect(deepContains(element, shadowElementChild)).to.be.true;
-    expect(deepContains(element, lightEl)).to.be.true;
+    expect(deepContains(element, lightChildEl)).to.be.true;
     expect(deepContains(shadowElement, shadowElement)).to.be.true;
     expect(deepContains(shadowElement, shadowElementChild)).to.be.true;
     expect(deepContains(shadowRoot, shadowElementChild)).to.be.true;
+
+    // Siblings
+    expect(deepContains(element.firstElementChild, element.lastElementChild)).to.be.false;
+    // Unrelated
+    expect(deepContains(lightChildEl, shadowElementChild)).to.be.false;
   });
 
   it('returns true if element contains a target element with a shadow boundary in between, for multiple shadowroots', async () => {
@@ -62,5 +68,43 @@ describe('deepContains()', () => {
     expect(deepContains(element, shadowElementChild2)).to.be.true;
     expect(deepContains(shadowElement2, shadowElementChild2)).to.be.true;
     expect(deepContains(shadowRoot2, shadowElementChild2)).to.be.true;
+  });
+
+  it('can detect containing elements inside multiple nested shadow roots', async () => {
+    const shadowNestedElement = await fixture('<div id="shadow-nested"></div>');
+    const shadowNestedRoot = shadowNestedElement.attachShadow({ mode: 'open' });
+    shadowNestedRoot.innerHTML = `
+      <button id="nested-el-1">Button</button>
+      <a id="nested-el-2" href="#foo">Href</a>
+      <input id="nested-el-3">
+    `;
+
+    const shadowElement = /** @type {HTMLElement} */ (await fixture('<div id="shadow"></div>'));
+    const shadowRoot = shadowElement.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = `
+      <button id="el-1">Button</button>
+
+      <input id="el-3">
+    `;
+    shadowRoot.insertBefore(shadowNestedElement, shadowRoot.lastElementChild);
+
+    const element = /** @type {HTMLElement} */ (await fixture(html`
+      <div id="light">
+        ${shadowElement}
+        <button id="light-el-1"></button>
+      </div>
+    `));
+
+    expect(deepContains(element, element.firstElementChild)).to.be.true;
+    expect(deepContains(element, element.firstElementChild.shadowRoot)).to.be.true;
+    expect(deepContains(element, element.firstElementChild.shadowRoot.children[1])).to.be.true;
+    expect(deepContains(element, element.firstElementChild.shadowRoot.children[1].shadowRoot)).to.be
+      .true;
+    expect(
+      deepContains(
+        element,
+        element.firstElementChild.shadowRoot.children[1].shadowRoot.lastElementChild,
+      ),
+    ).to.be.true;
   });
 });
