@@ -8,7 +8,7 @@ Its purpose is to provide a way for users to fill in an IBAN (International Bank
 ```js script
 import { html } from 'lit-html';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { IsCountryIBAN } from './src/validators.js';
+import { IsCountryIBAN, IsNotCountryIBAN } from './src/validators.js';
 
 import './lion-input-iban.js';
 
@@ -98,11 +98,13 @@ To get the default feedback message for this default validator, use `loadDefault
 
 In the example below, we show how to use an additional validator that blocks IBANs from certain countries.
 
+You can pass a single string value, or an array of strings.
+
 ```js preview-story
 export const blacklistedCountry = () => html`
   <lion-input-iban
-    .modelValue=${'RO89RZBR6997372848645577'}
-    .validators=${([new IsNotCountryIBAN('RO')], [new IsNotCountryIBAN('ES')])}
+    .modelValue=${'DE89370400440532013000'}
+    .validators=${[new IsNotCountryIBAN(['RO', 'NL'])]}
     name="iban"
     label="IBAN"
   ></lion-input-iban>

@@ -17,7 +17,7 @@ export default {
       'other {{params}}\n' +
       '} valid(ă).',
     IsNotCountryIBAN:
-      '{fieldName} {params, select,\n' +
+      '{fieldName} {userSuppliedCountryCode, select,\n' +
       'AT {austriac}\n' +
       'BE {belgian}\n' +
       'CZ {ceh}\n' +
@@ -29,7 +29,7 @@ export default {
       'NL {olandez}\n' +
       'PL {polonez}\n' +
       'RO {românesc}\n' +
-      'other {{params}}\n' +
+      'other {{userSuppliedCountryCode}}\n' +
       '} nu este permis.',
   },
 };

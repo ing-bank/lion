@@ -124,7 +124,7 @@ export class IsCountryIBAN extends IsIBAN {
   }
 
   /**
-   * @param {?} [value]
+   * @param {string} value
    * @returns {Boolean}
    */
   execute(value) {
@@ -160,18 +160,25 @@ export class IsNotCountryIBAN extends IsIBAN {
   }
 
   /**
-   * @param {?} [value]
+   * @param {string} value
    * @returns {Boolean}
    */
   execute(value) {
+    let isInvalid = false;
     const notIBAN = super.execute(value);
-    if (value.slice(0, 2) === this.param) {
-      return true;
+
+    if (typeof this.param === 'string') {
+      if (value.slice(0, 2) === this.param) {
+        isInvalid = true;
+      }
+    } else if (Array.isArray(this.param)) {
+      isInvalid = this.param.some(country => value.slice(0, 2) === country);
     }
+
     if (notIBAN) {
-      return true;
+      isInvalid = true;
     }
-    return false;
+    return isInvalid;
   }
 
   /**
@@ -186,6 +193,13 @@ export class IsNotCountryIBAN extends IsIBAN {
    */
   static async getMessage(data) {
     await loadTranslations();
-    return localize.msg('lion-validate+iban:error.IsNotCountryIBAN', data);
+    const _data = {
+      ...data,
+      userSuppliedCountryCode:
+        typeof data?.modelValue === 'string'
+          ? data?.modelValue.slice(0, 2)
+          : data?.modelValue.viewValue.slice(0, 2),
+    };
+    return localize.msg('lion-validate+iban:error.IsNotCountryIBAN', _data);
   }
 }

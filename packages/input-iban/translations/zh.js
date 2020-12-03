@@ -17,7 +17,7 @@ export default {
       '另一个 {{params}}\n' +
       '} {fieldName}。',
     IsNotCountryIBAN:
-      '{params, select,\n' +
+      '{userSuppliedCountryCode, select,\n' +
       'AT {奥}\n' +
       'BE {比利时的}\n' +
       'CZ {捷克}\n' +
@@ -29,7 +29,7 @@ export default {
       'NL {荷兰人}\n' +
       'PL {抛光}\n' +
       'RO {罗马尼亚}\n' +
-      '另一个 {{params}}\n' +
+      '另一个 {{userSuppliedCountryCode}}\n' +
       '} {fieldName} 不允許。',
   },
 };

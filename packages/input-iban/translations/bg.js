@@ -17,7 +17,7 @@ export default {
       'other {{params}}\n' +
       '} {fieldName}.',
     IsNotCountryIBAN:
-      '{params, select,\n' +
+      '{userSuppliedCountryCode, select,\n' +
       'AT {Австрийски}\n' +
       'BE {Белгийски}\n' +
       'CZ {Чешки}\n' +
@@ -29,7 +29,7 @@ export default {
       'NL {Нидерландски}\n' +
       'PL {Полски}\n' +
       'RO {Румънски}\n' +
-      'other {{params}}\n' +
+      'other {{userSuppliedCountryCode}}\n' +
       '} {fieldName} не е позволено.',
   },
 };

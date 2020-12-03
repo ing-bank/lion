@@ -17,7 +17,7 @@ export default {
       'other {{params}}\n' +
       '} {fieldName} értéket.',
     IsNotCountryIBAN:
-      '{params, select,\n' +
+      '{userSuppliedCountryCode, select,\n' +
       'AT {Osztrák}\n' +
       'BE {Belga}\n' +
       'CZ {Cseh}\n' +
@@ -29,7 +29,7 @@ export default {
       'NL {Holland}\n' +
       'PL {Lengyel}\n' +
       'RO {Román}\n' +
-      'other {{params}}\n' +
+      'other {{userSuppliedCountryCode}}\n' +
       '} {fieldName} nem engedélyezett.',
   },
 };
