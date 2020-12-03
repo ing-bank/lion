@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- 31471262: Allow setting a custom icon manager, which is important if you as a subclasser are managing your singletons.
+
 ## 0.8.4
 
 ### Patch Changes
