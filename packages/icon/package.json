@@ -1,6 +1,6 @@
 {
   "name": "@lion/icon",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "description": "A web component easily displaying svg icons",
   "license": "MIT",
   "author": "ing-bank",
