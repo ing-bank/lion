@@ -30,6 +30,6 @@ export default {
       'PL {Lengyel}\n' +
       'RO {Román}\n' +
       'other {{params}}\n' +
-      '} {fieldName} nem engedélyezett',
+      '} {fieldName} nem engedélyezett.',
   },
 };

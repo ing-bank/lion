@@ -30,6 +30,6 @@ export default {
       'PL {抛光}\n' +
       'RO {罗马尼亚}\n' +
       '另一个 {{params}}\n' +
-      '} {fieldName} 不允許',
+      '} {fieldName} 不允許。',
   },
 };

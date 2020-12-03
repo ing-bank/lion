@@ -30,6 +30,6 @@ export default {
       'PL {Польский}\n' +
       'RO {Румынский}\n' +
       'other {{params}}\n' +
-      '} {fieldName} не допускается',
+      '} {fieldName} не допускается.',
   },
 };

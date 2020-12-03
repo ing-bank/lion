@@ -30,6 +30,6 @@ export default {
       'PL {Polacco}\n' +
       'RO {Rumeno}\n' +
       'other {{params}}\n' +
-      '} non è permesso',
+      '} non è permesso.',
   },
 };

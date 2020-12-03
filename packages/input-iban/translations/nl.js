@@ -30,6 +30,6 @@ export default {
       'PL {Poolse}\n' +
       'RO {Roemeense}\n' +
       'other {{params}}\n' +
-      '} {fieldName} is niet toegestaan',
+      '} {fieldName} is niet toegestaan.',
   },
 };
