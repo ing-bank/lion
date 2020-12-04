@@ -657,6 +657,11 @@ export class OverlayController extends EventTargetShim {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    // Subsequent shows could happen, make sure we await it first.
+    // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
+    if (this._showComplete) {
+      await this._showComplete;
+    }
     this._showComplete = new Promise(resolve => {
       this._showResolve = resolve;
     });

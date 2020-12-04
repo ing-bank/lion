@@ -114,6 +114,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       await itEl.updateComplete;
       expect(itEl._overlayCtrl.trapsKeyboardFocus).to.be.false;
 
+      await nextFrame();
       itEl.config = { viewportConfig: { placement: 'left' } };
       expect(itEl._overlayCtrl.viewportConfig.placement).to.equal('left');
     });
@@ -234,6 +235,44 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       el.toggle();
       await nextFrame();
       expect(el.opened).to.be.false;
+    });
+
+    /** See: https://github.com/ing-bank/lion/issues/1075 */
+    it('stays open after config update', async () => {
+      const el = /** @type {OverlayEl} */ (await fixture(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `));
+      el.open();
+      await el._overlayCtrl._showComplete;
+      el.config = { ...el.config, hidesOnOutsideClick: !el.config.hidesOnOutsideClick };
+      await nextFrame();
+      expect(el.opened).to.be.true;
+      expect(getComputedStyle(el._overlayCtrl.contentWrapperNode).display).not.to.equal('none');
+    });
+
+    /** Prevent unnecessary reset side effects, such as show animation. See: https://github.com/ing-bank/lion/issues/1075 */
+    it('does not call updateConfig on equivalent config change', async () => {
+      const el = /** @type {OverlayEl} */ (await fixture(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `));
+      el.open();
+      await nextFrame();
+
+      const stub = sinon.stub(el._overlayCtrl, 'updateConfig');
+      stub.callsFake(() => {
+        throw new Error('Unexpected config update');
+      });
+
+      expect(() => {
+        el.config = { ...el.config };
+      }).to.not.throw;
+      stub.restore();
     });
   });
 

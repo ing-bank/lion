@@ -353,6 +353,7 @@ describe('lion-select-rich', () => {
       el.opened = true;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
+      await el._overlayCtrl._showComplete;
 
       // noDefaultSelected will now flip the override back to what was the initial reference width
       // @ts-ignore allow protected access in tests

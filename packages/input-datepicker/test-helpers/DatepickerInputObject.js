@@ -33,7 +33,7 @@ export class DatepickerInputObject {
    * @param {number} day
    */
   async selectMonthDay(day) {
-    this.overlayController.show();
+    await this.overlayController.show();
     await this.calendarEl.updateComplete;
     this.calendarObj.getDayEl(day).click();
     return true;

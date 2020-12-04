@@ -1,5 +1,6 @@
 import { dedupeMixin } from '@lion/core';
 import { OverlayController } from './OverlayController.js';
+import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
@@ -43,10 +44,15 @@ export const OverlayMixinImplementation = superclass =>
 
     /** @param {OverlayConfig} value */
     set config(value) {
-      if (this._overlayCtrl) {
+      const shouldUpdate = !isEqualConfig(this.config, value);
+
+      if (this._overlayCtrl && shouldUpdate) {
         this._overlayCtrl.updateConfig(value);
       }
       this.__config = value;
+      if (this._overlayCtrl && shouldUpdate) {
+        this.__syncToOverlayController();
+      }
     }
 
     /**
