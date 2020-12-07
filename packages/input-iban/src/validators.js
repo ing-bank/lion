@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file  */
 
 import { localize } from '@lion/localize';
-import { Validator } from '@lion/form-core';
+import { Unparseable, Validator } from '@lion/form-core';
 import { isValidIBAN } from 'ibantools';
 
 let loaded = false;
@@ -124,7 +124,7 @@ export class IsCountryIBAN extends IsIBAN {
   }
 
   /**
-   * @param {?} [value]
+   * @param {string} value
    * @returns {Boolean}
    */
   execute(value) {
@@ -150,6 +150,61 @@ export class IsCountryIBAN extends IsIBAN {
    */
   static async getMessage(data) {
     await loadTranslations();
-    return localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+    // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
+    return data?.modelValue instanceof Unparseable
+      ? localize.msg('lion-validate+iban:error.IsIBAN', data)
+      : localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+  }
+}
+
+export class IsNotCountryIBAN extends IsIBAN {
+  static get validatorName() {
+    return 'IsNotCountryIBAN';
+  }
+
+  /**
+   * @param {string} value
+   * @returns {Boolean}
+   */
+  execute(value) {
+    let isInvalid = false;
+    const notIBAN = super.execute(value);
+
+    if (typeof this.param === 'string') {
+      if (value.slice(0, 2) === this.param) {
+        isInvalid = true;
+      }
+    } else if (Array.isArray(this.param)) {
+      isInvalid = this.param.some(country => value.slice(0, 2) === country);
+    }
+
+    if (notIBAN) {
+      isInvalid = true;
+    }
+    return isInvalid;
+  }
+
+  /**
+   * @param {object} [data]
+   * @param {*} [data.modelValue]
+   * @param {string} [data.fieldName]
+   * @param {*} [data.params]
+   * @param {string} [data.type]
+   * @param {Object.<string,?>} [data.config]
+   * @param {string} [data.name]
+   * @returns {Promise<string|Node>}
+   */
+  static async getMessage(data) {
+    await loadTranslations();
+    const _data = {
+      ...data,
+      userSuppliedCountryCode:
+        typeof data?.modelValue === 'string' ? data?.modelValue.slice(0, 2) : '',
+    };
+
+    // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
+    return data?.modelValue instanceof Unparseable
+      ? localize.msg('lion-validate+iban:error.IsIBAN', _data)
+      : localize.msg('lion-validate+iban:error.IsNotCountryIBAN', _data);
   }
 }

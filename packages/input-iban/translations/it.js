@@ -16,5 +16,20 @@ export default {
       'RO {Rumeno}\n' +
       'other {{params}}\n' +
       '}.',
+    IsNotCountryIBAN:
+      '{fieldName} {userSuppliedCountryCode, select,\n' +
+      'AT {Austriaco}\n' +
+      'BE {Belga}\n' +
+      'CZ {Ceco}\n' +
+      'DE {Tedesco}\n' +
+      'ES {Spagnolo}\n' +
+      'FR {Francese}\n' +
+      'HU {Ungherese}\n' +
+      'IT {Italiano}\n' +
+      'NL {Olandese}\n' +
+      'PL {Polacco}\n' +
+      'RO {Rumeno}\n' +
+      'other {{userSuppliedCountryCode}}\n' +
+      '} non è permesso.',
   },
 };

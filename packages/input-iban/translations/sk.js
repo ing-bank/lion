@@ -16,5 +16,20 @@ export default {
       'RO {rumunský}\n' +
       'other {{params}}\n' +
       '} kód {fieldName}.',
+    IsNotCountryIBAN:
+      '{userSuppliedCountryCode, select,\n' +
+      'AT {Rakúsky}\n' +
+      'BE {Belgický}\n' +
+      'CZ {Český}\n' +
+      'DE {Nemecký}\n' +
+      'ES {Španielsky}\n' +
+      'FR {Francúzsky}\n' +
+      'HU {Maďarský}\n' +
+      'IT {Taliansky}\n' +
+      'NL {Holandský}\n' +
+      'PL {Poľský}\n' +
+      'RO {Rumunský}\n' +
+      'other {{userSuppliedCountryCode}}\n' +
+      '} {fieldName} nie je povolené.',
   },
 };
