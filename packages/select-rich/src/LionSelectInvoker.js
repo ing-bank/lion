@@ -15,6 +15,10 @@ export class LionSelectInvoker extends LionButton {
     return [
       super.styles,
       css`
+        :host {
+          justify-content: space-between;
+        }
+
         #content-wrapper {
           position: relative;
         }
