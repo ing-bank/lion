@@ -325,22 +325,22 @@ export const OverlayMixinImplementation = superclass =>
     /**
      * Toggles the overlay
      */
-    toggle() {
-      /** @type {OverlayController} */ (this._overlayCtrl).toggle();
+    async toggle() {
+      await /** @type {OverlayController} */ (this._overlayCtrl).toggle();
     }
 
     /**
      * Shows the overlay
      */
-    open() {
-      /** @type {OverlayController} */ (this._overlayCtrl).show();
+    async open() {
+      await /** @type {OverlayController} */ (this._overlayCtrl).show();
     }
 
     /**
      * Hides the overlay
      */
-    close() {
-      /** @type {OverlayController} */ (this._overlayCtrl).hide();
+    async close() {
+      await /** @type {OverlayController} */ (this._overlayCtrl).hide();
     }
   };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);
