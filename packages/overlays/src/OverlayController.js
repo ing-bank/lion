@@ -1098,8 +1098,7 @@ export class OverlayController extends EventTargetShim {
     if (!this._referenceNode || this.placementMode === 'global') {
       return;
     }
-
-    const referenceWidth = `${this._referenceNode.clientWidth}px`;
+    const referenceWidth = `${this._referenceNode.getBoundingClientRect().width}px`;
     switch (this.inheritsReferenceWidth) {
       case 'max':
         this.contentWrapperNode.style.maxWidth = referenceWidth;
