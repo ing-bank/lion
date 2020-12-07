@@ -920,9 +920,11 @@ describe('OverlayController', () => {
         expect(ctrl2.content).to.be.displayed;
 
         await ctrl3.show();
+        await ctrl3._showComplete;
         expect(ctrl3.content).to.be.displayed;
 
         await ctrl2.hide();
+        await ctrl2._hideComplete;
         expect(ctrl0.content).to.be.displayed;
         expect(ctrl1.content).to.be.displayed;
 
