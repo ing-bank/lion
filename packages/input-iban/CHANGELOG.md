@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- c8e73457: add country blacklisting validator
+
 ## 0.10.10
 
 ### Patch Changes
