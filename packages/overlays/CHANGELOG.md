@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.22.6
+
+### Patch Changes
+
+- de536282: Sync config change to the controller and make sure that an overlay is re-opened/re-hidden after the updateConfig handling, instead of always closed.
+- 11e8dbcb: Return promises for the OverlayMixin toggle, open and close methods, since the OverlayController hiding/showing is asynchronous.
+
 ## 0.22.5
 
 ### Patch Changes

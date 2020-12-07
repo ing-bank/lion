@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies [c8e73457]
+  - @lion/input-iban@0.11.0
+  - @lion/input-datepicker@0.18.9
+  - @lion/select-rich@0.21.18
+
 ## 0.3.18
 
 ### Patch Changes
