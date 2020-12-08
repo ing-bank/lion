@@ -20,7 +20,7 @@ function isRelativeSourcePath(source) {
  * @param {string} rootPath like '/path/to/repo'
  */
 function toRelativeSourcePath(fullPath, rootPath) {
-  return toPosixPath(fullPath).replace(rootPath, '.');
+  return toPosixPath(fullPath).replace(toPosixPath(rootPath), '.');
 }
 
 module.exports = { isRelativeSourcePath, toRelativeSourcePath };
