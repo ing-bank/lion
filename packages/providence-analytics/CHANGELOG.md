@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.2
+
+### Patch Changes
+
+- 3cd1cf95: Relative source path util take posix path for both full path and root path, to ensure the replace happens properly.
+
 ## 0.8.1
 
 ### Patch Changes
