@@ -24,14 +24,69 @@ Additionally imports like `import '@lion/form/lion-form.js'` need to be transfor
 
 ## Features
 
-- pure es modules
-- exposes functions/classes and web components
-- provides pure functionality
-- fully accessible
-- built to be extended
+- High Performance - Focused on great performance in all relevant browsers with a minimal number of dependencies
+- Accessibility - Aimed at compliance with the WCAG 2.1 AA standard to create components that are accessible for everybody
+- Flexibility - Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs
+- Pure ES Modules
+- Exposes functions/classes and Web Components
 
 > Note: These demos may look a little bland but that is on purpose. They only come with functional stylings.
 > This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
+
+## How to install
+
+```bash
+npm i @lion/<package-name>
+```
+
+## How to use
+
+### Extend a Web Component
+
+**This is the main use case for lion**. To import component classes, and extend them for your own design system's components.
+
+```js
+import { css } from '@lion/core';
+import { LionInput } from '@lion/input';
+
+class MyInput extends LionInput {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        /* your styles here */
+      `,
+    ];
+  }
+}
+customElements.define('my-input', MyInput);
+```
+
+### Use a JavaScript system
+
+There's a couple of "systems" in lion which have a JavaScript API. Examples are `localize`, `overlays`, `ajax`, etc.
+
+```html
+<script type="module">
+  import { ajax } from '@lion/ajax';
+
+  ajax.get('data.json').then(response => {
+    // most likely you will use response.data
+  });
+</script>
+```
+
+### Use a Web Component
+
+You can also use the lion elements directly, although this is likely not a common use case.
+
+```html
+<script type="module">
+  import '@lion/input/lion-input.js';
+</script>
+
+<lion-input name="firstName"></lion-input>
+```
 
 ## Issues
 
@@ -92,51 +147,6 @@ The accessibility column indicates whether the functionality is accessible in it
 | [collapsible](https://lion-web-components.netlify.app/?path=/docs/others-collapsible--main)                   | [![collapsible](https://img.shields.io/npm/v/@lion/collapsible.svg)](https://www.npmjs.com/package/@lion/collapsible)                   | Combination of a button and a chunk of extra content                                           | ✔️                         |
 | **-- [Helpers](https://lion-web-components.netlify.app/?path=/docs/helpers-intro--page) --**                  | [![helpers](https://img.shields.io/npm/v/@lion/helpers.svg)](https://www.npmjs.com/package/@lion/helpers)                               | Helpers to make your and your life easier                                                      |                            |
 | [sb-action-logger](https://lion-web-components.netlify.app/?path=/docs/helpers-storybook-action-logger--main) |                                                                                                                                         | Storybook action logger                                                                        |
-
-## How to install
-
-```bash
-npm i @lion/<package-name>
-```
-
-## How to use
-
-### Use a Web Component
-
-```html
-<script type="module">
-  import '@lion/input/lion-input.js';
-</script>
-
-<lion-input name="firstName"></lion-input>
-```
-
-### Use a JavaScript system
-
-```html
-<script type="module">
-  import { ajax } from '@lion/ajax';
-
-  ajax.get('data.json').then(response => {
-    // most likely you will use response.data
-  });
-</script>
-```
-
-### Extend a Web Component
-
-```js
-import { LionInput } from '@lion/input';
-
-class MyInput extends LionInput {}
-customElements.define('my-input', MyInput);
-```
-
-## Key Features
-
-- High Performance - Focused on great performance in all relevant browsers with a minimal number of dependencies
-- Accessibility - Aimed at compliance with the WCAG 2.0 AA standard to create components that are accessible for everybody
-- Flexibility - Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs
 
 ## Technologies
 
