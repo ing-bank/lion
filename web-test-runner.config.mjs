@@ -7,6 +7,10 @@ const packages = fs
     dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
   );
 
+const tools = fs
+  .readdirSync('tools')
+  .filter(dir => fs.statSync(`tools/${dir}`).isDirectory() && fs.existsSync(`tools/${dir}/test`));
+
 export default {
   nodeResolve: true,
   coverageConfig: {
@@ -29,10 +33,19 @@ export default {
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups: packages.map(pkg => {
-    return {
-      name: pkg,
-      files: `packages/${pkg}/test/**/*.test.js`,
-    };
-  }),
+  groups: packages
+    .map(pkg => {
+      return {
+        name: pkg,
+        files: `packages/${pkg}/test/**/*.test.js`,
+      };
+    })
+    .concat(
+      tools.map(pkg => {
+        return {
+          name: pkg,
+          files: `tools/${pkg}/test/**/*.test.js`,
+        };
+      }),
+    ),
 };

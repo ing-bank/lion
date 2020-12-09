@@ -3,16 +3,15 @@ const path = require('path');
 
 module.exports = {
   stories: [
-    '../packages/*/README.md',
-    '../packages/*/docs/*.md',
-    '../packages/*/docs/!(assets)**/*.md',
+    '../{packages,tools}/*/README.md',
+    '../{packages,tools}/*/docs/*.md',
+    '../{packages,tools}/*/docs/!(assets)**/*.md',
+    '../packages/helpers/*/README.md',
     '../docs/README.md',
     '../docs/**/*.md',
     '../README.md',
     '../demo/README.md',
     '../demo/docs/*.md',
-    '../packages/helpers/README.md',
-    '../packages/helpers/*/README.md',
   ],
   addons: [
     // order of tabs in addons panel

@@ -304,6 +304,6 @@ you can "hard" code it to the same versions.
 
 ```js script
 export default {
-  title: 'Others/SingletonManager',
+  title: 'Tools/SingletonManager',
 };
 ```

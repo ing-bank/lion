@@ -184,8 +184,8 @@ customElements.define('my-app', MyApp);
 
 ## Full Demo & Api Example
 
-You can run the example locally via `npm run start` or look at its [source code](https://github.com/ing-bank/lion/tree/master/packages/babel-plugin-extend-docs/demo/).
-_Note we are configuring babel via the [server.config.js](https://github.com/ing-bank/lion/tree/master/packages/babel-plugin-extend-docs/demo/server.config.js)_
+You can run the example locally via `npm run start` or look at its [source code](https://github.com/ing-bank/lion/tree/master/tools/babel-plugin-extend-docs/demo/).
+_Note we are configuring babel via the [server.config.js](https://github.com/ing-bank/lion/tree/master/tools/babel-plugin-extend-docs/demo/server.config.js)_
 
 👉 _babel.config.js_
 

@@ -24,6 +24,9 @@ yarn-error.log
 *.d.ts
 !packages/**/*/types/**/*
 !packages/**/index.d.ts
+!tools/**/*/types/**/*
+!tools/**/index.d.ts
+!tools/**/types.d.ts
 
 ## temp folders
 /.tmp/
@@ -40,4 +43,4 @@ browserstack.err
 
 debug.log
 
-!packages/singleton-manager/demo/**/node_modules
+!tools/singleton-manager/demo/**/node_modules

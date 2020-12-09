@@ -52,31 +52,33 @@ function compareVersions(versionsA, versionsB) {
   };
 }
 
-let currentVersions = readPackageJsonDeps('./package.json');
 let endReturn = 0;
+function lintVersions(folder) {
+  let currentVersions = readPackageJsonDeps('./package.json');
 
-// find all versions in the monorepo
-getDirectories('./packages').forEach(subPackage => {
-  const filePath = `./packages/${subPackage}/package.json`;
-  currentVersions = { ...currentVersions, ...readPackageJsonNameVersion(filePath) };
-});
+  // find all versions in the monorepo
+  getDirectories(`./${folder}`).forEach(subPackage => {
+    const filePath = `./${folder}/${subPackage}/package.json`;
+    currentVersions = { ...currentVersions, ...readPackageJsonNameVersion(filePath) };
+  });
 
-// lint all versions in packages
-getDirectories('./packages').forEach(subPackage => {
-  const filePath = `./packages/${subPackage}/package.json`;
-  const subPackageVersions = readPackageJsonDeps(filePath);
-  const { output, newVersions } = compareVersions(currentVersions, subPackageVersions);
-  currentVersions = { ...newVersions };
-  if (output) {
-    console.log(`Version mismatches found in "${filePath}":`);
-    console.log(output);
-    console.log();
-    endReturn = 1;
-  }
-});
-
+  // lint all versions in folder
+  getDirectories(`./${folder}`).forEach(subPackage => {
+    const filePath = `./${folder}/${subPackage}/package.json`;
+    const subPackageVersions = readPackageJsonDeps(filePath);
+    const { output, newVersions } = compareVersions(currentVersions, subPackageVersions);
+    currentVersions = { ...newVersions };
+    if (output) {
+      console.log(`Version mismatches found in "${filePath}":`);
+      console.log(output);
+      console.log();
+      endReturn = 1;
+    }
+  });
+}
+lintVersions('packages');
+lintVersions('tools');
 if (endReturn === 0) {
   console.log('All versions are aligned 💪');
 }
-
 process.exit(endReturn);
