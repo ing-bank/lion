@@ -112,6 +112,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.interactionMode = 'auto';
 
     this.singleOption = false;
+    this._arrowWidth = 28;
 
     this.__onKeyUp = this.__onKeyUp.bind(this);
     this.__invokerOnBlur = this.__invokerOnBlur.bind(this);
@@ -217,6 +218,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       /* eslint-enable no-param-reassign */
       this.__hasInitialSelectedFormElement = true;
     }
+    this._alignInvokerWidth();
+
     this._onFormElementsChanged();
   }
 
@@ -226,6 +229,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   removeFormElement(child) {
     super.removeFormElement(child);
+    this._alignInvokerWidth();
     this._onFormElementsChanged();
   }
 
@@ -352,6 +356,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
     this._initialInheritsReferenceWidth = this._overlayCtrl.inheritsReferenceWidth;
+    this._alignInvokerWidth();
 
     this._overlayCtrl.addEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.addEventListener('show', this.__overlayOnShow);
@@ -367,6 +372,27 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
+  }
+
+  /**
+   * Align invoker width with content width
+   * Make sure display is not set to "none" while calculating the content width
+   */
+  async _alignInvokerWidth() {
+    if (this._overlayCtrl && this._overlayCtrl.content) {
+      await this.updateComplete;
+      const initContentDisplay = this._overlayCtrl.content.style.display;
+      const initContentMinWidth = this._overlayCtrl.content.style.minWidth;
+      const initContentWidth = this._overlayCtrl.content.style.width;
+      this._overlayCtrl.content.style.display = '';
+      this._overlayCtrl.content.style.minWidth = 'auto';
+      this._overlayCtrl.content.style.width = 'auto';
+      const contentWidth = this._overlayCtrl.content.getBoundingClientRect().width;
+      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      this._overlayCtrl.content.style.display = initContentDisplay;
+      this._overlayCtrl.content.style.minWidth = initContentMinWidth;
+      this._overlayCtrl.content.style.width = initContentWidth;
+    }
   }
 
   /**

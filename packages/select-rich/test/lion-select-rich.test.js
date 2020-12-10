@@ -189,6 +189,31 @@ describe('lion-select-rich', () => {
       // @ts-ignore allow protected access in tests
       expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('30');
     });
+
+    it('inherits the content width including arrow width', async () => {
+      const el = /** @type {LionSelectRich} */ (await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${10}>Item 2 with long label</lion-option>
+        </lion-select-rich>
+      `));
+      el.opened = true;
+      const options = el.formElements;
+      await el.updateComplete;
+      expect(el._invokerNode.clientWidth).to.equal(options[1].clientWidth);
+
+      const newOption = /** @type {LionOption} */ (document.createElement('lion-option'));
+      newOption.choiceValue = 30;
+      newOption.textContent = '30 with longer label';
+
+      el._inputNode.appendChild(newOption);
+      await el.updateComplete;
+      expect(el._invokerNode.clientWidth).to.equal(options[2].clientWidth);
+
+      el._inputNode.removeChild(newOption);
+      await el.updateComplete;
+      expect(el._invokerNode.clientWidth).to.equal(options[1].clientWidth);
+    });
   });
 
   describe('overlay', () => {

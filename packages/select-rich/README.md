@@ -343,7 +343,7 @@ class SingleOptionRemoveAdd extends LitElement {
 
   constructor() {
     super();
-    this.options = ['Option 1'];
+    this.options = ['Option 1', 'Option 2'];
   }
 
   render() {
@@ -361,15 +361,17 @@ class SingleOptionRemoveAdd extends LitElement {
   }
 
   addOption() {
-    this.options.push(`Option ${this.options.length + 1}`);
+    this.options.push(`Option ${this.options.length + 1} with a long title`);
     this.options = [...this.options];
     this.requestUpdate();
   }
 
   removeOption() {
-    this.options.pop();
-    this.options = [...this.options];
-    this.requestUpdate();
+    if (this.options.length >= 2) {
+      this.options.pop();
+      this.options = [...this.options];
+      this.requestUpdate();
+    }
   }
 }
 
