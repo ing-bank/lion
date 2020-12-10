@@ -13,6 +13,7 @@ import { Required, Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import './lion-checkbox-group.js';
 import './lion-checkbox.js';
+import './lion-checkbox-indeterminate.js';
 
 export default {
   title: 'Forms/Checkbox Group',
@@ -232,5 +233,21 @@ export const event = () => html`
   </lion-checkbox-group>
   <br />
   <span>Selected scientists: <strong id="selectedDinosaur">N/A</strong></span>
+`;
+```
+
+### Indeterminate
+
+```js preview-story
+export const indeterminate = () => html`
+  <lion-checkbox-group
+    name="scientists[]"
+    label="Favorite scientists"
+  >
+    <lion-checkbox-indeterminate label="Foo"></lion-checkbox-indeterminate>
+    <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+    <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  </lion-checkbox-group>
 `;
 ```
