@@ -206,7 +206,7 @@ describe('lion-button', () => {
       const wrapperId = el.getAttribute('aria-labelledby');
       expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).to.exist;
       expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).dom.to.equal(
-        `<div class="button-content" id="${wrapperId}"><slot></slot></div>`,
+        `<div part="content" class="button-content" id="${wrapperId}"><slot></slot></div>`,
       );
       browserDetectionStub.restore();
     });

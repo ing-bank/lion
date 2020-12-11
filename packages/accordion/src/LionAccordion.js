@@ -173,7 +173,7 @@ export class LionAccordion extends LitElement {
 
   render() {
     return html`
-      <div class="accordion">
+      <div part="accordion" class="accordion">
         <slot name="invoker"></slot>
         <slot name="content"></slot>
       </div>

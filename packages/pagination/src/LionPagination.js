@@ -246,8 +246,9 @@ export class LionPagination extends LocalizeMixin(LitElement) {
    */
   _prevNextButtonTemplate(label, pageNumber, namespace = 'lion') {
     return html`
-      <li>
+      <li part="list-item">
         <button
+          part="button ${label} page"
           aria-label=${this.msgLit(`${namespace}-pagination:${label}`)}
           @click=${() => this.__fire(pageNumber)}
         >
@@ -266,8 +267,10 @@ export class LionPagination extends LocalizeMixin(LitElement) {
    */
   _disabledButtonTemplate(label) {
     return html`
-      <li>
-        <button disabled>${this._prevNextIconTemplate(label)}</button>
+      <li part="list-item">
+        <button part="button ${label} page disabled" disabled>
+          ${this._prevNextIconTemplate(label)}
+        </button>
       </li>
     `;
   }
@@ -280,10 +283,11 @@ export class LionPagination extends LocalizeMixin(LitElement) {
   _renderNavList() {
     return this.__calculateNavList().map(page =>
       page === '...'
-        ? html` <li><span>${page}</span></li> `
+        ? html` <li part="list-item"><span part="page jump">${page}</span></li> `
         : html`
-            <li>
+            <li part="list-item">
               <button
+                part="button page${page === this.current ? ' current' : ''}"
                 aria-label="${this.msgLit('lion-pagination:page', { page })}"
                 aria-current=${page === this.current}
                 @click=${() => this.__fire(page)}
@@ -297,8 +301,8 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   render() {
     return html`
-      <nav role="navigation" aria-label="${this.msgLit('lion-pagination:label')}">
-        <ul>
+      <nav part="navigation" role="navigation" aria-label="${this.msgLit('lion-pagination:label')}">
+        <ul part="list">
           ${this.current > 1
             ? this._prevNextButtonTemplate('previous', this.current - 1)
             : this._disabledButtonTemplate('previous')}

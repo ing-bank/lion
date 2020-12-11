@@ -55,8 +55,8 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    */
   render() {
     return html`
-      <div class="form-field__group-one">${this._groupOneTemplate()}</div>
-      <div class="form-field__group-two">${this._groupTwoTemplate()}</div>
+      <div part="group-one" class="form-field__group-one">${this._groupOneTemplate()}</div>
+      <div part="group-two" class="form-field__group-two">${this._groupTwoTemplate()}</div>
     `;
   }
 

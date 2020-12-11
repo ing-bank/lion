@@ -44,9 +44,38 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
   const startOfLastWeek = day.startOfWeek && lastWeekDays.includes(dayNumber);
   const lastDay = lastDayNumber === dayNumber;
 
+  const cellParts = [
+    'cell',
+    day.currentMonth ? 'current-month' : '',
+    firstDay ? 'first-day' : '',
+    endOfFirstWeek ? 'end-of-first-week' : '',
+    startOfFirstFullWeek ? 'start-of-first-full-week' : '',
+    endOfLastFullWeek ? 'end-of-last-full-week' : '',
+    startOfLastWeek ? 'start-of-last-week' : '',
+    lastDay ? 'last-day' : '',
+  ]
+    .filter(i => i)
+    .join(' ');
+
+  const buttonParts = [
+    'day',
+    'button',
+    day.disabled ? 'disabled' : '',
+    day.selected ? 'selected' : '',
+    day.past ? 'past' : '',
+    day.today ? 'today' : '',
+    day.future ? 'future' : '',
+    day.previousMonth ? 'previous-month' : '',
+    day.currentMonth ? 'current-month' : '',
+    day.nextMonth ? 'next-month' : '',
+  ]
+    .filter(i => i)
+    .join(' ');
+
   return html`
     <td
       role="gridcell"
+      part="${cellParts}"
       class="calendar__day-cell"
       ?current-month=${day.currentMonth}
       ?first-day=${firstDay}
@@ -58,6 +87,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
     >
       <button
         .date=${day.date}
+        part="${buttonParts}"
         class="calendar__day-button"
         tabindex=${ifDefined(day.tabindex)}
         aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
@@ -72,7 +102,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
         ?current-month=${day.currentMonth}
         ?next-month=${day.nextMonth}
       >
-        <span class="calendar__day-button__text"> ${day.date.getDate()} </span>
+        <span part="day text" class="calendar__day-button__text"> ${day.date.getDate()} </span>
       </button>
     </td>
   `;

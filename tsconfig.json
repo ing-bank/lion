@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "suppressImplicitAnyIndexErrors": true
   },
-  "include": ["packages/**/*.js", "packages-node/**/*.js"],
+  "include": ["packages/**/*.js", "packages-node/**/*.js", "docs/theming/examples/styles/orbit-combobox.css.js"],
   "exclude": [
     "node_modules",
     "**/node_modules/*",

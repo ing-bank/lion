@@ -63,9 +63,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   render() {
     return html`
-      <div class="btn">
-        <div class="switch-button__track"></div>
-        <div class="switch-button__thumb"></div>
+      <div part="button" class="btn">
+        <div part="track" class="switch-button__track"></div>
+        <div part="thumb" class="switch-button__thumb"></div>
       </div>
     `;
   }

@@ -143,10 +143,10 @@ export class LionTabs extends LitElement {
 
   render() {
     return html`
-      <div class="tabs__tab-group" role="tablist">
+      <div part="tablist" class="tabs__tab-group" role="tablist">
         <slot name="tab"></slot>
       </div>
-      <div class="tabs__panels">
+      <div part="panels" class="tabs__panels">
         <slot name="panel"></slot>
       </div>
     `;
