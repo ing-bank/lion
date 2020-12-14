@@ -21,7 +21,7 @@ export function dataTemplate(
             aria-labelledby="month year"
           >
             <thead>
-              <tr role="row">
+              <tr>
                 ${weekdaysShort.map(
                   (header, i) => html`
                     <th

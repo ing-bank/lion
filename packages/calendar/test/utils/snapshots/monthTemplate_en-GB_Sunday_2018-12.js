@@ -10,7 +10,7 @@ export default html`
       role="grid"
     >
       <thead>
-        <tr role="row">
+        <tr>
           <th class="calendar__weekday-header" aria-label="Sunday" scope="col" role="columnheader">
             Sun
           </th>
@@ -50,7 +50,7 @@ export default html`
         </tr>
       </thead>
       <tbody>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <button
               aria-label="25 November 2018 Sunday"
@@ -122,7 +122,7 @@ export default html`
             </button>
           </td>
         </tr>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell" start-of-first-full-week>
             <button
               aria-label="2 December 2018 Sunday"
@@ -194,7 +194,7 @@ export default html`
             </button>
           </td>
         </tr>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="9 December 2018 Sunday"
@@ -266,7 +266,7 @@ export default html`
             </button>
           </td>
         </tr>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="16 December 2018 Sunday"
@@ -338,7 +338,7 @@ export default html`
             </button>
           </td>
         </tr>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell">
             <button
               aria-label="23 December 2018 Sunday"
@@ -410,7 +410,7 @@ export default html`
             </button>
           </td>
         </tr>
-        <tr role="row">
+        <tr>
           <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <button
               aria-label="30 December 2018 Sunday"
