@@ -671,9 +671,7 @@ describe('<lion-calendar>', () => {
               aria-pressed="false"
               past=""
               current-month="">
-              <span class="calendar__day-button__text">
                 30
-              </span>
             </button>
           `);
         });

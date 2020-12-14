@@ -72,7 +72,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
         ?current-month=${day.currentMonth}
         ?next-month=${day.nextMonth}
       >
-        <span class="calendar__day-button__text"> ${day.date.getDate()} </span>
+        ${day.date.getDate()}
       </button>
     </td>
   `;
