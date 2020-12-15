@@ -1206,7 +1206,6 @@ describe('<lion-calendar>', () => {
           `),
         );
         const { previousMonthDayObjs, nextMonthDayObjs } = elObj;
-
         expect(previousMonthDayObjs.length).to.equal(3);
         expect(previousMonthDayObjs[0].cellIndex).to.equal(0);
         expect(previousMonthDayObjs[0].monthday).to.equal(29);
@@ -1220,6 +1219,36 @@ describe('<lion-calendar>', () => {
         expect(nextMonthDayObjs[0].monthday).to.equal(1);
         expect(nextMonthDayObjs[1].cellIndex).to.equal(6);
         expect(nextMonthDayObjs[1].monthday).to.equal(2);
+      });
+
+      it('renders days for next months in the last month of the year', async () => {
+        const elObj = new CalendarObject(
+          await fixture(html`
+            <lion-calendar .selectedDate="${new Date('2020/12/12')}"></lion-calendar>
+          `),
+        );
+        const { nextMonthDayObjs } = elObj;
+        expect(nextMonthDayObjs.length).to.equal(2);
+        expect(nextMonthDayObjs[0].cellIndex).to.equal(5);
+        expect(nextMonthDayObjs[0].monthday).to.equal(1);
+        expect(nextMonthDayObjs[1].cellIndex).to.equal(6);
+        expect(nextMonthDayObjs[1].monthday).to.equal(2);
+      });
+
+      it('renders days for previous months in the first month of the year', async () => {
+        const elObj = new CalendarObject(
+          await fixture(html`
+            <lion-calendar .selectedDate="${new Date('2020/01/12')}"></lion-calendar>
+          `),
+        );
+        const { previousMonthDayObjs } = elObj;
+        expect(previousMonthDayObjs.length).to.equal(3);
+        expect(previousMonthDayObjs[0].cellIndex).to.equal(0);
+        expect(previousMonthDayObjs[0].monthday).to.equal(29);
+        expect(previousMonthDayObjs[1].cellIndex).to.equal(1);
+        expect(previousMonthDayObjs[1].monthday).to.equal(30);
+        expect(previousMonthDayObjs[2].cellIndex).to.equal(2);
+        expect(previousMonthDayObjs[2].monthday).to.equal(31);
       });
 
       it('sets aria-current="date" to todays button', async () => {
