@@ -609,7 +609,7 @@ export const LocalWithArrow = () => {
         ...super._defineOverlayConfig(),
         popperConfig: {
           ...super._defineOverlayConfig().popperConfig,
-          placement: 'bottom',
+          placement: 'top',
         },
       };
     }
@@ -641,10 +641,34 @@ export const LocalWithArrow = () => {
     customElements.define('arrow-example', ArrowExample);
   }
   return html`
-    <arrow-example>
-      <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content">This is a tooltip with an arrow<div>
-    </arrow-example>
+    <style>
+      .demo-box-placements {
+        display: flex;
+        flex-direction: column;
+        margin: 40px 0 0 200px;
+      }
+      .demo-box-placements arrow-example {
+        margin: 20px;
+      }
+    </style>
+    <div class="demo-box-placements">
+      <arrow-example>
+        <button slot="invoker">Top</button>
+        <div slot="content">This is a tooltip with an arrow</div>
+      </arrow-example>
+      <arrow-example .config=${{ popperConfig: { placement: 'right' } }}>
+        <button slot="invoker">Right</button>
+        <div slot="content">This is a tooltip with an arrow</div>
+      </arrow-example>
+      <arrow-example .config=${{ popperConfig: { placement: 'bottom' } }}>
+        <button slot="invoker">Bottom</button>
+        <div slot="content">This is a tooltip with an arrow</div>
+      </arrow-example>
+      <arrow-example .config=${{ popperConfig: { placement: 'left' } }}>
+        <button slot="invoker">Left</button>
+        <div slot="content">This is a tooltip with an arrow</div>
+      </arrow-example>
+    </div>
   `;
 };
 ```
