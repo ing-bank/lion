@@ -1,11 +1,7 @@
 export { ajax, setAjax } from './src/ajax.js';
-
-export { AjaxClass } from './src/AjaxClass.js';
+export { AjaxClient } from './src/AjaxClient.js';
 
 export {
-  cancelInterceptorFactory,
-  cancelPreviousOnNewRequestInterceptorFactory,
-  addAcceptLanguageHeaderInterceptorFactory,
+  acceptLanguageRequestInterceptor,
+  createXSRFRequestInterceptor,
 } from './src/interceptors.js';
-
-export { jsonPrefixTransformerFactory } from './src/transformers.js';

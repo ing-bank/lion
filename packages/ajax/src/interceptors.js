@@ -1,57 +1,50 @@
-// @ts-ignore no types for bundled-es-modules/axios
-import { axios } from '@bundled-es-modules/axios';
+import { localize } from '@lion/localize';
 
 /**
- * @param {string} [lang]
- * @return {(config: {[key:string]: ?}) => {[key:string]: ?}}
+ * @typedef {import('./AjaxClient').RequestInterceptor} RequestInterceptor
  */
-export function addAcceptLanguageHeaderInterceptorFactory(lang) {
-  return /** @param {{[key:string]: ?}} config */ config => {
-    const result = config;
-    if (typeof lang === 'string' && lang !== '') {
-      if (typeof result.headers !== 'object') {
-        result.headers = {};
-      }
-      const withLang = { headers: { 'Accept-Language': lang, ...result.headers } };
-      return { ...result, ...withLang };
-    }
-    return result;
-  };
+
+/**
+ * @param {string} name the cookie name
+ * @param {Document | { cookie: string }} _document overwriteable for testing
+ * @returns {string | null}
+ */
+export function getCookie(name, _document = document) {
+  const match = _document.cookie.match(new RegExp(`(^|;\\s*)(${name})=([^;]*)`));
+  return match ? decodeURIComponent(match[3]) : null;
 }
 
 /**
- * @param {import('./AjaxClass').AjaxClass} ajaxInstance
- * @return {(config: {[key:string]: ?}) => {[key:string]: ?}}
+ * Transforms a request, adding an accept-language header with the current application's locale
+ * if it has not already been set.
+ * @type {RequestInterceptor}
  */
-export function cancelInterceptorFactory(ajaxInstance) {
-  /** @type {unknown[]} */
-  const cancelSources = [];
-  return /** @param {{[key:string]: ?}} config */ config => {
-    const source = axios.CancelToken.source();
-    cancelSources.push(source);
-    /* eslint-disable-next-line no-param-reassign */
-    ajaxInstance.cancel = (message = 'Operation canceled by the user.') => {
-      // @ts-ignore axios is untyped so we don't know the type for the source
-      cancelSources.forEach(s => s.cancel(message));
-    };
-    return { ...config, cancelToken: source.token };
-  };
+export async function acceptLanguageRequestInterceptor(request) {
+  if (!request.headers.has('accept-language')) {
+    request.headers.set('accept-language', localize.locale);
+  }
+  return request;
 }
 
 /**
- * @return {(config: {[key:string]: ?}) => {[key:string]: ?}}
+ * Creates a request transformer that adds a XSRF header for protecting
+ * against cross-site request forgery.
+ * @param {string} cookieName the cookie name
+ * @param {string} headerName the header name
+ * @param {Document | { cookie: string }} _document overwriteable for testing
+ * @returns {RequestInterceptor}
  */
-export function cancelPreviousOnNewRequestInterceptorFactory() {
-  // @ts-ignore axios is untyped so we don't know the type for the source
-  let prevCancelSource;
-  return /** @param {{[key:string]: ?}} config */ config => {
-    // @ts-ignore axios is untyped so we don't know the type for the source
-    if (prevCancelSource) {
-      // @ts-ignore
-      prevCancelSource.cancel('Concurrent requests not allowed.');
+export function createXSRFRequestInterceptor(cookieName, headerName, _document = document) {
+  /**
+   * @type {RequestInterceptor}
+   */
+  async function xsrfRequestInterceptor(request) {
+    const xsrfToken = getCookie(cookieName, _document);
+    if (xsrfToken) {
+      request.headers.set(headerName, xsrfToken);
     }
-    const source = axios.CancelToken.source();
-    prevCancelSource = source;
-    return { ...config, cancelToken: source.token };
-  };
+    return request;
+  }
+
+  return xsrfRequestInterceptor;
 }

@@ -1,198 +1,99 @@
+[//]: # 'AUTO INSERT HEADER PREPUBLISH'
+
 # Ajax
 
-`ajax` is the global manager for handling all ajax requests.
-It is a promise based system for fetching data, based on [axios](https://github.com/axios/axios)
+`ajax` is a small wrapper around `fetch` which:
 
-```js script
-import { html } from '@lion/core';
-import { ajax } from './src/ajax.js';
-import { AjaxClass } from './src/AjaxClass.js';
-
-export default {
-  title: 'Others/Ajax',
-};
-```
-
-## Features
-
-- only JS functions, no (unnecessarily expensive) web components
-- supports GET, POST, PUT, DELETE, REQUEST, PATCH and HEAD methods
-- can be used with or without XSRF token
+- Allows globally registering request and response interceptors
+- Throws on 4xx and 5xx status codes
+- Prevents network request if a request interceptor returns a response
+- Supports a JSON request which automatically encodes/decodes body request and response payload as JSON
+- Adds accept-language header to requests based on application language
+- Adds XSRF header to request if the cookie is present
 
 ## How to use
 
 ### Installation
 
-```bash
+```sh
 npm i --save @lion/ajax
 ```
 
-```js
-import { ajax, AjaxClass } from '@lion/ajax';
-```
+### Relation to fetch
 
-### Example
+`ajax` delegates all requests to fetch. `ajax.request` and `ajax.requestJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.
+
+### Example requests
+
+#### GET request
 
 ```js
 import { ajax } from '@lion/ajax';
 
-ajax.get('data.json').then(response => console.log(response));
+const response = await ajax.request('/api/users');
+const users = await response.json();
 ```
 
-### Performing requests
-
-Performing a `GET` request:
-
-```js preview-story
-export const performingGetRequests = () => html`
-  <button
-    @click=${() => {
-      ajax
-        .get('./packages/ajax/docs/assets/data.json')
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }}
-  >
-    Execute Request to Action Logger
-  </button>
-`;
-```
-
-To post data to the server, pass the data as the second argument in the `POST` request:
+#### POST request
 
 ```js
-const body = {
-  ant: {
-    type: 'insect',
-    limbs: 6,
-  },
-};
-ajax
-  .post('zooApi/animals/addAnimal', body)
-  .then(response => {
-    console.log(`POST successful: ${response.status} ${response.statusText}`);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+import { ajax } from '@lion/ajax';
+
+const response = await ajax.request('/api/users', {
+  method: 'POST',
+  body: JSON.stringify({ username: 'steve' }),
+});
+const newUser = await response.json();
 ```
 
-## Configuration
+### JSON requests
 
-### JSON prefix
+We usually deal with JSON requests and responses. With `requestJson` you don't need to specifically stringify the request body or parse the response body:
 
-The called API might add a JSON prefix to the response in order to prevent hijacking.
-The prefix renders the string syntactically invalid as a script so that it cannot be hijacked.
-This prefix should be stripped before parsing the string as JSON.
-Pass the prefix with the `jsonPrefix` option.
+#### GET JSON request
 
 ```js
-const myAjax = new AjaxClass({ jsonPrefix: ")]}'," });
-myAjax
-  .get('./packages/ajax/docs/assets/data.json')
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+import { ajax } from '@lion/ajax';
+
+const { response, body } = await ajax.requestJson('/api/users');
 ```
 
-### Additional headers
+#### POST JSON request
 
-Add additional headers to the requests with the `headers` option.
+```js
+import { ajax } from '@lion/ajax';
 
-```js preview-story
-export const additionalHeaders = () => html`
-  <button
-    @click=${() => {
-      const myAjax = new AjaxClass({ headers: { 'MY-HEADER': 'SOME-HEADER-VALUE' } });
-      myAjax
-        .get('./packages/ajax/docs/assets/data.json')
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }}
-  >
-    Execute Request to Action Logger
-  </button>
-`;
+const { response, body } = await ajax.requestJson('/api/users', {
+  method: 'POST',
+  body: { username: 'steve' },
+});
 ```
 
-When executing the request above, check the Network tab in the Browser's dev tools and look for the Request Header on the GET call.
+### Error handling
 
-### Cancelable Request
+Different from fetch, `ajax` throws when the server returns a 4xx or 5xx, returning the request and response:
 
-It is possible to make an Ajax request cancelable, and then call `cancel()` to make the request provide a custom error once fired.
+```js
+import { ajax } from '@lion/ajax';
 
-```js preview-story
-export const cancelableRequests = () => html`
-  <button
-    @click=${() => {
-      const myAjax = new AjaxClass({ cancelable: true });
-      requestAnimationFrame(() => {
-        myAjax.cancel('too slow');
-      });
-      myAjax
-        .get('./packages/ajax/docs/assets/data.json')
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }}
-  >
-    Execute Request to Action Logger
-  </button>
-`;
+try {
+  const users = await ajax.requestJson('/api/users');
+} catch (error) {
+  if (error.response) {
+    if (error.response.status === 400) {
+      // handle a specific status code, for example 400 bad request
+    } else {
+      console.error(error);
+    }
+  } else {
+    // an error happened before receiving a response, ex. an incorrect request or network error
+    console.error(error);
+  }
+}
 ```
 
-### Cancel concurrent requests
+## Fetch Polyfill
 
-You can cancel concurrent requests with the `cancelPreviousOnNewRequest` option.
+For IE11 you will need a polyfill for fetch. You should add this on your top level layer, e.g. your application.
 
-```js preview-story
-export const cancelConcurrentRequests = () => html`
-  <button
-    @click=${() => {
-      const myAjax = new AjaxClass({ cancelPreviousOnNewRequest: true });
-      myAjax
-        .get('./packages/ajax/docs/assets/data.json')
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error.message);
-        });
-      myAjax
-        .get('./packages/ajax/docs/assets/data.json')
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error.message);
-        });
-    }}
-  >
-    Execute Both Requests to Action Logger
-  </button>
-`;
-```
-
-## Considerations
-
-Due to a [bug in axios](https://github.com/axios/axios/issues/385) options may leak in to other instances.
-So please avoid setting global options in axios. Interceptors have no issues.
-
-## Future plans
-
-- Eventually we want to remove axios and replace it with [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
-- This wrapper exist to prevent this switch from causing breaking changes for our users
+[This is the polyfill we recommend](https://github.com/github/fetch). It also has a [section for polyfilling AbortController](https://github.com/github/fetch#aborting-requests)
