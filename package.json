@@ -4,7 +4,7 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "tools/*"
+    "packages-node/*"
   ],
   "scripts": {
     "build:docs": "wca analyze \"packages/tabs/**/*.js\"",

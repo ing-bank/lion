@@ -77,7 +77,7 @@ function lintVersions(folder) {
   });
 }
 lintVersions('packages');
-lintVersions('tools');
+lintVersions('packages-node');
 if (endReturn === 0) {
   console.log('All versions are aligned 💪');
 }

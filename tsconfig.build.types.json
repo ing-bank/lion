@@ -12,18 +12,18 @@
     "**/dist/**/*",
     "packages/**/test-helpers",
     "packages/**/docs/**/*",
-    "packages/select-rich/test/**/*.js", // TODO: Needs to get typed!
-    "packages/overlays/test/utils-tests/**/*.js", // TODO: Needs to get typed!
-    "packages/form-integrations/test/**/*.js", // TODO: Needs to get typed!
     "packages/combobox/test/**/*.js", // TODO: Needs to get typed!
+    "packages/form-integrations/test/**/*.js", // TODO: Needs to get typed!
+    "packages/overlays/test/utils-tests/**/*.js", // TODO: Needs to get typed!
+    "packages/select-rich/test/**/*.js", // TODO: Needs to get typed!
+    "packages/singleton-manager/demo/",
+    "packages/singleton-manager/test/",
     // ignore test/demos for singleton manager until overlays are typed as it's used in there
-    "tools/**/test-helpers",
-    "tools/**/docs/**/*",
-    "tools/babel-plugin-extend-docs/**/*.js",
-    "tools/providence-analytics/**/*.js",
-    "tools/remark-extend/**/*.js",
-    "tools/singleton-manager/demo/",
-    "tools/singleton-manager/test/",
+    "packages-node/**/test-helpers",
+    "packages-node/**/docs/**/*",
+    "packages-node/babel-plugin-extend-docs/**/*.js",
+    "packages/providence-analytics/**/*.js",
+    "packages-node/remark-extend/**/*.js",
     // specific for building types
     "packages/core/index.js"
   ]

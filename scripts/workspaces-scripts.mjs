@@ -28,11 +28,11 @@ function findPackagesWithScript(directory) {
 }
 
 const packagesDir = join(moduleDir, '..', 'packages');
-const toolsDir = join(moduleDir, '..', 'tools');
+const packagesNodeDir = join(moduleDir, '..', 'packages-node');
 
 const packagesWithScript = [
   ...findPackagesWithScript(packagesDir),
-  ...findPackagesWithScript(toolsDir),
+  ...findPackagesWithScript(packagesNodeDir),
 ];
 
 const commands = packagesWithScript.map(pkgPath => ({

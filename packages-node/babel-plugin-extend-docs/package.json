@@ -1,0 +1,41 @@
+{
+  "name": "babel-plugin-extend-docs",
+  "version": "0.2.4",
+  "description": "Babel plugin which rewrites imports and templates according to a configuration",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/babel-plugin-extend-docs"
+  },
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "test-node"
+  ],
+  "scripts": {
+    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "start": "es-dev-server -c demo/server.config.js --root-dir ../../",
+    "start:no-babel": "es-dev-server -c demo/server.no-babel.config.js --root-dir ../../",
+    "test": "npm run test:node",
+    "test:node": "mocha test-node",
+    "test:watch": "mocha test-node --watch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.1",
+    "mermaid": "^8.2.6",
+    "mock-fs": "^4.10.1",
+    "nyc": "^15.0.0",
+    "ssl-root-cas": "^1.3.1"
+  },
+  "keywords": [
+    "babel",
+    "extend"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

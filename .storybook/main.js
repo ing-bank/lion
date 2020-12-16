@@ -3,9 +3,9 @@ const path = require('path');
 
 module.exports = {
   stories: [
-    '../{packages,tools}/*/README.md',
-    '../{packages,tools}/*/docs/*.md',
-    '../{packages,tools}/*/docs/!(assets)**/*.md',
+    '../{packages,packages-node}/*/README.md',
+    '../{packages,packages-node}/*/docs/*.md',
+    '../{packages,packages-node}/*/docs/!(assets)**/*.md',
     '../packages/helpers/*/README.md',
     '../docs/README.md',
     '../docs/**/*.md',
