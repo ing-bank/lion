@@ -1,7 +1,7 @@
 {
   "name": "@lion/ajax",
   "version": "0.5.15",
-  "description": "Thin wrapper around axios to allow for custom interceptors",
+  "description": "Thin wrapper around fetch.",
   "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -29,14 +29,13 @@
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && npm run test:browser -- --group ajax"
   },
-  "sideEffects": false,
   "dependencies": {
-    "@bundled-es-modules/axios": "0.18.1",
-    "@lion/core": "0.13.8",
-    "singleton-manager": "1.2.1"
+    "@lion/localize": "0.15.5"
   },
   "keywords": [
     "ajax",
+    "fetch",
+    "http",
     "lion",
     "web-components"
   ],

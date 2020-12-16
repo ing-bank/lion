@@ -1,7 +1,10 @@
-export class HttpClientFetchError extends Error {
+export class AjaxClientFetchError extends Error {
+  /**
+   * @param {Request} request
+   * @param {Response} response
+   */
   constructor(request, response) {
     super(`Fetch request to ${request.url} failed.`);
-
     this.request = request;
     this.response = response;
   }

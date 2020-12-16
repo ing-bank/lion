@@ -1,12 +1,12 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '@lion/localize';
 import {
-  createXSRFRequestTransformer,
+  createXSRFRequestInterceptor,
   getCookie,
-  acceptLanguageRequestTransformer,
-} from '../src/transformers.js';
+  acceptLanguageRequestInterceptor,
+} from '../src/interceptors.js';
 
-describe('transformers', () => {
+describe('interceptors', () => {
   describe('getCookie()', () => {
     it('returns the cookie value', () => {
       expect(getCookie('foo', { cookie: 'foo=bar' })).to.equal('bar');
@@ -27,36 +27,36 @@ describe('transformers', () => {
     });
   });
 
-  describe('acceptLanguageRequestTransformer()', () => {
+  describe('acceptLanguageRequestInterceptor()', () => {
     it('adds the locale as accept-language header', () => {
       const request = new Request('/foo/');
-      acceptLanguageRequestTransformer(request);
+      acceptLanguageRequestInterceptor(request);
       expect(request.headers.get('accept-language')).to.equal(localize.locale);
     });
 
     it('does not change an existing accept-language header', () => {
       const request = new Request('/foo/', { headers: { 'accept-language': 'my-accept' } });
-      acceptLanguageRequestTransformer(request);
+      acceptLanguageRequestInterceptor(request);
       expect(request.headers.get('accept-language')).to.equal('my-accept');
     });
   });
 
-  describe('createXSRFRequestTransformer()', () => {
+  describe('createXSRFRequestInterceptor()', () => {
     it('adds the xsrf token header to the request', () => {
-      const transformer = createXSRFRequestTransformer('XSRF-TOKEN', 'X-XSRF-TOKEN', {
+      const interceptor = createXSRFRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', {
         cookie: 'XSRF-TOKEN=foo',
       });
       const request = new Request('/foo/');
-      transformer(request);
+      interceptor(request);
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal('foo');
     });
 
     it('doesnt set anything if the cookie is not there', () => {
-      const transformer = createXSRFRequestTransformer('XSRF-TOKEN', 'X-XSRF-TOKEN', {
+      const interceptor = createXSRFRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', {
         cookie: 'XXSRF-TOKEN=foo',
       });
       const request = new Request('/foo/');
-      transformer(request);
+      interceptor(request);
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal(null);
     });
   });
