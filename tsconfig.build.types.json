@@ -22,7 +22,7 @@
     "packages-node/**/test-helpers",
     "packages-node/**/docs/**/*",
     "packages-node/babel-plugin-extend-docs/**/*.js",
-    "packages/providence-analytics/**/*.js",
+    "packages-node/providence-analytics/**/*.js",
     "packages-node/remark-extend/**/*.js",
     // specific for building types
     "packages/core/index.js"
