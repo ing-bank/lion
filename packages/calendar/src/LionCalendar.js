@@ -515,9 +515,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const day = createDay(new Date(_day.date), _day);
     const today = normalizeDateTime(new Date());
     day.central = isSameDate(day.date, this.centralDate);
-    day.previousMonth = currentMonth && day.date.getMonth() < currentMonth.getMonth();
-    day.currentMonth = currentMonth && day.date.getMonth() === currentMonth.getMonth();
-    day.nextMonth = currentMonth && day.date.getMonth() > currentMonth.getMonth();
+    const dayYearMonth = `${day.date.getFullYear()}${`0${day.date.getMonth() + 1}`.slice(-2)}`;
+    const currentYearMonth =
+      currentMonth && `${currentMonth.getFullYear()}${`0${currentMonth.getMonth() + 1}`.slice(-2)}`;
+    day.previousMonth = currentMonth && dayYearMonth < currentYearMonth;
+    day.currentMonth = currentMonth && dayYearMonth === currentYearMonth;
+    day.nextMonth = currentMonth && dayYearMonth > currentYearMonth;
     day.selected = this.selectedDate ? isSameDate(day.date, this.selectedDate) : false;
     day.past = day.date < today;
     day.today = isSameDate(day.date, today);
