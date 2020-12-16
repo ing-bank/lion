@@ -49,6 +49,10 @@ export const ArrowMixinImplementation = superclass =>
             display: block;
           }
 
+          [x-placement^='top'] .arrow {
+            bottom: calc(-1 * var(--tooltip-arrow-height));
+          }
+
           [x-placement^='bottom'] .arrow {
             top: calc(-1 * var(--tooltip-arrow-height));
             transform: rotate(180deg);
