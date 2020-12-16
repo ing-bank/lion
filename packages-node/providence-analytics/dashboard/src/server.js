@@ -64,7 +64,7 @@ function transformToProjectNames(collections) {
 
 const pathFromServerRootToHere = `/${pathLib.relative(process.cwd(), __dirname)}`;
 
-// Needed for dev purposes (we call it from ./packages/providence-analytics/ instead of ./)
+// Needed for dev purposes (we call it from ./packages-node/providence-analytics/ instead of ./)
 // Allows es-dev-server to find the right moduleDirs
 const fromPackageRoot = process.argv.includes('--serve-from-package-root');
 const moduleRoot = fromPackageRoot ? pathLib.resolve(process.cwd(), '../../') : process.cwd();

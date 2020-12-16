@@ -3,7 +3,8 @@
   "name": "@lion/root",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages-node/*"
   ],
   "scripts": {
     "build:docs": "wca analyze \"packages/tabs/**/*.js\"",
