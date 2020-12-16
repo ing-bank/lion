@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.9.11
+
+### Patch Changes
+
+- Updated dependencies [41edf033]
+  - @lion/core@0.13.5
+  - @lion/form-core@0.6.13
+  - @lion/input@0.10.11
+  - @lion/localize@0.15.2
+
 ## 0.9.10
 
 ### Patch Changes

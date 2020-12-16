@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.12.8
+
+### Patch Changes
+
+- f82b5c18: solve previousMonth and nextMonth conditions error
+- Updated dependencies [41edf033]
+  - @lion/core@0.13.5
+  - @lion/localize@0.15.2
+
 ## 0.12.7
 
 ### Patch Changes

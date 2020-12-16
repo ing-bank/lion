@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.5
+
+### Patch Changes
+
+- 41edf033: Upgrade @open-wc/scoped-elements version
+
 ## 0.13.4
 
 ### Patch Changes

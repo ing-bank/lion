@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.18.10
+
+### Patch Changes
+
+- Updated dependencies [f82b5c18]
+- Updated dependencies [41edf033]
+  - @lion/calendar@0.12.8
+  - @lion/core@0.13.5
+  - @lion/form-core@0.6.13
+  - @lion/input-date@0.8.11
+  - @lion/localize@0.15.2
+  - @lion/overlays@0.22.7
+
 ## 0.18.9
 
 ### Patch Changes
