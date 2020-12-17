@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.22.8
+
+### Patch Changes
+
+- 80031f66: Fix arrow placement top
+- Updated dependencies [9fba9007]
+  - @lion/core@0.13.6
+
 ## 0.22.7
 
 ### Patch Changes

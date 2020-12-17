@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.6
+
+### Patch Changes
+
+- 9fba9007: Yarn lock was bad, caused types to be built wrongly with the dependency type imports, so we re-release core so that all types get rebuilt and published.
+
 ## 0.13.5
 
 ### Patch Changes
