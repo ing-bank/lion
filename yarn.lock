@@ -1834,15 +1834,7 @@
     "@open-wc/rollup-plugin-html" "^1.2.5"
     polyfills-loader "^1.7.5"
 
-"@open-wc/scoped-elements@^1.2.4":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-1.3.1.tgz#3ec9c5d48cd9a1d3a33ea0fb976f8053fef9e764"
-  integrity sha512-apl+k0YZoO4BY0W72zN/hxSKLdqoqA8rRzcODZBZkBeREjswTG6088N0YsVuK+p6x00j29rukE3143Qnw6+9IA==
-  dependencies:
-    "@open-wc/dedupe-mixin" "^1.3.0"
-    lit-html "^1.0.0"
-
-"@open-wc/scoped-elements@^1.3.2":
+"@open-wc/scoped-elements@^1.2.4", "@open-wc/scoped-elements@^1.3.2":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-1.3.2.tgz#6ae54c49731bbe8c3e0b5383c989f983dcdfacf5"
   integrity sha512-DoP3XA8r03tGx+IrlJwP/voLuDFkyS56kvwhmXIhpESo7M5jMt5e0zScNrawj7EMe4b5gDaJjorx2Jza8FLaLw==
