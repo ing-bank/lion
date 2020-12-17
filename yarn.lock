@@ -9963,6 +9963,23 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
+playwright-chromium@^1.8.0-next.1608058261773:
+  version "1.8.0-next.1608161486387"
+  resolved "https://artifactory.ing.net:443/artifactory/api/npm/releases_npm_all/playwright-chromium/-/playwright-chromium-1.8.0-next.1608161486387.tgz#b8d658273de3af7a034661097c96eef3423ea7b7"
+  integrity sha1-uNZYJz3jr3oDRmEJfJbu80I+p7c=
+  dependencies:
+    debug "^4.1.1"
+    extract-zip "^2.0.1"
+    https-proxy-agent "^5.0.0"
+    jpeg-js "^0.4.2"
+    mime "^2.4.6"
+    pngjs "^5.0.0"
+    progress "^2.0.3"
+    proper-lockfile "^4.1.1"
+    proxy-from-env "^1.1.0"
+    rimraf "^3.0.2"
+    ws "^7.3.1"
+
 playwright@^1.2.1, playwright@^1.4.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.5.2.tgz#e127142cba86c918fad9f68315db5e79524af64c"

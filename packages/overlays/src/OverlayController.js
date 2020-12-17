@@ -22,6 +22,35 @@ async function preloadPopper() {
   return /** @type {Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
 
+// /**
+//  * @returns {Promise<PopperModule>}
+//  */
+// async function preloadPopper() {
+//   // @ts-ignore
+//   const popperLitePromise = import('@popperjs/core/dist/esm/popper-lite.js');
+//   // @ts-ignore
+//   const flipModifierPromise = import('@popperjs/core/dist/esm/modifiers/flip.js');
+//   // @ts-ignore
+//   const arrowModifierPromise = import('@popperjs/core/dist/esm/modifiers/arrow.js');
+//   // @ts-ignore
+//   const preventOverflowPromise = import('@popperjs/core/dist/esm/modifiers/preventOverflow.js');
+
+//   const [popperLite, flip, preventOverflow, arrow] = await Promise.all([
+//     popperLitePromise,
+//     flipModifierPromise,
+//     preventOverflowPromise,
+//     arrowModifierPromise,
+//   ]);
+
+//   const { popperGenerator, defaultModifiers } = popperLite;
+
+//   const createPopper = popperGenerator({
+//     defaultModifiers: [...defaultModifiers, arrow, flip, preventOverflow],
+//   });
+
+//   return { createPopper };
+// }
+
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
 const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
 // @ts-expect-error CSS not yet typed
@@ -119,11 +148,8 @@ export class OverlayController extends EventTargetShim {
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
-        // positionFixed: false,
+        strategy: 'absolute',
         modifiers: [
-          // keepTogether: {
-          //   enabled: false,
-          // },
           {
             name: 'preventOverflow',
             enabled: true,
@@ -436,15 +462,16 @@ export class OverlayController extends EventTargetShim {
     /** @type {OverlayConfig} */
     this.__prevConfig = this.config || {};
 
+    /** @type {OverlayConfig} */
     this.config = {
       ...this._defaultConfig, // our basic ingredients
       ...this.__sharedConfig, // the initial configured overlayController
       ...cfgToAdd, // the added config
+      // @ts-ignore
       popperConfig: {
         ...(this._defaultConfig.popperConfig || {}),
         ...(this.__sharedConfig.popperConfig || {}),
         ...(cfgToAdd.popperConfig || {}),
-        // TODO: Fix modifiers merging logic
         modifiers: [
           ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
             []),
@@ -455,7 +482,7 @@ export class OverlayController extends EventTargetShim {
       },
     };
 
-    this.__validateConfiguration(this.config);
+    this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
     // TODO: remove this, so we only have the getters (no setters)
     // Object.assign(this, this.config);
     this._init({ cfgToAdd });
@@ -834,7 +861,7 @@ export class OverlayController extends EventTargetShim {
             );
             hideConfig.backdropNode.removeEventListener('animationend', afterFadeOut);
           }
-          resolve();
+          resolve(undefined);
         };
       });
       // @ts-expect-error

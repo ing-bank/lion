@@ -25,9 +25,10 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     static get styles() {
-      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.constructor);
+      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
+        .constructor);
       return [
-        superCtor.styles ? superCtor.styles : [],
+        superCtor.styles || [],
         css`
           .arrow svg {
             display: block;
@@ -43,6 +44,10 @@ export const ArrowMixinImplementation = superclass =>
 
           .arrow__graphic {
             display: block;
+          }
+
+          [data-popper-placement^='top'] .arrow {
+            bottom: calc(-1 * var(--tooltip-arrow-height));
           }
 
           [data-popper-placement^='bottom'] .arrow {
@@ -73,6 +78,10 @@ export const ArrowMixinImplementation = superclass =>
 
           [data-popper-placement^='right'] .arrow__graphic {
             transform: rotate(90deg);
+          }
+
+          :host(:not([has-arrow])) .arrow {
+            display: none;
           }
         `,
       ];
@@ -122,20 +131,35 @@ export const ArrowMixinImplementation = superclass =>
       return {
         ...superConfig,
         popperConfig: {
-          ...this._getPopperArrowConfig(superConfig.popperConfig),
+          ...this._getPopperArrowConfig(
+            /** @type {Partial<PopperOptions>} */ (superConfig.popperConfig),
+          ),
         },
       };
     }
 
     /**
-     * @param {PopperOptions} popperConfigToExtendFrom
-     * @returns {PopperOptions}
+     * @param {Partial<PopperOptions>} popperConfigToExtendFrom
+     * @returns {Partial<PopperOptions>}
      */
-    _getPopperArrowConfig(popperConfigToExtendFrom = {}) {
-      /** @type {PopperOptions & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper').State>) => void }} */
+    _getPopperArrowConfig(popperConfigToExtendFrom) {
+      /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper').State>) => void }} */
       const popperCfg = {
-        ...popperConfigToExtendFrom,
+        ...(popperConfigToExtendFrom || {}),
         placement: /** @type {Placement} */ ('top'),
+        modifiers: [
+          // {
+          //   name: 'keepTogether',
+          //   enabled: true,
+          // },
+          {
+            name: 'arrow',
+            enabled: true,
+            options: {
+              padding: 8, // 8px from the edges of the popper
+            },
+          },
+        ],
         /** @param {Partial<import('@popperjs/core/lib/popper').State>} data */
         onFirstUpdate: data => {
           this.__syncFromPopperState(data);

@@ -110,25 +110,21 @@ export const placements = () => html`
     ${tooltipDemoStyles}
   </style>
   <div class="demo-box-placements">
-    <lion-tooltip .config=${{ popperConfig: { placement: 'top' } }}>
+    <lion-tooltip has-arrow .config=${{ popperConfig: { placement: 'top' } }}>
       <button slot="invoker">Top</button>
       <div slot="content" class="demo-tooltip-content">Its top placement</div>
-      <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
-    <lion-tooltip .config=${{ popperConfig: { placement: 'right' } }}>
+    <lion-tooltip has-arrow .config=${{ popperConfig: { placement: 'right' } }}>
       <button slot="invoker">Right</button>
       <div slot="content" class="demo-tooltip-content">Its right placement</div>
-      <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
-    <lion-tooltip .config=${{ popperConfig: { placement: 'bottom' } }}>
+    <lion-tooltip has-arrow .config=${{ popperConfig: { placement: 'bottom' } }}>
       <button slot="invoker">Bottom</button>
       <div slot="content" class="demo-tooltip-content">Its bottom placement</div>
-      <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
-    <lion-tooltip .config=${{ popperConfig: { placement: 'left' } }}>
+    <lion-tooltip has-arrow .config=${{ popperConfig: { placement: 'left' } }}>
       <button slot="invoker">Left</button>
       <div slot="content" class="demo-tooltip-content">Its left placement</div>
-      <lion-tooltip-arrow slot="arrow"></lion-tooltip-arrow>
     </lion-tooltip>
   </div>
 `;
@@ -144,26 +140,38 @@ export const overridePopperConfig = () => html`
     <lion-tooltip .config=${{
       popperConfig: {
         placement: 'bottom-start',
-        positionFixed: true,
-        modifiers: {
-          keepTogether: {
+        strategy: 'fixed',
+        modifiers: [
+          {
+            name: 'keepTogether',
+            options: {},
             enabled: true,
           },
-          preventOverflow: {
+          {
+            name: 'preventOverflow',
+            options: {
+              boundariesElement: 'viewport',
+              padding: 16,
+            },
             enabled: false,
-            boundariesElement: 'viewport',
-            padding: 16,
           },
-          flip: {
+          {
+            name: 'flip',
+            options: {
+              boundariesElement: 'viewport',
+              padding: 4,
+            },
             enabled: true,
-            boundariesElement: 'viewport',
-            padding: 4,
           },
-          offset: {
+          {
+            name: 'offset',
+            options: {
+              // Note the different offset notation
+              offset: [0, 4],
+            },
             enabled: true,
-            offset: `0, 4px`,
           },
-        },
+        ],
       },
     }}>
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>

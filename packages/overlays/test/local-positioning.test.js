@@ -133,15 +133,13 @@ describe('Local Positioning', () => {
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `)),
         popperConfig: {
-          modifiers: {
-            keepTogether: {
+          modifiers: [
+            {
+              name: 'keepTogether',
               enabled: false,
             },
-            offset: {
-              enabled: true,
-              offset: `0, 16px`,
-            },
-          },
+            { name: 'offset', enabled: true, options: { offset: [0, 16] } },
+          ],
         },
       });
       await fixture(html`
@@ -206,12 +204,15 @@ describe('Local Positioning', () => {
         `)),
         popperConfig: {
           placement: 'top',
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 10px',
+              options: {
+                offset: [0, 10],
+              },
             },
-          },
+          ],
         },
       });
       await fixture(html`
@@ -229,12 +230,15 @@ describe('Local Positioning', () => {
       await ctrl.hide();
       await ctrl.updateConfig({
         popperConfig: {
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 20px',
+              options: {
+                offset: [0, 20],
+              },
             },
-          },
+          ],
         },
       });
       await ctrl.show();
@@ -261,12 +265,15 @@ describe('Local Positioning', () => {
         `)),
         popperConfig: {
           placement: 'top',
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 10px',
+              options: {
+                offset: [0, 10],
+              },
             },
-          },
+          ],
         },
       });
       await fixture(html`
@@ -283,12 +290,7 @@ describe('Local Positioning', () => {
 
       await ctrl.updateConfig({
         popperConfig: {
-          modifiers: {
-            offset: {
-              enabled: true,
-              offset: '0, 20px',
-            },
-          },
+          modifiers: [{ name: 'offset', enabled: true, options: { offset: [0, 20] } }],
         },
       });
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(

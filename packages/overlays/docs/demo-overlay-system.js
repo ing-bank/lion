@@ -5,11 +5,6 @@ import { OverlayMixin } from '../src/OverlayMixin.js';
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  */
 class DemoOverlaySystem extends OverlayMixin(LitElement) {
-  constructor() {
-    super();
-    this.__toggle = this.__toggle.bind(this);
-  }
-
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
@@ -17,15 +12,11 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
     });
   }
 
-  __toggle() {
-    this.opened = !this.opened;
-  }
-
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
 
     if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.addEventListener('click', this.__toggle);
+      this._overlayInvokerNode.addEventListener('click', this.toggle);
     }
   }
 
@@ -33,7 +24,7 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
     super._teardownOpenCloseListeners();
 
     if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+      this._overlayInvokerNode.removeEventListener('click', this.toggle);
     }
   }
 
