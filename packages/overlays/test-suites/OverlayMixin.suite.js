@@ -132,6 +132,9 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       await el.updateComplete;
       expect(spy.callCount).to.equal(1);
       expect(el.opened).to.be.true;
+      el.opened = true;
+      await el.updateComplete;
+      expect(spy.callCount).to.equal(1);
       await el._overlayCtrl.hide();
       await el.updateComplete;
       expect(spy.callCount).to.equal(2);
