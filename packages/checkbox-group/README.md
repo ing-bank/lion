@@ -11,6 +11,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
 import './lion-checkbox-group.js';
+import './lion-checkbox-indeterminate.js';
 import './lion-checkbox.js';
 
 export default {
@@ -164,5 +165,19 @@ export const event = () => html`
   </lion-checkbox-group>
   <br />
   <span>Selected scientists: <strong id="selectedDinosaur">N/A</strong></span>
+`;
+```
+
+### Indeterminate
+
+```js preview-story
+export const indeterminate = () => html`
+  <lion-checkbox-group name="scientists[]">
+    <lion-checkbox-indeterminate indeterminate label="Favorite scientists">
+    </lion-checkbox-indeterminate>
+    <lion-checkbox label="Archimedes"></lion-checkbox>
+    <lion-checkbox label="Francis Bacon"></lion-checkbox>
+    <lion-checkbox label="Marie Curie"></lion-checkbox>
+  </lion-checkbox-group>
 `;
 ```
