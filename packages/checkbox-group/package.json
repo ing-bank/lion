@@ -31,7 +31,8 @@
   },
   "sideEffects": [
     "lion-checkbox.js",
-    "lion-checkbox-group.js"
+    "lion-checkbox-group.js",
+    "lion-checkbox-indeterminate.js"
   ],
   "dependencies": {
     "@lion/core": "0.13.6",
