@@ -1,3 +1,4 @@
+import { html, css } from '@lion/core';
 import { LionCheckbox } from './LionCheckbox.js';
 
 export class LionCheckboxIndeterminate extends LionCheckbox {
@@ -39,13 +40,26 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     }
   }
 
-  _ownModelValueChanged(ev) {
-    if (ev.target === this) {
-      this._subCheckboxes.forEach(checkbox => {
-        // eslint-disable-next-line no-param-reassign
-        checkbox.checked = this.checked;
-      });
-    }
+  _ownInputChanged() {
+    this._subCheckboxes.forEach(checkbox => {
+      // eslint-disable-next-line no-param-reassign
+      checkbox.checked = this._inputNode.checked;
+    });
+  }
+
+  /**
+   * @override
+   * clicking on indeterminate status will set the status as checked
+   */
+  // eslint-disable-next-line class-methods-use-this
+  __toggleChecked() {}
+
+  // eslint-disable-next-line class-methods-use-this
+  _afterTemplate() {
+    return html`
+    <div class"nestedCheckboxes">
+      <slot></slot>
+    </div>`;
   }
 
   constructor() {
@@ -55,11 +69,19 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
 
   connectedCallback() {
     super.connectedCallback();
-    this._checkboxGroupNode.addEventListener(
+    this._parentModelValueChanged = this._parentModelValueChanged.bind(this);
+    this._checkboxGroupNode.addEventListener('model-value-changed', this._parentModelValueChanged);
+    this._ownInputChanged = this._ownInputChanged.bind(this);
+    this._inputNode.addEventListener('change', this._ownInputChanged.bind(this));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._checkboxGroupNode.removeEventListener(
       'model-value-changed',
-      this._parentModelValueChanged.bind(this),
+      this._parentModelValueChanged,
     );
-    this.addEventListener('model-value-changed', this._ownModelValueChanged);
+    this._inputNode.removeEventListener('change', this._ownInputChanged);
   }
 
   /** @param {import('lit-element').PropertyValues } changedProperties */
@@ -70,22 +92,19 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     }
   }
 
-  /**
-   * @override
-   * clicking on indeterminate status will set the status as checked
-   */
-  __toggleChecked() {
-    if (this.disabled) {
-      return;
-    }
+  static get styles() {
+    const superCtor = /** @type {typeof LionCheckbox} */ (super.prototype.constructor);
+    return [
+      superCtor.styles ? superCtor.styles : [],
+      css`
+        :host .nestedCheckboxes {
+          display: block;
+        }
 
-    // always turn off indeterminate
-    // and set checked to true
-    if (this.indeterminate) {
-      this.indeterminate = false;
-      this.checked = true;
-    } else {
-      this.checked = !this.checked;
-    }
+        :host ::slotted(lion-checkbox) {
+          padding-left: 8px;
+        }
+      `,
+    ];
   }
 }

@@ -175,10 +175,15 @@ const ChoiceInputMixinImplementation = superclass =>
         <small class="choice-field__help-text">
           <slot name="help-text"></slot>
         </small>
+        ${this._afterTemplate()}
       `;
     }
 
     _choiceGraphicTemplate() {
+      return nothing;
+    }
+
+    _afterTemplate() {
       return nothing;
     }
 
