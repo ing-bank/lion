@@ -388,7 +388,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       this._overlayCtrl.content.style.minWidth = 'auto';
       this._overlayCtrl.content.style.width = 'auto';
       const contentWidth = this._overlayCtrl.content.getBoundingClientRect().width;
-      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      /**
+       * TODO when inside an overlay the current solution doesn't work.
+       * Since that dialog is still hidden, open and close the select-rich
+       * doesn't have any effect so the contentWidth returns 0
+       */
+      if (contentWidth > 0) {
+        this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      }
       this._overlayCtrl.content.style.display = initContentDisplay;
       this._overlayCtrl.content.style.minWidth = initContentMinWidth;
       this._overlayCtrl.content.style.width = initContentWidth;

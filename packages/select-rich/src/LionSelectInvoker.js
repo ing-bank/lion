@@ -21,6 +21,7 @@ export class LionSelectInvoker extends LionButton {
 
         #content-wrapper {
           position: relative;
+          pointer-events: none;
         }
       `,
     ];
