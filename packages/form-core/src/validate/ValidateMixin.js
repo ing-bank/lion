@@ -470,7 +470,7 @@ export const ValidateMixinImplementation = superclass =>
         if (!(v instanceof Validator)) {
           // throws in constructor are not visible to end user so we do both
           const errorType = Array.isArray(v) ? 'array' : typeof v;
-          const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found.`;
+          const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of @lion/form-core.`;
           // eslint-disable-next-line no-console
           console.error(errorMessage, this);
           throw new Error(errorMessage);
