@@ -17,11 +17,11 @@ export class LionSelectInvoker extends LionButton {
       css`
         :host {
           justify-content: space-between;
+          align-items: center;
         }
 
         #content-wrapper {
           position: relative;
-          pointer-events: none;
         }
       `,
     ];
