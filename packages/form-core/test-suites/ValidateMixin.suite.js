@@ -70,7 +70,7 @@ export function runValidateMixinSuite(customConfig) {
         const stub = sinon.stub(console, 'error');
         const el = /** @type {ValidateElement} */ (await fixture(html`<${tag}></${tag}>`));
         const errorMessage =
-          'Validators array only accepts class instances of Validator. Type "array" found.';
+          'Validators array only accepts class instances of Validator. Type "array" found. This may be caused by having multiple installations of @lion/form-core.';
         expect(() => {
           // @ts-expect-error putting the wrong value on purpose
           el.validators = [[new Required()]];
@@ -78,7 +78,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(stub.args[0][0]).to.equal(errorMessage);
 
         const errorMessage2 =
-          'Validators array only accepts class instances of Validator. Type "string" found.';
+          'Validators array only accepts class instances of Validator. Type "string" found. This may be caused by having multiple installations of @lion/form-core.';
         expect(() => {
           // @ts-expect-error because we purposely put a wrong type
           el.validators = ['required'];
