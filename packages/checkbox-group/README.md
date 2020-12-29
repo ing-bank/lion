@@ -241,6 +241,11 @@ export const event = () => html`
 ```js preview-story
 export const indeterminate = () => html`
   <lion-checkbox-group name="scientists[]">
+    <lion-checkbox-indeterminate indeterminate readonly label="Favorite scientists">
+      <lion-checkbox label="Archimedes"></lion-checkbox>
+      <lion-checkbox label="Francis Bacon"></lion-checkbox>
+      <lion-checkbox label="Marie Curie"></lion-checkbox>
+    </lion-checkbox-indeterminate>
     <lion-checkbox-indeterminate indeterminate label="Favorite scientists">
       <lion-checkbox label="Archimedes"></lion-checkbox>
       <lion-checkbox label="Francis Bacon"></lion-checkbox>

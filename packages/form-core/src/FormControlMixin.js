@@ -750,7 +750,7 @@ const FormControlMixinImplementation = superclass =>
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: { formPath: [this], initialize: true },
+          detail: { formPath: [this], initialize: true, isTrusted: false },
         }),
       );
     }
@@ -817,12 +817,17 @@ const FormControlMixinImplementation = superclass =>
       }
       const formPath = [...parentFormPath, this];
 
+      console.log('isTrusted', ev.detail);
+
       // C2. Finally, redispatch a fresh model-value-changed event from our host, consumable
       // for an Application Developer
       //
       // Since for a11y everything needs to be in lightdom, we don't add 'composed:true'
       this.dispatchEvent(
-        new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
+        new CustomEvent('model-value-changed', {
+          bubbles: true,
+          detail: { formPath, isTrusted: ev.detail.isTrusted },
+        }),
       );
     }
 

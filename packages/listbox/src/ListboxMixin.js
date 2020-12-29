@@ -699,7 +699,13 @@ const ListboxMixinImplementation = superclass =>
       // only send model-value-changed if the event is caused by one of its children
       if (ev.detail && ev.detail.formPath) {
         this.dispatchEvent(
-          new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
+          new CustomEvent('model-value-changed', {
+            detail: {
+              formPath: ev.detail.formPath,
+              isTrusted: ev.detail.isTrusted,
+              element: ev.target,
+            },
+          }),
         );
       }
       this.__oldModelValue = this.modelValue;

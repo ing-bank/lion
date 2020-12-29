@@ -312,11 +312,13 @@ const FormatMixinImplementation = superclass =>
      * is fired. For objects, a deep comparison might be needed.
      */
     _dispatchModelValueChangedEvent() {
+      console.log('_onModelValueChanged', this.__isHandlingUserInput);
+
       /** @event model-value-changed */
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: { formPath: [this] },
+          detail: { formPath: [this], isTrusted: this.__isHandlingUserInput },
         }),
       );
     }

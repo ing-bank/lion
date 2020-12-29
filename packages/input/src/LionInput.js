@@ -100,6 +100,10 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
     if (changedProperties.has('autocomplete')) {
       this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
     }
+
+    if (changedProperties.has('readOnly')) {
+      this._inputNode.readOnly = this.readOnly;
+    }
   }
 
   __delegateReadOnly() {

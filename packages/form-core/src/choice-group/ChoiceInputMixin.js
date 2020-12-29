@@ -201,7 +201,9 @@ const ChoiceInputMixinImplementation = superclass =>
       if (this.disabled) {
         return;
       }
+      this.__isHandlingUserInput = true;
       this.checked = !this.checked;
+      this.__isHandlingUserInput = false;
     }
 
     /**
