@@ -80,8 +80,7 @@
     "typescript": "3.9.7",
     "web-component-analyzer": "^1.0.3",
     "webpack-merge": "^4.1.5",
-    "whatwg-fetch": "^3.0.0",
-    "playwright-chromium": "^1.8.0-next.1608058261773"
+    "whatwg-fetch": "^3.0.0"
   },
   "bundlesize": [
     {

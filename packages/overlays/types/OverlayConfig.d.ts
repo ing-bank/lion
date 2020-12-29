@@ -50,6 +50,11 @@ export interface OverlayConfig {
   popperConfig?: Partial<Options>;
   /** Viewport configuration. Will be used when placementMode is 'global' */
   viewportConfig?: ViewportConfig;
+  /**
+   * Determines the conditions hiding/showing should be based on. It gets the OverlayController as input and returns an object with
+   * functions with Overlay phases as keys
+   */
+  handlesUserInteraction?: Function;
 }
 
 export type ViewportPlacement =

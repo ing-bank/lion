@@ -144,7 +144,7 @@ export class OverlayController extends EventTargetShim {
       hidesOnOutsideClick: false,
       isTooltip: false,
       invokerRelation: 'description',
-      // handlesUserInteraction: false,
+      handlesUserInteraction: undefined,
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
@@ -400,6 +400,10 @@ export class OverlayController extends EventTargetShim {
     return /** @type {ViewportConfig} */ (this.config?.viewportConfig);
   }
 
+  get handlesUserInteraction() {
+    return /** @type {function} */ (this.config?.handlesUserInteraction);
+  }
+
   /**
    * Usually the parent node of contentWrapperNode that either exists locally or globally.
    * When a responsive scenario is created (in which we switch from global to local or vice versa)
@@ -473,18 +477,14 @@ export class OverlayController extends EventTargetShim {
         ...(this.__sharedConfig.popperConfig || {}),
         ...(cfgToAdd.popperConfig || {}),
         modifiers: [
-          ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
-            []),
-          ...((this.__sharedConfig.popperConfig && this.__sharedConfig.popperConfig.modifiers) ||
-            []),
-          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || []),
+          ...(this._defaultConfig.popperConfig?.modifiers || []),
+          ...(this.__sharedConfig.popperConfig?.modifiers || []),
+          ...(cfgToAdd.popperConfig?.modifiers || []),
         ],
       },
     };
 
     this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
-    // TODO: remove this, so we only have the getters (no setters)
-    // Object.assign(this, this.config);
     this._init({ cfgToAdd });
     this.__elementToFocusAfterHide = undefined;
   }
@@ -932,6 +932,24 @@ export class OverlayController extends EventTargetShim {
     if (this.inheritsReferenceWidth) {
       this._handleInheritsReferenceWidth();
     }
+
+    if (this.handlesUserInteraction) {
+      this._handleUserInteraction({ phase });
+    }
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   */
+  _handleUserInteraction({ phase }) {
+    if (typeof this.handlesUserInteraction === 'function') {
+      if (phase === 'init') {
+        this.__userInteractionHandler = this.handlesUserInteraction({ phase, controller: this });
+      }
+      if (this.__userInteractionHandler[phase]) {
+        this.__userInteractionHandler[phase]();
+      }
+    }
   }
 
   /**
@@ -1230,6 +1248,16 @@ export class OverlayController extends EventTargetShim {
         ...this.config?.popperConfig,
       });
     }
+  }
+
+  _hasDisabledInvoker() {
+    if (this.invokerNode) {
+      return (
+        /** @type {HTMLElement & { disabled: boolean }} */ (this.invokerNode).disabled ||
+        this.invokerNode.getAttribute('aria-disabled') === 'true'
+      );
+    }
+    return false;
   }
 }
 /** @type {PopperModule | undefined} */
