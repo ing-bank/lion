@@ -44,7 +44,7 @@ export function convertPopperConfig(p1Cfg) {
         if (typeof result.options.offset === 'string') {
           result.options.offset = result.options.offset
             .split(',')
-            .map((/** @type {string} */ c) => Number(c.replace('px', '')));
+            .map((/** @type {string} */ c) => Number(c.replace('px', '')) || 0);
         }
         return result;
       });
