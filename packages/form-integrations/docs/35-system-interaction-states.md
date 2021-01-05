@@ -3,7 +3,7 @@
 # Interaction States
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { render } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import '@lion/input/lion-input.js';

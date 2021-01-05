@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement } from 'lit-element';
+import { LitElement } from '../index.js';
 
 export declare class DisabledHost {
   disabled: boolean;

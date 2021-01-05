@@ -533,7 +533,7 @@ describe('lion-combobox', () => {
   describe('Selection display', () => {
     class MySelectionDisplay extends LitElement {
       /**
-       * @param {import('lit-element').PropertyValues } changedProperties
+       * @param {import('@lion/core').PropertyValues } changedProperties
        */
       onComboboxElementUpdated(changedProperties) {
         if (

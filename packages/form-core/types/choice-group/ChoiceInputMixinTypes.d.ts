@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement, TemplateResult } from '@lion/core';
-import { CSSResultArray } from 'lit-element';
+import { CSSResultArray } from '@lion/core';
 import { FormatHost } from '../FormatMixinTypes';
 
 export interface ChoiceInputModelValue {

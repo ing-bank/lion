@@ -3,7 +3,7 @@
 `lion-collapsible` is a combination of a button (the invoker), a chunk of 'extra content', and an animation that is used to disclose the extra content. There are two slots available respectively; `invoker` to specify collapsible invoker and `content` for the extra content of the collapsible.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 
 import './lion-collapsible.js';
 import './demo/custom-collapsible.js';

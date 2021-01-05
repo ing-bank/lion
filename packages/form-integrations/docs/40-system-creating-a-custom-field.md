@@ -3,7 +3,7 @@
 # Creating a custom field
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { render } from '@lion/core';
 import '@lion/input/lion-input.js';
 import { Validator } from '@lion/form-core';

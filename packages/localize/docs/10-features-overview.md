@@ -5,7 +5,7 @@
 ### As a function
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { render, LitElement } from '@lion/core';
 import { localize, formatNumber, formatDate, LocalizeMixin } from '../index.js';
 

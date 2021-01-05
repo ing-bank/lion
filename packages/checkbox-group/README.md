@@ -8,7 +8,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 > You should use `<lion-checkbox>` elements as the children of the `<lion-checkbox-group>`.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import './lion-checkbox-group.js';

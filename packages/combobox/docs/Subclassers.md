@@ -1,7 +1,7 @@
 # Combobox Extensions
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import './md-combobox/md-combobox.js';
 import './gh-combobox/gh-combobox.js';
 import './wa-combobox/wa-combobox.js';

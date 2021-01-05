@@ -1,5 +1,5 @@
 import { OverlayMixin } from '@lion/overlays';
-import { LitElement } from 'lit-element';
+import { LitElement } from '@lion/core';
 import { defineCE, fixture, html, expect, unsafeStatic } from '@open-wc/testing';
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';

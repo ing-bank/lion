@@ -3,7 +3,7 @@
 `lion-input` component is a webcomponent that enhances the functionality of the native `<input>` element.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { MaxLength } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

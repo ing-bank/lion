@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit-element';
+import { css, html, LitElement } from '@lion/core';
 
 export class LeaTab extends LitElement {
   static get styles() {

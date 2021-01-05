@@ -6,7 +6,7 @@ This is a meta package to show interaction between various form elements.
 For usage and installation please see the appropriate packages.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '@lion/checkbox-group/lion-checkbox-group.js';
 import '@lion/checkbox-group/lion-checkbox.js';
 import '@lion/combobox/lion-combobox.js';

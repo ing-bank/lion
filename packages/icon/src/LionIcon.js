@@ -101,7 +101,7 @@ export class LionIcon extends LitElement {
     this.__svg = nothing;
   }
 
-  /** @param {import('lit-element').PropertyValues} changedProperties */
+  /** @param {import('@lion/core').PropertyValues} changedProperties */
   update(changedProperties) {
     super.update(changedProperties);
     if (changedProperties.has('ariaLabel')) {

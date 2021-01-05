@@ -86,7 +86,7 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     this.__teardownStyleTag();
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -103,7 +103,7 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     if (changedProperties.has('modelValue')) {

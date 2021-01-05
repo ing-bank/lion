@@ -10,7 +10,7 @@ For an input that may mean that it is not an empty string,
 while for a checkbox group it means at least one checkbox needs to be checked.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionInput } from '@lion/input';
 import '@lion/input-amount/lion-input-amount.js';

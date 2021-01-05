@@ -35,6 +35,7 @@
   "dependencies": {
     "@lion/core": "0.13.6",
     "@lion/form-core": "0.6.14",
+    "@lion/validate-messages": "0.3.12",
     "@types/autosize": "^3.0.7",
     "autosize": "4.0.2"
   },

@@ -8,7 +8,7 @@ where each option name starts with the same word or phrase can also significantl
 usability for keyboard and screen reader users.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

@@ -7,7 +7,7 @@ It uses the `@lion/localize` system to provide these translations and has suppor
 15 locales.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { Required } from '@lion/form-core';
 import '@lion/form-core/lion-field.js';

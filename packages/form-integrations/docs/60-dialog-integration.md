@@ -3,7 +3,7 @@
 # Forms in a dialog
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '@lion/dialog/lion-dialog.js';
 import '@lion/select-rich/lion-select-rich.js';
 import '@lion/listbox/lion-options.js';

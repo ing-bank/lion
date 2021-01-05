@@ -3,7 +3,7 @@
 A web component for displaying icons.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { icons } from './index.js';
 import './docs/icons/iconset-bugs.js';
 import './docs/icons/iconset-misc.js';

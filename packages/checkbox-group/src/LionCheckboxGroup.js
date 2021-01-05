@@ -11,7 +11,7 @@ export class LionCheckboxGroup extends ChoiceGroupMixin(FormGroupMixin(LitElemen
     this.multipleChoice = true;
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('name') && !String(this.name).match(/\[\]$/)) {

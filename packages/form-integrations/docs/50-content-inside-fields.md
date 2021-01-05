@@ -3,7 +3,7 @@
 # Content inside fields
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '@lion/input/lion-input.js';
 import '@lion/button/lion-button.js';
 
