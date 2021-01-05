@@ -329,12 +329,12 @@ describe('detail.isTriggeredByUser', () => {
    * - false: when .modelValue (or checked) set programmatically
    *
    * ChoiceGroupField (listbox, select-rich, combobox, radio-group, checkbox-group):
-   * - true: when child formElement condition for Choice Field is met
-   * - false: when child formElement condition for Choice Field is not met
+   * - true: when child formElement condition for ChoiceField(Option) is met
+   * - false: when child formElement condition for ChoiceField(Option) is not met
    *
    * FormOrFieldset (fieldset, form):
-   * - true: when child formElement condition for Field is met
-   * - false: when child formElement condition for Field is not met
+   * - true: when child formElement condition for RegularField is met
+   * - false: when child formElement condition for RegularField is not met
    */
 
   const featureDetectChoiceField = el => 'checked' in el && 'choiceValue' in el;

@@ -6,7 +6,7 @@ import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 import { LionValidationFeedback } from '../src/validate/LionValidationFeedback';
 import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
 
-export type ModelValueEventDetails {
+export type ModelValueEventDetails = {
   /**
    * A list that represents the path of FormControls the model-value-changed event
    * 'traveled through'.
@@ -15,10 +15,12 @@ export type ModelValueEventDetails {
    */
   formPath: HTMLElement[];
   /**
-   * Whether the model-value-changed event is triggered via user interaction. This information
-   * can be helpful for both Application Developers and Subclassers.
-   * This concept is related to the native isTrusted property:
-   * https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
+   * Sometimes it can be helpful to detect whether a value change was caused by a user or
+   * via a programmatical change.
+   * This feature acts as a normalization layer: since we use `model-value-changed` as a single
+   * source of truth event for all FormControls, there should be no use cases for
+   * (inconsistently implemented (cross browser)) events
+   * like 'input'/'change'/'user-input-changed' etc.)
    */
   isTriggeredByUser: boolean;
   /**
@@ -27,7 +29,7 @@ export type ModelValueEventDetails {
    * case `isTriggeredByUser` is true))
    */
   initialize?: boolean;
-}
+};
 
 declare interface HTMLElementWithValue extends HTMLElement {
   value: string;

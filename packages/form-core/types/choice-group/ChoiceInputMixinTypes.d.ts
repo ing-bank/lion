@@ -35,6 +35,7 @@ export declare class ChoiceInputHost {
   render(): TemplateResult;
 
   _choiceGraphicTemplate(): TemplateResult;
+  _afterTemplate(): TemplateResult;
 
   connectedCallback(): void;
   disconnectedCallback(): void;
@@ -46,6 +47,8 @@ export declare class ChoiceInputHost {
   __syncCheckedToModel(checked: boolean): void;
 
   __syncCheckedToInputElement(): void;
+
+  __isHandlingUserInput: boolean;
 
   _proxyInputEvent(): void;
 
