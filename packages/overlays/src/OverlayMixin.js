@@ -76,23 +76,23 @@ export const OverlayMixinImplementation = superclass =>
      */
     // eslint-disable-next-line
     _defineOverlay({ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }) {
+      const overlayConfig = this._defineOverlayConfig() || {};
+
       return new OverlayController({
         contentNode,
         invokerNode,
         referenceNode,
         backdropNode,
         contentWrapperNode,
-        ...this._defineOverlayConfig(), // wc provided in the class as defaults
+        ...overlayConfig, // wc provided in the class as defaults
         ...this.config, // user provided (e.g. in template)
         popperConfig: {
-          ...(this._defineOverlayConfig().popperConfig || {}),
+          ...(overlayConfig.popperConfig || {}),
           ...(this.config.popperConfig || {}),
-          modifiers: {
-            ...((this._defineOverlayConfig().popperConfig &&
-              this._defineOverlayConfig()?.popperConfig?.modifiers) ||
-              {}),
-            ...((this.config.popperConfig && this.config.popperConfig.modifiers) || {}),
-          },
+          modifiers: [
+            ...(overlayConfig.popperConfig?.modifiers || []),
+            ...(this.config.popperConfig?.modifiers || []),
+          ],
         },
       });
     }

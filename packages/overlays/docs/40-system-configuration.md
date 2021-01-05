@@ -341,7 +341,7 @@ Features:
 - Currently eagerly loads popper if mode is local, in the constructor. Loading during idle time / using prefetch would be better, this is still WIP. PRs are welcome!
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
-> This also means that if you use the arrow feature, you are in charge of styling it properly, use the x-placement attribute for this.
+> This also means that if you use the arrow feature, you are in charge of styling it properly, use the data-popper-placement attribute for this.
 > An example implementation can be found in [lion-tooltip](?path=/docs/overlays-tooltip--main#tooltip), where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
@@ -356,31 +356,35 @@ export const popperConfig = () => html`
         /* Placement of content node, relative to invoker node */
         placement: 'bottom-start',
         positionFixed: true,
-        modifiers: {
-          /* Prevents detachment of content node from invoker node */
-          keepTogether: {
-            enabled: true,
-          },
+        modifiers: [
           /* When enabled, adds shifting/sliding behavior on secondary axis */
-          preventOverflow: {
+          {
+            name: 'preventOverflow',
             enabled: false,
-            boundariesElement: 'viewport',
-            /* When enabled, this is the <boundariesElement>-margin for the secondary axis */
-            padding: 32,
+            options: {
+              boundariesElement: 'viewport',
+              /* When enabled, this is the <boundariesElement>-margin for the secondary axis */
+              padding: 32,
+            },
           },
           /* Use to adjust flipping behavior or constrain directions */
-          flip: {
-            boundariesElement: 'viewport',
-            /* <boundariesElement>-margin for flipping on primary axis */
-            padding: 16,
+          {
+            name: 'flip',
+            options: {
+              boundariesElement: 'viewport',
+              /* <boundariesElement>-margin for flipping on primary axis */
+              padding: 16,
+            },
           },
           /* When enabled, adds an offset to either primary or secondary axis */
-          offset: {
-            enabled: true,
-            /* margin between content node and invoker node */
-            offset: `0, 16px`,
+          {
+            name: 'offset',
+            options: {
+              /* margin between content node and invoker node */
+              offset: [0, 16],
+            },
           },
-        },
+        ],
       },
     }}
   >
@@ -398,4 +402,4 @@ export const popperConfig = () => html`
 `;
 ```
 
-> Note: popperConfig reflects [Popper.js API](https://popper.js.org/popper-documentation.html)
+> Note: popperConfig reflects [Popper API](https://popper.js.org/docs/v2/)

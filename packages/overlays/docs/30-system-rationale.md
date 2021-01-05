@@ -15,7 +15,7 @@ appearances and types of overlays.
 
 An overlay is a visual element that is painted on top of a page, breaking out of the regular
 document flow.
-Overlays come in many forms (dialog, popover, dropown, tooltip etc.)
+Overlays come in many forms (dialog, popover, dropdown, tooltip etc.)
 For a more exhaustive list, see 'Types of overlays' below.
 Our system tries to focus on mapping all these forms to officially supported aria widgets.
 Hence, all occurrences of overlays we offer will be accessible out of the box.
@@ -142,7 +142,7 @@ Other roles worth mentioning are _alertdialog_ (a specific instance of the dialo
 alerts), select (an abstract role), _combobox_ and _menu_.
 
 Also, the W3C document often refers to _popup_. This term is mentioned in the context of _combobox_,
-_listbox_, _grid_, _tree_, _dialog_ and _tooltip_. Therefore, one could say it could be a term
+_listbox_, _grid_, _tree_, _dialog_ and _tooltip_. It can be considered as a synonym of _overlay_.
 
 _aria-haspopup_ attribute needs to be mentioned: it can have values ‘menu’, ‘listbox’, ‘grid’,
 ’tree’ and ‘dialog’.
