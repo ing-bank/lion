@@ -1,4 +1,4 @@
-import { formatDate } from './formatDate.js';
+import { formatDate } from '../formatDate.js';
 import { clean } from './clean.js';
 
 /**

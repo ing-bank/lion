@@ -22,17 +22,17 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     return this._checkboxGroupNode.formElements.filter(cb => cb !== this && this.contains(cb));
   }
 
+  /**
+   * @param {CustomEvent} event
+   */
   _parentModelValueChanged(event) {
     const checkedElements = this._subCheckboxes.filter(checkbox => checkbox.checked);
-
-    console.log(event.detail.isTrusted);
-
     switch (this._subCheckboxes.length - checkedElements.length) {
       // all checked
       case 0:
         this.indeterminate = false;
         this.checked = true;
-        if (event.detail.isTrusted) {
+        if (event.detail.isTriggeredByUser) {
           this.__prevState = undefined;
         }
         break;
@@ -40,7 +40,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       case this._subCheckboxes.length:
         this.indeterminate = false;
         this.checked = false;
-        if (event.detail.isTrusted) {
+        if (event.detail.isTriggeredByUser) {
           this.__prevState = undefined;
         }
         break;
@@ -81,7 +81,6 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * clicking on indeterminate status will set the status as checked
    * @param {Event} event
    */
-  // eslint-disable-next-line class-methods-use-this
   __toggleChecked({ target }) {
     if (this.disabled || target !== this) {
       return;

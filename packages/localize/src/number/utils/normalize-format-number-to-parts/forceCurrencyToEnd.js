@@ -1,7 +1,7 @@
 /**
  * For Dutch and Belgian amounts the currency should be at the end of the string
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
  * @returns {FormatNumberPart[]}
  */

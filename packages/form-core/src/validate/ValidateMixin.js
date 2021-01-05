@@ -14,6 +14,7 @@ import { FormControlMixin } from '../FormControlMixin.js';
 
 /**
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateMixin} ValidateMixin
+ * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
  */
 
 /**
@@ -177,6 +178,10 @@ export const ValidateMixinImplementation = superclass =>
       super.firstUpdated(changedProperties);
       this.__validateInitialized = true;
       this.validate();
+
+      this.addEventListener('blur', () => {
+        this._feedbackNode.setAttribute('aria-live', 'assertive');
+      });
     }
 
     /**
@@ -559,8 +564,8 @@ export const ValidateMixinImplementation = superclass =>
      * - we set aria-invalid="true" in case hasErrorVisible is true
      */
     _updateFeedbackComponent() {
-      const { _feedbackNode } = this;
-      if (!_feedbackNode) {
+      const { _feedbackNode: feedbackNode } = this;
+      if (!feedbackNode) {
         return;
       }
 
@@ -575,12 +580,11 @@ export const ValidateMixinImplementation = superclass =>
             validationResult: this.__validationResult,
           });
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
-
-          _feedbackNode.feedbackData = messageMap.length ? messageMap : [];
+          feedbackNode.feedbackData = messageMap.length ? messageMap : [];
         });
       } else {
         this.__feedbackQueue.add(async () => {
-          _feedbackNode.feedbackData = [];
+          feedbackNode.feedbackData = [];
         });
       }
       this.feedbackComplete = this.__feedbackQueue.complete;
@@ -619,9 +623,17 @@ export const ValidateMixinImplementation = superclass =>
           .constructor);
         // Necessary typecast because types aren't smart enough to understand that we filter out undefined
         this.showsFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
-          .map(type => (this._hasFeedbackVisibleFor(type) ? type : undefined))
-          .filter(_ => !!_));
+          .map(type => this._hasFeedbackVisibleFor(type) && type)
+          .filter(Boolean));
         this._updateFeedbackComponent();
+      }
+
+      if (changedProperties.has('focused')) {
+        if (this.focused) {
+          // On focus, we make sure aria-live is not assertive. blur we need to make
+          // sure we set aria-live back to assertive before the next element receives focus
+          this._feedbackNode.setAttribute('aria-live', 'polite');
+        }
       }
     }
 

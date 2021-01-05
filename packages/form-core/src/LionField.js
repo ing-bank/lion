@@ -85,8 +85,6 @@ export class LionField extends FormControlMixin(
   }
 
   _onChange() {
-    console.log('_onChange');
-
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {
         bubbles: true,

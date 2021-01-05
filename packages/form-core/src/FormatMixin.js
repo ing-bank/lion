@@ -8,6 +8,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 /**
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
  * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 // For a future breaking release:
@@ -312,13 +313,14 @@ const FormatMixinImplementation = superclass =>
      * is fired. For objects, a deep comparison might be needed.
      */
     _dispatchModelValueChangedEvent() {
-      console.log('_onModelValueChanged', this.__isHandlingUserInput);
-
       /** @event model-value-changed */
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: { formPath: [this], isTrusted: this.__isHandlingUserInput },
+          detail: /** @type { ModelValueEventDetails } */ ({
+            formPath: [this],
+            isTriggeredByUser: Boolean(this.__isHandlingUserInput),
+          }),
         }),
       );
     }

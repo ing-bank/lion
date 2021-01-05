@@ -58,11 +58,7 @@ Useful on input elements it allows to define how many characters can be entered.
 
 ```js preview-story
 export const stringValidators = () => html`
-  <lion-input
-    .validators=${[new EqualsLength(7)]}
-    .modelValue=${'not exactly'}
-    label="EqualsLength"
-  ></lion-input>
+  <lion-input .validators=${[new EqualsLength(7)]} label="EqualsLength"></lion-input>
   <lion-input
     .validators=${[new MinLength(10)]}
     .modelValue=${'too short'}
