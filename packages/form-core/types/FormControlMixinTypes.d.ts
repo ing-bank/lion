@@ -6,6 +6,29 @@ import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 import { LionValidationFeedback } from '../src/validate/LionValidationFeedback';
 import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
 
+export type ModelValueEventDetails {
+  /**
+   * A list that represents the path of FormControls the model-value-changed event
+   * 'traveled through'.
+   * (every FormControl stops propagation of its child and sends a new event, hereby adding
+   * itself to the beginning of formPath)
+   */
+  formPath: HTMLElement[];
+  /**
+   * Whether the model-value-changed event is triggered via user interaction. This information
+   * can be helpful for both Application Developers and Subclassers.
+   * This concept is related to the native isTrusted property:
+   * https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
+   */
+  isTriggeredByUser: boolean;
+  /**
+   * Whether it is the first event sent on initialization of the form (other
+   * model-value-changed events are triggered imperatively or via user input (in the latter
+   * case `isTriggeredByUser` is true))
+   */
+  initialize?: boolean;
+}
+
 declare interface HTMLElementWithValue extends HTMLElement {
   value: string;
 }
@@ -40,12 +63,12 @@ export declare class FormControlHost {
    * controls until they are enabled.
    * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
    */
-  readOnly: boolean;
+  public readOnly: boolean;
   /**
-   * The name the element will be registered on to the .formElements collection
+   * The name the element will be registered with to the .formElements collection
    * of the parent.
    */
-  name: string;
+  public name: string;
   /**
    * The model value is the result of the parser function(when available).
    * It should be considered as the internal value used for validation and reasoning/logic.
@@ -58,25 +81,25 @@ export declare class FormControlHost {
    * - For a number input: a formatted String '1.234,56' will be converted to a Number:
    *   1234.56
    */
-  modelValue: unknown;
+  public modelValue: unknown;
   /**
    * The label text for the input node.
    * When no light dom defined via [slot=label], this value will be used
    */
-  get label(): string;
-  set label(arg: string);
+  public get label(): string;
+  public set label(arg: string);
   __label: string | undefined;
   /**
    * The helpt text for the input node.
    * When no light dom defined via [slot=help-text], this value will be used
    */
-  get helpText(): string;
-  set helpText(arg: string);
+  public get helpText(): string;
+  public set helpText(arg: string);
   __helpText: string | undefined;
-  set fieldName(arg: string);
-  get fieldName(): string;
+  public set fieldName(arg: string);
+  public get fieldName(): string;
   __fieldName: string | undefined;
-  get slots(): SlotsMap;
+  public get slots(): SlotsMap;
   get _inputNode(): HTMLElementWithValue;
   get _labelNode(): HTMLElement;
   get _helpTextNode(): HTMLElement;
@@ -123,7 +146,7 @@ export declare class FormControlHost {
   __reflectAriaAttr(attrName: string, nodes: HTMLElement[], reorder: boolean | undefined): void;
   _isEmpty(modelValue?: unknown): boolean;
   _getAriaDescriptionElements(): HTMLElement[];
-  addToAriaLabelledBy(
+  public addToAriaLabelledBy(
     element: HTMLElement,
     customConfig?: {
       idPrefix?: string | undefined;
@@ -131,7 +154,7 @@ export declare class FormControlHost {
     },
   ): void;
   __reorderAriaLabelledNodes: boolean | undefined;
-  addToAriaDescribedBy(
+  public addToAriaDescribedBy(
     element: HTMLElement,
     customConfig?: {
       idPrefix?: string | undefined;

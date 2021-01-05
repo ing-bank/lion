@@ -123,18 +123,23 @@ export function runFormatMixinSuite(customConfig) {
       `);
     });
 
-    it('fires `model-value-changed` for every change on the input', async () => {
+    it('fires `model-value-changed` for every input triggered by user', async () => {
       const formatEl = /** @type {FormatClass} */ (await fixture(
         html`<${elem}><input slot="input"></${elem}>`,
       ));
 
       let counter = 0;
-      formatEl.addEventListener('model-value-changed', () => {
+      let isTriggeredByUser = false;
+      formatEl.addEventListener('model-value-changed', (
+        /** @param {CustomEvent} event */ event,
+      ) => {
         counter += 1;
+        isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
       });
 
       mimicUserInput(formatEl, generateValueBasedOnType());
       expect(counter).to.equal(1);
+      expect(isTriggeredByUser).to.be.true;
 
       // Counter offset +1 for Date because parseDate created a new Date object
       // when the user changes the value.
@@ -150,17 +155,21 @@ export function runFormatMixinSuite(customConfig) {
       expect(counter).to.equal(2 + counterOffset);
     });
 
-    it('fires `model-value-changed` for every modelValue change', async () => {
+    it('fires `model-value-changed` for every programmatic modelValue change', async () => {
       const el = /** @type {FormatClass} */ (await fixture(
         html`<${elem}><input slot="input"></${elem}>`,
       ));
       let counter = 0;
-      el.addEventListener('model-value-changed', () => {
+      let isTriggeredByUser = false;
+
+      el.addEventListener('model-value-changed', event => {
         counter += 1;
+        isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
       });
 
       el.modelValue = 'one';
       expect(counter).to.equal(1);
+      expect(isTriggeredByUser).to.be.false;
 
       // no change means no event
       el.modelValue = 'one';

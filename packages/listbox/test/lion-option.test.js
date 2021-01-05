@@ -13,6 +13,38 @@ describe('lion-option', () => {
       expect(el.modelValue).to.deep.equal({ value: 10, checked: false });
     });
 
+    it('fires model-value-changed on click', async () => {
+      let isTriggeredByUser;
+      const el = /** @type {LionOption} */ (await fixture(html`
+        <lion-option
+          @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+            isTriggeredByUser = event.detail.isTriggeredByUser;
+          }}"
+        >
+        </lion-option>
+      `));
+      el.dispatchEvent(new CustomEvent('click', { bubbles: true }));
+      expect(isTriggeredByUser).to.be.true;
+    });
+
+    it('fires model-value-changed on programmatic "checked" change', async () => {
+      let count = 0;
+      let isTriggeredByUser;
+
+      const el = /** @type {LionOption} */ (await fixture(html`
+        <lion-option
+          @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+            count += 1;
+            isTriggeredByUser = event.detail.isTriggeredByUser;
+          }}"
+        >
+        </lion-option>
+      `));
+      el.checked = true;
+      expect(count).to.equal(1);
+      expect(isTriggeredByUser).to.be.false;
+    });
+
     it('can be checked', async () => {
       const el = /** @type {LionOption} */ (await fixture(
         html`<lion-option .choiceValue=${10} checked></lion-option>`,

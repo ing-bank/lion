@@ -14,6 +14,7 @@ import { LionOptions } from './LionOptions.js';
  * @typedef {import('../types/ListboxMixinTypes').ListboxMixin} ListboxMixin
  * @typedef {import('../types/ListboxMixinTypes').ListboxHost} ListboxHost
  * @typedef {import('@lion/form-core/types/registration/FormRegistrarPortalMixinTypes').FormRegistrarPortalHost} FormRegistrarPortalHost
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 function uuid() {
@@ -699,7 +700,13 @@ const ListboxMixinImplementation = superclass =>
       // only send model-value-changed if the event is caused by one of its children
       if (ev.detail && ev.detail.formPath) {
         this.dispatchEvent(
-          new CustomEvent('model-value-changed', { detail: { element: ev.target } }),
+          new CustomEvent('model-value-changed', {
+            detail: /** @type {ModelValueEventDetails} */ ({
+              formPath: ev.detail.formPath,
+              isTriggeredByUser: ev.detail.isTriggeredByUser,
+              element: ev.target,
+            }),
+          }),
         );
       }
       this.__oldModelValue = this.modelValue;
