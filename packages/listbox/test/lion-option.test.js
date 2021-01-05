@@ -21,10 +21,9 @@ describe('lion-option', () => {
             isTriggeredByUser = event.detail.isTriggeredByUser;
           }}"
         >
-          <input slot="input" />
         </lion-option>
       `));
-      el._inputNode.dispatchEvent(new CustomEvent('click', { bubbles: true }));
+      el.dispatchEvent(new CustomEvent('click', { bubbles: true }));
       expect(isTriggeredByUser).to.be.true;
     });
 
@@ -39,7 +38,6 @@ describe('lion-option', () => {
             isTriggeredByUser = event.detail.isTriggeredByUser;
           }}"
         >
-          <input slot="input" />
         </lion-option>
       `));
       el.checked = true;
