@@ -8,9 +8,9 @@ const CURRENCY_CODE_SYMBOL_MAP = {
 /**
  * Change the symbols for locale 'en-AU', due to bug in Chrome
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
  * @returns {FormatNumberPart[]}
  */
 export function forceENAUSymbols(formattedParts, { currency, currencyDisplay } = {}) {

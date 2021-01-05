@@ -1,9 +1,9 @@
-import { normalSpaces } from './normalSpaces.js';
+import { normalSpaces } from '../normalSpaces.js';
 
 /**
  * Parts with forced "normal" spaces
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
  * @returns {FormatNumberPart[]}
  */

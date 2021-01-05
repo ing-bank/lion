@@ -1,4 +1,5 @@
-import { normalizeIntlDate } from './normalizeIntlDate.js';
+import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
+import { forceShortMonthNamesForEnGb } from './utils/forceShortMonthNamesForEnGb.js';
 
 /** @type {Object.<string, Object.<string,string[]>>} */
 const monthsLocaleCache = {};
@@ -26,7 +27,9 @@ export function getMonthNames({ locale, style = 'long' } = {}) {
     const normalizedDate = normalizeIntlDate(formattedDate);
     months.push(normalizedDate);
   }
-
+  if (locale === 'en-GB' && style === 'short') {
+    months = forceShortMonthNamesForEnGb(months);
+  }
   monthsLocaleCache[locale] = monthsLocaleCache[locale] || {};
   monthsLocaleCache[locale][style] = months;
 

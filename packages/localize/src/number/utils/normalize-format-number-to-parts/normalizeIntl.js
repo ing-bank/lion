@@ -1,4 +1,4 @@
-import { getGroupSeparator } from './getGroupSeparator.js';
+import { getGroupSeparator } from '../../getGroupSeparator.js';
 import { forceAddGroupSeparators } from './forceAddGroupSeparators.js';
 import { forceCurrencyToEnd } from './forceCurrencyToEnd.js';
 import { forceNormalSpaces } from './forceNormalSpaces.js';
@@ -9,11 +9,11 @@ import { forceTryCurrencyCode } from './forceTryCurrencyCode.js';
 import { forceENAUSymbols } from './forceENAUSymbols.js';
 
 /**
- * Function with all fixes on localize
+ * Normalizes function "formatNumberToParts"
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} options
+ * @param {import('../../../../types/LocalizeMixinTypes').FormatNumberOptions} options
  * @param {string} _locale
  * @returns {FormatNumberPart[]}
  */

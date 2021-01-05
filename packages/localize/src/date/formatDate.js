@@ -1,6 +1,6 @@
 import { localize } from '../localize.js';
-import { getLocale } from './getLocale.js';
-import { normalizeIntlDate } from './normalizeIntlDate.js';
+import { getLocale } from '../utils/getLocale.js';
+import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
 
 /** @typedef {import('../../types/LocalizeMixinTypes').DatePostProcessor} DatePostProcessor */
 
