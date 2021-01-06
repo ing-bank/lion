@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.18.12
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [a8cf4215]
+- Updated dependencies [5302ec89]
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+- Updated dependencies [a8cf4215]
+  - @lion/localize@0.15.4
+  - @lion/form-core@0.7.0
+  - @lion/validate-messages@0.3.13
+  - @lion/overlays@0.23.0
+  - @lion/calendar@0.12.10
+  - @lion/core@0.13.7
+  - @lion/input-date@0.8.13
+
 ## 0.18.11
 
 ### Patch Changes

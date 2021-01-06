@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.23.0
+
+### Minor Changes
+
+- 1f62ed8b: **BREAKING:** Upgrade to popper v2. Has breaking changes for overlays config.popperConfig which is now aligned with v2 of Popper. See their [migration guidelines](https://popper.js.org/docs/v2/migration-guide/).
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- 53d22a85: Prevent `opened-changed` event to be sent twice
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+  - singleton-manager@1.2.1
+
 ## 0.22.8
 
 ### Patch Changes

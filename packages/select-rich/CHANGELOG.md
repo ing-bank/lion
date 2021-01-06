@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.21.21
+
+### Patch Changes
+
+- 9b9db3dd: add workarround and todo for align select-rich invoker width with options if its inside an overlay
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [718843e5]
+  - @lion/form-core@0.7.0
+  - @lion/listbox@0.4.0
+  - @lion/overlays@0.23.0
+  - @lion/button@0.8.8
+  - @lion/core@0.13.7
+
 ## 0.21.20
 
 ### Patch Changes

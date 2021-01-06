@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.15.4
+
+### Patch Changes
+
+- a8cf4215: Improved localize DX by making it clear from source code structure what are main (exported) functions and what are util/helper functions consumed by those main functions.
+  Added Chrome Intl corrections for Philippine currency names and en-GB short month names.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+  - singleton-manager@1.2.1
+
 ## 0.15.3
 
 ### Patch Changes

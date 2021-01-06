@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.7.13
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+  - @lion/fieldset@0.15.13
+
 ## 0.7.12
 
 ### Patch Changes

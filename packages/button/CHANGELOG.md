@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.8.8
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- 718843e5: Set user-select to none on button, so that the inner text is not selectable.
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+
 ## 0.8.7
 
 ### Patch Changes
