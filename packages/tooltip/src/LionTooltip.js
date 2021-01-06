@@ -4,7 +4,7 @@ import { ArrowMixin, OverlayMixin } from '@lion/overlays';
 /**
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/core').CSSResult} CSSResult
- * @typedef {import('lit-element').CSSResultArray} CSSResultArray
+ * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
  */
 
 /**

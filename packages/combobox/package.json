@@ -45,9 +45,7 @@
     "@lion/core": "0.13.6",
     "@lion/form-core": "0.6.14",
     "@lion/listbox": "0.3.12",
-    "@lion/overlays": "0.22.8"
-  },
-  "devDependencies": {
+    "@lion/overlays": "0.22.8",
     "@lion/validate-messages": "0.3.12"
   },
   "keywords": [

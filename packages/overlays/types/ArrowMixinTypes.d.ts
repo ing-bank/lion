@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement, TemplateResult } from '@lion/core';
-import { CSSResultArray } from 'lit-element';
+import { CSSResultArray } from '@lion/core';
 import Data from 'popper.js';
 import { Options as PopperOptions } from '@popperjs/core/lib/popper';
 import { OverlayConfig } from '../types/OverlayConfig';

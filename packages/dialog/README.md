@@ -6,7 +6,7 @@
 Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import demoStyle from './docs/demo-dialog-style.js';
 import './docs/styled-dialog-content.js';
 import './docs/slots-dialog-content.js';

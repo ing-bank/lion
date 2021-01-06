@@ -36,7 +36,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     this.defaultValidators.push(new IsDate());
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('locale')) {

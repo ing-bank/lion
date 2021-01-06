@@ -3,7 +3,7 @@
 # Overlay System
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { render, LitElement } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import {

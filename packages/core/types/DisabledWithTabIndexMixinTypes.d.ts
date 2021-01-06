@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { DisabledHost } from './DisabledMixinTypes';
-import { LitElement } from 'lit-element';
+import { LitElement } from '../index.js';
 export declare class DisabledWithTabIndexHost {
   tabIndex: number;
   /**

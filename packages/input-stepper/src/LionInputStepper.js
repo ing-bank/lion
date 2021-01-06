@@ -84,7 +84,7 @@ export class LionInputStepper extends LionInput {
     this.removeEventListener('keydown', this.__keyDownHandler);
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 

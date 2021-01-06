@@ -3,7 +3,7 @@
 # Overlay System - Configuration
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '../docs/demo-overlay-system.js';
 import '../docs/applyDemoOverlayStyles.js';
 

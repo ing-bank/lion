@@ -3,7 +3,7 @@
 `lion-steps` breaks a single goal down into dependable sub-tasks.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import './lion-step.js';
 import './lion-steps.js';
 

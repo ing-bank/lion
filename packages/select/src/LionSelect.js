@@ -62,7 +62,7 @@ export class LionSelect extends LionFieldWithSelect {
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('disabled')) {

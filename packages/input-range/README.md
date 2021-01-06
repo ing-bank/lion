@@ -4,7 +4,7 @@
 Its purpose is to provide a way for users to select one value from a range of values.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 
 import './lion-input-range.js';
 

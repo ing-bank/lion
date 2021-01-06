@@ -5,7 +5,7 @@
 You should use `<lion-radio>`s inside this element.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

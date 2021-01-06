@@ -4,7 +4,7 @@
 Its purpose is to provide a way for users to write text that is multiple lines long.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { MaxLength, MinLength, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

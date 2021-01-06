@@ -41,9 +41,9 @@ export declare class ValidateHost {
 
   connectedCallback(): void;
   disconnectedCallback(): void;
-  firstUpdated(changedProperties: import('lit-element').PropertyValues): void;
+  firstUpdated(changedProperties: import('@lion/core').PropertyValues): void;
   updateSync(name: string, oldValue: unknown): void;
-  updated(changedProperties: import('lit-element').PropertyValues): void;
+  updated(changedProperties: import('@lion/core').PropertyValues): void;
 
   validate(opts?: { clearCurrentResult?: boolean }): void;
   __storePrevResult(): void;

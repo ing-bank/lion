@@ -3,7 +3,7 @@
 `lion-pagination` component that handles pagination.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 
 import './lion-pagination.js';
 

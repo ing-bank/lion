@@ -27,7 +27,7 @@ const extendDocsConfig = {
 
 describe('babel-plugin-extend-docs: integration tests', () => {
   it('works for the demo', () => {
-    const code = `import { LitElement, html } from 'lit-element';
+    const code = `import { LitElement, html } from '@lion/core';
 import { MyCounter } from './src/MyCounter.js';
 import './my-counter.js';
 
@@ -52,7 +52,7 @@ class MyApp extends LitElement {
 
 customElements.define('my-app', MyApp);
 `;
-    const output = `import { LitElement, html } from "lit-element";
+    const output = `import { LitElement, html } from "@lion/core";
 import { MyExtension } from "./my-extension/index.js";
 import "./my-extension/my-extension.js";
 

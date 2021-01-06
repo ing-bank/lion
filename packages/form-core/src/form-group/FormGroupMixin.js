@@ -207,7 +207,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('@lion/core').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

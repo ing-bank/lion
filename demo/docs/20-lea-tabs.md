@@ -7,7 +7,7 @@
 `lea-tabs` implements tabs view to allow users to quickly move between a small number of equally important views.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { LitElement } from '@lion/core';
 
 import '../lea-tabs.js';

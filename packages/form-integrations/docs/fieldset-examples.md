@@ -3,7 +3,7 @@
 # Fieldset Examples
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '@lion/input/lion-input.js';
 import { localize } from '@lion/localize';
 import { MinLength, Validator, Required } from '@lion/form-core';

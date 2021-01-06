@@ -3,7 +3,7 @@
 `lion-fieldset` groups multiple input fields or other fieldsets together.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import '@lion/input/lion-input.js';
 import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';

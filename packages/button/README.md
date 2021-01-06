@@ -5,7 +5,7 @@
 `lion-button` provides a button component that is easily styleable and is accessible.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 
 import './lion-button.js';
 import iconSvg from './docs/assets/icon.svg.js';

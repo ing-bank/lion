@@ -3,7 +3,7 @@
 # Providence
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { providenceFlowSvg, providenceInternalFlowSvg } from './docs/_mermaid.svg.js';
 
 export default {

@@ -26,7 +26,7 @@ describe('SyncUpdatableMixin', () => {
           this.propB = 'init-b';
         }
 
-        /** @param {import('lit-element').PropertyValues } changedProperties */
+        /** @param {import('@lion/core').PropertyValues } changedProperties */
         firstUpdated(changedProperties) {
           super.firstUpdated(changedProperties);
           hasCalledFirstUpdated = true;

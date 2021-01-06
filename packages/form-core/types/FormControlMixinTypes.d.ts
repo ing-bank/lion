@@ -1,5 +1,4 @@
-import { CSSResultArray } from 'lit-element';
-import { LitElement, nothing, TemplateResult } from '@lion/core';
+import { LitElement, nothing, TemplateResult, CSSResultArray } from '@lion/core';
 import { SlotsMap, SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
@@ -102,7 +101,7 @@ export declare class FormControlHost {
   _isRepropagationEndpoint: boolean;
 
   connectedCallback(): void;
-  updated(changedProperties: import('lit-element').PropertyValues): void;
+  updated(changedProperties: import('@lion/core').PropertyValues): void;
 
   render(): TemplateResult;
   _groupOneTemplate(): TemplateResult;
