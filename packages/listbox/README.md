@@ -8,8 +8,6 @@ multiple options to be selected is a multi-select listbox.
 
 ```js script
 import { html } from '@lion/core';
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { listboxData } from './docs/listboxData.js';
 import './lion-option.js';
 import './lion-listbox.js';

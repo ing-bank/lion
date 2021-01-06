@@ -6,6 +6,7 @@ export { LionField } from './src/LionField.js';
 export { FormRegisteringMixin } from './src/registration/FormRegisteringMixin.js';
 export { FormRegistrarMixin } from './src/registration/FormRegistrarMixin.js';
 export { FormRegistrarPortalMixin } from './src/registration/FormRegistrarPortalMixin.js';
+export { NativeTextFieldMixin } from './src/NativeTextFieldMixin.js';
 export { FormControlsCollection } from './src/registration/FormControlsCollection.js';
 
 // validate

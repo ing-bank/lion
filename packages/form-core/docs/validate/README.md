@@ -5,15 +5,13 @@
 ```js script
 import { html } from '@lion/core';
 import { LionInput } from '@lion/input';
-import { Required, IsString, MaxLength, DefaultSuccess, Validator } from '@lion/form-core';
+import { Required, IsString, MaxLength, DefaultSuccess, Validator } from '../../index.js';
 
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 export default {
   title: 'Forms/Validation/Overview',
 };
-
-loadDefaultFeedbackMessages();
 ```
 
 ## Features
@@ -108,4 +106,32 @@ Retrieving validity states is as easy as checking for:
 
 ```js
 myInitialsInput.hasFeedbackFor.include('error');
+```
+
+## Default Validation Messages
+
+Lion comes with a set of localized messages for default Validators.
+Once the method `loadDefaultFeedbackMessages` is called, it will make sure that all validators provided in `@lion/form-core` will have a default error message.
+It uses the `@lion/localize` system to provide these translations and has support for more than 15 locales.
+
+```bash
+npm i --save @lion/validate-messages
+```
+
+```js
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+```
+
+```js preview-story
+export const defaultValidationMessages = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input
+      name="value"
+      label="Value"
+      .fieldName="${'value'}"
+      .validators="${[new Required()]}"
+    ></lion-input>
+  `;
+};
 ```

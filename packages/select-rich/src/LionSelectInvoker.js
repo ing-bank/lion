@@ -1,4 +1,4 @@
-import { LionButton } from '@lion/button/src/LionButton.js';
+import { LionButton } from '@lion/button';
 import { css, html } from '@lion/core';
 
 /**

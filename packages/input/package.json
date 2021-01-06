@@ -33,9 +33,7 @@
     "lion-input.js"
   ],
   "dependencies": {
-    "@lion/form-core": "0.6.14",
-    "@lion/localize": "0.15.3",
-    "@lion/validate-messages": "0.3.12"
+    "@lion/form-core": "0.6.14"
   },
   "keywords": [
     "input",

@@ -10,8 +10,6 @@ Its implementation is based on the following Design pattern:
 
 ```js script
 import { LitElement, html } from '@lion/core';
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import '@lion/listbox/lion-option.js';
 import '@lion/listbox/lion-options.js';
@@ -20,7 +18,6 @@ import './lion-select-rich.js';
 export default {
   title: 'Forms/Select Rich',
 };
-loadDefaultFeedbackMessages();
 ```
 
 ```js preview-story
@@ -168,29 +165,6 @@ export const disabledOption = () => html`
 `;
 ```
 
-### Validation
-
-Validation can be used on this field as well, same as with other fields. Below is an example with required.
-It can be triggered by opening the select and selecting a valid option, then selecting the first option again, of which the `modelValue` is `null`.
-
-```js preview-story
-export const validation = () => {
-  return html`
-    <lion-select-rich
-      id="color"
-      name="color"
-      label="Favorite color"
-      .validators="${[new Required()]}"
-    >
-      <lion-option .choiceValue=${null}>select a color</lion-option>
-      <lion-option .choiceValue=${'red'}>Red</lion-option>
-      <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-      <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-    </lion-select-rich>
-  `;
-};
-```
-
 ### Render options
 
 The choiceValue can also be a complex value like an Object.
@@ -303,8 +277,6 @@ However, this allows the user to explicitly select this option.
 
 Often, you may want a placeholder that appears initially, but cannot be selected explicitly by the user.
 For this you can use `has-no-default-selected` attribute.
-
-Both methods work with the `Required` validator.
 
 ```js preview-story
 export const noDefaultSelection = () => html`

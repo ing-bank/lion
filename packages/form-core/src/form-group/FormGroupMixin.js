@@ -1,5 +1,4 @@
-import { dedupeMixin, html, SlotMixin } from '@lion/core';
-import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
+import { dedupeMixin, html, SlotMixin, DisabledMixin } from '@lion/core';
 import { FormControlMixin } from '../FormControlMixin.js';
 import { FormControlsCollection } from '../registration/FormControlsCollection.js';
 import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';

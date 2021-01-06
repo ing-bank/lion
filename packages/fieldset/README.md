@@ -6,7 +6,6 @@
 import { html } from '@lion/core';
 import '@lion/input/lion-input.js';
 import { localize } from '@lion/localize';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { MinLength, Validator, Required } from '@lion/form-core';
 import './lion-fieldset.js';
 import './docs/helpers/demo-fieldset-child.js';

@@ -33,9 +33,7 @@
     "lion-form.js"
   ],
   "dependencies": {
-    "@lion/core": "0.13.6",
-    "@lion/fieldset": "0.15.12",
-    "@lion/input": "0.10.12"
+    "@lion/fieldset": "0.15.12"
   },
   "keywords": [
     "form",
