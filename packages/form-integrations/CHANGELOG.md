@@ -1,5 +1,43 @@
 # Change Log
 
+## 0.3.22
+
+### Patch Changes
+
+- a8cf4215: Improved localize DX by making it clear from source code structure what are main (exported) functions and what are util/helper functions consumed by those main functions.
+  Added Chrome Intl corrections for Philippine currency names and en-GB short month names.
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [9b9db3dd]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [718843e5]
+  - @lion/select-rich@0.21.21
+  - @lion/localize@0.15.4
+  - @lion/checkbox-group@0.12.13
+  - @lion/combobox@0.1.17
+  - @lion/fieldset@0.15.13
+  - @lion/form@0.7.13
+  - @lion/form-core@0.7.0
+  - @lion/input@0.10.13
+  - @lion/input-amount@0.8.13
+  - @lion/input-range@0.5.13
+  - @lion/input-stepper@0.1.14
+  - @lion/listbox@0.4.0
+  - @lion/radio-group@0.12.13
+  - @lion/select@0.8.13
+  - @lion/textarea@0.8.13
+  - @lion/validate-messages@0.3.13
+  - @lion/button@0.8.8
+  - @lion/core@0.13.7
+  - @lion/input-date@0.8.13
+  - @lion/input-datepicker@0.18.12
+  - @lion/input-email@0.9.13
+  - @lion/input-iban@0.11.3
+  - @lion/switch@0.12.13
+
 ## 0.3.21
 
 ### Patch Changes

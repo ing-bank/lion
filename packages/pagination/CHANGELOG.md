@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.2.10
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [a8cf4215]
+- Updated dependencies [98f1bb7e]
+  - @lion/localize@0.15.4
+  - @lion/core@0.13.7
+
 ## 0.2.9
 
 ### Patch Changes

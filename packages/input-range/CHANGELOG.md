@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.5.13
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [a8cf4215]
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+  - @lion/localize@0.15.4
+  - @lion/input@0.10.13
+  - @lion/core@0.13.7
+
 ## 0.5.12
 
 ### Patch Changes

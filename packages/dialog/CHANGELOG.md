@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.9.14
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+  - @lion/overlays@0.23.0
+  - @lion/core@0.13.7
+
 ## 0.9.13
 
 ### Patch Changes
