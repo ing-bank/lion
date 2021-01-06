@@ -1,4 +1,4 @@
-import { getLocale } from './getLocale.js';
+import { getLocale } from '../utils/getLocale.js';
 
 /**
  * To get the decimal separator

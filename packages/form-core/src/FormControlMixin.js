@@ -5,6 +5,16 @@ import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDo
 import { Unparseable } from './validate/Unparseable.js';
 
 /**
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('@lion/core').nothing} nothing
+ * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
+ * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
+ */
+
+/**
  * Generates random unique identifier (for dom elements)
  * @param {string} prefix
  */
@@ -18,11 +28,6 @@ function uuid(prefix) {
  * This Mixin is a shared fundament for all form components, it's applied on:
  * - LionField (which is extended to LionInput, LionTextarea, LionSelect etc. etc.)
  * - LionFieldset (which is extended to LionRadioGroup, LionCheckboxGroup, LionForm)
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
- * @typedef {import('@lion/core').CSSResult} CSSResult
- * @typedef {import('@lion/core').nothing} nothing
- * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
- * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  * @type {FormControlMixin}
  */
@@ -750,7 +755,11 @@ const FormControlMixinImplementation = superclass =>
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: { formPath: [this], initialize: true },
+          detail: /** @type {ModelValueEventDetails} */ ({
+            formPath: [this],
+            initialize: true,
+            isTriggeredByUser: false,
+          }),
         }),
       );
     }
@@ -822,7 +831,13 @@ const FormControlMixinImplementation = superclass =>
       //
       // Since for a11y everything needs to be in lightdom, we don't add 'composed:true'
       this.dispatchEvent(
-        new CustomEvent('model-value-changed', { bubbles: true, detail: { formPath } }),
+        new CustomEvent('model-value-changed', {
+          bubbles: true,
+          detail: /** @type {ModelValueEventDetails} */ ({
+            formPath,
+            isTriggeredByUser: Boolean(ev.detail?.isTriggeredByUser),
+          }),
+        }),
       );
     }
 

@@ -1,6 +1,6 @@
 import { localize } from '../localize.js';
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
-import { addLeadingZero } from './addLeadingZero.js';
+import { addLeadingZero } from './utils/addLeadingZero.js';
 
 /**
  * @param {function} fn

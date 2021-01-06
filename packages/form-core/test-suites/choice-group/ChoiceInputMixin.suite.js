@@ -95,6 +95,21 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       expect(counter).to.equal(1);
     });
 
+    it('adds "isTriggerByUser" flag on model-value-changed', async () => {
+      let isTriggeredByUser;
+      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      <${tag}
+        @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+          isTriggeredByUser = event.detail.isTriggeredByUser;
+        }}"
+      >
+        <input slot="input" />
+      </${tag}>
+    `));
+      el._inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+      expect(isTriggeredByUser).to.be.true;
+    });
+
     it('can be required', async () => {
       const el = /** @type {ChoiceInput} */ (await fixture(html`
       <${tag} .choiceValue=${'foo'} .validators=${[new Required()]}></${tag}>

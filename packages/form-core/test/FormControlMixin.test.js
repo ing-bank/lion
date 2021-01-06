@@ -238,14 +238,19 @@ describe('FormControlMixin', () => {
         const fieldsetEv = fieldsetSpy.firstCall.args[0];
         expect(fieldsetEv.target).to.equal(fieldsetEl);
         expect(fieldsetEv.detail.formPath).to.eql([fieldsetEl]);
+        expect(fieldsetEv.detail.initialize).to.be.true;
 
         expect(formSpy.callCount).to.equal(1);
         const formEv = formSpy.firstCall.args[0];
         expect(formEv.target).to.equal(formEl);
         expect(formEv.detail.formPath).to.eql([formEl]);
+        expect(formEv.detail.initialize).to.be.true;
       });
     });
 
+    /**
+     * After initialization means: events triggered programmatically or by user actions
+     */
     describe('After initialization', () => {
       it('redispatches one event from host and keeps formPath history', async () => {
         const formSpy = sinon.spy();
@@ -310,11 +315,45 @@ describe('FormControlMixin', () => {
         const choiceGroupEv = choiceGroupSpy.firstCall.args[0];
         expect(choiceGroupEv.target).to.equal(choiceGroupEl);
         expect(choiceGroupEv.detail.formPath).to.eql([choiceGroupEl]);
+        expect(choiceGroupEv.detail.isTriggeredByUser).to.be.false;
 
         expect(formSpy.callCount).to.equal(1);
         const formEv = formSpy.firstCall.args[0];
         expect(formEv.target).to.equal(formEl);
         expect(formEv.detail.formPath).to.eql([choiceGroupEl, formEl]);
+        expect(formEv.detail.isTriggeredByUser).to.be.false;
+      });
+
+      it('sets "isTriggeredByUser" event detail when event triggered by user', async () => {
+        const formSpy = sinon.spy();
+        const fieldsetSpy = sinon.spy();
+        const fieldSpy = sinon.spy();
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="fieldset">
+              <${tag} name="field"></${tag}>
+            </${groupTag}>
+          </${groupTag}>
+        `);
+        const fieldEl = formEl.querySelector('[name=field]');
+        const fieldsetEl = formEl.querySelector('[name=fieldset]');
+
+        formEl.addEventListener('model-value-changed', formSpy);
+        fieldsetEl?.addEventListener('model-value-changed', fieldsetSpy);
+        fieldEl?.addEventListener('model-value-changed', fieldSpy);
+
+        fieldEl?.dispatchEvent(
+          new CustomEvent('model-value-changed', {
+            bubbles: true,
+            detail: { isTriggeredByUser: true },
+          }),
+        );
+
+        const fieldsetEv = fieldsetSpy.firstCall.args[0];
+        expect(fieldsetEv.detail.isTriggeredByUser).to.be.true;
+
+        const formEv = formSpy.firstCall.args[0];
+        expect(formEv.detail.isTriggeredByUser).to.be.true;
       });
     });
   });

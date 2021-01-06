@@ -1,4 +1,4 @@
-import { localize } from '../localize.js';
+import { localize } from '../../localize.js';
 
 /**
  * When number is NaN we should return an empty string or returnIfNaN param

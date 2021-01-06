@@ -1,5 +1,5 @@
 import { localize } from '../localize.js';
-import { getLocale } from './getLocale.js';
+import { getLocale } from '../utils/getLocale.js';
 import { formatNumberToParts } from './formatNumberToParts.js';
 
 /** @typedef {import('../../types/LocalizeMixinTypes').NumberPostProcessor} NumberPostProcessor */

@@ -1,5 +1,5 @@
-import { getLocale } from './getLocale.js';
-import { normalSpaces } from './normalSpaces.js';
+import { getLocale } from '../utils/getLocale.js';
+import { normalSpaces } from './utils/normalSpaces.js';
 
 /**
  * Gets the group separator
