@@ -4,10 +4,6 @@
 
 ```js script
 import { html } from '@lion/core';
-import { MaxLength } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-
-import { localize } from '@lion/localize';
 
 import './lion-input.js';
 
@@ -178,30 +174,4 @@ export const after = () => html`
     <div slot="after">%</div>
   </lion-input>
 `;
-```
-
-## Using validation
-
-The input can be used with [validation](?path=/docs/forms-validation-overview--page).
-On certain conditions, a feedback message can be shown if the input value is invalid.
-
-You can change the locale with the buttons below the field.
-Our default validators come with default translations already.
-
-```js preview-story
-export const validation = () => {
-  loadDefaultFeedbackMessages();
-  return html`
-    <lion-input
-      label="Value"
-      .modelValue=${'Too long input'}
-      .validators=${[new MaxLength(5)]}
-    ></lion-input>
-    <button @click=${() => (localize.locale = 'de-DE')}>DE</button>
-    <button @click=${() => (localize.locale = 'en-GB')}>EN</button>
-    <button @click=${() => (localize.locale = 'fr-FR')}>FR</button>
-    <button @click=${() => (localize.locale = 'nl-NL')}>NL</button>
-    <button @click=${() => (localize.locale = 'zh-CN')}>CN</button>
-  `;
-};
 ```

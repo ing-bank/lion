@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { css, html, unsafeCSS } from '@lion/core';
 import { LionInput } from '@lion/input';
-import { formatNumber, LocalizeMixin } from '@lion/localize';
+import { formatNumber } from '@lion/localize';
 
 /**
  * @typedef {import('@lion/core').CSSResult} CSSResult
@@ -12,8 +12,8 @@ import { formatNumber, LocalizeMixin } from '@lion/localize';
  *
  * @customElement `lion-input-range`
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110 + false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionInputRange extends LocalizeMixin(LionInput) {
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
+export class LionInputRange extends LionInput {
   static get properties() {
     return {
       min: {

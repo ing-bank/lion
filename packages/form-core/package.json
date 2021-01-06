@@ -35,7 +35,6 @@
   ],
   "dependencies": {
     "@lion/core": "0.13.6",
-    "@lion/input": "0.10.12",
     "@lion/localize": "0.15.3"
   },
   "keywords": [

@@ -10,15 +10,12 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 ```js script
 import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import './lion-checkbox-group.js';
 import './lion-checkbox.js';
 
 export default {
   title: 'Forms/Checkbox Group',
 };
-
-loadDefaultFeedbackMessages();
 ```
 
 ```js story
@@ -117,71 +114,6 @@ export const disabled = () => html`
     ></lion-checkbox>
   </lion-checkbox-group>
 `;
-```
-
-### Validation
-
-You can apply validation to the `<lion-checkbox-group>`, similar to how you would do so in any fieldset.
-The interaction states of the `<lion-checkbox-group>` are evaluated in order to hide or show feedback messages.
-
-```js preview-story
-export const validation = () => {
-  const validate = () => {
-    const checkboxGroup = document.querySelector('#scientists');
-    checkboxGroup.submitted = !checkboxGroup.submitted;
-  };
-  return html`
-    <lion-checkbox-group
-      id="scientists"
-      name="scientists[]"
-      label="Favorite scientists"
-      .validators=${[new Required()]}
-    >
-      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
-    </lion-checkbox-group>
-    <button @click="${() => validate()}">Validate</button>
-  `;
-};
-```
-
-### Validation advanced
-
-Below is a more advanced validator on the group that evaluates the children checkboxes' checked states.
-
-```js preview-story
-export const validationAdvanced = () => {
-  class HasMinTwoChecked extends Validator {
-    execute(value) {
-      return value.length < 2;
-    }
-    static get validatorName() {
-      return 'HasMinTwoChecked';
-    }
-    static async getMessage() {
-      return 'You need to select at least 2 values.';
-    }
-  }
-  const validate = () => {
-    const checkboxGroup = document.querySelector('#scientists2');
-    checkboxGroup.submitted = !checkboxGroup.submitted;
-  };
-  return html`
-    <lion-checkbox-group
-      id="scientists2"
-      name="scientists[]"
-      label="Favorite scientists"
-      help-text="You should have at least 2 of those"
-      .validators=${[new Required(), new HasMinTwoChecked()]}
-    >
-      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
-    </lion-checkbox-group>
-    <button @click="${() => validate()}">Validate</button>
-  `;
-};
 ```
 
 ### Help text

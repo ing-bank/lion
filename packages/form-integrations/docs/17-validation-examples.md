@@ -13,10 +13,27 @@ while for a checkbox group it means at least one checkbox needs to be checked.
 import { html } from '@lion/core';
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionInput } from '@lion/input';
+import '@lion/checkbox-group/lion-checkbox-group.js';
+import '@lion/checkbox-group/lion-checkbox.js';
+import '@lion/combobox/lion-combobox.js';
+import '@lion/fieldset/lion-fieldset.js';
+import '@lion/form/lion-form.js';
 import '@lion/input-amount/lion-input-amount.js';
 import '@lion/input-date/lion-input-date.js';
+import '@lion/input-datepicker/lion-input-datepicker.js';
 import '@lion/input-email/lion-input-email.js';
+import '@lion/input-iban/lion-input-iban.js';
+import '@lion/input-range/lion-input-range.js';
+import '@lion/input-stepper/lion-input-stepper.js';
 import '@lion/input/lion-input.js';
+import '@lion/listbox/lion-listbox.js';
+import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-options.js';
+import '@lion/radio-group/lion-radio-group.js';
+import '@lion/radio-group/lion-radio.js';
+import '@lion/select/lion-select.js';
+import '@lion/select-rich/lion-select-rich.js';
+import '@lion/textarea/lion-textarea.js';
 import {
   DefaultSuccess,
   EqualsLength,
@@ -36,7 +53,7 @@ import {
   Validator,
   Pattern,
 } from '@lion/form-core';
-
+import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 export default {
@@ -83,6 +100,11 @@ export const stringValidators = () => html`
     .modelValue=${'regex checks if "#Lion<NO SPACE>Rocks" is in this input #LionRocks'}
     label="Pattern"
   ></lion-input>
+  <button @click=${() => (localize.locale = 'de-DE')}>DE</button>
+  <button @click=${() => (localize.locale = 'en-GB')}>EN</button>
+  <button @click=${() => (localize.locale = 'fr-FR')}>FR</button>
+  <button @click=${() => (localize.locale = 'nl-NL')}>NL</button>
+  <button @click=${() => (localize.locale = 'zh-CN')}>CN</button>
 `;
 ```
 
@@ -163,6 +185,152 @@ export const emailValidator = () => html`
     label="IsEmail"
   ></lion-input-email>
 `;
+```
+
+## Checkbox Validator
+
+You can apply validation to the `<lion-checkbox-group>`, similar to how you would do so in any fieldset.
+The interaction states of the `<lion-checkbox-group>` are evaluated in order to hide or show feedback messages.
+
+```js preview-story
+export const checkboxValidation = () => {
+  const validate = () => {
+    const checkboxGroup = document.querySelector('#scientists');
+    checkboxGroup.submitted = !checkboxGroup.submitted;
+  };
+  return html`
+    <lion-checkbox-group
+      id="scientists"
+      name="scientists[]"
+      label="Favorite scientists"
+      .validators=${[new Required()]}
+    >
+      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+    </lion-checkbox-group>
+    <button @click="${() => validate()}">Validate</button>
+  `;
+};
+```
+
+Below is a more advanced validator on the group that evaluates the children checkboxes' checked states.
+
+```js preview-story
+export const checkboxValidationAdvanced = () => {
+  class HasMinTwoChecked extends Validator {
+    execute(value) {
+      return value.length < 2;
+    }
+    static get validatorName() {
+      return 'HasMinTwoChecked';
+    }
+    static async getMessage() {
+      return 'You need to select at least 2 values.';
+    }
+  }
+  const validate = () => {
+    const checkboxGroup = document.querySelector('#scientists2');
+    checkboxGroup.submitted = !checkboxGroup.submitted;
+  };
+  return html`
+    <lion-checkbox-group
+      id="scientists2"
+      name="scientists[]"
+      label="Favorite scientists"
+      help-text="You should have at least 2 of those"
+      .validators=${[new Required(), new HasMinTwoChecked()]}
+    >
+      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+    </lion-checkbox-group>
+    <button @click="${() => validate()}">Validate</button>
+  `;
+};
+```
+
+## Radio Validator
+
+```js preview-story
+export const radioValidation = () => {
+  const validate = () => {
+    const radioGroup = document.querySelector('#dinos');
+    radioGroup.submitted = !radioGroup.submitted;
+  };
+  return html`
+    <lion-radio-group
+      id="dinos"
+      name="dinos_8"
+      label="Favourite dinosaur"
+      .validators=${[new Required()]}
+    >
+      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+      <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
+    </lion-radio-group>
+    <button @click="${() => validate()}">Validate</button>
+  `;
+};
+```
+
+You can also create a validator that validates whether a certain option is checked.
+
+```js preview-story
+export const radioValidationAdvanced = () => {
+  class IsBrontosaurus extends Validator {
+    static get validatorName() {
+      return 'IsBrontosaurus';
+    }
+    execute(value) {
+      let showFeedback = false;
+      if (value !== 'brontosaurus') {
+        showFeedback = true;
+      }
+      return showFeedback;
+    }
+    static async getMessage() {
+      return 'You need to select "brontosaurus"';
+    }
+  }
+  const validate = () => {
+    const radioGroup = document.querySelector('#dinosTwo');
+    radioGroup.submitted = !radioGroup.submitted;
+  };
+  return html`
+    <lion-radio-group
+      id="dinosTwo"
+      name="dinosTwo"
+      label="Favourite dinosaur"
+      .validators=${[new Required(), new IsBrontosaurus()]}
+    >
+      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
+      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+      <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    </lion-radio-group>
+    <button @click="${() => validate()}">Validate</button>
+  `;
+};
+```
+
+## Combobox
+
+Validation can be used as normal, below is an example of a combobox with a `Required` validator.
+
+```js preview-story
+export const validationCombobox = () => {
+  Required.getMessage = () => 'Please enter a value';
+  return html`
+    <lion-combobox .validators="${[new Required()]}" name="favoriteMovie" label="Favorite movie">
+      <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
+      <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
+      <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
+      <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
+      <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
+      <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+    </lion-combobox>
+  `;
+};
 ```
 
 ## Validation Types
@@ -469,6 +637,17 @@ export const FormValidationReset = () => html`
           <option value="3">Drop down for what?</option>
         </select>
       </lion-select>
+      <lion-select-rich
+        id="color"
+        name="color"
+        label="Favorite color"
+        .validators="${[new Required()]}"
+      >
+        <lion-option .choiceValue=${null}>select a color</lion-option>
+        <lion-option .choiceValue=${'red'}>Red</lion-option>
+        <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+        <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+      </lion-select-rich>
       <lion-input-range
         name="range"
         min="1"
@@ -478,6 +657,14 @@ export const FormValidationReset = () => html`
         step="0.1"
         label="Input range"
       ></lion-input-range>
+      <lion-input-stepper
+        min="100"
+        max="500"
+        name="value"
+        step="100"
+        label="Number"
+        .validators="${[new Required()]}"
+      ></lion-input-stepper>
       <lion-checkbox-group
         name="terms[]"
         .validators="${[

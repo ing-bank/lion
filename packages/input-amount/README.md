@@ -113,7 +113,7 @@ export const faultyPrefilled = () => html`
 
 ### Modifying the amount of decimals
 
-You can override certain formatting options similar to how you would do this when using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat" target="_blank">Intl NumberFormat</a>.
+You can override certain formatting options similar to how you would do this when using [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat).
 This example shows formatting to whole numbers.
 
 ```js preview-story
