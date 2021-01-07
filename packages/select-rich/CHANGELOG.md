@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.21.22
+
+### Patch Changes
+
+- 3fefc359: Set pointer-events to none to fix Safari bug where click event is blocked by text content wrapper.
+- ef7ccbb9: Fix some type issues with static get styles, CSSResultArray combines CSSResult and CSSResult[].
+- Updated dependencies [3fefc359]
+  - @lion/button@0.8.9
+
 ## 0.21.21
 
 ### Patch Changes

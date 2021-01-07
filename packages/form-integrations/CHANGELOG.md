@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies [3fefc359]
+- Updated dependencies [3fefc359]
+- Updated dependencies [ef7ccbb9]
+  - @lion/button@0.8.9
+  - @lion/select-rich@0.21.22
+  - @lion/combobox@0.1.18
+
 ## 0.3.22
 
 ### Patch Changes

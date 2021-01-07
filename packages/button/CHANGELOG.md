@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.9
+
+### Patch Changes
+
+- 3fefc359: Fix button user-select for Edge/Safari by adding prefixes for the CSS rule.
+
 ## 0.8.8
 
 ### Patch Changes
