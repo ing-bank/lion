@@ -62,6 +62,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           outline: none; /* focus style handled below */
           cursor: default; /* /* we should always see the default arrow, never a caret */
           user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
         }
 
         :host::before {
