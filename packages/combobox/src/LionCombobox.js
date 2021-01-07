@@ -19,7 +19,6 @@ import { LionListbox } from '@lion/listbox';
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-// @ts-ignore
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
