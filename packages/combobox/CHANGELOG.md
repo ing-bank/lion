@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.18
+
+### Patch Changes
+
+- ef7ccbb9: Fix some type issues with static get styles, CSSResultArray combines CSSResult and CSSResult[].
+
 ## 0.1.17
 
 ### Patch Changes
