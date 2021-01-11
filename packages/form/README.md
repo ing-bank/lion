@@ -33,3 +33,7 @@ npm i --save @lion/form
 ```js
 import '@lion/form/lion-form.js';
 ```
+
+## Example
+
+See full [form example](?path=/docs/forms-features-overview--main)
