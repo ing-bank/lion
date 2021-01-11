@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.1
+
+### Patch Changes
+
+- a04ea59c: Put tooltip arrow width and height css props on host of ArrowMixin.
+
 ## 0.23.0
 
 ### Minor Changes

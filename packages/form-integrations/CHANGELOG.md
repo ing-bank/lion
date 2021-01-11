@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies [fcc60cbf]
+  - @lion/form@0.7.14
+  - @lion/combobox@0.1.19
+  - @lion/input-datepicker@0.18.13
+  - @lion/select-rich@0.21.23
+
 ## 0.3.23
 
 ### Patch Changes
