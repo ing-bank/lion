@@ -30,14 +30,17 @@ export const ArrowMixinImplementation = superclass =>
       return [
         superCtor.styles || [],
         css`
+          :host {
+            --tooltip-arrow-width: 12px;
+            --tooltip-arrow-height: 8px;
+          }
+
           .arrow svg {
             display: block;
           }
 
           .arrow {
             position: absolute;
-            --tooltip-arrow-width: 12px;
-            --tooltip-arrow-height: 8px;
             width: var(--tooltip-arrow-width);
             height: var(--tooltip-arrow-height);
           }
