@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.25
+
+### Patch Changes
+
+- @lion/combobox@0.1.20
+- @lion/input-datepicker@0.18.14
+- @lion/select-rich@0.21.24
+
 ## 0.3.24
 
 ### Patch Changes

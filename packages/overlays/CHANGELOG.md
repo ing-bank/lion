@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.2
+
+### Patch Changes
+
+- a7760b64: Fix type declaration for \_\_syncFromPopperState method.
+
 ## 0.23.1
 
 ### Patch Changes
