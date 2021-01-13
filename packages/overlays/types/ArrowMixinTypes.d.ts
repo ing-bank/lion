@@ -5,6 +5,7 @@ import { Options as PopperOptions, State } from '@popperjs/core/lib/popper';
 import { OverlayConfig } from '../types/OverlayConfig';
 
 export declare class ArrowHost {
+  constructor(...args: any[]);
   static get properties(): {
     hasArrow: {
       type: BooleanConstructor;

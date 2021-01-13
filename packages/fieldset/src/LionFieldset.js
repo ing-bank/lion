@@ -19,13 +19,15 @@ import { FormGroupMixin } from '@lion/form-core';
  *
  * @customElement lion-fieldset
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionFieldset extends FormGroupMixin(LitElement) {
   constructor() {
     super();
     /** @override FormRegistrarMixin */
     this._isFormOrFieldset = true;
-    /** @override FormControlMixin */
+    /**
+     * @type {'child' | 'choice-group' | 'fieldset'}
+     * @override FormControlMixin
+     */
     this._repropagationRole = 'fieldset';
   }
 }

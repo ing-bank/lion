@@ -12,7 +12,6 @@ export function runValidateMixinFeedbackPart() {
       localizeTearDown();
     });
 
-    // @ts-expect-error base constructor same return type
     class ValidateElement extends ValidateMixin(LitElement) {
       connectedCallback() {
         super.connectedCallback();
@@ -80,7 +79,6 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('reflects .showsFeedbackFor as attribute joined with "," to be used as a style hook', async () => {
-      // @ts-expect-error base constructors same return type
       class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
         static get validationTypes() {
           return [...super.validationTypes, 'x'];
@@ -307,7 +305,6 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('shows success message after fixing an error', async () => {
-      // @ts-expect-error base constructor same return type
       class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
         static get validationTypes() {
           return ['error', 'success'];
@@ -362,7 +359,6 @@ export function runValidateMixinFeedbackPart() {
 
     describe('Meta data', () => {
       it('".getMessage()" gets a reference to formControl, params, modelValue and type', async () => {
-        // @ts-expect-error base constructor same return type
         class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
           static get validationTypes() {
             return ['error', 'x'];

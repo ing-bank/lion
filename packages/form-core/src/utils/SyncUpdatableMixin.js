@@ -53,7 +53,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {*} oldValue
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
-      // @ts-expect-error FIXME: Typescript bug, superclass static method not availabe from static context
+      // @ts-expect-error accessing private lit property
       const properties = this._classProperties;
       if (properties.get(name) && properties.get(name).hasChanged) {
         return properties.get(name).hasChanged(newValue, oldValue);

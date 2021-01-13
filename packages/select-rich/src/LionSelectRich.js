@@ -23,7 +23,7 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  */
-// @ts-expect-error
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
@@ -88,7 +88,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @configure ListboxMixin
    * @protected
    */
-  // @ts-ignore
   get _scrollTargetNode() {
     // TODO: should this be defined here or in extension layer?
     // @ts-expect-error we allow the _overlayContentNode to define its own _scrollTargetNode

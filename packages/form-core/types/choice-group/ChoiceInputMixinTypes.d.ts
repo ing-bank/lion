@@ -15,6 +15,7 @@ export interface ChoiceInputSerializedValue {
 }
 
 export declare class ChoiceInputHost {
+  constructor(...args: any[]);
   modelValue: ChoiceInputModelValue;
   serializedValue: ChoiceInputSerializedValue;
 

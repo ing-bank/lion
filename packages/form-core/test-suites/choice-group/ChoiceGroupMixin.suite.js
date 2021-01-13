@@ -8,7 +8,6 @@ import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
 class ChoiceInput extends ChoiceInputMixin(LionInput) {}
 customElements.define('choice-group-input', ChoiceInput);
-// @ts-expect-error
 class ChoiceGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('choice-group', ChoiceGroup);
 

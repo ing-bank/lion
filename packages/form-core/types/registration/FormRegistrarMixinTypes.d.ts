@@ -9,6 +9,7 @@ export declare class ElementWithParentFormGroup {
 }
 
 export declare class FormRegistrarHost {
+  constructor(...args: any[]);
   _isFormOrFieldset: boolean;
   formElements: FormControlsCollection & { [x: string]: any };
   addFormElement(

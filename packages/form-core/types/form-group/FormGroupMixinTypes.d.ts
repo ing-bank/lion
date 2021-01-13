@@ -7,6 +7,7 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { ValidateHost } from '../validate/ValidateMixinTypes';
 
 export declare class FormGroupHost {
+  constructor(...args: any[]);
   protected static _addDescriptionElementIdsToField(): void;
   _inputNode: HTMLElement;
   submitGroup(): void;
@@ -29,7 +30,7 @@ export declare function FormGroupImplementation<T extends Constructor<LitElement
   superclass: T,
 ): T &
   Constructor<FormGroupHost> &
-  FormGroupHost &
+  typeof FormGroupHost &
   Constructor<FormRegistrarHost> &
   typeof FormRegistrarHost &
   Constructor<FormControlHost> &

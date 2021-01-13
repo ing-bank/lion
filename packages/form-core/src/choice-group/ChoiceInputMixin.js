@@ -244,12 +244,15 @@ const ChoiceInputMixinImplementation = superclass =>
      * hasChanged is designed for async (updated) callback, also check for sync
      * (requestUpdateInternal) callback
      * @param {{ modelValue:unknown }} newV
-     * @param {{ modelValue:unknown }} [oldV]
+     * @param {{ modelValue:unknown }} [old]
      */
-    // @ts-expect-error
-    _onModelValueChanged({ modelValue }, { modelValue: old }) {
-      // @ts-expect-error
-      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, old)) {
+    _onModelValueChanged({ modelValue }, old) {
+      let _old;
+      if (old && old.modelValue) {
+        _old = old.modelValue;
+      }
+      // @ts-expect-error lit private property
+      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, _old)) {
         super._onModelValueChanged({ modelValue });
       }
     }
