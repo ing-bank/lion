@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.16.3
+
+### Patch Changes
+
+- Updated dependencies [a7760b64]
+  - @lion/overlays@0.23.2
+
 ## 0.16.2
 
 ### Patch Changes
