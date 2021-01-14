@@ -22,7 +22,9 @@ import '@lion/button/lion-button.js';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
-    return this.shadowRoot.querySelector('lion-form');
+    return /** @type {import('@lion/form').LionForm} */ (this.shadowRoot?.querySelector(
+      'lion-form',
+    ));
   }
 
   render() {
@@ -113,8 +115,10 @@ export class UmbrellaForm extends LitElement {
             <lion-button
               type="button"
               raised
-              @click=${ev =>
-                ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+              @click=${() => {
+                const lionForm = this._lionFormNode;
+                lionForm.resetGroup();
+              }}
               >Reset</lion-button
             >
           </div>

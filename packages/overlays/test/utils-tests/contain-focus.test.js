@@ -1,5 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-// @ts-expect-error
 import { renderLitAsNode } from '@lion/helpers';
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';
 import { getFocusableElements } from '../../src/utils/get-focusable-elements.js';
@@ -72,9 +71,11 @@ function createShadowDomNode() {
       <button id="outside-2">outside 2</button>
     </div>
   `);
-  const rootElementShadow = shadowDomNode.querySelector('#rootElementShadow');
-  rootElementShadow.attachShadow({ mode: 'open' });
-  rootElementShadow.shadowRoot.appendChild(interactionElementsNode);
+  const rootElementShadow = shadowDomNode?.querySelector('#rootElementShadow');
+  rootElementShadow?.attachShadow({ mode: 'open' });
+  if (interactionElementsNode) {
+    rootElementShadow?.shadowRoot?.appendChild(interactionElementsNode);
+  }
   return shadowDomNode;
 }
 

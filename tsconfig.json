@@ -22,10 +22,6 @@
     "**/dist/**/*",
     "packages/**/test-helpers",
     "packages/**/docs/**/*",
-    "packages/combobox/test/**/*.js", // TODO: Needs to get typed!
-    "packages/form-integrations/test/**/*.js", // TODO: Needs to get typed!
-    "packages/overlays/test/utils-tests/**/*.js", // TODO: Needs to get typed!
-    "packages/select-rich/test/**/*.js", // TODO: Needs to get typed!
     "packages/singleton-manager/demo/",
     "packages/singleton-manager/test/",
     // ignore test/demos for singleton manager until overlays are typed as it's used in there

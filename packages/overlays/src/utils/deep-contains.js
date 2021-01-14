@@ -1,7 +1,7 @@
 /**
  * Whether first element contains the second element, also goes through shadow roots
  * @param {HTMLElement|ShadowRoot} el
- * @param {HTMLElement} targetEl
+ * @param {HTMLElement|ShadowRoot} targetEl
  * @returns {boolean}
  */
 export function deepContains(el, targetEl) {

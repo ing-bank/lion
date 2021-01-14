@@ -372,7 +372,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *
    * @example
    * _showOverlayCondition(options) {
-   *   return this.focused || super.showOverlayCondition(options);
+   *   return this.focused || super._showOverlayCondition(options);
    * }
    *
    * @example
@@ -382,7 +382,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *
    * @example
    * _showOverlayCondition(options) {
-   *   return options.currentValue.length > 4 && super.showOverlayCondition(options);
+   *   return options.currentValue.length > 4 && super._showOverlayCondition(options);
    * }
    *
    * @param {{ currentValue: string, lastKey:string }} options
