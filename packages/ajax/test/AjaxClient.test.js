@@ -10,7 +10,7 @@ describe('AjaxClient', () => {
 
   beforeEach(() => {
     fetchStub = stub(window, 'fetch');
-    fetchStub.returns(Promise.resolve('mock response'));
+    fetchStub.returns(Promise.resolve(new Response('mock response')));
     ajax = new AjaxClient();
   });
 
@@ -20,7 +20,7 @@ describe('AjaxClient', () => {
 
   describe('request()', () => {
     it('calls fetch with the given args, returning the result', async () => {
-      const response = await ajax.request('/foo', { method: 'POST' });
+      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
 
       expect(fetchStub).to.have.been.calledOnce;
       const request = fetchStub.getCall(0).args[0];
@@ -115,12 +115,19 @@ describe('AjaxClient', () => {
     });
 
     it('addResponseInterceptor() adds a function which intercepts the response', async () => {
-      // @ts-expect-error we're mocking the response as a simple promise which returns a string
-      ajax.addResponseInterceptor(r => `${r} intercepted-1`);
-      // @ts-expect-error we're mocking the response as a simple promise which returns a string
-      ajax.addResponseInterceptor(r => `${r} intercepted-2`);
+      ajax.addResponseInterceptor(async r => {
+        const { status, statusText, headers } = r;
+        const body = await r.text();
+        return new Response(`${body} intercepted-1`, { status, statusText, headers });
+      });
 
-      const response = await ajax.request('/foo', { method: 'POST' });
+      ajax.addResponseInterceptor(async r => {
+        const { status, statusText, headers } = r;
+        const body = await r.text();
+        return new Response(`${body} intercepted-2`, { status, statusText, headers });
+      });
+
+      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
       expect(response).to.equal('mock response intercepted-1 intercepted-2');
     });
 
@@ -143,7 +150,7 @@ describe('AjaxClient', () => {
       // @ts-expect-error we're mocking the response as a simple promise which returns a string
       ajax.removeResponseInterceptor(interceptor);
 
-      const response = await ajax.request('/foo', { method: 'POST' });
+      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
       expect(response).to.equal('mock response');
     });
   });

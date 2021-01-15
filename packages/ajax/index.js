@@ -7,3 +7,9 @@ export {
   createXSRFRequestInterceptor,
   getCookie,
 } from './src/interceptors.js';
+
+export {
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
+  validateOptions,
+} from './src/interceptors-cache.js';

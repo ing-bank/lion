@@ -2,31 +2,7 @@
 import { acceptLanguageRequestInterceptor, createXSRFRequestInterceptor } from './interceptors.js';
 import { AjaxClientFetchError } from './AjaxClientFetchError.js';
 
-/**
- * @typedef {Object} AjaxClientConfig configuration for the AjaxClient instance
- * @property {boolean} [addAcceptLanguage] the Accept-Language request HTTP header advertises
- * which languages the client is able to understand, and which locale variant is preferred.
- * @property {string|null} [xsrfCookieName] name of the XSRF cookie to read from
- * @property {string|null} [xsrfHeaderName] name of the XSRF header to set
- * @property {string} [jsonPrefix] the json prefix to use when fetching json (if any)
- */
-
-/**
- * Intercepts a Request before fetching. Must return an instance of Request or Response.
- * If a Respone is returned, the network call is skipped and it is returned as is.
- * @typedef {(request: Request) => Promise<Request | Response>} RequestInterceptor
- */
-
-/**
- * Intercepts a Response before returning. Must return an instance of Response.
- * @typedef {(response: Response) => Promise<Response>} ResponseInterceptor
- */
-
-/**
- * Overrides the body property to also allow javascript objects
- * as they get string encoded automatically
- * @typedef {import('../types/ajaxClientTypes').LionRequestInit} LionRequestInit
- */
+import './typedef.js';
 
 /**
  * HTTP Client which acts as a small wrapper around `fetch`. Allows registering hooks which
@@ -35,30 +11,43 @@ import { AjaxClientFetchError } from './AjaxClientFetchError.js';
  */
 export class AjaxClient {
   /**
-   * @param {AjaxClientConfig} config
+   * @param {Partial<AjaxClientConfig>} config
    */
   constructor(config = {}) {
-    const {
-      addAcceptLanguage = true,
-      xsrfCookieName = 'XSRF-TOKEN',
-      xsrfHeaderName = 'X-XSRF-TOKEN',
-      jsonPrefix,
-    } = config;
+    this.__config = {
+      addAcceptLanguage: true,
+      xsrfCookieName: 'XSRF-TOKEN',
+      xsrfHeaderName: 'X-XSRF-TOKEN',
+      jsonPrefix: '',
+      ...config,
+    };
 
-    /** @type {string | undefined} */
-    this._jsonPrefix = jsonPrefix;
-    /** @type {RequestInterceptor[]} */
+    /** @type {Array.<RequestInterceptor|CachedRequestInterceptor>} */
     this._requestInterceptors = [];
-    /** @type {ResponseInterceptor[]} */
+    /** @type {Array.<ResponseInterceptor|CachedResponseInterceptor>} */
     this._responseInterceptors = [];
 
-    if (addAcceptLanguage) {
+    if (this.__config.addAcceptLanguage) {
       this.addRequestInterceptor(acceptLanguageRequestInterceptor);
     }
 
-    if (xsrfCookieName && xsrfHeaderName) {
-      this.addRequestInterceptor(createXSRFRequestInterceptor(xsrfCookieName, xsrfHeaderName));
+    if (this.__config.xsrfCookieName && this.__config.xsrfHeaderName) {
+      this.addRequestInterceptor(
+        createXSRFRequestInterceptor(this.__config.xsrfCookieName, this.__config.xsrfHeaderName),
+      );
     }
+  }
+
+  /**
+   * Sets the config for the instance
+   * @param {AjaxClientConfig} config configuration for the AjaxClass instance
+   */
+  set options(config) {
+    this.__config = config;
+  }
+
+  get options() {
+    return this.__config;
   }
 
   /** @param {RequestInterceptor} requestInterceptor */
@@ -92,11 +81,13 @@ export class AjaxClient {
    * interceptors.
    *
    * @param {RequestInfo} info
-   * @param {RequestInit} [init]
+   * @param {RequestInit & Partial<CacheRequestExtension>} [init]
    * @returns {Promise<Response>}
    */
   async request(info, init) {
-    const request = new Request(info, init);
+    const request = /** @type {CacheRequest} */ (new Request(info, { ...init }));
+    request.cacheOptions = init?.cacheOptions;
+    request.params = init?.params;
 
     // run request interceptors, returning directly and skipping the network
     // if a interceptor returns a Response
@@ -112,7 +103,8 @@ export class AjaxClient {
       }
     }
 
-    const response = await fetch(interceptedRequest);
+    const response = /** @type {CacheResponse} */ (await fetch(interceptedRequest));
+    response.request = interceptedRequest;
 
     let interceptedResponse = response;
     for (const intercept of this._responseInterceptors) {
@@ -156,9 +148,9 @@ export class AjaxClient {
     const response = await this.request(info, jsonInit);
     let responseText = await response.text();
 
-    if (typeof this._jsonPrefix === 'string') {
-      if (responseText.startsWith(this._jsonPrefix)) {
-        responseText = responseText.substring(this._jsonPrefix.length);
+    if (typeof this.__config.jsonPrefix === 'string') {
+      if (responseText.startsWith(this.__config.jsonPrefix)) {
+        responseText = responseText.substring(this.__config.jsonPrefix.length);
       }
     }
 
