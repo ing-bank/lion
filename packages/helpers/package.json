@@ -13,6 +13,7 @@
   "main": "index.js",
   "module": "index.js",
   "files": [
+    "*.d.ts",
     "*.js",
     "renderLitAsNode",
     "sb-action-logger",
