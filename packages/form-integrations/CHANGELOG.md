@@ -1,5 +1,36 @@
 # Change Log
 
+## 0.3.26
+
+### Patch Changes
+
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/checkbox-group@0.12.14
+  - @lion/core@0.13.8
+  - @lion/fieldset@0.15.14
+  - @lion/form-core@0.7.1
+  - @lion/input-date@0.8.14
+  - @lion/input-datepicker@0.18.15
+  - @lion/input-email@0.9.14
+  - @lion/input-iban@0.11.4
+  - @lion/listbox@0.4.1
+  - @lion/localize@0.15.5
+  - @lion/radio-group@0.12.14
+  - @lion/select-rich@0.21.25
+  - @lion/switch@0.12.14
+  - @lion/combobox@0.1.21
+  - @lion/button@0.8.10
+  - @lion/input-amount@0.8.14
+  - @lion/input-range@0.5.14
+  - @lion/input-stepper@0.1.15
+  - @lion/select@0.8.14
+  - @lion/textarea@0.8.14
+  - @lion/form@0.7.15
+  - @lion/input@0.10.14
+  - @lion/validate-messages@0.3.14
+
 ## 0.3.25
 
 ### Patch Changes

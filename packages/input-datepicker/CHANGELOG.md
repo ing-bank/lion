@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.18.15
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+- Updated dependencies [9352b577]
+  - @lion/calendar@0.12.11
+  - @lion/core@0.13.8
+  - @lion/form-core@0.7.1
+  - @lion/input-date@0.8.14
+  - @lion/localize@0.15.5
+  - @lion/overlays@0.23.3
+  - @lion/validate-messages@0.3.14
+
 ## 0.18.14
 
 ### Patch Changes
