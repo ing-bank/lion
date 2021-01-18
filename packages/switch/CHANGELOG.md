@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.12.15
+
+### Patch Changes
+
+- Updated dependencies [e557bda4]
+  - @lion/helpers@0.5.20
+
 ## 0.12.14
 
 ### Patch Changes
