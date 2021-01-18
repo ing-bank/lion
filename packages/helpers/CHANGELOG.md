@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.20
+
+### Patch Changes
+
+- e557bda4: Republish helpers so that index.d.ts gets published with the latest ts config.
+
 ## 0.5.19
 
 ### Patch Changes

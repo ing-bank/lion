@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.27
+
+### Patch Changes
+
+- @lion/switch@0.12.15
+
 ## 0.3.26
 
 ### Patch Changes

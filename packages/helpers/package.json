@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "description": "Helpers that are used throughout lion and can be used outside",
   "license": "MIT",
   "author": "ing-bank",
