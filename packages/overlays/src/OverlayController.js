@@ -1016,8 +1016,8 @@ export class OverlayController extends EventTargetShim {
           this.__backdropNodeToBeTornDown = this.backdropNode;
 
           this.__backdropAnimation.then(() => {
-            if (this.__backdropNodeToBeTornDown) {
-              /** @type {HTMLElement} */ (this.__backdropNodeToBeTornDown.parentNode).removeChild(
+            if (this.__backdropNodeToBeTornDown && this.__backdropNodeToBeTornDown.parentNode) {
+              this.__backdropNodeToBeTornDown.parentNode.removeChild(
                 this.__backdropNodeToBeTornDown,
               );
             }
