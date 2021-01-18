@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.1.21
+
+### Patch Changes
+
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+- Updated dependencies [9352b577]
+  - @lion/core@0.13.8
+  - @lion/form-core@0.7.1
+  - @lion/listbox@0.4.1
+  - @lion/overlays@0.23.3
+
 ## 0.1.20
 
 ### Patch Changes
