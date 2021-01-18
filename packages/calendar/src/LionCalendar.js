@@ -25,7 +25,6 @@ import { isSameDate } from './utils/isSameDate.js';
 /**
  * @customElement lion-calendar
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionCalendar extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
     return [

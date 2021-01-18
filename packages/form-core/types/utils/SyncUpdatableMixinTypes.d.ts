@@ -10,6 +10,7 @@ export declare interface SyncUpdatableNamespace {
 }
 
 export declare class SyncUpdatableHost {
+  constructor(...args: any[]);
   static __syncUpdatableHasChanged(name: string, newValue: any, oldValue: any): boolean;
   updateSync(name: string, oldValue: any): void;
   __syncUpdatableInitialize(): void;

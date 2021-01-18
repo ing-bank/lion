@@ -4,7 +4,6 @@ import { ChoiceGroupMixin, FormGroupMixin } from '@lion/form-core';
 /**
  * A wrapper around multiple checkboxes
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionCheckboxGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {
   constructor() {
     super();

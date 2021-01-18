@@ -71,7 +71,6 @@ describe('LocalizeMixin', () => {
       'child-element': loc => fakeImport(`./child-element/${loc}.js`),
     };
 
-    // @ts-expect-error
     class ParentElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [parentElementNs, defaultNs, ...super.localizeNamespaces];
@@ -79,7 +78,6 @@ describe('LocalizeMixin', () => {
     }
 
     const tagString = defineCE(
-      // @ts-expect-error
       class ChildElement extends LocalizeMixin(ParentElement) {
         static get localizeNamespaces() {
           return [childElementNs, defaultNs, ...super.localizeNamespaces];

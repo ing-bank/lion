@@ -9,7 +9,6 @@ import { Unparseable } from './validate/Unparseable.js';
  * @typedef {import('@lion/core').CSSResult} CSSResult
  * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
- * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
@@ -522,15 +521,13 @@ const FormControlMixinImplementation = superclass =>
     /**
      * @param {?} modelValue
      * @return {boolean}
-     *
-     * FIXME: Move to FormatMixin? Since there we have access to modelValue prop
      */
-    // @ts-expect-error
+    // @ts-ignore FIXME: Move to FormatMixin? Since there we have access to modelValue prop
     _isEmpty(modelValue = this.modelValue) {
       let value = modelValue;
-      // @ts-expect-error
+      // @ts-ignore
       if (this.modelValue instanceof Unparseable) {
-        // @ts-expect-error
+        // @ts-ignore
         value = this.modelValue.viewValue;
       }
 

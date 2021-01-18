@@ -3,7 +3,6 @@ import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-w
 import { FocusMixin } from '../src/FocusMixin.js';
 
 describe('FocusMixin', () => {
-  // @ts-expect-error base constructors same return type
   class Focusable extends FocusMixin(LitElement) {
     render() {
       return html`<slot name="input"></slot>`;

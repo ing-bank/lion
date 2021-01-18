@@ -507,7 +507,7 @@ export class OverlayController extends EventTargetShim {
     if (this.placementMode === 'local') {
       // Lazily load Popper if not done yet
       if (!OverlayController.popperModule) {
-        // @ts-expect-error
+        // @ts-expect-error FIXME: for some reason createPopper is missing here
         OverlayController.popperModule = preloadPopper();
       }
     }
@@ -838,8 +838,8 @@ export class OverlayController extends EventTargetShim {
       hideConfig.backdropNode.classList.remove(
         `${this.placementMode}-overlays__backdrop--animation-in`,
       );
-      /** @type {(ev:AnimationEvent) => void} */
-      let afterFadeOut;
+      /** @type {() => void} */
+      let afterFadeOut = () => {};
       hideConfig.backdropNode.classList.add(
         `${this.placementMode}-overlays__backdrop--animation-out`,
       );
@@ -857,7 +857,7 @@ export class OverlayController extends EventTargetShim {
           resolve(undefined);
         };
       });
-      // @ts-expect-error
+
       hideConfig.backdropNode.addEventListener('animationend', afterFadeOut);
     }
   }

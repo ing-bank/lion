@@ -8,7 +8,6 @@ import { Required } from '@lion/form-core';
 import { LionCombobox } from '../src/LionCombobox.js';
 
 /**
- * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
  * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
  */
 
@@ -384,8 +383,9 @@ describe('lion-combobox', () => {
     describe('Subclassers', () => {
       it('allows to control overlay visibility via "_showOverlayCondition"', async () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            return this.focused || super.showOverlayCondition(options);
+            return this.focused || super._showOverlayCondition(options);
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -575,6 +575,7 @@ describe('lion-combobox', () => {
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
       `));
+      // @ts-ignore sinon type error
       const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
       el.requestUpdate('modelValue');
       await el.updateComplete;
@@ -823,6 +824,11 @@ describe('lion-combobox', () => {
       `));
       expect(el._inputNode.value).to.equal('');
 
+      /**
+       * @param {'none' | 'list' | 'inline' | 'both'} autocomplete
+       * @param {number|number[]} index
+       * @param {string} valueOnClose
+       */
       async function performChecks(autocomplete, index, valueOnClose) {
         await el.updateComplete;
         el.opened = true;
@@ -945,7 +951,7 @@ describe('lion-combobox', () => {
         `));
         // This ensures autocomplete would be off originally
         el.autocomplete = 'list';
-        await mimicUserTypingAdvanced(el, 'vi'); // so we have options ['Victoria Plum']
+        await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(3);
       });
@@ -1057,6 +1063,10 @@ describe('lion-combobox', () => {
             return true;
           }
 
+          /**
+           * @param {?} modelValue
+           * @param {?} oldModelValue
+           */
           // eslint-disable-next-line no-unused-vars
           _syncToTextboxMultiple(modelValue, oldModelValue) {
             // In a real scenario (depending on how selection display works),

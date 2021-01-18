@@ -10,6 +10,7 @@ export type Delegations = {
 };
 
 export declare class DelegateHost {
+  constructor(...args: any[]);
   delegations: Delegations;
 
   protected _connectDelegateMixin(): void;

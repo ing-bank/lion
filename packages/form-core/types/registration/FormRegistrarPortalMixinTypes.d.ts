@@ -2,6 +2,7 @@ import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
 
 export declare class FormRegistrarPortalHost {
+  constructor(...args: any[]);
   registrationTarget: HTMLElement;
   __redispatchEventForFormRegistrarPortalMixin(ev: CustomEvent): void;
 }

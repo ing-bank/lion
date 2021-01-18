@@ -29,7 +29,6 @@ export function runFormGroupMixinSuite(cfg = {}) {
 
   const childTagString = cfg.childTagString || defineCE(FormChild);
 
-  // @ts-expect-error base constructors same return type
   class FormGroup extends FormGroupMixin(LitElement) {
     constructor() {
       super();
@@ -131,8 +130,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
       try {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
-        // @ts-expect-error
-        el.addFormElement(/**  @type {FormControlHost} */ ({}));
+        el.addFormElement(
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({}),
+        );
       } catch (err) {
         error = err;
       }
@@ -151,8 +151,11 @@ export function runFormGroupMixinSuite(cfg = {}) {
       try {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
-        // @ts-expect-error
-        el.addFormElement(/**  @type {FormControlHost} */ ({ name: 'foo' }));
+        el.addFormElement(
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+            name: 'foo',
+          }),
+        );
       } catch (err) {
         error = err;
       }
@@ -171,10 +174,16 @@ export function runFormGroupMixinSuite(cfg = {}) {
       try {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
-        // @ts-expect-error
-        el.addFormElement(/**  @type {FormControlHost} */ ({ name: 'fooBar' }));
-        // @ts-expect-error
-        el.addFormElement(/**  @type {FormControlHost} */ ({ name: 'fooBar' }));
+        el.addFormElement(
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+            name: 'fooBar',
+          }),
+        );
+        el.addFormElement(
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+            name: 'fooBar',
+          }),
+        );
       } catch (err) {
         error = err;
       }
@@ -628,7 +637,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
             return 'Input1IsTen';
           }
 
-          // @ts-expect-error
+          /** @param {?} value */
           execute(value) {
             const hasError = value.input1 !== 10;
             return hasError;
@@ -643,10 +652,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
           <${childTag} name="input2" .validators=${[new IsNumber()]}></${childTag}>
         </${tag}>
       `));
-        const inputs = el.querySelectorAll(childTagString);
-        // @ts-expect-error
+        const inputs = /** @type {FormChild[]} */ (Array.from(el.querySelectorAll(childTagString)));
         inputs[1].modelValue = 2; // make it dirty
-        // @ts-expect-error
         inputs[1].focus();
 
         outSideButton.focus();
@@ -662,8 +669,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const fieldset = /**  @type {FormGroup} */ (await fixture(
           html`<${tag}>${inputSlots}</${tag}>`,
         ));
-        // @ts-expect-error
-        fieldset.formElements['hobbies[]'][0].serializer = v => `${v.value}-serialized`;
+        fieldset.formElements['hobbies[]'][0].serializer = /** @param {?} v */ v =>
+          `${v.value}-serialized`;
         fieldset.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'Bar' };
         fieldset.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
         fieldset.formElements['gender[]'][0].modelValue = { checked: false, value: 'male' };

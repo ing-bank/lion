@@ -20,12 +20,14 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
 
   const childTagString = cfg.childTagString || defineCE(FormChild);
 
-  // @ts-expect-error
   const FormGroup = class extends FormGroupMixin(LitElement) {
     constructor() {
       super();
       /** @override from FormRegistrarMixin */
       this._isFormOrFieldset = true;
+      /**
+       * @type {'fieldset' | 'child' | 'choice-group'}
+       */
       this._repropagationRole = 'fieldset'; // configures FormControlMixin
     }
   };

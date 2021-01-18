@@ -9,7 +9,6 @@ import { Unparseable, Validator } from '../index.js';
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  */
 
-// @ts-expect-error base constructor same return type
 class FormatClass extends FormatMixin(LitElement) {
   get _inputNode() {
     return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
@@ -279,7 +278,6 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('works if there is no underlying _inputNode', async () => {
-      // @ts-expect-error base constructor same return type
       const tagNoInputString = defineCE(class extends FormatMixin(LitElement) {});
       const tagNoInput = unsafeStatic(tagNoInputString);
       expect(async () => {

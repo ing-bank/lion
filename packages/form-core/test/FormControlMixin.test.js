@@ -7,7 +7,6 @@ import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 describe('FormControlMixin', () => {
   const inputSlot = '<input slot="input" />';
 
-  // @ts-expect-error base constructor same return type
   class FormControlMixinClass extends FormControlMixin(LitElement) {}
 
   const tagString = defineCE(FormControlMixinClass);
@@ -213,7 +212,6 @@ describe('FormControlMixin', () => {
   });
 
   describe('Model-value-changed event propagation', () => {
-    // @ts-expect-error base constructor same return type
     const FormControlWithRegistrarMixinClass = class extends FormControlMixin(
       FormRegistrarMixin(LitElement),
     ) {};

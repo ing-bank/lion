@@ -13,7 +13,6 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
  * Element gets state supplied externally, reflects this to attributes,
  * enabling SubClassers to style based on those states
  */
-// @ts-expect-error
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
   static get properties() {
     return {

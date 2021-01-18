@@ -21,6 +21,7 @@ export declare class UpdateStylesHost {
    *
    * @param {StylesMap} updateStyles
    */
+  constructor(...args: any[]);
   public updateStyles(updateStyles: StylesMap): void;
 }
 

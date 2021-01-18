@@ -2,7 +2,6 @@ import { css, html, ScopedElementsMixin } from '@lion/core';
 import { ChoiceInputMixin, LionField } from '@lion/form-core';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [

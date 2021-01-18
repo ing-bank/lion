@@ -36,6 +36,7 @@ declare interface HTMLElementWithValue extends HTMLElement {
 }
 
 export declare class FormControlHost {
+  constructor(...args: any[]);
   static get styles(): CSSResultArray;
   static get properties(): {
     name: {

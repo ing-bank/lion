@@ -19,6 +19,7 @@ type FeedbackMessage = {
 };
 
 export declare class ValidateHost {
+  constructor(...args: any[]);
   validators: Validator[];
   hasFeedbackFor: string[];
   shouldShowFeedbackFor: string[];

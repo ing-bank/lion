@@ -3,6 +3,7 @@ import { FormRegistrarHost } from './FormRegistrarMixinTypes';
 import { LitElement } from '@lion/core';
 
 export declare class FormRegisteringHost {
+  constructor(...args: any[]);
   connectedCallback(): void;
   disconnectedCallback(): void;
   __parentFormGroup?: FormRegistrarHost;

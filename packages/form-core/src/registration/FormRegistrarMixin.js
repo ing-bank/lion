@@ -93,7 +93,7 @@ const FormRegistrarMixinImplementation = superclass =>
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError('You need to define a name');
         }
-        // @ts-expect-error
+        // @ts-expect-error this._isFormOrFieldset true means we can assume `this.name` exists
         if (name === this.name) {
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError(`You can not have the same name "${name}" as your parent`);

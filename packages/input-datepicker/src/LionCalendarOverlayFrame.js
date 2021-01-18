@@ -1,7 +1,6 @@
 import { css, html, LitElement } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
   static get styles() {
     return [

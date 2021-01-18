@@ -134,7 +134,7 @@ describe('Validator', () => {
 
   it('has access to FormControl', async () => {
     const lightDom = '';
-    // @ts-expect-error base constructors same return type
+    // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
     class ValidateElement extends ValidateMixin(LitElement) {
       static get properties() {
         return { modelValue: String };

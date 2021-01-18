@@ -445,7 +445,7 @@ export class GoogleCombobox extends LionCombobox {
   }
 
   _showOverlayCondition(options) {
-    return this.focused || super.showOverlayCondition(options);
+    return this.focused || super._showOverlayCondition(options);
   }
 
   __resetFocus() {

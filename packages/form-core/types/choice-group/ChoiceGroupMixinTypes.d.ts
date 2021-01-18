@@ -5,6 +5,7 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { InteractionStateHost } from '../InteractionStateMixinTypes';
 
 export declare class ChoiceGroupHost {
+  constructor(...args: any[]);
   multipleChoice: boolean;
 
   connectedCallback(): void;
