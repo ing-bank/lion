@@ -41,6 +41,8 @@ export declare class ChoiceInputHost {
   connectedCallback(): void;
   disconnectedCallback(): void;
 
+  _preventDuplicateLabelClick(ev: Event): void;
+
   __toggleChecked(): void;
 
   __syncModelCheckedToChecked(checked: boolean): void;
