@@ -128,6 +128,7 @@ const ChoiceInputMixinImplementation = superclass =>
       super();
       this.modelValue = { value: '', checked: false };
       this.disabled = false;
+      this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
       this.__toggleChecked = this.__toggleChecked.bind(this);
     }
 
@@ -189,12 +190,35 @@ const ChoiceInputMixinImplementation = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
+      if (this._labelNode) {
+        this._labelNode.addEventListener('click', this._preventDuplicateLabelClick);
+      }
       this.addEventListener('user-input-changed', this.__toggleChecked);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
+      if (this._labelNode) {
+        this._labelNode.removeEventListener('click', this._preventDuplicateLabelClick);
+      }
       this.removeEventListener('user-input-changed', this.__toggleChecked);
+    }
+
+    /**
+     * The native platform fires an event for both the click on the label, and also
+     * the redispatched click on the native input element.
+     * This results in two click events arriving at the host, but we only want one.
+     * This method prevents the duplicate click and ensures the correct isTrusted event
+     * with the correct event.target arrives at the host.
+     * @param {Event} ev
+     */
+    // eslint-disable-next-line no-unused-vars
+    _preventDuplicateLabelClick(ev) {
+      const __inputClickHandler = /** @param {Event} _ev */ _ev => {
+        _ev.stopImmediatePropagation();
+        this._inputNode.removeEventListener('click', __inputClickHandler);
+      };
+      this._inputNode.addEventListener('click', __inputClickHandler);
     }
 
     __toggleChecked() {
