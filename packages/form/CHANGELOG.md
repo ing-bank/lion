@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.16
+
+### Patch Changes
+
+- @lion/fieldset@0.15.15
+
 ## 0.7.15
 
 ### Patch Changes

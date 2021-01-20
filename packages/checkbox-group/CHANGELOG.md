@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.13.0
+
+### Minor Changes
+
+- 8d2b2513: Add checkbox-indeterminate component, which is a mixed state checkbox that depends on its child checkbox states.
+
+### Patch Changes
+
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+  - @lion/input@0.10.15
+
 ## 0.12.14
 
 ### Patch Changes
