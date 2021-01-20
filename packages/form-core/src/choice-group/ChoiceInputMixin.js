@@ -5,7 +5,7 @@ import { FormatMixin } from '../FormatMixin.js';
 
 /**
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputMixin} ChoiceInputMixin
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputModelValue} ChoiceInputModelValue
  */
@@ -115,9 +115,9 @@ const ChoiceInputMixinImplementation = superclass =>
       if (
         changedProperties.has('name') &&
         // @ts-expect-error not all choice inputs have a parent form group, since this mixin does not have a strict contract with the registration system
-        this.__parentFormGroup &&
+        this._parentFormGroup &&
         // @ts-expect-error
-        this.__parentFormGroup.name !== this.name
+        this._parentFormGroup.name !== this.name
       ) {
         // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
         this.name = changedProperties.get('name');
@@ -129,7 +129,7 @@ const ChoiceInputMixinImplementation = superclass =>
       this.modelValue = { value: '', checked: false };
       this.disabled = false;
       this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
-      this.__toggleChecked = this.__toggleChecked.bind(this);
+      this._toggleChecked = this._toggleChecked.bind(this);
     }
 
     /**
@@ -193,7 +193,7 @@ const ChoiceInputMixinImplementation = superclass =>
       if (this._labelNode) {
         this._labelNode.addEventListener('click', this._preventDuplicateLabelClick);
       }
-      this.addEventListener('user-input-changed', this.__toggleChecked);
+      this.addEventListener('user-input-changed', this._toggleChecked);
     }
 
     disconnectedCallback() {
@@ -201,7 +201,7 @@ const ChoiceInputMixinImplementation = superclass =>
       if (this._labelNode) {
         this._labelNode.removeEventListener('click', this._preventDuplicateLabelClick);
       }
-      this.removeEventListener('user-input-changed', this.__toggleChecked);
+      this.removeEventListener('user-input-changed', this._toggleChecked);
     }
 
     /**
@@ -221,7 +221,9 @@ const ChoiceInputMixinImplementation = superclass =>
       this._inputNode.addEventListener('click', __inputClickHandler);
     }
 
-    __toggleChecked() {
+    /** @param {Event} ev */
+    // eslint-disable-next-line no-unused-vars
+    _toggleChecked(ev) {
       if (this.disabled) {
         return;
       }

@@ -11,7 +11,7 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
 /**
@@ -77,7 +77,7 @@ const FormRegistrarMixinImplementation = superclass =>
     addFormElement(child, indexToInsertAt) {
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
       // eslint-disable-next-line no-param-reassign
-      child.__parentFormGroup = this;
+      child._parentFormGroup = this;
 
       // 1. Add children as array element
       if (indexToInsertAt >= 0) {

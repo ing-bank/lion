@@ -11,6 +11,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
 import './lion-checkbox-group.js';
+import './lion-checkbox-indeterminate.js';
 import './lion-checkbox.js';
 
 export default {
@@ -164,5 +165,83 @@ export const event = () => html`
   </lion-checkbox-group>
   <br />
   <span>Selected scientists: <strong id="selectedDinosaur">N/A</strong></span>
+`;
+```
+
+### Indeterminate
+
+```js preview-story
+export const indeterminate = () => html`
+  <lion-checkbox-group name="scientists[]">
+    <lion-checkbox-indeterminate label="Favorite scientists">
+      <lion-checkbox slot="checkbox" label="Archimedes"></lion-checkbox>
+      <lion-checkbox slot="checkbox" label="Francis Bacon"></lion-checkbox>
+      <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
+    </lion-checkbox-indeterminate>
+  </lion-checkbox-group>
+`;
+```
+
+```js preview-story
+export const indeterminateSiblings = () => html`
+  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
+    <lion-checkbox-indeterminate label="Old Greek scientists">
+      <lion-checkbox
+        slot="checkbox"
+        label="Archimedes"
+        .choiceValue=${'Archimedes'}
+      ></lion-checkbox>
+      <lion-checkbox slot="checkbox" label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+      <lion-checkbox
+        slot="checkbox"
+        label="Pythagoras"
+        .choiceValue=${'Pythagoras'}
+      ></lion-checkbox>
+    </lion-checkbox-indeterminate>
+    <lion-checkbox-indeterminate label="17th Century scientists">
+      <lion-checkbox
+        slot="checkbox"
+        label="Isaac Newton"
+        .choiceValue=${'Isaac Newton'}
+      ></lion-checkbox>
+      <lion-checkbox
+        slot="checkbox"
+        label="Galileo Galilei"
+        .choiceValue=${'Galileo Galilei'}
+      ></lion-checkbox>
+    </lion-checkbox-indeterminate>
+  </lion-checkbox-group>
+`;
+```
+
+```js preview-story
+export const indeterminateChildren = () => html`
+  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
+    <lion-checkbox-indeterminate label="Scientists">
+      <lion-checkbox
+        slot="checkbox"
+        label="Isaac Newton"
+        .choiceValue=${'Isaac Newton'}
+      ></lion-checkbox>
+      <lion-checkbox
+        slot="checkbox"
+        label="Galileo Galilei"
+        .choiceValue=${'Galileo Galilei'}
+      ></lion-checkbox>
+      <lion-checkbox-indeterminate slot="checkbox" label="Old Greek scientists">
+        <lion-checkbox
+          slot="checkbox"
+          label="Archimedes"
+          .choiceValue=${'Archimedes'}
+        ></lion-checkbox>
+        <lion-checkbox slot="checkbox" label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+        <lion-checkbox
+          slot="checkbox"
+          label="Pythagoras"
+          .choiceValue=${'Pythagoras'}
+        ></lion-checkbox>
+      </lion-checkbox-indeterminate>
+    </lion-checkbox-indeterminate>
+  </lion-checkbox-group>
 `;
 ```
