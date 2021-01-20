@@ -19,7 +19,7 @@ const FormRegisteringMixinImplementation = superclass =>
     constructor() {
       super();
       /** @type {FormRegistrarHost | undefined} */
-      this.__parentFormGroup = undefined;
+      this._parentFormGroup = undefined;
     }
 
     connectedCallback() {
@@ -42,8 +42,8 @@ const FormRegisteringMixinImplementation = superclass =>
         // @ts-expect-error check it anyway, because could be lit-element extension
         super.disconnectedCallback();
       }
-      if (this.__parentFormGroup) {
-        this.__parentFormGroup.removeFormElement(this);
+      if (this._parentFormGroup) {
+        this._parentFormGroup.removeFormElement(this);
       }
     }
   };

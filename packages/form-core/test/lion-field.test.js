@@ -16,7 +16,7 @@ import '../lion-field.js';
 /**
  * @typedef {import('../src/LionField.js').LionField} LionField
  * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
 /** @typedef {HTMLElement & {shadowRoot: HTMLElement, assignedNodes: Function}} ShadowHTMLElement */

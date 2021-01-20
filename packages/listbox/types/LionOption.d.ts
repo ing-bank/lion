@@ -2,5 +2,5 @@ import { ChoiceGroupHost } from '@lion/form-core/types/choice-group/ChoiceGroupM
 
 export declare class LionOptionHost {
   constructor(...args: any[]);
-  private __parentFormGroup: ChoiceGroupHost;
+  protected _parentFormGroup: ChoiceGroupHost;
 }

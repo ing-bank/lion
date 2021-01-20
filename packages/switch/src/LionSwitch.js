@@ -80,7 +80,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       this._inputNode.addEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged);
     }
     if (this._labelNode) {
-      this._labelNode.addEventListener('click', this.__toggleChecked);
+      this._labelNode.addEventListener('click', this._toggleChecked);
     }
     this._syncButtonSwitch();
     this.submitted = true;
@@ -94,7 +94,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       );
     }
     if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this.__toggleChecked);
+      this._labelNode.removeEventListener('click', this._toggleChecked);
     }
   }
 

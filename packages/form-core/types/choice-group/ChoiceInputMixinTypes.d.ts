@@ -43,7 +43,7 @@ export declare class ChoiceInputHost {
 
   _preventDuplicateLabelClick(ev: Event): void;
 
-  __toggleChecked(): void;
+  _toggleChecked(ev: Event): void;
 
   __syncModelCheckedToChecked(checked: boolean): void;
 

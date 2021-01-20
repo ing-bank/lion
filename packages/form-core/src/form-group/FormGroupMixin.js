@@ -12,7 +12,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
  */
 
 /**
@@ -449,12 +449,12 @@ const FormGroupMixinImplementation = superclass =>
     __linkChildrenMessagesToParent(child) {
       // aria-describedby of (nested) children
       const unTypedThis = /** @type {unknown} */ (this);
-      let parent = /** @type {FormControlHost & { __parentFormGroup:any }} */ (unTypedThis);
+      let parent = /** @type {FormControlHost & { _parentFormGroup:any }} */ (unTypedThis);
       const ctor = /** @type {typeof FormGroupMixin} */ (this.constructor);
       while (parent) {
         ctor._addDescriptionElementIdsToField(child, parent._getAriaDescriptionElements());
         // Also check if the newly added child needs to refer grandparents
-        parent = parent.__parentFormGroup;
+        parent = parent._parentFormGroup;
       }
     }
 
