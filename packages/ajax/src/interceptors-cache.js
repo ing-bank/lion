@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
-import { searchParamSerializer } from './serialize-search-params.js';
-import './typedef.js';
+
+import './typedef-cache.js';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
@@ -97,6 +97,19 @@ class LionCache {
 }
 
 let caches = {};
+
+/**
+ * Serialize search parameters into url query string parameters.
+ * If params === null, returns ''
+ * @param {Params} params query string parameters object
+ * @returns {string} of querystring parameters WITHOUT `?` or empty string ''
+ */
+export const searchParamSerializer = params =>
+  params
+    ? Object.keys(params)
+        .map(key => `${key}=${params[key]}`)
+        .join('&')
+    : '';
 
 /**
  * Returns the active cache instance for the current session

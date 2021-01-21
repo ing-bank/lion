@@ -43,16 +43,3 @@ Interceptors require `cacheIdentifier` function and `cacheOptions` config.
 The configuration is used by the interceptors to determine what to put in the cache and when to use the cached data.
 
 A cache configuration per action (pre `get` etc) can be placed in ajax configuration in `lionCacheOptions` field, it needed for situations when you want your, for instance, `get` request to have specific cache parameters, like `timeToLive`.
-
-## Decisions
-
-### Service Worker
-
-We used to have an implementation in the service worker, but we've chosen not to
-use it.
-
-The main reason was that a service worker is not available for IE11. Previously
-we had the Redux store that we used to cache responses and share the data
-between features that needed it. This was also to relieve the backend from
-receiving too many calls. Now that service workers aren't available in IE11, we
-would see an increase in calls to the particular APIs. This was unacceptable.

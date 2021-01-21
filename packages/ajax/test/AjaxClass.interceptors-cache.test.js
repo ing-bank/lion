@@ -1,12 +1,12 @@
 import { expect } from '@open-wc/testing';
 import sinon, { spy } from 'sinon';
-import { ajax } from '../../ajax/index.js';
-import '../src/typedef.js';
+import '../src/typedef-cache.js';
 
 import {
   lionCacheRequestInterceptorFactory,
   lionCacheResponseInterceptorFactory,
   validateOptions,
+  ajax,
 } from '../index.js';
 
 describe('lion-lib-cache', function describeLionLibCache() {
