@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- 77114753: Stop propagation of label click event in choice inputs to deduplicate the click event on the choice input.
+- f98aab23: Make \_\_parentFormGroup --> \_parentFormGroup so it is protected and not private
+- f98aab23: Make \_\_toggleChecked protected property (\_toggleChecked)
+
 ## 0.7.1
 
 ### Patch Changes

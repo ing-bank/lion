@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.12.16
+
+### Patch Changes
+
+- f98aab23: Make \_\_toggleChecked protected property (\_toggleChecked)
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+
 ## 0.12.15
 
 ### Patch Changes

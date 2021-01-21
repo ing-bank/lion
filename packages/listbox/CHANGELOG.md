@@ -1,5 +1,15 @@
 # @lion/listbox
 
+## 0.4.2
+
+### Patch Changes
+
+- f98aab23: Make \_\_parentFormGroup --> \_parentFormGroup so it is protected and not private
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+
 ## 0.4.1
 
 ### Patch Changes

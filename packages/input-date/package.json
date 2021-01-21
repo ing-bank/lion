@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-date",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "description": "Provide a way for users to fill in a date",
   "license": "MIT",
   "author": "ing-bank",
@@ -34,10 +34,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.13.8",
-    "@lion/form-core": "0.7.1",
-    "@lion/input": "0.10.14",
+    "@lion/form-core": "0.7.2",
+    "@lion/input": "0.10.15",
     "@lion/localize": "0.15.5",
-    "@lion/validate-messages": "0.3.14"
+    "@lion/validate-messages": "0.3.15"
   },
   "keywords": [
     "input-date",
