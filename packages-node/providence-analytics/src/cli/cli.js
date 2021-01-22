@@ -175,13 +175,13 @@ async function cli({ cwd } = {}) {
       v => cliHelpers.pathsArrayFromCs(v, cwd),
       InputDataService.referenceProjectPaths,
     )
-    .option('-a, --allowlist [allowlist]', `allowlisted paths, like './src, ./packages/*'`, v =>
-      cliHelpers.pathsArrayFromCs(v, cwd),
+    .option('-a, --allowlist [allowlist]', `allowlisted paths, like 'src/**/*, packages/**/*'`, v =>
+      cliHelpers.csToArray(v, cwd),
     )
     .option(
       '--allowlist-reference [allowlist-reference]',
-      `allowed paths for reference, like './src, ./packages/*'`,
-      v => cliHelpers.pathsArrayFromCs(v, cwd),
+      `allowed paths for reference, like 'src/**/*, packages/**/*'`,
+      v => cliHelpers.csToArray(v, cwd),
     )
     .option(
       '--search-target-collection [collection-name]',
