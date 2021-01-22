@@ -735,21 +735,17 @@ export class OverlayController extends EventTargetShim {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
         this.__bodyClientHeight = document.body.clientHeight;
-        this.__bodyMarginRight = 0;
-        this.__bodyMarginBottom = 0;
+        this.__bodyMarginRightInline = document.body.style.marginRight;
+        this.__bodyMarginBottomInline = document.body.style.marginBottom;
         break;
       case 'show': {
-        if (supportsCSSTypedObject) {
-          // @ts-expect-error types attributeStyleMap not available yet
-          this.__bodyMarginRight = document.body.computedStyleMap().get('margin-right').value;
-          // @ts-expect-error types computedStyleMap not available yet
-          this.__bodyMarginBottom = document.body.computedStyleMap().get('margin-bottom').value;
-        } else if (window.getComputedStyle) {
+        if (window.getComputedStyle) {
           const bodyStyle = window.getComputedStyle(document.body);
-          if (bodyStyle) {
-            this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
-            this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
-          }
+          this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
+          this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+        } else {
+          this.__bodyMarginRight = 0;
+          this.__bodyMarginBottom = 0;
         }
         const scrollbarWidth =
           document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
@@ -769,15 +765,8 @@ export class OverlayController extends EventTargetShim {
         break;
       }
       case 'hide':
-        if (supportsCSSTypedObject) {
-          // @ts-expect-error types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-right', CSS.px(this.__bodyMarginRight));
-          // @ts-expect-error types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-bottom', CSS.px(this.__bodyMarginBottom));
-        } else {
-          document.body.style.marginRight = `${this.__bodyMarginRight}px`;
-          document.body.style.marginBottom = `${this.__bodyMarginBottom}px`;
-        }
+        document.body.style.marginRight = this.__bodyMarginRightInline || '';
+        document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
         break;
       /* no default */
     }
