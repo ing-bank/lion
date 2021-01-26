@@ -52,7 +52,10 @@ const externalCfgMock = {
 };
 
 async function runCli(args, cwd) {
-  process.argv = [...process.argv.slice(0, 2), ...args.split(' ')];
+  process.argv = [
+    ...process.argv.slice(0, 2),
+    ...args.split(' ').map(a => a.replace(/^("|')?(.*)("|')?$/, '$2')),
+  ];
   await cli({ cwd });
 }
 
@@ -231,27 +234,26 @@ describe('Providence CLI', () => {
     });
 
     it('"-a --allowlist"', async () => {
-      await runCli(`${analyzeCmd} -a /mocked/path/example-project`, rootDir);
-      expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
+      await runCli(`${analyzeCmd} -a mocked/**/*,rocked/*`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
-        '/mocked/path/example-project',
+        'mocked/**/*',
+        'rocked/*',
       ]);
 
-      pathsArrayFromCsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --allowlist /mocked/path/example-project`, rootDir);
-      expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
+      await runCli(`${analyzeCmd} --allowlist mocked/**/*,rocked/*`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
-        '/mocked/path/example-project',
+        'mocked/**/*',
+        'rocked/*',
       ]);
     });
 
     it('"--allowlist-reference"', async () => {
-      await runCli(`${analyzeCmd} --allowlist-reference /mocked/path/example-project`, rootDir);
-      expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
+      await runCli(`${analyzeCmd} --allowlist-reference mocked/**/*,rocked/*`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.eql([
-        '/mocked/path/example-project',
+        'mocked/**/*',
+        'rocked/*',
       ]);
     });
 
@@ -383,8 +385,8 @@ describe('Providence CLI', () => {
           },
           outputFolder: '/outp',
           extensions: ['.bla'],
-          allowlist: [`${rootDir}/al`],
-          allowlistReference: [`${rootDir}/alr`],
+          allowlist: ['al'],
+          allowlistReference: ['alr'],
           cwd: undefined,
         });
       });

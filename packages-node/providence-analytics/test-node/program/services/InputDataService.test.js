@@ -197,6 +197,14 @@ describe('InputDataService', () => {
         ]);
       });
 
+      it('does not support non globs in "allowlist"', async () => {
+        const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+          extensions: ['.html', '.js'],
+          allowlist: ['nested'],
+        });
+        expect(globOutput).to.eql([]);
+      });
+
       it('omits node_modules and bower_components at root level by default', async () => {
         mockProject({
           './index.js': '',
@@ -226,6 +234,23 @@ describe('InputDataService', () => {
         expect(globOutput).to.eql([
           '/fictional/project/added/file.js',
           '/fictional/project/root-lvl.js',
+        ]);
+      });
+
+      it('allows deeper globs', async () => {
+        mockProject({
+          './root-lvl.js': '',
+          './deeper/glob/structure/file.js': '',
+          './deeper/glob/file.js': '',
+          './deeper/file.js': '',
+        });
+        const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+          allowlist: ['deeper/**/*'],
+        });
+        expect(globOutput).to.eql([
+          '/fictional/project/deeper/file.js',
+          '/fictional/project/deeper/glob/file.js',
+          '/fictional/project/deeper/glob/structure/file.js',
         ]);
       });
 
