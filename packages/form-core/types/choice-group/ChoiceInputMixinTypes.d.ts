@@ -43,6 +43,8 @@ export declare class ChoiceInputHost {
 
   _preventDuplicateLabelClick(ev: Event): void;
 
+  _syncNameToParentFormGroup(): void;
+
   _toggleChecked(ev: Event): void;
 
   __syncModelCheckedToChecked(checked: boolean): void;

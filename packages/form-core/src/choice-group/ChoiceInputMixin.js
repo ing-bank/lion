@@ -119,8 +119,7 @@ const ChoiceInputMixinImplementation = superclass =>
         // @ts-expect-error
         this._parentFormGroup.name !== this.name
       ) {
-        // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
-        this.name = changedProperties.get('name');
+        this._syncNameToParentFormGroup();
       }
     }
 
@@ -230,6 +229,20 @@ const ChoiceInputMixinImplementation = superclass =>
       this.__isHandlingUserInput = true;
       this.checked = !this.checked;
       this.__isHandlingUserInput = false;
+    }
+
+    /**
+     * Override this in case of extending ChoiceInputMixin and requiring
+     * to sync differently with parent form group name
+     * Right now it checks tag name match where the parent form group tagname
+     * should include the child field tagname ('checkbox' is included in 'checkbox-group')
+     */
+    _syncNameToParentFormGroup() {
+      // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
+      if (this._parentFormGroup.tagName.includes(this.tagName)) {
+        // @ts-expect-error
+        this.name = this._parentFormGroup.name;
+      }
     }
 
     /**
