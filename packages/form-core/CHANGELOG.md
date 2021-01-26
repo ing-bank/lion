@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- a7b27502: Sync name to parent form group conditionally and allow overriding. Also fix sync properly to prevent infinite loop.
+
 ## 0.7.2
 
 ### Patch Changes

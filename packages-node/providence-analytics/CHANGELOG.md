@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.4
+
+### Patch Changes
+
+- b4ec2fe8: - allowlist does not preprocess globs in cli before handing them over to the program
+
 ## 0.8.3
 
 ### Patch Changes

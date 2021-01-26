@@ -1,6 +1,6 @@
 {
   "name": "@lion/select-rich",
-  "version": "0.21.26",
+  "version": "0.21.27",
   "description": "Provides a select with options that can contain html",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,8 +36,8 @@
   "dependencies": {
     "@lion/button": "0.8.10",
     "@lion/core": "0.13.8",
-    "@lion/form-core": "0.7.2",
-    "@lion/listbox": "0.4.2",
+    "@lion/form-core": "0.7.3",
+    "@lion/listbox": "0.4.3",
     "@lion/overlays": "0.23.3"
   },
   "keywords": [
