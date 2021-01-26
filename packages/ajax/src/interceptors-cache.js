@@ -18,7 +18,7 @@ class LionCache {
     /**
      * @type {{[url: string]: {date: number, data: object} }}
      */
-    this.cacheObject = {};
+    this._cacheObject = {};
   }
 
   /**
@@ -28,7 +28,7 @@ class LionCache {
    */
   set(url, data) {
     this._validateCache();
-    this.cacheObject[url] = {
+    this._cacheObject[url] = {
       date: +new Date(),
       data,
     };
@@ -42,7 +42,7 @@ class LionCache {
   get(url, timeToLive) {
     this._validateCache();
 
-    const cacheResult = this.cacheObject[url];
+    const cacheResult = this._cacheObject[url];
     if (!cacheResult) {
       return false;
     }
@@ -61,9 +61,9 @@ class LionCache {
   delete(url) {
     this._validateCache();
 
-    Object.keys(this.cacheObject).forEach(key => {
+    Object.keys(this._cacheObject).forEach(key => {
       if (key.indexOf(url) > -1) {
-        delete this.cacheObject[key];
+        delete this._cacheObject[key];
       }
     });
   }
@@ -75,22 +75,22 @@ class LionCache {
   deleteMatched(regex) {
     this._validateCache();
 
-    Object.keys(this.cacheObject).forEach(key => {
+    Object.keys(this._cacheObject).forEach(key => {
       if (regex.test(key)) {
-        delete this.cacheObject[key];
+        delete this._cacheObject[key];
       }
     });
   }
 
   /**
    * Validate cache on each call to the Cache
-   * When the expiration date has passed, the cacheObject will be replaced by an
+   * When the expiration date has passed, the _cacheObject will be replaced by an
    * empty object
    */
   _validateCache() {
     if (+new Date() > this.expiration) {
       // @ts-ignore
-      this.cacheObject = {};
+      this._cacheObject = {};
     }
     return true;
   }

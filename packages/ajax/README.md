@@ -216,7 +216,9 @@ const globalCacheOptions = {
   useCache: 'always',
   timeToLive: 1000 * 60 * 5, // 5 minutes
 };
-const getCacheIdentifier = () => getActiveProfile().refreshToken;
+// Cache is removed each time an identifier changes,
+// for instance when a current user is logged out
+const getCacheIdentifier = () => getActiveProfile().profileId;
 
 ajax.interceptors.request.use(
   lionCacheRequestInterceptorFactory(getCacheIdentifier, globalCacheOptions),
@@ -238,9 +240,8 @@ import {
   lionCacheRequestInterceptorFactory,
   lionCacheResponseInterceptorFactory,
 } from '@lion-web/ajax.js';
-import { getActiveProfile } from 'token-manager'; //example, not real package
 
-const getCacheIdentifier = () => getActiveProfile().refreshToken;
+const getCacheIdentifier = () => getActiveProfile().profileId;
 
 const globalCacheOptions = {
   useCache: 'never',
