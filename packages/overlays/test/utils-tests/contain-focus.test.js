@@ -1,4 +1,4 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, nextFrame } from '@open-wc/testing';
 import { renderLitAsNode } from '@lion/helpers';
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';
 import { getFocusableElements } from '../../src/utils/get-focusable-elements.js';
@@ -164,6 +164,17 @@ describe('containFocus()', () => {
   });
 
   describe('Tabbing into window', () => {
+    it('reinserts tab detection element when contentNode changes inner content', async () => {
+      await fixture(lightDomTemplate);
+      const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
+      const { disconnect } = containFocus(root);
+      expect(root.querySelector('[data-is-tab-detection-element]')).to.exist;
+      root.innerHTML = `my content`;
+      await nextFrame();
+      expect(root.querySelector('[data-is-tab-detection-element]')).to.exist;
+      disconnect();
+    });
+
     it('restores focus within root element', async () => {
       await fixture(lightDomTemplate);
       const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
