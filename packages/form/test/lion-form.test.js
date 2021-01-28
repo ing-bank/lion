@@ -138,6 +138,23 @@ describe('<lion-form>', () => {
     expect(submitEv.composed).to.be.false;
   });
 
+  it('redispatches a submit event on the native form node when calling submit() imperatively', async () => {
+    const nativeFormSubmitEventSpy = spy();
+    const el = await fixture(html`
+      <lion-form>
+        <form @submit=${nativeFormSubmitEventSpy}>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const submitSpy = spy(el, 'submit');
+    const submitGroupSpy = spy(el, 'submitGroup');
+    el.submit();
+    expect(submitSpy.calledOnce).to.be.true;
+    expect(nativeFormSubmitEventSpy.calledOnce).to.be.true;
+    expect(submitGroupSpy.calledOnce).to.be.true;
+  });
+
   it('handles internal submit handler before dispatch', async () => {
     const el = await fixture(html`
       <lion-form>
