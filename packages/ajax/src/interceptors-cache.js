@@ -9,7 +9,7 @@ const HOUR = MINUTE * 60;
 
 class Cache {
   constructor() {
-    this.expiration = +new Date() + HOUR;
+    this.expiration = new Date().getTime() + HOUR;
     /**
      * @type {{[url: string]: CacheConfig }}
      */
@@ -29,7 +29,7 @@ class Cache {
   set(url, data) {
     this._validateCache();
     this._cacheObject[url] = {
-      date: +new Date(),
+      date: new Date().getTime(),
       data,
     };
   }
@@ -46,7 +46,7 @@ class Cache {
     if (!cacheResult) {
       return false;
     }
-    const cacheAge = +new Date() - cacheResult.date;
+    const cacheAge = new Date().getTime() - cacheResult.date;
 
     if (timeToLive !== null && cacheAge > timeToLive) {
       return false;
@@ -88,7 +88,7 @@ class Cache {
    * empty object
    */
   _validateCache() {
-    if (+new Date() > this.expiration) {
+    if (new Date().getTime() > this.expiration) {
       // @ts-ignore
       this._cacheObject = {};
     }
