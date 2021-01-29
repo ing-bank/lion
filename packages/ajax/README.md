@@ -199,7 +199,7 @@ frontend `services`.
 
 Consume the global `ajax` instance and add the interceptors to it, using a cache configuration
 which is applied on application level. If a developer wants to add specifics to cache behavior
-he or she has to provide a cache config per action (get etc) via `lionCacheOptions` field of local ajax config,
+they have to provide a cache config per action (`get`, `post`, etc.) via `lionCacheOptions` field of local ajax config,
 see examples below.
 
 > **Note**: make sure to add the **interceptors** only **once**. This is usually
