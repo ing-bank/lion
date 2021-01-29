@@ -3,13 +3,13 @@ import sinon, { spy } from 'sinon';
 import '../src/typedef-cache.js';
 
 import {
-  lionCacheRequestInterceptorFactory,
-  lionCacheResponseInterceptorFactory,
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
   validateOptions,
   ajax,
 } from '../index.js';
 
-describe('lion-lib-cache', function describeLionLibCache() {
+describe('ajax cache', function describeLibCache() {
   /** @type {number | undefined} */
   let cacheId;
   /** @type {import('sinon').SinonFakeServer} */
@@ -33,12 +33,12 @@ describe('lion-lib-cache', function describeLionLibCache() {
   const addCacheInterceptors = (ajaxInstance, options) => {
     const requestInterceptorIndex =
       ajaxInstance.requestInterceptors.push(
-        lionCacheRequestInterceptorFactory(getCacheIdentifier, options),
+        cacheRequestInterceptorFactory(getCacheIdentifier, options),
       ) - 1;
 
     const responseInterceptorIndex =
       ajaxInstance.responseInterceptors.push(
-        lionCacheResponseInterceptorFactory(getCacheIdentifier, options),
+        cacheResponseInterceptorFactory(getCacheIdentifier, options),
       ) - 1;
 
     return {
@@ -218,7 +218,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
       })
       .then(() =>
         ajax.get('/test', {
-          lionCacheOptions: {
+          cacheOptions: {
             useCache: 'always',
           },
         }),
@@ -249,7 +249,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
     });
 
     const actionConfig = {
-      lionCacheOptions: {
+      cacheOptions: {
         invalidateUrlsRegex: /foo/gi,
       },
     };
@@ -310,7 +310,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
     });
 
     const actionConfig = {
-      lionCacheOptions: {
+      cacheOptions: {
         invalidateUrlsRegex: /posts/gi,
       },
     };
@@ -434,7 +434,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
         expect(ajaxAlwaysGetSpy.calledOnce, 'calledOnce').to.be.true;
         expect(ajaxAlwaysGetSpy.calledWith('/test'));
       })
-      .then(() => ajax.get('/test', { lionCacheOptions: { useCache: 'never' } }))
+      .then(() => ajax.get('/test', { cacheOptions: { useCache: 'never' } }))
       .then(() => {
         expect(server.requests.length).to.equal(2);
       })
@@ -570,7 +570,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
       );
     });
     const actionConfig = {
-      lionCacheOptions: {
+      cacheOptions: {
         invalidateUrls: ['/test-invalid-url'],
       },
     };
@@ -611,7 +611,7 @@ describe('lion-lib-cache', function describeLionLibCache() {
     });
     expect(() => {
       ajax.get('/test', {
-        lionCacheOptions: validateOptions({
+        cacheOptions: validateOptions({
           // @ts-ignore needed for test
           invalidateUrls: 'not an array',
         }),

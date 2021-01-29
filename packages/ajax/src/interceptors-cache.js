@@ -7,7 +7,7 @@ const SECOND = 1000;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 
-class LionCache {
+class Cache {
   constructor() {
     this.expiration = +new Date() + HOUR;
     /**
@@ -122,7 +122,7 @@ const getCache = cacheIdentifier => {
   // invalidate old caches
   caches = {};
   // create new cache
-  caches[cacheIdentifier] = new LionCache();
+  caches[cacheIdentifier] = new Cache();
   return caches[cacheIdentifier];
 };
 
@@ -210,8 +210,8 @@ export const validateOptions = (
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
  * @param {GlobalCacheOptions} globalCacheOptions
  */
-export const lionCacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialLionCacheOptions = validateOptions(globalCacheOptions, true);
+export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
+  const validatedInitialCacheOptions = validateOptions(globalCacheOptions, true);
 
   return /** @param {CacheRequest} cacheRequest */ cacheRequest => {
     const { method, status, statusText, headers } = cacheRequest;
@@ -221,10 +221,10 @@ export const lionCacheRequestInterceptorFactory = (getCacheIdentifier, globalCac
 
     try {
       actionCacheOptions =
-        cacheRequest.lionCacheOptions &&
+        cacheRequest.cacheOptions &&
         validateOptions({
-          ...validatedInitialLionCacheOptions,
-          ...cacheRequest.lionCacheOptions,
+          ...validatedInitialCacheOptions,
+          ...cacheRequest.cacheOptions,
         });
     } catch (e) {
       // We need console.error here to show error somehow since Errors are not emitted from Axios
@@ -233,37 +233,37 @@ export const lionCacheRequestInterceptorFactory = (getCacheIdentifier, globalCac
     }
 
     /** @type {ValidatedCacheOptions} */
-    const lionCacheOptions = {
-      ...validatedInitialLionCacheOptions,
+    const cacheOptions = {
+      ...validatedInitialCacheOptions,
       ...actionCacheOptions,
     };
 
     // don't use cache if 'cache' === 'never'
-    if (lionCacheOptions.useCache === 'never') {
+    if (cacheOptions.useCache === 'never') {
       return cacheRequest;
     }
 
-    const cacheId = lionCacheOptions.requestIdentificationFn(cacheRequest, searchParamSerializer);
+    const cacheId = cacheOptions.requestIdentificationFn(cacheRequest, searchParamSerializer);
 
     // cacheIdentifier is used to bind the cache to the current session
     const currentCache = getCache(getCacheIdentifier());
-    const cacheResponse = currentCache.get(cacheId, lionCacheOptions.timeToLive);
+    const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
 
     // don't use cache if the request method is not part of the configs methods
-    if (lionCacheOptions.methods.indexOf(method) === -1) {
+    if (cacheOptions.methods.indexOf(method) === -1) {
       // If it's NOT one of the config.methods, invalidate caches
       currentCache.delete(cacheId);
       // also invalidate caches matching to ingCacheOptions
-      if (lionCacheOptions.invalidateUrls) {
-        lionCacheOptions.invalidateUrls.forEach(
+      if (cacheOptions.invalidateUrls) {
+        cacheOptions.invalidateUrls.forEach(
           /** @type {string} */ invalidateUrl => {
             currentCache.delete(invalidateUrl);
           },
         );
       }
       // also invalidate caches matching to invalidateUrlsRegex
-      if (lionCacheOptions.invalidateUrlsRegex) {
-        currentCache.deleteMatched(lionCacheOptions.invalidateUrlsRegex);
+      if (cacheOptions.invalidateUrlsRegex) {
+        currentCache.deleteMatched(cacheOptions.invalidateUrlsRegex);
       }
 
       return cacheRequest;
@@ -274,11 +274,11 @@ export const lionCacheRequestInterceptorFactory = (getCacheIdentifier, globalCac
       // eslint-disable-next-line no-param-reassign
       cacheRequest.adapter = () => {
         // eslint-disable-next-line no-param-reassign
-        if (!cacheRequest.lionCacheOptions) {
-          cacheRequest.lionCacheOptions = { useCache: 'never' };
+        if (!cacheRequest.cacheOptions) {
+          cacheRequest.cacheOptions = { useCache: 'never' };
         }
         // @ts-ignore 'fromCache' is needed only for internal communication between request and response interceptors
-        cacheRequest.lionCacheOptions.fromCache = true;
+        cacheRequest.cacheOptions.fromCache = true;
         return Promise.resolve({
           data: cacheResponse,
           status,
@@ -300,8 +300,8 @@ export const lionCacheRequestInterceptorFactory = (getCacheIdentifier, globalCac
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
  * @param {GlobalCacheOptions} globalCacheOptions
  */
-export const lionCacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialLionCacheOptions = validateOptions(globalCacheOptions, true);
+export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
+  const validatedInitialCacheOptions = validateOptions(globalCacheOptions, true);
 
   /**
    * Axios response https://github.com/axios/axios#response-schema
@@ -312,10 +312,10 @@ export const lionCacheResponseInterceptorFactory = (getCacheIdentifier, globalCa
 
     try {
       actionCacheOptions =
-        cacheResponse.config.lionCacheOptions &&
+        cacheResponse.config.cacheOptions &&
         validateOptions({
-          ...validatedInitialLionCacheOptions,
-          ...cacheResponse.config.lionCacheOptions,
+          ...validatedInitialCacheOptions,
+          ...cacheResponse.config.cacheOptions,
         });
     } catch (e) {
       // We need console.error here to show error somehow since Errors are not emitted from Axios
@@ -323,8 +323,8 @@ export const lionCacheResponseInterceptorFactory = (getCacheIdentifier, globalCa
       console.error(e.message);
     }
 
-    const lionCacheOptions = {
-      ...validatedInitialLionCacheOptions,
+    const cacheOptions = {
+      ...validatedInitialCacheOptions,
       ...actionCacheOptions,
     };
 
@@ -333,18 +333,18 @@ export const lionCacheResponseInterceptorFactory = (getCacheIdentifier, globalCa
     }
 
     // @ts-ignore 'fromCache' is needed only for internal communication between request and response interceptors
-    const isAlreadyFromCache = !!lionCacheOptions.fromCache;
+    const isAlreadyFromCache = !!cacheOptions.fromCache;
     // caching all responses with not default `timeToLive`
-    const isCacheActive = lionCacheOptions.timeToLive > 0;
+    const isCacheActive = cacheOptions.timeToLive > 0;
 
     if (isAlreadyFromCache || !isCacheActive) {
       return cacheResponse;
     }
 
     // if the request is one of the options.methods; store response in cache
-    if (lionCacheOptions.methods.indexOf(cacheResponse.config.method) > -1) {
+    if (cacheOptions.methods.indexOf(cacheResponse.config.method) > -1) {
       // string that identifies cache entry
-      const cacheId = lionCacheOptions.requestIdentificationFn(
+      const cacheId = cacheOptions.requestIdentificationFn(
         cacheResponse.config,
         searchParamSerializer,
       );

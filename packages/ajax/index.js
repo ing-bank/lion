@@ -9,8 +9,8 @@ export {
 } from './src/interceptors.js';
 
 export {
-  lionCacheRequestInterceptorFactory,
-  lionCacheResponseInterceptorFactory,
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
   validateOptions,
 } from './src/interceptors-cache.js';
 

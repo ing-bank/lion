@@ -43,7 +43,7 @@
 
 /**
  * @typedef {Object} CacheRequestExtension
- * @property {CacheOptions=} lionCacheOptions
+ * @property {CacheOptions=} cacheOptions
  * @property {number} status
  * @property {string} statusText
  * @property {any} adapter
@@ -52,7 +52,7 @@
 
 /**
  * @typedef {Object} CacheResponseConfig
- * @property {CacheOptions=} lionCacheOptions
+ * @property {CacheOptions=} cacheOptions
  * @property {string} method
  */
 
