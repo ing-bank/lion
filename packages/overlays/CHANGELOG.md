@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.4
+
+### Patch Changes
+
+- a77452b0: Use MutationObserver to watch child changes of the contentNode, and re-insert tab detection element when necessary.
+
 ## 0.23.3
 
 ### Patch Changes
