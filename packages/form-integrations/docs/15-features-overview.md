@@ -7,6 +7,7 @@ For usage and installation please see the appropriate packages.
 
 ```js script
 import { html } from '@lion/core';
+import '@lion/button/lion-button.js';
 import '@lion/checkbox-group/lion-checkbox-group.js';
 import '@lion/checkbox-group/lion-checkbox.js';
 import '@lion/combobox/lion-combobox.js';
@@ -31,6 +32,8 @@ import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
+loadDefaultFeedbackMessages();
+
 export default {
   title: 'Forms/Features Overview',
 };
@@ -40,7 +43,6 @@ export default {
 
 ```js story
 export const main = () => {
-  loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';
   return html`
     <lion-form>
@@ -158,6 +160,70 @@ export const main = () => {
         </div>
       </form>
     </lion-form>
+  `;
+};
+```
+
+## Submitting a form
+
+To submit a form, use a regular button (or `LionButton`) with `type="submit"` (which is default) somewhere inside the native `<form>`.
+
+Then, add a `submit` handler on the `lion-form`.
+
+You can use this event to do your own (pre-)submit logic, like getting the serialized form data and sending it to a backend API.
+
+Another example is checking if the form has errors, and focusing the first field with an error.
+
+To fire a submit from JavaScript, select the `lion-form` element and call `.submit()`.
+
+```js preview-story
+export const formSubmit = () => {
+  const submitHandler = ev => {
+    if (ev.target.hasFeedbackFor.includes('error')) {
+      const firstFormElWithError = ev.target.formElements.find(el =>
+        el.hasFeedbackFor.includes('error'),
+      );
+      firstFormElWithError.focus();
+      return;
+    }
+    const formData = ev.target.serializedValue;
+    fetch('/api/foo/', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+    });
+  };
+
+  const submitViaJS = ev => {
+    // Call submit on the lion-form element, in your own code you should use
+    // a selector that's not dependent on DOM structure like this one.
+    ev.target.previousElementSibling.submit();
+  };
+
+  return html`
+    <lion-form @submit=${submitHandler}>
+      <form @submit=${ev => ev.preventDefault()}>
+        <lion-input
+          name="first_name"
+          label="First Name"
+          .validators="${[new Required()]}"
+        ></lion-input>
+        <lion-input
+          name="last_name"
+          label="Last Name"
+          .validators="${[new Required()]}"
+        ></lion-input>
+        <div style="display:flex">
+          <lion-button raised>Submit</lion-button>
+          <lion-button
+            type="button"
+            raised
+            @click=${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+            >Reset</lion-button
+          >
+        </div>
+      </form>
+    </lion-form>
+    <button @click=${submitViaJS}>Explicit submit via JavaScript</button>
   `;
 };
 ```

@@ -3,6 +3,8 @@
 `lion-form` is a webcomponent that enhances the functionality of the native `form` component.
 It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview--page).
 
+> Note: Make sure to explicitly put `<form>` native element as a first child of `<lion-form>`, in order to function properly.
+
 ```js script
 export default {
   title: 'Forms/Form/Overview',

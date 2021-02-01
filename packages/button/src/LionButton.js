@@ -190,7 +190,11 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   connectedCallback() {
     super.connectedCallback();
     this.__setupEvents();
-    this.__setupSubmitAndResetHelperOnConnected();
+    // Old browsers (IE11, Old Edge, Firefox ESR 60) don't have the `.form`
+    // property defined immediately on the native button, so do this after first render on connected.
+    this.updateComplete.then(() => {
+      this.__setupSubmitAndResetHelperOnConnected();
+    });
   }
 
   disconnectedCallback() {
@@ -221,7 +225,12 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * without side effects caused by the click bubbling back up to lion-button.
    * @param {Event} ev
    */
-  __clickDelegationHandler(ev) {
+  async __clickDelegationHandler(ev) {
+    // Wait for updateComplete if form is not yet available
+    if (!this._form) {
+      await this.updateComplete;
+    }
+
     if ((this.type === 'submit' || this.type === 'reset') && ev.target === this && this._form) {
       /**
        * Here, we make sure our button is compatible with a native form, by firing a click
