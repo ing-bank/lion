@@ -77,6 +77,8 @@ export function containFocus(rootElement) {
   const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
   /** @type {HTMLElement} */
   let tabDetectionElement;
+  /** @type {MutationObserver} */
+  let rootElementMutationObserver;
 
   // If root element will receive focus, it should have a tabindex of -1.
   // This makes it focusable through js, but it won't appear in the tab order
@@ -101,7 +103,28 @@ export function containFocus(rootElement) {
   function createHelpersDetectingTabDirection() {
     tabDetectionElement = document.createElement('div');
     tabDetectionElement.style.display = 'none';
+    tabDetectionElement.setAttribute('data-is-tab-detection-element', '');
     rootElement.insertBefore(tabDetectionElement, rootElement.children[0]);
+
+    rootElementMutationObserver = new MutationObserver(mutationsList => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          const tabDetectionElIsMissing = !Array.from(rootElement.children).find(el =>
+            el.hasAttribute('data-is-tab-detection-element'),
+          );
+          const foundTabDetectionElInMutations = Array.from(mutation.addedNodes).find(
+            /** @param {Node} el */ el =>
+              el instanceof HTMLElement && el.hasAttribute('data-is-tab-detection-element'),
+          );
+          // Prevent infinite loop by detecting that mutation event is not from adding the tab detection el
+          if (tabDetectionElIsMissing && !foundTabDetectionElInMutations) {
+            rootElementMutationObserver.disconnect();
+            createHelpersDetectingTabDirection();
+          }
+        }
+      }
+    });
+    rootElementMutationObserver.observe(rootElement, { childList: true });
   }
 
   function isForwardTabInWindow() {
@@ -162,7 +185,12 @@ export function containFocus(rootElement) {
     window.removeEventListener('keydown', handleKeydown);
     window.removeEventListener('focusin', handleFocusin);
     window.removeEventListener('focusout', handleFocusout);
-    rootElement.removeChild(tabDetectionElement);
+    // Guard this, since we also disconnect if we notice a missing tab
+    // detection element. We reinsert it, so it's okay to not fail here.
+    rootElementMutationObserver.disconnect();
+    if (Array.from(rootElement.children).includes(tabDetectionElement)) {
+      rootElement.removeChild(tabDetectionElement);
+    }
     rootElement.style.removeProperty('outline');
   }
 
