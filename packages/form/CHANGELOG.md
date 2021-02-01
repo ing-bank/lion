@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.18
+
+### Patch Changes
+
+- 1a5e353f: Dispatch submit event on native form node instead of calling submit() directly, which circumvents lion-form submit logic and will always do a page reload and cannot be stopped by the user.
+
 ## 0.7.17
 
 ### Patch Changes
