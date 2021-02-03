@@ -16,7 +16,7 @@ class Cache {
     this.cacheConfig = {};
 
     /**
-     * @type {{[url: string]: {date: number, data: object} }}
+     * @type {{[url: string]: {expires: number, data: object} }}
      */
     this._cacheObject = {};
   }
@@ -29,7 +29,7 @@ class Cache {
   set(url, data) {
     this._validateCache();
     this._cacheObject[url] = {
-      date: new Date().getTime(),
+      expires: new Date().getTime(),
       data,
     };
   }
@@ -46,7 +46,7 @@ class Cache {
     if (!cacheResult) {
       return false;
     }
-    const cacheAge = new Date().getTime() - cacheResult.date;
+    const cacheAge = new Date().getTime() - cacheResult.expires;
 
     if (timeToLive !== null && cacheAge > timeToLive) {
       return false;

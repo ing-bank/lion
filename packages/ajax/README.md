@@ -199,7 +199,7 @@ frontend `services`.
 
 Consume the global `ajax` instance and add the interceptors to it, using a cache configuration
 which is applied on application level. If a developer wants to add specifics to cache behavior
-they have to provide a cache config per action (`get`, `post`, etc.) via `lionCacheOptions` field of local ajax config,
+they have to provide a cache config per action (`get`, `post`, etc.) via `cacheOptions` field of local ajax config,
 see examples below.
 
 > **Note**: make sure to add the **interceptors** only **once**. This is usually
@@ -208,8 +208,8 @@ see examples below.
 ```js
 import {
   ajax,
-  lionCacheRequestInterceptorFactory,
-  lionCacheResponseInterceptorFactory,
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
 } from '@lion-web/ajax.js';
 
 const globalCacheOptions = {
@@ -221,10 +221,10 @@ const globalCacheOptions = {
 const getCacheIdentifier = () => getActiveProfile().profileId;
 
 ajax.interceptors.request.use(
-  lionCacheRequestInterceptorFactory(getCacheIdentifier, globalCacheOptions),
+  cacheRequestInterceptorFactory(getCacheIdentifier, globalCacheOptions),
 );
 ajax.interceptors.response.use(
-  lionCacheResponseInterceptorFactory(getCacheIdentifier, globalCacheOptions),
+  cacheResponseInterceptorFactory(getCacheIdentifier, globalCacheOptions),
 );
 
 ajax.get('/my-url').then(response => {
@@ -237,8 +237,8 @@ ajax.get('/my-url').then(response => {
 ```js
 import {
   ajax,
-  lionCacheRequestInterceptorFactory,
-  lionCacheResponseInterceptorFactory,
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
 } from '@lion-web/ajax.js';
 
 const getCacheIdentifier = () => getActiveProfile().profileId;
@@ -255,15 +255,15 @@ const globalCacheOptions = {
 };
 
 // pass a function to the interceptorFactory that retrieves a cache identifier
-ajax.interceptors.request.use(lionCacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-ajax.interceptors.response.use(
-  lionCacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions),
-);
+// ajax.interceptors.request.use(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
+// ajax.interceptors.response.use(
+//   cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions),
+// );
 
 class TodoService {
   constructor() {
     this.localAjaxConfig = {
-      lionCacheOptions: {
+      cacheOptions: {
         invalidateUrls: ['/api/todosbykeyword'], // default: []
         // invalidateUrlsRegex: RegExp, // see docs below for more info
         // requestIdentificationFn: (requestConfig) => { }, // see docs below for more info
