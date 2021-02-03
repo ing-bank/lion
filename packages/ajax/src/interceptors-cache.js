@@ -128,20 +128,16 @@ const getCache = cacheIdentifier => {
 
 /**
  * @param {CacheOptions} options Options to match cache
- * @param {boolean} isGlobalOptions only available per action (get, post etc)
  * @returns {ValidatedCacheOptions}
  */
-export const validateOptions = (
-  {
-    useCache = 'never',
-    methods = ['get'],
-    timeToLive,
-    invalidateUrls,
-    invalidateUrlsRegex,
-    requestIdentificationFn,
-  },
-  isGlobalOptions = false,
-) => {
+export const validateOptions = ({
+  useCache = 'never',
+  methods = ['get'],
+  timeToLive,
+  invalidateUrls,
+  invalidateUrlsRegex,
+  requestIdentificationFn,
+}) => {
   // validate 'cache'
   if (!(useCache === 'always' || useCache === 'never')) {
     throw new Error('Property `useCache` should be `always` or `never`');
@@ -160,22 +156,12 @@ export const validateOptions = (
   }
   // validate 'invalidateUrls', must be an `Array` or `falsy`
   if (invalidateUrls) {
-    if (isGlobalOptions) {
-      throw new Error(
-        'Property `invalidateUrls` can be applied only to config per action (get, post etc)',
-      );
-    }
     if (!Array.isArray(invalidateUrls)) {
       throw new Error('Property `invalidateUrls` must be of type `Array` or `falsy`');
     }
   }
   // validate 'invalidateUrlsRegex', must be an regex expression or `falsy`
   if (invalidateUrlsRegex) {
-    if (isGlobalOptions) {
-      throw new Error(
-        'Property `invalidateUrlsRegex` can be applied only to config per action (get, post etc)',
-      );
-    }
     if (!(invalidateUrlsRegex instanceof RegExp)) {
       throw new Error('Property `invalidateUrlsRegex` must be of type `RegExp` or `falsy`');
     }
@@ -211,7 +197,7 @@ export const validateOptions = (
  * @param {GlobalCacheOptions} globalCacheOptions
  */
 export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialCacheOptions = validateOptions(globalCacheOptions, true);
+  const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
 
   return /** @param {CacheRequest} cacheRequest */ cacheRequest => {
     const { method, status, statusText, headers } = cacheRequest;
@@ -301,7 +287,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
  * @param {GlobalCacheOptions} globalCacheOptions
  */
 export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialCacheOptions = validateOptions(globalCacheOptions, true);
+  const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
 
   /**
    * Axios response https://github.com/axios/axios#response-schema

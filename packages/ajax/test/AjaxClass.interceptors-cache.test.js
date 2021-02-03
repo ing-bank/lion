@@ -2,12 +2,7 @@ import { expect } from '@open-wc/testing';
 import sinon, { spy } from 'sinon';
 import '../src/typedef-cache.js';
 
-import {
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-  validateOptions,
-  ajax,
-} from '../index.js';
+import { cacheRequestInterceptorFactory, cacheResponseInterceptorFactory, ajax } from '../index.js';
 
 describe('ajax cache', function describeLibCache() {
   /** @type {number | undefined} */
@@ -601,38 +596,6 @@ describe('ajax cache', function describeLibCache() {
         ajaxPostSpy.restore();
         removeCacheInterceptors(ajax, indexes);
       });
-  });
-
-  it('throws error when invalidateUrls is not an array', () => {
-    newCacheId();
-
-    const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
-    });
-    expect(() => {
-      ajax.get('/test', {
-        cacheOptions: validateOptions({
-          // @ts-ignore needed for test
-          invalidateUrls: 'not an array',
-        }),
-      });
-    }).to.throw(/Property `invalidateUrls` must be of type `Array` or `falsy`/);
-    removeCacheInterceptors(ajax, indexes);
-  });
-
-  it('throws error when invalidateUrls is applied to global config', () => {
-    newCacheId();
-
-    expect(() => {
-      const indexes = addCacheInterceptors(ajax, {
-        useCache: 'always',
-        // @ts-ignore needed for test
-        invalidateUrls: 'not an array',
-      });
-      removeCacheInterceptors(ajax, indexes);
-    }).to.throw(
-      /Property `invalidateUrls` can be applied only to config per action \(get, post etc\)/,
-    );
   });
 
   it('invalidates cache on a post', () => {
