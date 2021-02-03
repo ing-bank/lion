@@ -25,7 +25,7 @@ module.exports = {
       },
     },
     {
-      files: ['demo/**/*.js'],
+      files: ['demo/**/*.js', './scripts/**/*.js'],
       rules: {
         'import/no-extraneous-dependencies': 'off',
       },
