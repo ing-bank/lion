@@ -573,22 +573,23 @@ describe('ajax cache', function describeLibCache() {
     return ajax
       .get('/test-valid-url', actionConfig)
       .then(() => {
-        expect(ajaxGetSpy.calledOnce).to.be.true;
-        expect(ajaxGetSpy.calledWith('/test-valid-url')).to.be.true;
         expect(server.requests.length).to.equal(1);
       })
       .then(() => ajax.get('/test-invalid-url'))
       .then(() => {
         expect(server.requests.length).to.equal(2);
       })
-      .then(() => ajax.post('/test-valid-url', {}, actionConfig))
+      .then(() =>
+        // 'post' will invalidate 'own' cache and the one mentioned in config
+        ajax.post('/test-valid-url', {}, actionConfig),
+      )
       .then(() => {
-        expect(ajaxPostSpy.calledOnce).to.be.true;
-        expect(ajaxPostSpy.calledWith('/test-valid-url')).to.be.true;
         expect(server.requests.length).to.equal(3);
       })
       .then(() => ajax.get('/test-invalid-url'))
       .then(() => {
+        // indicates that 'test-invalid-url' cache was removed
+        // because the server registered new request
         expect(server.requests.length).to.equal(4);
       })
       .finally(() => {
