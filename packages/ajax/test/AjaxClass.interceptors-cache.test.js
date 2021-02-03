@@ -69,6 +69,18 @@ describe('ajax cache', function describeLibCache() {
     server.restore();
   });
 
+  it('allows direct ajax calls without cache interceptors configured', () => {
+    return ajax
+      .get('/test')
+      .then(() => {
+        expect(server.requests.length).to.equal(1);
+      })
+      .then(() => ajax.get('/test'))
+      .then(() => {
+        expect(server.requests.length).to.equal(2);
+      });
+  });
+
   it('validates `useCache`', () => {
     newCacheId();
     const test = () => {
@@ -436,18 +448,6 @@ describe('ajax cache', function describeLibCache() {
       .finally(() => {
         ajaxAlwaysGetSpy.restore();
         removeCacheInterceptors(ajax, indexes);
-      });
-  });
-
-  it('allows direct ajax calls without cache interceptors configured', () => {
-    return ajax
-      .get('/test')
-      .then(() => {
-        expect(server.requests.length).to.equal(1);
-      })
-      .then(() => ajax.get('/test'))
-      .then(() => {
-        expect(server.requests.length).to.equal(2);
       });
   });
 
