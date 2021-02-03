@@ -15,20 +15,8 @@ const throwFormNodeError = () => {
 export class LionForm extends LionFieldset {
   constructor() {
     super();
-    /** @param {Event} ev */
-    this._submit = ev => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      this.submitGroup();
-      this.dispatchEvent(new Event('submit', { bubbles: true }));
-    };
-    /** @param {Event} ev */
-    this._reset = ev => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      this.resetGroup();
-      this.dispatchEvent(new Event('reset', { bubbles: true }));
-    };
+    this._submit = this._submit.bind(this);
+    this._reset = this._reset.bind(this);
   }
 
   connectedCallback() {
@@ -50,10 +38,22 @@ export class LionForm extends LionFieldset {
 
   submit() {
     if (this._formNode) {
-      this._formNode.submit();
+      // Firefox requires cancelable flag, otherwise we cannot preventDefault
+      // Firefox still runs default handlers for untrusted events :\
+      this._formNode.dispatchEvent(new Event('submit', { cancelable: true }));
     } else {
       throwFormNodeError();
     }
+  }
+
+  /**
+   * @param {Event} ev
+   */
+  _submit(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.submitGroup();
+    this.dispatchEvent(new Event('submit', { bubbles: true }));
   }
 
   reset() {
@@ -62,6 +62,16 @@ export class LionForm extends LionFieldset {
     } else {
       throwFormNodeError();
     }
+  }
+
+  /**
+   * @param {Event} ev
+   */
+  _reset(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.resetGroup();
+    this.dispatchEvent(new Event('reset', { bubbles: true }));
   }
 
   __registerEventsForLionForm() {

@@ -3,7 +3,7 @@
 `lion-input-email` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

@@ -1,5 +1,53 @@
 # Change Log
 
+## 0.12.17
+
+### Patch Changes
+
+- Updated dependencies [a7b27502]
+  - @lion/form-core@0.7.3
+
+## 0.12.16
+
+### Patch Changes
+
+- f98aab23: Make \_\_toggleChecked protected property (\_toggleChecked)
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+
+## 0.12.15
+
+### Patch Changes
+
+- Updated dependencies [e557bda4]
+  - @lion/helpers@0.5.20
+
+## 0.12.14
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/core@0.13.8
+  - @lion/form-core@0.7.1
+  - @lion/helpers@0.5.19
+
+## 0.12.13
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [a8cf4215]
+  - @lion/form-core@0.7.0
+  - @lion/core@0.13.7
+  - @lion/helpers@0.5.18
+
 ## 0.12.12
 
 ### Patch Changes

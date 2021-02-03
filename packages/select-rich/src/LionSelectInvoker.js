@@ -1,4 +1,4 @@
-import { LionButton } from '@lion/button/src/LionButton.js';
+import { LionButton } from '@lion/button';
 import { css, html } from '@lion/core';
 
 /**
@@ -9,18 +9,19 @@ import { css, html } from '@lion/core';
 /**
  * LionSelectInvoker: invoker button consuming a selected element
  */
-// @ts-expect-error
 export class LionSelectInvoker extends LionButton {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           justify-content: space-between;
+          align-items: center;
         }
 
         #content-wrapper {
           position: relative;
+          pointer-events: none;
         }
       `,
     ];

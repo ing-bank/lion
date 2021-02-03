@@ -13,9 +13,8 @@ availability of the popup.
 > Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { listboxData } from '@lion/listbox/docs/listboxData.js';
 import '@lion/listbox/lion-option.js';
 import './lion-combobox.js';
@@ -282,35 +281,6 @@ export const invokerButton = () => html`
     )}
   </lion-combobox>
 `;
-```
-
-## Validation
-
-Validation can be used as normal, below is an example of a combobox with a `Required` validator.
-
-```js preview-story
-export const validation = () => {
-  loadDefaultFeedbackMessages();
-  Required.getMessage = () => 'Please enter a value';
-  return html`
-    <lion-form>
-      <form>
-        <lion-combobox
-          .validators="${[new Required()]}"
-          name="favoriteMovie"
-          label="Favorite movie"
-        >
-          <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
-          <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
-          <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
-          <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
-          <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
-          <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
-        </lion-combobox>
-      </form>
-    </lion-form>
-  `;
-};
 ```
 
 ## Listbox compatibility

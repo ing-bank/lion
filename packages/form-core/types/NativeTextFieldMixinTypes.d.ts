@@ -6,6 +6,7 @@ export declare class NativeTextField extends LionField {
 }
 
 export declare class NativeTextFieldHost {
+  constructor(...args: any[]);
   get selectionStart(): number;
   set selectionStart(value: number);
   get selectionEnd(): number;

@@ -5,7 +5,7 @@ import { FormatMixin } from '../FormatMixin.js';
 
 /**
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputMixin} ChoiceInputMixin
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputModelValue} ChoiceInputModelValue
  */
@@ -92,7 +92,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('@lion/core').PropertyValues } changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -104,7 +104,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit-element').PropertyValues } changedProperties
+     * @param {import('@lion/core').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);
@@ -115,12 +115,11 @@ const ChoiceInputMixinImplementation = superclass =>
       if (
         changedProperties.has('name') &&
         // @ts-expect-error not all choice inputs have a parent form group, since this mixin does not have a strict contract with the registration system
-        this.__parentFormGroup &&
+        this._parentFormGroup &&
         // @ts-expect-error
-        this.__parentFormGroup.name !== this.name
+        this._parentFormGroup.name !== this.name
       ) {
-        // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
-        this.name = changedProperties.get('name');
+        this._syncNameToParentFormGroup();
       }
     }
 
@@ -128,7 +127,8 @@ const ChoiceInputMixinImplementation = superclass =>
       super();
       this.modelValue = { value: '', checked: false };
       this.disabled = false;
-      this.__toggleChecked = this.__toggleChecked.bind(this);
+      this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
+      this._toggleChecked = this._toggleChecked.bind(this);
     }
 
     /**
@@ -175,6 +175,7 @@ const ChoiceInputMixinImplementation = superclass =>
         <small class="choice-field__help-text">
           <slot name="help-text"></slot>
         </small>
+        ${this._afterTemplate()}
       `;
     }
 
@@ -182,21 +183,66 @@ const ChoiceInputMixinImplementation = superclass =>
       return nothing;
     }
 
+    _afterTemplate() {
+      return nothing;
+    }
+
     connectedCallback() {
       super.connectedCallback();
-      this.addEventListener('user-input-changed', this.__toggleChecked);
+      if (this._labelNode) {
+        this._labelNode.addEventListener('click', this._preventDuplicateLabelClick);
+      }
+      this.addEventListener('user-input-changed', this._toggleChecked);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      this.removeEventListener('user-input-changed', this.__toggleChecked);
+      if (this._labelNode) {
+        this._labelNode.removeEventListener('click', this._preventDuplicateLabelClick);
+      }
+      this.removeEventListener('user-input-changed', this._toggleChecked);
     }
 
-    __toggleChecked() {
+    /**
+     * The native platform fires an event for both the click on the label, and also
+     * the redispatched click on the native input element.
+     * This results in two click events arriving at the host, but we only want one.
+     * This method prevents the duplicate click and ensures the correct isTrusted event
+     * with the correct event.target arrives at the host.
+     * @param {Event} ev
+     */
+    // eslint-disable-next-line no-unused-vars
+    _preventDuplicateLabelClick(ev) {
+      const __inputClickHandler = /** @param {Event} _ev */ _ev => {
+        _ev.stopImmediatePropagation();
+        this._inputNode.removeEventListener('click', __inputClickHandler);
+      };
+      this._inputNode.addEventListener('click', __inputClickHandler);
+    }
+
+    /** @param {Event} ev */
+    // eslint-disable-next-line no-unused-vars
+    _toggleChecked(ev) {
       if (this.disabled) {
         return;
       }
+      this.__isHandlingUserInput = true;
       this.checked = !this.checked;
+      this.__isHandlingUserInput = false;
+    }
+
+    /**
+     * Override this in case of extending ChoiceInputMixin and requiring
+     * to sync differently with parent form group name
+     * Right now it checks tag name match where the parent form group tagname
+     * should include the child field tagname ('checkbox' is included in 'checkbox-group')
+     */
+    _syncNameToParentFormGroup() {
+      // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
+      if (this._parentFormGroup.tagName.includes(this.tagName)) {
+        // @ts-expect-error
+        this.name = this._parentFormGroup.name;
+      }
     }
 
     /**
@@ -237,12 +283,15 @@ const ChoiceInputMixinImplementation = superclass =>
      * hasChanged is designed for async (updated) callback, also check for sync
      * (requestUpdateInternal) callback
      * @param {{ modelValue:unknown }} newV
-     * @param {{ modelValue:unknown }} [oldV]
+     * @param {{ modelValue:unknown }} [old]
      */
-    // @ts-expect-error
-    _onModelValueChanged({ modelValue }, { modelValue: old }) {
-      // @ts-expect-error
-      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, old)) {
+    _onModelValueChanged({ modelValue }, old) {
+      let _old;
+      if (old && old.modelValue) {
+        _old = old.modelValue;
+      }
+      // @ts-expect-error lit private property
+      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, _old)) {
         super._onModelValueChanged({ modelValue });
       }
     }

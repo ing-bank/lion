@@ -160,7 +160,7 @@ export class LionTabs extends LitElement {
     this.selectedIndex = 0;
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();

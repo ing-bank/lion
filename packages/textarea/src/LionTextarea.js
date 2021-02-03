@@ -1,9 +1,8 @@
 /* eslint-disable max-classes-per-file */
 // @ts-expect-error https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
 import autosize from 'autosize/src/autosize.js';
-import { LionField } from '@lion/form-core';
+import { LionField, NativeTextFieldMixin } from '@lion/form-core';
 import { css } from '@lion/core';
-import { NativeTextFieldMixin } from '@lion/form-core/src/NativeTextFieldMixin';
 
 class LionFieldWithTextArea extends LionField {
   /**
@@ -77,7 +76,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     this.__intersectionObserver.observe(this);
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 

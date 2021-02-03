@@ -2,3 +2,4 @@ node_modules
 coverage/
 bundlesize/
 .history/
+*.d.ts

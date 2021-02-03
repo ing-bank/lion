@@ -3,8 +3,7 @@
 `lion-input-stepper` enables the user to increase and decrease a numeric value by predefined range. It is a combination of two buttons and a number input field with an optional slot `after` to suffix the extra information.
 
 ```js script
-import { html } from 'lit-html';
-import '@lion/form/lion-form.js';
+import { html } from '@lion/core';
 import './lion-input-stepper.js';
 
 export default {
@@ -85,52 +84,5 @@ Use `min` and `max` attribute to specify range.
 export const range = () => html`
   <p><strong>Min:</strong> 200, <strong>Max:</strong> 500, <strong>Step:</strong> 100</p>
   <lion-input-stepper min="200" max="500" name="value" step="100" value="200"></lion-input-stepper>
-`;
-```
-
-#### Validation
-
-Only numbers are allowed in the field.
-
-```js preview-story
-export const validation = () => html`
-  <p>
-    <strong>Min:</strong> 100, <strong>Max:</strong> 500, <strong>Step:</strong> 100,
-    <strong>Value:</strong> Test
-  </p>
-  <lion-input-stepper min="100" max="500" name="value" step="100" value="Test"></lion-input-stepper>
-`;
-```
-
-#### Form
-
-```js preview-story
-export const usingForm = () => html`
-  <lion-form
-    @submit=${e => {
-      console.log(e.target.serializedValue);
-      const code = document.getElementById('code');
-      code.style = 'background-color:#DEDEDE;padding:12px;';
-      code.innerHTML = `<code>${JSON.stringify(e.target.serializedValue, null, 4)}</code>`;
-    }}
-  >
-    <form>
-      <lion-input name="fullname" label="Full name"></lion-input>
-      <br />
-      <lion-input-stepper min="0" max="5" name="count">
-        <label slot="label">RSVP</label>
-        <div slot="help-text">Max. 5 guests</div>
-      </lion-input-stepper>
-      <br />
-      <lion-button raised>Submit</lion-button>
-      <lion-button
-        type="button"
-        raised
-        @click=${ev => ev.currentTarget.parentElement.parentElement.resetGroup()}
-        >Reset</lion-button
-      >
-    </form>
-  </lion-form>
-  <pre id="code"></pre>
 `;
 ```

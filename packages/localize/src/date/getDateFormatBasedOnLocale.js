@@ -1,5 +1,5 @@
-import { sanitizedDateTimeFormat } from './sanitizedDateTimeFormat.js';
-import { splitDate } from './splitDate.js';
+import { sanitizedDateTimeFormat } from './utils/sanitizedDateTimeFormat.js';
+import { splitDate } from './utils/splitDate.js';
 
 /**
  * To compute the localized date format

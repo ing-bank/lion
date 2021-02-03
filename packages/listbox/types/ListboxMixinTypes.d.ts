@@ -9,6 +9,7 @@ import { LionOptions } from '../src/LionOptions.js';
 import { LionOption } from '../src/LionOption.js';
 
 export declare class ListboxHost {
+  constructor(...args: any[]);
   /**
    * When true, will synchronize activedescendant and selected element on
    * arrow key navigation.

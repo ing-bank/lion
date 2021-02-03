@@ -5,7 +5,7 @@
 A visual element to show action logs in Storybook demos `sb-action-logger`
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 
 import '../sb-action-logger.js';
 

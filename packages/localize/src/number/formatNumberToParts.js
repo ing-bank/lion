@@ -1,10 +1,30 @@
-import { emptyStringWhenNumberNan } from './emptyStringWhenNumberNan.js';
+import { emptyStringWhenNumberNan } from './utils/emptyStringWhenNumberNan.js';
 import { getDecimalSeparator } from './getDecimalSeparator.js';
 import { getGroupSeparator } from './getGroupSeparator.js';
-import { getLocale } from './getLocale.js';
-import { normalizeIntl } from './normalizeIntl.js';
-import { normalSpaces } from './normalSpaces.js';
-import { roundNumber } from './roundNumber.js';
+import { getLocale } from '../utils/getLocale.js';
+import { normalizeIntl } from './utils/normalize-format-number-to-parts/normalizeIntl.js';
+import { normalSpaces } from './utils/normalSpaces.js';
+
+/**
+ * Round the number based on the options
+ *
+ * @param {number} number
+ * @param {string} roundMode
+ * @throws {Error} roundMode can only be round|floor|ceiling
+ * @returns {number}
+ */
+export function roundNumber(number, roundMode) {
+  switch (roundMode) {
+    case 'floor':
+      return Math.floor(number);
+    case 'ceiling':
+      return Math.ceil(number);
+    case 'round':
+      return Math.round(number);
+    default:
+      throw new Error('roundMode can only be round|floor|ceiling');
+  }
+}
 
 /**
  * Splits a number up in parts for integer, fraction, group, literal, decimal and currency.

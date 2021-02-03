@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement, TemplateResult } from '@lion/core';
-import { CSSResultArray } from 'lit-element';
+import { CSSResultArray } from '@lion/core';
 import { FormatHost } from '../FormatMixinTypes';
 
 export interface ChoiceInputModelValue {
@@ -15,6 +15,7 @@ export interface ChoiceInputSerializedValue {
 }
 
 export declare class ChoiceInputHost {
+  constructor(...args: any[]);
   modelValue: ChoiceInputModelValue;
   serializedValue: ChoiceInputSerializedValue;
 
@@ -35,17 +36,24 @@ export declare class ChoiceInputHost {
   render(): TemplateResult;
 
   _choiceGraphicTemplate(): TemplateResult;
+  _afterTemplate(): TemplateResult;
 
   connectedCallback(): void;
   disconnectedCallback(): void;
 
-  __toggleChecked(): void;
+  _preventDuplicateLabelClick(ev: Event): void;
+
+  _syncNameToParentFormGroup(): void;
+
+  _toggleChecked(ev: Event): void;
 
   __syncModelCheckedToChecked(checked: boolean): void;
 
   __syncCheckedToModel(checked: boolean): void;
 
   __syncCheckedToInputElement(): void;
+
+  __isHandlingUserInput: boolean;
 
   _proxyInputEvent(): void;
 

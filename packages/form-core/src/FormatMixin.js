@@ -8,6 +8,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 /**
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
  * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 // For a future breaking release:
@@ -303,20 +304,24 @@ const FormatMixinImplementation = superclass =>
      */
     _onModelValueChanged(...args) {
       this._calculateValues({ source: 'model' });
-      // @ts-expect-error only passing this so a subclasser can use it, but we do not use it ourselves
       this._dispatchModelValueChangedEvent(...args);
     }
 
     /**
+     * @param {{ modelValue: unknown; }[]} args
      * This is wrapped in a distinct method, so that parents can control when the changed event
      * is fired. For objects, a deep comparison might be needed.
      */
-    _dispatchModelValueChangedEvent() {
+    // eslint-disable-next-line no-unused-vars
+    _dispatchModelValueChangedEvent(...args) {
       /** @event model-value-changed */
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: { formPath: [this] },
+          detail: /** @type { ModelValueEventDetails } */ ({
+            formPath: [this],
+            isTriggeredByUser: Boolean(this.__isHandlingUserInput),
+          }),
         }),
       );
     }

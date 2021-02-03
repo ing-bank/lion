@@ -1,5 +1,79 @@
 # Change Log
 
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies [a77452b0]
+  - @lion/overlays@0.23.4
+
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies [a7b27502]
+  - @lion/form-core@0.7.3
+  - @lion/listbox@0.4.3
+
+## 0.1.22
+
+### Patch Changes
+
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+  - @lion/listbox@0.4.2
+
+## 0.1.21
+
+### Patch Changes
+
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+- Updated dependencies [9352b577]
+  - @lion/core@0.13.8
+  - @lion/form-core@0.7.1
+  - @lion/listbox@0.4.1
+  - @lion/overlays@0.23.3
+
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [a7760b64]
+  - @lion/overlays@0.23.2
+
+## 0.1.19
+
+### Patch Changes
+
+- Updated dependencies [a04ea59c]
+  - @lion/overlays@0.23.1
+
+## 0.1.18
+
+### Patch Changes
+
+- ef7ccbb9: Fix some type issues with static get styles, CSSResultArray combines CSSResult and CSSResult[].
+
+## 0.1.17
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+- Updated dependencies [a8cf4215]
+  - @lion/form-core@0.7.0
+  - @lion/listbox@0.4.0
+  - @lion/overlays@0.23.0
+  - @lion/core@0.13.7
+
 ## 0.1.16
 
 ### Patch Changes

@@ -1,5 +1,47 @@
 # Change Log
 
+## 0.7.18
+
+### Patch Changes
+
+- 1a5e353f: Dispatch submit event on native form node instead of calling submit() directly, which circumvents lion-form submit logic and will always do a page reload and cannot be stopped by the user.
+
+## 0.7.17
+
+### Patch Changes
+
+- @lion/fieldset@0.15.16
+
+## 0.7.16
+
+### Patch Changes
+
+- @lion/fieldset@0.15.15
+
+## 0.7.15
+
+### Patch Changes
+
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/fieldset@0.15.14
+
+## 0.7.14
+
+### Patch Changes
+
+- fcc60cbf: Add example link to form demo
+
+## 0.7.13
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+  - @lion/fieldset@0.15.13
+
 ## 0.7.12
 
 ### Patch Changes

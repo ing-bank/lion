@@ -3,14 +3,15 @@ import { isEqualConfig } from '../../src/utils/is-equal-config.js';
 
 function TestConfig() {
   return {
-    placementMode: 'local',
+    placementMode: /** @type {'local'|'global'} */ ('local'),
     hidesOnOutsideClick: true,
     popperConfig: {
-      modifiers: {
-        offset: {
+      modifiers: [
+        {
+          name: 'offset',
           enabled: false,
         },
-      },
+      ],
     },
   };
 }
@@ -31,13 +32,13 @@ describe('isEqualConfig()', () => {
 
   it('compares prop count', () => {
     const config = TestConfig();
-    expect(isEqualConfig(config, { ...config, extra: 'value' })).eql(false);
-    expect(isEqualConfig({ ...config, extra: 'value' }, config)).eql(false);
+    expect(isEqualConfig(config, { ...config, isBlocking: true })).eql(false);
+    expect(isEqualConfig({ ...config, isBlocking: true }, config)).eql(false);
   });
 
   it('regards missing props different from ones with undefined value', () => {
     const config = TestConfig();
-    expect(isEqualConfig(config, { ...config, extra: undefined })).eql(false);
+    expect(isEqualConfig(config, { ...config, referenceNode: undefined })).eql(false);
   });
 
   it('compares nested props', () => {
@@ -46,12 +47,7 @@ describe('isEqualConfig()', () => {
       ...config,
       popperConfig: {
         ...config.popperConfig,
-        modifiers: {
-          ...config.popperConfig.modifiers,
-          offset: {
-            ...config.popperConfig.modifiers.offset,
-          },
-        },
+        modifiers: [...config.popperConfig.modifiers],
       },
     };
     expect(isEqualConfig(config, sameConfig)).eql(true);
@@ -59,12 +55,13 @@ describe('isEqualConfig()', () => {
       ...config,
       popperConfig: {
         ...config.popperConfig,
-        modifiers: {
+        modifiers: [
           ...config.popperConfig.modifiers,
-          offset: {
-            enabled: !config.popperConfig.modifiers.offset.enabled,
+          {
+            name: 'offset',
+            enabled: !config.popperConfig.modifiers.find(mod => mod.name === 'offset')?.enabled,
           },
-        },
+        ],
       },
     };
     expect(isEqualConfig(config, differentConfig)).eql(false);

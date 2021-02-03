@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.13.8
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+
+## 0.13.7
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+
 ## 0.13.6
 
 ### Patch Changes

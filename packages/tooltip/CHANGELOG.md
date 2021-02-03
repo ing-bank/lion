@@ -1,5 +1,57 @@
 # Change Log
 
+## 0.16.5
+
+### Patch Changes
+
+- Updated dependencies [a77452b0]
+  - @lion/overlays@0.23.4
+
+## 0.16.4
+
+### Patch Changes
+
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+- Updated dependencies [9352b577]
+  - @lion/core@0.13.8
+  - @lion/overlays@0.23.3
+
+## 0.16.3
+
+### Patch Changes
+
+- Updated dependencies [a7760b64]
+  - @lion/overlays@0.23.2
+
+## 0.16.2
+
+### Patch Changes
+
+- Updated dependencies [a04ea59c]
+  - @lion/overlays@0.23.1
+
+## 0.16.1
+
+### Patch Changes
+
+- ef7ccbb9: Fix some type issues with static get styles, CSSResultArray combines CSSResult and CSSResult[].
+
+## 0.16.0
+
+### Minor Changes
+
+- 1f62ed8b: **BREAKING:** Upgrade to popper v2. Has breaking changes for overlays config.popperConfig which is now aligned with v2 of Popper. See their [migration guidelines](https://popper.js.org/docs/v2/migration-guide/).
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+  - @lion/overlays@0.23.0
+  - @lion/core@0.13.7
+
 ## 0.15.13
 
 ### Patch Changes

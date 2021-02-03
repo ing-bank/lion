@@ -1,4 +1,4 @@
-import { css } from 'lit-element';
+import { css } from '@lion/core';
 import { LionTabs } from '@lion/tabs';
 
 export class LeaTabs extends LionTabs {

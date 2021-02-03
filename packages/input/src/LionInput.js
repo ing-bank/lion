@@ -71,13 +71,13 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__delegateReadOnly();
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('type')) {

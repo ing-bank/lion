@@ -7,7 +7,7 @@ For an input field with a big range, such as `birthday-input`, a datepicker is n
 We encourage using the standard [lion-input-date](?path=/docs/form-component-input-date) for this.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { MinMaxDate, IsDateDisabled } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { formatDate } from '@lion/localize';

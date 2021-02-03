@@ -5,10 +5,11 @@ import { FormControlHost } from '../../types/FormControlMixinTypes';
 import { LitElement } from '@lion/core';
 
 export declare class ElementWithParentFormGroup {
-  __parentFormGroup: FormRegistrarHost;
+  _parentFormGroup: FormRegistrarHost;
 }
 
 export declare class FormRegistrarHost {
+  constructor(...args: any[]);
   _isFormOrFieldset: boolean;
   formElements: FormControlsCollection & { [x: string]: any };
   addFormElement(

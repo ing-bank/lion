@@ -2,7 +2,6 @@ import { css, html, ScopedElementsMixin } from '@lion/core';
 import { ChoiceInputMixin, LionField } from '@lion/form-core';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
@@ -81,7 +80,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       this._inputNode.addEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged);
     }
     if (this._labelNode) {
-      this._labelNode.addEventListener('click', this.__toggleChecked);
+      this._labelNode.addEventListener('click', this._toggleChecked);
     }
     this._syncButtonSwitch();
     this.submitted = true;
@@ -95,11 +94,11 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       );
     }
     if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this.__toggleChecked);
+      this._labelNode.removeEventListener('click', this._toggleChecked);
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     this._syncButtonSwitch();

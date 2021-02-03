@@ -5,6 +5,7 @@ import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FormatHost {
+  constructor(...args: any[]);
   formattedValue: string;
   serializedValue: string;
   formatOn: string;

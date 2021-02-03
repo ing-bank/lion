@@ -1,6 +1,4 @@
 import { expect, fixture, fixtureSync, html } from '@open-wc/testing';
-// @ts-ignore
-import Popper from 'popper.js/dist/esm/popper.min.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers.js';
 
@@ -27,11 +25,9 @@ describe('Local Positioning', () => {
         ...withLocalTestConfig(),
       });
       await ctrl.show();
-      expect(/** @type {Popper} */ (ctrl._popper)).to.be.an.instanceof(Popper);
-      expect(/** @type {Popper} */ (ctrl._popper).modifiers).to.exist;
+      expect(ctrl._popper.state.modifiersData).to.exist;
       await ctrl.hide();
-      expect(/** @type {Popper} */ (ctrl._popper)).to.be.an.instanceof(Popper);
-      expect(/** @type {Popper} */ (ctrl._popper).modifiers).to.exist;
+      expect(ctrl._popper.state.modifiersData).to.exist;
     });
 
     it('positions correctly', async () => {
@@ -53,8 +49,8 @@ describe('Local Positioning', () => {
       await ctrl.show();
 
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(-30px, -38px, 0px)',
-        'translate3d should be -30px [to center = (80 - 20)/2*-1] -38px [to place above = 30 + 8 default padding]',
+        'translate(-30px, -18px)',
+        'translate should be -30px [to center = (80 - 20)/2*-1], -18px [to place above = 10 invoker height + 8 default padding]',
       );
     });
 
@@ -74,7 +70,7 @@ describe('Local Positioning', () => {
         </div>
       `);
       await ctrl.show();
-      expect(ctrl.content.getAttribute('x-placement')).to.equal('top');
+      expect(ctrl.content.getAttribute('data-popper-placement')).to.equal('top');
     });
 
     it('positions to preferred place if placement is set and space is available', async () => {
@@ -97,7 +93,7 @@ describe('Local Positioning', () => {
       `);
 
       await ctrl.show();
-      expect(ctrl.content.getAttribute('x-placement')).to.equal('left-start');
+      expect(ctrl.content.getAttribute('data-popper-placement')).to.equal('left-start');
     });
 
     it('positions to different place if placement is set and no space is available', async () => {
@@ -112,15 +108,15 @@ describe('Local Positioning', () => {
           </div>
         `)),
         popperConfig: {
-          placement: 'top-start',
+          placement: 'left',
         },
       });
       await fixture(html`
-        <div style="position: absolute; top: 0;">${ctrl.invokerNode}${ctrl.content}</div>
+        <div style="position: absolute; top: 50px;">${ctrl.invokerNode}${ctrl.content}</div>
       `);
 
       await ctrl.show();
-      expect(ctrl.content.getAttribute('x-placement')).to.equal('bottom-start');
+      expect(ctrl.content.getAttribute('data-popper-placement')).to.equal('right');
     });
 
     it('allows the user to override default Popper modifiers', async () => {
@@ -133,15 +129,13 @@ describe('Local Positioning', () => {
           <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
         `)),
         popperConfig: {
-          modifiers: {
-            keepTogether: {
+          modifiers: [
+            {
+              name: 'keepTogether',
               enabled: false,
             },
-            offset: {
-              enabled: true,
-              offset: `0, 16px`,
-            },
-          },
+            { name: 'offset', enabled: true, options: { offset: [0, 16] } },
+          ],
         },
       });
       await fixture(html`
@@ -151,15 +145,7 @@ describe('Local Positioning', () => {
       `);
 
       await ctrl.show();
-      const keepTogether = /** @type {Popper} */ (ctrl._popper).modifiers.find(
-        (/** @type {{ name: string }} */ item) => item.name === 'keepTogether',
-      );
-      const offset = /** @type {Popper} */ (ctrl._popper).modifiers.find(
-        (/** @type {{ name: string }} */ item) => item.name === 'offset',
-      );
-      expect(keepTogether.enabled).to.be.false;
-      expect(offset.enabled).to.be.true;
-      expect(offset.offset).to.equal('0, 16px');
+      expect(ctrl._popper.state.modifiersData.offset.auto).to.eql({ x: 0, y: 16 });
     });
 
     it('positions the Popper element correctly on show', async () => {
@@ -182,14 +168,14 @@ describe('Local Positioning', () => {
       `);
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(10px, -28px, 0px)',
+        'translate(10px, -28px)',
         'Popper positioning values',
       );
 
       await ctrl.hide();
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
-        'translate3d(10px, -28px, 0px)',
+        'translate(10px, -28px)',
         'Popper positioning values should be identical after hiding and showing',
       );
     });
@@ -206,12 +192,15 @@ describe('Local Positioning', () => {
         `)),
         popperConfig: {
           placement: 'top',
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 10px',
+              options: {
+                offset: [0, 10],
+              },
             },
-          },
+          ],
         },
       });
       await fixture(html`
@@ -229,18 +218,19 @@ describe('Local Positioning', () => {
       await ctrl.hide();
       await ctrl.updateConfig({
         popperConfig: {
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 20px',
+              options: {
+                offset: [0, 20],
+              },
             },
-          },
+          ],
         },
       });
       await ctrl.show();
-      expect(/** @type {Popper} */ (ctrl._popper).options.modifiers.offset.offset).to.equal(
-        '0, 20px',
-      );
+      expect(ctrl._popper.options.modifiers.offset.offset).to.equal('0, 20px');
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(
         'translate3d(10px, -40px, 0px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
@@ -261,12 +251,15 @@ describe('Local Positioning', () => {
         `)),
         popperConfig: {
           placement: 'top',
-          modifiers: {
-            offset: {
+          modifiers: [
+            {
+              name: 'offset',
               enabled: true,
-              offset: '0, 10px',
+              options: {
+                offset: [0, 10],
+              },
             },
-          },
+          ],
         },
       });
       await fixture(html`
@@ -283,12 +276,7 @@ describe('Local Positioning', () => {
 
       await ctrl.updateConfig({
         popperConfig: {
-          modifiers: {
-            offset: {
-              enabled: true,
-              offset: '0, 20px',
-            },
-          },
+          modifiers: [{ name: 'offset', enabled: true, options: { offset: [0, 20] } }],
         },
       });
       expect(normalizeTransformStyle(ctrl.content.style.transform)).to.equal(

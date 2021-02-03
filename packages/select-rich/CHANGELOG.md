@@ -1,5 +1,89 @@
 # Change Log
 
+## 0.21.28
+
+### Patch Changes
+
+- Updated dependencies [33f639e8]
+- Updated dependencies [a77452b0]
+  - @lion/button@0.8.11
+  - @lion/overlays@0.23.4
+
+## 0.21.27
+
+### Patch Changes
+
+- Updated dependencies [a7b27502]
+  - @lion/form-core@0.7.3
+  - @lion/listbox@0.4.3
+
+## 0.21.26
+
+### Patch Changes
+
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+  - @lion/listbox@0.4.2
+
+## 0.21.25
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+- Updated dependencies [9352b577]
+  - @lion/core@0.13.8
+  - @lion/form-core@0.7.1
+  - @lion/listbox@0.4.1
+  - @lion/overlays@0.23.3
+  - @lion/button@0.8.10
+
+## 0.21.24
+
+### Patch Changes
+
+- Updated dependencies [a7760b64]
+  - @lion/overlays@0.23.2
+
+## 0.21.23
+
+### Patch Changes
+
+- Updated dependencies [a04ea59c]
+  - @lion/overlays@0.23.1
+
+## 0.21.22
+
+### Patch Changes
+
+- 3fefc359: Set pointer-events to none to fix Safari bug where click event is blocked by text content wrapper.
+- ef7ccbb9: Fix some type issues with static get styles, CSSResultArray combines CSSResult and CSSResult[].
+- Updated dependencies [3fefc359]
+  - @lion/button@0.8.9
+
+## 0.21.21
+
+### Patch Changes
+
+- 9b9db3dd: add workarround and todo for align select-rich invoker width with options if its inside an overlay
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [5302ec89]
+- Updated dependencies [1f62ed8b]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [53d22a85]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [718843e5]
+  - @lion/form-core@0.7.0
+  - @lion/listbox@0.4.0
+  - @lion/overlays@0.23.0
+  - @lion/button@0.8.8
+  - @lion/core@0.13.7
+
 ## 0.21.20
 
 ### Patch Changes

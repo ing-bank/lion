@@ -1,7 +1,7 @@
 import { dedupeMixin } from '@lion/core';
 
 /**
- * @typedef {import('lit-element').PropertyValues } changedProperties
+ * @typedef {import('@lion/core').PropertyValues } changedProperties
  */
 
 /**

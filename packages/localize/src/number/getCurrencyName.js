@@ -1,4 +1,6 @@
 import { formatNumberToParts } from './formatNumberToParts.js';
+import { localize } from '../localize.js';
+import { forceCurrencyNameForPHPEnGB } from './utils/normalize-get-currency-name/forceCurrencyNameForPHPEnGB.js';
 
 /**
  * Based on number, returns currency name like 'US dollar'
@@ -15,9 +17,13 @@ export function getCurrencyName(currencyIso, options) {
     currency: currencyIso,
     currencyDisplay: 'name',
   }));
-  const currencyName = parts
+  let currencyName = parts
     .filter(p => p.type === 'currency')
     .map(o => o.value)
     .join(' ');
+  const locale = options?.locale || localize.locale;
+  if (currencyIso === 'PHP' && locale === 'en-GB') {
+    currencyName = forceCurrencyNameForPHPEnGB(currencyName);
+  }
   return currencyName;
 }

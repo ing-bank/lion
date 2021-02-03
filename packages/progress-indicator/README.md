@@ -5,7 +5,7 @@
 `lion-progress-indicator` implements accessibility requirements for progress indicators.
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import './demo/custom-progress-indicator.js';
 
 export default {

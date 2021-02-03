@@ -1,5 +1,43 @@
 # Change Log
 
+## 0.3.16
+
+### Patch Changes
+
+- Updated dependencies [a7b27502]
+  - @lion/form-core@0.7.3
+
+## 0.3.15
+
+### Patch Changes
+
+- Updated dependencies [77114753]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+
+## 0.3.14
+
+### Patch Changes
+
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/form-core@0.7.1
+  - @lion/localize@0.15.5
+
+## 0.3.13
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [a8cf4215]
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [a8cf4215]
+  - @lion/localize@0.15.4
+  - @lion/form-core@0.7.0
+
 ## 0.3.12
 
 ### Patch Changes

@@ -23,7 +23,7 @@ function detectInteractionMode() {
 /**
  * LionSelectRich: wraps the <lion-listbox> element
  */
-// @ts-expect-error
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
     return {
@@ -88,7 +88,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @configure ListboxMixin
    * @protected
    */
-  // @ts-ignore
   get _scrollTargetNode() {
     // TODO: should this be defined here or in extension layer?
     // @ts-expect-error we allow the _overlayContentNode to define its own _scrollTargetNode
@@ -160,7 +159,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -388,7 +387,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       this._overlayCtrl.content.style.minWidth = 'auto';
       this._overlayCtrl.content.style.width = 'auto';
       const contentWidth = this._overlayCtrl.content.getBoundingClientRect().width;
-      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      /**
+       * TODO when inside an overlay the current solution doesn't work.
+       * Since that dialog is still hidden, open and close the select-rich
+       * doesn't have any effect so the contentWidth returns 0
+       */
+      if (contentWidth > 0) {
+        this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+      }
       this._overlayCtrl.content.style.display = initContentDisplay;
       this._overlayCtrl.content.style.minWidth = initContentMinWidth;
       this._overlayCtrl.content.style.width = initContentWidth;

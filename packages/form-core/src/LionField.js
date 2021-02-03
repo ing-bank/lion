@@ -22,7 +22,7 @@ import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies F
  *
  * @customElement lion-field
  */
-// @ts-expect-error base constructors same return type
+// @ts-expect-error lit properties false positive
 export class LionField extends FormControlMixin(
   InteractionStateMixin(FocusMixin(FormatMixin(ValidateMixin(SlotMixin(LitElement))))),
 ) {
@@ -46,7 +46,7 @@ export class LionField extends FormControlMixin(
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);

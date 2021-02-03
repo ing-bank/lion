@@ -19,7 +19,6 @@ import { LionListbox } from '@lion/listbox';
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-// @ts-ignore
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
@@ -300,7 +299,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -373,7 +372,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *
    * @example
    * _showOverlayCondition(options) {
-   *   return this.focused || super.showOverlayCondition(options);
+   *   return this.focused || super._showOverlayCondition(options);
    * }
    *
    * @example
@@ -383,7 +382,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *
    * @example
    * _showOverlayCondition(options) {
-   *   return options.currentValue.length > 4 && super.showOverlayCondition(options);
+   *   return options.currentValue.length > 4 && super._showOverlayCondition(options);
    * }
    *
    * @param {{ currentValue: string, lastKey:string }} options

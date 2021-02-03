@@ -10,7 +10,6 @@ import { LocalizeMixin } from '@lion/localize';
  *
  * @customElement lion-pagination
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionPagination extends LocalizeMixin(LitElement) {
   static get styles() {
     return [

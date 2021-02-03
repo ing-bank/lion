@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from '@lion/core';
 
 import { MyCounter } from './src/MyCounter.js';
 import './my-counter.js';

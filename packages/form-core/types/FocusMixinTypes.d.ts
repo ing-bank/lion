@@ -3,6 +3,7 @@ import { LitElement } from '@lion/core';
 import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FocusHost {
+  constructor(...args: any[]);
   focused: boolean;
 
   connectedCallback(): void;

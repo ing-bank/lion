@@ -28,7 +28,6 @@ export function runValidateMixinSuite(customConfig) {
 
   const lightDom = cfg.lightDom || '';
 
-  // @ts-expect-error base constructor same return type
   class ValidateElement extends ValidateMixin(LitElement) {
     connectedCallback() {
       super.connectedCallback();
@@ -562,7 +561,6 @@ export function runValidateMixinSuite(customConfig) {
       };
 
       const withSuccessTagString = defineCE(
-        // @ts-expect-error
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
             return [...super.validationTypes, 'success'];
@@ -677,7 +675,6 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('calls "._isEmpty" when provided (useful for different modelValues)', async () => {
-        // @ts-expect-error base constructor same return type
         class _isEmptyValidate extends ValidateMixin(LitElement) {
           _isEmpty() {
             // @ts-expect-error
@@ -729,7 +726,6 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Default (preconfigured) Validators', () => {
       const preconfTagString = defineCE(
-        // @ts-expect-error base constructor same return type
         class extends ValidateMixin(LitElement) {
           constructor() {
             super();
@@ -752,7 +748,6 @@ export function runValidateMixinSuite(customConfig) {
 
       it('can be altered by App Developers', async () => {
         const altPreconfTagString = defineCE(
-          // @ts-expect-error base constructor same return type
           class extends ValidateMixin(LitElement) {
             constructor() {
               super();
@@ -918,7 +913,6 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Extensibility: Custom Validator types', () => {
       const customTypeTagString = defineCE(
-        // @ts-expect-error base constructor same return type
         class extends ValidateMixin(LitElement) {
           static get validationTypes() {
             return [...super.validationTypes, 'x', 'y'];
@@ -1026,7 +1020,6 @@ export function runValidateMixinSuite(customConfig) {
     describe('Subclassers', () => {
       describe('Adding new Validator types', () => {
         it('can add helpers for validation types', async () => {
-          // @ts-expect-error base constructor same return type
           class ValidateHasX extends ValidateMixin(LitElement) {
             static get validationTypes() {
               return [...super.validationTypes, 'x'];
@@ -1074,7 +1067,6 @@ export function runValidateMixinSuite(customConfig) {
               .concat(array2.filter(x => !array1.includes(x)));
           }
           const elTagString = defineCE(
-            // @ts-expect-error base constructor same return type
             class extends ValidateMixin(LitElement) {
               static get validationTypes() {
                 return [...super.validationTypes, 'x'];
@@ -1123,7 +1115,7 @@ export function runValidateMixinSuite(customConfig) {
         // TODO: add this test on FormControl layer
         it('reconsiders feedback visibility when interaction states changed', async () => {
           const elTagString = defineCE(
-            // @ts-expect-error base constructor same return type
+            // @ts-expect-error lit properties false positive, they get merged with parent properties by lit automatically
             class extends ValidateMixin(LitElement) {
               static get properties() {
                 return {
@@ -1168,7 +1160,7 @@ export function runValidateMixinSuite(customConfig) {
 
         it('filters feedback visibility according interaction states', async () => {
           const elTagString = defineCE(
-            // @ts-expect-error base constructor same return type
+            // @ts-expect-error lit properties false positive, they get merged with parent properties by lit automatically
             class extends ValidateMixin(LitElement) {
               static get validationTypes() {
                 return ['error', 'info'];

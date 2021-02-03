@@ -1,6 +1,6 @@
 import { LitElement } from '@lion/core';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { PropertyValues } from 'lit-element';
+import { PropertyValues } from '@lion/core';
 
 export declare interface SyncUpdatableNamespace {
   connected?: boolean;
@@ -10,6 +10,7 @@ export declare interface SyncUpdatableNamespace {
 }
 
 export declare class SyncUpdatableHost {
+  constructor(...args: any[]);
   static __syncUpdatableHasChanged(name: string, newValue: any, oldValue: any): boolean;
   updateSync(name: string, oldValue: any): void;
   __syncUpdatableInitialize(): void;

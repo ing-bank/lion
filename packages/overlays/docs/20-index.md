@@ -3,7 +3,7 @@
 # Overlay System
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { render, LitElement } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import {
@@ -75,7 +75,7 @@ Global refers to overlays where the content is positioned in a global root node 
 
 Overlays can be configured in many ways to suit your needs. We go in-depth into each option in the Overlay System - Configuration chapter.
 
-We also export a few preset configuration objects, which you can find [here](?path=/docs/overlays-system-configuration--placement-local#overlay-system---configuration).
+We also export a few [preset configuration objects](?path=/docs/overlays-system-configuration--placement-local#overlay-system---configuration).
 
 - withModalDialogConfig
 - withDropdownConfig
@@ -270,6 +270,12 @@ export const responsiveSwitching = () => html`
     }}
   >
     <button slot="invoker">Click me to open the overlay!</button>
+    <div slot="content" class="demo-overlay">
+      Hello! You can close this notification here:
+      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
+        ⨯
+      </button>
+    </div>
   </demo-overlay-system>
 `;
 ```
@@ -501,7 +507,7 @@ class MyOverlayWC extends OverlayMixin(LitElement) {
 The `OverlaysManager` is a global registry keeping track of all different types of overlays.
 The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.
 
-For example, you may have a modal dialog that open another modal dialog.
+For example, you may have a modal dialog that opens another modal dialog.
 The second dialog needs to block the first.
 When the second dialog is closed, the first one is available again.
 
@@ -603,7 +609,6 @@ And add the `arrowPopperConfig` to the `_defineOverlayConfig`.
 ```js preview-story
 export const LocalWithArrow = () => {
   class ArrowExample extends ArrowMixin(OverlayMixin(LitElement)) {
-    // Alternatively, set `this.config = { popperConfig: { placement: 'bottom' } }` on connectedCallback
     _defineOverlayConfig() {
       return {
         ...super._defineOverlayConfig(),
@@ -614,26 +619,17 @@ export const LocalWithArrow = () => {
       };
     }
 
-    constructor() {
-      super();
-      this.__toggle = this.__toggle.bind(this);
-    }
-
-    __toggle() {
-      this.opened = !this.opened;
-    }
-
     _setupOpenCloseListeners() {
       super._setupOpenCloseListeners();
       if (this._overlayInvokerNode) {
-        this._overlayInvokerNode.addEventListener('click', this.__toggle);
+        this._overlayInvokerNode.addEventListener('click', this.toggle);
       }
     }
 
     _teardownOpenCloseListeners() {
       super._teardownOpenCloseListeners();
       if (this._overlayInvokerNode) {
-        this._overlayInvokerNode.removeEventListener('click', this.__toggle);
+        this._overlayInvokerNode.removeEventListener('click', this.toggle);
       }
     }
   }

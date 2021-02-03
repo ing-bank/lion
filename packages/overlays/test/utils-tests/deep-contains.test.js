@@ -30,7 +30,12 @@ describe('deepContains()', () => {
     expect(deepContains(shadowRoot, shadowElementChild)).to.be.true;
 
     // Siblings
-    expect(deepContains(element.firstElementChild, element.lastElementChild)).to.be.false;
+    expect(
+      deepContains(
+        /** @type {HTMLElement} */ (element.firstElementChild),
+        /** @type {HTMLElement} */ (element.lastElementChild),
+      ),
+    ).to.be.false;
     // Unrelated
     expect(deepContains(lightChildEl, shadowElementChild)).to.be.false;
   });
@@ -95,16 +100,19 @@ describe('deepContains()', () => {
       </div>
     `));
 
-    expect(deepContains(element, element.firstElementChild)).to.be.true;
-    expect(deepContains(element, element.firstElementChild.shadowRoot)).to.be.true;
-    expect(deepContains(element, element.firstElementChild.shadowRoot.children[1])).to.be.true;
-    expect(deepContains(element, element.firstElementChild.shadowRoot.children[1].shadowRoot)).to.be
-      .true;
-    expect(
-      deepContains(
-        element,
-        element.firstElementChild.shadowRoot.children[1].shadowRoot.lastElementChild,
-      ),
-    ).to.be.true;
+    const elementFirstChild = /** @type {HTMLElement} */ (element.firstElementChild);
+    const elementFirstChildShadow = /** @type {ShadowRoot} */ (elementFirstChild.shadowRoot);
+    const elementFirstChildShadowChildren = /** @type {HTMLElement[]} */ (Array.from(
+      elementFirstChildShadow.children,
+    ));
+    const elementFirstChildShadowChildShadow = /** @type {ShadowRoot} */ (elementFirstChildShadowChildren[1]
+      .shadowRoot);
+    const elementFirstChildShadowChildShadowLastChild = /** @type {HTMLElement} */ (elementFirstChildShadowChildShadow.lastElementChild);
+
+    expect(deepContains(element, elementFirstChild)).to.be.true;
+    expect(deepContains(element, elementFirstChildShadow)).to.be.true;
+    expect(deepContains(element, elementFirstChildShadowChildren[1])).to.be.true;
+    expect(deepContains(element, elementFirstChildShadowChildShadow)).to.be.true;
+    expect(deepContains(element, elementFirstChildShadowChildShadowLastChild)).to.be.true;
   });
 });

@@ -1,10 +1,10 @@
-import { LitElement, UpdatingElement } from '@lion/core';
+import { LitElement } from '@lion/core';
 import { html } from '@open-wc/testing';
 import { runRegistrationSuite } from '../test-suites/FormRegistrationMixins.suite.js';
 
 runRegistrationSuite({
-  suffix: 'with UpdatingElement',
-  baseElement: UpdatingElement,
+  suffix: 'with LitElement',
+  baseElement: LitElement,
 });
 
 runRegistrationSuite({

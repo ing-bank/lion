@@ -1,5 +1,48 @@
 # Change Log
 
+## 0.23.4
+
+### Patch Changes
+
+- a77452b0: Use MutationObserver to watch child changes of the contentNode, and re-insert tab detection element when necessary.
+
+## 0.23.3
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- 9352b577: Guard backdrop node parentNode when removing the backdrop node on teardown.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/core@0.13.8
+
+## 0.23.2
+
+### Patch Changes
+
+- a7760b64: Fix type declaration for \_\_syncFromPopperState method.
+
+## 0.23.1
+
+### Patch Changes
+
+- a04ea59c: Put tooltip arrow width and height css props on host of ArrowMixin.
+
+## 0.23.0
+
+### Minor Changes
+
+- 1f62ed8b: **BREAKING:** Upgrade to popper v2. Has breaking changes for overlays config.popperConfig which is now aligned with v2 of Popper. See their [migration guidelines](https://popper.js.org/docs/v2/migration-guide/).
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- 53d22a85: Prevent `opened-changed` event to be sent twice
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+  - singleton-manager@1.2.1
+
 ## 0.22.8
 
 ### Patch Changes

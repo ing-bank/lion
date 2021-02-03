@@ -80,7 +80,7 @@ paths: [
 We have an existing demo code which we want to reuse.
 
 ```js
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from '@lion/core';
 import './my-counter.js';
 class MyApp extends LitElement {
   render() {
@@ -109,7 +109,7 @@ tag: {
 ### Result of Replacement of tags
 
 ```js
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from '@lion/core';
 import './my-extension/my-extension.js';
 class MyApp extends LitElement {
   render() {
@@ -127,7 +127,7 @@ customElements.define('my-app', MyApp);
 We have an existing demo code which we want to reuse.
 
 ```js
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from '@lion/core';
 import { MyCounter } from './src/MyCounter.js';
 class TenCounter extends MyCounter {
   inc() {
@@ -163,7 +163,7 @@ variable: {
 ### Result of Replacement of classes
 
 ```js
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from '@lion/core';
 import { MyExtension } from './my-extension/index.js';
 class TenCounter extends MyExtension {
   inc() {

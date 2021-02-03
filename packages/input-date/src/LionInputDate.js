@@ -18,7 +18,7 @@ function isValidDate(date) {
  *
  * @customElement lion-input-date
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputDate extends LocalizeMixin(LionInput) {
   static get properties() {
     return {
@@ -36,7 +36,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     this.defaultValidators.push(new IsDate());
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('locale')) {

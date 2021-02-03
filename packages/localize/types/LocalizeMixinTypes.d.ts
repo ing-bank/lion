@@ -56,7 +56,7 @@ interface msgOptions {
 }
 
 declare class LocalizeMixinHost {
-  // FIXME: return value type check doesn't seem to be `working!
+  constructor(...args: any[]);
   static get localizeNamespaces(): StringToFunctionMap[];
 
   static get waitForLocalizeNamespaces(): boolean;

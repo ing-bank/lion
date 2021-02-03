@@ -1,4 +1,4 @@
-import { html, css } from 'lit-element';
+import { html, css } from '@lion/core';
 import { MyCounter } from '../src/MyCounter.js';
 
 export class MyExtension extends MyCounter {

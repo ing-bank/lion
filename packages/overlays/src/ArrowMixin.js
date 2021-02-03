@@ -4,7 +4,8 @@ import { OverlayMixin } from './OverlayMixin.js';
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('../types/ArrowMixinTypes').ArrowMixin} ArrowMixin
- * @typedef {import('popper.js').PopperOptions} PopperOptions
+ * @typedef {import('@popperjs/core/lib/popper').Options} PopperOptions
+ * @typedef {import('@popperjs/core/lib/enums').Placement} Placement
  */
 
 /**
@@ -27,51 +28,63 @@ export const ArrowMixinImplementation = superclass =>
       const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
         .constructor);
       return [
-        superCtor.styles ? superCtor.styles : [],
+        superCtor.styles || [],
         css`
           :host {
             --tooltip-arrow-width: 12px;
             --tooltip-arrow-height: 8px;
           }
 
+          .arrow svg {
+            display: block;
+          }
+
           .arrow {
-            display: none;
             position: absolute;
             width: var(--tooltip-arrow-width);
             height: var(--tooltip-arrow-height);
           }
 
-          :host([has-arrow]) .arrow {
+          .arrow__graphic {
             display: block;
           }
 
-          .arrow svg {
-            display: block;
-          }
-
-          [x-placement^='top'] .arrow {
+          [data-popper-placement^='top'] .arrow {
             bottom: calc(-1 * var(--tooltip-arrow-height));
           }
 
-          [x-placement^='bottom'] .arrow {
+          [data-popper-placement^='bottom'] .arrow {
             top: calc(-1 * var(--tooltip-arrow-height));
+          }
+
+          [data-popper-placement^='bottom'] .arrow__graphic {
             transform: rotate(180deg);
           }
 
-          [x-placement^='left'] .arrow {
+          [data-popper-placement^='left'] .arrow {
             right: calc(
               -1 * (var(--tooltip-arrow-height) +
                     (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
             );
+          }
+
+          [data-popper-placement^='left'] .arrow__graphic {
             transform: rotate(270deg);
           }
 
-          [x-placement^='right'] .arrow {
+          [data-popper-placement^='right'] .arrow {
             left: calc(
               -1 * (var(--tooltip-arrow-height) +
                     (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
             );
+          }
+
+          [data-popper-placement^='right'] .arrow__graphic {
             transform: rotate(90deg);
+          }
+
+          :host(:not([has-arrow])) .arrow {
+            display: none;
           }
         `,
       ];
@@ -94,13 +107,13 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     _arrowNodeTemplate() {
-      return html`<div class="arrow" x-arrow>${this._arrowTemplate()}</div>`;
+      return html` <div class="arrow" data-popper-arrow>${this._arrowTemplate()}</div> `;
     }
 
     // eslint-disable-next-line class-methods-use-this
     _arrowTemplate() {
       return html`
-        <svg viewBox="0 0 12 8">
+        <svg viewBox="0 0 12 8" class="arrow__graphic">
           <path d="M 0,0 h 12 L 6,8 z"></path>
         </svg>
       `;
@@ -121,40 +134,48 @@ export const ArrowMixinImplementation = superclass =>
       return {
         ...superConfig,
         popperConfig: {
-          ...this._getPopperArrowConfig(superConfig.popperConfig),
+          ...this._getPopperArrowConfig(
+            /** @type {Partial<PopperOptions>} */ (superConfig.popperConfig),
+          ),
         },
       };
     }
 
     /**
-     * @param {PopperOptions} popperConfigToExtendFrom
-     * @returns {PopperOptions}
+     * @param {Partial<PopperOptions>} popperConfigToExtendFrom
+     * @returns {Partial<PopperOptions>}
      */
-    _getPopperArrowConfig(popperConfigToExtendFrom = {}) {
-      return {
-        placement: 'top',
-
-        modifiers: {
-          ...popperConfigToExtendFrom.modifiers,
-          keepTogether: {
-            ...popperConfigToExtendFrom.modifiers?.keepTogether,
+    _getPopperArrowConfig(popperConfigToExtendFrom) {
+      /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper').State>) => void }} */
+      const popperCfg = {
+        ...(popperConfigToExtendFrom || {}),
+        placement: /** @type {Placement} */ ('top'),
+        modifiers: [
+          {
+            name: 'arrow',
             enabled: true,
+            options: {
+              padding: 8, // 8px from the edges of the popper
+            },
           },
-          arrow: {
-            ...popperConfigToExtendFrom.modifiers?.arrow,
+          {
+            name: 'offset',
             enabled: true,
+            options: { offset: [0, 8] },
           },
-        },
-
-        /** @param {import("popper.js").default.Data} data */
-        onCreate: data => {
+          ...((popperConfigToExtendFrom && popperConfigToExtendFrom.modifiers) || []),
+        ],
+        /** @param {Partial<import('@popperjs/core/lib/popper').State>} data */
+        onFirstUpdate: data => {
           this.__syncFromPopperState(data);
         },
-        /** @param {import("popper.js").default.Data} data */
-        onUpdate: data => {
+        /** @param {Partial<import('@popperjs/core/lib/popper').State>} data */
+        afterWrite: data => {
           this.__syncFromPopperState(data);
         },
       };
+
+      return popperCfg;
     }
 
     __setupRepositionCompletePromise() {
@@ -164,11 +185,11 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     get _arrowNode() {
-      return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[x-arrow]');
+      return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('[data-popper-arrow]');
     }
 
     /**
-     * @param {import("popper.js").default.Data} data
+     * @param {Partial<import('@popperjs/core/lib/popper').State>} data
      */
     __syncFromPopperState(data) {
       if (!data) {

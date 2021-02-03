@@ -1,4 +1,4 @@
-import { PopperOptions } from 'popper.js';
+import { Options } from '@popperjs/core';
 
 export interface OverlayConfig {
   /** Determines the connection point in DOM (body vs next to invoker). */
@@ -47,7 +47,7 @@ export interface OverlayConfig {
   /** By default, the tooltip content is a 'description' for the invoker (uses aria-describedby) Setting this property to 'label' makes the content function as a label (via aria-labelledby) */
   invokerRelation?: 'label' | 'description';
   /** Popper configuration. Will be used when placementMode is 'local' */
-  popperConfig?: PopperOptions;
+  popperConfig?: Partial<Options>;
   /** Viewport configuration. Will be used when placementMode is 'global' */
   viewportConfig?: ViewportConfig;
 }

@@ -4,7 +4,7 @@
 It is a promise based system for fetching data, based on [axios](https://github.com/axios/axios)
 
 ```js script
-import { html } from 'lit-html';
+import { html } from '@lion/core';
 import { ajax } from './src/ajax.js';
 import { AjaxClass } from './src/AjaxClass.js';
 

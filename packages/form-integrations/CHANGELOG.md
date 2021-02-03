@@ -1,5 +1,176 @@
 # Change Log
 
+## 0.3.30
+
+### Patch Changes
+
+- Updated dependencies [33f639e8]
+- Updated dependencies [1a5e353f]
+  - @lion/button@0.8.11
+  - @lion/form@0.7.18
+  - @lion/select-rich@0.21.28
+  - @lion/combobox@0.1.24
+  - @lion/input-datepicker@0.18.18
+
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies [a7b27502]
+  - @lion/form-core@0.7.3
+  - @lion/checkbox-group@0.13.1
+  - @lion/combobox@0.1.23
+  - @lion/fieldset@0.15.16
+  - @lion/input@0.10.16
+  - @lion/input-amount@0.8.16
+  - @lion/input-date@0.8.16
+  - @lion/input-datepicker@0.18.17
+  - @lion/input-email@0.9.16
+  - @lion/input-iban@0.11.6
+  - @lion/input-stepper@0.1.17
+  - @lion/listbox@0.4.3
+  - @lion/radio-group@0.12.16
+  - @lion/select@0.8.16
+  - @lion/select-rich@0.21.27
+  - @lion/switch@0.12.17
+  - @lion/textarea@0.8.16
+  - @lion/validate-messages@0.3.16
+  - @lion/form@0.7.17
+  - @lion/input-range@0.5.16
+
+## 0.3.28
+
+### Patch Changes
+
+- Updated dependencies [77114753]
+- Updated dependencies [8d2b2513]
+- Updated dependencies [f98aab23]
+- Updated dependencies [f98aab23]
+  - @lion/form-core@0.7.2
+  - @lion/checkbox-group@0.13.0
+  - @lion/listbox@0.4.2
+  - @lion/switch@0.12.16
+  - @lion/combobox@0.1.22
+  - @lion/fieldset@0.15.15
+  - @lion/input@0.10.15
+  - @lion/input-amount@0.8.15
+  - @lion/input-date@0.8.15
+  - @lion/input-datepicker@0.18.16
+  - @lion/input-email@0.9.15
+  - @lion/input-iban@0.11.5
+  - @lion/input-stepper@0.1.16
+  - @lion/radio-group@0.12.15
+  - @lion/select@0.8.15
+  - @lion/select-rich@0.21.26
+  - @lion/textarea@0.8.15
+  - @lion/validate-messages@0.3.15
+  - @lion/form@0.7.16
+  - @lion/input-range@0.5.15
+
+## 0.3.27
+
+### Patch Changes
+
+- @lion/switch@0.12.15
+
+## 0.3.26
+
+### Patch Changes
+
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/checkbox-group@0.12.14
+  - @lion/core@0.13.8
+  - @lion/fieldset@0.15.14
+  - @lion/form-core@0.7.1
+  - @lion/input-date@0.8.14
+  - @lion/input-datepicker@0.18.15
+  - @lion/input-email@0.9.14
+  - @lion/input-iban@0.11.4
+  - @lion/listbox@0.4.1
+  - @lion/localize@0.15.5
+  - @lion/radio-group@0.12.14
+  - @lion/select-rich@0.21.25
+  - @lion/switch@0.12.14
+  - @lion/combobox@0.1.21
+  - @lion/button@0.8.10
+  - @lion/input-amount@0.8.14
+  - @lion/input-range@0.5.14
+  - @lion/input-stepper@0.1.15
+  - @lion/select@0.8.14
+  - @lion/textarea@0.8.14
+  - @lion/form@0.7.15
+  - @lion/input@0.10.14
+  - @lion/validate-messages@0.3.14
+
+## 0.3.25
+
+### Patch Changes
+
+- @lion/combobox@0.1.20
+- @lion/input-datepicker@0.18.14
+- @lion/select-rich@0.21.24
+
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies [fcc60cbf]
+  - @lion/form@0.7.14
+  - @lion/combobox@0.1.19
+  - @lion/input-datepicker@0.18.13
+  - @lion/select-rich@0.21.23
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies [3fefc359]
+- Updated dependencies [3fefc359]
+- Updated dependencies [ef7ccbb9]
+  - @lion/button@0.8.9
+  - @lion/select-rich@0.21.22
+  - @lion/combobox@0.1.18
+
+## 0.3.22
+
+### Patch Changes
+
+- a8cf4215: Improved localize DX by making it clear from source code structure what are main (exported) functions and what are util/helper functions consumed by those main functions.
+  Added Chrome Intl corrections for Philippine currency names and en-GB short month names.
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [9b9db3dd]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [5302ec89]
+- Updated dependencies [98f1bb7e]
+- Updated dependencies [a8cf4215]
+- Updated dependencies [718843e5]
+  - @lion/select-rich@0.21.21
+  - @lion/localize@0.15.4
+  - @lion/checkbox-group@0.12.13
+  - @lion/combobox@0.1.17
+  - @lion/fieldset@0.15.13
+  - @lion/form@0.7.13
+  - @lion/form-core@0.7.0
+  - @lion/input@0.10.13
+  - @lion/input-amount@0.8.13
+  - @lion/input-range@0.5.13
+  - @lion/input-stepper@0.1.14
+  - @lion/listbox@0.4.0
+  - @lion/radio-group@0.12.13
+  - @lion/select@0.8.13
+  - @lion/textarea@0.8.13
+  - @lion/validate-messages@0.3.13
+  - @lion/button@0.8.8
+  - @lion/core@0.13.7
+  - @lion/input-date@0.8.13
+  - @lion/input-datepicker@0.18.12
+  - @lion/input-email@0.9.13
+  - @lion/input-iban@0.11.3
+  - @lion/switch@0.12.13
+
 ## 0.3.21
 
 ### Patch Changes

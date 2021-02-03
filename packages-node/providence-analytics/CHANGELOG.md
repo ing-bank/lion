@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.8.4
+
+### Patch Changes
+
+- b4ec2fe8: - allowlist does not preprocess globs in cli before handing them over to the program
+
+## 0.8.3
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+
 ## 0.8.2
 
 ### Patch Changes

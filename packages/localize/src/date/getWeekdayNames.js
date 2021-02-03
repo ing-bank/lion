@@ -1,4 +1,4 @@
-import { normalizeIntlDate } from './normalizeIntlDate.js';
+import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
 
 /** @type {Object.<string, Object.<string,string[]>>} */
 const weekdayNamesCache = {};

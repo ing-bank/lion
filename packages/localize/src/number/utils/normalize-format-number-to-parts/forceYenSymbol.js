@@ -1,7 +1,7 @@
 /**
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
  * @returns {FormatNumberPart[]}
  */
 export function forceYenSymbol(formattedParts, { currency, currencyDisplay } = {}) {

@@ -95,6 +95,41 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       expect(counter).to.equal(1);
     });
 
+    it('fires one "click" event when clicking label or input, using the right target', async () => {
+      const spy = sinon.spy();
+      const el = /** @type {ChoiceInput} */ (await fixture(html`
+        <${tag}
+          @click="${spy}"
+        >
+          <input slot="input" />
+        </${tag}>
+      `));
+      el.click();
+      expect(spy.args[0][0].target).to.equal(el);
+      expect(spy.callCount).to.equal(1);
+      el._labelNode.click();
+      expect(spy.args[1][0].target).to.equal(el._labelNode);
+      expect(spy.callCount).to.equal(2);
+      el._inputNode.click();
+      expect(spy.args[2][0].target).to.equal(el._inputNode);
+      expect(spy.callCount).to.equal(3);
+    });
+
+    it('adds "isTriggerByUser" flag on model-value-changed', async () => {
+      let isTriggeredByUser;
+      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      <${tag}
+        @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+          isTriggeredByUser = event.detail.isTriggeredByUser;
+        }}"
+      >
+        <input slot="input" />
+      </${tag}>
+    `));
+      el._inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+      expect(isTriggeredByUser).to.be.true;
+    });
+
     it('can be required', async () => {
       const el = /** @type {ChoiceInput} */ (await fixture(html`
       <${tag} .choiceValue=${'foo'} .validators=${[new Required()]}></${tag}>

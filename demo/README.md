@@ -149,7 +149,7 @@ npm i lit-element @lion/tabs
 Create a `lea-tabs` component by reusing the functionality of Lion. This gives Lea all the functionality and accessible core that she needs for his custom tabs component.
 
 ```js
-import { css } from 'lit-element';
+import { css } from '@lion/core';
 import { LionTabs } from '@lion/tabs';
 
 export class LeaTabs extends LionTabs {
@@ -178,7 +178,7 @@ customElements.define('lea-tabs', LeaTabs);
 Lea also wants to be able to style the tab and tab-panel according to Betatechs visual identity. In order to do so, she creates a `lea-tab-panel` component and a `lea-tab` component, which she can then fully style however she desires, and eventually place inside the `lea-tabs` component. You can see how Lea achieved this in the example down below.
 
 ```js
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css } from '@lion/core';
 
 export class LeaTab extends LitElement {
   static get styles() {

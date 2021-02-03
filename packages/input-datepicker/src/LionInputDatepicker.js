@@ -12,7 +12,7 @@ import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 /**
  * @customElement lion-input-datepicker
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
+// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputDatepicker extends ScopedElementsMixin(
   ArrowMixin(OverlayMixin(LionInputDate)),
 ) {
@@ -199,19 +199,18 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
-      // @ts-expect-error even though disabled may not exist on the invoker node
-      // set it anyway, it doesn't harm, and is needed in case of invoker elements that do have disabled prop
-      this._invokerNode.disabled = this.disabled || this.readOnly;
+      const invokerNode = /** @type {HTMLElement & {disabled: boolean}} */ (this._invokerNode);
+      invokerNode.disabled = this.disabled || this.readOnly;
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__toggleInvokerDisabled();
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('validators')) {

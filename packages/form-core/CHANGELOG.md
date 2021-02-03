@@ -1,5 +1,48 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- a7b27502: Sync name to parent form group conditionally and allow overriding. Also fix sync properly to prevent infinite loop.
+
+## 0.7.2
+
+### Patch Changes
+
+- 77114753: Stop propagation of label click event in choice inputs to deduplicate the click event on the choice input.
+- f98aab23: Make \_\_parentFormGroup --> \_parentFormGroup so it is protected and not private
+- f98aab23: Make \_\_toggleChecked protected property (\_toggleChecked)
+
+## 0.7.1
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/core@0.13.8
+  - @lion/localize@0.15.5
+
+## 0.7.0
+
+### Minor Changes
+
+- a8cf4215: Added `isTriggeredByUser` meta data in `model-value-changed` event
+
+  Sometimes it can be helpful to detect whether a value change was caused by a user or via a programmatical change.
+  This feature acts as a normalization layer: since we use `model-value-changed` as a single source of truth event for all FormControls, there should be no use cases for (inconsistently implemented (cross browser)) events like `input`/`change`/`user-input-changed` etc.
+
+### Patch Changes
+
+- 5302ec89: Minimise dependencies by removing integration demos to form-integrations and form-core packages.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [a8cf4215]
+- Updated dependencies [98f1bb7e]
+  - @lion/localize@0.15.4
+  - @lion/core@0.13.7
+
 ## 0.6.14
 
 ### Patch Changes

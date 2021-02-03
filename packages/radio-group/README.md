@@ -5,9 +5,7 @@
 You should use `<lion-radio>`s inside this element.
 
 ```js script
-import { html } from 'lit-html';
-import { Required, Validator } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { html } from '@lion/core';
 
 import './lion-radio-group.js';
 import './lion-radio.js';
@@ -15,8 +13,6 @@ import './lion-radio.js';
 export default {
   title: 'Forms/Radio Group',
 };
-
-loadDefaultFeedbackMessages();
 ```
 
 ```js preview-story
@@ -116,69 +112,6 @@ export const disabledGroup = () => html`
     <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
   </lion-radio-group>
 `;
-```
-
-### Validation
-
-```js preview-story
-export const validation = () => {
-  const validate = () => {
-    const radioGroup = document.querySelector('#dinos');
-    radioGroup.submitted = !radioGroup.submitted;
-  };
-  return html`
-    <lion-radio-group
-      id="dinos"
-      name="dinos_8"
-      label="Favourite dinosaur"
-      .validators=${[new Required()]}
-    >
-      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
-      <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
-    </lion-radio-group>
-    <button @click="${() => validate()}">Validate</button>
-  `;
-};
-```
-
-You can also create a validator that validates whether a certain option is checked.
-
-```js preview-story
-export const validateItem = () => {
-  class IsBrontosaurus extends Validator {
-    static get validatorName() {
-      return 'IsBrontosaurus';
-    }
-    execute(value) {
-      let showFeedback = false;
-      if (value !== 'brontosaurus') {
-        showFeedback = true;
-      }
-      return showFeedback;
-    }
-    static async getMessage() {
-      return 'You need to select "brontosaurus"';
-    }
-  }
-  const validate = () => {
-    const radioGroup = document.querySelector('#dinosTwo');
-    radioGroup.submitted = !radioGroup.submitted;
-  };
-  return html`
-    <lion-radio-group
-      id="dinosTwo"
-      name="dinosTwo"
-      label="Favourite dinosaur"
-      .validators=${[new Required(), new IsBrontosaurus()]}
-    >
-      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
-      <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
-    </lion-radio-group>
-    <button @click="${() => validate()}">Validate</button>
-  `;
-};
 ```
 
 ### Help text

@@ -1,7 +1,8 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement } from 'lit-element';
+import { LitElement } from '../index.js';
 
 export declare class DisabledHost {
+  constructor(...args: any[]);
   disabled: boolean;
 
   /**
@@ -20,6 +21,6 @@ export declare class DisabledHost {
 
 export declare function DisabledMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<DisabledHost>;
+): T & Constructor<DisabledHost> & typeof DisabledHost;
 
 export type DisabledMixin = typeof DisabledMixinImplementation;

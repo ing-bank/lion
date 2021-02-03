@@ -1,7 +1,7 @@
 /**
  * Add separators when they are not present
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
  * @param {string} groupSeparator
  * @returns {FormatNumberPart[]}

@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.15.5
+
+### Patch Changes
+
+- 8fb7e7a1: Fix type issues where base constructors would not have the same return type. This allows us to remove a LOT of @ts-expect-errors/@ts-ignores across lion.
+- 9112d243: Fix missing types and update to latest scoped elements to fix constructor type.
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/core@0.13.8
+
+## 0.15.4
+
+### Patch Changes
+
+- a8cf4215: Improved localize DX by making it clear from source code structure what are main (exported) functions and what are util/helper functions consumed by those main functions.
+  Added Chrome Intl corrections for Philippine currency names and en-GB short month names.
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+  - singleton-manager@1.2.1
+
 ## 0.15.3
 
 ### Patch Changes

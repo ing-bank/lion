@@ -18,6 +18,7 @@ import '@lion/textarea/lion-textarea';
 import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
 
 describe(`Submitting/Resetting Form`, async () => {
+  /** @type {import('@lion/form').LionForm} */
   let el;
   beforeEach(async () => {
     el = await fixture(html`
@@ -121,7 +122,7 @@ describe(`Submitting/Resetting Form`, async () => {
   });
 
   it('Submitting a form should make submitted true for all fields', async () => {
-    el.querySelector('#submit_button').click();
+    /** @type {import('@lion/button').LionButton} */ (el.querySelector('#submit_button')).click();
     await elementUpdated(el);
     await el.updateComplete;
     el.formElements.forEach(field => {
@@ -130,8 +131,8 @@ describe(`Submitting/Resetting Form`, async () => {
   });
 
   it('Resetting a form should reset metadata of all fields', async () => {
-    el.querySelector('#submit_button').click();
-    el.querySelector('#reset_button').click();
+    /** @type {import('@lion/button').LionButton} */ (el.querySelector('#submit_button')).click();
+    /** @type {import('@lion/button').LionButton} */ (el.querySelector('#reset_button')).click();
     await elementUpdated(el);
     await el.updateComplete;
     expect(el.submitted).to.be.false;

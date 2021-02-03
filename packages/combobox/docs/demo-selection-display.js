@@ -94,7 +94,7 @@ export class DemoSelectionDisplay extends LitElement {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
@@ -106,7 +106,7 @@ export class DemoSelectionDisplay extends LitElement {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   onComboboxElementUpdated(changedProperties) {
     if (changedProperties.has('modelValue')) {

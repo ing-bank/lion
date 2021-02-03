@@ -8,16 +8,13 @@ where each option name starts with the same word or phrase can also significantl
 usability for keyboard and screen reader users.
 
 ```js script
-import { html } from 'lit-html';
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { html } from '@lion/core';
 
 import './lion-select.js';
 
 export default {
   title: 'Forms/Select',
 };
-loadDefaultFeedbackMessages();
 ```
 
 ```js preview-story
@@ -104,27 +101,4 @@ export const disabledSelect = () => html`
     </select>
   </lion-select>
 `;
-```
-
-### Validation
-
-```js preview-story
-export const validation = () => {
-  const validate = () => {
-    const select = document.querySelector('#color');
-    select.submitted = !select.submitted;
-  };
-  return html`
-    <lion-select id="color" name="color" .validators="${[new Required()]}">
-      <label slot="label">Favorite color</label>
-      <select slot="input">
-        <option selected hidden value>Please select</option>
-        <option value="red">Red</option>
-        <option value="hotpink">Hotpink</option>
-        <option value="teal">Teal</option>
-      </select>
-    </lion-select>
-    <button @click="${() => validate()}">Validate</button>
-  `;
-};
 ```

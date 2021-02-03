@@ -6,7 +6,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes').ChoiceGroupMixin} ChoiceGroupMixin
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {FormControlHost & HTMLElement & {__parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
  */
 
@@ -161,7 +161,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       });
     }
 
-    /** @param {import('lit-element').PropertyValues} changedProperties */
+    /** @param {import('@lion/core').PropertyValues} changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
       if (changedProperties.has('name') && this.name !== changedProperties.get('name')) {

@@ -13,7 +13,6 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
  * Element gets state supplied externally, reflects this to attributes,
  * enabling SubClassers to style based on those states
  */
-// @ts-expect-error
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
   static get properties() {
     return {
@@ -84,7 +83,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -122,7 +121,8 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     if (this.disabled) {
       return;
     }
-    const parentForm = /** @type {unknown} */ (this.__parentFormGroup);
+    const parentForm = /** @type {unknown} */ (this._parentFormGroup);
+    this.__isHandlingUserInput = true;
     if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
       this.checked = !this.checked;
       this.active = !this.active;
@@ -130,5 +130,6 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
       this.checked = true;
       this.active = true;
     }
+    this.__isHandlingUserInput = false;
   }
 }

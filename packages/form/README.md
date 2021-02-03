@@ -3,26 +3,15 @@
 `lion-form` is a webcomponent that enhances the functionality of the native `form` component.
 It is designed to interact with (instances of) the [form controls](?path=/docs/forms-system-overview--page).
 
-```js script
-import { html } from 'lit-html';
-import '@lion/input/lion-input.js';
-import './lion-form.js';
+> Note: Make sure to explicitly put `<form>` native element as a first child of `<lion-form>`, in order to function properly.
 
+```js script
 export default {
   title: 'Forms/Form/Overview',
 };
 ```
 
-```js story
-export const main = () => html`
-  <lion-form id="form">
-    <form>
-      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
-    </form>
-  </lion-form>
-`;
-```
+For a full demo of forms integrated with other lion field components, see [features overview](?path=/docs/forms-features-overview--main)
 
 ## Features
 
@@ -47,14 +36,6 @@ npm i --save @lion/form
 import '@lion/form/lion-form.js';
 ```
 
-### Example
+## Example
 
-```html
-<lion-form>
-  <form>
-    <lion-fieldset name="fullName">
-      <lion-input label="First Name" name="firstName"></lion-input>
-    </lion-fieldset>
-  </form>
-</lion-form>
-```
+See full [form example](?path=/docs/forms-features-overview--main)

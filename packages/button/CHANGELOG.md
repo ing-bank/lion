@@ -1,5 +1,34 @@
 # Change Log
 
+## 0.8.11
+
+### Patch Changes
+
+- 33f639e8: Delay adding prevent event leakage handler by one frame. This is because it takes 1 frame longer for older browsers such as Firefox ESR 60, IE11 and old Edge to have the native form available as a property on the native button.
+
+## 0.8.10
+
+### Patch Changes
+
+- Updated dependencies [8fb7e7a1]
+- Updated dependencies [9112d243]
+  - @lion/core@0.13.8
+
+## 0.8.9
+
+### Patch Changes
+
+- 3fefc359: Fix button user-select for Edge/Safari by adding prefixes for the CSS rule.
+
+## 0.8.8
+
+### Patch Changes
+
+- 98f1bb7e: Ensure all lit imports are imported from @lion/core. Remove devDependencies in all subpackages and move to root package.json. Add demo dependencies as real dependencies for users that extend our docs/demos.
+- 718843e5: Set user-select to none on button, so that the inner text is not selectable.
+- Updated dependencies [98f1bb7e]
+  - @lion/core@0.13.7
+
 ## 0.8.7
 
 ### Patch Changes
