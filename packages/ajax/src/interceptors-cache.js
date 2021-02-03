@@ -131,7 +131,7 @@ const getCache = cacheIdentifier => {
  * @returns {ValidatedCacheOptions}
  */
 export const validateOptions = ({
-  useCache = 'never',
+  useCache = false,
   methods = ['get'],
   timeToLive,
   invalidateUrls,
@@ -139,8 +139,8 @@ export const validateOptions = ({
   requestIdentificationFn,
 }) => {
   // validate 'cache'
-  if (!(useCache === 'always' || useCache === 'never')) {
-    throw new Error('Property `useCache` should be `always` or `never`');
+  if (typeof useCache !== 'boolean') {
+    throw new Error('Property `useCache` should be `true` or `false`');
   }
 
   if (methods[0] !== 'get' || methods.length !== 1) {
@@ -224,8 +224,8 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       ...actionCacheOptions,
     };
 
-    // don't use cache if 'cache' === 'never'
-    if (cacheOptions.useCache === 'never') {
+    // don't use cache if 'useCache' === false
+    if (!cacheOptions.useCache) {
       return cacheRequest;
     }
 
@@ -261,7 +261,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       cacheRequest.adapter = () => {
         // eslint-disable-next-line no-param-reassign
         if (!cacheRequest.cacheOptions) {
-          cacheRequest.cacheOptions = { useCache: 'never' };
+          cacheRequest.cacheOptions = { useCache: false };
         }
         // @ts-ignore 'fromCache' is needed only for internal communication between request and response interceptors
         cacheRequest.cacheOptions.fromCache = true;

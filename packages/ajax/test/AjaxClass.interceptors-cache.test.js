@@ -97,7 +97,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
     expect(() => {
       const indexes = addCacheInterceptors(ajax, {
-        useCache: 'always',
+        useCache: true,
         // @ts-ignore needed for test
         timeToLive: '',
       });
@@ -109,7 +109,7 @@ describe('ajax cache', function describeLibCache() {
     // @ts-ignore needed for test
     cacheId = '';
 
-    const indexes = addCacheInterceptors(ajax, { useCache: 'always' });
+    const indexes = addCacheInterceptors(ajax, { useCache: true });
 
     return ajax.get('/test').catch(
       /** @param {Error} err */ err => {
@@ -127,7 +127,7 @@ describe('ajax cache', function describeLibCache() {
 
     expect(() => {
       const indexes = addCacheInterceptors(ajax, {
-        useCache: 'always',
+        useCache: true,
         methods: ['get', 'post'],
       });
       removeCacheInterceptors(ajax, indexes);
@@ -137,7 +137,7 @@ describe('ajax cache', function describeLibCache() {
   it('creates a wrapped ajax object', () => {
     newCacheId();
 
-    const indexes = addCacheInterceptors(ajax, { useCache: 'always' });
+    const indexes = addCacheInterceptors(ajax, { useCache: true });
 
     ['delete', 'get', 'head', 'options', 'post', 'put', 'patch'].forEach(method => {
       expect(ajax[method]).to.be.ok;
@@ -150,7 +150,7 @@ describe('ajax cache', function describeLibCache() {
 
     /** @type {GlobalCacheOptions} */
     const cacheParams = {
-      useCache: 'always',
+      useCache: true,
       methods: ['get'],
       timeToLive: 3600001,
       requestIdentificationFn: () => '',
@@ -176,11 +176,11 @@ describe('ajax cache', function describeLibCache() {
       });
   });
 
-  it("returns the cached object on second call with `useCache: 'always'`", () => {
+  it('returns the cached object on second call with `useCache: true`', () => {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 100,
     });
     const ajaxGetSpy = sinon.spy(ajax, 'get');
@@ -205,7 +205,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'never',
+      useCache: false,
       timeToLive: 100,
     });
     const ajaxGetSpy = sinon.spy(ajax, 'get');
@@ -226,7 +226,7 @@ describe('ajax cache', function describeLibCache() {
       .then(() =>
         ajax.get('/test', {
           cacheOptions: {
-            useCache: 'always',
+            useCache: true,
           },
         }),
       )
@@ -243,7 +243,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 1000,
     });
 
@@ -304,7 +304,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 1000,
     });
 
@@ -365,7 +365,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 0,
     });
 
@@ -390,11 +390,11 @@ describe('ajax cache', function describeLibCache() {
       });
   });
 
-  it("returns the cached object on second call with `useCache: 'always'`, with querystring parameters", () => {
+  it('returns the cached object on second call with `useCache: true`, with querystring parameters', () => {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 100,
     });
 
@@ -428,12 +428,12 @@ describe('ajax cache', function describeLibCache() {
       });
   });
 
-  it("makes two requests when using `useCache: 'never'` in the action", () => {
+  it('makes two requests when using `useCache: false` in the action', () => {
     newCacheId();
     getCacheIdentifier = () => 'cacheIdentifier2';
 
     const ajaxAlwaysGetSpy = sinon.spy(ajax, 'get');
-    const indexes = addCacheInterceptors(ajax, { useCache: 'always' });
+    const indexes = addCacheInterceptors(ajax, { useCache: true });
 
     return ajax
       .get('/test')
@@ -441,7 +441,7 @@ describe('ajax cache', function describeLibCache() {
         expect(ajaxAlwaysGetSpy.calledOnce, 'calledOnce').to.be.true;
         expect(ajaxAlwaysGetSpy.calledWith('/test'));
       })
-      .then(() => ajax.get('/test', { cacheOptions: { useCache: 'never' } }))
+      .then(() => ajax.get('/test', { cacheOptions: { useCache: false } }))
       .then(() => {
         expect(server.requests.length).to.equal(2);
       })
@@ -458,7 +458,7 @@ describe('ajax cache', function describeLibCache() {
     });
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 5000,
     });
     const ajaxGetSpy = sinon.spy(ajax, 'get');
@@ -503,7 +503,7 @@ describe('ajax cache', function describeLibCache() {
 
     const ajaxGetSpy = sinon.spy(ajax, 'get');
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 1000 * 60 * 60,
     });
 
@@ -543,7 +543,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 500,
     });
     const ajaxGetSpy = sinon.spy(ajax, 'get');
@@ -602,7 +602,7 @@ describe('ajax cache', function describeLibCache() {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       timeToLive: 100,
     });
     const ajaxGetSpy = sinon.spy(ajax, 'get');
@@ -643,7 +643,7 @@ describe('ajax cache', function describeLibCache() {
 
     expect(() => {
       const indexes = addCacheInterceptors(ajax, {
-        useCache: 'always',
+        useCache: true,
         // @ts-ignore needed for test
         requestIdentificationFn: 'not a function',
       });
@@ -659,7 +659,7 @@ describe('ajax cache', function describeLibCache() {
     };
     const reqIdSpy = sinon.spy(customRequestIdFn);
     const indexes = addCacheInterceptors(ajax, {
-      useCache: 'always',
+      useCache: true,
       requestIdentificationFn: reqIdSpy,
     });
 

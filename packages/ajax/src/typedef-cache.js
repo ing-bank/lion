@@ -15,7 +15,7 @@
 
 /**
  * @typedef {Object} CacheOptions
- * @property {'always' | 'never'} useCache
+ * @property {boolean} useCache
  * @property {string[]=} methods
  * @property {number=} timeToLive
  * @property {string[]=} invalidateUrls - only available per action (get, post etc)
@@ -25,7 +25,7 @@
 
 /**
  * @typedef {Object} ValidatedCacheOptions
- * @property {'always' | 'never'} useCache
+ * @property {boolean} useCache
  * @property {string[]} methods
  * @property {number} timeToLive
  * @property {string[]=} invalidateUrls - only available per action (get, post etc)
@@ -35,7 +35,7 @@
 
 /**
  * @typedef {Object} GlobalCacheOptions
- * @property {'always' | 'never'} useCache
+ * @property {boolean} useCache
  * @property {string[]=} methods
  * @property {number=} timeToLive
  * @property {RequestIdentificationFn=} requestIdentificationFn
