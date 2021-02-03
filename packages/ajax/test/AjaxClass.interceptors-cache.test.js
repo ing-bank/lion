@@ -422,6 +422,18 @@ describe('ajax cache', function describeLibCache() {
       .then(() => {
         expect(server.requests.length).to.equal(1);
       })
+      .then(() =>
+        // a request with different param should not be cached
+        ajax.get('/test', {
+          params: {
+            q: 'test',
+            page: 2,
+          },
+        }),
+      )
+      .then(() => {
+        expect(server.requests.length).to.equal(2);
+      })
       .finally(() => {
         ajaxGetSpy.restore();
         removeCacheInterceptors(ajax, indexes);
