@@ -23,7 +23,7 @@ describe('ajax cache', function describeLibCache() {
 
   /**
    * @param {ajax} ajaxInstance
-   * @param {GlobalCacheOptions} options
+   * @param {CacheOptions} options
    */
   const addCacheInterceptors = (ajaxInstance, options) => {
     const requestInterceptorIndex =
@@ -148,7 +148,7 @@ describe('ajax cache', function describeLibCache() {
   it('preserves ajax configuration', () => {
     newCacheId();
 
-    /** @type {GlobalCacheOptions} */
+    /** @type {CacheOptions} */
     const cacheParams = {
       useCache: true,
       methods: ['get'],
@@ -245,6 +245,7 @@ describe('ajax cache', function describeLibCache() {
     const indexes = addCacheInterceptors(ajax, {
       useCache: true,
       timeToLive: 1000,
+      invalidateUrlsRegex: /foo/gi,
     });
 
     server.respondWith(/\/foo-request-1/, xhr => {
@@ -255,14 +256,8 @@ describe('ajax cache', function describeLibCache() {
       xhr.respond(200, { 'Content-Type': 'application/json' }, '{}');
     });
 
-    const actionConfig = {
-      cacheOptions: {
-        invalidateUrlsRegex: /foo/gi,
-      },
-    };
-
     return ajax
-      .get('/test', actionConfig)
+      .get('/test')
       .then(() => ajax.get('/test'))
       .then(() => {
         expect(server.requests.length).to.equal(1);
@@ -283,7 +278,7 @@ describe('ajax cache', function describeLibCache() {
       .then(() => {
         expect(server.requests.length).to.equal(3);
       })
-      .then(() => ajax.post('/test', {}, actionConfig))
+      .then(() => ajax.post('/test', {}))
       .then(() => {
         expect(server.requests.length).to.equal(4);
       })
@@ -293,7 +288,7 @@ describe('ajax cache', function describeLibCache() {
       })
       .then(() => ajax.get('/foo-request-2'))
       .then(() => {
-        expect(server.requests.length).to.equal(5);
+        expect(server.requests.length).to.equal(6);
       })
       .finally(() => {
         removeCacheInterceptors(ajax, indexes);
@@ -306,6 +301,7 @@ describe('ajax cache', function describeLibCache() {
     const indexes = addCacheInterceptors(ajax, {
       useCache: true,
       timeToLive: 1000,
+      invalidateUrlsRegex: /posts/gi,
     });
 
     server.respondWith(/^\/posts$/, xhr => {
@@ -316,14 +312,8 @@ describe('ajax cache', function describeLibCache() {
       xhr.respond(200, { 'Content-Type': 'application/json' }, '{}');
     });
 
-    const actionConfig = {
-      cacheOptions: {
-        invalidateUrlsRegex: /posts/gi,
-      },
-    };
-
     return ajax
-      .get('/test', actionConfig)
+      .get('/test')
       .then(() => ajax.get('/test'))
       .then(() => {
         expect(server.requests.length).to.equal(1);
@@ -334,6 +324,7 @@ describe('ajax cache', function describeLibCache() {
       })
       .then(() => ajax.get('/posts'))
       .then(() => {
+        // no new requests, cached
         expect(server.requests.length).to.equal(2);
       })
       .then(() => ajax.get('/posts/1'))
@@ -342,19 +333,25 @@ describe('ajax cache', function describeLibCache() {
       })
       .then(() => ajax.get('/posts/1'))
       .then(() => {
+        // no new requests, cached
         expect(server.requests.length).to.equal(3);
       })
-      .then(() => ajax.post('/test', {}, actionConfig))
+      .then(() =>
+        // cleans cache for defined urls
+        ajax.post('/test', {}),
+      )
       .then(() => {
         expect(server.requests.length).to.equal(4);
       })
       .then(() => ajax.get('/posts'))
       .then(() => {
+        // new requests, cache is cleaned
         expect(server.requests.length).to.equal(5);
       })
       .then(() => ajax.get('/posts/1'))
       .then(() => {
-        expect(server.requests.length).to.equal(5);
+        // new requests, cache is cleaned
+        expect(server.requests.length).to.equal(6);
       })
       .finally(() => {
         removeCacheInterceptors(ajax, indexes);

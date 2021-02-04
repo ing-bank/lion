@@ -76,8 +76,14 @@ class Cache {
     this._validateCache();
 
     Object.keys(this._cacheObject).forEach(key => {
-      if (regex.test(key)) {
-        delete this._cacheObject[key];
+      const notMatch = !new RegExp(regex).test(key);
+
+      if (notMatch) return;
+
+      const isDataDeleted = delete this._cacheObject[key];
+
+      if (!isDataDeleted) {
+        throw new Error(`Failed to delete cache for a request '${key}'`);
       }
     });
   }
@@ -194,7 +200,7 @@ export const validateOptions = ({
 /**
  * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
- * @param {GlobalCacheOptions} globalCacheOptions
+ * @param {CacheOptions} globalCacheOptions
  */
 export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
   const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
@@ -284,7 +290,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
 /**
  * Response interceptor to cache relevant requests
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
- * @param {GlobalCacheOptions} globalCacheOptions
+ * @param {CacheOptions} globalCacheOptions
  */
 export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
   const validatedInitialCacheOptions = validateOptions(globalCacheOptions);

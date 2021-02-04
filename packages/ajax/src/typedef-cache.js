@@ -34,14 +34,6 @@
  */
 
 /**
- * @typedef {Object} GlobalCacheOptions
- * @property {boolean} useCache
- * @property {string[]=} methods
- * @property {number=} timeToLive
- * @property {RequestIdentificationFn=} requestIdentificationFn
- */
-
-/**
  * @typedef {Object} CacheRequestExtension
  * @property {CacheOptions=} cacheOptions
  * @property {number} status
