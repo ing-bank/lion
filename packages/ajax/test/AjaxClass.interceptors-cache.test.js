@@ -164,11 +164,7 @@ describe('ajax cache', function describeLibCache() {
       .then(() => {
         const configArg = ajaxProxyGetSpy.args[0][1];
         expect(ajaxProxyGetSpy).to.be.calledOnceWith('/test');
-        expect(JSON.stringify(configArg)).to.be.equal(
-          JSON.stringify({
-            ...ajaxOptions,
-          }),
-        );
+        expect(configArg).to.eql(ajaxOptions);
       })
       .finally(() => {
         ajaxProxyGetSpy.restore();
@@ -358,7 +354,7 @@ describe('ajax cache', function describeLibCache() {
       });
   });
 
-  it('does not returns the cached object on second call default timeToLive`', () => {
+  it('caches response but does not return it when expiration time is 0', () => {
     newCacheId();
 
     const indexes = addCacheInterceptors(ajax, {

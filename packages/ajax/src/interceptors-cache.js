@@ -119,6 +119,8 @@ export const searchParamSerializer = params =>
 
 /**
  * Returns the active cache instance for the current session
+ * If 'cacheIdentifier' changes the cache is reset, we avoid situation of accessing old cache
+ * and proactively clean it
  * @param {string} cacheIdentifier usually the refreshToken of the owner of the cache
  */
 const getCache = cacheIdentifier => {

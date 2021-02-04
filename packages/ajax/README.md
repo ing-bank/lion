@@ -248,10 +248,8 @@ const globalCacheOptions = {
   timeToLive: 50, // default: one hour (the cache instance will be replaced in 1 hour, regardless of this setting)
   methods: ['get'], // default: ['get'] NOTE for now only 'get' is supported
   // requestIdentificationFn: (requestConfig) => { }, // see docs below for more info
-
-  // Note:
-  // invalidateUrls: not available for global cache config, see docs below for more info
-  // invalidateUrlsRegex: not available for global cache config, see docs below for more info
+  // invalidateUrls: [], see docs below for more info
+  // invalidateUrlsRegex: RegExp, // see docs below for more info
 };
 
 // pass a function to the interceptorFactory that retrieves a cache identifier
@@ -265,8 +263,6 @@ class TodoService {
     this.localAjaxConfig = {
       cacheOptions: {
         invalidateUrls: ['/api/todosbykeyword'], // default: []
-        // invalidateUrlsRegex: RegExp, // see docs below for more info
-        // requestIdentificationFn: (requestConfig) => { }, // see docs below for more info
       },
     };
   }
@@ -295,6 +291,8 @@ class TodoService {
 }
 ```
 
+If a value returned by `cacheIdentifier` changes the cache is reset. We avoid situation of accessing old cache and proactively clean it, for instance when a user session is ended.
+
 ### Ajax cache Options
 
 ```js
@@ -319,13 +317,11 @@ const cacheOptions = {
   // `invalidateUrls`: an array of strings that for each string that partially
   // occurs as key in the cache, will be removed
   // default: []
-  // This option can be used only in cache config per action (get, post etc)
   // Note: can be invalidated only by non-get request to the same url
   invalidateUrls: ['/api/todosbykeyword'],
 
   // `invalidateUrlsRegex`: a RegExp object to match and delete
   // each matched key in the cache
-  // This option can be used only in cache config per action (get, post etc)
   // Note: can be invalidated only by non-get request to the same url
   invalidateUrlsRegex: /posts/
 
