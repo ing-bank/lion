@@ -27,8 +27,7 @@ npm i --save @lion/ajax
 
 #### GET request
 
-```js
-import { ajax } from '@lion/ajax';
+### Example requests
 
 const response = await ajax.request('/api/users');
 const users = await response.json();
