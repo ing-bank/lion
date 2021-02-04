@@ -213,7 +213,7 @@ import {
 } from '@lion-web/ajax.js';
 
 const globalCacheOptions = {
-  useCache: 'always',
+  useCache: true,
   timeToLive: 1000 * 60 * 5, // 5 minutes
 };
 // Cache is removed each time an identifier changes,
@@ -244,7 +244,7 @@ import {
 const getCacheIdentifier = () => getActiveProfile().profileId;
 
 const globalCacheOptions = {
-  useCache: 'never',
+  useCache: false,
   timeToLive: 50, // default: one hour (the cache instance will be replaced in 1 hour, regardless of this setting)
   methods: ['get'], // default: ['get'] NOTE for now only 'get' is supported
   // requestIdentificationFn: (requestConfig) => { }, // see docs below for more info
@@ -298,9 +298,9 @@ If a value returned by `cacheIdentifier` changes the cache is reset. We avoid si
 ```js
 const cacheOptions = {
   // `useCache`: determines wether or not to use the cache
-  // can be string 'always' | 'never'
-  // default: 'never'
-  useCache: 'always',
+  // can be boolean
+  // default: false
+  useCache: true,
 
   // `timeToLive`: is the time the cache should be kept in ms
   // default: 0
@@ -309,7 +309,7 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 5,
 
   // `methods`: an array of methods on which this configuration is applied
-  // Note: when `useCache` is `never` this will not be used
+  // Note: when `useCache` is `false` this will not be used
   // NOTE: ONLY GET IS SUPPORTED
   // default: ['get']
   methods: ['get'],
