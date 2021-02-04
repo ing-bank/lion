@@ -1,4 +1,4 @@
-import { aTimeout, expect } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
 import { stub } from 'sinon';
 import { AjaxClient, AjaxClientFetchError } from '@lion/ajax';
 
