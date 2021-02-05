@@ -110,12 +110,9 @@ let caches = {};
  * @param {Params} params query string parameters object
  * @returns {string} of querystring parameters WITHOUT `?` or empty string ''
  */
-export const searchParamSerializer = params =>
-  params
-    ? Object.keys(params)
-        .map(key => `${key}=${params[key]}`)
-        .join('&')
-    : '';
+export const searchParamSerializer = (params = {}) =>
+  // @ts-ignore
+  typeof params === 'object' ? new URLSearchParams(params).toString() : '';
 
 /**
  * Returns the active cache instance for the current session
