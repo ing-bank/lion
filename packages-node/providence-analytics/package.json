@@ -65,5 +65,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./src/program/providence.js",
+    "./src/cli/index.js": "./src/cli/index.js"
   }
 }

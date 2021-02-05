@@ -1,6 +1,6 @@
 import { html } from '@lion/core';
 import { localize } from '@lion/localize';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
 import '../lion-input-amount.js';
 import { formatAmount } from '../src/formatters.js';

@@ -45,5 +45,10 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-radio": "./lion-radio.js",
+    "./lion-radio-group": "./lion-radio-group.js"
   }
 }

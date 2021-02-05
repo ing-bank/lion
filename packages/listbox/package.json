@@ -46,5 +46,12 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./test-suites/*": "./test-suites/*",
+    "./lion-listbox": "./lion-listbox.js",
+    "./lion-option": "./lion-option.js",
+    "./lion-options": "./lion-options.js"
   }
 }

@@ -1,4 +1,4 @@
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import '../lion-checkbox-group.js';
 import '../lion-checkbox.js';

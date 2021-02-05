@@ -6,7 +6,7 @@ import {
   LitElement,
   SlotMixin,
 } from '@lion/core';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import '@lion/core/differentKeyEventNamesShimIE';
 
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';

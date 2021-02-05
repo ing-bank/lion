@@ -44,5 +44,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-dialog": "./lion-dialog.js"
   }
 }

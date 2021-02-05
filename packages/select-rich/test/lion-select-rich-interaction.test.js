@@ -1,9 +1,9 @@
 import { Required } from '@lion/form-core';
 import { expect, html, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
 import { browserDetection } from '@lion/core';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
-import '@lion/listbox/lion-option.js';
-import '@lion/listbox/lion-options.js';
+import '@lion/core/differentKeyEventNamesShimIE';
+import '@lion/listbox/lion-option';
+import '@lion/listbox/lion-options';
 import '../lion-select-rich.js';
 
 /**

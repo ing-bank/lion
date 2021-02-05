@@ -1,5 +1,5 @@
 import { LitElement } from '@lion/core';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import {
   defineCE,
   expect,
@@ -11,7 +11,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { IsNumber, Validator, LionField } from '@lion/form-core';
-import '@lion/form-core/lion-field.js';
+import '@lion/form-core/lion-field';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
 
 /**

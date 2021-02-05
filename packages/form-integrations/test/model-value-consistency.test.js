@@ -3,31 +3,31 @@ import { expect, html, unsafeStatic, fixture } from '@open-wc/testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
 
-import '@lion/input/lion-input.js';
-import '@lion/input-amount/lion-input-amount.js';
-import '@lion/input-date/lion-input-date.js';
-import '@lion/input-datepicker/lion-input-datepicker.js';
-import '@lion/input-email/lion-input-email.js';
-import '@lion/input-iban/lion-input-iban.js';
-import '@lion/input-range/lion-input-range.js';
-import '@lion/textarea/lion-textarea.js';
+import '@lion/input/lion-input';
+import '@lion/input-amount/lion-input-amount';
+import '@lion/input-date/lion-input-date';
+import '@lion/input-datepicker/lion-input-datepicker';
+import '@lion/input-email/lion-input-email';
+import '@lion/input-iban/lion-input-iban';
+import '@lion/input-range/lion-input-range';
+import '@lion/textarea/lion-textarea';
 
-import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/checkbox-group/lion-checkbox.js';
+import '@lion/checkbox-group/lion-checkbox-group';
+import '@lion/checkbox-group/lion-checkbox';
 
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio-group/lion-radio.js';
+import '@lion/radio-group/lion-radio-group';
+import '@lion/radio-group/lion-radio';
 
-import '@lion/select/lion-select.js';
+import '@lion/select/lion-select';
 
-import '@lion/combobox/lion-combobox.js';
-import '@lion/listbox/lion-listbox.js';
-import '@lion/listbox/lion-option.js';
-import '@lion/select-rich/lion-select-rich.js';
+import '@lion/combobox/lion-combobox';
+import '@lion/listbox/lion-listbox';
+import '@lion/listbox/lion-option';
+import '@lion/select-rich/lion-select-rich';
 
-import '@lion/fieldset/lion-fieldset.js';
-import '@lion/form/lion-form.js';
-import '@lion/form-core/lion-field.js';
+import '@lion/fieldset/lion-fieldset';
+import '@lion/form/lion-form';
+import '@lion/form-core/lion-field';
 
 /**
  * @typedef {import('@lion/core').LitElement} LitElement

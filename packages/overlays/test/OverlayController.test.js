@@ -1,8 +1,9 @@
 /* eslint-disable no-new */
-import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
+
+import '@lion/core/differentKeyEventNamesShimIE';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
 import { keyCodes } from '../src/utils/key-codes.js';

@@ -1,24 +1,24 @@
 import { LitElement, html } from '@lion/core';
 import { Required, MinLength } from '@lion/form-core';
-import '@lion/form/lion-form.js';
-import '@lion/fieldset/lion-fieldset.js';
-import '@lion/input/lion-input.js';
-import '@lion/input-date/lion-input-date.js';
-import '@lion/input-datepicker/lion-input-datepicker.js';
-import '@lion/input-amount/lion-input-amount.js';
-import '@lion/input-iban/lion-input-iban.js';
-import '@lion/input-email/lion-input-email.js';
-import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/checkbox-group/lion-checkbox.js';
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio-group/lion-radio.js';
-import '@lion/select/lion-select.js';
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/select-rich/lion-options.js';
-import '@lion/select-rich/lion-option.js';
-import '@lion/input-range/lion-input-range.js';
-import '@lion/textarea/lion-textarea.js';
-import '@lion/button/lion-button.js';
+import '@lion/form/lion-form';
+import '@lion/fieldset/lion-fieldset';
+import '@lion/input/lion-input';
+import '@lion/input-date/lion-input-date';
+import '@lion/input-datepicker/lion-input-datepicker';
+import '@lion/input-amount/lion-input-amount';
+import '@lion/input-iban/lion-input-iban';
+import '@lion/input-email/lion-input-email';
+import '@lion/checkbox-group/lion-checkbox-group';
+import '@lion/checkbox-group/lion-checkbox';
+import '@lion/radio-group/lion-radio-group';
+import '@lion/radio-group/lion-radio';
+import '@lion/select/lion-select';
+import '@lion/select-rich/lion-select-rich';
+import '@lion/select-rich/lion-options';
+import '@lion/select-rich/lion-option';
+import '@lion/input-range/lion-input-range';
+import '@lion/textarea/lion-textarea';
+import '@lion/button/lion-button';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {

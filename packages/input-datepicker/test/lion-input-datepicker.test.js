@@ -1,5 +1,4 @@
-import { LionCalendar } from '@lion/calendar';
-import { isSameDate } from '@lion/calendar/src/utils/isSameDate.js';
+import { LionCalendar, isSameDate } from '@lion/calendar';
 import { html, LitElement } from '@lion/core';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';

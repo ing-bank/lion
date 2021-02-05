@@ -55,5 +55,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-combobox": "./lion-combobox.js"
   }
 }

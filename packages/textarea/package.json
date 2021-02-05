@@ -45,5 +45,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-textarea": "./lion-textarea.js"
   }
 }

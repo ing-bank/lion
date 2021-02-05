@@ -1,5 +1,4 @@
 import { html, LitElement } from '@lion/core';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import {
   getMonthNames,
   getWeekdayNames,
@@ -7,6 +6,8 @@ import {
   LocalizeMixin,
   normalizeDateTime,
 } from '@lion/localize';
+
+import '@lion/core/differentKeyEventNamesShimIE';
 import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';

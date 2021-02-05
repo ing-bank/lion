@@ -43,5 +43,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-progress-indicator": "./lion-progress-indicator.js"
   }
 }

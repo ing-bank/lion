@@ -1,4 +1,4 @@
-import { CalendarObject } from '@lion/calendar/test-helpers.js';
+import { CalendarObject } from '@lion/calendar/test-helpers';
 
 export class DatepickerInputObject {
   /** @param {import('../src/LionInputDatepicker').LionInputDatepicker} el */
