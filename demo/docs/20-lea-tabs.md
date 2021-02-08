@@ -34,7 +34,7 @@ export const main = () => html`
 
 ### Installation
 
-```sh
+```bash
 npm i --save @lion/tabs;
 ```
 

@@ -38,7 +38,7 @@ detailed (file) level how those components are being consumed by which projects.
 
 ### Install providence
 
-```sh
+```bash
 npm i --save-dev providence-analytics
 ```
 
@@ -157,7 +157,7 @@ Analyzers can be described as predefined queries that use AST traversal.
 
 Run:
 
-```sh
+```bash
 providence analyze
 ```
 
@@ -179,7 +179,7 @@ export const analyzerQuery = () => html`
 
 ### How to add a new search target project
 
-```sh
+```bash
 git submodule add <git-url> ./providence-input-data/search-targets/<project-name>
 ```
 
@@ -189,7 +189,7 @@ By adding a reference project, you can automatically see how code in your refere
 used across the search target projects.
 Under the hood, this automatically creates a set of queries for you.
 
-```sh
+```bash
 git submodule add <git-url> ./providence-input-data/references/<project-name>
 ```
 
@@ -197,7 +197,7 @@ git submodule add <git-url> ./providence-input-data/references/<project-name>
 
 Please run:
 
-```sh
+```bash
 git submodule update --init --recursive
 ```
 
@@ -205,6 +205,6 @@ git submodule update --init --recursive
 
 Please run:
 
-```sh
+```bash
 sh ./rm-submodule.sh <path/to/submodule>
 ```

@@ -1,11 +1,5 @@
 # Extending Lion Documentation
 
-```js script
-export default {
-  title: 'Guidelines/Extending documentation',
-};
-```
-
 If you extend [Lion](https://lion-web-components.netlify.app/) components, you don't only want to reuse the components, but you probably want to reuse the documentation (Storybook demos) as well. Wouldn't it be nice to just take it all from lion, but replace it with your own design system extension, so you don't have the extra maintenance of essentially copying the docs from `Lion` for your own design system implementation?
 
 In this blog we will explain how `Lion` supports this use case, and allows you to extend not just the components, but also the documentation.
@@ -29,13 +23,13 @@ For step 1, we can use `@open-wc/demoing-storybook` version 2 or higher, which u
 
 Install it manually (and see the docs for configuring):
 
-```sh
+```bash
 npm i @open-wc/demoing-storybook --save-dev
 ```
 
 Or scaffold it with basic configuration by doing
 
-```sh
+```bash
 npm init @open-wc
 ```
 
@@ -70,7 +64,7 @@ To do this we make use of [Providence](https://lion-web-components.netlify.app/?
 
 So lets install it:
 
-```sh
+```bash
 npm i providence-analytics --save-dev
 ```
 
@@ -109,7 +103,7 @@ This will analyse the JavaScript script and story content inside the markdown fi
 
 So all you need to do is to install this plugin:
 
-```sh
+```bash
 npm i babel-plugin-extend-docs --save-dev
 ```
 

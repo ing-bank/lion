@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Discover",
+    "children": [
+      {
+        "text": "Blog",
+        "href": "/blog/"
+      },
+      {
+        "text": "Help and Feedback",
+        "href": "https://github.com/ing-bank/lion/issues"
+      }
+    ]
+  },
+  {
+    "name": "Follow",
+    "children": [
+      {
+        "text": "Github",
+        "href": "https://github.com/ing-bank/lion"
+      },
+      {
+        "text": "Twitter",
+        "href": "https://twitter.com/daKmoR"
+      },
+      {
+        "text": "Slack",
+        "href": "/about/slack/"
+      }
+    ]
+  },
+  {
+    "name": "Support",
+    "children": [
+      {
+        "text": "Contribute",
+        "href": "https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md"
+      }
+    ]
+  }
+]
