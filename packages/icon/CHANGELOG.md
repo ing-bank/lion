@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.5
+
+### Patch Changes
+
+- c913c973: Export the IconManager in @lion/icon index.js entrypoint.
+
 ## 0.9.4
 
 ### Patch Changes
