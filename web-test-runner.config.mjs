@@ -35,7 +35,7 @@ export default {
     },
   },
   browsers: [
-    playwrightLauncher({ product: 'firefox', concurrency: 1 }),
+    playwrightLauncher({ product: 'firefox' }),
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
