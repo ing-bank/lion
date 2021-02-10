@@ -26,7 +26,7 @@
     "debug": "cd ../../ && npm run debug -- --group input",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser -- --group input"
   },
   "sideEffects": [
