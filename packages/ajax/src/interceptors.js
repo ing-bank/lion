@@ -1,5 +1,3 @@
-import { localize } from '@lion/localize';
-
 /**
  * @typedef {import('./AjaxClient').RequestInterceptor} RequestInterceptor
  */
@@ -21,7 +19,11 @@ export function getCookie(name, _document = document) {
  */
 export async function acceptLanguageRequestInterceptor(request) {
   if (!request.headers.has('accept-language')) {
-    request.headers.set('accept-language', localize.locale);
+    let locale = document.documentElement.lang || 'en';
+    if (document.documentElement.getAttribute('data-localize-lang')) {
+      locale = document.documentElement.getAttribute('data-localize-lang') || 'en';
+    }
+    request.headers.set('accept-language', locale);
   }
   return request;
 }

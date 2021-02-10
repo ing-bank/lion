@@ -1,10 +1,9 @@
 import { expect } from '@open-wc/testing';
-import { localize } from '@lion/localize';
 import {
   createXSRFRequestInterceptor,
   getCookie,
   acceptLanguageRequestInterceptor,
-} from '../src/interceptors.js';
+} from '@lion/ajax';
 
 describe('interceptors', () => {
   describe('getCookie()', () => {
@@ -31,7 +30,7 @@ describe('interceptors', () => {
     it('adds the locale as accept-language header', () => {
       const request = new Request('/foo/');
       acceptLanguageRequestInterceptor(request);
-      expect(request.headers.get('accept-language')).to.equal(localize.locale);
+      expect(request.headers.get('accept-language')).to.equal('en');
     });
 
     it('does not change an existing accept-language header', () => {
@@ -51,7 +50,7 @@ describe('interceptors', () => {
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal('foo');
     });
 
-    it('doesnt set anything if the cookie is not there', () => {
+    it('does not set anything if the cookie is not there', () => {
       const interceptor = createXSRFRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', {
         cookie: 'XXSRF-TOKEN=foo',
       });
