@@ -5,6 +5,7 @@ module.exports = {
       files: ['**/*.js'],
       rules: {
         'wc/guard-super-call': 'off', // types will prevent you from calling the super if it's not in the base class, making the guard unnecessary
+        'no-await-in-loop': 'off',
       },
     },
     {
