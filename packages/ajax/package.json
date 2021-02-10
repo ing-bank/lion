@@ -1,7 +1,7 @@
 {
   "name": "@lion/ajax",
   "version": "0.5.15",
-  "description": "Thin wrapper around fetch.",
+  "description": "Thin wrapper around fetch with support for interceptors.",
   "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -29,9 +29,6 @@
     "prepublishOnly": "../../scripts/npm-prepublish.js",
     "test": "cd ../../ && npm run test:browser -- --group ajax"
   },
-  "dependencies": {
-    "@lion/localize": "0.15.5"
-  },
   "keywords": [
     "ajax",
     "fetch",
@@ -41,5 +38,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js"
   }
 }

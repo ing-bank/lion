@@ -1,6 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { ajax, setAjax } from '../src/ajax.js';
-import { AjaxClient } from '../src/AjaxClient.js';
+import { ajax, setAjax, AjaxClient } from '@lion/ajax';
 
 describe('ajax', () => {
   it('exports an instance of AjaxClient', () => {

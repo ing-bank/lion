@@ -1507,25 +1507,6 @@
   dependencies:
     vary "^1.1.2"
 
-"@lion/core@0.13.4":
-  version "0.13.4"
-  resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.13.4.tgz#397f324c56d19f5fc84b9a774fe8169f1c002bb0"
-  integrity sha512-0wcW8WDACxH2LQNZgFG1IoPqrTxyGvusQxY+eXTUzw7rv7a/gYa0t/jh+l45NOlYfKdjyXQLWr121W+NCShqiQ==
-  dependencies:
-    "@open-wc/dedupe-mixin" "^1.2.18"
-    "@open-wc/scoped-elements" "^1.2.2"
-    lit-element "~2.4.0"
-    lit-html "^1.3.0"
-
-"@lion/localize@0.15.1":
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/@lion/localize/-/localize-0.15.1.tgz#0b40f6cb1ecfbb6f56e0efa8c871c9338e5436ea"
-  integrity sha512-cjcE+XQlx4Ehs+rlsJEwD8xvJAki/q0yWtRwH6suuV7hrVpZeMMkOBFjvM07xQEUgzmdjo9FT9TWrsE/keR/RA==
-  dependencies:
-    "@bundled-es-modules/message-format" "6.0.4"
-    "@lion/core" "0.13.4"
-    singleton-manager "1.2.0"
-
 "@manypkg/find-root@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@manypkg/find-root/-/find-root-1.1.0.tgz#a62d8ed1cd7e7d4c11d9d52a8397460b5d4ad29f"
@@ -1848,7 +1829,7 @@
     "@open-wc/rollup-plugin-html" "^1.2.5"
     polyfills-loader "^1.7.5"
 
-"@open-wc/scoped-elements@^1.2.2", "@open-wc/scoped-elements@^1.2.4", "@open-wc/scoped-elements@^1.3.3":
+"@open-wc/scoped-elements@^1.2.4", "@open-wc/scoped-elements@^1.3.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-1.3.3.tgz#fe008aef4d74fb00c553c900602960638fc1c7b0"
   integrity sha512-vFIQVYYjFw67odUE4JzZOpctnF7S/2DX+S+clrL3bQPql7HvEnV0wMFwOWUavQTuCJi0rfU8GTcNMiUybio+Yg==
@@ -10767,11 +10748,6 @@ simplebar@^4.2.3:
     lodash.memoize "^4.1.2"
     lodash.throttle "^4.1.1"
     resize-observer-polyfill "^1.5.1"
-
-singleton-manager@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/singleton-manager/-/singleton-manager-1.2.0.tgz#5f80f89bda3a49b926ce6f721c14abdd8bff067a"
-  integrity sha512-CJvFjCjO6rhAB+N10CJ3nlb6EbuoZv+TEA5y+91oGRHk0egtQJMTbDEUQBg6gw7ksrTgjMhg4RRngE1Km6diAQ==
 
 sinon-chai@^3.3.0:
   version "3.5.0"

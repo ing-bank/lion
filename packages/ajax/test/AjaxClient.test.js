@@ -1,8 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { stub } from 'sinon';
-import { localize } from '@lion/localize';
-import { AjaxClient } from '../src/AjaxClient.js';
-import { AjaxClientFetchError } from '../src/AjaxClientFetchError.js';
+import { AjaxClient, AjaxClientFetchError } from '@lion/ajax';
 
 describe('AjaxClient', () => {
   /** @type {import('sinon').SinonStub} */
@@ -154,7 +152,7 @@ describe('AjaxClient', () => {
     it('is set by default based on localize.locale', async () => {
       await ajax.request('/foo');
       const request = fetchStub.getCall(0).args[0];
-      expect(request.headers.get('accept-language')).to.equal(localize.locale);
+      expect(request.headers.get('accept-language')).to.equal('en');
     });
 
     it('can be disabled', async () => {

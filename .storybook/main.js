@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   stories: [
-    '../{packages,packages-node}/*/README.md',
+    '../{packages,packages-node}/!(ajax)*/README.md',
     '../{packages,packages-node}/*/docs/*.md',
     '../{packages,packages-node}/*/docs/!(assets)**/*.md',
     '../packages/helpers/*/README.md',
