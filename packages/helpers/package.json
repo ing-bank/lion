@@ -21,6 +21,7 @@
     "sortEachDepth"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group helpers",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group helpers",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group helpers",
@@ -47,5 +48,6 @@
     ".": "./index.js",
     "./sb-action-logger": "./sb-action-logger.js",
     "./sb-locale-switcher": "./sb-locale-switcher.js"
-  }
+  },
+  "customElementsManifest": "custom-elements.json"
 }

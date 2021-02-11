@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/helper-wc/h-output.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "HelperOutput",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "field",
+              "fieldName": "field"
+            },
+            {
+              "name": "show",
+              "fieldName": "show"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "field",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "show",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__rerender",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__renderProp",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "p"
+                }
+              ]
+            }
+          ],
+          "tagName": "h-output"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "HelperOutput",
+          "declaration": {
+            "name": "HelperOutput",
+            "module": "./docs/helper-wc/h-output.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "h-output",
+          "declaration": {
+            "name": "HelperOutput",
+            "module": "./docs/helper-wc/h-output.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test/helpers/umbrella-form.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "UmbrellaForm",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "_lionFormNode",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "umbrella-form"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UmbrellaForm",
+          "declaration": {
+            "name": "UmbrellaForm",
+            "module": "./test/helpers/umbrella-form.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "umbrella-form",
+          "declaration": {
+            "name": "UmbrellaForm",
+            "module": "./test/helpers/umbrella-form.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/15-features-overview.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/17-validation-examples.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/20-system-overview.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/25-system-model-value.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/30-system-formatting.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/35-system-interaction-states.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/40-system-creating-a-custom-field.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/50-content-inside-fields.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/60-dialog-integration.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/fieldset-examples.md",
+      "declarations": [],
+      "exports": []
+    }
+  ]
+}

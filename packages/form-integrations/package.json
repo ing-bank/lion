@@ -23,6 +23,7 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group form-integrations",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-integrations",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-integrations",
@@ -65,5 +66,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "exports": "./index.js"
+  "exports": "./index.js",
+  "customElementsManifest": "custom-elements.json"
 }

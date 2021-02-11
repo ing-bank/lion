@@ -23,6 +23,7 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group localize",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group localize",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group localize",
@@ -46,5 +47,6 @@
   "exports": {
     ".": "./index.js",
     "./test-helpers": "./test-helpers.js"
-  }
+  },
+  "customElementsManifest": "custom-elements.json"
 }

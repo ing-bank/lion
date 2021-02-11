@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionSelect",
+          "declaration": {
+            "name": "LionSelect",
+            "module": "./src/LionSelect.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-select.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-select",
+          "declaration": {
+            "name": "LionSelect",
+            "module": "./src/LionSelect.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionSelect.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionSelect",
+          "events": [
+            {
+              "name": "user-input-changed",
+              "type": {
+                "type": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LionFieldWithSelect",
+            "module": "./src/LionSelect.js"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "disconnectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_proxyChangeEvent",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-select"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionSelect",
+          "declaration": {
+            "name": "LionSelect",
+            "module": "./src/LionSelect.js"
+          }
+        }
+      ]
+    }
+  ]
+}

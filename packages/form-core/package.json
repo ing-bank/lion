@@ -23,6 +23,7 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group form-core",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-core",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-core",
@@ -51,5 +52,6 @@
     "./test-suites/*": "./test-suites/*",
     "./lion-field": "./lion-field.js",
     "./lion-validation-feedback": "./lion-validation-feedback.js"
-  }
+  },
+  "customElementsManifest": "custom-elements.json"
 }

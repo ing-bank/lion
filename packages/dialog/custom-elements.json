@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionDialog",
+          "declaration": {
+            "name": "LionDialog",
+            "module": "./src/LionDialog.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-dialog.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-dialog",
+          "declaration": {
+            "name": "LionDialog",
+            "module": "./src/LionDialog.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/demo-dialog-style.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/demo-dialog-style.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/slots-dialog-content.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "SlotsDialogContent",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "tagName": "slots-dialog-content"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "slots-dialog-content",
+          "declaration": {
+            "name": "SlotsDialogContent",
+            "module": "./docs/slots-dialog-content.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/styled-dialog-content.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "StyledDialogContent",
+          "events": [
+            {
+              "name": "close-overlay",
+              "type": {
+                "type": "Event"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "_closeOverlay",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "styled-dialog-content"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "styled-dialog-content",
+          "declaration": {
+            "name": "StyledDialogContent",
+            "module": "./docs/styled-dialog-content.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionDialog.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionDialog",
+          "mixins": [
+            {
+              "name": "OverlayMixin",
+              "package": "@lion/overlays"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-dialog"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionDialog",
+          "declaration": {
+            "name": "LionDialog",
+            "module": "./src/LionDialog.js"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionForm",
+          "declaration": {
+            "name": "LionForm",
+            "module": "./src/LionForm.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-form.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-form",
+          "declaration": {
+            "name": "LionForm",
+            "module": "./src/LionForm.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionForm.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionForm",
+          "events": [
+            {
+              "name": "submit",
+              "type": {
+                "type": "Event"
+              }
+            },
+            {
+              "name": "reset",
+              "type": {
+                "type": "Event"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LionFieldset",
+            "package": "@lion/fieldset"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "disconnectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_formNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "submit",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_submit",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_reset",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__registerEventsForLionForm",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__teardownEventsForLionForm",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-form"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionForm",
+          "declaration": {
+            "name": "LionForm",
+            "module": "./src/LionForm.js"
+          }
+        }
+      ]
+    }
+  ]
+}

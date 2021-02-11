@@ -1,0 +1,886 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionIcon",
+          "declaration": {
+            "name": "LionIcon",
+            "module": "./src/LionIcon.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "icons",
+          "declaration": {
+            "name": "icons",
+            "module": "./src/icons.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setIcons",
+          "declaration": {
+            "name": "setIcons",
+            "module": "./src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-icon.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-icon",
+          "declaration": {
+            "name": "LionIcon",
+            "module": "./src/LionIcon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/IconManager.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "IconManager",
+          "members": [
+            {
+              "kind": "method",
+              "name": "addIconResolver",
+              "privacy": "public",
+              "description": "Adds an icon resolver for the given namespace. An icon resolver is a\nfunction which takes an icon set and an icon name and returns an svg\nicon as a TemplateResult. This function can be sync or async.",
+              "parameters": [
+                {
+                  "name": "namespace",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "iconResolver",
+                  "type": {
+                    "type": "(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing> "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeIconResolver",
+              "privacy": "public",
+              "description": "Removes an icon resolver for a namespace.",
+              "parameters": [
+                {
+                  "name": "namespace",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resolveIcon",
+              "privacy": "public",
+              "description": "Resolves icon for the given parameters. Returns the icon as a svg string.",
+              "return": {
+                "type": {
+                  "type": "Promise<TemplateResult>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "namespace",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "iconset",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "icon",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resolveIconForId",
+              "privacy": "public",
+              "description": "Resolves icon for the given icon id. Returns the icon as a svg string.",
+              "return": {
+                "type": {
+                  "type": "Promise<TemplateResult>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "iconId",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IconManager",
+          "declaration": {
+            "name": "IconManager",
+            "module": "./src/IconManager.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionIcon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionIcon",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "svg",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "privacy": "public",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "iconId",
+              "privacy": "public",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "privacy": "public",
+              "default": "'img'"
+            },
+            {
+              "kind": "method",
+              "name": "_onLabelChanged",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSvg",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "svgObject",
+                  "type": {
+                    "type": "TemplateResult | nothing"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_iconManager",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_onIconIdChanged",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "prevIconId",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "aria-label",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "icon-id",
+              "fieldName": "iconId"
+            },
+            {
+              "name": "role",
+              "fieldName": "role"
+            }
+          ],
+          "tagName": "lion-icon"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionIcon",
+          "declaration": {
+            "name": "LionIcon",
+            "module": "./src/LionIcon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/icons.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "icons"
+        },
+        {
+          "kind": "function",
+          "name": "setIcons",
+          "parameters": [
+            {
+              "name": "newIcons"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "icons",
+          "declaration": {
+            "name": "icons",
+            "module": "./src/icons.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setIcons",
+          "declaration": {
+            "name": "setIcons",
+            "module": "./src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test/hammer.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./test/hammer.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test/heart.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./test/heart.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/iconset-bugs.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "bug01",
+          "declaration": {
+            "name": "bug01",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug02",
+          "declaration": {
+            "name": "bug02",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug05",
+          "declaration": {
+            "name": "bug05",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug06",
+          "declaration": {
+            "name": "bug06",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug08",
+          "declaration": {
+            "name": "bug08",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug12",
+          "declaration": {
+            "name": "bug12",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug19",
+          "declaration": {
+            "name": "bug19",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug23",
+          "declaration": {
+            "name": "bug23",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bug24",
+          "declaration": {
+            "name": "bug24",
+            "module": "./docs/icons/iconset-bugs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/iconset-misc.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "arrowLeft",
+          "declaration": {
+            "name": "arrowLeft",
+            "module": "./docs/icons/iconset-misc.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/iconset-space.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "alienSpaceship",
+          "declaration": {
+            "name": "alienSpaceship",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "meteor",
+          "declaration": {
+            "name": "meteor",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "moonFlag",
+          "declaration": {
+            "name": "moonFlag",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "moon",
+          "declaration": {
+            "name": "moon",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "night",
+          "declaration": {
+            "name": "night",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "orbit",
+          "declaration": {
+            "name": "orbit",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "planet",
+          "declaration": {
+            "name": "planet",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "robot",
+          "declaration": {
+            "name": "robot",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rocket",
+          "declaration": {
+            "name": "rocket",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "satellite",
+          "declaration": {
+            "name": "satellite",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "signal",
+          "declaration": {
+            "name": "signal",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spaceHelmet",
+          "declaration": {
+            "name": "spaceHelmet",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sun",
+          "declaration": {
+            "name": "sun",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "telescope",
+          "declaration": {
+            "name": "telescope",
+            "module": "./docs/icons/iconset-space.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug01.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug01.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug02.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug02.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug05.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug05.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug06.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug06.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug08.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug08.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug12.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug12.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug19.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug19.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug23.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug23.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/bugs/bug24.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/bugs/bug24.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/misc/arrowLeft.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/misc/arrowLeft.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/aliens-spaceship.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/aliens-spaceship.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/meteor.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/meteor.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/moon-flag.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/moon-flag.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/moon.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/moon.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/night.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/night.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/orbit.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/orbit.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/planet.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/planet.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/robot.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/robot.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/rocket.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/rocket.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/satellite.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/satellite.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/signal.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/signal.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/space-helmet.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/space-helmet.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/sun.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/sun.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/icons/space/telescope.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/icons/space/telescope.svg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/system.md",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/system.md"
+          }
+        }
+      ]
+    }
+  ]
+}

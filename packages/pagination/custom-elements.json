@@ -1,0 +1,457 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionPagination",
+          "declaration": {
+            "name": "LionPagination",
+            "module": "./src/LionPagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-pagination.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-pagination",
+          "declaration": {
+            "name": "LionPagination",
+            "module": "./src/LionPagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionPagination.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionPagination",
+          "mixins": [
+            {
+              "name": "LocalizeMixin",
+              "package": "@lion/localize"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "localizeNamespaces",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "privacy": "public",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "privacy": "public",
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "next",
+              "privacy": "public",
+              "description": "Go next in pagination"
+            },
+            {
+              "kind": "method",
+              "name": "first",
+              "privacy": "public",
+              "description": "Go to first page"
+            },
+            {
+              "kind": "method",
+              "name": "last",
+              "privacy": "public",
+              "description": "Go to the last page"
+            },
+            {
+              "kind": "method",
+              "name": "goto",
+              "privacy": "public",
+              "description": "Go to the specific page",
+              "parameters": [
+                {
+                  "name": "pageNumber",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "previous",
+              "privacy": "public",
+              "description": "Go back in pagination"
+            },
+            {
+              "kind": "method",
+              "name": "__fire",
+              "privacy": "private",
+              "description": "Set desired page in the pagination and fire the current changed event.",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "type": "Number"
+                  },
+                  "description": "page number to be set"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__calculateNavList",
+              "privacy": "private",
+              "description": "Calculate nav list based on current page selection.",
+              "return": {
+                "type": {
+                  "type": "(number|'...')[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_prevNextIconTemplate",
+              "privacy": "protected",
+              "description": "Get previous or next button template.\nThis method can be overridden to apply customized template in wrapper.",
+              "return": {
+                "type": {
+                  "type": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "type": "String"
+                  },
+                  "description": "namespace label i.e. next or previous"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_prevNextButtonTemplate",
+              "privacy": "protected",
+              "description": "Get next or previous button template.\nThis method can be overridden to apply customized template in wrapper.",
+              "return": {
+                "type": {
+                  "type": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "type": "String"
+                  },
+                  "description": "namespace label i.e. next or previous"
+                },
+                {
+                  "name": "pageNumber",
+                  "type": {
+                    "type": "Number"
+                  },
+                  "description": "page number to be set"
+                },
+                {
+                  "name": "namespace",
+                  "type": {
+                    "type": "String"
+                  },
+                  "description": "namespace prefix for translations",
+                  "default": "'lion'"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_disabledButtonTemplate",
+              "privacy": "protected",
+              "description": "Get disabled button template.\nThis method can be overridden to apply customized template in wrapper.",
+              "return": {
+                "type": {
+                  "type": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "type": "String"
+                  },
+                  "description": "namespace label i.e. next or previous"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderNavList",
+              "privacy": "protected",
+              "description": "Render navigation list",
+              "return": {
+                "type": {
+                  "type": "TemplateResult[]"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "current",
+              "fieldName": "current"
+            },
+            {
+              "name": "count",
+              "fieldName": "count"
+            }
+          ],
+          "tagName": "lion-pagination"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionPagination",
+          "declaration": {
+            "name": "LionPagination",
+            "module": "./src/LionPagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/bg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/bg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/cs.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/cs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/de.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/de.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/es.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/es.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/hu.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/hu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/it.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/it.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/pl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/pl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ro.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ro.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ru.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ru.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/sk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/sk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/uk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/uk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/zh.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/zh.js"
+          }
+        }
+      ]
+    }
+  ]
+}

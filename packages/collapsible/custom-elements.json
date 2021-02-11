@@ -1,0 +1,423 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionCollapsible",
+          "declaration": {
+            "name": "LionCollapsible",
+            "module": "./src/LionCollapsible.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-collapsible.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-collapsible",
+          "declaration": {
+            "name": "LionCollapsible",
+            "module": "./src/LionCollapsible.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./demo/CustomCollapsible.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "CustomCollapsible",
+          "superclass": {
+            "name": "LionCollapsible",
+            "module": "/demo/src/LionCollapsible.js"
+          },
+          "attributes": [
+            {
+              "name": "transitioning",
+              "fieldName": "transitioning"
+            },
+            {
+              "name": "opened",
+              "fieldName": "opened",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "transitioning",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "privacy": "public",
+              "description": "Wait until transition is finished."
+            },
+            {
+              "kind": "method",
+              "name": "_showAnimation",
+              "privacy": "public",
+              "description": "Trigger show animation and wait for transition to be finished.",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "Object"
+                  },
+                  "description": "element node and its options"
+                },
+                {
+                  "name": "options.contentNode",
+                  "type": {
+                    "type": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hideAnimation",
+              "privacy": "public",
+              "description": "Trigger hide animation and wait for transition to be finished.",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "Object"
+                  },
+                  "description": "element node and its options"
+                },
+                {
+                  "name": "options.contentNode",
+                  "type": {
+                    "type": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_waitForTransition",
+              "privacy": "public",
+              "description": "Wait until the transition event is finished.",
+              "return": {
+                "type": {
+                  "type": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "Object"
+                  },
+                  "description": "element node and its options"
+                },
+                {
+                  "name": "options.contentNode",
+                  "type": {
+                    "type": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__calculateHeight",
+              "privacy": "private",
+              "description": "Calculate total content height after collapsible opens",
+              "parameters": [
+                {
+                  "name": "contentNode",
+                  "type": {
+                    "type": "HTMLElement"
+                  },
+                  "description": "content node"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "opened",
+              "privacy": "public",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "privacy": "public",
+              "description": "Show extra content.",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "privacy": "public",
+              "description": "Hide extra content.",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_invokerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_contentNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_contentHeight",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__openedChanged",
+              "privacy": "private",
+              "description": "Update content slot size and fire `opened-changed` event",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__updateContentSize",
+              "privacy": "private",
+              "description": "Toggle extra content visibility on state change.",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setDefaultState",
+              "privacy": "private",
+              "description": "Set default state for content based on `opened` attr",
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            }
+          ],
+          "tagName": "custom-collapsible",
+          "events": [
+            {
+              "name": "opened-changed",
+              "type": {
+                "type": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "LionCollapsible",
+                "module": "./src/LionCollapsible.js"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CustomCollapsible",
+          "declaration": {
+            "name": "CustomCollapsible",
+            "module": "./demo/CustomCollapsible.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./demo/applyDemoCollapsibleStyles.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./demo/custom-collapsible.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "custom-collapsible",
+          "declaration": {
+            "name": "CustomCollapsible",
+            "module": "./demo/CustomCollapsible.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionCollapsible.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionCollapsible",
+          "events": [
+            {
+              "name": "opened-changed",
+              "type": {
+                "type": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "opened",
+              "fieldName": "opened"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "opened",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "privacy": "public",
+              "description": "Show extra content."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "privacy": "public",
+              "description": "Hide extra content."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "privacy": "public",
+              "description": "Toggle the current(opened/closed) state."
+            },
+            {
+              "kind": "method",
+              "name": "_showAnimation",
+              "privacy": "protected",
+              "description": "Show animation implementation in sub-classer.",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "type": "Object"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hideAnimation",
+              "privacy": "protected",
+              "description": "Hide animation implementation in sub-classer.",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "type": "Object"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_invokerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_contentNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_contentHeight",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__openedChanged",
+              "privacy": "private",
+              "description": "Update content slot size and fire `opened-changed` event"
+            },
+            {
+              "kind": "method",
+              "name": "__updateContentSize",
+              "privacy": "private",
+              "description": "Toggle extra content visibility on state change."
+            },
+            {
+              "kind": "method",
+              "name": "__setDefaultState",
+              "privacy": "private",
+              "description": "Set default state for content based on `opened` attr"
+            }
+          ],
+          "tagName": "lion-collapsible"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionCollapsible",
+          "declaration": {
+            "name": "LionCollapsible",
+            "module": "./src/LionCollapsible.js"
+          }
+        }
+      ]
+    }
+  ]
+}

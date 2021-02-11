@@ -1,0 +1,954 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputIban",
+          "declaration": {
+            "name": "LionInputIban",
+            "module": "./src/LionInputIban.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatIBAN",
+          "declaration": {
+            "name": "formatIBAN",
+            "module": "./src/formatters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseIBAN",
+          "declaration": {
+            "name": "parseIBAN",
+            "module": "./src/parsers.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IsIBAN",
+          "declaration": {
+            "name": "IsIBAN",
+            "module": "./src/validators.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IsCountryIBAN",
+          "declaration": {
+            "name": "IsCountryIBAN",
+            "module": "./src/validators.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IsNotCountryIBAN",
+          "declaration": {
+            "name": "IsNotCountryIBAN",
+            "module": "./src/validators.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-input-iban.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-input-iban",
+          "declaration": {
+            "name": "LionInputIban",
+            "module": "./src/LionInputIban.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionInputIban.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionInputIban",
+          "mixins": [
+            {
+              "name": "LocalizeMixin",
+              "package": "@lion/localize"
+            }
+          ],
+          "superclass": {
+            "name": "LionInput",
+            "package": "@lion/input"
+          },
+          "tagName": "lion-input-iban"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputIban",
+          "declaration": {
+            "name": "LionInputIban",
+            "module": "./src/LionInputIban.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/formatters.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "formatIBAN",
+          "description": "Takes an unformatted IBAN and returns a formatted one.",
+          "return": {
+            "type": {
+              "type": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "modelValue",
+              "type": {
+                "type": "string"
+              },
+              "description": "value to be formatted"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formatIBAN",
+          "declaration": {
+            "name": "formatIBAN",
+            "module": "./src/formatters.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/parsers.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseIBAN",
+          "description": "Parses an IBAN trimming spaces and making uppercase.",
+          "return": {
+            "type": {
+              "type": "string|undefined"
+            }
+          },
+          "parameters": [
+            {
+              "name": "viewValue",
+              "type": {
+                "type": "string"
+              },
+              "description": "value to be parsed"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseIBAN",
+          "declaration": {
+            "name": "parseIBAN",
+            "module": "./src/parsers.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/validators.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "IsIBAN",
+          "superclass": {
+            "name": "Validator",
+            "package": "@lion/form-core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "validatorName",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "execute",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMessage",
+              "privacy": "public",
+              "static": true,
+              "return": {
+                "type": {
+                  "type": "Promise<string|Node>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "type": "object"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.modelValue",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.fieldName",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.params",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.type",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.config",
+                  "type": {
+                    "type": "Object.<string,?>"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.name",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "IsCountryIBAN",
+          "superclass": {
+            "name": "IsIBAN",
+            "module": "/src/validators.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "validatorName",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "execute",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "type": "Boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMessage",
+              "privacy": "public",
+              "static": true,
+              "return": {
+                "type": {
+                  "type": "Promise<string|Node>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "type": "object"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.modelValue",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.fieldName",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.params",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.type",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.config",
+                  "type": {
+                    "type": "Object.<string,?>"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.name",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "IsNotCountryIBAN",
+          "superclass": {
+            "name": "IsIBAN",
+            "module": "/src/validators.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "validatorName",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "execute",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "type": "Boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMessage",
+              "privacy": "public",
+              "static": true,
+              "return": {
+                "type": {
+                  "type": "Promise<string|Node>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "type": "object"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.modelValue",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.fieldName",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.params",
+                  "type": {
+                    "type": "*"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.type",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.config",
+                  "type": {
+                    "type": "Object.<string,?>"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "data.name",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IsIBAN",
+          "declaration": {
+            "name": "IsIBAN",
+            "module": "./src/validators.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IsCountryIBAN",
+          "declaration": {
+            "name": "IsCountryIBAN",
+            "module": "./src/validators.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IsNotCountryIBAN",
+          "declaration": {
+            "name": "IsNotCountryIBAN",
+            "module": "./src/validators.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/bg-BG.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/bg-BG.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/bg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/bg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/cs-CZ.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/cs-CZ.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/cs.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/cs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/de-DE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/de-DE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/de.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/de.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-AU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-AU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-GB.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-GB.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-US.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-US.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/es-ES.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/es-ES.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/es.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/es.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr-BE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr-BE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr-FR.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr-FR.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/hu-HU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/hu-HU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/hu.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/hu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/it-IT.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/it-IT.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/it.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/it.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl-BE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl-BE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl-NL.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl-NL.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/pl-PL.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/pl-PL.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/pl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/pl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ro-RO.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ro-RO.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ro.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ro.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ru-RU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ru-RU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ru.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ru.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/sk-SK.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/sk-SK.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/sk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/sk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/uk-UA.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/uk-UA.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/uk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/uk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/zh.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/zh.js"
+          }
+        }
+      ]
+    }
+  ]
+}

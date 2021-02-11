@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionTabs",
+          "declaration": {
+            "name": "LionTabs",
+            "module": "./src/LionTabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-tabs.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-tabs",
+          "declaration": {
+            "name": "LionTabs",
+            "module": "./src/LionTabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionTabs.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionTabs",
+          "events": [
+            {
+              "name": "selected-changed",
+              "type": {
+                "type": "Event"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "selected-index",
+              "fieldName": "selectedIndex"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "selectedIndex",
+              "privacy": "public",
+              "description": "An index number of the selected tab",
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "__setupSlots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setupStore",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__cleanStore",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__createButtonClickHandler",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "type": "EventHandlerNonNull"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__handleButtonKeyup",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setSelectedIndexWithFocus",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "type": "number"
+                  },
+                  "description": "The new index for focus"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_pairCount",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__updateSelected",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "withFocus",
+                  "default": "false"
+                }
+              ]
+            }
+          ],
+          "tagName": "lion-tabs"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionTabs",
+          "declaration": {
+            "name": "LionTabs",
+            "module": "./src/LionTabs.js"
+          }
+        }
+      ]
+    }
+  ]
+}

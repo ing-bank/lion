@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionFieldset",
+          "declaration": {
+            "name": "LionFieldset",
+            "module": "./src/LionFieldset.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-fieldset.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-fieldset",
+          "declaration": {
+            "name": "LionFieldset",
+            "module": "./src/LionFieldset.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionFieldset.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionFieldset",
+          "mixins": [
+            {
+              "name": "FormGroupMixin",
+              "package": "@lion/form-core"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "tagName": "lion-fieldset"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionFieldset",
+          "declaration": {
+            "name": "LionFieldset",
+            "module": "./src/LionFieldset.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/helpers/demo-fieldset-child.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "demo-fieldset-child",
+          "declaration": {
+            "module": "./docs/helpers/demo-fieldset-child.js"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionRadioGroup",
+          "declaration": {
+            "name": "LionRadioGroup",
+            "module": "./src/LionRadioGroup.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LionRadio",
+          "declaration": {
+            "name": "LionRadio",
+            "module": "./src/LionRadio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-radio-group.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-radio-group",
+          "declaration": {
+            "name": "LionRadioGroup",
+            "module": "./src/LionRadioGroup.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-radio.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-radio",
+          "declaration": {
+            "name": "LionRadio",
+            "module": "./src/LionRadio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionRadio.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionRadio",
+          "mixins": [
+            {
+              "name": "ChoiceInputMixin",
+              "package": "@lion/form-core"
+            }
+          ],
+          "superclass": {
+            "name": "LionInput",
+            "package": "@lion/input"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-radio"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionRadio",
+          "declaration": {
+            "name": "LionRadio",
+            "module": "./src/LionRadio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionRadioGroup.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionRadioGroup",
+          "mixins": [
+            {
+              "name": "ChoiceGroupMixin",
+              "package": "@lion/form-core"
+            },
+            {
+              "name": "FormGroupMixin",
+              "package": "@lion/form-core"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "resetGroup",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-radio-group"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionRadioGroup",
+          "declaration": {
+            "name": "LionRadioGroup",
+            "module": "./src/LionRadioGroup.js"
+          }
+        }
+      ]
+    }
+  ]
+}

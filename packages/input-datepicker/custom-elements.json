@@ -1,0 +1,923 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputDatepicker",
+          "declaration": {
+            "name": "LionInputDatepicker",
+            "module": "./src/LionInputDatepicker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-input-datepicker.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-input-datepicker",
+          "declaration": {
+            "name": "LionInputDatepicker",
+            "module": "./src/LionInputDatepicker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test-helpers.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DatepickerInputObject",
+          "declaration": {
+            "name": "DatepickerInputObject",
+            "module": "./test-helpers/DatepickerInputObject.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionCalendarOverlayFrame.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionCalendarOverlayFrame",
+          "events": [
+            {
+              "name": "close-overlay",
+              "type": {
+                "type": "Event"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "LocalizeMixin",
+              "package": "@lion/localize"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "localizeNamespaces",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__dispatchCloseEvent",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-calendar-overlay-frame"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionCalendarOverlayFrame",
+          "declaration": {
+            "name": "LionCalendarOverlayFrame",
+            "module": "./src/LionCalendarOverlayFrame.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionInputDatepicker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionInputDatepicker",
+          "mixins": [
+            {
+              "name": "ScopedElementsMixin",
+              "package": "@lion/core"
+            },
+            {
+              "name": "ArrowMixin",
+              "package": "@lion/overlays"
+            },
+            {
+              "name": "OverlayMixin",
+              "package": "@lion/overlays"
+            }
+          ],
+          "superclass": {
+            "name": "LionInputDate",
+            "package": "@lion/input-date"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "scopedElements",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "calendarHeading",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_calendarInvokerSlot",
+              "privacy": "public",
+              "default": "'suffix'"
+            },
+            {
+              "kind": "field",
+              "name": "__calendarMinDate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "__calendarMaxDate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "__calendarDisableDates",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "localizeNamespaces",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_invokerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_calendarNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__createUniqueIdForA11y",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "PropertyKey"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__toggleInvokerDisabled",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_overlayTemplate",
+              "privacy": "public",
+              "description": "Defining this overlay as a templates from OverlayMixin\nthis is our source to give as .contentNode to OverlayController.\nImportant: do not change the name of this method."
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_calendarTemplate",
+              "privacy": "public",
+              "description": "Subclassers can replace this with their custom extension of\nLionCalendar, like `<my-calendar id=\"calendar\"></my-calendar>`"
+            },
+            {
+              "kind": "method",
+              "name": "_invokerTemplate",
+              "privacy": "public",
+              "description": "Subclassers can replace this with their custom extension invoker,\nlike `<my-button><calendar-icon></calendar-icon></my-button>`"
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "type": "Object"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__openCalendarOverlay",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_onCalendarOverlayOpened",
+              "privacy": "public",
+              "description": "Lifecycle callback for subclassers"
+            },
+            {
+              "kind": "method",
+              "name": "_onCalendarUserSelectedChanged",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "type": "{ target: { selectedDate: Date }}"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__getSyncDownValue",
+              "privacy": "public",
+              "static": true,
+              "description": "The LionCalendar shouldn't know anything about the modelValue;\nit can't handle Unparseable dates, but does handle 'undefined'",
+              "return": {
+                "type": {
+                  "type": "Date|undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__syncDisabledDates",
+              "privacy": "public",
+              "description": "Validators contain the information to synchronize the input with\nthe min, max and enabled dates of the calendar.",
+              "parameters": [
+                {
+                  "name": "validators",
+                  "type": {
+                    "type": "Validator[]"
+                  },
+                  "description": "errorValidators or warningValidators array"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "calendar-heading",
+              "fieldName": "calendarHeading"
+            }
+          ],
+          "tagName": "lion-input-datepicker"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputDatepicker",
+          "declaration": {
+            "name": "LionInputDatepicker",
+            "module": "./src/LionInputDatepicker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/lion-calendar-overlay-frame.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-calendar-overlay-frame",
+          "declaration": {
+            "name": "LionCalendarOverlayFrame",
+            "module": "./src/LionCalendarOverlayFrame.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test-helpers/DatepickerInputObject.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "DatepickerInputObject",
+          "members": [
+            {
+              "kind": "method",
+              "name": "openCalendar",
+              "privacy": "public",
+              "description": "Methods mimicing User Interaction"
+            },
+            {
+              "kind": "method",
+              "name": "closeCalendar",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "selectMonthDay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "invokerEl",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "overlayEl",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "overlayHeadingEl",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "overlayCloseButtonEl",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "calendarEl",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "calendarObj",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "overlayController",
+              "privacy": "public"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DatepickerInputObject",
+          "declaration": {
+            "name": "DatepickerInputObject",
+            "module": "./test-helpers/DatepickerInputObject.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/bg-BG.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/bg-BG.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/bg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/bg.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/cs-CZ.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/cs-CZ.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/cs.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/cs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/de-DE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/de-DE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/de.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/de.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-AU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-AU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-GB.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-GB.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en-US.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en-US.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/en.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/en.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/es-ES.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/es-ES.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/es.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/es.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr-BE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr-BE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr-FR.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr-FR.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/fr.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/fr.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/hu-HU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/hu-HU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/hu.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/hu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/it-IT.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/it-IT.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/it.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/it.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl-BE.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl-BE.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl-NL.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl-NL.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/nl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/nl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/pl-PL.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/pl-PL.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/pl.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/pl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ro-RO.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ro-RO.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ro.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ro.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ru-RU.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ru-RU.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/ru.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/ru.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/sk-SK.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/sk-SK.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/sk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/sk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/uk-UA.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/uk-UA.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/uk.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/uk.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./translations/zh.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./translations/zh.js"
+          }
+        }
+      ]
+    }
+  ]
+}

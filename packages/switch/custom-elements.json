@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionSwitch",
+          "declaration": {
+            "name": "LionSwitch",
+            "module": "./src/LionSwitch.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LionSwitchButton",
+          "declaration": {
+            "name": "LionSwitchButton",
+            "module": "./src/LionSwitchButton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-switch-button.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-switch-button",
+          "declaration": {
+            "name": "LionSwitchButton",
+            "module": "./src/LionSwitchButton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-switch.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-switch",
+          "declaration": {
+            "name": "LionSwitch",
+            "module": "./src/LionSwitch.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionSwitch.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionSwitch",
+          "mixins": [
+            {
+              "name": "ScopedElementsMixin",
+              "package": "@lion/core"
+            },
+            {
+              "name": "ChoiceInputMixin",
+              "package": "@lion/form-core"
+            }
+          ],
+          "superclass": {
+            "name": "LionField",
+            "package": "@lion/form-core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "scopedElements",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public",
+              "description": "Restore original render function from FormControlMixin.js\nAs it gets overwritten in ChoiceInputMixin"
+            },
+            {
+              "kind": "method",
+              "name": "_groupOneTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "disconnectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_isEmpty",
+              "privacy": "public",
+              "description": "Override this function from ChoiceInputMixin."
+            },
+            {
+              "kind": "method",
+              "name": "__handleButtonSwitchCheckedChanged",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_syncButtonSwitch",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-switch"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionSwitch",
+          "declaration": {
+            "name": "LionSwitch",
+            "module": "./src/LionSwitch.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionSwitchButton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionSwitchButton",
+          "events": [
+            {
+              "name": "checked-changed",
+              "type": {
+                "type": "Event"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DisabledWithTabIndexMixin",
+              "package": "@lion/core"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "role",
+              "fieldName": "role"
+            },
+            {
+              "name": "checked",
+              "fieldName": "checked"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "role",
+              "privacy": "public",
+              "default": "'switch'"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "_toggleChecked",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__checkedStateChange",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__handleKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__handleKeyup",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "description": "We synchronously update aria-checked to support voice over on safari.",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "PropertyKey"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "?"
+                  }
+                }
+              ]
+            }
+          ],
+          "tagName": "lion-switch-button"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionSwitchButton",
+          "declaration": {
+            "name": "LionSwitchButton",
+            "module": "./src/LionSwitchButton.js"
+          }
+        }
+      ]
+    }
+  ]
+}

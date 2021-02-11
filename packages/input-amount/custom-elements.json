@@ -1,0 +1,283 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputAmount",
+          "declaration": {
+            "name": "LionInputAmount",
+            "module": "./src/LionInputAmount.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatAmount",
+          "declaration": {
+            "name": "formatAmount",
+            "module": "./src/formatters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseAmount",
+          "declaration": {
+            "name": "parseAmount",
+            "module": "./src/parsers.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-input-amount.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-input-amount",
+          "declaration": {
+            "name": "LionInputAmount",
+            "module": "./src/LionInputAmount.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionInputAmount.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionInputAmount",
+          "mixins": [
+            {
+              "name": "LocalizeMixin",
+              "package": "@lion/localize"
+            }
+          ],
+          "superclass": {
+            "name": "LionInput",
+            "package": "@lion/input"
+          },
+          "attributes": [
+            {
+              "name": "currency",
+              "fieldName": "currency"
+            },
+            {
+              "name": "modelValue",
+              "fieldName": "modelValue"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "currency",
+              "privacy": "public",
+              "type": {
+                "type": "string | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "modelValue",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_currencyDisplayNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__callParser",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "value",
+                  "default": "this.formattedValue"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_reflectBackOn",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_onCurrencyChanged",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "type": "Object"
+                  }
+                },
+                {
+                  "name": "opts.currency",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setCurrencyDisplayLabel",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "__currencyLabel",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-input-amount"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInputAmount",
+          "declaration": {
+            "name": "LionInputAmount",
+            "module": "./src/LionInputAmount.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/formatters.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "formatAmount",
+          "description": "Formats a number considering the default fraction digits provided by Intl.",
+          "parameters": [
+            {
+              "name": "modelValue",
+              "type": {
+                "type": "number"
+              },
+              "description": "Number to format"
+            },
+            {
+              "name": "givenOptions",
+              "type": {
+                "type": "FormatOptions"
+              },
+              "optional": true
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "formatCurrencyLabel",
+          "parameters": [
+            {
+              "name": "currency",
+              "type": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "locale",
+              "type": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formatAmount",
+          "declaration": {
+            "name": "formatAmount",
+            "module": "./src/formatters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatCurrencyLabel",
+          "declaration": {
+            "name": "formatCurrencyLabel",
+            "module": "./src/formatters.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/parsers.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseAmount",
+          "description": "Parses a number string and returns the best possible javascript number.\nFor edge cases it may use locale to give the best possible assumption.\n\nIt has 3 \"methods\" of returning numbers\n- 'unparseable': becomes just numbers\n- 'withLocale': result depends on given or global locale\n- 'heuristic': result depends on considering separators",
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "type": "string"
+              },
+              "description": "Number to be parsed"
+            },
+            {
+              "name": "options",
+              "type": {
+                "type": "object"
+              },
+              "description": "Locale Options",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseAmount",
+          "declaration": {
+            "name": "parseAmount",
+            "module": "./src/parsers.js"
+          }
+        }
+      ]
+    }
+  ]
+}

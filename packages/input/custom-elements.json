@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInput",
+          "declaration": {
+            "name": "LionInput",
+            "module": "./src/LionInput.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-input.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-input",
+          "declaration": {
+            "name": "LionInput",
+            "module": "./src/LionInput.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionInput.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionInput",
+          "mixins": [
+            {
+              "name": "NativeTextFieldMixin",
+              "package": "@lion/form-core/src/NativeTextFieldMixin"
+            }
+          ],
+          "superclass": {
+            "name": "LionField",
+            "package": "@lion/form-core"
+          },
+          "attributes": [
+            {
+              "name": "readonly",
+              "fieldName": "readOnly"
+            },
+            {
+              "name": "type",
+              "fieldName": "type"
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "default": "'text'"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "PropertyKey"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__delegateReadOnly",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-input"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionInput",
+          "declaration": {
+            "name": "LionInput",
+            "module": "./src/LionInput.js"
+          }
+        }
+      ]
+    }
+  ]
+}

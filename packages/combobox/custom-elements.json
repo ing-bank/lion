@@ -1,0 +1,3954 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionCombobox",
+          "declaration": {
+            "name": "LionCombobox",
+            "module": "./src/LionCombobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-combobox.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-combobox",
+          "declaration": {
+            "name": "LionCombobox",
+            "module": "./src/LionCombobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/LinkMixin.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "LinkMixin"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LinkMixin",
+          "declaration": {
+            "name": "LinkMixin",
+            "module": "./docs/LinkMixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/demo-selection-display.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "DemoSelectionDisplay",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "comboboxElement",
+              "fieldName": "comboboxElement"
+            },
+            {
+              "name": "removeChipOnNextBackspace",
+              "fieldName": "removeChipOnNextBackspace"
+            },
+            {
+              "name": "selectedElements",
+              "fieldName": "selectedElements"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "comboboxElement",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "removeChipOnNextBackspace",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "selectedElements",
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_computeSelectedElements",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "multipleChoice",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onComboboxElementUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__reorderChips",
+              "privacy": "public",
+              "description": "Whenever selectedElements are updated, makes sure that latest added elements\nare shown latest, and deleted elements respect existing order of chips."
+            },
+            {
+              "kind": "method",
+              "name": "_selectedElementTemplate",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "highlight",
+                  "type": {
+                    "type": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_selectedElementsTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__textboxOnKeyup",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "{ key: string; }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__restoreBackspace",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "demo-selection-display"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DemoSelectionDisplay",
+          "declaration": {
+            "name": "DemoSelectionDisplay",
+            "module": "./docs/demo-selection-display.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "demo-selection-display",
+          "declaration": {
+            "name": "DemoSelectionDisplay",
+            "module": "./docs/demo-selection-display.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/lazyRender.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "lazyRender",
+          "description": "In order to speed up the first meaningful paint, use this directive\non content that is:\n- (visually) hidden\n- out of the page flow (having position: 'absolute|fixed')\n\nA good practice would be to use it in overlays,\nFor hidden tab panels, collapsible content etc. it's also useful"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "lazyRender",
+          "declaration": {
+            "name": "lazyRender",
+            "module": "./docs/lazyRender.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/levenshtein.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "default",
+          "parameters": [
+            {
+              "name": "a"
+            },
+            {
+              "name": "b"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "default",
+            "module": "./docs/levenshtein.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionCombobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionCombobox",
+          "mixins": [
+            {
+              "name": "OverlayMixin",
+              "package": "@lion/overlays"
+            }
+          ],
+          "superclass": {
+            "name": "LionListbox",
+            "package": "@lion/listbox"
+          },
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete"
+            },
+            {
+              "name": "match-mode",
+              "fieldName": "matchMode"
+            },
+            {
+              "name": "show-all-on-empty",
+              "fieldName": "showAllOnEmpty"
+            },
+            {
+              "name": "__shouldAutocompleteNextUpdate",
+              "fieldName": "__shouldAutocompleteNextUpdate"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "type": "'none'|'list'|'inline'|'both'"
+              },
+              "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
+              "default": "'both'"
+            },
+            {
+              "kind": "field",
+              "name": "matchMode",
+              "privacy": "public",
+              "type": {
+                "type": "'begin'|'all'"
+              },
+              "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
+              "default": "'all'"
+            },
+            {
+              "kind": "field",
+              "name": "showAllOnEmpty",
+              "privacy": "public",
+              "description": "When true, the listbox is open and textbox goes from a value to empty, all options are shown.\nBy default, the listbox closes on empty, similar to wai-aria example and <datalist>",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "__shouldAutocompleteNextUpdate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupInputTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_overlayListboxTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_comboboxNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_selectionDisplayNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayReferenceNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_listboxNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_activeDescendantOwnerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "'disabled'|'modelValue'|'readOnly'"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "matchCondition",
+              "privacy": "public",
+              "description": "When the preconfigurable `match-mode` conditions are not sufficient,\none can define a custom matching function.",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "textboxValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": "current ._inputNode value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_showOverlayCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "{ currentValue: string, lastKey:string }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnInput",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setTextboxValue",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__onOverlayClose",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_repropagationCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "type": "EventTarget & ChoiceInputHost"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__computeUserIntendsAutoFill",
+              "privacy": "public",
+              "description": "Computes whether a user intends to autofill (inline autocomplete textbox)",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "type": "{ prevValue:string, curValue:string }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleAutocompletion",
+              "privacy": "public",
+              "description": "Handles autocompletion. This entails:\n- list: shows a list on keydown character press\n- filter: filters list of potential matches according to matchmode or provided matchCondition\n- focus: automatically focuses closest match (makes it the activedescendant)\n- check: automatically checks/selects closest match when selection-follows-focus is enabled\n(this is the default configuration)\n- complete: completes the textbox value inline (the 'missing characters' will be added as\nselected text)"
+            },
+            {
+              "kind": "method",
+              "name": "__textboxInlineComplete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.formElements[this.activeIndex]"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_autoSelectCondition",
+              "privacy": "public",
+              "description": "When this condition is false, an end user will have to manually select a suggested\noption from the list (by default when autocomplete is 'none' or 'list').\nFor autocomplete 'both' or 'inline', it will automatically select on a match."
+            },
+            {
+              "kind": "method",
+              "name": "_setupListboxNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnKeyDown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxMultiple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string[]"
+                  },
+                  "default": "[]"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_enhanceLightDomClasses",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__initFilterListbox",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setComboboxDisabledAndReadOnly",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setupCombobox",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__teardownCombobox",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__requestShowOverlay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "tagName": "lion-combobox"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionCombobox",
+          "declaration": {
+            "name": "LionCombobox",
+            "module": "./src/LionCombobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/SelectionDisplay.d.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/gh-combobox/gh-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "GhButton",
+          "superclass": {
+            "name": "LionButton",
+            "package": "@lion/button"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "fieldName": "value"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "gh-button"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GhButton",
+          "declaration": {
+            "name": "GhButton",
+            "module": "./docs/gh-combobox/gh-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "gh-button",
+          "declaration": {
+            "name": "GhButton",
+            "module": "./docs/gh-combobox/gh-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/gh-combobox/gh-combobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "GhOption",
+          "superclass": {
+            "name": "LionOption",
+            "package": "@lion/listbox"
+          },
+          "attributes": [
+            {
+              "name": "category",
+              "fieldName": "category"
+            },
+            {
+              "name": "default",
+              "fieldName": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "category",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "default",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "gh-option"
+        },
+        {
+          "kind": "class",
+          "name": "GhCombobox",
+          "superclass": {
+            "name": "LionCombobox",
+            "module": "/docs/gh-combobox/src/LionCombobox.js"
+          },
+          "attributes": [
+            {
+              "name": "category",
+              "fieldName": "category"
+            },
+            {
+              "name": "is-desktop",
+              "fieldName": "isDesktop"
+            },
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "match-mode",
+              "fieldName": "matchMode",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "show-all-on-empty",
+              "fieldName": "showAllOnEmpty",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "__shouldAutocompleteNextUpdate",
+              "fieldName": "__shouldAutocompleteNextUpdate",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "category",
+              "privacy": "public",
+              "type": {
+                "type": "'branches'|'tags'"
+              },
+              "default": "'branches'"
+            },
+            {
+              "kind": "field",
+              "name": "isDesktop",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_comboboxNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupInputTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayReferenceNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_categoryButtons",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__handleCategory",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnKeydown",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__toggleOverlay",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "type": "'none'|'list'|'inline'|'both'"
+              },
+              "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
+              "default": "'both'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "matchMode",
+              "privacy": "public",
+              "type": {
+                "type": "'begin'|'all'"
+              },
+              "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
+              "default": "'all'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showAllOnEmpty",
+              "privacy": "public",
+              "description": "When true, the listbox is open and textbox goes from a value to empty, all options are shown.\nBy default, the listbox closes on empty, similar to wai-aria example and <datalist>",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "__shouldAutocompleteNextUpdate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_overlayListboxTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_selectionDisplayNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_listboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeDescendantOwnerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "'disabled'|'modelValue'|'readOnly'"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "matchCondition",
+              "privacy": "public",
+              "description": "When the preconfigurable `match-mode` conditions are not sufficient,\none can define a custom matching function.",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "textboxValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": "current ._inputNode value"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_showOverlayCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "{ currentValue: string, lastKey:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnInput",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "MouseEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setTextboxValue",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__onOverlayClose",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_repropagationCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "type": "EventTarget & ChoiceInputHost"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__computeUserIntendsAutoFill",
+              "privacy": "public",
+              "description": "Computes whether a user intends to autofill (inline autocomplete textbox)",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "type": "{ prevValue:string, curValue:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleAutocompletion",
+              "privacy": "public",
+              "description": "Handles autocompletion. This entails:\n- list: shows a list on keydown character press\n- filter: filters list of potential matches according to matchmode or provided matchCondition\n- focus: automatically focuses closest match (makes it the activedescendant)\n- check: automatically checks/selects closest match when selection-follows-focus is enabled\n(this is the default configuration)\n- complete: completes the textbox value inline (the 'missing characters' will be added as\nselected text)",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__textboxInlineComplete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.formElements[this.activeIndex]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_autoSelectCondition",
+              "privacy": "public",
+              "description": "When this condition is false, an end user will have to manually select a suggested\noption from the list (by default when autocomplete is 'none' or 'list').\nFor autocomplete 'both' or 'inline', it will automatically select on a match.",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupListboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnKeyDown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxMultiple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string[]"
+                  },
+                  "default": "[]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_enhanceLightDomClasses",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__initFilterListbox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setComboboxDisabledAndReadOnly",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setupCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__teardownCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__requestShowOverlay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ],
+          "tagName": "gh-combobox"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GhOption",
+          "declaration": {
+            "name": "GhOption",
+            "module": "./docs/gh-combobox/gh-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "gh-option",
+          "declaration": {
+            "name": "GhOption",
+            "module": "./docs/gh-combobox/gh-combobox.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GhCombobox",
+          "declaration": {
+            "name": "GhCombobox",
+            "module": "./docs/gh-combobox/gh-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "gh-combobox",
+          "declaration": {
+            "name": "GhCombobox",
+            "module": "./docs/gh-combobox/gh-combobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/google-combobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "GoogleOption",
+          "mixins": [
+            {
+              "name": "LinkMixin",
+              "module": "/docs/LinkMixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LionOption",
+            "package": "@lion/listbox"
+          },
+          "attributes": [
+            {
+              "name": "imageUrl",
+              "fieldName": "imageUrl"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "imageUrl",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "currentValue",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onFilterUnmatch",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "google-option"
+        },
+        {
+          "kind": "class",
+          "name": "GoogleCombobox",
+          "superclass": {
+            "name": "LionCombobox",
+            "module": "/docs/google-combobox/src/LionCombobox.js"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "_overlayListboxTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupSuffixTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_googleSearchBtnsTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayReferenceNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxCondition",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_showOverlayCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__resetFocus",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__clearText",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "type": "'none'|'list'|'inline'|'both'"
+              },
+              "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
+              "default": "'both'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "matchMode",
+              "privacy": "public",
+              "type": {
+                "type": "'begin'|'all'"
+              },
+              "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
+              "default": "'all'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showAllOnEmpty",
+              "privacy": "public",
+              "description": "When true, the listbox is open and textbox goes from a value to empty, all options are shown.\nBy default, the listbox closes on empty, similar to wai-aria example and <datalist>",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "__shouldAutocompleteNextUpdate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupInputTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_comboboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_selectionDisplayNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_listboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeDescendantOwnerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "'disabled'|'modelValue'|'readOnly'"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "matchCondition",
+              "privacy": "public",
+              "description": "When the preconfigurable `match-mode` conditions are not sufficient,\none can define a custom matching function.",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "textboxValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": "current ._inputNode value"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnInput",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "MouseEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setTextboxValue",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__onOverlayClose",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_repropagationCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "type": "EventTarget & ChoiceInputHost"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__computeUserIntendsAutoFill",
+              "privacy": "public",
+              "description": "Computes whether a user intends to autofill (inline autocomplete textbox)",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "type": "{ prevValue:string, curValue:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleAutocompletion",
+              "privacy": "public",
+              "description": "Handles autocompletion. This entails:\n- list: shows a list on keydown character press\n- filter: filters list of potential matches according to matchmode or provided matchCondition\n- focus: automatically focuses closest match (makes it the activedescendant)\n- check: automatically checks/selects closest match when selection-follows-focus is enabled\n(this is the default configuration)\n- complete: completes the textbox value inline (the 'missing characters' will be added as\nselected text)",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__textboxInlineComplete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.formElements[this.activeIndex]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_autoSelectCondition",
+              "privacy": "public",
+              "description": "When this condition is false, an end user will have to manually select a suggested\noption from the list (by default when autocomplete is 'none' or 'list').\nFor autocomplete 'both' or 'inline', it will automatically select on a match.",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupListboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnKeyDown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxMultiple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string[]"
+                  },
+                  "default": "[]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_enhanceLightDomClasses",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__initFilterListbox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setComboboxDisabledAndReadOnly",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setupCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__teardownCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__requestShowOverlay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ],
+          "tagName": "google-combobox",
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "match-mode",
+              "fieldName": "matchMode",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "show-all-on-empty",
+              "fieldName": "showAllOnEmpty",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "__shouldAutocompleteNextUpdate",
+              "fieldName": "__shouldAutocompleteNextUpdate",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GoogleOption",
+          "declaration": {
+            "name": "GoogleOption",
+            "module": "./docs/google-combobox/google-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "google-option",
+          "declaration": {
+            "name": "GoogleOption",
+            "module": "./docs/google-combobox/google-combobox.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GoogleCombobox",
+          "declaration": {
+            "name": "GoogleCombobox",
+            "module": "./docs/google-combobox/google-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "google-combobox",
+          "declaration": {
+            "name": "GoogleCombobox",
+            "module": "./docs/google-combobox/google-combobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/md-combobox/MdFieldMixin.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "MdFieldMixin"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MdFieldMixin",
+          "declaration": {
+            "name": "MdFieldMixin",
+            "module": "./docs/md-combobox/MdFieldMixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/md-combobox/md-combobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "MdOption",
+          "superclass": {
+            "name": "LionOption",
+            "package": "@lion/listbox"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onFilterUnmatch",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "md-option"
+        },
+        {
+          "kind": "class",
+          "name": "MdCombobox",
+          "mixins": [
+            {
+              "name": "MdFieldMixin",
+              "module": "/docs/md-combobox/MdFieldMixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LionCombobox",
+            "module": "/docs/md-combobox/src/LionCombobox.js"
+          },
+          "tagName": "md-combobox",
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "match-mode",
+              "fieldName": "matchMode",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "show-all-on-empty",
+              "fieldName": "showAllOnEmpty",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "__shouldAutocompleteNextUpdate",
+              "fieldName": "__shouldAutocompleteNextUpdate",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "type": "'none'|'list'|'inline'|'both'"
+              },
+              "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
+              "default": "'both'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "matchMode",
+              "privacy": "public",
+              "type": {
+                "type": "'begin'|'all'"
+              },
+              "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
+              "default": "'all'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showAllOnEmpty",
+              "privacy": "public",
+              "description": "When true, the listbox is open and textbox goes from a value to empty, all options are shown.\nBy default, the listbox closes on empty, similar to wai-aria example and <datalist>",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "__shouldAutocompleteNextUpdate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupInputTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_overlayListboxTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_comboboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_selectionDisplayNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayReferenceNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_listboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeDescendantOwnerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "'disabled'|'modelValue'|'readOnly'"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "matchCondition",
+              "privacy": "public",
+              "description": "When the preconfigurable `match-mode` conditions are not sufficient,\none can define a custom matching function.",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "textboxValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": "current ._inputNode value"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_showOverlayCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "{ currentValue: string, lastKey:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnInput",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "MouseEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setTextboxValue",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__onOverlayClose",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_repropagationCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "type": "EventTarget & ChoiceInputHost"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__computeUserIntendsAutoFill",
+              "privacy": "public",
+              "description": "Computes whether a user intends to autofill (inline autocomplete textbox)",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "type": "{ prevValue:string, curValue:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleAutocompletion",
+              "privacy": "public",
+              "description": "Handles autocompletion. This entails:\n- list: shows a list on keydown character press\n- filter: filters list of potential matches according to matchmode or provided matchCondition\n- focus: automatically focuses closest match (makes it the activedescendant)\n- check: automatically checks/selects closest match when selection-follows-focus is enabled\n(this is the default configuration)\n- complete: completes the textbox value inline (the 'missing characters' will be added as\nselected text)",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__textboxInlineComplete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.formElements[this.activeIndex]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_autoSelectCondition",
+              "privacy": "public",
+              "description": "When this condition is false, an end user will have to manually select a suggested\noption from the list (by default when autocomplete is 'none' or 'list').\nFor autocomplete 'both' or 'inline', it will automatically select on a match.",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupListboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnKeyDown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string|string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxMultiple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string[]"
+                  },
+                  "default": "[]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_enhanceLightDomClasses",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__initFilterListbox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setComboboxDisabledAndReadOnly",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setupCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__teardownCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__requestShowOverlay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MdOption",
+          "declaration": {
+            "name": "MdOption",
+            "module": "./docs/md-combobox/md-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "md-option",
+          "declaration": {
+            "name": "MdOption",
+            "module": "./docs/md-combobox/md-combobox.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MdCombobox",
+          "declaration": {
+            "name": "MdCombobox",
+            "module": "./docs/md-combobox/md-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "md-combobox",
+          "declaration": {
+            "name": "MdCombobox",
+            "module": "./docs/md-combobox/md-combobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/md-combobox/md-input.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "MdInput",
+          "mixins": [
+            {
+              "name": "MdFieldMixin",
+              "module": "/docs/md-combobox/MdFieldMixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LionInput",
+            "package": "@lion/input"
+          },
+          "tagName": "md-input"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MdInput",
+          "declaration": {
+            "name": "MdInput",
+            "module": "./docs/md-combobox/md-input.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "md-input",
+          "declaration": {
+            "name": "MdInput",
+            "module": "./docs/md-combobox/md-input.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/wa-combobox/wa-combobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "WaOption",
+          "superclass": {
+            "name": "LionOption",
+            "package": "@lion/listbox"
+          },
+          "attributes": [
+            {
+              "name": "title",
+              "fieldName": "title"
+            },
+            {
+              "name": "text",
+              "fieldName": "text"
+            },
+            {
+              "name": "time",
+              "fieldName": "time"
+            },
+            {
+              "name": "image",
+              "fieldName": "image"
+            },
+            {
+              "name": "is-user-text",
+              "fieldName": "isUserText"
+            },
+            {
+              "name": "is-user-text-read",
+              "fieldName": "isUserTextRead"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "title",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "text",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "time",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "isUserText",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "isUserTextRead",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "tagName": "wa-option"
+        },
+        {
+          "kind": "class",
+          "name": "WaCombobox",
+          "superclass": {
+            "name": "LionCombobox",
+            "module": "/docs/wa-combobox/src/LionCombobox.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "matchCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption"
+                  }
+                },
+                {
+                  "name": "textboxValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": "current ._inputNode value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxCondition",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "type": "'none'|'list'|'inline'|'both'"
+              },
+              "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
+              "default": "'both'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "matchMode",
+              "privacy": "public",
+              "type": {
+                "type": "'begin'|'all'"
+              },
+              "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
+              "default": "'all'",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showAllOnEmpty",
+              "privacy": "public",
+              "description": "When true, the listbox is open and textbox goes from a value to empty, all options are shown.\nBy default, the listbox closes on empty, similar to wai-aria example and <datalist>",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "__shouldAutocompleteNextUpdate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_inputGroupInputTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_overlayListboxTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_groupTwoTemplate",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_comboboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_selectionDisplayNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_inputNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayReferenceNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_listboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeDescendantOwnerNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdateInternal",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "type": "'disabled'|'modelValue'|'readOnly'"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "type": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "type": "PropertyValues "
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_showOverlayCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "{ currentValue: string, lastKey:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnInput",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_textboxOnKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "MouseEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setTextboxValue",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__onOverlayClose",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_repropagationCondition",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "type": "EventTarget & ChoiceInputHost"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterMatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "matchingString",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onFilterUnmatch",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "type": "LionOption & {__originalInnerHTML?:string}"
+                  }
+                },
+                {
+                  "name": "curValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "prevValue",
+                  "type": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__computeUserIntendsAutoFill",
+              "privacy": "public",
+              "description": "Computes whether a user intends to autofill (inline autocomplete textbox)",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "type": "{ prevValue:string, curValue:string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleAutocompletion",
+              "privacy": "public",
+              "description": "Handles autocompletion. This entails:\n- list: shows a list on keydown character press\n- filter: filters list of potential matches according to matchmode or provided matchCondition\n- focus: automatically focuses closest match (makes it the activedescendant)\n- check: automatically checks/selects closest match when selection-follows-focus is enabled\n(this is the default configuration)\n- complete: completes the textbox value inline (the 'missing characters' will be added as\nselected text)",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__textboxInlineComplete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.formElements[this.activeIndex]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_autoSelectCondition",
+              "privacy": "public",
+              "description": "When this condition is false, an end user will have to manually select a suggested\noption from the list (by default when autocomplete is 'none' or 'list').\nFor autocomplete 'both' or 'inline', it will automatically select on a match.",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupListboxNode",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_listboxOnKeyDown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_syncToTextboxMultiple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "type": "string[]"
+                  }
+                },
+                {
+                  "name": "oldModelValue",
+                  "type": {
+                    "type": "string[]"
+                  },
+                  "default": "[]"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_enhanceLightDomClasses",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__initFilterListbox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setComboboxDisabledAndReadOnly",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__setupCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__teardownCombobox",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__requestShowOverlay",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  },
+                  "optional": true
+                }
+              ],
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ],
+          "tagName": "wa-combobox",
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "match-mode",
+              "fieldName": "matchMode",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "show-all-on-empty",
+              "fieldName": "showAllOnEmpty",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            },
+            {
+              "name": "__shouldAutocompleteNextUpdate",
+              "fieldName": "__shouldAutocompleteNextUpdate",
+              "inheritedFrom": {
+                "name": "LionCombobox",
+                "module": "./src/LionCombobox.js"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "wa-option",
+          "declaration": {
+            "name": "WaOption",
+            "module": "./docs/wa-combobox/wa-combobox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "wa-combobox",
+          "declaration": {
+            "name": "WaCombobox",
+            "module": "./docs/wa-combobox/wa-combobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/assets/google-clear-icon.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/google-combobox/assets/google-clear-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/assets/google-search-icon.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/google-combobox/assets/google-search-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/assets/google-voice-search-icon.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/google-combobox/assets/google-voice-search-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/md-combobox/style/load-roboto.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/md-combobox/style/md-ripple.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "MdRipple",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "__onRipple",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e"
+                }
+              ]
+            }
+          ],
+          "tagName": "md-ripple"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "md-ripple",
+          "declaration": {
+            "name": "MdRipple",
+            "module": "./docs/md-combobox/style/md-ripple.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/Subclassers.md",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/assets/appleLogo.png",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/google-combobox/assets/googlelogo_color_272x92dp.png",
+      "declarations": [],
+      "exports": []
+    }
+  ]
+}

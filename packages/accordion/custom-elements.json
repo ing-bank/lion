@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionAccordion",
+          "declaration": {
+            "name": "LionAccordion",
+            "module": "./src/LionAccordion.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-accordion.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-accordion",
+          "declaration": {
+            "name": "LionAccordion",
+            "module": "./src/LionAccordion.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionAccordion.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionAccordion",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "focusedIndex",
+              "fieldName": "focusedIndex"
+            },
+            {
+              "name": "expanded",
+              "fieldName": "expanded"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "focusedIndex",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setupSlots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setupStore",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__cleanStore",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__createInvokerClickHandler",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__handleInvokerKeydown",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_pairCount",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__updateFocused",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__updateExpanded",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__toggleExpanded",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "tagName": "lion-accordion"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionAccordion",
+          "declaration": {
+            "name": "LionAccordion",
+            "module": "./src/LionAccordion.js"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "experimental",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionButton",
+          "declaration": {
+            "name": "LionButton",
+            "module": "./src/LionButton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lion-button.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "lion-button",
+          "declaration": {
+            "name": "LionButton",
+            "module": "./src/LionButton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/LionButton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionButton",
+          "mixins": [
+            {
+              "name": "DisabledWithTabIndexMixin",
+              "package": "@lion/core"
+            },
+            {
+              "name": "SlotMixin",
+              "package": "@lion/core"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "attributes": [
+            {
+              "name": "role",
+              "fieldName": "role"
+            },
+            {
+              "name": "active",
+              "fieldName": "active"
+            },
+            {
+              "name": "type",
+              "fieldName": "type"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "role",
+              "privacy": "public",
+              "default": "'button'"
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "default": "'submit'"
+            },
+            {
+              "kind": "method",
+              "name": "_beforeTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_afterTemplate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_nativeButtonNode",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__clickDelegationHandler",
+              "privacy": "public",
+              "description": "Delegate click, by flashing a native button as a direct child\nof the form, and firing click on this button. This will fire the form submit\nwithout side effects caused by the click bubbling back up to lion-button.",
+              "parameters": [
+                {
+                  "name": "ev",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setupDelegationInConstructor",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__setupEvents",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__teardownEvents",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__mousedownHandler",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__keydownHandler",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__keyupHandler",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__preventEventLeakage",
+              "privacy": "public",
+              "description": "Prevents that someone who listens outside or on form catches the click event",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "type": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setupSubmitAndResetHelperOnConnected",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__teardownSubmitAndResetHelperOnDisconnected",
+              "privacy": "public"
+            }
+          ],
+          "tagName": "lion-button"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionButton",
+          "declaration": {
+            "name": "LionButton",
+            "module": "./src/LionButton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test/demos.screenshots-test.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/assets/icon.svg.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "./docs/assets/icon.svg.js"
+          }
+        }
+      ]
+    }
+  ]
+}
