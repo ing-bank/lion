@@ -198,6 +198,36 @@ export const validateOptions = ({
 
 /**
  * Request interceptor to return relevant cached requests
+ * @param {ValidatedCacheOptions} validatedInitialCacheOptions
+ * @param {CacheOptions=} configCacheOptions
+ */
+function composeCacheOptions(validatedInitialCacheOptions, configCacheOptions) {
+  /** @type {any} */
+  let actionCacheOptions = {};
+
+  try {
+    actionCacheOptions =
+      configCacheOptions &&
+      validateOptions({
+        ...validatedInitialCacheOptions,
+        ...configCacheOptions,
+      });
+  } catch (e) {
+    // We need console.error here to show error somehow since Errors are not emitted from Axios
+    // eslint-disable-next-line no-console
+    console.error(e.message);
+  }
+
+  const cacheOptions = {
+    ...validatedInitialCacheOptions,
+    ...actionCacheOptions,
+  };
+
+  return cacheOptions;
+}
+
+/**
+ * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  */
@@ -207,27 +237,11 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
   return /** @param {CacheRequest} cacheRequest */ cacheRequest => {
     const { method, status, statusText, headers } = cacheRequest;
 
-    /** @type {any} */
-    let actionCacheOptions = {};
-
-    try {
-      actionCacheOptions =
-        cacheRequest.cacheOptions &&
-        validateOptions({
-          ...validatedInitialCacheOptions,
-          ...cacheRequest.cacheOptions,
-        });
-    } catch (e) {
-      // We need console.error here to show error somehow since Errors are not emitted from Axios
-      // eslint-disable-next-line no-console
-      console.error(e.message);
-    }
-
     /** @type {ValidatedCacheOptions} */
-    const cacheOptions = {
-      ...validatedInitialCacheOptions,
-      ...actionCacheOptions,
-    };
+    const cacheOptions = composeCacheOptions(
+      validatedInitialCacheOptions,
+      cacheRequest.cacheOptions,
+    );
 
     // don't use cache if 'useCache' === false
     if (!cacheOptions.useCache) {
@@ -240,8 +254,12 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
     const currentCache = getCache(getCacheIdentifier());
     const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
 
+    // Cache has to be invalidated for the url if non-GET action happens.
+    // non-GET action will mean data is modified and cache is not valid anymore
+    const cacheInvalidationNeeded = cacheOptions.methods.indexOf(method) === -1;
+
     // don't use cache if the request method is not part of the configs methods
-    if (cacheOptions.methods.indexOf(method) === -1) {
+    if (cacheInvalidationNeeded) {
       // If it's NOT one of the config.methods, invalidate caches
       currentCache.delete(cacheId);
       // also invalidate caches matching to ingCacheOptions
@@ -298,26 +316,10 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
    * Axios response https://github.com/axios/axios#response-schema
    */
   return /** @param {CacheResponse} cacheResponse */ cacheResponse => {
-    /** @type {any} */
-    let actionCacheOptions = {};
-
-    try {
-      actionCacheOptions =
-        cacheResponse.config.cacheOptions &&
-        validateOptions({
-          ...validatedInitialCacheOptions,
-          ...cacheResponse.config.cacheOptions,
-        });
-    } catch (e) {
-      // We need console.error here to show error somehow since Errors are not emitted from Axios
-      // eslint-disable-next-line no-console
-      console.error(e.message);
-    }
-
-    const cacheOptions = {
-      ...validatedInitialCacheOptions,
-      ...actionCacheOptions,
-    };
+    const cacheOptions = composeCacheOptions(
+      validatedInitialCacheOptions,
+      cacheResponse.config.cacheOptions,
+    );
 
     if (!getCacheIdentifier()) {
       throw new Error(`getCacheIdentifier returns falsy`);
