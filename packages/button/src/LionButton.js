@@ -32,7 +32,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   render() {
     return html`
       ${this._beforeTemplate()}
-      <div class="button-content" id="${this._buttonId}"><slot></slot></div>
+      <div part="content" class="button-content" id="${this._buttonId}"><slot></slot></div>
       ${this._afterTemplate()}
       <slot name="_button"></slot>
     `;
@@ -84,7 +84,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
           height: 100%;
         }
 
-        .button-content {
+        [part='content'] {
           display: flex;
           align-items: center;
           justify-content: center;

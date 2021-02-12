@@ -6,6 +6,7 @@ import {
   localize,
   LocalizeMixin,
   normalizeDateTime,
+  // @ts-ignore
 } from '@lion/localize';
 import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
@@ -336,9 +337,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const nextYear = this.centralDate.getMonth() === 11 ? year + 1 : year;
     const previousYear = this.centralDate.getMonth() === 0 ? year - 1 : year;
     return html`
-      <div class="calendar__navigation__month">
+      <div part="navigation month container" class="calendar__navigation__month">
         ${this.__renderPreviousButton('Month', previousMonth, previousYear)}
-        <h2 class="calendar__navigation-heading" id="month" aria-atomic="true">${month}</h2>
+        <h2
+          part="navigation year heading"
+          class="calendar__navigation-heading"
+          id="month"
+          aria-atomic="true"
+        >
+          ${month}
+        </h2>
         ${this.__renderNextButton('Month', nextMonth, nextYear)}
       </div>
     `;
@@ -353,9 +361,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const previousYear = year - 1;
 
     return html`
-      <div class="calendar__navigation__year">
+      <div part="navigation year container" class="calendar__navigation__year">
         ${this.__renderPreviousButton('FullYear', month, previousYear)}
-        <h2 class="calendar__navigation-heading" id="year" aria-atomic="true">${year}</h2>
+        <h2
+          part="navigation year heading"
+          class="calendar__navigation-heading"
+          id="year"
+          aria-atomic="true"
+        >
+          ${year}
+        </h2>
         ${this.__renderNextButton('FullYear', month, nextYear)}
       </div>
     `;
@@ -365,7 +380,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const month = getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth()];
     const year = this.centralDate.getFullYear();
     return html`
-      <div class="calendar__navigation">
+      <div part="navigation container" class="calendar__navigation">
         ${this.__renderYearNavigation(month, year)} ${this.__renderMonthNavigation(month, year)}
       </div>
     `;
@@ -442,6 +457,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {number} previousYear
    */
   __renderPreviousButton(type, previousMonth, previousYear) {
+    const contentTemplate = /** @type {HTMLTemplateElement} */ this.querySelector(
+      '.previous-button-content',
+    );
+    // TODO: make type of contentTemplate as HTMLTemplateElement work
+    // @ts-ignore
+    const buttonContent = contentTemplate?.content.cloneNode(true) || html`&lt;`;
     const { disabled, month } = this.__getPreviousDisabled(type, previousMonth, previousYear);
     const previousButtonTitle = this.__getNavigationLabel('previous', type, month, previousYear);
     const clickDateDelegation = () => {
@@ -452,15 +473,26 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       }
     };
 
+    const parts = [
+      'navigation',
+      'button',
+      'previous',
+      type === 'FullYear' ? 'year' : 'month',
+      disabled ? 'disabled' : null,
+    ]
+      .filter(item => item)
+      .join(' ');
+
     return html`
       <button
+        part="${parts}"
         class="calendar__previous-button"
         aria-label=${previousButtonTitle}
         title=${previousButtonTitle}
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &lt;
+        ${buttonContent}
       </button>
     `;
   }
@@ -471,6 +503,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {number} nextYear
    */
   __renderNextButton(type, nextMonth, nextYear) {
+    const contentTemplate = /** @type {HTMLTemplateElement} */ this.querySelector(
+      '.next-button-content',
+    );
+    // TODO: make type of contentTemplate as HTMLTemplateElement work
+    // @ts-ignore
+    const buttonContent = contentTemplate?.content.cloneNode(true) || html`&gt;`;
     const { disabled, month } = this.__getNextDisabled(type, nextMonth, nextYear);
     const nextButtonTitle = this.__getNavigationLabel('next', type, month, nextYear);
     const clickDateDelegation = () => {
@@ -481,15 +519,26 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       }
     };
 
+    const parts = [
+      'navigation',
+      'button',
+      'previous',
+      type === 'FullYear' ? 'year' : 'month',
+      disabled ? 'disabled' : null,
+    ]
+      .filter(item => item)
+      .join(' ');
+
     return html`
       <button
+        part="${parts}"
         class="calendar__next-button"
         aria-label=${nextButtonTitle}
         title=${nextButtonTitle}
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &gt;
+        ${buttonContent}
       </button>
     `;
   }
@@ -550,6 +599,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     });
     data.months.forEach((month, monthi) => {
       month.weeks.forEach((week, weeki) => {
+        // @ts-ignore
         week.days.forEach((day, dayi) => {
           // eslint-disable-next-line no-unused-vars
           const currentDay = data.months[monthi].weeks[weeki].days[dayi];

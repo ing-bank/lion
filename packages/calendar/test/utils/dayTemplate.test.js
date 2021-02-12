@@ -12,12 +12,13 @@ describe('dayTemplate', () => {
     expect(el).dom.to.equal(`
       <td role="gridcell" class="calendar__day-cell">
         <button
+          part="day button"
           class="calendar__day-button"
           aria-label="19 April 2019 Friday"
           aria-pressed="false"
           tabindex="-1"
         >
-          <span class="calendar__day-button__text">19</span>
+          <span part="day text" class="calendar__day-button__text">19</span>
         </button>
       </td>
     `);

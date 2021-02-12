@@ -98,7 +98,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
 
   render() {
     return html`
-      <div class="choice-field__label">
+      <div part="label" class="choice-field__label">
         <slot></slot>
       </div>
     `;

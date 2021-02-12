@@ -10,22 +10,25 @@ export function dataTemplate(
   { weekdaysShort, weekdays, monthsLabels, dayTemplate = defaultDayTemplate },
 ) {
   return html`
-    <div id="js-content-wrapper">
+    <div part="content" id="js-content-wrapper">
       ${data.months.map(
         month => html`
           <table
             role="grid"
+            part="grid"
             data-wrap-cols
             aria-readonly="true"
+            part="grid"
             class="calendar__grid"
             aria-labelledby="month year"
           >
-            <thead>
-              <tr role="row">
+            <thead part="grid-head">
+              <tr role="row" part="row head">
                 ${weekdaysShort.map(
                   (header, i) => html`
                     <th
                       role="columnheader"
+                      part="columnheader"
                       class="calendar__weekday-header"
                       scope="col"
                       aria-label="${weekdays[i]}"
@@ -39,7 +42,7 @@ export function dataTemplate(
             <tbody>
               ${month.weeks.map(
                 week => html`
-                  <tr role="row">
+                  <tr role="row" part="row body">
                     ${week.days.map(day =>
                       dayTemplate(day, { weekdaysShort, weekdays, monthsLabels }),
                     )}

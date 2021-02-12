@@ -130,6 +130,7 @@ export declare class FormControlHost {
   updated(changedProperties: import('@lion/core').PropertyValues): void;
 
   render(): TemplateResult;
+  static renderPart(): string;
   _groupOneTemplate(): TemplateResult;
   _groupTwoTemplate(): TemplateResult;
   _labelTemplate(): TemplateResult;

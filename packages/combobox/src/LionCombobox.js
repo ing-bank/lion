@@ -76,7 +76,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _inputGroupInputTemplate() {
     // @ts-ignore
     return html`
-      <div class="input-group__input">
+      <div part="input" class="input-group__input">
         <slot name="selection-display"></slot>
         <slot name="input"></slot>
       </div>
@@ -86,7 +86,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
     return html`
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div part="overlay-content" id="overlay-content-node-wrapper" role="dialog">
         <slot name="listbox"></slot>
       </div>
       <slot id="options-outlet"></slot>

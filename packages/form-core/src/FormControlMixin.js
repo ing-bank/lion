@@ -1,5 +1,6 @@
 import { css, dedupeMixin, html, nothing, SlotMixin } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
+import { ShadowPartsMixin } from '@lion/core/src/ShadowPartsMixin.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 import { Unparseable } from './validate/Unparseable.js';
@@ -32,7 +33,9 @@ function uuid(prefix) {
  */
 const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
-  class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
+  class FormControlMixin extends FormRegisteringMixin(
+    ShadowPartsMixin(DisabledMixin(SlotMixin(superclass))),
+  ) {
     static get properties() {
       return {
         /**
@@ -349,44 +352,80 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * Object with all shadow parts
+     * @csspart group-one
+     * @csspart label
+     * @csspart help-text
+     * @csspart group-two
+     * @csspart input-group
+     * @csspart before
+     * @csspart container
+     * @csspart prefix
+     * @csspart input
+     * @csspart suffix
+     * @csspart after
+     * @csspart feedback
+     */
+    static get _shadowParts() {
+      return [
+        'group-one',
+        'label',
+        'help-text',
+        'group-two',
+        'input-group',
+        'before',
+        'container',
+        'prefix',
+        'input',
+        'suffix',
+        'after',
+        'feedback',
+      ];
+    }
+
+    /**
      * Default Render Result:
-     * <div class="form-field__group-one">
-     *   <div class="form-field__label">
+     * <div part="group-one" class="form-field__group-one">
+     *   <div part="label" class="form-field__label">
      *     <slot name="label"></slot>
      *   </div>
-     *   <small class="form-field__help-text">
+     *   <small part="help-text" class="form-field__help-text">
      *     <slot name="help-text"></slot>
      *   </small>
      * </div>
-     * <div class="form-field__group-two">
+     * <div part="group-two" class="form-field__group-two">
      *   <div class="input-group">
-     *     <div class="input-group__before">
+     *     <div part="before" class="input-group__before">
      *       <slot name="before"></slot>
      *     </div>
-     *     <div class="input-group__container">
-     *       <div class="input-group__prefix">
+     *     <div part="container" class="input-group__container">
+     *       <div part="prefix" class="input-group__prefix">
      *         <slot name="prefix"></slot>
      *       </div>
-     *       <div class="input-group__input">
+     *       <div part="input" class="input-group__input">
      *         <slot name="input"></slot>
      *       </div>
-     *       <div class="input-group__suffix">
+     *       <div part="suffix" class="input-group__suffix">
      *         <slot name="suffix"></slot>
      *       </div>
      *     </div>
-     *     <div class="input-group__after">
+     *     <div part="after" class="input-group__after">
      *       <slot name="after"></slot>
      *     </div>
      *   </div>
-     *   <div class="form-field__feedback">
+     *   <div part="feedback" class="form-field__feedback">
      *     <slot name="feedback"></slot>
      *   </div>
      * </div>
      */
     render() {
       return html`
-        <div class="form-field__group-one">${this._groupOneTemplate()}</div>
-        <div class="form-field__group-two">${this._groupTwoTemplate()}</div>
+        <div part="${this.constructor._renderPart('group-one')}" class="form-field__group-one">
+          ${this._groupOneTemplate()}
+        </div>
+        <div part="${this.constructor._renderPart('group-two')}" class="form-field__group-two">
+          ${this._groupTwoTemplate()}
+        </div>
       `;
     }
 
@@ -410,7 +449,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _labelTemplate() {
       return html`
-        <div class="form-field__label">
+        <div part="${this.constructor._renderPart('label')}" class="form-field__label">
           <slot name="label"></slot>
         </div>
       `;
@@ -422,7 +461,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _helpTextTemplate() {
       return html`
-        <small class="form-field__help-text">
+        <small part="${this.constructor._renderPart('help-text')}" lass="form-field__help-text">
           <slot name="help-text"></slot>
         </small>
       `;
@@ -433,9 +472,9 @@ const FormControlMixinImplementation = superclass =>
      */
     _inputGroupTemplate() {
       return html`
-        <div class="input-group">
+        <div part="${this.constructor._renderPart('input-group')}" class="input-group">
           ${this._inputGroupBeforeTemplate()}
-          <div class="input-group__container">
+          <div part="${this.constructor._renderPart('container')}" class="input-group__container">
             ${this._inputGroupPrefixTemplate()} ${this._inputGroupInputTemplate()}
             ${this._inputGroupSuffixTemplate()}
           </div>
@@ -450,7 +489,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _inputGroupBeforeTemplate() {
       return html`
-        <div class="input-group__before">
+        <div part="${this.constructor._renderPart('before')}" class="input-group__before">
           <slot name="before"></slot>
         </div>
       `;
@@ -463,7 +502,7 @@ const FormControlMixinImplementation = superclass =>
       return !Array.from(this.children).find(child => child.slot === 'prefix')
         ? nothing
         : html`
-            <div class="input-group__prefix">
+            <div part="prefix" class="input-group__prefix">
               <slot name="prefix"></slot>
             </div>
           `;
@@ -475,7 +514,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _inputGroupInputTemplate() {
       return html`
-        <div class="input-group__input">
+        <div part="${this.constructor._renderPart('input')}" class="input-group__input">
           <slot name="input"></slot>
         </div>
       `;
@@ -488,7 +527,7 @@ const FormControlMixinImplementation = superclass =>
       return !Array.from(this.children).find(child => child.slot === 'suffix')
         ? nothing
         : html`
-            <div class="input-group__suffix">
+            <div part="${this.constructor._renderPart('suffix')}" class="input-group__suffix">
               <slot name="suffix"></slot>
             </div>
           `;
@@ -500,7 +539,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _inputGroupAfterTemplate() {
       return html`
-        <div class="input-group__after">
+        <div part="${this.constructor._renderPart('after')}" class="input-group__after">
           <slot name="after"></slot>
         </div>
       `;
@@ -512,7 +551,7 @@ const FormControlMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _feedbackTemplate() {
       return html`
-        <div class="form-field__feedback">
+        <div part="${this.constructor._renderPart('feedback')}" class="form-field__feedback">
           <slot name="feedback"></slot>
         </div>
       `;
@@ -570,12 +609,12 @@ const FormControlMixinImplementation = superclass =>
      * {block} .form-field
      *
      * Structure:
-     * - {element}  .form-field__label : a wrapper element around the projected label
-     * - {element}  .form-field__help-text (optional) : a wrapper element around the projected
+     * - {element}::part(label) : a wrapper element around the projected label
+     * - {element}::part(help-text) (optional) : a wrapper element around the projected
      *               help-text
-     * - {block}    .input-group : a container around the input element, including prefixes and
+     * - {element} ::part(input-group) : a container around the input element, including prefixes and
      *               suffixes
-     * - {element}  .form-field__feedback (optional) : a wrapper element around the projected
+     * - {element}::part(feedback) (optional) : a wrapper element around the projected
      *               (validation) feedback message
      *
      * Modifiers:
@@ -604,17 +643,17 @@ const FormControlMixinImplementation = superclass =>
      * {block} .input-group
      *
      * Structure:
-     * - {element} .input-group__before (optional) : a prefix that resides outside the container
-     * - {element} .input-group__container : an inner container: this element contains all styling
-     *  - {element} .input-group__prefix (optional) : a prefix that resides in the container,
+     * - {element}::part(before) (optional) : a prefix that resides outside the container
+     * - {element}::part(container) : an inner container: this element contains all styling
+     *  - {element}::part(prefix) (optional) : a prefix that resides in the container,
      *               allowing it to be detectable as a :first-child
-     *  - {element} .input-group__input : a wrapper around the form-control component
+     *  - {element}::part(input) : a wrapper around the form-control component
      *   - {block} .form-control : the actual input element (input/select/textarea)
-     *  - {element} .input-group__suffix (optional) : a suffix that resides inside the container,
+     *  - {element}::part(suffix) (optional) : a suffix that resides inside the container,
      *               allowing it to be detectable as a :last-child
-     *  - {element} .input-group__bottom (optional) : placeholder element for additional styling
+     *  - {element}::part(bottom) (optional) : placeholder element for additional styling
      *               (like an animated line for material design input)
-     * - {element} .input-group__after (optional) :  a suffix that resides outside the container
+     * - {element}::part(after) (optional) :  a suffix that resides outside the container
      */
     static get styles() {
       const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
@@ -638,8 +677,8 @@ const FormControlMixinImplementation = superclass =>
             pointer-events: none;
           }
 
-          :host([disabled]) .form-field__label ::slotted(*),
-          :host([disabled]) .form-field__help-text ::slotted(*) {
+          :host([disabled]) form-field__label ::slotted(*),
+          :host([disabled]) form-field__help-text ::slotted(*) {
             color: var(--disabled-text-color, #767676);
           }
 

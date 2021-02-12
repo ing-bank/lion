@@ -665,13 +665,14 @@ describe('<lion-calendar>', () => {
           expect(remote.activeYear).to.equal('2019');
           expect(remote.centralDayObj?.el).dom.to.equal(`
             <button
+              part="day button past current-month"
               class="calendar__day-button"
               tabindex="0"
               aria-label="30 September 2019 Monday"
               aria-pressed="false"
               past=""
               current-month="">
-              <span class="calendar__day-button__text">
+              <span part="day text" class="calendar__day-button__text">
                 30
               </span>
             </button>
@@ -946,8 +947,9 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar
                 .selectedDate="${new Date('2001/01/02')}"
-                .disableDates=${/** @param {Date} date */ date =>
-                  date.getDate() === 3 || date.getDate() === 4}
+                .disableDates=${
+                  /** @param {Date} date */ date => date.getDate() === 3 || date.getDate() === 4
+                }
               ></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
@@ -1413,8 +1415,9 @@ describe('<lion-calendar>', () => {
       const el = await fixture(
         html`
           <lion-calendar
-            .disableDates=${/** @param {Date} date */ date =>
-              date.getDay() === 6 || date.getDay() === 0}
+            .disableDates=${
+              /** @param {Date} date */ date => date.getDay() === 6 || date.getDay() === 0
+            }
           ></lion-calendar>
         `,
       );

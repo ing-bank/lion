@@ -262,7 +262,7 @@ const FormGroupMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _inputGroupTemplate() {
       return html`
-        <div class="input-group">
+        <div part="input-group" class="input-group">
           <slot></slot>
         </div>
       `;
