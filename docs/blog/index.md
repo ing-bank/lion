@@ -3,7 +3,7 @@ title: Lion Blog
 layout: layout-blog-overview
 eleventyNavigation:
   key: Blog
-  order: 30
+  order: 40
 pagination:
   data: collections.blog
   size: 10

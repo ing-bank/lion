@@ -1,6 +1,6 @@
 [//]: # 'AUTO INSERT HEADER PREPUBLISH'
 
-# Components >> Forms in a dialog
+# Forms in a dialog
 
 ```js script
 import { html } from '@lion/core';

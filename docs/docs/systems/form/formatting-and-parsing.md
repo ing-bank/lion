@@ -22,7 +22,7 @@ Our fields can automatically format/parse/serialize user input or an input set i
 
 Below are some concrete examples of implementations of formatters and parsers mimicking a (basic) amount input.
 
-> For an actual amount input, check out [lion-input-amount](/docs/components/inputs/input-amount/overview/).
+> For an actual amount input, check out [lion-input-amount](../../../components/inputs/input-amount/overview.md).
 > This comes with its own formatter, parser, serializer.
 
 ### Parsers & modelValue

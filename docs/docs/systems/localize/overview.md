@@ -9,15 +9,15 @@ In it's simplest form it is a function that returns the translated text for a na
 - Formatting of numbers, amounts
 - Formatting of dates
 
-Further examples can be seen at [Features Overview Demo](/docs/systems/form/features-overview/) and a more in depth description can be found at [Localize System Overview](/docs/systems/localize/overview/).
+Further examples can be seen at [Features Overview Demo](../form/features-overview.md) and a more in depth description can be found at [Localize System Overview](../localize/overview.md).
 
 ## Content
 
-| Feature                                           | Description                                   |
-| ------------------------------------------------- | --------------------------------------------- |
-| [Translate Text](/docs/systems/localize/text/)    | Load and translate text in multiple languages |
-| [Format Numbers](/docs/systems/localize/numbers/) | Format numbers in multiple languages          |
-| [Format Dates](/docs/systems/localize/dates/)     | Format dates in multiple languages            |
+| Feature                                  | Description                                   |
+| ---------------------------------------- | --------------------------------------------- |
+| [Translate Text](../localize/text.md)    | Load and translate text in multiple languages |
+| [Format Numbers](../localize/numbers.md) | Format numbers in multiple languages          |
+| [Format Dates](../localize/dates.md)     | Format dates in multiple languages            |
 
 ## How to use
 

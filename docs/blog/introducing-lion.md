@@ -210,7 +210,7 @@ Excellent! Lea can now use the tabs component like so:
 </lea-tabs>
 ```
 
-There we go, Lea's component is already done, so let's write some documentation. See the [live Lea tabs documentation page](/docs/components/content/tabs/examples/). You can see the full code of `lea-tabs` [on github](https://github.com/ing-bank/lion/tree/master/demo/).
+There we go, Lea's component is already done, so let's write some documentation. See the [live Lea tabs documentation page](../components/content/tabs/examples.md). You can see the full code of `lea-tabs` [on github](https://github.com/ing-bank/lion/tree/master/demo/).
 
 P.S.: Do note that Lea is now responsible for keeping the documentation of `lea-tabs` up to date herself, and improvements on Lion's documentation will not automatically be reflected on Lea's documentation.
 

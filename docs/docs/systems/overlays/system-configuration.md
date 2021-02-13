@@ -68,7 +68,7 @@ export const placementGlobal = () => {
 
 ## isTooltip (placementMode: 'local')
 
-As specified in the [overlay rationale](/docs/systems/overlays/system-rationale/) there are only two official types of overlays: dialogs and tooltips. And their main differences are:
+As specified in the [overlay rationale](./system-rationale.md) there are only two official types of overlays: dialogs and tooltips. And their main differences are:
 
 - Dialogs have a modal option, tooltips don’t
 - Dialogs have interactive content, tooltips don’t
@@ -358,7 +358,7 @@ Features:
 
 > Popper strictly is scoped on positioning. **It does not change the dimensions of the content node nor the invoker node**.
 > This also means that if you use the arrow feature, you are in charge of styling it properly, use the data-popper-placement attribute for this.
-> An example implementation can be found in [lion-tooltip](/docs/components/interaction/tooltip/overview/), where an arrow is set by default.
+> An example implementation can be found in [lion-tooltip](../../../components/interaction/tooltip/overview.md), where an arrow is set by default.
 
 To override the default options we set for local mode, you add a `popperConfig` object to the config passed to the OverlayController.
 Here's a succinct overview of some often used popper properties:

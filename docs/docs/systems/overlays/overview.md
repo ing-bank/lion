@@ -6,7 +6,7 @@ Manages their position on the screen relative to other elements, including other
 
 Its purpose is to make it easy to use our Overlay System declaratively. It can be easily extended where needed, to override event listeners and more.
 
-See [lion-dialog](/docs/components/interaction/dialog/) and [lion-tooltip](/docs/components/interaction/tooltip/) for example Web Component implementations using the Overlay System.
+See [lion-dialog](../../../components/interaction/dialog/overview.md) and [lion-tooltip](../../../components/interaction/tooltip/overview.md) for example Web Component implementations using the Overlay System.
 
 ## Features
 
@@ -18,9 +18,9 @@ See [lion-dialog](/docs/components/interaction/dialog/) and [lion-tooltip](/docs
 - lion-overlay web component:
   - Show content when clicking the invoker
   - Have a `.config` object to set or update the OverlayController's configuration
-- [**OverlaysManager**](/docs/systems/overlays/system-overview/#overlaysmanager), a global repository keeping track of all different types of overlays
-- [**OverlayController**](/docs/systems/overlays/system-overview/#overlaycontroller), a single controller class for handling overlays
-- [**OverlayMixin**](/docs/systems/overlays/system-overview/#overlaymixin), a mixin that can be used to create webcomponents that use the OverlayController under the hood
+- [**OverlaysManager**](../overlays/system-overview.md#overlaysmanager), a global repository keeping track of all different types of overlays
+- [**OverlayController**](../overlays/system-overview.md#overlaycontroller), a single controller class for handling overlays
+- [**OverlayMixin**](../overlays/system-overview.md#overlaymixin), a mixin that can be used to create webcomponents that use the OverlayController under the hood
 
 ## How to use
 
@@ -113,7 +113,7 @@ class MyOverlayComponent extends LitElement {
 
 ## Rationales
 
-Please check the [system rationals](/docs/systems/overlays/system-rationale/) folder, where we go more in-depth.
+Please check the [system rationals](./system-rationale.md) folder, where we go more in-depth.
 
 ### Aria roles
 

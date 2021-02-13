@@ -7,7 +7,7 @@ import { Validator } from '@lion/form-core';
 import '../../docs/systems/form/src/helper-wc/h-output.js';
 ```
 
-Custom fields can be created in just a few steps. All you need is an interaction element (like for instance a slider, a listbox or a combobox) and connect it to the [input components](/docs/components/inputs/overview/).
+Custom fields can be created in just a few steps. All you need is an interaction element (like for instance a slider, a listbox or a combobox) and connect it to the [input components](../../components/inputs/input/overview.md).
 
 ## Prerequisite: an interaction element
 
@@ -18,7 +18,7 @@ For this tutorial, we assume we have a component `<my-slider>` that exposes its 
 ## Connecting the interaction element to the field
 
 Now we want to integrate the slider in our form framework to enrich the user interface, get
-validation support and get all the other [benefits of LionField](/docs/components/inputs/overview/). We start by creating a component `<lion-slider>` that extends from `LionField`. Then we follow the steps below:
+validation support and get all the other [benefits of LionField](../../docs/systems/form/overview.md). We start by creating a component `<lion-slider>` that extends from `LionField`. Then we follow the steps below:
 
 ### 1. Add your interaction element as ‘input slot'
 
