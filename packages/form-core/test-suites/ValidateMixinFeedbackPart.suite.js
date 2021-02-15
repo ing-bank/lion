@@ -1,6 +1,6 @@
 import { LitElement } from '@lion/core';
 import { localize } from '@lion/localize';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '../index.js';

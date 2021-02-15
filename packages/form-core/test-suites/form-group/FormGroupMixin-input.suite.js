@@ -1,8 +1,8 @@
 import { LitElement } from '@lion/core';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import { defineCE, expect, html, unsafeStatic, fixture } from '@open-wc/testing';
 import { LionInput } from '@lion/input';
-import '@lion/form-core/lion-field.js';
+import '@lion/form-core/lion-field';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
 
 /**

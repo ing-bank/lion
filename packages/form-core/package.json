@@ -44,5 +44,12 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./test-helpers/*": "./test-helpers/*",
+    "./test-suites/*": "./test-suites/*",
+    "./lion-field": "./lion-field.js",
+    "./lion-validation-feedback": "./lion-validation-feedback.js"
   }
 }

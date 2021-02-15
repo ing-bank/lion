@@ -1,7 +1,7 @@
 import { browserDetection } from '@lion/core';
 import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import '@lion/core/src/differentKeyEventNamesShimIE.js';
+import '@lion/core/differentKeyEventNamesShimIE';
 import '../lion-button.js';
 
 /**

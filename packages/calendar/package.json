@@ -43,5 +43,10 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-calendar": "./lion-calendar.js",
+    "./test-helpers": "./test-helpers.js"
   }
 }

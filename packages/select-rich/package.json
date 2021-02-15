@@ -51,5 +51,12 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-option": "./lion-option.js",
+    "./lion-options": "./lion-options.js",
+    "./lion-select-invoker": "./lion-select-invoker.js",
+    "./lion-select-rich": "./lion-select-rich.js"
   }
 }

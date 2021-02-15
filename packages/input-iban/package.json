@@ -47,5 +47,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-input-iban": "./lion-input-iban.js"
   }
 }

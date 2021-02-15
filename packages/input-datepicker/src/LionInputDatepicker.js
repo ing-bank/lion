@@ -1,4 +1,4 @@
-import { LionCalendar } from '@lion/calendar/src/LionCalendar';
+import { LionCalendar } from '@lion/calendar';
 import { html, ifDefined, ScopedElementsMixin } from '@lion/core';
 import { LionInputDate } from '@lion/input-date';
 import {

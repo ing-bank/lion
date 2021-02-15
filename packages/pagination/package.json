@@ -43,5 +43,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-pagination": "./lion-pagination.js"
   }
 }

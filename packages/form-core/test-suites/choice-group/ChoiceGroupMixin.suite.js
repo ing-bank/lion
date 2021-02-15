@@ -1,6 +1,6 @@
 import { LitElement } from '@lion/core';
 import { LionInput } from '@lion/input';
-import '@lion/fieldset/lion-fieldset.js';
+import '@lion/fieldset/lion-fieldset';
 import { FormGroupMixin, Required } from '@lion/form-core';
 import { expect, html, fixture, unsafeStatic } from '@open-wc/testing';
 import { ChoiceGroupMixin } from '../../src/choice-group/ChoiceGroupMixin.js';

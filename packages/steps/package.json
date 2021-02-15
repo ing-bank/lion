@@ -43,5 +43,10 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-step": "./lion-step.js",
+    "./lion-steps": "./lion-steps.js"
   }
 }

@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '@lion/localize';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 
 import { formatAmount } from '../src/formatters.js';
 

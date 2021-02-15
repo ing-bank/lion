@@ -2,4 +2,4 @@
  * @deprecated
  * Import here for backwards compatibility
  */
-import '@lion/listbox/lion-option.js';
+import '@lion/listbox/lion-option';

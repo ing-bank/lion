@@ -46,5 +46,11 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-checkbox": "./lion-checkbox.js",
+    "./lion-checkbox-group": "./lion-checkbox-group.js",
+    "./lion-checkbox-indeterminate": "./lion-checkbox-indeterminate.js"
   }
 }

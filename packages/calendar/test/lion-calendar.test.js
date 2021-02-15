@@ -1,7 +1,7 @@
 import { html } from '@lion/core';
 import '@lion/core/test-helpers/keyboardEventShimIE.js';
 import { localize } from '@lion/localize';
-import { localizeTearDown } from '@lion/localize/test-helpers.js';
+import { localizeTearDown } from '@lion/localize/test-helpers';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import '../lion-calendar.js';

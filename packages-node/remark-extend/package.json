@@ -35,5 +35,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "exports": "./index.js"
 }

@@ -45,5 +45,10 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./lion-switch": "./lion-switch.js",
+    "./lion-switch-button": "./lion-switch-button.js"
   }
 }
