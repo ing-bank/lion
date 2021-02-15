@@ -698,7 +698,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this._inputNode.addEventListener('keydown', this.__requestShowOverlay);
+    this._inputNode.addEventListener('keyup', this.__requestShowOverlay);
   }
 
   /**
@@ -706,7 +706,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
-    this._inputNode.removeEventListener('keydown', this.__requestShowOverlay);
+    this._inputNode.removeEventListener('keyup', this.__requestShowOverlay);
   }
 
   /**

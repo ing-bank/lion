@@ -20,7 +20,7 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
+  el._inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
 }
 
 /**
@@ -264,7 +264,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
     });
 
-    it('shows overlay again after select and char keydown', async () => {
+    it('shows overlay again after select and char keyup', async () => {
       /**
        * Scenario:
        * [1] user focuses textbox: overlay hidden
@@ -404,6 +404,79 @@ describe('lion-combobox', () => {
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.equal(true);
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition({ currentValue }) {
+            return currentValue.length > 3;
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaa');
+        expect(el.opened).to.be.false;
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should display overlay if currentValue length condition is fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition({ currentValue }) {
+            return currentValue.length > 3;
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaaa');
+        expect(el.opened).to.be.true;
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled after once fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition({ currentValue }) {
+            return currentValue.length > 3;
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaaa');
+        expect(el.opened).to.be.true;
+
+        mimicUserTyping(el, 'aaa');
+        await el.updateComplete;
+        expect(el.opened).to.be.false;
       });
     });
 
