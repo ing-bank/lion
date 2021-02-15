@@ -285,13 +285,20 @@ export function runFormatMixinSuite(customConfig) {
       }).to.not.throw();
     });
 
-    describe('parsers/formatters/serializers', () => {
-      it('should call the parser|formatter|serializer provided by user', async () => {
+    describe('parsers/formatters/serializers/preprocessors', () => {
+      it('should call the parser|formatter|serializer|preprocessor provided by user', async () => {
         const formatterSpy = sinon.spy(value => `foo: ${value}`);
         const parserSpy = sinon.spy(value => value.replace('foo: ', ''));
         const serializerSpy = sinon.spy(value => `[foo] ${value}`);
+        const preprocessorSpy = sinon.spy(value => value.replace('bar', ''));
         const el = /** @type {FormatClass} */ (await fixture(html`
-          <${elem} .formatter=${formatterSpy} .parser=${parserSpy} .serializer=${serializerSpy} .modelValue=${'test'}>
+          <${elem}
+            .formatter=${formatterSpy}
+            .parser=${parserSpy}
+            .serializer=${serializerSpy}
+            .preprocessor=${preprocessorSpy}
+            .modelValue=${'test'}
+          >
             <input slot="input">
           </${elem}>
         `));
@@ -300,6 +307,8 @@ export function runFormatMixinSuite(customConfig) {
 
         el.formattedValue = 'raw';
         expect(parserSpy.called).to.equal(true);
+        el.dispatchEvent(new CustomEvent('user-input-changed'));
+        expect(preprocessorSpy.called).to.equal(true);
       });
 
       it('should have formatOptions available in formatter', async () => {
@@ -353,7 +362,7 @@ export function runFormatMixinSuite(customConfig) {
         expect(el.modelValue).to.equal('');
       });
 
-      it.skip('will only call the formatter for valid values on `user-input-changed` ', async () => {
+      it('will only call the formatter for valid values on `user-input-changed` ', async () => {
         const formatterSpy = sinon.spy(value => `foo: ${value}`);
 
         const generatedModelValue = generateValueBasedOnType();
@@ -400,6 +409,31 @@ export function runFormatMixinSuite(customConfig) {
         expect(formatterSpy.callCount).to.equal(2);
 
         expect(el.formattedValue).to.equal(`foo: ${generatedModelValue}`);
+      });
+
+      it('changes `.value` on keyup, before passing on to parser', async () => {
+        const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
+        if (typeof val !== 'string') {
+          return;
+        }
+
+        const toBeCorrectedVal = `${val}$`;
+        const preprocessorSpy = sinon.spy(v => v.replace(/\$$/g, ''));
+
+        const el = /** @type {FormatClass} */ (await fixture(html`
+        <${elem} .preprocessor=${preprocessorSpy}>
+          <input slot="input">
+        </${elem}>
+      `));
+
+        expect(preprocessorSpy.callCount).to.equal(1);
+
+        const parserSpy = sinon.spy(el, 'parser');
+        mimicUserInput(el, toBeCorrectedVal);
+
+        expect(preprocessorSpy.callCount).to.equal(2);
+        expect(parserSpy.lastCall.args[0]).to.equal(val);
+        expect(el._inputNode.value).to.equal(val);
       });
     });
 

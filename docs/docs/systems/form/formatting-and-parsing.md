@@ -127,7 +127,7 @@ A deserializer converts a value, for example one received from an API, to a `mod
 > You need to call `el.deserializer(el.modelValue)` manually yourself.
 
 ```js preview-story
-export const deSerializers = () => {
+export const deserializers = () => {
   const mySerializer = (modelValue, options) => {
     return parseInt(modelValue, 8);
   };
@@ -144,6 +144,29 @@ export const deSerializers = () => {
       .modelValue="${1234567890}"
     ></lion-input>
     <h-output .show="${['modelValue', 'serializedValue']}"></h-output>
+  `;
+};
+```
+
+### Preprocessors
+
+A preprocessor converts the user input immediately on input.
+This makes it useful for preventing invalid input or doing other processing tasks before the viewValue hits the parser.
+
+In the example below, we do not allow you to write digits.
+
+```js preview-story
+export const preprocessors = () => {
+  const preprocess = (value) => {
+    return value.replace(/[0-9]/g, '');
+  }
+  return html`
+    <lion-input
+      label="Date Example"
+      help-text="Uses .preprocessor to prevent digits"
+      .preprocessor=${preprocess}
+    ></lion-input>
+    <h-output .show="${['modelValue']}"></h-output>
   `;
 };
 ```
