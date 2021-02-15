@@ -24,6 +24,7 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "tsc",
     "lint:versions": "node ./scripts/lint-versions.js",
+    "postinstall": "npm run custom-elements-manifest",
     "release": "npm run build:types && npm run build:docs && changeset publish",
     "start": "npm run storybook",
     "storybook": "start-storybook -p 9001",

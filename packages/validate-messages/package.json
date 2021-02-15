@@ -15,6 +15,7 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
@@ -27,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group validate-messages",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group validate-messages",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group validate-messages",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group validate-messages"
   },
   "dependencies": {

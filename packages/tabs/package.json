@@ -15,6 +15,7 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
@@ -27,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group tabs",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group tabs",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group tabs",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group tabs"
   },
   "sideEffects": [
@@ -44,9 +45,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-tabs": "./lion-tabs.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

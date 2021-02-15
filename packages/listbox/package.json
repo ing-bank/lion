@@ -15,10 +15,11 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
-    "test-suites",
+    "test-helpers",
     "translations",
     "types"
   ],
@@ -27,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group listbox",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group listbox",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group listbox",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group listbox"
   },
   "sideEffects": [

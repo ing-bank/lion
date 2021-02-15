@@ -15,6 +15,7 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
@@ -27,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group select-rich",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group select-rich",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group select-rich",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group select-rich"
   },
   "sideEffects": [

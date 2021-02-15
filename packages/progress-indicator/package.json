@@ -15,8 +15,11 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
+    "docs",
     "src",
     "test",
+    "test-helpers",
     "translations",
     "types"
   ],
@@ -25,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group progress-indicator",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group progress-indicator",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group progress-indicator",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group progress-indicator"
   },
   "sideEffects": [
