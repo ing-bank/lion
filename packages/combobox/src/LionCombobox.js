@@ -389,8 +389,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
+    if (!lastKey) {
+      return this.opened;
+    }
     const doNotOpenOn = ['Tab', 'Esc', 'Enter'];
-    return lastKey && !doNotOpenOn.includes(lastKey);
+    return !doNotOpenOn.includes(lastKey);
   }
 
   /**
@@ -812,6 +815,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       })
     ) {
       this.opened = true;
+    } else {
+      this.opened = false;
     }
   }
 }

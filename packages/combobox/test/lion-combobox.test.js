@@ -409,8 +409,8 @@ describe('lion-combobox', () => {
       it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled', async () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
-          _showOverlayCondition({ currentValue }) {
-            return currentValue.length > 3;
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -432,8 +432,8 @@ describe('lion-combobox', () => {
       it('allows to control overlay visibility via "_showOverlayCondition": should display overlay if currentValue length condition is fulfilled', async () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
-          _showOverlayCondition({ currentValue }) {
-            return currentValue.length > 3;
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -455,8 +455,8 @@ describe('lion-combobox', () => {
       it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled after once fulfilled', async () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
-          _showOverlayCondition({ currentValue }) {
-            return currentValue.length > 3;
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
