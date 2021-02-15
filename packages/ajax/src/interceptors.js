@@ -1,6 +1,4 @@
-/**
- * @typedef {import('./AjaxClient').RequestInterceptor} RequestInterceptor
- */
+import './typedef.js';
 
 /**
  * @param {string} name the cookie name
