@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -25,53 +25,77 @@
         },
         {
           "kind": "js",
-          "name": "AjaxClass",
+          "name": "AjaxClient",
           "declaration": {
-            "name": "AjaxClass",
-            "module": "./src/AjaxClass.js"
+            "name": "AjaxClient",
+            "module": "./src/AjaxClient.js"
           }
         },
         {
           "kind": "js",
-          "name": "cancelInterceptorFactory",
+          "name": "AjaxClientFetchError",
           "declaration": {
-            "name": "cancelInterceptorFactory",
+            "name": "AjaxClientFetchError",
+            "module": "./src/AjaxClientFetchError.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "acceptLanguageRequestInterceptor",
+          "declaration": {
+            "name": "acceptLanguageRequestInterceptor",
             "module": "./src/interceptors.js"
           }
         },
         {
           "kind": "js",
-          "name": "cancelPreviousOnNewRequestInterceptorFactory",
+          "name": "createXSRFRequestInterceptor",
           "declaration": {
-            "name": "cancelPreviousOnNewRequestInterceptorFactory",
+            "name": "createXSRFRequestInterceptor",
             "module": "./src/interceptors.js"
           }
         },
         {
           "kind": "js",
-          "name": "addAcceptLanguageHeaderInterceptorFactory",
+          "name": "getCookie",
           "declaration": {
-            "name": "addAcceptLanguageHeaderInterceptorFactory",
+            "name": "getCookie",
             "module": "./src/interceptors.js"
           }
         },
         {
           "kind": "js",
-          "name": "jsonPrefixTransformerFactory",
+          "name": "cacheRequestInterceptorFactory",
           "declaration": {
-            "name": "jsonPrefixTransformerFactory",
-            "module": "./src/transformers.js"
+            "name": "cacheRequestInterceptorFactory",
+            "module": "./src/interceptors-cache.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "cacheResponseInterceptorFactory",
+          "declaration": {
+            "name": "cacheResponseInterceptorFactory",
+            "module": "./src/interceptors-cache.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "validateOptions",
+          "declaration": {
+            "name": "validateOptions",
+            "module": "./src/interceptors-cache.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "./src/AjaxClass.js",
+      "path": "./src/AjaxClient.js",
       "declarations": [
         {
           "kind": "class",
-          "name": "AjaxClass",
+          "name": "AjaxClient",
           "members": [
             {
               "kind": "field",
@@ -80,251 +104,105 @@
             },
             {
               "kind": "method",
+              "name": "addRequestInterceptor",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "requestInterceptor",
+                  "type": {
+                    "text": "RequestInterceptor"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeRequestInterceptor",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "requestInterceptor",
+                  "type": {
+                    "text": "RequestInterceptor"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addResponseInterceptor",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "responseInterceptor",
+                  "type": {
+                    "text": "ResponseInterceptor"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeResponseInterceptor",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "responseInterceptor",
+                  "type": {
+                    "text": "ResponseInterceptor"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "request",
               "privacy": "public",
-              "description": "Dispatches a request",
+              "description": "Makes a fetch request, calling the registered fetch request and response\ninterceptors.",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "Promise<Response>"
                 }
               },
               "parameters": [
                 {
-                  "name": "url",
+                  "name": "info",
                   "type": {
-                    "type": "string"
+                    "text": "RequestInfo"
                   }
                 },
                 {
-                  "name": "config",
+                  "name": "init",
                   "type": {
-                    "type": "{[key:string]: ?}"
+                    "text": "RequestInit & Partial<CacheRequestExtension>"
                   },
-                  "description": "the config specific for this request",
                   "optional": true
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "cancel",
+              "name": "requestJson",
               "privacy": "public",
+              "description": "Makes a fetch request, calling the registered fetch request and response\ninterceptors. Encodes/decodes the request and response body as JSON.",
+              "return": {
+                "type": {
+                  "text": "Promise<{ response: Response, body: T }>"
+                }
+              },
               "parameters": [
                 {
-                  "name": "msg",
+                  "name": "info",
                   "type": {
-                    "type": "string"
+                    "text": "RequestInfo"
                   }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'get' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
                 },
                 {
-                  "name": "config",
+                  "name": "init",
                   "type": {
-                    "type": "{[key:string]: ?}"
+                    "text": "LionRequestInit"
                   },
-                  "description": "the config specific for this request",
                   "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "delete",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'delete' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{[key:string]: ?}"
-                  },
-                  "description": "the config specific for this request",
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "head",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'head' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{[key:string]: ?}"
-                  },
-                  "description": "the config specific for this request",
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "post",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'post' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
-                },
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "Object"
-                  },
-                  "description": "the data to be sent to the endpoint",
-                  "optional": true
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{[key:string]: ?}"
-                  },
-                  "description": "the config specific for this request",
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "put",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'put' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
-                },
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "Object"
-                  },
-                  "description": "the data to be sent to the endpoint",
-                  "optional": true
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{[key:string]: ?}"
-                  },
-                  "description": "the config specific for this request",
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "patch",
-              "privacy": "public",
-              "description": "Dispatches a {@link AxiosRequestConfig} with method 'patch' predefined",
-              "return": {
-                "type": {
-                  "type": "?"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "url",
-                  "type": {
-                    "type": "string"
-                  },
-                  "description": "the endpoint location"
-                },
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "Object"
-                  },
-                  "description": "the data to be sent to the endpoint",
-                  "optional": true
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "Object"
-                  },
-                  "description": "the config specific for this request.",
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "__setupInterceptors",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "__setupTransformers",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{[key:string]: ?}"
-                  }
                 }
               ]
             }
@@ -334,10 +212,34 @@
       "exports": [
         {
           "kind": "js",
-          "name": "AjaxClass",
+          "name": "AjaxClient",
           "declaration": {
-            "name": "AjaxClass",
-            "module": "./src/AjaxClass.js"
+            "name": "AjaxClient",
+            "module": "./src/AjaxClient.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/AjaxClientFetchError.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "AjaxClientFetchError",
+          "superclass": {
+            "name": "Error",
+            "module": "./src/AjaxClientFetchError.js"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AjaxClientFetchError",
+          "declaration": {
+            "name": "AjaxClientFetchError",
+            "module": "./src/AjaxClientFetchError.js"
           }
         }
       ]
@@ -358,7 +260,7 @@
             {
               "name": "newAjax",
               "type": {
-                "type": "AjaxClass"
+                "text": "AjaxClient"
               },
               "description": "the globally used instance of {@link:ajax}."
             }
@@ -386,93 +288,138 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./src/interceptors-cache.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "searchParamSerializer",
+          "description": "Serialize search parameters into url query string parameters.\nIf params === null, returns ''"
+        },
+        {
+          "kind": "variable",
+          "name": "validateOptions",
+          "description": "",
+          "type": {
+            "text": "ValidatedCacheOptions"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "cacheRequestInterceptorFactory",
+          "description": "Request interceptor to return relevant cached requests"
+        },
+        {
+          "kind": "variable",
+          "name": "cacheResponseInterceptorFactory",
+          "description": "Response interceptor to cache relevant requests"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "searchParamSerializer",
+          "declaration": {
+            "name": "searchParamSerializer",
+            "module": "./src/interceptors-cache.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "validateOptions",
+          "declaration": {
+            "name": "validateOptions",
+            "module": "./src/interceptors-cache.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "cacheRequestInterceptorFactory",
+          "declaration": {
+            "name": "cacheRequestInterceptorFactory",
+            "module": "./src/interceptors-cache.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "cacheResponseInterceptorFactory",
+          "declaration": {
+            "name": "cacheResponseInterceptorFactory",
+            "module": "./src/interceptors-cache.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./src/interceptors.js",
       "declarations": [
         {
           "kind": "function",
-          "name": "addAcceptLanguageHeaderInterceptorFactory",
+          "name": "getCookie",
           "return": {
             "type": {
-              "type": "(config: {[key:string]: ?}) => {[key:string]: ?}"
+              "text": "string | null"
             }
           },
           "parameters": [
             {
-              "name": "lang",
+              "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
-              "optional": true
+              "description": "the cookie name"
+            },
+            {
+              "name": "_document",
+              "type": {
+                "text": "Document | { cookie: string }"
+              },
+              "description": "overwriteable for testing",
+              "default": "document"
             }
           ]
         },
         {
           "kind": "function",
-          "name": "cancelInterceptorFactory",
+          "name": "acceptLanguageRequestInterceptor",
+          "description": "Transforms a request, adding an accept-language header with the current application's locale\nif it has not already been set.",
+          "parameters": [
+            {
+              "name": "request"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "createXSRFRequestInterceptor",
+          "description": "Creates a request transformer that adds a XSRF header for protecting\nagainst cross-site request forgery.",
           "return": {
             "type": {
-              "type": "(config: {[key:string]: ?}) => {[key:string]: ?}"
+              "text": "RequestInterceptor"
             }
           },
           "parameters": [
             {
-              "name": "ajaxInstance",
+              "name": "cookieName",
               "type": {
-                "type": "AjaxClass"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "cancelPreviousOnNewRequestInterceptorFactory",
-          "return": {
-            "type": {
-              "type": "(config: {[key:string]: ?}) => {[key:string]: ?}"
-            }
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "addAcceptLanguageHeaderInterceptorFactory",
-          "declaration": {
-            "name": "addAcceptLanguageHeaderInterceptorFactory",
-            "module": "./src/interceptors.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "cancelInterceptorFactory",
-          "declaration": {
-            "name": "cancelInterceptorFactory",
-            "module": "./src/interceptors.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "cancelPreviousOnNewRequestInterceptorFactory",
-          "declaration": {
-            "name": "cancelPreviousOnNewRequestInterceptorFactory",
-            "module": "./src/interceptors.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./src/transformers.js",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "jsonPrefixTransformerFactory",
-          "parameters": [
+                "text": "string"
+              },
+              "description": "the cookie name"
+            },
             {
-              "name": "prefix",
+              "name": "headerName",
               "type": {
-                "type": "string"
-              }
+                "text": "string"
+              },
+              "description": "the header name"
+            },
+            {
+              "name": "_document",
+              "type": {
+                "text": "Document | { cookie: string }"
+              },
+              "description": "overwriteable for testing",
+              "default": "document"
             }
           ]
         }
@@ -480,17 +427,45 @@
       "exports": [
         {
           "kind": "js",
-          "name": "jsonPrefixTransformerFactory",
+          "name": "getCookie",
           "declaration": {
-            "name": "jsonPrefixTransformerFactory",
-            "module": "./src/transformers.js"
+            "name": "getCookie",
+            "module": "./src/interceptors.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "acceptLanguageRequestInterceptor",
+          "declaration": {
+            "name": "acceptLanguageRequestInterceptor",
+            "module": "./src/interceptors.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "createXSRFRequestInterceptor",
+          "declaration": {
+            "name": "createXSRFRequestInterceptor",
+            "module": "./src/interceptors.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "./docs/assets/data.json",
+      "path": "./src/typedef.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/types.d.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./docs/cache-technical-docs.md",
       "declarations": [],
       "exports": []
     }

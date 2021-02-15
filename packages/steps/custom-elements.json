@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -66,19 +66,19 @@
             {
               "name": "enter",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "leave",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "skip",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -157,7 +157,7 @@
                 {
                   "name": "data",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "optional": true
                 }
@@ -189,7 +189,7 @@
             {
               "name": "transition",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -213,7 +213,7 @@
               "name": "data",
               "privacy": "public",
               "type": {
-                "type": "{[key: string]: ?}"
+                "text": "{[key: string]: ?}"
               },
               "default": "{}"
             },
@@ -222,7 +222,7 @@
               "name": "current",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "default": "0"
             },
@@ -249,13 +249,13 @@
                 {
                   "name": "newCurrent",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "oldCurrent",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -268,13 +268,13 @@
                 {
                   "name": "newCurrent",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "oldCurrent",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -287,13 +287,13 @@
                 {
                   "name": "fromStep",
                   "type": {
-                    "type": "{number: number, element: LionStep}"
+                    "text": "{number: number, element: LionStep}"
                   }
                 },
                 {
                   "name": "toStep",
                   "type": {
-                    "type": "{number: number, element: LionStep}"
+                    "text": "{number: number, element: LionStep}"
                   }
                 }
               ]
@@ -306,13 +306,13 @@
                 {
                   "name": "newValues",
                   "type": {
-                    "type": "{current: number}"
+                    "text": "{current: number}"
                   }
                 },
                 {
                   "name": "oldValues",
                   "type": {
-                    "type": "{current: number}"
+                    "text": "{current: number}"
                   }
                 }
               ]

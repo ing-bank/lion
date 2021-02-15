@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -99,7 +99,10 @@
             {
               "kind": "field",
               "name": "_nativeButtonNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLButtonElement"
+              }
             },
             {
               "kind": "field",
@@ -115,7 +118,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -148,7 +151,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -161,7 +164,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -175,7 +178,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]

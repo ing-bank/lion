@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -7,6 +7,14 @@
       "path": "./index.js",
       "declarations": [],
       "exports": [
+        {
+          "kind": "js",
+          "name": "isSameDate",
+          "declaration": {
+            "name": "isSameDate",
+            "module": "./src/utils/isSameDate.js"
+          }
+        },
         {
           "kind": "js",
           "name": "LionCalendar",
@@ -74,7 +82,7 @@
             {
               "name": "user-selected-date-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -122,7 +130,7 @@
               "name": "centralDate",
               "privacy": "public",
               "type": {
-                "type": "Date"
+                "text": "Date"
               },
               "default": "this.__today"
             },
@@ -149,7 +157,7 @@
               "name": "__focusedDate",
               "privacy": "public",
               "type": {
-                "type": "Date | null"
+                "text": "Date | null"
               },
               "default": "null"
             },
@@ -158,7 +166,7 @@
               "name": "__data",
               "privacy": "public",
               "type": {
-                "type": "{months: Month[]}"
+                "text": "{months: Month[]}"
               },
               "default": "{ months: [] }"
             },
@@ -195,7 +203,7 @@
                 {
                   "name": "date",
                   "type": {
-                    "type": "Date"
+                    "text": "Date"
                   }
                 }
               ]
@@ -218,13 +226,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -242,13 +250,13 @@
                 {
                   "name": "month",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "year",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -261,13 +269,13 @@
                 {
                   "name": "month",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "year",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -290,19 +298,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "previousMonth",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "previousYear",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -315,19 +323,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nextMonth",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nextYear",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -340,19 +348,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "previousMonth",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "previousYear",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -365,19 +373,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nextMonth",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nextYear",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -390,25 +398,25 @@
                 {
                   "name": "mode",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "month",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "year",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -421,13 +429,13 @@
                 {
                   "name": "_day",
                   "type": {
-                    "type": "Day"
+                    "text": "Day"
                   }
                 },
                 {
                   "name": "param1",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   }
                 }
               ]
@@ -440,7 +448,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "Day"
+                    "text": "Day"
                   },
                   "optional": true
                 }
@@ -459,7 +467,7 @@
                 {
                   "name": "selectedDate",
                   "type": {
-                    "type": "Date"
+                    "text": "Date"
                   }
                 }
               ]
@@ -487,7 +495,7 @@
                 {
                   "name": "date",
                   "type": {
-                    "type": "Date"
+                    "text": "Date"
                   }
                 }
               ]
@@ -500,19 +508,19 @@
                 {
                   "name": "date",
                   "type": {
-                    "type": "Date"
+                    "text": "Date"
                   }
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 },
                 {
                   "name": "opts.mode",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "Find best date in `future/past/both`",
                   "optional": true
@@ -527,7 +535,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -550,7 +558,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -563,31 +571,31 @@
                 {
                   "name": "modify",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 },
                 {
                   "name": "opts.dateType",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "opts.type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "opts.mode",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -631,12 +639,6 @@
           }
         }
       ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./test/demos.screenshots-test.js",
-      "declarations": [],
-      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -734,7 +736,7 @@
                 {
                   "name": "monthDayNumber",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -747,7 +749,7 @@
                 {
                   "name": "monthDayNumber",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -775,14 +777,14 @@
                 {
                   "name": "condition",
                   "type": {
-                    "type": "function"
+                    "text": "function"
                   },
                   "description": ": condition that should apply for \"filter\" days\nExample: \"(dayObj) => dayObj.selected\""
                 },
                 {
                   "name": "filter",
                   "type": {
-                    "type": "number[]|function"
+                    "text": "number[]|function"
                   },
                   "description": "month day numbers for which condition should apply.\n- Example 1: \"[15, 20]\"\n- Example 2: \"(dayNumber) => dayNumber === 15\" (1 based ,not zero based)",
                   "optional": true
@@ -914,6 +916,18 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./test/demos.screenshots-test.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/day.d.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -1127,12 +1141,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./types/day.d.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "./src/utils/createDay.js",
       "declarations": [
         {
@@ -1140,14 +1148,14 @@
           "name": "createDay",
           "return": {
             "type": {
-              "type": "Day"
+              "text": "Day"
             }
           },
           "parameters": [
             {
               "name": "date,",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             },
             {
@@ -1177,26 +1185,26 @@
           "name": "createMonth",
           "return": {
             "type": {
-              "type": "Month"
+              "text": "Month"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             },
             {
               "name": "opts",
               "type": {
-                "type": "Object"
+                "text": "Object"
               }
             },
             {
               "name": "opts.firstDayOfWeek",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "optional": true
             }
@@ -1223,14 +1231,14 @@
           "name": "createMultipleMonth",
           "return": {
             "type": {
-              "type": "{months: Month[]}"
+              "text": "{months: Month[]}"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]
@@ -1256,26 +1264,26 @@
           "name": "createWeek",
           "return": {
             "type": {
-              "type": "Week"
+              "text": "Week"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             },
             {
               "name": "opts",
               "type": {
-                "type": "Object"
+                "text": "Object"
               }
             },
             {
               "name": "opts.firstDayOfWeek",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "optional": true
             }
@@ -1304,13 +1312,13 @@
             {
               "name": "data",
               "type": {
-                "type": "{months: {weeks: {days: Day[]}[]}[]}"
+                "text": "{months: {weeks: {days: Day[]}[]}[]}"
               }
             },
             {
               "name": "opts",
               "type": {
-                "type": "{ weekdaysShort: string[], weekdays: string[], monthsLabels?: string[], dayTemplate?: (day: TemplateResult }"
+                "text": "{ weekdaysShort: string[], weekdays: string[], monthsLabels?: string[], dayTemplate?: (day: TemplateResult }"
               }
             }
           ]
@@ -1338,13 +1346,13 @@
             {
               "name": "day",
               "type": {
-                "type": "Day"
+                "text": "Day"
               }
             },
             {
               "name": "opts",
               "type": {
-                "type": "{ weekdays: string[], monthsLabels?: string[] }"
+                "text": "{ weekdays: string[], monthsLabels?: string[] }"
               }
             }
           ]
@@ -1371,14 +1379,14 @@
           "description": "Gives the first day of the next month",
           "return": {
             "type": {
-              "type": "Date"
+              "text": "Date"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]
@@ -1405,14 +1413,14 @@
           "description": "Gives the last day of the previous month",
           "return": {
             "type": {
-              "type": "Date"
+              "text": "Date"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]
@@ -1439,20 +1447,20 @@
           "description": "Compares if two days are the same",
           "return": {
             "type": {
-              "type": "boolean"
+              "text": "boolean"
             }
           },
           "parameters": [
             {
               "name": "day1",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             },
             {
               "name": "day2",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]

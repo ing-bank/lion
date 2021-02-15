@@ -44,12 +44,9 @@
   "publishConfig": {
     "access": "public"
   },
-<<<<<<< HEAD
   "exports": {
     ".": "./index.js",
     "./lion-accordion": "./lion-accordion.js"
-  }
-=======
+  },
   "customElementsManifest": "custom-elements.json"
->>>>>>> d8595b90... docs: add custom elements manifest
 }

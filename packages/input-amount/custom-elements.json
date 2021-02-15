@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -81,7 +81,7 @@
               "name": "currency",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined"
             },
@@ -113,7 +113,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -142,13 +142,13 @@
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 },
                 {
                   "name": "opts.currency",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -190,14 +190,14 @@
             {
               "name": "modelValue",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "description": "Number to format"
             },
             {
               "name": "givenOptions",
               "type": {
-                "type": "FormatOptions"
+                "text": "FormatOptions"
               },
               "optional": true
             }
@@ -210,13 +210,13 @@
             {
               "name": "currency",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -253,14 +253,14 @@
             {
               "name": "value",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "Number to be parsed"
             },
             {
               "name": "options",
               "type": {
-                "type": "object"
+                "text": "object"
               },
               "description": "Locale Options",
               "optional": true

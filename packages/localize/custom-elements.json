@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -217,7 +217,7 @@
             {
               "name": "localeChanged",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -245,7 +245,7 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -258,7 +258,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -281,19 +281,19 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "data",
                   "type": {
-                    "type": "object"
+                    "text": "object"
                   }
                 }
               ]
@@ -306,13 +306,13 @@
                 {
                   "name": "pattern",
                   "type": {
-                    "type": "RegExp|string"
+                    "text": "RegExp|string"
                   }
                 },
                 {
                   "name": "loader",
                   "type": {
-                    "type": "function"
+                    "text": "function"
                   }
                 }
               ]
@@ -323,27 +323,27 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise.<Object>"
+                  "text": "Promise.<Object>"
                 }
               },
               "parameters": [
                 {
                   "name": "namespaces",
                   "type": {
-                    "type": "NamespaceObject[]"
+                    "text": "NamespaceObject[]"
                   }
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "optional": true
                 },
                 {
                   "name": "options.locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -355,27 +355,27 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise.<Object|void>"
+                  "text": "Promise.<Object|void>"
                 }
               },
               "parameters": [
                 {
                   "name": "namespaceObj",
                   "type": {
-                    "type": "NamespaceObject"
+                    "text": "NamespaceObject"
                   }
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "optional": true
                 },
                 {
                   "name": "options.locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -387,27 +387,27 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "keys",
                   "type": {
-                    "type": "string | string[]"
+                    "text": "string | string[]"
                   }
                 },
                 {
                   "name": "vars",
                   "type": {
-                    "type": "Object.<string,?>"
+                    "text": "Object.<string,?>"
                   },
                   "optional": true
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "optional": true,
                   "default": "{}"
@@ -415,7 +415,7 @@
                 {
                   "name": "opts.locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -439,13 +439,13 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -458,13 +458,13 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -475,32 +475,32 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise.<Object|void>"
+                  "text": "Promise.<Object|void>"
                 }
               },
               "parameters": [
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespaceObj",
                   "type": {
-                    "type": "NamespaceObject"
+                    "text": "NamespaceObject"
                   }
                 },
                 {
                   "name": "isDynamicImport",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -513,19 +513,19 @@
                 {
                   "name": "namespaceObj",
                   "type": {
-                    "type": "NamespaceObject"
+                    "text": "NamespaceObject"
                   }
                 },
                 {
                   "name": "isDynamicImport",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -536,32 +536,32 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise.<any>"
+                  "text": "Promise.<any>"
                 }
               },
               "parameters": [
                 {
                   "name": "loader",
                   "type": {
-                    "type": "function"
+                    "text": "function"
                   }
                 },
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "fallbackLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true,
                   "default": "this._fallbackLocale"
@@ -576,19 +576,19 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "promise",
                   "type": {
-                    "type": "Promise.<Object>"
+                    "text": "Promise.<Object>"
                   }
                 }
               ]
@@ -599,14 +599,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "function|null"
+                  "text": "function|null"
                 }
               },
               "parameters": [
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -617,14 +617,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -637,19 +637,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "listener",
                   "type": {
-                    "type": "EventListener"
+                    "text": "EventListener"
                   }
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "...Object"
+                    "text": "...Object"
                   }
                 }
               ]
@@ -662,19 +662,19 @@
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "listener",
                   "type": {
-                    "type": "EventListener"
+                    "text": "EventListener"
                   }
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "...Object"
+                    "text": "...Object"
                   }
                 }
               ]
@@ -687,7 +687,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -698,20 +698,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "undefined"
+                  "text": "undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "newLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -722,20 +722,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise.<Object>"
+                  "text": "Promise.<Object>"
                 }
               },
               "parameters": [
                 {
                   "name": "newLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -746,20 +746,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string | undefined"
+                  "text": "string | undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "keys",
                   "type": {
-                    "type": "string | string[]"
+                    "text": "string | string[]"
                   }
                 },
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -770,20 +770,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "key",
                   "type": {
-                    "type": "string | undefined"
+                    "text": "string | undefined"
                   }
                 },
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -796,7 +796,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{locale:string, postProcessor:DatePostProcessor}"
+                    "text": "{locale:string, postProcessor:DatePostProcessor}"
                   }
                 }
               ]
@@ -809,7 +809,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{locale:string, postProcessor:NumberPostProcessor}"
+                    "text": "{locale:string, postProcessor:NumberPostProcessor}"
                   }
                 }
               ]
@@ -835,10 +835,6 @@
         {
           "kind": "mixin",
           "name": "LocalizeMixin",
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/LocalizeMixin.js"
-          },
           "members": [
             {
               "kind": "field",
@@ -859,7 +855,7 @@
               "description": "hook into LitElement to only render once all translations are loaded",
               "return": {
                 "type": {
-                  "type": "Promise.<void>"
+                  "text": "Promise.<void>"
                 }
               }
             },
@@ -879,33 +875,33 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string | function"
+                  "text": "string | function"
                 }
               },
               "parameters": [
                 {
                   "name": "keys",
                   "type": {
-                    "type": "string | string[]"
+                    "text": "string | string[]"
                   }
                 },
                 {
                   "name": "variables",
                   "type": {
-                    "type": "Object.<string,?>"
+                    "text": "Object.<string,?>"
                   }
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "optional": true
                 },
                 {
                   "name": "options.locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -917,7 +913,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string[]"
+                  "text": "string[]"
                 }
               }
             },
@@ -944,7 +940,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -962,13 +958,13 @@
                 {
                   "name": "newLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldLocale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -979,10 +975,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "LocalizeMixin"
         }
       ],
       "exports": [
@@ -1005,14 +997,14 @@
           "name": "default",
           "return": {
             "type": {
-              "type": "boolean"
+              "text": "boolean"
             }
           },
           "parameters": [
             {
               "name": "obj",
               "type": {
-                "type": "Object.<string, Object>"
+                "text": "Object.<string, Object>"
               }
             }
           ]
@@ -1038,7 +1030,7 @@
           "name": "localize",
           "description": "",
           "type": {
-            "type": "LocalizeManager"
+            "text": "LocalizeManager"
           }
         },
         {
@@ -1048,7 +1040,7 @@
             {
               "name": "newLocalize",
               "type": {
-                "type": "LocalizeManager"
+                "text": "LocalizeManager"
               }
             }
           ]
@@ -1098,13 +1090,13 @@
             {
               "name": "path",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
               "name": "data",
               "type": {
-                "type": "Object"
+                "text": "Object"
               }
             }
           ]
@@ -1116,13 +1108,13 @@
             {
               "name": "namespaces",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             },
             {
               "name": "locales",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             }
           ]
@@ -1136,20 +1128,20 @@
           "name": "fakeImport",
           "return": {
             "type": {
-              "type": "Promise.<Object>"
+              "text": "Promise.<Object>"
             }
           },
           "parameters": [
             {
               "name": "path",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
               "name": "ms",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "optional": true,
               "default": "0"
@@ -1230,7 +1222,7 @@
           "kind": "variable",
           "name": "fetchMock",
           "type": {
-            "type": "any"
+            "text": "any"
           }
         }
       ],
@@ -1361,20 +1353,20 @@
           "description": "Formats date based on locale and options",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatDateOptions"
+                "text": "FormatDateOptions"
               },
               "description": "Intl options are available",
               "optional": true
@@ -1403,7 +1395,7 @@
           "description": "To compute the localized date format",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           }
         }
@@ -1428,21 +1420,21 @@
           "name": "getMonthNames",
           "return": {
             "type": {
-              "type": "string[]"
+              "text": "string[]"
             }
           },
           "parameters": [
             {
               "name": "options",
               "type": {
-                "type": "Object"
+                "text": "Object"
               },
               "optional": true
             },
             {
               "name": "options.locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "locale",
               "optional": true
@@ -1450,7 +1442,7 @@
             {
               "name": "options.style",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "long, short or narrow",
               "optional": true
@@ -1478,21 +1470,21 @@
           "name": "getWeekdayNames",
           "return": {
             "type": {
-              "type": "string[]"
+              "text": "string[]"
             }
           },
           "parameters": [
             {
               "name": "options",
               "type": {
-                "type": "Object"
+                "text": "Object"
               },
               "optional": true
             },
             {
               "name": "options.locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "locale",
               "optional": true
@@ -1500,7 +1492,7 @@
             {
               "name": "options.style",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "long, short or narrow",
               "optional": true
@@ -1508,7 +1500,7 @@
             {
               "name": "options.firstDayOfWeek",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "description": "0 (Sunday), 1 (Monday), etc...",
               "optional": true
@@ -1536,14 +1528,14 @@
           "name": "normalizeDateTime",
           "return": {
             "type": {
-              "type": "Date"
+              "text": "Date"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]
@@ -1570,14 +1562,14 @@
           "description": "To parse a date into the right format",
           "return": {
             "type": {
-              "type": "Date | undefined"
+              "text": "Date | undefined"
             }
           },
           "parameters": [
             {
               "name": "dateString",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -1604,21 +1596,21 @@
           "description": "Formats a number based on locale and options. It uses Intl for the formatting.",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "number",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "description": "Number to be formatted"
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatOptions"
+                "text": "FormatOptions"
               },
               "description": "Intl options are available extended by roundMode and returnIfNaN",
               "optional": true,
@@ -1648,20 +1640,20 @@
           "description": "Round the number based on the options",
           "return": {
             "type": {
-              "type": "number"
+              "text": "number"
             }
           },
           "parameters": [
             {
               "name": "number",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             },
             {
               "name": "roundMode",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -1672,21 +1664,21 @@
           "description": "Splits a number up in parts for integer, fraction, group, literal, decimal and currency.",
           "return": {
             "type": {
-              "type": "string | FormatNumberPart[]"
+              "text": "string | FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "number",
               "type": {
-                "type": "number"
+                "text": "number"
               },
               "description": "Number to split up"
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "description": "Intl options are available extended by roundMode,returnIfNaN",
               "optional": true,
@@ -1724,21 +1716,21 @@
           "description": "Based on number, returns currency name like 'US dollar'",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "currencyIso",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "iso code like USD"
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "description": "Intl options are available extended by roundMode",
               "optional": true
@@ -1767,14 +1759,14 @@
           "description": "To get the decimal separator",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "To override the browser locale",
               "optional": true
@@ -1802,14 +1794,14 @@
           "name": "getFractionDigits",
           "return": {
             "type": {
-              "type": "number"
+              "text": "number"
             }
           },
           "parameters": [
             {
               "name": "currency",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "Currency code e.g. EUR",
               "optional": true,
@@ -1839,14 +1831,14 @@
           "description": "Gets the group separator",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "To override the browser locale",
               "optional": true
@@ -1875,20 +1867,20 @@
           "description": "For Turkey fixes currency label with locale options",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "currency",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -1915,14 +1907,14 @@
           "description": "Gets the locale to use",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "Locale to override browser locale",
               "optional": true
@@ -1951,14 +1943,14 @@
           "description": "To add a leading zero to a single number",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "dateString",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -1985,14 +1977,14 @@
           "description": "To clean date from added characters from IE",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "dateAsString",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2020,7 +2012,7 @@
             {
               "name": "months",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             }
           ]
@@ -2047,20 +2039,20 @@
           "description": "To filter out some added characters in IE",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "str",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
               "name": "locale",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "optional": true,
               "default": "''"
@@ -2068,7 +2060,7 @@
             {
               "name": "options",
               "type": {
-                "type": "FormatDateOptions"
+                "text": "FormatDateOptions"
               },
               "description": "Intl options are available",
               "optional": true
@@ -2097,14 +2089,14 @@
           "description": "To get the absolute value of a number.",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "n",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "number in string format"
             }
@@ -2132,14 +2124,14 @@
           "description": "To sanitize a date from IE11 handling",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "date",
               "type": {
-                "type": "Date"
+                "text": "Date"
               }
             }
           ]
@@ -2166,14 +2158,14 @@
           "description": "To split a date into days, months, years, etc",
           "return": {
             "type": {
-              "type": "ArrayLike.<string> | null"
+              "text": "ArrayLike.<string> | null"
             }
           },
           "parameters": [
             {
               "name": "dateAsString",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2200,14 +2192,14 @@
           "description": "To trim the date",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "dateAsString",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2234,14 +2226,14 @@
           "description": "When number is NaN we should return an empty string or returnIfNaN param",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "returnIfNaN",
               "type": {
-                "type": "string|undefined"
+                "text": "string|undefined"
               }
             }
           ]
@@ -2267,14 +2259,14 @@
           "name": "normalSpaces",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "value",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2302,7 +2294,7 @@
             {
               "name": "currencyName",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2329,20 +2321,20 @@
           "description": "Add separators when they are not present",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "groupSeparator",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -2369,14 +2361,14 @@
           "description": "For Dutch and Belgian amounts the currency should be at the end of the string",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             }
           ]
@@ -2403,20 +2395,20 @@
           "description": "Change the symbols for locale 'en-AU', due to bug in Chrome",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "optional": true
             }
@@ -2444,14 +2436,14 @@
           "description": "Parts with forced \"normal\" spaces",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             }
           ]
@@ -2478,20 +2470,20 @@
           "description": "When in some locales there is no space between currency and amount it is added",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "optional": true
             }
@@ -2518,14 +2510,14 @@
           "name": "forceSpaceInsteadOfZeroForGroup",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             }
           ]
@@ -2551,20 +2543,20 @@
           "name": "forceTryCurrencyCode",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "optional": true
             }
@@ -2591,20 +2583,20 @@
           "name": "forceYenSymbol",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "optional": true
             }
@@ -2632,27 +2624,27 @@
           "description": "Normalizes function \"formatNumberToParts\"",
           "return": {
             "type": {
-              "type": "FormatNumberPart[]"
+              "text": "FormatNumberPart[]"
             }
           },
           "parameters": [
             {
               "name": "formattedParts",
               "type": {
-                "type": "FormatNumberPart[]"
+                "text": "FormatNumberPart[]"
               }
             },
             {
               "name": "options",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               },
               "default": "{}"
             },
             {
               "name": "_locale",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]

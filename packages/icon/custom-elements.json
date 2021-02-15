@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -13,6 +13,14 @@
           "declaration": {
             "name": "LionIcon",
             "module": "./src/LionIcon.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IconManager",
+          "declaration": {
+            "name": "IconManager",
+            "module": "./src/IconManager.js"
           }
         },
         {
@@ -65,13 +73,13 @@
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "iconResolver",
                   "type": {
-                    "type": "(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing> "
+                    "text": "(iconset: string, icon: string) => TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing> "
                   }
                 }
               ]
@@ -85,7 +93,7 @@
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -97,26 +105,26 @@
               "description": "Resolves icon for the given parameters. Returns the icon as a svg string.",
               "return": {
                 "type": {
-                  "type": "Promise<TemplateResult>"
+                  "text": "Promise<TemplateResult>"
                 }
               },
               "parameters": [
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "iconset",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "icon",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -128,14 +136,14 @@
               "description": "Resolves icon for the given icon id. Returns the icon as a svg string.",
               "return": {
                 "type": {
-                  "type": "Promise<TemplateResult>"
+                  "text": "Promise<TemplateResult>"
                 }
               },
               "parameters": [
                 {
                   "name": "iconId",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -202,7 +210,7 @@
                 {
                   "name": "svgObject",
                   "type": {
-                    "type": "TemplateResult | nothing"
+                    "text": "TemplateResult | nothing"
                   }
                 }
               ]
@@ -220,7 +228,7 @@
                 {
                   "name": "prevIconId",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]

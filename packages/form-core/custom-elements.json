@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -373,29 +373,38 @@
         {
           "kind": "mixin",
           "name": "FocusMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "events": [
             {
               "name": "focus",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             },
             {
               "name": "blur",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             },
             {
               "name": "focusin",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             },
             {
               "name": "focusout",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -405,10 +414,6 @@
               "module": "/src/FormControlMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/FocusMixin.js"
-          },
           "attributes": [
             {
               "name": "focused",
@@ -463,10 +468,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "FocusMixin"
         }
       ],
       "exports": [
@@ -487,17 +488,26 @@
         {
           "kind": "mixin",
           "name": "FormControlMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "events": [
             {
               "name": "form-element-name-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -508,17 +518,13 @@
             },
             {
               "name": "DisabledMixin",
-              "package": "@lion/core/src/DisabledMixin.js"
+              "package": "@lion/core"
             },
             {
               "name": "SlotMixin",
               "package": "@lion/core"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/FormControlMixin.js"
-          },
           "attributes": [
             {
               "name": "name",
@@ -543,7 +549,7 @@
               "name": "name",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined"
             },
@@ -572,7 +578,7 @@
               "name": "_ariaLabelledNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]"
             },
@@ -581,7 +587,7 @@
               "name": "_ariaDescribedNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]"
             },
@@ -590,7 +596,7 @@
               "name": "_repropagationRole",
               "privacy": "public",
               "type": {
-                "type": "'child'|'choice-group'|'fieldset'"
+                "text": "'child'|'choice-group'|'fieldset'"
               },
               "default": "'child'"
             },
@@ -648,7 +654,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -677,7 +683,7 @@
                 {
                   "name": "additionalSlots",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "['prefix', 'suffix', 'before', 'after']"
                 }
@@ -692,19 +698,19 @@
                 {
                   "name": "attrName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nodes",
                   "type": {
-                    "type": "HTMLElement[]"
+                    "text": "HTMLElement[]"
                   }
                 },
                 {
                   "name": "reorder",
                   "type": {
-                    "type": "boolean|undefined"
+                    "text": "boolean|undefined"
                   }
                 }
               ]
@@ -721,7 +727,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -731,7 +737,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -741,7 +747,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -751,7 +757,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -761,7 +767,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -771,7 +777,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -781,7 +787,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               }
             },
@@ -791,7 +797,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -801,7 +807,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               }
             },
@@ -811,7 +817,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -821,7 +827,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -831,14 +837,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "default": "this.modelValue"
                 }
@@ -850,7 +856,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Array.<HTMLElement|undefined>"
+                  "text": "Array.<HTMLElement|undefined>"
                 }
               }
             },
@@ -863,13 +869,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -884,13 +890,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -902,14 +908,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "HTMLElement | undefined"
+                  "text": "HTMLElement | undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -927,7 +933,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -940,7 +946,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -954,7 +960,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ]
@@ -965,10 +971,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "FormControlMixin"
         }
       ],
       "exports": [
@@ -989,17 +991,26 @@
         {
           "kind": "mixin",
           "name": "FormatMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "events": [
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "user-input-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -1013,10 +1024,6 @@
               "module": "/src/FormControlMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/FormatMixin.js"
-          },
           "members": [
             {
               "kind": "field",
@@ -1048,13 +1055,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldVal",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -1071,21 +1078,21 @@
               "description": "Converts formattedValue to modelValue\nFor instance, a localized date to a Date Object",
               "return": {
                 "type": {
-                  "type": "*"
+                  "text": "*"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "formattedValue: the formatted value inside <input>"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ]
@@ -1097,21 +1104,21 @@
               "description": "Converts modelValue to formattedValue (formattedValue will be synced with\n`._inputNode.value`)\nFor instance, a Date object to a localized date.",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ]
@@ -1123,14 +1130,14 @@
               "description": "Converts `.modelValue` to `.serializedValue`\nFor instance, a Date object to an iso formatted date string",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -1143,14 +1150,14 @@
               "description": "Converts `LionField.value` to `.modelValue`\nFor instance, an iso formatted date string to a Date object",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -1165,7 +1172,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{source:'model'|'serialized'|'formatted'|null}"
+                    "text": "{source:'model'|'serialized'|'formatted'|null}"
                   },
                   "description": "the type of value that triggered this method. It should not be\nset again, so that its observer won't be triggered. Can be:\n'model'|'formatted'|'serialized'."
                 }
@@ -1177,14 +1184,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string|undefined"
+                    "text": "string|undefined"
                   },
                   "default": "this.formattedValue"
                 }
@@ -1196,7 +1203,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string|undefined"
+                  "text": "string|undefined"
                 }
               }
             },
@@ -1209,7 +1216,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   }
                 }
               ]
@@ -1222,7 +1229,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   },
                   "description": "This is wrapped in a distinct method, so that parents can control when the changed event\nis fired. For objects, a deep comparison might be needed."
                 }
@@ -1246,7 +1253,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               }
             },
@@ -1271,10 +1278,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "FormatMixin"
         }
       ],
       "exports": [
@@ -1295,17 +1298,26 @@
         {
           "kind": "mixin",
           "name": "InteractionStateMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "events": [
             {
               "name": "touched-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "dirty-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -1315,10 +1327,6 @@
               "module": "/src/FormControlMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/InteractionStateMixin.js"
-          },
           "attributes": [
             {
               "name": "touched",
@@ -1371,13 +1379,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "PropertyKey"
+                    "text": "PropertyKey"
                   }
                 },
                 {
                   "name": "oldVal",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   }
                 }
               ]
@@ -1434,10 +1442,6 @@
               "description": "Show the validity feedback when one of the following conditions is met:\n\n- submitted\nIf the form is submitted, always show the error message.\n\n- prefilled\nthe user already filled in something, or the value is prefilled\nwhen the form is initially rendered.\n\n- touched && dirty\nWhen a user starts typing for the first time in a field with for instance `required`\nvalidation, error message should not be shown until a field becomes `touched`\n(a user leaves(blurs) a field).\nWhen a user enters a field without altering the value(making it `dirty`),\nan error message shouldn't be shown either."
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "InteractionStateMixin"
         }
       ],
       "exports": [
@@ -1462,13 +1466,13 @@
             {
               "name": "user-input-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "form-element-name-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "FormControlMixin",
@@ -1478,7 +1482,7 @@
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "FormControlMixin",
@@ -1488,7 +1492,7 @@
             {
               "name": "touched-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "InteractionStateMixin",
@@ -1498,7 +1502,7 @@
             {
               "name": "dirty-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "InteractionStateMixin",
@@ -1508,7 +1512,7 @@
             {
               "name": "focus",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -1518,7 +1522,7 @@
             {
               "name": "blur",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -1528,7 +1532,7 @@
             {
               "name": "focusin",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -1538,7 +1542,7 @@
             {
               "name": "focusout",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -1656,7 +1660,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined"
             },
@@ -1691,7 +1695,7 @@
               "name": "name",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined",
               "inheritedFrom": {
@@ -1740,7 +1744,7 @@
               "name": "_ariaLabelledNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]",
               "inheritedFrom": {
@@ -1753,7 +1757,7 @@
               "name": "_ariaDescribedNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]",
               "inheritedFrom": {
@@ -1766,7 +1770,7 @@
               "name": "_repropagationRole",
               "privacy": "public",
               "type": {
-                "type": "'child'|'choice-group'|'fieldset'"
+                "text": "'child'|'choice-group'|'fieldset'"
               },
               "default": "'child'",
               "inheritedFrom": {
@@ -1864,7 +1868,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -1909,7 +1913,7 @@
                 {
                   "name": "additionalSlots",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "['prefix', 'suffix', 'before', 'after']"
                 }
@@ -1928,19 +1932,19 @@
                 {
                   "name": "attrName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nodes",
                   "type": {
-                    "type": "HTMLElement[]"
+                    "text": "HTMLElement[]"
                   }
                 },
                 {
                   "name": "reorder",
                   "type": {
-                    "type": "boolean|undefined"
+                    "text": "boolean|undefined"
                   }
                 }
               ],
@@ -1965,7 +1969,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -1979,7 +1983,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -1993,7 +1997,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2007,7 +2011,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2021,7 +2025,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2035,7 +2039,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2049,7 +2053,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               },
               "inheritedFrom": {
@@ -2063,7 +2067,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2077,7 +2081,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               },
               "inheritedFrom": {
@@ -2091,7 +2095,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2105,7 +2109,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -2119,14 +2123,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "default": "this.modelValue"
                 }
@@ -2142,7 +2146,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Array.<HTMLElement|undefined>"
+                  "text": "Array.<HTMLElement|undefined>"
                 }
               },
               "inheritedFrom": {
@@ -2159,13 +2163,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -2184,13 +2188,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -2206,14 +2210,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "HTMLElement | undefined"
+                  "text": "HTMLElement | undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -2239,7 +2243,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ],
@@ -2256,7 +2260,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ],
@@ -2274,7 +2278,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -2349,13 +2353,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "PropertyKey"
+                    "text": "PropertyKey"
                   }
                 },
                 {
                   "name": "oldVal",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   }
                 }
               ],
@@ -2531,21 +2535,21 @@
               "description": "Converts formattedValue to modelValue\nFor instance, a localized date to a Date Object",
               "return": {
                 "type": {
-                  "type": "*"
+                  "text": "*"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "formattedValue: the formatted value inside <input>"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ],
@@ -2561,21 +2565,21 @@
               "description": "Converts modelValue to formattedValue (formattedValue will be synced with\n`._inputNode.value`)\nFor instance, a Date object to a localized date.",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ],
@@ -2591,14 +2595,14 @@
               "description": "Converts `.modelValue` to `.serializedValue`\nFor instance, a Date object to an iso formatted date string",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -2615,14 +2619,14 @@
               "description": "Converts `LionField.value` to `.modelValue`\nFor instance, an iso formatted date string to a Date object",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -2641,7 +2645,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{source:'model'|'serialized'|'formatted'|null}"
+                    "text": "{source:'model'|'serialized'|'formatted'|null}"
                   },
                   "description": "the type of value that triggered this method. It should not be\nset again, so that its observer won't be triggered. Can be:\n'model'|'formatted'|'serialized'."
                 }
@@ -2657,14 +2661,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string|undefined"
+                    "text": "string|undefined"
                   },
                   "default": "this.formattedValue"
                 }
@@ -2680,7 +2684,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string|undefined"
+                  "text": "string|undefined"
                 }
               },
               "inheritedFrom": {
@@ -2697,7 +2701,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   }
                 }
               ],
@@ -2714,7 +2718,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   },
                   "description": "This is wrapped in a distinct method, so that parents can control when the changed event\nis fired. For objects, a deep comparison might be needed."
                 }
@@ -2750,7 +2754,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "inheritedFrom": {
@@ -2798,20 +2802,31 @@
         {
           "kind": "mixin",
           "name": "NativeTextFieldMixin",
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/NativeTextFieldMixin.js"
-          },
+          "parameters": [
+            {
+              "name": "superclass}",
+              "type": {
+                "text": "NativeTextField>"
+              },
+              "description": "superclass"
+            }
+          ],
           "members": [
             {
               "kind": "field",
               "name": "selectionStart",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "kind": "field",
               "name": "selectionEnd",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              }
             },
             {
               "kind": "field",
@@ -2827,17 +2842,13 @@
                 {
                   "name": "newValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "The value that should be saved."
                 }
               ]
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "NativeTextFieldMixin"
         }
       ],
       "exports": [
@@ -2896,7 +2907,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise<boolean> | boolean"
+                  "text": "Promise<boolean> | boolean"
                 }
               }
             }
@@ -2922,7 +2933,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise<boolean>"
+                  "text": "Promise<boolean>"
                 }
               }
             },
@@ -2958,7 +2969,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise<boolean>"
+                  "text": "Promise<boolean>"
                 }
               }
             },
@@ -3023,7 +3034,7 @@
               "name": "focused",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -3032,7 +3043,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3042,7 +3053,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3052,7 +3063,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3062,7 +3073,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3072,7 +3083,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3082,7 +3093,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3092,7 +3103,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3102,7 +3113,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -3113,14 +3124,14 @@
           "name": "FocusImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<FocusHost> & FocusHost & Constructor<FormControlHost> & typeof FormControlHost"
+              "text": "T & Constructor<FocusHost> & FocusHost & Constructor<FormControlHost> & typeof FormControlHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -3158,7 +3169,7 @@
               "name": "readOnly",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -3166,7 +3177,7 @@
               "name": "name",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3174,7 +3185,7 @@
               "name": "modelValue",
               "privacy": "public",
               "type": {
-                "type": "unknown"
+                "text": "unknown"
               }
             },
             {
@@ -3182,7 +3193,7 @@
               "name": "label",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3190,7 +3201,7 @@
               "name": "__label",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               }
             },
             {
@@ -3198,7 +3209,7 @@
               "name": "helpText",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3206,7 +3217,7 @@
               "name": "__helpText",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               }
             },
             {
@@ -3219,7 +3230,7 @@
               "name": "__fieldName",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               }
             },
             {
@@ -3227,7 +3238,7 @@
               "name": "slots",
               "privacy": "public",
               "type": {
-                "type": "SlotsMap"
+                "text": "SlotsMap"
               }
             },
             {
@@ -3235,7 +3246,7 @@
               "name": "_inputNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLElementWithValue"
+                "text": "HTMLElementWithValue"
               }
             },
             {
@@ -3243,7 +3254,7 @@
               "name": "_labelNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             },
             {
@@ -3251,7 +3262,7 @@
               "name": "_helpTextNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             },
             {
@@ -3259,7 +3270,7 @@
               "name": "_feedbackNode",
               "privacy": "public",
               "type": {
-                "type": "LionValidationFeedback | undefined"
+                "text": "LionValidationFeedback | undefined"
               }
             },
             {
@@ -3267,7 +3278,7 @@
               "name": "_inputId",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3275,7 +3286,7 @@
               "name": "_ariaLabelledNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               }
             },
             {
@@ -3283,7 +3294,7 @@
               "name": "_ariaDescribedNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               }
             },
             {
@@ -3291,7 +3302,7 @@
               "name": "_repropagationRole",
               "privacy": "public",
               "type": {
-                "type": "'child' | 'choice-group' | 'fieldset'"
+                "text": "'child' | 'choice-group' | 'fieldset'"
               }
             },
             {
@@ -3299,7 +3310,7 @@
               "name": "_isRepropagationEndpoint",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -3308,7 +3319,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3318,14 +3329,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "import('@lion/core').PropertyValues"
+                    "text": "import('@lion/core').PropertyValues"
                   }
                 }
               ]
@@ -3336,7 +3347,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3346,7 +3357,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3356,7 +3367,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3366,7 +3377,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3376,7 +3387,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3386,7 +3397,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3396,7 +3407,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3406,7 +3417,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | typeof nothing"
+                  "text": "TemplateResult | typeof nothing"
                 }
               }
             },
@@ -3416,7 +3427,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3426,7 +3437,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | typeof nothing"
+                  "text": "TemplateResult | typeof nothing"
                 }
               }
             },
@@ -3436,7 +3447,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3446,7 +3457,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -3456,7 +3467,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3466,7 +3477,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3476,7 +3487,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3486,14 +3497,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "additionalSlots",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 }
               ]
@@ -3504,26 +3515,26 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "attrName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nodes",
                   "type": {
-                    "type": "HTMLElement[]"
+                    "text": "HTMLElement[]"
                   }
                 },
                 {
                   "name": "reorder",
                   "type": {
-                    "type": "boolean | undefined"
+                    "text": "boolean | undefined"
                   }
                 }
               ]
@@ -3534,14 +3545,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -3552,7 +3563,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "HTMLElement[]"
+                  "text": "HTMLElement[]"
                 }
               }
             },
@@ -3562,20 +3573,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{\n      idPrefix?: string | undefined;\n      reorder?: boolean | undefined;\n    }"
+                    "text": "{\n      idPrefix?: string | undefined;\n      reorder?: boolean | undefined;\n    }"
                   }
                 }
               ]
@@ -3585,7 +3596,7 @@
               "name": "__reorderAriaLabelledNodes",
               "privacy": "public",
               "type": {
-                "type": "boolean | undefined"
+                "text": "boolean | undefined"
               }
             },
             {
@@ -3594,20 +3605,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{\n      idPrefix?: string | undefined;\n      reorder?: boolean | undefined;\n    }"
+                    "text": "{\n      idPrefix?: string | undefined;\n      reorder?: boolean | undefined;\n    }"
                   }
                 }
               ]
@@ -3617,7 +3628,7 @@
               "name": "__reorderAriaDescribedNodes",
               "privacy": "public",
               "type": {
-                "type": "boolean | undefined"
+                "text": "boolean | undefined"
               }
             },
             {
@@ -3626,14 +3637,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "HTMLElement"
+                  "text": "HTMLElement"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -3644,7 +3655,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3653,7 +3664,7 @@
               "name": "__repropagateChildrenInitialized",
               "privacy": "public",
               "type": {
-                "type": "boolean | undefined"
+                "text": "boolean | undefined"
               }
             },
             {
@@ -3662,14 +3673,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -3680,14 +3691,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -3699,14 +3710,14 @@
           "name": "FormControlImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<FormRegisteringHost> &\n  typeof FormRegisteringHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost"
+              "text": "T &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<FormRegisteringHost> &\n  typeof FormRegisteringHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -3744,7 +3755,7 @@
               "name": "formattedValue",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3752,7 +3763,7 @@
               "name": "serializedValue",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3760,7 +3771,7 @@
               "name": "formatOn",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3768,7 +3779,7 @@
               "name": "formatOptions",
               "privacy": "public",
               "type": {
-                "type": "FormatNumberOptions"
+                "text": "FormatNumberOptions"
               }
             },
             {
@@ -3776,7 +3787,7 @@
               "name": "__preventRecursiveTrigger",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -3784,7 +3795,7 @@
               "name": "__isHandlingUserInput",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -3793,20 +3804,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "unknown"
+                  "text": "unknown"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatNumberOptions"
+                    "text": "FormatNumberOptions"
                   }
                 }
               ]
@@ -3817,20 +3828,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatNumberOptions"
+                    "text": "FormatNumberOptions"
                   }
                 }
               ]
@@ -3841,14 +3852,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -3859,14 +3870,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "unknown"
+                  "text": "unknown"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -3876,7 +3887,7 @@
               "name": "value",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -3885,14 +3896,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "opts",
                   "type": {
-                    "type": "{ source: 'model' | 'serialized' | 'formatted' | null }"
+                    "text": "{ source: 'model' | 'serialized' | 'formatted' | null }"
                   }
                 }
               ]
@@ -3903,14 +3914,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "object"
+                  "text": "object"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string | undefined"
+                    "text": "string | undefined"
                   }
                 }
               ]
@@ -3921,7 +3932,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               }
             },
@@ -3931,14 +3942,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "arg",
                   "type": {
-                    "type": "{ modelValue: unknown }"
+                    "text": "{ modelValue: unknown }"
                   }
                 }
               ]
@@ -3949,7 +3960,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3959,7 +3970,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3969,7 +3980,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3979,7 +3990,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -3989,7 +4000,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               }
             },
@@ -3999,7 +4010,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4009,7 +4020,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4019,7 +4030,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4029,7 +4040,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -4040,14 +4051,14 @@
           "name": "FormatImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<FormatHost> &\n  FormatHost &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
+              "text": "T &\n  Constructor<FormatHost> &\n  FormatHost &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -4085,7 +4096,7 @@
               "name": "prefilled",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -4093,7 +4104,7 @@
               "name": "filled",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -4101,7 +4112,7 @@
               "name": "touched",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -4109,7 +4120,7 @@
               "name": "dirty",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -4117,7 +4128,7 @@
               "name": "submitted",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -4125,7 +4136,7 @@
               "name": "_leaveEvent",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -4133,7 +4144,7 @@
               "name": "_valueChangedEvent",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -4142,7 +4153,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4152,7 +4163,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4162,7 +4173,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4172,7 +4183,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4182,7 +4193,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4192,7 +4203,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4202,7 +4213,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -4212,7 +4223,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -4223,14 +4234,14 @@
           "name": "InteractionStateImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<InteractionStateHost> &\n  typeof InteractionStateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
+              "text": "T &\n  Constructor<InteractionStateHost> &\n  typeof InteractionStateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -4272,7 +4283,7 @@
               "name": "_inputNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLTextAreaElement | HTMLInputElement"
+                "text": "HTMLTextAreaElement | HTMLInputElement"
               }
             },
             {
@@ -4280,7 +4291,7 @@
               "name": "name",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined",
               "inheritedFrom": {
@@ -4329,7 +4340,7 @@
               "name": "_ariaLabelledNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]",
               "inheritedFrom": {
@@ -4342,7 +4353,7 @@
               "name": "_ariaDescribedNodes",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "default": "[]",
               "inheritedFrom": {
@@ -4355,7 +4366,7 @@
               "name": "_repropagationRole",
               "privacy": "public",
               "type": {
-                "type": "'child'|'choice-group'|'fieldset'"
+                "text": "'child'|'choice-group'|'fieldset'"
               },
               "default": "'child'",
               "inheritedFrom": {
@@ -4444,7 +4455,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -4489,7 +4500,7 @@
                 {
                   "name": "additionalSlots",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "['prefix', 'suffix', 'before', 'after']"
                 }
@@ -4508,19 +4519,19 @@
                 {
                   "name": "attrName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "nodes",
                   "type": {
-                    "type": "HTMLElement[]"
+                    "text": "HTMLElement[]"
                   }
                 },
                 {
                   "name": "reorder",
                   "type": {
-                    "type": "boolean|undefined"
+                    "text": "boolean|undefined"
                   }
                 }
               ],
@@ -4545,7 +4556,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4559,7 +4570,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4573,7 +4584,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4587,7 +4598,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4601,7 +4612,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4615,7 +4626,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4629,7 +4640,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               },
               "inheritedFrom": {
@@ -4643,7 +4654,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4657,7 +4668,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult | nothing"
+                  "text": "TemplateResult | nothing"
                 }
               },
               "inheritedFrom": {
@@ -4671,7 +4682,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4685,7 +4696,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "inheritedFrom": {
@@ -4699,14 +4710,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "default": "this.modelValue"
                 }
@@ -4722,7 +4733,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Array.<HTMLElement|undefined>"
+                  "text": "Array.<HTMLElement|undefined>"
                 }
               },
               "inheritedFrom": {
@@ -4739,13 +4750,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -4764,13 +4775,13 @@
                 {
                   "name": "element",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "customConfig",
                   "type": {
-                    "type": "{idPrefix?:string; reorder?: boolean}"
+                    "text": "{idPrefix?:string; reorder?: boolean}"
                   },
                   "default": "{}"
                 }
@@ -4786,14 +4797,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "HTMLElement | undefined"
+                  "text": "HTMLElement | undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -4819,7 +4830,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ],
@@ -4836,7 +4847,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ],
@@ -4854,7 +4865,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -4929,13 +4940,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "PropertyKey"
+                    "text": "PropertyKey"
                   }
                 },
                 {
                   "name": "oldVal",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   }
                 }
               ],
@@ -5130,21 +5141,21 @@
               "description": "Converts formattedValue to modelValue\nFor instance, a localized date to a Date Object",
               "return": {
                 "type": {
-                  "type": "*"
+                  "text": "*"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "formattedValue: the formatted value inside <input>"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ],
@@ -5160,21 +5171,21 @@
               "description": "Converts modelValue to formattedValue (formattedValue will be synced with\n`._inputNode.value`)\nFor instance, a Date object to a localized date.",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "FormatOptions"
+                    "text": "FormatOptions"
                   }
                 }
               ],
@@ -5190,14 +5201,14 @@
               "description": "Converts `.modelValue` to `.serializedValue`\nFor instance, a Date object to an iso formatted date string",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -5214,14 +5225,14 @@
               "description": "Converts `LionField.value` to `.modelValue`\nFor instance, an iso formatted date string to a Date object",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   },
                   "description": "modelValue: can be an Object, Number, String depending on the\ninput type(date, number, email etc)"
                 }
@@ -5240,7 +5251,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{source:'model'|'serialized'|'formatted'|null}"
+                    "text": "{source:'model'|'serialized'|'formatted'|null}"
                   },
                   "description": "the type of value that triggered this method. It should not be\nset again, so that its observer won't be triggered. Can be:\n'model'|'formatted'|'serialized'."
                 }
@@ -5256,14 +5267,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "?"
+                  "text": "?"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string|undefined"
+                    "text": "string|undefined"
                   },
                   "default": "this.formattedValue"
                 }
@@ -5279,7 +5290,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string|undefined"
+                  "text": "string|undefined"
                 }
               },
               "inheritedFrom": {
@@ -5296,7 +5307,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   }
                 }
               ],
@@ -5313,7 +5324,7 @@
                 {
                   "name": "args",
                   "type": {
-                    "type": "{ modelValue: unknown; }[]"
+                    "text": "{ modelValue: unknown; }[]"
                   },
                   "description": "This is wrapped in a distinct method, so that parents can control when the changed event\nis fired. For objects, a deep comparison might be needed."
                 }
@@ -5349,7 +5360,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "inheritedFrom": {
@@ -5380,7 +5391,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "string | undefined"
+                "text": "string | undefined"
               },
               "default": "undefined",
               "inheritedFrom": {
@@ -5503,7 +5514,7 @@
             {
               "name": "form-element-name-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "FormControlMixin",
@@ -5513,7 +5524,7 @@
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "FormControlMixin",
@@ -5523,7 +5534,7 @@
             {
               "name": "touched-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "InteractionStateMixin",
@@ -5533,7 +5544,7 @@
             {
               "name": "dirty-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "InteractionStateMixin",
@@ -5543,7 +5554,7 @@
             {
               "name": "focus",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -5553,7 +5564,7 @@
             {
               "name": "blur",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -5563,7 +5574,7 @@
             {
               "name": "focusin",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -5573,7 +5584,7 @@
             {
               "name": "focusout",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "FocusMixin",
@@ -5583,7 +5594,7 @@
             {
               "name": "user-input-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "FormatMixin",
@@ -5601,7 +5612,7 @@
               "name": "selectionStart",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             },
             {
@@ -5609,7 +5620,7 @@
               "name": "selectionEnd",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             }
           ]
@@ -5619,14 +5630,14 @@
           "name": "NativeTextFieldImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<NativeTextFieldHost> & NativeTextFieldHost & typeof NativeTextField"
+              "text": "T & Constructor<NativeTextFieldHost> & NativeTextFieldHost & typeof NativeTextField"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -5666,6 +5677,15 @@
         {
           "kind": "mixin",
           "name": "ChoiceGroupMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "mixins": [
             {
               "name": "FormRegistrarMixin",
@@ -5676,10 +5696,6 @@
               "module": "/src/choice-group/InteractionStateMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/choice-group/ChoiceGroupMixin.js"
-          },
           "attributes": [
             {
               "name": "multiple-choice",
@@ -5721,7 +5737,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues"
+                    "text": "PropertyValues"
                   }
                 }
               ]
@@ -5739,13 +5755,13 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControl"
+                    "text": "FormControl"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -5763,7 +5779,7 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
@@ -5780,7 +5796,7 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControl"
+                    "text": "FormControl"
                   }
                 }
               ]
@@ -5798,7 +5814,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent & {target:FormControl}"
+                    "text": "CustomEvent & {target:FormControl}"
                   }
                 }
               ]
@@ -5816,13 +5832,13 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "string | any[]"
+                    "text": "string | any[]"
                   }
                 },
                 {
                   "name": "check",
                   "type": {
-                    "type": "Function"
+                    "text": "Function"
                   }
                 }
               ]
@@ -5840,16 +5856,12 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "ChoiceGroupMixin"
         }
       ],
       "exports": [
@@ -5870,16 +5882,21 @@
         {
           "kind": "mixin",
           "name": "ChoiceInputMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "mixins": [
             {
               "name": "FormatMixin",
               "module": "/src/choice-group/FormatMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/choice-group/ChoiceInputMixin.js"
-          },
           "attributes": [
             {
               "name": "checked",
@@ -5929,13 +5946,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -5948,7 +5965,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -5961,7 +5978,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -6001,7 +6018,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -6014,7 +6031,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -6033,7 +6050,7 @@
                 {
                   "name": "checked",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -6046,7 +6063,7 @@
                 {
                   "name": "checked",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -6069,13 +6086,13 @@
                 {
                   "name": "newV",
                   "type": {
-                    "type": "{ modelValue:unknown }"
+                    "text": "{ modelValue:unknown }"
                   }
                 },
                 {
                   "name": "old",
                   "type": {
-                    "type": "{ modelValue:unknown }"
+                    "text": "{ modelValue:unknown }"
                   },
                   "optional": true
                 }
@@ -6094,7 +6111,7 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "ChoiceInputModelValue "
+                    "text": "ChoiceInputModelValue "
                   }
                 }
               ]
@@ -6116,10 +6133,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "ChoiceInputMixin"
         }
       ],
       "exports": [
@@ -6159,21 +6172,21 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   },
                   "optional": true
                 },
                 {
                   "name": "options",
                   "type": {
-                    "type": "string | undefined"
+                    "text": "string | undefined"
                   },
                   "optional": true
                 },
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ node: any }"
+                    "text": "{ node: any }"
                   }
                 }
               ]
@@ -6205,6 +6218,15 @@
         {
           "kind": "mixin",
           "name": "FormGroupMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "mixins": [
             {
               "name": "FormRegistrarMixin",
@@ -6220,17 +6242,13 @@
             },
             {
               "name": "DisabledMixin",
-              "package": "@lion/core/src/DisabledMixin.js"
+              "package": "@lion/core"
             },
             {
               "name": "SlotMixin",
               "package": "@lion/core"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/form-group/FormGroupMixin.js"
-          },
           "attributes": [
             {
               "name": "submitted",
@@ -6331,7 +6349,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -6349,7 +6367,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -6397,7 +6415,7 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
@@ -6414,13 +6432,13 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string | number"
+                    "text": "string | number"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -6433,13 +6451,13 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "values",
                   "type": {
-                    "type": "{ [x: string]: any; }"
+                    "text": "{ [x: string]: any; }"
                   }
                 }
               ]
@@ -6452,7 +6470,7 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -6465,7 +6483,7 @@
                 {
                   "name": "state",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "one of ValidateHost.validationTypes"
                 }
@@ -6479,7 +6497,7 @@
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -6493,7 +6511,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -6511,7 +6529,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -6529,7 +6547,7 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControl"
+                    "text": "FormControl"
                   }
                 }
               ]
@@ -6542,13 +6560,13 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControl"
+                    "text": "FormControl"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -6568,14 +6586,14 @@
                 {
                   "name": "field",
                   "type": {
-                    "type": "FormControl"
+                    "text": "FormControl"
                   },
                   "description": "the child: lion-field/lion-input/lion-textarea"
                 },
                 {
                   "name": "descriptionElements",
                   "type": {
-                    "type": "HTMLElement[]"
+                    "text": "HTMLElement[]"
                   },
                   "description": "description elements like feedback and help-text"
                 }
@@ -6589,16 +6607,12 @@
                 {
                   "name": "el",
                   "type": {
-                    "type": "FormRegisteringHost"
+                    "text": "FormRegisteringHost"
                   }
                 }
               ]
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "FormGroupMixin"
         }
       ],
       "exports": [
@@ -6630,7 +6644,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string[]"
+                  "text": "string[]"
                 }
               }
             }
@@ -6710,392 +6724,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./src/validate/LionValidationFeedback.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "LionValidationFeedback",
-          "superclass": {
-            "name": "LitElement",
-            "package": "@lion/core"
-          },
-          "members": [
-            {
-              "kind": "field",
-              "name": "feedbackData",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "_messageTemplate",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "opts",
-                  "type": {
-                    "type": "Object"
-                  }
-                },
-                {
-                  "name": "opts.message",
-                  "type": {
-                    "type": "string | Node | TemplateResult "
-                  },
-                  "description": "message or feedback node or TemplateResult"
-                },
-                {
-                  "name": "opts.type",
-                  "type": {
-                    "type": "string"
-                  },
-                  "optional": true
-                },
-                {
-                  "name": "opts.validator",
-                  "type": {
-                    "type": "Validator"
-                  },
-                  "optional": true
-                }
-              ]
-            }
-          ],
-          "tagName": "lion-validation-feedback"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "LionValidationFeedback",
-          "declaration": {
-            "name": "LionValidationFeedback",
-            "module": "./src/validate/LionValidationFeedback.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./src/validate/ResultValidator.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "ResultValidator",
-          "superclass": {
-            "name": "Validator",
-            "module": "/src/src/validate/Validator.js"
-          },
-          "members": [
-            {
-              "kind": "method",
-              "name": "executeOnResults",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "type": "Object"
-                  }
-                },
-                {
-                  "name": "context.regularValidationResult",
-                  "type": {
-                    "type": "Validator[]"
-                  }
-                },
-                {
-                  "name": "context.prevValidationResult",
-                  "type": {
-                    "type": "Validator[] | undefined"
-                  }
-                },
-                {
-                  "name": "context.validators",
-                  "type": {
-                    "type": "Validator[]"
-                  },
-                  "optional": true
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ResultValidator",
-          "declaration": {
-            "name": "ResultValidator",
-            "module": "./src/validate/ResultValidator.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./src/validate/Unparseable.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "Unparseable",
-          "members": [
-            {
-              "kind": "method",
-              "name": "toString",
-              "privacy": "public"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Unparseable",
-          "declaration": {
-            "name": "Unparseable",
-            "module": "./src/validate/Unparseable.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./src/validate/ValidateMixin.js",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "ValidateMixinImplementation",
-          "description": "",
-          "type": {
-            "type": "LitElement>"
-          }
-        },
-        {
-          "kind": "variable",
-          "name": "ValidateMixin"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ValidateMixinImplementation",
-          "declaration": {
-            "name": "ValidateMixinImplementation",
-            "module": "./src/validate/ValidateMixin.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "ValidateMixin",
-          "declaration": {
-            "name": "ValidateMixin",
-            "module": "./src/validate/ValidateMixin.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./src/validate/Validator.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "Validator",
-          "members": [
-            {
-              "name": "MessageData.modelValue",
-              "type": {
-                "type": "*"
-              },
-              "description": ""
-            },
-            {
-              "name": "MessageData.fieldName",
-              "type": {
-                "type": "string"
-              },
-              "description": ""
-            },
-            {
-              "name": "MessageData.formControl",
-              "type": {
-                "type": "HTMLElement"
-              },
-              "description": ""
-            },
-            {
-              "name": "MessageData.type",
-              "type": {
-                "type": "string"
-              },
-              "description": ""
-            },
-            {
-              "name": "MessageData.config",
-              "type": {
-                "type": "Object.<string,?>"
-              },
-              "description": ""
-            },
-            {
-              "name": "MessageData.name",
-              "type": {
-                "type": "string"
-              },
-              "description": ""
-            },
-            {
-              "kind": "field",
-              "name": "validatorName",
-              "static": true,
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "async",
-              "static": true,
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "execute",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "Boolean|Promise<Boolean>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "modelValue",
-                  "type": {
-                    "type": "?"
-                  },
-                  "optional": true
-                },
-                {
-                  "name": "param",
-                  "type": {
-                    "type": "?"
-                  },
-                  "optional": true
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "{}"
-                  },
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "param",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "config",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "_getMessage",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "Promise<string|Node>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "MessageData"
-                  },
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getMessage",
-              "privacy": "public",
-              "static": true,
-              "return": {
-                "type": {
-                  "type": "Promise<string|Node>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "MessageData"
-                  },
-                  "optional": true
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "onFormControlConnect",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "formControl",
-                  "type": {
-                    "type": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "onFormControlDisconnect",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "formControl",
-                  "type": {
-                    "type": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "abortExecution",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "__fakeExtendsEventTarget",
-              "privacy": "public"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Validator",
-          "declaration": {
-            "name": "Validator",
-            "module": "./src/validate/Validator.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "./src/utils/AsyncQueue.js",
       "declarations": [
         {
@@ -7110,7 +6738,7 @@
                 {
                   "name": "task",
                   "type": {
-                    "type": "function"
+                    "text": "function"
                   }
                 }
               ]
@@ -7163,27 +6791,27 @@
           "name": "getAriaElementsInRightDomOrder",
           "return": {
             "type": {
-              "type": "HTMLElement[]"
+              "text": "HTMLElement[]"
             }
           },
           "parameters": [
             {
               "name": "descriptionElements",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               },
               "description": "holds references to description or label elements whose\nid should be returned"
             },
             {
               "name": "opts",
               "type": {
-                "type": "Object"
+                "text": "Object"
               }
             },
             {
               "name": "opts.reverse",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               },
               "optional": true
             }
@@ -7211,14 +6839,14 @@
           "description": "Return PascalCased version of the camelCased string",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "str",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]
@@ -7237,6 +6865,820 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./src/validate/LionValidationFeedback.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "LionValidationFeedback",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "feedbackData",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_messageTemplate",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "text": "Object"
+                  }
+                },
+                {
+                  "name": "opts.message",
+                  "type": {
+                    "text": "string | Node | TemplateResult "
+                  },
+                  "description": "message or feedback node or TemplateResult"
+                },
+                {
+                  "name": "opts.type",
+                  "type": {
+                    "text": "string"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "opts.validator",
+                  "type": {
+                    "text": "Validator"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "tagName": "lion-validation-feedback"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LionValidationFeedback",
+          "declaration": {
+            "name": "LionValidationFeedback",
+            "module": "./src/validate/LionValidationFeedback.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/validate/ResultValidator.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ResultValidator",
+          "superclass": {
+            "name": "Validator",
+            "module": "/src/src/validate/Validator.js"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "executeOnResults",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "Object"
+                  }
+                },
+                {
+                  "name": "context.regularValidationResult",
+                  "type": {
+                    "text": "Validator[]"
+                  }
+                },
+                {
+                  "name": "context.prevValidationResult",
+                  "type": {
+                    "text": "Validator[] | undefined"
+                  }
+                },
+                {
+                  "name": "context.validators",
+                  "type": {
+                    "text": "Validator[]"
+                  },
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ResultValidator",
+          "declaration": {
+            "name": "ResultValidator",
+            "module": "./src/validate/ResultValidator.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/validate/Unparseable.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "Unparseable",
+          "members": [
+            {
+              "kind": "method",
+              "name": "toString",
+              "privacy": "public"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Unparseable",
+          "declaration": {
+            "name": "Unparseable",
+            "module": "./src/validate/Unparseable.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/validate/ValidateMixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ValidateMixinImplementation",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
+          "events": [
+            {
+              "name": "showsFeedbackForChanged",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "shouldShowFeedbackForChanged",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "validate-performed",
+              "type": {
+                "text": "Event"
+              },
+              "description": "private event that should be listened to by LionFieldSet"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "FormControlMixin",
+              "module": "/src/validate/FormControlMixin.js"
+            },
+            {
+              "name": "SyncUpdatableMixin",
+              "module": "/src/utils/SyncUpdatableMixin.js"
+            },
+            {
+              "name": "DisabledMixin",
+              "package": "@lion/core"
+            },
+            {
+              "name": "SlotMixin",
+              "package": "@lion/core"
+            },
+            {
+              "name": "ScopedElementsMixin",
+              "package": "@lion/core"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "scopedElements",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "validators",
+              "privacy": "public",
+              "type": {
+                "text": "Validator[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "hasFeedbackFor",
+              "privacy": "public",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "shouldShowFeedbackFor",
+              "privacy": "public",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "showsFeedbackFor",
+              "privacy": "public",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "validationStates",
+              "privacy": "public",
+              "type": {
+                "text": "Object.<string, Object.<string, boolean>>"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "isPending",
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValidators",
+              "privacy": "public",
+              "type": {
+                "text": "Validator[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_visibleMessagesAmount",
+              "privacy": "public",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "validationTypes",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "slots",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_allValidators",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "connectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "disconnectedCallback",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "text": "PropertyValues"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateSync",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "oldValue",
+                  "type": {
+                    "text": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "text": "{ clearCurrentResult?: boolean }"
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__storePrevResult",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__executeValidators",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__executeSyncValidators",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "syncValidators",
+                  "type": {
+                    "text": "Validator[]"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "type": {
+                    "text": "{ hasAsync: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__executeAsyncValidators",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "asyncValidators",
+                  "type": {
+                    "text": "Validator[]"
+                  },
+                  "description": "all Validators except required and ResultValidators"
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__executeResultValidators",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "regularValidationResult",
+                  "type": {
+                    "text": "Validator[]"
+                  },
+                  "description": "result of steps 1-3"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__finishValidation",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "object"
+                  }
+                },
+                {
+                  "name": "options.source",
+                  "type": {
+                    "text": "'sync'|'async'"
+                  }
+                },
+                {
+                  "name": "options.hasAsync",
+                  "type": {
+                    "text": "boolean"
+                  },
+                  "description": "whether async validators are configured in this run.\nIf not, we have nothing left to wait for.",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__clearValidationResults",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__onValidatorUpdated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event|CustomEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setupValidators",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__isEmpty",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "text": "?"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__getFeedbackMessages",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise.<FeedbackMessage[]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "validators",
+                  "type": {
+                    "text": "Validator[]"
+                  },
+                  "description": "list of objects having a .getMessage method"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateFeedbackComponent",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_showFeedbackConditionFor",
+              "privacy": "public",
+              "description": "Show the validity feedback when returning true, don't show when false",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hasFeedbackVisibleFor",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "changedProperties",
+                  "type": {
+                    "text": "PropertyValues"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateShouldShowFeedbackFor",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_prioritizeAndFilterFeedback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Validator[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "opts",
+                  "type": {
+                    "text": "{ validationResult: Validator[] }"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "shows-feedback-for",
+              "fieldName": "showsFeedbackFor"
+            },
+            {
+              "name": "is-pending",
+              "fieldName": "isPending"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "ValidateMixin"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ValidateMixinImplementation",
+          "declaration": {
+            "name": "ValidateMixinImplementation",
+            "module": "./src/validate/ValidateMixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ValidateMixin",
+          "declaration": {
+            "name": "ValidateMixin",
+            "module": "./src/validate/ValidateMixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./src/validate/Validator.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "Validator",
+          "members": [
+            {
+              "name": "MessageData.modelValue",
+              "type": {
+                "text": "*"
+              },
+              "description": ""
+            },
+            {
+              "name": "MessageData.fieldName",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "MessageData.formControl",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": ""
+            },
+            {
+              "name": "MessageData.type",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "name": "MessageData.config",
+              "type": {
+                "text": "Object.<string,?>"
+              },
+              "description": ""
+            },
+            {
+              "name": "MessageData.name",
+              "type": {
+                "text": "string"
+              },
+              "description": ""
+            },
+            {
+              "kind": "field",
+              "name": "validatorName",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "async",
+              "static": true,
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "execute",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Boolean|Promise<Boolean>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "modelValue",
+                  "type": {
+                    "text": "?"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "param",
+                  "type": {
+                    "text": "?"
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "{}"
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "param",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "config",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "_getMessage",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<string|Node>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "MessageData"
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMessage",
+              "privacy": "public",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "Promise<string|Node>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "MessageData"
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onFormControlConnect",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "formControl",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onFormControlDisconnect",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "formControl",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "abortExecution",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "__fakeExtendsEventTarget",
+              "privacy": "public"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Validator",
+          "declaration": {
+            "name": "Validator",
+            "module": "./src/validate/Validator.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./types/choice-group/ChoiceGroupMixinTypes.d.ts",
       "declarations": [
         {
@@ -7248,7 +7690,7 @@
               "name": "multipleChoice",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -7257,7 +7699,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7267,7 +7709,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7276,7 +7718,7 @@
               "name": "modelValue",
               "privacy": "public",
               "type": {
-                "type": "any"
+                "text": "any"
               }
             },
             {
@@ -7284,7 +7726,7 @@
               "name": "serializedValue",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -7292,7 +7734,7 @@
               "name": "formattedValue",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -7301,7 +7743,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7311,7 +7753,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7321,20 +7763,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControlHost"
+                    "text": "FormControlHost"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -7345,7 +7787,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7355,20 +7797,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "filterCondition",
                   "type": {
-                    "type": "Function"
+                    "text": "Function"
                   }
                 }
               ]
@@ -7379,14 +7821,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControlHost"
+                    "text": "FormControlHost"
                   }
                 }
               ]
@@ -7397,7 +7839,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7407,14 +7849,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -7425,7 +7867,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7435,20 +7877,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 },
                 {
                   "name": "check",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -7459,7 +7901,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7469,14 +7911,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormControlHost"
+                    "text": "FormControlHost"
                   }
                 }
               ]
@@ -7487,14 +7929,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -7506,14 +7948,14 @@
           "name": "ChoiceGroupImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<ChoiceGroupHost> &\n  ChoiceGroupHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<InteractionStateHost> &\n  typeof InteractionStateHost"
+              "text": "T &\n  Constructor<ChoiceGroupHost> &\n  ChoiceGroupHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<InteractionStateHost> &\n  typeof InteractionStateHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -7551,7 +7993,7 @@
               "name": "modelValue",
               "privacy": "public",
               "type": {
-                "type": "ChoiceInputModelValue"
+                "text": "ChoiceInputModelValue"
               }
             },
             {
@@ -7559,7 +8001,7 @@
               "name": "serializedValue",
               "privacy": "public",
               "type": {
-                "type": "ChoiceInputSerializedValue"
+                "text": "ChoiceInputSerializedValue"
               }
             },
             {
@@ -7567,7 +8009,7 @@
               "name": "checked",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -7575,7 +8017,7 @@
               "name": "choiceValue",
               "privacy": "public",
               "type": {
-                "type": "any"
+                "text": "any"
               }
             },
             {
@@ -7584,20 +8026,20 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -7608,14 +8050,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "Map<string, any>"
+                    "text": "Map<string, any>"
                   }
                 }
               ]
@@ -7626,14 +8068,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "Map<string, any>"
+                    "text": "Map<string, any>"
                   }
                 }
               ]
@@ -7644,7 +8086,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -7654,7 +8096,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -7664,7 +8106,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -7674,7 +8116,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7684,7 +8126,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7694,14 +8136,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -7712,7 +8154,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7722,14 +8164,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -7740,14 +8182,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "checked",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -7758,14 +8200,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "checked",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -7776,7 +8218,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7785,7 +8227,7 @@
               "name": "__isHandlingUserInput",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -7794,7 +8236,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7804,20 +8246,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "newV",
                   "type": {
-                    "type": "{ modelValue: ChoiceInputModelValue }"
+                    "text": "{ modelValue: ChoiceInputModelValue }"
                   }
                 },
                 {
                   "name": "oldV",
                   "type": {
-                    "type": "{ modelValue: ChoiceInputModelValue }"
+                    "text": "{ modelValue: ChoiceInputModelValue }"
                   }
                 }
               ]
@@ -7828,7 +8270,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "any"
+                  "text": "any"
                 }
               }
             },
@@ -7838,14 +8280,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "string"
+                  "text": "string"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "ChoiceInputModelValue"
+                    "text": "ChoiceInputModelValue"
                   }
                 }
               ]
@@ -7856,7 +8298,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7866,7 +8308,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7875,7 +8317,7 @@
               "name": "type",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -7883,7 +8325,7 @@
               "name": "_inputNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             }
           ]
@@ -7893,14 +8335,14 @@
           "name": "ChoiceInputImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<ChoiceInputHost> &\n  ChoiceInputHost &\n  Constructor<FormatHost> &\n  FormatHost &\n  HTMLElement"
+              "text": "T &\n  Constructor<ChoiceInputHost> &\n  ChoiceInputHost &\n  Constructor<FormatHost> &\n  FormatHost &\n  HTMLElement"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -7940,7 +8382,7 @@
               "static": true,
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7949,7 +8391,7 @@
               "name": "_inputNode",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             },
             {
@@ -7958,7 +8400,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7968,7 +8410,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -7977,7 +8419,7 @@
               "name": "prefilled",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -7985,7 +8427,7 @@
               "name": "touched",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -7993,7 +8435,7 @@
               "name": "dirty",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -8001,7 +8443,7 @@
               "name": "submitted",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -8009,7 +8451,7 @@
               "name": "serializedValue",
               "privacy": "public",
               "type": {
-                "type": "{ [key: string]: any }"
+                "text": "{ [key: string]: any }"
               }
             },
             {
@@ -8017,7 +8459,7 @@
               "name": "modelValue",
               "privacy": "public",
               "type": {
-                "type": "{ [x: string]: any }"
+                "text": "{ [x: string]: any }"
               }
             },
             {
@@ -8025,7 +8467,7 @@
               "name": "formattedValue",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -8033,7 +8475,7 @@
               "name": "children",
               "privacy": "public",
               "type": {
-                "type": "Array<HTMLElement & FormControlHost>"
+                "text": "Array<HTMLElement & FormControlHost>"
               }
             },
             {
@@ -8041,7 +8483,7 @@
               "name": "_initialModelValue",
               "privacy": "public",
               "type": {
-                "type": "{ [x: string]: any }"
+                "text": "{ [x: string]: any }"
               }
             },
             {
@@ -8050,20 +8492,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "property",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -8074,7 +8516,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8084,7 +8526,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -8095,14 +8537,14 @@
           "name": "FormGroupImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<FormGroupHost> &\n  typeof FormGroupHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost"
+              "text": "T &\n  Constructor<FormGroupHost> &\n  typeof FormGroupHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -8141,7 +8583,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8151,7 +8593,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8160,7 +8602,7 @@
               "name": "_parentFormGroup",
               "privacy": "public",
               "type": {
-                "type": "FormRegistrarHost"
+                "text": "FormRegistrarHost"
               }
             }
           ]
@@ -8170,14 +8612,14 @@
           "name": "FormRegisteringImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<FormRegisteringHost> & typeof FormRegisteringHost"
+              "text": "T & Constructor<FormRegisteringHost> & typeof FormRegisteringHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -8215,7 +8657,7 @@
               "name": "_parentFormGroup",
               "privacy": "public",
               "type": {
-                "type": "FormRegistrarHost"
+                "text": "FormRegistrarHost"
               }
             }
           ]
@@ -8229,7 +8671,7 @@
               "name": "_isFormOrFieldset",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -8237,7 +8679,7 @@
               "name": "formElements",
               "privacy": "public",
               "type": {
-                "type": "FormControlsCollection & { [x: string]: any }"
+                "text": "FormControlsCollection & { [x: string]: any }"
               }
             },
             {
@@ -8246,20 +8688,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "child",
                   "type": {
-                    "type": "| (FormControlHost & ElementWithParentFormGroup)\n      | (FormControlHost & HTMLElement)\n      | (HTMLElement & ElementWithParentFormGroup)"
+                    "text": "| (FormControlHost & ElementWithParentFormGroup)\n      | (FormControlHost & HTMLElement)\n      | (HTMLElement & ElementWithParentFormGroup)"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -8270,14 +8712,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormRegisteringHost"
+                    "text": "FormRegisteringHost"
                   }
                 }
               ]
@@ -8288,14 +8730,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "e",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -8306,14 +8748,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "el",
                   "type": {
-                    "type": "FormControlHost"
+                    "text": "FormControlHost"
                   }
                 }
               ]
@@ -8323,7 +8765,7 @@
               "name": "registrationComplete",
               "privacy": "public",
               "type": {
-                "type": "Promise<boolean>"
+                "text": "Promise<boolean>"
               }
             }
           ]
@@ -8333,14 +8775,14 @@
           "name": "FormRegistrarImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormRegisteringHost> &\n  typeof FormRegisteringHost"
+              "text": "T &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormRegisteringHost> &\n  typeof FormRegisteringHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -8386,7 +8828,7 @@
               "name": "registrationTarget",
               "privacy": "public",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             },
             {
@@ -8395,14 +8837,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent"
+                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -8414,14 +8856,14 @@
           "name": "FormRegistrarPortalImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<FormRegistrarPortalHost> & FormRegistrarPortalHost"
+              "text": "T & Constructor<FormRegistrarPortalHost> & FormRegistrarPortalHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -8461,26 +8903,26 @@
               "static": true,
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "newValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -8491,20 +8933,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -8515,7 +8957,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8524,7 +8966,7 @@
               "name": "__SyncUpdatableNamespace",
               "privacy": "public",
               "type": {
-                "type": "SyncUpdatableNamespace"
+                "text": "SyncUpdatableNamespace"
               }
             },
             {
@@ -8533,14 +8975,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues"
+                    "text": "PropertyValues"
                   }
                 }
               ]
@@ -8551,7 +8993,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -8562,14 +9004,14 @@
           "name": "SyncUpdatableImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<SyncUpdatableHost> & typeof SyncUpdatableHost"
+              "text": "T & Constructor<SyncUpdatableHost> & typeof SyncUpdatableHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -8607,7 +9049,7 @@
               "name": "validators",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8615,7 +9057,7 @@
               "name": "hasFeedbackFor",
               "privacy": "public",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             },
             {
@@ -8623,7 +9065,7 @@
               "name": "shouldShowFeedbackFor",
               "privacy": "public",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             },
             {
@@ -8631,7 +9073,7 @@
               "name": "showsFeedbackFor",
               "privacy": "public",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             },
             {
@@ -8639,7 +9081,7 @@
               "name": "validationStates",
               "privacy": "public",
               "type": {
-                "type": "{ [key: string]: { [key: string]: Object } }"
+                "text": "{ [key: string]: { [key: string]: Object } }"
               }
             },
             {
@@ -8647,7 +9089,7 @@
               "name": "isPending",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -8655,7 +9097,7 @@
               "name": "defaultValidators",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8663,7 +9105,7 @@
               "name": "_visibleMessagesAmount",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             },
             {
@@ -8671,7 +9113,7 @@
               "name": "fieldName",
               "privacy": "public",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             },
             {
@@ -8680,7 +9122,7 @@
               "static": true,
               "privacy": "public",
               "type": {
-                "type": "string[]"
+                "text": "string[]"
               }
             },
             {
@@ -8688,7 +9130,7 @@
               "name": "slots",
               "privacy": "public",
               "type": {
-                "type": "SlotsMap"
+                "text": "SlotsMap"
               }
             },
             {
@@ -8696,7 +9138,7 @@
               "name": "_feedbackNode",
               "privacy": "public",
               "type": {
-                "type": "LionValidationFeedback"
+                "text": "LionValidationFeedback"
               }
             },
             {
@@ -8704,7 +9146,7 @@
               "name": "_allValidators",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8712,7 +9154,7 @@
               "name": "__syncValidationResult",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8720,7 +9162,7 @@
               "name": "__asyncValidationResult",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8728,7 +9170,7 @@
               "name": "__validationResult",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8736,7 +9178,7 @@
               "name": "__prevValidationResult",
               "privacy": "public",
               "type": {
-                "type": "Validator[]"
+                "text": "Validator[]"
               }
             },
             {
@@ -8745,7 +9187,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8755,7 +9197,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8765,14 +9207,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "import('@lion/core').PropertyValues"
+                    "text": "import('@lion/core').PropertyValues"
                   }
                 }
               ]
@@ -8783,20 +9225,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -8807,14 +9249,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "import('@lion/core').PropertyValues"
+                    "text": "import('@lion/core').PropertyValues"
                   }
                 }
               ]
@@ -8825,14 +9267,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "opts",
                   "type": {
-                    "type": "{ clearCurrentResult?: boolean }"
+                    "text": "{ clearCurrentResult?: boolean }"
                   }
                 }
               ]
@@ -8843,7 +9285,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8853,7 +9295,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8862,7 +9304,7 @@
               "name": "validateComplete",
               "privacy": "public",
               "type": {
-                "type": "Promise<void>"
+                "text": "Promise<void>"
               }
             },
             {
@@ -8870,7 +9312,7 @@
               "name": "feedbackComplete",
               "privacy": "public",
               "type": {
-                "type": "Promise<void>"
+                "text": "Promise<void>"
               }
             },
             {
@@ -8879,7 +9321,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8889,26 +9331,26 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "syncValidators",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 },
                 {
                   "name": "opts",
                   "type": {
-                    "type": "{ hasAsync: boolean }"
+                    "text": "{ hasAsync: boolean }"
                   }
                 }
               ]
@@ -8919,20 +9361,20 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "asyncValidators",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -8943,14 +9385,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Validator[]"
+                  "text": "Validator[]"
                 }
               },
               "parameters": [
                 {
                   "name": "regularValidationResult",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 }
               ]
@@ -8961,14 +9403,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ source: 'sync' | 'async'; hasAsync?: boolean }"
+                    "text": "{ source: 'sync' | 'async'; hasAsync?: boolean }"
                   }
                 }
               ]
@@ -8979,7 +9421,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -8989,14 +9431,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "e",
                   "type": {
-                    "type": "Event | CustomEvent"
+                    "text": "Event | CustomEvent"
                   }
                 }
               ]
@@ -9007,7 +9449,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -9017,14 +9459,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "v",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -9035,14 +9477,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Promise<FeedbackMessage[]>"
+                  "text": "Promise<FeedbackMessage[]>"
                 }
               },
               "parameters": [
                 {
                   "name": "validators",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 }
               ]
@@ -9053,7 +9495,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -9063,14 +9505,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -9081,14 +9523,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -9099,7 +9541,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -9109,14 +9551,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Validator[]"
+                  "text": "Validator[]"
                 }
               },
               "parameters": [
                 {
                   "name": "opts",
                   "type": {
-                    "type": "{ validationResult: Validator[] }"
+                    "text": "{ validationResult: Validator[] }"
                   }
                 }
               ]
@@ -9128,14 +9570,14 @@
           "name": "ValidateImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<SyncUpdatableHost> &\n  typeof SyncUpdatableHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost &\n  Constructor<ScopedElementsHost> &\n  typeof ScopedElementsHost"
+              "text": "T &\n  Constructor<ValidateHost> &\n  typeof ValidateHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost &\n  Constructor<SyncUpdatableHost> &\n  typeof SyncUpdatableHost &\n  Constructor<DisabledHost> &\n  typeof DisabledHost &\n  Constructor<SlotHost> &\n  typeof SlotHost &\n  Constructor<ScopedElementsHost> &\n  typeof ScopedElementsHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -9178,26 +9620,26 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "context",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 },
                 {
                   "name": "context.regularValidationResult",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 },
                 {
                   "name": "context.prevValidationResult",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   }
                 }
               ]
@@ -9242,7 +9684,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9271,7 +9713,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9304,7 +9746,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9337,7 +9779,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9366,7 +9808,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9447,7 +9889,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9476,7 +9918,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9509,7 +9951,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9542,7 +9984,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9611,7 +10053,7 @@
                 {
                   "name": "formControl",
                   "type": {
-                    "type": "FormControlHost & HTMLElement"
+                    "text": "FormControlHost & HTMLElement"
                   }
                 }
               ]
@@ -9624,7 +10066,7 @@
                 {
                   "name": "formControl",
                   "type": {
-                    "type": "FormControlHost & HTMLElement"
+                    "text": "FormControlHost & HTMLElement"
                   }
                 }
               ]
@@ -9669,7 +10111,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9698,7 +10140,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9731,7 +10173,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9764,7 +10206,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {
@@ -9797,7 +10239,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9826,7 +10268,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -9855,7 +10297,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 },
                 {

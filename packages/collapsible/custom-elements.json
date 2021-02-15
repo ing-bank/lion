@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -84,14 +84,14 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "description": "element node and its options"
                 },
                 {
                   "name": "options.contentNode",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -105,14 +105,14 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "description": "element node and its options"
                 },
                 {
                   "name": "options.contentNode",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -124,21 +124,21 @@
               "description": "Wait until the transition event is finished.",
               "return": {
                 "type": {
-                  "type": "Promise<void>"
+                  "text": "Promise<void>"
                 }
               },
               "parameters": [
                 {
                   "name": "options",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   },
                   "description": "element node and its options"
                 },
                 {
                   "name": "options.contentNode",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -152,7 +152,7 @@
                 {
                   "name": "contentNode",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   },
                   "description": "content node"
                 }
@@ -251,7 +251,7 @@
             {
               "name": "opened-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "LionCollapsible",
@@ -304,7 +304,7 @@
             {
               "name": "opened-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -352,7 +352,7 @@
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 }
               ]
@@ -366,7 +366,7 @@
                 {
                   "name": "opts",
                   "type": {
-                    "type": "Object"
+                    "text": "Object"
                   }
                 }
               ]

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -43,7 +43,7 @@
             {
               "name": "user-input-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -70,7 +70,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]

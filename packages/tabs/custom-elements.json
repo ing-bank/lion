@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -43,7 +43,7 @@
             {
               "name": "selected-changed",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -86,14 +86,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "EventHandlerNonNull"
+                  "text": "EventHandlerNonNull"
                 }
               },
               "parameters": [
                 {
                   "name": "index",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -106,7 +106,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -119,7 +119,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   },
                   "description": "The new index for focus"
                 }

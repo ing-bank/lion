@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -95,7 +95,7 @@
                 {
                   "name": "pageNumber",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -115,7 +115,7 @@
                 {
                   "name": "page",
                   "type": {
-                    "type": "Number"
+                    "text": "Number"
                   },
                   "description": "page number to be set"
                 }
@@ -128,7 +128,7 @@
               "description": "Calculate nav list based on current page selection.",
               "return": {
                 "type": {
-                  "type": "(number|'...')[]"
+                  "text": "(number|'...')[]"
                 }
               }
             },
@@ -139,14 +139,14 @@
               "description": "Get previous or next button template.\nThis method can be overridden to apply customized template in wrapper.",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "parameters": [
                 {
                   "name": "label",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "namespace label i.e. next or previous"
                 }
@@ -159,28 +159,28 @@
               "description": "Get next or previous button template.\nThis method can be overridden to apply customized template in wrapper.",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "parameters": [
                 {
                   "name": "label",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "namespace label i.e. next or previous"
                 },
                 {
                   "name": "pageNumber",
                   "type": {
-                    "type": "Number"
+                    "text": "Number"
                   },
                   "description": "page number to be set"
                 },
                 {
                   "name": "namespace",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "namespace prefix for translations",
                   "default": "'lion'"
@@ -194,14 +194,14 @@
               "description": "Get disabled button template.\nThis method can be overridden to apply customized template in wrapper.",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "parameters": [
                 {
                   "name": "label",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "namespace label i.e. next or previous"
                 }
@@ -214,7 +214,7 @@
               "description": "Render navigation list",
               "return": {
                 "type": {
-                  "type": "TemplateResult[]"
+                  "text": "TemplateResult[]"
                 }
               }
             }

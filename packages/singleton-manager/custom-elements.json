@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -47,13 +47,13 @@
                 {
                   "name": "key",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -64,14 +64,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": ""
+                  "text": ""
                 }
               },
               "parameters": [
                 {
                   "name": "key",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -84,7 +84,7 @@
                 {
                   "name": "key",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -260,7 +260,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 1.x'"
@@ -396,7 +396,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 1.x'"
@@ -532,7 +532,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 1.x'"
@@ -594,6 +594,39 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./demo/singleton-complex/node_modules/page-a/page-a.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "PageA",
+          "superclass": {
+            "name": "LitElement",
+            "package": "@lion/core"
+          },
+          "tagName": "page-a"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PageA",
+          "declaration": {
+            "name": "PageA",
+            "module": "./demo/singleton-complex/node_modules/page-a/page-a.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "page-a",
+          "declaration": {
+            "name": "PageA",
+            "module": "./demo/fail/node_modules/page-a/page-a.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./demo/singleton-complex/node_modules/page-b/page-b.js",
       "declarations": [
         {
@@ -603,7 +636,7 @@
             {
               "name": "request-instance",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -650,39 +683,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./demo/singleton-complex/node_modules/page-a/page-a.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "PageA",
-          "superclass": {
-            "name": "LitElement",
-            "package": "@lion/core"
-          },
-          "tagName": "page-a"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PageA",
-          "declaration": {
-            "name": "PageA",
-            "module": "./demo/singleton-complex/node_modules/page-a/page-a.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "page-a",
-          "declaration": {
-            "name": "PageA",
-            "module": "./demo/fail/node_modules/page-a/page-a.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "./demo/fail/node_modules/page-b/node_modules/overlays/index.js",
       "declarations": [
         {
@@ -693,7 +693,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 2.x'"
@@ -765,7 +765,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 2.x'"
@@ -837,7 +837,7 @@
               "kind": "field",
               "name": "name",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "privacy": "public",
               "default": "'OverlayManager 2.x'"

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -58,7 +58,7 @@
             {
               "name": "close-overlay",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -191,13 +191,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "PropertyKey"
+                    "text": "PropertyKey"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -215,7 +215,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -228,7 +228,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -267,7 +267,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Object"
+                  "text": "Object"
                 }
               }
             },
@@ -290,7 +290,7 @@
                 {
                   "name": "opts",
                   "type": {
-                    "type": "{ target: { selectedDate: Date }}"
+                    "text": "{ target: { selectedDate: Date }}"
                   }
                 }
               ]
@@ -303,14 +303,14 @@
               "description": "The LionCalendar shouldn't know anything about the modelValue;\nit can't handle Unparseable dates, but does handle 'undefined'",
               "return": {
                 "type": {
-                  "type": "Date|undefined"
+                  "text": "Date|undefined"
                 }
               },
               "parameters": [
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "?"
+                    "text": "?"
                   }
                 }
               ]
@@ -324,7 +324,7 @@
                 {
                   "name": "validators",
                   "type": {
-                    "type": "Validator[]"
+                    "text": "Validator[]"
                   },
                   "description": "errorValidators or warningValidators array"
                 }
@@ -403,7 +403,7 @@
                 {
                   "name": "day",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]

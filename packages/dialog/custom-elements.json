@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -82,7 +82,7 @@
             {
               "name": "close-overlay",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],

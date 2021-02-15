@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -117,7 +117,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -136,13 +136,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "highlight",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -160,7 +160,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "{ key: string; }"
+                    "text": "{ key: string; }"
                   }
                 }
               ]
@@ -283,7 +283,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "'none'|'list'|'inline'|'both'"
+                "text": "'none'|'list'|'inline'|'both'"
               },
               "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
               "default": "'both'"
@@ -293,7 +293,7 @@
               "name": "matchMode",
               "privacy": "public",
               "type": {
-                "type": "'begin'|'all'"
+                "text": "'begin'|'all'"
               },
               "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
               "default": "'all'"
@@ -328,17 +328,26 @@
             {
               "kind": "field",
               "name": "slots",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "SlotsMap"
+              }
             },
             {
               "kind": "field",
               "name": "_comboboxNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "_selectionDisplayNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "SelectionDisplay | null"
+              }
             },
             {
               "kind": "field",
@@ -383,13 +392,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "'disabled'|'modelValue'|'readOnly'"
+                    "text": "'disabled'|'modelValue'|'readOnly'"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -402,7 +411,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -416,13 +425,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "textboxValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "current ._inputNode value"
                 }
@@ -436,7 +445,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ currentValue: string, lastKey:string }"
+                    "text": "{ currentValue: string, lastKey:string }"
                   }
                 }
               ]
@@ -449,7 +458,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -462,7 +471,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -475,7 +484,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ]
@@ -488,7 +497,7 @@
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -506,7 +515,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ]
@@ -519,13 +528,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -538,20 +547,20 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -566,7 +575,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ prevValue:string, curValue:string }"
+                    "text": "{ prevValue:string, curValue:string }"
                   }
                 }
               ]
@@ -627,7 +636,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -640,13 +649,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 }
               ]
@@ -659,13 +668,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "[]"
                 }
@@ -704,7 +713,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "optional": true
                 }
@@ -878,7 +887,7 @@
               "name": "category",
               "privacy": "public",
               "type": {
-                "type": "'branches'|'tags'"
+                "text": "'branches'|'tags'"
               },
               "default": "'branches'"
             },
@@ -895,7 +904,10 @@
             {
               "kind": "field",
               "name": "_comboboxNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "method",
@@ -982,7 +994,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "'none'|'list'|'inline'|'both'"
+                "text": "'none'|'list'|'inline'|'both'"
               },
               "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
               "default": "'both'",
@@ -996,7 +1008,7 @@
               "name": "matchMode",
               "privacy": "public",
               "type": {
-                "type": "'begin'|'all'"
+                "text": "'begin'|'all'"
               },
               "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
               "default": "'all'",
@@ -1038,6 +1050,9 @@
               "kind": "field",
               "name": "_selectionDisplayNode",
               "privacy": "public",
+              "type": {
+                "text": "SelectionDisplay | null"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -1096,13 +1111,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "'disabled'|'modelValue'|'readOnly'"
+                    "text": "'disabled'|'modelValue'|'readOnly'"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ],
@@ -1120,13 +1135,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "textboxValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "current ._inputNode value"
                 }
@@ -1144,7 +1159,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ currentValue: string, lastKey:string }"
+                    "text": "{ currentValue: string, lastKey:string }"
                   }
                 }
               ],
@@ -1161,7 +1176,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ],
@@ -1178,7 +1193,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
@@ -1195,7 +1210,7 @@
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -1221,7 +1236,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -1238,13 +1253,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -1261,20 +1276,20 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -1293,7 +1308,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ prevValue:string, curValue:string }"
+                    "text": "{ prevValue:string, curValue:string }"
                   }
                 }
               ],
@@ -1372,7 +1387,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -1389,13 +1404,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 }
               ],
@@ -1412,13 +1427,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "[]"
                 }
@@ -1481,7 +1496,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "optional": true
                 }
@@ -1567,7 +1582,7 @@
                 {
                   "name": "currentValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -1663,7 +1678,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "'none'|'list'|'inline'|'both'"
+                "text": "'none'|'list'|'inline'|'both'"
               },
               "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
               "default": "'both'",
@@ -1677,7 +1692,7 @@
               "name": "matchMode",
               "privacy": "public",
               "type": {
-                "type": "'begin'|'all'"
+                "text": "'begin'|'all'"
               },
               "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
               "default": "'all'",
@@ -1719,6 +1734,9 @@
               "kind": "field",
               "name": "_comboboxNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -1728,6 +1746,9 @@
               "kind": "field",
               "name": "_selectionDisplayNode",
               "privacy": "public",
+              "type": {
+                "text": "SelectionDisplay | null"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -1795,13 +1816,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "'disabled'|'modelValue'|'readOnly'"
+                    "text": "'disabled'|'modelValue'|'readOnly'"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ],
@@ -1818,7 +1839,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -1836,13 +1857,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "textboxValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "current ._inputNode value"
                 }
@@ -1860,7 +1881,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ],
@@ -1877,7 +1898,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -1894,7 +1915,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
@@ -1911,7 +1932,7 @@
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -1937,7 +1958,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -1954,13 +1975,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -1977,20 +1998,20 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -2009,7 +2030,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ prevValue:string, curValue:string }"
+                    "text": "{ prevValue:string, curValue:string }"
                   }
                 }
               ],
@@ -2106,7 +2127,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -2123,13 +2144,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "[]"
                 }
@@ -2192,7 +2213,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "optional": true
                 }
@@ -2315,7 +2336,7 @@
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -2387,7 +2408,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "'none'|'list'|'inline'|'both'"
+                "text": "'none'|'list'|'inline'|'both'"
               },
               "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
               "default": "'both'",
@@ -2401,7 +2422,7 @@
               "name": "matchMode",
               "privacy": "public",
               "type": {
-                "type": "'begin'|'all'"
+                "text": "'begin'|'all'"
               },
               "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
               "default": "'all'",
@@ -2461,6 +2482,9 @@
               "kind": "field",
               "name": "slots",
               "privacy": "public",
+              "type": {
+                "text": "SlotsMap"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -2470,6 +2494,9 @@
               "kind": "field",
               "name": "_comboboxNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -2479,6 +2506,9 @@
               "kind": "field",
               "name": "_selectionDisplayNode",
               "privacy": "public",
+              "type": {
+                "text": "SelectionDisplay | null"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -2555,13 +2585,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "'disabled'|'modelValue'|'readOnly'"
+                    "text": "'disabled'|'modelValue'|'readOnly'"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ],
@@ -2578,7 +2608,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -2596,13 +2626,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "textboxValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "current ._inputNode value"
                 }
@@ -2620,7 +2650,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ currentValue: string, lastKey:string }"
+                    "text": "{ currentValue: string, lastKey:string }"
                   }
                 }
               ],
@@ -2637,7 +2667,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ],
@@ -2654,7 +2684,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -2671,7 +2701,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
@@ -2688,7 +2718,7 @@
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -2714,7 +2744,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -2731,13 +2761,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -2754,20 +2784,20 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -2786,7 +2816,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ prevValue:string, curValue:string }"
+                    "text": "{ prevValue:string, curValue:string }"
                   }
                 }
               ],
@@ -2883,7 +2913,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -2900,13 +2930,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string|string[]"
+                    "text": "string|string[]"
                   }
                 }
               ],
@@ -2923,13 +2953,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "[]"
                 }
@@ -2992,7 +3022,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "optional": true
                 }
@@ -3160,7 +3190,7 @@
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -3173,14 +3203,14 @@
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -3210,13 +3240,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "textboxValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "current ._inputNode value"
                 }
@@ -3232,7 +3262,7 @@
               "name": "autocomplete",
               "privacy": "public",
               "type": {
-                "type": "'none'|'list'|'inline'|'both'"
+                "text": "'none'|'list'|'inline'|'both'"
               },
               "description": "When \"list\", will filter listbox suggestions based on textbox value.\nWhen \"both\", an inline completion string will be added to the textbox as well.",
               "default": "'both'",
@@ -3246,7 +3276,7 @@
               "name": "matchMode",
               "privacy": "public",
               "type": {
-                "type": "'begin'|'all'"
+                "text": "'begin'|'all'"
               },
               "description": "When typing in the textbox, will by default be set on 'begin',\nonly matching the beginning part in suggestion list.\n=> 'a' will match 'apple' from ['apple', 'pear', 'citrus'].\nWhen set to 'all', will match middle of the word as well\n=> 'a' will match 'apple' and 'pear'",
               "default": "'all'",
@@ -3306,6 +3336,9 @@
               "kind": "field",
               "name": "_comboboxNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -3315,6 +3348,9 @@
               "kind": "field",
               "name": "_selectionDisplayNode",
               "privacy": "public",
+              "type": {
+                "text": "SelectionDisplay | null"
+              },
               "inheritedFrom": {
                 "name": "LionCombobox",
                 "module": "./src/LionCombobox.js"
@@ -3391,13 +3427,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "'disabled'|'modelValue'|'readOnly'"
+                    "text": "'disabled'|'modelValue'|'readOnly'"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ],
@@ -3414,7 +3450,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -3431,7 +3467,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ currentValue: string, lastKey:string }"
+                    "text": "{ currentValue: string, lastKey:string }"
                   }
                 }
               ],
@@ -3448,7 +3484,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ],
@@ -3465,7 +3501,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -3482,7 +3518,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
@@ -3499,7 +3535,7 @@
                 {
                   "name": "v",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -3525,7 +3561,7 @@
                 {
                   "name": "target",
                   "type": {
-                    "type": "EventTarget & ChoiceInputHost"
+                    "text": "EventTarget & ChoiceInputHost"
                   }
                 }
               ],
@@ -3542,13 +3578,13 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "matchingString",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ],
@@ -3565,20 +3601,20 @@
                 {
                   "name": "option",
                   "type": {
-                    "type": "LionOption & {__originalInnerHTML?:string}"
+                    "text": "LionOption & {__originalInnerHTML?:string}"
                   }
                 },
                 {
                   "name": "curValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "prevValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -3597,7 +3633,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ prevValue:string, curValue:string }"
+                    "text": "{ prevValue:string, curValue:string }"
                   }
                 }
               ],
@@ -3694,7 +3730,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -3711,13 +3747,13 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 },
                 {
                   "name": "oldModelValue",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   },
                   "default": "[]"
                 }
@@ -3780,7 +3816,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "optional": true
                 }

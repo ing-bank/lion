@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -65,7 +65,7 @@
               "name": "invokerRelation",
               "privacy": "public",
               "type": {
-                "type": "'label'|'description'"
+                "text": "'label'|'description'"
               },
               "description": "Decides whether the tooltip invoker text should be considered a description\n(sets aria-describedby) or a label (sets aria-labelledby).",
               "default": "'description'"

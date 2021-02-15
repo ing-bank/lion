@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -113,14 +113,14 @@
           "description": "Takes an unformatted IBAN and returns a formatted one.",
           "return": {
             "type": {
-              "type": "string"
+              "text": "string"
             }
           },
           "parameters": [
             {
               "name": "modelValue",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "value to be formatted"
             }
@@ -148,14 +148,14 @@
           "description": "Parses an IBAN trimming spaces and making uppercase.",
           "return": {
             "type": {
-              "type": "string|undefined"
+              "text": "string|undefined"
             }
           },
           "parameters": [
             {
               "name": "viewValue",
               "type": {
-                "type": "string"
+                "text": "string"
               },
               "description": "value to be parsed"
             }
@@ -199,7 +199,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -211,56 +211,56 @@
               "static": true,
               "return": {
                 "type": {
-                  "type": "Promise<string|Node>"
+                  "text": "Promise<string|Node>"
                 }
               },
               "parameters": [
                 {
                   "name": "data",
                   "type": {
-                    "type": "object"
+                    "text": "object"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.modelValue",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.fieldName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.params",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.config",
                   "type": {
-                    "type": "Object.<string,?>"
+                    "text": "Object.<string,?>"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -288,14 +288,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Boolean"
+                  "text": "Boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -307,56 +307,56 @@
               "static": true,
               "return": {
                 "type": {
-                  "type": "Promise<string|Node>"
+                  "text": "Promise<string|Node>"
                 }
               },
               "parameters": [
                 {
                   "name": "data",
                   "type": {
-                    "type": "object"
+                    "text": "object"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.modelValue",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.fieldName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.params",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.config",
                   "type": {
-                    "type": "Object.<string,?>"
+                    "text": "Object.<string,?>"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }
@@ -384,14 +384,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Boolean"
+                  "text": "Boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -403,56 +403,56 @@
               "static": true,
               "return": {
                 "type": {
-                  "type": "Promise<string|Node>"
+                  "text": "Promise<string|Node>"
                 }
               },
               "parameters": [
                 {
                   "name": "data",
                   "type": {
-                    "type": "object"
+                    "text": "object"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.modelValue",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.fieldName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.params",
                   "type": {
-                    "type": "*"
+                    "text": "*"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.type",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.config",
                   "type": {
-                    "type": "Object.<string,?>"
+                    "text": "Object.<string,?>"
                   },
                   "optional": true
                 },
                 {
                   "name": "data.name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "optional": true
                 }

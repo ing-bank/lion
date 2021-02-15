@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -43,7 +43,7 @@
             {
               "name": "user-input-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -112,7 +112,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -137,7 +137,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "description": "keyboard event"
                 }
@@ -156,14 +156,14 @@
               "description": "Get slotted element",
               "return": {
                 "type": {
-                  "type": "HTMLButtonElement|Object"
+                  "text": "HTMLButtonElement|Object"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "String"
+                    "text": "String"
                   },
                   "description": "slot name"
                 }
@@ -188,7 +188,7 @@
               "description": "Get the increment button node",
               "return": {
                 "type": {
-                  "type": "Element|null"
+                  "text": "Element|null"
                 }
               }
             },
@@ -199,7 +199,7 @@
               "description": "Get the decrement button node",
               "return": {
                 "type": {
-                  "type": "Element|null"
+                  "text": "Element|null"
                 }
               }
             },
@@ -216,7 +216,7 @@
               "description": "Get the decrementor button sign template",
               "return": {
                 "type": {
-                  "type": "String|TemplateResult"
+                  "text": "String|TemplateResult"
                 }
               }
             },
@@ -227,7 +227,7 @@
               "description": "Get the incrementor button sign template",
               "return": {
                 "type": {
-                  "type": "String|TemplateResult"
+                  "text": "String|TemplateResult"
                 }
               }
             },
@@ -238,7 +238,7 @@
               "description": "Get the increment button template",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             },
@@ -249,7 +249,7 @@
               "description": "Get the decrement button template",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               }
             }

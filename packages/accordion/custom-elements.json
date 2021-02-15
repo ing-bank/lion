@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -87,7 +87,7 @@
                 {
                   "name": "index",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -100,7 +100,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -128,7 +128,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -168,7 +168,7 @@
               "name": "config",
               "privacy": "public",
               "type": {
-                "type": "OverlayConfig"
+                "text": "OverlayConfig"
               },
               "default": "{}",
               "inheritedFrom": {
@@ -184,13 +184,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ],
@@ -205,14 +205,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "OverlayController"
+                  "text": "OverlayController"
                 }
               },
               "parameters": [
                 {
                   "name": "config",
                   "type": {
-                    "type": "DefineOverlayConfig"
+                    "text": "DefineOverlayConfig"
                   }
                 }
               ],
@@ -229,7 +229,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -328,7 +328,7 @@
                 {
                   "name": "newOpened",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ],
@@ -410,7 +410,7 @@
             {
               "name": "opened-changed",
               "type": {
-                "type": "Event"
+                "text": "Event"
               },
               "inheritedFrom": {
                 "name": "OverlayMixin",
@@ -420,7 +420,7 @@
             {
               "name": "before-closed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "OverlayMixin",
@@ -448,16 +448,21 @@
         {
           "kind": "mixin",
           "name": "ArrowMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "mixins": [
             {
               "name": "OverlayMixin",
               "module": "/src/OverlayMixin.js"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/ArrowMixin.js"
-          },
           "attributes": [
             {
               "name": "has-arrow",
@@ -493,7 +498,7 @@
               "description": "Overrides arrow and keepTogether modifier to be enabled,\nand adds onCreate and onUpdate hooks to sync from popper state",
               "return": {
                 "type": {
-                  "type": "OverlayConfig"
+                  "text": "OverlayConfig"
                 }
               }
             },
@@ -503,14 +508,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "Partial<PopperOptions>"
+                  "text": "Partial<PopperOptions>"
                 }
               },
               "parameters": [
                 {
                   "name": "popperConfigToExtendFrom",
                   "type": {
-                    "type": "Partial<PopperOptions>"
+                    "text": "Partial<PopperOptions>"
                   }
                 }
               ]
@@ -533,7 +538,7 @@
                 {
                   "name": "data",
                   "type": {
-                    "type": "Partial<State>"
+                    "text": "Partial<State>"
                   }
                 }
               ]
@@ -545,12 +550,8 @@
           "name": "ArrowMixinImplementation",
           "description": "",
           "type": {
-            "type": "LitElement>"
+            "text": "LitElement>"
           }
-        },
-        {
-          "kind": "variable",
-          "name": "ArrowMixin"
         }
       ],
       "exports": [
@@ -583,25 +584,25 @@
             {
               "name": "before-hide",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "show",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             },
             {
               "name": "before-hide",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "hide",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -613,122 +614,194 @@
             {
               "kind": "field",
               "name": "invoker",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement | undefined"
+              }
             },
             {
               "kind": "field",
               "name": "content",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "placementMode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "'global' | 'local' | undefined"
+              }
             },
             {
               "kind": "field",
               "name": "invokerNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement | undefined"
+              }
             },
             {
               "kind": "field",
               "name": "referenceNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "contentNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "contentWrapperNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "backdropNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "elementToFocusAfterHide",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "hasBackdrop",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "isBlocking",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "preventsScroll",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "trapsKeyboardFocus",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "hidesOnEsc",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "hidesOnOutsideClick",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "hidesOnOutsideEsc",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "inheritsReferenceWidth",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "'max' | 'full' | 'min' | 'none' | undefined "
+              }
             },
             {
               "kind": "field",
               "name": "handlesAccessibility",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "isTooltip",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
               "name": "invokerRelation",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "'label' | 'description'| undefined"
+              }
             },
             {
               "kind": "field",
               "name": "popperConfig",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "PopperOptions"
+              }
             },
             {
               "kind": "field",
               "name": "viewportConfig",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "ViewportConfig"
+              }
             },
             {
               "kind": "field",
               "name": "_renderTarget",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "_referenceNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement | undefined"
+              }
             },
             {
               "kind": "field",
@@ -744,7 +817,7 @@
                 {
                   "name": "cfgToAdd",
                   "type": {
-                    "type": " OverlayConfig "
+                    "text": " OverlayConfig "
                   }
                 }
               ]
@@ -757,7 +830,7 @@
                 {
                   "name": "newConfig",
                   "type": {
-                    "type": "OverlayConfig"
+                    "text": "OverlayConfig"
                   }
                 }
               ]
@@ -770,7 +843,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ cfgToAdd: OverlayConfig }"
+                    "text": "{ cfgToAdd: OverlayConfig }"
                   }
                 }
               ]
@@ -789,7 +862,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "type": "{ cfgToAdd: OverlayConfig }"
+                    "text": "{ cfgToAdd: OverlayConfig }"
                   }
                 }
               ]
@@ -803,7 +876,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -816,7 +889,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -829,13 +902,13 @@
                 {
                   "name": "node",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   }
                 },
                 {
                   "name": "attrs",
                   "type": {
-                    "type": "string[]"
+                    "text": "string[]"
                   }
                 }
               ]
@@ -858,7 +931,7 @@
                 {
                   "name": "elementToFocusAfterHide",
                   "type": {
-                    "type": "HTMLElement"
+                    "text": "HTMLElement"
                   },
                   "default": "this.elementToFocusAfterHide"
                 }
@@ -872,7 +945,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -885,7 +958,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -904,7 +977,7 @@
                 {
                   "name": "hideConfig",
                   "type": {
-                    "type": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
+                    "text": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
                   }
                 }
               ]
@@ -917,7 +990,7 @@
                 {
                   "name": "hideConfig",
                   "type": {
-                    "type": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
+                    "text": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
                   }
                 }
               ]
@@ -931,7 +1004,7 @@
                 {
                   "name": "showConfig",
                   "type": {
-                    "type": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
+                    "text": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
                   }
                 }
               ]
@@ -944,7 +1017,7 @@
                 {
                   "name": "showConfig",
                   "type": {
-                    "type": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
+                    "text": "{backdropNode:HTMLElement, contentNode:HTMLElement}"
                   }
                 }
               ]
@@ -968,7 +1041,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -981,7 +1054,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -994,7 +1067,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1013,7 +1086,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ animation?: boolean, phase: OverlayPhase }"
+                    "text": "{ animation?: boolean, phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1031,7 +1104,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1070,7 +1143,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1083,7 +1156,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1101,7 +1174,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1114,7 +1187,7 @@
                 {
                   "name": "config",
                   "type": {
-                    "type": "{ phase: OverlayPhase }"
+                    "text": "{ phase: OverlayPhase }"
                   }
                 }
               ]
@@ -1159,26 +1232,22 @@
             {
               "name": "opened-changed",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             },
             {
               "name": "before-closed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             },
             {
               "name": "before-closed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/OverlayMixin.js"
-          },
           "attributes": [
             {
               "name": "opened",
@@ -1197,7 +1266,7 @@
               "name": "config",
               "privacy": "public",
               "type": {
-                "type": "OverlayConfig"
+                "text": "OverlayConfig"
               },
               "default": "{}"
             },
@@ -1209,13 +1278,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -1226,14 +1295,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "OverlayController"
+                  "text": "OverlayController"
                 }
               },
               "parameters": [
                 {
                   "name": "config",
                   "type": {
-                    "type": "DefineOverlayConfig"
+                    "text": "DefineOverlayConfig"
                   }
                 }
               ]
@@ -1244,7 +1313,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "OverlayConfig"
+                  "text": "OverlayConfig"
                 }
               }
             },
@@ -1256,7 +1325,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -1325,7 +1394,7 @@
                 {
                   "name": "newOpened",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -1370,12 +1439,8 @@
           "name": "OverlayMixinImplementation",
           "description": "",
           "type": {
-            "type": "OverlayMixin"
+            "text": "OverlayMixin"
           }
-        },
-        {
-          "kind": "variable",
-          "name": "OverlayMixin"
         }
       ],
       "exports": [
@@ -1439,14 +1504,14 @@
               "description": "Registers an overlay controller.",
               "return": {
                 "type": {
-                  "type": "OverlayController"
+                  "text": "OverlayController"
                 }
               },
               "parameters": [
                 {
                   "name": "ctrlToAdd",
                   "type": {
-                    "type": "OverlayController"
+                    "text": "OverlayController"
                   },
                   "description": "controller of the newly added overlay"
                 }
@@ -1460,7 +1525,7 @@
                 {
                   "name": "ctrlToRemove",
                   "type": {
-                    "type": "OverlayController"
+                    "text": "OverlayController"
                   }
                 }
               ]
@@ -1473,7 +1538,7 @@
                 {
                   "name": "ctrlToShow",
                   "type": {
-                    "type": "OverlayController"
+                    "text": "OverlayController"
                   }
                 }
               ]
@@ -1486,7 +1551,7 @@
                 {
                   "name": "ctrlToHide",
                   "type": {
-                    "type": "any"
+                    "text": "any"
                   }
                 }
               ]
@@ -1514,7 +1579,7 @@
                 {
                   "name": "placementMode",
                   "type": {
-                    "type": "'local' | 'global' | undefined"
+                    "text": "'local' | 'global' | undefined"
                   }
                 }
               ]
@@ -1550,7 +1615,7 @@
                 {
                   "name": "blockingCtrl",
                   "type": {
-                    "type": "OverlayController"
+                    "text": "OverlayController"
                   }
                 }
               ]
@@ -1563,7 +1628,7 @@
                 {
                   "name": "blockingCtrl",
                   "type": {
-                    "type": "OverlayController"
+                    "text": "OverlayController"
                   }
                 }
               ]
@@ -1617,7 +1682,7 @@
             {
               "name": "newOverlays",
               "type": {
-                "type": "OverlaysManager"
+                "text": "OverlaysManager"
               }
             }
           ]
@@ -1638,6 +1703,420 @@
           "declaration": {
             "name": "setOverlays",
             "module": "./src/overlays.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/ArrowMixinTypes.d.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ArrowHost",
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasArrow",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "repositionComplete",
+              "privacy": "public",
+              "type": {
+                "text": "Promise<void>"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_arrowTemplate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_arrowNodeTemplate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "OverlayConfig"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getPopperArrowConfig",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Partial<PopperOptions>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "popperConfigToExtendFrom",
+                  "type": {
+                    "text": "Partial<PopperOptions>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setupRepositionCompletePromise",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_arrowNode",
+              "privacy": "public",
+              "type": {
+                "text": "Element | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__syncFromPopperState",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "Partial<State>"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "ArrowImplementation",
+          "return": {
+            "type": {
+              "text": "T & Constructor<ArrowHost> & ArrowHost"
+            }
+          },
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "T"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ArrowHost",
+          "declaration": {
+            "name": "ArrowHost",
+            "module": "./types/ArrowMixinTypes.d.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ArrowImplementation",
+          "declaration": {
+            "name": "ArrowImplementation",
+            "module": "./types/ArrowMixinTypes.d.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/OverlayConfig.d.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./types/OverlayMixinTypes.d.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "OverlayHost",
+          "members": [
+            {
+              "kind": "field",
+              "name": "opened",
+              "privacy": "public",
+              "type": {
+                "text": "Boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "config",
+              "privacy": "public",
+              "type": {
+                "text": "OverlayConfig"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayCtrl",
+              "privacy": "protected",
+              "type": {
+                "text": "OverlayController"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayInvokerNode",
+              "privacy": "protected",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayBackdropNode",
+              "privacy": "protected",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentNode",
+              "privacy": "protected",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_overlayContentWrapperNode",
+              "privacy": "protected",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlay",
+              "privacy": "protected",
+              "description": "returns an instance of a (dynamic) overlay controller\nIn case overriding _defineOverlayConfig is not enough",
+              "return": {
+                "type": {
+                  "text": "OverlayController"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "DefineOverlayConfig"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_defineOverlayConfig",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "OverlayConfig"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOpenCloseListeners",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOpenCloseListeners",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setupOverlayCtrl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardownOverlayCtrl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setOpenedWithoutPropertyEffects",
+              "privacy": "protected",
+              "description": "When the opened state is changed by an Application Developer,cthe OverlayController is\nrequested to show/hide. It might happen that this request is not honoured\n(intercepted in before-hide for instance), so that we need to sync the controller state\nto this webcomponent again, preventing eternal loops.",
+              "return": {
+                "type": {
+                  "text": "Promise<undefined>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "newOpened",
+                  "type": {
+                    "text": "Boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "__setupSyncFromOverlayController",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__teardownSyncFromOverlayController",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "__syncToOverlayController",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "OverlayImplementation",
+          "return": {
+            "type": {
+              "text": "T & Constructor<OverlayHost> & typeof OverlayHost"
+            }
+          },
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "T"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "OverlayHost",
+          "declaration": {
+            "name": "OverlayHost",
+            "module": "./types/OverlayMixinTypes.d.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "OverlayImplementation",
+          "declaration": {
+            "name": "OverlayImplementation",
+            "module": "./types/OverlayMixinTypes.d.ts"
           }
         }
       ]
@@ -2106,420 +2585,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./types/ArrowMixinTypes.d.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "ArrowHost",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasArrow",
-              "privacy": "public",
-              "type": {
-                "type": "boolean"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "repositionComplete",
-              "privacy": "public",
-              "type": {
-                "type": "Promise<void>"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "render",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "TemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_arrowTemplate",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "TemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_arrowNodeTemplate",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "TemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_defineOverlayConfig",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "OverlayConfig"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_getPopperArrowConfig",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "Partial<PopperOptions>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "popperConfigToExtendFrom",
-                  "type": {
-                    "type": "Partial<PopperOptions>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "__setupRepositionCompletePromise",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_arrowNode",
-              "privacy": "public",
-              "type": {
-                "type": "Element | null"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "__syncFromPopperState",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "data",
-                  "type": {
-                    "type": "Partial<State>"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "ArrowImplementation",
-          "return": {
-            "type": {
-              "type": "T & Constructor<ArrowHost> & ArrowHost"
-            }
-          },
-          "parameters": [
-            {
-              "name": "superclass",
-              "type": {
-                "type": "T"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ArrowHost",
-          "declaration": {
-            "name": "ArrowHost",
-            "module": "./types/ArrowMixinTypes.d.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "ArrowImplementation",
-          "declaration": {
-            "name": "ArrowImplementation",
-            "module": "./types/ArrowMixinTypes.d.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./types/OverlayConfig.d.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./types/OverlayMixinTypes.d.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "OverlayHost",
-          "members": [
-            {
-              "kind": "field",
-              "name": "opened",
-              "privacy": "public",
-              "type": {
-                "type": "Boolean"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "config",
-              "privacy": "public",
-              "type": {
-                "type": "OverlayConfig"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggle",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_overlayCtrl",
-              "privacy": "protected",
-              "type": {
-                "type": "OverlayController"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_overlayInvokerNode",
-              "privacy": "protected",
-              "type": {
-                "type": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_overlayBackdropNode",
-              "privacy": "protected",
-              "type": {
-                "type": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_overlayContentNode",
-              "privacy": "protected",
-              "type": {
-                "type": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_overlayContentWrapperNode",
-              "privacy": "protected",
-              "type": {
-                "type": "HTMLElement"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_defineOverlay",
-              "privacy": "protected",
-              "description": "returns an instance of a (dynamic) overlay controller\nIn case overriding _defineOverlayConfig is not enough",
-              "return": {
-                "type": {
-                  "type": "OverlayController"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "config",
-                  "type": {
-                    "type": "DefineOverlayConfig"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_defineOverlayConfig",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "type": "OverlayConfig"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setupOpenCloseListeners",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_teardownOpenCloseListeners",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setupOverlayCtrl",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_teardownOverlayCtrl",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setOpenedWithoutPropertyEffects",
-              "privacy": "protected",
-              "description": "When the opened state is changed by an Application Developer,cthe OverlayController is\nrequested to show/hide. It might happen that this request is not honoured\n(intercepted in before-hide for instance), so that we need to sync the controller state\nto this webcomponent again, preventing eternal loops.",
-              "return": {
-                "type": {
-                  "type": "Promise<undefined>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "newOpened",
-                  "type": {
-                    "type": "Boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "__setupSyncFromOverlayController",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "__teardownSyncFromOverlayController",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "__syncToOverlayController",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "type": "void"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "OverlayImplementation",
-          "return": {
-            "type": {
-              "type": "T & Constructor<OverlayHost> & typeof OverlayHost"
-            }
-          },
-          "parameters": [
-            {
-              "name": "superclass",
-              "type": {
-                "type": "T"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "OverlayHost",
-          "declaration": {
-            "name": "OverlayHost",
-            "module": "./types/OverlayMixinTypes.d.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "OverlayImplementation",
-          "declaration": {
-            "name": "OverlayImplementation",
-            "module": "./types/OverlayMixinTypes.d.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "./docs/directives/ref.js",
       "declarations": [
         {
@@ -2527,7 +2592,7 @@
           "name": "ref",
           "description": "will be used to store reference to attribute names like #myElement",
           "type": {
-            "type": "object"
+            "text": "object"
           }
         }
       ],
@@ -2551,7 +2616,7 @@
           "name": "withBottomSheetConfig",
           "description": "",
           "type": {
-            "type": "OverlayConfig"
+            "text": "OverlayConfig"
           }
         }
       ],
@@ -2575,7 +2640,7 @@
           "name": "withDropdownConfig",
           "description": "",
           "type": {
-            "type": "OverlayConfig"
+            "text": "OverlayConfig"
           }
         }
       ],
@@ -2599,7 +2664,7 @@
           "name": "withModalDialogConfig",
           "description": "",
           "type": {
-            "type": "OverlayConfig"
+            "text": "OverlayConfig"
           }
         }
       ],
@@ -2626,14 +2691,14 @@
             {
               "name": "rootElement",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               },
               "description": "The root element"
             },
             {
               "name": "e",
               "type": {
-                "type": "KeyboardEvent"
+                "text": "KeyboardEvent"
               },
               "description": "The keyboard event"
             }
@@ -2645,14 +2710,14 @@
           "description": "Contains focus within given root element. When focus is on the last focusable\nelement inside the root element, the next focus will be redirected to the first\nfocusable element.",
           "return": {
             "type": {
-              "type": "{ disconnect: () => void }"
+              "text": "{ disconnect: () => void }"
             }
           },
           "parameters": [
             {
               "name": "rootElement",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               },
               "description": "The element to contain focus within"
             }
@@ -2688,20 +2753,20 @@
           "description": "Whether first element contains the second element, also goes through shadow roots",
           "return": {
             "type": {
-              "type": "boolean"
+              "text": "boolean"
             }
           },
           "parameters": [
             {
               "name": "el",
               "type": {
-                "type": "HTMLElement|ShadowRoot"
+                "text": "HTMLElement|ShadowRoot"
               }
             },
             {
               "name": "targetEl",
               "type": {
-                "type": "HTMLElement|ShadowRoot"
+                "text": "HTMLElement|ShadowRoot"
               }
             }
           ]
@@ -2728,7 +2793,7 @@
           "description": "Returns the activeElement, even when they are inside a shadowRoot.\n(If an element in a shadowRoot is focused, document.activeElement\nreturns the shadowRoot host.",
           "return": {
             "type": {
-              "type": "Element"
+              "text": "Element"
             }
           }
         }
@@ -2753,14 +2818,14 @@
           "name": "getFocusableElements",
           "return": {
             "type": {
-              "type": "HTMLElement[]"
+              "text": "HTMLElement[]"
             }
           },
           "parameters": [
             {
               "name": "element",
               "type": {
-                "type": "Element"
+                "text": "Element"
               }
             }
           ]
@@ -2789,7 +2854,7 @@
             {
               "name": "element",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             }
           ]
@@ -2802,7 +2867,7 @@
             {
               "name": "element",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             }
           ]
@@ -2837,20 +2902,20 @@
           "description": "Compares two OverlayConfigs to equivalence. Intended to prevent unnecessary resets.\nNote that it doesn't cover as many use cases as common implementations, such as Lodash isEqual.",
           "return": {
             "type": {
-              "type": "boolean"
+              "text": "boolean"
             }
           },
           "parameters": [
             {
               "name": "a",
               "type": {
-                "type": "Partial<OverlayConfig>"
+                "text": "Partial<OverlayConfig>"
               }
             },
             {
               "name": "b",
               "type": {
-                "type": "Partial<OverlayConfig>"
+                "text": "Partial<OverlayConfig>"
               }
             }
           ]
@@ -2876,14 +2941,14 @@
           "name": "isVisible",
           "return": {
             "type": {
-              "type": "boolean"
+              "text": "boolean"
             }
           },
           "parameters": [
             {
               "name": "element",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             }
           ]
@@ -2955,14 +3020,14 @@
           "name": "sortByTabIndex",
           "return": {
             "type": {
-              "type": "HTMLElement[]"
+              "text": "HTMLElement[]"
             }
           },
           "parameters": [
             {
               "name": "elements",
               "type": {
-                "type": "HTMLElement[]"
+                "text": "HTMLElement[]"
               }
             }
           ]
@@ -2990,7 +3055,7 @@
             {
               "name": "cssValue",
               "type": {
-                "type": "string"
+                "text": "string"
               }
             }
           ]

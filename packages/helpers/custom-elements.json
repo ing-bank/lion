@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -150,7 +150,7 @@
                 {
                   "name": "content",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "Content to be logged to the action logger"
                 }
@@ -163,14 +163,14 @@
               "description": "Protected getter that returns the template of a single log",
               "return": {
                 "type": {
-                  "type": "TemplateResult"
+                  "text": "TemplateResult"
                 }
               },
               "parameters": [
                 {
                   "name": "content",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -183,7 +183,7 @@
                 {
                   "name": "content",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -196,7 +196,7 @@
                 {
                   "name": "content",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -268,7 +268,7 @@
                 {
                   "name": "locale",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]
@@ -300,7 +300,7 @@
             {
               "name": "orderPerDepth",
               "type": {
-                "type": "Array.<[]>"
+                "text": "Array.<[]>"
               },
               "description": "array of arrays giving the order of each level"
             }

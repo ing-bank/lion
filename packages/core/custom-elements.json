@@ -1,7 +1,19 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./closestPolyfill.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./differentKeyEventNamesShimIE.js",
+      "declarations": [],
+      "exports": []
+    },
     {
       "kind": "javascript-module",
       "path": "./index.d.ts",
@@ -1003,7 +1015,7 @@
               "name": "delegations",
               "privacy": "public",
               "type": {
-                "type": "Delegations"
+                "text": "Delegations"
               }
             },
             {
@@ -1012,7 +1024,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1022,7 +1034,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1032,7 +1044,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1042,7 +1054,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1052,7 +1064,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1062,7 +1074,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1072,14 +1084,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "import('lit-element').PropertyValues"
+                    "text": "import('lit-element').PropertyValues"
                   }
                 }
               ]
@@ -1111,7 +1123,7 @@
               "name": "disabled",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -1121,7 +1133,7 @@
               "description": "Makes request to make the element disabled",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1132,7 +1144,7 @@
               "description": "Retract request to make the element disabled and restore disabled to previous",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1142,14 +1154,14 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -1159,7 +1171,7 @@
               "name": "_requestedToBeDisabled",
               "privacy": "protected",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             }
           ]
@@ -1169,14 +1181,14 @@
           "name": "DisabledMixinImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<DisabledHost> & typeof DisabledHost"
+              "text": "T & Constructor<DisabledHost> & typeof DisabledHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -1214,7 +1226,7 @@
               "name": "tabIndex",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             },
             {
@@ -1224,7 +1236,7 @@
               "description": "Makes request to make the element disabled and set the tabindex",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1235,7 +1247,7 @@
               "description": "Retract request to make the element disabled and restore disabled and tabindex to previous",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1245,14 +1257,14 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "value",
                   "type": {
-                    "type": "boolean"
+                    "text": "boolean"
                   }
                 }
               ]
@@ -1263,14 +1275,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "import('lit-element').PropertyValues"
+                    "text": "import('lit-element').PropertyValues"
                   }
                 }
               ]
@@ -1282,14 +1294,14 @@
           "name": "DisabledWithTabIndexMixinImplementation",
           "return": {
             "type": {
-              "type": "T & Constructor<DisabledWithTabIndexHost> & Constructor<DisabledHost>"
+              "text": "T & Constructor<DisabledWithTabIndexHost> & Constructor<DisabledHost>"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -1327,7 +1339,7 @@
               "name": "slots",
               "privacy": "public",
               "type": {
-                "type": "SlotsMap"
+                "text": "SlotsMap"
               }
             },
             {
@@ -1337,7 +1349,7 @@
               "description": "Starts the creation of slots",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1348,14 +1360,14 @@
               "description": "Useful to decide if a given slot should be manipulated depending on if it was auto generated\nor not.",
               "return": {
                 "type": {
-                  "type": "boolean"
+                  "text": "boolean"
                 }
               },
               "parameters": [
                 {
                   "name": "slotName",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   },
                   "description": "Name of the slot"
                 }
@@ -1367,7 +1379,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             }
@@ -1379,14 +1391,14 @@
           "description": "# SlotMixin\n\n`SlotMixin`, when attached to the DOM it creates content for defined slots in the Light DOM.\nThe content element is created using a factory function and is assigned a slot name from the key.\nExisting slot content is not overridden.\n\nThe purpose is to have the default content in the Light DOM rather than hidden in Shadow DOM\nlike default slot content works natively.",
           "return": {
             "type": {
-              "type": "T & Constructor<SlotHost> & typeof SlotHost"
+              "text": "T & Constructor<SlotHost> & typeof SlotHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]
@@ -1425,14 +1437,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "updateStyles",
                   "type": {
-                    "type": "StylesMap"
+                    "text": "StylesMap"
                   }
                 }
               ]

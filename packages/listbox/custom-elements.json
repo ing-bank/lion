@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -265,6 +265,9 @@
               "kind": "field",
               "name": "_listboxActiveDescendantNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "ListboxMixin",
                 "module": "./src/ListboxMixin.js"
@@ -274,6 +277,9 @@
               "kind": "field",
               "name": "_listboxSlot",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "ListboxMixin",
                 "module": "./src/ListboxMixin.js"
@@ -283,6 +289,9 @@
               "kind": "field",
               "name": "_scrollTargetNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "ListboxMixin",
                 "module": "./src/ListboxMixin.js"
@@ -292,6 +301,9 @@
               "kind": "field",
               "name": "_activeDescendantOwnerNode",
               "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              },
               "inheritedFrom": {
                 "name": "ListboxMixin",
                 "module": "./src/ListboxMixin.js"
@@ -319,6 +331,9 @@
               "kind": "field",
               "name": "checkedIndex",
               "privacy": "public",
+              "type": {
+                "text": "number | number[]"
+              },
               "inheritedFrom": {
                 "name": "ListboxMixin",
                 "module": "./src/ListboxMixin.js"
@@ -341,7 +356,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -358,7 +373,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ],
@@ -385,7 +400,7 @@
                 {
                   "name": "index",
                   "type": {
-                    "type": "number|number[]"
+                    "text": "number|number[]"
                   }
                 }
               ],
@@ -402,13 +417,13 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "Number"
+                    "text": "Number"
                   }
                 }
               ],
@@ -470,13 +485,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   },
                   "optional": true,
                   "default": "1"
@@ -495,13 +510,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   },
                   "optional": true,
                   "default": "-1"
@@ -520,7 +535,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event & { target: LionOption }"
+                    "text": "Event & { target: LionOption }"
                   }
                 }
               ],
@@ -537,7 +552,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "description": "the keydown event object"
                 }
@@ -555,7 +570,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
@@ -572,7 +587,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -616,7 +631,7 @@
                 {
                   "name": "el",
                   "type": {
-                    "type": "LionOption | null"
+                    "text": "LionOption | null"
                   }
                 }
               ],
@@ -633,7 +648,7 @@
                 {
                   "name": "exclude",
                   "type": {
-                    "type": "LionOption|LionOption[]"
+                    "text": "LionOption|LionOption[]"
                   },
                   "optional": true,
                   "default": "[]"
@@ -652,7 +667,7 @@
                 {
                   "name": "cfgOrEvent",
                   "type": {
-                    "type": "Event & { target: LionOption }"
+                    "text": "Event & { target: LionOption }"
                   }
                 }
               ],
@@ -670,13 +685,13 @@
                 {
                   "name": "attribute",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ],
@@ -693,7 +708,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent & { target: LionOption; }"
+                    "text": "CustomEvent & { target: LionOption; }"
                   }
                 }
               ],
@@ -710,13 +725,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ],
@@ -743,7 +758,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
@@ -794,7 +809,7 @@
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               },
               "inheritedFrom": {
                 "name": "ListboxMixin",
@@ -826,7 +841,7 @@
             {
               "name": "active-changed",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -874,13 +889,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -982,11 +997,20 @@
         {
           "kind": "mixin",
           "name": "ListboxMixin",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "LitElement>"
+              },
+              "description": ""
+            }
+          ],
           "events": [
             {
               "name": "model-value-changed",
               "type": {
-                "type": "CustomEvent"
+                "text": "CustomEvent"
               }
             }
           ],
@@ -1012,10 +1036,6 @@
               "package": "@lion/form-core"
             }
           ],
-          "superclass": {
-            "name": "superclass",
-            "module": "./src/ListboxMixin.js"
-          },
           "attributes": [
             {
               "name": "orientation",
@@ -1092,22 +1112,34 @@
             {
               "kind": "field",
               "name": "_listboxActiveDescendantNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "_listboxSlot",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "_scrollTargetNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
               "name": "_activeDescendantOwnerNode",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "HTMLElement"
+              }
             },
             {
               "kind": "field",
@@ -1122,7 +1154,10 @@
             {
               "kind": "field",
               "name": "checkedIndex",
-              "privacy": "public"
+              "privacy": "public",
+              "type": {
+                "text": "number | number[]"
+              }
             },
             {
               "kind": "method",
@@ -1137,7 +1172,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -1150,7 +1185,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -1169,7 +1204,7 @@
                 {
                   "name": "index",
                   "type": {
-                    "type": "number|number[]"
+                    "text": "number|number[]"
                   }
                 }
               ]
@@ -1182,13 +1217,13 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "LionOption"
+                    "text": "LionOption"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "Number"
+                    "text": "Number"
                   }
                 }
               ]
@@ -1226,13 +1261,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   },
                   "optional": true,
                   "default": "1"
@@ -1247,13 +1282,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   },
                   "optional": true,
                   "default": "-1"
@@ -1268,7 +1303,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event & { target: LionOption }"
+                    "text": "Event & { target: LionOption }"
                   }
                 }
               ]
@@ -1281,7 +1316,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "description": "the keydown event object"
                 }
@@ -1295,7 +1330,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ]
@@ -1308,7 +1343,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -1336,7 +1371,7 @@
                 {
                   "name": "el",
                   "type": {
-                    "type": "LionOption | null"
+                    "text": "LionOption | null"
                   }
                 }
               ]
@@ -1349,7 +1384,7 @@
                 {
                   "name": "exclude",
                   "type": {
-                    "type": "LionOption|LionOption[]"
+                    "text": "LionOption|LionOption[]"
                   },
                   "optional": true,
                   "default": "[]"
@@ -1364,7 +1399,7 @@
                 {
                   "name": "cfgOrEvent",
                   "type": {
-                    "type": "Event & { target: LionOption }"
+                    "text": "Event & { target: LionOption }"
                   }
                 }
               ]
@@ -1378,13 +1413,13 @@
                 {
                   "name": "attribute",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "value",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -1397,7 +1432,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "CustomEvent & { target: LionOption; }"
+                    "text": "CustomEvent & { target: LionOption; }"
                   }
                 }
               ]
@@ -1410,13 +1445,13 @@
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -1435,7 +1470,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -1462,10 +1497,6 @@
               "privacy": "public"
             }
           ]
-        },
-        {
-          "kind": "variable",
-          "name": "ListboxMixin"
         }
       ],
       "exports": [
@@ -1492,7 +1523,7 @@
               "name": "_parentFormGroup",
               "privacy": "protected",
               "type": {
-                "type": "ChoiceGroupHost"
+                "text": "ChoiceGroupHost"
               }
             }
           ]
@@ -1522,7 +1553,7 @@
               "name": "selectionFollowsFocus",
               "privacy": "public",
               "type": {
-                "type": "Boolean"
+                "text": "Boolean"
               }
             },
             {
@@ -1530,7 +1561,7 @@
               "name": "rotateKeyboardNavigation",
               "privacy": "public",
               "type": {
-                "type": "Boolean"
+                "text": "Boolean"
               }
             },
             {
@@ -1538,7 +1569,7 @@
               "name": "orientation",
               "privacy": "public",
               "type": {
-                "type": "'vertical' | 'horizontal'"
+                "text": "'vertical' | 'horizontal'"
               }
             },
             {
@@ -1546,7 +1577,7 @@
               "name": "hasNoDefaultSelected",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -1554,7 +1585,7 @@
               "name": "singleOption",
               "privacy": "public",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -1562,7 +1593,7 @@
               "name": "checkedIndex",
               "privacy": "public",
               "type": {
-                "type": "number | number[]"
+                "text": "number | number[]"
               }
             },
             {
@@ -1570,7 +1601,7 @@
               "name": "activeIndex",
               "privacy": "public",
               "type": {
-                "type": "number"
+                "text": "number"
               }
             },
             {
@@ -1578,7 +1609,7 @@
               "name": "formElements",
               "privacy": "public",
               "type": {
-                "type": "LionOption[]"
+                "text": "LionOption[]"
               }
             },
             {
@@ -1587,14 +1618,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "index",
                   "type": {
-                    "type": "number | number[]"
+                    "text": "number | number[]"
                   }
                 }
               ]
@@ -1606,7 +1637,7 @@
               "description": "Reset interaction states and modelValue",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1615,7 +1646,7 @@
               "name": "_scrollTargetNode",
               "privacy": "protected",
               "type": {
-                "type": "LionOptions"
+                "text": "LionOptions"
               }
             },
             {
@@ -1623,7 +1654,7 @@
               "name": "_listboxNode",
               "privacy": "protected",
               "type": {
-                "type": "LionOptions"
+                "text": "LionOptions"
               }
             },
             {
@@ -1631,7 +1662,7 @@
               "name": "_listboxReceivesNoFocus",
               "privacy": "protected",
               "type": {
-                "type": "boolean"
+                "text": "boolean"
               }
             },
             {
@@ -1640,7 +1671,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1650,7 +1681,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1660,20 +1691,20 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "number"
+                  "text": "number"
                 }
               },
               "parameters": [
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -1684,20 +1715,20 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "number"
+                  "text": "number"
                 }
               },
               "parameters": [
                 {
                   "name": "currentIndex",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 },
                 {
                   "name": "offset",
                   "type": {
-                    "type": "number"
+                    "text": "number"
                   }
                 }
               ]
@@ -1708,14 +1739,14 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -1726,14 +1757,14 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -1744,7 +1775,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1754,7 +1785,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1764,14 +1795,14 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "MouseEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ]
@@ -1782,7 +1813,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               }
             },
@@ -1792,14 +1823,14 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "type": "void"
+                  "text": "void"
                 }
               },
               "parameters": [
                 {
                   "name": "ev",
                   "type": {
-                    "type": "Event"
+                    "text": "Event"
                   }
                 }
               ]
@@ -1809,7 +1840,7 @@
               "name": "_activeDescendantOwnerNode",
               "privacy": "protected",
               "type": {
-                "type": "HTMLElement"
+                "text": "HTMLElement"
               }
             }
           ]
@@ -1819,14 +1850,14 @@
           "name": "ListboxImplementation",
           "return": {
             "type": {
-              "type": "T &\n  Constructor<ListboxHost> &\n  typeof ListboxHost &\n  Constructor<ChoiceGroupHost> &\n  typeof ChoiceGroupHost &\n  Constructor<SlotHost> &\n  typeof SlotHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
+              "text": "T &\n  Constructor<ListboxHost> &\n  typeof ListboxHost &\n  Constructor<ChoiceGroupHost> &\n  typeof ChoiceGroupHost &\n  Constructor<SlotHost> &\n  typeof SlotHost &\n  Constructor<FormRegistrarHost> &\n  typeof FormRegistrarHost &\n  Constructor<FormControlHost> &\n  typeof FormControlHost"
             }
           },
           "parameters": [
             {
               "name": "superclass",
               "type": {
-                "type": "T"
+                "text": "T"
               }
             }
           ]

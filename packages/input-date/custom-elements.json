@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -69,7 +69,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -87,7 +87,7 @@
                 {
                   "name": "modelValue",
                   "type": {
-                    "type": "Date"
+                    "text": "Date"
                   }
                 }
               ]
@@ -100,7 +100,7 @@
                 {
                   "name": "serializedValue",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 }
               ]

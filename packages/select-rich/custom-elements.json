@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "experimental",
+  "schemaVersion": "0.1.0",
   "readme": "",
   "modules": [
     {
@@ -114,7 +114,7 @@
               "name": "selectedElement",
               "privacy": "public",
               "type": {
-                "type": "LionOption | null"
+                "text": "LionOption | null"
               },
               "description": "The option element that is currently selected",
               "default": "null"
@@ -210,7 +210,7 @@
             {
               "name": "blur",
               "type": {
-                "type": "Event"
+                "text": "Event"
               }
             }
           ],
@@ -244,7 +244,7 @@
               "name": "navigateWithinInvoker",
               "privacy": "public",
               "type": {
-                "type": "Boolean"
+                "text": "Boolean"
               },
               "description": "When invoker has focus, up and down arrow keys changes active state of listbox,\nwithout opening overlay.",
               "default": "false"
@@ -254,7 +254,7 @@
               "name": "interactionMode",
               "privacy": "public",
               "type": {
-                "type": "'windows/linux'|'mac'|'auto'"
+                "text": "'windows/linux'|'mac'|'auto'"
               },
               "description": "Aligns behavior for 'selectionFollowFocus' and 'navigateWithinInvoker' with\nplatform. When 'auto' (default), platform is automatically detected",
               "default": "'auto'"
@@ -278,7 +278,10 @@
             {
               "kind": "field",
               "name": "_invokerNode",
-              "privacy": "protected"
+              "privacy": "protected",
+              "type": {
+                "text": "LionSelectInvoker"
+              }
             },
             {
               "kind": "field",
@@ -303,13 +306,13 @@
                 {
                   "name": "name",
                   "type": {
-                    "type": "string"
+                    "text": "string"
                   }
                 },
                 {
                   "name": "oldValue",
                   "type": {
-                    "type": "unknown"
+                    "text": "unknown"
                   }
                 }
               ]
@@ -322,7 +325,7 @@
                 {
                   "name": "changedProperties",
                   "type": {
-                    "type": "PropertyValues "
+                    "text": "PropertyValues "
                   }
                 }
               ]
@@ -335,13 +338,13 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "LionOption & FormControlHost"
+                    "text": "LionOption & FormControlHost"
                   }
                 },
                 {
                   "name": "indexToInsertAt",
                   "type": {
-                    "type": "Number"
+                    "text": "Number"
                   }
                 }
               ]
@@ -354,7 +357,7 @@
                 {
                   "name": "child",
                   "type": {
-                    "type": "FormRegisteringHost"
+                    "text": "FormRegisteringHost"
                   },
                   "description": "the child element (field)"
                 }
@@ -481,7 +484,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ]
@@ -494,7 +497,7 @@
                 {
                   "name": "ev",
                   "type": {
-                    "type": "KeyboardEvent"
+                    "text": "KeyboardEvent"
                   },
                   "description": "the keydown event object"
                 }
