@@ -73,7 +73,13 @@ export const combobox = () => html`
   <lion-dialog>
     <button slot="invoker">Open Dialog</button>
     <div slot="content">
-      <lion-combobox name="combo" label="Default">
+      <lion-combobox
+        name="combo"
+        label="Default"
+        @model-value-changed="${e => {
+          console.log(e.target.modelValue);
+        }}"
+      >
         ${listboxData.map(
           entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
         )}

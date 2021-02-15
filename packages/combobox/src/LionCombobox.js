@@ -273,6 +273,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   connectedCallback() {
     super.connectedCallback();
+    // Promise.resolve().then(() => this.__resolveRegistrationComplete());
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
