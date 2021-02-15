@@ -95,6 +95,28 @@ export const forceLocale = () => html`
 
 > The separators are now flipped due to Dutch locale. On top of that, due to JOD currency, the minimum amount of decimals is 3 by default for this currency.
 
+### Force digits as input
+
+You can use the `preprocessAmount` preprocessor to disable users from inputting anything other than digits or separator characters.
+This is not added by default, but you can add it yourself.
+
+Separator characters include:
+
+- ' ' (space)
+- . (dot)
+- , (comma)
+
+```js preview-story
+import { preprocessAmount } from '@lion/input-amount';
+
+export const forceDigits = () => html`
+  <lion-input-amount
+    label="Amount"
+    .preprocessor=${preprocessAmount}
+  ></lion-input-amount>
+`;
+```
+
 ### Faulty prefilled
 
 This example will show the error message by prefilling it with a faulty `modelValue`.
