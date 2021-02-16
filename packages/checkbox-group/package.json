@@ -1,6 +1,6 @@
 {
   "name": "@lion/checkbox-group",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "A container for multiple checkboxes",
   "license": "MIT",
   "author": "ing-bank",
@@ -37,9 +37,9 @@
     "lion-checkbox-indeterminate.js"
   ],
   "dependencies": {
-    "@lion/core": "0.13.8",
-    "@lion/form-core": "0.7.3",
-    "@lion/input": "0.10.16"
+    "@lion/core": "0.14.0",
+    "@lion/form-core": "0.8.0",
+    "@lion/input": "0.11.0"
   },
   "keywords": [
     "checkbox-group",

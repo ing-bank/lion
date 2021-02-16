@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-core",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "Form-core contains all essential building blocks for creating form fields and fieldsets",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,8 +36,8 @@
     "lion-validation-feedback.js"
   ],
   "dependencies": {
-    "@lion/core": "0.13.8",
-    "@lion/localize": "0.15.5"
+    "@lion/core": "0.14.0",
+    "@lion/localize": "0.16.0"
   },
   "keywords": [
     "field",
