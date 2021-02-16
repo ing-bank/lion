@@ -21,6 +21,16 @@ function mimicUserTyping(el, value) {
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
   el._inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
+  el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
+}
+
+/**
+ * @param {HTMLInputElement} el
+ * @param {string} value
+ */
+function mimicKeyPress(el, value) {
+  el.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
 }
 
 /**
@@ -53,7 +63,7 @@ async function mimicUserTypingAdvanced(el, values) {
         inputNode.value += key;
       }
 
-      inputNode.dispatchEvent(new KeyboardEvent('keydown', { key }));
+      mimicKeyPress(inputNode, key);
       el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
       el.updateComplete.then(() => {
@@ -348,7 +358,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
       expect(el._inputNode.value).to.equal('Artichoke');
 
-      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      mimicKeyPress(el._inputNode, 'Tab');
       expect(el.opened).to.equal(false);
       expect(el._inputNode.value).to.equal('Artichoke');
     });
@@ -561,7 +571,7 @@ describe('lion-combobox', () => {
         expect(el.checkedIndex).to.equal(0);
 
         // Simulate backspace deleting the char at the end of the string
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+        mimicKeyPress(el._inputNode, 'Backspace');
         el._inputNode.dispatchEvent(new Event('input'));
         const arr = el._inputNode.value.split('');
         arr.splice(el._inputNode.value.length - 1, 1);
@@ -1227,7 +1237,7 @@ describe('lion-combobox', () => {
         el.autocomplete = 'none';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(-1);
         expect(el.opened).to.be.true;
 
@@ -1238,7 +1248,7 @@ describe('lion-combobox', () => {
         el.autocomplete = 'list';
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(-1);
         expect(el.opened).to.be.true;
 
@@ -1254,7 +1264,7 @@ describe('lion-combobox', () => {
 
         expect(el.activeIndex).to.equal(1);
 
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         await el.updateComplete;
         await el.updateComplete;
 
@@ -1269,7 +1279,7 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
         expect(el.opened).to.be.false;
       });
@@ -1298,7 +1308,7 @@ describe('lion-combobox', () => {
         // select artichoke
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
 
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
@@ -1320,10 +1330,10 @@ describe('lion-combobox', () => {
         // Select something
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
 
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        mimicKeyPress(el._inputNode, 'Escape');
         await el.updateComplete;
         expect(el._inputNode.textContent).to.equal('');
 
@@ -1366,7 +1376,8 @@ describe('lion-combobox', () => {
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(null);
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        mimicKeyPress(el._inputNode, 'ArrowDown');
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
           'artichoke-option',
         );
