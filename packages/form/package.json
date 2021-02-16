@@ -15,6 +15,7 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
@@ -23,10 +24,11 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group form",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group form"
   },
   "sideEffects": [
@@ -46,5 +48,6 @@
   "exports": {
     ".": "./index.js",
     "./lion-form": "./lion-form.js"
-  }
+  },
+  "customElementsManifest": "custom-elements.json"
 }

@@ -15,6 +15,7 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "custom-elements.json",
     "docs",
     "src",
     "test",
@@ -23,10 +24,11 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group fieldset",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group fieldset",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group fieldset",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group fieldset"
   },
   "sideEffects": [
@@ -48,5 +50,6 @@
   "exports": {
     ".": "./index.js",
     "./lion-fieldset": "./lion-fieldset.js"
-  }
+  },
+  "customElementsManifest": "custom-elements.json"
 }
