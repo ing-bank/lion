@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- b2f981db: Add exports field in package.json
+
+  Note that some tools can break with this change as long as they respect the exports field. If that is the case, check that you always access the elements included in the exports field, with the same name which they are exported. Any item not exported is considered private to the package and should not be accessed from the outside.
+
 ## 1.2.1
 
 ### Patch Changes

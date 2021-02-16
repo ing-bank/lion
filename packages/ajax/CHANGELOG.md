@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 4452d06d: BREAKING CHANGE: We no longer use axios! Our ajax package is now a thin wrapper around Fetch. The API has changed completely. You will need a fetch polyfill for IE11.
+- b2f981db: Add exports field in package.json
+
+  Note that some tools can break with this change as long as they respect the exports field. If that is the case, check that you always access the elements included in the exports field, with the same name which they are exported. Any item not exported is considered private to the package and should not be accessed from the outside.
+
+- bbffd710: Added Ajax cache interceptors.
+
 ## 0.5.15
 
 ### Patch Changes

@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.19.0
+
+### Minor Changes
+
+- b2f981db: Add exports field in package.json
+
+  Note that some tools can break with this change as long as they respect the exports field. If that is the case, check that you always access the elements included in the exports field, with the same name which they are exported. Any item not exported is considered private to the package and should not be accessed from the outside.
+
+### Patch Changes
+
+- Updated dependencies [b2f981db]
+  - @lion/calendar@0.13.0
+  - @lion/core@0.14.0
+  - @lion/form-core@0.8.0
+  - @lion/input-date@0.9.0
+  - @lion/localize@0.16.0
+  - @lion/overlays@0.24.0
+  - @lion/validate-messages@0.4.0
+
 ## 0.18.18
 
 ### Patch Changes

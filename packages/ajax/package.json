@@ -1,6 +1,6 @@
 {
   "name": "@lion/ajax",
-  "version": "0.5.15",
+  "version": "0.6.0",
   "description": "Thin wrapper around fetch with support for interceptors.",
   "license": "MIT",
   "author": "ing-bank",

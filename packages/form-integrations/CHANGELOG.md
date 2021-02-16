@@ -1,5 +1,40 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- b2f981db: Add exports field in package.json
+
+  Note that some tools can break with this change as long as they respect the exports field. If that is the case, check that you always access the elements included in the exports field, with the same name which they are exported. Any item not exported is considered private to the package and should not be accessed from the outside.
+
+### Patch Changes
+
+- Updated dependencies [b2f981db]
+  - @lion/button@0.9.0
+  - @lion/checkbox-group@0.14.0
+  - @lion/combobox@0.2.0
+  - @lion/core@0.14.0
+  - @lion/fieldset@0.16.0
+  - @lion/form@0.8.0
+  - @lion/form-core@0.8.0
+  - @lion/input@0.11.0
+  - @lion/input-amount@0.9.0
+  - @lion/input-date@0.9.0
+  - @lion/input-datepicker@0.19.0
+  - @lion/input-email@0.10.0
+  - @lion/input-iban@0.12.0
+  - @lion/input-range@0.6.0
+  - @lion/input-stepper@0.2.0
+  - @lion/listbox@0.5.0
+  - @lion/localize@0.16.0
+  - @lion/radio-group@0.13.0
+  - @lion/select@0.9.0
+  - @lion/select-rich@0.22.0
+  - @lion/switch@0.13.0
+  - @lion/textarea@0.9.0
+  - @lion/validate-messages@0.4.0
+
 ## 0.3.30
 
 ### Patch Changes
