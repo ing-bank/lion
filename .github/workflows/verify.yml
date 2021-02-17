@@ -26,8 +26,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      # at the moment postinstall transforms package.jsons and removes newline at the bottom, so we do a git restore after installing
+      # that way we don't get linting errors from eclint for missing newlines in package.jsons.
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --frozen-lockfile && git restore .
 
       - name: Lint
         run: npm run lint

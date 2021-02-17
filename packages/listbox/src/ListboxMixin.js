@@ -126,6 +126,7 @@ const ListboxMixinImplementation = superclass =>
           const lionOptions = /** @type {HTMLElement & FormRegistrarPortalHost} */ (document.createElement(
             ListboxMixin.getScopedTagName('lion-options'),
           ));
+          lionOptions.setAttribute('data-tag-name', 'lion-options');
           lionOptions.registrationTarget = this;
           return lionOptions;
         },

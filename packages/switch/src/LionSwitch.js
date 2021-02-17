@@ -39,12 +39,15 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   get slots() {
     return {
       ...super.slots,
-      input: () =>
-        document.createElement(
+      input: () => {
+        const btnEl = document.createElement(
           /** @type {typeof LionSwitch} */ (this.constructor).getScopedTagName(
             'lion-switch-button',
           ),
-        ),
+        );
+        btnEl.setAttribute('data-tag-name', 'lion-switch-button');
+        return btnEl;
+      },
     };
   }
 
