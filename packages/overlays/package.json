@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group overlays",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group overlays",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group overlays",
@@ -49,10 +49,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./translations/*": "./translations/*",
     "./test-suites/*": "./test-suites/*"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

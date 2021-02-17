@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'demo/**/*'",
     "debug": "cd ../../ && npm run debug -- --group progress-indicator",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group progress-indicator",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group progress-indicator",
@@ -48,9 +48,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-progress-indicator": "./lion-progress-indicator.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

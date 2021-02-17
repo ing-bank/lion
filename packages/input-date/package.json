@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group input-date",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-date",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-date",
@@ -49,9 +49,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-input-date": "./lion-input-date.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

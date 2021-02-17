@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group combobox",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group combobox",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group combobox",
@@ -58,9 +58,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-combobox": "./lion-combobox.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

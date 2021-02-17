@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group form-core",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-core",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-core",
@@ -47,12 +47,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./test-helpers/*": "./test-helpers/*",
     "./test-suites/*": "./test-suites/*",
     "./lion-field": "./lion-field.js",
     "./lion-validation-feedback": "./lion-validation-feedback.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

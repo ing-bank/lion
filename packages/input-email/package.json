@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group input-email",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-email",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-email",
@@ -49,9 +49,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-input-email": "./lion-input-email.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }
