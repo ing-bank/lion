@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.5.1
+
+### Patch Changes
+
+- deb95d13: Add data-tag-name manually to scoped child slottables as the ScopedElementsMixin only does this transform for elements inside render templates.
+- Updated dependencies [deb95d13]
+  - @lion/form-core@0.8.1
+
 ## 0.5.0
 
 ### Minor Changes

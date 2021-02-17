@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- @lion/input@0.11.1
+
 ## 0.6.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [deb95d13]
+  - @lion/form-core@0.8.1
+  - @lion/input@0.11.1
+
 ## 0.13.0
 
 ### Minor Changes
