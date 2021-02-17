@@ -36,8 +36,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      # at the moment postinstall transforms package.jsons and removes newline at the bottom, so we do a git restore after installing
+      # that way we don't publish package.jsons without a newline at the bottom.
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --frozen-lockfile && git restore .
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

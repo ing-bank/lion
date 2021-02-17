@@ -112,7 +112,13 @@ export const ValidateMixinImplementation = superclass =>
       const ctor = /** @type {typeof ValidateMixin & ScopedElementsObj} */ (this.constructor);
       return {
         ...super.slots,
-        feedback: () => document.createElement(ctor.getScopedTagName('lion-validation-feedback')),
+        feedback: () => {
+          const feedbackEl = document.createElement(
+            ctor.getScopedTagName('lion-validation-feedback'),
+          );
+          feedbackEl.setAttribute('data-tag-name', 'lion-validation-feedback');
+          return feedbackEl;
+        },
       };
     }
 
