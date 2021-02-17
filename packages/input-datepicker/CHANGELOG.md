@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.19.1
+
+### Patch Changes
+
+- Updated dependencies [deb95d13]
+  - @lion/form-core@0.8.1
+  - @lion/input-date@0.9.1
+  - @lion/validate-messages@0.4.1
+
 ## 0.19.0
 
 ### Minor Changes
