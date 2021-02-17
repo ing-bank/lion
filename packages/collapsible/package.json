@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'demo/**/*'",
     "debug": "cd ../../ && npm run debug -- --group collapsible",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group collapsible",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group collapsible",
@@ -48,9 +48,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-collapsible": "./lion-collapsible.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group select",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group select",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group select",
@@ -46,9 +46,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-select": "./lion-select.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group dialog",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group dialog",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group dialog",
@@ -47,9 +47,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-dialog": "./lion-dialog.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

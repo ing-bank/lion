@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group steps",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group steps",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group steps",
@@ -46,10 +46,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-step": "./lion-step.js",
     "./lion-steps": "./lion-steps.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

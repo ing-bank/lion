@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group accordion",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group accordion",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group accordion",
@@ -45,9 +45,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-accordion": "./lion-accordion.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }

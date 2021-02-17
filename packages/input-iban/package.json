@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --exclude 'docs/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
     "debug": "cd ../../ && npm run debug -- --group input-iban",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-iban",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-iban",
@@ -50,9 +50,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./lion-input-iban": "./lion-input-iban.js"
-  },
-  "customElementsManifest": "custom-elements.json"
+  }
 }
