@@ -225,9 +225,9 @@ Alternatively, most often for subclassers, you can extend or import `AjaxClient`
 ```js
 import { AjaxClient } from '@lion/ajax';
 
-export const ajax = new AjaxClient({ 
-  cacheOptions: { 
-    useCache: true, 
+export const ajax = new AjaxClient({
+  cacheOptions: {
+    useCache: true,
     timeToLive: 1000 * 60 * 5, // 5 minutes
     getCacheIdentifier: () => getActiveProfile().profileId,
   },
@@ -319,8 +319,8 @@ After TTL expires, the next request will set the cache again, and for the next 3
 export const cacheTimeToLive = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = () => {
-    ajax.requestJson(`./packages/ajax/docs/pabu.json`, { 
-      cacheOptions: { 
+    ajax.requestJson(`./packages/ajax/docs/pabu.json`, {
+      cacheOptions: {
         timeToLive: 1000 * 3, // 3 seconds
       }
     })
@@ -441,7 +441,7 @@ export const invalidateRules = () => {
       actionCacheOptions.invalidateUrlsRegex = /\/packages\/ajax\/docs\/naga.json/;
     }
 
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { 
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`, {
       method,
       cacheOptions: actionCacheOptions,
     })
