@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { stub } from 'sinon';
+import { stub, useFakeTimers } from 'sinon';
 import { AjaxClient, AjaxClientFetchError } from '@lion/ajax';
 
 describe('AjaxClient', () => {
@@ -207,6 +207,61 @@ describe('AjaxClient', () => {
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-CSRF-TOKEN')).to.equal('5678');
+    });
+  });
+
+  describe('Caching', () => {
+    /** @type {number | undefined} */
+    let cacheId;
+    /** @type {() => string} */
+    let getCacheIdentifier;
+
+    const newCacheId = () => {
+      if (!cacheId) {
+        cacheId = 1;
+      } else {
+        cacheId += 1;
+      }
+      return cacheId;
+    };
+
+    beforeEach(() => {
+      getCacheIdentifier = () => String(cacheId);
+    });
+
+    it('allows configuring cache interceptors on the AjaxClient config', async () => {
+      newCacheId();
+      const customAjax = new AjaxClient({
+        cacheOptions: {
+          useCache: true,
+          timeToLive: 100,
+          getCacheIdentifier,
+        },
+      });
+
+      const clock = useFakeTimers({
+        shouldAdvanceTime: true,
+      });
+
+      // Smoke test 1: verify caching works
+      await customAjax.request('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+      await customAjax.request('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+
+      // Smoke test 2: verify caching is invalidated on non-get method
+      await customAjax.request('/foo', { method: 'POST' });
+      expect(fetchStub.callCount).to.equal(2);
+      await customAjax.request('/foo');
+      expect(fetchStub.callCount).to.equal(3);
+
+      // Smoke test 3: verify caching is invalidated after TTL has passed
+      await customAjax.request('/foo');
+      expect(fetchStub.callCount).to.equal(3);
+      clock.tick(101);
+      await customAjax.request('/foo');
+      expect(fetchStub.callCount).to.equal(4);
+      clock.restore();
     });
   });
 

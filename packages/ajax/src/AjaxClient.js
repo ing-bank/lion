@@ -1,4 +1,8 @@
 /* eslint-disable consistent-return */
+import {
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
+} from './interceptors-cache.js';
 import { acceptLanguageRequestInterceptor, createXSRFRequestInterceptor } from './interceptors.js';
 import { AjaxClientFetchError } from './AjaxClientFetchError.js';
 
@@ -14,11 +18,16 @@ export class AjaxClient {
    * @param {Partial<AjaxClientConfig>} config
    */
   constructor(config = {}) {
+    /** @type {Partial<AjaxClientConfig>} */
     this.__config = {
       addAcceptLanguage: true,
       xsrfCookieName: 'XSRF-TOKEN',
       xsrfHeaderName: 'X-XSRF-TOKEN',
       jsonPrefix: '',
+      cacheOptions: {
+        getCacheIdentifier: () => '_default',
+        ...config.cacheOptions,
+      },
       ...config,
     };
 
@@ -36,11 +45,26 @@ export class AjaxClient {
         createXSRFRequestInterceptor(this.__config.xsrfCookieName, this.__config.xsrfHeaderName),
       );
     }
+
+    if (this.__config.cacheOptions && this.__config.cacheOptions.useCache) {
+      this.addRequestInterceptor(
+        cacheRequestInterceptorFactory(
+          this.__config.cacheOptions.getCacheIdentifier,
+          this.__config.cacheOptions,
+        ),
+      );
+      this.addResponseInterceptor(
+        cacheResponseInterceptorFactory(
+          this.__config.cacheOptions.getCacheIdentifier,
+          this.__config.cacheOptions,
+        ),
+      );
+    }
   }
 
   /**
    * Sets the config for the instance
-   * @param {AjaxClientConfig} config configuration for the AjaxClass instance
+   * @param {Partial<AjaxClientConfig>} config configuration for the AjaxClass instance
    */
   set options(config) {
     this.__config = config;
