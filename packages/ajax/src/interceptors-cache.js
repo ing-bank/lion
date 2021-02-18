@@ -253,7 +253,6 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       if (cacheOptions.invalidateUrls) {
         cacheOptions.invalidateUrls.forEach(
           /** @type {string} */ invalidateUrl => {
-            console.log('invalidaaaating', currentCache._cacheObject);
             currentCache.delete(invalidateUrl);
           },
         );
