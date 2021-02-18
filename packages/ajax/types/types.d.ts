@@ -14,6 +14,7 @@ export interface AjaxClientConfig {
   addAcceptLanguage: boolean;
   xsrfCookieName: string | null;
   xsrfHeaderName: string | null;
+  cacheOptions: CacheOptionsWithIdentifier;
   jsonPrefix: string;
 }
 
@@ -38,17 +39,17 @@ export interface CacheOptions {
   invalidateUrls?: string[];
   invalidateUrlsRegex?: RegExp;
   requestIdentificationFn?: RequestIdentificationFn;
-  fromCache?: boolean;
 }
 
-export interface ValidatedCacheOptions {
+export interface CacheOptionsWithIdentifier extends CacheOptions {
+  getCacheIdentifier: () => string;
+}
+
+export interface ValidatedCacheOptions extends CacheOptions {
   useCache: boolean;
   methods: string[];
   timeToLive: number;
-  invalidateUrls?: string[];
-  invalidateUrlsRegex?: RegExp;
   requestIdentificationFn: RequestIdentificationFn;
-  fromCache?: boolean;
 }
 
 export interface CacheRequestExtension {
@@ -67,6 +68,7 @@ export interface CacheResponseRequest {
 export interface CacheResponseExtension {
   request: CacheResponseRequest;
   data: object | string;
+  fromCache?: boolean;
 }
 
 export type CacheRequest = Request & Partial<CacheRequestExtension>;

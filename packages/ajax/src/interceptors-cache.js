@@ -204,22 +204,16 @@ export const validateOptions = ({
  * @returns {ValidatedCacheOptions}
  */
 function composeCacheOptions(validatedInitialCacheOptions, configCacheOptions) {
-  /** @type {any} */
-  let actionCacheOptions = {};
+  let actionCacheOptions = validatedInitialCacheOptions;
 
-  actionCacheOptions =
-    configCacheOptions &&
-    validateOptions({
+  if (configCacheOptions) {
+    actionCacheOptions = validateOptions({
       ...validatedInitialCacheOptions,
       ...configCacheOptions,
     });
+  }
 
-  const cacheOptions = {
-    ...validatedInitialCacheOptions,
-    ...actionCacheOptions,
-  };
-
-  return cacheOptions;
+  return actionCacheOptions;
 }
 
 /**
@@ -249,7 +243,6 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
 
     // cacheIdentifier is used to bind the cache to the current session
     const currentCache = getCache(getCacheIdentifier());
-
     const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
 
     // don't use cache if the request method is not part of the configs methods
@@ -260,6 +253,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       if (cacheOptions.invalidateUrls) {
         cacheOptions.invalidateUrls.forEach(
           /** @type {string} */ invalidateUrl => {
+            console.log('invalidaaaating', currentCache._cacheObject);
             currentCache.delete(invalidateUrl);
           },
         );
@@ -277,16 +271,17 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       if (!cacheRequest.cacheOptions) {
         cacheRequest.cacheOptions = { useCache: false };
       }
-      cacheRequest.cacheOptions.fromCache = true;
 
       const init = /** @type {LionRequestInit} */ ({
         status,
         statusText,
         headers,
-        request: cacheRequest,
       });
 
-      return /** @type {CacheResponse} */ (new Response(cacheResponse, init));
+      const response = /** @type {CacheResponse} */ (new Response(cacheResponse, init));
+      response.request = cacheRequest;
+      response.fromCache = true;
+      return response;
     }
 
     return cacheRequest;
@@ -315,7 +310,7 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
       cacheResponse.request?.cacheOptions,
     );
 
-    const isAlreadyFromCache = !!cacheOptions.fromCache;
+    const isAlreadyFromCache = !!cacheResponse.fromCache;
     // caching all responses with not default `timeToLive`
     const isCacheActive = cacheOptions.timeToLive > 0;
 
@@ -334,8 +329,9 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
         searchParamSerializer,
       );
 
+      const responseBody = await cacheResponse.clone().text();
       // store the response data in the cache
-      getCache(getCacheIdentifier()).set(cacheId, cacheResponse.body);
+      getCache(getCacheIdentifier()).set(cacheId, responseBody);
     } else {
       // don't store in cache if the request method is not part of the configs methods
       return cacheResponse;

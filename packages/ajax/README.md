@@ -2,6 +2,36 @@
 
 # Ajax
 
+```js script
+import { html } from '@lion/core';
+import { renderLitAsNode } from '@lion/helpers';
+import { ajax, AjaxClient, cacheRequestInterceptorFactory, cacheResponseInterceptorFactory } from '@lion/ajax';
+import '@lion/helpers/sb-action-logger';
+
+const getCacheIdentifier = () => {
+  let userId = localStorage.getItem('lion-ajax-cache-demo-user-id');
+  if (!userId) {
+    localStorage.setItem('lion-ajax-cache-demo-user-id', '1');
+    userId = '1';
+  }
+  return userId;
+}
+
+const cacheOptions = {
+  useCache: true,
+  timeToLive: 1000 * 60 * 10, // 10 minutes
+};
+
+ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
+ajax.addResponseInterceptor(
+  cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions),
+);
+
+export default {
+  title: 'Ajax/Ajax',
+};
+```
+
 `ajax` is a small wrapper around `fetch` which:
 
 - Allows globally registering request and response interceptors
@@ -27,11 +57,27 @@ npm i --save @lion/ajax
 
 #### GET request
 
-```js
-import { ajax } from '@lion/ajax';
-
-const response = await ajax.request('/api/users');
-const users = await response.json();
+```js preview-story
+export const getRequest = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name) => {
+    ajax.request(`./packages/ajax/docs/${name}.json`)
+      .then(response => response.json())
+      .then(result => {
+        actionLogger.log(JSON.stringify(result, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
+    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    ${actionLogger}
+  `;
+}
 ```
 
 #### POST request
@@ -48,14 +94,33 @@ const newUser = await response.json();
 
 ### JSON requests
 
-We usually deal with JSON requests and responses. With `requestJson` you don't need to specifically stringify the request body or parse the response body:
+We usually deal with JSON requests and responses. With `requestJson` you don't need to specifically stringify the request body or parse the response body.
+
+The result will have the Response object on `.response` property, and the decoded json will be available on `.body`.
 
 #### GET JSON request
 
-```js
-import { ajax } from '@lion/ajax';
-
-const { response, body } = await ajax.requestJson('/api/users');
+```js preview-story
+export const getJsonRequest = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name) => {
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`)
+      .then(result => {
+        console.log(result.response);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
+    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    ${actionLogger}
+  `;
+}
 ```
 
 #### POST JSON request
@@ -73,32 +138,54 @@ const { response, body } = await ajax.requestJson('/api/users', {
 
 Different from fetch, `ajax` throws when the server returns a 4xx or 5xx, returning the request and response:
 
-```js
-import { ajax } from '@lion/ajax';
-
-try {
-  const users = await ajax.requestJson('/api/users');
-} catch (error) {
-  if (error.response) {
-    if (error.response.status === 400) {
-      // handle a specific status code, for example 400 bad request
-    } else {
-      console.error(error);
+```js preview-story
+export const errorHandling = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = async () => {
+    try {
+      const users = await ajax.requestJson('/api/users');
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          // handle a specific status code, for example 400 bad request
+        } else {
+          actionLogger.log(error);
+        }
+      } else {
+        // an error happened before receiving a response, ex. an incorrect request or network error
+        actionLogger.log(error);
+      }
     }
-  } else {
-    // an error happened before receiving a response, ex. an incorrect request or network error
-    console.error(error);
   }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${fetchHandler}>Fetch</button>
+    ${actionLogger}
+  `;
 }
 ```
 
+## Fetch Polyfill
+
+For IE11 you will need a polyfill for fetch. You should add this on your top level layer, e.g. your application.
+
+[This is the polyfill we recommend](https://github.com/github/fetch). It also has a [section for polyfilling AbortController](https://github.com/github/fetch#aborting-requests)
+
 ## Ajax Cache
 
-A caching library that uses `lion-web/ajax` and adds cache interceptors to provide caching for use in
+A caching library that uses `@lion/ajax` and adds cache interceptors to provide caching for use in
 frontend `services`.
 
-> Technical documentation and decisions can be found in
-> [./docs/technical-docs.md](./docs/technical-docs.md)
+The **request interceptor**'s main goal is to determine whether or not to
+**return the cached object**. This is done based on the options that are being
+passed.
+
+The **response interceptor**'s goal is to determine **when to cache** the
+requested response, based on the options that are being passed.
 
 ### Getting started
 
@@ -133,113 +220,247 @@ ajax.addResponseInterceptor(
 const { response, body } = await ajax.requestJson('/my-url');
 ```
 
-### Ajax cache example
+Alternatively, most often for subclassers, you can extend or import `AjaxClient` yourself, and pass cacheOptions when instantiating the ajax singleton.
 
 ```js
-import {
-  ajax,
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-} from '@lion-web/ajax';
+import { AjaxClient } from '@lion/ajax';
 
-const getCacheIdentifier = () => getActiveProfile().profileId;
+export const ajax = new AjaxClient({ 
+  cacheOptions: { 
+    useCache: true, 
+    timeToLive: 1000 * 60 * 5, // 5 minutes
+    getCacheIdentifier: () => getActiveProfile().profileId,
+  },
+})
+```
 
-const globalCacheOptions = {
-  useCache: false,
-  timeToLive: 50, // default: one hour (the cache instance will be replaced in 1 hour, regardless of this setting)
-  methods: ['get'], // default: ['get'] NOTE for now only 'get' is supported
-  // requestIdentificationFn: (requestConfig) => { }, // see docs below for more info
-  // invalidateUrls: [], see docs below for more info
-  // invalidateUrlsRegex: RegExp, // see docs below for more info
-};
+### Ajax cache example
 
-// pass a function to the interceptorFactory that retrieves a cache identifier
-// ajax.interceptors.request.use(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-// ajax.interceptors.response.use(
-//   cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions),
-// );
+> Let's assume that we have a user session, for this demo purposes we already created an identifier function for this and set the cache interceptors.
 
-class TodoService {
-  constructor() {
-    this.localAjaxConfig = {
-      cacheOptions: {
-        invalidateUrls: ['/api/todosbykeyword'], // default: []
-      },
-    };
+We can see if a response is served from the cache by checking the `response.fromCache` property,
+which is either undefined for normal requests, or set to true for responses that were served from cache.
+
+```js preview-story
+export const cache = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name) => {
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`)
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
   }
-
-  /**
-   * Returns all todos from cache if not older than 5 minutes
-   */
-  getTodos() {
-    return ajax.requestJson(`/api/todos`, this.localAjaxConfig);
-  }
-
-  /**
-   *
-   */
-  getTodosByKeyword(keyword) {
-    return ajax.requestJson(`/api/todosbykeyword/${keyword}`, this.localAjaxConfig);
-  }
-
-  /**
-   * Creates new todo and invalidates cache.
-   * `getTodos` will NOT take the response from cache
-   */
-  saveTodo(todo) {
-    return ajax.requestJson(`/api/todos`, { method: 'POST', body: todo, ...this.localAjaxConfig });
-  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
+    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    ${actionLogger}
+  `;
 }
 ```
 
-If a value returned by `cacheIdentifier` changes the cache is reset. We avoid situation of accessing old cache and proactively clean it, for instance when a user session is ended.
+You can also change the cache options per request, which is handy if you don't want to remove and re-add the interceptors for a simple configuration change.
 
-### Ajax cache Options
+In this demo, when we fetch naga, we always pass `useCache: false` so the Response is never a cached one.
 
-```js
-const cacheOptions = {
-  // `useCache`: determines wether or not to use the cache
-  // can be boolean
-  // default: false
-  useCache: true,
+```js preview-story
+export const cacheActionOptions = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name) => {
+    let actionCacheOptions;
+    if (name === 'naga') {
+      actionCacheOptions = {
+        useCache: false,
+      }
+    }
 
-  // `timeToLive`: is the time the cache should be kept in ms
-  // default: 0
-  // Note: regardless of this setting, the cache instance holding all the caches
-  //       will be invalidated after one hour
-  timeToLive: 1000 * 60 * 5,
-
-  // `methods`: an array of methods on which this configuration is applied
-  // Note: when `useCache` is `false` this will not be used
-  // NOTE: ONLY GET IS SUPPORTED
-  // default: ['get']
-  methods: ['get'],
-
-  // `invalidateUrls`: an array of strings that for each string that partially
-  // occurs as key in the cache, will be removed
-  // default: []
-  // Note: can be invalidated only by non-get request to the same url
-  invalidateUrls: ['/api/todosbykeyword'],
-
-  // `invalidateUrlsRegex`: a RegExp object to match and delete
-  // each matched key in the cache
-  // Note: can be invalidated only by non-get request to the same url
-  invalidateUrlsRegex: /posts/
-
-  // `requestIdentificationFn`: a function to provide a string that should be
-  // taken as a key in the cache.
-  // This can be used to cache post-requests.
-  // default: (requestConfig, searchParamsSerializer) => url + params
-  requestIdentificationFn: (request, serializer) => {
-    return `${request.url}?${serializer(request.params)}`;
-  },
-};
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { cacheOptions: actionCacheOptions })
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
+    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    ${actionLogger}
+  `;
+}
 ```
 
-## Considerations
+### Invalidating cache
 
-## Fetch Polyfill
+Invalidating the cache, or cache busting, can be done in multiple ways:
 
-For IE11 you will need a polyfill for fetch. You should add this on your top level layer, e.g. your application.
+- Going past the `timeToLive` of the cache object
+- Changing cache identifier (e.g. user session or active profile changes)
+- Doing a non GET request to the cached endpoint
+  - Invalidates the cache of that endpoint
+  - Invalidates the cache of all other endpoints matching `invalidatesUrls` and `invalidateUrlsRegex`
 
-[This is the polyfill we recommend](https://github.com/github/fetch). It also has a [section for polyfilling AbortController](https://github.com/github/fetch#aborting-requests)
+#### Time to live
+
+In this demo we pass a timeToLive of three seconds.
+Try clicking the fetch button and watch fromCache change whenever TTL expires.
+
+After TTL expires, the next request will set the cache again, and for the next 3 seconds you will get cached responses for subsequent requests.
+
+```js preview-story
+export const cacheTimeToLive = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = () => {
+    ajax.requestJson(`./packages/ajax/docs/pabu.json`, { 
+      cacheOptions: { 
+        timeToLive: 1000 * 3, // 3 seconds
+      }
+    })
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${fetchHandler}>Fetch Pabu</button>
+    ${actionLogger}
+  `;
+}
+```
+
+#### Changing cache identifier
+
+For this demo we use localStorage to set a user id to `'1'`.
+
+Now we will allow you to change this identifier to invalidate the cache.
+
+```js preview-story
+export const changeCacheIdentifier = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = () => {
+    ajax.requestJson(`./packages/ajax/docs/pabu.json`)
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+
+  const changeUserHandler = () => {
+    const currentUser = parseInt(localStorage.getItem('lion-ajax-cache-demo-user-id'), 10);
+    localStorage.setItem('lion-ajax-cache-demo-user-id', `${currentUser + 1}`);
+  }
+
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${fetchHandler}>Fetch Pabu</button>
+    <button @click=${changeUserHandler}>Change user</button>
+    ${actionLogger}
+  `;
+}
+```
+
+#### Non-GET request
+
+In this demo we show that by doing a PATCH request, you invalidate the cache of the endpoint for subsequent GET requests.
+
+Try clicking the GET pabu button twice so you see a cached response.
+Then click the PATCH pabu button, followed by another GET, and you will see that this one is not served from cache, because the PATCH invalidated it.
+
+The rationale is that if a user does a non-GET request to an endpoint, it will make the client-side caching of this endpoint outdated.
+This is because non-GET requests usually in some way mutate the state of the database through interacting with this endpoint.
+Therefore, we invalidate the cache, so the user gets the latest state from the database on the next GET request.
+
+> Ignore the browser errors when clicking PATCH buttons, JSON files (our mock database) don't accept PATCH requests.
+
+```js preview-story
+export const nonGETRequest = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name, method) => {
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { method })
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu', 'GET')}>GET Pabu</button>
+    <button @click=${() => fetchHandler('pabu', 'PATCH')}>PATCH Pabu</button>
+    <button @click=${() => fetchHandler('naga', 'GET')}>GET Naga</button>
+    <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
+    ${actionLogger}
+  `;
+}
+```
+
+#### Invalidate Rules
+
+There are two kinds of invalidate rules:
+
+- `invalidateUrls` (array of URL like strings)
+- `invalidateUrlsRegex` (RegExp)
+
+If a non-GET method is fired, by default it only invalidates its own endpoint.
+Invalidating `/api/users` cache by doing a PATCH, will not invalidate `/api/accounts` cache.
+
+However, in the case of users and accounts, they may be very interconnected, so perhaps you do want to invalidate `/api/accounts` when invalidating `/api/users`.
+
+This is what the invalidate rules are for.
+
+In this demo, invalidating the `pabu` endpoint will invalidate `naga`, but not the other way around.
+
+> For invalidateUrls you need the full URL e.g. `<protocol>://<domain>:<port>/<url>` so it's often easier to use invalidateUrlsRegex
+
+```js preview-story
+export const invalidateRules = () => {
+  const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
+  const fetchHandler = (name, method) => {
+    const actionCacheOptions = {};
+    if (name === 'pabu') {
+      actionCacheOptions.invalidateUrlsRegex = /\/packages\/ajax\/docs\/naga.json/;
+    }
+
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { 
+      method,
+      cacheOptions: actionCacheOptions,
+    })
+      .then(result => {
+        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+        actionLogger.log(JSON.stringify(result.body, null, 2));
+      });
+  }
+  return html`
+    <style>
+      sb-action-logger {
+        --sb-action-logger-max-height: 300px;
+      }
+    </style>
+    <button @click=${() => fetchHandler('pabu', 'GET')}>GET Pabu</button>
+    <button @click=${() => fetchHandler('pabu', 'PATCH')}>PATCH Pabu</button>
+    <button @click=${() => fetchHandler('naga', 'GET')}>GET Naga</button>
+    <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
+    ${actionLogger}
+  `;
+}
+```
