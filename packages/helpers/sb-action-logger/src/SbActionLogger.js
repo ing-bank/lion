@@ -20,6 +20,7 @@ export class SbActionLogger extends LitElement {
           --sb-action-logger-cue-color-primary: #3f51b5;
           --sb-action-logger-cue-color-secondary: #c5cae9;
           --sb-action-logger-cue-duration: 1000ms;
+          --sb-action-logger-max-height: 110px;
 
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           display: block;
@@ -87,7 +88,7 @@ export class SbActionLogger extends LitElement {
 
         .logger {
           overflow-y: auto;
-          max-height: 110px;
+          max-height: var(--sb-action-logger-max-height);
         }
 
         .logger__log {
@@ -109,6 +110,7 @@ export class SbActionLogger extends LitElement {
         }
 
         .logger__log-count {
+          align-self: baseline;
           line-height: 8px;
           font-size: 12px;
           padding: 4px;
