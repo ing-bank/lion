@@ -1,0 +1,54 @@
+{
+  "name": "@lion/transfer",
+  "version": "0.0.1",
+  "description": "Allows the user to shift/transfer one or more items between lists.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/transfer"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "custom-elements.json",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "debug": "cd ../../ && npm run debug -- --group transfer",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group transfer",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group transfer",
+    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "test": "cd ../../ && npm run test:browser -- --group transfer"
+  },
+  "sideEffects": [
+    "lion-transfer.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.14.0",
+    "@lion/listbox": "0.5.1"
+  },
+  "keywords": [
+    "lion",
+    "transfer",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "customElementsManifest": "custom-elements.json",
+  "exports": {
+    ".": "./index.js",
+    "./lion-transfer": "./lion-transfer.js"
+  }
+}
