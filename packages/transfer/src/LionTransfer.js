@@ -11,7 +11,6 @@ import '@lion/listbox/lion-listbox.js';
  * which indeed implicitly provide all wai-aria listbox design pattern and integrates it as a Lion
  * @customElement lion-transfer
  */
-// @ts-expect-error https://github.com/microsoft/TypeScript/issues/40110
 export class LionTransfer extends LitElement {
 
   /**
