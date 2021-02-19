@@ -106,4 +106,4 @@ __getLightDomNode() {
 }
 ```
 
-We encourage you to have a look at [OpenWC's Scoped elements](https://open-wc.org/scoped-elements).
+We encourage you to have a look at [OpenWC's Scoped elements](https://open-wc.org/docs/development/scoped-elements).
