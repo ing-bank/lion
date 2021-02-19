@@ -4,7 +4,6 @@
 import { LitElement, css, html } from '@lion/core';
 import '@lion/listbox/lion-listbox.js';
 
-
 /** @typedef {{choiceValue: string, checked: boolean, active: boolean}} ListOption */
 /**
  * LionTransfer: provide functionality to shift items between listboxes
@@ -12,13 +11,12 @@ import '@lion/listbox/lion-listbox.js';
  * @customElement lion-transfer
  */
 export class LionTransfer extends LitElement {
-
   /**
-    * Instance of the element is created/upgraded. Useful for initializing
-    * state, set up event listeners, create shadow dom.
+   * Instance of the element is created/upgraded. Useful for initializing
+   * state, set up event listeners, create shadow dom.
 
-    * @constructor
-    */
+   * @constructor
+   */
   constructor() {
     super();
     /** @type {Array.<ListOption>} */
@@ -48,14 +46,20 @@ export class LionTransfer extends LitElement {
     return html`
       <lion-listbox id="leftListBox" multiple-choice></lion-listbox>
       <div class="action-panel">
-        <slot name="transferToRightActionSlot" @click=${this._handleTransferToRight.bind(this)}></slot>
-        <slot name="transferToLeftActionSlot"  @click=${this._handleTransferToLeft.bind(this)}></slot>
+        <slot
+          name="transferToRightActionSlot"
+          @click=${this._handleTransferToRight.bind(this)}
+        ></slot>
+        <slot
+          name="transferToLeftActionSlot"
+          @click=${this._handleTransferToLeft.bind(this)}
+        ></slot>
       </div>
       <lion-listbox id="rightListBox" multiple-choice></lion-listbox>
 
       <slot id="leftListSlot" name="leftList"></slot>
       <slot id="rightListSlot" name="rightList"></slot>
-      `;
+    `;
   }
 
   /**
@@ -74,12 +78,11 @@ export class LionTransfer extends LitElement {
     this._transferingOptions('rightList', 'leftList');
   }
 
-
   get modelValue() {
     return {
       left: this.leftList?.map(el => el.choiceValue) || [],
       right: this.rightList?.map(el => el.choiceValue) || [],
-    }
+    };
   }
 
   firstUpdated() {
@@ -90,23 +93,22 @@ export class LionTransfer extends LitElement {
       /** @type {ShadowRoot} */ this.shadowRoot?.querySelector('#leftListSlot')
     );
     const rightListSlot = /** @type {HTMLSlotElement} */ (
-    /** @type {ShadowRoot} */ this.shadowRoot?.querySelector('#rightListSlot')
+      /** @type {ShadowRoot} */ this.shadowRoot?.querySelector('#rightListSlot')
     );
 
-    [leftListSlot, rightListSlot].forEach((slot) => {
+    [leftListSlot, rightListSlot].forEach(slot => {
       slot?.addEventListener('slotchange', () => {
-
-        const nodes = /** @type {HTMLElement[]} */ (
-          slot?.assignedNodes()
-        );
+        const nodes = /** @type {HTMLElement[]} */ (slot?.assignedNodes());
         const itemCollection = nodes[0]?.children;
         const slotType = slot?.id.replace('Slot', '');
 
         this[slotType] = Array.from(itemCollection);
-        this[slotType].forEach(/** @param {ListOption & HTMLElement} option */ option => {
-          option.choiceValue = option.getAttribute('.choicevalue') || ''; // eslint-disable-line no-param-reassign
-          option.removeAttribute('.choicevalue');
-        })
+        this[slotType].forEach(
+          /** @param {ListOption & HTMLElement} option */ option => {
+            option.choiceValue = option.getAttribute('.choicevalue') || ''; // eslint-disable-line no-param-reassign
+            option.removeAttribute('.choicevalue');
+          },
+        );
         this.shouldTransfer = true;
         this._renderOptions(slotType);
       });
@@ -121,9 +123,11 @@ export class LionTransfer extends LitElement {
   _renderOptions(listName) {
     this._clearOptions(listName);
 
-    this[listName]?.forEach(/** @param {HTMLElement} el */ el => {
-      this[`${listName}Box`]?._inputNode?.appendChild(el);
-    });
+    this[listName]?.forEach(
+      /** @param {HTMLElement} el */ el => {
+        this[`${listName}Box`]?._inputNode?.appendChild(el);
+      },
+    );
   }
 
   /**
@@ -133,15 +137,19 @@ export class LionTransfer extends LitElement {
    * @protected
    */
   _transferingOptions(fromListName, toListName) {
-    const selected = this[fromListName]?.filter(/** @param {ListOption} item */ item => item.checked) || [];
+    const selected =
+      this[fromListName]?.filter(/** @param {ListOption} item */ item => item.checked) || [];
 
-    this[fromListName] = this[fromListName]?.filter(/** @param {ListOption} item */ item => !item.checked) || [];
+    this[fromListName] =
+      this[fromListName]?.filter(/** @param {ListOption} item */ item => !item.checked) || [];
     this.shouldTransfer = false;
-    selected.forEach(/** @param {ListOption} element */ element => {
-      this.shouldTransfer = true;
-      element.checked = false; // eslint-disable-line no-param-reassign
-      element.active = false;  // eslint-disable-line no-param-reassign
-    });
+    selected.forEach(
+      /** @param {ListOption} element */ element => {
+        this.shouldTransfer = true;
+        element.checked = false; // eslint-disable-line no-param-reassign
+        element.active = false; // eslint-disable-line no-param-reassign
+      },
+    );
 
     this[toListName] = [...this[toListName], ...selected];
 
