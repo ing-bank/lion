@@ -1,6 +1,12 @@
+/* eslint-disable max-classes-per-file */
 import { dedupeMixin, LitElement } from '@lion/core';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
+
+
+function getContentHeight(node) {
+  return `${node.getBoundingClientRect().height}px`;
+}
 
 /**
  * Calculate total content height after collapsible opens
@@ -13,9 +19,6 @@ async function calculateHeight(contentNode) {
   return getContentHeight(contentNode); // Expected height i.e. actual size once collapsed after animation
 }
 
-function getContentHeight(node) {
-  return `${node.getBoundingClientRect().height}px`;
-}
 
 const AnimateMixinImplementation = superclass =>
   class AnimateMixin extends superclass {
@@ -134,12 +137,16 @@ export const AnimateMixin = dedupeMixin(AnimateMixinImplementation);
 export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
   static get properties() {
     return {
+      /**
+       * Enable bar to use [role="menubar"] and horizontal navigation
+      */
       bar: { type: Boolean },
     };
   }
 
   /**
-   * Allows groups within one level. In case we deal with menuitemcheckbox, we treat it as multiple choice group
+   * Allows groups within one level. In case we deal with menuitemcheckbox,
+   * we treat it as multiple choice group
    * @override InteractiveListMixin
    * @param {number} index
    */

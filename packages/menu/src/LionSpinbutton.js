@@ -37,10 +37,12 @@ export class LionSpinbutton extends LitElement {
     return html`${ariaText}${this._decreaseBtnTemplate()}${this._increaseBtnTemplate()}`;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _decreaseBtnTemplate() {
     return html`<span data-ref="decrease">▼</span>`;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _increaseBtnTemplate() {
     return html`<span data-ref="increase">▲</span>`;
   }
@@ -137,6 +139,7 @@ export class LionSpinbutton extends LitElement {
   _onKeydown(ev) {
     const { key } = ev;
 
+    // eslint-disable-next-line default-case
     switch (key) {
       case 'ArrowDown':
         ev.stopPropagation(); // In case we are inside a menu
@@ -163,10 +166,10 @@ export class LionSpinbutton extends LitElement {
         }
         break;
       case 'PageDown':
-        this.__decrease(null, step * 2);
+        this.__decrease(null, this.step * 2);
         break;
       case 'PageUp':
-        this.__increase(null, step * 2);
+        this.__increase(null, this.step * 2);
         break;
     }
   }

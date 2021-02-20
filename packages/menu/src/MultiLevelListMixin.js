@@ -30,9 +30,7 @@ const MultiLevelListMixinImplementation = superclass =>
     get _invokerNode() {
       return (
         this.invokerNode ||
-        (this.previousElementSibling &&
-          this.previousElementSibling.hasAttribute('data-invoker') &&
-          this.previousElementSibling) ||
+        this.previousElementSibling?.hasAttribute('data-invoker') ||
         super._invokerNode
       );
     }
@@ -86,6 +84,7 @@ const MultiLevelListMixinImplementation = superclass =>
         if (childOfInvoker) {
           return Array.from(item.children).find(child => child.isInteractiveList);
         }
+        return undefined;
       }
 
       newItems.forEach(item => {

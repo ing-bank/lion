@@ -1,14 +1,14 @@
 {
-  "name": "@lion/listbox",
+  "name": "@lion/menu",
   "version": "0.0.0",
-  "description": "A listbox widget presents a list of options and allows a user to select one or more of them",
+  "description": "A menu is a widget that offers a list of choices to the user, such as a set of actions or functions",
   "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
-    "directory": "packages/listbox"
+    "directory": "packages/menu"
   },
   "main": "index.js",
   "module": "index.js",
@@ -24,20 +24,19 @@
   ],
   "scripts": {
     "prepublishOnly": "../../scripts/npm-prepublish.js",
-    "test": "cd ../../ && yarn test:browser --grep \"packages/listbox/test/**/*.test.js\"",
-    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/listbox/test/**/*.test.js\""
+    "test": "cd ../../ && yarn test:browser --grep \"packages/menu/test/**/*.test.js\"",
+    "test:watch": "cd ../../ && yarn test:browser:watch --grep \"packages/menu/test/**/*.test.js\""
   },
   "sideEffects": [
-    "lion-listbox.js"
+    "lion-menu.js"
   ],
   "dependencies": {
     "@lion/core": "0.11.0",
     "@lion/form-core": "0.6.0"
   },
   "keywords": [
-    "form",
     "lion",
-    "listbox",
+    "menu",
     "web-components"
   ],
   "publishConfig": {

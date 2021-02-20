@@ -1,4 +1,5 @@
-import { html, css, dedupeMixin, SlotMixin, DisabledMixin } from '@lion/core';
+/* eslint-disable max-classes-per-file */
+import { html, css, dedupeMixin, SlotMixin, DisabledMixin, LitElement } from '@lion/core';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
 import { uuid } from './utils/uuid.js';
 import { isInView } from './utils/isInView.js';
@@ -15,19 +16,90 @@ import {
 } from './utils/listItemInteractions.js';
 
 /**
- * @typedef {'menuitem'|'menuitemcheckbox'|'menuitemradio'|'option'|'treeitem'} InteractiveListItemRole
+ * @typedef {'menuitem'|'menuitemcheckbox'|'menuitemradio'|'option'|'treeitem'|'radio'|'checkbox'} InteractiveListItemRole
  */
+
+ /**
+  * Lightweight component supporting InteractiveListItemRole as a type.
+  *
+  * Supports:
+  * - 1. menu item
+  * <lion-item> Item label </lion-item>
+  * - 2. sub menu
+  * <lion-item>
+  *   <button slot="invoker"> Item label </button>
+  *   <lion-menu slot="subitems"> ... </lion-menu>
+  * </lion-item>
+  *
+  * Sets the role property on the right element. For case 1, this would be the item itself,
+  * for case 2 it would be the [slot=invoker].
+  */
+class LionItem extends LitElement {
+  static get properties() {
+    return {
+      type: String,
+    }
+  }
+
+  get _invokerNode() {
+    return this.querySelector('[slot=invoker]');
+  }
+
+  constructor() {
+    super();
+    /** @type {InteractiveListItemRole} */
+    this.type = '';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    if (!this._computedType) {
+      this._computedType = this.type || 'listitem';
+    }
+    if (this._invokerNode) {
+      this._invokerNode.setAttribute('role', this._computedType);
+    } else {
+      this.setAttribute('role', this._computedType);
+    }
+  }
+
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+      }
+    `;
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <slot></slot>
+    `;
+  }
+}
+
+class LionMenuitem extends LionItem  {
+  connectedCallback() {
+    this._computedType = `menuitem${this.type}`;
+    super.connectedCallback();
+  }
+}
+customElements.define('lion-menuitem', LionMenuitem);
 
 /**
  * Handles keyboard interaction plus bookkeeping for active and selected states.
- * Can be reused for:
+ * Can be used as a fundament for:
  * - [role="menu|menubar"] having children with [role="menuitem|menuitemcheckbox|menuitemradio"]
  * - [role="listbox"] having children with [role="option"]
- * - [role="toolbar"]
- * - [role="tree"]
+ * - [role="toolbar"] having children with [role="radiogroup|radio|group|checkbox|spinbutton"]
+ * - [role="tree"] having children with [role="group|treeitem"]
  *
- * List items that can be 'smart'. In that case they are responsible for registering themselves
- * and reflecting accessibility properties.
+ * An interactive list accepts two types of items:
+ * - 'smart' items: responsible for registering themselves and reflecting accessibility properties,
+ * for example LionOption
+ * - 'regular' items with a [role="menuitem|menuitemcheckbox|menuitemradio|option|radio|checkbox|treeitem|listitem]
  *
  * Features:
  * - keyboard navigation according to [aria specs](https://www.w3.org/TR/wai-aria-practices-1.1) for role
@@ -37,13 +109,6 @@ import {
  */
 const InteractiveListMixinImplementation = superclass =>
   class InteractiveListMixin extends DisabledMixin(SlotMixin(superclass)) {
-    render() {
-      return html`
-        <slot name="list"></slot>
-        <slot></slot>
-      `;
-    }
-
     static get styles() {
       return [
         css`
@@ -64,6 +129,13 @@ const InteractiveListMixinImplementation = superclass =>
           }
         `,
       ];
+    }
+
+    render() {
+      return html`
+        <slot name="list"></slot>
+        <slot></slot>
+      `;
     }
 
     static get properties() {
@@ -101,7 +173,7 @@ const InteractiveListMixinImplementation = superclass =>
          * - [role="menubar"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-1/menubar-1.html)
          * - [role="tree"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/treeview/treeview-1/treeview-1b.html)
          * For disclosure menus, we need keyboard navigation, but treat every list item (more precise its anchor child) as a tab stop
-         * {'activedescendant'|'roving-tabindex'|'none'}
+         * @type {'activedescendant'|'roving-tabindex'|'none'}
          */
         _activeMode: String,
       };
@@ -116,11 +188,11 @@ const InteractiveListMixinImplementation = superclass =>
 
     /**
      * This is the (usually focusable, unless combobox) element that will contain [aria-activedescendant]
-     * Depending on the children, role will be 'listbox' or 'menu|menubar'
+     * Depending on the children, role will be "listbox|menu|menubar|tree|toolbar"
      * @type {HTMLElement}
      */
     get _listNode() {
-      return /**@type{HTMLElement}*/ (Array.from(this.children).find(c => c.slot === 'list'));
+      return /** @type {HTMLElement} */ (Array.from(this.children).find(c => c.slot === 'list'));
     }
 
     get _scrollTargetNode() {
@@ -132,9 +204,10 @@ const InteractiveListMixinImplementation = superclass =>
      * @type {HTMLSlotElement}
      */
     get _listItemsSlot() {
-      const shadowRoot = /**@type{ShadowRoot}*/ (this.shadowRoot);
+      /** @type {ShadowRoot} */
+      const { shadowRoot } = this;
       const slots = Array.from(shadowRoot.querySelectorAll('slot'));
-      return /**@type{HTMLSlotElement}*/ (slots.find(s => !s.name));
+      return /** @type {HTMLSlotElement} */ (slots.find(s => !s.name));
     }
 
     /**
@@ -149,6 +222,7 @@ const InteractiveListMixinImplementation = superclass =>
      * @overridable
      * @type {InteractiveListItemRole[]}
      */
+    // eslint-disable-next-line class-methods-use-this
     get _childrenRoles() {
       return ['menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'treeitem', 'listitem'];
     }
@@ -233,6 +307,7 @@ const InteractiveListMixinImplementation = superclass =>
     /**
      * Since we cannot check instanceof with mixins, use this getter instead
      */
+    // eslint-disable-next-line class-methods-use-this
     get isInteractiveList() {
       return true;
     }
@@ -253,7 +328,7 @@ const InteractiveListMixinImplementation = superclass =>
       this._hasSmartChildren = false;
       /**
        * The role that will be put on _listNode
-       * @type {'menu'|'menubar'|'listbox'}
+       * @type {'menu'|'menubar'|'listbox'|'tree'|'toolbar'}
        */
       this._listRole = 'menu';
 
@@ -283,8 +358,8 @@ const InteractiveListMixinImplementation = superclass =>
       /**
        * @param {HTMLElement} node
        */
-      const shoulAddItem = node => {
-        const role = /** @type {InteractiveListItemRole|'group'}*/ (node.getAttribute('role'));
+      const shouldAddItem = node => {
+        const role = /** @type {InteractiveListItemRole|'group'} */ (node.getAttribute('role'));
         return (role && this._childrenRoles.includes(role)) || node.hasAttribute('data-item');
       };
 
@@ -299,7 +374,7 @@ const InteractiveListMixinImplementation = superclass =>
           if (this._hasSmartChildren || !(node instanceof Element)) {
             return;
           }
-          const shouldAdd = shoulAddItem(node);
+          const shouldAdd = shouldAddItem(node);
           /**
            * When [role=group], we can have a grouped set within a level, like multiple menuitemradios or -checkboxes
            * When no role at all, we might deal with a wrapped node (for instance triggering a submenu)
@@ -309,7 +384,7 @@ const InteractiveListMixinImplementation = superclass =>
           if (!shouldAdd) {
             // for now allow one nested group as direct child of [role="menu|menubar"]
             Array.from(node.children).forEach(child => {
-              if (shoulAddItem(child)) {
+              if (shouldAddItem(child)) {
                 newItems.push(child);
               }
             });
@@ -340,12 +415,12 @@ const InteractiveListMixinImplementation = superclass =>
           // This makes them focusable, but not part of tab sequence
           item.setAttribute('tabindex', '-1');
         } else if (this._activeMode === 'activedescendant') {
+          // eslint-disable-next-line no-param-reassign
           item.id = item.id || `${this.localName}-item-${uuid()}`;
         }
       });
 
       if (!this.noPreselect && this.checkedIndex === -1) {
-        // preselect for now
         this.checkedIndex = 0;
       }
     }
@@ -447,8 +522,9 @@ const InteractiveListMixinImplementation = superclass =>
 
     /**
      * @overridable
-     * @param {{chars: sting[], item: HTMLElement}} config
+     * @param {{chars: string[], item: HTMLElement}} config
      */
+    // eslint-disable-next-line class-methods-use-this
     _matchCharsAgainstItem({ chars, item }) {
       const value = getValue(item).toLowerCase();
       return value.startsWith(chars);
@@ -478,7 +554,8 @@ const InteractiveListMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _onListClick(ev) {
-      const target = /** @type {HTMLElement} */ (ev.target);
+      /** @type {HTMLElement} */
+      const { target } = ev;
       const item = /** @type {HTMLElement} */ (target.closest('[role]')); // TODO: we might need a more specific contract
       const foundIndex = this.listItems.indexOf(item);
       if (foundIndex > -1) {

@@ -46,6 +46,28 @@ export const menuButton = () => html`
 `;
 ```
 
+```js preview-story
+export const menuButtonZ = () => html`
+  <nav>
+    <button data-invoker for="menu"> Open menu </button>
+    <lion-menu id="menu">
+      <lion-menuitem> Go to Definition </lion-menuitem>
+      <lion-menuitem> Go to Type Definition </lion-menuitem>
+      <lion-menuitem>
+        <div slot="invoker"> Peek </div>
+        <lion-menu>
+          <lion-menuitem type="radio"> Peek Call Hierarchy </lion-menuitem>
+          <div role="separator"></div>
+          <lion-menuitem type="radio"> Peek Definition </lion-menuitem>
+        </lion-menu>
+      </lion-menuitem>
+      <div role="separator"></div>
+      <lion-menuitem type="checkbox"> Find all References </lion-menuitem>
+    </lion-menu>
+  </nav>
+`;
+```
+
 ## Groups, menuitemradios and menuitemcheckboxes
 
 From [wai aria menu fragment](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-2/menubar-2.html)
@@ -209,7 +231,7 @@ export const disclosureMenu = () => html`
 
 ## Toolbar
 
-From [wai aria toolbar](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-2/menubar-2.html)
+From [wai aria toolbar](https://www.w3.org/TR/wai-aria-practices-1.2/examples/toolbar/toolbar.html)
 
 ```js preview-story
 export const toolbar = () => html`

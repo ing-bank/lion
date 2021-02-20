@@ -1,6 +1,7 @@
+/* eslint-disable max-classes-per-file */
 import { html, dedupeMixin } from '@lion/core';
-import { LionMenu } from './LionMenu.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
+import { LionMenu } from './LionMenu.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
 
 /**
@@ -78,7 +79,7 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
       placement = 'right-start';
     }
 
-    let menuConfig = {};
+    const menuConfig = {};
     // if (this._activeMode === 'activedescendant') {
     //   menuConfig.elementToFocusAfterHide = this._listNode;
     // }

@@ -76,6 +76,14 @@ export function setActive(item, unset = false) {
   }
 }
 
+function getDirectTextContent(item) {
+  return Array.from(item.childNodes)
+    .filter(n => n.nodeName === '#text')
+    .map(n => n.textContent)
+    .join('')
+    .trim();
+}
+
 /**
  * @param {HTMLElement|LionOption} item
  */
@@ -89,10 +97,3 @@ export function getValue(item) {
   );
 }
 
-function getDirectTextContent(item) {
-  return Array.from(item.childNodes)
-    .filter(n => n.nodeName === '#text')
-    .map(n => n.textContent)
-    .join('')
-    .trim();
-}
