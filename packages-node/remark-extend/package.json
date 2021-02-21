@@ -1,7 +1,7 @@
 {
   "name": "remark-extend",
   "version": "0.2.2",
-  "description": "A plugin for remark that allows to extend a md file with another md file",
+  "description": "A plugin for remark to extend markdown by importing from source files",
   "license": "MIT",
   "author": "ing-bank",
   "homepage": "https://github.com/ing-bank/lion/",
@@ -24,8 +24,8 @@
     "test:watch": "mocha test-node --watch"
   },
   "dependencies": {
-    "remark-parse": "^8.0.0",
-    "unified": "^9.0.0",
+    "remark-parse": "^9.0.0",
+    "unified": "^9.2.0",
     "unist-util-is": "^4.0.2",
     "unist-util-select": "^3.0.1",
     "unist-util-visit": "^2.0.2"

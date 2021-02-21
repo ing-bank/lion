@@ -1,6 +1,6 @@
 # remark-extend
 
-A plugin for remark to extend one markdown file with another.
+A plugin for remark to extend markdown by importing from source files.
 
 `remark-extend` is build to be integrated within the [unifiedjs](https://unifiedjs.com/) system.
 
@@ -10,26 +10,137 @@ A plugin for remark to extend one markdown file with another.
 npm i -D remark-extend
 ```
 
-```js
+````js
 const unified = require('unified');
 const markdown = require('remark-parse');
 const mdStringify = require('remark-html');
 
 const { remarkExtend } = require('remark-extend');
 
-const sourceMd = '# Headline';
-const extendMd = 'extending instructions';
+const sourceMd = [
+  //
+  '# Headline',
+  "```js ::import('@name/pkg/README.md')",
+  '```',
+].join('\n');
 
-const parser = unified().use(markdown).use(remarkExtend, { extendMd }).use(mdStringify);
+const parser = unified().use(markdown).use(remarkExtend).use(mdStringify);
 const result = await parser.process(sourceMd);
+````
+
+## Importing a block
+
+In many cases the full file might be too much so you want to import a "block".
+A block stars with a headline and ends when the next headline of equal level starts.
+
+```md
+## Block one
+
+Content of block one
+
+## Block two
+
+Content of block two
+
+### Sub headline in block two
+
+Still content of block two
+
+## Block three
+
+Content of block three
 ```
 
-## Extending Instructions
+Now if you wish to import only block two you can write.
 
-### Selection
+````md
+# Blew you will find Block two
 
-For modifications you will need to provide a starting node.
-In order to get this node css like selectors from [unist-util-select](https://github.com/syntax-tree/unist-util-select#support) are supported.
+```js ::importBlock('./path/to/file.md', '## Block two')
+
+```
+````
+
+### Result after import
+
+```md
+# Blew you will find Block two
+
+## Block two
+
+Content of block two
+
+### Sub headline in block two
+
+Still content of block two
+```
+
+PS: importBlock is basically a shortcut to writing an import for a headline
+
+```md
+::importBlock('./path/to/file.md', '## red')
+// is the same as
+::import('./path/to/file.md', 'heading[depth=2]:has([value=red])', 'heading[depth=2]:has([value=red]) ~heading[depth=2]')
+```
+
+---
+
+## Adjusting imported content
+
+If a function gets placed in the import code block then it does get called for every node from the starting point (including the starting point).
+
+Note: does work for `::import` and `::importBlock`
+
+### Adjustment Input File
+
+👉 `file.md`
+
+```md
+### Red
+
+red is the fire
+```
+
+#### Adjustment Extending File
+
+The goal is to replace all red with green.
+
+````md
+# Below you will not find any read
+
+```js ::import('./path/to/file.md')
+module.exports.replaceSection = node => {
+  if (node.value) {
+    node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');
+  }
+  return node;
+};
+```
+````
+
+This function gets called with these nodes in order.
+
+1. root
+2. heading
+3. text
+4. paragraph
+5. text
+
+#### Adjustment Result
+
+```md
+# Below you will not find any read
+
+### Green
+
+green is the fire
+```
+
+---
+
+## Import selection
+
+For `::import` you can provide a start and end selector based on [unist-util-select](https://github.com/syntax-tree/unist-util-select#support).
 
 Some examples are:
 
@@ -80,247 +191,14 @@ Resulting AST.
 }
 ```
 
----
+### Usage in import
 
-### Replacement
+If you full control of what the start and end selector should be then you can use `::import`.
 
-Does adjustments from a start point downwards.
-The provided function does get called for every node from the starting point (including the starting point).
-
-#### Replacement Input File
-
-```md
-### Red
-
-red is the fire
-```
-
-#### Replacement Extending File
-
-Goal is to replace all red with green.
+To for example import everything that is between `## Red` and `## More Red` you can use something like this.
 
 ````md
-```js ::replaceFrom(':root')
-module.exports.replaceSection = node => {
-  if (node.value) {
-    node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');
-  }
-  return node;
-};
+```::import('./path/to/file.md', 'heading[depth=2]:has([value=Red])', 'heading[depth=2]:has([value=More Red])')
+
 ```
 ````
-
-This function gets called with these nodes in order.
-
-1. root
-2. heading
-3. text
-4. paragraph
-5. text
-
-#### Replacement Result
-
-```md
-### Green
-
-green is the fire
-```
-
-### Replacement Range
-
-Whenever a section or part of the original markdown needs to be adjusted.
-The function does get every node from the starting point (including the starting point) till the end point (excluding the end point).
-
-#### Replacement Range Input File
-
-```md
-### Red <-- starting point (including)
-
-red is the fire
-
-### More Red <-- end point (excluding)
-
-the sun can get red
-```
-
-#### Replacement Range Extending File
-
-````md
-```js ::replaceBetween('heading:has([value=Red])', 'heading:has([value=More Red])')
-module.exports.replaceSection = node => {
-  if (node.value) {
-    node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');
-  }
-  return node;
-};
-```
-````
-
-#### Replacement Range Result
-
-```md
-### Green <-- starting point (including)
-
-green is the fire
-
-### More Red <-- end point (excluding)
-
-the sun can get red
-```
-
----
-
-### Add More Markdown Content After
-
-If additional markdown content should be inserted after at a specific location.
-
-#### Add After Input File
-
-```md
-### Red
-
-red is the fire
-```
-
-#### Add After Extending File
-
-````md
-```
-::addMdAfter('heading:has([value=Red])')
-```
-
-the ocean is blue
-````
-
-#### Add After Result
-
-```md
-### Red
-
-the ocean is blue
-red is the fire
-```
-
-More example use cases:
-
-- Add more markdown at the top `::addMdAfter(':root')`
-- Add more markdown at the bottom `::addMdAfter(':scope:last-child')`
-
-### Add More Markdown Content Before
-
-If additional markdown content should be inserted before at a specific location.
-Useful for adding disclaimers above a headline.
-
-#### Add Before Input File
-
-```md
-### Red
-
-red is the fire
-
-### Green <-- staring point
-```
-
-#### Add Before Extending File
-
-````md
-```
-::addMdBefore('heading:has([value=Red])')
-```
-
-the ocean is blue
-````
-
-#### Add Before Result
-
-```md
-### Red
-
-red is the fire
-
-the ocean is blue
-
-### Green <-- staring point
-```
-
-More example use cases:
-
-- Add something at the end of a "section": `::addMdBefore('heading:has([value=Red]) ~ heading[depth=3]')`
-  It works by selecting the headline of your section and add before the next sibling headline with the same depth.
-
----
-
-### Removal
-
-Does adjustments from a start point downwards.
-The provided function does get called for every node from the starting point (including the starting point).
-
-#### Removal Input File
-
-```md
-### Red
-
-red is the fire
-
-### More Red // <-- start
-
-the sun can get red
-```
-
-#### Removal Extending File
-
-Goal is to remove everything after `### More Red`
-
-````md
-```
-::removeFrom('heading:has([value=More Red])')
-```
-````
-
-#### Removal Result
-
-```md
-### Red
-
-red is the fire
-```
-
-### Removal Range
-
-Whenever a section or part of the original markdown needs to be removed.
-
-#### Removal Range Input File
-
-```md
-### Red <-- starting point (including)
-
-red is the fire
-
-### More Red <-- end point (excluding)
-
-the sun can get red
-```
-
-#### Removal Range Extending File
-
-Starting from `### Red` until the next headline with depth of 3.
-
-````md
-```
-::removeBetween('heading:has([value=Red])', 'heading:has([value=Red]) ~ heading[depth=3]')
-```
-````
-
-#### Removal Range Result
-
-```md
-### More Red <-- end point (excluding)
-
-the sun can get red
-```
-
-```js script
-export default {
-  title: 'Tools/Remark Extend',
-};
-```
