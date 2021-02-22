@@ -44,7 +44,12 @@ const ChoiceGroupMixinImplementation = superclass =>
        * @param {ChoiceInputHost} el
        * @param {any} val
        */
-      const checkCondition = (el, val) => el.choiceValue === val;
+      const checkCondition = (el, val) => {
+        if (typeof el.choiceValue === 'object') {
+          return JSON.stringify(el.choiceValue) === JSON.stringify(value);
+        }
+        return el.choiceValue === val;
+      };
 
       if (this.__isInitialModelValue) {
         this.__isInitialModelValue = false;
@@ -281,7 +286,16 @@ const ChoiceGroupMixinImplementation = superclass =>
     _setCheckedElements(value, check) {
       for (let i = 0; i < this.formElements.length; i += 1) {
         if (this.multipleChoice) {
-          this.formElements[i].checked = value.includes(this.formElements[i].value);
+          let valueIsIncluded = value.includes(this.formElements[i].modelValue.value);
+
+          // For complex values, do a JSON Stringified includes check, because [{ v: 'foo'}].includes({ v: 'foo' }) => false
+          if (typeof this.formElements[i].modelValue.value === 'object') {
+            valueIsIncluded = /** @type {any[]} */ (value)
+              .map(/** @param {Object} v */ v => JSON.stringify(v))
+              .includes(JSON.stringify(this.formElements[i].modelValue.value));
+          }
+
+          this.formElements[i].checked = valueIsIncluded;
         } else if (check(this.formElements[i], value)) {
           // Allows checking against custom values e.g. formattedValue or serializedValue
           this.formElements[i].checked = true;
