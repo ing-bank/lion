@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.2
+
+### Patch Changes
+
+- d0b37e62: Do a deep equals check for choice group children that have complex modelValues, enabling modelValue setter to work on the group level.
+
 ## 0.8.1
 
 ### Patch Changes
