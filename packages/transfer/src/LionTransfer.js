@@ -2,7 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import { LitElement, css, html } from '@lion/core';
-import '@lion/listbox/lion-listbox.js';
+import '@lion/listbox/lion-listbox';
 
 /** @typedef {{choiceValue: string, checked: boolean, active: boolean}} ListOption */
 /**
