@@ -286,7 +286,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       }
     });
 
-    it('can check a radio by supplying an available modelValue', async () => {
+    it('can check a choice by supplying an available modelValue', async () => {
       const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag}
@@ -307,6 +307,35 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         expect(el.modelValue).to.deep.equal(['female']);
       }
       el.modelValue = 'other';
+      expect(el.formElements[2].checked).to.be.true;
+    });
+
+    it('can check a choice by supplying an available modelValue even if this modelValue is an array or object', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        <${parentTag} name="gender[]">
+          <${childTag}
+            .modelValue="${{ value: { v: 'male' }, checked: false }}"
+          ></${childTag}>
+          <${childTag}
+            .modelValue="${{ value: { v: 'female' }, checked: true }}"
+          ></${childTag}>
+          <${childTag}
+            .modelValue="${{ value: { v: 'other' }, checked: false }}"
+          ></${childTag}>
+        </${parentTag}>
+      `));
+
+      if (cfg.choiceType === 'single') {
+        expect(el.modelValue).to.eql({ v: 'female' });
+      } else {
+        expect(el.modelValue).to.deep.equal([{ v: 'female' }]);
+      }
+
+      if (cfg.choiceType === 'single') {
+        el.modelValue = { v: 'other' };
+      } else {
+        el.modelValue = [{ v: 'other' }];
+      }
       expect(el.formElements[2].checked).to.be.true;
     });
 

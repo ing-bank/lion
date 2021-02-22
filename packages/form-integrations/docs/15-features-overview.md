@@ -28,6 +28,8 @@ import '@lion/radio-group/lion-radio-group.js';
 import '@lion/radio-group/lion-radio.js';
 import '@lion/select/lion-select.js';
 import '@lion/select-rich/lion-select-rich.js';
+import '@lion/switch/lion-switch.js';
+import '@lion/switch/lion-switch-button.js';
 import '@lion/textarea/lion-textarea.js';
 import { MinLength, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
@@ -144,6 +146,7 @@ export const main = () => {
         >
           <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
         </lion-checkbox-group>
+        <lion-switch name="notifications" label="Notifications"></lion-switch>
         <lion-input-stepper max="5" min="0" name="rsvp">
           <label slot="label">RSVP</label>
           <div slot="help-text">Max. 5 guests</div>
