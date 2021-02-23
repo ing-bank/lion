@@ -10,7 +10,7 @@ export class ResultValidator extends Validator {
   /**
    * @param {Object} context
    * @param {Validator[]} context.regularValidationResult
-   * @param {Validator[] | undefined} context.prevValidationResult
+   * @param {Validator[]} context.prevValidationResult
    * @param {Validator[]} [context.validators]
    * @returns {boolean}
    */

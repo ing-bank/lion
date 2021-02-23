@@ -161,6 +161,8 @@ export const ValidateMixinImplementation = superclass =>
        * @type {Validator[]}
        */
       this.__validationResult = [];
+      /** @type {Validator[]} */
+      this.__prevValidationResult = [];
 
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
