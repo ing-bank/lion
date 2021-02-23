@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.3
+
+### Patch Changes
+
+- b2a1c1ef: Make sure prev validation result is always an array (of validators) and not undefined.
+
 ## 0.8.2
 
 ### Patch Changes
