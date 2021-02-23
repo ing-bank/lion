@@ -89,7 +89,7 @@ class PBoard extends DecorateMixin(LitElement) {
                       type="checkbox"
                       name="references"
                       .checked=${colName === 'lion-based-ui'}
-                      value="${refName}"
+                      .value="${refName}"
                     />${refName}</label
                   >
                 `,
@@ -130,7 +130,7 @@ class PBoard extends DecorateMixin(LitElement) {
                           type="checkbox"
                           name="repos"
                           .checked="${dep}"
-                          value="${dep}"
+                          .value="${dep}"
                         />${dep}</label
                       >
                     `,
@@ -302,12 +302,11 @@ class PBoard extends DecorateMixin(LitElement) {
       const refSearch = `_${ref.replace('#', '_')}_`;
       activeRepos.forEach(dep => {
         const depSearch = `_${dep.replace('#', '_')}_`;
-        const found = this.__resultFiles[activeAnalyzer].find(({ fileName }) => {
-          return (
+        const found = this.__resultFiles[activeAnalyzer].find(
+          ({ fileName }) =>
             fileName.includes(encodeURIComponent(refSearch)) &&
-            fileName.includes(encodeURIComponent(depSearch))
-          );
-        });
+            fileName.includes(encodeURIComponent(depSearch)),
+        );
         if (found) {
           jsonResultsActiveFilter.push(found.content);
         } else {

@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture, html, nextFrame } from '@open-wc/testing';
 import { renderLitAsNode } from '@lion/helpers';
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';
@@ -24,7 +25,7 @@ function simulateTabInWindow(elToRecieveFocus) {
 const interactionElementsNode = renderLitAsNode(html`
   <div>
     <button id="el1"></button>
-    <a id="el2" href="#"></a>
+    <a id="el2" href="#">foo</a>
     <div id="el3" tabindex="0"></div>
     <input id="el4" />
     <div id="el5" contenteditable="true"></div>
@@ -49,7 +50,7 @@ const lightDomAutofocusTemplate = html`
 
     <div id="rootElement">
       <button id="el1"></button>
-      <a id="el2" href="#"></a>
+      <a id="el2" href="#">foo</a>
       <div id="el3" tabindex="0"></div>
       <input id="el4" autofocus />
       <div id="el5" contenteditable="true"></div>

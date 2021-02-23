@@ -7,7 +7,7 @@ class ElementB extends LitElement {
   render() {
     const marker = this.getAttribute('marker') || '';
     return html`
-      <a id="el-b-${marker}-1" href="#"></a>
+      <a id="el-b-${marker}-1" href="#">foo</a>
 
       <div>
         <div id="el-b-${marker}-2" tabindex="0">
@@ -137,7 +137,7 @@ describe('getFocusableElements()', () => {
 
             <slot name="slot-a"></slot>
 
-            <a id="el-a-2" href="#"></a>
+            <a id="el-a-2" href="#">foo</a>
 
             <slot></slot>
 

@@ -14,7 +14,10 @@ blocker.innerText = `Shared Blocker for App`;
 document.body.appendChild(blocker);
 
 class CompatibleManager1 extends OverlaysManager {
-  name = 'Compatible1 from App';
+  constructor() {
+    super();
+    this.name = 'Compatible1 from App';
+  }
 
   block(sync = true) {
     super.block();
@@ -36,7 +39,10 @@ class CompatibleManager1 extends OverlaysManager {
 }
 
 class CompatibleManager2 extends OverlaysManager2 {
-  name = 'Compatible2 from App';
+  constructor() {
+    super();
+    this.name = 'Compatible2 from App';
+  }
 
   blockBody(sync = true) {
     super.blockBody();

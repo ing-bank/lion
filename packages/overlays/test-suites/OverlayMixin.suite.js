@@ -144,7 +144,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     it('fires "before-closed" event on hide', async () => {
       const beforeSpy = sinon.spy();
       const el = /** @type {OverlayEl} */ (await fixture(html`
-        <${tag} @before-closed="${beforeSpy}" .opened="${true}">
+        <${tag} @before-closed="${beforeSpy}" opened>
           <div slot="content">content of the overlay</div>
           <button slot="invoker">invoker button</button>
         </${tag}>

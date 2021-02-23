@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
 import { expect, fixture, fixtureSync, html } from '@open-wc/testing';
 import { OverlayController } from '../src/OverlayController.js';
 import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers.js';
