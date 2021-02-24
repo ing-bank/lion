@@ -42,75 +42,75 @@ export function loadDefaultFeedbackMessages() {
         'lion-validate': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
-              return import('../translations/bg-BG.js');
+              return import('@lion/validate-messages/translations/bg-BG.js');
             case 'bg':
-              return import('../translations/bg.js');
+              return import('@lion/validate-messages/translations/bg.js');
             case 'cs-CZ':
-              return import('../translations/cs-CZ.js');
+              return import('@lion/validate-messages/translations/cs-CZ.js');
             case 'cs':
-              return import('../translations/cs.js');
+              return import('@lion/validate-messages/translations/cs.js');
             case 'de-DE':
-              return import('../translations/de-DE.js');
+              return import('@lion/validate-messages/translations/de-DE.js');
             case 'de':
-              return import('../translations/de.js');
+              return import('@lion/validate-messages/translations/de.js');
             case 'en-AU':
-              return import('../translations/en-AU.js');
+              return import('@lion/validate-messages/translations/en-AU.js');
             case 'en-GB':
-              return import('../translations/en-GB.js');
+              return import('@lion/validate-messages/translations/en-GB.js');
             case 'en-US':
-              return import('../translations/en-US.js');
+              return import('@lion/validate-messages/translations/en-US.js');
             case 'en-PH':
             case 'en':
-              return import('../translations/en.js');
+              return import('@lion/validate-messages/translations/en.js');
             case 'es-ES':
-              return import('../translations/es-ES.js');
+              return import('@lion/validate-messages/translations/es-ES.js');
             case 'es':
-              return import('../translations/es.js');
+              return import('@lion/validate-messages/translations/es.js');
             case 'fr-FR':
-              return import('../translations/fr-FR.js');
+              return import('@lion/validate-messages/translations/fr-FR.js');
             case 'fr-BE':
-              return import('../translations/fr-BE.js');
+              return import('@lion/validate-messages/translations/fr-BE.js');
             case 'fr':
-              return import('../translations/fr.js');
+              return import('@lion/validate-messages/translations/fr.js');
             case 'hu-HU':
-              return import('../translations/hu-HU.js');
+              return import('@lion/validate-messages/translations/hu-HU.js');
             case 'hu':
-              return import('../translations/hu.js');
+              return import('@lion/validate-messages/translations/hu.js');
             case 'it-IT':
-              return import('../translations/it-IT.js');
+              return import('@lion/validate-messages/translations/it-IT.js');
             case 'it':
-              return import('../translations/it.js');
+              return import('@lion/validate-messages/translations/it.js');
             case 'nl-BE':
-              return import('../translations/nl-BE.js');
+              return import('@lion/validate-messages/translations/nl-BE.js');
             case 'nl-NL':
-              return import('../translations/nl-NL.js');
+              return import('@lion/validate-messages/translations/nl-NL.js');
             case 'nl':
-              return import('../translations/nl.js');
+              return import('@lion/validate-messages/translations/nl.js');
             case 'pl-PL':
-              return import('../translations/pl-PL.js');
+              return import('@lion/validate-messages/translations/pl-PL.js');
             case 'pl':
-              return import('../translations/pl.js');
+              return import('@lion/validate-messages/translations/pl.js');
             case 'ro-RO':
-              return import('../translations/ro-RO.js');
+              return import('@lion/validate-messages/translations/ro-RO.js');
             case 'ro':
-              return import('../translations/ro.js');
+              return import('@lion/validate-messages/translations/ro.js');
             case 'ru-RU':
-              return import('../translations/ru-RU.js');
+              return import('@lion/validate-messages/translations/ru-RU.js');
             case 'ru':
-              return import('../translations/ru.js');
+              return import('@lion/validate-messages/translations/ru.js');
             case 'sk-SK':
-              return import('../translations/sk-SK.js');
+              return import('@lion/validate-messages/translations/sk-SK.js');
             case 'sk':
-              return import('../translations/sk.js');
+              return import('@lion/validate-messages/translations/sk.js');
             case 'uk-UA':
-              return import('../translations/uk-UA.js');
+              return import('@lion/validate-messages/translations/uk-UA.js');
             case 'uk':
-              return import('../translations/uk.js');
+              return import('@lion/validate-messages/translations/uk.js');
             case 'zh-CN':
             case 'zh':
-              return import('../translations/zh.js');
+              return import('@lion/validate-messages/translations/zh.js');
             default:
-              return import('../translations/en.js');
+              return import('@lion/validate-messages/translations/en.js');
           }
         },
       },

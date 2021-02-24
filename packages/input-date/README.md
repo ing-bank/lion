@@ -9,7 +9,7 @@ import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 import { formatDate } from '@lion/localize';
 
-import './lion-input-date.js';
+import '@lion/input-date/define';
 
 export default {
   title: 'Forms/Input Date',
@@ -44,7 +44,7 @@ npm i --save @lion/input-date
 ```js
 import { LionInputDate } from '@lion/input-date';
 // or
-import '@lion/input-date/lion-input-date.js';
+import '@lion/input-date/define';
 ```
 
 ## Examples

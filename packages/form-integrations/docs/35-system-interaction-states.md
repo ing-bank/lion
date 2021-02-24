@@ -6,7 +6,7 @@
 import { html } from '@lion/core';
 import { render } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 import { Validator } from '@lion/form-core';
 import '../docs/helper-wc/h-output.js';
 

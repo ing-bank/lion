@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '../../src/localize.js';
-import { localizeTearDown } from '../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/index.js';
 import { formatNumberToParts } from '../../src/number/formatNumberToParts.js';
 
 // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove

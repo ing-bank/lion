@@ -4,7 +4,7 @@
 
 ```js script
 import { html } from '@lion/core';
-import './lion-input-stepper.js';
+import '@lion/input-stepper/define';
 
 export default {
   title: 'Forms/Input Stepper',
@@ -38,7 +38,7 @@ npm i --save @lion/input-stepper
 ```js
 import { LionInputStepper } from '@lion/input-stepper';
 // or
-import '@lion/input-stepper/lion-input-stepper.js';
+import '@lion/input-stepper/define';
 ```
 
 ### Usage

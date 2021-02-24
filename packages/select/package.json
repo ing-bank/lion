@@ -49,6 +49,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-select": "./lion-select.js"
+    "./define": "./lion-select.js"
   }
 }

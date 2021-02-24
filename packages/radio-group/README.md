@@ -7,8 +7,7 @@ You should use `<lion-radio>`s inside this element.
 ```js script
 import { html } from '@lion/core';
 
-import './lion-radio-group.js';
-import './lion-radio.js';
+import '@lion/radio-group/define';
 
 export default {
   title: 'Forms/Radio Group',
@@ -48,8 +47,7 @@ npm i --save @lion/radio-group
 ```js
 import { LionRadioGroup, LionRadio } from '@lion/radio-group';
 // or
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio-group/lion-radio.js';
+import '@lion/radio-group/define';
 ```
 
 ### Model value

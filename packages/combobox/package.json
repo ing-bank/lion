@@ -61,6 +61,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-combobox": "./lion-combobox.js"
+    "./define": "./lion-combobox.js"
   }
 }

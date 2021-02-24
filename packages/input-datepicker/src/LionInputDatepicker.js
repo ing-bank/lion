@@ -81,75 +81,75 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         'lion-input-datepicker': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
-              return import('../translations/bg-BG.js');
+              return import('@lion/input-datepicker/translations/bg-BG.js');
             case 'bg':
-              return import('../translations/bg.js');
+              return import('@lion/input-datepicker/translations/bg.js');
             case 'cs-CZ':
-              return import('../translations/cs-CZ.js');
+              return import('@lion/input-datepicker/translations/cs-CZ.js');
             case 'cs':
-              return import('../translations/cs.js');
+              return import('@lion/input-datepicker/translations/cs.js');
             case 'de-DE':
-              return import('../translations/de-DE.js');
+              return import('@lion/input-datepicker/translations/de-DE.js');
             case 'de':
-              return import('../translations/de.js');
+              return import('@lion/input-datepicker/translations/de.js');
             case 'en-AU':
-              return import('../translations/en-AU.js');
+              return import('@lion/input-datepicker/translations/en-AU.js');
             case 'en-GB':
-              return import('../translations/en-GB.js');
+              return import('@lion/input-datepicker/translations/en-GB.js');
             case 'en-US':
-              return import('../translations/en-US.js');
+              return import('@lion/input-datepicker/translations/en-US.js');
             case 'en-PH':
             case 'en':
-              return import('../translations/en.js');
+              return import('@lion/input-datepicker/translations/en.js');
             case 'es-ES':
-              return import('../translations/es-ES.js');
+              return import('@lion/input-datepicker/translations/es-ES.js');
             case 'es':
-              return import('../translations/es.js');
+              return import('@lion/input-datepicker/translations/es.js');
             case 'fr-FR':
-              return import('../translations/fr-FR.js');
+              return import('@lion/input-datepicker/translations/fr-FR.js');
             case 'fr-BE':
-              return import('../translations/fr-BE.js');
+              return import('@lion/input-datepicker/translations/fr-BE.js');
             case 'fr':
-              return import('../translations/fr.js');
+              return import('@lion/input-datepicker/translations/fr.js');
             case 'hu-HU':
-              return import('../translations/hu-HU.js');
+              return import('@lion/input-datepicker/translations/hu-HU.js');
             case 'hu':
-              return import('../translations/hu.js');
+              return import('@lion/input-datepicker/translations/hu.js');
             case 'it-IT':
-              return import('../translations/it-IT.js');
+              return import('@lion/input-datepicker/translations/it-IT.js');
             case 'it':
-              return import('../translations/it.js');
+              return import('@lion/input-datepicker/translations/it.js');
             case 'nl-BE':
-              return import('../translations/nl-BE.js');
+              return import('@lion/input-datepicker/translations/nl-BE.js');
             case 'nl-NL':
-              return import('../translations/nl-NL.js');
+              return import('@lion/input-datepicker/translations/nl-NL.js');
             case 'nl':
-              return import('../translations/nl.js');
+              return import('@lion/input-datepicker/translations/nl.js');
             case 'pl-PL':
-              return import('../translations/pl-PL.js');
+              return import('@lion/input-datepicker/translations/pl-PL.js');
             case 'pl':
-              return import('../translations/pl.js');
+              return import('@lion/input-datepicker/translations/pl.js');
             case 'ro-RO':
-              return import('../translations/ro-RO.js');
+              return import('@lion/input-datepicker/translations/ro-RO.js');
             case 'ro':
-              return import('../translations/ro.js');
+              return import('@lion/input-datepicker/translations/ro.js');
             case 'ru-RU':
-              return import('../translations/ru-RU.js');
+              return import('@lion/input-datepicker/translations/ru-RU.js');
             case 'ru':
-              return import('../translations/ru.js');
+              return import('@lion/input-datepicker/translations/ru.js');
             case 'sk-SK':
-              return import('../translations/sk-SK.js');
+              return import('@lion/input-datepicker/translations/sk-SK.js');
             case 'sk':
-              return import('../translations/sk.js');
+              return import('@lion/input-datepicker/translations/sk.js');
             case 'uk-UA':
-              return import('../translations/uk-UA.js');
+              return import('@lion/input-datepicker/translations/uk-UA.js');
             case 'uk':
-              return import('../translations/uk.js');
+              return import('@lion/input-datepicker/translations/uk.js');
             case 'zh-CN':
             case 'zh':
-              return import('../translations/zh.js');
+              return import('@lion/input-datepicker/translations/zh.js');
             default:
-              return import('../translations/en.js');
+              return import('@lion/input-datepicker/translations/en.js');
           }
         },
       },

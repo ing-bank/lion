@@ -14,9 +14,8 @@ import {
 import { LionSelectInvoker, LionSelectRich } from '../index.js';
 
 import '@lion/core/differentKeyEventNamesShimIE';
-import '@lion/listbox/lion-option';
-import '@lion/listbox/lion-options';
-import '../lion-select-rich.js';
+import '@lion/listbox/define';
+import '@lion/select-rich/define';
 
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult

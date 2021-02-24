@@ -51,6 +51,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-input-range": "./lion-input-range.js"
+    "./define": "./lion-input-range.js"
   }
 }

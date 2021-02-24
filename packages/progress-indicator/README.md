@@ -30,7 +30,7 @@ npm i --save @lion/progress-indicator
 ```js
 import { LionProgressIndicator } from '@lion/progress-indicator';
 // or
-import '@lion/progress-indicator/lion-progress-indicator.js';
+import '@lion/progress-indicator/define';
 ```
 
 ### Example

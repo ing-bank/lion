@@ -9,7 +9,7 @@ import { html } from '@lion/core';
 import { render, LitElement } from '@lion/core';
 import { localize, formatNumber, formatDate, LocalizeMixin } from '../index.js';
 
-import '../../helpers/sb-locale-switcher.js';
+import '@lion/helpers/define-sb-locale-switcher';
 
 export default {
   title: 'Localize/Features Overview',

@@ -53,6 +53,7 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-input-iban": "./lion-input-iban.js"
+    "./define": "./lion-input-iban.js",
+    "./translations/*": "./translations/*"
   }
 }

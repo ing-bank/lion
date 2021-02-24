@@ -188,7 +188,7 @@ describe('babel-plugin-extend-docs', () => {
   });
 
   it('replaces `@lion` tag imports', () => {
-    const code = `import '@lion/input/lion-input.js';`;
+    const code = `import '@lion/input/define';`;
     const output = `import "../../../__element-definitions/wolf-input.js";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });

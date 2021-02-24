@@ -4,10 +4,10 @@
 
 ```js script
 import { html } from '@lion/core';
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 import { localize } from '@lion/localize';
 import { MinLength, Validator, Required } from '@lion/form-core';
-import './lion-fieldset.js';
+import '@lion/fieldset/define';
 import './docs/helpers/demo-fieldset-child.js';
 
 export default {
@@ -53,7 +53,7 @@ npm i --save @lion/fieldset
 ```js
 import { LionFieldset } from '@lion/fieldset';
 // or
-import '@lion/fieldset/lion-fieldset.js';
+import '@lion/fieldset/define';
 ```
 
 ### Example

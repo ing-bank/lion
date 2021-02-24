@@ -16,8 +16,8 @@ availability of the popup.
 import { html } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { listboxData } from '@lion/listbox/docs/listboxData.js';
-import '@lion/listbox/lion-option.js';
-import './lion-combobox.js';
+import '@lion/listbox/define';
+import '@lion/combobox/define';
 import './docs/demo-selection-display.js';
 import { lazyRender } from './docs/lazyRender.js';
 import levenshtein from './docs/levenshtein.js';
@@ -55,7 +55,7 @@ npm i --save @lion/combobox
 ```js
 import { LionCombobox } from '@lion/combobox';
 // or
-import '@lion/combobox/lion-combobox.js';
+import '@lion/combobox/define';
 ```
 
 ## Autocomplete

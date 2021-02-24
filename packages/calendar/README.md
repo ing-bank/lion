@@ -4,7 +4,7 @@
 
 ```js script
 import { html, css } from '@lion/core';
-import './lion-calendar.js';
+import '@lion/calendar/define';
 
 export default {
   title: 'Others/Calendar',
@@ -55,7 +55,7 @@ npm i --save @lion/calendar
 ```
 
 ```js
-import '@lion/calendar/lion-calendar.js';
+import '@lion/calendar/define';
 ```
 
 ### Example

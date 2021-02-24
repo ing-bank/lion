@@ -10,9 +10,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 ```js script
 import { html } from '@lion/core';
 import { Required, Validator } from '@lion/form-core';
-import './lion-checkbox-group.js';
-import './lion-checkbox-indeterminate.js';
-import './lion-checkbox.js';
+import '@lion/checkbox-group/define';
 
 export default {
   title: 'Forms/Checkbox Group',
@@ -45,8 +43,7 @@ npm i --save @lion/checkbox-group
 ```
 
 ```js
-import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/checkbox-group/lion-checkbox.js';
+import '@lion/checkbox-group/define';
 ```
 
 ### Model value

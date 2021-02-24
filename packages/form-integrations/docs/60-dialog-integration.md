@@ -4,10 +4,9 @@
 
 ```js script
 import { html } from '@lion/core';
-import '@lion/dialog/lion-dialog.js';
-import '@lion/input-datepicker';
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/listbox/lion-option.js';
+import '@lion/dialog/define';
+import '@lion/input-datepicker/define';
+import '@lion/select-rich/define';
 
 export default {
   title: 'Forms/System/Dialog integrations',

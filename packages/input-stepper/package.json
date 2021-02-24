@@ -51,6 +51,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-input-stepper": "./lion-input-stepper.js"
+    "./define": "./lion-input-stepper.js"
   }
 }

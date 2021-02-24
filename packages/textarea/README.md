@@ -6,7 +6,7 @@ Its purpose is to provide a way for users to write text that is multiple lines l
 ```js script
 import { html } from '@lion/core';
 
-import './lion-textarea.js';
+import '@lion/textarea/define';
 
 export default {
   title: 'Forms/Textarea',
@@ -38,7 +38,7 @@ npm i --save @lion/textarea
 ```js
 import { LionTextare } from '@lion/textarea';
 // or
-import '@lion/textarea/lion-textarea.js';
+import '@lion/textarea/define';
 ```
 
 ## Examples

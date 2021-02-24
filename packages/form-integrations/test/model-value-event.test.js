@@ -1,5 +1,5 @@
-import '@lion/fieldset/lion-fieldset';
-import '@lion/input/lion-input';
+import '@lion/fieldset/define';
+import '@lion/input/define';
 import { expect, html, fixture } from '@open-wc/testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';

@@ -1,6 +1,6 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-switch.js';
+import '@lion/switch/define';
 
 /**
  * @typedef {import('../src/LionSwitch').LionSwitch} LionSwitch

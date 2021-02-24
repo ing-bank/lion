@@ -1,7 +1,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 // eslint-disable-next-line no-unused-vars
 import { LionOptions } from '../src/LionOptions.js';
-import '../lion-options.js';
+import '@lion/listbox/define-options';
 
 describe('lion-options', () => {
   it('should have role="listbox"', async () => {

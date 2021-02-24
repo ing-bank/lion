@@ -31,7 +31,7 @@ Example using the sb-action-logger helper component.
 
 ```html
 <script type="module">
-  import '@lion/helpers/sb-action-logger.js';
+  import '@lion/helpers/define';
 </script>
 
 <sb-action-logger></sb-action-logger>

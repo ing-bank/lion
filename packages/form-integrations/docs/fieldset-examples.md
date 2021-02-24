@@ -4,12 +4,12 @@
 
 ```js script
 import { html } from '@lion/core';
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 import { localize } from '@lion/localize';
 import { MinLength, Validator, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
-import '@lion/fieldset/lion-fieldset.js';
+import '@lion/fieldset/define';
 
 export default {
   title: 'Forms/Fieldset/Examples',

@@ -40,7 +40,7 @@ const baseConfig = {
             to: './__element-definitions/wolf-input.js',
           },
           {
-            from: '@lion/input/lion-input.js',
+            from: '@lion/input/define',
             to: './__element-definitions/wolf-input.js',
           },
         ],
@@ -75,7 +75,7 @@ const baseConfig = {
             to: './__element-definitions/wolf-button.js',
           },
           {
-            from: '@lion/button/lion-button.js',
+            from: '@lion/button/define',
             to: './__element-definitions/wolf-button.js',
           },
         ],

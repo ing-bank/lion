@@ -1,4 +1,4 @@
-import '../lion-checkbox-indeterminate.js';
-import { runChoiceInputMixinSuite } from '@lion/form-core/test-suites/choice-group/ChoiceInputMixin.suite.js';
+import '@lion/checkbox-group/define-checkbox-indeterminate';
+import { runChoiceInputMixinSuite } from '@lion/form-core/test-suites';
 
 runChoiceInputMixinSuite({ tagString: 'lion-checkbox-indeterminate' });

@@ -32,6 +32,7 @@
     "test": "cd ../../ && npm run test:browser -- --group radio-group"
   },
   "sideEffects": [
+    "define.js",
     "lion-radio.js",
     "lion-radio-group.js"
   ],
@@ -51,7 +52,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-radio": "./lion-radio.js",
-    "./lion-radio-group": "./lion-radio-group.js"
+    "./define": "./define.js",
+    "./define-radio": "./lion-radio.js",
+    "./define-radio-group": "./lion-radio-group.js"
   }
 }

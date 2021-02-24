@@ -82,7 +82,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ```html
 <script type="module">
-  import '@lion/input/lion-input.js';
+  import '@lion/input/define';
 </script>
 
 <lion-input name="firstName"></lion-input>

@@ -50,6 +50,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-dialog": "./lion-dialog.js"
+    "./define": "./lion-dialog.js"
   }
 }

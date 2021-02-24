@@ -13,7 +13,7 @@ If there are no valid characters in the input whatsoever, it will provide an err
 import { html } from '@lion/core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
-import './lion-input-amount.js';
+import '@lion/input-amount/define';
 
 export default {
   title: 'Forms/Input Amount',
@@ -53,7 +53,7 @@ npm i --save @lion/input-amount
 ```js
 import { LionInputAmount } from '@lion/input-amount';
 // or
-import '@lion/input-amount/lion-input-amount.js';
+import '@lion/input-amount/define';
 ```
 
 ## Examples

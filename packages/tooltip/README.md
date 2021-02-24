@@ -6,7 +6,7 @@ Its purpose is to show content appearing when the user hovers over an invoker el
 ```js script
 import { css, html } from '@lion/core';
 import { LionTooltip } from './src/LionTooltip.js';
-import './lion-tooltip.js';
+import '@lion/tooltip/define';
 
 export default {
   title: 'Overlays/Tooltip',
@@ -77,7 +77,7 @@ npm i --save @lion/tooltip
 ```js
 import { LionTooltip } from '@lion/tooltip';
 // or
-import '@lion/tooltip/lion-tooltip.js';
+import '@lion/tooltip/define';
 ```
 
 ## Examples

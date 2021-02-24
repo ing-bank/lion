@@ -52,8 +52,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-checkbox": "./lion-checkbox.js",
-    "./lion-checkbox-group": "./lion-checkbox-group.js",
-    "./lion-checkbox-indeterminate": "./lion-checkbox-indeterminate.js"
+    "./define-checkbox": "./lion-checkbox.js",
+    "./define-checkbox-group": "./lion-checkbox-group.js",
+    "./define-checkbox-indeterminate": "./lion-checkbox-indeterminate.js",
+    "./define": "./define.js"
   }
 }

@@ -15,25 +15,27 @@ import { html } from '@lion/core';
 import { LionInput } from '@lion/input';
 import '@lion/checkbox-group/lion-checkbox-group.js';
 import '@lion/checkbox-group/lion-checkbox.js';
-import '@lion/combobox/lion-combobox.js';
-import '@lion/fieldset/lion-fieldset.js';
+import '@lion/combobox/define';
+import '@lion/fieldset/define';
 import '@lion/form/lion-form.js';
-import '@lion/input-amount/lion-input-amount.js';
-import '@lion/input-date/lion-input-date.js';
-import '@lion/input-datepicker/lion-input-datepicker.js';
-import '@lion/input-email/lion-input-email.js';
-import '@lion/input-iban/lion-input-iban.js';
-import '@lion/input-range/lion-input-range.js';
-import '@lion/input-stepper/lion-input-stepper.js';
-import '@lion/input/lion-input.js';
-import '@lion/listbox/lion-listbox.js';
-import '@lion/listbox/lion-option.js';
-import '@lion/listbox/lion-options.js';
-import '@lion/radio-group/lion-radio-group.js';
-import '@lion/radio-group/lion-radio.js';
-import '@lion/select/lion-select.js';
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/textarea/lion-textarea.js';
+import '@lion/input-amount/define';
+import '@lion/input-date/define';
+import '@lion/input-datepicker/define';
+import '@lion/input-email/define';
+import '@lion/input-iban/define';
+import '@lion/input-range/define';
+import '@lion/input-stepper/define';
+import '@lion/input/define';
+import '@lion/listbox/define';
+import '@lion/listbox/define-listbox.js';
+import '@lion/listbox/define-option.js';
+import '@lion/listbox/define-options.js';
+import '@lion/radio-group/define';
+import '@lion/radio-group/define-radio-group.js';
+import '@lion/radio-group/define-radio.js';
+import '@lion/select/define';
+import '@lion/select-rich/define-select-rich.js';
+import '@lion/textarea/define';
 import {
   DefaultSuccess,
   EqualsLength,
@@ -694,4 +696,93 @@ export const FormValidationReset = () => html`
     </form>
   </lion-form>
 `;
+```
+
+## Backend validation
+
+Backend validation is needed in some cases. For example, you have a sign up form, the username could be already taken. You can add an `AsyncValidator` to check the availability when the `username` field is changed but you may have a conflict when you submit the form (another user take the username in parallel).
+
+```js preview-story
+export const backendValidation = () => {
+  // Mock
+  function fakeFetch(ms = 0, withError = false) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(
+          new Response(
+            JSON.stringify({
+              message: withError ? 'Username is already taken' : '',
+            }),
+            { status: withError ? 400 : 200 },
+          ),
+        );
+      }, ms);
+    });
+  }
+
+  let backendValidationResolver;
+  let backendErrorMessage = 'Unknown Error';
+  let isBackendCallPending = false;
+
+  const submitHandler = ev => {
+    const lionForm = ev.target;
+    if (lionForm.hasFeedbackFor.includes('error')) {
+      const firstFormElWithError = lionForm.formElements.find(el =>
+        el.hasFeedbackFor.includes('error'),
+      );
+      firstFormElWithError.focus();
+      return;
+    }
+    isBackendCallPending = true;
+    lionForm.formElements.username.validate(); // => backendValidationResolver will be assigned
+    const formData = lionForm.serializedValue;
+    fakeFetch(2000, formData.simulateError.length).then(async response => {
+      if (response.status !== 200) {
+        backendErrorMessage = (await response.json())?.message;
+        backendValidationResolver(true);
+      }
+      backendValidationResolver(false);
+      isBackendCallPending = false;
+    });
+  };
+
+  class BackendValidator extends Validator {
+    static get validatorName() {
+      return 'backendValidator';
+    }
+    static get async() {
+      return true;
+    }
+    async execute() {
+      if (isBackendCallPending) {
+        return await new Promise(resolve => (backendValidationResolver = resolve));
+      }
+      return false;
+    }
+    static getMessage({ fieldName, modelValue, params: param }) {
+      return backendErrorMessage;
+    }
+  }
+  return html`
+    <style>
+      lion-input[is-pending] {
+        opacity: 0.5;
+      }
+    </style>
+    <lion-form @submit=${submitHandler}>
+      <form>
+        <lion-input
+          label="username"
+          name="username"
+          .validators="${[new BackendValidator(''), new Required()]}"
+          .modelValue="${''}"
+        ></lion-input>
+        <lion-checkbox-group name="simulateError">
+          <lion-checkbox label="Check to simulate a backend error"></lion-checkbox>
+        </lion-checkbox-group>
+        <lion-button raised>Submit</lion-button>
+      </form>
+    </lion-form>
+  `;
+};
 ```

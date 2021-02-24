@@ -5,7 +5,7 @@
 ```js script
 import { html } from '@lion/core';
 import { render } from '@lion/core';
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 import { Validator } from '@lion/form-core';
 import '../docs/helper-wc/h-output.js';
 

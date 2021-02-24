@@ -57,7 +57,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-helpers/*": "./test-helpers/*",
-    "./lion-input-datepicker": "./lion-input-datepicker.js"
+    "./define": "./lion-input-datepicker.js",
+    "./test-helpers": "./test-helpers.js",
+    "./translations/*": "./translations/*"
   }
 }

@@ -52,6 +52,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-input-email": "./lion-input-email.js"
+    "./define": "./lion-input-email.js"
   }
 }

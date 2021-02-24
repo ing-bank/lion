@@ -10,7 +10,7 @@ usability for keyboard and screen reader users.
 ```js script
 import { html } from '@lion/core';
 
-import './lion-select.js';
+import '@lion/select/define';
 
 export default {
   title: 'Forms/Select',
@@ -49,7 +49,7 @@ npm i --save @lion/select
 ```js
 import { LionSelect } from '@lion/select';
 // or
-import '@lion/select/lion-select.js';
+import '@lion/select/define';
 ```
 
 ## Examples

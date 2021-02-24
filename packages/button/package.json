@@ -48,6 +48,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-button": "./lion-button.js"
+    "./define": "./lion-button.js"
   }
 }

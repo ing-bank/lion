@@ -5,7 +5,7 @@
 ```js script
 import { html } from '@lion/core';
 
-import './lion-collapsible.js';
+import '@lion/collapsible/define';
 import './demo/custom-collapsible.js';
 import './demo/applyDemoCollapsibleStyles.js';
 
@@ -44,7 +44,7 @@ npm i --save @lion/collapsible
 ```js
 import { LionCollapsible } from '@lion/collapsible';
 // or
-import '@lion/collapsible/lion-collapsible.js';
+import '@lion/collapsible/define';
 ```
 
 ### Usage

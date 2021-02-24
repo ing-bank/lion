@@ -9,8 +9,7 @@ multiple options to be selected is a multi-select listbox.
 ```js script
 import { html } from '@lion/core';
 import { listboxData } from './docs/listboxData.js';
-import './lion-option.js';
-import './lion-listbox.js';
+import '@lion/listbox/define';
 
 export default {
   title: 'Forms/Listbox',

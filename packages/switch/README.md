@@ -6,8 +6,8 @@
 import { html } from '@lion/core';
 import { Validator } from '@lion/form-core';
 import { LionSwitch } from './index.js';
-import './lion-switch.js';
-import '@lion/helpers/sb-action-logger.js';
+import '@lion/switch/define';
+import '@lion/helpers/define';
 
 export default {
   title: 'Buttons/Switch',
@@ -35,7 +35,7 @@ npm i --save @lion/switch
 ```js
 import { LionSwitch } from '@lion/switch';
 // or
-import '@lion/switch/lion-switch.js';
+import '@lion/switch/define';
 ```
 
 ### Example

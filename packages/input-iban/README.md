@@ -10,7 +10,7 @@ import { html } from '@lion/core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { IsCountryIBAN, IsNotCountryIBAN } from './src/validators.js';
 
-import './lion-input-iban.js';
+import '@lion/input-iban/define';
 
 export default {
   title: 'Forms/Input Iban',
@@ -40,13 +40,13 @@ export const main = () => {
 ### Installation
 
 ```bash
-npm i --save @lion/input-amount
+npm i --save @lion/input-iban
 ```
 
 ```js
 import { LionInputIban } from '@lion/input-iban';
 // or
-import '@lion/input-amount/lion-input-amount.js';
+import '@lion/input-iban/define';
 ```
 
 ## Examples

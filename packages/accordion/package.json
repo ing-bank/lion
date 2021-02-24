@@ -48,6 +48,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-accordion": "./lion-accordion.js"
+    "./define": "./lion-accordion.js"
   }
 }

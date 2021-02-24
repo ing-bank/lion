@@ -5,7 +5,7 @@
 ```js script
 import { html } from '@lion/core';
 
-import './lion-input.js';
+import '@lion/input/define';
 
 export default {
   title: 'Forms/Input',
@@ -40,7 +40,7 @@ npm i --save @lion/input
 ```
 
 ```js
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 ```
 
 ## Examples

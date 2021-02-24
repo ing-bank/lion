@@ -1,6 +1,6 @@
 import { aTimeout, expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-textarea.js';
+import '@lion/textarea/define';
 
 /**
  * @typedef {import('../src/LionTextarea').LionTextarea} LionTextarea

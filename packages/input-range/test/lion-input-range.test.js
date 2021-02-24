@@ -1,6 +1,6 @@
 import { expect, fixture as _fixture, nextFrame, html } from '@open-wc/testing';
 
-import '../lion-input-range.js';
+import '@lion/input-range/define';
 
 /**
  * @typedef {import('../src/LionInputRange').LionInputRange} LionInputRange

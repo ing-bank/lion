@@ -47,7 +47,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./sb-action-logger": "./sb-action-logger.js",
-    "./sb-locale-switcher": "./sb-locale-switcher.js"
+    "./define": "./define.js",
+    "./define-sb-action-logger": "./sb-action-logger.js",
+    "./define-sb-locale-switcher": "./sb-locale-switcher.js"
   }
 }

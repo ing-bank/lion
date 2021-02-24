@@ -4,8 +4,7 @@
 
 ```js script
 import { html } from '@lion/core';
-import './lion-step.js';
-import './lion-steps.js';
+import '@lion/steps/define';
 
 export default {
   title: 'Navigation/Steps',
@@ -38,8 +37,7 @@ npm i --save @lion/steps
 ```js
 import { LionSteps, LionStep } from '@lion/steps';
 // or
-import '@lion/steps/lion-steps.js';
-import '@lion/steps/lion-step.js';
+import '@lion/steps/define';
 ```
 
 ### Example

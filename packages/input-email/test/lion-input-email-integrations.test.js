@@ -1,5 +1,5 @@
-import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
-import '../lion-input-email.js';
+import { runFormatMixinSuite } from '@lion/form-core/test-suites';
+import '@lion/input-email/define';
 
 const tagString = 'lion-input-email';
 

@@ -6,7 +6,7 @@ Its purpose is to provide a way for users to select one value from a range of va
 ```js script
 import { html } from '@lion/core';
 
-import './lion-input-range.js';
+import '@lion/input-range/define';
 
 export default {
   title: 'Forms/Input Range',

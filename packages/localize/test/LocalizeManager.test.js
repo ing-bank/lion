@@ -2,7 +2,7 @@ import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 // @ts-expect-error no types for this package
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
-import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers.js';
+import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers/index.js';
 
 import { LocalizeManager } from '../src/LocalizeManager.js';
 

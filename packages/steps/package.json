@@ -32,6 +32,7 @@
     "test": "cd ../../ && npm run test:browser -- --group steps"
   },
   "sideEffects": [
+    "define.js",
     "lion-step.js",
     "lion-steps.js"
   ],
@@ -49,7 +50,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-step": "./lion-step.js",
-    "./lion-steps": "./lion-steps.js"
+    "./define": "./define.js",
+    "./define-step": "./lion-step.js",
+    "./define-steps": "./lion-steps.js"
   }
 }

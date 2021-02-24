@@ -11,9 +11,7 @@ Its implementation is based on the following Design pattern:
 ```js script
 import { LitElement, html } from '@lion/core';
 
-import '@lion/listbox/lion-option.js';
-import '@lion/listbox/lion-options.js';
-import './lion-select-rich.js';
+import '@lion/select-rich/define';
 
 export default {
   title: 'Forms/Select Rich',
@@ -49,9 +47,7 @@ npm i --save @lion/select-rich
 ```js
 import { LionSelectRich, LionOptions, LionOption } from '@lion/select-rich';
 // or
-import '@lion/select-rich/lion-select-rich.js';
-import '@lion/listbox/lion-options.js';
-import '@lion/listbox/lion-option.js';
+import '@lion/select-rich/define';
 ```
 
 > No need to npm install `@lion/option` separately, it comes with the rich select as a dependency

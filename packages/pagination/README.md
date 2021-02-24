@@ -5,7 +5,7 @@
 ```js script
 import { html } from '@lion/core';
 
-import './lion-pagination.js';
+import '@lion/pagination/define';
 
 export default {
   title: 'Navigation/Pagination',
@@ -32,7 +32,7 @@ npm i --save @lion/pagination
 ```js
 import { LionPagination } from '@lion/pagination';
 // or
-import '@lion/pagination/lion-pagination.js';
+import '@lion/pagination/define';
 ```
 
 ### Usage

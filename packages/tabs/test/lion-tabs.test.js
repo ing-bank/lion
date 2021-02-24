@@ -4,7 +4,7 @@ import sinon from 'sinon';
 /**
  * @typedef {import('../src/LionTabs.js').LionTabs} LionTabs
  */
-import '../lion-tabs.js';
+import '@lion/tabs/define';
 
 const basicTabs = html`
   <lion-tabs>

@@ -1,7 +1,7 @@
 import { html, fixture as _fixture, expect } from '@open-wc/testing';
 import sinon from 'sinon';
 
-import '../lion-pagination.js';
+import '@lion/pagination/define';
 
 /**
  * @typedef {import('../src/LionPagination').LionPagination} LionPagination

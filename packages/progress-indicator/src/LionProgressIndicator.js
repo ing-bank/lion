@@ -11,56 +11,56 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
           switch (locale) {
             case 'bg-BG':
             case 'bg':
-              return import('../translations/bg.js');
+              return import('@lion/progress-indicator/translations/bg.js');
             case 'cs-CZ':
             case 'cs':
-              return import('../translations/cs.js');
+              return import('@lion/progress-indicator/translations/cs.js');
             case 'de-DE':
             case 'de':
-              return import('../translations/de.js');
+              return import('@lion/progress-indicator/translations/de.js');
             case 'en-AU':
             case 'en-GB':
             case 'en-US':
             case 'en-PH':
             case 'en':
-              return import('../translations/en.js');
+              return import('@lion/progress-indicator/translations/en.js');
             case 'es-ES':
             case 'es':
-              return import('../translations/es.js');
+              return import('@lion/progress-indicator/translations/es.js');
             case 'fr-BE':
             case 'fr-FR':
             case 'fr':
-              return import('../translations/fr.js');
+              return import('@lion/progress-indicator/translations/fr.js');
             case 'hu-HU':
             case 'hu':
-              return import('../translations/hu.js');
+              return import('@lion/progress-indicator/translations/hu.js');
             case 'it-IT':
             case 'it':
-              return import('../translations/it.js');
+              return import('@lion/progress-indicator/translations/it.js');
             case 'nl-BE':
             case 'nl-NL':
             case 'nl':
-              return import('../translations/nl.js');
+              return import('@lion/progress-indicator/translations/nl.js');
             case 'pl-PL':
             case 'pl':
-              return import('../translations/pl.js');
+              return import('@lion/progress-indicator/translations/pl.js');
             case 'ro-RO':
             case 'ro':
-              return import('../translations/ro.js');
+              return import('@lion/progress-indicator/translations/ro.js');
             case 'ru-RU':
             case 'ru':
-              return import('../translations/ru.js');
+              return import('@lion/progress-indicator/translations/ru.js');
             case 'sk-SK':
             case 'sk':
-              return import('../translations/sk.js');
+              return import('@lion/progress-indicator/translations/sk.js');
             case 'uk-UA':
             case 'uk':
-              return import('../translations/uk.js');
+              return import('@lion/progress-indicator/translations/uk.js');
             case 'zh-CN':
             case 'zh':
-              return import('../translations/zh.js');
+              return import('@lion/progress-indicator/translations/zh.js');
             default:
-              return import('../translations/en.js');
+              return import('@lion/progress-indicator/translations/en.js');
           }
         },
       },

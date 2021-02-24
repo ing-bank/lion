@@ -32,6 +32,7 @@
     "test": "cd ../../ && npm run test:browser -- --group listbox"
   },
   "sideEffects": [
+    "define.js",
     "lion-listbox.js",
     "lion-option.js",
     "lion-options.js"
@@ -52,9 +53,10 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-suites/*": "./test-suites/*",
-    "./lion-listbox": "./lion-listbox.js",
-    "./lion-option": "./lion-option.js",
-    "./lion-options": "./lion-options.js"
+    "./test-suites": "./test-suites/index.js",
+    "./define": "./define.js",
+    "./define-listbox": "./lion-listbox.js",
+    "./define-option": "./lion-option.js",
+    "./define-options": "./lion-options.js"
   }
 }

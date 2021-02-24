@@ -1,6 +1,6 @@
-import { runOverlayMixinSuite } from '@lion/overlays/test-suites/OverlayMixin.suite.js';
 import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
-import '../lion-dialog.js';
+import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
+import '@lion/dialog/define';
 
 /**
 

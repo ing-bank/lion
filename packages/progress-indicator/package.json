@@ -51,6 +51,7 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-progress-indicator": "./lion-progress-indicator.js"
+    "./define": "./lion-progress-indicator.js",
+    "./translations/*": "./translations/*"
   }
 }

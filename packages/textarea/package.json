@@ -51,6 +51,6 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-textarea": "./lion-textarea.js"
+    "./define": "./lion-textarea.js"
   }
 }

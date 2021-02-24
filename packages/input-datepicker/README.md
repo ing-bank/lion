@@ -12,7 +12,7 @@ import { MinMaxDate, IsDateDisabled } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { formatDate } from '@lion/localize';
 
-import './lion-input-datepicker.js';
+import '@lion/input-datepicker/define';
 
 export default {
   title: 'Forms/Input Datepicker',
@@ -51,7 +51,7 @@ npm i --save @lion/input-datepicker
 ```js
 import { LionInputDatepicker } from '@lion/input-datepicker';
 // or
-import '@lion/input-datepicker/lion-input-datepicker.js';
+import '@lion/input-datepicker/define';
 ```
 
 ## Examples

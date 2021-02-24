@@ -44,7 +44,7 @@ npm i --save @lion/dialog
 ### Example
 
 ```js
-import '@lion/dialog/lion-dialog.js';
+import '@lion/dialog/define';
 
 html`
   <lion-dialog .config=${{

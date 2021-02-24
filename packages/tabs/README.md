@@ -6,7 +6,7 @@
 
 ```js script
 import { html, LitElement } from '@lion/core';
-import './lion-tabs.js';
+import '@lion/tabs/define';
 
 export default {
   title: 'Navigation/Tabs',

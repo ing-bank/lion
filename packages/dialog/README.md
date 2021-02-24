@@ -10,7 +10,7 @@ import { html } from '@lion/core';
 import demoStyle from './docs/demo-dialog-style.js';
 import './docs/styled-dialog-content.js';
 import './docs/slots-dialog-content.js';
-import './lion-dialog.js';
+import '@lion/dialog/define';
 
 export default {
   title: 'Overlays/Dialog',
@@ -54,7 +54,7 @@ npm i --save @lion/dialog
 ```js
 import { LionDialog } from '@lion/dialog';
 // or
-import '@lion/dialog/lion-dialog.js';
+import '@lion/dialog/define';
 ```
 
 ## Usage notes

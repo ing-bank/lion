@@ -7,7 +7,7 @@
 ```js script
 import { html } from '@lion/core';
 
-import './lion-button.js';
+import '@lion/button/define';
 import iconSvg from './docs/assets/icon.svg.js';
 
 export default {
@@ -36,7 +36,7 @@ npm i --save @lion/button
 ```js
 import { LionButton } from '@lion/button';
 // or
-import '@lion/button/lion-button.js';
+import '@lion/button/define';
 ```
 
 ### Example

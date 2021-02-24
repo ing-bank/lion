@@ -32,6 +32,9 @@
     "test": "cd ../../ && npm run test:browser -- --group select-rich"
   },
   "sideEffects": [
+    "define.js",
+    "lion-option.js",
+    "lion-options",
     "lion-select-invoker.js",
     "lion-select-rich.js"
   ],
@@ -57,9 +60,10 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-option": "./lion-option.js",
-    "./lion-options": "./lion-options.js",
-    "./lion-select-invoker": "./lion-select-invoker.js",
-    "./lion-select-rich": "./lion-select-rich.js"
+    "./define": "./define.js",
+    "./define-option": "./lion-option.js",
+    "./define-options": "./lion-options.js",
+    "./define-select-invoker": "./lion-select-invoker.js",
+    "./define-select-rich": "./lion-select-rich.js"
   }
 }

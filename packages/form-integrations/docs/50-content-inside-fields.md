@@ -4,8 +4,8 @@
 
 ```js script
 import { html } from '@lion/core';
-import '@lion/input/lion-input.js';
-import '@lion/button/lion-button.js';
+import '@lion/input/define';
+import '@lion/button/define';
 
 export default {
   title: 'Forms/System/Field integrations',

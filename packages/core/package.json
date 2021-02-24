@@ -51,7 +51,7 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-helpers/*": "./test-helpers/*",
+    "./test-helpers": "./test-helpers/index.js",
     "./closestPolyfill": "./src/closestPolyfill.js",
     "./differentKeyEventNamesShimIE": "./src/differentKeyEventNamesShimIE.js"
   }

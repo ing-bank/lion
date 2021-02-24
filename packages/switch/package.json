@@ -32,6 +32,7 @@
     "test": "cd ../../ && npm run test:browser -- --group switch"
   },
   "sideEffects": [
+    "define.js",
     "lion-switch.js",
     "lion-switch-button.js"
   ],
@@ -51,7 +52,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-switch": "./lion-switch.js",
-    "./lion-switch-button": "./lion-switch-button.js"
+    "./define": "./define.js",
+    "./define-switch": "./lion-switch.js",
+    "./define-switch-button": "./lion-switch-button.js"
   }
 }

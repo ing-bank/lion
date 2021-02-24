@@ -7,7 +7,7 @@ import { html } from '@lion/core';
 import { Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
-import './lion-input-email.js';
+import '@lion/input-email/define';
 
 export default {
   title: 'Forms/Input Email',
@@ -38,7 +38,7 @@ npm i --save @lion/input-email
 ```js
 import { LionInputEmail } from '@lion/input-email';
 // or
-import '@lion/input-email/lion-input-email.js';
+import '@lion/input-email/define';
 ```
 
 ## Examples

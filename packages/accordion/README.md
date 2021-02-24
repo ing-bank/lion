@@ -8,7 +8,7 @@ Its purpose is to reduce the need to scroll when presenting multiple sections of
 ```js script
 import { LitElement } from '@lion/core';
 import { html } from '@lion/core';
-import './lion-accordion.js';
+import '@lion/accordion/define';
 
 export default {
   title: 'Navigation/Accordion',
@@ -44,7 +44,7 @@ npm i --save @lion/accordion
 ```js
 import { LionAccordion } from '@lion/accordion';
 // or
-import '@lion/accordion/lion-accordion.js';
+import '@lion/accordion/define';
 ```
 
 ### Usage

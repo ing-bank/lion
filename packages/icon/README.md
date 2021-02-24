@@ -9,7 +9,7 @@ import './docs/icons/iconset-bugs.js';
 import './docs/icons/iconset-misc.js';
 import * as spaceSet from './docs/icons/iconset-space.js';
 
-import './lion-icon.js';
+import '@lion/icon/define';
 
 export default {
   title: 'Icons/Icon',
@@ -46,7 +46,7 @@ npm i --save @lion/icon
 ```js
 import { LionIcon } from '@lion/icon';
 // or
-import '@lion/icon/lion-icon.js';
+import '@lion/icon/define';
 ```
 
 ### Icon sets

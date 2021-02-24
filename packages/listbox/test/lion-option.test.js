@@ -2,7 +2,7 @@ import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 // eslint-disable-next-line no-unused-vars
 import { LionOption } from '../src/LionOption.js';
-import '../lion-option.js';
+import '@lion/listbox/define-option';
 
 describe('lion-option', () => {
   describe('Values', () => {

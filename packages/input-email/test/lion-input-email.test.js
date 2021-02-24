@@ -1,6 +1,6 @@
 import { expect, fixture as _fixture } from '@open-wc/testing';
 
-import '../lion-input-email.js';
+import '@lion/input-email/define';
 
 /**
  * @typedef {import('../src/LionInputEmail').LionInputEmail} LionInputEmail

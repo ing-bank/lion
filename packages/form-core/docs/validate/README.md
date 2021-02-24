@@ -41,7 +41,7 @@ npm i --save @lion/form-core
 ```
 
 ```js
-import '@lion/input/lion-input.js';
+import '@lion/input/define';
 import { %ValidatorName% } from '@lion/form-core';
 ```
 
