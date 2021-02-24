@@ -946,8 +946,9 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar
                 .selectedDate="${new Date('2001/01/02')}"
-                .disableDates=${/** @param {Date} date */ date =>
-                  date.getDate() === 3 || date.getDate() === 4}
+                .disableDates=${
+                  /** @param {Date} date */ date => date.getDate() === 3 || date.getDate() === 4
+                }
               ></lion-calendar>
             `);
             const elObj = new CalendarObject(el);
@@ -1413,8 +1414,9 @@ describe('<lion-calendar>', () => {
       const el = await fixture(
         html`
           <lion-calendar
-            .disableDates=${/** @param {Date} date */ date =>
-              date.getDay() === 6 || date.getDay() === 0}
+            .disableDates=${
+              /** @param {Date} date */ date => date.getDay() === 6 || date.getDay() === 0
+            }
           ></lion-calendar>
         `,
       );

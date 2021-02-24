@@ -78,11 +78,13 @@ describe('ArrowMixin', () => {
   it('makes sure positioning of the arrow is correct', async () => {
     const el = /** @type {ArrowTest} */ (await fixture(html`
       <arrow-test
-        .config="${/** @type {import('../types/OverlayConfig').OverlayConfig} */ ({
-          popperConfig: {
-            placement: 'right',
-          },
-        })}"
+        .config="${
+          /** @type {import('../types/OverlayConfig').OverlayConfig} */ ({
+            popperConfig: {
+              placement: 'right',
+            },
+          })
+        }"
         style="position: relative; top: 10px;"
       >
         <div slot="content" style="height: 30px; background-color: red;">Hey there</div>

@@ -24,8 +24,10 @@ const collapsibleToggle = state => {
 const defaultCollapsible = html` <lion-collapsible>${collapsibleTemplate}</lion-collapsible> `;
 const collapsibleWithEvents = html`
   <lion-collapsible
-    @opened-changed=${/** @param {Event} e */ e =>
-      collapsibleToggle(/** @type {LionCollapsible} */ (e.target)?.opened)}
+    @opened-changed=${
+      /** @param {Event} e */ e =>
+        collapsibleToggle(/** @type {LionCollapsible} */ (e.target)?.opened)
+    }
   >
     ${collapsibleTemplate}
   </lion-collapsible>

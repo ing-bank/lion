@@ -260,8 +260,11 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     return html`
       <lion-calendar
         slot="content"
-        .selectedDate="${/** @type {typeof LionInputDatepicker} */ (this
-          .constructor).__getSyncDownValue(this.modelValue)}"
+        .selectedDate="${
+          /** @type {typeof LionInputDatepicker} */ (this.constructor).__getSyncDownValue(
+            this.modelValue,
+          )
+        }"
         .minDate="${this.__calendarMinDate}"
         .maxDate="${this.__calendarMaxDate}"
         .disableDates="${ifDefined(this.__calendarDisableDates)}"

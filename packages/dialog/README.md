@@ -154,9 +154,8 @@ export const placementOverrides = () => {
       ${demoStyle}
     </style>
     <div class="demo-box_placements">
-      ${dialog('center')} ${dialog('top-left')} ${dialog('top-right')} ${dialog('bottom-left')} ${dialog(
-        'bottom-right',
-      )}
+      ${dialog('center')} ${dialog('top-left')} ${dialog('top-right')} ${dialog('bottom-left')}
+      ${dialog('bottom-right')}
     </div>
   `;
 };
