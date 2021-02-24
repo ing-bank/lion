@@ -3,7 +3,6 @@ import { LitElement } from '@lion/core';
 import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class InteractionStateHost {
-  constructor(...args: any[]);
   prefilled: boolean;
   filled: boolean;
   touched: boolean;
@@ -27,8 +26,9 @@ export declare function InteractionStateImplementation<T extends Constructor<Lit
   superclass: T,
 ): T &
   Constructor<InteractionStateHost> &
-  typeof InteractionStateHost &
+  Pick<typeof InteractionStateHost, keyof typeof InteractionStateHost> &
   Constructor<FormControlHost> &
-  typeof FormControlHost;
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type InteractionStateMixin = typeof InteractionStateImplementation;

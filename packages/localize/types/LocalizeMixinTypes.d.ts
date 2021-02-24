@@ -56,7 +56,6 @@ interface msgOptions {
 }
 
 declare class LocalizeMixinHost {
-  constructor(...args: any[]);
   static get localizeNamespaces(): StringToFunctionMap[];
 
   static get waitForLocalizeNamespaces(): boolean;
@@ -83,6 +82,9 @@ declare class LocalizeMixinHost {
 
 declare function LocalizeMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<LocalizeMixinHost> & typeof LocalizeMixinHost;
+): T &
+  Constructor<LocalizeMixinHost> &
+  Pick<typeof LocalizeMixinHost, keyof typeof LocalizeMixinHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type LocalizeMixin = typeof LocalizeMixinImplementation;

@@ -6,7 +6,6 @@ export declare class NativeTextField extends LionField {
 }
 
 export declare class NativeTextFieldHost {
-  constructor(...args: any[]);
   get selectionStart(): number;
   set selectionStart(value: number);
   get selectionEnd(): number;
@@ -15,6 +14,9 @@ export declare class NativeTextFieldHost {
 
 export declare function NativeTextFieldImplementation<T extends Constructor<NativeTextField>>(
   superclass: T,
-): T & Constructor<NativeTextFieldHost> & NativeTextFieldHost & typeof NativeTextField;
+): T &
+  Constructor<NativeTextFieldHost> &
+  Pick<typeof NativeTextFieldHost, keyof typeof NativeTextFieldHost> &
+  Pick<typeof NativeTextField, keyof typeof NativeTextField>;
 
 export type NativeTextFieldMixin = typeof NativeTextFieldImplementation;

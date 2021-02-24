@@ -9,7 +9,6 @@ import { LionOptions } from '../src/LionOptions.js';
 import { LionOption } from '../src/LionOption.js';
 
 export declare class ListboxHost {
-  constructor(...args: any[]);
   /**
    * When true, will synchronize activedescendant and selected element on
    * arrow key navigation.
@@ -80,14 +79,15 @@ export declare function ListboxImplementation<T extends Constructor<LitElement>>
   superclass: T,
 ): T &
   Constructor<ListboxHost> &
-  typeof ListboxHost &
+  Pick<typeof ListboxHost, keyof typeof ListboxHost> &
   Constructor<ChoiceGroupHost> &
-  typeof ChoiceGroupHost &
+  Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> &
   Constructor<SlotHost> &
-  typeof SlotHost &
+  Pick<typeof SlotHost, keyof typeof SlotHost> &
   Constructor<FormRegistrarHost> &
-  typeof FormRegistrarHost &
+  Pick<typeof FormRegistrarHost, keyof typeof FormRegistrarHost> &
   Constructor<FormControlHost> &
-  typeof FormControlHost;
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type ListboxMixin = typeof ListboxImplementation;

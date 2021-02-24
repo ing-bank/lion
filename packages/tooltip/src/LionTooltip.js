@@ -11,6 +11,7 @@ import { ArrowMixin, OverlayMixin } from '@lion/overlays';
  * @customElement lion-tooltip
  */
 export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
+  /** @type {any} */
   static get properties() {
     return {
       invokerRelation: {

@@ -7,7 +7,6 @@ export type SlotsMap = {
 };
 
 export declare class SlotHost {
-  constructor(...args: any[]);
   /**
    * Obtains all the slots to create
    */
@@ -51,6 +50,9 @@ export declare class SlotHost {
  */
 export declare function SlotMixinImplementation<T extends Constructor<HTMLElement>>(
   superclass: T,
-): T & Constructor<SlotHost> & typeof SlotHost;
+): T &
+  Constructor<SlotHost> &
+  Pick<typeof SlotHost, keyof typeof SlotHost> &
+  Pick<typeof HTMLElement, keyof typeof HTMLElement>;
 
 export type SlotMixin = typeof SlotMixinImplementation;

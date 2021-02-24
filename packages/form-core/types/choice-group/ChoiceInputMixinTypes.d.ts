@@ -15,7 +15,6 @@ export interface ChoiceInputSerializedValue {
 }
 
 export declare class ChoiceInputHost {
-  constructor(...args: any[]);
   modelValue: ChoiceInputModelValue;
   serializedValue: ChoiceInputSerializedValue;
 
@@ -79,9 +78,9 @@ export declare function ChoiceInputImplementation<T extends Constructor<LitEleme
   superclass: T,
 ): T &
   Constructor<ChoiceInputHost> &
-  ChoiceInputHost &
+  Pick<typeof ChoiceInputHost, keyof typeof ChoiceInputHost> &
   Constructor<FormatHost> &
-  FormatHost &
-  HTMLElement;
+  Pick<typeof FormatHost, keyof typeof FormatHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type ChoiceInputMixin = typeof ChoiceInputImplementation;
