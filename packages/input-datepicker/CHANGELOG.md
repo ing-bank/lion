@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.19.4
+
+### Patch Changes
+
+- 701aadce: Fix types of mixins to include LitElement static props and methods, and use Pick generic type instead of fake constructors.
+- Updated dependencies [6b91c92d]
+- Updated dependencies [701aadce]
+  - @lion/form-core@0.8.4
+  - @lion/overlays@0.24.1
+  - @lion/calendar@0.13.1
+  - @lion/core@0.14.1
+  - @lion/localize@0.16.1
+  - @lion/input-date@0.9.4
+  - @lion/validate-messages@0.4.4
+
 ## 0.19.3
 
 ### Patch Changes

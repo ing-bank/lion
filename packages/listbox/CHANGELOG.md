@@ -1,5 +1,16 @@
 # @lion/listbox
 
+## 0.5.4
+
+### Patch Changes
+
+- 6b91c92d: Remove .prototype accessor when accessing super.constructor from a constructor. This causes maximum call stack exceeded in latest chrome.
+- 701aadce: Fix types of mixins to include LitElement static props and methods, and use Pick generic type instead of fake constructors.
+- Updated dependencies [6b91c92d]
+- Updated dependencies [701aadce]
+  - @lion/form-core@0.8.4
+  - @lion/core@0.14.1
+
 ## 0.5.3
 
 ### Patch Changes

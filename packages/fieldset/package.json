@@ -1,6 +1,6 @@
 {
   "name": "@lion/fieldset",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "description": "Allows to groups multiple input fields or other fieldsets together",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,8 +36,8 @@
     "./docs/helpers/demo-fieldset-child.js"
   ],
   "dependencies": {
-    "@lion/core": "0.14.0",
-    "@lion/form-core": "0.8.3"
+    "@lion/core": "0.14.1",
+    "@lion/form-core": "0.8.4"
   },
   "keywords": [
     "fieldset",
