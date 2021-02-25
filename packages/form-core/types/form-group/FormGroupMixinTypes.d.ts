@@ -7,7 +7,6 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { ValidateHost } from '../validate/ValidateMixinTypes';
 
 export declare class FormGroupHost {
-  constructor(...args: any[]);
   protected static _addDescriptionElementIdsToField(): void;
   _inputNode: HTMLElement;
   submitGroup(): void;
@@ -30,16 +29,17 @@ export declare function FormGroupImplementation<T extends Constructor<LitElement
   superclass: T,
 ): T &
   Constructor<FormGroupHost> &
-  typeof FormGroupHost &
+  Pick<typeof FormGroupHost, keyof typeof FormGroupHost> &
   Constructor<FormRegistrarHost> &
-  typeof FormRegistrarHost &
+  Pick<typeof FormRegistrarHost, keyof typeof FormRegistrarHost> &
   Constructor<FormControlHost> &
-  typeof FormControlHost &
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
   Constructor<ValidateHost> &
-  typeof ValidateHost &
+  Pick<typeof ValidateHost, keyof typeof ValidateHost> &
   Constructor<DisabledHost> &
-  typeof DisabledHost &
+  Pick<typeof DisabledHost, keyof typeof DisabledHost> &
   Constructor<SlotHost> &
-  typeof SlotHost;
+  Pick<typeof SlotHost, keyof typeof SlotHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type FormGroupMixin = typeof FormGroupImplementation;

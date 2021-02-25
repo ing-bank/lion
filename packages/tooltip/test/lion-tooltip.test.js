@@ -184,11 +184,13 @@ describe('lion-tooltip', () => {
       const el = /** @type {LionTooltip} */ (await fixture(html`
         <lion-tooltip
           has-arrow
-          .config="${/** @type {OverlayConfig} */ ({
-            popperConfig: {
-              placement: 'right',
-            },
-          })}"
+          .config="${
+            /** @type {OverlayConfig} */ ({
+              popperConfig: {
+                placement: 'right',
+              },
+            })
+          }"
           style="position: relative; top: 10px;"
         >
           <div slot="content" style="height: 30px; background-color: red;">Hey there</div>

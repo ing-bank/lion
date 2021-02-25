@@ -32,6 +32,7 @@ function uuid(prefix) {
 const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
+    /** @type {any} */
     static get properties() {
       return {
         /**
@@ -616,10 +617,8 @@ const FormControlMixinImplementation = superclass =>
      * - {element} .input-group__after (optional) :  a suffix that resides outside the container
      */
     static get styles() {
-      const superCtor = /** @type {typeof import('@lion/core').LitElement} */ (super.prototype
-        .constructor);
       return [
-        superCtor.styles ? superCtor.styles : [],
+        super.styles || [],
         css`
           /**********************
             {block} .form-field

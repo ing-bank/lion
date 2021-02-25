@@ -85,8 +85,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
+    // TODO: Localize the aria-label
     return html`
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div id="overlay-content-node-wrapper" role="dialog" aria-label="Combobox options popup">
         <slot name="listbox"></slot>
       </div>
       <slot id="options-outlet"></slot>

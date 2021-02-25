@@ -19,7 +19,6 @@ type FeedbackMessage = {
 };
 
 export declare class ValidateHost {
-  constructor(...args: any[]);
   validators: Validator[];
   hasFeedbackFor: string[];
   shouldShowFeedbackFor: string[];
@@ -76,16 +75,17 @@ export declare function ValidateImplementation<T extends Constructor<LitElement>
   superclass: T,
 ): T &
   Constructor<ValidateHost> &
-  typeof ValidateHost &
+  Pick<typeof ValidateHost, keyof typeof ValidateHost> &
   Constructor<FormControlHost> &
-  typeof FormControlHost &
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
   Constructor<SyncUpdatableHost> &
-  typeof SyncUpdatableHost &
+  Pick<typeof SyncUpdatableHost, keyof typeof SyncUpdatableHost> &
   Constructor<DisabledHost> &
-  typeof DisabledHost &
+  Pick<typeof DisabledHost, keyof typeof DisabledHost> &
   Constructor<SlotHost> &
-  typeof SlotHost &
+  Pick<typeof SlotHost, keyof typeof SlotHost> &
   Constructor<ScopedElementsHost> &
-  typeof ScopedElementsHost;
+  Pick<typeof ScopedElementsHost, keyof typeof ScopedElementsHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type ValidateMixin = typeof ValidateImplementation;

@@ -2,13 +2,15 @@ import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
 
 export declare class FormRegistrarPortalHost {
-  constructor(...args: any[]);
   registrationTarget: HTMLElement;
   __redispatchEventForFormRegistrarPortalMixin(ev: CustomEvent): void;
 }
 
 export declare function FormRegistrarPortalImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<FormRegistrarPortalHost> & FormRegistrarPortalHost;
+): T &
+  Constructor<FormRegistrarPortalHost> &
+  Pick<typeof FormRegistrarPortalHost, keyof typeof FormRegistrarPortalHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type FormRegistrarPortalMixin = typeof FormRegistrarPortalImplementation;

@@ -17,7 +17,6 @@ export interface DefineOverlayConfig {
 }
 
 export declare class OverlayHost {
-  constructor(...args: any[]);
   public opened: Boolean;
 
   public get config(): OverlayConfig;
@@ -67,6 +66,9 @@ export declare class OverlayHost {
 
 export declare function OverlayImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<OverlayHost> & typeof OverlayHost;
+): T &
+  Constructor<OverlayHost> &
+  Pick<typeof OverlayHost, keyof typeof OverlayHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type OverlayMixin = typeof OverlayImplementation;

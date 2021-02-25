@@ -9,7 +9,6 @@ export declare class ElementWithParentFormGroup {
 }
 
 export declare class FormRegistrarHost {
-  constructor(...args: any[]);
   _isFormOrFieldset: boolean;
   formElements: FormControlsCollection & { [x: string]: any };
   addFormElement(
@@ -29,8 +28,9 @@ export declare function FormRegistrarImplementation<T extends Constructor<LitEle
   superclass: T,
 ): T &
   Constructor<FormRegistrarHost> &
-  typeof FormRegistrarHost &
+  Pick<typeof FormRegistrarHost, keyof typeof FormRegistrarHost> &
   Constructor<FormRegisteringHost> &
-  typeof FormRegisteringHost;
+  Pick<typeof FormRegisteringHost, keyof typeof FormRegisteringHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type FormRegistrarMixin = typeof FormRegistrarImplementation;

@@ -5,7 +5,6 @@ import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FormatHost {
-  constructor(...args: any[]);
   formattedValue: string;
   serializedValue: string;
   formatOn: string;
@@ -41,10 +40,11 @@ export declare function FormatImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T &
   Constructor<FormatHost> &
-  FormatHost &
+  Pick<typeof FormatHost, keyof typeof FormatHost> &
   Constructor<ValidateHost> &
-  typeof ValidateHost &
+  Pick<typeof ValidateHost, keyof typeof ValidateHost> &
   Constructor<FormControlHost> &
-  typeof FormControlHost;
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type FormatMixin = typeof FormatImplementation;

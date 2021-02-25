@@ -5,7 +5,6 @@ import { Options as PopperOptions, State } from '@popperjs/core/lib/popper';
 import { OverlayConfig } from '../types/OverlayConfig';
 
 export declare class ArrowHost {
-  constructor(...args: any[]);
   static get properties(): {
     hasArrow: {
       type: BooleanConstructor;
@@ -30,6 +29,9 @@ export declare class ArrowHost {
 
 export declare function ArrowImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<ArrowHost> & ArrowHost;
+): T &
+  Constructor<ArrowHost> &
+  Pick<typeof ArrowHost, keyof typeof ArrowHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type ArrowMixin = typeof ArrowImplementation;

@@ -5,7 +5,6 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { InteractionStateHost } from '../InteractionStateMixinTypes';
 
 export declare class ChoiceGroupHost {
-  constructor(...args: any[]);
   multipleChoice: boolean;
 
   connectedCallback(): void;
@@ -54,10 +53,11 @@ export declare function ChoiceGroupImplementation<T extends Constructor<LitEleme
   superclass: T,
 ): T &
   Constructor<ChoiceGroupHost> &
-  ChoiceGroupHost &
+  Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> &
   Constructor<FormRegistrarHost> &
-  typeof FormRegistrarHost &
+  Pick<typeof FormRegistrarHost, keyof typeof FormRegistrarHost> &
   Constructor<InteractionStateHost> &
-  typeof InteractionStateHost;
+  Pick<typeof InteractionStateHost, keyof typeof InteractionStateHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type ChoiceGroupMixin = typeof ChoiceGroupImplementation;

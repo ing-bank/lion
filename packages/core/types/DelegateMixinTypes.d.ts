@@ -10,7 +10,6 @@ export type Delegations = {
 };
 
 export declare class DelegateHost {
-  constructor(...args: any[]);
   delegations: Delegations;
 
   protected _connectDelegateMixin(): void;
@@ -51,6 +50,9 @@ export declare class DelegateHost {
  */
 declare function DelegateMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<DelegateHost>;
+): T &
+  Constructor<DelegateHost> &
+  Pick<typeof DelegateHost, keyof typeof DelegateHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type DelegateMixin = typeof DelegateMixinImplementation;

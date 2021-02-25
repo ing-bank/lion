@@ -5,12 +5,10 @@ import { LionCheckbox } from './LionCheckbox.js';
  * @typedef {import('./LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup
  */
 
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionCheckboxIndeterminate extends LionCheckbox {
   static get styles() {
-    const superCtor = /** @type {typeof LionCheckbox} */ (super.prototype.constructor);
     return [
-      superCtor.styles ? superCtor.styles : [],
+      super.styles || [],
       css`
         :host .choice-field__nested-checkboxes {
           display: block;
@@ -23,6 +21,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     ];
   }
 
+  /** @type {any} */
   static get properties() {
     return {
       /**

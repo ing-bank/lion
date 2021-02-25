@@ -36,7 +36,6 @@ declare interface HTMLElementWithValue extends HTMLElement {
 }
 
 export declare class FormControlHost {
-  constructor(...args: any[]);
   static get styles(): CSSResultArray;
   static get properties(): {
     name: {
@@ -176,12 +175,13 @@ export declare function FormControlImplementation<T extends Constructor<LitEleme
   superclass: T,
 ): T &
   Constructor<FormControlHost> &
-  typeof FormControlHost &
+  Pick<typeof FormControlHost, keyof typeof FormControlHost> &
   Constructor<FormRegisteringHost> &
-  typeof FormRegisteringHost &
+  Pick<typeof FormRegisteringHost, keyof typeof FormRegisteringHost> &
   Constructor<DisabledHost> &
-  typeof DisabledHost &
+  Pick<typeof DisabledHost, keyof typeof DisabledHost> &
   Constructor<SlotHost> &
-  typeof SlotHost;
+  Pick<typeof SlotHost, keyof typeof SlotHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type FormControlMixin = typeof FormControlImplementation;

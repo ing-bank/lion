@@ -10,7 +10,6 @@ export declare interface SyncUpdatableNamespace {
 }
 
 export declare class SyncUpdatableHost {
-  constructor(...args: any[]);
   static __syncUpdatableHasChanged(name: string, newValue: any, oldValue: any): boolean;
   updateSync(name: string, oldValue: any): void;
   __syncUpdatableInitialize(): void;
@@ -24,6 +23,9 @@ export type SyncUpdatableHostType = typeof SyncUpdatableHost;
 
 export declare function SyncUpdatableImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<SyncUpdatableHost> & typeof SyncUpdatableHost;
+): T &
+  Constructor<SyncUpdatableHost> &
+  Pick<typeof SyncUpdatableHost, keyof typeof SyncUpdatableHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type SyncUpdatableMixin = typeof SyncUpdatableImplementation;

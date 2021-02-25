@@ -21,7 +21,6 @@ export declare class UpdateStylesHost {
    *
    * @param {StylesMap} updateStyles
    */
-  constructor(...args: any[]);
   public updateStyles(updateStyles: StylesMap): void;
 }
 
@@ -30,6 +29,9 @@ export declare class UpdateStylesHost {
  */
 declare function UpdateStylesMixinImplementation<T extends Constructor<HTMLElement>>(
   superclass: T,
-): T & Constructor<UpdateStylesHost>;
+): T &
+  Constructor<UpdateStylesHost> &
+  Pick<typeof UpdateStylesHost, keyof typeof UpdateStylesHost> &
+  Pick<typeof HTMLElement, keyof typeof HTMLElement>;
 
 export type UpdateStylesMixin = typeof UpdateStylesMixinImplementation;
