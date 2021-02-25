@@ -150,8 +150,8 @@ describe('SyncUpdatableMixin', () => {
          * @param {string} name
          * @param {*} oldValue
          */
-        requestUpdateInternal(name, oldValue) {
-          super.requestUpdateInternal(name, oldValue);
+        requestUpdate(name, oldValue) {
+          super.requestUpdate(name, oldValue);
           if (name === 'prop') {
             propChangedCount += 1;
           }

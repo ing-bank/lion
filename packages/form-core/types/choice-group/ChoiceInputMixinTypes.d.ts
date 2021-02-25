@@ -25,7 +25,7 @@ export declare class ChoiceInputHost {
 
   set choiceValue(value: any);
 
-  protected requestUpdateInternal(name: string, oldValue: any): void;
+  protected requestUpdate(name: string, oldValue: any): void;
 
   firstUpdated(changedProperties: Map<string, any>): void;
 

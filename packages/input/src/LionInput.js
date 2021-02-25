@@ -64,8 +64,8 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
    * @param {PropertyKey} name
    * @param {?} oldValue
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
+  requestUpdate(name, oldValue) {
+    super.requestUpdate(name, oldValue);
     if (name === 'readOnly') {
       this.__delegateReadOnly();
     }

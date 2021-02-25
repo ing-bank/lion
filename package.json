@@ -92,6 +92,10 @@
     "web-component-analyzer": "^1.0.3",
     "whatwg-fetch": "^3.0.0"
   },
+  "peerDependencies": {
+    "lit-element": "~3.0.0",
+    "lit-html": "^2.0.0-pre.4"
+  },
   "bundlesize": [
     {
       "path": "./bundlesize/dist/core/*.js",

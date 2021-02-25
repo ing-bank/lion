@@ -4,4 +4,10 @@ import { rocketBlog } from '@rocket/blog';
 
 export default {
   presets: [rocketLaunch(), rocketSearch(), rocketBlog()],
+  devServer: {
+    nodeResolve: {
+      exportConditions: ['development'],
+      // dedupe: true,
+    }
+  }
 };

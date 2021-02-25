@@ -66,8 +66,8 @@ const InteractionStateMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {*} oldVal
      */
-    requestUpdateInternal(name, oldVal) {
-      super.requestUpdateInternal(name, oldVal);
+    requestUpdate(name, oldVal) {
+      super.requestUpdate(name, oldVal);
       if (name === 'touched' && this.touched !== oldVal) {
         this._onTouchedChanged();
       }

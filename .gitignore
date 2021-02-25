@@ -19,6 +19,7 @@ yarn-error.log
 /lib/
 /build/
 /bundlesize/dist/
+**/custom-elements.json
 
 ## types
 *.d.ts

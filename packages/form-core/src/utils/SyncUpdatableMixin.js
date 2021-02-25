@@ -54,7 +54,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
       // @ts-expect-error accessing private lit property
-      const properties = this._classProperties;
+      const properties = this.elementProperties;
       if (properties.get(name) && properties.get(name).hasChanged) {
         return properties.get(name).hasChanged(newValue, oldValue);
       }
@@ -81,8 +81,8 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {string} name
      * @param {*} oldValue
      */
-    requestUpdateInternal(name, oldValue) {
-      super.requestUpdateInternal(name, oldValue);
+    requestUpdate(name, oldValue) {
+      super.requestUpdate(name, oldValue);
 
       this.__SyncUpdatableNamespace = this.__SyncUpdatableNamespace || {};
       const ns = this.__SyncUpdatableNamespace;

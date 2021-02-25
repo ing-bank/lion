@@ -110,8 +110,8 @@ const FormatMixinImplementation = superclass =>
      * @param {string} name
      * @param {any} oldVal
      */
-    requestUpdateInternal(name, oldVal) {
-      super.requestUpdateInternal(name, oldVal);
+    requestUpdate(name, oldVal) {
+      super.requestUpdate(name, oldVal);
 
       if (name === 'modelValue' && this.modelValue !== oldVal) {
         this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldVal });

@@ -1642,6 +1642,11 @@
   dependencies:
     vary "^1.1.2"
 
+"@lit/reactive-element@^1.0.0-pre.1":
+  version "1.0.0-pre.2"
+  resolved "https://registry.yarnpkg.com/@lit/reactive-element/-/reactive-element-1.0.0-pre.2.tgz#64d26148ea7ce9b4b2da71cefc40aa9528338618"
+  integrity sha512-IjguhOf9rFxtStHr8Sou2TuaUgpeLFojdKDoorssuyY0MnPCFdlcOJ2VhTOnoxV3fwHDC9m3Esc8zT+B3UG3Kw==
+
 "@manypkg/find-root@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@manypkg/find-root/-/find-root-1.1.0.tgz#a62d8ed1cd7e7d4c11d9d52a8397460b5d4ad29f"
@@ -8318,10 +8323,23 @@ lit-element@^2.2.1, lit-element@^2.4.0, lit-element@~2.4.0:
   dependencies:
     lit-html "^1.1.1"
 
+lit-element@~3.0.0:
+  version "3.0.0-pre.3"
+  resolved "https://registry.yarnpkg.com/lit-element/-/lit-element-3.0.0-pre.3.tgz#bdd86ce757956d44a17357f088de7403c433fb52"
+  integrity sha512-E6QaOQ+OJx4HX5bI6Xtojw5qHlOSY5R7NWXRtbq+/xxIIPXfwNTF5fOpOKREd8/GSdQP1hHBCxBovlitVPKYaA==
+  dependencies:
+    "@lit/reactive-element" "^1.0.0-pre.1"
+    lit-html "^2.0.0-pre.4"
+
 lit-html@^1.0.0, lit-html@^1.1.1, lit-html@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.3.0.tgz#c80f3cc5793a6dea6c07172be90a70ab20e56034"
   integrity sha512-0Q1bwmaFH9O14vycPHw8C/IeHMk/uSDldVLIefu/kfbTBGIc44KGH6A8p1bDfxUfHdc8q6Ct7kQklWoHgr4t1Q==
+
+lit-html@^2.0.0-pre.4:
+  version "2.0.0-pre.6"
+  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-2.0.0-pre.6.tgz#c0a0bb561a07ea2926f43a3155a69dd9a0dc635c"
+  integrity sha512-cqF/ukSYYkV4KLzeDXk7pMgkrWK6Vn5TvfXewK+SpVDMCw7AXd7Ft+6WShlbTb27AZAFGUfL3uM2kKsrTqT14w==
 
 load-json-file@^1.0.0:
   version "1.1.0"

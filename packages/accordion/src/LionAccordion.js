@@ -1,5 +1,7 @@
 import { LitElement, css, html } from '@lion/core';
 
+console.log('ACCORDION');
+
 /**
  * @typedef {Object} StoreEntry
  * @property {string} uid Unique ID for the entry
@@ -172,6 +174,7 @@ export class LionAccordion extends LitElement {
   }
 
   render() {
+    console.log('HALLO');
     return html`
       <div class="accordion">
         <slot name="invoker"></slot>
@@ -183,7 +186,7 @@ export class LionAccordion extends LitElement {
   constructor() {
     super();
     this.styles = {};
-
+    console.log('AH, cor Dion');
     /** @type {StoreEntry[]} */
     this.__store = [];
 
