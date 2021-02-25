@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 15e2d135: Add some styling improvements to action logger component.
+- Updated dependencies [701aadce]
+  - @lion/core@0.14.1
+
 ## 0.6.0
 
 ### Minor Changes

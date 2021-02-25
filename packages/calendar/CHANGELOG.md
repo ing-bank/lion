@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.13.1
+
+### Patch Changes
+
+- 701aadce: Fix types of mixins to include LitElement static props and methods, and use Pick generic type instead of fake constructors.
+- Updated dependencies [701aadce]
+  - @lion/core@0.14.1
+  - @lion/localize@0.16.1
+
 ## 0.13.0
 
 ### Minor Changes

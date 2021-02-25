@@ -1,6 +1,6 @@
 {
   "name": "@lion/select",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Provide a set of options where you can select one",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,8 +35,8 @@
     "lion-select.js"
   ],
   "dependencies": {
-    "@lion/core": "0.14.0",
-    "@lion/form-core": "0.8.3"
+    "@lion/core": "0.14.1",
+    "@lion/form-core": "0.8.4"
   },
   "keywords": [
     "lion",
