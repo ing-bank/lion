@@ -310,7 +310,7 @@ export function runFormatMixinSuite(customConfig) {
         await fixture(html`
           <${elem} value="${generatedViewValue}" .formatter="${formatterSpy}"
             .formatOptions="${{ locale: 'en-GB', decimalSeparator: '-' }}">
-            <input slot="input" value="${generatedViewValue}">
+            <input slot="input" .value="${generatedViewValue}">
           </${elem}>
         `);
 
@@ -327,7 +327,7 @@ export function runFormatMixinSuite(customConfig) {
         const parserSpy = sinon.spy();
         const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem} .parser="${parserSpy}">
-            <input slot="input" value="${generatedValue}">
+            <input slot="input" .value="${generatedValue}">
           </${elem}>
         `));
 
@@ -367,7 +367,7 @@ export function runFormatMixinSuite(customConfig) {
 
         const el = /** @type {FormatClass} */ (await fixture(html`
           <${elem} .formatter=${formatterSpy}>
-            <input slot="input" value="${generatedViewValue}">
+            <input slot="input" .value="${generatedViewValue}">
           </${elem}>
         `));
         expect(formatterSpy.callCount).to.equal(1);

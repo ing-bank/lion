@@ -7,37 +7,39 @@ export class MyCounter extends LitElement {
     };
   }
 
-  static styles = css`
-    :host {
-      display: block;
-      width: 220px;
-      margin: 0 auto;
-    }
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        width: 220px;
+        margin: 0 auto;
+      }
 
-    button,
-    span {
-      font-size: 200%;
-    }
+      button,
+      span {
+        font-size: 200%;
+      }
 
-    span {
-      width: 4rem;
-      display: inline-block;
-      text-align: center;
-    }
+      span {
+        width: 4rem;
+        display: inline-block;
+        text-align: center;
+      }
 
-    button {
-      width: 64px;
-      height: 64px;
-      border: none;
-      border-radius: 10px;
-      background-color: seagreen;
-      color: white;
-    }
+      button {
+        width: 64px;
+        height: 64px;
+        border: none;
+        border-radius: 10px;
+        background-color: seagreen;
+        color: white;
+      }
 
-    h3 {
-      text-align: center;
-    }
-  `;
+      h3 {
+        text-align: center;
+      }
+    `;
+  }
 
   constructor() {
     super();

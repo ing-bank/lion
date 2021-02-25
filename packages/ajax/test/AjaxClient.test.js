@@ -103,9 +103,7 @@ describe('AjaxClient', () => {
 
   describe('request and response interceptors', () => {
     it('addRequestInterceptor() adds a function which intercepts the request', async () => {
-      ajax.addRequestInterceptor(async r => {
-        return new Request(`${r.url}/intercepted-1`);
-      });
+      ajax.addRequestInterceptor(async r => new Request(`${r.url}/intercepted-1`));
       ajax.addRequestInterceptor(async r => new Request(`${r.url}/intercepted-2`));
 
       await ajax.request('/foo', { method: 'POST' });

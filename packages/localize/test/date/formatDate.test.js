@@ -240,9 +240,7 @@ describe('formatDate', () => {
      * @param {string} str
      * @returns {string}
      */
-    const upperCaseProcessor = str => {
-      return str.toUpperCase();
-    };
+    const upperCaseProcessor = str => str.toUpperCase();
 
     /**
      * Lowercase processor
@@ -250,9 +248,7 @@ describe('formatDate', () => {
      * @param {string} str
      * @returns {string}
      */
-    const lowerCaseProcessor = str => {
-      return str.toLocaleLowerCase();
-    };
+    const lowerCaseProcessor = str => str.toLocaleLowerCase();
 
     it('displays the appropriate date after post processor set in options', async () => {
       const testDate = new Date('2012/05/21');

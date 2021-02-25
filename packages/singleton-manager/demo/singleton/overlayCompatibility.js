@@ -2,10 +2,9 @@ import { OverlaysManager } from 'overlays';
 import { singletonManager } from '../../index.js';
 
 class CompatibleManager extends OverlaysManager {
-  name = 'Compatible from App';
-
   constructor() {
     super();
+    this.name = 'Compatible from App';
     this.blocker.innerText = `Blocker for ${this.name}`;
   }
 

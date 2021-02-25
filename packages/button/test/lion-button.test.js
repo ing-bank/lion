@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
 import { browserDetection } from '@lion/core';
 import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';

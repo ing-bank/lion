@@ -21,9 +21,7 @@ describe('IconManager', () => {
      * @return {TemplateResult | Promise<TemplateResult> | nothing | Promise<nothing>}
      */
     // eslint-disable-next-line no-unused-vars
-    const resolver = (iconset, icon) => {
-      return nothing;
-    };
+    const resolver = (iconset, icon) => nothing;
     manager.addIconResolver('foo', resolver);
 
     expect(manager.__iconResolvers.get('foo')).to.equal(resolver);

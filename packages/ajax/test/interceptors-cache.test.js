@@ -4,7 +4,7 @@ import '../src/typedef.js';
 
 import { cacheRequestInterceptorFactory, cacheResponseInterceptorFactory, ajax } from '../index.js';
 
-describe('ajax cache', function describeLibCache() {
+describe('ajax cache', () => {
   /** @type {number | undefined} */
   let cacheId;
   /** @type {import('sinon').SinonStub} */

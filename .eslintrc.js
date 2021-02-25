@@ -17,6 +17,9 @@ module.exports = {
         '**/*.config.js',
       ],
       rules: {
+        'lit/binding-positions': 'off',
+        'lit/no-invalid-html': 'off',
+        'lit/no-useless-template-literals': 'off',
         'no-console': 'off',
         'no-unused-expressions': 'off',
         'class-methods-use-this': 'off',

@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/tabindex-no-positive */
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { LitElement } from '../index.js';

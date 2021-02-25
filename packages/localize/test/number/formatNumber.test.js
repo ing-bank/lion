@@ -379,9 +379,7 @@ describe('formatNumber', () => {
      * @param {string} str
      * @returns {string}
      */
-    const commaToSpaceProcessor = str => {
-      return str.replace(/,/g, ' ');
-    };
+    const commaToSpaceProcessor = str => str.replace(/,/g, ' ');
 
     /**
      * First space to dot processor
@@ -389,9 +387,7 @@ describe('formatNumber', () => {
      * @param {string} str
      * @returns {string}
      */
-    const firstSpaceToDotProcessor = str => {
-      return str.replace(' ', '.');
-    };
+    const firstSpaceToDotProcessor = str => str.replace(' ', '.');
 
     it('uses `options.postProcessors`', () => {
       const postProcessors = new Map();

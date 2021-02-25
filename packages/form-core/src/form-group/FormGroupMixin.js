@@ -388,9 +388,9 @@ const FormGroupMixinImplementation = superclass =>
     _anyFormElementHasFeedbackFor(state) {
       return Object.keys(this.formElements).some(name => {
         if (Array.isArray(this.formElements[name])) {
-          return this.formElements[name].some((/** @type {FormControl} */ el) => {
-            return Boolean(el.hasFeedbackFor && el.hasFeedbackFor.includes(state));
-          });
+          return this.formElements[name].some((/** @type {FormControl} */ el) =>
+            Boolean(el.hasFeedbackFor && el.hasFeedbackFor.includes(state)),
+          );
         }
         return Boolean(
           this.formElements[name].hasFeedbackFor &&
