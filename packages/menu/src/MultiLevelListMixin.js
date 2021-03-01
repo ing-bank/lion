@@ -28,15 +28,13 @@ const MultiLevelListMixinImplementation = superclass =>
      * @configure DisclosureMixin
      */
     get _invokerNode() {
-      return (
-        this.invokerNode ||
-        this.previousElementSibling?.hasAttribute('data-invoker') ||
-        super._invokerNode
-      );
+      return this.invokerNode || super._invokerNode;
     }
 
     /**
      * @configure DisclosureMixin
+     * This will be compatible with DisclosureMixin and OverlayMixin. It contains the invoked
+     * InteractiveList widget (like menu|tree).
      */
     get _contentNode() {
       return this._listNode;
@@ -45,14 +43,40 @@ const MultiLevelListMixinImplementation = superclass =>
     constructor() {
       super();
 
+      /**
+       * When an invokerNode is supplied (usually by a parent level menu), it will take precedence
+       * over [slot=invoker] and previousElementSibling with [data-invoker] attribute
+       * @type {HTMLElement}
+       */
+      this.invokerNode = undefined;
+      /**
+       * @configure DisclosureMixin
+       */
       this.handleFocus = true;
-      /** @type {InteractiveList} */
+      /**
+       * The parent list if level > 1
+       * @type {InteractiveList}
+       */
       this.parentList = undefined;
+      /**
+       * When true, will have a maximum of one submenu open at a time
+       */
       this.behaveAsAccordion = false;
+      /**
+       * The level of nested menus. Will be reflected as attribute for styling purposes
+       */
+      this.level = 0;
+      /**
+       * @configure InteractiveListMixin
+       */
       this.noPreselect = true;
-
+      /**
+       * @configure InteractiveListMixin
+       */
       this._activeMode = 'roving-tabindex';
-
+      /**
+       * @type {Map<HTMLElement|LionItem,InteractiveList>}
+       */
       this._subListMap = new Map();
     }
 
@@ -68,27 +92,49 @@ const MultiLevelListMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * Gets the child InteractiveList, based on item
+     * @param {LionItem|HTMLElement} item can be sibling of or parent of InteractiveList
+     */
+    static _getSubInteractiveList(item) {
+      /**
+       * Note that, according to W3C spec, the sub level element with [role=menu|menubar|tree]
+       * needs to be a sibling of the invoker element with
+       * [role=menuitem|menuitemchecbox|menuitemradio|treeitem] (and not the parent)
+       *
+       * In the example below <lion-menu> is considered as item
+       * @example
+       * <lion-menuitem>
+       *   <button slot="invoker"></button>
+       *   <lion-menu> ... </lion-menu>
+       * </lion-menuitem>
+       */
+      const siblingOfInvoker = item.nextElementSibling && item.nextElementSibling.isInteractiveList;
+      if (siblingOfInvoker) {
+        return item.nextElementSibling;
+      }
+      /**
+       * In the example below div[role=listitem] | [data-item] is considered as item
+       * @example
+       * <div role="listitem" data-item>
+       *   <button slot="invoker"></button>
+       *   <lion-menu> ... </lion-menu>
+       * </div>
+       */
+      const childOfInvoker =
+        item.getAttribute('role') === 'listitem' || item.hasAttribute('data-item');
+      if (childOfInvoker) {
+        return Array.from(item.children).find(child => child.isInteractiveList);
+      }
+      return undefined;
+    }
+
     _initListItems(newItems) {
       super._initListItems(newItems);
 
-      function getSubList(item) {
-        // Note that, according to w3c spec, the sub level element with [role=menu|menubar|tree] needs
-        // to be a sibling of the invoker element with [role=menuitem|menuitemchecbox|menuitemradio|treeitem]
-        const siblingOfInvoker =
-          item.nextElementSibling && item.nextElementSibling.isInteractiveList;
-        if (siblingOfInvoker) {
-          return item.nextElementSibling;
-        }
-        const childOfInvoker =
-          item.getAttribute('role') === 'listitem' || item.hasAttribute('data-item');
-        if (childOfInvoker) {
-          return Array.from(item.children).find(child => child.isInteractiveList);
-        }
-        return undefined;
-      }
-
+      const ctor = this.constructor;
       newItems.forEach(item => {
-        const subList = getSubList(item);
+        const subList = ctor._getSubInteractiveList(item);
         if (subList) {
           this._subListMap.set(item, subList);
           subList.level = this.level + 1;
@@ -128,7 +174,6 @@ const MultiLevelListMixinImplementation = superclass =>
 
       const subListOfActiveItem = this._subListMap.get(this.activeItem);
       const parentListOfActiveItem = this.parentList;
-
       const { key } = ev;
 
       switch (key) {

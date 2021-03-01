@@ -49,12 +49,12 @@ export const menuButton = () => html`
 ```js preview-story
 export const menuButtonZ = () => html`
   <nav>
-    <button data-invoker for="menu"> Open menu </button>
+    <button data-invoker for="menu">Open menu</button>
     <lion-menu id="menu">
       <lion-menuitem> Go to Definition </lion-menuitem>
       <lion-menuitem> Go to Type Definition </lion-menuitem>
       <lion-menuitem>
-        <div slot="invoker"> Peek </div>
+        <button slot="invoker">Peek</button>
         <lion-menu>
           <lion-menuitem type="radio"> Peek Call Hierarchy </lion-menuitem>
           <div role="separator"></div>

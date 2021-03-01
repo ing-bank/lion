@@ -83,6 +83,10 @@ export function applyMenuDemoStyles() {
       content: '▶';
     }
 
+    [role^='menuitem'][aria-expanded='true']::after {
+      content: '▼';
+    }
+
     [orientation='horizontal'] [role^='menuitem'][aria-expanded]::after {
       content: '▼';
     }
@@ -141,6 +145,17 @@ export function applyMenuDemoStyles() {
       margin-left: 8px;
       margin-right: 8px;
       border-left: 1px solid lightgray;
+    }
+
+    button[slot='invoker'] {
+      background: none;
+      color: inherit;
+      border: none;
+      padding: 0;
+      font: inherit;
+      display: block;
+      width: 100%;
+      text-align: left;
     }
   </style>`;
   document.head.appendChild(renderLitAsNode(styles));

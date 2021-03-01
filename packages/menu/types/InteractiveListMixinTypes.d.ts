@@ -3,6 +3,15 @@ import { LitElement } from '@lion/core';
 import { SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 
+export type InteractiveListItemRole =
+  | 'menuitem'
+  | 'menuitemcheckbox'
+  | 'menuitemradio'
+  | 'option'
+  | 'treeitem'
+  | 'radio'
+  | 'checkbox';
+
 export declare class InteractiveListHost {
   /**
    * When true, will synchronize activedescendant and selected element on

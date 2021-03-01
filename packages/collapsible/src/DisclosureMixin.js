@@ -20,7 +20,17 @@ const DisclosureMixinImplementation = superclass =>
     }
 
     get _invokerNode() {
-      return Array.from(this.children).find(child => child.slot === 'invoker');
+      if (!this.__invokerNode) {
+        const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
+        if (slottedNode) {
+          this.__invokerNode = slottedNode;
+        } else {
+          this.__invokerNode =
+            this.previousElementSibling?.hasAttribute('data-invoker') &&
+            this.previousElementSibling;
+        }
+      }
+      return this.__invokerNode;
     }
 
     get _contentNode() {
@@ -38,7 +48,7 @@ const DisclosureMixinImplementation = superclass =>
       /**
        * @type {'click'|'hover'|undefined}
        */
-      this.invokerInteraction = undefined;
+      this.invokerInteraction = 'click';
       /**
        * Puts focus on `_contentNode` on open and on `_invokerNode` on close.
        * @type {Boolean}
@@ -95,11 +105,13 @@ const DisclosureMixinImplementation = superclass =>
      * @overridable
      */
     _setupOpenCloseListeners() {
+      console.log('this', this);
       if (!this._invokerNode) {
         return;
       }
 
       const interactions = this.invokerInteraction.split(' ');
+      console.log('interactions', interactions);
 
       if (interactions.includes('hover')) {
         this._invokerNode.addEventListener('mouseenter', this.__onInvokerMouseenter);
@@ -108,6 +120,7 @@ const DisclosureMixinImplementation = superclass =>
         this._contentNode.addEventListener('mouseleave', this.__onContentMouseleave);
       }
       if (interactions.includes('click')) {
+        console.log(this, 'addtCLick');
         this._invokerNode.addEventListener('click', this.toggle);
       }
     }
@@ -153,6 +166,8 @@ const DisclosureMixinImplementation = superclass =>
       this._invokerNode.removeEventListener('mouseleave', this.close);
       this._contentNode.removeEventListener('mouseenter', this.open);
       this._contentNode.removeEventListener('mouseleave', this.close);
+
+      console.log(this, 'removetCLick');
 
       this._invokerNode.removeEventListener('click', this.toggle);
     }
@@ -269,6 +284,7 @@ const DisclosureMixinImplementation = superclass =>
     }
 
     toggle() {
+      console.log('toggul', this);
       this.opened = !this.opened;
     }
 
