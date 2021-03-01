@@ -18,10 +18,10 @@ To help you get started with testing, we recommend [reading this article](https:
 
 ## Testing helpers
 
-Exposes all functions of [@temp/testing-helpers](https://open-wc.org/testing/testing-helpers.html), so that you have a single package to import from:
+Exposes all functions of [@open-wc/testing-helpers](https://open-wc.org/testing/testing-helpers.html), so that you have a single package to import from:
 
 ```javascript
-import { fixture, html } from '@temp/testing';
+import { fixture, html } from '@open-wc/testing';
 
 describe('my-test', () => {
   it('works', async () => {
@@ -37,7 +37,7 @@ Exposes chai as an es module with useful plugins pre-configured:
 [@open-wc/semantic-dom-diff](https://www.npmjs.com/package/@open-wc/semantic-dom-diff) for dom tree / snapshot testing:
 
 ```javascript
-import { expect, fixture, html } from '@temp/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 describe('Plugin - semantic-dom-diff', () => {
   it('can semantically compare full dom trees', async () => {
@@ -60,7 +60,7 @@ describe('Plugin - semantic-dom-diff', () => {
 [@open-wc/chai-a11y-axe](https://www.npmjs.com/package/chai-a11y-axe) for a11y testing:
 
 ```javascript
-import { expect, fixture, html } from '@temp/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 describe('my-test', () => {
   it('works', async () => {
@@ -73,7 +73,7 @@ describe('my-test', () => {
 [chai-dom](https://www.npmjs.com/package/chai-dom) for dom testing:
 
 ```js
-import { fixture, expect } from '@temp/testing';
+import { fixture, expect } from '@open-wc/testing';
 
 describe('Plugin - chai-dom', () => {
   it('can check for an exiting css class', async () => {

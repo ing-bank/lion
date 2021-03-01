@@ -15,7 +15,7 @@ export {
   fixtureSync,
   fixtureCleanup,
   elementUpdated,
-} from '@temp/testing-helpers/index-no-side-effects.js';
+} from '@open-wc/testing-helpers/index-no-side-effects.js';
 
 // @ts-ignore
 const { expect, assert, should } = window.chai;

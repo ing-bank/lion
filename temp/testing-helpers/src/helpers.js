@@ -138,7 +138,7 @@ export function oneEvent(eventTarget, eventName) {
  *
  * @example
  * ```js
- * import { fixture, waitUntil } from '@temp/testing-helpers';
+ * import { fixture, waitUntil } from '@open-wc/testing-helpers';
  *
  * const element = await fixture(html`<my-element></my-element>`);
  *

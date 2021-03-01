@@ -17,16 +17,16 @@ A library with helpers functions for testing in the browser.
 
 # Usage
 
-We recommend using this library through [@temp/testing](https://open-wc.org/testing/testing.html) which preconfigures and combines this library with other testing libraries.
+We recommend using this library through [@open-wc/testing](https://open-wc.org/testing/testing.html) which preconfigures and combines this library with other testing libraries.
 
-The examples that are shown here assume this setup, and import from `@temp/testing`. If you want to use this library standalone, you will need to import from `@temp/testing-helpers` directly instead:
+The examples that are shown here assume this setup, and import from `@open-wc/testing`. If you want to use this library standalone, you will need to import from `@open-wc/testing-helpers` directly instead:
 
 ```javascript
 // import from general testing library
-import { fixture } from '@temp/testing';
+import { fixture } from '@open-wc/testing';
 
 // import from testing-helpers directly
-import { fixture } from '@temp/testing-helpers';
+import { fixture } from '@open-wc/testing-helpers';
 ```
 
 ## Test fixtures
@@ -42,7 +42,7 @@ Test fixtures can be set up by using a string or a [lit-html](https://github.com
 ### Test a custom element
 
 ```js
-import { fixture } from '@temp/testing';
+import { fixture } from '@open-wc/testing';
 
 it('can instantiate an element', async () => {
   const el = await fixture('<my-el foo="bar"></my-el>');
@@ -53,7 +53,7 @@ it('can instantiate an element', async () => {
 ### Test a custom element with properties
 
 ```js
-import { html, fixture } from '@temp/testing';
+import { html, fixture } from '@open-wc/testing';
 
 it('can instantiate an element with properties', async () => {
   const el = await fixture(html` <my-el .foo=${'bar'}></my-el> `);
@@ -66,7 +66,7 @@ it('can instantiate an element with properties', async () => {
 If you're testing a mixin, or have multiple base classes that offer a various set of options you might find yourself in the situation of needing multiple custom element names in your tests. This can be dangerous as custom elements are global, so you don't want to have overlapping names in your tests. We recommend using the `defineCE` function to avoid that:
 
 ```js
-import { fixture, defineCE } from '@temp/testing';
+import { fixture, defineCE } from '@open-wc/testing';
 
 const tag = defineCE(
   class extends MyMixin(HTMLElement) {
@@ -86,7 +86,7 @@ For lit-html it's a little tougher as it does not support dynamic tag names by d
 This uses a workaround that's not performant for rerenders, which is fine for testing, but do NOT use this in production code.
 
 ```js
-import { html, fixture, defineCE, unsafeStatic } from '@temp/testing';
+import { html, fixture, defineCE, unsafeStatic } from '@open-wc/testing';
 
 const tagName = defineCE(
   class extends MyMixin(HTMLElement) {
@@ -173,7 +173,7 @@ Waits until the given condition returns true. This is useful when elements do as
 `waitUntil` can slow down the execution of tests, it should only be used when you don't have any other more reliable hooks.
 
 ```js
-import { fixture, waitUntil } from '@temp/testing-helpers';
+import { fixture, waitUntil } from '@open-wc/testing-helpers';
 
 const element = await fixture(html` <my-element></my-element> `);
 
@@ -200,7 +200,7 @@ The predicate can return a promise.
 If you want to test attribute and property changes, and an easy way to wait for those changes to propagate, you can import the `elementUpdated` helper (also available directly in the `testing` package)
 
 ```js
-import { fixture, elementUpdated } from '@temp/testing';
+import { fixture, elementUpdated } from '@open-wc/testing';
 import '../my-component.js';
 
 describe('Attributes', () => {
@@ -228,7 +228,7 @@ The `oneEvent` function helps you handle events in the context of the kinds of a
 `oneEvent` resolves with the event specified when it fires on the element specified.
 
 ```js
-import { oneEvent } from '@temp/testing';
+import { oneEvent } from '@open-wc/testing';
 
 class FiresDone extends HTMLElement {
   fireDone() {
@@ -257,7 +257,7 @@ Focus and blur events are synchronous events in all browsers except IE11.
 If you need to support that browser in your tests, you can await `triggerFocusFor` and `triggerBlurFor` helper functions.
 
 ```js
-import { triggerFocusFor, triggerBlurFor } from '@temp/testing';
+import { triggerFocusFor, triggerBlurFor } from '@open-wc/testing';
 
 it('can be focused and blured', async () => {
   const el = await fixture('<input type="text">');
@@ -272,11 +272,11 @@ it('can be focused and blured', async () => {
 
 ## Fixture Cleanup
 
-By default, if you import anything via `import { ... } from '@temp/testing';`, it will automatically register a side-effect that cleans up your fixtures.
+By default, if you import anything via `import { ... } from '@open-wc/testing';`, it will automatically register a side-effect that cleans up your fixtures.
 If you want to be in full control you can do so by using
 
 ```js
-import { fixture, fixtureCleanup } from '@temp/testing-helpers/index-no-side-effects.js';
+import { fixture, fixtureCleanup } from '@open-wc/testing-helpers/index-no-side-effects.js';
 
 it('can instantiate an element with properties', async () => {
   const el = await fixture(html`<my-el .foo=${'bar'}></my-el>`);

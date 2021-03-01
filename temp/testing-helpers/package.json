@@ -1,5 +1,5 @@
 {
-  "name": "@temp/testing-helpers",
+  "name": "@open-wc/testing-helpers",
   "version": "1.8.12",
   "publishConfig": {
     "access": "public"
