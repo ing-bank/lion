@@ -8,8 +8,8 @@ const EVENT = {
  * `CustomCollapsible` is a class for custom collapsible element (`<custom-collapsible>` web component).
  * @customElement custom-collapsible
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class CustomCollapsible extends LionCollapsible {
+  /** @type {any} */
   static get properties() {
     return {
       transitioning: {
@@ -56,7 +56,9 @@ export class CustomCollapsible extends LionCollapsible {
     contentNode.style.setProperty('opacity', '1');
     contentNode.style.setProperty('padding', '12px 0');
     contentNode.style.setProperty('max-height', '0px');
-    await new Promise(resolve => requestAnimationFrame(() => resolve()));
+    await /** @type {Promise<void>} */ (new Promise(resolve =>
+      requestAnimationFrame(() => resolve()),
+    ));
     contentNode.style.setProperty('max-height', expectedHeight);
     await this._waitForTransition({ contentNode });
   }
@@ -105,7 +107,9 @@ export class CustomCollapsible extends LionCollapsible {
    */
   async __calculateHeight(contentNode) {
     contentNode.style.setProperty('max-height', '');
-    await new Promise(resolve => requestAnimationFrame(() => resolve()));
+    await /** @type {Promise<void>} */ (new Promise(resolve =>
+      requestAnimationFrame(() => resolve()),
+    ));
     return this._contentHeight; // Expected height i.e. actual size once collapsed after animation
   }
 }

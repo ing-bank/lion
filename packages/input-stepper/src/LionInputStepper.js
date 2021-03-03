@@ -7,7 +7,6 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
  *
  * @customElement lion-input-stepper
  */
-// @ts-expect-error false positive, lit-element already merges properties for you
 export class LionInputStepper extends LionInput {
   static get styles() {
     return [
@@ -20,6 +19,7 @@ export class LionInputStepper extends LionInput {
     ];
   }
 
+  /** @type {any} */
   static get properties() {
     return {
       min: {

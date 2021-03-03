@@ -5,8 +5,10 @@ import { LionField, NativeTextFieldMixin } from '@lion/form-core';
  *
  * @customElement lion-input
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
-export class LionInput extends NativeTextFieldMixin(LionField) {
+export class LionInput extends NativeTextFieldMixin(
+  /** @type {typeof import('@lion/form-core/types/NativeTextFieldMixinTypes').NativeTextField} */ (LionField),
+) {
+  /** @type {any} */
   static get properties() {
     return {
       /**

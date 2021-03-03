@@ -28,10 +28,10 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormGroupMixinImplementation = superclass =>
-  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class FormGroupMixin extends FormRegistrarMixin(
     FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(superclass)))),
   ) {
+    /** @type {any} */
     static get properties() {
       return {
         /**

@@ -1115,8 +1115,8 @@ export function runValidateMixinSuite(customConfig) {
         // TODO: add this test on FormControl layer
         it('reconsiders feedback visibility when interaction states changed', async () => {
           const elTagString = defineCE(
-            // @ts-expect-error lit properties false positive, they get merged with parent properties by lit automatically
             class extends ValidateMixin(LitElement) {
+              /** @type {any} */
               static get properties() {
                 return {
                   modelValue: String,
@@ -1160,12 +1160,12 @@ export function runValidateMixinSuite(customConfig) {
 
         it('filters feedback visibility according interaction states', async () => {
           const elTagString = defineCE(
-            // @ts-expect-error lit properties false positive, they get merged with parent properties by lit automatically
             class extends ValidateMixin(LitElement) {
               static get validationTypes() {
                 return ['error', 'info'];
               }
 
+              /** @type {any} */
               static get properties() {
                 return {
                   modelValue: { type: String },

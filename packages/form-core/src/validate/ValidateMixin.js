@@ -32,7 +32,6 @@ function arrayDiff(array1 = [], array2 = []) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 export const ValidateMixinImplementation = superclass =>
-  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class extends FormControlMixin(
     SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
   ) {
@@ -45,6 +44,7 @@ export const ValidateMixinImplementation = superclass =>
       };
     }
 
+    /** @type {any} */
     static get properties() {
       return {
         validators: { attribute: false },
