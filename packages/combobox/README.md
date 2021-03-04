@@ -15,7 +15,7 @@ availability of the popup.
 ```js script
 import { html } from '@lion/core';
 import { Required } from '@lion/form-core';
-import { listboxData } from '@lion/listbox/docs/listboxData.js';
+import { listboxData } from './docs/listboxData.js';
 import '@lion/listbox/define';
 import '@lion/combobox/define';
 import './docs/demo-selection-display.js';

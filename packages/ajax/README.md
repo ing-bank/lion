@@ -5,8 +5,13 @@
 ```js script
 import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import { ajax, AjaxClient, cacheRequestInterceptorFactory, cacheResponseInterceptorFactory } from '@lion/ajax';
-import '@lion/helpers/sb-action-logger';
+import {
+  ajax,
+  AjaxClient,
+  cacheRequestInterceptorFactory,
+  cacheResponseInterceptorFactory,
+} from '@lion/ajax';
+import '@lion/helpers/define-sb-action-logger';
 
 const getCacheIdentifier = () => {
   let userId = localStorage.getItem('lion-ajax-cache-demo-user-id');
@@ -15,7 +20,7 @@ const getCacheIdentifier = () => {
     userId = '1';
   }
   return userId;
-}
+};
 
 const cacheOptions = {
   useCache: true,
@@ -23,9 +28,7 @@ const cacheOptions = {
 };
 
 ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-ajax.addResponseInterceptor(
-  cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions),
-);
+ajax.addResponseInterceptor(cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions));
 
 export default {
   title: 'Ajax/Ajax',
@@ -60,13 +63,14 @@ npm i --save @lion/ajax
 ```js preview-story
 export const getRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const fetchHandler = (name) => {
-    ajax.request(`./packages/ajax/docs/${name}.json`)
+  const fetchHandler = name => {
+    ajax
+      .request(`./packages/ajax/docs/${name}.json`)
       .then(response => response.json())
       .then(result => {
         actionLogger.log(JSON.stringify(result, null, 2));
       });
-  }
+  };
   return html`
     <style>
       sb-action-logger {
@@ -77,7 +81,7 @@ export const getRequest = () => {
     <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 #### POST request
@@ -103,13 +107,12 @@ The result will have the Response object on `.response` property, and the decode
 ```js preview-story
 export const getJsonRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const fetchHandler = (name) => {
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`)
-      .then(result => {
-        console.log(result.response);
-        actionLogger.log(JSON.stringify(result.body, null, 2));
-      });
-  }
+  const fetchHandler = name => {
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`).then(result => {
+      console.log(result.response);
+      actionLogger.log(JSON.stringify(result.body, null, 2));
+    });
+  };
   return html`
     <style>
       sb-action-logger {
@@ -120,7 +123,7 @@ export const getJsonRequest = () => {
     <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 #### POST JSON request
@@ -156,7 +159,7 @@ export const errorHandling = () => {
         actionLogger.log(error);
       }
     }
-  }
+  };
   return html`
     <style>
       sb-action-logger {
@@ -166,7 +169,7 @@ export const errorHandling = () => {
     <button @click=${fetchHandler}>Fetch</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 ## Fetch Polyfill
@@ -231,7 +234,7 @@ export const ajax = new AjaxClient({
     timeToLive: 1000 * 60 * 5, // 5 minutes
     getCacheIdentifier: () => getActiveProfile().profileId,
   },
-})
+});
 ```
 
 ### Ajax cache example
@@ -244,13 +247,12 @@ which is either undefined for normal requests, or set to true for responses that
 ```js preview-story
 export const cache = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const fetchHandler = (name) => {
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`)
-      .then(result => {
-        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
-        actionLogger.log(JSON.stringify(result.body, null, 2));
-      });
-  }
+  const fetchHandler = name => {
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`).then(result => {
+      actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+      actionLogger.log(JSON.stringify(result.body, null, 2));
+    });
+  };
   return html`
     <style>
       sb-action-logger {
@@ -261,7 +263,7 @@ export const cache = () => {
     <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 You can also change the cache options per request, which is handy if you don't want to remove and re-add the interceptors for a simple configuration change.
@@ -271,20 +273,21 @@ In this demo, when we fetch naga, we always pass `useCache: false` so the Respon
 ```js preview-story
 export const cacheActionOptions = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const fetchHandler = (name) => {
+  const fetchHandler = name => {
     let actionCacheOptions;
     if (name === 'naga') {
       actionCacheOptions = {
         useCache: false,
-      }
+      };
     }
 
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { cacheOptions: actionCacheOptions })
+    ajax
+      .requestJson(`./packages/ajax/docs/${name}.json`, { cacheOptions: actionCacheOptions })
       .then(result => {
         actionLogger.log(`From cache: ${result.response.fromCache || false}`);
         actionLogger.log(JSON.stringify(result.body, null, 2));
       });
-  }
+  };
   return html`
     <style>
       sb-action-logger {
@@ -295,7 +298,7 @@ export const cacheActionOptions = () => {
     <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 ### Invalidating cache
@@ -319,16 +322,17 @@ After TTL expires, the next request will set the cache again, and for the next 3
 export const cacheTimeToLive = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = () => {
-    ajax.requestJson(`./packages/ajax/docs/pabu.json`, {
-      cacheOptions: {
-        timeToLive: 1000 * 3, // 3 seconds
-      }
-    })
+    ajax
+      .requestJson(`./packages/ajax/docs/pabu.json`, {
+        cacheOptions: {
+          timeToLive: 1000 * 3, // 3 seconds
+        },
+      })
       .then(result => {
         actionLogger.log(`From cache: ${result.response.fromCache || false}`);
         actionLogger.log(JSON.stringify(result.body, null, 2));
       });
-  }
+  };
   return html`
     <style>
       sb-action-logger {
@@ -338,7 +342,7 @@ export const cacheTimeToLive = () => {
     <button @click=${fetchHandler}>Fetch Pabu</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 #### Changing cache identifier
@@ -351,17 +355,16 @@ Now we will allow you to change this identifier to invalidate the cache.
 export const changeCacheIdentifier = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = () => {
-    ajax.requestJson(`./packages/ajax/docs/pabu.json`)
-      .then(result => {
-        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
-        actionLogger.log(JSON.stringify(result.body, null, 2));
-      });
-  }
+    ajax.requestJson(`./packages/ajax/docs/pabu.json`).then(result => {
+      actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+      actionLogger.log(JSON.stringify(result.body, null, 2));
+    });
+  };
 
   const changeUserHandler = () => {
     const currentUser = parseInt(localStorage.getItem('lion-ajax-cache-demo-user-id'), 10);
     localStorage.setItem('lion-ajax-cache-demo-user-id', `${currentUser + 1}`);
-  }
+  };
 
   return html`
     <style>
@@ -373,7 +376,7 @@ export const changeCacheIdentifier = () => {
     <button @click=${changeUserHandler}>Change user</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 #### Non-GET request
@@ -393,12 +396,11 @@ Therefore, we invalidate the cache, so the user gets the latest state from the d
 export const nonGETRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = (name, method) => {
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { method })
-      .then(result => {
-        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
-        actionLogger.log(JSON.stringify(result.body, null, 2));
-      });
-  }
+    ajax.requestJson(`./packages/ajax/docs/${name}.json`, { method }).then(result => {
+      actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+      actionLogger.log(JSON.stringify(result.body, null, 2));
+    });
+  };
   return html`
     <style>
       sb-action-logger {
@@ -411,7 +413,7 @@ export const nonGETRequest = () => {
     <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```
 
 #### Invalidate Rules
@@ -441,15 +443,16 @@ export const invalidateRules = () => {
       actionCacheOptions.invalidateUrlsRegex = /\/packages\/ajax\/docs\/naga.json/;
     }
 
-    ajax.requestJson(`./packages/ajax/docs/${name}.json`, {
-      method,
-      cacheOptions: actionCacheOptions,
-    })
+    ajax
+      .requestJson(`./packages/ajax/docs/${name}.json`, {
+        method,
+        cacheOptions: actionCacheOptions,
+      })
       .then(result => {
         actionLogger.log(`From cache: ${result.response.fromCache || false}`);
         actionLogger.log(JSON.stringify(result.body, null, 2));
       });
-  }
+  };
   return html`
     <style>
       sb-action-logger {
@@ -462,5 +465,5 @@ export const invalidateRules = () => {
     <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
     ${actionLogger}
   `;
-}
+};
 ```

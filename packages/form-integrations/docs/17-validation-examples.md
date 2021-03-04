@@ -13,11 +13,10 @@ while for a checkbox group it means at least one checkbox needs to be checked.
 import { html } from '@lion/core';
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionInput } from '@lion/input';
-import '@lion/checkbox-group/lion-checkbox-group.js';
-import '@lion/checkbox-group/lion-checkbox.js';
+import '@lion/checkbox-group/define';
 import '@lion/combobox/define';
 import '@lion/fieldset/define';
-import '@lion/form/lion-form.js';
+import '@lion/form/define';
 import '@lion/input-amount/define';
 import '@lion/input-date/define';
 import '@lion/input-datepicker/define';
@@ -27,14 +26,9 @@ import '@lion/input-range/define';
 import '@lion/input-stepper/define';
 import '@lion/input/define';
 import '@lion/listbox/define';
-import '@lion/listbox/define-listbox.js';
-import '@lion/listbox/define-option.js';
-import '@lion/listbox/define-options.js';
 import '@lion/radio-group/define';
-import '@lion/radio-group/define-radio-group.js';
-import '@lion/radio-group/define-radio.js';
 import '@lion/select/define';
-import '@lion/select-rich/define-select-rich.js';
+import '@lion/select-rich/define';
 import '@lion/textarea/define';
 import {
   DefaultSuccess,

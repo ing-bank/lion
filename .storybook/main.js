@@ -1,44 +1,25 @@
 const fs = require('fs');
 const path = require('path');
+const globby = require('globby');
 
 module.exports = {
-  stories: [
-    '../{packages,packages-node}/*/README.md',
-    '../{packages,packages-node}/*/docs/*.md',
-    '../{packages,packages-node}/*/docs/!(assets)**/*.md',
-    '../packages/helpers/*/README.md',
-    '../docs/README.md',
-    '../docs/**/*.md',
-    '../README.md',
-    '../demo/README.md',
-    '../demo/docs/*.md',
-  ],
-  addons: [
-    // order of tabs in addons panel
-    'storybook-prebuilt/addon-actions/register.js',
-    'storybook-prebuilt/addon-knobs/register.js',
-    'storybook-prebuilt/addon-a11y/register.js',
-    'storybook-prebuilt/addon-docs/register.js',
-    // no tab in addons panel (e.g. load order does not matter here)
-    'storybook-prebuilt/addon-backgrounds/register.js',
-    'storybook-prebuilt/addon-links/register.js',
-    'storybook-prebuilt/addon-viewport/register.js',
-  ],
-  addons: [
-    'storybook-prebuilt/addon-docs/register.js',
-    'storybook-prebuilt/addon-actions/register.js',
-    'storybook-prebuilt/addon-knobs/register.js',
-    'storybook-prebuilt/addon-a11y/register.js',
-    'storybook-prebuilt/addon-backgrounds/register.js',
-    'storybook-prebuilt/addon-links/register.js',
-    'storybook-prebuilt/addon-viewport/register.js',
-  ],
-  esDevServer: {
-    nodeResolve: true,
-    watch: true,
-    open: true,
-  },
-  rollup: config => {
+  stories: globby
+    .sync([
+      './{packages,packages-node}/*/README.md',
+      './{packages,packages-node}/*/docs/*.md',
+      './{packages,packages-node}/*/docs/!(assets)**/*.md',
+      './{packages,packages-node}/*/docs/validate/!(assets)**/*.md',
+      './packages/helpers/*/README.md',
+      './docs/README.md',
+      './docs/**/*.md',
+      './README.md',
+      './demo/README.md',
+      './demo/docs/*.md',
+    ])
+    .filter(file => file !== 'packages/form-core/docs/validate/assets/FlowDiagram.md') // filter out this one
+    .map(url => `../${url}`), // map glob results relative to root which is '../' from .storybook/main.js
+  addons: ['@web/storybook-prebuilt/addons.js'],
+  rollupConfig(config) {
     // temporarily hard copy all needed global files as all tested rollup plugins flatten the
     // directory structure
     // `rollup-plugin-copy` might work if issue 37 is resolved
@@ -74,6 +55,16 @@ module.exports = {
               '../packages/form-integrations/dev-assets/FormatMixinDiagram-3.svg',
             ),
           ),
+        });
+        this.emitFile({
+          type: 'asset',
+          fileName: 'packages/ajax/docs/pabu.json',
+          source: fs.readFileSync(path.join(__dirname, '../packages/ajax/docs/pabu.json')),
+        });
+        this.emitFile({
+          type: 'asset',
+          fileName: 'packages/ajax/docs/naga.json',
+          source: fs.readFileSync(path.join(__dirname, '../packages/ajax/docs/naga.json')),
         });
       },
     });
