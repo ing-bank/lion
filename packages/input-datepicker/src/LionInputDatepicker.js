@@ -12,7 +12,6 @@ import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 /**
  * @customElement lion-input-datepicker
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputDatepicker extends ScopedElementsMixin(
   ArrowMixin(OverlayMixin(LionInputDate)),
 ) {
@@ -24,6 +23,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     };
   }
 
+  /** @type {any} */
   static get properties() {
     return {
       /**

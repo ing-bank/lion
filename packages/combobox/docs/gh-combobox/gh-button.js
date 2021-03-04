@@ -1,7 +1,6 @@
 import { css, html } from '@lion/core';
 import { LionButton } from '@lion/button';
 
-// @ts-expect-error
 export class GhButton extends LionButton {
   static get properties() {
     return {

@@ -20,7 +20,6 @@ class LionFieldWithTextArea extends LionField {
  *
  * @customElement lion-textarea
  */
-// @ts-expect-error false positive, parent properties get merged by lit-element already
 export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
   static get properties() {
     return {

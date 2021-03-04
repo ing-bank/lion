@@ -22,10 +22,10 @@ import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies F
  *
  * @customElement lion-field
  */
-// @ts-expect-error lit properties false positive
 export class LionField extends FormControlMixin(
   InteractionStateMixin(FocusMixin(FormatMixin(ValidateMixin(SlotMixin(LitElement))))),
 ) {
+  /** @type {any} */
   static get properties() {
     return {
       autocomplete: {

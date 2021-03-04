@@ -12,8 +12,8 @@ import { formatNumber } from '@lion/localize';
  *
  * @customElement `lion-input-range`
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputRange extends LionInput {
+  /** @type {any} */
   static get properties() {
     return {
       min: {

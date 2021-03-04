@@ -15,8 +15,8 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const ChoiceGroupMixinImplementation = superclass =>
-  // @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
   class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
+    /** @type {any} */
     static get properties() {
       return {
         /**

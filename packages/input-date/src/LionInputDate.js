@@ -18,8 +18,8 @@ function isValidDate(date) {
  *
  * @customElement lion-input-date
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputDate extends LocalizeMixin(LionInput) {
+  /** @type {any} */
   static get properties() {
     return {
       modelValue: Date,

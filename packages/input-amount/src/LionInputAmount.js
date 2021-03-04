@@ -10,8 +10,8 @@ import { parseAmount } from './parsers.js';
  *
  * @customElement lion-input-amount
  */
-// @ts-expect-error false positive for incompatible static get properties. Lit-element merges super properties already for you.
 export class LionInputAmount extends LocalizeMixin(LionInput) {
+  /** @type {any} */
   static get properties() {
     return {
       /**
