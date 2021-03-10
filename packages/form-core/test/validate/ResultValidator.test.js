@@ -15,18 +15,19 @@ describe('ResultValidator', () => {
        *
        * @param {Object} context
        * @param {Validator[]} context.regularValidationResult
-       * @param {Validator[]} context.prevValidationResult
+       * @param {string} context.prevShownValidationFeedback
        * @returns {boolean}
        */
-      executeOnResults({ regularValidationResult, prevValidationResult }) {
-        const hasSuccess = regularValidationResult.length && !prevValidationResult.length;
+      executeOnResults({ regularValidationResult, prevShownValidationFeedback }) {
+        const hasSuccess =
+          regularValidationResult.length && prevShownValidationFeedback === 'error';
         return !!hasSuccess;
       }
     }
     expect(
       new MyResultValidator().executeOnResults({
         regularValidationResult: [new Required(), new MinLength(3)],
-        prevValidationResult: [],
+        prevShownValidationFeedback: 'error',
       }),
     ).to.be.true;
   });
