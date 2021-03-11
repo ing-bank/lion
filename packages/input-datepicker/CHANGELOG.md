@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.19.5
+
+### Patch Changes
+
+- dbacafa5: Type static get properties as {any} since the real class fields are typed separately and lit properties are just "configuring". Remove expect error.
+- Updated dependencies [2e8e547c]
+- Updated dependencies [dbacafa5]
+  - @lion/overlays@0.24.2
+  - @lion/form-core@0.8.5
+  - @lion/input-date@0.9.5
+  - @lion/validate-messages@0.4.5
+
 ## 0.19.4
 
 ### Patch Changes

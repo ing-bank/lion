@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "description": "Overlays System using lit-html for rendering",
   "license": "MIT",
   "author": "ing-bank",
