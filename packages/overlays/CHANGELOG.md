@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.24.2
+
+### Patch Changes
+
+- 2e8e547c: Prevent error throw for body margin auto on overlay hide/show.
+
 ## 0.24.1
 
 ### Patch Changes

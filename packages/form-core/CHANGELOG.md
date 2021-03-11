@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.5
+
+### Patch Changes
+
+- dbacafa5: Type static get properties as {any} since the real class fields are typed separately and lit properties are just "configuring". Remove expect error.
+
 ## 0.8.4
 
 ### Patch Changes

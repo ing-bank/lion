@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.17.2
+
+### Patch Changes
+
+- Updated dependencies [2e8e547c]
+  - @lion/overlays@0.24.2
+
 ## 0.17.1
 
 ### Patch Changes
