@@ -1167,21 +1167,21 @@ export class OverlayController extends EventTargetShim {
     }
 
     this.contentWrapperNode[addOrRemoveListener](
-      'click',
+      'mousedown',
       /** @type {EventListenerOrEventListenerObject} */
       (this.__preventCloseOutsideClick),
       true,
     );
     if (this.invokerNode) {
       this.invokerNode[addOrRemoveListener](
-        'click',
+        'mousedown',
         /** @type {EventListenerOrEventListenerObject} */
         (this.__preventCloseOutsideClick),
         true,
       );
     }
     document.documentElement[addOrRemoveListener](
-      'click',
+      'mousedown',
       /** @type {EventListenerOrEventListenerObject} */
       (this.__onCaptureHtmlClick),
       true,

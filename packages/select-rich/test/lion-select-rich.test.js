@@ -254,9 +254,13 @@ describe('lion-select-rich', () => {
       ));
 
       expect(el.opened).to.be.true;
-      // a click on the button will trigger hide on outside click
+      // a mousedown (a full click won't work) on the button will trigger hide on outside click
       // which we then need to sync back to "opened"
       outerEl.click();
+      await aTimeout(0);
+      expect(el.opened).to.be.true;
+
+      outerEl.dispatchEvent(new MouseEvent('mousedown'));
       await aTimeout(0);
       expect(el.opened).to.be.false;
     });

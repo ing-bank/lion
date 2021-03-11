@@ -452,7 +452,13 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
+        // doesn't hide on click, ie doesn't hide on mousedown followed by mouseup event
         document.body.click();
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
+        // only hides on mousedown directly
+        document.body.dispatchEvent(new MouseEvent('mousedown'));
         await aTimeout(0);
         expect(ctrl.isShown).to.be.false;
       });
@@ -477,6 +483,13 @@ describe('OverlayController', () => {
         ctrl.contentNode.click();
         await aTimeout(0);
 
+        expect(ctrl.isShown).to.be.true;
+
+        // Don't hide on inside mousedown & outside mouseup
+        ctrl.contentNode.dispatchEvent(new MouseEvent('mousedown'));
+        await aTimeout(0);
+        document.body.dispatchEvent(new MouseEvent('mouseup'));
+        await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
 
         // Important to check if it can be still shown after, because we do some hacks inside
@@ -572,7 +585,12 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.equal(true);
 
         /** @type {HTMLElement} */
-        (dom.querySelector('third-party-noise')).click();
+        (dom.querySelector('third-party-noise')).dispatchEvent(new MouseEvent('mouseup'));
+        await aTimeout(0);
+        expect(ctrl.isShown).to.equal(true);
+
+        /** @type {HTMLElement} */
+        (dom.querySelector('third-party-noise')).dispatchEvent(new MouseEvent('mousedown'));
         await aTimeout(0);
         expect(ctrl.isShown).to.equal(false);
 
@@ -620,7 +638,12 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.equal(true);
 
         /** @type {HTMLElement} */
-        (dom.querySelector('third-party-noise')).click();
+        (dom.querySelector('third-party-noise')).dispatchEvent(new MouseEvent('mouseup'));
+        await aTimeout(0);
+        expect(ctrl.isShown).to.equal(true);
+
+        /** @type {HTMLElement} */
+        (dom.querySelector('third-party-noise')).dispatchEvent(new MouseEvent('mousedown'));
         await aTimeout(0);
         expect(ctrl.isShown).to.equal(false);
 

@@ -98,13 +98,18 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
-    it('closes the calendar via outside click', async () => {
+    it('closes the calendar via outside mousedown event', async () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(true);
 
       document.body.click();
+      await aTimeout(0);
+      // Click won't work, only mousedown directly outside
+      expect(elObj.overlayController.isShown).to.be.true;
+
+      document.body.dispatchEvent(new MouseEvent('mousedown'));
       await aTimeout(0);
       expect(elObj.overlayController.isShown).to.be.false;
     });
