@@ -9,6 +9,9 @@ export class LionDialog extends OverlayMixin(LitElement) {
     };
   }
 
+  /**
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
@@ -16,6 +19,9 @@ export class LionDialog extends OverlayMixin(LitElement) {
     };
   }
 
+  /**
+   * @protected
+   */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     if (this._overlayInvokerNode) {
@@ -23,6 +29,9 @@ export class LionDialog extends OverlayMixin(LitElement) {
     }
   }
 
+  /**
+   * @protected
+   */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
     if (this._overlayInvokerNode) {
