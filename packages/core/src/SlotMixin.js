@@ -22,6 +22,7 @@ const SlotMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /** @private */
       this.__privateSlots = new Set(null);
     }
 
@@ -34,6 +35,9 @@ const SlotMixinImplementation = superclass =>
       this._connectSlotMixin();
     }
 
+    /**
+     * @protected
+     */
     _connectSlotMixin() {
       if (!this.__isConnectedSlotMixin) {
         Object.keys(this.slots).forEach(slotName => {
@@ -55,6 +59,7 @@ const SlotMixinImplementation = superclass =>
     /**
      * @param {string} slotName Name of the slot
      * @return {boolean} true if given slot name been created by SlotMixin
+     * @protected
      */
     _isPrivateSlot(slotName) {
       return this.__privateSlots.has(slotName);

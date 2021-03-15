@@ -15,7 +15,9 @@ const throwFormNodeError = () => {
 export class LionForm extends LionFieldset {
   constructor() {
     super();
+    /** @protected */
     this._submit = this._submit.bind(this);
+    /** @protected */
     this._reset = this._reset.bind(this);
   }
 
@@ -48,6 +50,7 @@ export class LionForm extends LionFieldset {
 
   /**
    * @param {Event} ev
+   * @protected
    */
   _submit(ev) {
     ev.preventDefault();
@@ -66,6 +69,7 @@ export class LionForm extends LionFieldset {
 
   /**
    * @param {Event} ev
+   * @protected
    */
   _reset(ev) {
     ev.preventDefault();
@@ -74,11 +78,13 @@ export class LionForm extends LionFieldset {
     this.dispatchEvent(new Event('reset', { bubbles: true }));
   }
 
+  /** @private */
   __registerEventsForLionForm() {
     this._formNode.addEventListener('submit', this._submit);
     this._formNode.addEventListener('reset', this._reset);
   }
 
+  /** @private */
   __teardownEventsForLionForm() {
     this._formNode.removeEventListener('submit', this._submit);
     this._formNode.removeEventListener('reset', this._reset);

@@ -84,6 +84,7 @@ export class LionSelectInvoker extends LionButton {
     this.type = 'button';
   }
 
+  /** @private */
   // eslint-disable-next-line class-methods-use-this
   __handleKeydown(/** @type {KeyboardEvent} */ event) {
     switch (event.key) {
@@ -104,6 +105,7 @@ export class LionSelectInvoker extends LionButton {
     this.removeEventListener('keydown', this.__handleKeydown);
   }
 
+  /** @protected */
   _contentTemplate() {
     if (this.selectedElement) {
       const labelNodes = Array.from(this.selectedElement.childNodes);
@@ -117,16 +119,19 @@ export class LionSelectInvoker extends LionButton {
 
   /**
    * To be overriden for a placeholder, used when `hasNoDefaultSelected` is true on the select rich
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _noSelectionTemplate() {
     return html``;
   }
 
+  /** @protected */
   _beforeTemplate() {
     return html` <div id="content-wrapper">${this._contentTemplate()}</div> `;
   }
 
+  /** @protected */
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
     return html`${!this.singleOption ? html`<slot name="after"></slot>` : ''}`;

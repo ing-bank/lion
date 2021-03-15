@@ -184,10 +184,16 @@ export class LionAccordion extends LitElement {
     super();
     this.styles = {};
 
-    /** @type {StoreEntry[]} */
+    /**
+     * @type {StoreEntry[]}
+     * @private
+     */
     this.__store = [];
 
-    /** @type {number} */
+    /**
+     * @type {number}
+     * @private
+     */
     this.__focusedIndex = -1;
 
     /** @type {number[]} */
@@ -200,6 +206,9 @@ export class LionAccordion extends LitElement {
     this.__setupSlots();
   }
 
+  /**
+   *  @private
+   */
   __setupSlots() {
     const invokerSlot = this.shadowRoot?.querySelector('slot[name=invoker]');
     const handleSlotChange = () => {
@@ -213,6 +222,9 @@ export class LionAccordion extends LitElement {
     }
   }
 
+  /**
+   *  @private
+   */
   __setupStore() {
     const invokers = /** @type {HTMLElement[]} */ (Array.from(
       this.querySelectorAll('[slot="invoker"]'),
@@ -248,6 +260,9 @@ export class LionAccordion extends LitElement {
     });
   }
 
+  /**
+   *  @private
+   */
   __cleanStore() {
     if (!this.__store) {
       return;
@@ -261,6 +276,7 @@ export class LionAccordion extends LitElement {
   /**
    *
    * @param {number} index
+   * @private
    */
   __createInvokerClickHandler(index) {
     return () => {
@@ -271,6 +287,7 @@ export class LionAccordion extends LitElement {
 
   /**
    * @param {Event} e
+   * @private
    */
   __handleInvokerKeydown(e) {
     const _e = /** @type {KeyboardEvent} */ (e);
@@ -313,6 +330,9 @@ export class LionAccordion extends LitElement {
     return this.__focusedIndex;
   }
 
+  /**
+   *  @private
+   */
   get _pairCount() {
     return this.__store.length;
   }
@@ -329,6 +349,9 @@ export class LionAccordion extends LitElement {
     return this.__expanded;
   }
 
+  /**
+   *  @private
+   */
   __updateFocused() {
     if (!(this.__store && this.__store[this.focusedIndex])) {
       return;
@@ -345,6 +368,9 @@ export class LionAccordion extends LitElement {
     }
   }
 
+  /**
+   *  @private
+   */
   __updateExpanded() {
     if (!this.__store) {
       return;
@@ -364,6 +390,7 @@ export class LionAccordion extends LitElement {
 
   /**
    * @param {number} value
+   * @private
    */
   __toggleExpanded(value) {
     const { expanded } = this;

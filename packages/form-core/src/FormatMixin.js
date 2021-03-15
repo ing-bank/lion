@@ -207,6 +207,7 @@ const FormatMixinImplementation = superclass =>
      * @param {{source:'model'|'serialized'|'formatted'|null}} config - the type of value that triggered this method. It should not be
      * set again, so that its observer won't be triggered. Can be:
      * 'model'|'formatted'|'serialized'.
+     * @protected
      */
     _calculateValues({ source } = { source: null }) {
       if (this.__preventRecursiveTrigger) return; // prevent infinite loops
@@ -243,6 +244,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * @param {string|undefined} value
      * @return {?}
+     * @private
      */
     __callParser(value = this.formattedValue) {
       // A) check if we need to parse at all
@@ -280,6 +282,7 @@ const FormatMixinImplementation = superclass =>
 
     /**
      * @returns {string|undefined}
+     * @private
      */
     __callFormatter() {
       // - Why check for this.hasError?
@@ -316,6 +319,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * Observer Handlers
      * @param {{ modelValue: unknown; }[]} args
+     * @protected
      */
     _onModelValueChanged(...args) {
       this._calculateValues({ source: 'model' });
@@ -326,6 +330,7 @@ const FormatMixinImplementation = superclass =>
      * @param {{ modelValue: unknown; }[]} args
      * This is wrapped in a distinct method, so that parents can control when the changed event
      * is fired. For objects, a deep comparison might be needed.
+     * @protected
      */
     // eslint-disable-next-line no-unused-vars
     _dispatchModelValueChangedEvent(...args) {
@@ -346,6 +351,7 @@ const FormatMixinImplementation = superclass =>
      * Downwards syncing should only happen for `LionField`.value changes from 'above'.
      * This triggers _onModelValueChanged and connects user input
      * to the parsing/formatting/serializing loop.
+     * @protected
      */
     _syncValueUpwards() {
       this.value = this.__callPreprocessor(this.value);
@@ -357,6 +363,7 @@ const FormatMixinImplementation = superclass =>
      * - flow [1] will always be reflected back
      * - flow [2] will not be reflected back when this flow was triggered via
      *   `@user-input-changed` (this will happen later, when `formatOn` condition is met)
+     * @protected
      */
     _reflectBackFormattedValueToUser() {
       if (this._reflectBackOn()) {
@@ -367,6 +374,7 @@ const FormatMixinImplementation = superclass =>
 
     /**
      * @return {boolean}
+     * @protected
      */
     _reflectBackOn() {
       return !this.__isHandlingUserInput;
@@ -376,6 +384,7 @@ const FormatMixinImplementation = superclass =>
     // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
     // used  as source for the "user-input-changed" event (which can be seen as an abstraction
     // layer on top of other events (input, change, whatever))
+    /** @protected */
     _proxyInputEvent() {
       this.dispatchEvent(
         new CustomEvent('user-input-changed', {
@@ -385,6 +394,7 @@ const FormatMixinImplementation = superclass =>
       );
     }
 
+    /** @protected */
     _onUserInputChanged() {
       // Upwards syncing. Most properties are delegated right away, value is synced to
       // `LionField`, to be able to act on (imperatively set) value changes

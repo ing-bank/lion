@@ -15,6 +15,18 @@ import { mimicClick } from '../test-helpers.js';
  * @typedef {import('../types/OverlayConfig').ViewportPlacement} ViewportPlacement
  */
 
+/**
+ * @param {OverlayController} overlayControllerEl
+ */
+function getProtectedMembers(overlayControllerEl) {
+  // @ts-ignore
+  const { _contentId: contentId, _renderTarget: renderTarget } = overlayControllerEl;
+  return {
+    contentId,
+    renderTarget,
+  };
+}
+
 const withGlobalTestConfig = () =>
   /** @type {OverlayConfig} */ ({
     placementMode: 'global',
@@ -133,7 +145,8 @@ describe('OverlayController', () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
         });
-        expect(ctrl._renderTarget).to.equal(overlays.globalRootNode);
+        const { renderTarget } = getProtectedMembers(ctrl);
+        expect(renderTarget).to.equal(overlays.globalRootNode);
       });
 
       it.skip('creates local target next to sibling for placement mode "local"', async () => {
@@ -141,7 +154,8 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           invokerNode: /** @type {HTMLElement} */ (await fixture(html`<button>Invoker</button>`)),
         });
-        expect(ctrl._renderTarget).to.be.undefined;
+        const { renderTarget } = getProtectedMembers(ctrl);
+        expect(renderTarget).to.be.undefined;
         expect(ctrl.content).to.equal(ctrl.invokerNode?.nextElementSibling);
       });
 
@@ -156,7 +170,8 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode,
         });
-        expect(ctrl._renderTarget).to.equal(parentNode);
+        const { renderTarget } = getProtectedMembers(ctrl);
+        expect(renderTarget).to.equal(parentNode);
       });
 
       it('throws when passing a content node that was created "offline"', async () => {
@@ -179,8 +194,10 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode,
         });
+        const { renderTarget } = getProtectedMembers(overlay);
+
         expect(overlay.contentNode.isConnected).to.be.true;
-        expect(overlay._renderTarget).to.not.be.undefined;
+        expect(renderTarget).to.not.be.undefined;
       });
     });
   });
@@ -1265,7 +1282,8 @@ describe('OverlayController', () => {
         ...withLocalTestConfig(),
         handlesAccessibility: true,
       });
-      expect(ctrl.contentNode.id).to.contain(ctrl._contentId);
+      const { contentId } = getProtectedMembers(ctrl);
+      expect(ctrl.contentNode.id).to.contain(contentId);
     });
 
     it('preserves content id when present', async () => {
@@ -1418,7 +1436,9 @@ describe('OverlayController', () => {
           isTooltip: true,
           invokerNode,
         });
-        expect(ctrl.invokerNode?.getAttribute('aria-describedby')).to.equal(ctrl._contentId);
+        const { contentId } = getProtectedMembers(ctrl);
+
+        expect(ctrl.invokerNode?.getAttribute('aria-describedby')).to.equal(contentId);
       });
 
       it('adds [aria-labelledby] on invoker when invokerRelation is label', async () => {
@@ -1432,8 +1452,10 @@ describe('OverlayController', () => {
           invokerRelation: 'label',
           invokerNode,
         });
+        const { contentId } = getProtectedMembers(ctrl);
+
         expect(ctrl.invokerNode?.getAttribute('aria-describedby')).to.equal(null);
-        expect(ctrl.invokerNode?.getAttribute('aria-labelledby')).to.equal(ctrl._contentId);
+        expect(ctrl.invokerNode?.getAttribute('aria-labelledby')).to.equal(contentId);
       });
 
       it('adds [role=tooltip] on content', async () => {

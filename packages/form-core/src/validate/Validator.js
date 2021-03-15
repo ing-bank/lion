@@ -77,6 +77,7 @@ export class Validator {
    * @overridable
    * @param {MessageData} [data]
    * @returns {Promise<string|Node>}
+   * @protected
    */
   async _getMessage(data) {
     const ctor = /** @type {typeof Validator} */ (this.constructor);
@@ -130,6 +131,9 @@ export class Validator {
    */
   abortExecution() {} // eslint-disable-line
 
+  /**
+   * @private
+   */
   __fakeExtendsEventTarget() {
     const delegate = document.createDocumentFragment();
 

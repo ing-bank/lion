@@ -302,6 +302,8 @@ describe('<lion-tabs>', () => {
           <div slot="panel">panel 2</div>
         </lion-tabs>
       `));
+
+      // @ts-ignore : this el is LionTabs
       el._setSelectedIndexWithFocus(1);
       expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be.true;
     });

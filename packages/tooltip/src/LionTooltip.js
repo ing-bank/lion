@@ -49,10 +49,13 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
      * @type {'label'|'description'}
      */
     this.invokerRelation = 'description';
+    /** @protected */
     this._mouseActive = false;
+    /** @protected */
     this._keyActive = false;
   }
 
+  /** @protected */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
@@ -67,6 +70,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     });
   }
 
+  /** @protected */
   _hasDisabledInvoker() {
     if (this._overlayCtrl && this._overlayCtrl.invoker) {
       return (
@@ -77,6 +81,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     return false;
   }
 
+  /** @protected */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     this.__resetActive = this.__resetActive.bind(this);
@@ -92,6 +97,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     this._overlayInvokerNode.addEventListener('focusout', this._hideKey);
   }
 
+  /** @protected */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
     this._overlayCtrl.removeEventListener('hide', this.__resetActive);
@@ -101,11 +107,13 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
   }
 
+  /** @private */
   __resetActive() {
     this._mouseActive = false;
     this._keyActive = false;
   }
 
+  /** @protected */
   _showMouse() {
     if (!this._keyActive) {
       this._mouseActive = true;
@@ -115,12 +123,14 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     }
   }
 
+  /** @protected */
   _hideMouse() {
     if (!this._keyActive) {
       this.opened = false;
     }
   }
 
+  /** @protected */
   _showKey() {
     if (!this._mouseActive) {
       this._keyActive = true;
@@ -130,6 +140,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
     }
   }
 
+  /** @protected */
   _hideKey() {
     if (!this._mouseActive) {
       this.opened = false;

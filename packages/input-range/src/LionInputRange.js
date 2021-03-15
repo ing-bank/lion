@@ -70,6 +70,7 @@ export class LionInputRange extends LionInput {
      */
     this.parser = modelValue => parseFloat(modelValue);
     this.scopedClass = `${this.localName}-${Math.floor(Math.random() * 10000)}`;
+    /** @private */
     this.__styleTag = document.createElement('style');
   }
 
@@ -114,6 +115,7 @@ export class LionInputRange extends LionInput {
     }
   }
 
+  /** @protected */
   _inputGroupTemplate() {
     return html`
       <div>
@@ -131,6 +133,7 @@ export class LionInputRange extends LionInput {
     `;
   }
 
+  /** @protected */
   _inputGroupInputTemplate() {
     return html`
       <div class="input-group__input">
@@ -147,6 +150,7 @@ export class LionInputRange extends LionInput {
     `;
   }
 
+  /** @private */
   __setupStyleTag() {
     this.__styleTag.textContent = /** @type {typeof LionInputRange} */ (this.constructor)
       .rangeStyles(unsafeCSS(this.scopedClass))
@@ -154,6 +158,7 @@ export class LionInputRange extends LionInput {
     this.insertBefore(this.__styleTag, this.childNodes[0]);
   }
 
+  /** @private */
   __teardownStyleTag() {
     this.removeChild(this.__styleTag);
   }

@@ -13,6 +13,27 @@ import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 
+/**
+ * @param {LionInputDatepicker} datepickerEl
+ */
+function getProtectedMembersDatepicker(datepickerEl) {
+  // @ts-ignore
+  const { __invokerId: invokerId } = datepickerEl;
+  return {
+    invokerId,
+  };
+}
+
+/**
+ * @param {LionCalendar} calendarEl
+ */
+function getProtectedMembersCalendar(calendarEl) {
+  return {
+    // @ts-ignore
+    dateSelectedByUser: (...args) => calendarEl.__dateSelectedByUser(...args),
+  };
+}
+
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDatepicker>} */ (_fixture);
 
 describe('<lion-input-datepicker>', () => {
@@ -278,8 +299,10 @@ describe('<lion-input-datepicker>', () => {
       const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
         '[data-tag-name="lion-calendar"]',
       ));
+      const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
       // First set a fixed date as if selected by a user
-      calendarEl.__dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
+      dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
+
       await el.updateComplete;
       const elObj = new DatepickerInputObject(el);
 
@@ -303,8 +326,10 @@ describe('<lion-input-datepicker>', () => {
       const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
         '[data-tag-name="lion-calendar"]',
       ));
+      const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
+
       // First set a fixed date as if selected by a user
-      calendarEl.__dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
+      dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
       await el.updateComplete;
       const elObj = new DatepickerInputObject(el);
 
@@ -411,6 +436,7 @@ describe('<lion-input-datepicker>', () => {
 
         const myEl = await fixture(html`<${myTag}></${myTag}>`);
         const myElObj = new DatepickerInputObject(myEl);
+        const { invokerId } = getProtectedMembersDatepicker(myEl);
         expect(myElObj.invokerEl.tagName.toLowerCase()).to.equal('my-button');
 
         // All other tests will still pass. Small checkup:
@@ -419,7 +445,7 @@ describe('<lion-input-datepicker>', () => {
         expect(myElObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
         expect(myElObj.invokerEl.getAttribute('aria-haspopup')).to.equal('dialog');
         expect(myElObj.invokerEl.getAttribute('slot')).to.equal('suffix');
-        expect(myElObj.invokerEl.getAttribute('id')).to.equal(myEl.__invokerId);
+        expect(myElObj.invokerEl.getAttribute('id')).to.equal(invokerId);
         await myElObj.openCalendar();
         expect(myElObj.overlayController.isShown).to.equal(true);
       });

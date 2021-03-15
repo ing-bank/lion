@@ -142,7 +142,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   constructor() {
     super();
-    /** @type {{months: Month[]}} */
+    /** @type {{months: Month[]}}
+     * @private
+     */
     this.__data = { months: [] };
     this.minDate = new Date(0);
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -156,17 +158,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
+    /** @private */
     this.__today = normalizeDateTime(new Date());
     /** @type {Date} */
     this.centralDate = this.__today;
-    /** @type {Date | null} */
+    /**
+     * @type {Date | null}
+     * @private
+     */
     this.__focusedDate = null;
+    /** @private */
     this.__connectedCallbackDone = false;
+    /** @private */
     this.__eventsAdded = false;
     this.locale = '';
+    /** @private */
     this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
+    /** @private */
     this.__boundClickDateDelegation = this.__clickDateDelegation.bind(this);
+    /** @private */
     this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
+    /** @private */
     this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
   }
 
@@ -312,6 +324,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
+  /**
+   * @private
+   */
   __calculateInitialCentralDate() {
     if (this.centralDate === this.__today && this.selectedDate) {
       // initialised with selectedDate only if user didn't provide another one
@@ -324,6 +339,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /**
    * @param {string} month
    * @param {number} year
+   * @private
    */
   __renderMonthNavigation(month, year) {
     const nextMonth =
@@ -348,6 +364,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /**
    * @param {string} month
    * @param {number} year
+   * @private
    */
   __renderYearNavigation(month, year) {
     const nextYear = year + 1;
@@ -362,6 +379,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     `;
   }
 
+  /**
+   * @private
+   */
   __renderNavigation() {
     const month = getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth()];
     const year = this.centralDate.getFullYear();
@@ -372,6 +392,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     `;
   }
 
+  /**
+   * @private
+   */
   __renderData() {
     return dataTemplate(this.__data, {
       monthsLabels: getMonthNames({ locale: this.__getLocale() }),
@@ -393,6 +416,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} previousMonth
    * @param {number} previousYear
+   * @private
    */
   __getPreviousDisabled(type, previousMonth, previousYear) {
     let disabled;
@@ -417,6 +441,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} nextMonth
    * @param {number} nextYear
+   * @private
    */
   __getNextDisabled(type, nextMonth, nextYear) {
     let disabled;
@@ -441,6 +466,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} previousMonth
    * @param {number} previousYear
+   * @private
    */
   __renderPreviousButton(type, previousMonth, previousYear) {
     const { disabled, month } = this.__getPreviousDisabled(type, previousMonth, previousYear);
@@ -470,6 +496,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} nextMonth
    * @param {number} nextYear
+   * @private
    */
   __renderNextButton(type, nextMonth, nextYear) {
     const { disabled, month } = this.__getNextDisabled(type, nextMonth, nextYear);
@@ -501,6 +528,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} month
    * @param {number} year
+   * @private
    */
   __getNavigationLabel(mode, type, month, year) {
     return `${this.msgLit(`lion-calendar:${mode}${type}`)}, ${month} ${year}`;
@@ -510,6 +538,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    *
    * @param {Day} _day
    * @param {*} param1
+   * @private
    */
   __coreDayPreprocessor(_day, { currentMonth = false } = {}) {
     const day = createDay(new Date(_day.date), _day);
@@ -543,6 +572,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {Day} [options]
+   * @private
    */
   __createData(options) {
     const data = createMultipleMonth(this.centralDate, {
@@ -564,6 +594,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     return data;
   }
 
+  /**
+   * @private
+   */
   __disableDatesChanged() {
     if (this.__connectedCallbackDone) {
       this.__ensureValidCentralDate();
@@ -572,6 +605,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {Date} selectedDate
+   * @private
    */
   __dateSelectedByUser(selectedDate) {
     this.selectedDate = selectedDate;
@@ -585,18 +619,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     );
   }
 
+  /**
+   * @private
+   */
   __centralDateChanged() {
     if (this.__connectedCallbackDone) {
       this.__ensureValidCentralDate();
     }
   }
 
+  /**
+   * @private
+   */
   __focusedDateChanged() {
     if (this.__focusedDate) {
       this.centralDate = this.__focusedDate;
     }
   }
 
+  /**
+   * @private
+   */
   __ensureValidCentralDate() {
     if (!this.__isEnabledDate(this.centralDate)) {
       this.centralDate = this.__findBestEnabledDateFor(this.centralDate);
@@ -605,6 +648,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {Date} date
+   * @private
    */
   __isEnabledDate(date) {
     const processedDay = this.__coreDayPreprocessor({ date });
@@ -615,6 +659,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {Date} date
    * @param {Object} opts
    * @param {String} [opts.mode] Find best date in `future/past/both`
+   * @private
    */
   __findBestEnabledDateFor(date, { mode = 'both' } = {}) {
     const futureDate =
@@ -655,6 +700,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {Event} ev
+   * @private
    */
   __clickDateDelegation(ev) {
     const isDayButton = /** @param {HTMLElement} el */ el =>
@@ -666,6 +712,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
+  /**
+   * @private
+   */
   __focusDateDelegation() {
     const isDayButton = /** @param {HTMLElement} el */ el =>
       el.classList.contains('calendar__day-button');
@@ -679,6 +728,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
+  /**
+   * @private
+   */
   __blurDateDelegation() {
     const isDayButton = /** @param {HTMLElement} el */ el =>
       el.classList.contains('calendar__day-button');
@@ -695,6 +747,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {KeyboardEvent} ev
+   * @private
    */
   __keyboardNavigationEvent(ev) {
     const preventedKeys = ['ArrowUp', 'ArrowDown', 'PageDown', 'PageUp'];
@@ -744,6 +797,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} opts.dateType
    * @param {string} opts.type
    * @param {string} opts.mode
+   * @private
    */
   __modifyDate(modify, { dateType, type, mode }) {
     let tmpDate = new Date(this.centralDate);
@@ -765,6 +819,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     this[dateType] = tmpDate;
   }
 
+  /**
+   * @private
+   */
   __getLocale() {
     return this.locale || localize.locale;
   }

@@ -127,7 +127,9 @@ const ChoiceInputMixinImplementation = superclass =>
       super();
       this.modelValue = { value: '', checked: false };
       this.disabled = false;
+      /** @protected */
       this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
+      /** @protected */
       this._toggleChecked = this._toggleChecked.bind(this);
     }
 
@@ -177,10 +179,16 @@ const ChoiceInputMixinImplementation = superclass =>
       `;
     }
 
+    /**
+     * @protected
+     */
     _choiceGraphicTemplate() {
       return nothing;
     }
 
+    /**
+     * @protected
+     */
     _afterTemplate() {
       return nothing;
     }
@@ -208,6 +216,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * This method prevents the duplicate click and ensures the correct isTrusted event
      * with the correct event.target arrives at the host.
      * @param {Event} ev
+     * @protected
      */
     // eslint-disable-next-line no-unused-vars
     _preventDuplicateLabelClick(ev) {
@@ -218,7 +227,10 @@ const ChoiceInputMixinImplementation = superclass =>
       this._inputNode.addEventListener('click', __inputClickHandler);
     }
 
-    /** @param {Event} ev */
+    /**
+     * @param {Event} ev
+     * @protected
+     */
     // eslint-disable-next-line no-unused-vars
     _toggleChecked(ev) {
       if (this.disabled) {
@@ -234,6 +246,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * to sync differently with parent form group name
      * Right now it checks tag name match where the parent form group tagname
      * should include the child field tagname ('checkbox' is included in 'checkbox-group')
+     * @protected
      */
     _syncNameToParentFormGroup() {
       // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
@@ -245,6 +258,7 @@ const ChoiceInputMixinImplementation = superclass =>
 
     /**
      * @param {boolean} checked
+     * @private
      */
     __syncModelCheckedToChecked(checked) {
       this.checked = checked;
@@ -252,11 +266,15 @@ const ChoiceInputMixinImplementation = superclass =>
 
     /**
      * @param {any} checked
+     * @private
      */
     __syncCheckedToModel(checked) {
       this.modelValue = { value: this.choiceValue, checked };
     }
 
+    /**
+     * @private
+     */
     __syncCheckedToInputElement() {
       // ._inputNode might not be available yet(slot content)
       // or at all (no reliance on platform construct, in case of [role=option])
@@ -273,6 +291,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * However on Chrome on Mac whenever you use the keyboard
      * it fires the input AND change event. Other Browsers only fires the change event.
      * Therefore we disable the input event here.
+     * @protected
      */
     _proxyInputEvent() {}
 
@@ -282,6 +301,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * (requestUpdateInternal) callback
      * @param {{ modelValue:unknown }} newV
      * @param {{ modelValue:unknown }} [old]
+     * @protected
      */
     _onModelValueChanged({ modelValue }, old) {
       let _old;
@@ -321,6 +341,7 @@ const ChoiceInputMixinImplementation = superclass =>
 
     /**
      * Used for required validator.
+     * @protected
      */
     _isEmpty() {
       return !this.checked;
@@ -330,6 +351,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * @override
      * Overridden from FormatMixin, since a different modelValue is used for choice inputs.
      * Synchronization from user input is already arranged in this Mixin.
+     * @protected
      */
     _syncValueUpwards() {}
   };

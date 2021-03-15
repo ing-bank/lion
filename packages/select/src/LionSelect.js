@@ -84,6 +84,7 @@ export class LionSelect extends LionFieldWithSelect {
     this._inputNode.removeEventListener('change', this._proxyChangeEvent);
   }
 
+  /** @protected */
   _proxyChangeEvent() {
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {

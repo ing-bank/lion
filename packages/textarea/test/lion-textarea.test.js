@@ -9,6 +9,16 @@ import '@lion/textarea/define';
 
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionTextarea>} */ (_fixture);
 
+/**
+ * @param {LionTextarea} lionTextareaEl
+ */
+function getProtectedMembers(lionTextareaEl) {
+  const { _inputNode: input } = lionTextareaEl;
+  return {
+    input,
+  };
+}
+
 function hasBrowserResizeSupport() {
   const textarea = document.createElement('textarea');
   return textarea.style.resize !== undefined;
@@ -31,20 +41,25 @@ describe('<lion-textarea>', () => {
 
   it('has .readOnly=false .rows=2 and rows="2" by default', async () => {
     const el = await fixture(`<lion-textarea>foo</lion-textarea>`);
+    const { input } = getProtectedMembers(el);
+
     expect(el.rows).to.equal(2);
     expect(el.getAttribute('rows')).to.be.equal('2');
-    expect(el._inputNode.rows).to.equal(2);
-    expect(el._inputNode.getAttribute('rows')).to.be.equal('2');
+    // @ts-ignore
+    expect(input.rows).to.equal(2);
+    expect(input.getAttribute('rows')).to.be.equal('2');
     expect(el.readOnly).to.be.false;
-    expect(el._inputNode.hasAttribute('readonly')).to.be.false;
+    expect(input.hasAttribute('readonly')).to.be.false;
   });
 
   it('sync rows down to the native textarea', async () => {
     const el = await fixture(`<lion-textarea rows="8">foo</lion-textarea>`);
+    const { input } = getProtectedMembers(el);
     expect(el.rows).to.equal(8);
     expect(el.getAttribute('rows')).to.be.equal('8');
-    expect(el._inputNode.rows).to.equal(8);
-    expect(el._inputNode.getAttribute('rows')).to.be.equal('8');
+    // @ts-ignore
+    expect(input.rows).to.equal(8);
+    expect(input.getAttribute('rows')).to.be.equal('8');
   });
 
   it('sync readOnly to the native textarea', async () => {
@@ -59,7 +74,8 @@ describe('<lion-textarea>', () => {
     }
 
     const el = await fixture(`<lion-textarea></lion-textarea>`);
-    const computedStyle = window.getComputedStyle(el._inputNode);
+    const { input } = getProtectedMembers(el);
+    const computedStyle = window.getComputedStyle(input);
     expect(computedStyle.resize).to.equal('none');
   });
 
@@ -139,13 +155,14 @@ describe('<lion-textarea>', () => {
 
   it('has an attribute that can be used to set the placeholder text of the textarea', async () => {
     const el = await fixture(`<lion-textarea placeholder="text"></lion-textarea>`);
+    const { input } = getProtectedMembers(el);
     expect(el.getAttribute('placeholder')).to.equal('text');
-    expect(el._inputNode.getAttribute('placeholder')).to.equal('text');
+    expect(input.getAttribute('placeholder')).to.equal('text');
 
     el.placeholder = 'foo';
     await el.updateComplete;
     expect(el.getAttribute('placeholder')).to.equal('foo');
-    expect(el._inputNode.getAttribute('placeholder')).to.equal('foo');
+    expect(input.getAttribute('placeholder')).to.equal('foo');
   });
 
   it('fires resize textarea when a visibility change has been detected', async () => {

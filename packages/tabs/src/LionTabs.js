@@ -166,6 +166,7 @@ export class LionTabs extends LitElement {
     this.__setupSlots();
   }
 
+  /** @private */
   __setupSlots() {
     if (this.shadowRoot) {
       const tabSlot = this.shadowRoot.querySelector('slot[name=tab]');
@@ -181,6 +182,7 @@ export class LionTabs extends LitElement {
     }
   }
 
+  /** @private */
   __setupStore() {
     /** @type {StoreEntry[]} */
     this.__store = [];
@@ -222,6 +224,7 @@ export class LionTabs extends LitElement {
     });
   }
 
+  /** @private */
   __cleanStore() {
     if (!this.__store) {
       return;
@@ -235,6 +238,7 @@ export class LionTabs extends LitElement {
   /**
    * @param {number} index
    * @returns {EventHandlerNonNull}
+   * @private
    */
   __createButtonClickHandler(index) {
     return () => {
@@ -244,6 +248,7 @@ export class LionTabs extends LitElement {
 
   /**
    * @param {Event} ev
+   * @private
    */
   __handleButtonKeyup(ev) {
     const _ev = /** @type {KeyboardEvent} */ (ev);
@@ -289,6 +294,7 @@ export class LionTabs extends LitElement {
 
   /**
    * @param {number} value The new index for focus
+   * @protected
    */
   _setSelectedIndexWithFocus(value) {
     const stale = this.__selectedIndex;
@@ -305,10 +311,12 @@ export class LionTabs extends LitElement {
     return this.__selectedIndex || 0;
   }
 
+  /** @protected */
   get _pairCount() {
     return (this.__store && this.__store.length) || 0;
   }
 
+  /** @private */
   __updateSelected(withFocus = false) {
     if (
       !(this.__store && typeof this.selectedIndex === 'number' && this.__store[this.selectedIndex])

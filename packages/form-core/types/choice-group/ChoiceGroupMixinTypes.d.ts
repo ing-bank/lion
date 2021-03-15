@@ -28,17 +28,17 @@ export declare class ChoiceGroupHost {
 
   addFormElement(child: FormControlHost, indexToInsertAt: number): void;
 
-  _triggerInitialModelValueChangedEvent(): void;
+  protected _triggerInitialModelValueChangedEvent(): void;
 
   _getFromAllFormElements(property: string, filterCondition: Function): void;
 
   _throwWhenInvalidChildModelValue(child: FormControlHost): void;
 
-  _isEmpty(): void;
+  protected _isEmpty(): void;
 
   _checkSingleChoiceElements(ev: Event): void;
 
-  _getCheckedElements(): void;
+  protected _getCheckedElements(): void;
 
   _setCheckedElements(value: any, check: boolean): void;
 
@@ -46,7 +46,7 @@ export declare class ChoiceGroupHost {
 
   __delegateNameAttribute(child: FormControlHost): void;
 
-  _onBeforeRepropagateChildrenValues(ev: Event): void;
+  protected _onBeforeRepropagateChildrenValues(ev: Event): void;
 }
 
 export declare function ChoiceGroupImplementation<T extends Constructor<LitElement>>(

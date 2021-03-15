@@ -1,4 +1,5 @@
 import { LitElement } from '@lion/core';
+// @ts-ignore
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import {
   defineCE,
@@ -10,6 +11,7 @@ import {
   aTimeout,
 } from '@open-wc/testing';
 import sinon from 'sinon';
+// @ts-ignore
 import { IsNumber, Validator, LionField } from '@lion/form-core';
 import '@lion/form-core/define';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
@@ -19,6 +21,7 @@ import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
  */
 export function runFormGroupMixinSuite(cfg = {}) {
   class FormChild extends LionField {
+    // @ts-ignore
     get slots() {
       return {
         ...super.slots,
@@ -85,9 +88,11 @@ export function runFormGroupMixinSuite(cfg = {}) {
     // TODO: Tests below belong to FormRegistrarMixin. Preferably run suite integration test
     it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}>${inputSlots}</${tag}>`));
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(2);
       el.removeChild(el.formElements['hobbies[]'][0]);
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(1);
     });
@@ -111,6 +116,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       el.formElements['hobbies[]'][0].modelValue = { checked: false, value: 'chess' };
       el.formElements['hobbies[]'][1].modelValue = { checked: false, value: 'rugby' };
 
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(2);
       expect(el.formElements['hobbies[]'][0].modelValue.value).to.equal('chess');
@@ -202,12 +208,15 @@ export function runFormGroupMixinSuite(cfg = {}) {
         html`<${childTag} name="lastName"></${childTag}>`,
       ));
 
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(3);
 
       el.appendChild(newField);
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(4);
 
       el._inputNode.removeChild(newField);
+      // @ts-ignore
       expect(el.formElements._keys().length).to.equal(3);
     });
 
@@ -732,7 +741,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         newFieldset.formElements['gender[]'][1].modelValue = { checked: false, value: 'female' };
         newFieldset.formElements.color.modelValue = { checked: false, value: 'blue' };
         fieldset.formElements.comment.modelValue = 'Foo';
+        // @ts-ignore
         expect(fieldset.formElements._keys().length).to.equal(2);
+        // @ts-ignore
         expect(newFieldset.formElements._keys().length).to.equal(3);
         expect(fieldset.serializedValue).to.deep.equal({
           comment: 'Foo',

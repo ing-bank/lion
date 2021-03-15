@@ -115,6 +115,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
 
   constructor() {
     super();
+    /** @private */
     this.__visiblePages = 5;
     this.current = 1;
     this.count = 0;

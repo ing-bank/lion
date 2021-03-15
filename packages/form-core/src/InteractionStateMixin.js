@@ -157,10 +157,18 @@ const InteractionStateMixinImplementation = superclass =>
       this.prefilled = !this._isEmpty();
     }
 
+    /**
+     * Dispatches custom event on touched state change
+     * @protected
+     */
     _onTouchedChanged() {
       this.dispatchEvent(new CustomEvent('touched-changed', { bubbles: true, composed: true }));
     }
 
+    /**
+     * Dispatches custom event on touched state change
+     * @protected
+     */
     _onDirtyChanged() {
       this.dispatchEvent(new CustomEvent('dirty-changed', { bubbles: true, composed: true }));
     }
@@ -181,6 +189,7 @@ const InteractionStateMixinImplementation = superclass =>
      *   (a user leaves(blurs) a field).
      *   When a user enters a field without altering the value(making it `dirty`),
      *   an error message shouldn't be shown either.
+     * @protected
      */
     _showFeedbackConditionFor() {
       return (this.touched && this.dirty) || this.prefilled || this.submitted;

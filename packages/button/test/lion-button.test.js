@@ -9,6 +9,16 @@ import '@lion/button/define';
  * @typedef {import('@lion/button/src/LionButton').LionButton} LionButton
  */
 
+/**
+ * @param {LionButton} el
+ */
+function getProtectedMembers(el) {
+  return {
+    // @ts-ignore
+    nativeButtonNode: el._nativeButtonNode,
+  };
+}
+
 describe('lion-button', () => {
   it('behaves like native `button` in terms of a11y', async () => {
     const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
@@ -18,26 +28,32 @@ describe('lion-button', () => {
 
   it('has .type="submit" and type="submit" by default', async () => {
     const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
+    const { nativeButtonNode } = getProtectedMembers(el);
+
     expect(el.type).to.equal('submit');
     expect(el.getAttribute('type')).to.be.equal('submit');
-    expect(el._nativeButtonNode.type).to.equal('submit');
-    expect(el._nativeButtonNode.getAttribute('type')).to.be.equal('submit');
+    expect(nativeButtonNode.type).to.equal('submit');
+    expect(nativeButtonNode.getAttribute('type')).to.be.equal('submit');
   });
 
   it('sync type down to the native button', async () => {
     const el = /** @type {LionButton} */ (await fixture(
       `<lion-button type="button">foo</lion-button>`,
     ));
+    const { nativeButtonNode } = getProtectedMembers(el);
+
     expect(el.type).to.equal('button');
     expect(el.getAttribute('type')).to.be.equal('button');
-    expect(el._nativeButtonNode.type).to.equal('button');
-    expect(el._nativeButtonNode.getAttribute('type')).to.be.equal('button');
+    expect(nativeButtonNode.type).to.equal('button');
+    expect(nativeButtonNode.getAttribute('type')).to.be.equal('button');
   });
 
   it('hides the native button in the UI', async () => {
     const el = /** @type {LionButton} */ (await fixture(`<lion-button>foo</lion-button>`));
-    expect(el._nativeButtonNode.getAttribute('tabindex')).to.equal('-1');
-    expect(window.getComputedStyle(el._nativeButtonNode).clip).to.equal('rect(0px, 0px, 0px, 0px)');
+    const { nativeButtonNode } = getProtectedMembers(el);
+
+    expect(nativeButtonNode.getAttribute('tabindex')).to.equal('-1');
+    expect(window.getComputedStyle(nativeButtonNode).clip).to.equal('rect(0px, 0px, 0px, 0px)');
   });
 
   it('is hidden when attribute hidden is true', async () => {
@@ -223,8 +239,9 @@ describe('lion-button', () => {
 
     it('has a native button node with aria-hidden set to true', async () => {
       const el = /** @type {LionButton} */ (await fixture('<lion-button></lion-button>'));
+      const { nativeButtonNode } = getProtectedMembers(el);
 
-      expect(el._nativeButtonNode.getAttribute('aria-hidden')).to.equal('true');
+      expect(nativeButtonNode.getAttribute('aria-hidden')).to.equal('true');
     });
 
     it('is accessible', async () => {

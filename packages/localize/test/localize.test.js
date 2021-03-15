@@ -4,6 +4,21 @@ import { LocalizeManager } from '../src/LocalizeManager.js';
 
 import { localize, setLocalize } from '../src/localize.js';
 
+/**
+ * @param {LocalizeManager} localizeManagerEl
+ */
+function getProtectedMembers(localizeManagerEl) {
+  // @ts-ignore
+  const {
+    _autoLoadOnLocaleChange: autoLoadOnLocaleChange,
+    _fallbackLocale: fallbackLocale,
+  } = localizeManagerEl;
+  return {
+    autoLoadOnLocaleChange,
+    fallbackLocale,
+  };
+}
+
 describe('localize', () => {
   // this is an important mindset:
   // we don't test the singleton
@@ -32,10 +47,12 @@ describe('localize', () => {
   });
 
   it('is configured to automatically load namespaces if locale is changed', () => {
-    expect(localize._autoLoadOnLocaleChange).to.equal(true);
+    const { autoLoadOnLocaleChange } = getProtectedMembers(localize);
+    expect(autoLoadOnLocaleChange).to.equal(true);
   });
 
   it('is configured to fallback to the locale "en-GB"', () => {
-    expect(localize._fallbackLocale).to.equal('en-GB');
+    const { fallbackLocale } = getProtectedMembers(localize);
+    expect(fallbackLocale).to.equal('en-GB');
   });
 });

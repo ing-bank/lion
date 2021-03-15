@@ -18,13 +18,13 @@ export declare class ArrowHost {
   static get styles(): CSSResultArray;
 
   render(): TemplateResult;
-  _arrowTemplate(): TemplateResult;
-  _arrowNodeTemplate(): TemplateResult;
-  _defineOverlayConfig(): OverlayConfig;
-  _getPopperArrowConfig(popperConfigToExtendFrom: Partial<PopperOptions>): Partial<PopperOptions>;
-  __setupRepositionCompletePromise(): void;
+  protected _arrowTemplate(): TemplateResult;
+  protected _arrowNodeTemplate(): TemplateResult;
+  protected _defineOverlayConfig(): OverlayConfig;
+  protected _getPopperArrowConfig(popperConfigToExtendFrom: Partial<PopperOptions>): Partial<PopperOptions>;
+  private __setupRepositionCompletePromise(): void;
   get _arrowNode(): Element | null;
-  __syncFromPopperState(data: Partial<State>): void;
+  private __syncFromPopperState(data: Partial<State>): void;
 }
 
 export declare function ArrowImplementation<T extends Constructor<LitElement>>(

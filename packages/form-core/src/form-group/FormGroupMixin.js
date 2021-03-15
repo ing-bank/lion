@@ -81,6 +81,7 @@ const FormGroupMixinImplementation = superclass =>
       return this;
     }
 
+    // @ts-ignore
     get modelValue() {
       return this._getFromAllFormElements('modelValue');
     }
@@ -167,6 +168,7 @@ const FormGroupMixinImplementation = superclass =>
     connectedCallback() {
       super.connectedCallback();
       this.setAttribute('role', 'group');
+      // @ts-ignore
       Promise.resolve().then(() => this.__resolveRegistrationComplete());
 
       this.registrationComplete.then(() => {
@@ -325,6 +327,7 @@ const FormGroupMixinImplementation = superclass =>
      */
     _getFromAllFormElements(property, filterFn = (/** @type {FormControl} */ el) => !el.disabled) {
       const result = {};
+      // @ts-ignore
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {

@@ -99,6 +99,7 @@ export const ValidateMixinImplementation = superclass =>
      * @overridable
      * Adds "._feedbackNode" as described below
      */
+    // @ts-ignore
     get slots() {
       /**
        * FIXME: Ugly workaround https://github.com/microsoft/TypeScript/issues/40110
@@ -141,6 +142,7 @@ export const ValidateMixinImplementation = superclass =>
       /** @type {Object.<string, Object.<string, boolean>>} */
       this.validationStates = {};
 
+      /** @protected */
       this._visibleMessagesAmount = 1;
 
       this.isPending = false;
@@ -150,23 +152,35 @@ export const ValidateMixinImplementation = superclass =>
       /** @type {Validator[]} */
       this.defaultValidators = [];
 
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__syncValidationResult = [];
 
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__asyncValidationResult = [];
 
       /**
        * @desc contains results from sync Validators, async Validators and ResultValidators
        * @type {Validator[]}
+       * @private
        */
       this.__validationResult = [];
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__prevValidationResult = [];
       /** @type {Validator[]} */
       this.__prevShownValidationResult = [];
 
+      /** @private */
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
+      /** @protected */
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
     }
 
@@ -358,6 +372,7 @@ export const ValidateMixinImplementation = superclass =>
      * @param {Validator[]} syncValidators
      * @param {unknown} value
      * @param {{ hasAsync: boolean }} opts
+     * @private
      */
     __executeSyncValidators(syncValidators, value, { hasAsync }) {
       if (syncValidators.length) {
@@ -372,6 +387,7 @@ export const ValidateMixinImplementation = superclass =>
      * @desc step A3, calls __finishValidation
      * @param {Validator[]} asyncValidators all Validators except required and ResultValidators
      * @param {?} value
+     * @private
      */
     async __executeAsyncValidators(asyncValidators, value) {
       if (asyncValidators.length) {
@@ -389,6 +405,7 @@ export const ValidateMixinImplementation = superclass =>
     /**
      * @desc step B, called by __finishValidation
      * @param {Validator[]} regularValidationResult result of steps 1-3
+     * @private
      */
     __executeResultValidators(regularValidationResult) {
       const resultValidators = /** @type {ResultValidator[]} */ (this._allValidators.filter(v => {
@@ -409,6 +426,7 @@ export const ValidateMixinImplementation = superclass =>
      * @param {object} options
      * @param {'sync'|'async'} options.source
      * @param {boolean} [options.hasAsync] whether async validators are configured in this run.
+     * @private
      * If not, we have nothing left to wait for.
      */
     __finishValidation({ source, hasAsync }) {
@@ -442,11 +460,15 @@ export const ValidateMixinImplementation = superclass =>
       this.dispatchEvent(new Event('validate-performed', { bubbles: true }));
       if (source === 'async' || !hasAsync) {
         if (this.__validateCompleteResolve) {
+          // @ts-ignore
           this.__validateCompleteResolve();
         }
       }
     }
 
+    /**
+     * @private
+     */
     __clearValidationResults() {
       this.__syncValidationResult = [];
       this.__asyncValidationResult = [];
@@ -454,6 +476,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * @param {Event|CustomEvent} e
+     * @private
      */
     __onValidatorUpdated(e) {
       if (e.type === 'param-changed' || e.type === 'config-changed') {
@@ -461,6 +484,9 @@ export const ValidateMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @private
+     */
     __setupValidators() {
       const events = ['param-changed', 'config-changed'];
       if (this.__prevValidators) {
@@ -504,6 +530,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * @param {?} v
+     * @private
      */
     __isEmpty(v) {
       if (typeof this._isEmpty === 'function') {
@@ -533,6 +560,7 @@ export const ValidateMixinImplementation = superclass =>
     /**
      * @param {Validator[]} validators list of objects having a .getMessage method
      * @return {Promise.<FeedbackMessage[]>}
+     * @private
      */
     async __getFeedbackMessages(validators) {
       let fieldName = await this.fieldName;
@@ -541,6 +569,7 @@ export const ValidateMixinImplementation = superclass =>
           if (validator.config.fieldName) {
             fieldName = await validator.config.fieldName;
           }
+          // @ts-ignore
           const message = await validator._getMessage({
             modelValue: this.modelValue,
             formControl: this,
@@ -564,6 +593,7 @@ export const ValidateMixinImplementation = superclass =>
      * - we compute the 'show' flag (like 'hasErrorVisible') for all types
      * - we set the customValidity message of the highest prio Validator
      * - we set aria-invalid="true" in case hasErrorVisible is true
+     * @protected
      */
     _updateFeedbackComponent() {
       const { _feedbackNode } = this;
@@ -600,6 +630,7 @@ export const ValidateMixinImplementation = superclass =>
     /**
      * Show the validity feedback when returning true, don't show when false
      *  @param {string} type
+     * @protected
      */
     // eslint-disable-next-line no-unused-vars
     _showFeedbackConditionFor(type) {
@@ -608,6 +639,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * @param {string} type
+     * @protected
      */
     _hasFeedbackVisibleFor(type) {
       return (
@@ -636,6 +668,9 @@ export const ValidateMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @protected
+     */
     _updateShouldShowFeedbackFor() {
       const ctor = /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (this
         .constructor);
@@ -656,6 +691,7 @@ export const ValidateMixinImplementation = superclass =>
      * also filter out occurrences (based on interaction states)
      * @param {{ validationResult: Validator[] }} opts
      * @return {Validator[]} ordered list of Validators with feedback messages visible to the
+     * @protected
      * end user
      */
     _prioritizeAndFilterFeedback({ validationResult }) {

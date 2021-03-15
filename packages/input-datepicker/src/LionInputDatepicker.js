@@ -169,18 +169,26 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
   constructor() {
     super();
+    /** @private */
     this.__invokerId = this.__createUniqueIdForA11y();
+    /** @protected */
     this._calendarInvokerSlot = 'suffix';
 
     // Configuration flags for subclassers
+    /** @protected */
     this._focusCentralDateOnCalendarOpen = true;
+    /** @protected */
     this._hideOnUserSelect = true;
+    /** @protected */
     this._syncOnUserSelect = true;
 
+    /** @private */
     this.__openCalendarOverlay = this.__openCalendarOverlay.bind(this);
+    /** @protected */
     this._onCalendarUserSelectedChanged = this._onCalendarUserSelectedChanged.bind(this);
   }
 
+  /** @private */
   __createUniqueIdForA11y() {
     return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
@@ -197,6 +205,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     }
   }
 
+  /** @private */
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
       const invokerNode = /** @type {HTMLElement & {disabled: boolean}} */ (this._invokerNode);
@@ -226,6 +235,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * Defining this overlay as a templates from OverlayMixin
    * this is our source to give as .contentNode to OverlayController.
    * Important: do not change the name of this method.
+   * @protected
    */
   _overlayTemplate() {
     // TODO: add performance optimization to only render the calendar if needed

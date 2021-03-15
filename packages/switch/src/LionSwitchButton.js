@@ -77,8 +77,11 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
     this.role = 'switch';
     this.checked = false;
+    /** @protected */
     this._toggleChecked = this._toggleChecked.bind(this);
+    /** @private */
     this.__handleKeydown = this.__handleKeydown.bind(this);
+    /** @private */
     this.__handleKeyup = this.__handleKeyup.bind(this);
   }
 
@@ -97,6 +100,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.removeEventListener('keyup', this.__handleKeyup);
   }
 
+  /** @protected */
   _toggleChecked() {
     if (this.disabled) {
       return;
@@ -106,6 +110,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     this.checked = !this.checked;
   }
 
+  /** @private */
   __checkedStateChange() {
     this.dispatchEvent(
       new Event('checked-changed', {
@@ -118,6 +123,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   /**
    * @param {KeyboardEvent} e
+   * @private
    */
   // eslint-disable-next-line class-methods-use-this
   __handleKeydown(e) {
@@ -129,6 +135,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   /**
    * @param {KeyboardEvent} e
+   * @private
    */
   __handleKeyup(e) {
     if ([32 /* space */, 13 /* enter */].indexOf(e.keyCode) !== -1) {

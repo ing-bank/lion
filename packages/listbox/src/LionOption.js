@@ -66,7 +66,9 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
   constructor() {
     super();
     this.active = false;
+    /** @private */
     this.__onClick = this.__onClick.bind(this);
+    /** @private */
     this.__registerEventListeners();
   }
 
@@ -109,14 +111,17 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
     this.setAttribute('role', 'option');
   }
 
+  /** @private */
   __registerEventListeners() {
     this.addEventListener('click', this.__onClick);
   }
 
+  /** @private */
   __unRegisterEventListeners() {
     this.removeEventListener('click', this.__onClick);
   }
 
+  /** @private */
   __onClick() {
     if (this.disabled) {
       return;

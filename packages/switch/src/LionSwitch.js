@@ -30,12 +30,14 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    * Therefore we do a full override and typecast to an intersection type that includes LionSwitchButton
    * @returns {LionSwitchButton}
    */
+  // @ts-ignore
   get _inputNode() {
     return /** @type {LionSwitchButton} */ (Array.from(this.children).find(
       el => el.slot === 'input',
     ));
   }
 
+  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -62,10 +64,12 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     `;
   }
 
+  /** @protected */
   _groupOneTemplate() {
     return html`${this._labelTemplate()} ${this._helpTextTemplate()} ${this._feedbackTemplate()}`;
   }
 
+  /** @protected */
   _groupTwoTemplate() {
     return html`${this._inputGroupTemplate()}`;
   }
@@ -74,6 +78,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     super();
     this.role = 'switch';
     this.checked = false;
+    /** @private */
     this.__handleButtonSwitchCheckedChanged = this.__handleButtonSwitchCheckedChanged.bind(this);
   }
 
@@ -109,16 +114,19 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
 
   /**
    * Override this function from ChoiceInputMixin.
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _isEmpty() {
     return false;
   }
 
+  /** @private */
   __handleButtonSwitchCheckedChanged() {
     this.checked = this._inputNode.checked;
   }
 
+  /** @protected */
   _syncButtonSwitch() {
     this._inputNode.disabled = this.disabled;
   }

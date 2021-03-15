@@ -31,6 +31,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       };
     }
 
+    // @ts-ignore
     get modelValue() {
       const elems = this._getCheckedElements();
       if (this.multipleChoice) {
@@ -127,15 +128,21 @@ const ChoiceGroupMixinImplementation = superclass =>
     constructor() {
       super();
       this.multipleChoice = false;
-      /** @type {'child'|'choice-group'|'fieldset'} */
+      /** @type {'child'|'choice-group'|'fieldset'}
+       * @protected
+       */
       this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
-
+      /** @private */
       this.__isInitialModelValue = true;
+      /** @private */
       this.__isInitialSerializedValue = true;
+      /** @private */
       this.__isInitialFormattedValue = true;
       /** @type {Promise<any> & {done?:boolean}} */
       this.registrationComplete = new Promise((resolve, reject) => {
+        /** @private */
         this.__resolveRegistrationComplete = resolve;
+        /** @private */
         this.__rejectRegistrationComplete = reject;
       });
       this.registrationComplete.done = false;
@@ -156,6 +163,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       super.connectedCallback();
       // Double microtask queue to account for Webkit race condition
       Promise.resolve().then(() =>
+        // @ts-ignore
         Promise.resolve().then(() => this.__resolveRegistrationComplete()),
       );
 
@@ -203,6 +211,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @override from FormControlMixin
+     * @protected
      */
     _triggerInitialModelValueChangedEvent() {
       this.registrationComplete.then(() => {
@@ -213,6 +222,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @override
      * @param {string} property
+     * @protected
      */
     _getFromAllFormElements(property, filterCondition = () => true) {
       // For modelValue, serializedValue and formattedValue, an exception should be made,
@@ -229,6 +239,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @param {FormControl} child
+     * @protected
      */
     _throwWhenInvalidChildModelValue(child) {
       if (
@@ -246,6 +257,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @protected
+     */
     _isEmpty() {
       if (this.multipleChoice) {
         return this.modelValue.length === 0;
@@ -262,6 +276,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent & {target:FormControl}} ev
+     * @protected
      */
     _checkSingleChoiceElements(ev) {
       const { target } = ev;
@@ -278,6 +293,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       // this.__triggerCheckedValueChanged();
     }
 
+    /**
+     * @protected
+     */
     _getCheckedElements() {
       // We want to filter out disabled values by default
       return this.formElements.filter(el => el.checked && !el.disabled);
@@ -286,6 +304,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @param {string | any[]} value
      * @param {Function} check
+     * @protected
      */
     _setCheckedElements(value, check) {
       for (let i = 0; i < this.formElements.length; i += 1) {
@@ -309,6 +328,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @private
+     */
     __setChoiceGroupTouched() {
       const value = this.modelValue;
       if (value != null && value !== this.__previousCheckedValue) {
@@ -321,6 +343,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @override FormControlMixin
      * @param {CustomEvent} ev
+     * @protected
      */
     _onBeforeRepropagateChildrenValues(ev) {
       // Normalize target, since we might receive 'portal events' (from children in a modal,

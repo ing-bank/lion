@@ -94,6 +94,7 @@ export class FormControlsCollection extends Array {
   /**
    * @desc Gives back the named keys and filters out array indexes
    * @return {string[]}
+   * @protected
    */
   _keys() {
     return Object.keys(this).filter(k => Number.isNaN(Number(k)));
