@@ -78,7 +78,7 @@ describe('remarkExtend', () => {
       ].join('\n'),
     );
 
-    expect(result).to.equal(
+    expect(result.replace('\r', '')).to.equal(
       [
         '<h3>Static Headline</h3>',
         '<h1>import me headline</h1>',

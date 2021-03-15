@@ -83,7 +83,7 @@ function handleImportedFile({
       }
 
       if (node.type === 'image') {
-        node.url = path.join(path.dirname(fileImport), node.url);
+        node.url = path.posix.join(path.dirname(fileImport), node.url);
       }
     });
   };
