@@ -46,14 +46,23 @@ const FocusMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @private
+     */
     __onFocus() {
       this.focused = true;
     }
 
+    /**
+     * @private
+     */
     __onBlur() {
       this.focused = false;
     }
 
+    /**
+     * @private
+     */
     __registerEventsForFocusMixin() {
       /**
        * focus
@@ -98,6 +107,9 @@ const FocusMixinImplementation = superclass =>
       this._inputNode.addEventListener('focusout', this.__redispatchFocusout);
     }
 
+    /**
+     * @private
+     */
     __teardownEventsForFocusMixin() {
       this._inputNode.removeEventListener(
         'focus',

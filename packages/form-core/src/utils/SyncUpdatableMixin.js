@@ -51,6 +51,7 @@ const SyncUpdatableMixinImplementation = superclass =>
      * @param {string} name
      * @param {*} newValue
      * @param {*} oldValue
+     * @private
      */
     static __syncUpdatableHasChanged(name, newValue, oldValue) {
       // @ts-expect-error accessing private lit property
@@ -61,6 +62,7 @@ const SyncUpdatableMixinImplementation = superclass =>
       return newValue !== oldValue;
     }
 
+    /** @private */
     __syncUpdatableInitialize() {
       const ns = this.__SyncUpdatableNamespace;
       const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this

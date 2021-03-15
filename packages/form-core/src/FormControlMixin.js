@@ -273,16 +273,19 @@ const FormControlMixinImplementation = superclass =>
       }
     }
 
+    /** @protected */
     _triggerInitialModelValueChangedEvent() {
       this.__dispatchInitialModelValueChangedEvent();
     }
 
+    /** @protected */
     _enhanceLightDomClasses() {
       if (this._inputNode) {
         this._inputNode.classList.add('form-control');
       }
     }
 
+    /** @protected */
     _enhanceLightDomA11y() {
       const { _inputNode, _labelNode, _helpTextNode, _feedbackNode } = this;
 
@@ -309,6 +312,7 @@ const FormControlMixinImplementation = superclass =>
      * When boolean attribute data-label or data-description is found,
      * the slot element will be connected to the input via aria-labelledby or aria-describedby
      * @param {string[]} additionalSlots
+     * @protected
      */
     _enhanceLightDomA11yForAdditionalSlots(
       additionalSlots = ['prefix', 'suffix', 'before', 'after'],
@@ -334,6 +338,7 @@ const FormControlMixinImplementation = superclass =>
      * @param {string} attrName
      * @param {HTMLElement[]} nodes
      * @param {boolean|undefined} reorder
+     * @private
      */
     __reflectAriaAttr(attrName, nodes, reorder) {
       if (this._inputNode) {
@@ -392,6 +397,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     _groupOneTemplate() {
       return html` ${this._labelTemplate()} ${this._helpTextTemplate()} `;
@@ -399,6 +405,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     _groupTwoTemplate() {
       return html` ${this._inputGroupTemplate()} ${this._feedbackTemplate()} `;
@@ -406,6 +413,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _labelTemplate() {
@@ -418,6 +426,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _helpTextTemplate() {
@@ -430,6 +439,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     _inputGroupTemplate() {
       return html`
@@ -446,6 +456,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _inputGroupBeforeTemplate() {
@@ -458,6 +469,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult | nothing}
+     * @protected
      */
     _inputGroupPrefixTemplate() {
       return !Array.from(this.children).find(child => child.slot === 'prefix')
@@ -471,6 +483,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _inputGroupInputTemplate() {
@@ -483,6 +496,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult | nothing}
+     * @protected
      */
     _inputGroupSuffixTemplate() {
       return !Array.from(this.children).find(child => child.slot === 'suffix')
@@ -496,6 +510,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _inputGroupAfterTemplate() {
@@ -508,6 +523,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {TemplateResult}
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _feedbackTemplate() {
@@ -521,6 +537,7 @@ const FormControlMixinImplementation = superclass =>
     /**
      * @param {?} modelValue
      * @return {boolean}
+     * @protected
      */
     // @ts-ignore FIXME: Move to FormatMixin? Since there we have access to modelValue prop
     _isEmpty(modelValue = this.modelValue) {
@@ -674,6 +691,7 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @return {Array.<HTMLElement|undefined>}
+     * @protected
      */
     // Returns dom references to all elements that should be referred to by field(s)
     _getAriaDescriptionElements() {
@@ -726,6 +744,7 @@ const FormControlMixinImplementation = superclass =>
     /**
      * @param {string} slotName
      * @return {HTMLElement | undefined}
+     * @private
      */
     __getDirectSlotChild(slotName) {
       return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
@@ -733,6 +752,7 @@ const FormControlMixinImplementation = superclass =>
       );
     }
 
+    /** @private */
     __dispatchInitialModelValueChangedEvent() {
       // When we are not a fieldset / choice-group, we don't need to wait for our children
       // to send a unified event
@@ -761,12 +781,14 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _onBeforeRepropagateChildrenValues(ev) {}
 
     /**
      * @param {CustomEvent} ev
+     * @private
      */
     __repropagateChildrenValues(ev) {
       // Allows sub classes to internally listen to the children change events
@@ -840,6 +862,7 @@ const FormControlMixinImplementation = superclass =>
      * TODO: Extend this in choice group so that target is always a choice input and multipleChoice exists.
      * This will fix the types and reduce the need for ignores/expect-errors
      * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
+     * @protected
      */
     _repropagationCondition(target) {
       return !(
@@ -860,6 +883,7 @@ const FormControlMixinImplementation = superclass =>
      * _onLabelClick() {
      *   this._invokerNode.focus();
      * }
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _onLabelClick() {}

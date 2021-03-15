@@ -199,6 +199,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @override from FormControlMixin
+     * @protected
      */
     _triggerInitialModelValueChangedEvent() {
       this.registrationComplete.then(() => {
@@ -209,6 +210,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @override
      * @param {string} property
+     * @protected
      */
     _getFromAllFormElements(property, filterCondition = () => true) {
       // For modelValue, serializedValue and formattedValue, an exception should be made,
@@ -225,6 +227,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @param {FormControl} child
+     * @protected
      */
     _throwWhenInvalidChildModelValue(child) {
       if (
@@ -242,6 +245,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @protected
+     */
     _isEmpty() {
       if (this.multipleChoice) {
         return this.modelValue.length === 0;
@@ -258,6 +264,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent & {target:FormControl}} ev
+     * @protected
      */
     _checkSingleChoiceElements(ev) {
       const { target } = ev;
@@ -274,6 +281,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       // this.__triggerCheckedValueChanged();
     }
 
+    /**
+     * @protected
+     */
     _getCheckedElements() {
       // We want to filter out disabled values by default
       return this.formElements.filter(el => el.checked && !el.disabled);
@@ -282,6 +292,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @param {string | any[]} value
      * @param {Function} check
+     * @protected
      */
     _setCheckedElements(value, check) {
       for (let i = 0; i < this.formElements.length; i += 1) {
@@ -305,6 +316,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @private
+     */
     __setChoiceGroupTouched() {
       const value = this.modelValue;
       if (value != null && value !== this.__previousCheckedValue) {
@@ -317,6 +331,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /**
      * @override FormControlMixin
      * @param {CustomEvent} ev
+     * @protected
      */
     _onBeforeRepropagateChildrenValues(ev) {
       // Normalize target, since we might receive 'portal events' (from children in a modal,

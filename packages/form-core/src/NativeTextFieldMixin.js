@@ -59,6 +59,7 @@ const NativeTextFieldMixinImplementation = superclass =>
     /**
      * Restores the cursor to its original position after updating the value.
      * @param {string} newValue The value that should be saved.
+     * @protected
      */
     _setValueAndPreserveCaret(newValue) {
       // Only preserve caret if focused (changing selectionStart will move focus in Safari)

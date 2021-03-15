@@ -29,6 +29,7 @@ export class AsyncQueue {
     }
   }
 
+  /** @private */
   async __run() {
     this.__running = true;
     await this.__queue[0]();

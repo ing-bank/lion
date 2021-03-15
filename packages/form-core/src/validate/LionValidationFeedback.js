@@ -26,6 +26,7 @@ export class LionValidationFeedback extends LitElement {
    * @param {string | Node | TemplateResult } opts.message message or feedback node or TemplateResult
    * @param {string} [opts.type]
    * @param {Validator} [opts.validator]
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _messageTemplate({ message }) {
