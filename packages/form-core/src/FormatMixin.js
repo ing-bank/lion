@@ -301,6 +301,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * Observer Handlers
      * @param {{ modelValue: unknown; }[]} args
+     * @protected
      */
     _onModelValueChanged(...args) {
       this._calculateValues({ source: 'model' });

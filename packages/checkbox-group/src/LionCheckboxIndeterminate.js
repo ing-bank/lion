@@ -34,10 +34,16 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     };
   }
 
+  /**
+   * @protected
+   */
   get _checkboxGroupNode() {
     return /** @type LionCheckboxGroup */ (this._parentFormGroup);
   }
 
+  /**
+   * @protected
+   */
   get _subCheckboxes() {
     let checkboxes = [];
     if (
@@ -52,6 +58,9 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     return /** @type LionCheckbox[] */ (checkboxes);
   }
 
+  /**
+   * @protected
+   */
   _setOwnCheckedState() {
     const subCheckboxes = this._subCheckboxes;
     if (!subCheckboxes.length) {
@@ -82,6 +91,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
 
   /**
    * @param {Event} ev
+   * @private
    */
   __onModelValueChanged(ev) {
     if (this.disabled) {
@@ -98,6 +108,9 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this._setOwnCheckedState();
   }
 
+  /**
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
     return html`
@@ -107,6 +120,9 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     `;
   }
 
+  /**
+   * @protected
+   */
   _onRequestToAddFormElement() {
     this._setOwnCheckedState();
   }
