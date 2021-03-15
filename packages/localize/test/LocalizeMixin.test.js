@@ -18,7 +18,7 @@ import {
   resetFakeImport,
   setupEmptyFakeImportsFor,
   setupFakeImport,
-} from '../test-helpers.js';
+} from '../test-helpers/index.js';
 
 /**
  * @typedef {import('../types/LocalizeMixinTypes').LocalizeMixin} LocalizeMixinHost

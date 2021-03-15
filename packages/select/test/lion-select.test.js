@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import '../lion-select.js';
+import '@lion/select/define';
 
 describe('lion-select', () => {
   it('can preselect an option', async () => {

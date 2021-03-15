@@ -2,7 +2,7 @@ import { expect } from '@open-wc/testing';
 
 import { IsIBAN, IsCountryIBAN, IsNotCountryIBAN } from '../src/validators.js';
 
-import '../lion-input-iban.js';
+import '@lion/input-iban/define';
 
 describe('IBAN validation', () => {
   it('provides IsIBAN to check for valid IBAN', () => {

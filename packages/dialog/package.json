@@ -24,11 +24,12 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group dialog",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group dialog",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group dialog",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group dialog"
   },
   "sideEffects": [
@@ -50,6 +51,7 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-dialog": "./lion-dialog.js"
+    "./define": "./lion-dialog.js",
+    "./docs/": "./docs/"
   }
 }

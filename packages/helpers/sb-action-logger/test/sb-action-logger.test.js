@@ -1,5 +1,5 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
-import '../../sb-action-logger.js';
+import '@lion/helpers/define-sb-action-logger';
 
 /**
  * @typedef {import('../src/SbActionLogger').SbActionLogger} SbActionLogger

@@ -24,11 +24,11 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group localize",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group localize",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group localize",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/docs/systems/localize/assets",
+    "prepublishOnly": "npm run publish-docs",
     "test": "cd ../../ && npm run test:browser -- --group localize"
   },
   "sideEffects": false,
@@ -45,9 +45,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-helpers": "./test-helpers.js"
+    "./test-helpers": "./test-helpers/index.js",
+    "./docs/": "./docs/"
   }
 }

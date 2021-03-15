@@ -1,6 +1,6 @@
 import { LionButton } from '@lion/button';
 import { defineCE, expect, fixture, html } from '@open-wc/testing';
-import '../lion-select-invoker.js';
+import '@lion/select-rich/define-select-invoker';
 import { LionSelectInvoker } from '../src/LionSelectInvoker.js';
 
 /**

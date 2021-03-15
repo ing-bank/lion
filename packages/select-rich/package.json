@@ -24,14 +24,18 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group select-rich",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group select-rich",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group select-rich",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group select-rich"
   },
   "sideEffects": [
+    "define.js",
+    "lion-option.js",
+    "lion-options",
     "lion-select-invoker.js",
     "lion-select-rich.js"
   ],
@@ -57,9 +61,11 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-option": "./lion-option.js",
-    "./lion-options": "./lion-options.js",
-    "./lion-select-invoker": "./lion-select-invoker.js",
-    "./lion-select-rich": "./lion-select-rich.js"
+    "./define": "./define.js",
+    "./define-option": "./lion-option.js",
+    "./define-options": "./lion-options.js",
+    "./define-select-invoker": "./lion-select-invoker.js",
+    "./define-select-rich": "./lion-select-rich.js",
+    "./docs/": "./docs/"
   }
 }

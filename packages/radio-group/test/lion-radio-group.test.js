@@ -1,6 +1,5 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
-import '../lion-radio-group.js';
-import '../lion-radio.js';
+import '@lion/radio-group/define';
 
 /**
  * @typedef {import('../src/LionRadioGroup').LionRadioGroup} LionRadioGroup

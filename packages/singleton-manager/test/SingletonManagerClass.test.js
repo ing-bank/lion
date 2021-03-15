@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { SingletonManagerClass } from '../src/SingletonManagerClass.js';
+import { SingletonManagerClass } from 'singleton-manager';
 
 describe('SingletonManagerClass', () => {
   it('returns undefined and has false if not set', async () => {

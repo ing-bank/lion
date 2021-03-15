@@ -22,6 +22,8 @@
     "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
     "match-lion-imports": "npm run providence analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs",
     "test:node": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
     "test:node:watch": "npm run test:node --watch"
@@ -68,6 +70,7 @@
   },
   "exports": {
     ".": "./src/program/providence.js",
-    "./src/cli/index.js": "./src/cli/index.js"
+    "./src/cli": "./src/cli/index.js",
+    "./docs/": "./docs/"
   }
 }

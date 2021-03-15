@@ -1,6 +1,5 @@
-import { runChoiceGroupMixinSuite } from '@lion/form-core/test-suites/choice-group/ChoiceGroupMixin.suite.js';
-import '../lion-radio-group.js';
-import '../lion-radio.js';
+import { runChoiceGroupMixinSuite } from '@lion/form-core/test-suites';
+import '@lion/radio-group/define';
 
 runChoiceGroupMixinSuite({
   parentTagString: 'lion-radio-group',

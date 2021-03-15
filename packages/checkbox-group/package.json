@@ -24,11 +24,12 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group checkbox-group",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group checkbox-group",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group checkbox-group",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group checkbox-group"
   },
   "sideEffects": [
@@ -52,8 +53,10 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-checkbox": "./lion-checkbox.js",
-    "./lion-checkbox-group": "./lion-checkbox-group.js",
-    "./lion-checkbox-indeterminate": "./lion-checkbox-indeterminate.js"
+    "./define-checkbox": "./lion-checkbox.js",
+    "./define-checkbox-group": "./lion-checkbox-group.js",
+    "./define-checkbox-indeterminate": "./lion-checkbox-indeterminate.js",
+    "./define": "./define.js",
+    "./docs/": "./docs/"
   }
 }

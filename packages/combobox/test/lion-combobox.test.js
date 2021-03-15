@@ -1,7 +1,7 @@
-import '@lion/listbox/lion-option';
+import '@lion/listbox/define-option';
 import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-combobox.js';
+import '@lion/combobox/define';
 import { LionOptions } from '@lion/listbox';
 import { browserDetection, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';

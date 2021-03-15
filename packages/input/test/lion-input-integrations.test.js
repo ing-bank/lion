@@ -1,6 +1,6 @@
-import { runInteractionStateMixinSuite } from '@lion/form-core/test-suites/InteractionStateMixin.suite.js';
-import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
-import '../lion-input.js';
+import { runInteractionStateMixinSuite, runFormatMixinSuite } from '@lion/form-core/test-suites';
+
+import '@lion/input/define';
 
 const tagString = 'lion-input';
 

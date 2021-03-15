@@ -1,6 +1,6 @@
-import { runInteractionStateMixinSuite } from '@lion/form-core/test-suites/InteractionStateMixin.suite.js';
-import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
-import '../lion-input-date.js';
+import { runInteractionStateMixinSuite, runFormatMixinSuite } from '@lion/form-core/test-suites';
+
+import '@lion/input-date/define';
 
 const tagString = 'lion-input-date';
 describe('<lion-input-date> integrations', () => {

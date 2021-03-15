@@ -21,11 +21,12 @@
     "sortEachDepth"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group helpers",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group helpers",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group helpers",
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group helpers"
   },
   "sideEffects": [
@@ -47,7 +48,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./sb-action-logger": "./sb-action-logger.js",
-    "./sb-locale-switcher": "./sb-locale-switcher.js"
+    "./define": "./define.js",
+    "./define-sb-action-logger": "./sb-action-logger.js",
+    "./define-sb-locale-switcher": "./sb-locale-switcher.js",
+    "./docs/": "./docs/"
   }
 }

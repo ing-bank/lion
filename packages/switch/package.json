@@ -24,14 +24,16 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group switch",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group switch",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group switch",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group switch"
   },
   "sideEffects": [
+    "define.js",
     "lion-switch.js",
     "lion-switch-button.js"
   ],
@@ -51,7 +53,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-switch": "./lion-switch.js",
-    "./lion-switch-button": "./lion-switch-button.js"
+    "./define": "./define.js",
+    "./define-switch": "./lion-switch.js",
+    "./define-switch-button": "./lion-switch-button.js",
+    "./docs/": "./docs/"
   }
 }

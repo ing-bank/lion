@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { parseDate } from '../../src/date/parseDate.js';
-import { localizeTearDown } from '../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/index.js';
 import { localize } from '../../src/localize.js';
 
 /**

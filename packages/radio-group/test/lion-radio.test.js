@@ -1,5 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import '../lion-radio.js';
+import '@lion/radio-group/define-radio';
 
 /**
  * @typedef {import('../src/LionRadio').LionRadio} LionRadio

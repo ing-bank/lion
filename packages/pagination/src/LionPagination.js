@@ -41,43 +41,43 @@ export class LionPagination extends LocalizeMixin(LitElement) {
         'lion-pagination': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
-              return import('../translations/bg.js');
+              return import('@lion/pagination/translations/bg.js');
             case 'cs-CZ':
-              return import('../translations/cs.js');
+              return import('@lion/pagination/translations/cs.js');
             case 'de-AT':
             case 'de-DE':
-              return import('../translations/de.js');
+              return import('@lion/pagination/translations/de.js');
             case 'en-AU':
             case 'en-GB':
             case 'en-PH':
             case 'en-US':
-              return import('../translations/en.js');
+              return import('@lion/pagination/translations/en.js');
             case 'es-ES':
-              return import('../translations/es.js');
+              return import('@lion/pagination/translations/es.js');
             case 'fr-FR':
             case 'fr-BE':
-              return import('../translations/fr.js');
+              return import('@lion/pagination/translations/fr.js');
             case 'hu-HU':
-              return import('../translations/hu.js');
+              return import('@lion/pagination/translations/hu.js');
             case 'it-IT':
-              return import('../translations/it.js');
+              return import('@lion/pagination/translations/it.js');
             case 'nl-BE':
             case 'nl-NL':
-              return import('../translations/nl.js');
+              return import('@lion/pagination/translations/nl.js');
             case 'pl-PL':
-              return import('../translations/pl.js');
+              return import('@lion/pagination/translations/pl.js');
             case 'ro-RO':
-              return import('../translations/ro.js');
+              return import('@lion/pagination/translations/ro.js');
             case 'ru-RU':
-              return import('../translations/ru.js');
+              return import('@lion/pagination/translations/ru.js');
             case 'sk-SK':
-              return import('../translations/sk.js');
+              return import('@lion/pagination/translations/sk.js');
             case 'uk-UA':
-              return import('../translations/uk.js');
+              return import('@lion/pagination/translations/uk.js');
             case 'zh-CN':
-              return import('../translations/zh.js');
+              return import('@lion/pagination/translations/zh.js');
             default:
-              return import('../translations/en.js');
+              return import('@lion/pagination/translations/en.js');
           }
         },
       },

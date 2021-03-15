@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { localizeTearDown } from '../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/localizeTearDown.js';
 import { getCurrencyName } from '../../src/number/getCurrencyName.js';
 
 describe('getCurrencyName', () => {

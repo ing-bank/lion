@@ -1,6 +1,6 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
 
-import '../lion-collapsible.js';
+import '@lion/collapsible/define';
 
 /**
 

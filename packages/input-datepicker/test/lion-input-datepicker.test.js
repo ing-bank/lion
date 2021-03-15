@@ -4,9 +4,9 @@ import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import sinon from 'sinon';
 import { setViewport } from '@web/test-runner-commands';
-import '../lion-input-datepicker.js';
+import '@lion/input-datepicker/define';
+import { DatepickerInputObject } from '@lion/input-datepicker/test-helpers';
 import { LionInputDatepicker } from '../src/LionInputDatepicker.js';
-import { DatepickerInputObject } from '../test-helpers.js';
 
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult

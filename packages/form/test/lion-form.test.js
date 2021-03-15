@@ -10,10 +10,10 @@ import {
 import { spy } from 'sinon';
 import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
-import '@lion/form-core/lion-field';
-import '@lion/fieldset/lion-fieldset';
+import '@lion/form-core/define';
+import '@lion/fieldset/define';
 
-import '../lion-form.js';
+import '@lion/form/define';
 
 /**
 

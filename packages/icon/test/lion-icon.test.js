@@ -1,6 +1,6 @@
 import { nothing, until } from '@lion/core';
 import { aTimeout, expect, fixture as _fixture, fixtureSync, html } from '@open-wc/testing';
-import '../lion-icon.js';
+import '@lion/icon/define';
 import { icons } from '../src/icons.js';
 import hammerSvg from './hammer.svg.js';
 import heartSvg from './heart.svg.js';

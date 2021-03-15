@@ -1,7 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
 
-import '../lion-progress-indicator.js';
+import '@lion/progress-indicator/define';
 
 describe('lion-progress-indicator', () => {
   describe('Accessibility', () => {
