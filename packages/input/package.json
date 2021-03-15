@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
     "debug": "cd ../../ && npm run debug -- --group input",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input",

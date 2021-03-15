@@ -1,4 +1,5 @@
 import chai from 'chai';
+import { EOL } from 'os';
 import { execute } from './test-helpers.js';
 
 const { expect } = chai;
@@ -22,9 +23,9 @@ describe('PublishDocs', () => {
     });
 
     const redData = await readOutput('docs/assets/red-data.json');
-    expect(redData).to.equal('{\n  "data": "red"\n}');
+    expect(redData).to.equal(`{${EOL}  "data": "red"${EOL}}`);
     const moreRedData = await readOutput('docs/assets/more/red-data.json');
-    expect(moreRedData).to.equal('{\n  "more": "red"\n}');
+    expect(moreRedData).to.equal(`{${EOL}  "more": "red"${EOL}}`);
   });
 
   it('adjust links to full absolute urls', async () => {
@@ -44,7 +45,7 @@ describe('PublishDocs', () => {
         'There is more in [green](https://github.com/ing-bank/lion/blob/1234/docs/green/overview.md).',
         '',
         'Dos not touch [external](https://google.com) links.',
-      ].join('\n'),
+      ].join(EOL),
     );
 
     const overview = await readOutput('docs/overview.md');
@@ -57,7 +58,7 @@ describe('PublishDocs', () => {
         'There is more in [green](https://github.com/ing-bank/lion/blob/1234/docs/green/overview.md).',
         '',
         'Dos not touch [external](https://google.com) links.',
-      ].join('\n'),
+      ].join(EOL),
     );
     delete process.env.GITHUB_SHA;
   });
@@ -75,7 +76,7 @@ describe('PublishDocs', () => {
         '# overview.md',
         '',
         'See more [details](https://github.com/ing-bank/lion/blob/1234/docs/details.md).',
-      ].join('\n'),
+      ].join(EOL),
     );
     delete process.env.GITHUB_SHA;
   });
