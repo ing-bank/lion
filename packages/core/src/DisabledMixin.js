@@ -43,7 +43,10 @@ const DisabledMixinImplementation = superclass =>
       }
     }
 
-    /** @param {boolean} value */
+    /**
+     * @param {boolean} value
+     * @private
+     */
     __internalSetDisabled(value) {
       this.__isUserSettingDisabled = false;
       this.disabled = value;

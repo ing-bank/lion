@@ -101,6 +101,9 @@ const DelegateMixinImplementation = superclass =>
       super.removeAttribute(name);
     }
 
+    /**
+     * @protected
+     */
     _connectDelegateMixin() {
       if (this.__connectedDelegateMixin) return;
 
@@ -117,6 +120,9 @@ const DelegateMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @private
+     */
     __setupPropertyDelegation() {
       const propertyNames = this.delegations.properties.concat(this.delegations.methods);
       propertyNames.forEach(propertyName => {
@@ -153,6 +159,9 @@ const DelegateMixinImplementation = superclass =>
       });
     }
 
+    /**
+     * @private
+     */
     __initialAttributeDelegation() {
       const attributeNames = this.delegations.attributes;
       attributeNames.forEach(attributeName => {
@@ -164,12 +173,18 @@ const DelegateMixinImplementation = superclass =>
       });
     }
 
+    /**
+     * @private
+     */
     __emptyEventListenerQueue() {
       this.__eventsQueue.forEach(ev => {
         this.delegationTarget.addEventListener(ev.type, ev.handler, ev.opts);
       });
     }
 
+    /**
+     * @private
+     */
     __emptyPropertiesQueue() {
       Object.keys(this.__propertiesQueue).forEach(propName => {
         this.delegationTarget[propName] = this.__propertiesQueue[propName];

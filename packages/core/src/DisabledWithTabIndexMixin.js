@@ -48,6 +48,7 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
 
     /**
      * @param {number} value
+     * @private
      */
     __internalSetTabIndex(value) {
       this.__isUserSettingTabIndex = false;
