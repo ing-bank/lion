@@ -127,18 +127,27 @@ export class LionCollapsible extends LitElement {
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async _hideAnimation(opts) {}
 
+  /**
+   * @protected
+   */
   get _invokerNode() {
     return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
       child => child.slot === 'invoker',
     );
   }
 
+  /**
+   * @protected
+   */
   get _contentNode() {
     return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
       child => child.slot === 'content',
     );
   }
 
+  /**
+   * @protected
+   */
   get _contentHeight() {
     const size = this._contentNode?.getBoundingClientRect().height || 0;
     return `${size}px`;
