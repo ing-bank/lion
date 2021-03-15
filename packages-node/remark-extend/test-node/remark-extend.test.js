@@ -6,7 +6,13 @@ const mdStringify = require('remark-html');
 
 const { remarkExtend } = require('../src/remarkExtend.js');
 
-async function expectThrowsAsync(method, errorMessage) {
+/**
+ * @param {function} method
+ * @param {object} options
+ * @param {string} [options.errorMatch]
+ * @param {string} [options.errorMessage]
+ */
+async function expectThrowsAsync(method, { errorMatch, errorMessage } = {}) {
   let error = null;
   try {
     await method();
@@ -14,682 +20,317 @@ async function expectThrowsAsync(method, errorMessage) {
     error = err;
   }
   expect(error).to.be.an('Error', 'No error was thrown');
+  if (errorMatch) {
+    expect(error.message).to.match(errorMatch);
+  }
   if (errorMessage) {
     expect(error.message).to.equal(errorMessage);
   }
 }
 
+async function execute(input) {
+  const parser = unified()
+    //
+    .use(markdown)
+    .use(remarkExtend, { rootDir: __dirname, page: { inputPath: 'test-file.md' } })
+    .use(mdStringify);
+  const result = await parser.process(input);
+  return result.contents;
+}
+
 describe('remarkExtend', () => {
   it('does no modifications if no action is found', async () => {
-    const input = [
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '#### More Red',
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = '';
-    const output = [
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<h4>More Red</h4>',
-      '<p>the sun can get red</p>',
-      '',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('can do replacements on the full file', async () => {
-    const input = [
-      '### Red', // <-- start
-      '',
-      'red is the fire',
-      '',
-      '#### More Red',
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = [
-      //
-      "```js ::replaceFrom(':root')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-    ].join('\n');
-    const output = [
-      '<h3>Green</h3>', // <-- start
-      '<p>green is the fire</p>',
-      '<h4>More Green</h4>',
-      '<p>the sun can get green</p>',
-      '',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('can replace from a starting point downward', async () => {
-    const input = [
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### More Red', // <-- start
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceFrom('heading[depth=3]:has([value=More Red])')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-    ].join('\n');
-    const output = [
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<h3>More Green</h3>', // <-- start
-      '<p>the sun can get green</p>',
-      '',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('can replace within a range (start point included, endpoint not)', async () => {
-    const input = [
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      'red is the cross', // <-- start
-      '',
-      'red is the flag',
-      '',
-      '#### More Red',
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceBetween('heading:has([value=Red]) ~ paragraph:nth-of-type(2)', 'heading:has([value=More Red])')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node',
-      '};',
-    ].join('\n');
-    const output = [
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<p>green is the cross</p>', // <-- start
-      '<p>green is the flag</p>',
-      '<h4>More Red</h4>', // <-- end
-      '<p>the sun can get red</p>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('throws if a start selector is not found', async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceFrom('heading:has([value=More Red])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
-      'The start selector "heading:has([value=More Red])" could not find a matching node.',
+    const result = await execute(
+      ['### Red', 'red is the fire', '#### More Red', 'the sun can get red'].join('\n'),
     );
-  });
 
-  it('throws with addition info (if provide as filePath, overrideFilePath) if a start selector is not found', async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceFrom('heading:has([value=More Red])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-    ].join('\n');
-
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, {
-        extendMd,
-        filePath: '/path/to/input.md',
-        overrideFilePath: '/path/to/override.md',
-      })
-      .use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
+    expect(result).to.equal(
       [
-        'The start selector "heading:has([value=More Red])" could not find a matching node.',
-        'Markdown File: /path/to/input.md',
-        'Override File: /path/to/override.md',
+        '<h3>Red</h3>',
+        '<p>red is the fire</p>',
+        '<h4>More Red</h4>',
+        '<p>the sun can get red</p>',
+        '',
       ].join('\n'),
     );
   });
 
-  it('throws if a end selector is not found', async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceBetween('heading:has([value=Red])', 'heading:has([value=Red2])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-    ].join('\n');
-
-    const parser = unified().use(markdown).use(remarkExtend, { extendMd }).use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
-      'The end selector "heading:has([value=Red2])" could not find a matching node.',
+  it('can import another file', async () => {
+    const result = await execute(
+      [
+        //
+        '### Red',
+        "```js ::import('./fixtures/import-me.md')",
+        '```',
+      ].join('\n'),
     );
+
+    expect(result).to.equal(['<h3>Red</h3>', '<h1>import me headline</h1>', ''].join('\n'));
   });
 
-  it('throws with addition info (if provide as filePath, overrideFilePath) if a end selector is not found', async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceBetween('heading:has([value=Red])', 'heading:has([value=Red2])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-    ].join('\n');
-
-    const parser = unified()
-      .use(markdown)
-      .use(remarkExtend, {
-        extendMd,
-        filePath: '/path/to/input.md',
-        overrideFilePath: '/path/to/override.md',
-      })
-      .use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
+  it('will rewrite image urls/paths but not links', async () => {
+    const result = await execute(
       [
-        'The end selector "heading:has([value=Red2])" could not find a matching node.',
-        'Markdown File: /path/to/input.md',
-        'Override File: /path/to/override.md',
+        //
+        '### Static Headline',
+        "```js ::import('./fixtures/import-with-image.md')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        '<h3>Static Headline</h3>',
+        '<h1>import me headline</h1>',
+        '<p><img src="fixtures/my.svg" alt="my image">',
+        '<a href="./import-me.md">link to</a></p>',
+        '',
       ].join('\n'),
     );
   });
 
-  it('replaces a single node if replacing between the start and end of the same node', async () => {
-    const input = [
-      //
-      '### Red',
-      'red',
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      "```js ::replaceBetween('heading:has([value=Red]) > text', 'heading:has([value=Red]) > text')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node',
-      '};',
-      '```',
-    ].join('\n');
-    const output = [
-      '<h3>Green</h3>', // text node "Green" == start == end
-      '<p>red</p>',
-      '<h3>Red</h3>',
-      '',
-    ].join('\n');
+  it('can import another file from a start point', async () => {
+    const result = await execute(
+      [
+        //
+        '# Static Headline',
+        "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])')",
+        '```',
+      ].join('\n'),
+    );
 
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('can put something after via "::addMdAfter"', async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::addMdAfter('heading:has([value=Red])')",
-      '```',
-      '',
-      'the ocean is blue',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>the ocean is blue</p>',
-      '<p>red is the fire</p>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('adding stops at the next ::[action]', async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### More Red',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::addMdAfter('heading:has([value=Red])')",
-      '```',
-      '',
-      'the ocean is blue',
-      '',
-      '```',
-      "::addMdAfter('heading:has([value=More Red])')",
-      '```',
-      '',
-      'as in the sun is the ultimate red',
-      '',
-      "```js ::replaceBetween('heading:has([value=Red])', 'heading:has([value=Red])')",
-      'module.exports.replaceSection = (node) => {}',
-      '```',
-      'content not part of an add so it gets ignored',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>the ocean is blue</p>',
-      '<p>red is the fire</p>',
-      '<h3>More Red</h3>',
-      '<p>as in the sun is the ultimate red</p>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
-  });
-
-  it('will throw if trying to immediate run replacements of added content', async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::addMdAfter('heading:has([value=Red])')",
-      '```',
-      '',
-      '## Blue',
-      '',
-      "```js ::replaceFrom('heading:has([value=Blue])')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/Blue/g, 'Yellow');",
-      '  }',
-      '  return node',
-      '}',
-      '```',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-
-    await expectThrowsAsync(
-      () => parser.process(input),
-      'The start selector "heading:has([value=Blue])" could not find a matching node.',
+    expect(result).to.equal(
+      [
+        '<h1>Static Headline</h1>',
+        '<h2>More Red</h2>',
+        '<p>the sun can get red</p>',
+        '<h2>Additional Red</h2>',
+        '<p>the red sea</p>',
+        '',
+      ].join('\n'),
     );
   });
 
-  it(`can put something right at the top via "::addMdAfter(':root')"`, async () => {
-    const input = [
-      //
-      '### Red',
-    ].join('\n');
-    const extendMd = [
-      //
-      '```',
-      "::addMdAfter(':root')",
-      '```',
-      '',
-      '# New Headline',
-    ].join('\n');
-    const output = [
-      //
-      '<h1>New Headline</h1>',
-      '<h3>Red</h3>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
+  it('can import another file from a start to an end point', async () => {
+    const result = await execute(
+      [
+        //
+        '# Red',
+        "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=More Red]) ~ heading[depth=2]')",
+        '```',
+      ].join('\n'),
+    );
 
-    expect(result.contents).to.equal(output);
+    expect(result).to.equal(
+      ['<h1>Red</h1>', '<h2>More Red</h2>', '<p>the sun can get red</p>', ''].join('\n'),
+    );
   });
 
-  it(`can put something right at the bottom via "::addMdAfter(':scope:last-child')"`, async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-    ].join('\n');
-    const extendMd = [
-      //
-      '```',
-      "::addMdAfter(':scope:last-child')",
-      '```',
-      '',
-      'extra text',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<p>extra text</p>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
+  it('can do replacements on imports', async () => {
+    const result = await execute(
+      [
+        //
+        '# Red',
+        "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=More Red]) ~ heading[depth=2]')",
+        'module.exports.replaceSection = (node) => {',
+        '  if (node.value) {',
+        "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
+        '  }',
+        '  return node;',
+        '};',
+        '```',
+      ].join('\n'),
+    );
 
-    expect(result.contents).to.equal(output);
+    expect(result).to.equal(
+      ['<h1>Red</h1>', '<h2>More Green</h2>', '<p>the sun can get green</p>', ''].join('\n'),
+    );
   });
 
-  it('can put something before via "::addMdBefore"', async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### Blue',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::addMdBefore('heading:has([value=Blue])')",
-      '```',
-      '',
-      'the ocean is blue',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<p>the ocean is blue</p>',
-      '<h3>Blue</h3>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
+  it('throws if an import file does not exist', async () => {
+    await expectThrowsAsync(() => execute("```js ::import('./fixtures/not-available.md')\n```"), {
+      errorMatch: /The import "\.\/fixtures\/not-available.md" in "test-file.md" does not exist\. Resolved to ".*"\.$/,
+    });
   });
 
-  it(`can put something at the end of a "section" via "::addMdBefore('heading:has([value=Red]) ~ heading[depth=3]')"`, async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### Blue',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::addMdBefore('heading:has([value=Red]) ~ heading[depth=3]')",
-      '```',
-      '',
-      'the sun will be red',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<p>the sun will be red</p>',
-      '<h3>Blue</h3>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
+  it('throws if an start selector can not be found', async () => {
+    const input =
+      "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=Does not exit])')\n```";
+    await expectThrowsAsync(() => execute(input), {
+      errorMatch: /The start selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\.$/,
+    });
   });
 
-  it(`can put something at the top of the file via '::addMdBefore(":root")'`, async () => {
-    const input = [
-      //
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### Blue',
-    ].join('\n');
-    const extendMd = [
-      //
-      '```',
-      "::addMdBefore(':root')",
-      '```',
-      '',
-      'the ocean is blue',
-    ].join('\n');
-    const output = [
-      //
-      '<p>the ocean is blue</p>',
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '<h3>Blue</h3>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
+  it('throws if an end selector can not be found', async () => {
+    const input =
+      "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=Does not exit])')\n```";
+    await expectThrowsAsync(() => execute(input), {
+      errorMatch: /The end selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\./,
+    });
   });
 
-  it('can remove from a starting point downward', async () => {
-    const input = [
-      '### Red',
-      '',
-      'red is the fire',
-      '',
-      '### More Red', // <-- start
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = [
-      //
-      '```',
-      "::removeFrom('heading:has([value=More Red])')",
-      '```',
-    ].join('\n');
-    const output = [
-      //
-      '<h3>Red</h3>',
-      '<p>red is the fire</p>',
-      '',
-    ].join('\n');
+  it('can import a block (from start headline to next headline same level)', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/three-sections-red.md', '## More Red')",
+        '```',
+      ].join('\n'),
+    );
 
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
-
-    expect(result.contents).to.equal(output);
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h2>More Red</h2>',
+        '<p>the sun can get red</p>',
+        '',
+      ].join('\n'),
+    );
   });
 
-  it('can remove a range (start point included, endpoint not)', async () => {
-    const input = [
-      '### Red', // <-- start
-      '',
-      'red is the fire',
-      '',
-      '### More Red', // <-- end
-      '',
-      'the sun can get red',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      `::removeBetween('heading:has([value=Red])', 'heading:has([value=Red]) ~ heading[depth=3]')`,
-      '```',
-    ].join('\n');
-    const output = [
-      '<h3>More Red</h3>', // <-- end
-      '<p>the sun can get red</p>',
-      '',
-    ].join('\n');
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
+  it('can import the last block (from start headline to end of file)', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/three-sections-red.md', '## Additional Red')",
+        '```',
+      ].join('\n'),
+    );
 
-    expect(result.contents).to.equal(output);
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h2>Additional Red</h2>',
+        '<p>the red sea</p>',
+        '',
+      ].join('\n'),
+    );
   });
 
-  it('does replacements in order of extendMd', async () => {
-    const input = [
-      '### Red', // <-- start
-      '',
-      'red is the fire',
-      '### More',
-    ].join('\n');
-    const extendMd = [
-      '```',
-      "::removeBetween('heading:has([value=Red]) + *', 'heading:has([value=Red]) ~ heading')",
-      '```',
-      "```js ::replaceFrom(':root')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/red/g, 'green').replace(/Red/g, 'Green');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-      "```js ::replaceFrom(':root')",
-      'module.exports.replaceSection = (node) => {',
-      '  if (node.value) {',
-      "     node.value = node.value.replace(/green/g, 'yellow').replace(/Green/g, 'Yellow');",
-      '  }',
-      '  return node;',
-      '};',
-      '```',
-      '```',
-      "::addMdAfter('heading:has([value=Yellow])')",
-      '```',
-      'This is added',
-    ].join('\n');
-    const output = [
-      '<h3>Yellow</h3>', // <-- start
-      '<p>This is added</p>',
-      '<h3>More</h3>',
-      '',
-    ].join('\n');
+  it('can import a block content (from start headline (excluding) to next headline same level)', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlockContent('./fixtures/three-sections-red.md', '## More Red')",
+        '```',
+      ].join('\n'),
+    );
 
-    const parser = unified()
-      //
-      .use(markdown)
-      .use(remarkExtend, { extendMd })
-      .use(mdStringify);
-    const result = await parser.process(input);
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<p>the sun can get red</p>',
+        '',
+      ].join('\n'),
+    );
+  });
 
-    expect(result.contents).to.equal(output);
+  it('can import a small block (from start headline to next headline of any level)', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importSmallBlock('./fixtures/three-sections-red.md', '# Red')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h1>Red</h1>',
+        '<p>red is the fire</p>',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('can import a small block content (from start headline (excluding) to next headline of any level)', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importSmallBlockContent('./fixtures/three-sections-red.md', '# Red')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<p>red is the fire</p>',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('resolves imports via node resolution', async () => {
+    // NOTE: this test can easily break as it reads content from a 3rd. party package
+    // If that content changes the test should be adjusted
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('unified/readme.md', '## Install')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        '<h3>Static Headline</h3>',
+        '<h2>Install</h2>',
+        '<p>[npm][]:</p>',
+        '<pre><code class="language-sh">npm install unified',
+        '</code></pre>',
+        '<p>This package comes with types.',
+        'If you’re using TypeScript, make sure to also install',
+        '[<code>@types/unist</code>][ts-unist].</p>',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('throws if importBlock is used not with headlines', async () => {
+    const input =
+      "```js ::importBlock('./fixtures/three-sections-red.md', 'heading:has([value=More Red])')\n```";
+    await expectThrowsAsync(() => execute(input), {
+      errorMessage:
+        '::importBlock only works for headlines like "## My Headline" but "heading:has([value=More Red])" was given',
+    });
+  });
+
+  it('can import multiple files', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/three-sections-red.md', '## More Red')",
+        '```',
+        '### Another Static Headline',
+        "```js ::import('./fixtures/import-me.md')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h2>More Red</h2>',
+        '<p>the sun can get red</p>',
+        '<h3>Another Static Headline</h3>',
+        '<h1>import me headline</h1>',
+        '',
+      ].join('\n'),
+    );
   });
 });
