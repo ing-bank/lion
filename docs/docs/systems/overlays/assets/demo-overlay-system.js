@@ -1,5 +1,5 @@
 import { html, LitElement } from '@lion/core';
-import { OverlayMixin } from '@lion/overlays/src/OverlayMixin.js';
+import { OverlayMixin } from '@lion/overlays';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig

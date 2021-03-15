@@ -30,6 +30,7 @@
     "test": "cd ../../ && npm run test:browser -- --group helpers"
   },
   "sideEffects": [
+    "define.js",
     "sb-action-logger.js",
     "sb-locale-switcher.js"
   ],

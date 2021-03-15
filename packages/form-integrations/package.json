@@ -31,9 +31,6 @@
     "prepublishOnly": "npm run publish-docs",
     "test": "cd ../../ && npm run test:browser -- --group form-integrations"
   },
-  "sideEffects": [
-    "./docs/helper-wc/h-output.js"
-  ],
   "dependencies": {
     "@lion/button": "0.9.1",
     "@lion/checkbox-group": "0.14.5",

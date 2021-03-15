@@ -7,7 +7,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 import { html } from '@lion/core';
 import '@lion/dialog/define';
 
-import { demoStyle } from './src/demoStyles.js';
+import { demoStyle } from './src/demoStyle.js';
 ```
 
 ```js preview-story
