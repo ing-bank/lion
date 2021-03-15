@@ -3,31 +3,28 @@ import { expect, html, unsafeStatic, fixture } from '@open-wc/testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
 
-import '@lion/input/lion-input';
-import '@lion/input-amount/lion-input-amount';
-import '@lion/input-date/lion-input-date';
-import '@lion/input-datepicker/lion-input-datepicker';
-import '@lion/input-email/lion-input-email';
-import '@lion/input-iban/lion-input-iban';
-import '@lion/input-range/lion-input-range';
-import '@lion/textarea/lion-textarea';
+import '@lion/input/define';
+import '@lion/input-amount/define';
+import '@lion/input-date/define';
+import '@lion/input-datepicker/define';
+import '@lion/input-email/define';
+import '@lion/input-iban/define';
+import '@lion/input-range/define';
+import '@lion/textarea/define';
 
-import '@lion/checkbox-group/lion-checkbox-group';
-import '@lion/checkbox-group/lion-checkbox';
+import '@lion/checkbox-group/define';
 
-import '@lion/radio-group/lion-radio-group';
-import '@lion/radio-group/lion-radio';
+import '@lion/radio-group/define';
 
-import '@lion/select/lion-select';
+import '@lion/select/define';
 
-import '@lion/combobox/lion-combobox';
-import '@lion/listbox/lion-listbox';
-import '@lion/listbox/lion-option';
-import '@lion/select-rich/lion-select-rich';
+import '@lion/combobox/define';
+import '@lion/listbox/define';
+import '@lion/select-rich/define';
 
-import '@lion/fieldset/lion-fieldset';
-import '@lion/form/lion-form';
-import '@lion/form-core/lion-field';
+import '@lion/fieldset/define';
+import '@lion/form/define';
+import '@lion/form-core/define';
 
 /**
  * @typedef {import('@lion/core').LitElement} LitElement

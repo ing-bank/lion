@@ -5,7 +5,7 @@ import { IsCountryIBAN } from '../src/validators.js';
 import { formatIBAN } from '../src/formatters.js';
 import { parseIBAN } from '../src/parsers.js';
 
-import '../lion-input-iban.js';
+import '@lion/input-iban/define';
 
 /**
  * @typedef {import('../src/LionInputIban').LionInputIban} LionInputIban

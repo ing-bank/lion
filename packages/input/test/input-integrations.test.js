@@ -1,6 +1,6 @@
 import { defineCE } from '@open-wc/testing';
-import { runInteractionStateMixinSuite } from '@lion/form-core/test-suites/InteractionStateMixin.suite.js';
-import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
+import { runInteractionStateMixinSuite, runFormatMixinSuite } from '@lion/form-core/test-suites';
+
 import { LionInput } from '../src/LionInput.js';
 
 const fieldTagString = defineCE(

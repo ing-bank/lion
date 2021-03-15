@@ -11,7 +11,7 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-field.js';
+import '@lion/form-core/define-field';
 
 /**
  * @typedef {import('../src/LionField.js').LionField} LionField

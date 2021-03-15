@@ -1,7 +1,6 @@
 import { expect, fixture as _fixture, html, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-step.js';
-import '../lion-steps.js';
+import '@lion/steps/define';
 
 /**
  * @typedef {import('../src/LionSteps').LionSteps} LionSteps

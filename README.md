@@ -1,37 +1,59 @@
-# Lion Web Components
+<p align="center">
+  <img
+    width="60%"
+    src="./assets/logo.png"
+    alt="Lion"
+  />
+</p>
 
-```js script
-export default {
-  title: 'Intro/Lion Web Components',
-};
-```
+<p align="center">
+  <a href="https://github.com/modernweb-dev/rocket/actions"
+    ><img
+      src="https://img.shields.io/github/workflow/status/modernweb-dev/rocket/Release/main?label=workflow&style=flat-square"
+      alt="GitHub Actions workflow status"
+  /></a>
+  <a href="https://github.com/modernweb-dev/rocket/actions"
+    ><img
+      src="https://img.shields.io/github/workflow/status/modernweb-dev/rocket/Release/main?label=workflow&style=flat-square"
+      alt="GitHub Actions workflow status"
+  /></a>
+  <a href="https://www.tickgit.com/browse?repo=github.com/ing-bank/lion"
+    ><img
+      src="https://badgen.net/https/api.tickgit.com/badgen/github.comgithub.com/ing-bank/lion"
+      alt="Todos"
+  /></a>
+</p>
 
-Lion web components is a set of highly performant, accessible and flexible Web Components.
-They provide an unopinionated, white label layer that can be extended to your own layer of components.
+<p align="center">
+  <a href="https://lion-web.netlify.app">Website</a>
+  ·
+  <a href="https://lion-web.netlify.app/guides/">Guides</a>
+  ·
+  <a href="https://lion-web.netlify.app/components/">Components</a>
+  ·
+  <a href="https://lion-web.netlify.app/docs/">Documentation</a>
+  ·
+  <a href="https://lion-web.netlify.app/blog/">Blog</a>
+</p>
 
-For some more details see the [announcement blog post](https://medium.com/ing-blog/ing-open-sources-lion-a-library-for-performant-accessible-flexible-web-components-22ad165b1d3d).
+<h1></h1>
 
-[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.comgithub.com/ing-bank/lion)](https://www.tickgit.com/browse?repo=github.com/ing-bank/lion)
+**Lion is a set of highly performant, accessible and flexible Web Components.!**
 
-## Demos
+They provide an unopinionated, white-label layer that can be extended to your own layer of components.
 
-We do have a [live Storybook](http://lion-web-components.netlify.com) which shows all our components.
+- **High Performance:** Focused on great performance in all relevant browsers with a minimal number of dependencies.
+- **Accessibility:** Aimed at compliance with the WCAG 2.1 AA standard to create components that are accessible for everybody.
+- **Flexibility:** Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs.
+- **Modern Code:** Lion is distributes as pure es modules.
+- **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
 
-**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all dependencies by executing `yarn install`.
-
-The code examples make use of [Javascript tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) which are a key component of the [lit-html engine](https://lit-html.polymer-project.org/) used in Lion.
-Additionally imports like `import '@lion/form/lion-form.js'` need to be transformed somehow, for example by [es-dev-server](https://open-wc.org/developing/es-dev-server.html#node-resolve).
-
-## Features
-
-- High Performance - Focused on great performance in all relevant browsers with a minimal number of dependencies
-- Accessibility - Aimed at compliance with the WCAG 2.1 AA standard to create components that are accessible for everybody
-- Flexibility - Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs
-- Pure ES Modules
-- Exposes functions/classes and Web Components
-
-> Note: These demos may look a little bland but that is on purpose. They only come with functional stylings.
+> Note: Our demos may look a little bland but that is on purpose. They only come with functional stylings.
 > This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
+
+<p align="center">
+  <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
+</p>
 
 ## How to install
 
@@ -82,7 +104,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ```html
 <script type="module">
-  import '@lion/input/lion-input.js';
+  import '@lion/input/define';
 </script>
 
 <lion-input name="firstName"></lion-input>
@@ -150,18 +172,17 @@ The accessibility column indicates whether the functionality is accessible in it
 
 ## Technologies
 
-Lion Web Components aims to be future proof and use well-supported proven technology. The stack we have chosen should reflect this.
+Lion Web Components aims to be future-proof and use well-supported proven technology. The stack we have chosen should reflect this.
 
 - [lit-html](https://lit-html.polymer-project.org) and [lit-element](https://lit-element.polymer-project.org)
 - [npm](http://npmjs.com)
 - [yarn](https://yarnpkg.com)
-- [open-wc](https://open-wc.org)
-- [Karma](https://karma-runner.github.io)
+- [Open Web Components](https://open-wc.org)
+- [Modern Web](https://modern-web.dev)
 - [Mocha](https://mochajs.org)
 - [Chai](https://www.chaijs.com)
 - [ESLint](https://eslint.org)
 - [prettier](https://prettier.io)
-- [Storybook](https://storybook.js.org)
 - [ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 - Lots and lots of tests
 
@@ -179,6 +200,8 @@ This means you only have to apply your own Design System: by delivering styles, 
 Check out our [coding guidelines](https://lion-web-components.netlify.app/?path=/docs/guidelines-intro--page) for more detailed information.
 
 ## How to contribute
+
+**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all dependencies by executing `yarn install`.
 
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.

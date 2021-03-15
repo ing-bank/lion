@@ -3,7 +3,7 @@ import { browserDetection } from '@lion/core';
 import { aTimeout, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/core/differentKeyEventNamesShimIE';
-import '../lion-button.js';
+import '@lion/button/define';
 
 /**
  * @typedef {import('@lion/button/src/LionButton').LionButton} LionButton

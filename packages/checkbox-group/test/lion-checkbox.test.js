@@ -1,5 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import '../lion-checkbox.js';
+import '@lion/checkbox-group/define-checkbox';
 
 /**
  * @typedef {import('../src/LionCheckbox').LionCheckbox} LionCheckbox

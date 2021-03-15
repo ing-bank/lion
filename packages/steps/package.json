@@ -24,14 +24,16 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group steps",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group steps",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group steps",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group steps"
   },
   "sideEffects": [
+    "define.js",
     "lion-step.js",
     "lion-steps.js"
   ],
@@ -49,7 +51,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-step": "./lion-step.js",
-    "./lion-steps": "./lion-steps.js"
+    "./define": "./define.js",
+    "./define-step": "./lion-step.js",
+    "./define-steps": "./lion-steps.js",
+    "./docs/": "./docs/"
   }
 }

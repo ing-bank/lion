@@ -24,14 +24,16 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group listbox",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group listbox",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group listbox",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group listbox"
   },
   "sideEffects": [
+    "define.js",
     "lion-listbox.js",
     "lion-option.js",
     "lion-options.js"
@@ -52,9 +54,11 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-suites/*": "./test-suites/*",
-    "./lion-listbox": "./lion-listbox.js",
-    "./lion-option": "./lion-option.js",
-    "./lion-options": "./lion-options.js"
+    "./test-suites": "./test-suites/index.js",
+    "./define": "./define.js",
+    "./define-listbox": "./lion-listbox.js",
+    "./define-option": "./lion-option.js",
+    "./define-options": "./lion-options.js",
+    "./docs/": "./docs/"
   }
 }

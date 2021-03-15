@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '../../src/localize.js';
-import { localizeTearDown } from '../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/index.js';
 
 import { getDateFormatBasedOnLocale } from '../../src/date/getDateFormatBasedOnLocale.js';
 

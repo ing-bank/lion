@@ -1,17 +1,9 @@
-[//]: # 'AUTO INSERT HEADER PREPUBLISH'
-
-# Core
+# Systems >> Core >> Overview || 10
 
 The `@lion/core` package is mostly for in depth usage.
 It handles the version of `lit-element` and `lit-html`.
 
 In order to be sure a compatible version is used import it via this package.
-
-```js script
-export default {
-  title: 'Others/System/Core',
-};
-```
 
 ```js
 import { LitElement, html, render } from '@lion/core';
@@ -19,7 +11,7 @@ import { LitElement, html, render } from '@lion/core';
 
 ## Features
 
-- [function to deduplicate mixins (dedupeMixin)](#deduping-of-mixins)
+- [function to deduplicate mixins (dedupeMixin)](https://github.com/ing-bank/lion/blob/master/docs/docs/systems/core/#deduping-of-mixins)
 - Mixin to handle disabled (DisabledMixin)
 - Mixin to handle disabled AND tabIndex (DisabledWithTabIndexMixin)
 - Mixin to manage auto generated needed slot elements in light dom (SlotMixin)

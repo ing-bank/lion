@@ -1,6 +1,6 @@
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 
-import '../lion-step.js';
+import '@lion/steps/define-step';
 
 /**
  * @typedef {import('../src/LionStep').LionStep} LionStep

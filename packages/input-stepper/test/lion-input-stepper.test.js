@@ -1,5 +1,5 @@
 import { expect, fixture as _fixture, nextFrame, html } from '@open-wc/testing';
-import '../lion-input-stepper.js';
+import '@lion/input-stepper/define';
 
 /**
  * @typedef {import('../src/LionInputStepper').LionInputStepper} LionInputStepper

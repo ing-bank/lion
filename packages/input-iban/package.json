@@ -24,11 +24,12 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group input-iban",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-iban",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-iban",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group input-iban"
   },
   "sideEffects": [
@@ -53,6 +54,8 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-input-iban": "./lion-input-iban.js"
+    "./define": "./lion-input-iban.js",
+    "./translations/*": "./translations/*",
+    "./docs/": "./docs/"
   }
 }

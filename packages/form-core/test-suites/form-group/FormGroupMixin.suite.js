@@ -11,7 +11,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { IsNumber, Validator, LionField } from '@lion/form-core';
-import '@lion/form-core/lion-field';
+import '@lion/form-core/define';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
 
 /**

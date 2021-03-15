@@ -2,6 +2,9 @@
   "line-length": {
     "line_length": -1
   },
+  "fenced-code-language": false,
+  "no-inline-html": false,
+  "first-line-h1": false,
   "no-trailing-punctuation": {
     "punctuation": ".,;。，；：！"
   }

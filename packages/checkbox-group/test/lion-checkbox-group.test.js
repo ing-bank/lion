@@ -1,7 +1,6 @@
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
-import '../lion-checkbox-group.js';
-import '../lion-checkbox.js';
+import '@lion/checkbox-group/define';
 
 /**
  * @typedef {import('../src/LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup

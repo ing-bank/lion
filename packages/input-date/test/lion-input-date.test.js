@@ -3,7 +3,7 @@ import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { MaxDate } from '@lion/form-core';
 import { expect, fixture as _fixture } from '@open-wc/testing';
-import '../lion-input-date.js';
+import '@lion/input-date/define';
 
 /**
  * @typedef {import('../src/LionInputDate').LionInputDate} LionInputDate

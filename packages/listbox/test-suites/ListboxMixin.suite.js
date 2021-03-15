@@ -1,11 +1,9 @@
 import '@lion/core/differentKeyEventNamesShimIE';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
-import '@lion/listbox/lion-option';
-import '@lion/listbox/lion-options';
+import '@lion/listbox/define';
 import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../lion-listbox.js';
 
 /**
  * @typedef {import('../src/LionListbox').LionListbox} LionListbox

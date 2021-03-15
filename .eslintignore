@@ -3,3 +3,5 @@ coverage/
 bundlesize/
 .history/
 *.d.ts
+_site-dev
+_site

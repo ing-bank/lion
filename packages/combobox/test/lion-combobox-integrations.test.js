@@ -1,4 +1,4 @@
-import { runListboxMixinSuite } from '@lion/listbox/test-suites/ListboxMixin.suite.js';
-import '../lion-combobox.js';
+import { runListboxMixinSuite } from '@lion/listbox/test-suites';
+import '@lion/combobox/define';
 
 runListboxMixinSuite({ tagString: 'lion-combobox' });

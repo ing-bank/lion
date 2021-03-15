@@ -24,11 +24,12 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group calendar",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group calendar",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group calendar",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group calendar"
   },
   "sideEffects": [
@@ -49,7 +50,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./lion-calendar": "./lion-calendar.js",
-    "./test-helpers": "./test-helpers.js"
+    "./define": "./lion-calendar.js",
+    "./translations/*": "./translations/*",
+    "./test-helpers": "./test-helpers/index.js",
+    "./docs/": "./docs/"
   }
 }

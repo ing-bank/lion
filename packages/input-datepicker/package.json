@@ -24,11 +24,12 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
+    "custom-elements-manifest": "node ../../node_modules/.bin/custom-elements-manifest analyze --litelement --exclude 'docs/**/*' 'test-helpers/**/*'",
     "debug": "cd ../../ && npm run debug -- --group input-datepicker",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-datepicker",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-datepicker",
-    "prepublishOnly": "../../scripts/npm-prepublish.js && npm run custom-elements-manifest",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group input-datepicker"
   },
   "sideEffects": [
@@ -57,7 +58,9 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./test-helpers/*": "./test-helpers/*",
-    "./lion-input-datepicker": "./lion-input-datepicker.js"
+    "./define": "./lion-input-datepicker.js",
+    "./test-helpers": "./test-helpers.js",
+    "./translations/*": "./translations/*",
+    "./docs/": "./docs/"
   }
 }

@@ -1,0 +1,45 @@
+{
+  "name": "publish-docs",
+  "version": "0.0.0",
+  "description": "A tool that copies and processes your documentation (in a monorepo) so it can be published/shipped with your package.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/publish-docs"
+  },
+  "type": "module",
+  "bin": {
+    "publish-docs": "src/cli.js"
+  },
+  "files": [
+    "*.js",
+    "docs",
+    "src"
+  ],
+  "scripts": {
+    "publish-docs": "node ./src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs",
+    "test": "npm run test:node",
+    "test:node": "mocha test-node",
+    "test:watch": "mocha test-node --watch"
+  },
+  "types": "index.js",
+  "dependencies": {
+    "command-line-args": "^5.1.1",
+    "fs-extra": "^9.0.0",
+    "glob": "^7.1.6"
+  },
+  "keywords": [
+    "docs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./docs/": "./docs/"
+  }
+}

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars, no-param-reassign */
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
-import '../../lion-validation-feedback.js';
+import '@lion/form-core/define-validation-feedback';
 import { AlwaysInvalid, AlwaysValid } from '../../test-helpers.js';
 
 /**

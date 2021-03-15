@@ -1,6 +1,6 @@
-import { runFormatMixinSuite } from '@lion/form-core/test-suites/FormatMixin.suite.js';
+import { runFormatMixinSuite } from '@lion/form-core/test-suites';
 
-import '../lion-textarea.js';
+import '@lion/textarea/define';
 
 const tagString = 'lion-textarea';
 
