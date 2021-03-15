@@ -1,5 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { ResultValidator } from '../../src/validate/ResultValidator.js';
+import { DefaultSuccess } from '../../src/validate/resultValidators/DefaultSuccess.js';
 import { Required } from '../../src/validate/validators/Required.js';
 import { MinLength } from '../../src/validate/validators/StringValidators.js';
 
@@ -15,19 +16,31 @@ describe('ResultValidator', () => {
        *
        * @param {Object} context
        * @param {Validator[]} context.regularValidationResult
-       * @param {string} context.prevShownValidationFeedback
+       * @param {Validator[]} context.prevValidationResult
+       * @param {Validator[]} context.prevShownValidationResult
        * @returns {boolean}
        */
-      executeOnResults({ regularValidationResult, prevShownValidationFeedback }) {
-        const hasSuccess =
-          regularValidationResult.length && prevShownValidationFeedback === 'error';
-        return !!hasSuccess;
+      executeOnResults({ regularValidationResult, prevShownValidationResult }) {
+        const errorOrWarning = /** @param {Validator} v */ v =>
+          v.type === 'error' || v.type === 'warning';
+        const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
+        const hasShownErrorOrWarning = !!prevShownValidationResult.filter(errorOrWarning).length;
+
+        return !hasErrorOrWarning && hasShownErrorOrWarning;
       }
     }
     expect(
       new MyResultValidator().executeOnResults({
         regularValidationResult: [new Required(), new MinLength(3)],
-        prevShownValidationFeedback: 'error',
+        prevValidationResult: [],
+        prevShownValidationResult: [],
+      }),
+    ).to.be.false;
+    expect(
+      new MyResultValidator().executeOnResults({
+        regularValidationResult: [new DefaultSuccess()],
+        prevValidationResult: [new Required()],
+        prevShownValidationResult: [new Required()],
       }),
     ).to.be.true;
   });

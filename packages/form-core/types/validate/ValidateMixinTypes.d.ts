@@ -37,7 +37,8 @@ export declare class ValidateHost {
   __syncValidationResult: Validator[];
   __asyncValidationResult: Validator[];
   __validationResult: Validator[];
-  __prevShownValidationFeedback: string;
+  __prevValidationResult: Validator[];
+  __prevShownValidationResult: Validator[];
 
   connectedCallback(): void;
   disconnectedCallback(): void;

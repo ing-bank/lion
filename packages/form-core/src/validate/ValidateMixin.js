@@ -161,8 +161,10 @@ export const ValidateMixinImplementation = superclass =>
        * @type {Validator[]}
        */
       this.__validationResult = [];
-      /** @type {string} */
-      this.__prevShownValidationFeedback = '';
+      /** @type {Validator[]} */
+      this.__prevValidationResult = [];
+      /** @type {Validator[]} */
+      this.__prevShownValidationResult = [];
 
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
@@ -279,6 +281,7 @@ export const ValidateMixinImplementation = superclass =>
         return;
       }
 
+      this.__prevValidationResult = this.__validationResult;
       if (clearCurrentResult) {
         // Clear ('invalidate') all pending and existing validation results.
         // This is needed because we have async (pending) validators whose results
@@ -396,7 +399,8 @@ export const ValidateMixinImplementation = superclass =>
       return resultValidators.filter(v =>
         v.executeOnResults({
           regularValidationResult,
-          prevShownValidationFeedback: this.__prevShownValidationFeedback,
+          prevValidationResult: this.__prevValidationResult,
+          prevShownValidationResult: this.__prevShownValidationResult,
         }),
       );
     }
@@ -579,7 +583,7 @@ export const ValidateMixinImplementation = superclass =>
           });
 
           if (this.__prioritizedResult.length > 0) {
-            this.__prevShownValidationFeedback = this.__prioritizedResult[0].type;
+            this.__prevShownValidationResult = this.__prioritizedResult;
           }
 
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);

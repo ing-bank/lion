@@ -550,19 +550,16 @@ export function runValidateMixinSuite(customConfig) {
          *
          * @param {Object} context
          * @param {Validator[]} context.regularValidationResult
-         * @param {string} context.prevShownValidationFeedback
+         * @param {Validator[]} context.prevShownValidationResult
          * @returns {boolean}
          */
         // eslint-disable-next-line class-methods-use-this
-        executeOnResults({ regularValidationResult, prevShownValidationFeedback }) {
+        executeOnResults({ regularValidationResult, prevShownValidationResult }) {
           const errorOrWarning = /** @param {Validator} v */ v =>
             v.type === 'error' || v.type === 'warning';
           const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
-
-          return (
-            !hasErrorOrWarning &&
-            (prevShownValidationFeedback === 'error' || prevShownValidationFeedback === 'warning')
-          );
+          const hasShownErrorOrWarning = !!prevShownValidationResult.filter(errorOrWarning).length;
+          return !hasErrorOrWarning && hasShownErrorOrWarning;
         }
       };
 
@@ -613,7 +610,8 @@ export function runValidateMixinSuite(customConfig) {
               .modelValue=${'myValue'}
             >${lightDom}</${withSuccessTag}>
           `));
-        const prevShownValidationFeedback = el.__prevShownValidationFeedback;
+        const prevValidationResult = el.__prevValidationResult;
+        const prevShownValidationResult = el.__prevShownValidationResult;
         const regularValidationResult = [
           ...el.__syncValidationResult,
           ...el.__asyncValidationResult,
@@ -621,7 +619,8 @@ export function runValidateMixinSuite(customConfig) {
 
         expect(resultValidateSpy.args[0][0]).to.eql({
           regularValidationResult,
-          prevShownValidationFeedback,
+          prevValidationResult,
+          prevShownValidationResult,
         });
       });
 
