@@ -2592,9 +2592,9 @@
     magic-string "^0.25.7"
 
 "@web/rollup-plugin-polyfills-loader@^1.0.3":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@web/rollup-plugin-polyfills-loader/-/rollup-plugin-polyfills-loader-1.0.4.tgz#54ee9b1adae733672ee9b4c25e0ee1919f328c73"
-  integrity sha512-/q09FziyhfvB3X7UHxcEhSGOsoQpdeeAnwnWsLaeoHkrcQBwpiZxDguPPhyUCJvsxYVuBkbApay4GcHYffoaxw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@web/rollup-plugin-polyfills-loader/-/rollup-plugin-polyfills-loader-1.0.7.tgz#67c3931a0a8a29f379f8b79971f8a22f46c3b8d4"
+  integrity sha512-+WG8nPWdtwgifjGQpC4eQNxYm2TcAlJAQPwuuPcJHjF52tU/RwDYr0qHz6T/fNL2ifRyK181J38zwZ87S4S1hA==
   dependencies:
     "@web/polyfills-loader" "^1.0.2"
 
