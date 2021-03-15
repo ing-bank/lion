@@ -17,7 +17,8 @@
     "test-node"
   ],
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs",
     "start": "es-dev-server -c demo/server.config.js --root-dir ../../",
     "start:no-babel": "es-dev-server -c demo/server.no-babel.config.js --root-dir ../../",
     "test": "npm run test:node",
@@ -31,5 +32,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "exports": "./index.js"
+  "exports": {
+    ".": "./index.js",
+    "./docs/": "./docs/"
+  }
 }
