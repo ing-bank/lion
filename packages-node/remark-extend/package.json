@@ -1,6 +1,6 @@
 {
   "name": "remark-extend",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A plugin for remark that allows to extend a md file with another md file",
   "license": "MIT",
   "author": "ing-bank",

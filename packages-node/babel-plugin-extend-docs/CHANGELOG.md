@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- f3e54c56: Publish documentation with a format for Rocket
+
+### Patch Changes
+
+- 5db622e9: Still replace tags if templates uses `.foo=${{ key: 'value' }}`
+
 ## 0.3.0
 
 ### Minor Changes

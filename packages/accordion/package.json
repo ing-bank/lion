@@ -1,6 +1,6 @@
 {
   "name": "@lion/accordion",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Vertically stacked list of invokers that can be clicked to reveal or hide content associated with them.",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,7 +36,7 @@
     "lion-accordion.js"
   ],
   "dependencies": {
-    "@lion/core": "0.14.1"
+    "@lion/core": "0.15.0"
   },
   "keywords": [
     "accordion",
