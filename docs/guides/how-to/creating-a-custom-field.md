@@ -5,7 +5,7 @@ import { html, render } from '@lion/core';
 import { Validator } from '@lion/form-core';
 
 import '@lion/input/define';
-import '../../docs/systems/form/src/helper-wc/h-output.js';
+import '../../docs/systems/form/assets/h-output.js';
 ```
 
 Custom fields can be created in just a few steps. All you need is an interaction element (like for instance a slider, a listbox or a combobox) and connect it to the [input components](../../components/inputs/input/overview.md).

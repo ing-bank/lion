@@ -7,7 +7,7 @@
     "packages-node/*"
   ],
   "scripts": {
-    "build:docs": "wca analyze \"packages/tabs/**/*.js\"",
+    "build": "rocket build",
     "build:types": "tsc -p tsconfig.build.types.json",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "custom-elements-manifest": "node scripts/workspaces-scripts.mjs run custom-elements-manifest",
@@ -25,7 +25,7 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "tsc",
     "lint:versions": "node ./scripts/lint-versions.js",
-    "release": "npm run build:types && npm run build:docs && changeset publish",
+    "release": "npm run build:types && changeset publish",
     "rocket:build": "rocket build",
     "rocket:build:start": "web-dev-server --root-dir _site --open",
     "start": "rocket start",
