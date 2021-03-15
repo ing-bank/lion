@@ -11,6 +11,10 @@ import '@lion/core/differentKeyEventNamesShimIE';
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
+/**
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ */
+
 export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement)) {
   static get properties() {
     return {
@@ -38,11 +42,21 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     `;
   }
 
+  /**
+   *
+   * @returns {TemplateResult} button template
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _beforeTemplate() {
     return html``;
   }
 
+  /**
+   *
+   * @returns {TemplateResult} button template
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
     return html``;
@@ -143,7 +157,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     ];
   }
 
-  /** @type {HTMLButtonElement} */
+  /**
+   * @type {HTMLButtonElement}
+   * @protected
+   */
   get _nativeButtonNode() {
     return /** @type {HTMLButtonElement} */ (Array.from(this.children).find(
       child => child.slot === '_button',
@@ -224,6 +241,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * of the form, and firing click on this button. This will fire the form submit
    * without side effects caused by the click bubbling back up to lion-button.
    * @param {Event} ev
+   * @private
    */
   async __clickDelegationHandler(ev) {
     // Wait for updateComplete if form is not yet available
@@ -249,18 +267,27 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     }
   }
 
+  /**
+   * @private
+   */
   __setupDelegationInConstructor() {
     // do not move to connectedCallback, otherwise IE11 breaks.
     // more info: https://github.com/ing-bank/lion/issues/179#issuecomment-511763835
     this.addEventListener('click', this.__clickDelegationHandler, true);
   }
 
+  /**
+   * @private
+   */
   __setupEvents() {
     this.addEventListener('mousedown', this.__mousedownHandler);
     this.addEventListener('keydown', this.__keydownHandler);
     this.addEventListener('keyup', this.__keyupHandler);
   }
 
+  /**
+   * @private
+   */
   __teardownEvents() {
     this.removeEventListener('mousedown', this.__mousedownHandler);
     this.removeEventListener('keydown', this.__keydownHandler);
@@ -268,6 +295,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     this.removeEventListener('click', this.__clickDelegationHandler);
   }
 
+  /**
+   * @private
+   */
   __mousedownHandler() {
     this.active = true;
     const mouseupHandler = () => {
@@ -281,6 +311,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
   /**
    * @param {KeyboardEvent} e
+   * @private
    */
   __keydownHandler(e) {
     if (this.active || !isKeyboardClickEvent(e)) {
@@ -309,6 +340,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
 
   /**
    * @param {KeyboardEvent} e
+   * @private
    */
   __keyupHandler(e) {
     if (isKeyboardClickEvent(e)) {
@@ -324,6 +356,7 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
   /**
    * Prevents that someone who listens outside or on form catches the click event
    * @param {Event} e
+   * @private
    */
   __preventEventLeakage(e) {
     if (e.target === this.__submitAndResetHelperButton) {
@@ -331,6 +364,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     }
   }
 
+  /**
+   * @private
+   */
   __setupSubmitAndResetHelperOnConnected() {
     this._form = this._nativeButtonNode.form;
 
@@ -339,6 +375,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     }
   }
 
+  /**
+   * @private
+   */
   __teardownSubmitAndResetHelperOnDisconnected() {
     if (this._form) {
       this._form.removeEventListener('click', this.__preventEventLeakage);
