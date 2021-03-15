@@ -1,5 +1,7 @@
 ---
+'babel-plugin-extend-docs': minor
 '@lion/accordion': minor
+'@lion/ajax': minor
 '@lion/button': minor
 '@lion/calendar': minor
 '@lion/checkbox-group': minor
@@ -29,6 +31,7 @@
 '@lion/radio-group': minor
 '@lion/select': minor
 '@lion/select-rich': minor
+'singleton-manager': minor
 '@lion/steps': minor
 '@lion/switch': minor
 '@lion/tabs': minor
@@ -37,4 +40,4 @@
 '@lion/validate-messages': minor
 ---
 
-BREAKING: Align exports fields. This means no more wildcards, meaning you always import with bare import specifiers, extensionless. Import components where customElements.define side effect is executed by importing from '@lion/package/define'. For multi-component packages this defines all components (e.g. radio-group + radio). If you want to only import a single one, do '@lion/radio-group/define-radio' for example for just lion-radio.
+Publish documentation with a format for Rocket
