@@ -163,6 +163,8 @@ export const ValidateMixinImplementation = superclass =>
       this.__validationResult = [];
       /** @type {Validator[]} */
       this.__prevValidationResult = [];
+      /** @type {Validator[]} */
+      this.__prevShownValidationResult = [];
 
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
@@ -279,7 +281,7 @@ export const ValidateMixinImplementation = superclass =>
         return;
       }
 
-      this.__storePrevResult();
+      this.__prevValidationResult = this.__validationResult;
       if (clearCurrentResult) {
         // Clear ('invalidate') all pending and existing validation results.
         // This is needed because we have async (pending) validators whose results
@@ -287,10 +289,6 @@ export const ValidateMixinImplementation = superclass =>
         this.__clearValidationResults();
       }
       await this.__executeValidators();
-    }
-
-    __storePrevResult() {
-      this.__prevValidationResult = this.__validationResult;
     }
 
     /**
@@ -402,6 +400,7 @@ export const ValidateMixinImplementation = superclass =>
         v.executeOnResults({
           regularValidationResult,
           prevValidationResult: this.__prevValidationResult,
+          prevShownValidationResult: this.__prevShownValidationResult,
         }),
       );
     }
@@ -582,8 +581,12 @@ export const ValidateMixinImplementation = superclass =>
           this.__prioritizedResult = this._prioritizeAndFilterFeedback({
             validationResult: this.__validationResult,
           });
-          const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
 
+          if (this.__prioritizedResult.length > 0) {
+            this.__prevShownValidationResult = this.__prioritizedResult;
+          }
+
+          const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
           _feedbackNode.feedbackData = messageMap.length ? messageMap : [];
         });
       } else {
@@ -636,10 +639,15 @@ export const ValidateMixinImplementation = superclass =>
     _updateShouldShowFeedbackFor() {
       const ctor = /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (this
         .constructor);
+
       // Necessary typecast because types aren't smart enough to understand that we filter out undefined
-      this.shouldShowFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
+      const newShouldShowFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
         .map(type => (this._showFeedbackConditionFor(type) ? type : undefined))
         .filter(_ => !!_));
+
+      if (JSON.stringify(this.shouldShowFeedbackFor) !== JSON.stringify(newShouldShowFeedbackFor)) {
+        this.shouldShowFeedbackFor = newShouldShowFeedbackFor;
+      }
     }
 
     /**

@@ -2,6 +2,7 @@ node_modules
 coverage/
 bundlesize/
 .history/
+storybook-static/
 *.d.ts
 _site-dev
 _site

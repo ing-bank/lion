@@ -18,14 +18,16 @@ export class DefaultSuccess extends ResultValidator {
    * @param {Object} context
    * @param {Validator[]} context.regularValidationResult
    * @param {Validator[]} context.prevValidationResult
+   * @param {Validator[]} context.prevShownValidationResult
    * @returns {boolean}
    */
   // eslint-disable-next-line class-methods-use-this
-  executeOnResults({ regularValidationResult, prevValidationResult }) {
+  executeOnResults({ regularValidationResult, prevShownValidationResult }) {
     const errorOrWarning = /** @param {Validator} v */ v =>
       v.type === 'error' || v.type === 'warning';
     const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
-    const prevHadErrorOrWarning = !!prevValidationResult.filter(errorOrWarning).length;
-    return !hasErrorOrWarning && prevHadErrorOrWarning;
+    const hasShownErrorOrWarning = !!prevShownValidationResult.filter(errorOrWarning).length;
+
+    return !hasErrorOrWarning && hasShownErrorOrWarning;
   }
 }

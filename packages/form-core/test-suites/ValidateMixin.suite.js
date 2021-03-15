@@ -548,15 +548,18 @@ export function runValidateMixinSuite(customConfig) {
 
         /**
          *
-         * @param {{ regularValidationResult: Validator[], prevValidationResult: Validator[]}} param0
+         * @param {Object} context
+         * @param {Validator[]} context.regularValidationResult
+         * @param {Validator[]} context.prevShownValidationResult
+         * @returns {boolean}
          */
         // eslint-disable-next-line class-methods-use-this
-        executeOnResults({ regularValidationResult, prevValidationResult }) {
+        executeOnResults({ regularValidationResult, prevShownValidationResult }) {
           const errorOrWarning = /** @param {Validator} v */ v =>
             v.type === 'error' || v.type === 'warning';
           const hasErrorOrWarning = !!regularValidationResult.filter(errorOrWarning).length;
-          const prevHadErrorOrWarning = !!prevValidationResult.filter(errorOrWarning).length;
-          return !hasErrorOrWarning && prevHadErrorOrWarning;
+          const hasShownErrorOrWarning = !!prevShownValidationResult.filter(errorOrWarning).length;
+          return !hasErrorOrWarning && hasShownErrorOrWarning;
         }
       };
 
@@ -608,14 +611,16 @@ export function runValidateMixinSuite(customConfig) {
             >${lightDom}</${withSuccessTag}>
           `));
         const prevValidationResult = el.__prevValidationResult;
+        const prevShownValidationResult = el.__prevShownValidationResult;
         const regularValidationResult = [
           ...el.__syncValidationResult,
           ...el.__asyncValidationResult,
         ];
 
         expect(resultValidateSpy.args[0][0]).to.eql({
-          prevValidationResult,
           regularValidationResult,
+          prevValidationResult,
+          prevShownValidationResult,
         });
       });
 
@@ -1140,7 +1145,7 @@ export function runValidateMixinSuite(customConfig) {
             >${lightDom}</${elTag}>
           `));
 
-          const spy = sinon.spy(el, '_updateFeedbackComponent');
+          const spy = sinon.spy(el, '_updateShouldShowFeedbackFor');
           let counter = 0;
           // for ... of is already allowed we should update eslint...
           // eslint-disable-next-line no-restricted-syntax
