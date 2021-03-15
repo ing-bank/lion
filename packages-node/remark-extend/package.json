@@ -18,14 +18,15 @@
     "test"
   ],
   "scripts": {
-    "prepublishOnly": "../../scripts/npm-prepublish.js",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs",
     "test": "npm run test:node",
     "test:node": "mocha test-node",
     "test:watch": "mocha test-node --watch"
   },
   "dependencies": {
-    "remark-parse": "^8.0.0",
-    "unified": "^9.0.0",
+    "remark-parse": "^9.0.0",
+    "unified": "^9.2.0",
     "unist-util-is": "^4.0.2",
     "unist-util-select": "^3.0.1",
     "unist-util-visit": "^2.0.2"
@@ -36,5 +37,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "exports": "./index.js"
+  "exports": {
+    ".": "./index.js",
+    "./docs/": "./docs/"
+  }
 }
