@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- f3e54c56: Publish documentation with a format for Rocket
+
 ## 0.7.0
 
 ### Minor Changes

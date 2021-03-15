@@ -1,5 +1,41 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- f3e54c56: Publish documentation with a format for Rocket
+- 5db622e9: BREAKING: Align exports fields. This means no more wildcards, meaning you always import with bare import specifiers, extensionless. Import components where customElements.define side effect is executed by importing from '@lion/package/define'. For multi-component packages this defines all components (e.g. radio-group + radio). If you want to only import a single one, do '@lion/radio-group/define-radio' for example for just lion-radio.
+
+### Patch Changes
+
+- Updated dependencies [f3e54c56]
+- Updated dependencies [af90b20e]
+- Updated dependencies [5db622e9]
+  - @lion/button@0.10.0
+  - @lion/checkbox-group@0.15.0
+  - @lion/combobox@0.3.0
+  - @lion/core@0.15.0
+  - @lion/fieldset@0.17.0
+  - @lion/form@0.9.0
+  - @lion/form-core@0.9.0
+  - @lion/input@0.12.0
+  - @lion/input-amount@0.10.0
+  - @lion/input-date@0.10.0
+  - @lion/input-datepicker@0.20.0
+  - @lion/input-email@0.11.0
+  - @lion/input-iban@0.13.0
+  - @lion/input-range@0.7.0
+  - @lion/input-stepper@0.3.0
+  - @lion/listbox@0.6.0
+  - @lion/localize@0.17.0
+  - @lion/radio-group@0.14.0
+  - @lion/select@0.10.0
+  - @lion/select-rich@0.23.0
+  - @lion/switch@0.14.0
+  - @lion/textarea@0.10.0
+  - @lion/validate-messages@0.5.0
+
 ## 0.4.5
 
 ### Patch Changes

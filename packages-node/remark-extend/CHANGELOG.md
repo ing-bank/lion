@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 5db622e9: BREAKING CHANGE: Changing approach from overwriting extending files to using an import-based approach.
+
+  Removed features:
+
+  - `::replaceFrom`
+  - `::replaceBetween`
+  - `::addMdAfter`
+  - `::removeFrom`
+  - `::removeBetween`
+
+  Added Features:
+
+  - `::import`
+  - `::importBlock`
+  - `::importBlockContent`
+  - `::importSmallBlock`
+  - `::importSmallBlockContent`
+
+  See the updated documentation for how to use this new approach.
+
 ## 0.3.0
 
 ### Minor Changes

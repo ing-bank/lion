@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- f3e54c56: Publish documentation with a format for Rocket
+- 5db622e9: BREAKING: Align exports fields. This means no more wildcards, meaning you always import with bare import specifiers, extensionless. Import components where customElements.define side effect is executed by importing from '@lion/package/define'. For multi-component packages this defines all components (e.g. radio-group + radio). If you want to only import a single one, do '@lion/radio-group/define-radio' for example for just lion-radio.
+
+### Patch Changes
+
+- Updated dependencies [f3e54c56]
+- Updated dependencies [af90b20e]
+- Updated dependencies [5db622e9]
+  - @lion/form-core@0.9.0
+
 ## 0.11.5
 
 ### Patch Changes
