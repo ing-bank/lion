@@ -18,7 +18,10 @@ export class AjaxClient {
    * @param {Partial<AjaxClientConfig>} config
    */
   constructor(config = {}) {
-    /** @type {Partial<AjaxClientConfig>} */
+    /**
+     * @type {Partial<AjaxClientConfig>}
+     * @private
+     */
     this.__config = {
       addAcceptLanguage: true,
       xsrfCookieName: 'XSRF-TOKEN',

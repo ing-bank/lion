@@ -186,13 +186,13 @@ export class LionAccordion extends LitElement {
 
     /**
      * @type {StoreEntry[]}
-     * private
+     * @private
      */
     this.__store = [];
 
     /**
      * @type {number}
-     * private
+     * @private
      */
     this.__focusedIndex = -1;
 
@@ -207,7 +207,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   __setupSlots() {
     const invokerSlot = this.shadowRoot?.querySelector('slot[name=invoker]');
@@ -223,7 +223,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   __setupStore() {
     const invokers = /** @type {HTMLElement[]} */ (Array.from(
@@ -261,7 +261,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   __cleanStore() {
     if (!this.__store) {
@@ -276,7 +276,7 @@ export class LionAccordion extends LitElement {
   /**
    *
    * @param {number} index
-   * private
+   * @private
    */
   __createInvokerClickHandler(index) {
     return () => {
@@ -287,7 +287,7 @@ export class LionAccordion extends LitElement {
 
   /**
    * @param {Event} e
-   * private
+   * @private
    */
   __handleInvokerKeydown(e) {
     const _e = /** @type {KeyboardEvent} */ (e);
@@ -331,7 +331,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   get _pairCount() {
     return this.__store.length;
@@ -350,7 +350,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   __updateFocused() {
     if (!(this.__store && this.__store[this.focusedIndex])) {
@@ -369,7 +369,7 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   *  private
+   *  @private
    */
   __updateExpanded() {
     if (!this.__store) {
@@ -390,7 +390,7 @@ export class LionAccordion extends LitElement {
 
   /**
    * @param {number} value
-   * private
+   * @private
    */
   __toggleExpanded(value) {
     const { expanded } = this;
