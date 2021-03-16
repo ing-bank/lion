@@ -34,15 +34,27 @@ const SyncUpdatableMixinImplementation = superclass =>
       this.__SyncUpdatableNamespace = {};
     }
 
-    /** @param {import('@lion/core').PropertyValues } changedProperties */
-    firstUpdated(changedProperties) {
-      super.firstUpdated(changedProperties);
-      this.__SyncUpdatableNamespace.connected = true;
-      this.__syncUpdatableInitialize();
+    /**
+     * If element gets disconnected, we want to re-init syncUpdatable
+     * Normally we could do this on connectedCallback after updateComplete,
+     * but we actually want to be after first render but before the firstUpdated
+     * callback of our parents. Therefore, we hook into super.update and check if
+     * sync updatable needs to be initialized after super.render.
+     *
+     * @param {import('lit-element').PropertyValues } changedProperties
+     */
+    update(changedProperties) {
+      super.update(changedProperties);
+      console.log('update', this.__SyncUpdatableNamespace.connected);
+      if (!this.__SyncUpdatableNamespace.connected) {
+        this.__SyncUpdatableNamespace.connected = true;
+        this.__syncUpdatableInitialize();
+      }
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
+      console.log('d callback');
       this.__SyncUpdatableNamespace.connected = false;
     }
 
