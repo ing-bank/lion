@@ -103,6 +103,7 @@ export class LionInput extends NativeTextFieldMixin(
     }
   }
 
+  /** @private */
   __delegateReadOnly() {
     if (this._inputNode) {
       this._inputNode.readOnly = this.readOnly;
