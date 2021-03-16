@@ -26,6 +26,7 @@ export const OverlayMixinImplementation = superclass =>
     constructor() {
       super();
       this.opened = false;
+      /** @private */
       this.__needsSetup = true;
       /** @type {OverlayConfig} */
       this.config = {};
@@ -73,6 +74,7 @@ export const OverlayMixinImplementation = superclass =>
      * In case overriding _defineOverlayConfig is not enough
      * @param {DefineOverlayConfig} config
      * @returns {OverlayController}
+     * @protected
      */
     // eslint-disable-next-line
     _defineOverlay({ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }) {
@@ -102,6 +104,7 @@ export const OverlayMixinImplementation = superclass =>
      * @desc returns an object with default configuration options for your overlay component.
      * This is generally speaking easier to override than _defineOverlay method entirely.
      * @returns {OverlayConfig}
+     * @protected
      */
     // eslint-disable-next-line
     _defineOverlayConfig() {
@@ -125,6 +128,7 @@ export const OverlayMixinImplementation = superclass =>
      * @overridable
      * @desc use this method to setup your open and close event listeners
      * For example, set a click event listener on _overlayInvokerNode to set opened to true
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _setupOpenCloseListeners() {
@@ -146,6 +150,7 @@ export const OverlayMixinImplementation = superclass =>
     /**
      * @overridable
      * @desc use this method to tear down your event listeners
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this
     _teardownOpenCloseListeners() {
@@ -207,6 +212,7 @@ export const OverlayMixinImplementation = superclass =>
       return this.shadowRoot.querySelector('#overlay-content-node-wrapper');
     }
 
+    /** @protected */
     _setupOverlayCtrl() {
       /** @type {OverlayController} */
       this._overlayCtrl = this._defineOverlay({
@@ -221,6 +227,7 @@ export const OverlayMixinImplementation = superclass =>
       this._setupOpenCloseListeners();
     }
 
+    /** @protected */
     _teardownOverlayCtrl() {
       this._teardownOpenCloseListeners();
       this.__teardownSyncFromOverlayController();
@@ -234,6 +241,7 @@ export const OverlayMixinImplementation = superclass =>
      * (intercepted in before-hide for instance), so that we need to sync the controller state
      * to this webcomponent again, preventing eternal loops.
      * @param {boolean} newOpened
+     * @protected
      */
     async _setOpenedWithoutPropertyEffects(newOpened) {
       this.__blockSyncToOverlayCtrl = true;
@@ -242,6 +250,7 @@ export const OverlayMixinImplementation = superclass =>
       this.__blockSyncToOverlayCtrl = false;
     }
 
+    /** @private */
     __setupSyncFromOverlayController() {
       this.__onOverlayCtrlShow = () => {
         this.opened = true;
@@ -292,6 +301,7 @@ export const OverlayMixinImplementation = superclass =>
       (this._overlayCtrl).addEventListener('before-hide', this.__onBeforeHide);
     }
 
+    /** @private */
     __teardownSyncFromOverlayController() {
       /** @type {OverlayController} */
       (this._overlayCtrl).removeEventListener(
@@ -312,6 +322,7 @@ export const OverlayMixinImplementation = superclass =>
       );
     }
 
+    /** @private */
     __syncToOverlayController() {
       if (this.opened) {
         /** @type {OverlayController} */

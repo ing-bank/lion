@@ -91,6 +91,7 @@ export const ArrowMixinImplementation = superclass =>
     constructor() {
       super();
       this.hasArrow = true;
+      /** @private */
       this.__setupRepositionCompletePromise();
     }
 
@@ -104,10 +105,12 @@ export const ArrowMixinImplementation = superclass =>
       `;
     }
 
+    /** @protected */
     _arrowNodeTemplate() {
       return html` <div class="arrow" data-popper-arrow>${this._arrowTemplate()}</div> `;
     }
 
+    /** @protected */
     // eslint-disable-next-line class-methods-use-this
     _arrowTemplate() {
       return html`
@@ -122,6 +125,7 @@ export const ArrowMixinImplementation = superclass =>
      * and adds onCreate and onUpdate hooks to sync from popper state
      * @configure OverlayMixin
      * @returns {OverlayConfig}
+     * @protected
      */
     // eslint-disable-next-line
     _defineOverlayConfig() {
@@ -142,6 +146,7 @@ export const ArrowMixinImplementation = superclass =>
     /**
      * @param {Partial<PopperOptions>} popperConfigToExtendFrom
      * @returns {Partial<PopperOptions>}
+     * @protected
      */
     _getPopperArrowConfig(popperConfigToExtendFrom) {
       /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper').State>) => void }} */
@@ -176,6 +181,7 @@ export const ArrowMixinImplementation = superclass =>
       return popperCfg;
     }
 
+    /** @private */
     __setupRepositionCompletePromise() {
       this.repositionComplete = new Promise(resolve => {
         this.__repositionCompleteResolver = resolve;
@@ -188,6 +194,7 @@ export const ArrowMixinImplementation = superclass =>
 
     /**
      * @param {Partial<import('@popperjs/core/lib/popper').State>} data
+     * @private
      */
     __syncFromPopperState(data) {
       if (!data) {

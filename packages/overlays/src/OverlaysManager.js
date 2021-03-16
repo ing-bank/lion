@@ -56,12 +56,22 @@ export class OverlaysManager {
   }
 
   constructor() {
-    /** @type {OverlayController[]} */
+    /**
+     * @type {OverlayController[]}
+     * @private
+     */
     this.__list = [];
-    /** @type {OverlayController[]} */
+    /**
+     * @type {OverlayController[]}
+     * @private
+     */
     this.__shownList = [];
+    /** @private */
     this.__siblingsInert = false;
-    /** @type {WeakMap<OverlayController, OverlayController[]>} */
+    /**
+     * @type {WeakMap<OverlayController, OverlayController[]>}
+     * @private
+     */
     this.__blockingMap = new WeakMap();
   }
 
