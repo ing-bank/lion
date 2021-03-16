@@ -127,15 +127,21 @@ const ChoiceGroupMixinImplementation = superclass =>
     constructor() {
       super();
       this.multipleChoice = false;
-      /** @type {'child'|'choice-group'|'fieldset'} */
+      /** @type {'child'|'choice-group'|'fieldset'}
+       * @protected
+       */
       this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
-
+      /** @private */
       this.__isInitialModelValue = true;
+      /** @private */
       this.__isInitialSerializedValue = true;
+      /** @private */
       this.__isInitialFormattedValue = true;
       /** @type {Promise<any> & {done?:boolean}} */
       this.registrationComplete = new Promise((resolve, reject) => {
+        /** @private */
         this.__resolveRegistrationComplete = resolve;
+        /** @private */
         this.__rejectRegistrationComplete = reject;
       });
       this.registrationComplete.done = false;

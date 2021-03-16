@@ -4,6 +4,7 @@ import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
 export class LionDialog extends OverlayMixin(LitElement) {
   constructor() {
     super();
+    /** @private */
     this.__toggle = () => {
       this.opened = !this.opened;
     };

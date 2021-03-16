@@ -127,7 +127,9 @@ const ChoiceInputMixinImplementation = superclass =>
       super();
       this.modelValue = { value: '', checked: false };
       this.disabled = false;
+      /** @protected */
       this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
+      /** @protected */
       this._toggleChecked = this._toggleChecked.bind(this);
     }
 

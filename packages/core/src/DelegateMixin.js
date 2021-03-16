@@ -22,11 +22,18 @@ const DelegateMixinImplementation = superclass =>
     constructor() {
       super();
 
-      /** @type {DelegateEvent[]} */
+      /**
+       * @type {DelegateEvent[]}
+       * @private
+       */
       this.__eventsQueue = [];
 
-      /** @type {Object.<string,?>} */
+      /**
+       * @type {Object.<string,?>}
+       * @private
+       */
       this.__propertiesQueue = {};
+      /** @private */
       this.__setupPropertyDelegation();
     }
 

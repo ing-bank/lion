@@ -22,6 +22,7 @@ const SlotMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /** @private */
       this.__privateSlots = new Set(null);
     }
 
