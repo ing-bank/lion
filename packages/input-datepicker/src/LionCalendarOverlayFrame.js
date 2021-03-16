@@ -93,6 +93,7 @@ export class LionCalendarOverlayFrame extends LocalizeMixin(LitElement) {
     ];
   }
 
+  /** @private */
   __dispatchCloseEvent() {
     this.dispatchEvent(new Event('close-overlay'));
   }
