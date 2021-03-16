@@ -15,20 +15,35 @@ import isLocalizeESModule from './isLocalizeESModule.js';
 export class LocalizeManager {
   // eslint-disable-line no-unused-vars
   constructor({ autoLoadOnLocaleChange = false, fallbackLocale = '' } = {}) {
+    /** @private */
     this.__delegationTarget = document.createDocumentFragment();
+    /** @protected */
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
+    /** @protected */
     this._fallbackLocale = fallbackLocale;
 
-    /** @type {Object.<string, Object.<string, Object>>} */
+    /**
+     * @type {Object.<string, Object.<string, Object>>}
+     * @private
+     */
     this.__storage = {};
 
-    /** @type {Map.<RegExp|string, function>} */
+    /**
+     * @type {Map.<RegExp|string, function>}
+     * @private
+     */
     this.__namespacePatternsMap = new Map();
 
-    /** @type {Object.<string, function|null>} */
+    /**
+     * @type {Object.<string, function|null>}
+     * @private
+     */
     this.__namespaceLoadersCache = {};
 
-    /** @type {Object.<string, Object.<string, Promise.<Object>>>} */
+    /**
+     * @type {Object.<string, Object.<string, Promise.<Object>>>}
+     * @private
+     */
     this.__namespaceLoaderPromisesCache = {};
 
     this.formatNumberOptions = {
@@ -50,6 +65,7 @@ export class LocalizeManager {
      */
     const initialLocale = document.documentElement.getAttribute('data-localize-lang');
 
+    /** @protected */
     this._supportExternalTranslationTools = Boolean(initialLocale);
 
     if (this._supportExternalTranslationTools) {
@@ -61,9 +77,11 @@ export class LocalizeManager {
       document.documentElement.lang = this.locale || 'en-GB';
     }
 
+    /** @protected */
     this._setupHtmlLangAttributeObserver();
   }
 
+  /** @protected */
   _setupTranslationToolSupport() {
     /**
      * This value allows for support for Google Translate (or other 3rd parties taking control
@@ -132,6 +150,7 @@ export class LocalizeManager {
 
   /**
    * @param {string} locale
+   * @protected
    */
   _setHtmlLangAttribute(locale) {
     this._teardownHtmlLangAttributeObserver();
@@ -142,6 +161,7 @@ export class LocalizeManager {
   /**
    * @param {string} value
    * @throws {Error} Language only locales are not allowed(Use 'en-GB' instead of 'en')
+   * @private
    */
   // eslint-disable-next-line class-methods-use-this
   __handleLanguageOnly(value) {
@@ -248,6 +268,7 @@ export class LocalizeManager {
     return formatter.format(vars);
   }
 
+  /** @protected */
   _setupHtmlLangAttributeObserver() {
     if (!this._htmlLangAttributeObserver) {
       this._htmlLangAttributeObserver = new MutationObserver(mutations => {
@@ -273,6 +294,7 @@ export class LocalizeManager {
     });
   }
 
+  /** @protected */
   _teardownHtmlLangAttributeObserver() {
     if (this._htmlLangAttributeObserver) {
       this._htmlLangAttributeObserver.disconnect();
@@ -282,6 +304,7 @@ export class LocalizeManager {
   /**
    * @param {string} locale
    * @param {string} namespace
+   * @protected
    */
   _isNamespaceInCache(locale, namespace) {
     return !!(this.__storage[locale] && this.__storage[locale][namespace]);
@@ -290,6 +313,7 @@ export class LocalizeManager {
   /**
    * @param {string} locale
    * @param {string} namespace
+   * @protected
    */
   _getCachedNamespaceLoaderPromise(locale, namespace) {
     if (this.__namespaceLoaderPromisesCache[locale]) {
@@ -304,6 +328,7 @@ export class LocalizeManager {
    * @param {boolean} isDynamicImport
    * @param {string} namespace
    * @returns {Promise.<Object|void>}
+   * @protected
    */
   _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace) {
     const loader = this._getNamespaceLoader(namespaceObj, isDynamicImport, namespace);
@@ -326,6 +351,7 @@ export class LocalizeManager {
    * @param {boolean} isDynamicImport
    * @param {string} namespace
    * @throws {Error} Namespace shall setup properly. Check loader!
+   * @protected
    */
   _getNamespaceLoader(namespaceObj, isDynamicImport, namespace) {
     let loader = this.__namespaceLoadersCache[namespace];
@@ -356,6 +382,7 @@ export class LocalizeManager {
    * @param {string} [fallbackLocale]
    * @returns {Promise.<any>}
    * @throws {Error} Data for namespace and (locale or fallback locale) could not be loaded.
+   * @protected
    */
   _getNamespaceLoaderPromise(loader, locale, namespace, fallbackLocale = this._fallbackLocale) {
     return loader(locale, namespace).catch(() => {
@@ -384,6 +411,7 @@ export class LocalizeManager {
    * @param {string} locale
    * @param {string} namespace
    * @param {Promise.<Object>} promise
+   * @protected
    */
   _cacheNamespaceLoaderPromise(locale, namespace, promise) {
     if (!this.__namespaceLoaderPromisesCache[locale]) {
@@ -395,6 +423,7 @@ export class LocalizeManager {
   /**
    * @param {string} namespace
    * @returns {function|null}
+   * @protected
    */
   _lookupNamespaceLoader(namespace) {
     /* eslint-disable no-restricted-syntax */
@@ -413,6 +442,7 @@ export class LocalizeManager {
   /**
    * @param {string} locale
    * @returns {string}
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _getLangFromLocale(locale) {
@@ -448,6 +478,7 @@ export class LocalizeManager {
    * @param {string} newLocale
    * @param {string} oldLocale
    * @returns {undefined}
+   * @protected
    */
   _onLocaleChanged(newLocale, oldLocale) {
     if (newLocale === oldLocale) {
@@ -463,6 +494,7 @@ export class LocalizeManager {
    * @param {string} newLocale
    * @param {string} oldLocale
    * @returns {Promise.<Object>}
+   * @protected
    */
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
@@ -486,6 +518,7 @@ export class LocalizeManager {
    * @param {string | string[]} keys
    * @param {string} locale
    * @returns {string | undefined}
+   * @protected
    */
   _getMessageForKeys(keys, locale) {
     if (typeof keys === 'string') {
@@ -509,6 +542,7 @@ export class LocalizeManager {
    * @param {string} locale
    * @returns {string}
    * @throws {Error} `key`is missing namespace. The format for `key` is "namespace:name"
+   * @protected
    *
    */
   _getMessageForKey(key, locale) {

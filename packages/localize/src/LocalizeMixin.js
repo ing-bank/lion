@@ -29,6 +29,7 @@ const LocalizeMixinImplementation = superclass =>
     constructor() {
       super();
 
+      /** @private */
       this.__boundLocalizeOnLocaleChanged =
         /** @param {...Object} args */
         (...args) => {
@@ -37,10 +38,12 @@ const LocalizeMixinImplementation = superclass =>
         };
 
       // should be loaded in advance
+      /** @private */
       this.__localizeStartLoadingNamespaces();
 
       if (this.localizeNamespacesLoaded) {
         this.localizeNamespacesLoaded.then(() => {
+          /** @private */
           this.__localizeMessageSync = true;
         });
       }
@@ -100,6 +103,7 @@ const LocalizeMixinImplementation = superclass =>
 
     /**
      * @returns {string[]}
+     * @private
      */
     __getUniqueNamespaces() {
       /** @type {string[]} */
@@ -114,20 +118,24 @@ const LocalizeMixinImplementation = superclass =>
       return uniqueNamespaces;
     }
 
+    /** @private */
     __localizeStartLoadingNamespaces() {
       this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
     }
 
+    /** @private */
     __localizeAddLocaleChangedListener() {
       localize.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
     }
 
+    /** @private */
     __localizeRemoveLocaleChangedListener() {
       localize.removeEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
     }
 
     /**
      * @param {CustomEvent} event
+     * @private
      */
     __localizeOnLocaleChanged(event) {
       this.onLocaleChanged(event.detail.newLocale, event.detail.oldLocale);
