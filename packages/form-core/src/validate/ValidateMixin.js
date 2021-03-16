@@ -83,7 +83,6 @@ export const ValidateMixinImplementation = superclass =>
         /**
          * Subclassers can enable this to show multiple feedback messages at the same time
          * By default, just like the platform, only one message (with highest prio) is visible.
-         * @protected
          */
         _visibleMessagesAmount: { attribute: false },
       };
@@ -142,6 +141,7 @@ export const ValidateMixinImplementation = superclass =>
       /** @type {Object.<string, Object.<string, boolean>>} */
       this.validationStates = {};
 
+      /** @protected */
       this._visibleMessagesAmount = 1;
 
       this.isPending = false;
@@ -151,21 +151,33 @@ export const ValidateMixinImplementation = superclass =>
       /** @type {Validator[]} */
       this.defaultValidators = [];
 
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__syncValidationResult = [];
 
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__asyncValidationResult = [];
 
       /**
        * @desc contains results from sync Validators, async Validators and ResultValidators
        * @type {Validator[]}
+       * @private
        */
       this.__validationResult = [];
-      /** @type {Validator[]} */
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__prevValidationResult = [];
 
+      /** @private */
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
+      /** @protected */
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
     }
 

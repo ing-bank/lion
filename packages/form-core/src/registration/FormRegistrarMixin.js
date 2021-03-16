@@ -38,7 +38,6 @@ const FormRegistrarMixinImplementation = superclass =>
          * it should act like an array (see ChoiceGroupMixin).
          * Usually, when false, we deal with a choice-group (radio-group, checkbox-group,
          * (multi)select)
-         * @protected
          */
         _isFormOrFieldset: { type: Boolean },
       };

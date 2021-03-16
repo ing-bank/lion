@@ -277,11 +277,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._listboxReceivesNoFocus = true;
 
     /**
-     * @protected
+     * @private
      */
     this.__prevCboxValueNonSelected = '';
     /**
-     * @protected
+     * @private
      */
     this.__prevCboxValue = '';
 
@@ -562,7 +562,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * - complete: completes the textbox value inline (the 'missing characters' will be added as
    * selected text)
    *
-   * @private
+   * @protected
    */
   _handleAutocompletion() {
     // TODO: this is captured by 'noFilter'

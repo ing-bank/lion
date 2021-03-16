@@ -130,13 +130,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
       /**
        * The currently focused date (if any)
-       * @private
        */
       __focusedDate: { attribute: false },
 
       /**
        * Data to render current month grid
-       * @private
        */
       __data: { attribute: false },
     };
@@ -144,7 +142,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   constructor() {
     super();
-    /** @type {{months: Month[]}} */
+    /** @type {{months: Month[]}}
+     * @private
+     */
     this.__data = { months: [] };
     this.minDate = new Date(0);
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -158,17 +158,27 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     this.firstDayOfWeek = 0;
     this.weekdayHeaderNotation = 'short';
+    /** @private */
     this.__today = normalizeDateTime(new Date());
     /** @type {Date} */
     this.centralDate = this.__today;
-    /** @type {Date | null} */
+    /**
+     * @type {Date | null}
+     * @private
+     */
     this.__focusedDate = null;
+    /** @private */
     this.__connectedCallbackDone = false;
+    /** @private */
     this.__eventsAdded = false;
     this.locale = '';
+    /** @private */
     this.__boundKeyboardNavigationEvent = this.__keyboardNavigationEvent.bind(this);
+    /** @private */
     this.__boundClickDateDelegation = this.__clickDateDelegation.bind(this);
+    /** @private */
     this.__boundFocusDateDelegation = this.__focusDateDelegation.bind(this);
+    /** @private */
     this.__boundBlurDateDelegation = this.__focusDateDelegation.bind(this);
   }
 
