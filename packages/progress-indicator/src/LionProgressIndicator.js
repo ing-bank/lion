@@ -67,6 +67,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     ];
   }
 
+  /** @protected */
   _graphicTemplate() {
     return nothing;
   }
