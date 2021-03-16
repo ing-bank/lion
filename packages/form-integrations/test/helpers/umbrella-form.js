@@ -62,7 +62,7 @@ export class UmbrellaForm extends LitElement {
           <lion-input-email name="email" label="Email"></lion-input-email>
           <lion-checkbox-group
             label="What do you like?"
-            name="checkers"
+            name="checkers[]"
             .validators="${[new Required()]}"
           >
             <lion-checkbox .choiceValue=${'foo'} checked label="I like foo"></lion-checkbox>
@@ -102,7 +102,7 @@ export class UmbrellaForm extends LitElement {
             label="Input range"
           >
           </lion-input-range>
-          <lion-checkbox-group name="terms" .validators="${[new Required()]}">
+          <lion-checkbox-group name="terms[]" .validators="${[new Required()]}">
             <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
           </lion-checkbox-group>
           <lion-textarea name="comments" label="Comments"></lion-textarea>
