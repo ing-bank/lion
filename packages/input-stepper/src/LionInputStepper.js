@@ -177,6 +177,7 @@ export class LionInputStepper extends LionInput {
    * Get slotted element
    * @param {String} slotName - slot name
    * @returns {HTMLButtonElement|Object}
+   * @private
    */
   __getSlot(slotName) {
     return (
@@ -215,6 +216,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the increment button node
    * @returns {Element|null}
+   * @private
    */
   __getIncrementButtonNode() {
     const renderParent = document.createElement('div');
@@ -232,6 +234,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the decrement button node
    * @returns {Element|null}
+   * @private
    */
   __getDecrementButtonNode() {
     const renderParent = document.createElement('div');
@@ -249,6 +252,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Toggle +/- buttons on change
    * @override
+   * @protected
    */
   _onChange() {
     super._onChange();
@@ -258,6 +262,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the decrementor button sign template
    * @returns {String|import('@lion/core').TemplateResult}
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _decrementorSignTemplate() {
@@ -267,6 +272,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the incrementor button sign template
    * @returns {String|import('@lion/core').TemplateResult}
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _incrementorSignTemplate() {
@@ -276,6 +282,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the increment button template
    * @returns {import('@lion/core').TemplateResult}
+   * @protected
    */
   _decrementorTemplate() {
     return html`
@@ -294,6 +301,7 @@ export class LionInputStepper extends LionInput {
   /**
    * Get the decrement button template
    * @returns {import('@lion/core').TemplateResult}
+   * @protected
    */
   _incrementorTemplate() {
     return html`
