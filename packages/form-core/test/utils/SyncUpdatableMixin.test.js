@@ -300,4 +300,40 @@ describe('SyncUpdatableMixin', () => {
       expect(spy.callCount).to.equal(3);
     });
   });
+
+  it('reinitializes when the element gets reconnected to DOM', async () => {
+    const container = await fixture(html`<div></div>`);
+    class UpdatableImplementation extends SyncUpdatableMixin(LitElement) {
+      static get properties() {
+        return {
+          prop: { attribute: false },
+        };
+      }
+
+      constructor() {
+        super();
+        this.prop = '';
+      }
+    }
+    const tagString = defineCE(UpdatableImplementation);
+    const tag = unsafeStatic(tagString);
+    const el = /** @type {UpdatableImplementation} */ (fixtureSync(html`<${tag}></${tag}>`));
+    const ns = el.__SyncUpdatableNamespace;
+    const updateSyncSpy = sinon.spy(el, 'updateSync');
+
+    expect(ns.connected).to.be.true;
+    expect(ns.initialized).to.be.undefined;
+    await el.updateComplete;
+    expect(ns.initialized).to.be.true;
+    el.parentElement?.removeChild(el);
+    expect(ns.connected).to.be.false;
+    container.appendChild(el);
+    expect(ns.connected).to.be.true;
+
+    // change a prop to cause rerender
+    expect(updateSyncSpy.calledWith('prop', undefined)).to.be.true;
+    el.prop = 'a';
+    await el.updateComplete;
+    expect(updateSyncSpy.calledWith('prop', '')).to.be.true;
+  });
 });

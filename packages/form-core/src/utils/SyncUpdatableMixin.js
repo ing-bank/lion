@@ -34,11 +34,19 @@ const SyncUpdatableMixinImplementation = superclass =>
       this.__SyncUpdatableNamespace = {};
     }
 
-    /** @param {import('@lion/core').PropertyValues } changedProperties */
+    /**
+     * Empty pending queue in order to guarantee order independence
+     *
+     * @param {import('lit-element').PropertyValues } changedProperties
+     */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
-      this.__SyncUpdatableNamespace.connected = true;
       this.__syncUpdatableInitialize();
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.__SyncUpdatableNamespace.connected = true;
     }
 
     disconnectedCallback() {
@@ -89,9 +97,8 @@ const SyncUpdatableMixinImplementation = superclass =>
 
       const ctor = /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (this
         .constructor);
-
       // Before connectedCallback: queue
-      if (!ns.connected) {
+      if (!ns.initialized) {
         ns.queue = ns.queue || new Set();
         // Makes sure that we only initialize one time, with most up to date value
         ns.queue.add(name);
