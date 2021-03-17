@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- 3aa47833: Add define.js sideEffect to package.json
+
 ## 0.15.0
 
 ### Minor Changes

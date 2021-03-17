@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-integrations",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "license": "MIT",
   "author": "ing-bank",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@lion/button": "0.10.0",
-    "@lion/checkbox-group": "0.15.0",
+    "@lion/checkbox-group": "0.15.1",
     "@lion/combobox": "0.3.0",
     "@lion/core": "0.15.0",
     "@lion/fieldset": "0.17.0",
