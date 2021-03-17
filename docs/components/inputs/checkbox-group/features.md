@@ -3,8 +3,6 @@
 ```js script
 import { html } from '@lion/core';
 import '@lion/checkbox-group/define';
-import '@lion/checkbox-group/define';
-import '@lion/checkbox-group/define';
 ```
 
 ## Model value
