@@ -169,6 +169,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     autosize.update(this._inputNode);
   }
 
+  /** @private */
   __initializeAutoresize() {
     // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
     if (this.__shady_native_contains) {
@@ -181,6 +182,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     }
   }
 
+  /** @private */
   async __waitForTextareaRenderedInRealDOM() {
     let count = 3; // max tasks to wait for
     // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
@@ -191,6 +193,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     }
   }
 
+  /** @private */
   __startAutoresize() {
     autosize(this._inputNode);
     this.setTextareaMaxHeight();
