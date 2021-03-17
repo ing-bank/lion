@@ -33,6 +33,7 @@
     "test": "cd ../../ && npm run test:browser -- --group checkbox-group"
   },
   "sideEffects": [
+    "define.js",
     "lion-checkbox.js",
     "lion-checkbox-group.js",
     "lion-checkbox-indeterminate.js"
