@@ -13,7 +13,7 @@ describe('Form Integrations', () => {
     const formEl = el._lionFormNode;
     expect(formEl.serializedValue).to.eql({
       bio: '',
-      checkers: ['foo', 'bar'],
+      'checkers[]': [['foo', 'bar']],
       comments: '',
       date: '2000-12-12',
       datepicker: '2020-12-12',
@@ -28,7 +28,7 @@ describe('Form Integrations', () => {
       lyrics: '1',
       money: '',
       range: 2.3,
-      terms: [],
+      'terms[]': [[]],
     });
   });
 
@@ -38,7 +38,7 @@ describe('Form Integrations', () => {
     const formEl = el._lionFormNode;
     expect(formEl.formattedValue).to.eql({
       bio: '',
-      checkers: ['foo', 'bar'],
+      'checkers[]': [['foo', 'bar']],
       comments: '',
       date: '12/12/2000',
       datepicker: '12/12/2020',
@@ -53,7 +53,7 @@ describe('Form Integrations', () => {
       lyrics: '1',
       money: '',
       range: 2.3,
-      terms: [],
+      'terms[]': [[]],
     });
   });
 });
