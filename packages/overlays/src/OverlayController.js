@@ -1124,55 +1124,86 @@ export class OverlayController extends EventTargetShim {
     const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
 
     if (phase === 'show') {
-      let wasClickInside = false;
-      let wasIndirectSynchronousClick = false;
-      // Handle on capture phase and remember till the next task that there was an inside click
+      /**
+       * We listen to click (more specifically mouseup and mousedown) events
+       * in their capture phase (see our tests about 3rd parties stopping event propagation).
+       * We define an outside click as follows:
+       * - both mousedown and mouseup occur outside of content or invoker
+       *
+       * This means we have the following flow:
+       * [1]. (optional) mousedown is triggered on content/invoker
+       * [2]. mouseup is triggered on document (logic will be scheduled to step 4)
+       * [3]. (optional) mouseup is triggered on content/invoker
+       * [4]. mouseup logic is executed on document (its logic is inside a timeout and is thus
+       * executed after 3)
+       * [5]. Reset all helper variables that were considered in step [4]
+       *
+       */
+
+      /** @type {boolean} */
+      let wasMouseDownInside = false;
+      /** @type {boolean} */
+      let wasMouseUpInside = false;
+
       /** @type {EventListenerOrEventListenerObject} */
-      this.__preventCloseOutsideClick = () => {
-        if (wasClickInside) {
-          // This occurs when a synchronous new click is triggered from a previous click.
-          // For instance, when we have a label pointing to an input, the platform triggers
-          // a new click on the input. Not taking this click into account, will hide the overlay
-          // in `__onCaptureHtmlClick`
-          wasIndirectSynchronousClick = true;
-        }
-        wasClickInside = true;
-        setTimeout(() => {
-          wasClickInside = false;
-          setTimeout(() => {
-            wasIndirectSynchronousClick = false;
-          });
-        });
+      this.__onInsideMouseDown = () => {
+        // [1]. was mousedown inside content or invoker
+        wasMouseDownInside = true;
       };
-      // handle on capture phase and schedule the hide if needed
+
+      this.__onInsideMouseUp = () => {
+        // [3]. was mouseup inside content or invoker
+        wasMouseUpInside = true;
+      };
+
       /** @type {EventListenerOrEventListenerObject} */
-      this.__onCaptureHtmlClick = () => {
+      this.__onDocumentMouseUp = () => {
+        // [2]. The captured mouseup goes from top of the document to bottom. We add a timeout,
+        // so that [3] can be executed before [4]
         setTimeout(() => {
-          if (wasClickInside === false && !wasIndirectSynchronousClick) {
+          // [4]. Keep open if step 1 (mousedown) or 3 (mouseup) was inside
+          if (!wasMouseDownInside && !wasMouseUpInside) {
             this.hide();
           }
+          // [5]. Reset...
+          wasMouseDownInside = false;
+          wasMouseUpInside = false;
         });
       };
     }
 
     this.contentWrapperNode[addOrRemoveListener](
-      'click',
+      'mousedown',
       /** @type {EventListenerOrEventListenerObject} */
-      (this.__preventCloseOutsideClick),
+      (this.__onInsideMouseDown),
+      true,
+    );
+    this.contentWrapperNode[addOrRemoveListener](
+      'mouseup',
+      /** @type {EventListenerOrEventListenerObject} */
+      (this.__onInsideMouseUp),
       true,
     );
     if (this.invokerNode) {
+      // An invoker click (usually resulting in toggle) should be left to a different part of
+      // the code
       this.invokerNode[addOrRemoveListener](
-        'click',
+        'mousedown',
         /** @type {EventListenerOrEventListenerObject} */
-        (this.__preventCloseOutsideClick),
+        (this.__onInsideMouseDown),
+        true,
+      );
+      this.invokerNode[addOrRemoveListener](
+        'mouseup',
+        /** @type {EventListenerOrEventListenerObject} */
+        (this.__onInsideMouseUp),
         true,
       );
     }
     document.documentElement[addOrRemoveListener](
-      'click',
+      'mouseup',
       /** @type {EventListenerOrEventListenerObject} */
-      (this.__onCaptureHtmlClick),
+      (this.__onDocumentMouseUp),
       true,
     );
   }

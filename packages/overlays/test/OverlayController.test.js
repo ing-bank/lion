@@ -8,6 +8,7 @@ import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
+import { mimicClick } from '../test-helpers.js';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
@@ -451,8 +452,12 @@ describe('OverlayController', () => {
           contentNode,
         });
         await ctrl.show();
+        mimicClick(document.body);
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.false;
 
-        document.body.click();
+        await ctrl.show();
+        await mimicClick(document.body, { isAsync: true });
         await aTimeout(0);
         expect(ctrl.isShown).to.be.false;
       });
@@ -479,11 +484,54 @@ describe('OverlayController', () => {
 
         expect(ctrl.isShown).to.be.true;
 
+        // Don't hide on inside mousedown & outside mouseup
+        ctrl.contentNode.dispatchEvent(new MouseEvent('mousedown'));
+        await aTimeout(0);
+        document.body.dispatchEvent(new MouseEvent('mouseup'));
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
         // Important to check if it can be still shown after, because we do some hacks inside
         await ctrl.hide();
         expect(ctrl.isShown).to.be.false;
         await ctrl.show();
         expect(ctrl.isShown).to.be.true;
+      });
+
+      it('only hides when both mousedown and mouseup events are outside', async () => {
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+          contentNode,
+          invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
+            <div role="button" style="width: 100px; height: 20px;">Invoker</div>
+          `)),
+        });
+        await ctrl.show();
+        mimicClick(document.body, { releaseElement: contentNode });
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
+        mimicClick(contentNode, { releaseElement: document.body });
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
+        mimicClick(document.body, {
+          releaseElement: /** @type {HTMLElement} */ (ctrl.invokerNode),
+        });
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
+        mimicClick(/** @type {HTMLElement} */ (ctrl.invokerNode), {
+          releaseElement: document.body,
+        });
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+
+        mimicClick(document.body);
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.false;
       });
 
       it('doesn\'t hide on "inside sub shadow dom" click', async () => {
@@ -548,22 +596,14 @@ describe('OverlayController', () => {
           contentNode,
           invokerNode,
         });
+        const stopProp = (/** @type {Event} */ e) => e.stopPropagation();
         const dom = await fixture(
-          /**
-           * @param {{ stopPropagation: () => any; }} e
-           */
           `
           <div>
             <div id="popup">${invokerNode}${contentNode}</div>
-            <div
-              id="regular-sibling"
-              @click="${() => {
-                /* propagates */
-              }}"
-            ></div>
-            <third-party-noise @click="${(/** @type {Event} */ e) => e.stopPropagation()}">
+            <div id="third-party-noise" @click="${stopProp}" @mousedown="${stopProp}" @mouseup="${stopProp}">
               This element prevents our handlers from reaching the document click handler.
-            </third-party-noise>
+            </div>
           </div>
         `,
         );
@@ -571,8 +611,9 @@ describe('OverlayController', () => {
         await ctrl.show();
         expect(ctrl.isShown).to.equal(true);
 
-        /** @type {HTMLElement} */
-        (dom.querySelector('third-party-noise')).click();
+        const noiseEl = /** @type {HTMLElement} */ (dom.querySelector('#third-party-noise'));
+
+        mimicClick(noiseEl);
         await aTimeout(0);
         expect(ctrl.isShown).to.equal(false);
 
@@ -592,35 +633,26 @@ describe('OverlayController', () => {
           contentNode,
           invokerNode,
         });
+        const stopProp = (/** @type {Event} */ e) => e.stopPropagation();
         const dom = /** @type {HTMLElement} */ (await fixture(`
           <div>
             <div id="popup">${invokerNode}${ctrl.content}</div>
-            <div
-              id="regular-sibling"
-              @click="${() => {
-                /* propagates */
-              }}"
-            ></div>
-            <third-party-noise>
+            <div id="third-party-noise">
               This element prevents our handlers from reaching the document click handler.
-            </third-party-noise>
+            </div>
           </div>
         `));
 
-        /** @type {HTMLElement} */
-        (dom.querySelector('third-party-noise')).addEventListener(
-          'click',
-          (/** @type {Event} */ event) => {
-            event.stopPropagation();
-          },
-          true,
-        );
+        const noiseEl = /** @type {HTMLElement} */ (dom.querySelector('#third-party-noise'));
+
+        noiseEl.addEventListener('click', stopProp, true);
+        noiseEl.addEventListener('mousedown', stopProp, true);
+        noiseEl.addEventListener('mouseup', stopProp, true);
 
         await ctrl.show();
         expect(ctrl.isShown).to.equal(true);
 
-        /** @type {HTMLElement} */
-        (dom.querySelector('third-party-noise')).click();
+        mimicClick(noiseEl);
         await aTimeout(0);
         expect(ctrl.isShown).to.equal(false);
 
