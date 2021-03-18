@@ -53,6 +53,7 @@
     ".": "./index.js",
     "./test-suites": "./test-suites/index.js",
     "./translations/*": "./translations/*",
+    "./test-helpers": "./test-helpers.js",
     "./docs/": "./docs/"
   }
 }

@@ -2,6 +2,7 @@ import { LitElement } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import { OverlayController } from '@lion/overlays';
 import { LionOption } from '@lion/listbox';
+import { mimicClick } from '@lion/overlays/test-helpers';
 import {
   aTimeout,
   defineCE,
@@ -253,9 +254,8 @@ describe('lion-select-rich', () => {
       ));
 
       expect(el.opened).to.be.true;
-      // a click on the button will trigger hide on outside click
-      // which we then need to sync back to "opened"
-      outerEl.click();
+
+      mimicClick(outerEl);
       await aTimeout(0);
       expect(el.opened).to.be.false;
     });

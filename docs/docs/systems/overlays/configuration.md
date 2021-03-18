@@ -167,7 +167,8 @@ export const hidesOnOutsideClick = () => {
     <demo-overlay-system .config=${hidesOnOutsideClickConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
-        Hello! You can close this notification here:
+        <label for="myInput">Clicking this label should not trigger close</label>
+        <input id="myInput" />
         <button
           class="close-button"
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}

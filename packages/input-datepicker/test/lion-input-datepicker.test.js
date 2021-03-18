@@ -2,6 +2,7 @@ import { LionCalendar, isSameDate } from '@lion/calendar';
 import { html, LitElement } from '@lion/core';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/form-core';
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
+import { mimicClick } from '@lion/overlays/test-helpers';
 import sinon from 'sinon';
 import { setViewport } from '@web/test-runner-commands';
 import '@lion/input-datepicker/define';
@@ -98,13 +99,13 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 
-    it('closes the calendar via outside click', async () => {
+    it('closes the calendar via outside click event', async () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(true);
 
-      document.body.click();
+      mimicClick(document.body);
       await aTimeout(0);
       expect(elObj.overlayController.isShown).to.be.false;
     });
