@@ -1,6 +1,6 @@
 # Content >> Collapsible >> Overview ||10
 
-`lion-collapsible` is a combination of a button (the invoker), a chunk of 'extra content', and can be extended with an animation to disclose the extra content. There are two slots available respectively; `invoker` to specify the collapsible's invoker and `content` for the extra content of the collapsible.
+A combination of a button (the invoker) and a chunk of 'extra content'. This web component can be extended with an animation to disclose the extra content. There are two slots available respectively; `invoker` to specify the collapsible's invoker and `content` for the extra content of the collapsible.
 
 ```js script
 import { html } from '@lion/core';

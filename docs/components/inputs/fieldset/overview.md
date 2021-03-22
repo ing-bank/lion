@@ -7,7 +7,7 @@ import '@lion/input/define';
 import '@lion/fieldset/define';
 ```
 
-A fieldset groups multiple input fields or other fieldsets together.
+A web component that can be used to group multiple input fields or other fieldsets together.
 
 ```js preview-story
 export const main = () => html`

@@ -1,6 +1,6 @@
 # Content >> Progress Indicator >> Overview ||10
 
-`lion-progress-indicator` implements accessibility requirements for progress indicators.
+A web component that implements accessibility requirements for progress indicators.
 
 ```html
 <lion-progress-indicator></lion-progress-indicator>
@@ -10,7 +10,7 @@ Note: You don't see a live demo here as it would be empty, since there is no sty
 
 ## Features
 
-`LionProgressIndicator` is designed to be extended to add visuals.
+This component is designed to be extended in order to add visuals.
 
 - Accessibility compliant
 - Localized "Loading" label

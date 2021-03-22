@@ -1,11 +1,11 @@
 # Inputs >> Input >> Overview ||10
 
-`lion-input` component is a webcomponent that enhances the functionality of the native `<input>` element.
-
 ```js script
 import { html } from '@lion/core';
 import '@lion/input/define';
 ```
+
+A web component that enhances the functionality of the native `<input>` element.
 
 ```js preview-story
 export const main = () => html`<lion-input label="First Name"></lion-input>`;

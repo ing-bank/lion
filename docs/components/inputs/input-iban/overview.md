@@ -1,6 +1,6 @@
 # Inputs >> Input Iban >> Overview ||10
 
-`lion-input-iban` component is based on the generic text input field.
+A web component based on the generic text input field.
 Its purpose is to provide a way for users to fill in an IBAN (International Bank Account Number).
 
 ```js script

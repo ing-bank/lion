@@ -1,6 +1,6 @@
 # Interaction >> Button >> Overview ||10
 
-`lion-button` provides a button component that is easily stylable and accessible.
+A button web component that is easily stylable and accessible.
 
 ```js script
 import { html } from '@lion/core';

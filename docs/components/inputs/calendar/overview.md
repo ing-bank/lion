@@ -1,6 +1,6 @@
 # Inputs >> Calendar >> Overview ||10
 
-`lion-calendar` is a reusable and accessible calendar view.
+A reusable and accessible calendar view web component.
 
 ```js script
 import { html, css } from '@lion/core';

@@ -1,6 +1,6 @@
 # Navigation >> Steps >> Overview ||10
 
-`lion-steps` breaks a single goal down into dependable sub-tasks.
+A web component that can be used to break a single goal down into dependable sub-tasks.
 
 ```js script
 import { html } from '@lion/core';

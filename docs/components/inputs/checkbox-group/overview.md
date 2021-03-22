@@ -1,6 +1,6 @@
 # Inputs >> Checkbox Group >> Overview ||10
 
-`lion-checkbox-group` component enhances the functionality of the native `<input type="checkbox">` element.
+A checkbox group enhances the functionality of the native `<input type="checkbox">` element.
 Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
 > You should use `<lion-checkbox>` elements as the children of the `<lion-checkbox-group>`.

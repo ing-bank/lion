@@ -1,6 +1,6 @@
 # Inputs >> Radio Group >> Overview ||10
 
-`lion-radio-group` component is webcomponent that enhances the functionality of the native `<input type="radio">` element. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
+A web component that enhances the functionality of the native `<input type="radio">` element. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 
 You should use `<lion-radio>`s inside this element.
 

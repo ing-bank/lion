@@ -1,6 +1,6 @@
 # Inputs >> Input Amount >> Overview ||10
 
-`lion-input-amount` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an amount.
+A web component based on the generic text input field. Its purpose is to provide a way for users to fill in an amount.
 
 For formatting, we use [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) with some overrides.
 

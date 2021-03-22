@@ -1,6 +1,6 @@
 # Inputs >> Textarea >> Overview ||10
 
-`lion-textarea` is a webcomponent that enhances the functionality of the native `<input type="textarea">` element.
+A webcomponent that enhances the functionality of the native `<input type="textarea">` element.
 Its purpose is to provide a way for users to write text that is multiple lines long.
 
 ```js script
