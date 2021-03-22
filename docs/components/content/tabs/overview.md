@@ -1,6 +1,6 @@
 # Content >> Tabs >> Overview ||10
 
-A component to allow users to quickly move between a small number of equally important views.
+A web component that allows users to quickly move between a small number of equally important views.
 
 ```js script
 import { LitElement, html } from '@lion/core';

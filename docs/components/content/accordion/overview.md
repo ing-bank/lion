@@ -1,6 +1,6 @@
 # Content >> Accordion >> Overview ||10
 
-`lion-accordion` is a component used to toggle the display of sections of content.
+A web component that can be used to toggle the display of sections of content.
 Its purpose is to reduce the need to scroll when presenting multiple sections of content on a single page. Accordions often allow users to get the big picture before focusing on details.
 
 ```js script

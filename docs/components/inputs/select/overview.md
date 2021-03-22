@@ -1,11 +1,9 @@
 # Inputs >> Select >> Overview ||10
 
-`lion-select` component is a wrapper around the native `select`.
+A web component that works as a wrapper around the native `select`.
 
-You cannot use interactive elements inside the options. Avoid very long names to
-facilitate the understandability and perceivability for screen reader users. Sets of options
-where each option name starts with the same word or phrase can also significantly degrade
-usability for keyboard and screen reader users.
+You cannot use interactive elements inside the options. Avoid very long names to facilitate the understandability and perceivability for screen reader users.
+Sets of options where each option name starts with the same word or phrase can also significantly degrade usability for keyboard and screen reader users.
 
 ```js script
 import { html } from '@lion/core';

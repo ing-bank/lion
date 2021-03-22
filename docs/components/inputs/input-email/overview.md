@@ -1,6 +1,6 @@
 # Inputs >> Input Email >> Overview ||10
 
-`lion-input-email` component is based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
+A web component based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 
 ```js script
 import { html } from '@lion/core';

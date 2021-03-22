@@ -1,6 +1,6 @@
 # Navigation >> Pagination >> Overview ||10
 
-`lion-pagination` is a component that handles pagination.
+A web component that handles pagination.
 
 ```js script
 import { html } from '@lion/core';

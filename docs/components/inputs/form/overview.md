@@ -7,7 +7,7 @@ import '@lion/input/define';
 import '@lion/form/define';
 ```
 
-We use a form web-component to enhances the functionality of the native `form` component.
+A web component that enhances the functionality of the native `form` component.
 It is designed to interact with (instances of) the [form controls](../overview.md).
 
 ```js preview-story
