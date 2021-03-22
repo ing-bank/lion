@@ -142,6 +142,14 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * @param {string} v - the raw value from the <input> after keyUp/Down event
+     * @returns {string} preprocessedValue: the result of preprocessing for invalid input
+     */
+    preprocessor(v) {
+      return v;
+    }
+
+    /**
      * Converts formattedValue to modelValue
      * For instance, a localized date to a Date Object
      * @param {string} v - formattedValue: the formatted value inside <input>
@@ -223,6 +231,13 @@ const FormatMixinImplementation = superclass =>
       }
       this._reflectBackFormattedValueToUser();
       this.__preventRecursiveTrigger = false;
+    }
+
+    /**
+     * @param {string} value
+     */
+    __callPreprocessor(value) {
+      return this.preprocessor(value);
     }
 
     /**
@@ -328,11 +343,12 @@ const FormatMixinImplementation = superclass =>
 
     /**
      * Synchronization from `._inputNode.value` to `LionField` (flow [2])
+     * Downwards syncing should only happen for `LionField`.value changes from 'above'.
+     * This triggers _onModelValueChanged and connects user input
+     * to the parsing/formatting/serializing loop.
      */
     _syncValueUpwards() {
-      // Downwards syncing should only happen for `LionField`.value changes from 'above'
-      // This triggers _onModelValueChanged and connects user input to the
-      // parsing/formatting/serializing loop
+      this.value = this.__callPreprocessor(this.value);
       this.modelValue = this.__callParser(this.value);
     }
 
