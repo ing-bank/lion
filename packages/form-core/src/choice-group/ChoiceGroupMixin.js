@@ -71,6 +71,10 @@ const ChoiceGroupMixinImplementation = superclass =>
       // user are relevant, choice values are always defined by the Application Developer
       // and known by the backend.
 
+      if (this.serializer) {
+        return this.serializer(this.modelValue);
+      }
+
       // Assuming values are always defined as strings, modelValues and serializedValues
       // are the same.
       const elems = this._getCheckedElements();

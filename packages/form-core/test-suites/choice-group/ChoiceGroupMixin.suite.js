@@ -1,5 +1,6 @@
 import { LitElement } from '@lion/core';
 import { LionInput } from '@lion/input';
+import sinon from 'sinon';
 import '@lion/fieldset/define';
 import { FormGroupMixin, Required } from '@lion/form-core';
 import { expect, html, fixture, unsafeStatic } from '@open-wc/testing';
@@ -439,6 +440,24 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       } else {
         expect(el.serializedValue).to.deep.equal([]);
       }
+    });
+
+    describe('serializers', () => {
+      it('should call the serializer provided by user', async () => {
+        const serializerSpy = sinon.spy(() => `foo`);
+
+        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+          <${parentTag} name="gender[]" .serializer=${serializerSpy}>
+            <${childTag} .choiceValue=${'male'}></${childTag}>
+            <${childTag} .choiceValue=${'female'}></${childTag}>
+          </${parentTag}>
+        `));
+
+        await el.updateComplete;
+        el.formElements[0].checked = true;
+        expect(el.serializedValue).to.equal('foo');
+        expect(serializerSpy.called).to.equal(true);
+      });
     });
 
     describe('multipleChoice', () => {
