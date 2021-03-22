@@ -47,6 +47,8 @@ export { DefaultSuccess } from './src/validate/resultValidators/DefaultSuccess.j
 
 export { LionValidationFeedback } from './src/validate/LionValidationFeedback.js';
 
+export { preprocessorFactory } from './src/utils/preprocessorFactory.js';
+
 export { ChoiceGroupMixin } from './src/choice-group/ChoiceGroupMixin.js';
 export { ChoiceInputMixin } from './src/choice-group/ChoiceInputMixin.js';
 

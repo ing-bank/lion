@@ -142,10 +142,17 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * Preprocessors could be considered 'live formatters'. Their result is shown to the user
+     * on keyup instead of after blurring the field. The biggest difference between preprocessors
+     * and formatters is their moment of execution: preprocessors are run before modelValue is
+     * computed (and work based on view value), whereas formatters are run after the parser (and
+     * are based on modelValue)
      * @param {string} v - the raw value from the <input> after keyUp/Down event
-     * @returns {string} preprocessedValue: the result of preprocessing for invalid input
+     * @param {{ currentCaretIndex:number, prevViewValue: string }} opts
+     * @returns {string|{ viewValue:string, caretIndex:number }} the result of preprocessing for invalid input
      */
-    preprocessor(v) {
+    // eslint-disable-next-line no-unused-vars
+    preprocessor(v, opts) {
       return v;
     }
 
@@ -234,10 +241,25 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * @param {string} value
+     * handle view value and caretIndex, depending on return type of .preprocessor
      */
-    __callPreprocessor(value) {
-      return this.preprocessor(value);
+    __handlePreprocessor() {
+      const unprocessedValue = this.value;
+      const preprocessedValue = this.preprocessor(this.value, {
+        currentCaretIndex: this._inputNode.selectionStart,
+        prevViewValue: this.__prevViewValue,
+      });
+      this.__prevViewValue = unprocessedValue;
+      if (typeof preprocessedValue === 'string') {
+        this.value = preprocessedValue;
+      } else if (typeof preprocessedValue === 'object') {
+        const { viewValue, caretIndex } = preprocessedValue;
+        this.value = viewValue;
+        if (caretIndex) {
+          this._inputNode.selectionStart = caretIndex;
+          this._inputNode.selectionEnd = caretIndex;
+        }
+      }
     }
 
     /**
@@ -348,7 +370,7 @@ const FormatMixinImplementation = superclass =>
      * to the parsing/formatting/serializing loop.
      */
     _syncValueUpwards() {
-      this.value = this.__callPreprocessor(this.value);
+      this.__handlePreprocessor();
       this.modelValue = this.__callParser(this.value);
     }
 

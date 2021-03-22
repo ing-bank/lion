@@ -5,7 +5,7 @@
 ```js script
 import { html } from '@lion/core';
 import '@lion/input/lion-input.js';
-import { Unparseable } from '@lion/form-core';
+import { Unparseable, preprocessorFactory } from '@lion/form-core';
 import '../docs/helper-wc/h-output.js';
 
 export default {
@@ -168,14 +168,28 @@ In the example below, we do not allow you to write digits.
 
 ```js preview-story
 export const preprocessors = () => {
-  const preprocess = (value) => {
+  const preprocess = value => {
     return value.replace(/[0-9]/g, '');
-  }
+  };
   return html`
     <lion-input
       label="Date Example"
       help-text="Uses .preprocessor to prevent digits"
       .preprocessor=${preprocess}
+    ></lion-input>
+    <h-output .show="${['modelValue']}"></h-output>
+  `;
+};
+```
+
+```js preview-story
+export const preprocessorMask = () => {
+  const maskedPreprocess = preprocessorFactory('___-____-_____');
+  return html`
+    <lion-input
+      label="Credit card example"
+      help-text="Uses preprocessorFactory('___-____-_____')"
+      .preprocessor=${maskedPreprocess}
     ></lion-input>
     <h-output .show="${['modelValue']}"></h-output>
   `;
