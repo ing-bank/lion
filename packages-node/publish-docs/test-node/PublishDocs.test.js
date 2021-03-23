@@ -60,6 +60,15 @@ describe('PublishDocs', () => {
         'Dos not touch [external](https://google.com) links.',
       ].join(EOL),
     );
+
+    const details = await readOutput('docs/details.md');
+    expect(details).to.equal(
+      [
+        '# details.md',
+        '',
+        `![Some Image](https://github.com/ing-bank/lion/blob/1234/docs/red/assets/image.svg 'the title')`,
+      ].join(EOL),
+    );
     delete process.env.GITHUB_SHA;
   });
 
