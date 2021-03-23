@@ -1,6 +1,6 @@
 {
   "name": "publish-docs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tool that copies and processes your documentation (in a monorepo) so it can be published/shipped with your package.",
   "license": "MIT",
   "author": "ing-bank",

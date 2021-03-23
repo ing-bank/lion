@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- 3aa47833: Add define.js sideEffect to package.json
+- Updated dependencies [13f808af]
+- Updated dependencies [aa478174]
+- Updated dependencies [a809d7b5]
+  - @lion/form-core@0.10.0
+  - @lion/input@0.12.1
+
 ## 0.15.0
 
 ### Minor Changes
