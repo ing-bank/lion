@@ -48,7 +48,8 @@ function rewriteLinksInMdContent(mdContent, filePath, { gitHubUrl, gitRootDir })
    * @param {string} title
    * @param {string} text
    */
-  const mdLink = (href, title, text) => `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
+  const mdLink = (href, title, text) =>
+    `[${text}](${rewrite(href)}${title ? ` ${title.trim()}` : ''})`;
 
   /** @type {string[]} */
   const resultLinks = [];
@@ -61,6 +62,10 @@ function rewriteLinksInMdContent(mdContent, filePath, { gitHubUrl, gitRootDir })
     const parts = link.match(new RegExp(linkPattern));
     if (parts) {
       newLink = mdLink(parts[2], parts[3], parts[1]);
+      if (parts[0][0] === '!') {
+        // is an image
+        newLink = `!${newLink}`;
+      }
     }
     resultLinks.push(newLink);
   });
@@ -134,12 +139,6 @@ export class PublishDocs {
       await fs.promises.mkdir(targetDir, { recursive: true });
     }
     await fs.copy(sourceDir, targetDir);
-
-    // const assets = await listFiles(this.options.copyDir, this.options.gitRootDir);
-    // for (const asset of assets) {
-    //   await fs.promises.mkdir(targetDir, { recursive: true });
-    //   await fs.promises.copyFile(asset, path.join(targetDir, path.basename(asset)));
-    // }
   }
 
   async execute() {
