@@ -82,7 +82,7 @@ describe('remarkExtend', () => {
       [
         '<h3>Static Headline</h3>',
         '<h1>import me headline</h1>',
-        '<p><img src="fixtures/my.svg" alt="my image">',
+        '<p><img src="./my.svg" alt="my image">',
         '<a href="./import-me.md">link to</a></p>',
         '',
       ].join('\n'),
@@ -273,13 +273,11 @@ describe('remarkExtend', () => {
   });
 
   it('resolves imports via node resolution', async () => {
-    // NOTE: this test can easily break as it reads content from a 3rd. party package
-    // If that content changes the test should be adjusted
     const result = await execute(
       [
         //
         '### Static Headline',
-        "```js ::importBlock('unified/readme.md', '## Install')",
+        "```js ::importBlock('remark-extend/docs/test.md', '## Test')",
         '```',
       ].join('\n'),
     );
@@ -287,13 +285,8 @@ describe('remarkExtend', () => {
     expect(result).to.equal(
       [
         '<h3>Static Headline</h3>',
-        '<h2>Install</h2>',
-        '<p>[npm][]:</p>',
-        '<pre><code class="language-sh">npm install unified',
-        '</code></pre>',
-        '<p>This package comes with types.',
-        'If you’re using TypeScript, make sure to also install',
-        '[<code>@types/unist</code>][ts-unist].</p>',
+        '<h2>Test</h2>',
+        '<p><img src="./some-image.svg" alt="some image" title="with alt"></p>',
         '',
       ].join('\n'),
     );
