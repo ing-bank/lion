@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- 13f808af: Add preprocessor hook for completely preventing invalid input or doing other preprocessing steps before the parsing process of the FormatMixin.
+
+### Patch Changes
+
+- aa478174: fix: prevent a11y violations when applying aria-required
+- a809d7b5: Make sync updatable mixin work for elements that get re-connected to DOM e.g. through appendChild. Needed for integration with global overlays.
+
 ## 0.9.0
 
 ### Minor Changes

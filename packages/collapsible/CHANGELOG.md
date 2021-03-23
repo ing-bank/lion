@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 59dad284: Removed lion-specific component namings from overview.md files
+
 ## 0.4.0
 
 ### Minor Changes

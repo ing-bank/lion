@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- 13f808af: Add a digit-only preprocessor for input-amount. This will only allow users to enter characters that are digits or separator characters.
+
+### Patch Changes
+
+- Updated dependencies [13f808af]
+- Updated dependencies [aa478174]
+- Updated dependencies [a809d7b5]
+  - @lion/form-core@0.10.0
+  - @lion/input@0.12.1
+  - @lion/validate-messages@0.5.1
+
 ## 0.10.0
 
 ### Minor Changes

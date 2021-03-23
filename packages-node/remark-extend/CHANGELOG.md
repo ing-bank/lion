@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 57ad1569: Do not touch image urls
+
 ## 0.4.0
 
 ### Minor Changes

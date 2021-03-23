@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.25.1
+
+### Patch Changes
+
+- 412270fa: fix: only close an overlay if both mousedown and mousep events are outside (for hidesOnOutsideClick)
+
 ## 0.25.0
 
 ### Minor Changes

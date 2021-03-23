@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.23.1
+
+### Patch Changes
+
+- Updated dependencies [59dad284]
+- Updated dependencies [13f808af]
+- Updated dependencies [412270fa]
+- Updated dependencies [aa478174]
+- Updated dependencies [a809d7b5]
+  - @lion/button@0.10.1
+  - @lion/form-core@0.10.0
+  - @lion/overlays@0.25.1
+  - @lion/listbox@0.6.1
+
 ## 0.23.0
 
 ### Minor Changes

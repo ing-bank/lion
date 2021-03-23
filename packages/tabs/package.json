@@ -1,6 +1,6 @@
 {
   "name": "@lion/tabs",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Allows users to quickly move between a small number of equally important views.",
   "license": "MIT",
   "author": "ing-bank",

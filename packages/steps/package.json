@@ -1,6 +1,6 @@
 {
   "name": "@lion/steps",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Breaks a single goal down into dependable sub-tasks.",
   "license": "MIT",
   "author": "ing-bank",
