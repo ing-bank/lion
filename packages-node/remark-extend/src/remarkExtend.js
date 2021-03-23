@@ -36,7 +36,6 @@ function handleImportedFile({
   endSelector,
   userFunction,
   filePath,
-  fileImport,
   missingEndSelectorMeansUntilEndOfFile = false,
 }) {
   return tree => {
@@ -80,10 +79,6 @@ function handleImportedFile({
 
       if (insertIt && parent && parent.type === 'root') {
         toInsertNodes.push(node);
-      }
-
-      if (node.type === 'image') {
-        node.url = path.posix.join(path.dirname(fileImport), node.url);
       }
     });
   };
