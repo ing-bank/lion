@@ -184,7 +184,9 @@ const FormGroupMixinImplementation = superclass =>
         this.__hasActiveOutsideClickHandling = false;
       }
       if (this.registrationComplete.done === false) {
-        this.__rejectRegistrationComplete();
+        Promise.resolve().then(() => {
+          this.__rejectRegistrationComplete();
+        });
       }
     }
 

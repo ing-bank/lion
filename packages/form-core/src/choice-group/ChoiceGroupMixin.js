@@ -181,7 +181,11 @@ const ChoiceGroupMixinImplementation = superclass =>
       super.disconnectedCallback();
 
       if (this.registrationComplete.done === false) {
-        this.__rejectRegistrationComplete();
+        Promise.resolve().then(() => {
+          Promise.resolve().then(() => {
+            this.__rejectRegistrationComplete();
+          });
+        });
       }
     }
 
