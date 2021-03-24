@@ -177,6 +177,22 @@ describe('lion-combobox', () => {
         el.autocomplete = 'both';
         await performChecks();
       });
+
+      it('shows overlay on focusin', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        expect(el.opened).to.be.false;
+        el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        await el.updateComplete;
+        expect(el.opened).to.be.true;
+      });
     });
   });
 

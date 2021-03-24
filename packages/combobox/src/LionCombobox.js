@@ -390,6 +390,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
+    if (this.showAllOnEmpty && this.focused) {
+      return true;
+    }
     // when no keyboard action involved (on focused change), return current opened state
     if (!lastKey) {
       return this.opened;
