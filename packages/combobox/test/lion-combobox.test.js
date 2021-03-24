@@ -936,6 +936,46 @@ describe('lion-combobox', () => {
       await performChecks('both', [0, 1], '');
     });
 
+    it('is possible to adjust textbox synchronize condition on overlay close', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.equal('');
+
+      /**
+       * @param {'none' | 'list' | 'inline' | 'both'} autocomplete
+       * @param {number|number[]} index
+       * @param {string} valueOnClose
+       */
+      async function performChecks(autocomplete, index, valueOnClose) {
+        await el.updateComplete;
+        el.opened = true;
+        el.setCheckedIndex(-1);
+        await el.updateComplete;
+        el.autocomplete = autocomplete;
+        el.setCheckedIndex(index);
+        el.opened = false;
+        await el.updateComplete;
+        expect(el._inputNode.value).to.equal(valueOnClose);
+      }
+
+      await performChecks('none', 0, '');
+      await performChecks('list', 0, '');
+      await performChecks('inline', 0, '');
+      await performChecks('both', 0, '');
+
+      el.multipleChoice = true;
+      await performChecks('none', [0, 1], '');
+      await performChecks('list', [0, 1], '');
+      await performChecks('inline', [0, 1], '');
+      await performChecks('both', [0, 1], '');
+    });
+
     it('does inline autocompletion when adding chars', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" autocomplete="inline">
