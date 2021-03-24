@@ -22,3 +22,13 @@ level, via:
 > recommended as a means of interaction.
 
 For more information about parsing and the Unparseable type, see [Formatting and Parsing](../../../docs/systems/form/formatting-and-parsing.md)
+
+### Event meta
+
+`model-value-changed` events have a `detail` object, containing the following meta data:
+
+- `isTriggeredByUser`: a boolean that determines whether a change originated
+  from a user or was triggered programmatically
+- `formPath`: an array of FormControls. It contains the path an event follows to go from a 'leaf
+  element' (for instance a lion-input) to a top element (for instance lion-form). An example path
+  could be [lionForm, lionFieldset, lionInput]
