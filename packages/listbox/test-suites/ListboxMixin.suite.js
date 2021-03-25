@@ -15,6 +15,15 @@ import sinon from 'sinon';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
 
 /**
+ * @param {HTMLElement} el
+ * @param {string} key
+ */
+function mimicKeyPress(el, key) {
+  el.dispatchEvent(new KeyboardEvent('keydown', { key }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key }));
+}
+
+/**
  * @param {LionListbox} lionListboxEl
  */
 function getProtectedMembers(lionListboxEl) {
@@ -382,7 +391,8 @@ export function runListboxMixinSuite(customConfig = {}) {
         el.activeIndex = 0;
         await el.updateComplete;
         expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('first');
-        activeDescendantOwner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        mimicKeyPress(activeDescendantOwner, 'ArrowDown');
+        // activeDescendantOwner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await el.updateComplete;
         expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('second');
       });
@@ -537,12 +547,17 @@ export function runListboxMixinSuite(customConfig = {}) {
             // Normalize
             el.activeIndex = 0;
             const options = el.formElements;
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            // mimicKeyPress(listbox, 'ArrowUp');
+
+            mimicKeyPress(listbox, 'ArrowUp');
+
             expect(options[0].active).to.be.true;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.false;
             el.activeIndex = 2;
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            // mimicKeyPress(listbox, 'ArrowDown');
+            mimicKeyPress(listbox, 'ArrowDown');
+
             expect(options[0].active).to.be.false;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.true;
@@ -563,14 +578,20 @@ export function runListboxMixinSuite(customConfig = {}) {
             el.activeIndex = 0;
             expect(el.activeIndex).to.equal(0);
 
-            el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            mimicKeyPress(el._inputNode, 'ArrowUp');
+
             await el.updateComplete;
             expect(el.activeIndex).to.equal(2);
 
-            el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            mimicKeyPress(el._inputNode, 'ArrowDown');
+
             expect(el.activeIndex).to.equal(0);
             // Extra check: regular navigation
-            el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            mimicKeyPress(el._inputNode, 'ArrowDown');
+
             expect(el.activeIndex).to.equal(1);
           });
         });
@@ -590,8 +611,8 @@ export function runListboxMixinSuite(customConfig = {}) {
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            mimicKeyPress(listbox, 'ArrowDown');
+            mimicKeyPress(listbox, 'Enter');
             expect(options[1].checked).to.be.true;
           });
         });
@@ -613,14 +634,16 @@ export function runListboxMixinSuite(customConfig = {}) {
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            mimicKeyPress(listbox, 'ArrowDown');
+            mimicKeyPress(listbox, ' ');
+
             expect(options[1].checked).to.be.true;
             el.checkedIndex = 0;
             // @ts-ignore allow protected member access in test
             el._listboxReceivesNoFocus = true;
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            mimicKeyPress(listbox, 'ArrowDown');
+            mimicKeyPress(listbox, ' ');
+
             expect(options[1].checked).to.be.false;
           });
         });
@@ -668,9 +691,9 @@ export function runListboxMixinSuite(customConfig = {}) {
           }
 
           el.activeIndex = 2;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          mimicKeyPress(listbox, 'Home');
           expect(el.activeIndex).to.equal(0);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          mimicKeyPress(listbox, 'End');
           expect(el.activeIndex).to.equal(3);
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
@@ -690,10 +713,11 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.selectionFollowsFocus = false;
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          mimicKeyPress(listbox, 'ArrowUp');
+
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
         });
@@ -718,21 +742,24 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          mimicKeyPress(listbox, 'ArrowUp');
+
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           // No response to horizontal arrows...
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          mimicKeyPress(listbox, 'ArrowRight');
+
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           el.activeIndex = 1;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          mimicKeyPress(listbox, 'ArrowLeft');
+
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
         });
@@ -753,18 +780,21 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           await el.updateComplete;
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          mimicKeyPress(listbox, 'ArrowRight');
+
           expect(el.activeIndex).to.equal(1);
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          mimicKeyPress(listbox, 'ArrowLeft');
+
           expect(el.activeIndex).to.equal(0);
 
           // No response to vertical arrows...
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(0);
 
           el.activeIndex = 1;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          mimicKeyPress(listbox, 'ArrowUp');
+
           expect(el.activeIndex).to.equal(1);
         });
 
@@ -834,13 +864,13 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Enter
           el.activeIndex = 0;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          mimicKeyPress(listbox, 'Enter');
           el.activeIndex = 1;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          mimicKeyPress(listbox, 'Enter');
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          mimicKeyPress(listbox, 'Enter');
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke']);
 
@@ -855,13 +885,16 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Space
           el.activeIndex = 0;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          mimicKeyPress(listbox, ' ');
+
           el.activeIndex = 1;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          mimicKeyPress(listbox, ' ');
+
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          mimicKeyPress(listbox, ' ');
+
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke']);
         });
@@ -925,11 +958,12 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+          mimicKeyPress(listbox, 'ArrowUp');
+
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
@@ -964,11 +998,13 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          mimicKeyPress(listbox, 'ArrowRight');
+
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+          mimicKeyPress(listbox, 'ArrowLeft');
+
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
@@ -990,9 +1026,9 @@ export function runListboxMixinSuite(customConfig = {}) {
           }
 
           expect(el.modelValue).to.equal('30');
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+          mimicKeyPress(listbox, 'Home');
           expect(el.modelValue).to.equal('10');
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+          mimicKeyPress(listbox, 'End');
           expect(el.modelValue).to.equal('40');
         });
       });
@@ -1009,7 +1045,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           await el.updateComplete;
           const { checkedIndex } = el;
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.checkedIndex).to.equal(checkedIndex);
         });
 
@@ -1065,11 +1101,11 @@ export function runListboxMixinSuite(customConfig = {}) {
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
 
           expect(el.checkedIndex).to.equal(0);
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          mimicKeyPress(listbox, 'Enter');
           // Checked index stays where it was
           expect(el.checkedIndex).to.equal(0);
         });
@@ -1087,11 +1123,11 @@ export function runListboxMixinSuite(customConfig = {}) {
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
 
-          listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          mimicKeyPress(listbox, 'ArrowDown');
           expect(el.activeIndex).to.equal(2);
           expect(el.checkedIndex).to.equal(2);
         });
@@ -1318,8 +1354,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         // Allow options that behave like anchors (think of Google Search) to trigger the anchor behavior
         const activeOption = el.formElements[1];
         const clickSpy = sinon.spy(activeOption, 'click');
-
-        listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(listbox, 'Enter');
 
         expect(clickSpy).to.have.been.calledOnce;
       });
@@ -1339,7 +1374,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         const activeOption = el.formElements[0];
         const clickSpy = sinon.spy(activeOption, 'click');
 
-        listbox.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(listbox, 'Enter');
 
         expect(clickSpy).to.not.have.been.called;
       });

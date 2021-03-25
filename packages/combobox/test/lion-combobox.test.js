@@ -20,7 +20,17 @@ function mimicUserTyping(el, value) {
   // eslint-disable-next-line no-param-reassign
   el._inputNode.value = value;
   el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  el._inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
   el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
+}
+
+/**
+ * @param {HTMLInputElement} el
+ * @param {string} key
+ */
+function mimicKeyPress(el, key) {
+  el.dispatchEvent(new KeyboardEvent('keydown', { key }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key }));
 }
 
 /**
@@ -53,7 +63,7 @@ async function mimicUserTypingAdvanced(el, values) {
         inputNode.value += key;
       }
 
-      inputNode.dispatchEvent(new KeyboardEvent('keydown', { key }));
+      mimicKeyPress(inputNode, key);
       el._inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
       el.updateComplete.then(() => {
@@ -264,7 +274,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
     });
 
-    it('shows overlay again after select and char keydown', async () => {
+    it('shows overlay again after select and char keyup', async () => {
       /**
        * Scenario:
        * [1] user focuses textbox: overlay hidden
@@ -348,7 +358,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
       expect(el._inputNode.value).to.equal('Artichoke');
 
-      el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      mimicKeyPress(el._inputNode, 'Tab');
       expect(el.opened).to.equal(false);
       expect(el._inputNode.value).to.equal('Artichoke');
     });
@@ -404,6 +414,79 @@ describe('lion-combobox', () => {
         el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.equal(true);
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaa');
+        expect(el.opened).to.be.false;
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should display overlay if currentValue length condition is fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaaa');
+        expect(el.opened).to.be.true;
+      });
+
+      it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled after once fulfilled', async () => {
+        class ShowOverlayConditionCombobox extends LionCombobox {
+          /** @param {{ currentValue: string, lastKey:string }} options */
+          _showOverlayCondition(options) {
+            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+          }
+        }
+        const tagName = defineCE(ShowOverlayConditionCombobox);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <${tag} name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `));
+
+        mimicUserTyping(el, 'aaaa');
+        expect(el.opened).to.be.true;
+
+        mimicUserTyping(el, 'aaa');
+        await el.updateComplete;
+        expect(el.opened).to.be.false;
       });
     });
 
@@ -488,7 +571,7 @@ describe('lion-combobox', () => {
         expect(el.checkedIndex).to.equal(0);
 
         // Simulate backspace deleting the char at the end of the string
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }));
+        mimicKeyPress(el._inputNode, 'Backspace');
         el._inputNode.dispatchEvent(new Event('input'));
         const arr = el._inputNode.value.split('');
         arr.splice(el._inputNode.value.length - 1, 1);
@@ -1123,11 +1206,11 @@ describe('lion-combobox', () => {
         expect(el.activeIndex).to.equal(1);
       });
 
-      it('changes whether active index is set to the closest match automatically depending on autocomplete', async () => {
+      it('changes whether activeIndex is set to the closest match automatically depending on autocomplete', async () => {
         /**
-         * Automatic selection (setting activeIndex to closest matching option) in lion is set for inline & both autocomplete,
-         * because it is unavoidable there
-         * For list & none autocomplete, it is turned off and manual selection is required.
+         * Automatic selection (setting activeIndex to closest matching option) in lion is set for
+         * 'inline' & 'both' autocomplete, because it is unavoidable there
+         * For 'list' & 'none' autocomplete, it is turned off and manual selection is required.
          * TODO: Make this configurable for list & none autocomplete?
          */
         const el = /** @type {LionCombobox} */ (await fixture(html`
@@ -1139,49 +1222,64 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `));
 
-        /** @param {LionCombobox} elm */
-        function reset(elm) {
+        /**
+         * @param {LionCombobox} elm
+         * @param {'none'|'list'|'inline'|'both'} autocomplete
+         */
+        async function setup(elm, autocomplete) {
+          // eslint-disable-next-line no-param-reassign
+          elm.autocomplete = autocomplete;
           // eslint-disable-next-line no-param-reassign
           elm.activeIndex = -1;
           // eslint-disable-next-line no-param-reassign
           elm.checkedIndex = -1;
+          // eslint-disable-next-line no-param-reassign
+          elm.opened = true;
+          await elm.updateComplete;
         }
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 1. List Autocomplete with Manual Selection:
         // does not set active at all until user selects
-        reset(el);
-        el.autocomplete = 'none';
+        await setup(el, 'none');
+
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         expect(el.activeIndex).to.equal(-1);
         expect(el.opened).to.be.true;
+
+        mimicKeyPress(el._inputNode, 'Enter');
+        expect(el.opened).to.be.false;
+        expect(el.activeIndex).to.equal(-1);
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 2. List Autocomplete with Automatic Selection:
         // does not set active at all until user selects
-        reset(el);
-        el.autocomplete = 'list';
+        await setup(el, 'list');
+
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        expect(el.activeIndex).to.equal(-1);
         expect(el.opened).to.be.true;
+        expect(el.activeIndex).to.equal(-1);
+
+        mimicKeyPress(el._inputNode, 'Enter');
+        expect(el.activeIndex).to.equal(-1);
+        expect(el.opened).to.be.false;
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 3. List with Inline Autocomplete (mostly, but with aria-autocomplete="inline")
-        reset(el);
-        el.autocomplete = 'inline';
+        await setup(el, 'inline');
+
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         await el.updateComplete;
+        expect(el.opened).to.be.true;
 
         expect(el.activeIndex).to.equal(1);
 
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         await el.updateComplete;
         await el.updateComplete;
 
@@ -1190,13 +1288,12 @@ describe('lion-combobox', () => {
 
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 3. List with Inline Autocomplete
-        reset(el);
-        el.autocomplete = 'both';
+        await setup(el, 'both');
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
         expect(el.opened).to.be.false;
       });
@@ -1225,7 +1322,7 @@ describe('lion-combobox', () => {
         // select artichoke
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
 
         mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
@@ -1247,10 +1344,10 @@ describe('lion-combobox', () => {
         // Select something
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        mimicKeyPress(el._inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
 
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        mimicKeyPress(el._inputNode, 'Escape');
         await el.updateComplete;
         expect(el._inputNode.textContent).to.equal('');
 
@@ -1293,7 +1390,8 @@ describe('lion-combobox', () => {
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(null);
-        el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        mimicKeyPress(el._inputNode, 'ArrowDown');
         expect(el._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
           'artichoke-option',
         );

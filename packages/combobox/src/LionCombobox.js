@@ -390,8 +390,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
-    const doNotOpenOn = ['Tab', 'Esc', 'Enter'];
-    return lastKey && !doNotOpenOn.includes(lastKey);
+    // when no keyboard action involved (on focused change), return current opened state
+    if (!lastKey) {
+      return this.opened;
+    }
+    const doNotShowOn = ['Tab', 'Esc', 'Enter'];
+    return !doNotShowOn.includes(lastKey);
   }
 
   /**
@@ -699,7 +703,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this._inputNode.addEventListener('keydown', this.__requestShowOverlay);
+    this._inputNode.addEventListener('keyup', this.__requestShowOverlay);
   }
 
   /**
@@ -707,7 +711,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
-    this._inputNode.removeEventListener('keydown', this.__requestShowOverlay);
+    this._inputNode.removeEventListener('keyup', this.__requestShowOverlay);
   }
 
   /**
@@ -806,13 +810,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {KeyboardEvent} [ev]
    */
   __requestShowOverlay(ev) {
-    if (
-      this._showOverlayCondition({
-        lastKey: ev && ev.key,
-        currentValue: this._inputNode.value,
-      })
-    ) {
-      this.opened = true;
-    }
+    this.opened = this._showOverlayCondition({
+      lastKey: ev && ev.key,
+      currentValue: this._inputNode.value,
+    });
   }
 }
