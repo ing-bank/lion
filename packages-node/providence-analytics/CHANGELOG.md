@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.1
+
+### Patch Changes
+
+- 67cd8e35: Expose analyzers that are requested to be run in external contexts
+
 ## 0.10.0
 
 ### Minor Changes
