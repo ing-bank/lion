@@ -71,6 +71,7 @@
   "exports": {
     ".": "./src/program/providence.js",
     "./src/cli": "./src/cli/index.js",
+    "./analyzers": "./src/program/analyzers/index.js",
     "./docs/": "./docs/"
   }
 }
