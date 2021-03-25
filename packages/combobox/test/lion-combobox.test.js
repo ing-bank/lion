@@ -177,6 +177,22 @@ describe('lion-combobox', () => {
         el.autocomplete = 'both';
         await performChecks();
       });
+
+      it('shows overlay on focusin', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        expect(el.opened).to.be.false;
+        el._comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        await el.updateComplete;
+        expect(el.opened).to.be.true;
+      });
     });
   });
 
@@ -928,6 +944,46 @@ describe('lion-combobox', () => {
       await performChecks('list', 0, 'Artichoke');
       await performChecks('inline', 0, 'Artichoke');
       await performChecks('both', 0, 'Artichoke');
+
+      el.multipleChoice = true;
+      await performChecks('none', [0, 1], '');
+      await performChecks('list', [0, 1], '');
+      await performChecks('inline', [0, 1], '');
+      await performChecks('both', [0, 1], '');
+    });
+
+    it('is possible to adjust textbox synchronize condition on overlay close', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+      expect(el._inputNode.value).to.equal('');
+
+      /**
+       * @param {'none' | 'list' | 'inline' | 'both'} autocomplete
+       * @param {number|number[]} index
+       * @param {string} valueOnClose
+       */
+      async function performChecks(autocomplete, index, valueOnClose) {
+        await el.updateComplete;
+        el.opened = true;
+        el.setCheckedIndex(-1);
+        await el.updateComplete;
+        el.autocomplete = autocomplete;
+        el.setCheckedIndex(index);
+        el.opened = false;
+        await el.updateComplete;
+        expect(el._inputNode.value).to.equal(valueOnClose);
+      }
+
+      await performChecks('none', 0, '');
+      await performChecks('list', 0, '');
+      await performChecks('inline', 0, '');
+      await performChecks('both', 0, '');
 
       el.multipleChoice = true;
       await performChecks('none', [0, 1], '');

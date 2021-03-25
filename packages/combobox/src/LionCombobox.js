@@ -390,6 +390,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
+    if (this.showAllOnEmpty && this.focused) {
+      return true;
+    }
     // when no keyboard action involved (on focused change), return current opened state
     if (!lastKey) {
       return this.opened;
@@ -440,7 +443,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   __onOverlayClose() {
     if (!this.multipleChoice) {
-      if (this.checkedIndex !== -1) {
+      if (
+        this.checkedIndex !== -1 &&
+        this._syncToTextboxCondition(this.modelValue, this.__oldModelValue, {
+          phase: 'overlay-close',
+        })
+      ) {
         this._inputNode.value = this.formElements[
           /** @type {number} */ (this.checkedIndex)
         ].choiceValue;
@@ -739,12 +747,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * @overridable
    * @param {string|string[]} modelValue
    * @param {string|string[]} oldModelValue
    */
   // eslint-disable-next-line no-unused-vars
-  _syncToTextboxCondition(modelValue, oldModelValue) {
-    return this.autocomplete === 'inline' || this.autocomplete === 'both';
+  _syncToTextboxCondition(modelValue, oldModelValue, { phase } = {}) {
+    return (
+      this.autocomplete === 'inline' || this.autocomplete === 'both' || phase === 'overlay-close'
+    );
   }
 
   /**
