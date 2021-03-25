@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.23.2
+
+### Patch Changes
+
+- Updated dependencies [72a6ccc8]
+- Updated dependencies [ca15374a]
+  - @lion/form-core@0.10.1
+  - @lion/listbox@0.6.2
+
 ## 0.23.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.6.2
+
+### Patch Changes
+
+- ca15374a: listbox (descendants) add `isTriggeredByUser` meta data to `model-value-changed` event on keyboard interaction
+- Updated dependencies [72a6ccc8]
+  - @lion/form-core@0.10.1
+
 ## 0.6.1
 
 ### Patch Changes
