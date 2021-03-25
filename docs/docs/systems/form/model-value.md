@@ -32,3 +32,4 @@ For more information about parsing and the Unparseable type, see [Formatting and
 - `formPath`: an array of FormControls. It contains the path an event follows to go from a 'leaf
   element' (for instance a lion-input) to a top element (for instance lion-form). An example path
   could be [lionForm, lionFieldset, lionInput]
+- `initialize`: whether this is the first time the event is fired (on first render of the FormControl)

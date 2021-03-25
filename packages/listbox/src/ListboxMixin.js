@@ -486,6 +486,13 @@ const ListboxMixinImplementation = superclass =>
         return;
       }
 
+      this.__isHandlingUserInput = true;
+      setTimeout(() => {
+        // Since we can't control when subclasses are done handling keyboard input, we
+        // schedule a timeout to reset __isHandlingUserInput
+        this.__isHandlingUserInput = false;
+      });
+
       const { key } = ev;
 
       switch (key) {
@@ -586,6 +593,14 @@ const ListboxMixinImplementation = superclass =>
       if (this.disabled) {
         return;
       }
+
+      this.__isHandlingUserInput = true;
+      setTimeout(() => {
+        // Since we can't control when subclasses are done handling keyboard input, we
+        // schedule a timeout to reset __isHandlingUserInput
+        this.__isHandlingUserInput = false;
+      });
+
       const { key } = ev;
       // eslint-disable-next-line default-case
       switch (key) {
@@ -702,7 +717,7 @@ const ListboxMixinImplementation = superclass =>
           new CustomEvent('model-value-changed', {
             detail: /** @type {ModelValueEventDetails} */ ({
               formPath: ev.detail.formPath,
-              isTriggeredByUser: ev.detail.isTriggeredByUser,
+              isTriggeredByUser: ev.detail.isTriggeredByUser || this.__isHandlingUserInput,
               element: ev.target,
             }),
           }),

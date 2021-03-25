@@ -396,10 +396,11 @@ describe('detail.isTriggeredByUser', () => {
   }
 
   /**
-   * @param {FormControl & {value: string}} el
+   * @param {FormControl & {value: string;}} el
    * @param {string} newViewValue
+   * @param {string | undefined} [triggerType]
    */
-  function mimicUserInput(el, newViewValue) {
+  function mimicUserInput(el, newViewValue, triggerType) {
     const type = detectType(el);
     let userInputEv;
     if (type === 'RegularField') {
@@ -409,7 +410,14 @@ describe('detail.isTriggeredByUser', () => {
     } else if (type === 'ChoiceField') {
       el._inputNode.dispatchEvent(new Event('change', { bubbles: true }));
     } else if (type === 'OptionChoiceField') {
-      el.dispatchEvent(new Event('click', { bubbles: true }));
+      if (!triggerType) {
+        el.dispatchEvent(new Event('click', { bubbles: true }));
+      } else if (triggerType === 'keypress') {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', bubbles: true }));
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+      }
     }
   }
 
@@ -459,9 +467,12 @@ describe('detail.isTriggeredByUser', () => {
       }
 
       /**
-       * @param {FormControl & {value: string}} formControl
+       * @param {FormControl & {value: string;}} formControl
+       * @param {boolean | undefined} [testKeyboardBehavior]
        */
-      function expectCorrectEventMetaChoiceField(formControl) {
+      function expectCorrectEventMetaChoiceField(formControl, testKeyboardBehavior) {
+        const type = detectType(formControl);
+
         resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue');
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
@@ -474,6 +485,16 @@ describe('detail.isTriggeredByUser', () => {
         // eslint-disable-next-line no-param-reassign
         formControl.modelValue = { value: 'programmaticValue', checked: false };
         expect(spy.secondCall.args[0].detail.isTriggeredByUser).to.be.false;
+
+        if (type === 'OptionChoiceField' && testKeyboardBehavior) {
+          resetChoiceFieldToForceRepropagation(formControl);
+          mimicUserInput(formControl, 'userValue', 'keypress');
+          try {
+            expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
+          } catch (e) {
+            console.log(formControl);
+          }
+        }
       }
 
       // 1. Derive the type of field we're dealing with
@@ -494,7 +515,7 @@ describe('detail.isTriggeredByUser', () => {
         );
         el.appendChild(childrenEls);
         await el.registrationComplete;
-        expectCorrectEventMetaChoiceField(el.formElements[0]);
+        expectCorrectEventMetaChoiceField(el.formElements[0], true);
       } else if (type === 'FormOrFieldset') {
         const childrenEls = await fixture(
           html`<div><lion-input name="one"></lion-input><lion-input name="two"></lion-input></div>`,
