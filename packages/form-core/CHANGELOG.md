@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.10.1
+
+### Patch Changes
+
+- 72a6ccc8: Allow Subclassers of LionCombobox to set '\_syncToTextboxCondition' in closing phase of overlay
+
+  ## Fixes
+
+  - form-core: allow an extra microtask in registration phase to make forms inside dialogs compatible.
+  - combobox: open on focused when showAllOnEmpty
+
 ## 0.10.0
 
 ### Minor Changes

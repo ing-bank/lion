@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 72a6ccc8: Allow Subclassers of LionCombobox to set '\_syncToTextboxCondition' in closing phase of overlay
+
+  ## Fixes
+
+  - form-core: allow an extra microtask in registration phase to make forms inside dialogs compatible.
+  - combobox: open on focused when showAllOnEmpty
+
+### Patch Changes
+
+- 63e05c36: Combobox evaluates show condition after keyup(instead of keydown), so textbox value is updated
+- Updated dependencies [72a6ccc8]
+- Updated dependencies [ca15374a]
+  - @lion/form-core@0.10.1
+  - @lion/listbox@0.6.2
+
 ## 0.3.1
 
 ### Patch Changes

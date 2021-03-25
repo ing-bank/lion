@@ -1,5 +1,40 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- 72a6ccc8: Allow Subclassers of LionCombobox to set '\_syncToTextboxCondition' in closing phase of overlay
+
+  ## Fixes
+
+  - form-core: allow an extra microtask in registration phase to make forms inside dialogs compatible.
+  - combobox: open on focused when showAllOnEmpty
+
+- Updated dependencies [72a6ccc8]
+- Updated dependencies [63e05c36]
+- Updated dependencies [ca15374a]
+  - @lion/combobox@0.4.0
+  - @lion/form-core@0.10.1
+  - @lion/listbox@0.6.2
+  - @lion/checkbox-group@0.15.2
+  - @lion/fieldset@0.17.2
+  - @lion/input@0.12.2
+  - @lion/input-amount@0.11.1
+  - @lion/input-date@0.10.2
+  - @lion/input-datepicker@0.20.2
+  - @lion/input-email@0.11.2
+  - @lion/input-iban@0.13.2
+  - @lion/input-stepper@0.3.2
+  - @lion/radio-group@0.14.2
+  - @lion/select@0.10.2
+  - @lion/select-rich@0.23.2
+  - @lion/switch@0.14.2
+  - @lion/textarea@0.10.2
+  - @lion/validate-messages@0.5.2
+  - @lion/form@0.9.2
+  - @lion/input-range@0.7.2
+
 ## 0.5.1
 
 ### Patch Changes
