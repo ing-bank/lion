@@ -35,7 +35,7 @@ class PBoard extends DecorateMixin(LitElement) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       utilsStyles,
       tooltipStyles,
       css`

@@ -4,7 +4,7 @@ import { MyCounter } from '../src/MyCounter.js';
 export class MyExtension extends MyCounter {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         button {
           background: #c43f16;

@@ -10,7 +10,7 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
 export class LionInputStepper extends LionInput {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         .input-group__container > .input-group__input ::slotted(.form-control) {
           text-align: center;

@@ -38,7 +38,7 @@ import { LionInput } from '@lion/input';
 class MyInput extends LionInput {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         /* your styles here */
       `,

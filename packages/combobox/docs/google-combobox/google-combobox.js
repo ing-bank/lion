@@ -20,7 +20,7 @@ export class GoogleOption extends LinkMixin(LionOption) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           position: relative;
@@ -106,7 +106,7 @@ customElements.define('google-option', GoogleOption);
 export class GoogleCombobox extends LionCombobox {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         /** @configure FormControlMixin */
 

@@ -137,7 +137,7 @@ const ChoiceInputMixinImplementation = superclass =>
      */
     static get styles() {
       return [
-        super.styles || [],
+        ...(super.styles || []),
         css`
           :host {
             display: flex;

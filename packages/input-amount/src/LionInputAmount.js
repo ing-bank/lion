@@ -53,7 +53,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         .input-group__container > .input-group__input ::slotted(.form-control) {
           text-align: right;

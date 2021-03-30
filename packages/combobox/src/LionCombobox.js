@@ -37,7 +37,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         .input-group__input {
           display: flex;

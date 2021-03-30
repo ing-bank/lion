@@ -6,6 +6,7 @@ import { Unparseable } from './validate/Unparseable.js';
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
  * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
@@ -618,7 +619,7 @@ const FormControlMixinImplementation = superclass =>
      */
     static get styles() {
       return [
-        super.styles || [],
+        .../** @type {CSSResultArray} */ (super.styles || []),
         css`
           /**********************
             {block} .form-field

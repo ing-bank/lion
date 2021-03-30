@@ -17,7 +17,7 @@ class WaOption extends LionOption {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           --background-default: white;
@@ -287,7 +287,7 @@ customElements.define('wa-option', WaOption);
 class WaCombobox extends LionCombobox {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           font-family: SF Pro Text, SF Pro Icons, system, -apple-system, system-ui,

@@ -149,7 +149,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         .input-group__container > .input-group__input ::slotted(.form-control) {
           overflow-x: hidden; /* for FF adds height to the TextArea to reserve place for scroll-bars */

@@ -9,7 +9,7 @@ import './style/load-roboto.js';
 export class MdOption extends LionOption {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           position: relative;
@@ -69,7 +69,7 @@ customElements.define('md-option', MdOption);
 export class MdCombobox extends MdFieldMixin(LionCombobox) {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         .input-group__container {
           display: flex;
