@@ -16,6 +16,7 @@ export declare class FormatHost {
   formatter(v: unknown, opts: FormatNumberOptions): string;
   serializer(v: unknown): string;
   deserializer(v: string): unknown;
+  preprocessor(v: string): string;
 
   get value(): string;
   set value(value: string);
