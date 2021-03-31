@@ -20,6 +20,36 @@ class Cache {
      * @protected
      */
     this._cacheObject = {};
+    /** @type {{ [url: string]: { promise: Promise<void>, resolve: (v?: any) => void } }} */
+    this._pendingRequests = {};
+  }
+
+  /** @param {string} url  */
+  setPendingRequest(url) {
+    /** @type {(v: any) => void} */
+    let resolve = () => {};
+    const promise = new Promise(_resolve => {
+      resolve = _resolve;
+    });
+    this._pendingRequests[url] = { promise, resolve };
+  }
+
+  /**
+   * @param {string} url
+   * @returns {Promise<void> | undefined}
+   */
+  getPendingRequest(url) {
+    if (this._pendingRequests[url]) {
+      return this._pendingRequests[url].promise;
+    }
+  }
+
+  /** @param {string} url */
+  resolvePendingRequest(url) {
+    if (this._pendingRequests[url]) {
+      this._pendingRequests[url].resolve();
+      delete this._pendingRequests[url];
+    }
   }
 
   /**
@@ -65,6 +95,7 @@ class Cache {
     Object.keys(this._cacheObject).forEach(key => {
       if (key.indexOf(url) > -1) {
         delete this._cacheObject[key];
+        this.resolvePendingRequest(key);
       }
     });
   }
@@ -82,6 +113,7 @@ class Cache {
       if (notMatch) return;
 
       const isDataDeleted = delete this._cacheObject[key];
+      this.resolvePendingRequest(key);
 
       if (!isDataDeleted) {
         throw new Error(`Failed to delete cache for a request '${key}'`);
@@ -245,7 +277,6 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
 
     // cacheIdentifier is used to bind the cache to the current session
     const currentCache = getCache(getCacheIdentifier());
-    const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
 
     // don't use cache if the request method is not part of the configs methods
     if (cacheOptions.methods.indexOf(method.toLowerCase()) === -1) {
@@ -267,6 +298,13 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       return cacheRequest;
     }
 
+    const pendingRequest = currentCache.getPendingRequest(cacheId);
+    if (pendingRequest) {
+      // there is another concurrent request, wait for it to finish
+      await pendingRequest;
+    }
+
+    const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
     if (cacheResponse) {
       // eslint-disable-next-line no-param-reassign
       if (!cacheRequest.cacheOptions) {
@@ -284,6 +322,10 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
       response.fromCache = true;
       return response;
     }
+
+    // we do want to use caching for this requesting, but it's not already cached
+    // mark this as a pending request, so that concurrent requests can reuse it from the cache
+    currentCache.setPendingRequest(cacheId);
 
     return cacheRequest;
   };
@@ -306,38 +348,36 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
       throw new Error(`getCacheIdentifier returns falsy`);
     }
 
+    if (!cacheResponse.request) {
+      throw new Error('Missing request in response.');
+    }
+
     const cacheOptions = composeCacheOptions(
       validatedInitialCacheOptions,
       cacheResponse.request?.cacheOptions,
     );
-
+    // string that identifies cache entry
+    const cacheId = cacheOptions.requestIdentificationFn(
+      cacheResponse.request,
+      searchParamSerializer,
+    );
+    const currentCache = getCache(getCacheIdentifier());
     const isAlreadyFromCache = !!cacheResponse.fromCache;
     // caching all responses with not default `timeToLive`
     const isCacheActive = cacheOptions.timeToLive > 0;
 
-    if (isAlreadyFromCache || !isCacheActive) {
-      return cacheResponse;
-    }
-
     // if the request is one of the options.methods; store response in cache
     if (
-      cacheResponse.request &&
+      !isAlreadyFromCache &&
+      isCacheActive &&
       cacheOptions.methods.indexOf(cacheResponse.request.method.toLowerCase()) > -1
     ) {
-      // string that identifies cache entry
-      const cacheId = cacheOptions.requestIdentificationFn(
-        cacheResponse.request,
-        searchParamSerializer,
-      );
-
+      // store the response data in the cache and mark request as resolved
       const responseBody = await cacheResponse.clone().text();
-      // store the response data in the cache
-      getCache(getCacheIdentifier()).set(cacheId, responseBody);
-    } else {
-      // don't store in cache if the request method is not part of the configs methods
-      return cacheResponse;
+      currentCache.set(cacheId, responseBody);
     }
 
+    currentCache.resolvePendingRequest(cacheId);
     return cacheResponse;
   };
 };

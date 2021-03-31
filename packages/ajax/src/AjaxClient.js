@@ -118,27 +118,15 @@ export class AjaxClient {
 
     // run request interceptors, returning directly and skipping the network
     // if a interceptor returns a Response
-    let interceptedRequest = request;
-    for (const intercept of this._requestInterceptors) {
-      // In this instance we actually do want to await for each sequence
-      // eslint-disable-next-line no-await-in-loop
-      const interceptedRequestOrResponse = await intercept(interceptedRequest);
-      if (interceptedRequestOrResponse instanceof Request) {
-        interceptedRequest = interceptedRequestOrResponse;
-      } else {
-        return interceptedRequestOrResponse;
-      }
+    const interceptedRequestOrResponse = await this.__interceptRequest(request);
+    if (interceptedRequestOrResponse instanceof Response) {
+      return interceptedRequestOrResponse;
     }
 
-    const response = /** @type {CacheResponse} */ (await fetch(interceptedRequest));
-    response.request = interceptedRequest;
+    const response = /** @type {CacheResponse} */ (await fetch(interceptedRequestOrResponse));
+    response.request = interceptedRequestOrResponse;
 
-    let interceptedResponse = response;
-    for (const intercept of this._responseInterceptors) {
-      // In this instance we actually do want to await for each sequence
-      // eslint-disable-next-line no-await-in-loop
-      interceptedResponse = await intercept(interceptedResponse);
-    }
+    const interceptedResponse = await this.__interceptResponse(response);
 
     if (interceptedResponse.status >= 400 && interceptedResponse.status < 600) {
       throw new AjaxClientFetchError(request, interceptedResponse);
@@ -189,5 +177,40 @@ export class AjaxClient {
     } catch (error) {
       throw new Error(`Failed to parse response from ${response.url} as JSON.`);
     }
+  }
+
+  /**
+   * @param {Request} request
+   * @returns {Promise<Request | Response>}
+   */
+  async __interceptRequest(request) {
+    // run request interceptors, returning directly and skipping the network
+    // if a interceptor returns a Response
+    let interceptedRequest = request;
+    for (const intercept of this._requestInterceptors) {
+      // In this instance we actually do want to await for each sequence
+      // eslint-disable-next-line no-await-in-loop
+      const interceptedRequestOrResponse = await intercept(interceptedRequest);
+      if (interceptedRequestOrResponse instanceof Request) {
+        interceptedRequest = interceptedRequestOrResponse;
+      } else {
+        return this.__interceptResponse(interceptedRequestOrResponse);
+      }
+    }
+    return interceptedRequest;
+  }
+
+  /**
+   * @param {Response} response
+   * @returns {Promise<Response>}
+   */
+  async __interceptResponse(response) {
+    let interceptedResponse = response;
+    for (const intercept of this._responseInterceptors) {
+      // In this instance we actually do want to await for each sequence
+      // eslint-disable-next-line no-await-in-loop
+      interceptedResponse = await intercept(interceptedResponse);
+    }
+    return interceptedResponse;
   }
 }
