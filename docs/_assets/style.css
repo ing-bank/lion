@@ -12,12 +12,12 @@ mdjs-preview {
   margin-bottom: 20px;
 }
 
-#main-header a[href="/blog/"] {
+#main-header a[href='/blog/'] {
   display: none;
 }
 
 @media screen and (min-width: 1024px) {
-  #main-header a[href="/blog/"] {
+  #main-header a[href='/blog/'] {
     display: block;
   }
 }

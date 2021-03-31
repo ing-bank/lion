@@ -15,6 +15,9 @@ html {
   --footer-background: rgba(0, 0, 0, 0.1);
 
   --text-color: black;
+
+  /* search colors*/
+  --rocket-search-highlight-color: #2c3e50;
 }
 
 html.dark {
@@ -38,4 +41,7 @@ html.dark {
   --markdown-syntax-background-color: #a0a0a0;
   --markdown-link-color: #fb7881;
   --markdown-blockquote-color: #c9e3ff;
+
+  /* search colors*/
+  --rocket-search-highlight-color: #eee;
 }
