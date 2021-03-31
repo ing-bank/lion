@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 6ea02988: Always use ...styles and [css``] everywhere consistently, meaning an array of CSSResult. Makes it easier on TSC.
+- Updated dependencies [6ea02988]
+  - @lion/form-core@0.10.2
+  - @lion/listbox@0.6.3
+  - @lion/overlays@0.25.2
+
 ## 0.4.0
 
 ### Minor Changes
