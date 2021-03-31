@@ -491,5 +491,31 @@ describe('ajax cache', () => {
       ajaxRequestSpy.restore();
       removeCacheInterceptors(ajax, indexes);
     });
+
+    it('preserves status and headers when returning cached response', async () => {
+      newCacheId();
+      fetchStub.returns(
+        Promise.resolve(
+          new Response('mock response', { status: 206, headers: { 'x-foo': 'x-bar' } }),
+        ),
+      );
+
+      const indexes = addCacheInterceptors(ajax, {
+        useCache: true,
+        timeToLive: 100,
+      });
+      const ajaxRequestSpy = spy(ajax, 'request');
+
+      const response1 = await ajax.request('/test');
+      const response2 = await ajax.request('/test');
+      expect(fetchStub.callCount).to.equal(1);
+      expect(response1.status).to.equal(206);
+      expect(response1.headers.get('x-foo')).to.equal('x-bar');
+      expect(response2.status).to.equal(206);
+      expect(response2.headers.get('x-foo')).to.equal('x-bar');
+
+      ajaxRequestSpy.restore();
+      removeCacheInterceptors(ajax, indexes);
+    });
   });
 });

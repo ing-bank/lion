@@ -16,11 +16,14 @@ class Cache {
     this.cacheConfig = {};
 
     /**
-     * @type {{[url: string]: {expires: number, data: object} }}
-     * @protected
+     * @type {{[url: string]: {expires: number, response: CacheResponse} }}
+     * @private
      */
     this._cacheObject = {};
-    /** @type {{ [url: string]: { promise: Promise<void>, resolve: (v?: any) => void } }} */
+    /**
+     * @type {{ [url: string]: { promise: Promise<void>, resolve: (v?: any) => void } }}
+     * @private
+     */
     this._pendingRequests = {};
   }
 
@@ -55,13 +58,13 @@ class Cache {
   /**
    * Store an item in the cache
    * @param {string} url key by which the cache is stored
-   * @param {object} data the cached object
+   * @param {Response} response the cached response
    */
-  set(url, data) {
+  set(url, response) {
     this._validateCache();
     this._cacheObject[url] = {
       expires: new Date().getTime(),
-      data,
+      response,
     };
   }
 
@@ -69,6 +72,7 @@ class Cache {
    * Retrieve an item from the cache
    * @param {string} url key by which the cache is stored
    * @param {number} timeToLive maximum time to allow cache to live
+   * @returns {CacheResponse | false}
    */
   get(url, timeToLive) {
     this._validateCache();
@@ -82,7 +86,7 @@ class Cache {
     if (timeToLive !== null && cacheAge > timeToLive) {
       return false;
     }
-    return cacheResult.data;
+    return cacheResult.response;
   }
 
   /**
@@ -260,7 +264,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
   const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
 
   return /** @param {CacheRequest} cacheRequest */ async cacheRequest => {
-    const { method, status, statusText, headers } = cacheRequest;
+    const { method } = cacheRequest;
 
     const cacheOptions = composeCacheOptions(
       validatedInitialCacheOptions,
@@ -311,13 +315,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
         cacheRequest.cacheOptions = { useCache: false };
       }
 
-      const init = /** @type {LionRequestInit} */ ({
-        status,
-        statusText,
-        headers,
-      });
-
-      const response = /** @type {CacheResponse} */ (new Response(cacheResponse, init));
+      const response = /** @type {CacheResponse} */ cacheResponse.clone();
       response.request = cacheRequest;
       response.fromCache = true;
       return response;
@@ -373,8 +371,7 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
       cacheOptions.methods.indexOf(cacheResponse.request.method.toLowerCase()) > -1
     ) {
       // store the response data in the cache and mark request as resolved
-      const responseBody = await cacheResponse.clone().text();
-      currentCache.set(cacheId, responseBody);
+      currentCache.set(cacheId, cacheResponse.clone());
     }
 
     currentCache.resolvePendingRequest(cacheId);

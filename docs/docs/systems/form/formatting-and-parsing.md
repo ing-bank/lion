@@ -157,9 +157,9 @@ In the example below, we do not allow you to write digits.
 
 ```js preview-story
 export const preprocessors = () => {
-  const preprocess = (value) => {
+  const preprocess = value => {
     return value.replace(/[0-9]/g, '');
-  }
+  };
   return html`
     <lion-input
       label="Date Example"
