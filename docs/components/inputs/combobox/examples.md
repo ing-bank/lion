@@ -5,7 +5,17 @@ import { html } from '@lion/core';
 import './src/md-combobox/md-combobox.js';
 import './src/gh-combobox/gh-combobox.js';
 import './src/wa-combobox/wa-combobox.js';
+import './src/google-combobox/google-combobox.js';
 ```
+
+Below several extensions can be found. They illustrate that complex UI components can be created
+easily from an extended Lion component, just by:
+
+- **configuring**: setting properties or providing conditions via methods
+- **enhancing**: adding extra html/styles/logic without changing behavior of the extended element
+- **overriding**: replace html/styles/logic of the extended element with your own
+
+## Material Design
 
 ```js preview-story
 export const MaterialDesign = () => html`
@@ -19,6 +29,8 @@ export const MaterialDesign = () => html`
 `;
 ```
 
+## Github
+
 ```js preview-story
 export const Github = () => html`
   <gh-combobox name="combo" label="Switch branches/tags">
@@ -30,6 +42,8 @@ export const Github = () => html`
   </gh-combobox>
 `;
 ```
+
+## Whatsapp
 
 ```js preview-story
 export const Whatsapp = () => html`
@@ -75,3 +89,65 @@ export const Whatsapp = () => html`
   </wa-combobox>
 `;
 ```
+
+**Whatsapp example shows:**
+
+- advanced styling
+- how to match/highlight text on multiple rows of the option (not just choiceValue)
+- how to animate options
+
+## Google Search
+
+```js preview-story
+export const GoogleSearch = () => {
+  return html`
+    <google-combobox name="combo" label="Google Search">
+      <google-option
+        href="https://www.google.com/search?query=apple"
+        target="_blank"
+        rel="noopener noreferrer"
+        .choiceValue=${'Apple'}
+        >Apple</google-option
+      >
+      <google-option
+        href="https://www.google.com/search?query=Artichoke"
+        target="_blank"
+        rel="noopener noreferrer"
+        .choiceValue=${'Artichoke'}
+        >Artichoke</google-option
+      >
+      <google-option
+        href="https://www.google.com/search?query=Asparagus"
+        target="_blank"
+        rel="noopener noreferrer"
+        .choiceValue=${'Asparagus'}
+        >Asparagus</google-option
+      >
+      <google-option
+        href="https://www.google.com/search?query=Banana"
+        target="_blank"
+        rel="noopener noreferrer"
+        .choiceValue=${'Banana'}
+        >Banana</google-option
+      >
+      <google-option
+        href="https://www.google.com/search?query=Beets"
+        target="_blank"
+        rel="noopener noreferrer"
+        .choiceValue=${'Beets'}
+        >Beets</google-option
+      >
+    </google-combobox>
+    <div style="height:200px;"></div>
+  `;
+};
+```
+
+**Google Search example shows:**
+
+- advanced styling
+- how to use options that are links
+- create exact user experience of Google Search, by:
+  - using autocomplete 'list' as a fundament (we don't want inline completion in textbox)
+  - enhancing `_showOverlayCondition`: open on focus
+  - enhancing `_syncToTextboxCondition`: always sync to textbox when navigating by keyboard (this needs to be enabled, since it's not provided in the "autocomplete=list" preset)
