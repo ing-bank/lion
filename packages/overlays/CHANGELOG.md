@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.25.2
+
+### Patch Changes
+
+- 6ea02988: Always use ...styles and [css``] everywhere consistently, meaning an array of CSSResult. Makes it easier on TSC.
+
 ## 0.25.1
 
 ### Patch Changes

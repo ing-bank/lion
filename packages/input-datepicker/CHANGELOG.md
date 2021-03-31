@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.20.3
+
+### Patch Changes
+
+- Updated dependencies [6ea02988]
+  - @lion/form-core@0.10.2
+  - @lion/overlays@0.25.2
+  - @lion/input-date@0.10.3
+  - @lion/validate-messages@0.5.3
+
 ## 0.20.2
 
 ### Patch Changes

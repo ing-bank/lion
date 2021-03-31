@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-range",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Provide a way for users to select one value from a range of values",
   "license": "MIT",
   "author": "ing-bank",
@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.15.0",
-    "@lion/input": "0.12.2",
+    "@lion/input": "0.12.3",
     "@lion/localize": "0.17.0"
   },
   "keywords": [
