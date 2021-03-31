@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- 0e61e764: Fix combobox google demo
+
 ## 0.4.1
 
 ### Patch Changes
