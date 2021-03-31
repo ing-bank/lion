@@ -17,7 +17,7 @@ export class PTable extends DecorateMixin(LitElement) {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         /**
          * Structural css

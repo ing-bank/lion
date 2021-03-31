@@ -15,7 +15,7 @@ export class GhOption extends LionOption {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           display: flex;
@@ -118,7 +118,7 @@ export class GhCombobox extends LionCombobox {
 
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         /** @configure LionCombobox */
 

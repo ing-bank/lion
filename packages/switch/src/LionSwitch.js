@@ -5,7 +5,7 @@ import { LionSwitchButton } from './LionSwitchButton.js';
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host([hidden]) {
           display: none;

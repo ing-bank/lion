@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement } from '@lion/core';
+import { LitElement, CSSResultArray } from '@lion/core';
 import { SlotHost } from '@lion/core/types/SlotMixinTypes';
 
 import { FormControlHost } from '@lion/form-core/types/FormControlMixinTypes';
@@ -9,6 +9,7 @@ import { LionOptions } from '../src/LionOptions.js';
 import { LionOption } from '../src/LionOption.js';
 
 export declare class ListboxHost {
+  static get styles(): CSSResultArray;
   /**
    * When true, will synchronize activedescendant and selected element on
    * arrow key navigation.

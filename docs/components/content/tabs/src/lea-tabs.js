@@ -4,7 +4,7 @@ import { LionTabs } from '@lion/tabs';
 export class LeaTabs extends LionTabs {
   static get styles() {
     return [
-      super.styles,
+      ...super.styles,
       css`
         :host {
           background: #222;

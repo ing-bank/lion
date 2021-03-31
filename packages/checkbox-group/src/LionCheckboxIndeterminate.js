@@ -8,7 +8,7 @@ import { LionCheckbox } from './LionCheckbox.js';
 export class LionCheckboxIndeterminate extends LionCheckbox {
   static get styles() {
     return [
-      super.styles || [],
+      ...(super.styles || []),
       css`
         :host .choice-field__nested-checkboxes {
           display: block;

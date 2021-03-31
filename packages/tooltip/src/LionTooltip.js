@@ -23,7 +23,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
 
   static get styles() {
     return [
-      super.styles ? super.styles : [],
+      ...super.styles,
       css`
         :host {
           display: inline-block;

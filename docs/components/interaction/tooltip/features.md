@@ -170,7 +170,7 @@ export const customArrow = () => {
       class extends LionTooltip {
         static get styles() {
           return [
-            super.styles,
+            ...super.styles,
             css`
               :host {
                 --tooltip-arrow-width: 20px;

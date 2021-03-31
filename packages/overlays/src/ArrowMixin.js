@@ -6,6 +6,7 @@ import { OverlayMixin } from './OverlayMixin.js';
  * @typedef {import('../types/ArrowMixinTypes').ArrowMixin} ArrowMixin
  * @typedef {import('@popperjs/core/lib/popper').Options} PopperOptions
  * @typedef {import('@popperjs/core/lib/enums').Placement} Placement
+ * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
  */
 
 /**
@@ -26,7 +27,7 @@ export const ArrowMixinImplementation = superclass =>
 
     static get styles() {
       return [
-        super.styles || [],
+        .../** @type {CSSResultArray} */ (super.styles || []),
         css`
           :host {
             --tooltip-arrow-width: 12px;
