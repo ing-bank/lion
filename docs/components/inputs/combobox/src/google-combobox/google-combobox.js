@@ -1,7 +1,7 @@
 import { css, html } from '@lion/core';
 import { LionOption } from '@lion/listbox';
 import { renderLitAsNode } from '@lion/helpers';
-import { LionCombobox } from '../../src/LionCombobox.js';
+import { LionCombobox } from '@lion/combobox';
 import { LinkMixin } from '../LinkMixin.js';
 import googleSearchIcon from './assets/google-search-icon.js';
 import googleVoiceSearchIcon from './assets/google-voice-search-icon.js';
