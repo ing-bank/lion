@@ -12,12 +12,37 @@ mdjs-preview {
   margin-bottom: 20px;
 }
 
-#main-header a[href='/blog/'] {
-  display: none;
+#main-header a {
+  font-weight: normal;
 }
 
-@media screen and (min-width: 1024px) {
+#main-header a.current.active {
+  font-weight: bold;
+}
+
+#main-header .current.active {
+  display: block;
+}
+
+@media only screen and (max-width: 600px) {
+  #main-header a {
+    font-size: 12px;
+  }
+  #main-header a.social-link {
+    display: block;
+    width: 20px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
   #main-header a[href='/blog/'] {
     display: block;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  #main-header a.social-link {
+    display: block;
+    width: 30px;
   }
 }
