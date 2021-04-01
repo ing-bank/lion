@@ -22,8 +22,11 @@ const DisabledMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /** @protected */
       this._requestedToBeDisabled = false;
+      /** @private */
       this.__isUserSettingDisabled = true;
+      /** @private */
       this.__restoreDisabledTo = false;
       this.disabled = false;
     }
@@ -43,7 +46,10 @@ const DisabledMixinImplementation = superclass =>
       }
     }
 
-    /** @param {boolean} value */
+    /**
+     * @param {boolean} value
+     * @private
+     */
     __internalSetDisabled(value) {
       this.__isUserSettingDisabled = false;
       this.disabled = value;

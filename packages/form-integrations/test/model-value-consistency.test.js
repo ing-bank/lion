@@ -35,6 +35,16 @@ import '@lion/form-core/define';
  * @typedef {import('@lion/listbox').LionOption} LionOption
  */
 
+/**
+ * @param {FormControl} el
+ */
+function getProtectedMembers(el) {
+  return {
+    // @ts-ignore
+    repropagationRole: el._repropagationRole,
+  };
+}
+
 const featureName = 'model value';
 
 const getFirstPaintTitle = /** @param {number} count */ count =>
@@ -386,13 +396,14 @@ describe('detail.isTriggeredByUser', () => {
    * @returns {'RegularField'|'ChoiceField'|'OptionChoiceField'|'ChoiceGroupField'|'FormOrFieldset'}
    */
   function detectType(el) {
-    if (el._repropagationRole === 'child') {
+    const { repropagationRole } = getProtectedMembers(el);
+    if (repropagationRole === 'child') {
       if (featureDetectChoiceField(el)) {
         return featureDetectOptionChoiceField(el) ? 'OptionChoiceField' : 'ChoiceField';
       }
       return 'RegularField';
     }
-    return el._repropagationRole === 'choice-group' ? 'ChoiceGroupField' : 'FormOrFieldset';
+    return repropagationRole === 'choice-group' ? 'ChoiceGroupField' : 'FormOrFieldset';
   }
 
   /**

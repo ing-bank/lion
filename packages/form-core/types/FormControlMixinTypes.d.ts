@@ -112,7 +112,7 @@ export declare class FormControlHost {
   /**
    * Based on the role, details of handling model-value-changed repropagation differ.
    */
-  _repropagationRole: 'child' | 'choice-group' | 'fieldset';
+  protected _repropagationRole: 'child' | 'choice-group' | 'fieldset';
   /**
    * By default, a field with _repropagationRole 'choice-group' will act as an
    * 'endpoint'. This means it will be considered as an individual field: for
@@ -129,24 +129,24 @@ export declare class FormControlHost {
   updated(changedProperties: import('@lion/core').PropertyValues): void;
 
   render(): TemplateResult;
-  _groupOneTemplate(): TemplateResult;
-  _groupTwoTemplate(): TemplateResult;
+  protected _groupOneTemplate(): TemplateResult;
+  protected _groupTwoTemplate(): TemplateResult;
   _labelTemplate(): TemplateResult;
   _helpTextTemplate(): TemplateResult;
-  _inputGroupTemplate(): TemplateResult;
+  protected _inputGroupTemplate(): TemplateResult;
   _inputGroupBeforeTemplate(): TemplateResult;
   _inputGroupPrefixTemplate(): TemplateResult | typeof nothing;
-  _inputGroupInputTemplate(): TemplateResult;
+  protected _inputGroupInputTemplate(): TemplateResult;
   _inputGroupSuffixTemplate(): TemplateResult | typeof nothing;
   _inputGroupAfterTemplate(): TemplateResult;
   _feedbackTemplate(): TemplateResult;
 
-  _triggerInitialModelValueChangedEvent(): void;
+  protected _triggerInitialModelValueChangedEvent(): void;
   _enhanceLightDomClasses(): void;
   _enhanceLightDomA11y(): void;
   _enhanceLightDomA11yForAdditionalSlots(additionalSlots?: string[]): void;
   __reflectAriaAttr(attrName: string, nodes: HTMLElement[], reorder: boolean | undefined): void;
-  _isEmpty(modelValue?: unknown): boolean;
+  protected _isEmpty(modelValue?: unknown): boolean;
   _getAriaDescriptionElements(): HTMLElement[];
   public addToAriaLabelledBy(
     element: HTMLElement,
@@ -167,7 +167,7 @@ export declare class FormControlHost {
   __getDirectSlotChild(slotName: string): HTMLElement;
   __dispatchInitialModelValueChangedEvent(): void;
   __repropagateChildrenInitialized: boolean | undefined;
-  _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
+  protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   __repropagateChildrenValues(ev: CustomEvent): void;
 }
 

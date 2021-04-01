@@ -33,6 +33,16 @@ const collapsibleWithEvents = html`
   </lion-collapsible>
 `;
 
+/**
+ * @param {LionCollapsible} el
+ */
+function getProtectedMembers(el) {
+  return {
+    // @ts-ignore
+    contentHeight: el._contentHeight,
+  };
+}
+
 describe('<lion-collapsible>', () => {
   describe('Collapsible', () => {
     it('sets opened to false by default', async () => {
@@ -49,10 +59,12 @@ describe('<lion-collapsible>', () => {
 
     it('should return content node height before and after collapsing', async () => {
       const collapsible = await fixture(defaultCollapsible);
-      expect(collapsible._contentHeight).to.equal('0px');
+      const collHeight1 = getProtectedMembers(collapsible);
+      expect(collHeight1.contentHeight).to.equal('0px');
       collapsible.show();
       await collapsible.requestUpdate();
-      expect(collapsible._contentHeight).to.equal('32px');
+      const collHeight2 = getProtectedMembers(collapsible);
+      expect(collHeight2.contentHeight).to.equal('32px');
     });
   });
 

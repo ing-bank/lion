@@ -35,7 +35,7 @@ export declare class ChoiceInputHost {
   render(): TemplateResult;
 
   _choiceGraphicTemplate(): TemplateResult;
-  _afterTemplate(): TemplateResult;
+  protected _afterTemplate(): TemplateResult;
 
   connectedCallback(): void;
   disconnectedCallback(): void;
@@ -54,9 +54,9 @@ export declare class ChoiceInputHost {
 
   __isHandlingUserInput: boolean;
 
-  _proxyInputEvent(): void;
+  protected _proxyInputEvent(): void;
 
-  _onModelValueChanged(
+  protected _onModelValueChanged(
     newV: { modelValue: ChoiceInputModelValue },
     oldV: { modelValue: ChoiceInputModelValue },
   ): void;
@@ -65,9 +65,9 @@ export declare class ChoiceInputHost {
 
   formatter(modelValue: ChoiceInputModelValue): string;
 
-  _isEmpty(): void;
+  protected _isEmpty(): void;
 
-  _syncValueUpwards(): void;
+  protected _syncValueUpwards(): void;
 
   type: string;
 

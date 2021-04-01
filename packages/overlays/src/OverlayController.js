@@ -94,9 +94,13 @@ export class OverlayController extends EventTargetShim {
   constructor(config = {}, manager = overlays) {
     super();
     this.manager = manager;
+    /** @private */
     this.__sharedConfig = config;
 
-    /** @type {OverlayConfig} */
+    /**
+     * @type {OverlayConfig}
+     * @protected
+     */
     this._defaultConfig = {
       placementMode: undefined,
       contentNode: config.contentNode,
@@ -155,7 +159,9 @@ export class OverlayController extends EventTargetShim {
     };
 
     this.manager.add(this);
+    /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
+    /** @private */
     this.__originalAttrs = new Map();
     if (this._defaultConfig.contentNode) {
       if (!this._defaultConfig.contentNode.isConnected) {
@@ -166,11 +172,17 @@ export class OverlayController extends EventTargetShim {
       this.__isContentNodeProjected = Boolean(this._defaultConfig.contentNode.assignedSlot);
     }
     this.updateConfig(config);
+    /** @private */
     this.__hasActiveTrapsKeyboardFocus = false;
+    /** @private */
     this.__hasActiveBackdrop = true;
-    /** @type {HTMLElement | undefined} */
+    /**
+     * @type {HTMLElement | undefined}
+     * @private
+     */
     this.__backdropNodeToBeTornDown = undefined;
 
+    /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
   }
 
@@ -377,6 +389,7 @@ export class OverlayController extends EventTargetShim {
    * we need to know where we should reappend contentWrapperNode (or contentNode in case it's
    * projected).
    * @type {HTMLElement}
+   * @protected
    */
   get _renderTarget() {
     /** config [g1] */
@@ -395,6 +408,7 @@ export class OverlayController extends EventTargetShim {
   /**
    * @desc The element our local overlay will be positioned relative to.
    * @type {HTMLElement | undefined}
+   * @protected
    */
   get _referenceNode() {
     return this.referenceNode || this.invokerNode;
@@ -430,7 +444,10 @@ export class OverlayController extends EventTargetShim {
     // Teardown all previous configs
     this.teardown();
 
-    /** @type {OverlayConfig} */
+    /**
+     * @type {OverlayConfig}
+     * @private
+     */
     this.__prevConfig = this.config || {};
 
     /** @type {OverlayConfig} */
@@ -452,15 +469,19 @@ export class OverlayController extends EventTargetShim {
       },
     };
 
+    /** @private */
     this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
     // TODO: remove this, so we only have the getters (no setters)
     // Object.assign(this, this.config);
+    /** @protected */
     this._init({ cfgToAdd });
+    /** @private */
     this.__elementToFocusAfterHide = undefined;
   }
 
   /**
    * @param {OverlayConfig} newConfig
+   * @private
    */
   // eslint-disable-next-line class-methods-use-this
   __validateConfiguration(newConfig) {
@@ -499,6 +520,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ cfgToAdd: OverlayConfig }} options
+   * @protected
    */
   _init({ cfgToAdd }) {
     this.__initContentWrapperNode({ cfgToAdd });
@@ -514,6 +536,7 @@ export class OverlayController extends EventTargetShim {
     this._handleFeatures({ phase: 'init' });
   }
 
+  /** @private */
   __initConnectionTarget() {
     // Now, add our node to the right place in dom (renderTarget)
     if (this.contentWrapperNode !== this.__prevConfig?.contentWrapperNode) {
@@ -544,6 +567,7 @@ export class OverlayController extends EventTargetShim {
    * Cleanup ._contentWrapperNode. We do this, because creating a fresh wrapper
    * can lead to problems with event listeners...
    * @param {{ cfgToAdd: OverlayConfig }} options
+   * @private
    */
   __initContentWrapperNode({ cfgToAdd }) {
     if (this.config?.contentWrapperNode && this.placementMode === 'local') {
@@ -578,6 +602,7 @@ export class OverlayController extends EventTargetShim {
   /**
    * Display local overlays on top of elements with no z-index that appear later in the DOM
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleZIndex({ phase }) {
     if (this.placementMode !== 'local') {
@@ -594,6 +619,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @private
    */
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
@@ -634,6 +660,7 @@ export class OverlayController extends EventTargetShim {
   /**
    * @param {HTMLElement} node
    * @param {string[]} attrs
+   * @private
    */
   __storeOriginalAttrs(node, attrs) {
     const attrMap = {};
@@ -643,6 +670,7 @@ export class OverlayController extends EventTargetShim {
     this.__originalAttrs.set(node, attrMap);
   }
 
+  /** @private */
   __restoreOriginalAttrs() {
     for (const [node, attrMap] of this.__originalAttrs) {
       Object.entries(attrMap).forEach(([attrName, value]) => {
@@ -706,6 +734,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
@@ -729,6 +758,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _keepBodySize({ phase }) {
     switch (phase) {
@@ -817,6 +847,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async _transitionHide(hideConfig) {
@@ -874,6 +905,7 @@ export class OverlayController extends EventTargetShim {
     }
   }
 
+  /** @protected */
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
@@ -894,6 +926,7 @@ export class OverlayController extends EventTargetShim {
   /**
    * All features are handled here.
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleFeatures({ phase }) {
     this._handleZIndex({ phase });
@@ -929,6 +962,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handlePreventsScroll({ phase }) {
     switch (phase) {
@@ -944,6 +978,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleBlocking({ phase }) {
     switch (phase) {
@@ -966,6 +1001,7 @@ export class OverlayController extends EventTargetShim {
    * it is removed. Otherwise this is the first time displaying a backdrop, so a animation-in
    * animation is played.
    * @param {{ animation?: boolean, phase: OverlayPhase }} config
+   * @protected
    */
   _handleBackdrop({ phase }) {
     switch (phase) {
@@ -1026,6 +1062,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleTrapsKeyboardFocus({ phase }) {
     if (phase === 'show') {
@@ -1063,12 +1100,14 @@ export class OverlayController extends EventTargetShim {
     }
   }
 
+  /** @private */
   __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
     return ev.key === 'Escape' && this.hide();
   }
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleHidesOnEsc({ phase }) {
     if (phase === 'show') {
@@ -1086,6 +1125,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
@@ -1097,6 +1137,7 @@ export class OverlayController extends EventTargetShim {
     }
   }
 
+  /** @protected */
   _handleInheritsReferenceWidth() {
     if (!this._referenceNode || this.placementMode === 'global') {
       return;
@@ -1119,6 +1160,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleHidesOnOutsideClick({ phase }) {
     const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
@@ -1210,6 +1252,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @param {{ phase: OverlayPhase }} config
+   * @protected
    */
   _handleAccessibility({ phase }) {
     if (phase === 'init' || phase === 'teardown') {
@@ -1231,6 +1274,7 @@ export class OverlayController extends EventTargetShim {
     this._teardownContentWrapperNode();
   }
 
+  /** @protected */
   _teardownContentWrapperNode() {
     if (
       this.placementMode === 'global' &&
@@ -1241,6 +1285,7 @@ export class OverlayController extends EventTargetShim {
     }
   }
 
+  /** @private */
   async __createPopperInstance() {
     if (this._popper) {
       this._popper.destroy();

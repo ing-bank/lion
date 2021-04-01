@@ -5,6 +5,7 @@
 
 export class IconManager {
   constructor() {
+    /** @private */
     this.__iconResolvers = new Map();
   }
 

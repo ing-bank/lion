@@ -22,11 +22,15 @@ import { FormGroupMixin } from '@lion/form-core';
 export class LionFieldset extends FormGroupMixin(LitElement) {
   constructor() {
     super();
-    /** @override FormRegistrarMixin */
+    /**
+     * @override FormRegistrarMixin
+     * @protected
+     */
     this._isFormOrFieldset = true;
     /**
      * @type {'child' | 'choice-group' | 'fieldset'}
      * @override FormControlMixin
+     * @protected
      */
     this._repropagationRole = 'fieldset';
   }

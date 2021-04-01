@@ -7,14 +7,27 @@ import { IconManager } from '../src/IconManager.js';
  * @typedef {import("lit-html").TemplateResult} TemplateResult
  */
 
+/**
+ * @param {IconManager} iconManagerEl
+ */
+function getProtectedMembers(iconManagerEl) {
+  // @ts-ignore
+  const { __iconResolvers: iconResolvers } = iconManagerEl;
+  return {
+    iconResolvers,
+  };
+}
+
 describe('IconManager', () => {
   it('starts off with an empty map of resolvers', () => {
     const manager = new IconManager();
-    expect(manager.__iconResolvers.size).to.equal(0);
+    const { iconResolvers } = getProtectedMembers(manager);
+    expect(iconResolvers.size).to.equal(0);
   });
 
   it('allows adding an icon resolver', () => {
     const manager = new IconManager();
+    const { iconResolvers } = getProtectedMembers(manager);
     /**
      * @param {string} iconset
      * @param {string} icon
@@ -24,7 +37,7 @@ describe('IconManager', () => {
     const resolver = (iconset, icon) => nothing;
     manager.addIconResolver('foo', resolver);
 
-    expect(manager.__iconResolvers.get('foo')).to.equal(resolver);
+    expect(iconResolvers.get('foo')).to.equal(resolver);
   });
 
   it('does not allow adding a resolve for the same namespace twice', () => {

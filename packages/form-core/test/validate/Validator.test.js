@@ -20,6 +20,15 @@ async function expectThrowsAsync(method, errorMessage) {
     expect(error.message).to.equal(errorMessage);
   }
 }
+/**
+ * @param {Validator} validatorEl
+ */
+function getProtectedMembers(validatorEl) {
+  return {
+    // @ts-ignore
+    getMessage: (...args) => validatorEl._getMessage(...args),
+  };
+}
 
 describe('Validator', () => {
   it('has an "execute" function returning "shown" state', async () => {
@@ -52,8 +61,11 @@ describe('Validator', () => {
       }
     }
 
+    const vali = new MyValidator({}, { getMessage: 'This is the custom error message' });
+    const { getMessage } = getProtectedMembers(vali);
+
     await expectThrowsAsync(
-      () => new MyValidator({}, { getMessage: 'This is the custom error message' })._getMessage(),
+      () => getMessage(),
       "You must provide a value for getMessage of type 'function', you provided a value of type: string",
     );
   });
@@ -76,7 +88,8 @@ describe('Validator', () => {
       }
     }
     const vali = new MyValidator('myParam', { my: 'config', getMessage: configSpy });
-    vali._getMessage();
+    const { getMessage } = getProtectedMembers(vali);
+    getMessage();
 
     expect(configSpy.args[0][0]).to.deep.equal({
       name: 'MyValidator',
@@ -102,7 +115,8 @@ describe('Validator', () => {
       }
     }
     const vali = new MyValidator('myParam', { my: 'config' });
-    vali._getMessage();
+    const { getMessage } = getProtectedMembers(vali);
+    getMessage();
 
     expect(data).to.deep.equal({
       name: 'MyValidator',

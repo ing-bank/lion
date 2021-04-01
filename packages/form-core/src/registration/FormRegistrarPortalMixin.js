@@ -38,6 +38,7 @@ const FormRegistrarPortalMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
+     * @private
      */
     __redispatchEventForFormRegistrarPortalMixin(ev) {
       ev.stopPropagation();

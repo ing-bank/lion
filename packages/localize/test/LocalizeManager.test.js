@@ -7,6 +7,21 @@ import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers/in
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
 /**
+ * @param {LocalizeManager} localizeManagerEl
+ */
+function getProtectedMembers(localizeManagerEl) {
+  // @ts-ignore
+  const {
+    __storage: storage,
+    _supportExternalTranslationTools: supportExternalTranslationTools,
+  } = localizeManagerEl;
+  return {
+    storage,
+    supportExternalTranslationTools,
+  };
+}
+
+/**
  * @param {string} str
  * Useful for IE11 where LTR and RTL symbols are put by Intl when rendering dates
  */
@@ -84,10 +99,11 @@ describe('LocalizeManager', () => {
   describe('addData()', () => {
     it('allows to provide inline data', () => {
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'lion-hello': { greeting: 'Hi!' },
         },
@@ -95,7 +111,7 @@ describe('LocalizeManager', () => {
 
       manager.addData('en-GB', 'lion-goodbye', { farewell: 'Cheers!' });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'lion-hello': { greeting: 'Hi!' },
           'lion-goodbye': { farewell: 'Cheers!' },
@@ -105,7 +121,7 @@ describe('LocalizeManager', () => {
       manager.addData('nl-NL', 'lion-hello', { greeting: 'Hoi!' });
       manager.addData('nl-NL', 'lion-goodbye', { farewell: 'Doei!' });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'lion-hello': { greeting: 'Hi!' },
           'lion-goodbye': { farewell: 'Cheers!' },
@@ -119,6 +135,7 @@ describe('LocalizeManager', () => {
 
     it('prevents mutating existing data for the same locale & namespace', () => {
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
 
@@ -126,7 +143,7 @@ describe('LocalizeManager', () => {
         manager.addData('en-GB', 'lion-hello', { greeting: 'Hello!' });
       }).to.throw();
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'lion-hello': { greeting: 'Hi!' } },
       });
     });
@@ -137,13 +154,14 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       await manager.loadNamespace({
         /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
       });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-component': { greeting: 'Hello!' },
         },
@@ -154,6 +172,7 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hello!' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
       manager.locale = 'en-US';
 
       await manager.loadNamespace(
@@ -164,7 +183,7 @@ describe('LocalizeManager', () => {
         { locale: 'nl-NL' },
       );
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'nl-NL': {
           'my-component': { greeting: 'Hello!' },
         },
@@ -176,6 +195,7 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-send-button/en-GB.js', { default: { submit: 'Send' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       await manager.loadNamespaces([
         {
@@ -188,7 +208,7 @@ describe('LocalizeManager', () => {
         },
       ]);
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-defaults': { submit: 'Submit' },
           'my-send-button': { submit: 'Send' },
@@ -201,6 +221,7 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-send-button/nl-NL.js', { default: { submit: 'Send' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
       manager.locale = 'en-US';
 
       await manager.loadNamespaces(
@@ -217,7 +238,7 @@ describe('LocalizeManager', () => {
         { locale: 'nl-NL' },
       );
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'nl-NL': {
           'my-defaults': { submit: 'Submit' },
           'my-send-button': { submit: 'Send' },
@@ -229,13 +250,14 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       await manager.loadNamespace({
         /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`),
       });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-component': { greeting: 'Hello!' },
         },
@@ -265,6 +287,7 @@ describe('LocalizeManager', () => {
     describe('fallback locale', () => {
       it('can load a fallback locale if current one can not be loaded', async () => {
         manager = new LocalizeManager({ fallbackLocale: 'en-GB' });
+        const { storage } = getProtectedMembers(manager);
         manager.locale = 'nl-NL';
 
         setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
@@ -274,7 +297,7 @@ describe('LocalizeManager', () => {
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         });
 
-        expect(manager.__storage).to.deep.equal({
+        expect(storage).to.deep.equal({
           'nl-NL': {
             'my-component': { greeting: 'Hello!' },
           },
@@ -283,6 +306,7 @@ describe('LocalizeManager', () => {
 
       it('can load fallback generic language file if fallback locale file is not found', async () => {
         manager = new LocalizeManager({ fallbackLocale: 'en-GB' });
+        const { storage } = getProtectedMembers(manager);
         manager.locale = 'nl-NL';
 
         setupFakeImport('./my-component/en.js', { default: { greeting: 'Hello!' } });
@@ -292,7 +316,7 @@ describe('LocalizeManager', () => {
           'my-component': locale => fakeImport(`./my-component/${locale}.js`),
         });
 
-        expect(manager.__storage).to.deep.equal({
+        expect(storage).to.deep.equal({
           'nl-NL': {
             'my-component': { greeting: 'Hello!' },
           },
@@ -345,6 +369,7 @@ describe('LocalizeManager', () => {
       fetchMock.get('./my-component/en-GB.json', { greeting: 'Hello!' });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.setupNamespaceLoader(
         'my-component',
@@ -357,7 +382,7 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespace('my-component');
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-component': { greeting: 'Hello!' },
         },
@@ -373,6 +398,7 @@ describe('LocalizeManager', () => {
       });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.setupNamespaceLoader(
         'my-defaults',
@@ -394,7 +420,7 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespaces(['my-defaults', 'my-send-button']);
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-send-button': {
             submit: 'Send',
@@ -410,6 +436,7 @@ describe('LocalizeManager', () => {
       fetchMock.get('./my-component/en-GB.json', { greeting: 'Hello!' });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.setupNamespaceLoader(
         /my-.+/,
@@ -425,7 +452,7 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespace('my-component');
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-component': { greeting: 'Hello!' },
         },
@@ -437,6 +464,7 @@ describe('LocalizeManager', () => {
       fetchMock.get('./my-send-button/en-GB.json', { submit: 'Send' });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.setupNamespaceLoader(
         /my-.+/,
@@ -452,7 +480,7 @@ describe('LocalizeManager', () => {
 
       await manager.loadNamespaces(['my-defaults', 'my-send-button']);
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': {
           'my-defaults': { submit: 'Submit' },
           'my-send-button': { submit: 'Send' },
@@ -467,20 +495,21 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-component/nl-NL.js', { default: { greeting: 'Hallo!' } });
 
       manager = new LocalizeManager({ autoLoadOnLocaleChange: true });
+      const { storage } = getProtectedMembers(manager);
 
       await manager.loadNamespace({
         /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
       });
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'my-component': { greeting: 'Hello!' } },
       });
 
       manager.locale = 'nl-NL';
       await manager.loadingComplete;
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'my-component': { greeting: 'Hello!' } },
         'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
       });
@@ -491,14 +520,15 @@ describe('LocalizeManager', () => {
     it('has a Promise "loadingComplete" that resolved once all pending loading is done', async () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Hello!' } });
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
 
       manager.loadNamespace({
         /** @param {string} locale */
         'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
       });
-      expect(manager.__storage).to.deep.equal({});
+      expect(storage).to.deep.equal({});
       await manager.loadingComplete;
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'my-component': { greeting: 'Hello!' } },
       });
     });
@@ -526,11 +556,12 @@ describe('LocalizeManager', () => {
       setupFakeImport('./my-component/en-GB.js', { default: { greeting: 'Loaded hello!' } });
 
       manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
       manager.addData('en-GB', 'my-component', { greeting: 'Hello!' });
 
       await manager.loadNamespace('my-component');
 
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'my-component': { greeting: 'Hello!' } },
       });
 
@@ -544,7 +575,7 @@ describe('LocalizeManager', () => {
       });
 
       expect(called).to.equal(0);
-      expect(manager.__storage).to.deep.equal({
+      expect(storage).to.deep.equal({
         'en-GB': { 'my-component': { greeting: 'Hello!' } },
       });
     });
@@ -684,11 +715,15 @@ describe('When supporting external translation tools like Google Translate', () 
     it('triggers support for external translation tools via data-localize-lang', async () => {
       document.documentElement.removeAttribute('data-localize-lang');
       manager = getInstance();
-      expect(manager._supportExternalTranslationTools).to.be.false;
+      const { supportExternalTranslationTools: first } = getProtectedMembers(manager);
+
+      expect(first).to.be.false;
 
       document.documentElement.setAttribute('data-localize-lang', 'nl-NL');
       manager = getInstance();
-      expect(manager._supportExternalTranslationTools).to.be.true;
+      const { supportExternalTranslationTools: second } = getProtectedMembers(manager);
+
+      expect(second).to.be.true;
     });
   });
 
@@ -776,13 +811,14 @@ describe('[deprecated] When not supporting external translation tools like Googl
     manager = new LocalizeManager({
       autoLoadOnLocaleChange: true,
     });
+    const { storage } = getProtectedMembers(manager);
 
     await manager.loadNamespace({
       /** @param {string} locale */
       'my-component': locale => fakeImport(`./my-component/${locale}.js`, 25),
     });
 
-    expect(manager.__storage).to.deep.equal({
+    expect(storage).to.deep.equal({
       'en-GB': { 'my-component': { greeting: 'Hello!' } },
     });
 
@@ -790,7 +826,7 @@ describe('[deprecated] When not supporting external translation tools like Googl
     await aTimeout(0); // wait for mutation observer to be called
     await manager.loadingComplete;
 
-    expect(manager.__storage).to.deep.equal({
+    expect(storage).to.deep.equal({
       'en-GB': { 'my-component': { greeting: 'Hello!' } },
       'nl-NL': { 'my-component': { greeting: 'Hallo!' } },
     });

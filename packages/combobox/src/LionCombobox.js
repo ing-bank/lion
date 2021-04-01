@@ -71,6 +71,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance FormControlMixin - add slot[name=selection-display]
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
@@ -83,6 +84,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     `;
   }
 
+  /**
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
     // TODO: Localize the aria-label
@@ -96,6 +100,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance FormControlMixin - add overlay
+   * @protected
    */
   _groupTwoTemplate() {
     return html` ${super._groupTwoTemplate()} ${this._overlayListboxTemplate()}`;
@@ -157,6 +162,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * Wrapper with combobox role for the text input that the end user controls the listbox with.
    * @type {HTMLElement}
+   * @protected
    */
   get _comboboxNode() {
     return /** @type {HTMLElement} */ (this.querySelector('[slot="input"]'));
@@ -164,6 +170,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @type {SelectionDisplay | null}
+   * @protected
    */
   get _selectionDisplayNode() {
     return this.querySelector('[slot="selection-display"]');
@@ -173,6 +180,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @configure FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
+   * @protected
    */
   get _inputNode() {
     if (this._ariaVersion === '1.1') {
@@ -183,6 +191,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   get _overlayContentNode() {
     return this._listboxNode;
@@ -190,6 +199,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   get _overlayReferenceNode() {
     return /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.input-group__container');
@@ -197,6 +207,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   get _overlayInvokerNode() {
     return this._inputNode;
@@ -204,6 +215,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure ListboxMixin
+   * @protected
    */
   get _listboxNode() {
     return /** @type {LionOptions} */ ((this._overlayCtrl && this._overlayCtrl.contentNode) ||
@@ -212,6 +224,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure ListboxMixin
+   * @protected
    */
   get _activeDescendantOwnerNode() {
     return this._inputNode;
@@ -253,22 +266,36 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     /**
      * For optimal support, we allow aria v1.1 on newer browsers
      * @type {'1.1'|'1.0'}
+     * @protected
      */
     this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
 
     /**
      * @configure ListboxMixin
+     * @protected
      */
     this._listboxReceivesNoFocus = true;
 
+    /**
+     * @private
+     */
     this.__prevCboxValueNonSelected = '';
+    /**
+     * @private
+     */
     this.__prevCboxValue = '';
 
-    /** @type {EventListener} */
+    /** @type {EventListener}
+     * @private
+     */
     this.__requestShowOverlay = this.__requestShowOverlay.bind(this);
-    /** @type {EventListener} */
+    /** @type {EventListener}
+     * @protected
+     */
     this._textboxOnInput = this._textboxOnInput.bind(this);
-    /** @type {EventListener} */
+    /** @type {EventListener}
+     * @protected
+     */
     this._textboxOnKeydown = this._textboxOnKeydown.bind(this);
   }
 
@@ -387,6 +414,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * }
    *
    * @param {{ currentValue: string, lastKey:string }} options
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
@@ -403,6 +431,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @param {Event} ev
+   * @protected
    */
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
@@ -412,6 +441,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @param {KeyboardEvent} ev
+   * @protected
    */
   _textboxOnKeydown(ev) {
     if (ev.key === 'Tab') {
@@ -421,6 +451,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @param {MouseEvent} ev
+   * @protected
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
@@ -433,6 +464,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @param {string} v
+   * @protected
    */
   _setTextboxValue(v) {
     // Make sure that we don't loose inputNode.selectionStart and inputNode.selectionEnd
@@ -441,6 +473,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
+  /**
+   * @private
+   */
   __onOverlayClose() {
     if (!this.multipleChoice) {
       if (
@@ -471,6 +506,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * model-value-changed event that gets received, and we should repropagate it.
    *
    * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
+   * @protected
    */
   _repropagationCondition(target) {
     return super._repropagationCondition(target) || this.formElements.every(el => !el.checked);
@@ -481,6 +517,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @overridable
    * @param {LionOption & {__originalInnerHTML?:string}} option
    * @param {string} matchingString
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _onFilterMatch(option, matchingString) {
@@ -498,6 +535,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {LionOption & {__originalInnerHTML?:string}} option
    * @param {string} [curValue]
    * @param {string} [prevValue]
+   * @protected
    */
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
   _onFilterUnmatch(option, curValue, prevValue) {
@@ -512,6 +550,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * Computes whether a user intends to autofill (inline autocomplete textbox)
    * @param {{ prevValue:string, curValue:string }} config
+   * @private
    */
   // eslint-disable-next-line class-methods-use-this
   __computeUserIntendsAutoFill({ prevValue, curValue }) {
@@ -535,6 +574,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * - complete: completes the textbox value inline (the 'missing characters' will be added as
    * selected text)
    *
+   * @protected
    */
   _handleAutocompletion() {
     // TODO: this is captured by 'noFilter'
@@ -660,6 +700,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
+  /**
+   * @private
+   */
   __textboxInlineComplete(option = this.formElements[this.activeIndex]) {
     const prevLen = this._inputNode.value.length;
     this._inputNode.value = option.choiceValue;
@@ -672,6 +715,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * option from the list (by default when autocomplete is 'none' or 'list').
    * For autocomplete 'both' or 'inline', it will automatically select on a match.
    * @overridable
+   * @protected
    */
   _autoSelectCondition() {
     return this.autocomplete === 'both' || this.autocomplete === 'inline';
@@ -679,6 +723,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance ListboxMixin
+   * @protected
    */
   _setupListboxNode() {
     super._setupListboxNode();
@@ -688,6 +733,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
@@ -699,6 +745,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance OverlayMixin
+   * @protected
    */
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
@@ -708,6 +755,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance OverlayMixin
+   * @protected
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
@@ -716,6 +764,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @enhance OverlayMixin
+   * @protected
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
@@ -725,6 +774,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * @enhance ListboxMixin
    * @param {KeyboardEvent} ev
+   * @protected
    */
   _listboxOnKeyDown(ev) {
     super._listboxOnKeyDown(ev);
@@ -750,6 +800,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @overridable
    * @param {string|string[]} modelValue
    * @param {string|string[]} oldModelValue
+   * @protected
    */
   // eslint-disable-next-line no-unused-vars
   _syncToTextboxCondition(modelValue, oldModelValue, { phase } = {}) {
@@ -763,6 +814,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * Allows to control what happens when checkedIndexes change
    * @param {string[]} modelValue
    * @param {string[]} oldModelValue
+   * @protected
    */
   _syncToTextboxMultiple(modelValue, oldModelValue = []) {
     const diff = modelValue.filter(x => !oldModelValue.includes(x));
@@ -771,6 +823,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @override FormControlMixin - add form-control to [slot=input] instead of _inputNode
+   * @protected
    */
   _enhanceLightDomClasses() {
     if (this.querySelector('[slot=input]')) {
@@ -778,10 +831,16 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
+  /**
+   * @private
+   */
   __initFilterListbox() {
     this._handleAutocompletion();
   }
 
+  /**
+   * @private
+   */
   __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
       this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
@@ -789,6 +848,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
   }
 
+  /**
+   * @private
+   */
   __setupCombobox() {
     // With regard to accessibility: aria-expanded and -labelledby will
     // be handled by OverlayMixin and FormControlMixin respectively.
@@ -811,6 +873,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._inputNode.addEventListener('keydown', this._textboxOnKeydown);
   }
 
+  /**
+   * @private
+   */
   __teardownCombobox() {
     this._inputNode.removeEventListener('keydown', this._listboxOnKeyDown);
     this._inputNode.removeEventListener('input', this._textboxOnInput);
@@ -819,6 +884,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   /**
    * @param {KeyboardEvent} [ev]
+   * @private
    */
   __requestShowOverlay(ev) {
     this.opened = this._showOverlayCondition({

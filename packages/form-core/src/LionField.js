@@ -71,6 +71,10 @@ export class LionField extends FormControlMixin(
     this.submitted = false;
   }
 
+  /**
+   * Resets modelValue to initial value.
+   * Interaction states are cleared
+   */
   reset() {
     this.modelValue = this._initialModelValue;
     this.resetInteractionState();
@@ -84,6 +88,10 @@ export class LionField extends FormControlMixin(
     this.modelValue = ''; // can't set null here, because IE11 treats it as a string
   }
 
+  /**
+   * Dispatches custom bubble event
+   * @protected
+   */
   _onChange() {
     this.dispatchEvent(
       new CustomEvent('user-input-changed', {

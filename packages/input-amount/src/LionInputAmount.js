@@ -10,6 +10,7 @@ import { parseAmount } from './parsers.js';
  *
  * @customElement lion-input-amount
  */
+// @ts-ignore
 export class LionInputAmount extends LocalizeMixin(LionInput) {
   /** @type {any} */
   static get properties() {
@@ -68,10 +69,13 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.formatter = formatAmount;
     /** @type {string | undefined} */
     this.currency = undefined;
+    /** @private */
     this.__isPasting = false;
 
     this.addEventListener('paste', () => {
+      /** @private */
       this.__isPasting = true;
+      /** @private */
       this.__parserCallcountSincePaste = 0;
     });
 
@@ -99,17 +103,20 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   /**
    * @override of FormatMixin
+   * @private
    */
   __callParser(value = this.formattedValue) {
     // TODO: (@daKmor) input and change events both trigger parsing therefore we need to handle the second parse
     this.__parserCallcountSincePaste += 1;
     this.__isPasting = this.__parserCallcountSincePaste === 2;
     this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
+    // @ts-ignore
     return super.__callParser(value);
   }
 
   /**
    * @override of FormatMixin
+   * @protected
    */
   _reflectBackOn() {
     return super._reflectBackOn() || this.__isPasting;
@@ -118,6 +125,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   /**
    * @param {Object} opts
    * @param {string} opts.currency
+   * @protected
    */
   _onCurrencyChanged({ currency }) {
     if (this._isPrivateSlot('after') && this._currencyDisplayNode) {
@@ -128,6 +136,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.__setCurrencyDisplayLabel();
   }
 
+  /** @private */
   __setCurrencyDisplayLabel() {
     // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
     // example, for a language switch with text 'en', an aria-label of 'english' is not

@@ -53,6 +53,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @enhance FormControlMixin
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
@@ -118,14 +119,22 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.interactionMode = 'auto';
 
     this.singleOption = false;
+    /** @protected */
     this._arrowWidth = 28;
 
+    /** @private */
     this.__onKeyUp = this.__onKeyUp.bind(this);
+    /** @private */
     this.__invokerOnBlur = this.__invokerOnBlur.bind(this);
+    /** @private */
     this.__overlayOnHide = this.__overlayOnHide.bind(this);
+    /** @private */
     this.__overlayOnShow = this.__overlayOnShow.bind(this);
+    /** @private */
     this.__invokerOnClick = this.__invokerOnClick.bind(this);
+    /** @private */
     this.__overlayBeforeShow = this.__overlayBeforeShow.bind(this);
+    /** @protected */
     this._listboxOnClick = this._listboxOnClick.bind(this);
   }
 
@@ -248,20 +257,24 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * In the select disabled options are still going to a possible value for example
    * when prefilling or programmatically setting it.
    * @override ChoiceGroupMixin
+   * @protected
    */
   _getCheckedElements() {
     return this.formElements.filter(el => el.checked);
   }
 
+  /** @protected */
   _onFormElementsChanged() {
     this.singleOption = this.formElements.length === 1;
     this._invokerNode.singleOption = this.singleOption;
   }
 
+  /** @private */
   __initInteractionStates() {
     this.initInteractionState();
   }
 
+  /** @private */
   __toggleInvokerDisabled() {
     if (this._invokerNode) {
       this._invokerNode.disabled = this.disabled;
@@ -269,6 +282,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
+  /** @private */
   __syncInvokerElement() {
     // sync to invoker
     if (this._invokerNode) {
@@ -285,6 +299,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
+  /** @private */
   __setupInvokerNode() {
     this._invokerNode.id = `invoker-${this._inputId}`;
     this._invokerNode.setAttribute('aria-haspopup', 'listbox');
@@ -292,22 +307,26 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.__setupInvokerNodeEventListener();
   }
 
+  /** @private */
   __invokerOnClick() {
     if (!this.disabled && !this.readOnly && !this.singleOption && !this.__blockListShow) {
       this._overlayCtrl.toggle();
     }
   }
 
+  /** @private */
   __invokerOnBlur() {
     this.dispatchEvent(new Event('blur'));
   }
 
+  /** @private */
   __setupInvokerNodeEventListener() {
     this._invokerNode.addEventListener('click', this.__invokerOnClick);
 
     this._invokerNode.addEventListener('blur', this.__invokerOnBlur);
   }
 
+  /** @private */
   __teardownInvokerNode() {
     this._invokerNode.removeEventListener('click', this.__invokerOnClick);
     this._invokerNode.removeEventListener('blur', this.__invokerOnBlur);
@@ -315,6 +334,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
@@ -328,6 +348,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * By default, we will set it to 'min', and then set it back to what it was initially when
    * something is selected.
    * As a subclasser you can override this behavior.
+   * @protected
    */
   _noDefaultSelectedInheritsWidth() {
     if (this.checkedIndex === -1) {
@@ -339,12 +360,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
+  /** @private */
   __overlayBeforeShow() {
     if (this.hasNoDefaultSelected) {
       this._noDefaultSelectedInheritsWidth();
     }
   }
 
+  /** @private */
   __overlayOnShow() {
     if (this.checkedIndex != null) {
       this.activeIndex = /**  @type {number} */ (this.checkedIndex);
@@ -352,12 +375,14 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._listboxNode.focus();
   }
 
+  /** @private */
   __overlayOnHide() {
     this._invokerNode.focus();
   }
 
   /**
    * @enhance OverlayMixin
+   * @protected
    */
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
@@ -372,6 +397,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @enhance OverlayMixin
+   * @protected
    */
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
@@ -383,6 +409,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /**
    * Align invoker width with content width
    * Make sure display is not set to "none" while calculating the content width
+   * @protected
    */
   async _alignInvokerWidth() {
     if (this._overlayCtrl && this._overlayCtrl.content) {
@@ -410,6 +437,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @configure FormControlMixin
+   * @protected
    */
   _onLabelClick() {
     this._invokerNode.focus();
@@ -417,6 +445,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   get _overlayInvokerNode() {
     return this._invokerNode;
@@ -424,6 +453,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @configure OverlayMixin
+   * @protected
    */
   get _overlayContentNode() {
     return this._listboxNode;
@@ -431,6 +461,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /**
    * @param {KeyboardEvent} ev
+   * @private
    */
   __onKeyUp(ev) {
     if (this.disabled) {
@@ -474,6 +505,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * an item.
    *
    * @param {KeyboardEvent} ev - the keydown event object
+   * @protected
    */
   _listboxOnKeyDown(ev) {
     super._listboxOnKeyDown(ev);
@@ -502,15 +534,18 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     }
   }
 
+  /** @protected */
   _listboxOnClick() {
     this.opened = false;
   }
 
+  /** @protected */
   _setupListboxNode() {
     super._setupListboxNode();
     this._listboxNode.addEventListener('click', this._listboxOnClick);
   }
 
+  /** @protected */
   _teardownListboxNode() {
     super._teardownListboxNode();
     if (this._listboxNode) {
@@ -521,6 +556,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /**
    * Normally, when textbox gets focus or a char is typed, it opens listbox.
    * In transition phases (like clicking option) we prevent this.
+   * @private
    */
   __blockListShowDuringTransition() {
     this.__blockListShow = true;

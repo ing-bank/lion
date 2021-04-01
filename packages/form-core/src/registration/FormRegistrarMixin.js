@@ -146,6 +146,7 @@ const FormRegistrarMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
+     * @protected
      */
     _onRequestToAddFormElement(ev) {
       const child = ev.detail.element;
@@ -170,6 +171,7 @@ const FormRegistrarMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
+     * @protected
      */
     _onRequestToChangeFormElementName(ev) {
       const element = this.formElements[ev.detail.oldName];
@@ -181,6 +183,7 @@ const FormRegistrarMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
+     * @protected
      */
     _onRequestToRemoveFormElement(ev) {
       const child = ev.detail.element;

@@ -98,6 +98,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @override FormControlMixin
+     * @protected
      */
     // eslint-disable-next-line
     _inputGroupInputTemplate() {
@@ -259,31 +260,58 @@ const ListboxMixinImplementation = superclass =>
        */
       this.selectionFollowsFocus = false;
 
-      /** @type {number | null} */
+      /**
+       * @type {number | null}
+       * @protected
+       */
       this._listboxActiveDescendant = null;
+      /** @private */
       this.__hasInitialSelectedFormElement = false;
+      /** @protected */
       this._repropagationRole = 'choice-group'; // configures FormControlMixin
 
       /**
        * When listbox is coupled to a textbox (in case we are dealing with a combobox),
        * spaces should not select an element (they need to be put in the textbox)
+       * @protected
        */
       this._listboxReceivesNoFocus = false;
 
-      /** @type {string | string[] | undefined} */
+      /**
+       * @type {string | string[] | undefined}
+       * @private
+       */
       this.__oldModelValue = undefined;
 
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @protected
+       */
       this._listboxOnKeyDown = this._listboxOnKeyDown.bind(this);
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @protected
+       */
       this._listboxOnClick = this._listboxOnClick.bind(this);
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @protected
+       */
       this._listboxOnKeyUp = this._listboxOnKeyUp.bind(this);
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @protected
+       */
       this._onChildActiveChanged = this._onChildActiveChanged.bind(this);
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @private
+       */
       this.__proxyChildModelValueChanged = this.__proxyChildModelValueChanged.bind(this);
-      /** @type {EventListener} */
+      /**
+       * @type {EventListener}
+       * @private
+       */
       this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
     }
 
@@ -418,11 +446,13 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @override ChoiceGroupMixin: in the select disabled options are still going to a possible
      * value, for example when prefilling or programmatically setting it.
+     * @protected
      */
     _getCheckedElements() {
       return this.formElements.filter(el => el.checked);
     }
 
+    /** @protected */
     _setupListboxNode() {
       if (this._listboxNode) {
         this.__setupListboxNodeInteractions();
@@ -439,6 +469,7 @@ const ListboxMixinImplementation = superclass =>
       }
     }
 
+    /** @protected */
     _teardownListboxNode() {
       if (this._listboxNode) {
         this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
@@ -450,6 +481,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @param {number} currentIndex
      * @param {number} [offset=1]
+     * @protected
      */
     _getNextEnabledOption(currentIndex, offset = 1) {
       return this.__getEnabledOption(currentIndex, offset);
@@ -458,6 +490,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @param {number} currentIndex
      * @param {number} [offset=-1]
+     * @protected
      */
     _getPreviousEnabledOption(currentIndex, offset = -1) {
       return this.__getEnabledOption(currentIndex, offset);
@@ -466,6 +499,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @overridable
      * @param {Event & { target: LionOption }} ev
+     * @protected
      */
     // eslint-disable-next-line no-unused-vars, class-methods-use-this
     _onChildActiveChanged({ target }) {
@@ -480,6 +514,7 @@ const ListboxMixinImplementation = superclass =>
      * an item.
      *
      * @param {KeyboardEvent} ev - the keydown event object
+     * @protected
      */
     _listboxOnKeyDown(ev) {
       if (this.disabled) {
@@ -565,6 +600,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @overridable
      * @param {MouseEvent} ev
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _listboxOnClick(ev) {
@@ -587,6 +623,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @overridable
      * @param {KeyboardEvent} ev
+     * @protected
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _listboxOnKeyUp(ev) {
@@ -615,11 +652,13 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @configure FormControlMixin
+     * @protected
      */
     _onLabelClick() {
       this._listboxNode.focus();
     }
 
+    /** @private */
     __setupEventListeners() {
       this._listboxNode.addEventListener(
         'active-changed',
@@ -631,6 +670,7 @@ const ListboxMixinImplementation = superclass =>
       );
     }
 
+    /** @private */
     __teardownEventListeners() {
       this._listboxNode.removeEventListener(
         'active-changed',
@@ -644,6 +684,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @param {LionOption | null} el
+     * @private
      */
     __setChildActive(el) {
       this.formElements.forEach(formElement => {
@@ -662,6 +703,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @param {LionOption|LionOption[]} [exclude]
+     * @protected
      */
     _uncheckChildren(exclude = []) {
       const excludes = Array.isArray(exclude) ? exclude : [exclude];
@@ -675,6 +717,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @param {Event & { target: LionOption }} cfgOrEvent
+     * @private
      */
     __onChildCheckedChanged(cfgOrEvent) {
       const { target } = cfgOrEvent;
@@ -690,6 +733,7 @@ const ListboxMixinImplementation = superclass =>
      * // TODO: add to choiceGroup
      * @param {string} attribute
      * @param {number} value
+     * @private
      */
     __setAttributeForAllFormElements(attribute, value) {
       this.formElements.forEach(formElement => {
@@ -699,6 +743,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent & { target: LionOption; }} ev
+     * @private
      */
     __proxyChildModelValueChanged(ev) {
       // We need to redispatch the model-value-changed event on 'this', so it will
@@ -729,6 +774,7 @@ const ListboxMixinImplementation = superclass =>
     /**
      * @param {number} currentIndex
      * @param {number} offset
+     * @private
      */
     __getEnabledOption(currentIndex, offset) {
       /**
@@ -760,6 +806,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * Moves options put in unnamed slot to slot with [role="listbox"]
+     * @private
      */
     __moveOptionsToListboxNode() {
       const slot = /** @type {HTMLSlotElement} */ (
@@ -780,6 +827,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @param {KeyboardEvent} ev
+     * @private
      */
     __preventScrollingWithArrowKeys(ev) {
       if (this.disabled) {
@@ -798,6 +846,7 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * Helper method used within `._setupListboxNode`
+     * @private
      */
     __setupListboxNodeInteractions() {
       this._listboxNode.setAttribute('role', 'listbox');
@@ -812,6 +861,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     // TODO: move to ChoiceGroupMixin?
+    /** @private */
     __requestOptionsToBeDisabled() {
       this.formElements.forEach(el => {
         if (el.makeRequestToBeDisabled) {
@@ -820,6 +870,7 @@ const ListboxMixinImplementation = superclass =>
       });
     }
 
+    /** @private */
     __retractRequestOptionsToBeDisabled() {
       this.formElements.forEach(el => {
         if (el.retractRequestToBeDisabled) {
@@ -828,6 +879,7 @@ const ListboxMixinImplementation = superclass =>
       });
     }
 
+    /** @private */
     __initInteractionStates() {
       this.initInteractionState();
     }

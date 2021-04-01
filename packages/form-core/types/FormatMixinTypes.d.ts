@@ -22,15 +22,15 @@ export declare class FormatHost {
   set value(value: string);
 
   _calculateValues(opts: { source: 'model' | 'serialized' | 'formatted' | null }): void;
-  __callParser(value: string | undefined): object;
+  private __callParser(value: string | undefined): object;
   __callFormatter(): string;
-  _onModelValueChanged(arg: { modelValue: unknown }): void;
+  protected _onModelValueChanged(arg: { modelValue: unknown }): void;
   _dispatchModelValueChangedEvent(): void;
-  _syncValueUpwards(): void;
+  protected _syncValueUpwards(): void;
   _reflectBackFormattedValueToUser(): void;
   _reflectBackFormattedValueDebounced(): void;
   _reflectBackOn(): boolean;
-  _proxyInputEvent(): void;
+  protected _proxyInputEvent(): void;
   _onUserInputChanged(): void;
 
   connectedCallback(): void;

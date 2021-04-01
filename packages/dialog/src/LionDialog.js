@@ -4,11 +4,15 @@ import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
 export class LionDialog extends OverlayMixin(LitElement) {
   constructor() {
     super();
+    /** @private */
     this.__toggle = () => {
       this.opened = !this.opened;
     };
   }
 
+  /**
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return {
@@ -16,6 +20,9 @@ export class LionDialog extends OverlayMixin(LitElement) {
     };
   }
 
+  /**
+   * @protected
+   */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     if (this._overlayInvokerNode) {
@@ -23,6 +30,9 @@ export class LionDialog extends OverlayMixin(LitElement) {
     }
   }
 
+  /**
+   * @protected
+   */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
     if (this._overlayInvokerNode) {

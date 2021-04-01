@@ -98,6 +98,7 @@ export class LionIcon extends LitElement {
     this.role = 'img';
     this.ariaLabel = '';
     this.iconId = '';
+    /** @private */
     this.__svg = nothing;
   }
 
@@ -141,6 +142,7 @@ export class LionIcon extends LitElement {
     return this.__svg;
   }
 
+  /** @protected */
   _onLabelChanged() {
     if (this.ariaLabel) {
       this.setAttribute('aria-hidden', 'false');
@@ -152,6 +154,7 @@ export class LionIcon extends LitElement {
 
   /**
    * @param {TemplateResult | nothing} svgObject
+   * @protected
    */
   _renderSvg(svgObject) {
     validateSvg(svgObject);
@@ -161,6 +164,7 @@ export class LionIcon extends LitElement {
     }
   }
 
+  /** @protected */
   // eslint-disable-next-line class-methods-use-this
   get _iconManager() {
     return icons;
@@ -168,6 +172,7 @@ export class LionIcon extends LitElement {
 
   /**
    * @param {string} prevIconId
+   * @protected
    */
   async _onIconIdChanged(prevIconId) {
     if (!this.iconId) {

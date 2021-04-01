@@ -17,6 +17,7 @@ class Cache {
 
     /**
      * @type {{[url: string]: {expires: number, data: object} }}
+     * @protected
      */
     this._cacheObject = {};
   }
@@ -92,6 +93,7 @@ class Cache {
    * Validate cache on each call to the Cache
    * When the expiration date has passed, the _cacheObject will be replaced by an
    * empty object
+   * @protected
    */
   _validateCache() {
     if (new Date().getTime() > this.expiration) {
