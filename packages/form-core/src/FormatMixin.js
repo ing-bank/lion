@@ -234,13 +234,6 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * @param {string} value
-     */
-    __callPreprocessor(value) {
-      return this.preprocessor(value);
-    }
-
-    /**
      * @param {string|undefined} value
      * @return {?}
      */
@@ -348,7 +341,9 @@ const FormatMixinImplementation = superclass =>
      * to the parsing/formatting/serializing loop.
      */
     _syncValueUpwards() {
-      this.value = this.__callPreprocessor(this.value);
+      if (!this.__isHandlingComposition) {
+        this.value = this.preprocessor(this.value);
+      }
       this.modelValue = this.__callParser(this.value);
     }
 
@@ -366,6 +361,10 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * Every time .formattedValue is attempted to sync to the view value (on change/blur and on
+     * modelValue change), this condition is checked. When enhancing it, it's recommended to
+     * call `super._reflectBackOn()`
+     * @overridable
      * @return {boolean}
      */
     _reflectBackOn() {
@@ -393,10 +392,25 @@ const FormatMixinImplementation = superclass =>
       this.__isHandlingUserInput = false;
     }
 
+    /**
+     * @param {Event} event
+     */
+    __onCompositionEvent({ type }) {
+      if (type === 'compositionstart') {
+        this.__isHandlingComposition = true;
+      } else if (type === 'compositionend') {
+        this.__isHandlingComposition = false;
+        // in all other cases this would be triggered via user-input-changed
+        this._syncValueUpwards();
+      }
+    }
+
     constructor() {
       super();
       this.formatOn = 'change';
       this.formatOptions = /** @type {FormatOptions} */ ({});
+
+      this.__onCompositionEvent = this.__onCompositionEvent.bind(this);
     }
 
     connectedCallback() {
@@ -422,6 +436,8 @@ const FormatMixinImplementation = superclass =>
       if (this._inputNode) {
         this._inputNode.addEventListener(this.formatOn, this._reflectBackFormattedValueDebounced);
         this._inputNode.addEventListener('input', this._proxyInputEvent);
+        this._inputNode.addEventListener('compositionstart', this.__onCompositionEvent);
+        this._inputNode.addEventListener('compositionend', this.__onCompositionEvent);
       }
     }
 
@@ -435,6 +451,8 @@ const FormatMixinImplementation = superclass =>
           /** @type {EventListenerOrEventListenerObject} */ (this
             ._reflectBackFormattedValueDebounced),
         );
+        this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
+        this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);
       }
     }
   };
