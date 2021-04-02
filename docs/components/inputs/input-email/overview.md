@@ -15,7 +15,7 @@ export const main = () => {
 
 ## Features
 
-- Based on [lion-input](../input/overview.md)
+- Based on our [input](../input/overview.md)
 - Makes use of email [validators](../../../docs/systems/form/validate.md) with corresponding error messages in different languages
   - IsEmail (default)
 

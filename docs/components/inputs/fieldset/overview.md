@@ -20,9 +20,9 @@ export const main = () => html`
 
 We have three specific fieldset implementations:
 
-- [lion-form](../form/overview.md)
-- [lion-checkbox-group](../checkbox-group/overview.md)
-- [lion-radio-group](../radio-group/overview.md)
+- [form](../form/overview.md)
+- [checkbox-group](../checkbox-group/overview.md)
+- [radio-group](../radio-group/overview.md)
 
 A native fieldset element should always have a legend-element for a11y purposes.
 However, our fieldset element is not native and should not have a legend-element.

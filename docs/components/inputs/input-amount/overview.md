@@ -24,7 +24,7 @@ export const main = () => {
 
 ## Features
 
-- Based on [lion-input](../input/overview.md)
+- Based on our [input](../input/overview.md)
 - Makes use of [formatNumber](../../../docs/systems/localize/numbers.md) for formatting and parsing.
 - Option to show currency as a suffix
 - Option to override locale to change the formatting and parsing

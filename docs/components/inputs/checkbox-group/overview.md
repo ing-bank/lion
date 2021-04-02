@@ -3,7 +3,7 @@
 A checkbox group enhances the functionality of the native `<input type="checkbox">` element.
 Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.
 
-> You should use `<lion-checkbox>` elements as the children of the `<lion-checkbox-group>`.
+> You should use our `checkbox` elements as children in checkbox group.
 
 ```js script
 import { html } from '@lion/core';
@@ -20,11 +20,11 @@ export const main = () => html`
 `;
 ```
 
-> Make sure that the checkbox-group also has a name attribute, this is necessary for the [lion-form](../form/overview.md)'s serialization result.
+> Make sure that the checkbox-group also has a name attribute, this is necessary for our [form](../form/overview.md)'s serialization result.
 
 ## Features
 
-Since it extends from [lion-fieldset](../fieldset/overview.md),
+Since it extends from our [fieldset](../fieldset/overview.md),
 it has all the features a fieldset has.
 
 ## Installation

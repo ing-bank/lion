@@ -15,7 +15,7 @@ export const main = () => html`
 
 ## Features
 
-- Based on [lion-input](../input/overview.md).
+- Based on our [input](../input/overview.md).
 - Shows `modelValue` and `unit` above the range input.
 - Shows `min` and `max` value after the range input.
 - Can hide the `min` and `max` value via `no-min-max-labels`.
