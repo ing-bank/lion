@@ -29,7 +29,7 @@ npm i --save @lion/textarea
 ```
 
 ```js
-import { LionTextare } from '@lion/textarea';
+import { LionTextarea } from '@lion/textarea';
 // or
 import '@lion/textarea/define';
 ```

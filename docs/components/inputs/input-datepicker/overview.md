@@ -2,7 +2,7 @@
 
 A web component based on the date text input field. Its purpose is to provide a way for users to fill in a date with a datepicker.
 For an input field with a big range, such as `birthday-input`, a datepicker is not the best choice due to the high variance between possible inputs.
-We encourage using the standard [lion-input-date](../input-date/overview.md) for this.
+We encourage using our standard [input-date](../input-date/overview.md) for this.
 
 ```js script
 import { html } from '@lion/core';
@@ -18,8 +18,8 @@ export const main = () => {
 ## Features
 
 - Input field with a datepicker to help to choose a date
-- Based on [lion-input-date](../input-date/overview.md)
-- Makes use of [lion-calendar](../calendar/overview.md) inside the datepicker
+- Based on our [input-date](../input-date/overview.md)
+- Makes use of our [calendar](../calendar/overview.md) inside the datepicker
 - Makes use of [formatDate](../../../docs/systems/localize/dates.md) for formatting and parsing.
 - Option to overwrite locale to change the formatting and parsing
 - Can make use of date specific [validators](../../../docs/systems/form/validate.md) with corresponding error messages in different languages

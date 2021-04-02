@@ -21,10 +21,10 @@ export const main = () => html`
 
 ## Features
 
-- Use `opened` attribute or `toggle()` method to render default open
-- `invoker` slot can be custom template e.g. `lion-button` or native `button` with custom styling
-- Observe the state with the help of `@opened-changed` event
-- `show()` and `hide()` are helper methods to hide or show the content from outside
+- Use `opened` attribute or `toggle()` method to render default open.
+- `invoker` slot can be custom template e.g. our [button](../../interaction/button/overview.md) or native `button` with custom styling.
+- Observe the state with the help of `@opened-changed` event.
+- `show()` and `hide()` are helper methods to hide or show the content from outside.
 
 ## Installation
 

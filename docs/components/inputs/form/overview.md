@@ -30,7 +30,7 @@ export const main = () => html`
 - Registration mechanism for form controls
 - Accessible out of the box
 
-For more information about fields that are designed for `lion-form`, please read [form system](../../../docs/systems/form/overview.md).
+For more information about fields that are designed for our `form`, please read [form system](../../../docs/systems/form/overview.md).
 
 ## Installation
 

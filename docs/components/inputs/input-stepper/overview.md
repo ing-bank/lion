@@ -18,7 +18,7 @@ export const main = () => html`
 
 ## Features
 
-- Based on [lion-input](../input/overview.md).
+- Based on our [input](../input/overview.md).
 - Set `min` and `max` value to define the range.
 - Set `step` value in integer or decimal to increase and decrease the value.
 - Use `ArrowUp` or `ArrowDown` to update the value.

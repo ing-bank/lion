@@ -2,7 +2,7 @@
 
 A web component that enhances the functionality of the native `<input type="radio">` element. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 
-You should use `<lion-radio>`s inside this element.
+You should use our `radio` inside this element.
 
 ```js script
 import { html } from '@lion/core';
@@ -19,12 +19,12 @@ export const main = () => html`
 `;
 ```
 
-- Make sure that to use a name attribute as it is necessary for the [lion-form](../form/overview.md)'s serialization result.
-- If you have many options for a user to pick from, consider using [lion-select](../select/overview.md) instead
+- Make sure that to use a name attribute as it is necessary for our [form](../form/overview.md)'s serialization result.
+- If you have many options for a user to pick from, consider using our [select](../select/overview.md) instead.
 
 ## Features
 
-Since it extends from [lion-fieldset](../fieldset/overview.md), it has all the features a fieldset has.
+Since it extends from our [fieldset](../fieldset/overview.md), it has all the features a fieldset has.
 
 - Get or set the checked value of the group:
   - modelValue (default) - `checkedValue()`

@@ -24,7 +24,7 @@ export const main = () => html`
 ```
 
 For this form element it is important to put the `slot="input"` with the native `select` yourself, because you are responsible for filling it with `<option>`s.
-For most other form elements in `lion` we do this for you, because there's no need to put html inside the native form inputs.
+For most other form elements we do this for you, because there's no need to put html inside the native form inputs.
 
 ## Features
 
