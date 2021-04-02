@@ -13,7 +13,7 @@ export const main = () => html`<lion-input label="First Name"></lion-input>`;
 
 ## Features
 
-- Extra visual elements can be added via `slots`
+- Extra visual elements can be added via `slots`:
   - **label**: can also be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
     For example add an `u-sr-only` class to the label to make it visually hidden.
     A label is always needed for accessibility reasons.
@@ -23,7 +23,7 @@ export const main = () => html`<lion-input label="First Name"></lion-input>`;
   - **before**: does not have an active use case yet, but the option is in place.
   - **after**: can be used to show a currency or percentage.
 - Delegates attributes like `type`, `disabled`, `placeholder` and `read-only` to the native input.
-- Can make us of [validation](../../docs/../../docs/systems/form/validate.md)
+- Can make use of [validation](../../docs/../../docs/systems/form/validate.md).
 
 ## Installation
 
