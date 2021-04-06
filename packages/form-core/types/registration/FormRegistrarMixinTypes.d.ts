@@ -22,6 +22,8 @@ export declare class FormRegistrarHost {
   _onRequestToAddFormElement(e: CustomEvent): void;
   isRegisteredFormElement(el: FormControlHost): boolean;
   registrationComplete: Promise<boolean>;
+  initComplete: Promise<boolean>;
+  protected _completeRegistration(): void;
 }
 
 export declare function FormRegistrarImplementation<T extends Constructor<LitElement>>(

@@ -11,6 +11,12 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  */
 
 /**
+ * ChoiceGroupMixin applies on both Fields (listbox/select-rich/combobox)  and FormGroups
+ * (radio-group, checkbox-group)
+ * TODO: Ideally, the ChoiceGroupMixin should not depend on InteractionStateMixin, which is only
+ * designed for usage with Fields, in other words: their interaction states are not derived from
+ * children events, like in FormGroups
+ *
  * @type {ChoiceGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
@@ -53,8 +59,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       };
 
       if (this.__isInitialModelValue) {
-        this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialModelValue = false;
           this._setCheckedElements(value, checkCondition);
           this.requestUpdate('modelValue', this.__oldModelValue);
         });
@@ -89,8 +95,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       const checkCondition = (el, val) => el.serializedValue.value === val;
 
       if (this.__isInitialSerializedValue) {
-        this.__isInitialSerializedValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialSerializedValue = false;
           this._setCheckedElements(value, checkCondition);
           this.requestUpdate('serializedValue');
         });
@@ -116,8 +122,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       const checkCondition = (el, val) => el.formattedValue === val;
 
       if (this.__isInitialFormattedValue) {
-        this.__isInitialFormattedValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialFormattedValue = false;
           this._setCheckedElements(value, checkCondition);
         });
       } else {
@@ -138,40 +144,24 @@ const ChoiceGroupMixinImplementation = superclass =>
       this.__isInitialSerializedValue = true;
       /** @private */
       this.__isInitialFormattedValue = true;
-      /** @type {Promise<any> & {done?:boolean}} */
-      this.registrationComplete = new Promise((resolve, reject) => {
-        /** @private */
-        this.__resolveRegistrationComplete = resolve;
-        /** @private */
-        this.__rejectRegistrationComplete = reject;
-      });
-      this.registrationComplete.done = false;
-      this.registrationComplete.then(
-        () => {
-          this.registrationComplete.done = true;
-        },
-        () => {
-          this.registrationComplete.done = true;
-          throw new Error(
-            'Registration could not finish. Please use await el.registrationComplete;',
-          );
-        },
-      );
     }
 
     connectedCallback() {
       super.connectedCallback();
-      // Double microtask queue to account for Webkit race condition
-      Promise.resolve().then(() =>
-        // @ts-ignore
-        Promise.resolve().then(() => this.__resolveRegistrationComplete()),
-      );
 
       this.registrationComplete.then(() => {
         this.__isInitialModelValue = false;
         this.__isInitialSerializedValue = false;
         this.__isInitialFormattedValue = false;
       });
+    }
+
+    /**
+     * @enhance FormRegistrarMixin
+     */
+    _completeRegistration() {
+      // Double microtask queue to account for Webkit race condition
+      Promise.resolve().then(() => super._completeRegistration());
     }
 
     /** @param {import('@lion/core').PropertyValues} changedProperties */
@@ -181,18 +171,6 @@ const ChoiceGroupMixinImplementation = superclass =>
         this.formElements.forEach(child => {
           // eslint-disable-next-line no-param-reassign
           child.name = this.name;
-        });
-      }
-    }
-
-    disconnectedCallback() {
-      super.disconnectedCallback();
-
-      if (this.registrationComplete.done === false) {
-        Promise.resolve().then(() => {
-          Promise.resolve().then(() => {
-            this.__rejectRegistrationComplete();
-          });
         });
       }
     }

@@ -25,6 +25,9 @@ export class UmbrellaForm extends LitElement {
     ));
   }
 
+  /**
+   * @param {string} v
+   */
   set serializedValue(v) {
     this.__serializedValue = v;
   }
@@ -141,7 +144,8 @@ export class UmbrellaForm extends LitElement {
             <lion-button
               type="button"
               raised
-              @click=${ev =>
+              @click=${(/** @type {Event} */ ev) =>
+                // @ts-ignore
                 ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
               >Reset</lion-button
             >

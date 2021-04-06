@@ -81,6 +81,7 @@ describe('Form Integrations', () => {
         ></umbrella-form>`,
       ));
 
+      await el._lionFormNode.initComplete;
       expect(el._lionFormNode.dirty).to.be.false;
     });
   });

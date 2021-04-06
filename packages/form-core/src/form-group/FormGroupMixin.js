@@ -146,32 +146,13 @@ const FormGroupMixinImplementation = superclass =>
       this.addEventListener('validate-performed', this.__onChildValidatePerformed);
 
       this.defaultValidators = [new FormElementsHaveNoError()];
-      /** @type {Promise<any> & {done?:boolean}} */
-      this.registrationComplete = new Promise((resolve, reject) => {
-        this.__resolveRegistrationComplete = resolve;
-        this.__rejectRegistrationComplete = reject;
-      });
-      this.registrationComplete.done = false;
-      this.registrationComplete.then(
-        () => {
-          this.registrationComplete.done = true;
-        },
-        () => {
-          this.registrationComplete.done = true;
-          throw new Error(
-            'Registration could not finish. Please use await el.registrationComplete;',
-          );
-        },
-      );
     }
 
     connectedCallback() {
       super.connectedCallback();
       this.setAttribute('role', 'group');
-      // @ts-ignore
-      Promise.resolve().then(() => this.__resolveRegistrationComplete());
 
-      this.registrationComplete.then(() => {
+      this.initComplete.then(() => {
         this.__isInitialModelValue = false;
         this.__isInitialSerializedValue = false;
         this.__initInteractionStates();
@@ -184,11 +165,6 @@ const FormGroupMixinImplementation = superclass =>
       if (this.__hasActiveOutsideClickHandling) {
         document.removeEventListener('click', this._checkForOutsideClick);
         this.__hasActiveOutsideClickHandling = false;
-      }
-      if (this.registrationComplete.done === false) {
-        Promise.resolve().then(() => {
-          this.__rejectRegistrationComplete();
-        });
       }
     }
 
