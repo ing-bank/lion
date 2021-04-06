@@ -11,24 +11,24 @@ describe('Form Integrations', () => {
     const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
     await el.updateComplete;
     const formEl = el._lionFormNode;
+
     expect(formEl.serializedValue).to.eql({
-      bio: '',
-      'checkers[]': [['foo', 'bar']],
-      comments: '',
+      full_name: { first_name: '', last_name: '' },
       date: '2000-12-12',
       datepicker: '2020-12-12',
-      dinosaurs: 'brontosaurus',
-      email: '',
-      favoriteColor: 'hotpink',
-      full_name: {
-        first_name: '',
-        last_name: '',
-      },
-      iban: '',
-      lyrics: '1',
+      bio: '',
       money: '',
+      iban: '',
+      email: '',
+      checkers: ['foo', 'bar'],
+      dinosaurs: '',
+      favoriteFruit: 'Banana',
+      favoriteMovie: 'Rocky',
+      favoriteColor: 'hotpink',
+      lyrics: '1',
       range: 2.3,
-      'terms[]': [[]],
+      terms: [],
+      comments: '',
     });
   });
 
@@ -37,23 +37,51 @@ describe('Form Integrations', () => {
     await el.updateComplete;
     const formEl = el._lionFormNode;
     expect(formEl.formattedValue).to.eql({
-      bio: '',
-      'checkers[]': [['foo', 'bar']],
-      comments: '',
+      full_name: { first_name: '', last_name: '' },
       date: '12/12/2000',
       datepicker: '12/12/2020',
-      dinosaurs: 'brontosaurus',
-      email: '',
-      favoriteColor: 'hotpink',
-      full_name: {
-        first_name: '',
-        last_name: '',
-      },
-      iban: '',
-      lyrics: '1',
+      bio: '',
       money: '',
+      iban: '',
+      email: '',
+      checkers: ['foo', 'bar'],
+      dinosaurs: '',
+      favoriteFruit: 'Banana',
+      favoriteMovie: 'Rocky',
+      favoriteColor: 'hotpink',
+      lyrics: '1',
       range: 2.3,
-      'terms[]': [[]],
+      terms: [],
+      comments: '',
+    });
+  });
+
+  describe('Form Integrations', () => {
+    it('does not become dirty when elements are prefilled', async () => {
+      const el = /** @type {UmbrellaForm} */ (await fixture(
+        html`<umbrella-form
+          .serializedValue="${{
+            full_name: { first_name: '', last_name: '' },
+            date: '2000-12-12',
+            datepicker: '2020-12-12',
+            bio: '',
+            money: '',
+            iban: '',
+            email: '',
+            checkers: ['foo', 'bar'],
+            dinosaurs: 'brontosaurus',
+            favoriteFruit: 'Banana',
+            favoriteMovie: 'Rocky',
+            favoriteColor: 'hotpink',
+            lyrics: '1',
+            range: 2.3,
+            terms: [],
+            comments: '',
+          }}"
+        ></umbrella-form>`,
+      ));
+
+      expect(el._lionFormNode.dirty).to.be.false;
     });
   });
 });
