@@ -2,7 +2,7 @@ import { LitElement } from '@lion/core';
 import { LionInput } from '@lion/input';
 import '@lion/fieldset/define';
 import { FormGroupMixin, Required } from '@lion/form-core';
-import { expect, html, fixture, unsafeStatic } from '@open-wc/testing';
+import { expect, html, fixture, fixtureSync, unsafeStatic } from '@open-wc/testing';
 import { ChoiceGroupMixin } from '../../src/choice-group/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
@@ -244,6 +244,72 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         expect(el.formattedValue).to.deep.equal(['other']);
       }
       expect(el.formElements[2].checked).to.be.true;
+    });
+
+    it('correctly handles modelValue being set before registrationComplete', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (fixtureSync(html`
+        <${parentTag} name="gender[]" .modelValue=${null}>
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+          <${childTag} .choiceValue=${'other'}></${childTag}>
+        </${parentTag}>
+      `));
+
+      if (cfg.choiceType === 'single') {
+        el.modelValue = 'other';
+        await el.registrationComplete;
+        expect(el.modelValue).to.equal('other');
+      } else {
+        el.modelValue = ['other'];
+        await el.registrationComplete;
+        expect(el.modelValue).to.deep.equal(['other']);
+      }
+    });
+
+    it('correctly handles serializedValue being set before registrationComplete', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (fixtureSync(html`
+        <${parentTag} name="gender[]" .serializedValue=${null}>
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+          <${childTag} .choiceValue=${'other'}></${childTag}>
+        </${parentTag}>
+      `));
+
+      if (cfg.choiceType === 'single') {
+        // @ts-expect-error
+        el.serializedValue = 'other';
+        await el.registrationComplete;
+        expect(el.serializedValue).to.equal('other');
+      } else {
+        // @ts-expect-error
+        el.serializedValue = ['other'];
+        await el.registrationComplete;
+        expect(el.serializedValue).to.deep.equal(['other']);
+      }
+    });
+
+    it('can handle null and undefined modelValues', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        <${parentTag} name="gender[]" .modelValue=${null}>
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+          <${childTag} .choiceValue=${'other'}></${childTag}>
+        </${parentTag}>
+      `));
+
+      if (cfg.choiceType === 'single') {
+        expect(el.modelValue).to.equal('');
+      } else {
+        expect(el.modelValue).to.deep.equal([]);
+      }
+
+      el.modelValue = undefined;
+      await el.updateComplete;
+      if (cfg.choiceType === 'single') {
+        expect(el.modelValue).to.equal('');
+      } else {
+        expect(el.modelValue).to.deep.equal([]);
+      }
     });
 
     it('can handle complex data via choiceValue', async () => {
