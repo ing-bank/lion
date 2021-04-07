@@ -892,4 +892,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       currentValue: this._inputNode.value,
     });
   }
+
+  clear() {
+    super.clear();
+    this._inputNode.Value = '';
+  }
 }

@@ -443,6 +443,11 @@ const ListboxMixinImplementation = superclass =>
       this.resetInteractionState();
     }
 
+    clear() {
+      this.setCheckedIndex(-1);
+      this.resetInteractionState();
+    }
+
     /**
      * @override ChoiceGroupMixin: in the select disabled options are still going to a possible
      * value, for example when prefilling or programmatically setting it.
