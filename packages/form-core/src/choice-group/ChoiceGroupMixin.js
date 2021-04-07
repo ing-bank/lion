@@ -53,8 +53,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       };
 
       if (this.__isInitialModelValue) {
-        this.__isInitialModelValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialModelValue = false;
           this._setCheckedElements(value, checkCondition);
           this.requestUpdate('modelValue', this.__oldModelValue);
         });
@@ -89,8 +89,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       const checkCondition = (el, val) => el.serializedValue.value === val;
 
       if (this.__isInitialSerializedValue) {
-        this.__isInitialSerializedValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialSerializedValue = false;
           this._setCheckedElements(value, checkCondition);
           this.requestUpdate('serializedValue');
         });
@@ -116,8 +116,8 @@ const ChoiceGroupMixinImplementation = superclass =>
       const checkCondition = (el, val) => el.formattedValue === val;
 
       if (this.__isInitialFormattedValue) {
-        this.__isInitialFormattedValue = false;
         this.registrationComplete.then(() => {
+          this.__isInitialFormattedValue = false;
           this._setCheckedElements(value, checkCondition);
         });
       } else {
@@ -307,6 +307,12 @@ const ChoiceGroupMixinImplementation = superclass =>
      * @protected
      */
     _setCheckedElements(value, check) {
+      if (value === null || value === undefined) {
+        // Uncheck all
+        // eslint-disable-next-line no-return-assign, no-param-reassign
+        this.formElements.forEach(fe => (fe.checked = false));
+        return;
+      }
       for (let i = 0; i < this.formElements.length; i += 1) {
         if (this.multipleChoice) {
           let valueIsIncluded = value.includes(this.formElements[i].modelValue.value);

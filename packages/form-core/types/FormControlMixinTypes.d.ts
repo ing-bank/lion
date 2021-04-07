@@ -123,7 +123,7 @@ export declare class FormControlHost {
    * (think of an amount-input with a currency select box next to it), can set this
    * to true to hide private internals in the formPath.
    */
-  _isRepropagationEndpoint: boolean;
+  protected _isRepropagationEndpoint: boolean;
 
   connectedCallback(): void;
   updated(changedProperties: import('@lion/core').PropertyValues): void;
