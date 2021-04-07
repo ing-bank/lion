@@ -6,15 +6,11 @@ import './typedef.js';
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
+const DEFAULT_TIME_TO_LIVE = HOUR;
 
 class Cache {
   constructor() {
-    this.expiration = new Date().getTime() + HOUR;
-    /**
-     * @type {{[url: string]: CacheConfig }}
-     */
-    this.cacheConfig = {};
-
+    this.expiration = new Date().getTime() + DEFAULT_TIME_TO_LIVE;
     /**
      * @type {{[url: string]: {expires: number, response: CacheResponse} }}
      * @private
@@ -97,7 +93,7 @@ class Cache {
     this._validateCache();
 
     Object.keys(this._cacheObject).forEach(key => {
-      if (key.indexOf(url) > -1) {
+      if (key.includes(url)) {
         delete this._cacheObject[key];
         this.resolvePendingRequest(key);
       }
@@ -113,15 +109,9 @@ class Cache {
 
     Object.keys(this._cacheObject).forEach(key => {
       const notMatch = !new RegExp(regex).test(key);
-
       if (notMatch) return;
-
-      const isDataDeleted = delete this._cacheObject[key];
+      delete this._cacheObject[key];
       this.resolvePendingRequest(key);
-
-      if (!isDataDeleted) {
-        throw new Error(`Failed to delete cache for a request '${key}'`);
-      }
     });
   }
 
@@ -135,6 +125,7 @@ class Cache {
     if (new Date().getTime() > this.expiration) {
       // @ts-ignore
       this._cacheObject = {};
+      return false;
     }
     return true;
   }
@@ -150,7 +141,7 @@ let caches = {};
  */
 export const searchParamSerializer = (params = {}) =>
   // @ts-ignore
-  typeof params === 'object' ? new URLSearchParams(params).toString() : '';
+  typeof params === 'object' && params !== null ? new URLSearchParams(params).toString() : '';
 
 /**
  * Returns the active cache instance for the current session
@@ -159,10 +150,9 @@ export const searchParamSerializer = (params = {}) =>
  * @param {string} cacheIdentifier usually the refreshToken of the owner of the cache
  */
 const getCache = cacheIdentifier => {
-  if (caches[cacheIdentifier] && caches[cacheIdentifier]._validateCache()) {
+  if (caches[cacheIdentifier]?._validateCache()) {
     return caches[cacheIdentifier];
   }
-
   // invalidate old caches
   caches = {};
   // create new cache
@@ -193,7 +183,7 @@ export const validateOptions = ({
 
   // validate 'timeToLive', default 1 hour
   if (timeToLive === undefined) {
-    timeToLive = 0;
+    timeToLive = DEFAULT_TIME_TO_LIVE;
   }
   if (Number.isNaN(parseInt(String(timeToLive), 10))) {
     throw new Error('Property `timeToLive` must be of type `number`');
@@ -213,7 +203,7 @@ export const validateOptions = ({
   // validate 'requestIdentificationFn', default is url + searchParams
   if (requestIdentificationFn) {
     if (typeof requestIdentificationFn !== 'function') {
-      throw new Error('Property `requestIdentificationFn` must be of type `function` or `falsy`');
+      throw new Error('Property `requestIdentificationFn` must be of type `function`');
     }
   } else {
     requestIdentificationFn = /** @param {any} data */ (
@@ -237,25 +227,6 @@ export const validateOptions = ({
 
 /**
  * Request interceptor to return relevant cached requests
- * @param {ValidatedCacheOptions} validatedInitialCacheOptions
- * @param {CacheOptions=} configCacheOptions
- * @returns {ValidatedCacheOptions}
- */
-function composeCacheOptions(validatedInitialCacheOptions, configCacheOptions) {
-  let actionCacheOptions = validatedInitialCacheOptions;
-
-  if (configCacheOptions) {
-    actionCacheOptions = validateOptions({
-      ...validatedInitialCacheOptions,
-      ...configCacheOptions,
-    });
-  }
-
-  return actionCacheOptions;
-}
-
-/**
- * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  * @returns {CachedRequestInterceptor}
@@ -264,12 +235,11 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
   const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
 
   return /** @param {CacheRequest} cacheRequest */ async cacheRequest => {
-    const { method } = cacheRequest;
+    const cacheOptions = validateOptions({
+      ...validatedInitialCacheOptions,
+      ...cacheRequest.cacheOptions,
+    });
 
-    const cacheOptions = composeCacheOptions(
-      validatedInitialCacheOptions,
-      cacheRequest.cacheOptions,
-    );
     cacheRequest.cacheOptions = cacheOptions;
 
     // don't use cache if 'useCache' === false
@@ -278,12 +248,12 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
     }
 
     const cacheId = cacheOptions.requestIdentificationFn(cacheRequest, searchParamSerializer);
-
     // cacheIdentifier is used to bind the cache to the current session
     const currentCache = getCache(getCacheIdentifier());
+    const { method } = cacheRequest;
 
     // don't use cache if the request method is not part of the configs methods
-    if (cacheOptions.methods.indexOf(method.toLowerCase()) === -1) {
+    if (!cacheOptions.methods.includes(method.toLowerCase())) {
       // If it's NOT one of the config.methods, invalidate caches
       currentCache.delete(cacheId);
       // also invalidate caches matching to cacheOptions
@@ -310,11 +280,7 @@ export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOp
 
     const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
     if (cacheResponse) {
-      // eslint-disable-next-line no-param-reassign
-      if (!cacheRequest.cacheOptions) {
-        cacheRequest.cacheOptions = { useCache: false };
-      }
-
+      cacheRequest.cacheOptions = cacheRequest.cacheOptions ?? { useCache: false };
       const response = /** @type {CacheResponse} */ cacheResponse.clone();
       response.request = cacheRequest;
       response.fromCache = true;
@@ -350,10 +316,11 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
       throw new Error('Missing request in response.');
     }
 
-    const cacheOptions = composeCacheOptions(
-      validatedInitialCacheOptions,
-      cacheResponse.request?.cacheOptions,
-    );
+    const cacheOptions = validateOptions({
+      ...validatedInitialCacheOptions,
+      ...cacheResponse.request?.cacheOptions,
+    });
+
     // string that identifies cache entry
     const cacheId = cacheOptions.requestIdentificationFn(
       cacheResponse.request,
@@ -363,13 +330,11 @@ export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheO
     const isAlreadyFromCache = !!cacheResponse.fromCache;
     // caching all responses with not default `timeToLive`
     const isCacheActive = cacheOptions.timeToLive > 0;
-
+    const isMethodSupported = cacheOptions.methods.includes(
+      cacheResponse.request.method.toLowerCase(),
+    );
     // if the request is one of the options.methods; store response in cache
-    if (
-      !isAlreadyFromCache &&
-      isCacheActive &&
-      cacheOptions.methods.indexOf(cacheResponse.request.method.toLowerCase()) > -1
-    ) {
+    if (!isAlreadyFromCache && isCacheActive && isMethodSupported) {
       // store the response data in the cache and mark request as resolved
       currentCache.set(cacheId, cacheResponse.clone());
     }

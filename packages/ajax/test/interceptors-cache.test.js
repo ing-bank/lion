@@ -135,7 +135,7 @@ describe('ajax cache', () => {
           requestIdentificationFn: 'not a function',
         });
         removeCacheInterceptors(ajax, indexes);
-      }).to.throw(/Property `requestIdentificationFn` must be of type `function` or `falsy`/);
+      }).to.throw(/Property `requestIdentificationFn` must be of type `function`/);
     });
   });
 

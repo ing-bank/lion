@@ -18,6 +18,54 @@ describe('AjaxClient', () => {
     fetchStub.restore();
   });
 
+  describe('options', () => {
+    it('creates options object by expanding cacheOptions', async () => {
+      // Given
+      const getCacheIdentifier = () => '_DEFAULT_CACHE_ID';
+      const config = {
+        jsonPrefix: ")]}',",
+        cacheOptions: {
+          useCache: true,
+          timeToLive: 1000 * 60 * 5, // 5 minutes
+          getCacheIdentifier,
+        },
+      };
+      const expected = {
+        addAcceptLanguage: true,
+        xsrfCookieName: 'XSRF-TOKEN',
+        xsrfHeaderName: 'X-XSRF-TOKEN',
+        jsonPrefix: ")]}',",
+        cacheOptions: {
+          useCache: true,
+          timeToLive: 300000,
+          getCacheIdentifier,
+        },
+      };
+      // When
+      const ajax1 = new AjaxClient(config);
+      const result = ajax1.options;
+      // Then
+      expect(result).to.deep.equal(expected);
+    });
+
+    it('has default getCacheIdentifier function when cacheOptions does not provide one', async () => {
+      // Given
+      const config = {
+        cacheOptions: {
+          useCache: true,
+          timeToLive: 1000 * 60 * 5, // 5 minutes
+        },
+      };
+      // When
+      // @ts-expect-error
+      const ajax1 = new AjaxClient(config);
+      const result = ajax1.options?.cacheOptions?.getCacheIdentifier;
+      // Then
+      expect(result).not.to.be.undefined;
+      expect(result).to.be.a('function');
+    });
+  });
+
   describe('request()', () => {
     it('calls fetch with the given args, returning the result', async () => {
       const response = await (await ajax.request('/foo', { method: 'POST' })).text();
@@ -130,15 +178,22 @@ describe('AjaxClient', () => {
     });
 
     it('removeRequestInterceptor() removes a request interceptor', async () => {
-      const interceptor = /** @param {Request} r */ async r =>
+      const interceptor1 = /** @param {Request} r */ async r =>
         new Request(`${r.url}/intercepted-1`);
-      ajax.addRequestInterceptor(interceptor);
-      ajax.removeRequestInterceptor(interceptor);
+      const interceptor2 = /** @param {Request} r */ async r =>
+        new Request(`${r.url}/intercepted-2`);
+      const interceptor3 = /** @param {Request} r */ async r =>
+        new Request(`${r.url}/intercepted-3`);
+
+      ajax.addRequestInterceptor(interceptor1);
+      ajax.addRequestInterceptor(interceptor2);
+      ajax.addRequestInterceptor(interceptor3);
+      ajax.removeRequestInterceptor(interceptor1);
 
       await ajax.request('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
-      expect(request.url).to.equal(`${window.location.origin}/foo`);
+      expect(request.url).to.equal(`${window.location.origin}/foo/intercepted-2/intercepted-3`);
     });
 
     it('removeResponseInterceptor() removes a request interceptor', async () => {
@@ -148,8 +203,9 @@ describe('AjaxClient', () => {
       // @ts-expect-error we're mocking the response as a simple promise which returns a string
       ajax.removeResponseInterceptor(interceptor);
 
-      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
-      expect(response).to.equal('mock response');
+      const response = await ajax.request('/foo', { method: 'POST' });
+      const text = await response.text();
+      expect(text).to.equal('mock response');
     });
   });
 
