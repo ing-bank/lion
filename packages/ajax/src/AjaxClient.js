@@ -27,11 +27,11 @@ export class AjaxClient {
       xsrfCookieName: 'XSRF-TOKEN',
       xsrfHeaderName: 'X-XSRF-TOKEN',
       jsonPrefix: '',
+      ...config,
       cacheOptions: {
         getCacheIdentifier: () => '_default',
         ...config.cacheOptions,
       },
-      ...config,
     };
 
     /** @type {Array.<RequestInterceptor|CachedRequestInterceptor>} */
@@ -43,24 +43,18 @@ export class AjaxClient {
       this.addRequestInterceptor(acceptLanguageRequestInterceptor);
     }
 
-    if (this.__config.xsrfCookieName && this.__config.xsrfHeaderName) {
-      this.addRequestInterceptor(
-        createXSRFRequestInterceptor(this.__config.xsrfCookieName, this.__config.xsrfHeaderName),
-      );
+    const { xsrfCookieName, xsrfHeaderName } = this.__config;
+    if (xsrfCookieName && xsrfHeaderName) {
+      this.addRequestInterceptor(createXSRFRequestInterceptor(xsrfCookieName, xsrfHeaderName));
     }
 
-    if (this.__config.cacheOptions && this.__config.cacheOptions.useCache) {
+    const { cacheOptions } = this.__config;
+    if (cacheOptions?.useCache) {
       this.addRequestInterceptor(
-        cacheRequestInterceptorFactory(
-          this.__config.cacheOptions.getCacheIdentifier,
-          this.__config.cacheOptions,
-        ),
+        cacheRequestInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
       );
       this.addResponseInterceptor(
-        cacheResponseInterceptorFactory(
-          this.__config.cacheOptions.getCacheIdentifier,
-          this.__config.cacheOptions,
-        ),
+        cacheResponseInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
       );
     }
   }
@@ -84,10 +78,9 @@ export class AjaxClient {
 
   /** @param {RequestInterceptor} requestInterceptor */
   removeRequestInterceptor(requestInterceptor) {
-    const indexOf = this._requestInterceptors.indexOf(requestInterceptor);
-    if (indexOf !== -1) {
-      this._requestInterceptors.splice(indexOf);
-    }
+    this._requestInterceptors = this._requestInterceptors.filter(
+      interceptor => interceptor !== requestInterceptor,
+    );
   }
 
   /** @param {ResponseInterceptor} responseInterceptor */
@@ -97,10 +90,9 @@ export class AjaxClient {
 
   /** @param {ResponseInterceptor} responseInterceptor */
   removeResponseInterceptor(responseInterceptor) {
-    const indexOf = this._responseInterceptors.indexOf(responseInterceptor);
-    if (indexOf !== -1) {
-      this._responseInterceptors.splice(indexOf, 1);
-    }
+    this._responseInterceptors = this._responseInterceptors.filter(
+      interceptor => interceptor !== responseInterceptor,
+    );
   }
 
   /**
@@ -117,9 +109,9 @@ export class AjaxClient {
     request.params = init?.params;
 
     // run request interceptors, returning directly and skipping the network
-    // if a interceptor returns a Response
     const interceptedRequestOrResponse = await this.__interceptRequest(request);
     if (interceptedRequestOrResponse instanceof Response) {
+      // prevent network request, return cached response
       return interceptedRequestOrResponse;
     }
 
@@ -147,12 +139,12 @@ export class AjaxClient {
     const lionInit = {
       ...init,
       headers: {
-        ...(init && init.headers),
+        ...init?.headers,
         accept: 'application/json',
       },
     };
 
-    if (lionInit && lionInit.body) {
+    if (lionInit?.body) {
       // eslint-disable-next-line no-param-reassign
       lionInit.headers['content-type'] = 'application/json';
       lionInit.body = JSON.stringify(lionInit.body);
@@ -163,10 +155,9 @@ export class AjaxClient {
     const response = await this.request(info, jsonInit);
     let responseText = await response.text();
 
-    if (typeof this.__config.jsonPrefix === 'string') {
-      if (responseText.startsWith(this.__config.jsonPrefix)) {
-        responseText = responseText.substring(this.__config.jsonPrefix.length);
-      }
+    const { jsonPrefix } = this.__config;
+    if (typeof jsonPrefix === 'string' && responseText.startsWith(jsonPrefix)) {
+      responseText = responseText.substring(jsonPrefix.length);
     }
 
     try {

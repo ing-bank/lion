@@ -17,10 +17,9 @@ export function getCookie(name, _document = document) {
  */
 export async function acceptLanguageRequestInterceptor(request) {
   if (!request.headers.has('accept-language')) {
-    let locale = document.documentElement.lang || 'en';
-    if (document.documentElement.getAttribute('data-localize-lang')) {
-      locale = document.documentElement.getAttribute('data-localize-lang') || 'en';
-    }
+    const documentLocale = document.documentElement.lang;
+    const localizeLang = document.documentElement.getAttribute('data-localize-lang');
+    const locale = localizeLang || documentLocale || 'en';
     request.headers.set('accept-language', locale);
   }
   return request;
