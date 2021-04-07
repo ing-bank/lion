@@ -1,4 +1,4 @@
-import { expect } from '@open-wc/testing';
+import { aTimeout, expect } from '@open-wc/testing';
 import { spy, stub, useFakeTimers } from 'sinon';
 import '../src/typedef.js';
 
@@ -450,6 +450,71 @@ describe('ajax cache', () => {
       await ajax.request('/test', { cacheOptions: { useCache: false } });
       expect(fetchStub.callCount).to.equal(2);
       ajaxAlwaysRequestSpy.restore();
+      removeCacheInterceptors(ajax, indexes);
+    });
+
+    it('caches concurrent requests', async () => {
+      newCacheId();
+
+      let i = 0;
+      fetchStub.returns(
+        new Promise(resolve => {
+          i += 1;
+          setTimeout(() => {
+            resolve(new Response(`mock response ${i}`));
+          }, 5);
+        }),
+      );
+
+      const indexes = addCacheInterceptors(ajax, {
+        useCache: true,
+        timeToLive: 100,
+      });
+      const ajaxRequestSpy = spy(ajax, 'request');
+
+      const request1 = ajax.request('/test');
+      const request2 = ajax.request('/test');
+      await aTimeout(1);
+      const request3 = ajax.request('/test');
+      await aTimeout(3);
+      const request4 = ajax.request('/test');
+      const responses = await Promise.all([request1, request2, request3, request4]);
+      expect(fetchStub.callCount).to.equal(1);
+      const responseTexts = await Promise.all(responses.map(r => r.text()));
+      expect(responseTexts).to.eql([
+        'mock response 1',
+        'mock response 1',
+        'mock response 1',
+        'mock response 1',
+      ]);
+
+      ajaxRequestSpy.restore();
+      removeCacheInterceptors(ajax, indexes);
+    });
+
+    it('preserves status and headers when returning cached response', async () => {
+      newCacheId();
+      fetchStub.returns(
+        Promise.resolve(
+          new Response('mock response', { status: 206, headers: { 'x-foo': 'x-bar' } }),
+        ),
+      );
+
+      const indexes = addCacheInterceptors(ajax, {
+        useCache: true,
+        timeToLive: 100,
+      });
+      const ajaxRequestSpy = spy(ajax, 'request');
+
+      const response1 = await ajax.request('/test');
+      const response2 = await ajax.request('/test');
+      expect(fetchStub.callCount).to.equal(1);
+      expect(response1.status).to.equal(206);
+      expect(response1.headers.get('x-foo')).to.equal('x-bar');
+      expect(response2.status).to.equal(206);
+      expect(response2.headers.get('x-foo')).to.equal('x-bar');
+
+      ajaxRequestSpy.restore();
       removeCacheInterceptors(ajax, indexes);
     });
   });
