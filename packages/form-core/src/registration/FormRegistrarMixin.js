@@ -60,6 +60,61 @@ const FormRegistrarMixinImplementation = superclass =>
         'form-element-name-changed',
         /** @type {EventListenerOrEventListenerObject} */ (this._onRequestToChangeFormElementName),
       );
+
+      /**
+       * initComplete resolves after all pending initialization logic
+       * (for instance `<form-group .serializedValue=${{ child1: 'a', child2: 'b' }}>`)
+       * is executed
+       * @type {Promise<any>}
+       */
+      this.initComplete = new Promise((resolve, reject) => {
+        this.__resolveInitComplete = resolve;
+        this.__rejectInitComplete = reject;
+      });
+
+      /**
+       * registrationComplete waits for all children formElements to have registered
+       * @type {Promise<any> & {done?:boolean}}
+       */
+      this.registrationComplete = new Promise((resolve, reject) => {
+        this.__resolveRegistrationComplete = resolve;
+        this.__rejectRegistrationComplete = reject;
+      });
+      this.registrationComplete.done = false;
+      this.registrationComplete.then(
+        () => {
+          this.registrationComplete.done = true;
+          this.__resolveInitComplete(undefined);
+        },
+        () => {
+          this.registrationComplete.done = true;
+          this.__rejectInitComplete(undefined);
+          throw new Error(
+            'Registration could not finish. Please use await el.registrationComplete;',
+          );
+        },
+      );
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this._completeRegistration();
+    }
+
+    _completeRegistration() {
+      Promise.resolve().then(() => this.__resolveRegistrationComplete(undefined));
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+
+      if (this.registrationComplete.done === false) {
+        Promise.resolve().then(() => {
+          Promise.resolve().then(() => {
+            this.__rejectRegistrationComplete();
+          });
+        });
+      }
     }
 
     /**

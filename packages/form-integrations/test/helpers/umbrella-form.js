@@ -12,6 +12,8 @@ import '@lion/checkbox-group/define';
 import '@lion/radio-group/define';
 import '@lion/select/define';
 import '@lion/select-rich/define';
+import '@lion/listbox/define';
+import '@lion/combobox/define';
 import '@lion/input-range/define';
 import '@lion/textarea/define';
 import '@lion/button/define';
@@ -23,9 +25,16 @@ export class UmbrellaForm extends LitElement {
     ));
   }
 
+  /**
+   * @param {string} v
+   */
+  set serializedValue(v) {
+    this.__serializedValue = v;
+  }
+
   render() {
     return html`
-      <lion-form>
+      <lion-form .serializedValue="${this.__serializedValue}">
         <form>
           <lion-fieldset name="full_name">
             <lion-input
@@ -42,13 +51,13 @@ export class UmbrellaForm extends LitElement {
           <lion-input-date
             name="date"
             label="Date of application"
-            .modelValue="${new Date('2000/12/12')}"
+            .modelValue="${new Date('2000-12-12')}"
             .validators="${[new Required()]}"
           ></lion-input-date>
           <lion-input-datepicker
             name="datepicker"
             label="Date to be picked"
-            .modelValue="${new Date('2020/12/12')}"
+            .modelValue="${new Date('2020-12-12')}"
             .validators="${[new Required()]}"
           ></lion-input-datepicker>
           <lion-textarea
@@ -62,7 +71,7 @@ export class UmbrellaForm extends LitElement {
           <lion-input-email name="email" label="Email"></lion-input-email>
           <lion-checkbox-group
             label="What do you like?"
-            name="checkers[]"
+            name="checkers"
             .validators="${[new Required()]}"
           >
             <lion-checkbox .choiceValue=${'foo'} checked label="I like foo"></lion-checkbox>
@@ -75,15 +84,31 @@ export class UmbrellaForm extends LitElement {
             .validators="${[new Required()]}"
           >
             <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
-            <lion-radio .choiceValue=${'brontosaurus'} checked label="brontosaurus"></lion-radio>
+            <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
             <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
           </lion-radio-group>
+          <lion-listbox name="favoriteFruit" label="Favorite fruit">
+            <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
+            <lion-option checked .choiceValue=${'Banana'}>Banana</lion-option>
+            <lion-option .choiceValue=${'Mango'}>Mango</lion-option>
+          </lion-listbox>
+          <lion-combobox
+            .validators="${[new Required()]}"
+            name="favoriteMovie"
+            label="Favorite movie"
+            autocomplete="both"
+          >
+            <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
+            <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
+            <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
+            <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
+            <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
+            <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+          </lion-combobox>
           <lion-select-rich name="favoriteColor" label="Favorite color">
-            <lion-options slot="input">
-              <lion-option .choiceValue=${'red'}>Red</lion-option>
-              <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-            </lion-options>
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+            <lion-option .choiceValue=${'teal'}>Teal</lion-option>
           </lion-select-rich>
           <lion-select label="Lyrics" name="lyrics" .validators="${[new Required()]}">
             <select slot="input">
@@ -100,21 +125,28 @@ export class UmbrellaForm extends LitElement {
             unit="%"
             step="0.1"
             label="Input range"
+          ></lion-input-range>
+          <lion-checkbox-group
+            .mulipleChoice="${false}"
+            name="terms"
+            .validators="${[new Required()]}"
           >
-          </lion-input-range>
-          <lion-checkbox-group name="terms[]" .validators="${[new Required()]}">
             <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
           </lion-checkbox-group>
+          <lion-switch name="notifications" label="Notifications"></lion-switch>
+          <lion-input-stepper max="5" min="0" name="rsvp">
+            <label slot="label">RSVP</label>
+            <div slot="help-text">Max. 5 guests</div>
+          </lion-input-stepper>
           <lion-textarea name="comments" label="Comments"></lion-textarea>
           <div class="buttons">
             <lion-button raised>Submit</lion-button>
             <lion-button
               type="button"
               raised
-              @click=${() => {
-                const lionForm = this._lionFormNode;
-                lionForm.resetGroup();
-              }}
+              @click=${(/** @type {Event} */ ev) =>
+                // @ts-ignore
+                ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
               >Reset</lion-button
             >
           </div>

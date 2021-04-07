@@ -670,6 +670,24 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.validationStates.error.Input1IsTen).to.be.true;
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
+
+      it('does not become dirty when elements are prefilled', async () => {
+        const el = /**  @type {FormGroup} */ (await fixture(html`
+        <${tag} .serializedValue="${{ input1: 'x', input2: 'y' }}">
+          <${childTag} name="input1" ></${childTag}>
+          <${childTag} name="input2"></${childTag}>
+        </${tag}>
+      `));
+        expect(el.dirty).to.be.false;
+
+        const el2 = /**  @type {FormGroup} */ (await fixture(html`
+        <${tag} .modelValue="${{ input1: 'x', input2: 'y' }}">
+          <${childTag} name="input1" ></${childTag}>
+          <${childTag} name="input2"></${childTag}>
+        </${tag}>
+      `));
+        expect(el2.dirty).to.be.false;
+      });
     });
 
     // TODO: this should be tested in FormGroupMixin
