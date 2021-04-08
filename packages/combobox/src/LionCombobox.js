@@ -740,6 +740,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     return /** @type {OverlayConfig} */ ({
       ...withDropdownConfig(),
       elementToFocusAfterHide: undefined,
+      invokerNode: this._comboboxNode,
     });
   }
 

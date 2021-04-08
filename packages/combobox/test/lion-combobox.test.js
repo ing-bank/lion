@@ -708,6 +708,34 @@ describe('lion-combobox', () => {
         expect(comboboxNode.getAttribute('role')).to.equal('combobox');
       });
 
+      it('sets aria-expanded to element with role="combobox" in wai-aria 1.0 and 1.1', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `));
+        const { comboboxNode } = getProtectedMembers(el);
+
+        expect(comboboxNode.getAttribute('aria-expanded')).to.equal('false');
+        el.opened = true;
+        await el.updateComplete;
+        expect(comboboxNode.getAttribute('aria-expanded')).to.equal('true');
+
+        const el2 = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `));
+        const { comboboxNode: comboboxNode2 } = getProtectedMembers(el2);
+
+        expect(comboboxNode2.getAttribute('aria-expanded')).to.equal('false');
+        el2.opened = true;
+        await el2.updateComplete;
+        expect(comboboxNode.getAttribute('aria-expanded')).to.equal('true');
+      });
+
       it('makes sure listbox node is not focusable', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo">
