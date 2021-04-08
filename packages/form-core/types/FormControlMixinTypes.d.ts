@@ -163,6 +163,18 @@ export declare class FormControlHost {
       reorder?: boolean | undefined;
     },
   ): void;
+  public removeFromAriaLabelledBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  public removeFromAriaDescribedBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
   __reorderAriaDescribedNodes: boolean | undefined;
   __getDirectSlotChild(slotName: string): HTMLElement;
   __dispatchInitialModelValueChangedEvent(): void;

@@ -40,7 +40,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
     localizeTearDown();
   });
 
-  describe('FormGroupMixin with LionInput', () => {
+  describe('FormGroupMixin with LionField', () => {
     it('serializes undefined values as "" (nb radios/checkboxes are always serialized)', async () => {
       const fieldset = /**  @type {FormGroup} */ (await fixture(html`
         <${tag}>
@@ -54,6 +54,34 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
       expect(fieldset.serializedValue).to.deep.equal({
         'custom[]': ['custom 1', ''],
       });
+    });
+
+    it('suffixes child labels with group label, just like in <fieldset>', async () => {
+      const el = /**  @type {FormGroup} */ (await fixture(html`
+        <${tag} label="set">
+          <${childTag} name="A" label="fieldA"></${childTag}>
+          <${childTag} name="B" label="fieldB"></${childTag}>
+        </${tag}>
+      `));
+
+      /**
+       * @param {LionInput} formControl
+       */
+      function getLabels(formControl) {
+        return /** @type {string} */ (formControl._inputNode.getAttribute('aria-labelledby')).split(
+          ' ',
+        );
+      }
+      const field1 = el.formElements[0];
+      const field2 = el.formElements[1];
+
+      expect(getLabels(field1)).to.eql([field1._labelNode.id, el._labelNode.id]);
+      expect(getLabels(field2)).to.eql([field2._labelNode.id, el._labelNode.id]);
+
+      // Test the cleanup on disconnected
+      el.removeChild(field1);
+      await field1.updateComplete;
+      expect(getLabels(field1)).to.eql([field1._labelNode.id]);
     });
   });
 

@@ -454,6 +454,10 @@ const FormGroupMixinImplementation = superclass =>
       // TODO: Unlink in removeFormElement
       this.__linkChildrenMessagesToParent(child);
       this.validate({ clearCurrentResult: true });
+
+      if (typeof child.addToAriaLabelledBy === 'function' && this._labelNode) {
+        child.addToAriaLabelledBy(this._labelNode, { reorder: false });
+      }
     }
 
     /**
@@ -481,11 +485,15 @@ const FormGroupMixinImplementation = superclass =>
 
     /**
      * @override of FormRegistrarMixin. Connects ValidateMixin
-     * @param {FormRegisteringHost} el
+     * @param {FormRegisteringHost & FormControlHost} el
      */
     removeFormElement(el) {
       super.removeFormElement(el);
       this.validate({ clearCurrentResult: true });
+
+      if (typeof el.removeFromAriaLabelledBy === 'function' && this._labelNode) {
+        el.removeFromAriaLabelledBy(this._labelNode, { reorder: false });
+      }
     }
   };
 

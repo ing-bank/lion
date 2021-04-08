@@ -321,10 +321,10 @@ const FormControlMixinImplementation = superclass =>
       additionalSlots.forEach(additionalSlot => {
         const element = this.__getDirectSlotChild(additionalSlot);
         if (element) {
-          if (element.hasAttribute('data-label') === true) {
+          if (element.hasAttribute('data-label')) {
             this.addToAriaLabelledBy(element, { idPrefix: additionalSlot });
           }
-          if (element.hasAttribute('data-description') === true) {
+          if (element.hasAttribute('data-description')) {
             this.addToAriaDescribedBy(element, { idPrefix: additionalSlot });
           }
         }
@@ -346,6 +346,7 @@ const FormControlMixinImplementation = superclass =>
         if (reorder) {
           const insideNodes = nodes.filter(n => this.contains(n));
           const outsideNodes = nodes.filter(n => !this.contains(n));
+
           // eslint-disable-next-line no-param-reassign
           nodes = [...getAriaElementsInRightDomOrder(insideNodes), ...outsideNodes];
         }
@@ -704,12 +705,7 @@ const FormControlMixinImplementation = superclass =>
      * @param {HTMLElement} element
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
-    addToAriaLabelledBy(element, customConfig = {}) {
-      const { idPrefix, reorder } = {
-        reorder: true,
-        ...customConfig,
-      };
-
+    addToAriaLabelledBy(element, { idPrefix = '', reorder = true } = {}) {
       // eslint-disable-next-line no-param-reassign
       element.id = element.id || `${idPrefix}-${this._inputId}`;
       if (!this._ariaLabelledNodes.includes(element)) {
@@ -721,17 +717,26 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * Meant for Application Developers wanting to delete from aria-labelledby attribute.
+     * @param {HTMLElement} element
+     */
+    removeFromAriaLabelledBy(element) {
+      if (this._ariaLabelledNodes.includes(element)) {
+        this._ariaLabelledNodes.splice(this._ariaLabelledNodes.indexOf(element), 1);
+        this._ariaLabelledNodes = [...this._ariaLabelledNodes];
+
+        // This value will be read when we need to reflect to attr
+        /** @type {boolean} */
+        this.__reorderAriaLabelledNodes = false;
+      }
+    }
+
+    /**
      * Meant for Application Developers wanting to add to aria-describedby attribute.
      * @param {HTMLElement} element
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
-    addToAriaDescribedBy(element, customConfig = {}) {
-      const { idPrefix, reorder } = {
-        // chronologically sorts children of host element('this')
-        reorder: true,
-        ...customConfig,
-      };
-
+    addToAriaDescribedBy(element, { idPrefix = '', reorder = true } = {}) {
       // eslint-disable-next-line no-param-reassign
       element.id = element.id || `${idPrefix}-${this._inputId}`;
       if (!this._ariaDescribedNodes.includes(element)) {
@@ -739,6 +744,20 @@ const FormControlMixinImplementation = superclass =>
         // This value will be read when we need to reflect to attr
         /** @type {boolean} */
         this.__reorderAriaDescribedNodes = Boolean(reorder);
+      }
+    }
+
+    /**
+     * Meant for Application Developers wanting to delete from aria-labelledby attribute.
+     * @param {HTMLElement} element
+     */
+    removeFromAriaDescribedBy(element) {
+      if (this._ariaDescribedNodes.includes(element)) {
+        this._ariaDescribedNodes.splice(this._ariaDescribedNodes.indexOf(element), 1);
+        this._ariaDescribedNodes = [...this._ariaDescribedNodes];
+        // This value will be read when we need to reflect to attr
+        /** @type {boolean} */
+        this.__reorderAriaLabelledNodes = false;
       }
     }
 

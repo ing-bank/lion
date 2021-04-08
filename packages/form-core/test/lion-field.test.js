@@ -193,59 +193,6 @@ describe('<lion-field>', () => {
         `prefix-${el._inputId} suffix-${el._inputId}`,
       );
     });
-
-    // TODO: Move test below to FormControlMixin.test.js.
-    it(`allows to add to aria description or label via addToAriaLabelledBy() and
-      addToAriaDescribedBy()`, async () => {
-      const wrapper = /** @type {HTMLElement} */ (await fixture(html`
-        <div id="wrapper">
-          <${tag}>
-            ${inputSlot}
-            <label slot="label">Added to label by default</label>
-            <div slot="feedback">Added to description by default</div>
-          </${tag}>
-          <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
-          <div id="additionalDescription"> Same for this </div>
-        </div>`));
-      const el = /** @type {LionField} */ (wrapper.querySelector(tagString));
-      // wait until the field element is done rendering
-      await el.updateComplete;
-      await el.updateComplete;
-
-      const { _inputNode } = el;
-
-      // 1. addToAriaLabel()
-      // Check if the aria attr is filled initially
-      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(`label-${el._inputId}`);
-      const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
-        '#additionalLabel',
-      ));
-      el.addToAriaLabelledBy(additionalLabel);
-      const labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
-      // Now check if ids are added to the end (not overridden)
-      expect(labelledbyAttr).to.contain(`label-${el._inputId}`);
-      // Should be placed in the end
-      expect(
-        labelledbyAttr.indexOf(`label-${el._inputId}`) < labelledbyAttr.indexOf('additionalLabel'),
-      );
-
-      // 2. addToAriaDescription()
-      // Check if the aria attr is filled initially
-      expect(_inputNode.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
-      const additionalDescription = /** @type {HTMLElement} */ (wrapper.querySelector(
-        '#additionalDescription',
-      ));
-      el.addToAriaDescribedBy(additionalDescription);
-      const describedbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-describedby'));
-
-      // Now check if ids are added to the end (not overridden)
-      expect(describedbyAttr).to.contain(`feedback-${el._inputId}`);
-      // Should be placed in the end
-      expect(
-        describedbyAttr.indexOf(`feedback-${el._inputId}`) <
-          describedbyAttr.indexOf('additionalDescription'),
-      );
-    });
   });
 
   describe(`Validation`, () => {
