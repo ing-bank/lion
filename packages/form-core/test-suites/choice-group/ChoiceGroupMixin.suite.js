@@ -507,6 +507,23 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       }
     });
 
+    it('can be cleared', async () => {
+      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        <${parentTag} name="gender[]">
+          <${childTag} .choiceValue=${'male'}></${childTag}>
+          <${childTag} .choiceValue=${'female'}></${childTag}>
+        </${parentTag}>
+      `));
+      el.formElements[0].checked = true;
+      el.clear();
+
+      if (cfg.choiceType === 'single') {
+        expect(el.serializedValue).to.deep.equal('');
+      } else {
+        expect(el.serializedValue).to.deep.equal([]);
+      }
+    });
+
     describe('multipleChoice', () => {
       it('has a single modelValue representing all currently checked values', async () => {
         const el = /** @type {ChoiceInputGroup} */ (await fixture(html`

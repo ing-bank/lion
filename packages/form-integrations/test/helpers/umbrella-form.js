@@ -17,6 +17,8 @@ import '@lion/combobox/define';
 import '@lion/input-range/define';
 import '@lion/textarea/define';
 import '@lion/button/define';
+import '@lion/switch/define';
+import '@lion/input-stepper/define';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
@@ -131,7 +133,10 @@ export class UmbrellaForm extends LitElement {
             name="terms"
             .validators="${[new Required()]}"
           >
-            <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
+            <lion-checkbox
+              .choiceValue="agreed"
+              label="I blindly accept all terms and conditions"
+            ></lion-checkbox>
           </lion-checkbox-group>
           <lion-switch name="notifications" label="Notifications"></lion-switch>
           <lion-input-stepper max="5" min="0" name="rsvp">
@@ -140,13 +145,14 @@ export class UmbrellaForm extends LitElement {
           </lion-input-stepper>
           <lion-textarea name="comments" label="Comments"></lion-textarea>
           <div class="buttons">
-            <lion-button raised>Submit</lion-button>
+            <lion-button id="submit_button" raised>Submit</lion-button>
             <lion-button
+              id="reset_button"
               type="button"
               raised
-              @click=${(/** @type {Event} */ ev) =>
-                // @ts-ignore
-                ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+              @click="${() => {
+                this._lionFormNode.resetGroup();
+              }}"
               >Reset</lion-button
             >
           </div>

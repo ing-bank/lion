@@ -10,11 +10,14 @@ import '@lion/input-datepicker/define';
 import '@lion/input-email/define';
 import '@lion/input-iban/define';
 import '@lion/input-range/define';
+import '@lion/input-stepper/define';
+
 import '@lion/textarea/define';
 
 import '@lion/checkbox-group/define';
 
 import '@lion/radio-group/define';
+import '@lion/switch/define';
 
 import '@lion/select/define';
 
@@ -343,11 +346,13 @@ describe('detail.isTriggeredByUser', () => {
     'input-email',
     'input-iban',
     'input-range',
+    'input-stepper',
     'textarea',
     // 1b) Choice Fields
     'option',
     'checkbox',
     'radio',
+    'switch',
     // 1c) Choice Group Fields
     'select',
     'listbox',

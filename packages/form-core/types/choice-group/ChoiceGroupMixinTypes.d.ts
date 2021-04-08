@@ -28,6 +28,8 @@ export declare class ChoiceGroupHost {
 
   addFormElement(child: FormControlHost, indexToInsertAt: number): void;
 
+  clear(): void;
+
   protected _triggerInitialModelValueChangedEvent(): void;
 
   _getFromAllFormElements(property: string, filterCondition: Function): void;
