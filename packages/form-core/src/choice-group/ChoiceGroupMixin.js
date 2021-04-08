@@ -187,6 +187,14 @@ const ChoiceGroupMixinImplementation = superclass =>
       super.addFormElement(child, indexToInsertAt);
     }
 
+    clear() {
+      if (this.multipleChoice) {
+        this.modelValue = [];
+      } else {
+        this.modelValue = '';
+      }
+    }
+
     /**
      * @override from FormControlMixin
      * @protected
