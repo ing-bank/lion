@@ -1,21 +1,7 @@
 import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
-const packages = fs
-  .readdirSync('packages')
-  .filter(
-    dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
-  )
-  .concat(
-    fs
-      .readdirSync('packages/helpers')
-      .filter(
-        dir =>
-          fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
-          fs.existsSync(`packages/helpers/${dir}/test`),
-      )
-      .map(dir => `helpers/${dir}`),
-  );
+const packages = ['form-integrations']
 
 export default {
   nodeResolve: true,
@@ -35,14 +21,12 @@ export default {
     },
   },
   browsers: [
-    playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
-    playwrightLauncher({ product: 'webkit' }),
   ],
   groups: packages.map(pkg => {
     return {
       name: pkg,
-      files: `packages/${pkg}/test/**/*.test.js`,
+      files: `packages/${pkg}/test/dialog-integrations.test.js`,
     };
   }),
 };
