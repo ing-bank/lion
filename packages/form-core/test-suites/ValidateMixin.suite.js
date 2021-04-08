@@ -841,6 +841,26 @@ export function runValidateMixinSuite(customConfig) {
         expect(el.validationStates.error).to.not.eql({});
       });
 
+      it('can be configured to change visibility conditions per type', async () => {
+        const el = /** @type {ValidateElement} */ (await fixture(html`
+          <${tag}
+          .validators="${[new Required({}, { type: 'error' })]}"
+          .showFeedbackConditionFor="${(
+            /** @type {string} */ type,
+            /** @type {object} */ meta,
+            /** @type {(type: string) => any} */ defaultCondition,
+          ) => {
+            if (type === 'error') {
+              return true;
+            }
+            return defaultCondition(type);
+          }}"
+          >${lightDom}</${tag}>
+        `));
+
+        expect(el.showsFeedbackFor).to.eql(['error']);
+      });
+
       describe('Events', () => {
         it('fires "showsFeedbackForChanged" event async after feedbackData got synced to feedbackElement', async () => {
           const spy = sinon.spy();

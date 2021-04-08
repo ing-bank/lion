@@ -66,7 +66,8 @@ export declare class ValidateHost {
   __isEmpty(v: unknown): boolean;
   __getFeedbackMessages(validators: Validator[]): Promise<FeedbackMessage[]>;
   _updateFeedbackComponent(): void;
-  _showFeedbackConditionFor(type: string): boolean;
+  _showFeedbackConditionFor(type: string, meta: object): boolean;
+  showFeedbackConditionFor(type: string, meta: object, currentCondition: Function): boolean;
   _hasFeedbackVisibleFor(type: string): boolean;
   _updateShouldShowFeedbackFor(): void;
   _prioritizeAndFilterFeedback(opts: { validationResult: Validator[] }): Validator[];

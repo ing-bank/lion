@@ -628,13 +628,51 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
+     * The default showFeedbackConditionFor condition that will be used when the
+     * showFeedbackConditionFor is not overridden.
      * Show the validity feedback when returning true, don't show when false
-     *  @param {string} type
+     * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
+     * Validator type
+     * @param {object} meta meta info (interaction states etc)
      * @protected
      */
     // eslint-disable-next-line no-unused-vars
-    _showFeedbackConditionFor(type) {
+    _showFeedbackConditionFor(type, meta) {
       return true;
+    }
+
+    /**
+     * Allows super classes to add meta info for showFeedbackConditionFor
+     * @configurable
+     */
+    get _feedbackConditionMeta() {
+      return {};
+    }
+
+    /**
+     * Allows the end user to specify when a feedback message should be shown
+     * @example
+     * showFeedbackConditionFor(type, defaultCondition) {
+     *   if (type === 'info') {
+     *     return true;
+     *   }
+     *   return defaultCondition(type);
+     * }
+     * @overridable
+     * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
+     * Validator type
+     * @param {object} meta meta info (interaction states etc)
+     * @param {((type: string, meta: object) => boolean)} currentCondition this is the _showFeedbackConditionFor
+     * that can be used if a developer wants to override for a certain type, but wants to fallback
+     * for other types
+     * @returns {boolean}
+     */
+    showFeedbackConditionFor(
+      type,
+      meta = this._feedbackConditionMeta,
+      currentCondition = this._showFeedbackConditionFor.bind(this),
+    ) {
+      return currentCondition(type, meta);
     }
 
     /**
@@ -677,7 +715,7 @@ export const ValidateMixinImplementation = superclass =>
 
       // Necessary typecast because types aren't smart enough to understand that we filter out undefined
       const newShouldShowFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
-        .map(type => (this._showFeedbackConditionFor(type) ? type : undefined))
+        .map(type => (this.showFeedbackConditionFor(type) ? type : undefined))
         .filter(_ => !!_));
 
       if (JSON.stringify(this.shouldShowFeedbackFor) !== JSON.stringify(newShouldShowFeedbackFor)) {
@@ -700,7 +738,7 @@ export const ValidateMixinImplementation = superclass =>
       const types = ctor.validationTypes;
       // Sort all validators based on the type provided.
       const res = validationResult
-        .filter(v => this._showFeedbackConditionFor(v.type))
+        .filter(v => this.showFeedbackConditionFor(v.type))
         .sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
       return res.slice(0, this._visibleMessagesAmount);
     }
