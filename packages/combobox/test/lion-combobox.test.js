@@ -317,6 +317,36 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql([]);
       expect(el.formElements[0].checked).to.be.false;
     });
+
+    it('clears modelValue and textbox value on clear()', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      const { inputNode } = getProtectedMembers(el);
+
+      el.clear();
+      expect(el.modelValue).to.equal('');
+      expect(inputNode.value).to.equal('');
+
+      const el2 = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      el2.clear();
+      expect(el2.modelValue).to.eql([]);
+      expect(inputNode.value).to.equal('');
+    });
   });
 
   describe('Overlay visibility', () => {
