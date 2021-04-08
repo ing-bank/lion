@@ -37,6 +37,7 @@ export declare class InteractionStateHost {
     meta: InteractionStates,
     currentCondition: Function,
   ): boolean;
+  _feedbackConditionMeta: InteractionStates;
 }
 
 export declare function InteractionStateImplementation<T extends Constructor<LitElement>>(

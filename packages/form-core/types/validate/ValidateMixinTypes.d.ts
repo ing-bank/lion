@@ -71,6 +71,7 @@ export declare class ValidateHost {
   _hasFeedbackVisibleFor(type: string): boolean;
   _updateShouldShowFeedbackFor(): void;
   _prioritizeAndFilterFeedback(opts: { validationResult: Validator[] }): Validator[];
+  _feedbackConditionMeta: object;
 }
 
 export declare function ValidateImplementation<T extends Constructor<LitElement>>(

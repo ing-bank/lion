@@ -91,7 +91,6 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
       this._labelNode.addEventListener('click', this._toggleChecked);
     }
     this._syncButtonSwitch();
-    this.submitted = true;
   }
 
   disconnectedCallback() {

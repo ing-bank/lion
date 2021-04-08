@@ -652,11 +652,13 @@ export const ValidateMixinImplementation = superclass =>
     /**
      * Allows the end user to specify when a feedback message should be shown
      * @example
-     * showFeedbackConditionFor(type, defaultCondition) {
+     * showFeedbackConditionFor(type, meta, defaultCondition) {
      *   if (type === 'info') {
-     *     return true;
+     *     return return;
+     *   } else if (type === 'prefilledOnly') {
+     *     return meta.prefilled;
      *   }
-     *   return defaultCondition(type);
+     *   return defaultCondition(type, meta);
      * }
      * @overridable
      * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
@@ -715,7 +717,15 @@ export const ValidateMixinImplementation = superclass =>
 
       // Necessary typecast because types aren't smart enough to understand that we filter out undefined
       const newShouldShowFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
-        .map(type => (this.showFeedbackConditionFor(type) ? type : undefined))
+        .map(type =>
+          this.showFeedbackConditionFor(
+            type,
+            this._feedbackConditionMeta,
+            this._showFeedbackConditionFor.bind(this),
+          )
+            ? type
+            : undefined,
+        )
         .filter(_ => !!_));
 
       if (JSON.stringify(this.shouldShowFeedbackFor) !== JSON.stringify(newShouldShowFeedbackFor)) {
@@ -738,7 +748,13 @@ export const ValidateMixinImplementation = superclass =>
       const types = ctor.validationTypes;
       // Sort all validators based on the type provided.
       const res = validationResult
-        .filter(v => this.showFeedbackConditionFor(v.type))
+        .filter(v =>
+          this.showFeedbackConditionFor(
+            v.type,
+            this._feedbackConditionMeta,
+            this._showFeedbackConditionFor.bind(this),
+          ),
+        )
         .sort((a, b) => types.indexOf(a.type) - types.indexOf(b.type));
       return res.slice(0, this._visibleMessagesAmount);
     }

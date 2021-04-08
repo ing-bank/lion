@@ -196,12 +196,12 @@ const InteractionStateMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _showFeedbackConditionFor(type, meta) {
-      const { touched, dirty, prefilled, submitted } = meta;
-      return (touched && dirty) || prefilled || submitted;
+      return (meta.touched && meta.dirty) || meta.prefilled || meta.submitted;
     }
 
     get _feedbackConditionMeta() {
       return {
+        // @ts-ignore
         ...super._feedbackConditionMeta,
         submitted: this.submitted,
         touched: this.touched,
