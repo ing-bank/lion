@@ -39,6 +39,18 @@ describe('lion-switch', () => {
     expect(el.checked).to.be.false;
   });
 
+  it('clicking the label should focus the toggle button', async () => {
+    const el = await fixture(html`<lion-switch label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(document.activeElement).to.equal(el._inputNode);
+  });
+
+  it('clicking the label should not focus the toggle button when disabled', async () => {
+    const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(document.activeElement).to.not.equal(el._inputNode);
+  });
+
   it('should sync its "disabled" state to child button', async () => {
     const el = await fixture(html`<lion-switch disabled></lion-switch>`);
     const { inputNode } = getProtectedMembers(el);

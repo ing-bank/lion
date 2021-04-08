@@ -130,4 +130,15 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   _syncButtonSwitch() {
     this._inputNode.disabled = this.disabled;
   }
+
+  /**
+   * @configure FormControlMixin
+   * @protected
+   */
+  _onLabelClick() {
+    if (this.disabled) {
+      return;
+    }
+    this._inputNode.focus();
+  }
 }
