@@ -328,9 +328,11 @@ describe('lion-combobox', () => {
         </lion-combobox>
       `));
 
+      const { inputNode } = getProtectedMembers(el);
+
       el.clear();
       expect(el.modelValue).to.equal('');
-      expect(el._inputNode.value).to.equal('');
+      expect(inputNode.value).to.equal('');
 
       const el2 = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
@@ -343,7 +345,7 @@ describe('lion-combobox', () => {
 
       el2.clear();
       expect(el2.modelValue).to.eql([]);
-      expect(el2._inputNode.value).to.equal('');
+      expect(inputNode.value).to.equal('');
     });
   });
 
