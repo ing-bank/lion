@@ -49,6 +49,7 @@ export declare class ChoiceGroupHost {
   __delegateNameAttribute(child: FormControlHost): void;
 
   protected _onBeforeRepropagateChildrenValues(ev: Event): void;
+  __oldModelValue: any;
 }
 
 export declare function ChoiceGroupImplementation<T extends Constructor<LitElement>>(

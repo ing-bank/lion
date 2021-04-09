@@ -9,6 +9,7 @@ import { Unparseable } from './validate/Unparseable.js';
  * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
  * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
@@ -883,8 +884,9 @@ const FormControlMixinImplementation = superclass =>
     /**
      * TODO: Extend this in choice group so that target is always a choice input and multipleChoice exists.
      * This will fix the types and reduce the need for ignores/expect-errors
-     * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
+     * @param {EventTarget & ChoiceInputHost} target
      * @protected
+     * @overridable
      */
     _repropagationCondition(target) {
       return !(

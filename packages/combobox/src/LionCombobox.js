@@ -1,4 +1,3 @@
-// @ts-nocheck there's an error in cli that cannot be reproduced locally
 import { html, css, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { LionListbox } from '@lion/listbox';
@@ -12,6 +11,8 @@ import { LionListbox } from '@lion/listbox';
  * @typedef {import('@lion/listbox').LionOptions} LionOptions
  * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('@lion/form-core/types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
  */
 
@@ -19,6 +20,7 @@ import { LionListbox } from '@lion/listbox';
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
+// @ts-expect-error static properties are not compatible
 export class LionCombobox extends OverlayMixin(LionListbox) {
   static get properties() {
     return {
@@ -180,7 +182,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @configure FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
-   * @protected
    */
   get _inputNode() {
     if (this._ariaVersion === '1.1') {
@@ -413,8 +414,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *   return options.currentValue.length > 4 && super._showOverlayCondition(options);
    * }
    *
-   * @param {{ currentValue: string, lastKey:string }} options
+   * @param {{ currentValue: string, lastKey:string|undefined }} options
    * @protected
+   * @returns {boolean}
    */
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
@@ -423,7 +425,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     }
     // when no keyboard action involved (on focused change), return current opened state
     if (!lastKey) {
-      return this.opened;
+      return /** @type {boolean} */ (this.opened);
     }
     const doNotShowOn = ['Tab', 'Esc', 'Enter'];
     return !doNotShowOn.includes(lastKey);
@@ -505,8 +507,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * should indeed not repropagate as normally. If there is no elements checked, this will be the only
    * model-value-changed event that gets received, and we should repropagate it.
    *
-   * @param {EventTarget & import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} target
-   * @protected
+   * @param {FormControlHost} target
    */
   _repropagationCondition(target) {
     return super._repropagationCondition(target) || this.formElements.every(el => !el.checked);
@@ -800,6 +801,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @overridable
    * @param {string|string[]} modelValue
    * @param {string|string[]} oldModelValue
+   * @param {{phase?:string}} config
    * @protected
    */
   // eslint-disable-next-line no-unused-vars
@@ -817,17 +819,17 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _syncToTextboxMultiple(modelValue, oldModelValue = []) {
-    const diff = modelValue.filter(x => !oldModelValue.includes(x));
+    const diff = modelValue.filter(x => !oldModelValue.includes(x)).toString();
     this._setTextboxValue(diff); // or last selected value?
   }
 
   /**
    * @override FormControlMixin - add form-control to [slot=input] instead of _inputNode
-   * @protected
    */
   _enhanceLightDomClasses() {
-    if (this.querySelector('[slot=input]')) {
-      this.querySelector('[slot=input]').classList.add('form-control');
+    const formControl = /** @type {HTMLInputElement} */ (this.querySelector('[slot=input]'));
+    if (formControl) {
+      formControl.classList.add('form-control');
     }
   }
 
