@@ -131,6 +131,7 @@ const FormRegistrarMixinImplementation = superclass =>
      */
     addFormElement(child, indexToInsertAt) {
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
+      // @ts-expect-error FormControl needs to be at the bottom of the hierarchy
       // eslint-disable-next-line no-param-reassign
       child._parentFormGroup = this;
 

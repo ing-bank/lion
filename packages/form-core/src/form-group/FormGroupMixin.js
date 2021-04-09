@@ -126,7 +126,7 @@ const FormGroupMixinImplementation = superclass =>
 
     constructor() {
       super();
-      // inputNode = this, which always requires a value prop
+      // ._inputNode = this, which always requires a value prop
       this.value = '';
 
       this.disabled = false;
@@ -146,6 +146,8 @@ const FormGroupMixinImplementation = superclass =>
       this.addEventListener('validate-performed', this.__onChildValidatePerformed);
 
       this.defaultValidators = [new FormElementsHaveNoError()];
+
+      this.__descriptionElementsInParentChain = new Set();
     }
 
     connectedCallback() {
@@ -166,6 +168,7 @@ const FormGroupMixinImplementation = superclass =>
         document.removeEventListener('click', this._checkForOutsideClick);
         this.__hasActiveOutsideClickHandling = false;
       }
+      this.__descriptionElementsInParentChain.clear();
     }
 
     __initInteractionStates() {
@@ -425,18 +428,56 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @param {FormControl} child
+     * Traverses the _parentFormGroup tree, and gathers all aria description elements
+     * (feedback and helptext) that should be provided to children.
+     *
+     * In the example below, when the input for 'street' has focus, a screenreader user
+     * would hear the #group-error.
+     * In case one of the inputs was in error state as well, the SR user would
+     * first hear the local error, followed by #group-error
+     * @example
+     * <lion-fieldset name="address">
+     *   <lion-input name="street" label="Street" .modelValue="${'Park Avenue'}"></lion-input>
+     *   <lion-input name="number" label="Number" .modelValue="${100}">...</lion-input>
+     *   <div slot="feedback" id="group-error">
+     *      Park Avenue only has numbers up to 80
+     *   </div>
+     * </lion-fieldset>
      */
-    __linkChildrenMessagesToParent(child) {
-      // aria-describedby of (nested) children
+    __storeAllDescriptionElementsInParentChain() {
       const unTypedThis = /** @type {unknown} */ (this);
       let parent = /** @type {FormControlHost & { _parentFormGroup:any }} */ (unTypedThis);
-      const ctor = /** @type {typeof FormGroupMixin} */ (this.constructor);
       while (parent) {
-        ctor._addDescriptionElementIdsToField(child, parent._getAriaDescriptionElements());
+        const descriptionElements = parent._getAriaDescriptionElements();
+        const orderedEls = getAriaElementsInRightDomOrder(descriptionElements, { reverse: true });
+        orderedEls.forEach(el => {
+          this.__descriptionElementsInParentChain.add(el);
+        });
         // Also check if the newly added child needs to refer grandparents
         parent = parent._parentFormGroup;
       }
+    }
+
+    /**
+     * @param {FormControl} child
+     */
+    __linkParentMessages(child) {
+      this.__descriptionElementsInParentChain.forEach(el => {
+        if (typeof child.addToAriaDescribedBy === 'function') {
+          child.addToAriaDescribedBy(el, { reorder: false });
+        }
+      });
+    }
+
+    /**
+     * @param {FormControl} child
+     */
+    __unlinkParentMessages(child) {
+      this.__descriptionElementsInParentChain.forEach(el => {
+        if (typeof child.removeFromAriaDescribedBy === 'function') {
+          child.removeFromAriaDescribedBy(el);
+        }
+      });
     }
 
     /**
@@ -451,8 +492,10 @@ const FormGroupMixinImplementation = superclass =>
       if (this.disabled) {
         child.makeRequestToBeDisabled();
       }
-      // TODO: Unlink in removeFormElement
-      this.__linkChildrenMessagesToParent(child);
+      if (!this.__descriptionElementsInParentChain.size) {
+        this.__storeAllDescriptionElementsInParentChain();
+      }
+      this.__linkParentMessages(child);
       this.validate({ clearCurrentResult: true });
 
       if (typeof child.addToAriaLabelledBy === 'function' && this._labelNode) {
@@ -469,23 +512,8 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * Add aria-describedby to child element(field), so that it points to feedback/help-text of
-     * parent(fieldset)
-     * @param {FormControl} field - the child: lion-field/lion-input/lion-textarea
-     * @param {HTMLElement[]} descriptionElements  - description elements like feedback and help-text
-     */
-    static _addDescriptionElementIdsToField(field, descriptionElements) {
-      const orderedEls = getAriaElementsInRightDomOrder(descriptionElements, { reverse: true });
-      orderedEls.forEach(el => {
-        if (field.addToAriaDescribedBy) {
-          field.addToAriaDescribedBy(el, { reorder: false });
-        }
-      });
-    }
-
-    /**
      * @override of FormRegistrarMixin. Connects ValidateMixin
-     * @param {FormRegisteringHost & FormControlHost} el
+     * @param {FormRegisteringHost & FormControl} el
      */
     removeFormElement(el) {
       super.removeFormElement(el);
@@ -494,6 +522,7 @@ const FormGroupMixinImplementation = superclass =>
       if (typeof el.removeFromAriaLabelledBy === 'function' && this._labelNode) {
         el.removeFromAriaLabelledBy(this._labelNode, { reorder: false });
       }
+      this.__unlinkParentMessages(el);
     }
   };
 

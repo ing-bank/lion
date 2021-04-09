@@ -114,9 +114,7 @@ const ChoiceInputMixinImplementation = superclass =>
 
       if (
         changedProperties.has('name') &&
-        // @ts-expect-error not all choice inputs have a parent form group, since this mixin does not have a strict contract with the registration system
         this._parentFormGroup &&
-        // @ts-expect-error
         this._parentFormGroup.name !== this.name
       ) {
         this._syncNameToParentFormGroup();
@@ -251,7 +249,6 @@ const ChoiceInputMixinImplementation = superclass =>
     _syncNameToParentFormGroup() {
       // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
       if (this._parentFormGroup.tagName.includes(this.tagName)) {
-        // @ts-expect-error
         this.name = this._parentFormGroup.name;
       }
     }

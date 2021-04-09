@@ -181,6 +181,7 @@ export declare class FormControlHost {
   __repropagateChildrenInitialized: boolean | undefined;
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   __repropagateChildrenValues(ev: CustomEvent): void;
+  _parentFormGroup: FormControlHost;
 }
 
 export declare function FormControlImplementation<T extends Constructor<LitElement>>(

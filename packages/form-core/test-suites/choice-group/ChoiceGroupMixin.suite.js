@@ -11,7 +11,6 @@ customElements.define('choice-input-foo', ChoiceInputFoo);
 class ChoiceInputBar extends ChoiceInputMixin(LionInput) {
   _syncNameToParentFormGroup() {
     // Always sync, without conditions
-    // @ts-expect-error
     this.name = this._parentFormGroup.name;
   }
 }

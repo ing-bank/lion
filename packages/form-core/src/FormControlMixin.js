@@ -692,6 +692,8 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * This function exposes descripion elements that a FormGroup should expose to its
+     * children. See FormGroupMixin.__getAllDescriptionElementsInParentChain()
      * @return {Array.<HTMLElement|undefined>}
      * @protected
      */
@@ -748,7 +750,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * Meant for Application Developers wanting to delete from aria-labelledby attribute.
+     * Meant for Application Developers wanting to delete from aria-describedby attribute.
      * @param {HTMLElement} element
      */
     removeFromAriaDescribedBy(element) {

@@ -204,31 +204,6 @@ describe('FormControlMixin', () => {
         expect(/** @type {string} */ (el._inputNode.getAttribute('aria-describedby'))).to.contain(
           `feedback-${el._inputId}`,
         );
-        // const additionalDescription = /** @type {HTMLElement} */ (wrapper.querySelector(
-        //   '#additionalDescription',
-        // ));
-        // el.addToAriaDescribedBy(additionalDescription);
-        // await el.updateComplete;
-
-        // let describedbyAttr = /** @type {string} */ (el._inputNode.getAttribute(
-        //   'aria-describedby',
-        // ));
-
-        // // Now check if ids are added to the end (not overridden)
-        // expect(describedbyAttr).to.contain(`feedback-${el._inputId}`);
-        // // Should be placed in the end
-        // expect(
-        //   describedbyAttr.indexOf(`feedback-${el._inputId}`) <
-        //     describedbyAttr.indexOf('additionalDescription'),
-        // );
-
-        // // 2b. removeFromAriaDescription()
-        // el.removeFromAriaDescribedBy(additionalDescription);
-        // await el.updateComplete;
-
-        // describedbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-describedby'));
-        // // Now check if ids are added to the end (not overridden)
-        // expect(describedbyAttr).to.not.contain(`additionalDescription`);
       });
 
       it('sorts internal elements, and allows opt-out', async () => {
