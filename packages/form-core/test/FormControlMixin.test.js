@@ -3,9 +3,11 @@ import { LitElement } from '@lion/core';
 import sinon from 'sinon';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
+import { FocusMixin } from '../src/FocusMixin.js';
+import { FormGroupMixin } from '../src/form-group/FormGroupMixin.js';
 
 /**
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControl
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
  */
 
 describe('FormControlMixin', () => {
@@ -132,21 +134,6 @@ describe('FormControlMixin', () => {
       expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
     });
 
-    it('adds aria-live="polite" to the feedback slot', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-        <${tag}>
-          ${inputSlot}
-          <div slot="feedback">Added to see attributes</div>
-        </${tag}>
-      `));
-
-      expect(
-        Array.from(el.children)
-          .find(child => child.slot === 'feedback')
-          ?.getAttribute('aria-live'),
-      ).to.equal('polite');
-    });
-
     it('clicking the label should call `_onLabelClick`', async () => {
       const spy = sinon.spy();
       const el = /** @type {FormControlMixinClass} */ (await fixture(html`
@@ -157,6 +144,77 @@ describe('FormControlMixin', () => {
       expect(spy).to.not.have.been.called;
       el._labelNode.click();
       expect(spy).to.have.been.calledOnce;
+    });
+
+    describe('Feedback slot aria-live', () => {
+      // See: https://www.w3.org/WAI/tutorials/forms/notifications/#on-focus-change
+      it(`adds aria-live="polite" to the feedback slot on focus, aria-live="assertive" to the feedback slot on blur,
+        so error messages appearing on blur will be read before those of the next input`, async () => {
+        const FormControlWithRegistrarMixinClass = class extends FormGroupMixin(LitElement) {};
+
+        const groupTagString = defineCE(FormControlWithRegistrarMixinClass);
+        const groupTag = unsafeStatic(groupTagString);
+
+        const focusableTagString = defineCE(
+          class extends FocusMixin(FormControlMixin(LitElement)) {},
+        );
+        const focusableTag = unsafeStatic(focusableTagString);
+
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="fieldset">
+              <${focusableTag} name="field1">
+                ${inputSlot}
+                <div slot="feedback">
+                  Error message with:
+                  - aria-live="polite" on focused (during typing an end user should not be bothered for best UX)
+                  - aria-live="assertive" on blur (so that the message that eventually appears
+                    on blur will be read before message of the next focused input)
+                </div>
+              </${focusableTag}>
+              <${focusableTag} name="field2">
+                ${inputSlot}
+                <div slot="feedback">
+                  Should be read after the error message of field 1
+                </div>
+              </${focusableTag}>
+              <div slot="feedback">
+                Group message... Should be read after the error message of field 2
+              </div>
+            </${groupTag}>
+            <${focusableTag} name="field3">
+              ${inputSlot}
+              <div slot="feedback">
+              Should be read after the error message of field 2
+              </div>
+            </${focusableTag}>
+          </${groupTag}>
+        `);
+
+        /**
+         * @typedef {* & import('../types/FormControlMixinTypes').FormControlHost} FormControl
+         */
+        const field1El = /** @type {FormControl} */ (formEl.querySelector('[name=field1]'));
+        const field2El = /** @type {FormControl} */ (formEl.querySelector('[name=field2]'));
+        const field3El = /** @type {FormControl} */ (formEl.querySelector('[name=field3]'));
+        const fieldsetEl = /** @type {FormControl} */ (formEl.querySelector('[name=fieldset]'));
+
+        field1El.focus();
+        expect(field1El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+
+        field2El.focus();
+        // field1El just blurred
+        expect(field1El._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        expect(field2El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+
+        field3El.focus();
+        // field2El just blurred
+        expect(field2El._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        // fieldsetEl just blurred
+
+        expect(fieldsetEl._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        expect(field3El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+      });
     });
 
     describe('Adding extra labels and descriptions', () => {

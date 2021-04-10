@@ -305,7 +305,14 @@ const FormControlMixinImplementation = superclass =>
         this.addToAriaDescribedBy(_helpTextNode, { idPrefix: 'help-text' });
       }
       if (_feedbackNode) {
-        _feedbackNode.setAttribute('aria-live', 'polite');
+        // Generic focus/blur handling that works for both Fields/FormGroups
+        this.addEventListener('focusin', () => {
+          _feedbackNode.setAttribute('aria-live', 'polite');
+        });
+        this.addEventListener('focusout', () => {
+          _feedbackNode.setAttribute('aria-live', 'assertive');
+        });
+
         this.addToAriaDescribedBy(_feedbackNode, { idPrefix: 'feedback' });
       }
       this._enhanceLightDomA11yForAdditionalSlots();
