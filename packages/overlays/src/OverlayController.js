@@ -18,13 +18,13 @@ import { containFocus } from './utils/contain-focus.js';
  * @returns {Promise<PopperModule>}
  */
 async function preloadPopper() {
-  // @ts-ignore import complains about untyped module, but we typecast it ourselves
-  return /** @type {Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
+  // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
+  return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
 const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
-// @ts-expect-error CSS not yet typed
+// @ts-expect-error [external]: CSS not yet typed
 const supportsCSSTypedObject = window.CSS && CSS.number;
 
 /**
@@ -398,7 +398,7 @@ export class OverlayController extends EventTargetShim {
     }
     /** config [l2] or [l4] */
     if (this.__isContentNodeProjected) {
-      // @ts-expect-error
+      // @ts-expect-error [external]: fix Node types
       return this.__originalContentParent?.getRootNode().host;
     }
     /** config [l1] or [l3] */
@@ -529,7 +529,7 @@ export class OverlayController extends EventTargetShim {
     if (this.placementMode === 'local') {
       // Lazily load Popper if not done yet
       if (!OverlayController.popperModule) {
-        // @ts-expect-error FIXME: for some reason createPopper is missing here
+        // a@ts-expect-error FIXME: for some reason createPopper is missing here
         OverlayController.popperModule = preloadPopper();
       }
     }
@@ -784,9 +784,9 @@ export class OverlayController extends EventTargetShim {
         const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
         const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
         if (supportsCSSTypedObject) {
-          // @ts-expect-error types attributeStyleMap + CSS.px not available yet
+          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
-          // @ts-expect-error types attributeStyleMap + CSS.px not available yet
+          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
         } else {
           document.body.style.marginRight = `${newMarginRight}px`;
@@ -1300,5 +1300,5 @@ export class OverlayController extends EventTargetShim {
     }
   }
 }
-/** @type {PopperModule | undefined} */
+/** @type {Promise<PopperModule> | undefined} */
 OverlayController.popperModule = undefined;

@@ -81,7 +81,6 @@ const FormGroupMixinImplementation = superclass =>
       return this;
     }
 
-    // @ts-ignore
     get modelValue() {
       return this._getFromAllFormElements('modelValue');
     }
@@ -306,7 +305,7 @@ const FormGroupMixinImplementation = superclass =>
      */
     _getFromAllFormElements(property, filterFn = (/** @type {FormControl} */ el) => !el.disabled) {
       const result = {};
-      // @ts-ignore
+      // @ts-ignore [allow-protected]: allow Form internals to access this protected method
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {
@@ -448,6 +447,7 @@ const FormGroupMixinImplementation = superclass =>
       const unTypedThis = /** @type {unknown} */ (this);
       let parent = /** @type {FormControlHost & { _parentFormGroup:any }} */ (unTypedThis);
       while (parent) {
+        // @ts-ignore [allow-protected]: in parent/child relations we are allowed to call protected methods
         const descriptionElements = parent._getAriaDescriptionElements();
         const orderedEls = getAriaElementsInRightDomOrder(descriptionElements, { reverse: true });
         orderedEls.forEach(el => {

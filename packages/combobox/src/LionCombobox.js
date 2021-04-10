@@ -20,8 +20,8 @@ import { LionListbox } from '@lion/listbox';
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-// @ts-expect-error static properties are not compatible
 export class LionCombobox extends OverlayMixin(LionListbox) {
+  /** @type {any} */
   static get properties() {
     return {
       autocomplete: { type: String, reflect: true },
@@ -77,7 +77,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupInputTemplate() {
-    // @ts-ignore
     return html`
       <div class="input-group__input">
         <slot name="selection-display"></slot>
@@ -111,7 +110,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   /**
    * @type {SlotsMap}
    */
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -317,11 +315,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       this.__setComboboxDisabledAndReadOnly();
     }
     if (name === 'modelValue' && this.modelValue && this.modelValue !== oldValue) {
-      if (this._syncToTextboxCondition(this.modelValue, this.__oldModelValue)) {
+      if (this._syncToTextboxCondition(this.modelValue, this._oldModelValue)) {
         if (!this.multipleChoice) {
           this._setTextboxValue(this.modelValue);
         } else {
-          this._syncToTextboxMultiple(this.modelValue, this.__oldModelValue);
+          this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
         }
       }
     }
@@ -482,7 +480,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (!this.multipleChoice) {
       if (
         this.checkedIndex !== -1 &&
-        this._syncToTextboxCondition(this.modelValue, this.__oldModelValue, {
+        this._syncToTextboxCondition(this.modelValue, this._oldModelValue, {
           phase: 'overlay-close',
         })
       ) {
@@ -491,7 +489,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         ].choiceValue;
       }
     } else {
-      this._syncToTextboxMultiple(this.modelValue, this.__oldModelValue);
+      this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
     }
   }
 

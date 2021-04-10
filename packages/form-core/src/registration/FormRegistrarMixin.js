@@ -4,13 +4,11 @@ import { FormControlsCollection } from './FormControlsCollection.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
+ * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
- */
-
-/**
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
@@ -28,6 +26,7 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 const FormRegistrarMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   class extends FormRegisteringMixin(superclass) {
+    /** @type {any} */
     static get properties() {
       return {
         /**
@@ -131,9 +130,8 @@ const FormRegistrarMixinImplementation = superclass =>
      */
     addFormElement(child, indexToInsertAt) {
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
-      // @ts-expect-error FormControl needs to be at the bottom of the hierarchy
       // eslint-disable-next-line no-param-reassign
-      child._parentFormGroup = this;
+      child._parentFormGroup = /** @type {* & FormRegistrarHost} */ (this);
 
       // 1. Add children as array element
       if (indexToInsertAt >= 0) {
@@ -149,7 +147,6 @@ const FormRegistrarMixinImplementation = superclass =>
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError('You need to define a name');
         }
-        // @ts-expect-error this._isFormOrFieldset true means we can assume `this.name` exists
         if (name === this.name) {
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError(`You can not have the same name "${name}" as your parent`);
@@ -176,7 +173,7 @@ const FormRegistrarMixinImplementation = superclass =>
     }
 
     /**
-     * @param {FormRegisteringHost} child the child element (field)
+     * @param {FormControlHost} child the child element (field)
      */
     removeFormElement(child) {
       // 1. Handle array based children
@@ -187,7 +184,6 @@ const FormRegistrarMixinImplementation = superclass =>
 
       // 2. Handle name based object keys
       if (this._isFormOrFieldset) {
-        // @ts-expect-error
         const { name } = child; // FIXME: <-- ElementWithParentFormGroup should become LionFieldWithParentFormGroup so that "name" exists
         if (name.substr(-2) === '[]' && this.formElements[name]) {
           const idx = this.formElements[name].indexOf(child);

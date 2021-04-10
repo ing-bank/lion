@@ -10,7 +10,7 @@ export declare class SlotHost {
   /**
    * Obtains all the slots to create
    */
-  get slots(): SlotsMap;
+  public get slots(): SlotsMap;
 
   /**
    * Starts the creation of slots

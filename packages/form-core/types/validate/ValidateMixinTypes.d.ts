@@ -30,7 +30,6 @@ export declare class ValidateHost {
   fieldName: string;
 
   static validationTypes: string[];
-  slots: SlotsMap;
   _feedbackNode: LionValidationFeedback;
   _allValidators: Validator[];
 

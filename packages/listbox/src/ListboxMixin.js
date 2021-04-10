@@ -10,6 +10,7 @@ import { LionOptions } from './LionOptions.js';
 
 /**
  * @typedef {import('@lion/form-core/types/FormControlMixinTypes').HTMLElementWithValue} HTMLElementWithValue
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('./LionOption').LionOption} LionOption
  * @typedef {import('../types/ListboxMixinTypes').ListboxMixin} ListboxMixin
  * @typedef {import('../types/ListboxMixinTypes').ListboxHost} ListboxHost
@@ -54,6 +55,7 @@ const ListboxMixinImplementation = superclass =>
   class ListboxMixin extends FormControlMixin(
     ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
   ) {
+    /** @type {any} */
     static get properties() {
       return {
         orientation: String,
@@ -117,7 +119,6 @@ const ListboxMixinImplementation = superclass =>
       };
     }
 
-    // @ts-ignore
     get slots() {
       return {
         ...super.slots,
@@ -267,7 +268,10 @@ const ListboxMixinImplementation = superclass =>
       this._listboxActiveDescendant = null;
       /** @private */
       this.__hasInitialSelectedFormElement = false;
-      /** @protected */
+      /**
+       * @type {'fieldset' | 'child' | 'choice-group'}
+       * @protected
+       */
       this._repropagationRole = 'choice-group'; // configures FormControlMixin
 
       /**
@@ -279,9 +283,9 @@ const ListboxMixinImplementation = superclass =>
 
       /**
        * @type {string | string[] | undefined}
-       * @private
+       * @protected
        */
-      this.__oldModelValue = undefined;
+      this._oldModelValue = undefined;
 
       /**
        * @type {EventListener}
@@ -403,12 +407,10 @@ const ListboxMixinImplementation = superclass =>
 
     /**
      * @enhance FormRegistrarMixin: make sure children have specific default states when added
-     * @param {LionOption} child
+     * @param {FormControlHost & LionOption} child
      * @param {Number} indexToInsertAt
      */
-    // @ts-expect-error
     addFormElement(child, indexToInsertAt) {
-      // @ts-expect-error
       super.addFormElement(/** @type {FormControl} */ child, indexToInsertAt);
       // we need to adjust the elements being registered
       /* eslint-disable no-param-reassign */
@@ -426,7 +428,7 @@ const ListboxMixinImplementation = superclass =>
       });
 
       this.__proxyChildModelValueChanged(
-        /** @type {CustomEvent & { target: LionOption; }} */ ({ target: child }),
+        /** @type {CustomEvent & { target: FormControlHost & LionOption; }} */ ({ target: child }),
       );
       this.resetInteractionState();
       /* eslint-enable no-param-reassign */
@@ -760,7 +762,7 @@ const ListboxMixinImplementation = superclass =>
       this.__onChildCheckedChanged(ev);
 
       // don't send this.modelValue as oldValue, since it will take modelValue getter which takes it from child elements, which is already the updated value
-      this.requestUpdate('modelValue', this.__oldModelValue);
+      this.requestUpdate('modelValue', this._oldModelValue);
       // only send model-value-changed if the event is caused by one of its children
       if (ev.detail && ev.detail.formPath) {
         this.dispatchEvent(
@@ -773,7 +775,7 @@ const ListboxMixinImplementation = superclass =>
           }),
         );
       }
-      this.__oldModelValue = this.modelValue;
+      this._oldModelValue = this.modelValue;
     }
 
     /**

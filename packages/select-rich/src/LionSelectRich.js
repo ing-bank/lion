@@ -68,7 +68,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     `;
   }
 
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,
@@ -98,8 +97,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   get _scrollTargetNode() {
     // TODO: should this be defined here or in extension layer?
-    // @ts-expect-error we allow the _overlayContentNode to define its own _scrollTargetNode
-    return this._overlayContentNode._scrollTargetNode || this._overlayContentNode;
+    return /** @type {HTMLElement} */ (
+      /** @type {HTMLElement & {_scrollTargetNode?: HTMLElement}} */ (this._overlayContentNode)
+        ._scrollTargetNode || this._overlayContentNode
+    );
   }
 
   constructor() {

@@ -218,7 +218,7 @@ describe('lion-select', () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
       await fixture(html`
-        <lion-select @model-value-changed="${spy}">
+        <lion-select @model-value-changed="${/** @type {function} */ (spy)}">
           <select slot="input">
             <option value="option1"></option>
             <option value="option2"></option>
@@ -310,7 +310,7 @@ describe('lion-fieldset', () => {
     it(getFirstPaintTitle(firstStampCount), async () => {
       const spy = sinon.spy();
       await fixture(html`
-        <lion-fieldset name="parent" @model-value-changed="${spy}">
+        <lion-fieldset name="parent" @model-value-changed="${/** @type {function} */ (spy)}">
           <lion-input name="input"></lion-input>
         </lion-fieldset>
       `);

@@ -37,7 +37,6 @@ const ChoiceGroupMixinImplementation = superclass =>
       };
     }
 
-    // @ts-ignore
     get modelValue() {
       const elems = this._getCheckedElements();
       if (this.multipleChoice) {
@@ -62,13 +61,13 @@ const ChoiceGroupMixinImplementation = superclass =>
         this.registrationComplete.then(() => {
           this.__isInitialModelValue = false;
           this._setCheckedElements(value, checkCondition);
-          this.requestUpdate('modelValue', this.__oldModelValue);
+          this.requestUpdate('modelValue', this._oldModelValue);
         });
       } else {
         this._setCheckedElements(value, checkCondition);
-        this.requestUpdate('modelValue', this.__oldModelValue);
+        this.requestUpdate('modelValue', this._oldModelValue);
       }
-      this.__oldModelValue = this.modelValue;
+      this._oldModelValue = this.modelValue;
     }
 
     get serializedValue() {
@@ -229,7 +228,6 @@ const ChoiceGroupMixinImplementation = superclass =>
      */
     _throwWhenInvalidChildModelValue(child) {
       if (
-        // @ts-expect-error
         typeof child.modelValue.checked !== 'boolean' ||
         !Object.prototype.hasOwnProperty.call(child.modelValue, 'value')
       ) {
@@ -350,8 +348,22 @@ const ChoiceGroupMixinImplementation = superclass =>
         }
       });
       this.__setChoiceGroupTouched();
-      this.requestUpdate('modelValue', this.__oldModelValue);
-      this.__oldModelValue = this.modelValue;
+      this.requestUpdate('modelValue', this._oldModelValue);
+      this._oldModelValue = this.modelValue;
+    }
+
+    /**
+     * Don't repropagate unchecked single choice choiceInputs
+     * @param {FormControlHost & ChoiceInputHost} target
+     * @protected
+     * @overridable
+     */
+    _repropagationCondition(target) {
+      return !(
+        this._repropagationRole === 'choice-group' &&
+        !this.multipleChoice &&
+        !target.checked
+      );
     }
   };
 

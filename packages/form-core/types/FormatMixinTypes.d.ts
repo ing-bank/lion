@@ -13,7 +13,7 @@ export declare class FormatHost {
   __isHandlingUserInput: boolean;
 
   parser(v: string, opts: FormatNumberOptions): unknown;
-  formatter(v: unknown, opts: FormatNumberOptions): string;
+  formatter(v: unknown, opts?: FormatNumberOptions): string;
   serializer(v: unknown): string;
   deserializer(v: string): unknown;
   preprocessor(v: string): string;

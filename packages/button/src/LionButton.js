@@ -167,7 +167,6 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
     ));
   }
 
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,

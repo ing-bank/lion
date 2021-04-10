@@ -30,14 +30,13 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    * Therefore we do a full override and typecast to an intersection type that includes LionSwitchButton
    * @returns {LionSwitchButton}
    */
-  // @ts-ignore
+  // @ts-ignore [editor]: prevents vscode from complaining
   get _inputNode() {
     return /** @type {LionSwitchButton} */ (Array.from(this.children).find(
       el => el.slot === 'input',
     ));
   }
 
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,

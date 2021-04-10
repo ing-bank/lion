@@ -15,7 +15,8 @@ export interface ChoiceInputSerializedValue {
 }
 
 export declare class ChoiceInputHost {
-  modelValue: ChoiceInputModelValue;
+  get modelValue(): ChoiceInputModelValue;
+  set modelValue(value: ChoiceInputModelValue);
   serializedValue: ChoiceInputSerializedValue;
 
   checked: boolean;
@@ -71,7 +72,7 @@ export declare class ChoiceInputHost {
 
   type: string;
 
-  _inputNode: HTMLElement;
+  get _inputNode(): HTMLElement;
 }
 
 export declare function ChoiceInputImplementation<T extends Constructor<LitElement>>(

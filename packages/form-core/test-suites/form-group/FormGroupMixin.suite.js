@@ -332,11 +332,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
       };
       expect(el.modelValue).to.deep.equal(initState);
 
-      // @ts-expect-error
       el.modelValue = undefined;
       expect(el.modelValue).to.deep.equal(initState);
 
-      // @ts-expect-error
       el.modelValue = null;
       expect(el.modelValue).to.deep.equal(initState);
     });

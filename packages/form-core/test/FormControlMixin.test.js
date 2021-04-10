@@ -4,6 +4,10 @@ import sinon from 'sinon';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
+/**
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControl
+ */
+
 describe('FormControlMixin', () => {
   const inputSlot = html`<input slot="input" />`;
 
@@ -173,10 +177,13 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
         await el.updateComplete;
 
+        // @ts-ignore allow protected accessors in tests
+        const inputId = el._inputId;
+
         // 1a. addToAriaLabelledBy()
         // Check if the aria attr is filled initially
         expect(/** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'))).to.contain(
-          `label-${el._inputId}`,
+          `label-${inputId}`,
         );
         const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
           '#additionalLabel',
@@ -188,8 +195,7 @@ describe('FormControlMixin', () => {
         expect(labelledbyAttr).to.contain(`additionalLabel`);
         // Should be placed in the end
         expect(
-          labelledbyAttr.indexOf(`label-${el._inputId}`) <
-            labelledbyAttr.indexOf('additionalLabel'),
+          labelledbyAttr.indexOf(`label-${inputId}`) < labelledbyAttr.indexOf('additionalLabel'),
         );
 
         // 1b. removeFromAriaLabelledBy()
@@ -202,7 +208,7 @@ describe('FormControlMixin', () => {
         // 2a. addToAriaDescribedBy()
         // Check if the aria attr is filled initially
         expect(/** @type {string} */ (el._inputNode.getAttribute('aria-describedby'))).to.contain(
-          `feedback-${el._inputId}`,
+          `feedback-${inputId}`,
         );
       });
 
@@ -368,47 +374,6 @@ describe('FormControlMixin', () => {
         const formEv = formSpy.firstCall.args[0];
         expect(formEv.target).to.equal(formEl);
         expect(formEv.detail.formPath).to.eql([fieldEl, fieldsetEl, formEl]);
-      });
-
-      it('sends one event for single select choice-groups', async () => {
-        const formSpy = sinon.spy();
-        const choiceGroupSpy = sinon.spy();
-        const formEl = await fixture(html`
-          <${groupTag} name="form">
-            <${groupTag} name="choice-group" ._repropagationRole=${'choice-group'}>
-              <${tag} name="choice-group" id="option1" .checked=${true}></${tag}>
-              <${tag} name="choice-group" id="option2"></${tag}>
-            </${groupTag}>
-          </${groupTag}>
-        `);
-        const choiceGroupEl = formEl.querySelector('[name=choice-group]');
-        /** @typedef {{ checked: boolean }} checkedInterface */
-        const option1El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option1',
-        ));
-        const option2El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option2',
-        ));
-        formEl.addEventListener('model-value-changed', formSpy);
-        choiceGroupEl?.addEventListener('model-value-changed', choiceGroupSpy);
-
-        // Simulate check
-        option2El.checked = true;
-        option2El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
-        option1El.checked = false;
-        option1El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
-
-        expect(choiceGroupSpy.callCount).to.equal(1);
-        const choiceGroupEv = choiceGroupSpy.firstCall.args[0];
-        expect(choiceGroupEv.target).to.equal(choiceGroupEl);
-        expect(choiceGroupEv.detail.formPath).to.eql([choiceGroupEl]);
-        expect(choiceGroupEv.detail.isTriggeredByUser).to.be.false;
-
-        expect(formSpy.callCount).to.equal(1);
-        const formEv = formSpy.firstCall.args[0];
-        expect(formEv.target).to.equal(formEl);
-        expect(formEv.detail.formPath).to.eql([choiceGroupEl, formEl]);
-        expect(formEv.detail.isTriggeredByUser).to.be.false;
       });
 
       it('sets "isTriggeredByUser" event detail when event triggered by user', async () => {

@@ -8,7 +8,7 @@ import { ValidateHost } from '../validate/ValidateMixinTypes';
 
 export declare class FormGroupHost {
   protected static _addDescriptionElementIdsToField(): void;
-  _inputNode: HTMLElement;
+  get _inputNode(): HTMLElement;
   submitGroup(): void;
   resetGroup(): void;
   prefilled: boolean;
@@ -16,7 +16,8 @@ export declare class FormGroupHost {
   dirty: boolean;
   submitted: boolean;
   serializedValue: { [key: string]: any };
-  modelValue: { [x: string]: any };
+  get modelValue(): { [x: string]: any };
+  set modelValue(value: { [x: string]: any });
   formattedValue: string;
   children: Array<HTMLElement & FormControlHost>;
   _initialModelValue: { [x: string]: any };

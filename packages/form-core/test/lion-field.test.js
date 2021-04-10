@@ -51,7 +51,9 @@ function getSlot(el, slot) {
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(getSlot(el, 'input').id).to.equal(el._inputId);
+    // @ts-ignore allow protected accessors in tests
+    const inputId = el._inputId;
+    expect(getSlot(el, 'input').id).to.equal(inputId);
   });
 
   it(`has a fieldName based on the label`, async () => {
@@ -168,10 +170,11 @@ describe('<lion-field>', () => {
           </${tag}>
         `));
       const nativeInput = getSlot(el, 'input');
-
-      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
+      // @ts-ignore allow protected accessors in tests
+      const inputId = el._inputId;
+      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`feedback-${inputId}`);
     });
 
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
@@ -186,11 +189,13 @@ describe('<lion-field>', () => {
         `));
 
       const nativeInput = getSlot(el, 'input');
+      // @ts-ignore allow protected accessors in tests
+      const inputId = el._inputId;
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
-        `before-${el._inputId} after-${el._inputId}`,
+        `before-${inputId} after-${inputId}`,
       );
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(
-        `prefix-${el._inputId} suffix-${el._inputId}`,
+        `prefix-${inputId} suffix-${inputId}`,
       );
     });
   });

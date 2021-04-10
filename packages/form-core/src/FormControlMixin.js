@@ -1,7 +1,7 @@
 import { css, dedupeMixin, html, nothing, SlotMixin, DisabledMixin } from '@lion/core';
-import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 import { Unparseable } from './validate/Unparseable.js';
+import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
@@ -9,7 +9,10 @@ import { Unparseable } from './validate/Unparseable.js';
  * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
  * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('./validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback
  * @typedef {import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').HTMLElementWithValue} HTMLElementWithValue
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
@@ -162,7 +165,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {SlotsMap}
+     * @type {SlotsMap}
      */
     get slots() {
       return {
@@ -181,27 +184,25 @@ const FormControlMixinImplementation = superclass =>
     }
 
     get _inputNode() {
-      return this.__getDirectSlotChild('input');
+      return /** @type {HTMLElementWithValue} */ (this.__getDirectSlotChild('input'));
     }
 
     get _labelNode() {
-      return this.__getDirectSlotChild('label');
+      return /** @type {HTMLElement} */ (this.__getDirectSlotChild('label'));
     }
 
     get _helpTextNode() {
-      return this.__getDirectSlotChild('help-text');
+      return /** @type {HTMLElement} */ (this.__getDirectSlotChild('help-text'));
     }
 
     get _feedbackNode() {
-      return /** @type {import('./validate/LionValidationFeedback').LionValidationFeedback | undefined} */ (this.__getDirectSlotChild(
-        'feedback',
-      ));
+      return /** @type {LionValidationFeedback} */ (this.__getDirectSlotChild('feedback'));
     }
 
     constructor() {
       super();
-      /** @type {string | undefined} */
-      this.name = undefined;
+      /** @type {string} */
+      this.name = '';
       /** @type {string} */
       this._inputId = uuid(this.localName);
       /** @type {HTMLElement[]} */
@@ -211,6 +212,8 @@ const FormControlMixinImplementation = superclass =>
       /** @type {'child'|'choice-group'|'fieldset'} */
       this._repropagationRole = 'child';
       this._isRepropagationEndpoint = false;
+      /** @private */
+      this.__label = '';
       this.addEventListener(
         'model-value-changed',
         /** @type {EventListenerOrEventListenerObject} */ (this.__repropagateChildrenValues),
@@ -340,7 +343,6 @@ const FormControlMixinImplementation = superclass =>
      * @param {string} attrName
      * @param {HTMLElement[]} nodes
      * @param {boolean|undefined} reorder
-     * @private
      */
     __reflectAriaAttr(attrName, nodes, reorder) {
       if (this._inputNode) {
@@ -538,17 +540,14 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @param {?} modelValue
+     * @param {any} modelValue
      * @return {boolean}
      * @protected
      */
-    // @ts-ignore FIXME: Move to FormatMixin? Since there we have access to modelValue prop
-    _isEmpty(modelValue = this.modelValue) {
+    _isEmpty(modelValue = /** @type {any} */ (this).modelValue) {
       let value = modelValue;
-      // @ts-ignore
-      if (this.modelValue instanceof Unparseable) {
-        // @ts-ignore
-        value = this.modelValue.viewValue;
+      if (/** @type {any} */ (this).modelValue instanceof Unparseable) {
+        value = /** @type {any} */ (this).modelValue.viewValue;
       }
 
       // Checks for empty platform types: Objects, Arrays, Dates
@@ -638,7 +637,6 @@ const FormControlMixinImplementation = superclass =>
      */
     static get styles() {
       return [
-        .../** @type {CSSResultArray} */ (super.styles || []),
         css`
           /**********************
             {block} .form-field
@@ -695,7 +693,7 @@ const FormControlMixinImplementation = superclass =>
     /**
      * This function exposes descripion elements that a FormGroup should expose to its
      * children. See FormGroupMixin.__getAllDescriptionElementsInParentChain()
-     * @return {Array.<HTMLElement|undefined>}
+     * @return {Array.<HTMLElement>}
      * @protected
      */
     // Returns dom references to all elements that should be referred to by field(s)
@@ -767,7 +765,6 @@ const FormControlMixinImplementation = superclass =>
     /**
      * @param {string} slotName
      * @return {HTMLElement | undefined}
-     * @private
      */
     __getDirectSlotChild(slotName) {
       return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
@@ -775,7 +772,6 @@ const FormControlMixinImplementation = superclass =>
       );
     }
 
-    /** @private */
     __dispatchInitialModelValueChangedEvent() {
       // When we are not a fieldset / choice-group, we don't need to wait for our children
       // to send a unified event
@@ -811,7 +807,6 @@ const FormControlMixinImplementation = superclass =>
 
     /**
      * @param {CustomEvent} ev
-     * @private
      */
     __repropagateChildrenValues(ev) {
       // Allows sub classes to internally listen to the children change events
@@ -882,19 +877,15 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * TODO: Extend this in choice group so that target is always a choice input and multipleChoice exists.
-     * This will fix the types and reduce the need for ignores/expect-errors
-     * @param {EventTarget & ChoiceInputHost} target
+     * Based on provided target, this condition determines whether received model-value-changed
+     * event should be repropagated
+     * @param {FormControlHost} target
      * @protected
      * @overridable
      */
+    // eslint-disable-next-line class-methods-use-this
     _repropagationCondition(target) {
-      return !(
-        this._repropagationRole === 'choice-group' &&
-        // @ts-expect-error multipleChoice is not directly available but only as side effect
-        !this.multipleChoice &&
-        !target.checked
-      );
+      return Boolean(target);
     }
 
     /**

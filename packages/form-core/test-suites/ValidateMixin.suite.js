@@ -682,7 +682,6 @@ export function runValidateMixinSuite(customConfig) {
       it('calls "._isEmpty" when provided (useful for different modelValues)', async () => {
         class _isEmptyValidate extends ValidateMixin(LitElement) {
           _isEmpty() {
-            // @ts-expect-error
             return this.modelValue.model === '';
           }
         }

@@ -14,6 +14,7 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
  * enabling SubClassers to style based on those states
  */
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
+  /** @type {any} */
   static get properties() {
     return {
       active: {
