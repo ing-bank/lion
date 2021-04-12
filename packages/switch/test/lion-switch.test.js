@@ -1,11 +1,22 @@
 import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
+import { Validator } from '@lion/form-core';
+import { LionSwitch } from '@lion/switch';
 import '@lion/switch/define';
 
 /**
- * @typedef {import('../src/LionSwitch').LionSwitch} LionSwitch
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
+
+const IsTrue = class extends Validator {
+  static get validatorName() {
+    return 'IsTrue';
+  }
+
+  execute() {
+    return true;
+  }
+};
 
 /**
  * @param {LionSwitch} lionSwitchEl
@@ -37,6 +48,18 @@ describe('lion-switch', () => {
     const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
     el._labelNode.click();
     expect(el.checked).to.be.false;
+  });
+
+  it('clicking the label should focus the toggle button', async () => {
+    const el = await fixture(html`<lion-switch label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(document.activeElement).to.equal(el._inputNode);
+  });
+
+  it('clicking the label should not focus the toggle button when disabled', async () => {
+    const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
+    el._labelNode.click();
+    expect(document.activeElement).to.not.equal(el._inputNode);
   });
 
   it('should sync its "disabled" state to child button', async () => {
@@ -126,8 +149,44 @@ describe('lion-switch', () => {
     expect(handlerSpy.callCount).to.equal(1);
   });
 
-  it('is submitted by default', async () => {
-    const el = await fixture(html`<lion-switch></lion-switch>`);
-    expect(el.submitted).to.be.true;
+  it('can be configured to show feedback messages immediately', async () => {
+    const tagName = 'custom-switch';
+    if (!customElements.get(tagName)) {
+      customElements.define(
+        tagName,
+        class CustomSwitch extends LionSwitch {
+          static get validationTypes() {
+            return [...super.validationTypes, 'info'];
+          }
+
+          /**
+           * @param {string} type
+           * @param {object} meta
+           */
+          _showFeedbackConditionFor(type, meta) {
+            if (type === 'info') {
+              return true;
+            }
+            return super._showFeedbackConditionFor(type, meta);
+          }
+        },
+      );
+    }
+    const el = await fixture(
+      html`<custom-switch
+        .validators="${[new IsTrue({}, { type: 'info' })]}"
+        .showFeedbackConditionFor="${(
+          /** @type {string} */ type,
+          /** @type {object} */ meta,
+          /** @type {(type: string, meta: object) => any} */ defaultCondition,
+        ) => {
+          if (type === 'info') {
+            return true;
+          }
+          return defaultCondition(type, meta);
+        }}"
+      ></custom-switch>`,
+    );
+    expect(el.showsFeedbackFor).to.eql(['info']);
   });
 });

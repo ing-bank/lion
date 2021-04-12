@@ -41,6 +41,13 @@ export const validation = () => {
         static get validationTypes() {
           return [...super.validationTypes, 'info'];
         }
+
+        _showFeedbackConditionFor(type) {
+          if (type === 'info') {
+            return true;
+          }
+          return super._showFeedbackConditionFor(type);
+        }
       },
     );
   }

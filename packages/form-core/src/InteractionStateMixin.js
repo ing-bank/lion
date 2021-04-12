@@ -3,6 +3,7 @@ import { FormControlMixin } from './FormControlMixin.js';
 
 /**
  * @typedef {import('../types/InteractionStateMixinTypes').InteractionStateMixin} InteractionStateMixin
+ * @typedef {import('../types/InteractionStateMixinTypes').InteractionStates} InteractionStates
  */
 
 /**
@@ -190,9 +191,24 @@ const InteractionStateMixinImplementation = superclass =>
      *   When a user enters a field without altering the value(making it `dirty`),
      *   an error message shouldn't be shown either.
      * @protected
+     * @param {string} type
+     * @param {InteractionStates} meta
      */
-    _showFeedbackConditionFor() {
-      return (this.touched && this.dirty) || this.prefilled || this.submitted;
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _showFeedbackConditionFor(type, meta) {
+      return (meta.touched && meta.dirty) || meta.prefilled || meta.submitted;
+    }
+
+    get _feedbackConditionMeta() {
+      return {
+        // @ts-ignore
+        ...super._feedbackConditionMeta,
+        submitted: this.submitted,
+        touched: this.touched,
+        dirty: this.dirty,
+        filled: this.filled,
+        prefilled: this.prefilled,
+      };
     }
   };
 
