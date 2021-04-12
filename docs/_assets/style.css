@@ -16,11 +16,11 @@ mdjs-preview {
   font-weight: normal;
 }
 
-#main-header a.current.active {
+#main-header a.active {
   font-weight: bold;
 }
 
-#main-header .current.active {
+#main-header .active {
   display: block;
 }
 
@@ -31,12 +31,6 @@ mdjs-preview {
   #main-header a.social-link {
     display: block;
     width: 20px;
-  }
-}
-
-@media only screen and (min-width: 1024px) {
-  #main-header a[href='/blog/'] {
-    display: block;
   }
 }
 
