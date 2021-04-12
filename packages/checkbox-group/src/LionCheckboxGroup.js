@@ -9,12 +9,4 @@ export class LionCheckboxGroup extends ChoiceGroupMixin(FormGroupMixin(LitElemen
     super();
     this.multipleChoice = true;
   }
-
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    if (changedProperties.has('name') && !String(this.name).match(/\[\]$/)) {
-      throw new Error('Names should end in "[]".');
-    }
-  }
 }
