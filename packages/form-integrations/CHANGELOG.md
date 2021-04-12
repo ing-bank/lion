@@ -1,5 +1,70 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 43e4bb81: Type fixes and enhancements:
+
+  - all protected/private entries added to form-core type definitions, and their dependents were fixed
+  - a lot @ts-expect-error and @ts-ignore (all `get slots()` and `get modelValue()` issues are fixed)
+  - categorized @ts-expect-error / @ts-ignore into:
+    - [external]: when a 3rd party didn't ship types (could also be browser specs)
+    - [allow-protected]: when we are allowed to know about protected methods. For instance when code
+      resides in the same package
+    - [allow-private]: when we need to check a private value inside a test
+    - [allow]: miscellaneous allows
+    - [editor]: when the editor complains, but the cli/ci doesn't
+
+### Patch Changes
+
+- 38297d07: ## Bug fixes
+
+  **form-core**: registrationComplete callback executed before initial interaction states are computed
+
+- 77a04245: add protected and private type info
+- 6ae7a5e3: Add `clear()` interface to choiceGroups
+- Updated dependencies [38297d07]
+- Updated dependencies [3b5ed322]
+- Updated dependencies [97b8592c]
+- Updated dependencies [77a04245]
+- Updated dependencies [53167fd2]
+- Updated dependencies [d4dcb7c1]
+- Updated dependencies [0dc706b6]
+- Updated dependencies [181a1d45]
+- Updated dependencies [fb1522dd]
+- Updated dependencies [75af80be]
+- Updated dependencies [652f267b]
+- Updated dependencies [0e910e3f]
+- Updated dependencies [991f1f54]
+- Updated dependencies [cc02ae24]
+- Updated dependencies [e301ef96]
+- Updated dependencies [43e4bb81]
+- Updated dependencies [6ae7a5e3]
+  - @lion/form-core@0.11.0
+  - @lion/checkbox-group@0.16.0
+  - @lion/fieldset@0.18.0
+  - @lion/form@0.10.0
+  - @lion/input-amount@0.12.0
+  - @lion/input-date@0.11.0
+  - @lion/input-datepicker@0.21.0
+  - @lion/input-email@0.12.0
+  - @lion/input-iban@0.14.0
+  - @lion/input-range@0.8.0
+  - @lion/input-stepper@0.4.0
+  - @lion/radio-group@0.15.0
+  - @lion/button@0.11.0
+  - @lion/combobox@0.5.0
+  - @lion/core@0.16.0
+  - @lion/input@0.13.0
+  - @lion/listbox@0.7.0
+  - @lion/localize@0.18.0
+  - @lion/select@0.11.0
+  - @lion/select-rich@0.24.0
+  - @lion/switch@0.15.0
+  - @lion/textarea@0.11.0
+  - @lion/validate-messages@0.5.4
+
 ## 0.5.4
 
 ### Patch Changes

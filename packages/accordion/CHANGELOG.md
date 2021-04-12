@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+- Updated dependencies [77a04245]
+- Updated dependencies [43e4bb81]
+  - @lion/core@0.16.0
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.14.2
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+- Updated dependencies [77a04245]
+- Updated dependencies [43e4bb81]
+  - @lion/core@0.16.0
+  - @lion/localize@0.18.0
+
 ## 0.14.1
 
 ### Patch Changes

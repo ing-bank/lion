@@ -1,6 +1,6 @@
 {
   "name": "@lion/radio-group",
-  "version": "0.14.3",
+  "version": "0.15.0",
   "description": "Manage a group of choices",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,9 +38,9 @@
     "lion-radio-group.js"
   ],
   "dependencies": {
-    "@lion/core": "0.15.0",
-    "@lion/form-core": "0.10.2",
-    "@lion/input": "0.12.3"
+    "@lion/core": "0.16.0",
+    "@lion/form-core": "0.11.0",
+    "@lion/input": "0.13.0"
   },
   "keywords": [
     "lion",

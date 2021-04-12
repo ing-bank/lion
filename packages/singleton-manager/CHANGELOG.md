@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.1
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+
 ## 1.4.0
 
 ### Minor Changes
