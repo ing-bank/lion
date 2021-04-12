@@ -1,7 +1,10 @@
 import { dedupeMixin } from '@lion/core';
 
 /**
+ * @typedef {import('@lion/core').LitElement} LitElement
+ * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringMixin} FormRegisteringMixin
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
  */
@@ -12,7 +15,7 @@ import { dedupeMixin } from '@lion/core';
  * This Mixin registers a form element to a Registrar
  *
  * @type {FormRegisteringMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<HTMLElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const FormRegisteringMixinImplementation = superclass =>
   class extends superclass {
@@ -23,11 +26,7 @@ const FormRegisteringMixinImplementation = superclass =>
     }
 
     connectedCallback() {
-      // @ts-expect-error check it anyway, because could be lit-element extension
-      if (super.connectedCallback) {
-        // @ts-expect-error check it anyway, because could be lit-element extension
-        super.connectedCallback();
-      }
+      super.connectedCallback();
       this.dispatchEvent(
         new CustomEvent('form-element-register', {
           detail: { element: this },
@@ -37,13 +36,9 @@ const FormRegisteringMixinImplementation = superclass =>
     }
 
     disconnectedCallback() {
-      // @ts-expect-error check it anyway, because could be lit-element extension
-      if (super.disconnectedCallback) {
-        // @ts-expect-error check it anyway, because could be lit-element extension
-        super.disconnectedCallback();
-      }
+      super.disconnectedCallback();
       if (this._parentFormGroup) {
-        this._parentFormGroup.removeFormElement(this);
+        this._parentFormGroup.removeFormElement(/** @type {* & FormRegisteringHost} */ (this));
       }
     }
   };

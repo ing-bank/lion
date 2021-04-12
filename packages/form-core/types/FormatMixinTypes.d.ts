@@ -5,36 +5,32 @@ import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FormatHost {
+  parser(v: string, opts: FormatNumberOptions): unknown;
+  formatter(v: unknown, opts?: FormatNumberOptions): string;
+  serializer(v: unknown): string;
+  deserializer(v: string): unknown;
+  preprocessor(v: string): string;
   formattedValue: string;
   serializedValue: string;
   formatOn: string;
   formatOptions: FormatNumberOptions;
-  __preventRecursiveTrigger: boolean;
-  __isHandlingUserInput: boolean;
-
-  parser(v: string, opts: FormatNumberOptions): unknown;
-  formatter(v: unknown, opts: FormatNumberOptions): string;
-  serializer(v: unknown): string;
-  deserializer(v: string): unknown;
-  preprocessor(v: string): string;
-
   get value(): string;
   set value(value: string);
 
-  _calculateValues(opts: { source: 'model' | 'serialized' | 'formatted' | null }): void;
-  private __callParser(value: string | undefined): object;
-  __callFormatter(): string;
+  protected _isHandlingUserInput: boolean;
+  protected _calculateValues(opts: { source: 'model' | 'serialized' | 'formatted' | null }): void;
   protected _onModelValueChanged(arg: { modelValue: unknown }): void;
-  _dispatchModelValueChangedEvent(): void;
+  protected _dispatchModelValueChangedEvent(): void;
   protected _syncValueUpwards(): void;
-  _reflectBackFormattedValueToUser(): void;
-  _reflectBackFormattedValueDebounced(): void;
-  _reflectBackOn(): boolean;
+  protected _reflectBackFormattedValueToUser(): void;
+  protected _reflectBackFormattedValueDebounced(): void;
+  protected _reflectBackOn(): boolean;
   protected _proxyInputEvent(): void;
-  _onUserInputChanged(): void;
+  protected _onUserInputChanged(): void;
 
-  connectedCallback(): void;
-  disconnectedCallback(): void;
+  private __preventRecursiveTrigger: boolean;
+  private __callParser(value: string | undefined): object;
+  private __callFormatter(): string;
 }
 
 export declare function FormatImplementation<T extends Constructor<LitElement>>(

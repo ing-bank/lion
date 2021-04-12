@@ -5,12 +5,8 @@ import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPortalMixin.js';
 
 /**
- * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
- */
-
-/**
  * @typedef {Object} customConfig
- * @property {typeof LitElement} [baseElement]
+ * @property {typeof LitElement|undefined} [baseElement]
  * @property {string} [customConfig.suffix]
  * @property {string} [customConfig.parentTagString]
  * @property {string} [customConfig.childTagString]
@@ -22,7 +18,6 @@ import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPorta
  */
 export const runRegistrationSuite = customConfig => {
   const cfg = {
-    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/38535 fixed in later typescript version
     baseElement: LitElement,
     ...customConfig,
   };
@@ -90,7 +85,7 @@ export const runRegistrationSuite = customConfig => {
     it('works for components that have a delayed render', async () => {
       class PerformUpdate extends FormRegistrarMixin(LitElement) {
         async performUpdate() {
-          await new Promise(resolve => setTimeout(() => resolve(), 10));
+          await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
           await super.performUpdate();
         }
 
@@ -264,7 +259,7 @@ export const runRegistrationSuite = customConfig => {
         const delayedPortalString = defineCE(
           class extends FormRegistrarPortalMixin(LitElement) {
             async performUpdate() {
-              await new Promise(resolve => setTimeout(() => resolve(), 10));
+              await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
               await super.performUpdate();
             }
 

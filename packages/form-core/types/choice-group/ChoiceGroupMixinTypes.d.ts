@@ -6,50 +6,27 @@ import { InteractionStateHost } from '../InteractionStateMixinTypes';
 
 export declare class ChoiceGroupHost {
   multipleChoice: boolean;
-
-  connectedCallback(): void;
-  disconnectedCallback(): void;
-
   get modelValue(): any;
-
   set modelValue(value: any);
-
   get serializedValue(): string;
-
   set serializedValue(value: string);
-
   get formattedValue(): string;
-
   set formattedValue(value: string);
-
-  connectedCallback(): void;
-
-  disconnectedCallback(): void;
-
   addFormElement(child: FormControlHost, indexToInsertAt: number): void;
-
   clear(): void;
 
+  protected _oldModelValue: any;
   protected _triggerInitialModelValueChangedEvent(): void;
-
-  _getFromAllFormElements(property: string, filterCondition: Function): void;
-
-  _throwWhenInvalidChildModelValue(child: FormControlHost): void;
-
+  protected _getFromAllFormElements(property: string, filterCondition: Function): void;
+  protected _throwWhenInvalidChildModelValue(child: FormControlHost): void;
   protected _isEmpty(): void;
-
-  _checkSingleChoiceElements(ev: Event): void;
-
+  protected _checkSingleChoiceElements(ev: Event): void;
   protected _getCheckedElements(): void;
-
-  _setCheckedElements(value: any, check: boolean): void;
-
-  __setChoiceGroupTouched(): void;
-
-  __delegateNameAttribute(child: FormControlHost): void;
-
+  protected _setCheckedElements(value: any, check: boolean): void;
   protected _onBeforeRepropagateChildrenValues(ev: Event): void;
-  __oldModelValue: any;
+
+  private __setChoiceGroupTouched(): void;
+  private __delegateNameAttribute(child: FormControlHost): void;
 }
 
 export declare function ChoiceGroupImplementation<T extends Constructor<LitElement>>(

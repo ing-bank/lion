@@ -318,7 +318,9 @@ describe('SyncUpdatableMixin', () => {
     const tagString = defineCE(UpdatableImplementation);
     const tag = unsafeStatic(tagString);
     const el = /** @type {UpdatableImplementation} */ (fixtureSync(html`<${tag}></${tag}>`));
+    // @ts-ignore [allow-private] in tests
     const ns = el.__SyncUpdatableNamespace;
+    // @ts-ignore [allow-protected] in tests
     const updateSyncSpy = sinon.spy(el, 'updateSync');
 
     expect(ns.connected).to.be.true;

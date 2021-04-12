@@ -45,7 +45,7 @@ export declare class ListboxHost {
   /** Reset interaction states and modelValue */
   public reset(): void;
 
-  protected get _scrollTargetNode(): LionOptions;
+  protected get _scrollTargetNode(): HTMLElement;
 
   protected get _listboxNode(): LionOptions;
 

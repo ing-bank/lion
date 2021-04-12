@@ -1,0 +1,21 @@
+/**
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
+ */
+
+/**
+ * Exposes private and protected FormControl members
+ * @param {FormControlHost} el
+ */
+export function getFormControlMembers(el) {
+  // @ts-ignore [allow-protected] in test
+  // eslint-disable-next-line
+  const { _inputNode, _helpTextNode, _labelNode, _feedbackNode, _allValidators } = el;
+  return {
+    _inputNode,
+    _helpTextNode,
+    _labelNode,
+    _feedbackNode,
+    _allValidators: /** @type {* & ValidateHost} */ (el)._allValidators,
+  };
+}

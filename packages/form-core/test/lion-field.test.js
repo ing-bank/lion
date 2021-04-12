@@ -10,6 +10,7 @@ import {
   triggerFocusFor,
   unsafeStatic,
 } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import '@lion/form-core/define-field';
 
@@ -31,8 +32,10 @@ const inputSlot = unsafeHTML(inputSlotString);
  * @param {string} newViewValue
  */
 function mimicUserInput(formControl, newViewValue) {
+  const { _inputNode } = getFormControlMembers(formControl);
+
   formControl.value = newViewValue; // eslint-disable-line no-param-reassign
-  formControl._inputNode.dispatchEvent(new CustomEvent('input', { bubbles: true }));
+  _inputNode.dispatchEvent(new CustomEvent('input', { bubbles: true }));
 }
 
 beforeEach(() => {
@@ -51,19 +54,24 @@ function getSlot(el, slot) {
 describe('<lion-field>', () => {
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
-    expect(getSlot(el, 'input').id).to.equal(el._inputId);
+    // @ts-ignore allow protected accessors in tests
+    const inputId = el._inputId;
+    expect(getSlot(el, 'input').id).to.equal(inputId);
   });
 
   it(`has a fieldName based on the label`, async () => {
     const el1 = /** @type {LionField} */ (await fixture(
       html`<${tag} label="foo">${inputSlot}</${tag}>`,
     ));
-    expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+    const { _labelNode: _labelNode1 } = getFormControlMembers(el1);
+
+    expect(el1.fieldName).to.equal(_labelNode1.textContent);
 
     const el2 = /** @type {LionField} */ (await fixture(
       html`<${tag}><label slot="label">bar</label>${inputSlot}</${tag}>`,
     ));
-    expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+    const { _labelNode: _labelNode2 } = getFormControlMembers(el2);
+    expect(el2.fieldName).to.equal(_labelNode2.textContent);
   });
 
   it(`has a fieldName based on the name if no label exists`, async () => {
@@ -77,23 +85,26 @@ describe('<lion-field>', () => {
     const el = /** @type {LionField} */ (await fixture(
       html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlot}</${tag}>`,
     ));
+    // @ts-ignore [allow-proteced] in test
     expect(el.__fieldName).to.equal(el.fieldName);
   });
 
   it('fires focus/blur event on host and native input if focused/blurred', async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
+    const { _inputNode } = getFormControlMembers(el);
+
     const cbFocusHost = sinon.spy();
     el.addEventListener('focus', cbFocusHost);
     const cbFocusNativeInput = sinon.spy();
-    el._inputNode.addEventListener('focus', cbFocusNativeInput);
+    _inputNode.addEventListener('focus', cbFocusNativeInput);
     const cbBlurHost = sinon.spy();
     el.addEventListener('blur', cbBlurHost);
     const cbBlurNativeInput = sinon.spy();
-    el._inputNode.addEventListener('blur', cbBlurNativeInput);
+    _inputNode.addEventListener('blur', cbBlurNativeInput);
 
     await triggerFocusFor(el);
 
-    expect(document.activeElement).to.equal(el._inputNode);
+    expect(document.activeElement).to.equal(_inputNode);
     expect(cbFocusHost.callCount).to.equal(1);
     expect(cbFocusNativeInput.callCount).to.equal(1);
     expect(cbBlurHost.callCount).to.equal(0);
@@ -104,7 +115,7 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(1);
 
     await triggerFocusFor(el);
-    expect(document.activeElement).to.equal(el._inputNode);
+    expect(document.activeElement).to.equal(_inputNode);
     expect(cbFocusHost.callCount).to.equal(2);
     expect(cbFocusNativeInput.callCount).to.equal(2);
 
@@ -168,10 +179,11 @@ describe('<lion-field>', () => {
           </${tag}>
         `));
       const nativeInput = getSlot(el, 'input');
-
-      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${el._inputId}`);
-      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`feedback-${el._inputId}`);
+      // @ts-ignore allow protected accessors in tests
+      const inputId = el._inputId;
+      expect(nativeInput.getAttribute('aria-labelledby')).to.equal(`label-${inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`help-text-${inputId}`);
+      expect(nativeInput.getAttribute('aria-describedby')).to.contain(`feedback-${inputId}`);
     });
 
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
@@ -186,11 +198,13 @@ describe('<lion-field>', () => {
         `));
 
       const nativeInput = getSlot(el, 'input');
+      // @ts-ignore allow protected accessors in tests
+      const inputId = el._inputId;
       expect(nativeInput.getAttribute('aria-labelledby')).to.contain(
-        `before-${el._inputId} after-${el._inputId}`,
+        `before-${inputId} after-${inputId}`,
       );
       expect(nativeInput.getAttribute('aria-describedby')).to.contain(
-        `prefix-${el._inputId} suffix-${el._inputId}`,
+        `prefix-${inputId} suffix-${inputId}`,
       );
     });
   });

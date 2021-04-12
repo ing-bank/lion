@@ -4,6 +4,7 @@ import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
 import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
+import { getListboxMembers } from '../test-helpers/index.js';
 
 /**
  * @typedef {import('../src/LionListbox').LionListbox} LionListbox
@@ -23,22 +24,22 @@ function mimicKeyPress(el, key) {
   el.dispatchEvent(new KeyboardEvent('keyup', { key }));
 }
 
-/**
- * @param {LionListbox} lionListboxEl
- */
-function getProtectedMembers(lionListboxEl) {
-  // @ts-ignore protected members allowed in test
-  const {
-    _inputNode: input,
-    _activeDescendantOwnerNode: activeDescendantOwner,
-    _listboxNode: listbox,
-  } = lionListboxEl;
-  return {
-    input,
-    activeDescendantOwner,
-    listbox,
-  };
-}
+// /**
+//  * @param {LionListbox} lionListboxEl
+//  */
+// function getProtectedMembers(lionListboxEl) {
+//   // @ts-ignore protected members allowed in test
+//   const {
+//     _inputNode: input,
+//     _activeDescendantOwnerNode: activeDescendantOwner,
+//     _listboxNode: listbox,
+//   } = lionListboxEl;
+//   return {
+//     input,
+//     activeDescendantOwner,
+//     listbox,
+//   };
+// }
 
 /**
  * @param { {tagString?:string, optionTagString?:string} } [customConfig]
@@ -253,14 +254,16 @@ export function runListboxMixinSuite(customConfig = {}) {
         const el1 = await fixture(html`
         <${tag} label="foo"></${tag}>
       `);
-        expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+        const { _labelNode: _labelNode1 } = getListboxMembers(el1);
+        expect(el1.fieldName).to.equal(_labelNode1.textContent);
 
         const el2 = await fixture(html`
         <${tag}>
           <label slot="label">bar</label>
         </${tag}>
       `);
-        expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+        const { _labelNode: _labelNode2 } = getListboxMembers(el2);
+        expect(el2.fieldName).to.equal(_labelNode2.textContent);
       });
 
       it(`has a fieldName based on the name if no label exists`, async () => {
@@ -274,6 +277,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         const el = await fixture(html`
         <${tag} label="foo" .fieldName="${'bar'}"></${tag}>
       `);
+        // @ts-ignore [allow-proteced] in test
         expect(el.__fieldName).to.equal(el.fieldName);
       });
 
@@ -370,9 +374,9 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${30} id="predefined">Item 3</${optionTag}>
           </${tag}>
         `);
-        expect(el.querySelectorAll('lion-option')[0].id).to.exist;
-        expect(el.querySelectorAll('lion-option')[1].id).to.exist;
-        expect(el.querySelectorAll('lion-option')[2].id).to.equal('predefined');
+        expect(el.querySelectorAll(cfg.optionTagString)[0].id).to.exist;
+        expect(el.querySelectorAll(cfg.optionTagString)[1].id).to.exist;
+        expect(el.querySelectorAll(cfg.optionTagString)[2].id).to.equal('predefined');
       });
 
       it('has a reference to the active option', async () => {
@@ -382,19 +386,19 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
           </${tag}>
         `);
-        const { activeDescendantOwner } = getProtectedMembers(el);
+        const { _activeDescendantOwnerNode } = getListboxMembers(el);
 
-        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.be.null;
+        expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.be.null;
         await el.updateComplete;
 
         // Normalize
         el.activeIndex = 0;
         await el.updateComplete;
-        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('first');
-        mimicKeyPress(activeDescendantOwner, 'ArrowDown');
-        // activeDescendantOwner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('first');
+        mimicKeyPress(_activeDescendantOwnerNode, 'ArrowDown');
+        // _activeDescendantOwnerNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await el.updateComplete;
-        expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('second');
+        expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('second');
       });
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
@@ -542,21 +546,21 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
                 </${tag}>
               `));
-            const { listbox } = getProtectedMembers(el);
+            const { _listboxNode } = getListboxMembers(el);
 
             // Normalize
             el.activeIndex = 0;
             const options = el.formElements;
             // mimicKeyPress(listbox, 'ArrowUp');
 
-            mimicKeyPress(listbox, 'ArrowUp');
+            mimicKeyPress(_listboxNode, 'ArrowUp');
 
             expect(options[0].active).to.be.true;
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.false;
             el.activeIndex = 2;
             // mimicKeyPress(listbox, 'ArrowDown');
-            mimicKeyPress(listbox, 'ArrowDown');
+            mimicKeyPress(_listboxNode, 'ArrowDown');
 
             expect(options[0].active).to.be.false;
             expect(options[1].active).to.be.false;
@@ -571,26 +575,27 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
                 </${tag}>
               `));
+            const { _inputNode } = getListboxMembers(el);
 
-            el._inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+            _inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
             await el.updateComplete;
             // Normalize
             el.activeIndex = 0;
             expect(el.activeIndex).to.equal(0);
 
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-            mimicKeyPress(el._inputNode, 'ArrowUp');
+            mimicKeyPress(_inputNode, 'ArrowUp');
 
             await el.updateComplete;
             expect(el.activeIndex).to.equal(2);
 
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            mimicKeyPress(el._inputNode, 'ArrowDown');
+            mimicKeyPress(_inputNode, 'ArrowDown');
 
             expect(el.activeIndex).to.equal(0);
             // Extra check: regular navigation
             // el._inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            mimicKeyPress(el._inputNode, 'ArrowDown');
+            mimicKeyPress(_inputNode, 'ArrowDown');
 
             expect(el.activeIndex).to.equal(1);
           });
@@ -605,14 +610,14 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
             `));
-            const { listbox } = getProtectedMembers(el);
+            const { _listboxNode } = getListboxMembers(el);
 
             // Normalize suite
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            mimicKeyPress(listbox, 'ArrowDown');
-            mimicKeyPress(listbox, 'Enter');
+            mimicKeyPress(_listboxNode, 'ArrowDown');
+            mimicKeyPress(_listboxNode, 'Enter');
             expect(options[1].checked).to.be.true;
           });
         });
@@ -628,21 +633,21 @@ export function runListboxMixinSuite(customConfig = {}) {
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
                 </${tag}>
               `));
-            const { listbox } = getProtectedMembers(el);
+            const { _listboxNode } = getListboxMembers(el);
 
             // Normalize suite
             el.activeIndex = 0;
             const options = el.formElements;
             el.checkedIndex = 0;
-            mimicKeyPress(listbox, 'ArrowDown');
-            mimicKeyPress(listbox, ' ');
+            mimicKeyPress(_listboxNode, 'ArrowDown');
+            mimicKeyPress(_listboxNode, ' ');
 
             expect(options[1].checked).to.be.true;
             el.checkedIndex = 0;
             // @ts-ignore allow protected member access in test
             el._listboxReceivesNoFocus = true;
-            mimicKeyPress(listbox, 'ArrowDown');
-            mimicKeyPress(listbox, ' ');
+            mimicKeyPress(_listboxNode, 'ArrowDown');
+            mimicKeyPress(_listboxNode, ' ');
 
             expect(options[1].checked).to.be.false;
           });
@@ -683,7 +688,7 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
               </${tag}>
             `);
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           // @ts-ignore allow protected members in tests
           if (el._listboxReceivesNoFocus) {
@@ -691,9 +696,9 @@ export function runListboxMixinSuite(customConfig = {}) {
           }
 
           el.activeIndex = 2;
-          mimicKeyPress(listbox, 'Home');
+          mimicKeyPress(_listboxNode, 'Home');
           expect(el.activeIndex).to.equal(0);
-          mimicKeyPress(listbox, 'End');
+          mimicKeyPress(_listboxNode, 'End');
           expect(el.activeIndex).to.equal(3);
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
@@ -704,7 +709,7 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
               </${tag}>
             `));
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           // Normalize across listbox/select-rich/combobox
           el.activeIndex = 0;
@@ -713,10 +718,10 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.selectionFollowsFocus = false;
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
-          mimicKeyPress(listbox, 'ArrowUp');
+          mimicKeyPress(_listboxNode, 'ArrowUp');
 
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(-1);
@@ -731,7 +736,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
           `));
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           expect(el.orientation).to.equal('vertical');
           const options = el.formElements;
@@ -742,23 +747,23 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
 
-          mimicKeyPress(listbox, 'ArrowUp');
+          mimicKeyPress(_listboxNode, 'ArrowUp');
 
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           // No response to horizontal arrows...
-          mimicKeyPress(listbox, 'ArrowRight');
+          mimicKeyPress(_listboxNode, 'ArrowRight');
 
           expect(options[0].active).to.be.true;
           expect(options[1].active).to.be.false;
 
           el.activeIndex = 1;
-          mimicKeyPress(listbox, 'ArrowLeft');
+          mimicKeyPress(_listboxNode, 'ArrowLeft');
 
           expect(options[0].active).to.be.false;
           expect(options[1].active).to.be.true;
@@ -771,7 +776,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
           `));
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           expect(el.orientation).to.equal('horizontal');
 
@@ -780,20 +785,20 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           await el.updateComplete;
 
-          mimicKeyPress(listbox, 'ArrowRight');
+          mimicKeyPress(_listboxNode, 'ArrowRight');
 
           expect(el.activeIndex).to.equal(1);
 
-          mimicKeyPress(listbox, 'ArrowLeft');
+          mimicKeyPress(_listboxNode, 'ArrowLeft');
 
           expect(el.activeIndex).to.equal(0);
 
           // No response to vertical arrows...
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(0);
 
           el.activeIndex = 1;
-          mimicKeyPress(listbox, 'ArrowUp');
+          mimicKeyPress(_listboxNode, 'ArrowUp');
 
           expect(el.activeIndex).to.equal(1);
         });
@@ -806,8 +811,8 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
             `);
-            const { listbox } = getProtectedMembers(el);
-            expect(listbox.getAttribute('aria-orientation')).to.equal('horizontal');
+            const { _listboxNode } = getListboxMembers(el);
+            expect(_listboxNode.getAttribute('aria-orientation')).to.equal('horizontal');
           });
         });
       });
@@ -838,7 +843,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
             </${tag}>
           `);
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
 
           // @ts-ignore feature detection select-rich
@@ -864,13 +869,13 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Enter
           el.activeIndex = 0;
-          mimicKeyPress(listbox, 'Enter');
+          mimicKeyPress(_listboxNode, 'Enter');
           el.activeIndex = 1;
-          mimicKeyPress(listbox, 'Enter');
+          mimicKeyPress(_listboxNode, 'Enter');
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
-          mimicKeyPress(listbox, 'Enter');
+          mimicKeyPress(_listboxNode, 'Enter');
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke']);
 
@@ -885,15 +890,15 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Space
           el.activeIndex = 0;
-          mimicKeyPress(listbox, ' ');
+          mimicKeyPress(_listboxNode, ' ');
 
           el.activeIndex = 1;
-          mimicKeyPress(listbox, ' ');
+          mimicKeyPress(_listboxNode, ' ');
 
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
-          mimicKeyPress(listbox, ' ');
+          mimicKeyPress(_listboxNode, ' ');
 
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke']);
@@ -907,8 +912,8 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
             `);
-            const { listbox } = getProtectedMembers(el);
-            expect(listbox.getAttribute('aria-multiselectable')).to.equal('true');
+            const { _listboxNode } = getListboxMembers(el);
+            expect(_listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
           });
 
           it('does not allow "selectionFollowsFocus"', async () => {
@@ -918,11 +923,11 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
               </${tag}>
             `);
-            const { listbox, input } = getProtectedMembers(el);
+            const { _listboxNode, _inputNode } = getListboxMembers(el);
 
-            input.focus();
-            listbox.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-            expect(listbox.getAttribute('aria-multiselectable')).to.equal('true');
+            _inputNode.focus();
+            _listboxNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+            expect(_listboxNode.getAttribute('aria-multiselectable')).to.equal('true');
           });
         });
       });
@@ -950,7 +955,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               </${tag}>
             `));
 
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
           // Normalize start values between listbox, slect and combobox and test interaction below
           el.activeIndex = 0;
@@ -958,11 +963,11 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
-          mimicKeyPress(listbox, 'ArrowUp');
+          mimicKeyPress(_listboxNode, 'ArrowUp');
 
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
@@ -990,7 +995,7 @@ export function runListboxMixinSuite(customConfig = {}) {
               </${tag}>
             `));
 
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
           // Normalize start values between listbox, slect and combobox and test interaction below
           el.activeIndex = 0;
@@ -998,12 +1003,12 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
-          mimicKeyPress(listbox, 'ArrowRight');
+          mimicKeyPress(_listboxNode, 'ArrowRight');
 
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(1);
           expectOnlyGivenOneOptionToBeChecked(options, 1);
-          mimicKeyPress(listbox, 'ArrowLeft');
+          mimicKeyPress(_listboxNode, 'ArrowLeft');
 
           expect(el.activeIndex).to.equal(0);
           expect(el.checkedIndex).to.equal(0);
@@ -1018,7 +1023,7 @@ export function runListboxMixinSuite(customConfig = {}) {
                 <${optionTag} .choiceValue=${'40'}>Item 4</${optionTag}>
               </${tag}>
             `);
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           // @ts-ignore allow protected
           if (el._listboxReceivesNoFocus) {
@@ -1026,9 +1031,9 @@ export function runListboxMixinSuite(customConfig = {}) {
           }
 
           expect(el.modelValue).to.equal('30');
-          mimicKeyPress(listbox, 'Home');
+          mimicKeyPress(_listboxNode, 'Home');
           expect(el.modelValue).to.equal('10');
-          mimicKeyPress(listbox, 'End');
+          mimicKeyPress(_listboxNode, 'End');
           expect(el.modelValue).to.equal('40');
         });
       });
@@ -1041,11 +1046,11 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} checked .choiceValue=${'20'}>Item 2</${optionTag}>
             </${tag}>
           `);
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           await el.updateComplete;
           const { checkedIndex } = el;
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.checkedIndex).to.equal(checkedIndex);
         });
 
@@ -1096,16 +1101,16 @@ export function runListboxMixinSuite(customConfig = {}) {
             </${tag}>
           `);
 
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
 
           expect(el.checkedIndex).to.equal(0);
-          mimicKeyPress(listbox, 'Enter');
+          mimicKeyPress(_listboxNode, 'Enter');
           // Checked index stays where it was
           expect(el.checkedIndex).to.equal(0);
         });
@@ -1118,16 +1123,16 @@ export function runListboxMixinSuite(customConfig = {}) {
             </${tag}>
           `);
 
-          const { listbox } = getProtectedMembers(el);
+          const { _listboxNode } = getListboxMembers(el);
 
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
 
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(1);
           expect(el.checkedIndex).to.equal(-1);
 
-          mimicKeyPress(listbox, 'ArrowDown');
+          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(2);
           expect(el.checkedIndex).to.equal(2);
         });
@@ -1141,11 +1146,11 @@ export function runListboxMixinSuite(customConfig = {}) {
               <${optionTag} .choiceValue=${20} id="myId">Item 2</${optionTag}>
             </${tag}>
           `);
-          const { activeDescendantOwner } = getProtectedMembers(el);
+          const { _activeDescendantOwnerNode } = getListboxMembers(el);
 
           const opt = el.formElements[1];
           opt.active = true;
-          expect(activeDescendantOwner.getAttribute('aria-activedescendant')).to.equal('myId');
+          expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('myId');
         });
 
         it('can set checked state', async () => {
@@ -1326,15 +1331,15 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        const { listbox } = getProtectedMembers(el);
+        const { _listboxNode } = getListboxMembers(el);
 
-        expect(listbox).to.exist;
-        expect(listbox).to.be.instanceOf(LionOptions);
-        expect(el.querySelector('[role=listbox]')).to.equal(listbox);
+        expect(_listboxNode).to.exist;
+        expect(_listboxNode).to.be.instanceOf(LionOptions);
+        expect(el.querySelector('[role=listbox]')).to.equal(_listboxNode);
 
         expect(el.formElements.length).to.equal(2);
-        expect(listbox.children.length).to.equal(2);
-        expect(listbox.children[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
+        expect(_listboxNode.children.length).to.equal(2);
+        expect(_listboxNode.children[0].tagName).to.equal(cfg.optionTagString.toUpperCase());
       });
     });
 
@@ -1347,14 +1352,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
 
-        const { listbox } = getProtectedMembers(el);
+        const { _listboxNode } = getListboxMembers(el);
 
         el.activeIndex = 1;
 
         // Allow options that behave like anchors (think of Google Search) to trigger the anchor behavior
         const activeOption = el.formElements[1];
         const clickSpy = sinon.spy(activeOption, 'click');
-        mimicKeyPress(listbox, 'Enter');
+        mimicKeyPress(_listboxNode, 'Enter');
 
         expect(clickSpy).to.have.been.calledOnce;
       });
@@ -1367,14 +1372,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           </${tag}>
         `);
 
-        const { listbox } = getProtectedMembers(el);
+        const { _listboxNode } = getListboxMembers(el);
 
         el.activeIndex = 0;
 
         const activeOption = el.formElements[0];
         const clickSpy = sinon.spy(activeOption, 'click');
 
-        mimicKeyPress(listbox, 'Enter');
+        mimicKeyPress(_listboxNode, 'Enter');
 
         expect(clickSpy).to.not.have.been.called;
       });

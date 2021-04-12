@@ -8,7 +8,7 @@ import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
-import { mimicClick } from '../test-helpers.js';
+import { mimicClick } from '../test-helpers/index.js';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig

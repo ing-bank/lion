@@ -1,6 +1,6 @@
 import { LitElement } from '@lion/core';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
-import { SlotsMap, SlotHost } from '@lion/core/types/SlotMixinTypes';
+import { SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { ScopedElementsHost } from '@open-wc/scoped-elements/src/types';
 import { FormControlHost } from '../FormControlMixinTypes';
@@ -26,52 +26,47 @@ export declare class ValidateHost {
   validationStates: { [key: string]: { [key: string]: Object } };
   isPending: boolean;
   defaultValidators: Validator[];
-  _visibleMessagesAmount: number;
   fieldName: string;
-
-  static validationTypes: string[];
-  slots: SlotsMap;
-  _feedbackNode: LionValidationFeedback;
-  _allValidators: Validator[];
-
-  __syncValidationResult: Validator[];
-  __asyncValidationResult: Validator[];
-  __validationResult: Validator[];
-  __prevValidationResult: Validator[];
-  __prevShownValidationResult: Validator[];
-
-  connectedCallback(): void;
-  disconnectedCallback(): void;
-  firstUpdated(changedProperties: import('@lion/core').PropertyValues): void;
-  updateSync(name: string, oldValue: unknown): void;
-  updated(changedProperties: import('@lion/core').PropertyValues): void;
-
-  validate(opts?: { clearCurrentResult?: boolean }): void;
-  __storePrevResult(): void;
-  __executeValidators(): void;
   validateComplete: Promise<void>;
   feedbackComplete: Promise<void>;
-  __validateCompleteResolve(): void;
-  __executeSyncValidators(
+
+  static validationTypes: string[];
+
+  validate(opts?: { clearCurrentResult?: boolean }): void;
+
+  protected _visibleMessagesAmount: number;
+  protected _allValidators: Validator[];
+  protected get _feedbackNode(): LionValidationFeedback;
+
+  protected _updateFeedbackComponent(): void;
+  protected _showFeedbackConditionFor(type: string, meta: object): boolean;
+  protected _hasFeedbackVisibleFor(type: string): boolean;
+  protected _updateShouldShowFeedbackFor(): void;
+  protected _prioritizeAndFilterFeedback(opts: { validationResult: Validator[] }): Validator[];
+  protected updateSync(name: string, oldValue: unknown): void;
+
+  private __syncValidationResult: Validator[];
+  private __asyncValidationResult: Validator[];
+  private __validationResult: Validator[];
+  private __prevValidationResult: Validator[];
+  private __prevShownValidationResult: Validator[];
+
+  private __storePrevResult(): void;
+  private __executeValidators(): void;
+  private __validateCompleteResolve(): void;
+  private __executeSyncValidators(
     syncValidators: Validator[],
     value: unknown,
     opts: { hasAsync: boolean },
   ): void;
-  __executeAsyncValidators(asyncValidators: Validator[], value: unknown): void;
-  __executeResultValidators(regularValidationResult: Validator[]): Validator[];
-  __finishValidation(options: { source: 'sync' | 'async'; hasAsync?: boolean }): void;
-  __clearValidationResults(): void;
-  __onValidatorUpdated(e: Event | CustomEvent): void;
-  __setupValidators(): void;
-  __isEmpty(v: unknown): boolean;
-  __getFeedbackMessages(validators: Validator[]): Promise<FeedbackMessage[]>;
-  _updateFeedbackComponent(): void;
-  _showFeedbackConditionFor(type: string, meta: object): boolean;
-  showFeedbackConditionFor(type: string, meta: object, currentCondition: Function): boolean;
-  _hasFeedbackVisibleFor(type: string): boolean;
-  _updateShouldShowFeedbackFor(): void;
-  _prioritizeAndFilterFeedback(opts: { validationResult: Validator[] }): Validator[];
-  _feedbackConditionMeta: object;
+  private __executeAsyncValidators(asyncValidators: Validator[], value: unknown): void;
+  private __executeResultValidators(regularValidationResult: Validator[]): Validator[];
+  private __finishValidation(options: { source: 'sync' | 'async'; hasAsync?: boolean }): void;
+  private __clearValidationResults(): void;
+  private __onValidatorUpdated(e: Event | CustomEvent): void;
+  private __setupValidators(): void;
+  private __isEmpty(v: unknown): boolean;
+  private __getFeedbackMessages(validators: Validator[]): Promise<FeedbackMessage[]>;
 }
 
 export declare function ValidateImplementation<T extends Constructor<LitElement>>(

@@ -175,7 +175,9 @@ export class OverlaysManager {
     }
   }
 
-  // @ts-ignore
+  /**
+   * @param {{ disabledCtrl?:OverlayController, findNewTrap?:boolean }} [options]
+   */
   informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
     const next = this.shownList.find(
       ctrl => ctrl !== disabledCtrl && ctrl.trapsKeyboardFocus === true,

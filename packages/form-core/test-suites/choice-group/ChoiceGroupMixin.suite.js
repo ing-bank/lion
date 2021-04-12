@@ -3,6 +3,7 @@ import { LionInput } from '@lion/input';
 import '@lion/fieldset/define';
 import { FormGroupMixin, Required } from '@lion/form-core';
 import { expect, html, fixture, fixtureSync, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import { ChoiceGroupMixin } from '../../src/choice-group/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
@@ -11,7 +12,7 @@ customElements.define('choice-input-foo', ChoiceInputFoo);
 class ChoiceInputBar extends ChoiceInputMixin(LionInput) {
   _syncNameToParentFormGroup() {
     // Always sync, without conditions
-    this.name = this._parentFormGroup.name;
+    this.name = this._parentFormGroup?.name || '';
   }
 }
 customElements.define('choice-input-bar', ChoiceInputBar);
@@ -624,6 +625,55 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         } else {
           expect(el.serializedValue).to.deep.equal({ 'gender[]': [['female']] });
         }
+      });
+    });
+
+    describe('Modelvalue event propagation', () => {
+      it('sends one event for single select choice-groups', async () => {
+        const formSpy = sinon.spy();
+        const choiceGroupSpy = sinon.spy();
+        const formEl = await fixture(html`
+        <lion-fieldset name="form">
+          <${parentTag} name="choice-group">
+            <${childTag} id="option1" .choiceValue="${'1'}" checked></${childTag}>
+            <${childTag} id="option2" .choiceValue="${'2'}"></${childTag}>
+          </${parentTag}>
+        </lion-fieldset>
+      `);
+
+        const choiceGroupEl = /** @type {ChoiceInputGroup} */ (formEl.querySelector(
+          '[name=choice-group]',
+        ));
+        if (choiceGroupEl.multipleChoice) {
+          return;
+        }
+        /** @typedef {{ checked: boolean }} checkedInterface */
+        const option1El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
+          '#option1',
+        ));
+        const option2El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
+          '#option2',
+        ));
+        formEl.addEventListener('model-value-changed', formSpy);
+        choiceGroupEl?.addEventListener('model-value-changed', choiceGroupSpy);
+
+        // Simulate check
+        option2El.checked = true;
+        // option2El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+        option1El.checked = false;
+        // option1El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
+
+        expect(choiceGroupSpy.callCount).to.equal(1);
+        const choiceGroupEv = choiceGroupSpy.firstCall.args[0];
+        expect(choiceGroupEv.target).to.equal(choiceGroupEl);
+        expect(choiceGroupEv.detail.formPath).to.eql([choiceGroupEl]);
+        expect(choiceGroupEv.detail.isTriggeredByUser).to.be.false;
+
+        expect(formSpy.callCount).to.equal(1);
+        const formEv = formSpy.firstCall.args[0];
+        expect(formEv.target).to.equal(formEl);
+        expect(formEv.detail.formPath).to.eql([choiceGroupEl, formEl]);
+        expect(formEv.detail.isTriggeredByUser).to.be.false;
       });
     });
   });

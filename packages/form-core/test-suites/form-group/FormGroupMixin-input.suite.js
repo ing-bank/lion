@@ -1,6 +1,7 @@
 import { LitElement } from '@lion/core';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { defineCE, expect, html, unsafeStatic, fixture } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { LionInput } from '@lion/input';
 import '@lion/form-core/define';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
@@ -67,20 +68,23 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
           <${childTag} name="B" label="fieldB"></${childTag}>
         </${tag}>
       `));
+      const { _labelNode } = getFormControlMembers(el);
 
       /**
        * @param {LionInput} formControl
        */
       function getLabels(formControl) {
-        return /** @type {string} */ (formControl._inputNode.getAttribute('aria-labelledby')).split(
+        const control = getFormControlMembers(formControl);
+
+        return /** @type {string} */ (control._inputNode.getAttribute('aria-labelledby')).split(
           ' ',
         );
       }
       const field1 = el.formElements[0];
       const field2 = el.formElements[1];
 
-      expect(getLabels(field1)).to.eql([field1._labelNode.id, el._labelNode.id]);
-      expect(getLabels(field2)).to.eql([field2._labelNode.id, el._labelNode.id]);
+      expect(getLabels(field1)).to.eql([field1._labelNode.id, _labelNode.id]);
+      expect(getLabels(field2)).to.eql([field2._labelNode.id, _labelNode.id]);
 
       // Test the cleanup on disconnected
       el.removeChild(field1);
@@ -277,10 +281,12 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
 
           // Check cleanup of FormGroup on disconnect
           const l2_g = /** @type {FormGroup} */ (childAriaFixture.querySelector('[name=l2_g]'));
+          // @ts-ignore [allow-private] in test
           expect(l2_g.__descriptionElementsInParentChain.size).to.not.equal(0);
           // @ts-expect-error removeChild should always be inherited via LitElement?
           l2_g._parentFormGroup.removeChild(l2_g);
           await l2_g.updateComplete;
+          // @ts-ignore [allow-private] in test
           expect(l2_g.__descriptionElementsInParentChain.size).to.equal(0);
         }
         /* eslint-enable camelcase */

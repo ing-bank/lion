@@ -1,10 +1,9 @@
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { html } from '@lion/core';
-
+import { getInputMembers } from '@lion/input/test-helpers';
 import { IsCountryIBAN } from '../src/validators.js';
 import { formatIBAN } from '../src/formatters.js';
 import { parseIBAN } from '../src/parsers.js';
-
 import '@lion/input-iban/define';
 
 /**
@@ -26,7 +25,8 @@ describe('<lion-input-iban>', () => {
 
   it('has a type = text', async () => {
     const el = await fixture(`<lion-input-iban></lion-input-iban>`);
-    expect(el._inputNode.type).to.equal('text');
+    const { _inputNode } = getInputMembers(el);
+    expect(_inputNode.type).to.equal('text');
   });
 
   it('has validator "IsIBAN" applied by default', async () => {

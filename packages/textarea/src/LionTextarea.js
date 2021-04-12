@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-// @ts-expect-error https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
+// @ts-expect-error [external]: https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
 import autosize from 'autosize/src/autosize.js';
 import { LionField, NativeTextFieldMixin } from '@lion/form-core';
 import { css } from '@lion/core';
@@ -7,6 +7,7 @@ import { css } from '@lion/core';
 class LionFieldWithTextArea extends LionField {
   /**
    * @returns {HTMLTextAreaElement}
+   * @protected
    */
   get _inputNode() {
     return /** @type {HTMLTextAreaElement} */ (Array.from(this.children).find(
@@ -21,6 +22,7 @@ class LionFieldWithTextArea extends LionField {
  * @customElement lion-textarea
  */
 export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
+  /** @type {any} */
   static get properties() {
     return {
       maxRows: {
@@ -43,7 +45,6 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     };
   }
 
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,

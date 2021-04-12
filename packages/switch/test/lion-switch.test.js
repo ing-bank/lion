@@ -3,9 +3,12 @@ import sinon from 'sinon';
 import { Validator } from '@lion/form-core';
 import { LionSwitch } from '@lion/switch';
 import '@lion/switch/define';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 
 /**
+ * @typedef {import('../src/LionSwitchButton').LionSwitchButton} LionSwitchButton
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
  */
 
 const IsTrue = class extends Validator {
@@ -19,13 +22,11 @@ const IsTrue = class extends Validator {
 };
 
 /**
- * @param {LionSwitch} lionSwitchEl
+ * @param { LionSwitch } el
  */
-function getProtectedMembers(lionSwitchEl) {
-  return {
-    // @ts-ignore
-    inputNode: lionSwitchEl._inputNode,
-  };
+function getSwitchMembers(el) {
+  const obj = getFormControlMembers(/** @type { * & FormControlHost } */ (el));
+  return { ...obj, _inputNode: /** @type {LionSwitchButton} */ (obj._inputNode) };
 }
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitch>} */ (_fixture);
@@ -38,40 +39,46 @@ describe('lion-switch', () => {
 
   it('clicking the label should toggle the checked state', async () => {
     const el = await fixture(html`<lion-switch label="Enable Setting"></lion-switch>`);
-    el._labelNode.click();
+    const { _labelNode } = getFormControlMembers(el);
+    _labelNode.click();
     expect(el.checked).to.be.true;
-    el._labelNode.click();
+    _labelNode.click();
     expect(el.checked).to.be.false;
   });
 
   it('clicking the label should not toggle the checked state when disabled', async () => {
     const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
-    el._labelNode.click();
+    const { _labelNode } = getFormControlMembers(el);
+    _labelNode.click();
     expect(el.checked).to.be.false;
   });
 
   it('clicking the label should focus the toggle button', async () => {
     const el = await fixture(html`<lion-switch label="Enable Setting"></lion-switch>`);
-    el._labelNode.click();
-    expect(document.activeElement).to.equal(el._inputNode);
+    const { _inputNode, _labelNode } = getSwitchMembers(el);
+
+    _labelNode.click();
+    expect(document.activeElement).to.equal(_inputNode);
   });
 
   it('clicking the label should not focus the toggle button when disabled', async () => {
     const el = await fixture(html`<lion-switch disabled label="Enable Setting"></lion-switch>`);
-    el._labelNode.click();
-    expect(document.activeElement).to.not.equal(el._inputNode);
+    const { _inputNode, _labelNode } = getSwitchMembers(el);
+
+    _labelNode.click();
+    expect(document.activeElement).to.not.equal(_inputNode);
   });
 
   it('should sync its "disabled" state to child button', async () => {
     const el = await fixture(html`<lion-switch disabled></lion-switch>`);
-    const { inputNode } = getProtectedMembers(el);
-    expect(inputNode.disabled).to.be.true;
-    expect(inputNode.hasAttribute('disabled')).to.be.true;
+    const { _inputNode } = getSwitchMembers(el);
+    expect(_inputNode.disabled).to.be.true;
+    expect(_inputNode.hasAttribute('disabled')).to.be.true;
     el.disabled = false;
     await el.updateComplete;
     await el.updateComplete; // safari takes longer
-    expect(inputNode.disabled).to.be.false;
-    expect(inputNode.hasAttribute('disabled')).to.be.false;
+    expect(_inputNode.disabled).to.be.false;
+    expect(_inputNode.hasAttribute('disabled')).to.be.false;
   });
 
   it('is hidden when attribute hidden is true', async () => {
@@ -81,9 +88,9 @@ describe('lion-switch', () => {
 
   it('should sync its "checked" state to child button', async () => {
     const uncheckedEl = await fixture(html`<lion-switch></lion-switch>`);
-    const { inputNode: uncheckeInputNode } = getProtectedMembers(uncheckedEl);
+    const { _inputNode: uncheckeInputNode } = getSwitchMembers(uncheckedEl);
     const checkedEl = await fixture(html`<lion-switch checked></lion-switch>`);
-    const { inputNode: checkeInputNode } = getProtectedMembers(checkedEl);
+    const { _inputNode: checkeInputNode } = getSwitchMembers(checkedEl);
     expect(uncheckeInputNode.checked).to.be.false;
     expect(checkeInputNode.checked).to.be.true;
     uncheckedEl.checked = true;
@@ -96,8 +103,8 @@ describe('lion-switch', () => {
 
   it('should sync "checked" state received from child button', async () => {
     const el = await fixture(html`<lion-switch></lion-switch>`);
-    const { inputNode } = getProtectedMembers(el);
-    const button = inputNode;
+    const { _inputNode } = getSwitchMembers(el);
+    const button = _inputNode;
     expect(el.checked).to.be.false;
     button.click();
     expect(el.checked).to.be.true;
@@ -123,10 +130,10 @@ describe('lion-switch', () => {
   it('should dispatch "checked-changed" event when toggled via button or label', async () => {
     const handlerSpy = sinon.spy();
     const el = await fixture(html`<lion-switch .choiceValue=${'foo'}></lion-switch>`);
-    const { inputNode } = getProtectedMembers(el);
+    const { _inputNode, _labelNode } = getSwitchMembers(el);
     el.addEventListener('checked-changed', handlerSpy);
-    inputNode.click();
-    el._labelNode.click();
+    _inputNode.click();
+    _labelNode.click();
     await el.updateComplete;
     expect(handlerSpy.callCount).to.equal(2);
     const checkCall = /** @param {import('sinon').SinonSpyCall} call */ call => {

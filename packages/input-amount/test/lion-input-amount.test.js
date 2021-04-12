@@ -2,11 +2,13 @@ import { html } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { getInputMembers } from '@lion/input/test-helpers';
 import '@lion/input-amount/define';
 import { formatAmount } from '../src/formatters.js';
 import { parseAmount } from '../src/parsers.js';
 
 /**
+ * @typedef {import('@lion/input/src/LionInput').LionInput} LionInput
  * @typedef {import('../src/LionInputAmount').LionInputAmount} LionInputAmount
  */
 
@@ -73,14 +75,16 @@ describe('<lion-input-amount>', () => {
     const el = /** @type {LionInputAmount} */ (await fixture(
       `<lion-input-amount></lion-input-amount>`,
     ));
-    expect(el._inputNode.getAttribute('inputmode')).to.equal('decimal');
+    const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+    expect(_inputNode.getAttribute('inputmode')).to.equal('decimal');
   });
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
     const el = /** @type {LionInputAmount} */ (await fixture(
       `<lion-input-amount></lion-input-amount>`,
     ));
-    expect(el._inputNode.type).to.equal('text');
+    const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+    expect(_inputNode.type).to.equal('text');
   });
 
   it('shows no currency by default', async () => {
@@ -143,7 +147,8 @@ describe('<lion-input-amount>', () => {
         `<lion-input-amount currency="EUR"></lion-input-amount>`,
       ));
       expect(el._currencyDisplayNode?.getAttribute('data-label')).to.be.not.null;
-      expect(el._inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode?.id);
+      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode?.id);
     });
 
     it('adds an aria-label to currency slot', async () => {

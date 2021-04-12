@@ -28,11 +28,9 @@ function mergeSortByTabIndex(left, right) {
   const result = [];
   while (left.length > 0 && right.length > 0) {
     if (hasLowerTabOrder(left[0], right[0])) {
-      // @ts-ignore
-      result.push(right.shift());
+      result.push(/** @type {HTMLElement} */ (right.shift()));
     } else {
-      // @ts-ignore
-      result.push(left.shift());
+      result.push(/** @type {HTMLElement} */ (left.shift()));
     }
   }
 

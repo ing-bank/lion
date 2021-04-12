@@ -123,7 +123,6 @@ class Cache {
    */
   _validateCache() {
     if (new Date().getTime() > this.expiration) {
-      // @ts-ignore
       this._cacheObject = {};
       return false;
     }
@@ -140,7 +139,6 @@ let caches = {};
  * @returns {string} of querystring parameters WITHOUT `?` or empty string ''
  */
 export const searchParamSerializer = (params = {}) =>
-  // @ts-ignore
   typeof params === 'object' && params !== null ? new URLSearchParams(params).toString() : '';
 
 /**

@@ -4,16 +4,13 @@ import { FormControlHost } from './FormControlMixinTypes';
 
 export declare class FocusHost {
   focused: boolean;
-
-  connectedCallback(): void;
-  disconnectedCallback(): void;
-
   focus(): void;
   blur(): void;
-  __onFocus(): void;
-  __onBlur(): void;
-  __registerEventsForFocusMixin(): void;
-  __teardownEventsForFocusMixin(): void;
+
+  private __onFocus(): void;
+  private __onBlur(): void;
+  private __registerEventsForFocusMixin(): void;
+  private __teardownEventsForFocusMixin(): void;
 }
 
 export declare function FocusImplementation<T extends Constructor<LitElement>>(

@@ -99,7 +99,6 @@ export const ValidateMixinImplementation = superclass =>
      * @overridable
      * Adds "._feedbackNode" as described below
      */
-    // @ts-ignore
     get slots() {
       /**
        * FIXME: Ugly workaround https://github.com/microsoft/TypeScript/issues/40110
@@ -460,7 +459,7 @@ export const ValidateMixinImplementation = superclass =>
       this.dispatchEvent(new Event('validate-performed', { bubbles: true }));
       if (source === 'async' || !hasAsync) {
         if (this.__validateCompleteResolve) {
-          // @ts-ignore
+          // @ts-ignore [allow-private]
           this.__validateCompleteResolve();
         }
       }
@@ -569,7 +568,7 @@ export const ValidateMixinImplementation = superclass =>
           if (validator.config.fieldName) {
             fieldName = await validator.config.fieldName;
           }
-          // @ts-ignore
+          // @ts-ignore [allow-protected]
           const message = await validator._getMessage({
             modelValue: this.modelValue,
             formControl: this,

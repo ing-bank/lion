@@ -2,9 +2,10 @@ import { LitElement } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '../index.js';
-import { AlwaysInvalid } from '../test-helpers.js';
+import { AlwaysInvalid } from '../test-helpers/index.js';
 
 export function runValidateMixinFeedbackPart() {
   describe('Validity Feedback', () => {
@@ -121,11 +122,13 @@ export function runValidateMixinFeedbackPart() {
           .modelValue=${'cat'}
         >${lightDom}</${tag}>
       `));
-      expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      expect(_feedbackNode.feedbackData).to.deep.equal([]);
       el.validators = [new AlwaysInvalid()];
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
     });
 
     it('has configurable feedback visibility hook', async () => {
@@ -136,14 +139,17 @@ export function runValidateMixinFeedbackPart() {
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
+
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
+      // @ts-ignore [allow-protected] in test
       el._prioritizeAndFilterFeedback = () => []; // filter out all errors
       await el.validate();
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+      expect(_feedbackNode.feedbackData).to.deep.equal([]);
     });
 
     it('writes prioritized result to "._feedbackNode" based on Validator order', async () => {
@@ -154,9 +160,11 @@ export function runValidateMixinFeedbackPart() {
           .validators=${[new AlwaysInvalid(), new MinLength(4)]}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
+
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for AlwaysInvalid');
     });
 
     it('renders validation result to "._feedbackNode" when async messages are resolved', async () => {
@@ -178,13 +186,13 @@ export function runValidateMixinFeedbackPart() {
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `));
-      expect(el._feedbackNode.feedbackData).to.be.undefined;
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      expect(_feedbackNode.feedbackData).to.be.undefined;
       unlockMessage();
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal(
-        'this ends up in "._feedbackNode"',
-      );
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('this ends up in "._feedbackNode"');
     });
 
     // N.B. this replaces the 'config.hideFeedback' option we had before...
@@ -207,14 +215,13 @@ export function runValidateMixinFeedbackPart() {
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
-      expect(el._feedbackNode.feedbackData).to.be.undefined;
+      expect(_feedbackNode.feedbackData).to.be.undefined;
       unlockMessage();
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal(
-        'this ends up in "._feedbackNode"',
-      );
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('this ends up in "._feedbackNode"');
     });
 
     it('supports custom element to render feedback', async () => {
@@ -257,20 +264,21 @@ export function runValidateMixinFeedbackPart() {
           <${customFeedbackTag} slot="feedback"><${customFeedbackTag}>
         </${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
-      expect(el._feedbackNode.localName).to.equal(customFeedbackTagString);
+      expect(_feedbackNode.localName).to.equal(customFeedbackTagString);
 
       el.modelValue = 'dog';
       await el.updateComplete;
       await el.feedbackComplete;
-      await el._feedbackNode.updateComplete;
-      expect(el._feedbackNode).shadowDom.to.equal('Custom for ContainsLowercaseA');
+      await _feedbackNode.updateComplete;
+      expect(_feedbackNode).shadowDom.to.equal('Custom for ContainsLowercaseA');
 
       el.modelValue = 'cat';
       await el.updateComplete;
       await el.feedbackComplete;
-      await el._feedbackNode.updateComplete;
-      expect(el._feedbackNode).shadowDom.to.equal('Custom for AlwaysInvalid');
+      await _feedbackNode.updateComplete;
+      expect(_feedbackNode).shadowDom.to.equal('Custom for AlwaysInvalid');
     });
 
     it('supports custom messages in Validator instance configuration object', async () => {
@@ -280,11 +288,12 @@ export function runValidateMixinFeedbackPart() {
           .validators=${[new MinLength(3, { getMessage: () => 'custom via config' })]}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = 'a';
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('custom via config');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('custom via config');
     });
 
     it('updates the feedback component when locale changes', async () => {
@@ -295,13 +304,15 @@ export function runValidateMixinFeedbackPart() {
           .modelValue=${'1'}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
+
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.length).to.equal(1);
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
+      expect(_feedbackNode.feedbackData?.length).to.equal(1);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
 
       localize.locale = 'de-DE';
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Nachricht für MinLength');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Nachricht für MinLength');
     });
 
     it('shows success message after fixing an error', async () => {
@@ -321,16 +332,17 @@ export function runValidateMixinFeedbackPart() {
           ]}
         >${lightDom}</${elTag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = 'a';
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
 
       el.modelValue = 'abcd';
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
     });
 
     describe('Accessibility', () => {
@@ -342,7 +354,9 @@ export function runValidateMixinFeedbackPart() {
             .modelValue=${'a'}
           >${lightDom}</${tag}>
         `));
-        const inputNode = el._inputNode;
+        const { _inputNode } = getFormControlMembers(el);
+
+        const inputNode = _inputNode;
         expect(inputNode.getAttribute('aria-invalid')).to.equal('false');
 
         el.modelValue = '';
@@ -493,12 +507,13 @@ export function runValidateMixinFeedbackPart() {
           .modelValue=${'1'}
         >${lightDom}</${tag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = '12345';
       await el.updateComplete;
       await el.feedbackComplete;
 
-      expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+      expect(_feedbackNode.feedbackData).to.deep.equal([]);
     });
   });
 }

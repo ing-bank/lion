@@ -18,7 +18,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 // - simplify _calculateValues: recursive trigger lock can be omitted, since need for connecting
 // the loop via sync observers is not needed anymore.
 // - consider `formatOn` as an overridable function, by default something like:
-// `(!__isHandlingUserInput || !hasError) && !focused`
+// `(!_isHandlingUserInput || !hasError) && !focused`
 // This would allow for more advanced scenarios, like formatting an input whenever it becomes valid.
 // This would make formattedValue as a concept obsolete, since for maximum flexibility, the
 // formattedValue condition needs to be evaluated right before syncing back to the view
@@ -281,7 +281,7 @@ const FormatMixinImplementation = superclass =>
       // - Why check for this.hasError?
       // We only want to format values that are considered valid. For best UX,
       // we only 'reward' valid inputs.
-      // - Why check for __isHandlingUserInput?
+      // - Why check for _isHandlingUserInput?
       // Downwards sync is prevented whenever we are in an `@user-input-changed` flow, [2].
       // If we are in a 'imperatively set `.modelValue`' flow, [1], we want to reflect back
       // the value, no matter what.
@@ -290,7 +290,7 @@ const FormatMixinImplementation = superclass =>
       // input into `._inputNode` with modelValue as input)
 
       if (
-        this.__isHandlingUserInput &&
+        this._isHandlingUserInput &&
         this.hasFeedbackFor &&
         this.hasFeedbackFor.length &&
         this.hasFeedbackFor.includes('error') &&
@@ -333,7 +333,7 @@ const FormatMixinImplementation = superclass =>
           bubbles: true,
           detail: /** @type { ModelValueEventDetails } */ ({
             formPath: [this],
-            isTriggeredByUser: Boolean(this.__isHandlingUserInput),
+            isTriggeredByUser: Boolean(this._isHandlingUserInput),
           }),
         }),
       );
@@ -376,7 +376,7 @@ const FormatMixinImplementation = superclass =>
      * @protected
      */
     _reflectBackOn() {
-      return !this.__isHandlingUserInput;
+      return !this._isHandlingUserInput;
     }
 
     // This can be called whenever the view value should be updated. Dependent on component type
@@ -397,9 +397,9 @@ const FormatMixinImplementation = superclass =>
     _onUserInputChanged() {
       // Upwards syncing. Most properties are delegated right away, value is synced to
       // `LionField`, to be able to act on (imperatively set) value changes
-      this.__isHandlingUserInput = true;
+      this._isHandlingUserInput = true;
       this._syncValueUpwards();
-      this.__isHandlingUserInput = false;
+      this._isHandlingUserInput = false;
     }
 
     /**

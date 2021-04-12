@@ -1,5 +1,6 @@
 import { LitElement } from '@lion/core';
 import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { FocusMixin } from '../src/FocusMixin.js';
 
 describe('FocusMixin', () => {
@@ -16,16 +17,19 @@ describe('FocusMixin', () => {
     const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
     `));
+    const { _inputNode } = getFormControlMembers(el);
+
     el.focus();
-    expect(document.activeElement === el._inputNode).to.be.true;
+    expect(document.activeElement === _inputNode).to.be.true;
     el.blur();
-    expect(document.activeElement === el._inputNode).to.be.false;
+    expect(document.activeElement === _inputNode).to.be.false;
   });
 
   it('has an attribute focused when focused', async () => {
     const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
     `));
+
     el.focus();
     await el.updateComplete;
     expect(el.hasAttribute('focused')).to.be.true;
@@ -39,10 +43,12 @@ describe('FocusMixin', () => {
     const el = /** @type {Focusable} */ (await fixture(html`
       <${tag}><input slot="input"></${tag}>
     `));
+    const { _inputNode } = getFormControlMembers(el);
+
     expect(el.focused).to.be.false;
-    el._inputNode?.focus();
+    _inputNode?.focus();
     expect(el.focused).to.be.true;
-    el._inputNode?.blur();
+    _inputNode?.blur();
     expect(el.focused).to.be.false;
   });
 

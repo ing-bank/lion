@@ -234,11 +234,13 @@ const ChoiceInputMixinImplementation = superclass =>
       if (this.disabled) {
         return;
       }
-      this.__isHandlingUserInput = true;
+      this._isHandlingUserInput = true;
       this.checked = !this.checked;
-      this.__isHandlingUserInput = false;
+      this._isHandlingUserInput = false;
     }
 
+    // TODO: make this less fuzzy by applying these methods in LionRadio and LionCheckbox
+    // via instanceof (or feat. detection for tree-shaking in case parentGroup not needed)
     /**
      * Override this in case of extending ChoiceInputMixin and requiring
      * to sync differently with parent form group name
@@ -247,9 +249,9 @@ const ChoiceInputMixinImplementation = superclass =>
      * @protected
      */
     _syncNameToParentFormGroup() {
-      // @ts-expect-error not all choice inputs have a name prop, because this mixin does not have a strict contract with form control mixin
+      // @ts-expect-error [external]: tagName should be a prop of HTMLElement
       if (this._parentFormGroup.tagName.includes(this.tagName)) {
-        this.name = this._parentFormGroup.name;
+        this.name = this._parentFormGroup?.name || '';
       }
     }
 
@@ -305,7 +307,7 @@ const ChoiceInputMixinImplementation = superclass =>
       if (old && old.modelValue) {
         _old = old.modelValue;
       }
-      // @ts-expect-error lit private property
+      // @ts-expect-error [external]: lit private property
       if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, _old)) {
         super._onModelValueChanged({ modelValue });
       }

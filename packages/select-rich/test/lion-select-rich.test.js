@@ -13,10 +13,29 @@ import {
   fixture as _fixture,
 } from '@open-wc/testing';
 import { LionSelectInvoker, LionSelectRich } from '@lion/select-rich';
-
 import '@lion/core/differentKeyEventNamesShimIE';
 import '@lion/listbox/define';
 import '@lion/select-rich/define';
+import { getListboxMembers } from '@lion/listbox/test-helpers';
+
+/**
+ * @typedef {import('@lion/listbox/src/LionOptions').LionOptions} LionOptions
+ * @typedef {import('@lion/listbox/types/ListboxMixinTypes').ListboxHost} ListboxHost
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ */
+
+/**
+ * @param { LionSelectRich } el
+ */
+function getSelectRichMembers(el) {
+  const obj = getListboxMembers(el);
+  // eslint-disable-next-line no-return-assign
+  return {
+    ...obj,
+    // @ts-ignore [allow-protected] in test
+    ...{ _invokerNode: el._invokerNode, _overlayCtrl: el._overlayCtrl },
+  };
+}
 
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
@@ -24,43 +43,14 @@ import '@lion/select-rich/define';
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ (_fixture);
 
-/**
- * @param {LionSelectRich} lionSelectEl
- */
-function getProtectedMembers(lionSelectEl) {
-  // @ts-ignore protected members allowed in test
-  const {
-    _invokerNode: invoker,
-    // @ts-ignore
-    _feedbackNode: feedback,
-    // @ts-ignore
-    _labelNode: label,
-    // @ts-ignore
-    _helpTextNode: helpText,
-    // @ts-ignore
-    _listboxNode: listbox,
-    // @ts-ignore
-    _overlayCtrl: overlay,
-  } = lionSelectEl;
-  return {
-    invoker,
-    feedback,
-    label,
-    helpText,
-    listbox,
-    overlay,
-  };
-}
-
 describe('lion-select-rich', () => {
   it('clicking the label should focus the invoker', async () => {
     const el = await fixture(html` <lion-select-rich label="foo"> </lion-select-rich> `);
     expect(document.activeElement === document.body).to.be.true;
-    const { label } = getProtectedMembers(el);
-    label.click();
+    const { _labelNode, _invokerNode } = getSelectRichMembers(el);
+    _labelNode.click();
 
-    // @ts-ignore allow protected access in tests
-    expect(document.activeElement === el._invokerNode).to.be.true;
+    expect(document.activeElement === _invokerNode).to.be.true;
   });
 
   it('checks the first enabled option', async () => {
@@ -95,19 +85,18 @@ describe('lion-select-rich', () => {
         <lion-option .choiceValue=${'teal'}>Teal</lion-option>
       </lion-select-rich>
     `);
-    const { invoker } = getProtectedMembers(el);
-    expect(invoker.selectedElement).to.be.undefined;
+    const { _invokerNode } = getSelectRichMembers(el);
+    expect(_invokerNode.selectedElement).to.be.undefined;
     expect(el.modelValue).to.equal('');
   });
 
   describe('Invoker', () => {
     it('generates an lion-select-invoker if no invoker is provided', async () => {
       const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
+      const { _invokerNode } = getSelectRichMembers(el);
 
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode).to.exist;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.tagName).to.include('LION-SELECT-INVOKER');
+      expect(_invokerNode).to.exist;
+      expect(_invokerNode).to.be.instanceOf(LionSelectInvoker);
     });
 
     it('sets the first option as the selectedElement if no option is checked', async () => {
@@ -117,9 +106,9 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
+      const { _invokerNode } = getSelectRichMembers(el);
       const options = el.formElements;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.selectedElement).dom.to.equal(options[0]);
+      expect(_invokerNode.selectedElement).dom.to.equal(options[0]);
     });
 
     it('syncs the selected element to the invoker', async () => {
@@ -129,14 +118,13 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
+      const { _invokerNode } = getSelectRichMembers(el);
       const options = el.querySelectorAll('lion-option');
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.selectedElement).dom.to.equal(options[1]);
+      expect(_invokerNode.selectedElement).dom.to.equal(options[1]);
 
       el.checkedIndex = 0;
       await el.updateComplete;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.selectedElement).dom.to.equal(options[0]);
+      expect(_invokerNode.selectedElement).dom.to.equal(options[0]);
     });
 
     it('delegates readonly to the invoker', async () => {
@@ -146,10 +134,9 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
-
+      const { _invokerNode } = getSelectRichMembers(el);
       expect(el.hasAttribute('readonly')).to.be.true;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.hasAttribute('readonly')).to.be.true;
+      expect(_invokerNode.hasAttribute('readonly')).to.be.true;
     });
 
     it('delegates singleOption to the invoker', async () => {
@@ -158,10 +145,9 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
-
+      const { _invokerNode } = getSelectRichMembers(el);
       expect(el.singleOption).to.be.true;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.hasAttribute('single-option')).to.be.true;
+      expect(_invokerNode.hasAttribute('single-option')).to.be.true;
     });
 
     it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
@@ -189,14 +175,16 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
 
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('10');
+      const { _invokerNode } = getSelectRichMembers(el);
+      const firstChild = /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (_invokerNode.shadowRoot).firstElementChild
+      );
+      expect(firstChild.textContent).to.equal('10');
 
       firstOption.modelValue = { value: 30, checked: true };
       await firstOption.updateComplete;
       await el.updateComplete;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.shadowRoot.firstElementChild.textContent).to.equal('30');
+      expect(firstChild.textContent).to.equal('30');
     });
 
     // FIXME: wrong values in safari/webkit even though this passes in the "real" debug browsers
@@ -210,20 +198,21 @@ describe('lion-select-rich', () => {
       el.opened = true;
       const options = el.formElements;
       await el.updateComplete;
-      const { invoker } = getProtectedMembers(el);
-      expect(invoker.clientWidth).to.equal(options[1].clientWidth);
+      const { _invokerNode, _inputNode } = getSelectRichMembers(el);
+
+      expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
 
       const newOption = /** @type {LionOption} */ (document.createElement('lion-option'));
       newOption.choiceValue = 30;
       newOption.textContent = '30 with longer label';
 
-      el._inputNode.appendChild(newOption);
+      _inputNode.appendChild(newOption);
       await el.updateComplete;
-      expect(invoker.clientWidth).to.equal(options[2].clientWidth);
+      expect(_invokerNode.clientWidth).to.equal(options[2].clientWidth);
 
-      el._inputNode.removeChild(newOption);
+      _inputNode.removeChild(newOption);
       await el.updateComplete;
-      expect(invoker.clientWidth).to.equal(options[1].clientWidth);
+      expect(_invokerNode.clientWidth).to.equal(options[1].clientWidth);
     });
   });
 
@@ -235,16 +224,16 @@ describe('lion-select-rich', () => {
 
     it('shows/hides the listbox via opened attribute', async () => {
       const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
+      const { _overlayCtrl } = getSelectRichMembers(el);
+
       el.opened = true;
       await el.updateComplete;
-      // @ts-ignore allow protected access in tests
-      expect(el._overlayCtrl.isShown).to.be.true;
+      expect(_overlayCtrl.isShown).to.be.true;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      // @ts-ignore allow protected access in tests
-      expect(el._overlayCtrl.isShown).to.be.false;
+      expect(_overlayCtrl.isShown).to.be.false;
     });
 
     it('syncs opened state with overlay shown', async () => {
@@ -262,21 +251,18 @@ describe('lion-select-rich', () => {
 
     it('will focus the listbox on open and invoker on close', async () => {
       const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
-      // @ts-ignore allow protected access in tests
-      await el._overlayCtrl.show();
+      const { _overlayCtrl, _listboxNode, _invokerNode } = getSelectRichMembers(el);
+
+      await _overlayCtrl.show();
       await el.updateComplete;
-      // @ts-ignore allow protected access in tests
-      expect(document.activeElement === el._listboxNode).to.be.true;
-      // @ts-ignore allow protected access in tests
-      expect(document.activeElement === el._invokerNode).to.be.false;
+      expect(document.activeElement === _listboxNode).to.be.true;
+      expect(document.activeElement === _invokerNode).to.be.false;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      // @ts-ignore allow protected access in tests
-      expect(document.activeElement === el._listboxNode).to.be.false;
-      // @ts-ignore allow protected access in tests
-      expect(document.activeElement === el._invokerNode).to.be.true;
+      expect(document.activeElement === _listboxNode).to.be.false;
+      expect(document.activeElement === _invokerNode).to.be.true;
     });
 
     it('opens the listbox with checked option as active', async () => {
@@ -286,8 +272,9 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
-      // @ts-ignore allow protected access in tests
-      await el._overlayCtrl.show();
+      const { _overlayCtrl } = getSelectRichMembers(el);
+
+      await _overlayCtrl.show();
       await el.updateComplete;
       const options = el.formElements;
 
@@ -302,6 +289,7 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
+      const { _invokerNode: _invokerNodeReadOnly } = getSelectRichMembers(elReadOnly);
 
       const elDisabled = await fixture(html`
         <lion-select-rich disabled>
@@ -309,25 +297,24 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20} checked>Item 2</lion-option>
         </lion-select-rich>
       `);
+      const { _invokerNode: _invokerNodeDisabled } = getSelectRichMembers(elDisabled);
 
       const elSingleoption = await fixture(html`
         <lion-select-rich>
           <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
+      const { _invokerNode: _invokerNodeSingleOption } = getSelectRichMembers(elSingleoption);
 
-      // @ts-ignore allow protected access in tests
-      elReadOnly._invokerNode.click();
+      _invokerNodeReadOnly.click();
       await elReadOnly.updateComplete;
       expect(elReadOnly.opened).to.be.false;
 
-      // @ts-ignore allow protected access in tests
-      elDisabled._invokerNode.click();
+      _invokerNodeDisabled.click();
       await elDisabled.updateComplete;
       expect(elDisabled.opened).to.be.false;
 
-      // @ts-ignore allow protected access in tests
-      elSingleoption._invokerNode.click();
+      _invokerNodeSingleOption.click();
       await elSingleoption.updateComplete;
       expect(elSingleoption.opened).to.be.false;
     });
@@ -340,14 +327,13 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${'teal'}>Teal</lion-option>
         </lion-select-rich>
       `);
+      const { _overlayCtrl } = getSelectRichMembers(el);
 
-      // @ts-ignore allow protected access in tests
-      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
       el.opened = true;
       await el.updateComplete;
 
-      // @ts-ignore allow protected access in tests
-      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('min');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
     });
 
     it('should override the inheritsWidth prop when no default selected feature is used', async () => {
@@ -359,20 +345,17 @@ describe('lion-select-rich', () => {
         </lion-select-rich>
       `);
 
-      const { overlay } = getProtectedMembers(el);
+      const { _overlayCtrl } = getSelectRichMembers(el);
 
       // The default is min, so we override that behavior here
-      // @ts-ignore allow protected access in tests
-      overlay.updateConfig({ inheritsReferenceWidth: 'full' });
+      _overlayCtrl.updateConfig({ inheritsReferenceWidth: 'full' });
       el._initialInheritsReferenceWidth = 'full';
 
-      // @ts-ignore allow protected access in tests
-      expect(overlay.inheritsReferenceWidth).to.equal('full');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
       el.opened = true;
       await el.updateComplete;
       // Opens while hasNoDefaultSelected = true, so we expect an override
-      // @ts-ignore allow protected access in tests
-      expect(overlay.inheritsReferenceWidth).to.equal('min');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('min');
 
       // Emulate selecting hotpink, it closing, and opening it again
       el.modelValue = 'hotpink';
@@ -382,11 +365,10 @@ describe('lion-select-rich', () => {
       el.opened = true;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      await overlay._showComplete;
+      await _overlayCtrl._showComplete;
 
       // noDefaultSelected will now flip the override back to what was the initial reference width
-      // @ts-ignore allow protected access in tests
-      expect(el._overlayCtrl.inheritsReferenceWidth).to.equal('full');
+      expect(_overlayCtrl.inheritsReferenceWidth).to.equal('full');
     });
 
     it('should have singleOption only if there is exactly one option', async () => {
@@ -396,27 +378,26 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
+
+      const { _inputNode, _invokerNode } = getSelectRichMembers(el);
+
       expect(el.singleOption).to.be.false;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.singleOption).to.be.false;
+      expect(_invokerNode.singleOption).to.be.false;
 
       const optionELm = el.formElements[0];
-      // @ts-ignore allow protected access in tests
       optionELm.parentNode.removeChild(optionELm);
       el.requestUpdate();
       await el.updateComplete;
       expect(el.singleOption).to.be.true;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.singleOption).to.be.true;
+      expect(_invokerNode.singleOption).to.be.true;
 
       const newOption = /** @type {LionOption} */ (document.createElement('lion-option'));
       newOption.choiceValue = 30;
-      el._inputNode.appendChild(newOption);
+      _inputNode.appendChild(newOption);
       el.requestUpdate();
       await el.updateComplete;
       expect(el.singleOption).to.be.false;
-      // @ts-ignore allow protected access in tests
-      expect(el._invokerNode.singleOption).to.be.false;
+      expect(_invokerNode.singleOption).to.be.false;
     });
   });
 
@@ -432,32 +413,32 @@ describe('lion-select-rich', () => {
   describe('Keyboard navigation', () => {
     it('opens the listbox with [Enter] key via click handler', async () => {
       const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
-      // @ts-ignore allow protected access in tests
-      el._invokerNode.click();
+      const { _invokerNode } = getSelectRichMembers(el);
+      _invokerNode.click();
       await aTimeout(0);
       expect(el.opened).to.be.true;
     });
 
     it('opens the listbox with [ ](Space) key via click handler', async () => {
       const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
-      // @ts-ignore allow protected access in tests
-      el._invokerNode.click();
+      const { _invokerNode } = getSelectRichMembers(el);
+      _invokerNode.click();
       await aTimeout(0);
       expect(el.opened).to.be.true;
     });
 
     it('closes the listbox with [Escape] key once opened', async () => {
       const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
-      // @ts-ignore allow protected access in tests
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      const { _listboxNode } = getSelectRichMembers(el);
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(el.opened).to.be.false;
     });
 
     it('closes the listbox with [Tab] key once opened', async () => {
       const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
       // tab can only be caught via keydown
-      // @ts-ignore allow protected access in tests
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      const { _listboxNode } = getSelectRichMembers(el);
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.be.false;
     });
   });
@@ -466,8 +447,8 @@ describe('lion-select-rich', () => {
     it('opens the listbox via click on invoker', async () => {
       const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
       expect(el.opened).to.be.false;
-      // @ts-ignore allow protected access in tests
-      el._invokerNode.click();
+      const { _invokerNode } = getSelectRichMembers(el);
+      _invokerNode.click();
       await nextFrame(); // reflection of click takes some time
       expect(el.opened).to.be.true;
     });
@@ -487,8 +468,8 @@ describe('lion-select-rich', () => {
   describe('Keyboard navigation Windows', () => {
     it('closes the listbox with [Enter] key once opened', async () => {
       const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
-      // @ts-ignore allow protected access in tests
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      const { _listboxNode } = getSelectRichMembers(el);
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.be.false;
     });
   });
@@ -501,12 +482,12 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
+      const { _listboxNode } = getSelectRichMembers(el);
 
       // changes active but not checked
       el.activeIndex = 1;
       expect(el.checkedIndex).to.equal(0);
-      // @ts-ignore allow protected access in tests
-      el._listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.be.false;
       expect(el.checkedIndex).to.equal(1);
     });
@@ -538,26 +519,26 @@ describe('lion-select-rich', () => {
           <lion-option .choiceValue=${20}>Item 2</lion-option>
         </lion-select-rich>
       `);
-      const { invoker, feedback, label, helpText } = getProtectedMembers(el);
+      const { _invokerNode, _feedbackNode, _labelNode, _helpTextNode } = getSelectRichMembers(el);
 
-      expect(invoker.getAttribute('aria-labelledby')).to.contain(label.id);
-      expect(invoker.getAttribute('aria-labelledby')).to.contain(invoker.id);
-      expect(invoker.getAttribute('aria-describedby')).to.contain(helpText.id);
-      expect(invoker.getAttribute('aria-describedby')).to.contain(feedback.id);
-      expect(invoker.getAttribute('aria-haspopup')).to.equal('listbox');
+      expect(_invokerNode.getAttribute('aria-labelledby')).to.contain(_labelNode.id);
+      expect(_invokerNode.getAttribute('aria-labelledby')).to.contain(_invokerNode.id);
+      expect(_invokerNode.getAttribute('aria-describedby')).to.contain(_helpTextNode.id);
+      expect(_invokerNode.getAttribute('aria-describedby')).to.contain(_feedbackNode.id);
+      expect(_invokerNode.getAttribute('aria-haspopup')).to.equal('listbox');
     });
 
     it('notifies when the listbox is expanded or not', async () => {
       // smoke test for overlay functionality
       const el = await fixture(html` <lion-select-rich> </lion-select-rich> `);
-      const { invoker } = getProtectedMembers(el);
+      const { _invokerNode } = getSelectRichMembers(el);
 
-      expect(invoker.getAttribute('aria-expanded')).to.equal('false');
+      expect(_invokerNode.getAttribute('aria-expanded')).to.equal('false');
       el.opened = true;
       await el.updateComplete;
       await el.updateComplete; // need 2 awaits as overlay.show is an async function
 
-      expect(invoker.getAttribute('aria-expanded')).to.equal('true');
+      expect(_invokerNode.getAttribute('aria-expanded')).to.equal('true');
     });
   });
 
@@ -617,21 +598,21 @@ describe('lion-select-rich', () => {
         /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('lion-select-rich')
       );
 
-      const { invoker, listbox } = getProtectedMembers(selectRich);
+      const { _invokerNode, _listboxNode } = getSelectRichMembers(selectRich);
 
       expect(selectRich.checkedIndex).to.equal(1);
       expect(selectRich.modelValue).to.equal('hotpink');
-      expect(/** @type {LionOption} */ (invoker.selectedElement).value).to.equal('hotpink');
+      expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
 
       const newOption = /** @type {LionOption} */ (document.createElement('lion-option'));
       newOption.modelValue = { checked: false, value: 'blue' };
       newOption.textContent = 'Blue';
-      const hotpinkEl = listbox.children[1];
+      const hotpinkEl = _listboxNode.children[1];
       hotpinkEl.insertAdjacentElement('beforebegin', newOption);
 
       expect(selectRich.checkedIndex).to.equal(2);
       expect(selectRich.modelValue).to.equal('hotpink');
-      expect(/** @type {LionOption} */ (invoker.selectedElement).value).to.equal('hotpink');
+      expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
     });
   });
 
@@ -669,11 +650,11 @@ describe('lion-select-rich', () => {
         </${mySelectTag}>
       `);
       await el.updateComplete;
-      // @ts-ignore allow protected member access in tests
-      expect(el._overlayCtrl.placementMode).to.equal('global');
+      const { _overlayCtrl } = getSelectRichMembers(el);
+
+      expect(_overlayCtrl.placementMode).to.equal('global');
       el.dispatchEvent(new Event('switch'));
-      // @ts-ignore allow protected member access in tests
-      expect(el._overlayCtrl.placementMode).to.equal('local');
+      expect(_overlayCtrl.placementMode).to.equal('local');
     });
 
     it('supports putting a placeholder template when there is no default selection initially', async () => {
@@ -707,10 +688,10 @@ describe('lion-select-rich', () => {
 
         </${selectTag}>
       `);
-      const { invoker } = getProtectedMembers(el);
+      const { _invokerNode } = getSelectRichMembers(el);
 
       expect(
-        /** @type {ShadowRoot} */ (invoker.shadowRoot).getElementById('content-wrapper'),
+        /** @type {ShadowRoot} */ (_invokerNode.shadowRoot).getElementById('content-wrapper'),
       ).dom.to.equal(`<div id="content-wrapper">Please select an option..</div>`);
       expect(el.modelValue).to.equal('');
     });

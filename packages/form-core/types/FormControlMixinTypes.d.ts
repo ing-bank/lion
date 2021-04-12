@@ -1,10 +1,11 @@
 import { LitElement, nothing, TemplateResult, CSSResultArray } from '@lion/core';
-import { SlotsMap, SlotHost } from '@lion/core/types/SlotMixinTypes';
+import { SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
+import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
 
 import { LionValidationFeedback } from '../src/validate/LionValidationFeedback';
-import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes';
+import { Unparseable } from '../src/validate/Unparseable.js';
 
 export type ModelValueEventDetails = {
   /**
@@ -65,12 +66,12 @@ export declare class FormControlHost {
    * controls until they are enabled.
    * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
    */
-  public readOnly: boolean;
+  readOnly: boolean;
   /**
    * The name the element will be registered with to the .formElements collection
    * of the parent.
    */
-  public name: string;
+  name: string;
   /**
    * The model value is the result of the parser function(when available).
    * It should be considered as the internal value used for validation and reasoning/logic.
@@ -83,32 +84,59 @@ export declare class FormControlHost {
    * - For a number input: a formatted String '1.234,56' will be converted to a Number:
    *   1234.56
    */
-  public modelValue: unknown;
+  get modelValue(): any | Unparseable;
+  set modelValue(value: any | Unparseable);
   /**
    * The label text for the input node.
    * When no light dom defined via [slot=label], this value will be used
    */
-  public get label(): string;
-  public set label(arg: string);
-  __label: string | undefined;
+  get label(): string;
+  set label(arg: string);
   /**
    * The helpt text for the input node.
    * When no light dom defined via [slot=help-text], this value will be used
    */
-  public get helpText(): string;
-  public set helpText(arg: string);
-  __helpText: string | undefined;
-  public set fieldName(arg: string);
-  public get fieldName(): string;
-  __fieldName: string | undefined;
-  public get slots(): SlotsMap;
-  get _inputNode(): HTMLElementWithValue;
-  get _labelNode(): HTMLElement;
-  get _helpTextNode(): HTMLElement;
-  get _feedbackNode(): LionValidationFeedback | undefined;
-  _inputId: string;
-  _ariaLabelledNodes: HTMLElement[];
-  _ariaDescribedNodes: HTMLElement[];
+  get helpText(): string;
+  set helpText(arg: string);
+
+  set fieldName(arg: string);
+  get fieldName(): string;
+
+  addToAriaLabelledBy(
+    element: HTMLElement,
+    customConfig?: {
+      idPrefix?: string | undefined;
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  addToAriaDescribedBy(
+    element: HTMLElement,
+    customConfig?: {
+      idPrefix?: string | undefined;
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  removeFromAriaLabelledBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  removeFromAriaDescribedBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  updated(changedProperties: import('@lion/core').PropertyValues): void;
+
+  protected get _inputNode(): HTMLElementWithValue | HTMLInputElement | HTMLTextAreaElement;
+  protected get _labelNode(): HTMLElement;
+  protected get _helpTextNode(): HTMLElement;
+  protected get _feedbackNode(): LionValidationFeedback;
+  protected _inputId: string;
+  protected _ariaLabelledNodes: HTMLElement[];
+  protected _ariaDescribedNodes: HTMLElement[];
   /**
    * Based on the role, details of handling model-value-changed repropagation differ.
    */
@@ -124,65 +152,41 @@ export declare class FormControlHost {
    * to true to hide private internals in the formPath.
    */
   protected _isRepropagationEndpoint: boolean;
-
-  connectedCallback(): void;
-  updated(changedProperties: import('@lion/core').PropertyValues): void;
-
-  render(): TemplateResult;
+  protected _parentFormGroup: FormControlHost | undefined;
   protected _groupOneTemplate(): TemplateResult;
   protected _groupTwoTemplate(): TemplateResult;
-  _labelTemplate(): TemplateResult;
-  _helpTextTemplate(): TemplateResult;
+  protected _labelTemplate(): TemplateResult;
+  protected _helpTextTemplate(): TemplateResult;
   protected _inputGroupTemplate(): TemplateResult;
-  _inputGroupBeforeTemplate(): TemplateResult;
-  _inputGroupPrefixTemplate(): TemplateResult | typeof nothing;
+  protected _inputGroupBeforeTemplate(): TemplateResult;
+  protected _inputGroupPrefixTemplate(): TemplateResult | typeof nothing;
   protected _inputGroupInputTemplate(): TemplateResult;
-  _inputGroupSuffixTemplate(): TemplateResult | typeof nothing;
-  _inputGroupAfterTemplate(): TemplateResult;
-  _feedbackTemplate(): TemplateResult;
-
+  protected _inputGroupSuffixTemplate(): TemplateResult | typeof nothing;
+  protected _inputGroupAfterTemplate(): TemplateResult;
+  protected _feedbackTemplate(): TemplateResult;
   protected _triggerInitialModelValueChangedEvent(): void;
-  _enhanceLightDomClasses(): void;
-  _enhanceLightDomA11y(): void;
-  _enhanceLightDomA11yForAdditionalSlots(additionalSlots?: string[]): void;
-  __reflectAriaAttr(attrName: string, nodes: HTMLElement[], reorder: boolean | undefined): void;
-  protected _isEmpty(modelValue?: unknown): boolean;
-  _getAriaDescriptionElements(): HTMLElement[];
-  public addToAriaLabelledBy(
-    element: HTMLElement,
-    customConfig?: {
-      idPrefix?: string | undefined;
-      reorder?: boolean | undefined;
-    },
-  ): void;
-  __reorderAriaLabelledNodes: boolean | undefined;
-  public addToAriaDescribedBy(
-    element: HTMLElement,
-    customConfig?: {
-      idPrefix?: string | undefined;
-      reorder?: boolean | undefined;
-    },
-  ): void;
-  public removeFromAriaLabelledBy(
-    element: HTMLElement,
-    customConfig?: {
-      reorder?: boolean | undefined;
-    },
-  ): void;
-  public removeFromAriaDescribedBy(
-    element: HTMLElement,
-    customConfig?: {
-      reorder?: boolean | undefined;
-    },
-  ): void;
-  __reorderAriaDescribedNodes: boolean | undefined;
-  __getDirectSlotChild(slotName: string): HTMLElement;
-  __dispatchInitialModelValueChangedEvent(): void;
-  __repropagateChildrenInitialized: boolean | undefined;
+  protected _enhanceLightDomClasses(): void;
+  protected _enhanceLightDomA11y(): void;
+  protected _enhanceLightDomA11yForAdditionalSlots(additionalSlots?: string[]): void;
+  protected _isEmpty(modelValue?: any): boolean;
+  protected _getAriaDescriptionElements(): HTMLElement[];
+  protected _dispatchInitialModelValueChangedEvent(): void;
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
-  __repropagateChildrenValues(ev: CustomEvent): void;
-  _parentFormGroup: FormControlHost;
-  _repropagationCondition(target: FormControlHost): boolean;
+  protected _repropagationCondition(target: FormControlHost): boolean;
+
+  private __helpText: string | undefined;
+  private __label: string;
+  private __fieldName: string | undefined;
+  private __reorderAriaLabelledNodes: boolean | undefined;
+  private __reflectAriaAttr(
+    attrName: string,
+    nodes: HTMLElement[],
+    reorder: boolean | undefined,
+  ): void;
+  private __reorderAriaDescribedNodes: boolean | undefined;
+  private __getDirectSlotChild(slotName: string): HTMLElement | undefined;
+  private __repropagateChildrenInitialized: boolean | undefined;
+  private __repropagateChildrenValues(ev: CustomEvent): void;
 }
 
 export declare function FormControlImplementation<T extends Constructor<LitElement>>(

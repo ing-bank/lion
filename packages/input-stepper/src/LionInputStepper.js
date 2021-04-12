@@ -104,7 +104,6 @@ export class LionInputStepper extends LionInput {
     }
   }
 
-  // @ts-ignore
   get slots() {
     return {
       ...super.slots,

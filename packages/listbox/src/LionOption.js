@@ -14,6 +14,7 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
  * enabling SubClassers to style based on those states
  */
 export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
+  /** @type {any} */
   static get properties() {
     return {
       active: {
@@ -127,7 +128,7 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
       return;
     }
     const parentForm = /** @type {unknown} */ (this._parentFormGroup);
-    this.__isHandlingUserInput = true;
+    this._isHandlingUserInput = true;
     if (parentForm && /** @type {ChoiceGroupHost} */ (parentForm).multipleChoice) {
       this.checked = !this.checked;
       this.active = !this.active;
@@ -135,6 +136,6 @@ export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMi
       this.checked = true;
       this.active = true;
     }
-    this.__isHandlingUserInput = false;
+    this._isHandlingUserInput = false;
   }
 }

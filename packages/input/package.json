@@ -50,6 +50,7 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-input.js",
-    "./docs/": "./docs/"
+    "./docs/": "./docs/",
+    "./test-helpers": "./test-helpers/index.js"
   }
 }

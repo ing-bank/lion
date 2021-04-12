@@ -3,15 +3,13 @@
  * @param {string} [flavor]
  */
 function checkChrome(flavor = 'google-chrome') {
-  // @ts-ignore
-  const isChromium = window.chrome;
+  const isChromium = /** @type {window & { chrome?: boolean}} */ (window).chrome;
   if (flavor === 'chromium') {
     return isChromium;
   }
   const winNav = window.navigator;
   const vendorName = winNav.vendor;
-  // @ts-ignore
-  const isOpera = typeof window.opr !== 'undefined';
+  const isOpera = typeof (/** @type {window & { opr?: boolean}} */ (window).opr) !== 'undefined';
   const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
   const isIOSChrome = winNav.userAgent.match('CriOS');
 

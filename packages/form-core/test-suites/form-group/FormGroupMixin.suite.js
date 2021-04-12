@@ -1,5 +1,4 @@
 import { LitElement } from '@lion/core';
-// @ts-ignore
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import {
   defineCE,
@@ -11,10 +10,10 @@ import {
   aTimeout,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-// @ts-ignore
 import { IsNumber, Validator, LionField } from '@lion/form-core';
 import '@lion/form-core/define';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
+import { getFormControlMembers } from '../../test-helpers/getFormControlMembers.js';
 
 /**
  * @param {{ tagString?: string, childTagString?:string }} [cfg]
@@ -63,12 +62,14 @@ export function runFormGroupMixinSuite(cfg = {}) {
       const el1 = /**  @type {FormGroup} */ (await fixture(
         html`<${tag} label="foo">${inputSlots}</${tag}>`,
       ));
-      expect(el1.fieldName).to.equal(el1._labelNode.textContent);
+      const { _labelNode: _labelNode1 } = getFormControlMembers(el1);
+      expect(el1.fieldName).to.equal(_labelNode1.textContent);
 
       const el2 = /**  @type {FormGroup} */ (await fixture(
         html`<${tag}><label slot="label">bar</label>${inputSlots}</${tag}>`,
       ));
-      expect(el2.fieldName).to.equal(el2._labelNode.textContent);
+      const { _labelNode: _labelNode2 } = getFormControlMembers(el2);
+      expect(el2.fieldName).to.equal(_labelNode2.textContent);
     });
 
     it(`has a fieldName based on the name if no label exists`, async () => {
@@ -82,17 +83,18 @@ export function runFormGroupMixinSuite(cfg = {}) {
       const el = /**  @type {FormGroup} */ (await fixture(html`
       <${tag} label="foo" .fieldName="${'bar'}">${inputSlots}</${tag}>
     `));
+      // @ts-ignore [allow-proteced] in test
       expect(el.__fieldName).to.equal(el.fieldName);
     });
 
     // TODO: Tests below belong to FormRegistrarMixin. Preferably run suite integration test
     it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}>${inputSlots}</${tag}>`));
-      // @ts-ignore
+      // @ts-ignore [allow-proteced] in test
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(2);
       el.removeChild(el.formElements['hobbies[]'][0]);
-      // @ts-ignore
+      // @ts-ignore [allow-proteced] in test
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(1);
     });
@@ -207,16 +209,17 @@ export function runFormGroupMixinSuite(cfg = {}) {
       const newField = /**  @type {FormGroup} */ (await fixture(
         html`<${childTag} name="lastName"></${childTag}>`,
       ));
+      const { _inputNode } = getFormControlMembers(el);
 
-      // @ts-ignore
+      // @ts-ignore [allow-protected] in test
       expect(el.formElements._keys().length).to.equal(3);
 
       el.appendChild(newField);
-      // @ts-ignore
+      // @ts-ignore [allow-protected] in test
       expect(el.formElements._keys().length).to.equal(4);
 
-      el._inputNode.removeChild(newField);
-      // @ts-ignore
+      _inputNode.removeChild(newField);
+      // @ts-ignore [allow-protected] in test
       expect(el.formElements._keys().length).to.equal(3);
     });
 
@@ -332,11 +335,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
       };
       expect(el.modelValue).to.deep.equal(initState);
 
-      // @ts-expect-error
       el.modelValue = undefined;
       expect(el.modelValue).to.deep.equal(initState);
 
-      // @ts-expect-error
       el.modelValue = null;
       expect(el.modelValue).to.deep.equal(initState);
     });
@@ -512,11 +513,15 @@ export function runFormGroupMixinSuite(cfg = {}) {
 
       it('sets touched when last field in fieldset left after focus', async () => {
         const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}>${inputSlots}</${tag}>`));
-
-        await triggerFocusFor(el.formElements['hobbies[]'][0]._inputNode);
-        await triggerFocusFor(
-          el.formElements['hobbies[]'][el.formElements['gender[]'].length - 1]._inputNode,
+        const { _inputNode: hobbyInputNode } = getFormControlMembers(
+          el.formElements['hobbies[]'][0],
         );
+        const { _inputNode: genderInputNode } = getFormControlMembers(
+          el.formElements['hobbies[]'][el.formElements['gender[]'].length - 1],
+        );
+
+        await triggerFocusFor(hobbyInputNode);
+        await triggerFocusFor(genderInputNode);
         const button = /**  @type {FormGroup} */ (await fixture(html`<button></button>`));
         button.focus();
 
@@ -927,12 +932,14 @@ export function runFormGroupMixinSuite(cfg = {}) {
           html`<${tag} touched dirty>${inputSlots}</${tag}>`,
         ));
         // Safety check initially
+        // @ts-ignore [allow-protected] in test
         el._setValueForAllFormElements('prefilled', true);
         expect(el.dirty).to.equal(true, '"dirty" initially');
         expect(el.touched).to.equal(true, '"touched" initially');
         expect(el.prefilled).to.equal(true, '"prefilled" initially');
 
         // Reset all children states, with prefilled false
+        // @ts-ignore [allow-protected] in test
         el._setValueForAllFormElements('modelValue', {});
         el.resetInteractionState();
         expect(el.dirty).to.equal(false, 'not "dirty" after reset');
@@ -940,6 +947,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.prefilled).to.equal(false, 'not "prefilled" after reset');
 
         // Reset all children states with prefilled true
+        // @ts-ignore [allow-protected] in test
         el._setValueForAllFormElements('modelValue', { checked: true }); // not prefilled
         el.resetInteractionState();
         expect(el.dirty).to.equal(false, 'not "dirty" after 2nd reset');
@@ -1026,6 +1034,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       `));
         await el.updateComplete;
         el.modelValue['child[]'] = ['foo2', 'bar2'];
+        // @ts-ignore [allow-protected] in test
         expect(el._initialModelValue['child[]']).to.eql(['foo1', 'bar1']);
       });
 
@@ -1042,6 +1051,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         </${childTag}>
       `));
         el.appendChild(childEl);
+        // @ts-ignore [allow-protected] in test
         expect(el._initialModelValue['child[]']).to.eql(['foo1', 'bar1']);
       });
 

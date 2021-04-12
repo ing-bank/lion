@@ -1,8 +1,15 @@
 import { expect, html, defineCE, unsafeStatic, fixture } from '@open-wc/testing';
 import { LitElement } from '@lion/core';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
+import { FocusMixin } from '../src/FocusMixin.js';
+import { FormGroupMixin } from '../src/form-group/FormGroupMixin.js';
+
+/**
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ */
 
 describe('FormControlMixin', () => {
   const inputSlot = html`<input slot="input" />`;
@@ -112,35 +119,22 @@ describe('FormControlMixin', () => {
         </div>
       `));
       const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
-      const labelIdsBefore = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsBefore = /** @type {string} */ (el._inputNode.getAttribute(
+      const { _inputNode } = getFormControlMembers(el);
+
+      const labelIdsBefore = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsBefore = /** @type {string} */ (_inputNode.getAttribute(
         'aria-describedby',
       ));
       // Reconnect
       wrapper.removeChild(el);
       wrapper.appendChild(el);
-      const labelIdsAfter = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsAfter = /** @type {string} */ (el._inputNode.getAttribute(
+      const labelIdsAfter = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsAfter = /** @type {string} */ (_inputNode.getAttribute(
         'aria-describedby',
       ));
 
       expect(labelIdsBefore).to.equal(labelIdsAfter);
       expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
-    });
-
-    it('adds aria-live="polite" to the feedback slot', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-        <${tag}>
-          ${inputSlot}
-          <div slot="feedback">Added to see attributes</div>
-        </${tag}>
-      `));
-
-      expect(
-        Array.from(el.children)
-          .find(child => child.slot === 'feedback')
-          ?.getAttribute('aria-live'),
-      ).to.equal('polite');
     });
 
     it('clicking the label should call `_onLabelClick`', async () => {
@@ -150,9 +144,82 @@ describe('FormControlMixin', () => {
           ${inputSlot}
         </${tag}>
       `));
+      const { _labelNode } = getFormControlMembers(el);
+
       expect(spy).to.not.have.been.called;
-      el._labelNode.click();
+      _labelNode.click();
       expect(spy).to.have.been.calledOnce;
+    });
+
+    describe('Feedback slot aria-live', () => {
+      // See: https://www.w3.org/WAI/tutorials/forms/notifications/#on-focus-change
+      it(`adds aria-live="polite" to the feedback slot on focus, aria-live="assertive" to the feedback slot on blur,
+        so error messages appearing on blur will be read before those of the next input`, async () => {
+        const FormControlWithRegistrarMixinClass = class extends FormGroupMixin(LitElement) {};
+
+        const groupTagString = defineCE(FormControlWithRegistrarMixinClass);
+        const groupTag = unsafeStatic(groupTagString);
+
+        const focusableTagString = defineCE(
+          class extends FocusMixin(FormControlMixin(LitElement)) {},
+        );
+        const focusableTag = unsafeStatic(focusableTagString);
+
+        const formEl = await fixture(html`
+          <${groupTag} name="form">
+            <${groupTag} name="fieldset">
+              <${focusableTag} name="field1">
+                ${inputSlot}
+                <div slot="feedback">
+                  Error message with:
+                  - aria-live="polite" on focused (during typing an end user should not be bothered for best UX)
+                  - aria-live="assertive" on blur (so that the message that eventually appears
+                    on blur will be read before message of the next focused input)
+                </div>
+              </${focusableTag}>
+              <${focusableTag} name="field2">
+                ${inputSlot}
+                <div slot="feedback">
+                  Should be read after the error message of field 1
+                </div>
+              </${focusableTag}>
+              <div slot="feedback">
+                Group message... Should be read after the error message of field 2
+              </div>
+            </${groupTag}>
+            <${focusableTag} name="field3">
+              ${inputSlot}
+              <div slot="feedback">
+              Should be read after the error message of field 2
+              </div>
+            </${focusableTag}>
+          </${groupTag}>
+        `);
+
+        /**
+         * @typedef {* & import('../types/FormControlMixinTypes').FormControlHost} FormControl
+         */
+        const field1El = /** @type {FormControl} */ (formEl.querySelector('[name=field1]'));
+        const field2El = /** @type {FormControl} */ (formEl.querySelector('[name=field2]'));
+        const field3El = /** @type {FormControl} */ (formEl.querySelector('[name=field3]'));
+        const fieldsetEl = /** @type {FormControl} */ (formEl.querySelector('[name=fieldset]'));
+
+        field1El.focus();
+        expect(field1El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+
+        field2El.focus();
+        // field1El just blurred
+        expect(field1El._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        expect(field2El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+
+        field3El.focus();
+        // field2El just blurred
+        expect(field2El._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        // fieldsetEl just blurred
+
+        expect(fieldsetEl._feedbackNode.getAttribute('aria-live')).to.equal('assertive');
+        expect(field3El._feedbackNode.getAttribute('aria-live')).to.equal('polite');
+      });
     });
 
     describe('Adding extra labels and descriptions', () => {
@@ -169,40 +236,44 @@ describe('FormControlMixin', () => {
             <div id="additionalDescription"> Same for this </div>
           </div>`));
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
+
         // wait until the field element is done rendering
         await el.updateComplete;
         await el.updateComplete;
 
+        // @ts-ignore allow protected accessors in tests
+        const inputId = el._inputId;
+
         // 1a. addToAriaLabelledBy()
         // Check if the aria attr is filled initially
-        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'))).to.contain(
-          `label-${el._inputId}`,
+        expect(/** @type {string} */ (_inputNode.getAttribute('aria-labelledby'))).to.contain(
+          `label-${inputId}`,
         );
         const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
           '#additionalLabel',
         ));
         el.addToAriaLabelledBy(additionalLabel);
         await el.updateComplete;
-        let labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        let labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
         // Now check if ids are added to the end (not overridden)
         expect(labelledbyAttr).to.contain(`additionalLabel`);
         // Should be placed in the end
         expect(
-          labelledbyAttr.indexOf(`label-${el._inputId}`) <
-            labelledbyAttr.indexOf('additionalLabel'),
+          labelledbyAttr.indexOf(`label-${inputId}`) < labelledbyAttr.indexOf('additionalLabel'),
         );
 
         // 1b. removeFromAriaLabelledBy()
         el.removeFromAriaLabelledBy(additionalLabel);
         await el.updateComplete;
-        labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
         // Now check if ids are added to the end (not overridden)
         expect(labelledbyAttr).to.not.contain(`additionalLabel`);
 
         // 2a. addToAriaDescribedBy()
         // Check if the aria attr is filled initially
-        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-describedby'))).to.contain(
-          `feedback-${el._inputId}`,
+        expect(/** @type {string} */ (_inputNode.getAttribute('aria-describedby'))).to.contain(
+          `feedback-${inputId}`,
         );
       });
 
@@ -220,6 +291,7 @@ describe('FormControlMixin', () => {
           <div id="externalDescriptionB">should go after input internals</div>
         </div>`);
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
 
         // N.B. in real life we would never add the input to aria-describedby or -labelledby,
         // but this example purely demonstrates dom order is respected.
@@ -232,10 +304,10 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['myInput', 'internalLabel']);
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['myInput', 'internalDescription']);
 
         // cleanup
@@ -251,10 +323,10 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['internalLabel', 'myInput']);
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['internalDescription', 'myInput']);
       });
 
@@ -272,6 +344,7 @@ describe('FormControlMixin', () => {
           <div id="externalDescriptionB">should go after input internals</div>
         </div>`);
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
 
         // 1. addToAriaLabelledBy()
         const labelA = /** @type {HTMLElement} */ (wrapper.querySelector('#externalLabelA'));
@@ -282,7 +355,7 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['internalLabel', 'externalLabelA', 'externalLabelB']);
 
         // 2. addToAriaDescribedBy()
@@ -294,7 +367,7 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['internalDescription', 'externalDescriptionA', 'externalDescriptionB']);
       });
     });
@@ -368,47 +441,6 @@ describe('FormControlMixin', () => {
         const formEv = formSpy.firstCall.args[0];
         expect(formEv.target).to.equal(formEl);
         expect(formEv.detail.formPath).to.eql([fieldEl, fieldsetEl, formEl]);
-      });
-
-      it('sends one event for single select choice-groups', async () => {
-        const formSpy = sinon.spy();
-        const choiceGroupSpy = sinon.spy();
-        const formEl = await fixture(html`
-          <${groupTag} name="form">
-            <${groupTag} name="choice-group" ._repropagationRole=${'choice-group'}>
-              <${tag} name="choice-group" id="option1" .checked=${true}></${tag}>
-              <${tag} name="choice-group" id="option2"></${tag}>
-            </${groupTag}>
-          </${groupTag}>
-        `);
-        const choiceGroupEl = formEl.querySelector('[name=choice-group]');
-        /** @typedef {{ checked: boolean }} checkedInterface */
-        const option1El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option1',
-        ));
-        const option2El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option2',
-        ));
-        formEl.addEventListener('model-value-changed', formSpy);
-        choiceGroupEl?.addEventListener('model-value-changed', choiceGroupSpy);
-
-        // Simulate check
-        option2El.checked = true;
-        option2El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
-        option1El.checked = false;
-        option1El.dispatchEvent(new Event('model-value-changed', { bubbles: true }));
-
-        expect(choiceGroupSpy.callCount).to.equal(1);
-        const choiceGroupEv = choiceGroupSpy.firstCall.args[0];
-        expect(choiceGroupEv.target).to.equal(choiceGroupEl);
-        expect(choiceGroupEv.detail.formPath).to.eql([choiceGroupEl]);
-        expect(choiceGroupEv.detail.isTriggeredByUser).to.be.false;
-
-        expect(formSpy.callCount).to.equal(1);
-        const formEv = formSpy.firstCall.args[0];
-        expect(formEv.target).to.equal(formEl);
-        expect(formEv.detail.formPath).to.eql([choiceGroupEl, formEl]);
-        expect(formEv.detail.isTriggeredByUser).to.be.false;
       });
 
       it('sets "isTriggeredByUser" event detail when event triggered by user', async () => {

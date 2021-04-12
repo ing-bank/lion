@@ -7,23 +7,26 @@ import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { ValidateHost } from '../validate/ValidateMixinTypes';
 
 export declare class FormGroupHost {
-  protected static _addDescriptionElementIdsToField(): void;
-  _inputNode: HTMLElement;
-  submitGroup(): void;
-  resetGroup(): void;
   prefilled: boolean;
   touched: boolean;
   dirty: boolean;
   submitted: boolean;
   serializedValue: { [key: string]: any };
-  modelValue: { [x: string]: any };
   formattedValue: string;
   children: Array<HTMLElement & FormControlHost>;
-  _initialModelValue: { [x: string]: any };
-  _setValueForAllFormElements(property: string, value: any): void;
+  get modelValue(): { [x: string]: any };
+  set modelValue(value: { [x: string]: any });
   resetInteractionState(): void;
   clearGroup(): void;
-  __descriptionElementsInParentChain: Set<HTMLElement>;
+  submitGroup(): void;
+  resetGroup(): void;
+
+  protected _initialModelValue: { [x: string]: any };
+  protected get _inputNode(): HTMLElement;
+  protected static _addDescriptionElementIdsToField(): void;
+
+  protected _setValueForAllFormElements(property: string, value: any): void;
+  private __descriptionElementsInParentChain: Set<HTMLElement>;
 }
 
 export declare function FormGroupImplementation<T extends Constructor<LitElement>>(
