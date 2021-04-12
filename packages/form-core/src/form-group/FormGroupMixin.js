@@ -77,6 +77,7 @@ const FormGroupMixinImplementation = superclass =>
       };
     }
 
+    /** @protected */
     get _inputNode() {
       return this;
     }
@@ -183,7 +184,7 @@ const FormGroupMixinImplementation = superclass =>
      */
     _triggerInitialModelValueChangedEvent() {
       this.registrationComplete.then(() => {
-        this.__dispatchInitialModelValueChangedEvent();
+        this._dispatchInitialModelValueChangedEvent();
       });
     }
 

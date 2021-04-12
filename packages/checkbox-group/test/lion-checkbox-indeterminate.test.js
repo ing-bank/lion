@@ -1,4 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import '@lion/checkbox-group/define';
 
 /**
@@ -9,10 +10,14 @@ import '@lion/checkbox-group/define';
 /**
  * @param {LionCheckboxIndeterminate} el
  */
-function getProtectedMembers(el) {
+function getCheckboxIndeterminateMembers(el) {
+  const obj = getFormControlMembers(el);
   return {
-    // @ts-ignore
-    subCheckboxes: el._subCheckboxes,
+    ...obj,
+    ...{
+      // @ts-ignore [allow-protected] in test
+      _subCheckboxes: el._subCheckboxes,
+    },
   };
 }
 
@@ -103,10 +108,10 @@ describe('<lion-checkbox-indeterminate>', () => {
       'lion-checkbox-indeterminate',
     ));
 
-    const { subCheckboxes } = getProtectedMembers(elIndeterminate);
+    const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    subCheckboxes[0].checked = true;
+    _subCheckboxes[0].checked = true;
     await el.updateComplete;
 
     // Assert
@@ -127,12 +132,12 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       'lion-checkbox-indeterminate',
     ));
-    const { subCheckboxes } = getProtectedMembers(elIndeterminate);
+    const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    subCheckboxes[0].checked = true;
-    subCheckboxes[1].checked = true;
-    subCheckboxes[2].checked = true;
+    _subCheckboxes[0].checked = true;
+    _subCheckboxes[1].checked = true;
+    _subCheckboxes[2].checked = true;
     await el.updateComplete;
 
     // Assert
@@ -154,17 +159,17 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       'lion-checkbox-indeterminate',
     ));
+    const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    elIndeterminate._inputNode.click();
+    _inputNode.click();
     await elIndeterminate.updateComplete;
-    const { subCheckboxes } = getProtectedMembers(elIndeterminate);
 
     // Assert
     expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
-    expect(subCheckboxes[0].hasAttribute('checked')).to.be.true;
-    expect(subCheckboxes[1].hasAttribute('checked')).to.be.true;
-    expect(subCheckboxes[2].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
   });
 
   it('should sync all children when parent is checked (from unchecked to checked)', async () => {
@@ -181,17 +186,17 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       'lion-checkbox-indeterminate',
     ));
+    const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    elIndeterminate._inputNode.click();
+    _inputNode.click();
     await elIndeterminate.updateComplete;
-    const { subCheckboxes } = getProtectedMembers(elIndeterminate);
 
     // Assert
     expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
-    expect(subCheckboxes[0].hasAttribute('checked')).to.be.true;
-    expect(subCheckboxes[1].hasAttribute('checked')).to.be.true;
-    expect(subCheckboxes[2].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
   });
 
   it('should sync all children when parent is checked (from checked to unchecked)', async () => {
@@ -208,17 +213,17 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       'lion-checkbox-indeterminate',
     ));
+    const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    elIndeterminate._inputNode.click();
+    _inputNode.click();
     await elIndeterminate.updateComplete;
-    const elProts = getProtectedMembers(elIndeterminate);
 
     // Assert
     expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
-    expect(elProts.subCheckboxes[0].hasAttribute('checked')).to.be.false;
-    expect(elProts.subCheckboxes[1].hasAttribute('checked')).to.be.false;
-    expect(elProts.subCheckboxes[2].hasAttribute('checked')).to.be.false;
+    expect(_subCheckboxes[0].hasAttribute('checked')).to.be.false;
+    expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
+    expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
   });
 
   it('should work as expected with siblings checkbox-indeterminate', async () => {
@@ -258,27 +263,28 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elFirstIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       '#first-checkbox-indeterminate',
     ));
+
     const elSecondIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       '#second-checkbox-indeterminate',
     ));
 
+    const elFirstSubCheckboxes = getCheckboxIndeterminateMembers(elFirstIndeterminate);
+    const elSecondSubCheckboxes = getCheckboxIndeterminateMembers(elSecondIndeterminate);
+
     // Act - check the first sibling
-    elFirstIndeterminate._inputNode.click();
+    elFirstSubCheckboxes._inputNode.click();
     await elFirstIndeterminate.updateComplete;
     await elSecondIndeterminate.updateComplete;
-
-    const elFirstSubCheckboxes = getProtectedMembers(elFirstIndeterminate);
-    const elSecondSubCheckboxes = getProtectedMembers(elSecondIndeterminate);
 
     // Assert - the second sibling should not be affected
 
     expect(elFirstIndeterminate.hasAttribute('indeterminate')).to.be.false;
-    expect(elFirstSubCheckboxes.subCheckboxes[0].hasAttribute('checked')).to.be.true;
-    expect(elFirstSubCheckboxes.subCheckboxes[1].hasAttribute('checked')).to.be.true;
-    expect(elFirstSubCheckboxes.subCheckboxes[2].hasAttribute('checked')).to.be.true;
+    expect(elFirstSubCheckboxes._subCheckboxes[0].hasAttribute('checked')).to.be.true;
+    expect(elFirstSubCheckboxes._subCheckboxes[1].hasAttribute('checked')).to.be.true;
+    expect(elFirstSubCheckboxes._subCheckboxes[2].hasAttribute('checked')).to.be.true;
 
-    expect(elSecondSubCheckboxes.subCheckboxes[0].hasAttribute('checked')).to.be.false;
-    expect(elSecondSubCheckboxes.subCheckboxes[1].hasAttribute('checked')).to.be.false;
+    expect(elSecondSubCheckboxes._subCheckboxes[0].hasAttribute('checked')).to.be.false;
+    expect(elSecondSubCheckboxes._subCheckboxes[1].hasAttribute('checked')).to.be.false;
   });
 
   it('should work as expected with nested indeterminate checkboxes', async () => {
@@ -322,12 +328,13 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elParentIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       '#parent-checkbox-indeterminate',
     ));
-    const elNestedSubCheckboxes = getProtectedMembers(elNestedIndeterminate);
-    const elParentSubCheckboxes = getProtectedMembers(elParentIndeterminate);
+    const elNestedSubCheckboxes = getCheckboxIndeterminateMembers(elNestedIndeterminate);
+    const elParentSubCheckboxes = getCheckboxIndeterminateMembers(elParentIndeterminate);
 
     // Act - check a nested checkbox
     if (elNestedIndeterminate) {
-      elNestedSubCheckboxes.subCheckboxes[0]._inputNode.click();
+      // @ts-ignore [allow-protected] in test
+      elNestedSubCheckboxes._subCheckboxes[0]._inputNode.click();
     }
     await el.updateComplete;
 
@@ -336,8 +343,10 @@ describe('<lion-checkbox-indeterminate>', () => {
     expect(elParentIndeterminate?.hasAttribute('indeterminate')).to.be.true;
 
     // Act - check all nested checkbox
-    if (elNestedIndeterminate) elNestedSubCheckboxes.subCheckboxes[1]._inputNode.click();
-    if (elNestedIndeterminate) elNestedSubCheckboxes.subCheckboxes[2]._inputNode.click();
+    // @ts-ignore [allow-protected] in test
+    if (elNestedIndeterminate) elNestedSubCheckboxes._subCheckboxes[1]._inputNode.click();
+    // @ts-ignore [allow-protected] in test
+    if (elNestedIndeterminate) elNestedSubCheckboxes._subCheckboxes[2]._inputNode.click();
     await el.updateComplete;
 
     // Assert
@@ -348,10 +357,12 @@ describe('<lion-checkbox-indeterminate>', () => {
 
     // Act - finally check all remaining checkbox
     if (elParentIndeterminate) {
-      elParentSubCheckboxes.subCheckboxes[0]._inputNode.click();
+      // @ts-ignore [allow-protected] in test
+      elParentSubCheckboxes._subCheckboxes[0]._inputNode.click();
     }
     if (elParentIndeterminate) {
-      elParentSubCheckboxes.subCheckboxes[1]._inputNode.click();
+      // @ts-ignore [allow-protected] in test
+      elParentSubCheckboxes._subCheckboxes[1]._inputNode.click();
     }
     await el.updateComplete;
 
@@ -383,12 +394,12 @@ describe('<lion-checkbox-indeterminate>', () => {
     const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (el.querySelector(
       'lion-checkbox-indeterminate',
     ));
-    const { subCheckboxes } = getProtectedMembers(elIndeterminate);
+    const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
 
     // Act
-    subCheckboxes[0].checked = true;
-    subCheckboxes[1].checked = true;
-    subCheckboxes[2].checked = true;
+    _subCheckboxes[0].checked = true;
+    _subCheckboxes[1].checked = true;
+    _subCheckboxes[2].checked = true;
     await el.updateComplete;
 
     // Assert

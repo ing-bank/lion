@@ -3,6 +3,7 @@ import { Required, DefaultSuccess, Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { LionInput } from '@lion/input';
 import sinon from 'sinon';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 
 describe('Form Validation Integrations', () => {
   const lightDom = '';
@@ -49,8 +50,9 @@ describe('Form Validation Integrations', () => {
           ]}
         >${lightDom}</${elTag}>
       `));
+      const { _feedbackNode } = getFormControlMembers(el);
 
-      expect(el._feedbackNode.feedbackData?.length).to.equal(0);
+      expect(_feedbackNode.feedbackData?.length).to.equal(0);
 
       el.modelValue = 'w';
       el.touched = true;
@@ -61,7 +63,7 @@ describe('Form Validation Integrations', () => {
       el.modelValue = 'warn';
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('warning');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('warning');
 
       el.modelValue = 'war';
       await el.updateComplete;
@@ -76,14 +78,14 @@ describe('Form Validation Integrations', () => {
         'Changed!',
         'Ok, correct.',
       ]).to.include(
-        /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */ (el
-          ._feedbackNode.feedbackData)[0].message,
+        /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */
+        (_feedbackNode.feedbackData)[0].message,
       );
 
       el.modelValue = '';
       await el.updateComplete;
       await el.feedbackComplete;
-      expect(el._feedbackNode.feedbackData?.[0].message).to.equal('error');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('error');
 
       el.modelValue = 'war';
       await el.updateComplete;
@@ -98,13 +100,15 @@ describe('Form Validation Integrations', () => {
         'Changed!',
         'Ok, correct.',
       ]).to.include(
-        /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */ (el
-          ._feedbackNode.feedbackData)[0].message,
+        /** @type {{  message: string ;type: string; validator?: Validator | undefined;}[]} */
+        (_feedbackNode.feedbackData)[0].message,
       );
 
       // Check that change in focused or other interaction states does not refresh the success message
       // without a change in validation results
+      // @ts-ignore [allow-protected] in test
       const spy = sinon.spy(el, '_updateFeedbackComponent');
+      // @ts-ignore [allow-protected] in test
       el._updateShouldShowFeedbackFor();
       await el.updateComplete;
       await el.feedbackComplete;

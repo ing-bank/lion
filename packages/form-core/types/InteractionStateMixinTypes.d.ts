@@ -19,25 +19,18 @@ export declare class InteractionStateHost {
   touched: boolean;
   dirty: boolean;
   submitted: boolean;
-  _leaveEvent: string;
-  _valueChangedEvent: string;
+  initInteractionState(): void;
+  resetInteractionState(): void;
 
   connectedCallback(): void;
   disconnectedCallback(): void;
 
-  initInteractionState(): void;
-  resetInteractionState(): void;
-  _iStateOnLeave(): void;
-  _iStateOnValueChange(): void;
-  _onTouchedChanged(): void;
-  _onDirtyChanged(): void;
-
-  showFeedbackConditionFor(
-    type: string,
-    meta: InteractionStates,
-    currentCondition: Function,
-  ): boolean;
-  _feedbackConditionMeta: InteractionStates;
+  protected _leaveEvent: string;
+  protected _valueChangedEvent: string;
+  protected _iStateOnLeave(): void;
+  protected _iStateOnValueChange(): void;
+  protected _onTouchedChanged(): void;
+  protected _onDirtyChanged(): void;
 }
 
 export declare function InteractionStateImplementation<T extends Constructor<LitElement>>(

@@ -2,7 +2,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/form-core/define-validation-feedback';
-import { AlwaysInvalid, AlwaysValid } from '../../test-helpers.js';
+import { AlwaysInvalid, AlwaysValid } from '../../test-helpers/index.js';
 
 /**
  * @typedef {import('../../src/validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback

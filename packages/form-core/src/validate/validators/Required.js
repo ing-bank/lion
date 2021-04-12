@@ -45,14 +45,15 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
+  // @ts-ignore [allow-protected] we are allowed to know FormControl protcected props in form-core
   // eslint-disable-next-line class-methods-use-this
-  onFormControlConnect(formControl) {
-    if (formControl._inputNode) {
-      const role = formControl._inputNode.getAttribute('role') || '';
-      const elementTagName = formControl._inputNode.tagName.toLowerCase();
+  onFormControlConnect({ _inputNode: inputNode }) {
+    if (inputNode) {
+      const role = inputNode.getAttribute('role') || '';
+      const elementTagName = inputNode.tagName.toLowerCase();
       const ctor = /** @type {typeof Required} */ (this.constructor);
       if (ctor._compatibleRoles.includes(role) || ctor._compatibleTags.includes(elementTagName)) {
-        formControl._inputNode.setAttribute('aria-required', 'true');
+        inputNode.setAttribute('aria-required', 'true');
       }
     }
   }
@@ -60,10 +61,11 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
+  // @ts-ignore [allow-protected] we are allowed to know FormControl protcected props in form-core
   // eslint-disable-next-line class-methods-use-this
-  onFormControlDisconnect(formControl) {
-    if (formControl._inputNode) {
-      formControl._inputNode.removeAttribute('aria-required');
+  onFormControlDisconnect({ _inputNode: inputNode }) {
+    if (inputNode) {
+      inputNode.removeAttribute('aria-required');
     }
   }
 }

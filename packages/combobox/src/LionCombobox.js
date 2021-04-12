@@ -180,6 +180,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @configure FormControlMixin
    * Will tell FormControlMixin that a11y wrt labels / descriptions / feedback
    * should be applied here.
+   * @protected
    */
   get _inputNode() {
     if (this._ariaVersion === '1.1') {

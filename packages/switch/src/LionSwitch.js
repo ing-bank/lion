@@ -28,7 +28,8 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   /**
    * Input node here is the lion-switch-button, which is not compatible with LionField _inputNode --> HTMLInputElement
    * Therefore we do a full override and typecast to an intersection type that includes LionSwitchButton
-   * @returns {LionSwitchButton}
+   * @type {LionSwitchButton}
+   * @protected
    */
   // @ts-ignore [editor]: prevents vscode from complaining
   get _inputNode() {

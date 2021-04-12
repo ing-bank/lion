@@ -1,12 +1,22 @@
 import { dedupeMixin } from '@lion/core';
+import { FormControlMixin } from './FormControlMixin.js';
+import { FocusMixin } from './FocusMixin.js';
 
 /**
  * @typedef {import('../types/NativeTextFieldMixinTypes').NativeTextFieldMixin} NativeTextFieldMixin
  * @type {NativeTextFieldMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('../types/NativeTextFieldMixinTypes').NativeTextField>} superclass} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass} superclass
  */
 const NativeTextFieldMixinImplementation = superclass =>
-  class NativeTextFieldMixin extends superclass {
+  class NativeTextFieldMixin extends FocusMixin(FormControlMixin(superclass)) {
+    /**
+     * @protected
+     * @type {HTMLInputElement | HTMLTextAreaElement}
+     */
+    get _inputNode() {
+      return /** @type {HTMLInputElement | HTMLTextAreaElement} */ (super._inputNode);
+    }
+
     /** @type {number} */
     get selectionStart() {
       const native = this._inputNode;

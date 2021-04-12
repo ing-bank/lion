@@ -234,9 +234,9 @@ const ChoiceInputMixinImplementation = superclass =>
       if (this.disabled) {
         return;
       }
-      this.__isHandlingUserInput = true;
+      this._isHandlingUserInput = true;
       this.checked = !this.checked;
-      this.__isHandlingUserInput = false;
+      this._isHandlingUserInput = false;
     }
 
     // TODO: make this less fuzzy by applying these methods in LionRadio and LionCheckbox

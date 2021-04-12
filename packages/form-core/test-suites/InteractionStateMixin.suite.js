@@ -9,6 +9,7 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { InteractionStateMixin } from '../src/InteractionStateMixin.js';
 import { ValidateMixin } from '../src/validate/ValidateMixin.js';
 import { MinLength } from '../src/validate/validators/StringValidators.js';
@@ -135,6 +136,7 @@ export function runInteractionStateMixinSuite(customConfig) {
         const targetEl = el._inputNode || el;
         targetEl.dispatchEvent(new Event('focus', { bubbles: true }));
         el.modelValue = modelValue;
+        // @ts-ignore [allow-protected] in test
         targetEl.dispatchEvent(new Event(el._leaveEvent, { bubbles: true }));
       };
 
@@ -224,20 +226,22 @@ export function runInteractionStateMixinSuite(customConfig) {
         const el = /** @type {IState} */ (await fixture(html`
           <${tag} .validators=${[new MinLength(3)]}></${tag}>
         `));
+        const { _feedbackNode } = getFormControlMembers(el);
+
         await el.updateComplete;
         await el.feedbackComplete;
-        expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+        expect(_feedbackNode.feedbackData).to.deep.equal([]);
 
         // has error but does not show/forward to component as showCondition is not met
         el.modelValue = '1';
         await el.updateComplete;
         await el.feedbackComplete;
-        expect(el._feedbackNode.feedbackData).to.deep.equal([]);
+        expect(_feedbackNode.feedbackData).to.deep.equal([]);
 
         el.submitted = true;
         await el.updateComplete;
         await el.feedbackComplete;
-        expect(el._feedbackNode.feedbackData?.length).to.equal(1);
+        expect(_feedbackNode.feedbackData?.length).to.equal(1);
       });
     });
 

@@ -15,64 +15,37 @@ export interface ChoiceInputSerializedValue {
 }
 
 export declare class ChoiceInputHost {
+  type: string;
+  serializedValue: ChoiceInputSerializedValue;
+  checked: boolean;
   get modelValue(): ChoiceInputModelValue;
   set modelValue(value: ChoiceInputModelValue);
-  serializedValue: ChoiceInputSerializedValue;
-
-  checked: boolean;
-
   get choiceValue(): any;
-
   set choiceValue(value: any);
-
-  protected requestUpdateInternal(name: string, oldValue: any): void;
-
-  firstUpdated(changedProperties: Map<string, any>): void;
-
-  updated(changedProperties: Map<string, any>): void;
-
   static get styles(): CSSResultArray;
+  parser(): any;
+  formatter(modelValue: ChoiceInputModelValue): string;
 
-  render(): TemplateResult;
-
-  _choiceGraphicTemplate(): TemplateResult;
-  protected _afterTemplate(): TemplateResult;
-
-  connectedCallback(): void;
-  disconnectedCallback(): void;
-
-  _preventDuplicateLabelClick(ev: Event): void;
-
-  _syncNameToParentFormGroup(): void;
-
-  _toggleChecked(ev: Event): void;
-
-  __syncModelCheckedToChecked(checked: boolean): void;
-
-  __syncCheckedToModel(checked: boolean): void;
-
-  __syncCheckedToInputElement(): void;
-
-  __isHandlingUserInput: boolean;
+  protected _isHandlingUserInput: boolean;
+  protected get _inputNode(): HTMLElement;
 
   protected _proxyInputEvent(): void;
-
+  protected requestUpdateInternal(name: string, oldValue: any): void;
+  protected _choiceGraphicTemplate(): TemplateResult;
+  protected _afterTemplate(): TemplateResult;
+  protected _preventDuplicateLabelClick(ev: Event): void;
+  protected _syncNameToParentFormGroup(): void;
+  protected _toggleChecked(ev: Event): void;
   protected _onModelValueChanged(
     newV: { modelValue: ChoiceInputModelValue },
     oldV: { modelValue: ChoiceInputModelValue },
   ): void;
-
-  parser(): any;
-
-  formatter(modelValue: ChoiceInputModelValue): string;
-
   protected _isEmpty(): void;
-
   protected _syncValueUpwards(): void;
 
-  type: string;
-
-  get _inputNode(): HTMLElement;
+  private __syncModelCheckedToChecked(checked: boolean): void;
+  private __syncCheckedToModel(checked: boolean): void;
+  private __syncCheckedToInputElement(): void;
 }
 
 export declare function ChoiceInputImplementation<T extends Constructor<LitElement>>(

@@ -528,11 +528,11 @@ const ListboxMixinImplementation = superclass =>
         return;
       }
 
-      this.__isHandlingUserInput = true;
+      this._isHandlingUserInput = true;
       setTimeout(() => {
         // Since we can't control when subclasses are done handling keyboard input, we
-        // schedule a timeout to reset __isHandlingUserInput
-        this.__isHandlingUserInput = false;
+        // schedule a timeout to reset _isHandlingUserInput
+        this._isHandlingUserInput = false;
       });
 
       const { key } = ev;
@@ -638,11 +638,11 @@ const ListboxMixinImplementation = superclass =>
         return;
       }
 
-      this.__isHandlingUserInput = true;
+      this._isHandlingUserInput = true;
       setTimeout(() => {
         // Since we can't control when subclasses are done handling keyboard input, we
-        // schedule a timeout to reset __isHandlingUserInput
-        this.__isHandlingUserInput = false;
+        // schedule a timeout to reset _isHandlingUserInput
+        this._isHandlingUserInput = false;
       });
 
       const { key } = ev;
@@ -769,7 +769,7 @@ const ListboxMixinImplementation = superclass =>
           new CustomEvent('model-value-changed', {
             detail: /** @type {ModelValueEventDetails} */ ({
               formPath: ev.detail.formPath,
-              isTriggeredByUser: ev.detail.isTriggeredByUser || this.__isHandlingUserInput,
+              isTriggeredByUser: ev.detail.isTriggeredByUser || this._isHandlingUserInput,
               element: ev.target,
             }),
           }),

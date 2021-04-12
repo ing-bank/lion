@@ -1,5 +1,6 @@
 import { expect, html, defineCE, unsafeStatic, fixture } from '@open-wc/testing';
 import { LitElement } from '@lion/core';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
@@ -118,15 +119,17 @@ describe('FormControlMixin', () => {
         </div>
       `));
       const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
-      const labelIdsBefore = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsBefore = /** @type {string} */ (el._inputNode.getAttribute(
+      const { _inputNode } = getFormControlMembers(el);
+
+      const labelIdsBefore = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsBefore = /** @type {string} */ (_inputNode.getAttribute(
         'aria-describedby',
       ));
       // Reconnect
       wrapper.removeChild(el);
       wrapper.appendChild(el);
-      const labelIdsAfter = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsAfter = /** @type {string} */ (el._inputNode.getAttribute(
+      const labelIdsAfter = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsAfter = /** @type {string} */ (_inputNode.getAttribute(
         'aria-describedby',
       ));
 
@@ -141,8 +144,10 @@ describe('FormControlMixin', () => {
           ${inputSlot}
         </${tag}>
       `));
+      const { _labelNode } = getFormControlMembers(el);
+
       expect(spy).to.not.have.been.called;
-      el._labelNode.click();
+      _labelNode.click();
       expect(spy).to.have.been.calledOnce;
     });
 
@@ -231,6 +236,8 @@ describe('FormControlMixin', () => {
             <div id="additionalDescription"> Same for this </div>
           </div>`));
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
+
         // wait until the field element is done rendering
         await el.updateComplete;
         await el.updateComplete;
@@ -240,7 +247,7 @@ describe('FormControlMixin', () => {
 
         // 1a. addToAriaLabelledBy()
         // Check if the aria attr is filled initially
-        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'))).to.contain(
+        expect(/** @type {string} */ (_inputNode.getAttribute('aria-labelledby'))).to.contain(
           `label-${inputId}`,
         );
         const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
@@ -248,7 +255,7 @@ describe('FormControlMixin', () => {
         ));
         el.addToAriaLabelledBy(additionalLabel);
         await el.updateComplete;
-        let labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        let labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
         // Now check if ids are added to the end (not overridden)
         expect(labelledbyAttr).to.contain(`additionalLabel`);
         // Should be placed in the end
@@ -259,13 +266,13 @@ describe('FormControlMixin', () => {
         // 1b. removeFromAriaLabelledBy()
         el.removeFromAriaLabelledBy(additionalLabel);
         await el.updateComplete;
-        labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
         // Now check if ids are added to the end (not overridden)
         expect(labelledbyAttr).to.not.contain(`additionalLabel`);
 
         // 2a. addToAriaDescribedBy()
         // Check if the aria attr is filled initially
-        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-describedby'))).to.contain(
+        expect(/** @type {string} */ (_inputNode.getAttribute('aria-describedby'))).to.contain(
           `feedback-${inputId}`,
         );
       });
@@ -284,6 +291,7 @@ describe('FormControlMixin', () => {
           <div id="externalDescriptionB">should go after input internals</div>
         </div>`);
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
 
         // N.B. in real life we would never add the input to aria-describedby or -labelledby,
         // but this example purely demonstrates dom order is respected.
@@ -296,10 +304,10 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['myInput', 'internalLabel']);
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['myInput', 'internalDescription']);
 
         // cleanup
@@ -315,10 +323,10 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['internalLabel', 'myInput']);
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['internalDescription', 'myInput']);
       });
 
@@ -336,6 +344,7 @@ describe('FormControlMixin', () => {
           <div id="externalDescriptionB">should go after input internals</div>
         </div>`);
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        const { _inputNode } = getFormControlMembers(el);
 
         // 1. addToAriaLabelledBy()
         const labelA = /** @type {HTMLElement} */ (wrapper.querySelector('#externalLabelA'));
@@ -346,7 +355,7 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
         ).to.eql(['internalLabel', 'externalLabelA', 'externalLabelB']);
 
         // 2. addToAriaDescribedBy()
@@ -358,7 +367,7 @@ describe('FormControlMixin', () => {
         await el.updateComplete;
 
         expect(
-          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['internalDescription', 'externalDescriptionA', 'externalDescriptionB']);
       });
     });

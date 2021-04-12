@@ -4,8 +4,10 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import sinon from 'sinon';
 import { FormatMixin } from '../src/FormatMixin.js';
 import { Unparseable, Validator } from '../index.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
 
 /**
+ * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  */
 
@@ -284,10 +286,11 @@ export function runFormatMixinSuite(customConfig) {
 
     describe('View value', () => {
       it('has an input node (like <input>/<textarea>) which holds the formatted (view) value', async () => {
+        const { _inputNode } = getFormControlMembers(fooFormat);
         fooFormat.modelValue = 'string';
         expect(fooFormat.formattedValue).to.equal('foo: string');
         expect(fooFormat.value).to.equal('foo: string');
-        expect(fooFormat._inputNode.value).to.equal('foo: string');
+        expect(_inputNode.value).to.equal('foo: string');
       });
 
       it('works if there is no underlying _inputNode', async () => {
@@ -305,16 +308,17 @@ export function runFormatMixinSuite(customConfig) {
               <input slot="input" />
             </${tag}>
           `));
+          const { _inputNode } = getFormControlMembers(formatEl);
 
           const generatedViewValue = generateValueBasedOnType({ viewValue: true });
           const generatedModelValue = generateValueBasedOnType();
           mimicUserInput(formatEl, generatedViewValue);
-          expect(formatEl._inputNode.value).to.not.equal(`foo: ${generatedModelValue}`);
+          expect(_inputNode.value).to.not.equal(`foo: ${generatedModelValue}`);
 
           // user leaves field
-          formatEl._inputNode.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
+          _inputNode.dispatchEvent(new CustomEvent(formatEl.formatOn, { bubbles: true }));
           await aTimeout(0);
-          expect(formatEl._inputNode.value).to.equal(`foo: ${generatedModelValue}`);
+          expect(_inputNode.value).to.equal(`foo: ${generatedModelValue}`);
         });
 
         it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
@@ -323,17 +327,20 @@ export function runFormatMixinSuite(customConfig) {
               <input slot="input" />
             </${tag}>
           `));
+
+          const { _inputNode } = getFormControlMembers(el);
+
           // The FormatMixin can be used in conjunction with the ValidateMixin, in which case
           // it can hold errorState (affecting the formatting)
           el.hasFeedbackFor = ['error'];
 
           // users types value 'test'
           mimicUserInput(el, 'test');
-          expect(el._inputNode.value).to.not.equal('foo: test');
+          expect(_inputNode.value).to.not.equal('foo: test');
 
           // Now see the difference for an imperative change
           el.modelValue = 'test2';
-          expect(el._inputNode.value).to.equal('foo: test2');
+          expect(_inputNode.value).to.equal('foo: test2');
         });
       });
     });
@@ -494,6 +501,8 @@ export function runFormatMixinSuite(customConfig) {
           </${tag}>
         `));
 
+          const { _inputNode } = getFormControlMembers(el);
+
           expect(preprocessorSpy.callCount).to.equal(1);
 
           const parserSpy = sinon.spy(el, 'parser');
@@ -501,7 +510,7 @@ export function runFormatMixinSuite(customConfig) {
 
           expect(preprocessorSpy.callCount).to.equal(2);
           expect(parserSpy.lastCall.args[0]).to.equal(val);
-          expect(el._inputNode.value).to.equal(val);
+          expect(_inputNode.value).to.equal(val);
         });
 
         it('does not preprocess during composition', async () => {
@@ -510,13 +519,16 @@ export function runFormatMixinSuite(customConfig) {
               <input slot="input">
             </${tag}>
           `));
+
+          const { _inputNode } = getFormControlMembers(el);
+
           const preprocessorSpy = sinon.spy(el, 'preprocessor');
-          el._inputNode.dispatchEvent(new Event('compositionstart', { bubbles: true }));
+          _inputNode.dispatchEvent(new Event('compositionstart', { bubbles: true }));
           mimicUserInput(el, '`');
           expect(preprocessorSpy.callCount).to.equal(0);
           // "à" would be sent by the browser after pressing "option + `", followed by "a"
           mimicUserInput(el, 'à');
-          el._inputNode.dispatchEvent(new Event('compositionend', { bubbles: true }));
+          _inputNode.dispatchEvent(new Event('compositionend', { bubbles: true }));
           expect(preprocessorSpy.callCount).to.equal(1);
         });
       });

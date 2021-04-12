@@ -1,5 +1,5 @@
 import { expect, fixture as _fixture } from '@open-wc/testing';
-
+import { getInputMembers } from '@lion/input/test-helpers';
 import '@lion/input-email/define';
 
 /**
@@ -11,7 +11,8 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmai
 describe('<lion-input-email>', () => {
   it('has a type = text', async () => {
     const el = await fixture(`<lion-input-email></lion-input-email>`);
-    expect(el._inputNode.type).to.equal('text');
+    const { _inputNode } = getInputMembers(el);
+    expect(_inputNode.type).to.equal('text');
   });
 
   it('has validator "IsEmail" applied by default', async () => {

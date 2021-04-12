@@ -3,6 +3,7 @@ import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { MaxDate } from '@lion/form-core';
 import { expect, fixture as _fixture } from '@open-wc/testing';
+import { getInputMembers } from '@lion/input/test-helpers';
 import '@lion/input-date/define';
 
 /**
@@ -23,7 +24,8 @@ describe('<lion-input-date>', () => {
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
     const el = await fixture(html`<lion-input-date></lion-input-date>`);
-    expect(el._inputNode.type).to.equal('text');
+    const { _inputNode } = getInputMembers(el);
+    expect(_inputNode.type).to.equal('text');
   });
 
   it('has validator "isDate" applied by default', async () => {

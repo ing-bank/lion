@@ -200,7 +200,7 @@ const ChoiceGroupMixinImplementation = superclass =>
      */
     _triggerInitialModelValueChangedEvent() {
       this.registrationComplete.then(() => {
-        this.__dispatchInitialModelValueChangedEvent();
+        this._dispatchInitialModelValueChangedEvent();
       });
     }
 

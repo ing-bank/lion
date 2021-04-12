@@ -5,10 +5,6 @@ import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 import { FormRegistrarPortalMixin } from '../src/registration/FormRegistrarPortalMixin.js';
 
 /**
- * @typedef {import('../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
- */
-
-/**
  * @typedef {Object} customConfig
  * @property {typeof LitElement|undefined} [baseElement]
  * @property {string} [customConfig.suffix]

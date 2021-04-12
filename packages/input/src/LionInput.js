@@ -5,9 +5,7 @@ import { LionField, NativeTextFieldMixin } from '@lion/form-core';
  *
  * @customElement lion-input
  */
-export class LionInput extends NativeTextFieldMixin(
-  /** @type {typeof import('@lion/form-core/types/NativeTextFieldMixinTypes').NativeTextField} */ (LionField),
-) {
+export class LionInput extends NativeTextFieldMixin(LionField) {
   /** @type {any} */
   static get properties() {
     return {
@@ -50,6 +48,10 @@ export class LionInput extends NativeTextFieldMixin(
     };
   }
 
+  /**
+   * @type {HTMLInputElement}
+   * @protected
+   */
   get _inputNode() {
     return /** @type {HTMLInputElement} */ (super._inputNode); // casts type
   }

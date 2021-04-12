@@ -1,5 +1,6 @@
 import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
 import { LionField } from '@lion/form-core';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { Required } from '../../src/validate/validators/Required.js';
 
 /**
@@ -17,6 +18,7 @@ class RequiredElement extends LionField {
     super.connectedCallback();
   }
 
+  /** @protected */
   get _inputNode() {
     return inputNodeTag || super._inputNode;
   }
@@ -37,7 +39,8 @@ describe('Required validation', async () => {
       inputNodeTag = /** @type {HTMLElementWithValue} */ (document.createElement(tagName));
 
       validator.onFormControlConnect(el);
-      expect(el._inputNode).to.have.attribute('aria-required', 'true');
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode).to.have.attribute('aria-required', 'true');
     });
 
     // When incompatible tags are used, aria-required will not be added
@@ -46,7 +49,8 @@ describe('Required validation', async () => {
     inputNodeTag = /** @type {HTMLDivElementWithValue} */ (document.createElement('div'));
 
     validator.onFormControlConnect(el);
-    expect(el._inputNode).to.not.have.attribute('aria-required');
+    const { _inputNode } = getFormControlMembers(el);
+    expect(_inputNode).to.not.have.attribute('aria-required');
   });
   it('get aria-required attribute if element is part of the right roles', async () => {
     const el = /** @type {FormControlHost & HTMLElement} */ (await fixture(
@@ -59,7 +63,8 @@ describe('Required validation', async () => {
       inputNodeTag.setAttribute('role', role);
 
       validator.onFormControlConnect(el);
-      expect(el._inputNode).to.have.attribute('aria-required', 'true');
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode).to.have.attribute('aria-required', 'true');
     });
 
     // When incompatible roles are used, aria-required will not be added
@@ -69,6 +74,7 @@ describe('Required validation', async () => {
     inputNodeTag.setAttribute('role', 'group');
 
     validator.onFormControlConnect(el);
-    expect(el._inputNode).to.not.have.attribute('aria-required');
+    const { _inputNode } = getFormControlMembers(el);
+    expect(_inputNode).to.not.have.attribute('aria-required');
   });
 });

@@ -9,7 +9,6 @@ export declare class ElementWithParentFormGroup {
 }
 
 export declare class FormRegistrarHost {
-  protected _isFormOrFieldset: boolean;
   formElements: FormControlsCollection & { [x: string]: any };
   addFormElement(
     child:
@@ -19,10 +18,11 @@ export declare class FormRegistrarHost {
     indexToInsertAt?: number,
   ): void;
   removeFormElement(child: FormRegisteringHost): void;
-  _onRequestToAddFormElement(e: CustomEvent): void;
   isRegisteredFormElement(el: FormControlHost): boolean;
   registrationComplete: Promise<boolean>;
   initComplete: Promise<boolean>;
+  protected _isFormOrFieldset: boolean;
+  protected _onRequestToAddFormElement(e: CustomEvent): void;
   protected _completeRegistration(): void;
 }
 

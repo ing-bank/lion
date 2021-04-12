@@ -10,13 +10,10 @@ export declare interface SyncUpdatableNamespace {
 }
 
 export declare class SyncUpdatableHost {
-  static __syncUpdatableHasChanged(name: string, newValue: any, oldValue: any): boolean;
-  updateSync(name: string, oldValue: any): void;
-  __syncUpdatableInitialize(): void;
-  __SyncUpdatableNamespace: SyncUpdatableNamespace;
-
-  firstUpdated(changedProperties: PropertyValues): void;
-  disconnectedCallback(): void;
+  protected updateSync(name: string, oldValue: any): void;
+  private __syncUpdatableInitialize(): void;
+  private __SyncUpdatableNamespace: SyncUpdatableNamespace;
+  private static __syncUpdatableHasChanged(name: string, newValue: any, oldValue: any): boolean;
 }
 
 export type SyncUpdatableHostType = typeof SyncUpdatableHost;

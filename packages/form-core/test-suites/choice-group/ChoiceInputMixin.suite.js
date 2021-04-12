@@ -1,6 +1,7 @@
 import { Required } from '@lion/form-core';
 import { LionInput } from '@lion/input';
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
 
@@ -86,9 +87,11 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         <input slot="input" />
       </${tag}>
     `));
+      const { _inputNode } = getFormControlMembers(el);
+
       expect(counter).to.equal(0);
       // Here we try to mimic user interaction by firing browser events
-      const nativeInput = el._inputNode;
+      const nativeInput = _inputNode;
       nativeInput.dispatchEvent(new CustomEvent('input', { bubbles: true })); // fired by (at least) Chrome
       expect(counter).to.equal(0);
       nativeInput.dispatchEvent(new CustomEvent('change', { bubbles: true }));
@@ -104,14 +107,16 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
           <input slot="input" />
         </${tag}>
       `));
+      const { _inputNode, _labelNode } = getFormControlMembers(el);
+
       el.click();
       expect(spy.args[0][0].target).to.equal(el);
       expect(spy.callCount).to.equal(1);
-      el._labelNode.click();
-      expect(spy.args[1][0].target).to.equal(el._labelNode);
+      _labelNode.click();
+      expect(spy.args[1][0].target).to.equal(_labelNode);
       expect(spy.callCount).to.equal(2);
-      el._inputNode.click();
-      expect(spy.args[2][0].target).to.equal(el._inputNode);
+      _inputNode.click();
+      expect(spy.args[2][0].target).to.equal(_inputNode);
       expect(spy.callCount).to.equal(3);
     });
 
@@ -126,7 +131,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         <input slot="input" />
       </${tag}>
     `));
-      el._inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+      const { _inputNode } = getFormControlMembers(el);
+
+      _inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
       expect(isTriggeredByUser).to.be.true;
     });
 
@@ -134,6 +141,7 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       const el = /** @type {ChoiceInput} */ (await fixture(html`
       <${tag} .choiceValue=${'foo'} .validators=${[new Required()]}></${tag}>
     `));
+
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates.error).to.exist;
       expect(el.validationStates.error.Required).to.exist;
@@ -156,19 +164,23 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
       it('can be checked and unchecked programmatically', async () => {
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
+        const { _inputNode } = getFormControlMembers(el);
+
         expect(el.checked).to.be.false;
         el.checked = true;
         expect(el.checked).to.be.true;
 
         await el.updateComplete;
-        expect(el._inputNode.checked).to.be.true;
+        expect(/** @type {HTMLInputElement} */ (_inputNode).checked).to.be.true;
       });
 
       it('can be checked and unchecked via user interaction', async () => {
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
-        el._inputNode.click();
+        const { _inputNode } = getFormControlMembers(el);
+
+        _inputNode.click();
         expect(el.checked).to.be.true;
-        el._inputNode.click();
+        _inputNode.click();
         await el.updateComplete;
         if (el.type === 'checkbox') {
           expect(el.checked).to.be.false;
@@ -177,7 +189,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
       it('can not toggle the checked state when disabled via user interaction', async () => {
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag} disabled></${tag}>`));
-        el._inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+        const { _inputNode } = getFormControlMembers(el);
+
+        _inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
         expect(el.checked).to.be.false;
       });
 
@@ -206,7 +220,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         ));
         expect(el.checked).to.be.false;
 
+        // @ts-ignore [allow-private] in test
         const spyModelCheckedToChecked = sinon.spy(el, '__syncModelCheckedToChecked');
+        // @ts-ignore [allow-private] in test
         const spyCheckedToModel = sinon.spy(el, '__syncCheckedToModel');
         el.checked = true;
         expect(el.modelValue.checked).to.be.true;
@@ -234,14 +250,16 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
           <input slot="input" />
         </${tag}>
       `));
+        const { _inputNode } = getFormControlMembers(el);
+        const { _inputNode: _inputNodeChecked } = getFormControlMembers(elChecked);
 
         // Initial values
         expect(hasAttr(el)).to.equal(false, 'initial unchecked element');
         expect(hasAttr(elChecked)).to.equal(true, 'initial checked element');
 
         // Via user interaction
-        el._inputNode.click();
-        elChecked._inputNode.click();
+        _inputNode.click();
+        _inputNodeChecked.click();
         await el.updateComplete;
         expect(el.checked).to.be.true;
         expect(hasAttr(el)).to.equal(true, 'user click checked');

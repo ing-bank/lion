@@ -7,6 +7,7 @@ import { css } from '@lion/core';
 class LionFieldWithTextArea extends LionField {
   /**
    * @returns {HTMLTextAreaElement}
+   * @protected
    */
   get _inputNode() {
     return /** @type {HTMLTextAreaElement} */ (Array.from(this.children).find(
@@ -21,6 +22,7 @@ class LionFieldWithTextArea extends LionField {
  * @customElement lion-textarea
  */
 export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
+  /** @type {any} */
   static get properties() {
     return {
       maxRows: {

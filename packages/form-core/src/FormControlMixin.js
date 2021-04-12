@@ -183,6 +183,7 @@ const FormControlMixinImplementation = superclass =>
       };
     }
 
+    /** @protected */
     get _inputNode() {
       return /** @type {HTMLElementWithValue} */ (this.__getDirectSlotChild('input'));
     }
@@ -195,6 +196,9 @@ const FormControlMixinImplementation = superclass =>
       return /** @type {HTMLElement} */ (this.__getDirectSlotChild('help-text'));
     }
 
+    /**
+     * @protected
+     */
     get _feedbackNode() {
       return /** @type {LionValidationFeedback} */ (this.__getDirectSlotChild('feedback'));
     }
@@ -280,7 +284,7 @@ const FormControlMixinImplementation = superclass =>
 
     /** @protected */
     _triggerInitialModelValueChangedEvent() {
-      this.__dispatchInitialModelValueChangedEvent();
+      this._dispatchInitialModelValueChangedEvent();
     }
 
     /** @protected */
@@ -779,7 +783,7 @@ const FormControlMixinImplementation = superclass =>
       );
     }
 
-    __dispatchInitialModelValueChangedEvent() {
+    _dispatchInitialModelValueChangedEvent() {
       // When we are not a fieldset / choice-group, we don't need to wait for our children
       // to send a unified event
       if (this._repropagationRole === 'child') {

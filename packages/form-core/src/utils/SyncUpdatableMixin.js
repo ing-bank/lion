@@ -80,6 +80,7 @@ const SyncUpdatableMixinImplementation = superclass =>
       // Empty queue...
       if (ns.queue) {
         Array.from(ns.queue).forEach(name => {
+          // @ts-ignore [allow-private] in test
           if (ctor.__syncUpdatableHasChanged(name, this[name], undefined)) {
             this.updateSync(name, undefined);
           }
@@ -105,6 +106,7 @@ const SyncUpdatableMixinImplementation = superclass =>
         // Makes sure that we only initialize one time, with most up to date value
         ns.queue.add(name);
       } // After connectedCallback: guarded proxy to updateSync
+      // @ts-ignore [allow-private] in test
       else if (ctor.__syncUpdatableHasChanged(name, this[name], oldValue)) {
         this.updateSync(name, oldValue);
       }

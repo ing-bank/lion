@@ -1,5 +1,6 @@
 import { LitElement } from '@lion/core';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import {
   MaxLength,
@@ -15,7 +16,7 @@ import {
   AlwaysValid,
   AsyncAlwaysInvalid,
   AsyncAlwaysValid,
-} from '../test-helpers.js';
+} from '../test-helpers/index.js';
 
 /**
  * @param {{tagString?: string | null, lightDom?: string}} [customConfig]
@@ -153,6 +154,7 @@ export function runValidateMixinSuite(customConfig) {
           >${lightDom}</${tag}>
         `));
 
+        // @ts-ignore [allow-private] in test
         const clearSpy = sinon.spy(el, '__clearValidationResults');
         const validateSpy = sinon.spy(el, 'validate');
         el.modelValue = 'x';
@@ -174,6 +176,7 @@ export function runValidateMixinSuite(customConfig) {
         const el = /** @type {ValidateElement} */ (await fixture(html`
           <${tag} .validators=${[alwaysValid]}>${lightDom}</${tag}>
         `));
+        // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
         const validateSpy = sinon.spy(el, 'validate');
         el.modelValue = '';
@@ -191,7 +194,9 @@ export function runValidateMixinSuite(customConfig) {
         const el = /** @type {ValidateElement} */ (await fixture(html`
           <${tag} .validators=${[new AlwaysValid()]}>${lightDom}</${tag}>
         `));
+        // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
+        // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
         el.modelValue = 'nonEmpty';
         expect(isEmptySpy.calledBefore(syncSpy)).to.be.true;
@@ -203,7 +208,9 @@ export function runValidateMixinSuite(customConfig) {
             ${lightDom}
           </${tag}>
         `));
+        // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
+        // @ts-ignore [allow-private] in test
         const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
         el.modelValue = 'nonEmpty';
         expect(syncSpy.calledBefore(asyncSpy)).to.be.true;
@@ -223,7 +230,9 @@ export function runValidateMixinSuite(customConfig) {
           </${tag}>
         `));
 
+        // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
+        // @ts-ignore [allow-private] in test
         const resultSpy2 = sinon.spy(el, '__executeResultValidators');
 
         el.modelValue = 'nonEmpty';
@@ -236,7 +245,9 @@ export function runValidateMixinSuite(customConfig) {
           </${tag}>
         `);
 
+        // @ts-ignore [allow-private] in test
         const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
+        // @ts-ignore [allow-private] in test
         const resultSpy = sinon.spy(el, '__executeResultValidators');
 
         el.modelValue = 'nonEmpty';
@@ -266,6 +277,7 @@ export function runValidateMixinSuite(customConfig) {
             </${tag}>
           `));
           el.modelValue = 'nonEmpty';
+          // @ts-ignore [allow-private] in test
           const validateResolveSpy = sinon.spy(el, '__validateCompleteResolve');
           await el.validateComplete;
           expect(validateResolveSpy.callCount).to.equal(1);
@@ -610,10 +622,14 @@ export function runValidateMixinSuite(customConfig) {
               .modelValue=${'myValue'}
             >${lightDom}</${withSuccessTag}>
           `));
+        // @ts-ignore [allow-private] in test
         const prevValidationResult = el.__prevValidationResult;
+        // @ts-ignore [allow-private] in test
         const prevShownValidationResult = el.__prevShownValidationResult;
         const regularValidationResult = [
+          // @ts-ignore [allow-private] in test
           ...el.__syncValidationResult,
+          // @ts-ignore [allow-private] in test
           ...el.__asyncValidationResult,
         ];
 
@@ -643,6 +659,7 @@ export function runValidateMixinSuite(customConfig) {
           >${lightDom}</${tag}>
         `));
 
+        // @ts-ignore [allow-private] in test
         const totalValidationResult = el.__validationResult;
         expect(totalValidationResult).to.eql([resultV, validator]);
       });
@@ -673,6 +690,7 @@ export function runValidateMixinSuite(customConfig) {
         `));
         const validator = /** @type {Validator} */ (el.validators.find(v => v instanceof Required));
         const executeSpy = sinon.spy(validator, 'execute');
+        // @ts-ignore [allow-private] in test
         const privateIsEmptySpy = sinon.spy(el, '__isEmpty');
         el.modelValue = null;
         expect(executeSpy.callCount).to.equal(0);
@@ -722,9 +740,11 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${''}
           >${lightDom}</${tag}>
         `));
-        expect(el._inputNode?.getAttribute('aria-required')).to.equal('true');
+        const { _inputNode } = getFormControlMembers(el);
+
+        expect(_inputNode?.getAttribute('aria-required')).to.equal('true');
         el.validators = [];
-        expect(el._inputNode?.getAttribute('aria-required')).to.be.null;
+        expect(_inputNode?.getAttribute('aria-required')).to.be.null;
       });
     });
 
@@ -776,17 +796,20 @@ export function runValidateMixinSuite(customConfig) {
         <${preconfTag}
           .validators=${[new MinLength(3)]}
         ></${preconfTag}>`));
+        const { _allValidators } = getFormControlMembers(el);
 
         expect(el.validators.length).to.equal(1);
         expect(el.defaultValidators.length).to.equal(1);
-        expect(el._allValidators.length).to.equal(2);
+        expect(_allValidators.length).to.equal(2);
 
-        expect(el._allValidators[0] instanceof MinLength).to.be.true;
-        expect(el._allValidators[1] instanceof AlwaysInvalid).to.be.true;
+        expect(_allValidators[0] instanceof MinLength).to.be.true;
+        expect(_allValidators[1] instanceof AlwaysInvalid).to.be.true;
 
         el.validators = [new MaxLength(5)];
-        expect(el._allValidators[0] instanceof MaxLength).to.be.true;
-        expect(el._allValidators[1] instanceof AlwaysInvalid).to.be.true;
+        const { _allValidators: _allValidatorsMl } = getFormControlMembers(el);
+
+        expect(_allValidatorsMl[0] instanceof MaxLength).to.be.true;
+        expect(_allValidatorsMl[1] instanceof AlwaysInvalid).to.be.true;
       });
     });
 
@@ -915,8 +938,9 @@ export function runValidateMixinSuite(customConfig) {
             .validators=${[new MinLength(3, { message: 'foo' })]}>
             <input slot="input">
           </${tag}>`));
+        const { _inputNode } = getFormControlMembers(el);
 
-        if (el._inputNode) {
+        if (_inputNode) {
           // @ts-expect-error
           const spy = sinon.spy(el._inputNode, 'setCustomValidity');
           el.modelValue = '';
@@ -1021,9 +1045,13 @@ export function runValidateMixinSuite(customConfig) {
             .modelValue=${'1'}
           >${lightDom}</${customTypeTag}>
         `));
+        const { _feedbackNode } = getFormControlMembers(el);
+
         await el.feedbackComplete;
 
-        const feedbackNode = /** @type {import('../src/validate/LionValidationFeedback').LionValidationFeedback} */ (el._feedbackNode);
+        const feedbackNode =
+          /** @type {import('../src/validate/LionValidationFeedback').LionValidationFeedback} */
+          (_feedbackNode);
         const resultOrder = feedbackNode.feedbackData?.map(v => v.type);
         expect(resultOrder).to.deep.equal(['error', 'x', 'y']);
 
@@ -1164,6 +1192,7 @@ export function runValidateMixinSuite(customConfig) {
             >${lightDom}</${elTag}>
           `));
 
+          // @ts-ignore [allow-protected] in test
           const spy = sinon.spy(el, '_updateShouldShowFeedbackFor');
           let counter = 0;
           // for ... of is already allowed we should update eslint...

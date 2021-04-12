@@ -29,6 +29,8 @@ import '@lion/fieldset/define';
 import '@lion/form/define';
 import '@lion/form-core/define';
 
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
+
 /**
  * @typedef {import('@lion/core').LitElement} LitElement
  * @typedef {import('@lion/form-core').LionField} LionField
@@ -129,7 +131,7 @@ const choiceGroupDispatchesCountOnFirstPaint = (groupTagname, itemTagname, count
   it(getFirstPaintTitle(count), async () => {
     const spy = sinon.spy();
     await fixture(html`
-      <${groupTag} @model-value-changed="${spy}">
+      <${groupTag} @model-value-changed="${spy}" name="group[]">
         <${itemTag} .choiceValue="${'option1'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option2'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
@@ -151,7 +153,7 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
   it(getInteractionTitle(count), async () => {
     const spy = sinon.spy();
     const el = await fixture(html`
-      <${groupTag}>
+      <${groupTag}  name="group[]">
         <${itemTag} .choiceValue="${'option1'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option2'}"></${itemTag}>
         <${itemTag} .choiceValue="${'option3'}"></${itemTag}>
@@ -417,14 +419,15 @@ describe('detail.isTriggeredByUser', () => {
    * @param {string | undefined} [triggerType]
    */
   function mimicUserInput(el, newViewValue, triggerType) {
+    const { _inputNode } = getFormControlMembers(el);
     const type = detectType(el);
     let userInputEv;
     if (type === 'RegularField') {
-      userInputEv = el._inputNode.tagName === 'SELECT' ? 'change' : 'input';
+      userInputEv = _inputNode.tagName === 'SELECT' ? 'change' : 'input';
       el.value = newViewValue; // eslint-disable-line no-param-reassign
-      el._inputNode.dispatchEvent(new Event(userInputEv, { bubbles: true }));
+      _inputNode.dispatchEvent(new Event(userInputEv, { bubbles: true }));
     } else if (type === 'ChoiceField') {
-      el._inputNode.dispatchEvent(new Event('change', { bubbles: true }));
+      _inputNode.dispatchEvent(new Event('change', { bubbles: true }));
     } else if (type === 'OptionChoiceField') {
       if (!triggerType) {
         el.dispatchEvent(new Event('click', { bubbles: true }));
@@ -456,8 +459,9 @@ describe('detail.isTriggeredByUser', () => {
         childrenEl = await fixture(html`<input slot="input" />`);
       }
 
+      const name = controlName === 'checkbox-group' ? 'test[]' : 'test';
       const el = /** @type {LitElement & FormControl & {value: string} & {registrationComplete: Promise<boolean>} & {formElements: Array.<FormControl & {value: string}>}} */ (await fixture(
-        html`<${tag}>${childrenEl}</${tag}>`,
+        html`<${tag} name="${name}">${childrenEl}</${tag}>`,
       ));
       await el.registrationComplete;
       el.addEventListener('model-value-changed', spy);
