@@ -24,8 +24,8 @@ export declare class FormGroupHost {
   protected _initialModelValue: { [x: string]: any };
   protected get _inputNode(): HTMLElement;
   protected static _addDescriptionElementIdsToField(): void;
-
   protected _setValueForAllFormElements(property: string, value: any): void;
+
   private __descriptionElementsInParentChain: Set<HTMLElement>;
 }
 

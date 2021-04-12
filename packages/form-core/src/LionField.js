@@ -99,4 +99,11 @@ export class LionField extends FormControlMixin(
       }),
     );
   }
+
+  /**
+   * @configure InteractionStateMixin, ValidateMixin
+   */
+  get _feedbackConditionMeta() {
+    return { ...super._feedbackConditionMeta, focused: this.focused };
+  }
 }

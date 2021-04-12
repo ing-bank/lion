@@ -45,9 +45,11 @@ import {
   Required,
   Validator,
   Pattern,
+  Unparseable,
 } from '@lion/form-core';
 import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { renderLitAsNode } from '@lion/helpers';
 ```
 
 ## When validation happens
@@ -803,4 +805,93 @@ export const backendValidation = () => {
     </lion-form>
   `;
 };
+```
+
+## Multiple field validation
+
+When validation is dependent on muliple fields, two approaches can be considered:
+
+- Fieldset validation
+- Validators with knowledge about context
+
+### Fieldset validation
+
+Assume we have a field `startDate` and `endDate` field, with condition `startDate` < `endDate`.
+The easiest way to achieve this, is by adding a Validator to a fieldset wrapping those fields.
+
+```js preview-story
+const isInterpretable = mv => mv && !(mv instanceof Unparseable);
+
+class Interval extends Validator {
+  static get validatorName() {
+    return 'Interval';
+  }
+
+  execute({ startDate, endDate }) {
+    if (isInterpretable(startDate) && isInterpretable(endDate)) {
+      return !(startDate < endDate);
+    }
+    return false;
+  }
+
+  static async getMessage() {
+    return `The start date should be before the end date`;
+  }
+}
+export const fieldsetValidation = () => html`
+  <lion-fieldset .validators="${[new Interval()]}">
+    <lion-input-date name="startDate" label="Start date"></lion-input-date>
+    <lion-input-date name="endDate" label="End date"></lion-input-date>
+  </lion-fieldset>
+`;
+```
+
+### Validators with knowledge about context
+
+Assume we want to create password validation with a confirmation field.
+We don't want to show feedback on group level, but right beneath the fields.
+
+```js preview-story
+const isInterpretableValue = mv => mv && !(mv instanceof Unparseable);
+
+class PasswordMatch extends Validator {
+  static get validatorName() {
+    return 'PasswordsMatch';
+  }
+
+  execute(modelValue, { first, second }) {
+    if (isInterpretableValue(first.modelValue) && isInterpretableValue(second.modelValue)) {
+      return first.modelValue !== second.modelValue;
+    }
+    return false;
+  }
+}
+// TODO: use ref directive once on Lit-element 3
+const first = renderLitAsNode(html`
+  <lion-input
+    .feedbackCondition="${(type, meta) => meta.focused}"
+    type="password"
+    name="initialPassword"
+    label="New password"
+  ></lion-input>
+`);
+const second = renderLitAsNode(html`
+  <lion-input
+    .feedbackCondition="${(type, meta) => meta.focused}"
+    type="password"
+    name="confirmPassword"
+    label="Confirm password"
+  ></lion-input>
+`);
+first.validators = [
+  new PasswordMatch(
+    { first, second },
+    { getMessage: () => 'Please match with confirmation field' },
+  ),
+];
+second.validators = [
+  new PasswordMatch({ first, second }, { getMessage: () => 'Please match with initial field' }),
+];
+
+export const contextValidation = () => html` ${first}${second} `;
 ```

@@ -85,7 +85,7 @@ describe('<lion-field>', () => {
     const el = /** @type {LionField} */ (await fixture(
       html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlot}</${tag}>`,
     ));
-    // @ts-ignore [allow-proteced] in test
+    // @ts-ignore [allow-protected] in test
     expect(el.__fieldName).to.equal(el.fieldName);
   });
 

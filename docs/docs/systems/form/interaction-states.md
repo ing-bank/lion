@@ -4,7 +4,8 @@
 import { html, render } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import '@lion/input/define';
-import { Validator } from '@lion/form-core';
+import '@lion/input-date/define';
+import { Validator, Unparseable, MinDate, Required } from '@lion/form-core';
 import './assets/h-output.js';
 ```
 
@@ -118,7 +119,7 @@ export const feedbackCondition = () => {
     ></lion-input>
   `);
 
-  // 4. When checkboxes change, set the showFeedbackConditionFor method to a new method that checks
+  // 4. When checkboxes change, set the feedbackCondition method to a new method that checks
   // whether every condition that is checked, is true on the field. Otherwise, don't show the feedback.
   const fetchConditionsAndReevaluate = ({ currentTarget: { modelValue } }) => {
     fieldElement._showFeedbackConditionFor = type => {
@@ -141,4 +142,36 @@ export const feedbackCondition = () => {
     </lion-checkbox-group>
   `;
 };
+```
+
+### Changing the feedback show condition (Application Developers)
+
+In some situations, the default condition for showing feedback messages might not apply.
+The conditions as described in 'When is feedback shown to the user' can be overidden via
+the `feedbackCondition` method.
+In this example, we want to implement the following situation:
+
+- for an `input-date`, we have a MinDate condition
+- we want to send feedback as soon as we know the user intentionally typed a full Date
+  (we know if modelValue is not Unparseable)
+
+```js preview-story
+export const feedbackVisibility = () => html`
+  <lion-input-date
+    .validators="${[
+      new Required(),
+      new MinDate(new Date('2000/10/10'), {
+        getMessage: () => `You provided a correctly formatted date, but it's below MinData`,
+      }),
+    ]}"
+    .feedbackCondition="${(type, meta, originalCondition) => {
+      if (meta.modelValue && !(meta.modelValue instanceof Unparseable)) {
+        return true;
+      }
+      return originalCondition(type, meta);
+    }}"
+    help-text="Error appears as soon as a Parseable date before 10/10/2000 is typed"
+    label="Custom feedback visibility"
+  ></lion-input-date>
+`;
 ```

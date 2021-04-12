@@ -10,4 +10,11 @@ import { ListboxMixin } from './ListboxMixin.js';
  */
 export class LionListbox extends ListboxMixin(
   FocusMixin(InteractionStateMixin(ValidateMixin(LitElement))),
-) {}
+) {
+  /**
+   * @configure InteractionStateMixin, ValidateMixin
+   */
+  get _feedbackConditionMeta() {
+    return { ...super._feedbackConditionMeta, focused: this.focused };
+  }
+}

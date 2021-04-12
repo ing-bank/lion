@@ -83,18 +83,18 @@ export function runFormGroupMixinSuite(cfg = {}) {
       const el = /**  @type {FormGroup} */ (await fixture(html`
       <${tag} label="foo" .fieldName="${'bar'}">${inputSlots}</${tag}>
     `));
-      // @ts-ignore [allow-proteced] in test
+      // @ts-ignore [allow-protected] in test
       expect(el.__fieldName).to.equal(el.fieldName);
     });
 
     // TODO: Tests below belong to FormRegistrarMixin. Preferably run suite integration test
     it(`${tagString} has an up to date list of every form element in .formElements`, async () => {
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}>${inputSlots}</${tag}>`));
-      // @ts-ignore [allow-proteced] in test
+      // @ts-ignore [allow-protected] in test
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(2);
       el.removeChild(el.formElements['hobbies[]'][0]);
-      // @ts-ignore [allow-proteced] in test
+      // @ts-ignore [allow-protected] in test
       expect(el.formElements._keys().length).to.equal(3);
       expect(el.formElements['hobbies[]'].length).to.equal(1);
     });

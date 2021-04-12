@@ -201,7 +201,7 @@ const InteractionStateMixinImplementation = superclass =>
 
     get _feedbackConditionMeta() {
       return {
-        // @ts-ignore
+        // @ts-ignore to fix, InteractionStateMixin needs to depend on ValidateMixin
         ...super._feedbackConditionMeta,
         submitted: this.submitted,
         touched: this.touched,
