@@ -163,12 +163,26 @@ export declare class FormControlHost {
       reorder?: boolean | undefined;
     },
   ): void;
+  public removeFromAriaLabelledBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
+  public removeFromAriaDescribedBy(
+    element: HTMLElement,
+    customConfig?: {
+      reorder?: boolean | undefined;
+    },
+  ): void;
   __reorderAriaDescribedNodes: boolean | undefined;
   __getDirectSlotChild(slotName: string): HTMLElement;
   __dispatchInitialModelValueChangedEvent(): void;
   __repropagateChildrenInitialized: boolean | undefined;
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   __repropagateChildrenValues(ev: CustomEvent): void;
+  _parentFormGroup: FormControlHost;
+  _repropagationCondition(target: FormControlHost): boolean;
 }
 
 export declare function FormControlImplementation<T extends Constructor<LitElement>>(

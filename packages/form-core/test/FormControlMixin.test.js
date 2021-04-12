@@ -5,34 +5,12 @@ import { FormControlMixin } from '../src/FormControlMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
 describe('FormControlMixin', () => {
-  const inputSlot = '<input slot="input" />';
+  const inputSlot = html`<input slot="input" />`;
 
   class FormControlMixinClass extends FormControlMixin(LitElement) {}
 
   const tagString = defineCE(FormControlMixinClass);
   const tag = unsafeStatic(tagString);
-
-  it('has a label', async () => {
-    const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag} label="Email address">${inputSlot}</${tag}>
-    `));
-
-    expect(elAttr.label).to.equal('Email address', 'as an attribute');
-
-    const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}
-        .label=${'Email address'}
-      >${inputSlot}
-      </${tag}>`));
-    expect(elProp.label).to.equal('Email address', 'as a property');
-
-    const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <label slot="label">Email address</label>
-        ${inputSlot}
-      </${tag}>`));
-    expect(elElem.label).to.equal('Email address', 'as an element');
-  });
 
   it('is hidden when attribute hidden is true', async () => {
     const el = await fixture(html`
@@ -43,172 +21,283 @@ describe('FormControlMixin', () => {
     expect(el).not.to.be.displayed;
   });
 
-  it('has a label that supports inner html', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <label slot="label">Email <span>address</span></label>
-        ${inputSlot}
-      </${tag}>`));
-    expect(el.label).to.equal('Email address');
-  });
+  describe('Label and helpText api', () => {
+    it('has a label', async () => {
+      const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag} label="Email address">${inputSlot}</${tag}>
+      `));
 
-  it('only takes label of direct child', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <${tag} label="Email address">
+      expect(elAttr.label).to.equal('Email address', 'as an attribute');
+
+      const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}
+          .label=${'Email address'}
+        >${inputSlot}
+        </${tag}>`));
+      expect(elProp.label).to.equal('Email address', 'as a property');
+
+      const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <label slot="label">Email address</label>
           ${inputSlot}
-        </${tag}>
-      </${tag}>`));
-    expect(el.label).to.equal('');
-  });
+        </${tag}>`));
+      expect(elElem.label).to.equal('Email address', 'as an element');
+    });
 
-  it('can have a help-text', async () => {
-    const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag} help-text="We will not send you any spam">${inputSlot}</${tag}>
-    `));
-    expect(elAttr.helpText).to.equal('We will not send you any spam', 'as an attribute');
-
-    const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}
-        .helpText=${'We will not send you any spam'}
-      >${inputSlot}
-      </${tag}>`));
-    expect(elProp.helpText).to.equal('We will not send you any spam', 'as a property');
-
-    const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <div slot="help-text">We will not send you any spam</div>
-        ${inputSlot}
-      </${tag}>`));
-    expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
-  });
-
-  it('can have a help-text that supports inner html', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <div slot="help-text">We will not send you any <span>spam</span></div>
-        ${inputSlot}
-      </${tag}>`));
-    expect(el.helpText).to.equal('We will not send you any spam');
-  });
-
-  it('only takes help-text of direct child', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        <${tag} help-text="We will not send you any spam">
+    it('has a label that supports inner html', async () => {
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <label slot="label">Email <span>address</span></label>
           ${inputSlot}
-        </${tag}>
-      </${tag}>`));
-    expect(el.helpText).to.equal('');
-  });
+        </${tag}>`));
+      expect(el.label).to.equal('Email address');
+    });
 
-  it('does not duplicate aria-describedby and aria-labelledby ids', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(`
-      <${tagString} help-text="This element will be disconnected/reconnected">${inputSlot}</${tagString}>
-    `));
+    it('only takes label of direct child', async () => {
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <${tag} label="Email address">
+            ${inputSlot}
+          </${tag}>
+        </${tag}>`));
+      expect(el.label).to.equal('');
+    });
 
-    const wrapper = /** @type {LitElement} */ (await fixture(`<div></div>`));
-    el.parentElement?.appendChild(wrapper);
-    wrapper.appendChild(el);
-    await wrapper.updateComplete;
+    it('can have a help-text', async () => {
+      const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag} help-text="We will not send you any spam">${inputSlot}</${tag}>
+      `));
+      expect(elAttr.helpText).to.equal('We will not send you any spam', 'as an attribute');
 
-    ['aria-describedby', 'aria-labelledby'].forEach(ariaAttributeName => {
-      const ariaAttribute = Array.from(el.children)
-        .find(child => child.slot === 'input')
-        ?.getAttribute(ariaAttributeName)
-        ?.trim()
-        .split(' ');
-      const hasDuplicate = !!ariaAttribute?.find((elm, i) => ariaAttribute.indexOf(elm) !== i);
-      expect(hasDuplicate).to.be.false;
+      const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}
+          .helpText=${'We will not send you any spam'}
+        >${inputSlot}
+        </${tag}>`));
+      expect(elProp.helpText).to.equal('We will not send you any spam', 'as a property');
+
+      const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <div slot="help-text">We will not send you any spam</div>
+          ${inputSlot}
+        </${tag}>`));
+      expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
+    });
+
+    it('can have a help-text that supports inner html', async () => {
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <div slot="help-text">We will not send you any <span>spam</span></div>
+          ${inputSlot}
+        </${tag}>`));
+      expect(el.helpText).to.equal('We will not send you any spam');
+    });
+
+    it('only takes help-text of direct child', async () => {
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag}>
+          <${tag} help-text="We will not send you any spam">
+            ${inputSlot}
+          </${tag}>
+        </${tag}>`));
+      expect(el.helpText).to.equal('');
     });
   });
 
-  // FIXME: Broken test
-  it.skip('internally sorts aria-describedby and aria-labelledby ids', async () => {
-    const wrapper = await fixture(html`
-      <div id="wrapper">
-        <div id="additionalLabelA">should go after input internals</div>
-        <div id="additionalDescriptionA">should go after input internals</div>
+  describe('Accessibility', () => {
+    it('does not duplicate aria-describedby and aria-labelledby ids on reconnect', async () => {
+      const wrapper = /** @type {HTMLElement} */ (await fixture(html`
+        <div id="wrapper">
+          <${tag} help-text="This element will be disconnected/reconnected">${inputSlot}</${tag}>
+        </div>
+      `));
+      const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+      const labelIdsBefore = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsBefore = /** @type {string} */ (el._inputNode.getAttribute(
+        'aria-describedby',
+      ));
+      // Reconnect
+      wrapper.removeChild(el);
+      wrapper.appendChild(el);
+      const labelIdsAfter = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+      const descriptionIdsAfter = /** @type {string} */ (el._inputNode.getAttribute(
+        'aria-describedby',
+      ));
+
+      expect(labelIdsBefore).to.equal(labelIdsAfter);
+      expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
+    });
+
+    it('adds aria-live="polite" to the feedback slot', async () => {
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
         <${tag}>
-          <input slot="input" />
-          <label slot="label">Added to label by default</label>
-          <div slot="feedback">Added to description by default</div>
+          ${inputSlot}
+          <div slot="feedback">Added to see attributes</div>
         </${tag}>
-        <div id="additionalLabelB">should go after input internals</div>
-        <div id="additionalDescriptionB">should go after input internals</div>
-      </div>`);
-    const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
-    const { _inputNode } = el;
+      `));
 
-    // 1. addToAriaLabelledBy()
-    // external inputs should go in order defined by user
-    const labelA = /** @type {HTMLElement} */ (wrapper.querySelector('#additionalLabelA'));
-    const labelB = /** @type {HTMLElement} */ (wrapper.querySelector('#additionalLabelB'));
-    el.addToAriaLabelledBy(labelA);
-    el.addToAriaLabelledBy(labelB);
+      expect(
+        Array.from(el.children)
+          .find(child => child.slot === 'feedback')
+          ?.getAttribute('aria-live'),
+      ).to.equal('polite');
+    });
 
-    const ariaLabelId = /** @type {number} */ (_inputNode
-      .getAttribute('aria-labelledby')
-      ?.indexOf(`label-${el._inputId}`));
+    it('clicking the label should call `_onLabelClick`', async () => {
+      const spy = sinon.spy();
+      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+        <${tag} ._onLabelClick="${spy}">
+          ${inputSlot}
+        </${tag}>
+      `));
+      expect(spy).to.not.have.been.called;
+      el._labelNode.click();
+      expect(spy).to.have.been.calledOnce;
+    });
 
-    const ariaLabelA = /** @type {number} */ (_inputNode
-      .getAttribute('aria-labelledby')
-      ?.indexOf('additionalLabelA'));
+    describe('Adding extra labels and descriptions', () => {
+      it(`supports centrally orchestrated labels/descriptions via addToAriaLabelledBy() /
+      removeFromAriaLabelledBy() / addToAriaDescribedBy() / removeFromAriaDescribedBy()`, async () => {
+        const wrapper = /** @type {HTMLElement} */ (await fixture(html`
+          <div id="wrapper">
+            <${tag}>
+              ${inputSlot}
+              <label slot="label">Added to label by default</label>
+              <div slot="feedback">Added to description by default</div>
+            </${tag}>
+            <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
+            <div id="additionalDescription"> Same for this </div>
+          </div>`));
+        const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+        // wait until the field element is done rendering
+        await el.updateComplete;
+        await el.updateComplete;
 
-    const ariaLabelB = /** @type {number} */ (_inputNode
-      .getAttribute('aria-labelledby')
-      ?.indexOf('additionalLabelB'));
+        // 1a. addToAriaLabelledBy()
+        // Check if the aria attr is filled initially
+        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'))).to.contain(
+          `label-${el._inputId}`,
+        );
+        const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
+          '#additionalLabel',
+        ));
+        el.addToAriaLabelledBy(additionalLabel);
+        await el.updateComplete;
+        let labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        // Now check if ids are added to the end (not overridden)
+        expect(labelledbyAttr).to.contain(`additionalLabel`);
+        // Should be placed in the end
+        expect(
+          labelledbyAttr.indexOf(`label-${el._inputId}`) <
+            labelledbyAttr.indexOf('additionalLabel'),
+        );
 
-    expect(ariaLabelId < ariaLabelB && ariaLabelB < ariaLabelA).to.be.true;
+        // 1b. removeFromAriaLabelledBy()
+        el.removeFromAriaLabelledBy(additionalLabel);
+        await el.updateComplete;
+        labelledbyAttr = /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby'));
+        // Now check if ids are added to the end (not overridden)
+        expect(labelledbyAttr).to.not.contain(`additionalLabel`);
 
-    // 2. addToAriaDescribedBy()
-    // Check if the aria attr is filled initially
-    const descA = /** @type {HTMLElement} */ (wrapper.querySelector('#additionalDescriptionA'));
-    const descB = /** @type {HTMLElement} */ (wrapper.querySelector('#additionalDescriptionB'));
-    el.addToAriaDescribedBy(descB);
-    el.addToAriaDescribedBy(descA);
+        // 2a. addToAriaDescribedBy()
+        // Check if the aria attr is filled initially
+        expect(/** @type {string} */ (el._inputNode.getAttribute('aria-describedby'))).to.contain(
+          `feedback-${el._inputId}`,
+        );
+      });
 
-    const ariaDescId = /** @type {number} */ (_inputNode
-      .getAttribute('aria-describedby')
-      ?.indexOf(`feedback-${el._inputId}`));
+      it('sorts internal elements, and allows opt-out', async () => {
+        const wrapper = await fixture(html`
+        <div id="wrapper">
+          <${tag}>
+            <input slot="input" id="myInput" />
+            <label slot="label" id="internalLabel">Added to label by default</label>
+            <div slot="help-text" id="internalDescription">
+              Added to description by default
+            </div>
+          </${tag}>
+          <div id="externalLabelB">should go after input internals</div>
+          <div id="externalDescriptionB">should go after input internals</div>
+        </div>`);
+        const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
 
-    const ariaDescA = /** @type {number} */ (_inputNode
-      .getAttribute('aria-describedby')
-      ?.indexOf('additionalDescriptionA'));
+        // N.B. in real life we would never add the input to aria-describedby or -labelledby,
+        // but this example purely demonstrates dom order is respected.
+        // A real life scenario would be for instance when
+        // a Field or FormGroup would be extended and an extra slot would be added in the template
+        const myInput = /** @type {HTMLElement} */ (wrapper.querySelector('#myInput'));
+        el.addToAriaLabelledBy(myInput);
+        await el.updateComplete;
+        el.addToAriaDescribedBy(myInput);
+        await el.updateComplete;
 
-    const ariaDescB = /** @type {number} */ (_inputNode
-      .getAttribute('aria-describedby')
-      ?.indexOf('additionalDescriptionB'));
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+        ).to.eql(['myInput', 'internalLabel']);
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+        ).to.eql(['myInput', 'internalDescription']);
 
-    // Should be placed in the end
-    expect(ariaDescId < ariaDescB && ariaDescB < ariaDescA).to.be.true;
-  });
+        // cleanup
+        el.removeFromAriaLabelledBy(myInput);
+        await el.updateComplete;
+        el.removeFromAriaDescribedBy(myInput);
+        await el.updateComplete;
 
-  it('adds aria-live="polite" to the feedback slot', async () => {
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag}>
-        ${inputSlot}
-        <div slot="feedback">Added to see attributes</div>
-      </${tag}>
-    `));
+        // opt-out of reorder
+        el.addToAriaLabelledBy(myInput, { reorder: false });
+        await el.updateComplete;
+        el.addToAriaDescribedBy(myInput, { reorder: false });
+        await el.updateComplete;
 
-    expect(
-      Array.from(el.children)
-        .find(child => child.slot === 'feedback')
-        ?.getAttribute('aria-live'),
-    ).to.equal('polite');
-  });
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+        ).to.eql(['internalLabel', 'myInput']);
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+        ).to.eql(['internalDescription', 'myInput']);
+      });
 
-  it('clicking the label should call `_onLabelClick`', async () => {
-    const spy = sinon.spy();
-    const el = /** @type {FormControlMixinClass} */ (await fixture(html`
-      <${tag} ._onLabelClick="${spy}">
-        ${inputSlot}
-      </${tag}>
-    `));
-    expect(spy).to.not.have.been.called;
-    el._labelNode.click();
-    expect(spy).to.have.been.calledOnce;
+      it('respects provided order for external elements', async () => {
+        const wrapper = await fixture(html`
+        <div id="wrapper">
+          <div id="externalLabelA">should go after input internals</div>
+          <div id="externalDescriptionA">should go after input internals</div>
+          <${tag}>
+            <input slot="input" />
+            <label slot="label" id="internalLabel">Added to label by default</label>
+            <div slot="help-text" id="internalDescription">Added to description by default</div>
+          </${tag}>
+          <div id="externalLabelB">should go after input internals</div>
+          <div id="externalDescriptionB">should go after input internals</div>
+        </div>`);
+        const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
+
+        // 1. addToAriaLabelledBy()
+        const labelA = /** @type {HTMLElement} */ (wrapper.querySelector('#externalLabelA'));
+        const labelB = /** @type {HTMLElement} */ (wrapper.querySelector('#externalLabelB'));
+        // external inputs should go in order defined by user
+        el.addToAriaLabelledBy(labelA);
+        el.addToAriaLabelledBy(labelB);
+        await el.updateComplete;
+
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-labelledby')).split(' '),
+        ).to.eql(['internalLabel', 'externalLabelA', 'externalLabelB']);
+
+        // 2. addToAriaDescribedBy()
+        const descrA = /** @type {HTMLElement} */ (wrapper.querySelector('#externalDescriptionA'));
+        const descrB = /** @type {HTMLElement} */ (wrapper.querySelector('#externalDescriptionB'));
+
+        el.addToAriaDescribedBy(descrA);
+        el.addToAriaDescribedBy(descrB);
+        await el.updateComplete;
+
+        expect(
+          /** @type {string} */ (el._inputNode.getAttribute('aria-describedby')).split(' '),
+        ).to.eql(['internalDescription', 'externalDescriptionA', 'externalDescriptionB']);
+      });
+    });
   });
 
   describe('Model-value-changed event propagation', () => {

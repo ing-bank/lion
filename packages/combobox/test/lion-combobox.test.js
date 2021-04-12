@@ -1562,15 +1562,12 @@ describe('lion-combobox', () => {
       it('synchronizes autocomplete option to textbox', async () => {
         let el;
         [el] = await fruitFixture({ autocomplete: 'both' });
-        // @ts-expect-error
         expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('both');
 
         [el] = await fruitFixture({ autocomplete: 'list' });
-        // @ts-expect-error
         expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('list');
 
         [el] = await fruitFixture({ autocomplete: 'none' });
-        // @ts-expect-error
         expect(el._inputNode.getAttribute('aria-autocomplete')).to.equal('none');
       });
 

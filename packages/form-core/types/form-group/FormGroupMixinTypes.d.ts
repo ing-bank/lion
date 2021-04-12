@@ -23,6 +23,7 @@ export declare class FormGroupHost {
   _setValueForAllFormElements(property: string, value: any): void;
   resetInteractionState(): void;
   clearGroup(): void;
+  __descriptionElementsInParentChain: Set<HTMLElement>;
 }
 
 export declare function FormGroupImplementation<T extends Constructor<LitElement>>(
