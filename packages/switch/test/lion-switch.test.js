@@ -182,7 +182,7 @@ describe('lion-switch', () => {
     const el = await fixture(
       html`<custom-switch
         .validators="${[new IsTrue({}, { type: 'info' })]}"
-        .showFeedbackConditionFor="${(
+        .feedbackCondition="${(
           /** @type {string} */ type,
           /** @type {object} */ meta,
           /** @type {(type: string, meta: object) => any} */ defaultCondition,

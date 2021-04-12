@@ -36,6 +36,7 @@ export declare class ValidateHost {
 
   protected _visibleMessagesAmount: number;
   protected _allValidators: Validator[];
+  protected get _feedbackConditionMeta(): object;
   protected get _feedbackNode(): LionValidationFeedback;
 
   protected _updateFeedbackComponent(): void;
@@ -50,6 +51,7 @@ export declare class ValidateHost {
   private __validationResult: Validator[];
   private __prevValidationResult: Validator[];
   private __prevShownValidationResult: Validator[];
+  private __childModelValueChanged: boolean;
 
   private __storePrevResult(): void;
   private __executeValidators(): void;

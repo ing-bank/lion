@@ -17,6 +17,11 @@ import {
   AsyncAlwaysInvalid,
   AsyncAlwaysValid,
 } from '../test-helpers/index.js';
+import '../define.js';
+
+/**
+ * @typedef {import('../').LionField} LionField
+ */
 
 /**
  * @param {{tagString?: string | null, lightDom?: string}} [customConfig]
@@ -130,6 +135,20 @@ export function runValidateMixinSuite(customConfig) {
 
         const validateSpy = sinon.spy(el, 'validate');
         el.modelValue = 'x';
+        expect(validateSpy.callCount).to.equal(1);
+      });
+
+      it('revalidates when child ".modelValue" changes', async () => {
+        const el = /** @type {ValidateElement} */ (await fixture(html`
+          <${tag}
+            ._repropagationRole="${'fieldset'}"
+            .validators=${[new AlwaysValid()]}
+            .modelValue=${'myValue'}
+          ><lion-field id="child"><input slot="input"></lion-field></${tag}>
+        `));
+        const validateSpy = sinon.spy(el, 'validate');
+        /** @type {LionField} */ (el.querySelector('#child')).modelValue = 'test';
+        await el.updateComplete;
         expect(validateSpy.callCount).to.equal(1);
       });
 
@@ -867,7 +886,7 @@ export function runValidateMixinSuite(customConfig) {
         const el = /** @type {ValidateElement} */ (await fixture(html`
           <${tag}
           .validators="${[new Required({}, { type: 'error' })]}"
-          .showFeedbackConditionFor="${(
+          .feedbackCondition="${(
             /** @type {string} */ type,
             /** @type {object} */ meta,
             /** @type {(type: string) => any} */ defaultCondition,
@@ -915,6 +934,30 @@ export function runValidateMixinSuite(customConfig) {
               @showsFeedbackForErrorChanged=${spy};
             >${lightDom}</${tag}>
           `));
+          el.modelValue = 'a';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(1);
+
+          el.modelValue = 'abc';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(1);
+
+          el.modelValue = 'abcdefg';
+          await el.updateComplete;
+          expect(spy).to.have.callCount(2);
+        });
+
+        it('fires "{type}StateChanged" event async when type validity changed', async () => {
+          const spy = sinon.spy();
+          const el = /** @type {ValidateElement} */ (await fixture(html`
+            <${tag}
+              .submitted=${true}
+              .validators=${[new MinLength(7)]}
+              @errorStateChanged=${spy};
+            >${lightDom}</${tag}>
+          `));
+          expect(spy).to.have.callCount(0);
+
           el.modelValue = 'a';
           await el.updateComplete;
           expect(spy).to.have.callCount(1);

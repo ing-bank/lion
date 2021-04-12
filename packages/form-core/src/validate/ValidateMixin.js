@@ -85,6 +85,8 @@ export const ValidateMixinImplementation = superclass =>
          * By default, just like the platform, only one message (with highest prio) is visible.
          */
         _visibleMessagesAmount: { attribute: false },
+
+        __childModelValueChanged: { attribute: false },
       };
     }
 
@@ -181,6 +183,12 @@ export const ValidateMixinImplementation = superclass =>
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
       /** @protected */
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
+
+      /**
+       * This will be used for FormGroups that listen for `model-value-changed` of children
+       * @private
+       */
+      this.__childModelValueChanged = false;
     }
 
     connectedCallback() {
@@ -200,6 +208,11 @@ export const ValidateMixinImplementation = superclass =>
       super.firstUpdated(changedProperties);
       this.__validateInitialized = true;
       this.validate();
+      if (this._repropagationRole !== 'child') {
+        this.addEventListener('model-value-changed', () => {
+          this.__childModelValueChanged = true;
+        });
+      }
     }
 
     /**
@@ -627,8 +640,8 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * The default showFeedbackConditionFor condition that will be used when the
-     * showFeedbackConditionFor is not overridden.
+     * The default feedbackCondition condition that will be used when the
+     * feedbackCondition is not overridden.
      * Show the validity feedback when returning true, don't show when false
      * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
      * Validator type
@@ -641,17 +654,17 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * Allows super classes to add meta info for showFeedbackConditionFor
+     * Allows super classes to add meta info for feedbackCondition
      * @configurable
      */
     get _feedbackConditionMeta() {
-      return {};
+      return { modelValue: this.modelValue, el: this };
     }
 
     /**
      * Allows the end user to specify when a feedback message should be shown
      * @example
-     * showFeedbackConditionFor(type, meta, defaultCondition) {
+     * feedbackCondition(type, meta, defaultCondition) {
      *   if (type === 'info') {
      *     return return;
      *   } else if (type === 'prefilledOnly') {
@@ -668,7 +681,7 @@ export const ValidateMixinImplementation = superclass =>
      * for other types
      * @returns {boolean}
      */
-    showFeedbackConditionFor(
+    feedbackCondition(
       type,
       meta = this._feedbackConditionMeta,
       currentCondition = this._showFeedbackConditionFor.bind(this),
@@ -702,8 +715,29 @@ export const ValidateMixinImplementation = superclass =>
         // Necessary typecast because types aren't smart enough to understand that we filter out undefined
         this.showsFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
           .map(type => (this._hasFeedbackVisibleFor(type) ? type : undefined))
-          .filter(_ => !!_));
+          .filter(Boolean));
         this._updateFeedbackComponent();
+      }
+
+      if (changedProperties.has('__childModelValueChanged') && this.__childModelValueChanged) {
+        this.validate({ clearCurrentResult: true });
+        this.__childModelValueChanged = false;
+      }
+
+      if (changedProperties.has('validationStates')) {
+        const prevStates = /** @type {{[key: string]: object;}} */ (changedProperties.get(
+          'validationStates',
+        ));
+        if (prevStates) {
+          Object.entries(this.validationStates).forEach(([type, feedbackObj]) => {
+            if (
+              prevStates[type] &&
+              JSON.stringify(feedbackObj) !== JSON.stringify(prevStates[type])
+            ) {
+              this.dispatchEvent(new CustomEvent(`${type}StateChanged`, { detail: feedbackObj }));
+            }
+          });
+        }
       }
     }
 
@@ -717,7 +751,7 @@ export const ValidateMixinImplementation = superclass =>
       // Necessary typecast because types aren't smart enough to understand that we filter out undefined
       const newShouldShowFeedbackFor = /** @type {string[]} */ (ctor.validationTypes
         .map(type =>
-          this.showFeedbackConditionFor(
+          this.feedbackCondition(
             type,
             this._feedbackConditionMeta,
             this._showFeedbackConditionFor.bind(this),
@@ -725,7 +759,7 @@ export const ValidateMixinImplementation = superclass =>
             ? type
             : undefined,
         )
-        .filter(_ => !!_));
+        .filter(Boolean));
 
       if (JSON.stringify(this.shouldShowFeedbackFor) !== JSON.stringify(newShouldShowFeedbackFor)) {
         this.shouldShowFeedbackFor = newShouldShowFeedbackFor;
@@ -748,7 +782,7 @@ export const ValidateMixinImplementation = superclass =>
       // Sort all validators based on the type provided.
       const res = validationResult
         .filter(v =>
-          this.showFeedbackConditionFor(
+          this.feedbackCondition(
             v.type,
             this._feedbackConditionMeta,
             this._showFeedbackConditionFor.bind(this),

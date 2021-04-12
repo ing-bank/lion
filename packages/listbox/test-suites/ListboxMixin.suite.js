@@ -277,7 +277,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         const el = await fixture(html`
         <${tag} label="foo" .fieldName="${'bar'}"></${tag}>
       `);
-        // @ts-ignore [allow-proteced] in test
+        // @ts-ignore [allow-protected] in test
         expect(el.__fieldName).to.equal(el.fieldName);
       });
 
