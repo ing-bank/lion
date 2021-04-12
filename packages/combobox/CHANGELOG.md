@@ -1,5 +1,47 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 43e4bb81: Type fixes and enhancements:
+
+  - all protected/private entries added to form-core type definitions, and their dependents were fixed
+  - a lot @ts-expect-error and @ts-ignore (all `get slots()` and `get modelValue()` issues are fixed)
+  - categorized @ts-expect-error / @ts-ignore into:
+    - [external]: when a 3rd party didn't ship types (could also be browser specs)
+    - [allow-protected]: when we are allowed to know about protected methods. For instance when code
+      resides in the same package
+    - [allow-private]: when we need to check a private value inside a test
+    - [allow]: miscellaneous allows
+    - [editor]: when the editor complains, but the cli/ci doesn't
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+- 0dc706b6: Add clear() function combobox
+- 991f1f54: **combobox**: enabled and fixed types
+- e301ef96: ### Bug Fixes
+
+  **combobox**: aria-expanded always applied on element with role=combobox
+
+- Updated dependencies [38297d07]
+- Updated dependencies [3b5ed322]
+- Updated dependencies [77a04245]
+- Updated dependencies [53167fd2]
+- Updated dependencies [181a1d45]
+- Updated dependencies [fb1522dd]
+- Updated dependencies [75af80be]
+- Updated dependencies [0e910e3f]
+- Updated dependencies [991f1f54]
+- Updated dependencies [cc02ae24]
+- Updated dependencies [43e4bb81]
+- Updated dependencies [6ae7a5e3]
+  - @lion/form-core@0.11.0
+  - @lion/core@0.16.0
+  - @lion/listbox@0.7.0
+  - @lion/overlays@0.26.0
+
 ## 0.4.2
 
 ### Patch Changes

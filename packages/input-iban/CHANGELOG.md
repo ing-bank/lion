@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.14.0
+
+### Minor Changes
+
+- 43e4bb81: Type fixes and enhancements:
+
+  - all protected/private entries added to form-core type definitions, and their dependents were fixed
+  - a lot @ts-expect-error and @ts-ignore (all `get slots()` and `get modelValue()` issues are fixed)
+  - categorized @ts-expect-error / @ts-ignore into:
+    - [external]: when a 3rd party didn't ship types (could also be browser specs)
+    - [allow-protected]: when we are allowed to know about protected methods. For instance when code
+      resides in the same package
+    - [allow-private]: when we need to check a private value inside a test
+    - [allow]: miscellaneous allows
+    - [editor]: when the editor complains, but the cli/ci doesn't
+
+### Patch Changes
+
+- 97b8592c: Remove lion references in docs for easier extending
+- Updated dependencies [38297d07]
+- Updated dependencies [3b5ed322]
+- Updated dependencies [77a04245]
+- Updated dependencies [53167fd2]
+- Updated dependencies [181a1d45]
+- Updated dependencies [fb1522dd]
+- Updated dependencies [75af80be]
+- Updated dependencies [0e910e3f]
+- Updated dependencies [991f1f54]
+- Updated dependencies [cc02ae24]
+- Updated dependencies [43e4bb81]
+- Updated dependencies [6ae7a5e3]
+  - @lion/form-core@0.11.0
+  - @lion/core@0.16.0
+  - @lion/input@0.13.0
+  - @lion/localize@0.18.0
+  - @lion/validate-messages@0.5.4
+
 ## 0.13.3
 
 ### Patch Changes

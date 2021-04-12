@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+- Updated dependencies [77a04245]
+- Updated dependencies [43e4bb81]
+  - @lion/core@0.16.0
+  - singleton-manager@1.4.1
+
 ## 0.11.0
 
 ### Minor Changes

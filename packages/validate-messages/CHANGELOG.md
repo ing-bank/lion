@@ -1,5 +1,25 @@
 # Change Log
 
+## 0.5.4
+
+### Patch Changes
+
+- 77a04245: add protected and private type info
+- Updated dependencies [38297d07]
+- Updated dependencies [3b5ed322]
+- Updated dependencies [77a04245]
+- Updated dependencies [53167fd2]
+- Updated dependencies [181a1d45]
+- Updated dependencies [fb1522dd]
+- Updated dependencies [75af80be]
+- Updated dependencies [0e910e3f]
+- Updated dependencies [991f1f54]
+- Updated dependencies [cc02ae24]
+- Updated dependencies [43e4bb81]
+- Updated dependencies [6ae7a5e3]
+  - @lion/form-core@0.11.0
+  - @lion/localize@0.18.0
+
 ## 0.5.3
 
 ### Patch Changes
