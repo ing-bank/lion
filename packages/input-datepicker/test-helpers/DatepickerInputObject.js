@@ -44,6 +44,7 @@ export class DatepickerInputObject {
    */
 
   get invokerEl() {
+    // @ts-ignore [allow-protected] in test
     return this.el._invokerNode;
   }
 
@@ -63,6 +64,7 @@ export class DatepickerInputObject {
   }
 
   get calendarEl() {
+    // @ts-ignore [allow-protected] in test
     return /** @type {import('@lion/calendar').LionCalendar} */ (this.el && this.el._calendarNode);
   }
 

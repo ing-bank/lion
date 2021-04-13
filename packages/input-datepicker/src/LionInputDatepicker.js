@@ -157,10 +157,17 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     ];
   }
 
+  /**
+   * @protected
+   */
   get _invokerNode() {
     return /** @type {HTMLElement} */ (this.querySelector(`#${this.__invokerId}`));
   }
 
+  /**
+   * @type {LionCalendar}
+   * @protected
+   */
   get _calendarNode() {
     return /** @type {LionCalendar} */ (this._overlayCtrl.contentNode.querySelector(
       '[slot="content"]',
