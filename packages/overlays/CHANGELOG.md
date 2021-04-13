@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.26.1
+
+### Patch Changes
+
+- f2d9b8e2: only focus elements after hide when OverlayController has ownership
+
 ## 0.26.0
 
 ### Minor Changes

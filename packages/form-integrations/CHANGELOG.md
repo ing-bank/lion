@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- Updated dependencies [b77a038d]
+  - @lion/checkbox-group@0.16.1
+  - @lion/combobox@0.5.1
+  - @lion/input-datepicker@0.21.1
+  - @lion/select-rich@0.24.1
+
 ## 0.6.0
 
 ### Minor Changes

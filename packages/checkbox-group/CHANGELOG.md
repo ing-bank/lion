@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.1
+
+### Patch Changes
+
+- b77a038d: recover possibility to registrer without []
+
 ## 0.16.0
 
 ### Minor Changes
