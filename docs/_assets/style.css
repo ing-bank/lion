@@ -1,11 +1,27 @@
 body[layout='layout-home'] .markdown-body .call-to-action:nth-of-type(2) {
-  --primary-color: #222;
-  --primary-color-lighter: #333;
+  --primary-color: #333;
+  --primary-color-lighter: #444;
   --primary-color-darker: #000;
+}
+
+body[layout='layout-home'] .markdown-body .call-to-action:nth-of-type(1) {
+  --primary-color: #8f7325;
+  --primary-color-lighter: #8f7325;
+  --primary-color-darker: #725c1e;
+}
+
+#layout-index-open-navigation {
+  --primary-color: #8f7325;
+  --primary-color-lighter: #8f7325;
+  --primary-color-darker: #725c1e;
 }
 
 .markdown-body img {
   width: 100%;
+}
+
+.markdown-body a {
+  text-decoration: underline;
 }
 
 mdjs-preview {
@@ -22,6 +38,10 @@ mdjs-preview {
 
 #main-header .active {
   display: block;
+}
+
+#sidebar-nav {
+  padding: 2px;
 }
 
 @media only screen and (max-width: 600px) {
