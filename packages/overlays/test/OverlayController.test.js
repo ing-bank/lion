@@ -741,6 +741,25 @@ describe('OverlayController', () => {
         expect(document.activeElement).to.equal(input);
       });
 
+      it(`only sets focus when outside world didn't take over already`, async () => {
+        const input = /** @type {HTMLElement} */ (await fixture('<input />'));
+        const outsideButton = /** @type {HTMLButtonElement} */ (await fixture('<button></button>'));
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>/div>'));
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          elementToFocusAfterHide: input,
+          contentNode,
+        });
+
+        await ctrl.show();
+        // an outside element has taken over focus
+        outsideButton.focus();
+        expect(document.activeElement).to.equal(outsideButton);
+
+        await ctrl.hide();
+        expect(document.activeElement).to.equal(outsideButton);
+      });
+
       it('allows to set elementToFocusAfterHide on show', async () => {
         const input = /** @type {HTMLElement} */ (await fixture('<input />'));
         const contentNode = /** @type {HTMLElement} */ (await fixture(

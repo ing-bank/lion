@@ -907,15 +907,19 @@ export class OverlayController extends EventTargetShim {
 
   /** @protected */
   _restoreFocus() {
+    const { activeElement } = /** @type {* & ShadowRoot} */ (this
+      .__contentWrapperNode).getRootNode();
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
-    if (this.elementToFocusAfterHide) {
-      this.elementToFocusAfterHide.focus();
-    } else if (
-      document.activeElement &&
-      this.__contentWrapperNode?.contains(document.activeElement)
+    if (
+      activeElement &&
+      /** @type {HTMLElement} */ (this.__contentWrapperNode).contains(activeElement)
     ) {
-      /** @type {HTMLElement} */ (document.activeElement).blur();
+      if (this.elementToFocusAfterHide) {
+        this.elementToFocusAfterHide.focus();
+      } else {
+        activeElement.blur();
+      }
     }
   }
 
