@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.24.2
+
+### Patch Changes
+
+- f0527583: fix: expose members as protected for extension compat. till v1
+- Updated dependencies [f0527583]
+  - @lion/button@0.11.1
+
 ## 0.24.1
 
 ### Patch Changes

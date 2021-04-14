@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- Updated dependencies [f0527583]
+  - @lion/button@0.11.1
+  - @lion/input-date@0.11.1
+  - @lion/input-datepicker@0.21.2
+  - @lion/input@0.13.1
+  - @lion/select-rich@0.24.2
+  - @lion/select@0.11.1
+  - @lion/checkbox-group@0.16.2
+  - @lion/input-amount@0.12.1
+  - @lion/input-email@0.12.1
+  - @lion/input-iban@0.14.1
+  - @lion/input-range@0.8.1
+  - @lion/input-stepper@0.4.1
+  - @lion/radio-group@0.15.1
+
 ## 0.6.1
 
 ### Patch Changes

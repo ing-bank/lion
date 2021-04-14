@@ -1,6 +1,6 @@
 {
   "name": "@lion/input",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "It enhances the functionality of the native `<input>` element",
   "license": "MIT",
   "author": "ing-bank",

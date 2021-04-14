@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- f0527583: fix: expose members as protected for extension compat. till v1
+- Updated dependencies [f0527583]
+  - @lion/input@0.13.1
+
 ## 0.11.0
 
 ### Minor Changes
