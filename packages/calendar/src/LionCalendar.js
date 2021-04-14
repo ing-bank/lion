@@ -466,8 +466,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} previousMonth
    * @param {number} previousYear
-   * @private
+   * @protected
    */
+  // TODO: rename to _previousButtonTemplate in v1. Also see: https://github.com/ing-bank/lion/discussions/591
   __renderPreviousButton(type, previousMonth, previousYear) {
     const { disabled, month } = this.__getPreviousDisabled(type, previousMonth, previousYear);
     const previousButtonTitle = this.__getNavigationLabel('previous', type, month, previousYear);
@@ -496,8 +497,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} type
    * @param {string} nextMonth
    * @param {number} nextYear
-   * @private
+   * @protected
    */
+  // TODO: rename to _nextButtonTemplate in v1. Also see: https://github.com/ing-bank/lion/discussions/591
   __renderNextButton(type, nextMonth, nextYear) {
     const { disabled, month } = this.__getNextDisabled(type, nextMonth, nextYear);
     const nextButtonTitle = this.__getNavigationLabel('next', type, month, nextYear);

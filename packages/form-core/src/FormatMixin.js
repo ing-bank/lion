@@ -219,12 +219,12 @@ const FormatMixinImplementation = superclass =>
           /** @type {?} */
           this.modelValue = this.deserializer(this.serializedValue);
         } else if (source === 'formatted') {
-          this.modelValue = this.__callParser();
+          this.modelValue = this._callParser();
         }
       }
       if (source !== 'formatted') {
         /** @type {string} */
-        this.formattedValue = this.__callFormatter();
+        this.formattedValue = this._callFormatter();
       }
       if (source !== 'serialized') {
         /** @type {string} */
@@ -239,7 +239,7 @@ const FormatMixinImplementation = superclass =>
      * @return {?}
      * @private
      */
-    __callParser(value = this.formattedValue) {
+    _callParser(value = this.formattedValue) {
       // A) check if we need to parse at all
 
       // A.1) The end user had no intention to parse
@@ -277,7 +277,7 @@ const FormatMixinImplementation = superclass =>
      * @returns {string|undefined}
      * @private
      */
-    __callFormatter() {
+    _callFormatter() {
       // - Why check for this.hasError?
       // We only want to format values that are considered valid. For best UX,
       // we only 'reward' valid inputs.
@@ -350,7 +350,7 @@ const FormatMixinImplementation = superclass =>
       if (!this.__isHandlingComposition) {
         this.value = this.preprocessor(this.value);
       }
-      this.modelValue = this.__callParser(this.value);
+      this.modelValue = this._callParser(this.value);
     }
 
     /**

@@ -27,10 +27,10 @@ export declare class FormatHost {
   protected _reflectBackOn(): boolean;
   protected _proxyInputEvent(): void;
   protected _onUserInputChanged(): void;
+  protected _callParser(value: string | undefined): object;
+  protected _callFormatter(): string;
 
   private __preventRecursiveTrigger: boolean;
-  private __callParser(value: string | undefined): object;
-  private __callFormatter(): string;
 }
 
 export declare function FormatImplementation<T extends Constructor<LitElement>>(

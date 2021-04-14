@@ -240,8 +240,10 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * of the form, and firing click on this button. This will fire the form submit
    * without side effects caused by the click bubbling back up to lion-button.
    * @param {Event} ev
-   * @private
+   * @protected
+   * @returns {Promise<void>}
    */
+  // TODO: rename to _clickDelegationHandler in v1
   async __clickDelegationHandler(ev) {
     // Wait for updateComplete if form is not yet available
     if (!this._form) {
