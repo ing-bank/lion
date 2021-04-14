@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- Updated dependencies [f0527583]
+  - @lion/input@0.13.1
+
 ## 0.8.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.1
+
+### Patch Changes
+
+- f0527583: fix: expose members as protected for extension compat. till v1
+
 ## 0.13.0
 
 ### Minor Changes

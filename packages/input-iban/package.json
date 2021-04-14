@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-iban",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Provide a way for users to fill in an iban",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@lion/core": "0.16.0",
     "@lion/form-core": "0.11.0",
-    "@lion/input": "0.13.0",
+    "@lion/input": "0.13.1",
     "@lion/localize": "0.18.0",
     "@lion/validate-messages": "0.5.4",
     "ibantools": "^2.2.0"

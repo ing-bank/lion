@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.21.2
+
+### Patch Changes
+
+- f0527583: fix: expose members as protected for extension compat. till v1
+- Updated dependencies [f0527583]
+  - @lion/calendar@0.14.3
+  - @lion/input-date@0.11.1
+
 ## 0.21.1
 
 ### Patch Changes
