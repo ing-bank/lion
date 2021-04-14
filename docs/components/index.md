@@ -9,8 +9,8 @@ For organizational purposes, we split them into the following groups.
 2. [Icons](./icons/icon/overview.md) <br>
    Loading and displaying icons.
 3. [Inputs](./inputs/overview.md) <br>
-   Input components that lets you make complex forms with ease, including validation.
+   Input components that let you make complex forms with ease, including validation.
 4. [Interaction](./interaction/button/overview.md) <br>
-   A set of interactive components.
+   A set of interactive components like dialogs, tooltips, buttons and switches.
 5. [Navigation](./navigation/pagination/overview.md) <br>
-   The reasoning behind some of our decisions.
+   Navigational components like pagination and steps.
