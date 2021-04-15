@@ -325,6 +325,19 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   /**
+   * This exposes an interface for datepickers that want to
+   * reinitialize when calendar is opened
+   */
+  initCentralDate() {
+    if (this.selectedDate) {
+      this.focusSelectedDate();
+    } else {
+      this.centralDate = /** @type {Date} */ (this.__initialCentralDate);
+      this.focusCentralDate();
+    }
+  }
+
+  /**
    * @private
    */
   __calculateInitialCentralDate() {
@@ -334,6 +347,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     } else {
       this.__ensureValidCentralDate();
     }
+    /** @type {Date} */
+    this.__initialCentralDate = this.centralDate;
   }
 
   /**

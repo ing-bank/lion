@@ -151,10 +151,10 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`<lion-input-datepicker disabled></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       expect(elObj.overlayController.isShown).to.equal(false);
-      await elObj.openCalendar();
+      await elObj.openCalendar({ click: true });
       expect(elObj.overlayController.isShown).to.equal(false);
       el.disabled = false;
-      await elObj.openCalendar();
+      await elObj.openCalendar({ click: true });
       expect(elObj.overlayController.isShown).to.equal(true);
     });
 
@@ -162,10 +162,10 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`<lion-input-datepicker readonly></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
       expect(elObj.overlayController.isShown).to.equal(false);
-      await elObj.openCalendar();
+      await elObj.openCalendar({ click: true });
       expect(elObj.overlayController.isShown).to.equal(false);
       el.readOnly = false;
-      await elObj.openCalendar();
+      await elObj.openCalendar({ click: true });
       expect(elObj.overlayController.isShown).to.equal(true);
     });
   });
@@ -182,6 +182,25 @@ describe('<lion-input-datepicker>', () => {
       expect(elObj.calendarEl.selectedDate).to.equal(myDate);
       await elObj.selectMonthDay(myOtherDate.getDate());
       expect(isSameDate(/** @type {Date} */ (el.modelValue), myOtherDate)).to.be.true;
+    });
+
+    it('restores centralDate when modelValue is cleared', async () => {
+      const myDate = new Date('2019/06/15');
+      const el = await fixture(html` <lion-input-datepicker></lion-input-datepicker> `);
+      const elObj = new DatepickerInputObject(el);
+      const initialCentralDate = elObj.calendarEl.centralDate;
+      el.modelValue = myDate;
+
+      await elObj.openCalendar();
+      expect(elObj.calendarEl.selectedDate).to.equal(myDate);
+      expect(elObj.calendarEl.centralDate).to.equal(myDate);
+
+      el.modelValue = undefined;
+      expect(elObj.calendarEl.centralDate).to.equal(myDate);
+      await elObj.closeCalendar();
+      await elObj.openCalendar();
+
+      expect(elObj.calendarEl.centralDate).to.equal(initialCentralDate);
     });
 
     it('closes the calendar overlay on "user-selected-date-changed"', async () => {
