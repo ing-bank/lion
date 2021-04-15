@@ -124,12 +124,12 @@ export class IsCountryIBAN extends IsIBAN {
   }
 
   /**
-   * @param {string} value
+   * @param {string} modelValue
    * @returns {Boolean}
    */
-  execute(value) {
-    const notIBAN = super.execute(value);
-    if (value.slice(0, 2) !== this.param) {
+  execute(modelValue) {
+    const notIBAN = super.execute(modelValue);
+    if (modelValue.slice(0, 2) !== this.param.toUpperCase()) {
       return true;
     }
     if (notIBAN) {
@@ -163,19 +163,20 @@ export class IsNotCountryIBAN extends IsIBAN {
   }
 
   /**
-   * @param {string} value
+   * @param {string} modelValue
    * @returns {Boolean}
    */
-  execute(value) {
+  execute(modelValue) {
     let isInvalid = false;
-    const notIBAN = super.execute(value);
-
+    const notIBAN = super.execute(modelValue);
     if (typeof this.param === 'string') {
-      if (value.slice(0, 2) === this.param) {
+      if (String(modelValue.slice(0, 2)) === this.param.toUpperCase()) {
         isInvalid = true;
       }
     } else if (Array.isArray(this.param)) {
-      isInvalid = this.param.some(country => value.slice(0, 2) === country);
+      isInvalid = this.param.some(
+        country => String(modelValue.slice(0, 2)) === country.toUpperCase(),
+      );
     }
 
     if (notIBAN) {
@@ -201,7 +202,6 @@ export class IsNotCountryIBAN extends IsIBAN {
       userSuppliedCountryCode:
         typeof data?.modelValue === 'string' ? data?.modelValue.slice(0, 2) : '',
     };
-
     // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
     return data?.modelValue instanceof Unparseable
       ? localize.msg('lion-validate+iban:error.IsIBAN', _data)

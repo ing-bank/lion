@@ -43,4 +43,20 @@ describe('IBAN validation', () => {
     expect(deValidator.execute('DE89370400440532013000')).to.be.true;
     expect(deValidator.execute('SK3112000000198742637541')).to.be.true;
   });
+
+  it('allows providing lower cased country isos', () => {
+    const nlValidator = new IsCountryIBAN('nl');
+    expect(nlValidator.execute('NL17INGB0002822608')).to.be.false;
+    expect(nlValidator.execute('DE89370400440532013000')).to.be.true;
+
+    const deValidator = new IsNotCountryIBAN('de');
+    expect(deValidator.execute('DE89370400440532013000')).to.be.true;
+    expect(deValidator.execute('NL17INGB0002822608')).to.be.false;
+
+    const deskValidator = new IsNotCountryIBAN(['de', 'sk']);
+    expect(deskValidator.execute('NL17INGB0002822608')).to.be.false;
+    expect(deskValidator.execute('FR1420041010050500013M02606')).to.be.false;
+    expect(deskValidator.execute('DE89370400440532013000')).to.be.true;
+    expect(deskValidator.execute('SK3112000000198742637541')).to.be.true;
+  });
 });
