@@ -1,4 +1,5 @@
 import '@lion/core/differentKeyEventNamesShimIE';
+import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
@@ -23,23 +24,6 @@ function mimicKeyPress(el, key) {
   el.dispatchEvent(new KeyboardEvent('keydown', { key }));
   el.dispatchEvent(new KeyboardEvent('keyup', { key }));
 }
-
-// /**
-//  * @param {LionListbox} lionListboxEl
-//  */
-// function getProtectedMembers(lionListboxEl) {
-//   // @ts-ignore protected members allowed in test
-//   const {
-//     _inputNode: input,
-//     _activeDescendantOwnerNode: activeDescendantOwner,
-//     _listboxNode: listbox,
-//   } = lionListboxEl;
-//   return {
-//     input,
-//     activeDescendantOwner,
-//     listbox,
-//   };
-// }
 
 /**
  * @param { {tagString?:string, optionTagString?:string} } [customConfig]
@@ -1382,6 +1366,97 @@ export function runListboxMixinSuite(customConfig = {}) {
         mimicKeyPress(_listboxNode, 'Enter');
 
         expect(clickSpy).to.not.have.been.called;
+      });
+    });
+
+    describe('Dynamically adding options', () => {
+      class MyEl extends LitElement {
+        constructor() {
+          super();
+          /** @type {string[]} */
+          this.options = ['option 1', 'option 2'];
+        }
+
+        clearOptions() {
+          /** @type {string[]} */
+          this.options = [];
+          this.requestUpdate();
+        }
+
+        addOption() {
+          this.options.push(`option ${this.options.length + 1}`);
+          this.requestUpdate();
+        }
+
+        get withMap() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withMap'));
+        }
+
+        get withRepeat() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withRepeat'));
+        }
+
+        get registrationComplete() {
+          return Promise.all([
+            this.withMap.registrationComplete,
+            this.withRepeat.registrationComplete,
+          ]);
+        }
+
+        render() {
+          return html`
+            <${tag} id="withMap">
+              ${this.options.map(
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+            <${tag} id="withRepeat">
+              ${repeat(
+                this.options,
+                option => option,
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+          `;
+        }
+      }
+
+      customElements.define('my-el', MyEl);
+
+      it('works with array map and repeat directive', async () => {
+        const choiceVals = (/** @type {LionListbox} */ elm) =>
+          elm.formElements.map(fel => fel.choiceValue);
+        const insideListboxNode = (/** @type {LionListbox} */ elm) =>
+          // @ts-ignore [allow-protected] in test
+          elm.formElements.filter(fel => elm._listboxNode.contains(fel)).length ===
+          elm.formElements.length;
+
+        const el = /** @type {MyEl} */ (await _fixture(html`<my-el></my-el>`));
+
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(2);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(2);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
+
+        el.addOption();
+        await el.updateComplete;
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(3);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(3);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
+
+        el.clearOptions();
+        await el.updateComplete;
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(0);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(0);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
       });
     });
   });
