@@ -57,7 +57,7 @@ function mimicUserTyping(el, value) {
 }
 
 /**
- * @param {HTMLInputElement} el
+ * @param {HTMLElement} el
  * @param {string} key
  */
 function mimicKeyPress(el, key) {
@@ -157,41 +157,73 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
 }
 
 describe('lion-combobox', () => {
-  describe('Options', () => {
-    describe('showAllOnEmpty', () => {
-      it('hides options when text in input node is cleared after typing something by default', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+  describe('Options visibility', () => {
+    it('hides options when text in input node is cleared after typing something by default', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
 
-        const options = el.formElements;
-        const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+      const options = el.formElements;
+      const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
 
-        async function performChecks() {
-          mimicUserTyping(el, 'c');
-          await el.updateComplete;
-          expect(visibleOptions().length).to.equal(4);
-          mimicUserTyping(el, '');
-          await el.updateComplete;
-          expect(visibleOptions().length).to.equal(0);
-        }
+      async function performChecks() {
+        mimicUserTyping(el, 'c');
+        await el.updateComplete;
+        expect(visibleOptions().length).to.equal(4);
+        mimicUserTyping(el, '');
+        await el.updateComplete;
+        expect(visibleOptions().length).to.equal(0);
+      }
 
-        // FIXME: autocomplete 'none' should have this behavior as well
-        // el.autocomplete = 'none';
-        // await performChecks();
-        el.autocomplete = 'list';
-        await performChecks();
-        el.autocomplete = 'inline';
-        await performChecks();
-        el.autocomplete = 'both';
-        await performChecks();
-      });
+      // FIXME: autocomplete 'none' should have this behavior as well
+      // el.autocomplete = 'none';
+      // await performChecks();
+      el.autocomplete = 'list';
+      await performChecks();
+      el.autocomplete = 'inline';
+      await performChecks();
+      el.autocomplete = 'both';
+      await performChecks();
+    });
 
+    it('hides listbox on click/enter (when multiple-choice is false)', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo">
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+        </lion-combobox>
+      `));
+
+      const { _comboboxNode, _listboxNode } = getComboboxMembers(el);
+
+      async function open() {
+        // activate opened listbox
+        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        mimicUserTyping(el, 'ch');
+        return el.updateComplete;
+      }
+
+      await open();
+      expect(el.opened).to.be.true;
+      const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
+      visibleOptions[0].click();
+      expect(el.opened).to.be.false;
+      await open();
+      expect(el.opened).to.be.true;
+      el.activeIndex = el.formElements.indexOf(visibleOptions[0]);
+      mimicKeyPress(_listboxNode, 'Enter');
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+    });
+
+    describe('With ".showAllOnEmpty"', () => {
       it('keeps showing options when text in input node is cleared after typing something', async () => {
         const el = /** @type {LionCombobox} */ (await fixture(html`
           <lion-combobox name="foo" autocomplete="list" show-all-on-empty>
@@ -239,6 +271,63 @@ describe('lion-combobox', () => {
         _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.true;
+      });
+
+      it('hides overlay on focusin after [Escape]', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+        const { _comboboxNode, _inputNode } = getComboboxMembers(el);
+
+        expect(el.opened).to.be.false;
+        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        await el.updateComplete;
+        expect(el.opened).to.be.true;
+        _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await el.updateComplete;
+        expect(el.opened).to.be.false;
+      });
+
+      it('hides listbox on click/enter (when multiple-choice is false)', async () => {
+        const el = /** @type {LionCombobox} */ (await fixture(html`
+          <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `));
+
+        const { _comboboxNode, _listboxNode, _inputNode } = getComboboxMembers(el);
+
+        async function open() {
+          // activate opened listbox
+          _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+          mimicUserTyping(el, 'ch');
+          return el.updateComplete;
+        }
+
+        await open();
+        expect(el.opened).to.be.true;
+        const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
+        visibleOptions[0].click();
+        await el.updateComplete;
+        expect(el.opened).to.be.false;
+
+        _inputNode.value = '';
+        _inputNode.blur();
+        await open();
+        await el.updateComplete;
+        expect(el.opened).to.be.true;
+
+        el.activeIndex = el.formElements.indexOf(visibleOptions[0]);
+        mimicKeyPress(_listboxNode, 'Enter');
+        expect(el.opened).to.be.false;
       });
     });
   });
@@ -1766,7 +1855,7 @@ describe('lion-combobox', () => {
 
   describe('Multiple Choice', () => {
     // TODO: possibly later share test with select-rich if it officially supports multipleChoice
-    it('does not close listbox on click/enter/space', async () => {
+    it('does not close listbox on click/enter', async () => {
       const el = /** @type {LionCombobox} */ (await fixture(html`
         <lion-combobox name="foo" multiple-choice>
           <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
@@ -1787,10 +1876,8 @@ describe('lion-combobox', () => {
       const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
       visibleOptions[0].click();
       expect(el.opened).to.equal(true);
-      // visibleOptions[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
-      // expect(el.opened).to.equal(true);
-      // visibleOptions[2].dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
-      // expect(el.opened).to.equal(true);
+      mimicKeyPress(visibleOptions[1], 'Enter');
+      expect(el.opened).to.equal(true);
     });
   });
 

@@ -307,7 +307,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {'disabled'|'modelValue'|'readOnly'} name
+   * @param {'disabled'|'modelValue'|'readOnly'|'focused'} name
    * @param {unknown} oldValue
    */
   requestUpdateInternal(name, oldValue) {
@@ -324,6 +324,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         }
       }
     }
+    if (name === 'focused' && this.focused) {
+      this.__requestShowOverlay();
+    }
   }
 
   /**
@@ -331,11 +334,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('focused')) {
-      if (this.focused) {
-        this.__requestShowOverlay();
-      }
-    }
 
     if (changedProperties.has('opened')) {
       if (this.opened) {
@@ -413,12 +411,18 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *   return options.currentValue.length > 4 && super._showOverlayCondition(options);
    * }
    *
-   * @param {{ currentValue: string, lastKey:string|undefined }} options
+   * @param {{ currentValue?: string, lastKey?: string }} options
    * @protected
    * @returns {boolean}
    */
+  // TODO: batch all pending condition triggers in __pendingShowTriggers, reducing race conditions
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
+    const hideOn = ['Tab', 'Escape', 'Enter'];
+    if (lastKey && hideOn.includes(lastKey)) {
+      return false;
+    }
+
     if (this.showAllOnEmpty && this.focused) {
       return true;
     }
@@ -426,8 +430,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (!lastKey) {
       return /** @type {boolean} */ (this.opened);
     }
-    const doNotShowOn = ['Tab', 'Esc', 'Enter'];
-    return !doNotShowOn.includes(lastKey);
+
+    return true;
   }
 
   /**
@@ -449,11 +453,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {KeyboardEvent} ev
    * @protected
    */
-  _textboxOnKeydown(ev) {
-    if (ev.key === 'Tab') {
-      this.opened = false;
-    }
-  }
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  _textboxOnKeydown(ev) {}
 
   /**
    * @param {MouseEvent} ev
@@ -461,11 +462,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
+
+    this._inputNode.focus();
     if (!this.multipleChoice) {
       this.activeIndex = -1;
-      this.opened = false;
+      this._setOpenedWithoutPropertyEffects(false);
     }
-    this._inputNode.focus();
   }
 
   /**
@@ -760,6 +762,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @enhance OverlayMixin
    * @protected
    */
+  _teardownOverlayCtrl() {
+    super._teardownOverlayCtrl();
+    this.__teardownCombobox();
+  }
+
+  /**
+   * @enhance OverlayMixin
+   * @protected
+   */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     this._inputNode.addEventListener('keyup', this.__requestShowOverlay);
@@ -784,7 +795,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const { key } = ev;
     switch (key) {
       case 'Escape':
-        this.opened = false;
+        this._setOpenedWithoutPropertyEffects(false);
         this._setTextboxValue('');
         break;
       case 'Enter':
@@ -792,7 +803,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           return;
         }
         if (!this.multipleChoice) {
-          this.opened = false;
+          this._setOpenedWithoutPropertyEffects(false);
         }
         break;
       /* no default */
@@ -891,10 +902,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @private
    */
   __requestShowOverlay(ev) {
-    this.opened = this._showOverlayCondition({
-      lastKey: ev && ev.key,
-      currentValue: this._inputNode.value,
-    });
+    const lastKey = ev && ev.key;
+    this._setOpenedWithoutPropertyEffects(
+      this._showOverlayCondition({
+        lastKey,
+        currentValue: this._inputNode.value,
+      }),
+    );
   }
 
   clear() {
