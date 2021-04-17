@@ -79,7 +79,6 @@ export const OverlayMixinImplementation = superclass =>
     // eslint-disable-next-line
     _defineOverlay({ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }) {
       const overlayConfig = this._defineOverlayConfig() || {};
-
       return new OverlayController({
         contentNode,
         invokerNode,
@@ -352,6 +351,18 @@ export const OverlayMixinImplementation = superclass =>
      */
     async close() {
       await /** @type {OverlayController} */ (this._overlayCtrl).hide();
+    }
+
+    /**
+     * Sometimes it's needed to recompute Popper position of an overlay, for instance when we have
+     * an opened combobox and the surrounding context changes (the space consumed by the textbox
+     * increases vertically)
+     */
+    repositionOverlay() {
+      const ctrl = /** @type {OverlayController} */ (this._overlayCtrl);
+      if (ctrl.placementMode === 'local' && ctrl._popper) {
+        ctrl._popper.update();
+      }
     }
   };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

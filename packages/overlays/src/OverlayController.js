@@ -471,8 +471,6 @@ export class OverlayController extends EventTargetShim {
 
     /** @private */
     this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
-    // TODO: remove this, so we only have the getters (no setters)
-    // Object.assign(this, this.config);
     /** @protected */
     this._init({ cfgToAdd });
     /** @private */

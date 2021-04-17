@@ -1,7 +1,6 @@
 import { expect, fixture, html, nextFrame, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { overlays } from '../src/overlays.js';
-// eslint-disable-next-line no-unused-vars
 import { OverlayController } from '../src/OverlayController.js';
 
 /**
@@ -171,7 +170,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(el.opened).to.be.true;
     });
 
-    it('allows to call `preventDefault()` on "before-opened"/"before-closed" events', async () => {
+    it('allows to call "preventDefault()" on "before-opened"/"before-closed" events', async () => {
       function preventer(/** @type Event */ ev) {
         ev.preventDefault();
       }
@@ -215,7 +214,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     });
 
     // See https://github.com/ing-bank/lion/discussions/1095
-    it('exposes open(), close() and toggle() methods', async () => {
+    it('exposes "open()", "close()" and "toggle()" methods', async () => {
       const el = /** @type {OverlayEl} */ (await fixture(html`
         <${tag}>
           <div slot="content">content</div>
@@ -240,6 +239,25 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(el.opened).to.be.false;
     });
 
+    it('exposes "repositionOverlay()" method', async () => {
+      const el = /** @type {OverlayEl} */ (await fixture(html`
+        <${tag} opened .config="${{ placementMode: 'local' }}">
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `));
+      await OverlayController.popperModule;
+      sinon.spy(el._overlayCtrl._popper, 'update');
+      el.repositionOverlay();
+      expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
+
+      if (!el._overlayCtrl.isTooltip) {
+        el.config = { ...el.config, placementMode: 'global' };
+        el.repositionOverlay();
+        expect(el._overlayCtrl._popper.update).to.have.been.been.calledOnce;
+      }
+    });
+
     /** See: https://github.com/ing-bank/lion/issues/1075 */
     it('stays open after config update', async () => {
       const el = /** @type {OverlayEl} */ (await fixture(html`
@@ -250,6 +268,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       `));
       el.open();
       await el._overlayCtrl._showComplete;
+
       el.config = { ...el.config, hidesOnOutsideClick: !el.config.hidesOnOutsideClick };
       await nextFrame();
       expect(el.opened).to.be.true;
