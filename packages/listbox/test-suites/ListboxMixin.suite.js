@@ -365,7 +365,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
-          <${tag} opened has-no-default-selected autocomplete="none">
+          <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${'10'} id="first">Item 1</${optionTag}>
             <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
           </${tag}>
@@ -387,7 +387,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
         const el = /** @type {LionListbox} */ (await fixture(html`
-          <${tag} autocomplete="none">
+          <${tag} autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -400,7 +400,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
         const el = await fixture(html`
-          <${tag} autocomplete="none">
+          <${tag} autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -588,7 +588,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         describe('Enter', () => {
           it('[Enter] selects active option', async () => {
             const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened name="foo" autocomplete="none">
+              <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
                 <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                 <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
@@ -611,7 +611,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             // When listbox is not focusable (in case of a combobox), the user should be allowed
             // to enter a space in the focusable element (texbox)
             const el = /** @type {LionListbox} */ (await fixture(html`
-                <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none">
+                <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                   <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
@@ -687,7 +687,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened has-no-default-selected autocomplete="none">
+              <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
                 <${optionTag} .choiceValue=${'Item 1'}>Item 1</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 2'}>Item 2</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
@@ -715,7 +715,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       describe('Orientation', () => {
         it('has a default value of "vertical"', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-            <${tag} opened name="foo" autocomplete="none">
+            <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -755,7 +755,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-            <${tag} opened name="foo" orientation="horizontal" autocomplete="none">
+            <${tag} opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -932,7 +932,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus autocomplete="none">
+              <${tag} opened selection-follows-focus autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -972,7 +972,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none">
+              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>

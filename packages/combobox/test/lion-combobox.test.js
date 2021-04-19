@@ -46,6 +46,7 @@ function getComboboxMembers(el) {
  * @param {LionCombobox} el
  * @param {string} value
  */
+// TODO: add keys that actually make sense...
 function mimicUserTyping(el, value) {
   const { _inputNode } = getComboboxMembers(el);
   _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
@@ -71,45 +72,44 @@ function mimicKeyPress(el, key) {
  */
 async function mimicUserTypingAdvanced(el, values) {
   const { _inputNode } = getComboboxMembers(el);
-  const inputNodeLoc = /** @type {HTMLInputElement & {selectionStart:number, selectionEnd:number}} */ (_inputNode);
-  inputNodeLoc.dispatchEvent(new Event('focusin', { bubbles: true }));
+  _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
 
   for (const key of values) {
     // eslint-disable-next-line no-await-in-loop, no-loop-func
     await new Promise(resolve => {
-      const hasSelection = inputNodeLoc.selectionStart !== inputNodeLoc.selectionEnd;
+      const hasSelection = _inputNode.selectionStart !== _inputNode.selectionEnd;
 
       if (key === 'Backspace') {
         if (hasSelection) {
-          inputNodeLoc.value =
-            inputNodeLoc.value.slice(
+          _inputNode.value =
+            _inputNode.value.slice(
               0,
-              inputNodeLoc.selectionStart ? inputNodeLoc.selectionStart : undefined,
+              _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
             ) +
-            inputNodeLoc.value.slice(
-              inputNodeLoc.selectionEnd ? inputNodeLoc.selectionEnd : undefined,
-              inputNodeLoc.value.length,
+            _inputNode.value.slice(
+              _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
+              _inputNode.value.length,
             );
         } else {
-          inputNodeLoc.value = inputNodeLoc.value.slice(0, -1);
+          _inputNode.value = _inputNode.value.slice(0, -1);
         }
       } else if (hasSelection) {
-        inputNodeLoc.value =
-          inputNodeLoc.value.slice(
+        _inputNode.value =
+          _inputNode.value.slice(
             0,
-            inputNodeLoc.selectionStart ? inputNodeLoc.selectionStart : undefined,
+            _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
           ) +
           key +
-          inputNodeLoc.value.slice(
-            inputNodeLoc.selectionEnd ? inputNodeLoc.selectionEnd : undefined,
-            inputNodeLoc.value.length,
+          _inputNode.value.slice(
+            _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
+            _inputNode.value.length,
           );
       } else {
-        inputNodeLoc.value += key;
+        _inputNode.value += key;
       }
 
-      mimicKeyPress(inputNodeLoc, key);
-      inputNodeLoc.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      mimicKeyPress(_inputNode, key);
+      _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
       el.updateComplete.then(() => {
         // @ts-ignore
@@ -180,9 +180,8 @@ describe('lion-combobox', () => {
         expect(visibleOptions().length).to.equal(0);
       }
 
-      // FIXME: autocomplete 'none' should have this behavior as well
-      // el.autocomplete = 'none';
-      // await performChecks();
+      el.autocomplete = 'none';
+      await performChecks();
       el.autocomplete = 'list';
       await performChecks();
       el.autocomplete = 'inline';
@@ -321,9 +320,9 @@ describe('lion-combobox', () => {
 
         _inputNode.value = '';
         _inputNode.blur();
+
         await open();
         await el.updateComplete;
-        expect(el.opened).to.be.true;
 
         el.activeIndex = el.formElements.indexOf(visibleOptions[0]);
         mimicKeyPress(_listboxNode, 'Enter');
@@ -442,6 +441,36 @@ describe('lion-combobox', () => {
       el2.clear();
       expect(el2.modelValue).to.eql([]);
       expect(_inputNode.value).to.equal('');
+    });
+
+    it('syncs textbox to modelValue', async () => {
+      const el = /** @type {LionCombobox} */ (await fixture(html`
+        <lion-combobox name="foo" show-all-on-empty>
+          <lion-option .choiceValue="${'Aha'}" checked>Aha</lion-option>
+          <lion-option .choiceValue="${'Bhb'}">Bhb</lion-option>
+        </lion-combobox>
+      `));
+      const { _inputNode } = getComboboxMembers(el);
+
+      async function performChecks() {
+        el.formElements[0].click();
+        await el.updateComplete;
+
+        expect(_inputNode.value).to.equal('Aha');
+        expect(el.checkedIndex).to.equal(0);
+
+        await mimicUserTyping(el, 'Ah');
+        await el.updateComplete;
+
+        await el.updateComplete;
+        expect(el.checkedIndex).to.equal(-1);
+      }
+
+      el.autocomplete = 'none';
+      await performChecks();
+
+      el.autocomplete = 'list';
+      await performChecks();
     });
   });
 

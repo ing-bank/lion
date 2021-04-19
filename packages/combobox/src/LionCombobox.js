@@ -430,7 +430,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (!lastKey) {
       return /** @type {boolean} */ (this.opened);
     }
-
     return true;
   }
 
@@ -466,7 +465,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this._inputNode.focus();
     if (!this.multipleChoice) {
       this.activeIndex = -1;
-      this._setOpenedWithoutPropertyEffects(false);
+      this.opened = false;
     }
   }
 
@@ -584,8 +583,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _handleAutocompletion() {
-    if (this.autocomplete === 'none') {
-      return;
+    if ((!this.multipleChoice && this.autocomplete === 'none') || this.autocomplete === 'list') {
+      if (!this._inputNode.value.startsWith(this.modelValue)) {
+        this.checkedIndex = -1;
+      }
     }
 
     const hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
@@ -607,8 +608,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({ prevValue, curValue });
     const isInlineAutoFillCandidate =
       this.autocomplete === 'both' || this.autocomplete === 'inline';
-    const autoselect = this._autoSelectCondition();
-    // @ts-ignore this.autocomplete === 'none' needs to be there if statement above is removed
+    const autoselect = this.autocomplete !== 'none' && this._autoSelectCondition();
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
@@ -795,7 +795,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const { key } = ev;
     switch (key) {
       case 'Escape':
-        this._setOpenedWithoutPropertyEffects(false);
+        this.opened = false;
         this._setTextboxValue('');
         break;
       case 'Enter':
@@ -803,7 +803,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           return;
         }
         if (!this.multipleChoice) {
-          this._setOpenedWithoutPropertyEffects(false);
+          this.opened = false;
         }
         break;
       /* no default */
@@ -903,12 +903,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   __requestShowOverlay(ev) {
     const lastKey = ev && ev.key;
-    this._setOpenedWithoutPropertyEffects(
-      this._showOverlayCondition({
-        lastKey,
-        currentValue: this._inputNode.value,
-      }),
-    );
+    this.opened = this._showOverlayCondition({
+      lastKey,
+      currentValue: this._inputNode.value,
+    });
   }
 
   clear() {
