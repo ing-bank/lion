@@ -330,10 +330,27 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * When textbox value doesn't match checkedIndex anymore, update accordingly...
+   * @protected
+   */
+  __unsyncCheckedIndexOnInputChange() {
+    const autoselect = this._autoSelectCondition();
+    if (!this.multipleChoice && !autoselect && !this._inputNode.value.startsWith(this.modelValue)) {
+      this.checkedIndex = -1;
+    }
+  }
+
+  /**
    * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    if (changedProperties.has('__shouldAutocompleteNextUpdate')) {
+      // This check should take place before those below of 'opened' and
+      // '__shouldAutocompleteNextUpdate', to avoid race conditions
+      this.__unsyncCheckedIndexOnInputChange();
+    }
 
     if (changedProperties.has('opened')) {
       if (this.opened) {
@@ -583,12 +600,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _handleAutocompletion() {
-    if ((!this.multipleChoice && this.autocomplete === 'none') || this.autocomplete === 'list') {
-      if (!this._inputNode.value.startsWith(this.modelValue)) {
-        this.checkedIndex = -1;
-      }
-    }
-
     const hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
 
     const curValue = this._inputNode.value;
@@ -608,7 +619,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({ prevValue, curValue });
     const isInlineAutoFillCandidate =
       this.autocomplete === 'both' || this.autocomplete === 'inline';
-    const autoselect = this.autocomplete !== 'none' && this._autoSelectCondition();
+    const autoselect = this._autoSelectCondition();
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
