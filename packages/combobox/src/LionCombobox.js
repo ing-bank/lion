@@ -470,7 +470,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
-  _textboxOnKeydown(ev) {}
+  _textboxOnKeydown(ev) {
+    // N.B. the check in _showOverlayCondition() is on keyup, and there is a subtle difference
+    // (see tests)
+    if (ev.key === 'Tab') {
+      this.opened = false;
+    }
+  }
 
   /**
    * @param {MouseEvent} ev

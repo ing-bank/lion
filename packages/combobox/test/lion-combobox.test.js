@@ -592,7 +592,9 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
 
-      mimicKeyPress(_inputNode, 'Tab');
+      // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
+      // because this closely mimics what happens in the browser
+      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.equal(false);
       expect(_inputNode.value).to.equal('Artichoke');
     });
