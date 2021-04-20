@@ -1,6 +1,7 @@
 import { dedupeMixin } from '@lion/core';
 import { FormControlMixin } from './FormControlMixin.js';
 import { FocusMixin } from './FocusMixin.js';
+import { FormatMixin } from './FormatMixin.js';
 
 /**
  * @typedef {import('../types/NativeTextFieldMixinTypes').NativeTextFieldMixin} NativeTextFieldMixin
@@ -8,7 +9,7 @@ import { FocusMixin } from './FocusMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass} superclass
  */
 const NativeTextFieldMixinImplementation = superclass =>
-  class NativeTextFieldMixin extends FocusMixin(FormControlMixin(superclass)) {
+  class NativeTextFieldMixin extends FormatMixin(FocusMixin(FormControlMixin(superclass))) {
     /**
      * @protected
      * @type {HTMLInputElement | HTMLTextAreaElement}
@@ -93,6 +94,20 @@ const NativeTextFieldMixinImplementation = superclass =>
         }
       } else {
         this._inputNode.value = newValue;
+      }
+    }
+
+    /**
+     * @override FormatMixin
+     */
+    _reflectBackFormattedValueToUser() {
+      super._reflectBackFormattedValueToUser();
+      if (this._reflectBackOn() && this.focused) {
+        try {
+          // try/catch, because Safari is a bit sensitive here
+          this._inputNode.selectionStart = this._inputNode.value.length;
+          // eslint-disable-next-line no-empty
+        } catch (_) {}
       }
     }
   };

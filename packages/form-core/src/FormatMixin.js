@@ -129,7 +129,7 @@ const FormatMixinImplementation = superclass =>
     }
 
     // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
-    /** @type {string} */
+    /** @param {string} value */
     set value(value) {
       // if not yet connected to dom can't change the value
       if (this._inputNode) {
@@ -350,7 +350,16 @@ const FormatMixinImplementation = superclass =>
       if (!this.__isHandlingComposition) {
         this.value = this.preprocessor(this.value);
       }
+      const prevFormatted = this.formattedValue;
       this.modelValue = this._callParser(this.value);
+
+      // Sometimes, the formattedValue didn't change, but the viewValue did...
+      // We need this check to support pasting values that need to be formatted right on paste
+      if (prevFormatted === this.formattedValue && this.__prevViewValue !== this.value) {
+        this._calculateValues();
+      }
+      /** @type {string} */
+      this.__prevViewValue = this.value;
     }
 
     /**
@@ -379,11 +388,13 @@ const FormatMixinImplementation = superclass =>
       return !this._isHandlingUserInput;
     }
 
-    // This can be called whenever the view value should be updated. Dependent on component type
-    // ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
-    // used  as source for the "user-input-changed" event (which can be seen as an abstraction
-    // layer on top of other events (input, change, whatever))
-    /** @protected */
+    /**
+     * This can be called whenever the view value should be updated. Dependent on component type
+     * ("input" for <input> or "change" for <select>(mainly for IE)) a different event should be
+     * used  as source for the "user-input-changed" event (which can be seen as an abstraction
+     * layer on top of other events (input, change, whatever))
+     * @protected
+     */
     _proxyInputEvent() {
       this.dispatchEvent(
         new CustomEvent('user-input-changed', {
@@ -419,8 +430,36 @@ const FormatMixinImplementation = superclass =>
       super();
       this.formatOn = 'change';
       this.formatOptions = /** @type {FormatOptions} */ ({});
-
+      /**
+       * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
+       * @example
+       * ```js
+       * _reflectBackFormattedValueToUser() {
+       *   return super._reflectBackFormattedValueToUser() || this._isPasting;
+       * }
+       * ```
+       * @protected
+       */
+      this._isPasting = false;
+      /**
+       * @private
+       * @type {string}
+       */
+      this.__prevViewValue = '';
       this.__onCompositionEvent = this.__onCompositionEvent.bind(this);
+      // This computes formattedValue
+      this.addEventListener('user-input-changed', this._onUserInputChanged);
+      // This sets the formatted viewValue after paste
+      this.addEventListener('paste', this.__onPaste);
+    }
+
+    __onPaste() {
+      this._isPasting = true;
+      this.formatOptions.mode = 'pasted';
+      setTimeout(() => {
+        this._isPasting = false;
+        this.formatOptions.mode = 'auto';
+      });
     }
 
     connectedCallback() {
@@ -432,7 +471,7 @@ const FormatMixinImplementation = superclass =>
         // is guaranteed to be calculated
         setTimeout(this._reflectBackFormattedValueToUser);
       };
-      this.addEventListener('user-input-changed', this._onUserInputChanged);
+
       // Connect the value found in <input> to the formatting/parsing/serializing loop as a
       // fallback mechanism. Assume the user uses the value property of the
       // `LionField`(recommended api) as the api (this is a downwards sync).
@@ -453,7 +492,6 @@ const FormatMixinImplementation = superclass =>
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      this.removeEventListener('user-input-changed', this._onUserInputChanged);
       if (this._inputNode) {
         this._inputNode.removeEventListener('input', this._proxyInputEvent);
         this._inputNode.removeEventListener(
