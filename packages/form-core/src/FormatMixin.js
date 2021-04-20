@@ -434,8 +434,8 @@ const FormatMixinImplementation = superclass =>
        * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
        * @example
        * ```js
-       * _reflectBackFormattedValueToUser() {
-       *   return super._reflectBackFormattedValueToUser() || this._isPasting;
+       * _reflectBackOn() {
+       *   return super._reflectBackOn() || this._isPasting;
        * }
        * ```
        * @protected
