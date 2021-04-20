@@ -18,6 +18,41 @@ import { LionOptions } from './LionOptions.js';
  * @typedef {import('@lion/form-core/types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
+// TODO: consider adding methods below to @lion/helpers
+
+/**
+ * Sometimes, we want to provide best DX (direct slottables) and be accessible
+ * at the same time.
+ * In the first example below, we need to wrap our options in light dom in an element with
+ * [role=listbox]. We could achieve this via the second example, but it would affect our
+ * public api negatively. not allowing us to be forward compatible with the AOM spec:
+ * https://wicg.github.io/aom/explainer.html
+ * With this method, it's possible to watch elements in the default slot and move them
+ * to the desired target (the element with [role=listbox]) in light dom.
+ *
+ * @example
+ * # desired api
+ * <sel-ect>
+ *  <opt-ion></opt-ion>
+ * </sel-ect>
+ * # desired end state
+ * <sel-ect>
+ *  <div role="listbox" slot="lisbox">
+ *    <opt-ion></opt-ion>
+ *  </div>
+ * </sel-ect>
+ * @param {HTMLElement} source host of ShadowRoot with default <slot>
+ * @param {HTMLElement} target the desired target in light dom
+ */
+function moveDefaultSlottablesToTarget(source, target) {
+  Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
+    const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
+    if (!isNamedSlottable) {
+      target.appendChild(c);
+    }
+  });
+}
+
 function uuid() {
   return Math.random().toString(36).substr(2, 10);
 }
@@ -344,6 +379,12 @@ const ListboxMixinImplementation = superclass =>
         /** @type {any[]} */
         this._initialModelValue = this.modelValue;
       });
+
+      // Every time new options are rendered from outside context, notify our parents
+      const observer = new MutationObserver(() => {
+        this._onListboxContentChanged();
+      });
+      observer.observe(this._listboxNode, { childList: true });
     }
 
     /**
@@ -476,7 +517,15 @@ const ListboxMixinImplementation = superclass =>
       }
     }
 
-    /** @protected */
+    /**
+     * A Subclasser can perform additional logic whenever the elements inside the listbox are
+     * updated. For instance, when a combobox does server side autocomplete, we want to
+     * match highlighted parts client side.
+     * @configurable
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _onListboxContentChanged() {}
+
     _teardownListboxNode() {
       if (this._listboxNode) {
         this._listboxNode.removeEventListener('keydown', this._listboxOnKeyDown);
@@ -821,13 +870,9 @@ const ListboxMixinImplementation = superclass =>
       );
 
       if (slot) {
-        slot.assignedNodes().forEach(node => {
-          this._listboxNode.appendChild(node);
-        });
+        moveDefaultSlottablesToTarget(this, this._listboxNode);
         slot.addEventListener('slotchange', () => {
-          slot.assignedNodes().forEach(node => {
-            this._listboxNode.appendChild(node);
-          });
+          moveDefaultSlottablesToTarget(this, this._listboxNode);
         });
       }
     }

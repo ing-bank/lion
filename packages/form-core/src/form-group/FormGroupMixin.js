@@ -148,6 +148,9 @@ const FormGroupMixinImplementation = superclass =>
       this.defaultValidators = [new FormElementsHaveNoError()];
 
       this.__descriptionElementsInParentChain = new Set();
+
+      /** @type {{modelValue?:{[key:string]: any}, serializedValue?:{[key:string]: any}}} */
+      this.__pendingValues = { modelValue: {}, serializedValue: {} };
     }
 
     connectedCallback() {
@@ -349,6 +352,8 @@ const FormGroupMixinImplementation = superclass =>
           }
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];
+          } else {
+            this.__pendingValues[property][name] = values[name];
           }
         });
       }
@@ -485,7 +490,7 @@ const FormGroupMixinImplementation = superclass =>
      * @override of FormRegistrarMixin.
      * @desc Connects ValidateMixin and DisabledMixin
      * On top of this, error messages of children are linked to their parents
-     * @param {FormControl} child
+     * @param {FormControl & {serializedValue:string|object}} child
      * @param {number} indexToInsertAt
      */
     addFormElement(child, indexToInsertAt) {
@@ -501,6 +506,16 @@ const FormGroupMixinImplementation = superclass =>
 
       if (typeof child.addToAriaLabelledBy === 'function' && this._labelNode) {
         child.addToAriaLabelledBy(this._labelNode, { reorder: false });
+      }
+      if (!child.modelValue) {
+        const pVals = this.__pendingValues;
+        if (pVals.modelValue && pVals.modelValue[child.name]) {
+          // eslint-disable-next-line no-param-reassign
+          child.modelValue = pVals.modelValue[child.name];
+        } else if (pVals.serializedValue && pVals.serializedValue[child.name]) {
+          // eslint-disable-next-line no-param-reassign
+          child.serializedValue = pVals.serializedValue[child.name];
+        }
       }
     }
 

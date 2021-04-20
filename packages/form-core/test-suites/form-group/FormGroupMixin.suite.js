@@ -1,4 +1,4 @@
-import { LitElement } from '@lion/core';
+import { LitElement, ifDefined } from '@lion/core';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import {
   defineCE,
@@ -1163,6 +1163,225 @@ export function runFormGroupMixinSuite(cfg = {}) {
         ));
         expect(el.hasAttribute('aria-labelledby')).to.equal(true);
         expect(el.getAttribute('aria-labelledby')).contains(label.id);
+      });
+    });
+
+    describe('Dynamically rendered children', () => {
+      class DynamicCWrapper extends LitElement {
+        static get properties() {
+          return {
+            fields: { type: Array },
+          };
+        }
+
+        constructor() {
+          super();
+          /** @type {any[]} */
+          this.fields = [];
+          /** @type {object|undefined} */
+          this.modelValue = undefined;
+          /** @type {object|undefined} */
+          this.serializedValue = undefined;
+        }
+
+        render() {
+          return html`
+              <${tag}
+              .modelValue=${ifDefined(this.modelValue)}
+              .serializedValue=${ifDefined(this.serializedValue)}>
+                ${this.fields.map(field => {
+                  if (typeof field === 'object') {
+                    return html`<${childTag} name="${field.name}" .modelValue="${field.value}"></${childTag}>`;
+                  }
+                  return html`<${childTag} name="${field}"></${childTag}>`;
+                })}
+              </${tag}>
+            `;
+        }
+      }
+      const dynamicChildrenTagString = defineCE(DynamicCWrapper);
+      const dynamicChildrenTag = unsafeStatic(dynamicChildrenTagString);
+
+      it(`when rendering children right from the start, sets their values correctly
+      based on prefilled model/seriazedValue`, async () => {
+        const el = /** @type {DynamicCWrapper} */ (await fixture(html`
+          <${dynamicChildrenTag}
+            .fields="${['firstName', 'lastName']}"
+            .modelValue="${{ firstName: 'foo', lastName: 'bar' }}"
+            >
+          </${dynamicChildrenTag}>
+        `));
+        await el.updateComplete;
+        const fieldset = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(tagString)
+        );
+        expect(fieldset.formElements[0].modelValue).to.equal('foo');
+        expect(fieldset.formElements[1].modelValue).to.equal('bar');
+
+        const el2 = /** @type {DynamicCWrapper} */ (await fixture(html`
+          <${dynamicChildrenTag}
+            .fields="${['firstName', 'lastName']}"
+            .serializedValue="${{ firstName: 'foo', lastName: 'bar' }}"
+            >
+          </${dynamicChildrenTag}>
+        `));
+        await el2.updateComplete;
+        const fieldset2 = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el2.shadowRoot).querySelector(tagString)
+        );
+        expect(fieldset2.formElements[0].serializedValue).to.equal('foo');
+        expect(fieldset2.formElements[1].serializedValue).to.equal('bar');
+      });
+
+      it(`when rendering children delayed, sets their values
+      correctly based on prefilled model/seriazedValue`, async () => {
+        const el = /** @type {DynamicCWrapper} */ (await fixture(html`
+          <${dynamicChildrenTag} .modelValue="${{ firstName: 'foo', lastName: 'bar' }}">
+          </${dynamicChildrenTag}>
+        `));
+        await el.updateComplete;
+        const fieldset = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(tagString)
+        );
+        el.fields = ['firstName', 'lastName'];
+        await el.updateComplete;
+        expect(fieldset.formElements[0].modelValue).to.equal('foo');
+        expect(fieldset.formElements[1].modelValue).to.equal('bar');
+
+        const el2 = /** @type {DynamicCWrapper} */ (await fixture(html`
+          <${dynamicChildrenTag} .serializedValue="${{ firstName: 'foo', lastName: 'bar' }}">
+          </${dynamicChildrenTag}>
+        `));
+        await el2.updateComplete;
+        const fieldset2 = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el2.shadowRoot).querySelector(tagString)
+        );
+        el2.fields = ['firstName', 'lastName'];
+        await el2.updateComplete;
+        expect(fieldset2.formElements[0].serializedValue).to.equal('foo');
+        expect(fieldset2.formElements[1].serializedValue).to.equal('bar');
+      });
+
+      it(`when rendering children partly delayed, sets their values correctly based on
+      prefilled model/seriazedValue`, async () => {
+        const el = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag} .fields="${['firstName']}" .modelValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el.updateComplete;
+        const fieldset = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(tagString)
+        );
+        el.fields = ['firstName', 'lastName'];
+        await el.updateComplete;
+        expect(fieldset.formElements[0].modelValue).to.equal('foo');
+        expect(fieldset.formElements[1].modelValue).to.equal('bar');
+
+        const el2 = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag} .fields="${['firstName']}" .serializedValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el2.updateComplete;
+        const fieldset2 = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el2.shadowRoot).querySelector(tagString)
+        );
+        el2.fields = ['firstName', 'lastName'];
+        await el2.updateComplete;
+        expect(fieldset2.formElements[0].serializedValue).to.equal('foo');
+        expect(fieldset2.formElements[1].serializedValue).to.equal('bar');
+      });
+
+      it(`does not change interaction states when values set for delayed children`, async () => {
+        function expectInteractionStatesToBeCorrectFor(/** @type {FormChild|FormGroup} */ elm) {
+          expect(Boolean(elm.submitted)).to.be.false;
+          expect(elm.dirty).to.be.false;
+          expect(elm.touched).to.be.false;
+          expect(elm.prefilled).to.be.true;
+        }
+
+        const el = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag} .fields="${['firstName']}" .modelValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el.updateComplete;
+        const fieldset = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(tagString)
+        );
+        await fieldset.registrationComplete;
+
+        el.fields = ['firstName', 'lastName'];
+        await el.updateComplete;
+        expectInteractionStatesToBeCorrectFor(fieldset.formElements[0]);
+        expectInteractionStatesToBeCorrectFor(fieldset.formElements[1]);
+        expectInteractionStatesToBeCorrectFor(fieldset);
+
+        const el2 = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag} .fields="${['firstName']}" .serializedValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el2.updateComplete;
+        const fieldset2 = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el2.shadowRoot).querySelector(tagString)
+        );
+        await fieldset2.registrationComplete;
+
+        el2.fields = ['firstName', 'lastName'];
+        await el2.updateComplete;
+        expectInteractionStatesToBeCorrectFor(fieldset2.formElements[0]);
+        expectInteractionStatesToBeCorrectFor(fieldset2.formElements[1]);
+        expectInteractionStatesToBeCorrectFor(fieldset2);
+      });
+
+      it(`prefilled children values take precedence over parent values`, async () => {
+        const el = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag}  .modelValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el.updateComplete;
+        const fieldset = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(tagString)
+        );
+        el.fields = [
+          { name: 'firstName', value: 'wins' },
+          { name: 'lastName', value: 'winsAsWell' },
+        ];
+        await el.updateComplete;
+        expect(fieldset.formElements[0].modelValue).to.equal('wins');
+        expect(fieldset.formElements[1].modelValue).to.equal('winsAsWell');
+
+        const el2 = /** @type {DynamicCWrapper} */ (await fixture(html`
+        <${dynamicChildrenTag} .serializedValue="${{
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
+        </${dynamicChildrenTag}>
+      `));
+        await el2.updateComplete;
+        const fieldset2 = /** @type {FormGroup} */ (
+          /** @type {ShadowRoot} */ (el2.shadowRoot).querySelector(tagString)
+        );
+        el2.fields = [
+          { name: 'firstName', value: 'wins' },
+          { name: 'lastName', value: 'winsAsWell' },
+        ];
+        await el2.updateComplete;
+        expect(fieldset2.formElements[0].serializedValue).to.equal('wins');
+        expect(fieldset2.formElements[1].serializedValue).to.equal('winsAsWell');
       });
     });
   });

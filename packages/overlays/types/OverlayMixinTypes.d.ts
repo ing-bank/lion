@@ -17,14 +17,19 @@ export interface DefineOverlayConfig {
 }
 
 export declare class OverlayHost {
-  public opened: Boolean;
+  opened: Boolean;
+  get config(): OverlayConfig;
+  set config(value: OverlayConfig);
 
-  public get config(): OverlayConfig;
-  public set config(value: OverlayConfig);
-
-  public open(): void;
-  public close(): void;
-  public toggle(): void;
+  open(): void;
+  close(): void;
+  toggle(): void;
+  /**
+   * Sometimes it's needed to recompute Popper position of an overlay, for instance when we have
+   * an opened combobox and the surrounding context changes (the space consumed by the textbox
+   * increases vertically)
+   */
+  repositionOverlay(): void;
 
   protected _overlayCtrl: OverlayController;
 

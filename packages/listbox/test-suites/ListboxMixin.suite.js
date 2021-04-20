@@ -1,8 +1,9 @@
 import '@lion/core/differentKeyEventNamesShimIE';
+import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
-import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
 import sinon from 'sinon';
 import { getListboxMembers } from '../test-helpers/index.js';
 
@@ -23,23 +24,6 @@ function mimicKeyPress(el, key) {
   el.dispatchEvent(new KeyboardEvent('keydown', { key }));
   el.dispatchEvent(new KeyboardEvent('keyup', { key }));
 }
-
-// /**
-//  * @param {LionListbox} lionListboxEl
-//  */
-// function getProtectedMembers(lionListboxEl) {
-//   // @ts-ignore protected members allowed in test
-//   const {
-//     _inputNode: input,
-//     _activeDescendantOwnerNode: activeDescendantOwner,
-//     _listboxNode: listbox,
-//   } = lionListboxEl;
-//   return {
-//     input,
-//     activeDescendantOwner,
-//     listbox,
-//   };
-// }
 
 /**
  * @param { {tagString?:string, optionTagString?:string} } [customConfig]
@@ -381,7 +365,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('has a reference to the active option', async () => {
         const el = await fixture(html`
-          <${tag} opened has-no-default-selected autocomplete="none">
+          <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${'10'} id="first">Item 1</${optionTag}>
             <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
           </${tag}>
@@ -403,7 +387,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('puts "aria-setsize" on all options to indicate the total amount of options', async () => {
         const el = /** @type {LionListbox} */ (await fixture(html`
-          <${tag} autocomplete="none">
+          <${tag} autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -416,7 +400,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
       it('puts "aria-posinset" on all options to indicate their position in the listbox', async () => {
         const el = await fixture(html`
-          <${tag} autocomplete="none">
+          <${tag} autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
             <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -604,7 +588,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         describe('Enter', () => {
           it('[Enter] selects active option', async () => {
             const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened name="foo" autocomplete="none">
+              <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
                 <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                 <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
                 <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
@@ -627,7 +611,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             // When listbox is not focusable (in case of a combobox), the user should be allowed
             // to enter a space in the focusable element (texbox)
             const el = /** @type {LionListbox} */ (await fixture(html`
-                <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none">
+                <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
                   <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
                   <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
@@ -703,7 +687,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         });
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened has-no-default-selected autocomplete="none">
+              <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
                 <${optionTag} .choiceValue=${'Item 1'}>Item 1</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 2'}>Item 2</${optionTag}>
                 <${optionTag} .choiceValue=${'Item 3'}>Item 3</${optionTag}>
@@ -731,7 +715,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       describe('Orientation', () => {
         it('has a default value of "vertical"', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-            <${tag} opened name="foo" autocomplete="none">
+            <${tag} opened name="foo" autocomplete="none" show-all-on-empty>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -771,7 +755,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
           const el = /** @type {LionListbox} */ (await fixture(html`
-            <${tag} opened name="foo" orientation="horizontal" autocomplete="none">
+            <${tag} opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -948,7 +932,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus autocomplete="none">
+              <${tag} opened selection-follows-focus autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -988,7 +972,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             });
           }
           const el = /** @type {LionListbox} */ (await fixture(html`
-              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none">
+              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
@@ -1382,6 +1366,147 @@ export function runListboxMixinSuite(customConfig = {}) {
         mimicKeyPress(_listboxNode, 'Enter');
 
         expect(clickSpy).to.not.have.been.called;
+      });
+    });
+
+    describe('Dynamically adding options', () => {
+      class MyEl extends LitElement {
+        constructor() {
+          super();
+          /** @type {string[]} */
+          this.options = ['option 1', 'option 2'];
+        }
+
+        clearOptions() {
+          /** @type {string[]} */
+          this.options = [];
+          this.requestUpdate();
+        }
+
+        addOption() {
+          this.options.push(`option ${this.options.length + 1}`);
+          this.requestUpdate();
+        }
+
+        get withMap() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withMap'));
+        }
+
+        get withRepeat() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#withRepeat'));
+        }
+
+        get registrationComplete() {
+          return Promise.all([
+            this.withMap.registrationComplete,
+            this.withRepeat.registrationComplete,
+          ]);
+        }
+
+        render() {
+          return html`
+            <${tag} id="withMap">
+              ${this.options.map(
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+            <${tag} id="withRepeat">
+              ${repeat(
+                this.options,
+                option => option,
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+          `;
+        }
+      }
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
+
+      it('works with array map and repeat directive', async () => {
+        const choiceVals = (/** @type {LionListbox} */ elm) =>
+          elm.formElements.map(fel => fel.choiceValue);
+        const insideListboxNode = (/** @type {LionListbox} */ elm) =>
+          // @ts-ignore [allow-protected] in test
+          elm.formElements.filter(fel => elm._listboxNode.contains(fel)).length ===
+          elm.formElements.length;
+
+        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(2);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(2);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
+
+        el.addOption();
+        await el.updateComplete;
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(3);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(3);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
+
+        el.clearOptions();
+        await el.updateComplete;
+        expect(choiceVals(el.withMap)).to.eql(el.options);
+        expect(el.withMap.formElements.length).to.equal(0);
+        expect(insideListboxNode(el.withMap)).to.be.true;
+        expect(choiceVals(el.withRepeat)).to.eql(el.options);
+        expect(el.withRepeat.formElements.length).to.equal(0);
+        expect(insideListboxNode(el.withRepeat)).to.be.true;
+      });
+    });
+
+    describe('Subclassers', () => {
+      class MyEl extends LitElement {
+        constructor() {
+          super();
+          /** @type {string[]} */
+          this.options = ['option 1', 'option 2'];
+        }
+
+        clearOptions() {
+          /** @type {string[]} */
+          this.options = [];
+          this.requestUpdate();
+        }
+
+        addOption() {
+          this.options.push(`option ${this.options.length + 1}`);
+          this.requestUpdate();
+        }
+
+        get listbox() {
+          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#listbox'));
+        }
+
+        render() {
+          return html`
+            <${tag} id="listbox">
+              ${this.options.map(
+                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+              )}
+            </${tag}>
+          `;
+        }
+      }
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
+
+      it('calls "_onListboxContentChanged" after externally changing options', async () => {
+        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        await el.listbox.registrationComplete;
+        // @ts-ignore [allow-protected] in test
+        const spy = sinon.spy(el.listbox, '_onListboxContentChanged');
+        el.addOption();
+        await el.updateComplete;
+        expect(spy).to.have.been.calledOnce;
+        el.clearOptions();
+        await el.updateComplete;
+        expect(spy).to.have.been.calledTwice;
       });
     });
   });

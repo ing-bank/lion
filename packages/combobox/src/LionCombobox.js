@@ -307,7 +307,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {'disabled'|'modelValue'|'readOnly'} name
+   * @param {'disabled'|'modelValue'|'readOnly'|'focused'} name
    * @param {unknown} oldValue
    */
   requestUpdateInternal(name, oldValue) {
@@ -324,6 +324,20 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
         }
       }
     }
+    if (name === 'focused' && this.focused) {
+      this.__requestShowOverlay();
+    }
+  }
+
+  /**
+   * When textbox value doesn't match checkedIndex anymore, update accordingly...
+   * @protected
+   */
+  __unsyncCheckedIndexOnInputChange() {
+    const autoselect = this._autoSelectCondition();
+    if (!this.multipleChoice && !autoselect && !this._inputNode.value.startsWith(this.modelValue)) {
+      this.checkedIndex = -1;
+    }
   }
 
   /**
@@ -331,10 +345,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('focused')) {
-      if (this.focused) {
-        this.__requestShowOverlay();
-      }
+
+    if (changedProperties.has('__shouldAutocompleteNextUpdate')) {
+      // This check should take place before those below of 'opened' and
+      // '__shouldAutocompleteNextUpdate', to avoid race conditions
+      this.__unsyncCheckedIndexOnInputChange();
     }
 
     if (changedProperties.has('opened')) {
@@ -413,12 +428,18 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    *   return options.currentValue.length > 4 && super._showOverlayCondition(options);
    * }
    *
-   * @param {{ currentValue: string, lastKey:string|undefined }} options
+   * @param {{ currentValue?: string, lastKey?: string }} options
    * @protected
    * @returns {boolean}
    */
+  // TODO: batch all pending condition triggers in __pendingShowTriggers, reducing race conditions
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
+    const hideOn = ['Tab', 'Escape', 'Enter'];
+    if (lastKey && hideOn.includes(lastKey)) {
+      return false;
+    }
+
     if (this.showAllOnEmpty && this.focused) {
       return true;
     }
@@ -426,17 +447,21 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (!lastKey) {
       return /** @type {boolean} */ (this.opened);
     }
-    const doNotShowOn = ['Tab', 'Esc', 'Enter'];
-    return !doNotShowOn.includes(lastKey);
+    return true;
   }
 
   /**
-   * @param {Event} ev
+   * @configure ListboxMixin whenever the options are changed (potentially due to external causes
+   * like server side filtering of nodes), schedule autocompletion for proper highlighting
    * @protected
    */
+  _onListboxContentChanged() {
+    super._onListboxContentChanged();
+    this.__shouldAutocompleteNextUpdate = true;
+  }
+
   // eslint-disable-next-line no-unused-vars
-  _textboxOnInput(ev) {
-    // Schedules autocompletion of options
+  _textboxOnInput() {
     this.__shouldAutocompleteNextUpdate = true;
   }
 
@@ -444,7 +469,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {KeyboardEvent} ev
    * @protected
    */
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
   _textboxOnKeydown(ev) {
+    // N.B. the check in _showOverlayCondition() is on keyup, and there is a subtle difference
+    // (see tests)
     if (ev.key === 'Tab') {
       this.opened = false;
     }
@@ -456,11 +484,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
+
+    this._inputNode.focus();
     if (!this.multipleChoice) {
       this.activeIndex = -1;
       this.opened = false;
     }
-    this._inputNode.focus();
   }
 
   /**
@@ -577,13 +606,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _handleAutocompletion() {
-    // TODO: this is captured by 'noFilter'
-    // It should be removed and failing tests should be fixed. Currently, this line causes
-    // an empty box to keep showing its options when autocomplete is 'none'.
-    if (this.autocomplete === 'none') {
-      return;
-    }
-
     const hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
 
     const curValue = this._inputNode.value;
@@ -604,7 +626,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     const isInlineAutoFillCandidate =
       this.autocomplete === 'both' || this.autocomplete === 'inline';
     const autoselect = this._autoSelectCondition();
-    // @ts-ignore this.autocomplete === 'none' needs to be there if statement above is removed
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
     /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
@@ -758,6 +779,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @enhance OverlayMixin
    * @protected
    */
+  _teardownOverlayCtrl() {
+    super._teardownOverlayCtrl();
+    this.__teardownCombobox();
+  }
+
+  /**
+   * @enhance OverlayMixin
+   * @protected
+   */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
     this._inputNode.addEventListener('keyup', this.__requestShowOverlay);
@@ -889,8 +919,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @private
    */
   __requestShowOverlay(ev) {
+    const lastKey = ev && ev.key;
     this.opened = this._showOverlayCondition({
-      lastKey: ev && ev.key,
+      lastKey,
       currentValue: this._inputNode.value,
     });
   }

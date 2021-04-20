@@ -74,6 +74,8 @@ export declare class ListboxHost {
   protected _onChildActiveChanged(ev: Event): void;
 
   protected get _activeDescendantOwnerNode(): HTMLElement;
+
+  protected _onListboxContentChanged(): void;
 }
 
 export declare function ListboxImplementation<T extends Constructor<LitElement>>(

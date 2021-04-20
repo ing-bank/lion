@@ -509,6 +509,7 @@ describe('detail.isTriggeredByUser', () => {
         if (type === 'OptionChoiceField' && testKeyboardBehavior) {
           resetChoiceFieldToForceRepropagation(formControl);
           mimicUserInput(formControl, 'userValue', 'keypress');
+          // TODO: get rid of try/catch (?)...
           try {
             expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
           } catch (e) {
