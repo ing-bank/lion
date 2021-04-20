@@ -30,7 +30,7 @@ import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 ## Umbrella Form
 
-```js story
+```js preview-story
 export const main = () => {
   loadDefaultFeedbackMessages();
   Required.getMessage = () => 'Please enter a value';

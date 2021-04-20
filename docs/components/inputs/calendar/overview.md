@@ -7,7 +7,7 @@ import { html, css } from '@lion/core';
 import '@lion/calendar/define';
 ```
 
-```js story
+```js preview-story
 export const main = () => {
   return html`
     <style>
