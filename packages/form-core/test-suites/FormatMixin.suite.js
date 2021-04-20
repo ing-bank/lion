@@ -462,6 +462,73 @@ export function runFormatMixinSuite(customConfig) {
           expect(spyArg.locale).to.equal('en-GB');
           expect(spyArg.decimalSeparator).to.equal('-');
         });
+
+        describe('On paste', () => {
+          class ReflectOnPaste extends FormatClass {
+            _reflectBackOn() {
+              return super._reflectBackOn() || this._isPasting;
+            }
+          }
+          const reflectingTagString = defineCE(ReflectOnPaste);
+          const reflectingTag = unsafeStatic(reflectingTagString);
+
+          /**
+           * @param {FormatClass} el
+           */
+          function paste(el, val = 'lorem') {
+            const { _inputNode } = getFormControlMembers(el);
+            _inputNode.value = val;
+            _inputNode.dispatchEvent(new ClipboardEvent('paste', { bubbles: true }));
+            _inputNode.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+
+          it('sets formatOptions.mode to "pasted" (and restores to "auto")', async () => {
+            const el = /** @type {FormatClass} */ (await fixture(html`
+            <${reflectingTag}><input slot="input"></${reflectingTag}>
+          `));
+            const formatterSpy = sinon.spy(el, 'formatter');
+            paste(el);
+            expect(formatterSpy).to.be.called;
+            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('pasted');
+            await aTimeout(0);
+            mimicUserInput(el, '');
+            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('auto');
+          });
+
+          it('sets protected value "_isPasting" for Subclassers', async () => {
+            const el = /** @type {FormatClass} */ (await fixture(html`
+            <${reflectingTag}><input slot="input"></${reflectingTag}>
+          `));
+            const formatterSpy = sinon.spy(el, 'formatter');
+            paste(el);
+            expect(formatterSpy).to.have.been.called;
+            // @ts-ignore [allow-protected] in test
+            expect(el._isPasting).to.be.true;
+            await aTimeout(0);
+            // @ts-ignore [allow-protected] in test
+            expect(el._isPasting).to.be.false;
+          });
+
+          it('calls formatter and "_reflectBackOn()"', async () => {
+            const el = /** @type {FormatClass} */ (await fixture(html`
+            <${tag}><input slot="input"></${tag}>
+          `));
+            // @ts-ignore [allow-protected] in test
+            const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
+            paste(el);
+            expect(reflectBackSpy).to.have.been.called;
+          });
+
+          it(`updates viewValue when "_reflectBackOn()" configured to reflect`, async () => {
+            const el = /** @type {FormatClass} */ (await fixture(html`
+            <${reflectingTag}><input slot="input"></${reflectingTag}>
+          `));
+            // @ts-ignore [allow-protected] in test
+            const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
+            paste(el);
+            expect(reflectBackSpy).to.have.been.called;
+          });
+        });
       });
 
       describe('Parser', () => {

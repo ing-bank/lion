@@ -107,7 +107,7 @@ export const noDecimals = () => html`
 For copy pasting numbers into the input-amount, there is slightly different parsing behavior.
 
 Normally, when it receives an input with only 1 separator character, we check the locale to determine whether this character is a thousand separator, or a decimal separator.
-When a user pastes the input from a different source, we find this approach (locale-based) quite unreliable, because it may have been copied from somewhere with a different locale.
+When a user pastes the input from a different source, we find this approach (locale-based) quite unreliable, because it may have been copied from a 'mathematical context' (like an Excel sheet) or a context with a different locale.
 Therefore, we use the heuristics based method to parse the input when it is pasted by the user.
 
 ### What this means

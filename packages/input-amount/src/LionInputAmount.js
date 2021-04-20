@@ -68,16 +68,6 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.formatter = formatAmount;
     /** @type {string | undefined} */
     this.currency = undefined;
-    /** @private */
-    this.__isPasting = false;
-
-    this.addEventListener('paste', () => {
-      /** @private */
-      this.__isPasting = true;
-      /** @private */
-      this.__parserCallcountSincePaste = 0;
-    });
-
     this.defaultValidators.push(new IsNumber());
   }
 
@@ -101,24 +91,12 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @override of FormatMixin
-   * @protected
-   */
-  _callParser(value = this.formattedValue) {
-    // TODO: (@daKmor) input and change events both trigger parsing therefore we need to handle the second parse
-    this.__parserCallcountSincePaste += 1;
-    this.__isPasting = this.__parserCallcountSincePaste === 2;
-    this.formatOptions.mode = this.__isPasting === true ? 'pasted' : 'auto';
-    // @ts-ignore [allow-protected]
-    return super._callParser(value);
-  }
-
-  /**
-   * @override of FormatMixin
+   * @enhance FormatMixin: instead of only formatting on blur, also format when a user pasted
+   * content
    * @protected
    */
   _reflectBackOn() {
-    return super._reflectBackOn() || this.__isPasting;
+    return super._reflectBackOn() || this._isPasting;
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement } from '@lion/core';
+import { BooleanAttributePart, LitElement } from '@lion/core';
 import { FormatNumberOptions } from '@lion/localize/types/LocalizeMixinTypes';
 import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
@@ -18,6 +18,16 @@ export declare class FormatHost {
   set value(value: string);
 
   protected _isHandlingUserInput: boolean;
+  /**
+   * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
+   * @example
+   * ```js
+   * _reflectBackFormattedValueToUser() {
+   *   return super._reflectBackFormattedValueToUser() || this._isPasting;
+   * }
+   * ```
+   */
+  protected _isPasting: boolean;
   protected _calculateValues(opts: { source: 'model' | 'serialized' | 'formatted' | null }): void;
   protected _onModelValueChanged(arg: { modelValue: unknown }): void;
   protected _dispatchModelValueChangedEvent(): void;
@@ -31,6 +41,7 @@ export declare class FormatHost {
   protected _callFormatter(): string;
 
   private __preventRecursiveTrigger: boolean;
+  private __prevViewValue: string;
 }
 
 export declare function FormatImplementation<T extends Constructor<LitElement>>(

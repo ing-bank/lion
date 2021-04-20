@@ -2,6 +2,7 @@ import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
 import { FocusHost } from '@lion/form-core/types/FocusMixinTypes';
 import { FormControlHost } from '@lion/form-core/types/FormControlMixinTypes';
+import { FormatHost } from '@lion/form-core/types/FormatMixinTypes';
 
 export declare class NativeTextFieldHost {
   get selectionStart(): number;
@@ -15,6 +16,8 @@ export declare function NativeTextFieldImplementation<T extends Constructor<LitE
 ): T &
   Constructor<NativeTextFieldHost> &
   Pick<typeof NativeTextFieldHost, keyof typeof NativeTextFieldHost> &
+  Constructor<FormatHost> &
+  Pick<typeof FormatHost, keyof typeof FormatHost> &
   Constructor<FocusHost> &
   Pick<typeof FocusHost, keyof typeof FocusHost> &
   Constructor<FormControlHost> &
