@@ -250,9 +250,10 @@ export const invokerButton = () => html`
 `;
 ```
 
-### Server interaction
+## Server interaction
 
-It's possible to fetch data from server side.
+It's possible to fetch data from server side. When options are rerendered into the combobox,
+the autocompletion (highlighting/selecting etc.) functionality of the combobox is triggered.
 
 ```js preview-story
 const comboboxData = ['lorem', 'ipsum', 'dolor', 'sit', 'amet'];
