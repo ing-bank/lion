@@ -128,7 +128,7 @@ export const main = () => {
           label="Input range"
         ></lion-input-range>
         <lion-checkbox-group
-          .mulipleChoice="${false}"
+          .multipleChoice="${false}"
           name="terms"
           .validators="${[new Required()]}"
         >
