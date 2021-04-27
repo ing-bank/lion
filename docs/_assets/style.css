@@ -43,3 +43,7 @@ mdjs-preview {
     display: block;
   }
 }
+
+mdjs-preview::part(iframe) {
+  border-color: var(--primary-lines-color);
+}

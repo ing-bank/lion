@@ -10,7 +10,7 @@ import { html } from '@lion/core';
 import '@lion/checkbox-group/define';
 ```
 
-```js story
+```js preview-story
 export const main = () => html`
   <lion-checkbox-group name="scientists[]" label="Favorite scientists">
     <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>

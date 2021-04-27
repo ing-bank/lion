@@ -6,3 +6,4 @@ storybook-static/
 *.d.ts
 _site-dev
 _site
+docs/_merged_*
