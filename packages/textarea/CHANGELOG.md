@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [11ec31c6]
+- Updated dependencies [15146bf9]
+- Updated dependencies [02e4f2cb]
+- Updated dependencies [c6fbe920]
+  - @lion/form-core@0.12.0
+  - @lion/core@0.17.0
+
 ## 0.11.0
 
 ### Minor Changes

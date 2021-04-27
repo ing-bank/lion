@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
 ## 0.9.0
 
 ### Minor Changes

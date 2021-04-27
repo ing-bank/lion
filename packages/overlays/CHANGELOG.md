@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.27.0
+
+### Minor Changes
+
+- 239cce3b: expose "repositionOverlay()" on OverlayMixin
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+  - singleton-manager@1.4.2
+
 ## 0.26.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # publish-docs
 
+## 0.1.2
+
+### Patch Changes
+
+- 02e4f2cb: add simulator to demos
+
 ## 0.1.1
 
 ### Patch Changes

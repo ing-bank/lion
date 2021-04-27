@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [239cce3b]
+- Updated dependencies [02e4f2cb]
+  - @lion/overlays@0.27.0
+  - @lion/core@0.17.0
+
 ## 0.11.4
 
 ### Patch Changes

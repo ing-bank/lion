@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+- c6fbe920: support paste functionality in FormatMixin
+
+### Patch Changes
+
+- 11ec31c6: fixed css selector syntax for disabled [slot=input]'
+- 15146bf9: form groups support lazily rendered children
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+  - @lion/localize@0.19.0
+
 ## 0.11.0
 
 ### Minor Changes

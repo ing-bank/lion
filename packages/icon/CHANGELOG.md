@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+  - singleton-manager@1.4.2
+
 ## 0.11.1
 
 ### Patch Changes

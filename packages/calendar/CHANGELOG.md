@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- eae38926: Calendar allows to reinitialize centralDate properly. Datepicker calls this functionality on opening the calendar.
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+  - @lion/localize@0.19.0
+
 ## 0.14.3
 
 ### Patch Changes

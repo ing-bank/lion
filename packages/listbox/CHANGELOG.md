@@ -1,5 +1,22 @@
 # @lion/listbox
 
+## 0.8.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- d94d6bd8: teleported options compatible with map/repeat for listbox/combobox/select-rich
+- edb43c4e: syncs last selected choice value for [autocomplet="none|list"] on close
+- Updated dependencies [11ec31c6]
+- Updated dependencies [15146bf9]
+- Updated dependencies [02e4f2cb]
+- Updated dependencies [c6fbe920]
+  - @lion/form-core@0.12.0
+  - @lion/core@0.17.0
+
 ## 0.7.0
 
 ### Minor Changes
