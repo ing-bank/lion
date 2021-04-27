@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.8.3
+
+### Patch Changes
+
+- 02e4f2cb: add simulator to demos
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+
 ## 0.8.2
 
 ### Patch Changes

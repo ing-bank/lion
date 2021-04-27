@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [02e4f2cb]
+  - @lion/core@0.17.0
+  - @lion/input@0.14.0
+  - @lion/localize@0.19.0
+
 ## 0.8.1
 
 ### Patch Changes

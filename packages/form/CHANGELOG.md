@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [02e4f2cb]
+  - @lion/fieldset@0.19.0
+
 ## 0.10.0
 
 ### Minor Changes

@@ -1,5 +1,28 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 6aa7fc29: automatically recompute autocompletion features when options change (needed for server side completion support)
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- 351e9598: do not reopen listbox on focusin edge cases
+- edb43c4e: syncs last selected choice value for [autocomplet="none|list"] on close
+- Updated dependencies [239cce3b]
+- Updated dependencies [d94d6bd8]
+- Updated dependencies [11ec31c6]
+- Updated dependencies [15146bf9]
+- Updated dependencies [02e4f2cb]
+- Updated dependencies [edb43c4e]
+- Updated dependencies [c6fbe920]
+  - @lion/overlays@0.27.0
+  - @lion/listbox@0.8.0
+  - @lion/form-core@0.12.0
+  - @lion/core@0.17.0
+
 ## 0.5.1
 
 ### Patch Changes

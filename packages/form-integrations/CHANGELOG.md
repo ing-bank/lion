@@ -1,5 +1,48 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- 02e4f2cb: add simulator to demos
+
+### Patch Changes
+
+- Updated dependencies [d94d6bd8]
+- Updated dependencies [351e9598]
+- Updated dependencies [0fc206bf]
+- Updated dependencies [756a1384]
+- Updated dependencies [6aa7fc29]
+- Updated dependencies [11ec31c6]
+- Updated dependencies [15146bf9]
+- Updated dependencies [eae38926]
+- Updated dependencies [02e4f2cb]
+- Updated dependencies [edb43c4e]
+- Updated dependencies [c6fbe920]
+  - @lion/listbox@0.8.0
+  - @lion/combobox@0.6.0
+  - @lion/input-iban@0.15.0
+  - @lion/input-amount@0.13.0
+  - @lion/form-core@0.12.0
+  - @lion/input-datepicker@0.22.0
+  - @lion/button@0.12.0
+  - @lion/checkbox-group@0.17.0
+  - @lion/core@0.17.0
+  - @lion/fieldset@0.19.0
+  - @lion/form@0.11.0
+  - @lion/input@0.14.0
+  - @lion/input-date@0.12.0
+  - @lion/input-email@0.13.0
+  - @lion/input-range@0.9.0
+  - @lion/input-stepper@0.5.0
+  - @lion/localize@0.19.0
+  - @lion/radio-group@0.16.0
+  - @lion/select@0.12.0
+  - @lion/select-rich@0.25.0
+  - @lion/switch@0.16.0
+  - @lion/textarea@0.12.0
+  - @lion/validate-messages@0.6.0
+
 ## 0.6.2
 
 ### Patch Changes

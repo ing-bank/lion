@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.2
+
+### Patch Changes
+
+- 02e4f2cb: add simulator to demos
+
 ## 1.4.1
 
 ### Patch Changes
