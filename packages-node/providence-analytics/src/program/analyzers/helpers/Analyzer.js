@@ -180,6 +180,7 @@ class Analyzer {
    * @returns {CachedAnalyzerResult|undefined}
    */
   _prepare(cfg) {
+    LogService.debug(`Analyzer "${this.name}": started _prepare method`);
     this.constructor.__unwindProvidedResults(cfg);
 
     if (!cfg.targetProjectResult) {
@@ -264,6 +265,8 @@ class Analyzer {
    * @returns {AnalyzerResult}
    */
   _finalize(queryOutput, cfg) {
+    LogService.debug(`Analyzer "${this.name}": started _finalize method`);
+
     const analyzerResult = ensureAnalyzerResultFormat(queryOutput, cfg, this);
     LogService.success(`finished ${LogService.pad(this.name, 16)} for ${this.identifier}`);
     return analyzerResult;
@@ -273,6 +276,8 @@ class Analyzer {
    * @param {function} traverseEntry
    */
   async _traverse(traverseEntry) {
+    LogService.debug(`Analyzer "${this.name}": started _traverse method`);
+
     /**
      * Create ASTs for our inputData
      */
@@ -281,6 +286,8 @@ class Analyzer {
   }
 
   async execute(customConfig = {}) {
+    LogService.debug(`Analyzer "${this.name}": started execute method`);
+
     const cfg = {
       targetProjectPath: null,
       referenceProjectPath: null,

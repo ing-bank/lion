@@ -5,6 +5,7 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { aForEach } = require('../utils/async-array-utils.js');
+const { LogService } = require('../services/LogService.js');
 
 /** @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile */
 
@@ -136,6 +137,8 @@ function getLocalNameSpecifiers(node) {
  * @param {FindExportsConfig} config
  */
 function findExportsPerAstEntry(ast, { skipFileImports }) {
+  LogService.debug(`Analyzer "find-exports": started findExportsPerAstEntry method`);
+
   // Visit AST...
   const transformedEntry = [];
   // Unfortunately, we cannot have async functions in babel traverse.

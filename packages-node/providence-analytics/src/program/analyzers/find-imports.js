@@ -3,6 +3,7 @@ const { default: traverse } = require('@babel/traverse');
 const { isRelativeSourcePath } = require('../utils/relative-source-path.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { Analyzer } = require('./helpers/Analyzer.js');
+const { LogService } = require('../services/LogService.js');
 
 /**
  * Options that allow to filter 'on a file basis'.
@@ -45,6 +46,8 @@ function getImportOrReexportsSpecifiers(node) {
  * @param {string} context.relativePath the file being currently processed
  */
 function findImportsPerAstEntry(ast) {
+  LogService.debug(`Analyzer "find-imports": started findImportsPerAstEntry method`);
+
   // Visit AST...
   const transformedEntry = [];
   traverse(ast, {
