@@ -176,6 +176,7 @@ class QueryService {
    * @returns {QueryResult}
    */
   static async astSearch(queryConfig, customConfig) {
+    LogService.debug('started astSearch method');
     if (queryConfig.type !== 'analyzer') {
       LogService.error('Only analyzers supported for ast searches at the moment');
       process.exit(1);
