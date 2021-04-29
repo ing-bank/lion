@@ -2,4 +2,5 @@
 'providence-analytics': patch
 ---
 
-Enable debug logs in analyzers
+- enable debug logs in analyzers
+- export QueryService
