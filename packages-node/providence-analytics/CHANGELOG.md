@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.10.3
+
+### Patch Changes
+
+- 0e678dec: - enable debug logs in analyzers
+  - export QueryService
+
 ## 0.10.2
 
 ### Patch Changes
