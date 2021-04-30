@@ -30,14 +30,12 @@ const FocusMixinImplementation = superclass =>
 
     constructor() {
       super();
-
       /**
        * Whether the focusable element within (`._focusableNode`) is focused.
        * Reflects to attribute '[focused]' as a styling hook
        * @type {boolean}
        */
       this.focused = false;
-
       /**
        * Whether the focusable element within (`._focusableNode`) matches ':focus-visible'
        * Reflects to attribute '[focused-visible]' as a styling hook
@@ -77,8 +75,6 @@ const FocusMixinImplementation = superclass =>
      * @protected
      * @type {HTMLElement}
      */
-    // @ts-ignore it's up to Subclassers to return the right element. This is needed for docs/types
-    // eslint-disable-next-line class-methods-use-this, getter-return, no-empty-function
     get _focusableNode() {
       // TODO: [v1]: remove return of _inputNode (it's now here for backwards compatibility)
       // @ts-expect-error see above
