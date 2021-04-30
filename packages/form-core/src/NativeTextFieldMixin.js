@@ -110,6 +110,13 @@ const NativeTextFieldMixinImplementation = superclass =>
         } catch (_) {}
       }
     }
+
+    /**
+     * @configure FocusMixin
+     */
+    get _focusableNode() {
+      return this._inputNode;
+    }
   };
 
 export const NativeTextFieldMixin = dedupeMixin(NativeTextFieldMixinImplementation);
