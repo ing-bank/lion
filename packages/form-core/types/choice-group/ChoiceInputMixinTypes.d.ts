@@ -20,6 +20,10 @@ export declare class ChoiceInputHost {
   checked: boolean;
   get modelValue(): ChoiceInputModelValue;
   set modelValue(value: ChoiceInputModelValue);
+  /**
+   * The value that will be registered to the modelValue of the parent ChoiceGroup. Recommended
+   * to be a string
+   */
   get choiceValue(): any;
   set choiceValue(value: any);
   static get styles(): CSSResultArray;

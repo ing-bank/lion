@@ -16,7 +16,16 @@
 export class Unparseable {
   /** @param {string} value */
   constructor(value) {
+    /**
+     * Meta info for restoring serialized Unparseable values
+     * @type {'unparseable'}
+     */
     this.type = 'unparseable';
+    /**
+     * Stores current view value. For instance, value '09-' is an unparseable Date.
+     * This info can be used to restore previous form states.
+     * @type {string}
+     */
     this.viewValue = value;
   }
 

@@ -25,26 +25,6 @@ import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies F
 export class LionField extends FormControlMixin(
   InteractionStateMixin(FocusMixin(FormatMixin(ValidateMixin(SlotMixin(LitElement))))),
 ) {
-  /** @type {any} */
-  static get properties() {
-    return {
-      autocomplete: {
-        type: String,
-        reflect: true,
-      },
-      value: {
-        type: String,
-      },
-    };
-  }
-
-  constructor() {
-    super();
-    this.name = '';
-    /** @type {string | undefined} */
-    this.autocomplete = undefined;
-  }
-
   /**
    * @param {import('@lion/core').PropertyValues } changedProperties
    */
@@ -85,7 +65,8 @@ export class LionField extends FormControlMixin(
    * Interaction states are not cleared (use resetInteractionState for this)
    */
   clear() {
-    this.modelValue = ''; // can't set null here, because IE11 treats it as a string
+    // TODO: [v1] set to undefined
+    this.modelValue = '';
   }
 
   /**
@@ -93,11 +74,8 @@ export class LionField extends FormControlMixin(
    * @protected
    */
   _onChange() {
-    this.dispatchEvent(
-      new CustomEvent('user-input-changed', {
-        bubbles: true,
-      }),
-    );
+    /** @protectedEvent user-input-changed */
+    this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
   }
 
   /**

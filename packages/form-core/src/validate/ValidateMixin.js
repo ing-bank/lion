@@ -12,8 +12,11 @@ import { Validator } from './Validator.js';
 import { Required } from './validators/Required.js';
 import { FormControlMixin } from '../FormControlMixin.js';
 
+// TODO: [v1] make all @readOnly => @readonly and actually make sure those values cannot be set
+
 /**
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateMixin} ValidateMixin
+ * @typedef {import('../../types/validate/ValidateMixinTypes').ValidationType} ValidationType
  */
 
 /**
@@ -25,7 +28,7 @@ function arrayDiff(array1 = [], array2 = []) {
 }
 
 /**
- * @desc Handles all validation, based on modelValue changes. It has no knowledge about dom and
+ * Handles all validation, based on modelValue changes. It has no knowledge about dom and
  * UI. All error visibility, dom interaction and accessibility are handled in FeedbackMixin.
  *
  * @type {ValidateMixin}
@@ -48,11 +51,8 @@ export const ValidateMixinImplementation = superclass =>
     static get properties() {
       return {
         validators: { attribute: false },
-
         hasFeedbackFor: { attribute: false },
-
         shouldShowFeedbackFor: { attribute: false },
-
         showsFeedbackFor: {
           type: Array,
           attribute: 'shows-feedback-for',
@@ -62,36 +62,22 @@ export const ValidateMixinImplementation = superclass =>
             toAttribute: /** @param {[]} value */ value => value.join(','),
           },
         },
-
         validationStates: { attribute: false },
-
-        /**
-         * @desc flag that indicates whether async validation is pending
-         */
         isPending: {
           type: Boolean,
           attribute: 'is-pending',
           reflect: true,
         },
-
-        /**
-         * @desc specialized fields (think of input-date and input-email) can have preconfigured
-         * validators.
-         */
         defaultValidators: { attribute: false },
-
-        /**
-         * Subclassers can enable this to show multiple feedback messages at the same time
-         * By default, just like the platform, only one message (with highest prio) is visible.
-         */
         _visibleMessagesAmount: { attribute: false },
-
         __childModelValueChanged: { attribute: false },
       };
     }
 
     /**
+     * Types of validation supported by this FormControl (for instance 'error'|'warning'|'info')
      * @overridable
+     * @type {ValidationType[]}
      */
     static get validationTypes() {
       return ['error'];
@@ -124,6 +110,11 @@ export const ValidateMixinImplementation = superclass =>
       };
     }
 
+    /**
+     * Combination of validators provided by Application Developer and the default validators
+     * @type {Validator[]}
+     * @protected
+     */
     get _allValidators() {
       return [...this.validators, ...this.defaultValidators];
     }
@@ -131,27 +122,92 @@ export const ValidateMixinImplementation = superclass =>
     constructor() {
       super();
 
-      /** @type {string[]} */
+      /**
+       * As soon as validation happens (after modelValue/validators/validator param change), this
+       * array is updated with the active ValidationTypes ('error'|'warning'|'success'|'info' etc.).
+       * Notice the difference with `.showsFeedbackFor`, which filters `.hasFeedbackFor` based on
+       * `.feedbackCondition()`.
+       *
+       * For styling purposes, will be reflected to [has-feedback-for="error warning"]. This can
+       * be useful for subtle visual feedback on keyup, like a red/green border around an input.
+       *
+       * @example
+       * ```css
+       * :host([has-feedback-for~="error"]) .input-group__container {
+       *   border: 1px solid red;
+       * }
+       * ```
+       * @type {ValidationType[]}
+       * @readOnly
+       */
       this.hasFeedbackFor = [];
 
-      /** @type {string[]} */
-      this.shouldShowFeedbackFor = [];
-
-      /** @type {string[]} */
+      /**
+       * Based on outcome of feedbackCondition, this array decides what ValidationTypes should be
+       * shown in validationFeedback, based on meta data like interaction states.
+       *
+       * For styling purposes, it reflects it `[shows-feedback-for="error warning"]`
+       * @type {ValidationType[]}
+       * @readOnly
+       * @example
+       * ```css
+       * :host([shows-feedback-for~="success"]) .form-field__feedback {
+       *   transform: scaleY(1);
+       * }
+       * ```
+       */
       this.showsFeedbackFor = [];
 
-      /** @type {Object.<string, Object.<string, boolean>>} */
+      // TODO: [v1] make this fully private (preifix __)?
+      /**
+       * A temporary storage to transition from hasFeedbackFor to showsFeedbackFor
+       * @type {ValidationType[]}
+       * @readOnly
+       * @private
+       */
+      this.shouldShowFeedbackFor = [];
+
+      /**
+       * The outcome of a validation 'round'. Keyed by ValidationType and Validator name
+       * @readOnly
+       * @type {Object.<string, Object.<string, boolean>>}
+       */
       this.validationStates = {};
 
-      /** @protected */
-      this._visibleMessagesAmount = 1;
-
+      /**
+       * Flag indicating whether async validation is pending.
+       * Creates attribute [is-pending] as a styling hook
+       * @type {boolean}
+       */
       this.isPending = false;
 
-      /** @type {Validator[]} */
+      /**
+       * Used by Application Developers to add Validators to a FormControl.
+       * @example
+       * ```html
+       * <form-control .validators="${[new Required(), new MinLength(4, {type: 'warning'})]}">
+       * </form-control>
+       * ```
+       * @type {Validator[]}
+       */
       this.validators = [];
-      /** @type {Validator[]} */
+
+      /**
+       * Used by Subclassers to add default Validators to a particular FormControl.
+       * A date input for instance, always needs the isDate validator.
+       * @example
+       * ```js
+       * this.defaultValidators.push(new IsDate());
+       * ```
+       * @type {Validator[]}
+       */
       this.defaultValidators = [];
+
+      /**
+       * The amount of feedback messages that will visible in LionValidationFeedback
+       * @protected
+       */
+      this._visibleMessagesAmount = 1;
 
       /**
        * @type {Validator[]}
@@ -166,29 +222,35 @@ export const ValidateMixinImplementation = superclass =>
       this.__asyncValidationResult = [];
 
       /**
-       * @desc contains results from sync Validators, async Validators and ResultValidators
+       * Aggregated result from sync Validators, async Validators and ResultValidators
        * @type {Validator[]}
        * @private
        */
       this.__validationResult = [];
+
       /**
        * @type {Validator[]}
        * @private
        */
       this.__prevValidationResult = [];
-      /** @type {Validator[]} */
+
+      /**
+       * @type {Validator[]}
+       * @private
+       */
       this.__prevShownValidationResult = [];
+
+      /**
+       * The updated children validity affects the validity of the parent. Helper to recompute
+       * validatity of parent FormGroup
+       * @private
+       */
+      this.__childModelValueChanged = false;
 
       /** @private */
       this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
       /** @protected */
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
-
-      /**
-       * This will be used for FormGroups that listen for `model-value-changed` of children
-       * @private
-       */
-      this.__childModelValueChanged = false;
     }
 
     connectedCallback() {
@@ -271,28 +333,28 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc The main function of this mixin. Triggered by:
-     *  - a modelValue change
-     *  - a change in the 'validators' array
-     * -  a change in the config of an individual Validator
+     * Triggered by:
+     *  - modelValue change
+     *  - change in the 'validators' array
+     * -  change in the config of an individual Validator
      *
      * Three situations are handled:
-     * - A.1 The FormControl is empty: further execution is halted. When the Required Validator
+     * - a1) the FormControl is empty: further execution is halted. When the Required Validator
      * (being mutually exclusive to the other Validators) is applied, it will end up in the
      * validation result (as the only Validator, since further execution was halted).
-     * - A.2 There are synchronous Validators: this is the most common flow. When modelValue hasn't
+     * - a2) there are synchronous Validators: this is the most common flow. When modelValue hasn't
      * changed since last async results were generated, 'sync results' are merged with the
      * 'async results'.
-     * - A.3 There are asynchronous Validators: for instance when server side evaluation is needed.
+     * - a3) there are asynchronous Validators: for instance when server side evaluation is needed.
      * Executions are scheduled and awaited and the 'async results' are merged with the
      * 'sync results'.
      *
-     * - B. There are ResultValidators. After steps A.1, A.2, or A.3 are finished, the holistic
-     * ResultValidators (evaluating the total result of the 'regular' (A.1, A.2 and A.3) validators)
+     * - b) there are ResultValidators. After steps a1, a2, or a3 are finished, the holistic
+     * ResultValidators (evaluating the total result of the 'regular' (a1, a2 and a3) validators)
      * will be run...
      *
-     * Situations A.2 and A.3 are not mutually exclusive and can be triggered within one validate()
-     * call. Situation B will occur after every call.
+     * Situations a2 and a3 are not mutually exclusive and can be triggered within one `validate()`
+     * call. Situation b will occur after every call.
      *
      * @param {{ clearCurrentResult?: boolean }} [opts]
      */
@@ -318,7 +380,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc step A1-3 + B (as explained in 'validate')
+     * @desc step a1-3 + b (as explained in `validate()`)
      */
     async __executeValidators() {
       this.validateComplete = new Promise(resolve => {
@@ -380,7 +442,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc step A2, calls __finishValidation
+     * step a2 (as explained in `validate()`): calls `__finishValidation`
      * @param {Validator[]} syncValidators
      * @param {unknown} value
      * @param {{ hasAsync: boolean }} opts
@@ -396,7 +458,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc step A3, calls __finishValidation
+     * step a3 (as explained in `validate()`), calls __finishValidation
      * @param {Validator[]} asyncValidators all Validators except required and ResultValidators
      * @param {?} value
      * @private
@@ -415,7 +477,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc step B, called by __finishValidation
+     * step b (as explained in `validate()`), called by __finishValidation
      * @param {Validator[]} regularValidationResult result of steps 1-3
      * @private
      */
@@ -541,6 +603,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
+     * Helper method for the mutually exclusive Required Validator
      * @param {?} v
      * @private
      */
@@ -593,7 +656,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @desc Responsible for retrieving messages from Validators and
+     * Responsible for retrieving messages from Validators and
      * (delegation of) rendering them.
      *
      * For `._feedbackNode` (extension of LionValidationFeedback):
@@ -640,8 +703,8 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * The default feedbackCondition condition that will be used when the
-     * feedbackCondition is not overridden.
+     * Default feedbackCondition condition, used by Subclassers, that will be used when
+     * `feedbackCondition()` is not overridden by Application Developer.
      * Show the validity feedback when returning true, don't show when false
      * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
      * Validator type
@@ -654,7 +717,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * Allows super classes to add meta info for feedbackCondition
+     * Allows Subclassers to add meta info for feedbackCondition
      * @configurable
      */
     get _feedbackConditionMeta() {
@@ -664,6 +727,7 @@ export const ValidateMixinImplementation = superclass =>
     /**
      * Allows the end user to specify when a feedback message should be shown
      * @example
+     * ```js
      * feedbackCondition(type, meta, defaultCondition) {
      *   if (type === 'info') {
      *     return return;
@@ -672,6 +736,7 @@ export const ValidateMixinImplementation = superclass =>
      *   }
      *   return defaultCondition(type, meta);
      * }
+     * ```
      * @overridable
      * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
      * Validator type
@@ -690,6 +755,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
+     * Used to translate `.hasFeedbackFor` and `.shouldShowFeedbackFor` to `.showsFeedbackFor`
      * @param {string} type
      * @protected
      */
@@ -767,13 +833,12 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable
-     * @desc Orders all active validators in this.__validationResult. Can
+     * Orders all active validators in this.__validationResult. Can
      * also filter out occurrences (based on interaction states)
+     * @overridable
      * @param {{ validationResult: Validator[] }} opts
-     * @return {Validator[]} ordered list of Validators with feedback messages visible to the
+     * @return {Validator[]} ordered list of Validators with feedback messages visible to the end user
      * @protected
-     * end user
      */
     _prioritizeAndFilterFeedback({ validationResult }) {
       const ctor = /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (this

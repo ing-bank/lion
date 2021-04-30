@@ -29,23 +29,31 @@ const FormRegistrarMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * @desc Flag that determines how ".formElements" should behave.
-         * For a regular fieldset (see LionFieldset) we expect ".formElements"
-         * to be accessible as an object.
-         * In case of a radio-group, a checkbox-group or a select/listbox,
-         * it should act like an array (see ChoiceGroupMixin).
-         * Usually, when false, we deal with a choice-group (radio-group, checkbox-group,
-         * (multi)select)
-         */
         _isFormOrFieldset: { type: Boolean },
       };
     }
 
     constructor() {
       super();
+
+      /**
+       * Closely mimics the natively supported HTMLFormControlsCollection. It can be accessed
+       * both like an array and an object (based on control/element names).
+       * @type {FormControlsCollection}
+       */
       this.formElements = new FormControlsCollection();
 
+      /**
+       * Flag that determines how ".formElements" should behave.
+       * For a regular fieldset (see LionFieldset) we expect ".formElements"
+       * to be accessible as an object.
+       * In case of a radio-group, a checkbox-group or a select/listbox,
+       * it should act like an array (see ChoiceGroupMixin).
+       * Usually, when false, we deal with a choice-group (radio-group, checkbox-group,
+       * (multi)select)
+       * @type {boolean}
+       * @protected
+       */
       this._isFormOrFieldset = false;
 
       this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
@@ -100,6 +108,10 @@ const FormRegistrarMixinImplementation = superclass =>
       this._completeRegistration();
     }
 
+    /**
+     * Resolves the registrationComplete promise. Subclassers can delay if needed
+     * @overridable
+     */
     _completeRegistration() {
       Promise.resolve().then(() => this.__resolveRegistrationComplete(undefined));
     }
@@ -197,6 +209,7 @@ const FormRegistrarMixinImplementation = superclass =>
     }
 
     /**
+     * Hook for Subclassers to perform logic before an element is added
      * @param {CustomEvent} ev
      * @protected
      */
