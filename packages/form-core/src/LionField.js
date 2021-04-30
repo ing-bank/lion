@@ -106,4 +106,11 @@ export class LionField extends FormControlMixin(
   get _feedbackConditionMeta() {
     return { ...super._feedbackConditionMeta, focused: this.focused };
   }
+
+  /**
+   * @configure FocusMixin
+   */
+  get _focusableNode() {
+    return this._inputNode;
+  }
 }

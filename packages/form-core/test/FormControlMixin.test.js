@@ -161,7 +161,14 @@ describe('FormControlMixin', () => {
         const groupTag = unsafeStatic(groupTagString);
 
         const focusableTagString = defineCE(
-          class extends FocusMixin(FormControlMixin(LitElement)) {},
+          class extends FocusMixin(FormControlMixin(LitElement)) {
+            /**
+             * @configure FocusMixin
+             */
+            get _focusableNode() {
+              return this._inputNode;
+            }
+          },
         );
         const focusableTag = unsafeStatic(focusableTagString);
 
