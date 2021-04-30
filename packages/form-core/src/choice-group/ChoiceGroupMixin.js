@@ -25,15 +25,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * @desc When false (default), modelValue and serializedValue will reflect the
-         * currently selected choice (usually a string). When true, modelValue will and
-         * serializedValue will be an array of strings.
-         */
-        multipleChoice: {
-          type: Boolean,
-          attribute: 'multiple-choice',
-        },
+        multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
       };
     }
 
@@ -132,11 +124,21 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     constructor() {
       super();
+
+      /**
+       * When false (default), modelValue and serializedValue will reflect the
+       * currently selected choice (usually a string). When true, modelValue will and
+       * serializedValue will be an array of strings.
+       * @type {boolean}
+       */
       this.multipleChoice = false;
-      /** @type {'child'|'choice-group'|'fieldset'}
+
+      /**
+       * @type {'child'|'choice-group'|'fieldset'}
+       * @configure FormControlMixin event propagation
        * @protected
        */
-      this._repropagationRole = 'choice-group'; // configures event propagation logic of FormControlMixin
+      this._repropagationRole = 'choice-group';
       /** @private */
       this.__isInitialModelValue = true;
       /** @private */
@@ -156,7 +158,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @enhance FormRegistrarMixin
+     * @enhance FormRegistrarMixin: we need one extra microtask to complete
      */
     _completeRegistration() {
       // Double microtask queue to account for Webkit race condition
@@ -175,7 +177,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @override from FormRegistrarMixin
+     * @enhance FormRegistrarMixin
      * @param {FormControl} child
      * @param {number} indexToInsertAt
      */
@@ -353,10 +355,9 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     /**
-     * Don't repropagate unchecked single choice choiceInputs
      * @param {FormControlHost & ChoiceInputHost} target
      * @protected
-     * @overridable
+     * @configure FormControlMixin: don't repropagate unchecked single choice choiceInputs
      */
     _repropagationCondition(target) {
       return !(

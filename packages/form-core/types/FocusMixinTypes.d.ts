@@ -7,16 +7,19 @@ export declare class FocusHost {
    * Reflects to attribute '[focused]' as a styling hook
    */
   focused: boolean;
+
   /**
    * Whether the focusable element within (`._focusableNode`) matches ':focus-visible'
    * Reflects to attribute '[focused-visible]' as a styling hook
    * @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
    */
   focusedVisible: boolean;
+
   /**
    * Calls `focus()` on focusable element within
    */
   focus(): void;
+
   /**
    * Calls `blur()` on focusable element within
    */

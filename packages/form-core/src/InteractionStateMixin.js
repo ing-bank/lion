@@ -23,47 +23,15 @@ const InteractionStateMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * True when user has focused and left(blurred) the field.
-         */
-        touched: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * True when user has changed the value of the field.
-         */
-        dirty: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * True when the modelValue is non-empty (see _isEmpty in FormControlMixin)
-         */
-        filled: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * True when user has left non-empty field or input is prefilled.
-         * The name must be seen from the point of view of the input field:
-         * once the user enters the input field, the value is non-empty.
-         */
-        prefilled: {
-          attribute: false,
-        },
-        /**
-         * True when user has attempted to submit the form, e.g. through a button
-         * of type="submit"
-         */
-        submitted: {
-          attribute: false,
-        },
+        touched: { type: Boolean, reflect: true },
+        dirty: { type: Boolean, reflect: true },
+        filled: { type: Boolean, reflect: true },
+        prefilled: { attribute: false },
+        submitted: { attribute: false },
       };
     }
 
     /**
-     *
      * @param {PropertyKey} name
      * @param {*} oldVal
      */
@@ -86,18 +54,65 @@ const InteractionStateMixinImplementation = superclass =>
 
     constructor() {
       super();
+
+      /**
+       * True when user has focused and left(blurred) the field.
+       * @type {boolean}
+       */
       this.touched = false;
+
+      /**
+       * True when user has changed the value of the field.
+       * @type {boolean}
+       */
       this.dirty = false;
+
+      /**
+       * True when user has left non-empty field or input is prefilled.
+       * The name must be seen from the point of view of the input field:
+       * once the user enters the input field, the value is non-empty.
+       * @type {boolean}
+       */
       this.prefilled = false;
+
+      /**
+       * True when the modelValue is non-empty (see _isEmpty in FormControlMixin)
+       * @type {boolean}
+       */
       this.filled = false;
 
-      /** @type {string} */
+      /**
+       * True when user has attempted to submit the form, e.g. through a button
+       * of type="submit"
+       * @type {boolean}
+       */
+      // TODO: [v1] this might be fixable by scheduling property effects till firstUpdated
+      // this.submitted = false;
+
+      /**
+       * The event that triggers the touched state
+       * @type {string}
+       * @protected
+       */
       this._leaveEvent = 'blur';
-      /** @type {string} */
+
+      /**
+       * The event that triggers the dirty state
+       * @type {string}
+       * @protected
+       */
       this._valueChangedEvent = 'model-value-changed';
-      /** @type {EventHandlerNonNull} */
+
+      /**
+       * @type {EventHandlerNonNull}
+       * @protected
+       */
       this._iStateOnLeave = this._iStateOnLeave.bind(this);
-      /** @type {EventHandlerNonNull} */
+
+      /**
+       * @type {EventHandlerNonNull}
+       * @protected
+       */
       this._iStateOnValueChange = this._iStateOnValueChange.bind(this);
     }
 
@@ -118,10 +133,9 @@ const InteractionStateMixinImplementation = superclass =>
     }
 
     /**
-     * Evaluations performed on connectedCallback. Since some components can be out of sync
-     * (due to interdependence on light children that can only be processed
-     * after connectedCallback and affect the initial value).
-     * This method is exposed, so it can be called after they are initialized themselves.
+     * Evaluations performed on connectedCallback.
+     * This method is public, so it can be called at a later moment (when we need to wait for
+     * registering children for instance) as well.
      * Since this method will be called twice in last mentioned scenario, it must stay idempotent.
      */
     initInteractionState() {
@@ -130,8 +144,7 @@ const InteractionStateMixinImplementation = superclass =>
     }
 
     /**
-     * Sets touched value to true
-     * Reevaluates prefilled state.
+     * Sets touched value to true and reevaluates prefilled state.
      * When false, on next interaction, user will start with a clean state.
      * @protected
      */
@@ -159,22 +172,25 @@ const InteractionStateMixinImplementation = superclass =>
     }
 
     /**
-     * Dispatches custom event on touched state change
+     * Dispatches event on touched state change
      * @protected
      */
     _onTouchedChanged() {
-      this.dispatchEvent(new CustomEvent('touched-changed', { bubbles: true, composed: true }));
+      /** @protectedEvent touched-changed */
+      this.dispatchEvent(new Event('touched-changed', { bubbles: true, composed: true }));
     }
 
     /**
-     * Dispatches custom event on touched state change
+     * Dispatches event on touched state change
      * @protected
      */
     _onDirtyChanged() {
-      this.dispatchEvent(new CustomEvent('dirty-changed', { bubbles: true, composed: true }));
+      /** @protectedEvent dirty-changed */
+      this.dispatchEvent(new Event('dirty-changed', { bubbles: true, composed: true }));
     }
 
     /**
+     * @override ValidateMixin
      * Show the validity feedback when one of the following conditions is met:
      *
      * - submitted
@@ -199,6 +215,9 @@ const InteractionStateMixinImplementation = superclass =>
       return (meta.touched && meta.dirty) || meta.prefilled || meta.submitted;
     }
 
+    /**
+     * @enhance ValidateMixin
+     */
     get _feedbackConditionMeta() {
       return {
         // @ts-ignore to fix, InteractionStateMixin needs to depend on ValidateMixin

@@ -15,6 +15,7 @@ export type ModelValueEventDetails = {
    * itself to the beginning of formPath)
    */
   formPath: HTMLElement[];
+
   /**
    * Sometimes it can be helpful to detect whether a value change was caused by a user or
    * via a programmatical change.
@@ -24,6 +25,7 @@ export type ModelValueEventDetails = {
    * like 'input'/'change'/'user-input-changed' etc.)
    */
   isTriggeredByUser: boolean;
+
   /**
    * Whether it is the first event sent on initialization of the form (other
    * model-value-changed events are triggered imperatively or via user input (in the latter
@@ -59,19 +61,23 @@ export declare class FormControlHost {
     _repropagationRole: { attribute: boolean };
     _isRepropagationEndpoint: { attribute: boolean };
   };
+
   /**
-   * A Boolean attribute which, if present, indicates that the user should not be able to edit
+   * A boolean attribute which, if present, indicates that the user should not be able to edit
    * the value of the input. The difference between disabled and readonly is that read-only
    * controls can still function, whereas disabled controls generally do not function as
    * controls until they are enabled.
-   * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+   * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly
    */
   readOnly: boolean;
+
   /**
    * The name the element will be registered with to the .formElements collection
-   * of the parent.
+   * of the parent. Also, it serves as the key of key/value pairs in
+   *  modelValue/serializedValue objects
    */
   name: string;
+
   /**
    * The model value is the result of the parser function(when available).
    * It should be considered as the internal value used for validation and reasoning/logic.
@@ -86,12 +92,14 @@ export declare class FormControlHost {
    */
   get modelValue(): any | Unparseable;
   set modelValue(value: any | Unparseable);
+
   /**
    * The label text for the input node.
    * When no light dom defined via [slot=label], this value will be used
    */
   get label(): string;
   set label(arg: string);
+
   /**
    * The helpt text for the input node.
    * When no light dom defined via [slot=help-text], this value will be used
@@ -99,9 +107,15 @@ export declare class FormControlHost {
   get helpText(): string;
   set helpText(arg: string);
 
+  /**
+   * Will be used in validation messages to refer to the current field
+   */
   set fieldName(arg: string);
   get fieldName(): string;
 
+  /**
+   * Allows to add extra element references to aria-labelledby attribute.
+   */
   addToAriaLabelledBy(
     element: HTMLElement,
     customConfig?: {
@@ -109,6 +123,10 @@ export declare class FormControlHost {
       reorder?: boolean | undefined;
     },
   ): void;
+
+  /**
+   * Allows to add extra element references to aria-describedby attribute.
+   */
   addToAriaDescribedBy(
     element: HTMLElement,
     customConfig?: {
@@ -116,31 +134,71 @@ export declare class FormControlHost {
       reorder?: boolean | undefined;
     },
   ): void;
+
+  /**
+   * Allows to remove element references from aria-labelledby attribute.
+   */
   removeFromAriaLabelledBy(
     element: HTMLElement,
     customConfig?: {
       reorder?: boolean | undefined;
     },
   ): void;
+
+  /**
+   * Allows to remove element references from aria-describedby attribute.
+   */
   removeFromAriaDescribedBy(
     element: HTMLElement,
     customConfig?: {
       reorder?: boolean | undefined;
     },
   ): void;
+
   updated(changedProperties: import('@lion/core').PropertyValues): void;
 
+  /**
+   * The interactive (form) element. Can be a native element like input/textarea/select or
+   * an element with tabindex > -1
+   */
   protected get _inputNode(): HTMLElementWithValue | HTMLInputElement | HTMLTextAreaElement;
+
+  /**
+   * Element where label will be rendered to
+   */
   protected get _labelNode(): HTMLElement;
+
+  /**
+   * Element where help text will be rendered to
+   */
   protected get _helpTextNode(): HTMLElement;
+
+  /**
+   * Element where validation feedback will be rendered to
+   */
   protected get _feedbackNode(): LionValidationFeedback;
+
+  /**
+   * Unique id that can be used in all light dom
+   */
   protected _inputId: string;
+
+  /**
+   * Contains all elements that should end up in aria-labelledby of `._inputNode`
+   * @type {HTMLElement[]}
+   */
   protected _ariaLabelledNodes: HTMLElement[];
+
+  /**
+   * Contains all elements that should end up in aria-describedby of `._inputNode`
+   */
   protected _ariaDescribedNodes: HTMLElement[];
+
   /**
    * Based on the role, details of handling model-value-changed repropagation differ.
    */
   protected _repropagationRole: 'child' | 'choice-group' | 'fieldset';
+
   /**
    * By default, a field with _repropagationRole 'choice-group' will act as an
    * 'endpoint'. This means it will be considered as an individual field: for

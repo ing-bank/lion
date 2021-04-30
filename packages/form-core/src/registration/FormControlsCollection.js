@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 /**
- * @desc This class closely mimics the natively
+ * This class closely mimics the natively
  * supported HTMLFormControlsCollection. It can be accessed
  * both like an array and an object (based on control/element names).
  * @example

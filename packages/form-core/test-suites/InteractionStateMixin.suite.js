@@ -216,9 +216,11 @@ export function runInteractionStateMixinSuite(customConfig) {
         const el = /** @type {IState} */ (await fixture(html`
           <${tag}></${tag}>
         `));
+        // @ts-ignore [allow-private] in test
         expect(el.shouldShowFeedbackFor).to.deep.equal([]);
         el.submitted = true;
         await el.updateComplete;
+        // @ts-ignore [allow-private] in test
         expect(el.shouldShowFeedbackFor).to.deep.equal(['error']);
       });
 

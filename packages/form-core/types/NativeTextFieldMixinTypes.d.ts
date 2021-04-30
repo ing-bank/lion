@@ -5,10 +5,27 @@ import { FormControlHost } from '@lion/form-core/types/FormControlMixinTypes';
 import { FormatHost } from '@lion/form-core/types/FormatMixinTypes';
 
 export declare class NativeTextFieldHost {
+  /**
+   * Delegates autocomplete to input/textarea
+   */
+  autocomplete: string;
+
+  /**
+   * Delegates selectionStart to input/textarea
+   */
   get selectionStart(): number;
   set selectionStart(value: number);
+
+  /**
+   * Delegates selectionEnd to input/textarea
+   */
   get selectionEnd(): number;
   set selectionEnd(value: number);
+
+  /**
+   * Restores the cursor to its original position after updating the value.
+   */
+  protected _setValueAndPreserveCaret(value: string): void;
 }
 
 export declare function NativeTextFieldImplementation<T extends Constructor<LitElement>>(
