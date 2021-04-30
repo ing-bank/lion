@@ -4,7 +4,15 @@ import { FormRegistrarHost } from './FormRegistrarMixinTypes';
 import { LitElement } from '@lion/core';
 
 export declare class FormRegisteringHost {
+  /**
+   * The name the host is registered with to a parent
+   */
   name: string;
+
+  /**
+   * The registrar this FormControl registers to, Usually a descendant of FormGroup or
+   * ChoiceGroup
+   */
   protected _parentFormGroup: FormRegistrarHost | undefined;
 }
 

@@ -25,42 +25,18 @@ const ChoiceInputMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * Boolean indicating whether or not this element is checked by the end user.
-         */
-        checked: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Boolean indicating whether or not this element is disabled.
-         */
-        disabled: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Whereas 'normal' `.modelValue`s usually store a complex/typed version
-         * of a view value, choice inputs have a slightly different approach.
-         * In order to remain their Single Source of Truth characteristic, choice inputs
-         * store both the value and 'checkedness', in the format { value: 'x', checked: true }
-         * Different from the platform, this also allows to serialize the 'non checkedness',
-         * allowing to restore form state easily and inform the server about unchecked options.
-         */
-        modelValue: {
-          type: Object,
-          hasChanged,
-        },
-        /**
-         * The value property of the modelValue. It provides an easy interface for storing
-         * (complex) values in the modelValue
-         */
-        choiceValue: {
-          type: Object,
-        },
+        checked: { type: Boolean, reflect: true },
+        disabled: { type: Boolean, reflect: true },
+        modelValue: { type: Object, hasChanged },
+        choiceValue: { type: Object },
       };
     }
 
+    /**
+     * The value that will be registered to the modelValue of the parent ChoiceGroup. Recommended
+     * to be a string
+     * @type {string|any}
+     */
     get choiceValue() {
       return this.modelValue.value;
     }
@@ -123,8 +99,33 @@ const ChoiceInputMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /**
+       * Boolean indicating whether or not this element is checked by the end user.
+       */
+      // TODO: [v1] this can be solved when property effects are scheduled until firstUpdated
+      // this.checked = false;
+      /**
+       * Whereas 'normal' `.modelValue`s usually store a complex/typed version
+       * of a view value, choice inputs have a slightly different approach.
+       * In order to remain their Single Source of Truth characteristic, choice inputs
+       * store both the value and 'checkedness', in the format { value: 'x', checked: true }
+       * Different from the platform, this also allows to serialize the 'non checkedness',
+       * allowing to restore form state easily and inform the server about unchecked options.
+       * @type {{value:string|any,checked:boolean}}
+       */
       this.modelValue = { value: '', checked: false };
+      // TODO: maybe disabled is more a concern of FormControl/Field?
+      /**
+       * Boolean indicating whether or not this element is disabled.
+       * @type {boolean}
+       */
       this.disabled = false;
+
+      /**
+       * The value property of the modelValue. It provides an easy interface for storing
+       * (complex) values in the modelValue
+       */
+
       /** @protected */
       this._preventDuplicateLabelClick = this._preventDuplicateLabelClick.bind(this);
       /** @protected */

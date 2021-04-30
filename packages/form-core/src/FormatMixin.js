@@ -62,46 +62,8 @@ const FormatMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * The view value is the result of the formatter function (when available).
-         * The result will be stored in the native _inputNode (usually an input[type=text]).
-         *
-         * Examples:
-         * - For a date input, this would be '20/01/1999' (dependent on locale).
-         * - For a number input, this could be '1,234.56' (a String representation of modelValue
-         * 1234.56)
-         *
-         * @private
-         */
         formattedValue: { attribute: false },
-
-        /**
-         * The serialized version of the model value.
-         * This value exists for maximal compatibility with the platform API.
-         * The serialized value can be an interface in context where data binding is not
-         * supported and a serialized string needs to be set.
-         *
-         * Examples:
-         * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
-         * - For a number input this would be the String representation of a float ('1234.56'
-         *   instead of 1234.56)
-         *
-         * When no parser is available, the value is usually the same as the formattedValue
-         * (being _inputNode.value)
-         *
-         */
         serializedValue: { attribute: false },
-
-        /**
-         * Event that will trigger formatting (more precise, visual update of the view, so the
-         * user sees the formatted value)
-         * Default: 'change'
-         */
-        formatOn: { attribute: false },
-
-        /**
-         * Configuration object that will be available inside the formatter function
-         */
         formatOptions: { attribute: false },
       };
     }
@@ -124,11 +86,13 @@ const FormatMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * The view value. Will be delegated to `._inputNode.value`
+     */
     get value() {
       return (this._inputNode && this._inputNode.value) || this.__value || '';
     }
 
-    // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
     /** @param {string} value */
     set value(value) {
       // if not yet connected to dom can't change the value
@@ -142,6 +106,15 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * Preprocesses the viewValue before it's parsed to a modelValue. Can be used to filter
+     * invalid input amongst others.
+     * @example
+     * ```js
+     * preprocessor(viewValue) {
+     *   // only use digits
+     *   return viewValue.replace(/\D/g, '');
+     * }
+     * ```
      * @param {string} v - the raw value from the <input> after keyUp/Down event
      * @returns {string} preprocessedValue: the result of preprocessing for invalid input
      */
@@ -150,9 +123,9 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * Converts formattedValue to modelValue
+     * Converts viewValue to modelValue
      * For instance, a localized date to a Date Object
-     * @param {string} v - formattedValue: the formatted value inside <input>
+     * @param {string} v - viewValue: the formatted value inside <input>
      * @param {FormatOptions} opts
      * @returns {*} modelValue
      */
@@ -187,7 +160,7 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * Converts `LionField.value` to `.modelValue`
+     * Converts `.serializedValue` to `.modelValue`
      * For instance, an iso formatted date string to a Date object
      * @param {?} v - modelValue: can be an Object, Number, String depending on the
      * input type(date, number, email etc)
@@ -223,11 +196,9 @@ const FormatMixinImplementation = superclass =>
         }
       }
       if (source !== 'formatted') {
-        /** @type {string} */
         this.formattedValue = this._callFormatter();
       }
       if (source !== 'serialized') {
-        /** @type {string} */
         this.serializedValue = this.serializer(this.modelValue);
       }
       this._reflectBackFormattedValueToUser();
@@ -310,7 +281,6 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * Observer Handlers
      * @param {{ modelValue: unknown; }[]} args
      * @protected
      */
@@ -320,15 +290,16 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * @param {{ modelValue: unknown; }[]} args
      * This is wrapped in a distinct method, so that parents can control when the changed event
      * is fired. For objects, a deep comparison might be needed.
+     * @param {{ modelValue: unknown; }[]} args
      * @protected
      */
     // eslint-disable-next-line no-unused-vars
     _dispatchModelValueChangedEvent(...args) {
       /** @event model-value-changed */
       this.dispatchEvent(
+        /** @privateEvent model-value-changed: FormControl redispatches it as public event */
         new CustomEvent('model-value-changed', {
           bubbles: true,
           detail: /** @type { ModelValueEventDetails } */ ({
@@ -396,12 +367,9 @@ const FormatMixinImplementation = superclass =>
      * @protected
      */
     _proxyInputEvent() {
-      this.dispatchEvent(
-        new CustomEvent('user-input-changed', {
-          bubbles: true,
-          composed: true,
-        }),
-      );
+      // TODO: [v1] remove composed (and bubbles as well if possible)
+      /** @protectedEvent user-input-changed meant for usage by Subclassers only */
+      this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
     }
 
     /** @protected */
@@ -428,8 +396,52 @@ const FormatMixinImplementation = superclass =>
 
     constructor() {
       super();
+
+      // TODO: [v1] delete; use 'change' event directly within this file
+      /**
+       * Event that will trigger formatting (more precise, visual update of the view, so the
+       * user sees the formatted value)
+       * Default: 'change'
+       * @deprecated use _reflectBackOn()
+       * @protected
+       */
       this.formatOn = 'change';
+
+      /**
+       * Configuration object that will be available inside the formatter function
+       */
       this.formatOptions = /** @type {FormatOptions} */ ({});
+
+      /**
+       * The view value is the result of the formatter function (when available).
+       * The result will be stored in the native _inputNode (usually an input[type=text]).
+       *
+       * Examples:
+       * - For a date input, this would be '20/01/1999' (dependent on locale).
+       * - For a number input, this could be '1,234.56' (a String representation of modelValue
+       * 1234.56)
+       * @type {string|undefined}
+       * @readOnly
+       */
+      this.formattedValue = undefined;
+
+      /**
+       * The serialized version of the model value.
+       * This value exists for maximal compatibility with the platform API.
+       * The serialized value can be an interface in context where data binding is not
+       * supported and a serialized string needs to be set.
+       *
+       * Examples:
+       * - For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
+       * - For a number input this would be the String representation of a float ('1234.56'
+       *   instead of 1234.56)
+       *
+       * When no parser is available, the value is usually the same as the formattedValue
+       * (being _inputNode.value)
+       * @type {string|undefined}
+       */
+      this.serializedValue = undefined;
+
       /**
        * Whether the user is pasting content. Allows Subclassers to do this in their subclass:
        * @example
@@ -439,8 +451,18 @@ const FormatMixinImplementation = superclass =>
        * }
        * ```
        * @protected
+       * @type {boolean}
        */
       this._isPasting = false;
+
+      /**
+       * Flag that will be set when user interaction takes place (for instance after an 'input'
+       * event). Will be added as meta info to the `model-value-changed` event. Depending on
+       * whether a user is interacting, formatting logic will be handled differently.
+       * @protected
+       * @type {boolean}
+       */
+      this._isHandlingUserInput = false;
       /**
        * @private
        * @type {string}
@@ -451,6 +473,20 @@ const FormatMixinImplementation = superclass =>
       this.addEventListener('user-input-changed', this._onUserInputChanged);
       // This sets the formatted viewValue after paste
       this.addEventListener('paste', this.__onPaste);
+
+      /**
+       * @protected
+       */
+      this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
+
+      /**
+       * @private
+       */
+      this._reflectBackFormattedValueDebounced = () => {
+        // Make sure this is fired after the change event of _inputNode, so that formattedValue
+        // is guaranteed to be calculated
+        setTimeout(this._reflectBackFormattedValueToUser);
+      };
     }
 
     __onPaste() {
@@ -464,13 +500,6 @@ const FormatMixinImplementation = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      this._reflectBackFormattedValueToUser = this._reflectBackFormattedValueToUser.bind(this);
-
-      this._reflectBackFormattedValueDebounced = () => {
-        // Make sure this is fired after the change event of _inputNode, so that formattedValue
-        // is guaranteed to be calculated
-        setTimeout(this._reflectBackFormattedValueToUser);
-      };
 
       // Connect the value found in <input> to the formatting/parsing/serializing loop as a
       // fallback mechanism. Assume the user uses the value property of the

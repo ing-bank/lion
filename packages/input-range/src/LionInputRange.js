@@ -119,7 +119,9 @@ export class LionInputRange extends LionInput {
   _inputGroupTemplate() {
     return html`
       <div>
-        <span class="input-range__value">${formatNumber(parseFloat(this.formattedValue))}</span>
+        <span class="input-range__value"
+          >${formatNumber(parseFloat(/** @type {string} */ (this.formattedValue)))}</span
+        >
         <span class="input-range__unit">${this.unit}</span>
       </div>
       <div class="input-group">

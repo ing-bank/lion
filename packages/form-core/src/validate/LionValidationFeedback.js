@@ -42,6 +42,8 @@ export class LionValidationFeedback extends LitElement {
       this.setAttribute('type', this.feedbackData[0].type);
       this.currentType = this.feedbackData[0].type;
       window.clearTimeout(this.removeMessage);
+      // TODO: this logic should be in ValidateMixin, so that [show-feedback-for] is in sync,
+      // plus duration should be configurable
       if (this.currentType === 'success') {
         this.removeMessage = window.setTimeout(() => {
           this.removeAttribute('type');

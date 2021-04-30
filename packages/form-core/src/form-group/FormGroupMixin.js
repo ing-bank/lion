@@ -34,54 +34,25 @@ const FormGroupMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * Interaction state that can be used to compute the visibility of
-         * feedback messages
-         */
-        submitted: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Interaction state that will be active when any of the children
-         * is focused.
-         */
-        focused: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Interaction state that will be active when any of the children
-         * is dirty (see InteractionStateMixin for more details.)
-         */
-        dirty: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Interaction state that will be active when the group as a whole is
-         * blurred
-         */
-        touched: {
-          type: Boolean,
-          reflect: true,
-        },
-        /**
-         * Interaction state that will be active when all of the children
-         * are prefilled (see InteractionStateMixin for more details.)
-         */
-        prefilled: {
-          type: Boolean,
-          reflect: true,
-        },
+        submitted: { type: Boolean, reflect: true },
+        focused: { type: Boolean, reflect: true },
+        dirty: { type: Boolean, reflect: true },
+        touched: { type: Boolean, reflect: true },
+        prefilled: { type: Boolean, reflect: true },
       };
     }
 
-    /** @protected */
+    /**
+     * The host element with role group (or radigroup or form) containing neccessary aria attributes
+     * @protected
+     */
     get _inputNode() {
       return this;
     }
 
+    /**
+     * Object keyed by formElements names, containing formElements' modelValues
+     */
     get modelValue() {
       return this._getFromAllFormElements('modelValue');
     }
@@ -97,6 +68,9 @@ const FormGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * Object keyed by formElements names, containing formElements' serializedValues
+     */
     get serializedValue() {
       return this._getFromAllFormElements('serializedValue');
     }
@@ -112,6 +86,9 @@ const FormGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * Object keyed by formElements names, containing formElements' formattedValues
+     */
     get formattedValue() {
       return this._getFromAllFormElements('formattedValue');
     }
@@ -120,24 +97,51 @@ const FormGroupMixinImplementation = superclass =>
       this._setValueMapForAllFormElements('formattedValue', values);
     }
 
+    /**
+     * True when all of the children are prefilled (see InteractionStateMixin for more details.)
+     */
     get prefilled() {
       return this._everyFormElementHas('prefilled');
     }
 
     constructor() {
       super();
-      // ._inputNode = this, which always requires a value prop
+
+      // ._inputNode === this, which always requires a value prop
       this.value = '';
 
+      /**
+       * Disables all formElements in group
+       */
       this.disabled = false;
-      this.submitted = false;
-      this.dirty = false;
-      this.touched = false;
-      this.focused = false;
-      this.__addedSubValidators = false;
-      this.__isInitialModelValue = true;
-      this.__isInitialSerializedValue = true;
 
+      /**
+       * True when parent form is submitted
+       */
+      this.submitted = false;
+
+      /**
+       * True when any of the children is dirty (see InteractionStateMixin for more details.)
+       */
+      this.dirty = false;
+
+      /**
+       * True when the group as a whole is blurred (see InteractionStateMixin for more details.)
+       */
+      this.touched = false;
+
+      /**
+       * True when any of the children is focused.
+       */
+      this.focused = false;
+
+      /** @private */
+      this.__addedSubValidators = false;
+      /** @private */
+      this.__isInitialModelValue = true;
+      /** @private */
+      this.__isInitialSerializedValue = true;
+      /** @private */
       this._checkForOutsideClick = this._checkForOutsideClick.bind(this);
 
       this.addEventListener('focusin', this._syncFocused);
@@ -255,7 +259,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @desc Handles interaction state 'submitted'.
+     * Handles interaction state 'submitted'.
      * This allows children to enable visibility of validation feedback
      */
     submitGroup() {
@@ -269,6 +273,9 @@ const FormGroupMixinImplementation = superclass =>
       });
     }
 
+    /**
+     * Resets to initial/prefilled values and interaction states of all FormControls in group,
+     */
     resetGroup() {
       this.formElements.forEach(child => {
         if (typeof child.resetGroup === 'function') {
@@ -281,6 +288,9 @@ const FormGroupMixinImplementation = superclass =>
       this.resetInteractionState();
     }
 
+    /**
+     * Clears all values and resets all interaction states of all FormControls in group,
+     */
     clearGroup() {
       this.formElements.forEach(child => {
         if (typeof child.clearGroup === 'function') {
@@ -293,6 +303,9 @@ const FormGroupMixinImplementation = superclass =>
       this.resetInteractionState();
     }
 
+    /**
+     * Resets all interaction states for all formElements
+     */
     resetInteractionState() {
       this.submitted = false;
       this.touched = false;
@@ -305,7 +318,9 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * Gets a keyed be name object for requested property (like modelValue/serializedValue)
      * @param {string} property
+     * @returns {{[name:string]: any}}
      */
     _getFromAllFormElements(property, filterFn = (/** @type {FormControl} */ el) => !el.disabled) {
       const result = {};
@@ -326,6 +341,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * Sets the same value for requested property in all formElements
      * @param {string | number} property
      * @param {any} value
      */
@@ -336,6 +352,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * Allows to set formElements values via a keyed object structure
      * @param {string} property
      * @param {{ [x: string]: any; }} values
      */
@@ -360,6 +377,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * Returns true when one of the formElements has requested
      * @param {string} property
      */
     _anyFormElementHas(property) {
@@ -389,6 +407,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * Returns true when all of the formElements have requested property
      * @param {string} property
      */
     _everyFormElementHas(property) {
@@ -400,11 +419,13 @@ const FormGroupMixinImplementation = superclass =>
       });
     }
 
+    // TODO: the same functionality has been implemented with model-value-changed event, which
+    // covers the same and works with FormRegistrarPortalMixin
     /**
      * Gets triggered by event 'validate-performed' which enabled us to handle 2 different situations
-     *    - react on modelValue change, which says something about the validity as a whole
-     *        (at least two checkboxes for instance) and nothing about the children's values
-     *    - children validity states have changed, so fieldset needs to update itself based on that
+     *  - react on modelValue change, which says something about the validity as a whole
+     *  (at least two checkboxes for instance) and nothing about the children's values
+     *  - children validity states have changed, so fieldset needs to update itself based on that
      * @param {Event} ev
      */
     __onChildValidatePerformed(ev) {
@@ -441,6 +462,7 @@ const FormGroupMixinImplementation = superclass =>
      * In case one of the inputs was in error state as well, the SR user would
      * first hear the local error, followed by #group-error
      * @example
+     * ```html
      * <lion-fieldset name="address">
      *   <lion-input name="street" label="Street" .modelValue="${'Park Avenue'}"></lion-input>
      *   <lion-input name="number" label="Number" .modelValue="${100}">...</lion-input>
@@ -448,6 +470,7 @@ const FormGroupMixinImplementation = superclass =>
      *      Park Avenue only has numbers up to 80
      *   </div>
      * </lion-fieldset>
+     * ```
      */
     __storeAllDescriptionElementsInParentChain() {
       const unTypedThis = /** @type {unknown} */ (this);
@@ -487,8 +510,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @override of FormRegistrarMixin.
-     * @desc Connects ValidateMixin and DisabledMixin
+     * @enhance FormRegistrarMixin: connects ValidateMixin and DisabledMixin.
      * On top of this, error messages of children are linked to their parents
      * @param {FormControl & {serializedValue:string|object}} child
      * @param {number} indexToInsertAt
@@ -520,15 +542,14 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * Gathers initial model values of all children. Used
-     * when resetGroup() is called.
+     * Gathers initial model values of all children. Used when resetGroup() is called.
      */
     get _initialModelValue() {
       return this._getFromAllFormElements('_initialModelValue');
     }
 
     /**
-     * @override of FormRegistrarMixin. Connects ValidateMixin
+     * @override FormRegistrarMixin; Connects ValidateMixin
      * @param {FormRegisteringHost & FormControl} el
      */
     removeFormElement(el) {

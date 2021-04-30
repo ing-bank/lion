@@ -30,16 +30,18 @@ const FocusMixinImplementation = superclass =>
 
     constructor() {
       super();
+
       /**
        * Whether the focusable element within (`._focusableNode`) is focused.
        * Reflects to attribute '[focused]' as a styling hook
        * @type {boolean}
        */
       this.focused = false;
+
       /**
        * Whether the focusable element within (`._focusableNode`) matches ':focus-visible'
        * Reflects to attribute '[focused-visible]' as a styling hook
-       * @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
+       * See: https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
        * @type {boolean}
        */
       this.focusedVisible = false;

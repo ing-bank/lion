@@ -570,7 +570,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const button = /**  @type {HTMLButtonElement} */ (await fixture(`<button>Blur</button>`));
 
         expect(el.touched).to.equal(false, 'initially, touched state is false');
-        el.children[2].focus();
+        el.formElements[1].focus();
         expect(el.touched).to.equal(false, 'focus is on second checkbox');
         button.focus();
         expect(el.touched).to.equal(
@@ -602,8 +602,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
         outside.click();
         expect(el.touched, 'unfocused fieldset should stay untouched').to.be.false;
 
-        el.children[1].focus();
-        el.children[2].focus();
+        el.formElements[0].focus();
+        el.formElements[1].focus();
         expect(el.touched).to.be.false;
 
         outside.click(); // blur the group via a click

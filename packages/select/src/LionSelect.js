@@ -2,6 +2,21 @@
 import { LionField } from '@lion/form-core';
 
 class LionFieldWithSelect extends LionField {
+  /** @type {any} */
+  static get properties() {
+    return { autocomplete: { type: String } };
+  }
+
+  constructor() {
+    super();
+
+    /**
+     * Delegates autocomplete to select
+     * @type {string|undefined}
+     */
+    this.autocomplete = undefined;
+  }
+
   /**
    * @returns {HTMLSelectElement}
    */

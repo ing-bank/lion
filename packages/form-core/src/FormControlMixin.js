@@ -40,83 +40,22 @@ const FormControlMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        /**
-         * The name the element will be registered on to the .formElements collection
-         * of the parent.
-         */
-        name: {
-          type: String,
-          reflect: true,
-        },
-        /**
-         * A Boolean attribute which, if present, indicates that the user should not be able to edit
-         * the value of the input. The difference between disabled and readonly is that read-only
-         * controls can still function, whereas disabled controls generally do not function as
-         * controls until they are enabled.
-         *
-         * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
-         */
-        readOnly: {
-          type: Boolean,
-          attribute: 'readonly',
-          reflect: true,
-        },
-        /**
-         * The label text for the input node.
-         * When no light dom defined via [slot=label], this value will be used
-         */
+        name: { type: String, reflect: true },
+        readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
-        /**
-         * The helpt text for the input node.
-         * When no light dom defined via [slot=help-text], this value will be used
-         */
-        helpText: {
-          type: String,
-          attribute: 'help-text',
-        },
-
-        /**
-         * The model value is the result of the parser function(when available).
-         * It should be considered as the internal value used for validation and reasoning/logic.
-         * The model value is 'ready for consumption' by the outside world (think of a Date
-         * object or a float). The modelValue can(and is recommended to) be used as both input
-         * value and output value of the `LionField`.
-         *
-         * Examples:
-         * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
-         * - For a number input: a formatted String '1.234,56' will be converted to a Number:
-         *   1234.56
-         */
+        helpText: { type: String, attribute: 'help-text' },
         modelValue: { attribute: false },
-
-        /**
-         * Contains all elements that should end up in aria-labelledby of `._inputNode`
-         */
         _ariaLabelledNodes: { attribute: false },
-        /**
-         * Contains all elements that should end up in aria-describedby of `._inputNode`
-         */
         _ariaDescribedNodes: { attribute: false },
-        /**
-         * Based on the role, details of handling model-value-changed repropagation differ.
-         */
         _repropagationRole: { attribute: false },
-        /**
-         * By default, a field with _repropagationRole 'choice-group' will act as an
-         * 'endpoint'. This means it will be considered as an individual field: for
-         * a select, individual options will not be part of the formPath. They
-         * will.
-         * Similarly, components that (a11y wise) need to be fieldsets, but 'interaction wise'
-         * (from Application Developer perspective) need to be more like fields
-         * (think of an amount-input with a currency select box next to it), can set this
-         * to true to hide private internals in the formPath.
-         */
         _isRepropagationEndpoint: { attribute: false },
       };
     }
 
     /**
-     * @return {string}
+     * The label text for the input node.
+     * When no light dom defined via [slot=label], this value will be used.
+     * @type {string}
      */
     get label() {
       return this.__label || (this._labelNode && this._labelNode.textContent) || '';
@@ -133,7 +72,9 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {string}
+     * The helpt text for the input node.
+     * When no light dom defined via [slot=help-text], this value will be used
+     * @type {string}
      */
     get helpText() {
       return this.__helpText || (this._helpTextNode && this._helpTextNode.textContent) || '';
@@ -150,7 +91,8 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @return {string}
+     * Will be used in validation messages to refer to the current field
+     * @type {string}
      */
     get fieldName() {
       return this.__fieldName || this.label || this.name || '';
@@ -165,7 +107,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * @type {SlotsMap}
+     * @configure SlotMixin
      */
     get slots() {
       return {
@@ -183,20 +125,33 @@ const FormControlMixinImplementation = superclass =>
       };
     }
 
-    /** @protected */
+    /**
+     * The interactive (form) element. Can be a native element like input/textarea/select or
+     * an element with tabindex > -1
+     * @protected
+     */
     get _inputNode() {
       return /** @type {HTMLElementWithValue} */ (this.__getDirectSlotChild('input'));
     }
 
+    /**
+     * Element where label will be rendered to
+     * @protected
+     */
     get _labelNode() {
       return /** @type {HTMLElement} */ (this.__getDirectSlotChild('label'));
     }
 
+    /**
+     * Element where help text will be rendered to
+     * @protected
+     */
     get _helpTextNode() {
       return /** @type {HTMLElement} */ (this.__getDirectSlotChild('help-text'));
     }
 
     /**
+     * Element where validation feedback will be rendered to
      * @protected
      */
     get _feedbackNode() {
@@ -205,19 +160,91 @@ const FormControlMixinImplementation = superclass =>
 
     constructor() {
       super();
-      /** @type {string} */
+
+      /**
+       * The name the element will be registered with to the .formElements collection
+       * of the parent. Also, it serves as the key of key/value pairs in
+       *  modelValue/serializedValue objects
+       * @type {string}
+       */
       this.name = '';
-      /** @type {string} */
+
+      /**
+       * A Boolean attribute which, if present, indicates that the user should not be able to edit
+       * the value of the input. The difference between disabled and readonly is that read-only
+       * controls can still function, whereas disabled controls generally do not function as
+       * controls until they are enabled.
+       * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+       * @type {boolean}
+       */
+      this.readOnly = false;
+
+      /**
+       * The label text for the input node.
+       * When no value is defined, textContent of [slot=label] will be used
+       * @type {string}
+       */
+      this.label = '';
+
+      /**
+       * The helpt text for the input node.
+       * When no value is defined, textContent of [slot=help-text] will be used
+       * @type {string}
+       */
+      this.helpText = '';
+
+      /**
+       * The model value is the result of the parser function(when available).
+       * It should be considered as the internal value used for validation and reasoning/logic.
+       * The model value is 'ready for consumption' by the outside world (think of a Date
+       * object or a float). The modelValue can(and is recommended to) be used as both input
+       * value and output value of the `LionField`.
+       *
+       * Examples:
+       * - For a date input: a String '20/01/1999' will be converted to new Date('1999/01/20')
+       * - For a number input: a formatted String '1.234,56' will be converted to a Number:
+       *   1234.56
+       */
+      // TODO: we can probably set this up properly once propert effects run from firstUpdated
+      // this.modelValue = undefined;
+      /**
+       * Unique id that can be used in all light dom
+       * @type {string}
+       * @protected
+       */
       this._inputId = uuid(this.localName);
-      /** @type {HTMLElement[]} */
+
+      /**
+       * Contains all elements that should end up in aria-labelledby of `._inputNode`
+       * @type {HTMLElement[]}
+       */
       this._ariaLabelledNodes = [];
-      /** @type {HTMLElement[]} */
+
+      /**
+       * Contains all elements that should end up in aria-describedby of `._inputNode`
+       * @type {HTMLElement[]}
+       */
       this._ariaDescribedNodes = [];
-      /** @type {'child'|'choice-group'|'fieldset'} */
+
+      /**
+       * Based on the role, details of handling model-value-changed repropagation differ.
+       * @type {'child'|'choice-group'|'fieldset'}
+       */
       this._repropagationRole = 'child';
+
+      /**
+       * By default, a field with _repropagationRole 'choice-group' will act as an
+       * 'endpoint'. This means it will be considered as an individual field: for
+       * a select, individual options will not be part of the formPath. They
+       * will.
+       * Similarly, components that (a11y wise) need to be fieldsets, but 'interaction wise'
+       * (from Application Developer perspective) need to be more like fields
+       * (think of an amount-input with a currency select box next to it), can set this
+       * to true to hide private internals in the formPath.
+       * @type {boolean}
+       */
       this._isRepropagationEndpoint = false;
-      /** @private */
-      this.__label = '';
+
       this.addEventListener(
         'model-value-changed',
         /** @type {EventListenerOrEventListenerObject} */ (this.__repropagateChildrenValues),
@@ -274,6 +301,7 @@ const FormControlMixinImplementation = superclass =>
 
       if (changedProperties.has('name')) {
         this.dispatchEvent(
+          /** @privateEvent */
           new CustomEvent('form-element-name-changed', {
             detail: { oldName: changedProperties.get('name'), newName: this.name },
             bubbles: true,
@@ -551,6 +579,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * Used for Required validation and computation of interaction states
      * @param {any} modelValue
      * @return {boolean}
      * @protected
@@ -713,7 +742,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * Meant for Application Developers wanting to add to aria-labelledby attribute.
+     * Allows to add extra element references to aria-labelledby attribute.
      * @param {HTMLElement} element
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
@@ -729,7 +758,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * Meant for Application Developers wanting to delete from aria-labelledby attribute.
+     * Allows to remove element references from aria-labelledby attribute.
      * @param {HTMLElement} element
      */
     removeFromAriaLabelledBy(element) {
@@ -744,7 +773,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * Meant for Application Developers wanting to add to aria-describedby attribute.
+     * Allows to add element references to aria-describedby attribute.
      * @param {HTMLElement} element
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
@@ -760,7 +789,7 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
-     * Meant for Application Developers wanting to delete from aria-describedby attribute.
+     * Allows to remove element references from aria-describedby attribute.
      * @param {HTMLElement} element
      */
     removeFromAriaDescribedBy(element) {
@@ -810,6 +839,8 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * Hook for Subclassers to add logic before repropagation
+     * @configurable
      * @param {CustomEvent} ev
      * @protected
      */

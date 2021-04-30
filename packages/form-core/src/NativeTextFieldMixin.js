@@ -10,6 +10,23 @@ import { FormatMixin } from './FormatMixin.js';
  */
 const NativeTextFieldMixinImplementation = superclass =>
   class NativeTextFieldMixin extends FormatMixin(FocusMixin(FormControlMixin(superclass))) {
+    /** @type {any} */
+    static get properties() {
+      return {
+        autocomplete: { type: String, reflect: true },
+      };
+    }
+
+    constructor() {
+      super();
+
+      /**
+       * Delegates this property to input/textarea/select.
+       * @type {string | undefined}
+       */
+      this.autocomplete = undefined;
+    }
+
     /**
      * @protected
      * @type {HTMLInputElement | HTMLTextAreaElement}

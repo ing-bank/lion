@@ -8,7 +8,7 @@ import { dedupeMixin } from '@lion/core';
  */
 
 /**
- * @desc Why this mixin?
+ * Why this mixin?
  * - it adheres to the "Member Order Independence" web components standard:
  * https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence
  * - sync observers can be dependent on the outcome of the render function (or, more generically
@@ -27,8 +27,9 @@ const SyncUpdatableMixinImplementation = superclass =>
   class extends superclass {
     constructor() {
       super();
-      // Namespace for this mixin that guarantees naming clashes will not occur...
+
       /**
+       * Namespace for this mixin that guarantees naming clashes will not occur...
        * @type {SyncUpdatableNamespace}
        */
       this.__SyncUpdatableNamespace = {};
@@ -113,7 +114,14 @@ const SyncUpdatableMixinImplementation = superclass =>
     }
 
     /**
-     * @desc A public abstraction that has the exact same api as `requestUpdateInternal`.
+     * An abstraction that has the exact same api as `requestUpdateInternal`, but taking
+     * into account:
+     * - [member order independence](https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence)
+     * - property effects start when all (light) dom has initialized (on firstUpdated)
+     * - property effects don't interrupt the first meaningful paint
+     * - compatible with propertyAccessor.`hasChanged`: no manual checks needed or accidentally
+     * run property effects / events when no change happened
+     * effects when values didn't change
      * All code previously present in requestUpdateInternal can be placed in this method.
      * @param {string} name
      * @param {*} oldValue

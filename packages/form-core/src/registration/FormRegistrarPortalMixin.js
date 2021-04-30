@@ -24,7 +24,12 @@ const FormRegistrarPortalMixinImplementation = superclass =>
   class extends superclass {
     constructor() {
       super();
-      /** @type {(FormRegistrarPortalHost & HTMLElement) | undefined} */
+
+      /**
+       * Registration target: an element, usually in the body of the dom, that captures events
+       * and redispatches them on host
+       * @type {(FormRegistrarPortalHost & HTMLElement) | undefined}
+       */
       this.registrationTarget = undefined;
       this.__redispatchEventForFormRegistrarPortalMixin = this.__redispatchEventForFormRegistrarPortalMixin.bind(
         this,

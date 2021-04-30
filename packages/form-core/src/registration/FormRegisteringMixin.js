@@ -21,7 +21,11 @@ const FormRegisteringMixinImplementation = superclass =>
   class extends superclass {
     constructor() {
       super();
-      /** @type {FormRegistrarHost | undefined} */
+      /**
+       * The registrar this FormControl registers to, Usually a descendant of FormGroup or
+       * ChoiceGroup
+       * @type {FormRegistrarHost | undefined}
+       */
       this._parentFormGroup = undefined;
     }
 
