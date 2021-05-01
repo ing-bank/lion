@@ -34,6 +34,8 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     this.parser = value => (value === '' ? undefined : parseDate(value));
     this.formatter = formatDate;
     this.defaultValidators.push(new IsDate());
+    // Just explicitly make clear we shouldn't use type 'date'
+    this.type = 'text';
   }
 
   /** @param {import('@lion/core').PropertyValues } changedProperties */
@@ -42,12 +44,6 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     if (changedProperties.has('locale')) {
       this._calculateValues({ source: null });
     }
-  }
-
-  connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.connectedCallback();
-    this.type = 'text';
   }
 
   /**
