@@ -15,6 +15,7 @@ export const calendarStyle = css`
 
   .calendar__navigation {
     padding: 0 8px;
+    align-items: center;
   }
 
   .calendar__navigation__month,
@@ -24,6 +25,7 @@ export const calendarStyle = css`
 
   .calendar__navigation-heading {
     margin: 0.5em 0;
+    font-weight: bold;
   }
 
   .calendar__previous-button,
@@ -54,6 +56,11 @@ export const calendarStyle = css`
     padding: 0;
     min-width: 40px;
     min-height: 40px;
+    /** give div[role=button][aria-disabled] same display type as native btn */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
   }
 
   .calendar__day-button__text {
@@ -74,12 +81,17 @@ export const calendarStyle = css`
   }
 
   .calendar__day-button:hover {
-    border: 1px solid green;
+    border: 1px solid lightgray;
   }
 
   .calendar__day-button[disabled] {
     background-color: #fff;
     color: #eee;
+    outline: none;
+  }
+
+  .calendar__day-button:focus {
+    border: 1px solid blue;
     outline: none;
   }
 `;

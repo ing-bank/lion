@@ -56,24 +56,50 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
       ?start-of-last-week=${startOfLastWeek}
       ?last-day=${lastDay}
     >
-      <button
-        .date=${day.date}
-        class="calendar__day-button"
-        tabindex=${ifDefined(day.tabindex)}
-        aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
-        aria-pressed=${ifDefined(day.ariaPressed)}
-        aria-current=${ifDefined(day.ariaCurrent)}
-        ?disabled=${day.disabled}
-        ?selected=${day.selected}
-        ?past=${day.past}
-        ?today=${day.today}
-        ?future=${day.future}
-        ?previous-month=${day.previousMonth}
-        ?current-month=${day.currentMonth}
-        ?next-month=${day.nextMonth}
-      >
-        <span class="calendar__day-button__text"> ${day.date.getDate()} </span>
-      </button>
+      ${!day.disabled
+        ? html` <button
+            .date=${day.date}
+            class="calendar__day-button"
+            tabindex=${ifDefined(day.tabindex)}
+            aria-label=${`${dayNumber} ${monthName} ${year} ${weekdayName}`}
+            aria-pressed=${ifDefined(day.ariaPressed)}
+            aria-current=${ifDefined(day.ariaCurrent)}
+            ?disabled=${day.disabled}
+            ?selected=${day.selected}
+            ?past=${day.past}
+            ?today=${day.today}
+            ?future=${day.future}
+            ?previous-month=${day.previousMonth}
+            ?current-month=${day.currentMonth}
+            ?next-month=${day.nextMonth}
+          >
+            <span class="calendar__day-button__text" aria-hidden="true">
+              ${day.date.getDate()}
+            </span>
+          </button>`
+        : html`
+            <div
+              role="button"
+              .date=${day.date}
+              class="calendar__day-button"
+              tabindex=${ifDefined(day.tabindex)}
+              aria-label=${`disabled, ${dayNumber} ${monthName} ${year} ${weekdayName}`}
+              aria-pressed=${ifDefined(day.ariaPressed)}
+              ?disabled=${day.disabled}
+              aria-disabled=${day.disabled ? 'true' : 'false'}
+              ?selected=${day.selected}
+              ?past=${day.past}
+              ?today=${day.today}
+              ?future=${day.future}
+              ?previous-month=${day.previousMonth}
+              ?current-month=${day.currentMonth}
+              ?next-month=${day.nextMonth}
+            >
+              <span class="calendar__day-button__text" aria-hidden="true">
+                ${day.date.getDate()}
+              </span>
+            </div>
+          `}
     </td>
   `;
 }

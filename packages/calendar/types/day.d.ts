@@ -12,7 +12,7 @@ export declare interface Day {
   future?: boolean;
   disabled?: boolean;
   tabindex?: string;
-  ariaPressed?: string;
+  ariaPressed?: 'true' | 'false' | 'mixed' | 'undefined';
   ariaCurrent?: string | undefined;
 }
 
