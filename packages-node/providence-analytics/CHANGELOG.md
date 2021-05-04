@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.4
+
+### Patch Changes
+
+- 098365e6: move index.js to path exposed for npm
+
 ## 0.10.3
 
 ### Patch Changes
