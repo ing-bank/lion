@@ -66,9 +66,9 @@ describe('AjaxClient', () => {
     });
   });
 
-  describe('request()', () => {
+  describe('fetch()', () => {
     it('calls fetch with the given args, returning the result', async () => {
-      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
+      const response = await (await ajax.fetch('/foo', { method: 'POST' })).text();
 
       expect(fetchStub).to.have.been.calledOnce;
       const request = fetchStub.getCall(0).args[0];
@@ -82,7 +82,7 @@ describe('AjaxClient', () => {
 
       let thrown = false;
       try {
-        await ajax.request('/foo');
+        await ajax.fetch('/foo');
       } catch (e) {
         expect(e).to.be.an.instanceOf(AjaxClientFetchError);
         expect(e.request).to.be.an.instanceOf(Request);
@@ -97,7 +97,7 @@ describe('AjaxClient', () => {
 
       let thrown = false;
       try {
-        await ajax.request('/foo');
+        await ajax.fetch('/foo');
       } catch (e) {
         expect(e).to.be.an.instanceOf(AjaxClientFetchError);
         expect(e.request).to.be.an.instanceOf(Request);
@@ -108,32 +108,32 @@ describe('AjaxClient', () => {
     });
   });
 
-  describe('requestJson', () => {
+  describe('fetchtJson', () => {
     beforeEach(() => {
       fetchStub.returns(Promise.resolve(new Response('{}')));
     });
 
     it('sets json accept header', async () => {
-      await ajax.requestJson('/foo');
+      await ajax.fetchJson('/foo');
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('accept')).to.equal('application/json');
     });
 
     it('decodes response from json', async () => {
       fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}')));
-      const response = await ajax.requestJson('/foo');
+      const response = await ajax.fetchJson('/foo');
       expect(response.body).to.eql({ a: 1, b: 2 });
     });
 
     describe('given a request body', () => {
       it('encodes the request body as json', async () => {
-        await ajax.requestJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
+        await ajax.fetchJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
         const request = fetchStub.getCall(0).args[0];
         expect(await request.text()).to.equal('{"a":1,"b":2}');
       });
 
       it('sets json content-type header', async () => {
-        await ajax.requestJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
+        await ajax.fetchJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
         const request = fetchStub.getCall(0).args[0];
         expect(request.headers.get('content-type')).to.equal('application/json');
       });
@@ -143,7 +143,7 @@ describe('AjaxClient', () => {
       it('strips json prefix from response before decoding', async () => {
         const localAjax = new AjaxClient({ jsonPrefix: '//.,!' });
         fetchStub.returns(Promise.resolve(new Response('//.,!{"a":1,"b":2}')));
-        const response = await localAjax.requestJson('/foo');
+        const response = await localAjax.fetchJson('/foo');
         expect(response.body).to.eql({ a: 1, b: 2 });
       });
     });
@@ -154,7 +154,7 @@ describe('AjaxClient', () => {
       ajax.addRequestInterceptor(async r => new Request(`${r.url}/intercepted-1`));
       ajax.addRequestInterceptor(async r => new Request(`${r.url}/intercepted-2`));
 
-      await ajax.request('/foo', { method: 'POST' });
+      await ajax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.url).to.equal(`${window.location.origin}/foo/intercepted-1/intercepted-2`);
@@ -173,7 +173,7 @@ describe('AjaxClient', () => {
         return new Response(`${body} intercepted-2`, { status, statusText, headers });
       });
 
-      const response = await (await ajax.request('/foo', { method: 'POST' })).text();
+      const response = await (await ajax.fetch('/foo', { method: 'POST' })).text();
       expect(response).to.equal('mock response intercepted-1 intercepted-2');
     });
 
@@ -190,7 +190,7 @@ describe('AjaxClient', () => {
       ajax.addRequestInterceptor(interceptor3);
       ajax.removeRequestInterceptor(interceptor1);
 
-      await ajax.request('/foo', { method: 'POST' });
+      await ajax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.url).to.equal(`${window.location.origin}/foo/intercepted-2/intercepted-3`);
@@ -203,7 +203,7 @@ describe('AjaxClient', () => {
       // @ts-expect-error we're mocking the response as a simple promise which returns a string
       ajax.removeResponseInterceptor(interceptor);
 
-      const response = await ajax.request('/foo', { method: 'POST' });
+      const response = await ajax.fetch('/foo', { method: 'POST' });
       const text = await response.text();
       expect(text).to.equal('mock response');
     });
@@ -211,14 +211,14 @@ describe('AjaxClient', () => {
 
   describe('accept-language header', () => {
     it('is set by default based on localize.locale', async () => {
-      await ajax.request('/foo');
+      await ajax.fetch('/foo');
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('accept-language')).to.equal('en');
     });
 
     it('can be disabled', async () => {
       const customAjax = new AjaxClient({ addAcceptLanguage: false });
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.has('accept-language')).to.be.false;
     });
@@ -237,7 +237,7 @@ describe('AjaxClient', () => {
     });
 
     it('XSRF token header is set based on cookie', async () => {
-      await ajax.request('/foo');
+      await ajax.fetch('/foo');
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
@@ -245,8 +245,8 @@ describe('AjaxClient', () => {
 
     it('XSRF behavior can be disabled', async () => {
       const customAjax = new AjaxClient({ xsrfCookieName: null, xsrfHeaderName: null });
-      await customAjax.request('/foo');
-      await ajax.request('/foo');
+      await customAjax.fetch('/foo');
+      await ajax.fetch('/foo');
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.has('X-XSRF-TOKEN')).to.be.false;
@@ -257,7 +257,7 @@ describe('AjaxClient', () => {
         xsrfCookieName: 'CSRF-TOKEN',
         xsrfHeaderName: 'X-CSRF-TOKEN',
       });
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-CSRF-TOKEN')).to.equal('5678');
@@ -298,22 +298,22 @@ describe('AjaxClient', () => {
       });
 
       // Smoke test 1: verify caching works
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       expect(fetchStub.callCount).to.equal(1);
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       expect(fetchStub.callCount).to.equal(1);
 
       // Smoke test 2: verify caching is invalidated on non-get method
-      await customAjax.request('/foo', { method: 'POST' });
+      await customAjax.fetch('/foo', { method: 'POST' });
       expect(fetchStub.callCount).to.equal(2);
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       expect(fetchStub.callCount).to.equal(3);
 
       // Smoke test 3: verify caching is invalidated after TTL has passed
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       expect(fetchStub.callCount).to.equal(3);
       clock.tick(101);
-      await customAjax.request('/foo');
+      await customAjax.fetch('/foo');
       expect(fetchStub.callCount).to.equal(4);
       clock.restore();
     });
@@ -326,7 +326,7 @@ describe('AjaxClient', () => {
       const controller = new AbortController();
       const { signal } = controller;
       // Have to do a "real" request to be able to abort it and verify that this throws
-      const req = ajax.request(new URL('./foo.json', import.meta.url).pathname, {
+      const req = ajax.fetch(new URL('./foo.json', import.meta.url).pathname, {
         method: 'GET',
         signal,
       });

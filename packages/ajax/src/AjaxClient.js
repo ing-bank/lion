@@ -103,7 +103,7 @@ export class AjaxClient {
    * @param {RequestInit & Partial<CacheRequestExtension>} [init]
    * @returns {Promise<Response>}
    */
-  async request(info, init) {
+  async fetch(info, init) {
     const request = /** @type {CacheRequest} */ (new Request(info, { ...init }));
     request.cacheOptions = init?.cacheOptions;
     request.params = init?.params;
@@ -135,7 +135,7 @@ export class AjaxClient {
    * @template T
    * @returns {Promise<{ response: Response, body: T }>}
    */
-  async requestJson(info, init) {
+  async fetchJson(info, init) {
     const lionInit = {
       ...init,
       headers: {
@@ -152,7 +152,7 @@ export class AjaxClient {
 
     // Now that we stringified lionInit.body, we can safely typecast LionRequestInit back to RequestInit
     const jsonInit = /** @type {RequestInit} */ (lionInit);
-    const response = await this.request(info, jsonInit);
+    const response = await this.fetch(info, jsonInit);
     let responseText = await response.text();
 
     const { jsonPrefix } = this.__config;

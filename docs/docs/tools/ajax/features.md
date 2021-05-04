@@ -36,7 +36,7 @@ export const getRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = name => {
     ajax
-      .request(`../assets/${name}.json`)
+      .fetch(`../assets/${name}.json`)
       .then(response => response.json())
       .then(result => {
         actionLogger.log(JSON.stringify(result, null, 2));
@@ -60,7 +60,7 @@ export const getRequest = () => {
 ```js
 import { ajax } from '@lion/ajax';
 
-const response = await ajax.request('/api/users', {
+const response = await ajax.fetch('/api/users', {
   method: 'POST',
   body: JSON.stringify({ username: 'steve' }),
 });
@@ -79,7 +79,7 @@ The result will have the Response object on `.response` property, and the decode
 export const getJsonRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = name => {
-    ajax.requestJson(`../assets/${name}.json`).then(result => {
+    ajax.fetchJson(`../assets/${name}.json`).then(result => {
       console.log(result.response);
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
@@ -102,7 +102,7 @@ export const getJsonRequest = () => {
 ```js
 import { ajax } from '@lion/ajax';
 
-const { response, body } = await ajax.requestJson('/api/users', {
+const { response, body } = await ajax.fetchJson('/api/users', {
   method: 'POST',
   body: { username: 'steve' },
 });
@@ -117,7 +117,7 @@ export const errorHandling = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = async () => {
     try {
-      const users = await ajax.requestJson('/api/users');
+      const users = await ajax.fetchJson('/api/users');
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -191,7 +191,7 @@ ajax.addResponseInterceptor(
   cacheResponseInterceptorFactory(getCacheIdentifier, globalCacheOptions),
 );
 
-const { response, body } = await ajax.requestJson('/my-url');
+const { response, body } = await ajax.fetchJson('/my-url');
 ```
 
 Alternatively, most often for subclassers, you can extend or import `AjaxClient` yourself, and pass cacheOptions when instantiating the ajax singleton.
@@ -219,7 +219,7 @@ which is either undefined for normal requests, or set to true for responses that
 export const cache = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = name => {
-    ajax.requestJson(`../assets/${name}.json`).then(result => {
+    ajax.fetchJson(`../assets/${name}.json`).then(result => {
       actionLogger.log(`From cache: ${result.response.fromCache || false}`);
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
@@ -252,12 +252,10 @@ export const cacheActionOptions = () => {
       };
     }
 
-    ajax
-      .requestJson(`../assets/${name}.json`, { cacheOptions: actionCacheOptions })
-      .then(result => {
-        actionLogger.log(`From cache: ${result.response.fromCache || false}`);
-        actionLogger.log(JSON.stringify(result.body, null, 2));
-      });
+    ajax.fetchJson(`../assets/${name}.json`, { cacheOptions: actionCacheOptions }).then(result => {
+      actionLogger.log(`From cache: ${result.response.fromCache || false}`);
+      actionLogger.log(JSON.stringify(result.body, null, 2));
+    });
   };
   return html`
     <style>
@@ -294,7 +292,7 @@ export const cacheTimeToLive = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = () => {
     ajax
-      .requestJson(`../assets/pabu.json`, {
+      .fetchJson(`../assets/pabu.json`, {
         cacheOptions: {
           timeToLive: 1000 * 3, // 3 seconds
         },
@@ -326,7 +324,7 @@ Now we will allow you to change this identifier to invalidate the cache.
 export const changeCacheIdentifier = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = () => {
-    ajax.requestJson(`../assets/pabu.json`).then(result => {
+    ajax.fetchJson(`../assets/pabu.json`).then(result => {
       actionLogger.log(`From cache: ${result.response.fromCache || false}`);
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
@@ -367,7 +365,7 @@ Therefore, we invalidate the cache, so the user gets the latest state from the d
 export const nonGETRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
   const fetchHandler = (name, method) => {
-    ajax.requestJson(`../assets/${name}.json`, { method }).then(result => {
+    ajax.fetchJson(`../assets/${name}.json`, { method }).then(result => {
       actionLogger.log(`From cache: ${result.response.fromCache || false}`);
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
@@ -415,7 +413,7 @@ export const invalidateRules = () => {
     }
 
     ajax
-      .requestJson(`../assets/${name}.json`, {
+      .fetchJson(`../assets/${name}.json`, {
         method,
         cacheOptions: actionCacheOptions,
       })

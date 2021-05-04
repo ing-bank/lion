@@ -66,9 +66,9 @@ describe('ajax cache', () => {
 
   describe('Original ajax instance', () => {
     it('allows direct ajax calls without cache interceptors configured', async () => {
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(2);
     });
   });
@@ -104,7 +104,7 @@ describe('ajax cache', () => {
 
       const indexes = addCacheInterceptors(ajax, { useCache: true });
 
-      return ajax.request('/test').catch(
+      return ajax.fetch('/test').catch(
         /** @param {Error} err */ err => {
           expect(err.message).to.equal('getCacheIdentifier returns falsy');
 
@@ -147,12 +147,12 @@ describe('ajax cache', () => {
         useCache: true,
         timeToLive: 100,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test')).to.be.true;
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(1);
 
       ajaxRequestSpy.restore();
@@ -166,15 +166,15 @@ describe('ajax cache', () => {
         useCache: false,
         timeToLive: 100,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test')).to.be.true;
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(2);
-      await ajax.request('/test', {
+      await ajax.fetch('/test', {
         cacheOptions: {
           useCache: true,
         },
@@ -192,9 +192,9 @@ describe('ajax cache', () => {
         timeToLive: 100,
       });
 
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test', {
+      await ajax.fetch('/test', {
         params: {
           q: 'test',
           page: 1,
@@ -202,7 +202,7 @@ describe('ajax cache', () => {
       });
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test')).to.be.true;
-      await ajax.request('/test', {
+      await ajax.fetch('/test', {
         params: {
           q: 'test',
           page: 1,
@@ -210,7 +210,7 @@ describe('ajax cache', () => {
       });
       expect(fetchStub.callCount).to.equal(1);
       // a request with different param should not be cached
-      await ajax.request('/test', {
+      await ajax.fetch('/test', {
         params: {
           q: 'test',
           page: 2,
@@ -231,17 +231,17 @@ describe('ajax cache', () => {
         useCache: true,
         timeToLive: 5000,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test')).to.be.true;
       expect(fetchStub.callCount).to.equal(1);
       clock.tick(4900);
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(1);
       clock.tick(5100);
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(2);
       ajaxRequestSpy.restore();
       clock.restore();
@@ -266,7 +266,7 @@ describe('ajax cache', () => {
         requestIdentificationFn: reqIdSpy,
       });
 
-      await ajax.request('/test', { headers: { 'x-id': '1' } });
+      await ajax.fetch('/test', { headers: { 'x-id': '1' } });
       expect(reqIdSpy.calledOnce);
       expect(reqIdSpy.returnValues[0]).to.equal(`/test-1`);
       removeCacheInterceptors(ajax, indexes);
@@ -283,24 +283,24 @@ describe('ajax cache', () => {
         invalidateUrlsRegex: /foo/gi,
       });
 
-      await ajax.request('/test'); // new url
+      await ajax.fetch('/test'); // new url
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/test'); // cached
+      await ajax.fetch('/test'); // cached
       expect(fetchStub.callCount).to.equal(1);
 
-      await ajax.request('/foo-request-1'); // new url
+      await ajax.fetch('/foo-request-1'); // new url
       expect(fetchStub.callCount).to.equal(2);
-      await ajax.request('/foo-request-1'); // cached
+      await ajax.fetch('/foo-request-1'); // cached
       expect(fetchStub.callCount).to.equal(2);
 
-      await ajax.request('/foo-request-3'); // new url
+      await ajax.fetch('/foo-request-3'); // new url
       expect(fetchStub.callCount).to.equal(3);
 
-      await ajax.request('/test', { method: 'POST' }); // clear cache
+      await ajax.fetch('/test', { method: 'POST' }); // clear cache
       expect(fetchStub.callCount).to.equal(4);
-      await ajax.request('/foo-request-1'); // not cached anymore
+      await ajax.fetch('/foo-request-1'); // not cached anymore
       expect(fetchStub.callCount).to.equal(5);
-      await ajax.request('/foo-request-2'); // not cached anymore
+      await ajax.fetch('/foo-request-2'); // not cached anymore
       expect(fetchStub.callCount).to.equal(6);
 
       removeCacheInterceptors(ajax, indexes);
@@ -315,23 +315,23 @@ describe('ajax cache', () => {
         invalidateUrlsRegex: /posts/gi,
       });
 
-      await ajax.request('/test');
-      await ajax.request('/test'); // cached
+      await ajax.fetch('/test');
+      await ajax.fetch('/test'); // cached
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/posts');
+      await ajax.fetch('/posts');
       expect(fetchStub.callCount).to.equal(2);
-      await ajax.request('/posts'); // cached
+      await ajax.fetch('/posts'); // cached
       expect(fetchStub.callCount).to.equal(2);
-      await ajax.request('/posts/1');
+      await ajax.fetch('/posts/1');
       expect(fetchStub.callCount).to.equal(3);
-      await ajax.request('/posts/1'); // cached
+      await ajax.fetch('/posts/1'); // cached
       expect(fetchStub.callCount).to.equal(3);
       // cleans cache for defined urls
-      await ajax.request('/test', { method: 'POST' });
+      await ajax.fetch('/test', { method: 'POST' });
       expect(fetchStub.callCount).to.equal(4);
-      await ajax.request('/posts'); // no longer cached => new request
+      await ajax.fetch('/posts'); // no longer cached => new request
       expect(fetchStub.callCount).to.equal(5);
-      await ajax.request('/posts/1'); // no longer cached => new request
+      await ajax.fetch('/posts/1'); // no longer cached => new request
       expect(fetchStub.callCount).to.equal(6);
 
       removeCacheInterceptors(ajax, indexes);
@@ -343,21 +343,21 @@ describe('ajax cache', () => {
         shouldAdvanceTime: true,
       });
 
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
       const indexes = addCacheInterceptors(ajax, {
         useCache: true,
         timeToLive: 1000 * 60 * 60,
       });
 
-      await ajax.request('/test-hour');
+      await ajax.fetch('/test-hour');
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test-hour')).to.be.true;
       expect(fetchStub.callCount).to.equal(1);
       clock.tick(1000 * 60 * 59); // 0:59 hour
-      await ajax.request('/test-hour');
+      await ajax.fetch('/test-hour');
       expect(fetchStub.callCount).to.equal(1);
       clock.tick(1000 * 60 * 2); // +2 minutes => 1:01 hour
-      await ajax.request('/test-hour');
+      await ajax.fetch('/test-hour');
       expect(fetchStub.callCount).to.equal(2);
       ajaxRequestSpy.restore();
       clock.restore();
@@ -378,14 +378,14 @@ describe('ajax cache', () => {
         },
       };
 
-      await ajax.request('/test-valid-url', { ...actionConfig });
+      await ajax.fetch('/test-valid-url', { ...actionConfig });
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/test-invalid-url');
+      await ajax.fetch('/test-invalid-url');
       expect(fetchStub.callCount).to.equal(2);
       // 'post' will invalidate 'own' cache and the one mentioned in config
-      await ajax.request('/test-valid-url', { ...actionConfig, method: 'POST' });
+      await ajax.fetch('/test-valid-url', { ...actionConfig, method: 'POST' });
       expect(fetchStub.callCount).to.equal(3);
-      await ajax.request('/test-invalid-url');
+      await ajax.fetch('/test-invalid-url');
       // indicates that 'test-invalid-url' cache was removed
       // because the server registered new request
       expect(fetchStub.callCount).to.equal(4);
@@ -399,17 +399,17 @@ describe('ajax cache', () => {
         useCache: true,
         timeToLive: 100,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test-post');
+      await ajax.fetch('/test-post');
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test-post')).to.be.true;
       expect(fetchStub.callCount).to.equal(1);
-      await ajax.request('/test-post', { method: 'POST', body: 'data-post' });
+      await ajax.fetch('/test-post', { method: 'POST', body: 'data-post' });
       expect(ajaxRequestSpy.calledTwice).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test-post')).to.be.true;
       expect(fetchStub.callCount).to.equal(2);
-      await ajax.request('/test-post');
+      await ajax.fetch('/test-post');
       expect(fetchStub.callCount).to.equal(3);
       ajaxRequestSpy.restore();
       removeCacheInterceptors(ajax, indexes);
@@ -423,15 +423,15 @@ describe('ajax cache', () => {
         timeToLive: 0,
       });
 
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       const clock = useFakeTimers();
       expect(ajaxRequestSpy.calledOnce).to.be.true;
       expect(ajaxRequestSpy.calledWith('/test')).to.be.true;
       clock.tick(1);
       clock.restore();
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(2);
       ajaxRequestSpy.restore();
       removeCacheInterceptors(ajax, indexes);
@@ -441,13 +441,13 @@ describe('ajax cache', () => {
       newCacheId();
       getCacheIdentifier = () => 'cacheIdentifier2';
 
-      const ajaxAlwaysRequestSpy = spy(ajax, 'request');
+      const ajaxAlwaysRequestSpy = spy(ajax, 'fetch');
       const indexes = addCacheInterceptors(ajax, { useCache: true });
 
-      await ajax.request('/test');
+      await ajax.fetch('/test');
       expect(ajaxAlwaysRequestSpy.calledOnce, 'calledOnce').to.be.true;
       expect(ajaxAlwaysRequestSpy.calledWith('/test'));
-      await ajax.request('/test', { cacheOptions: { useCache: false } });
+      await ajax.fetch('/test', { cacheOptions: { useCache: false } });
       expect(fetchStub.callCount).to.equal(2);
       ajaxAlwaysRequestSpy.restore();
       removeCacheInterceptors(ajax, indexes);
@@ -470,14 +470,14 @@ describe('ajax cache', () => {
         useCache: true,
         timeToLive: 100,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      const request1 = ajax.request('/test');
-      const request2 = ajax.request('/test');
+      const request1 = ajax.fetch('/test');
+      const request2 = ajax.fetch('/test');
       await aTimeout(1);
-      const request3 = ajax.request('/test');
+      const request3 = ajax.fetch('/test');
       await aTimeout(3);
-      const request4 = ajax.request('/test');
+      const request4 = ajax.fetch('/test');
       const responses = await Promise.all([request1, request2, request3, request4]);
       expect(fetchStub.callCount).to.equal(1);
       const responseTexts = await Promise.all(responses.map(r => r.text()));
@@ -504,10 +504,10 @@ describe('ajax cache', () => {
         useCache: true,
         timeToLive: 100,
       });
-      const ajaxRequestSpy = spy(ajax, 'request');
+      const ajaxRequestSpy = spy(ajax, 'fetch');
 
-      const response1 = await ajax.request('/test');
-      const response2 = await ajax.request('/test');
+      const response1 = await ajax.fetch('/test');
+      const response2 = await ajax.fetch('/test');
       expect(fetchStub.callCount).to.equal(1);
       expect(response1.status).to.equal(206);
       expect(response1.headers.get('x-foo')).to.equal('x-bar');

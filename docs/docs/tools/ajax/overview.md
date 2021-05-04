@@ -46,4 +46,4 @@ npm i --save @lion/ajax
 
 ### Relation to fetch
 
-`ajax` delegates all requests to fetch. `ajax.request` and `ajax.requestJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.
+`ajax` delegates all requests to fetch. `ajax.fetch` and `ajax.fetchJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.
