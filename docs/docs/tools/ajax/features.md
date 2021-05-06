@@ -176,7 +176,7 @@ import {
   ajax,
   cacheRequestInterceptorFactory,
   cacheResponseInterceptorFactory,
-} from '@lion-web/ajax.js';
+} from '@lion-web/ajax';
 
 const globalCacheOptions = {
   useCache: true,

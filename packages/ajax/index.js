@@ -16,6 +16,7 @@ export function setAjax(newAjax) {
 export { AjaxClient } from './src/AjaxClient.js';
 export { AjaxClientFetchError } from './src/AjaxClientFetchError.js';
 
+// FIXME: Looks cleaner api if we don't export the below ones
 export {
   acceptLanguageRequestInterceptor,
   createXSRFRequestInterceptor,
