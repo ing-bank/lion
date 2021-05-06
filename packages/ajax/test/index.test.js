@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { ajax, setAjax, AjaxClient } from '@lion/ajax';
 
-describe('ajax', () => {
+describe('public interface', () => {
   it('exports an instance of AjaxClient', () => {
     expect(ajax).to.be.an.instanceOf(AjaxClient);
   });
