@@ -4,7 +4,7 @@ import {
   cacheResponseInterceptorFactory,
 } from './interceptors-cache.js';
 import { acceptLanguageRequestInterceptor, createXSRFRequestInterceptor } from './interceptors.js';
-import { AjaxClientFetchError } from './AjaxClientFetchError.js';
+import { AjaxFetchError } from './AjaxFetchError.js';
 
 import './typedef.js';
 
@@ -13,13 +13,13 @@ import './typedef.js';
  * intercept request and responses, for example to add authorization headers or logging. A
  * request can also be prevented from reaching the network at all by returning the Response directly.
  */
-export class AjaxClient {
+export class Ajax {
   /**
-   * @param {Partial<AjaxClientConfig>} config
+   * @param {Partial<AjaxConfig>} config
    */
   constructor(config = {}) {
     /**
-     * @type {Partial<AjaxClientConfig>}
+     * @type {Partial<AjaxConfig>}
      * @private
      */
     this.__config = {
@@ -61,7 +61,7 @@ export class AjaxClient {
 
   /**
    * Sets the config for the instance
-   * @param {Partial<AjaxClientConfig>} config configuration for the AjaxClass instance
+   * @param {Partial<AjaxConfig>} config configuration for the AjaxClass instance
    */
   set options(config) {
     this.__config = config;
@@ -121,7 +121,7 @@ export class AjaxClient {
     const interceptedResponse = await this.__interceptResponse(response);
 
     if (interceptedResponse.status >= 400 && interceptedResponse.status < 600) {
-      throw new AjaxClientFetchError(request, interceptedResponse);
+      throw new AjaxFetchError(request, interceptedResponse);
     }
     return interceptedResponse;
   }

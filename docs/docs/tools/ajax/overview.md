@@ -5,7 +5,7 @@ import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import {
   ajax,
-  AjaxClient,
+  Ajax,
   cacheRequestInterceptorFactory,
   cacheResponseInterceptorFactory,
 } from '@lion/ajax';

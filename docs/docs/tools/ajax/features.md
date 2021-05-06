@@ -5,7 +5,7 @@ import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
 import {
   ajax,
-  AjaxClient,
+  Ajax,
   cacheRequestInterceptorFactory,
   cacheResponseInterceptorFactory,
 } from '@lion/ajax';
@@ -194,12 +194,12 @@ ajax.addResponseInterceptor(
 const { response, body } = await ajax.fetchJson('/my-url');
 ```
 
-Alternatively, most often for subclassers, you can extend or import `AjaxClient` yourself, and pass cacheOptions when instantiating the ajax singleton.
+Alternatively, most often for subclassers, you can extend or import `Ajax` yourself, and pass cacheOptions when instantiating the ajax singleton.
 
 ```js
-import { AjaxClient } from '@lion/ajax';
+import { Ajax } from '@lion/ajax';
 
-export const ajax = new AjaxClient({
+export const ajax = new Ajax({
   cacheOptions: {
     useCache: true,
     timeToLive: 1000 * 60 * 5, // 5 minutes

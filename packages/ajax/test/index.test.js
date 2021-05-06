@@ -2,8 +2,8 @@ import { expect } from '@open-wc/testing';
 import {
   ajax,
   setAjax,
-  AjaxClient,
-  AjaxClientFetchError,
+  Ajax,
+  AjaxFetchError,
   acceptLanguageRequestInterceptor,
   createXSRFRequestInterceptor,
   getCookie,
@@ -13,22 +13,22 @@ import {
 } from '@lion/ajax';
 
 describe('public interface', () => {
-  it('exports AjaxClient', () => {
-    expect(AjaxClient).to.exist;
+  it('exports Ajax', () => {
+    expect(Ajax).to.exist;
   });
 
-  it('exports an instance of AjaxClient', () => {
-    expect(ajax).to.be.an.instanceOf(AjaxClient);
+  it('exports an instance of Ajax', () => {
+    expect(ajax).to.be.an.instanceOf(Ajax);
   });
 
   it('can replace ajax with another instance', () => {
-    const newAjax = new AjaxClient();
+    const newAjax = new Ajax();
     setAjax(newAjax);
     expect(ajax).to.equal(newAjax);
   });
 
-  it('exports AjaxClientFetchError', () => {
-    expect(AjaxClientFetchError).to.exist;
+  it('exports AjaxFetchError', () => {
+    expect(AjaxFetchError).to.exist;
   });
 
   it('exports acceptLanguageRequestInterceptor', () => {

@@ -1,17 +1,17 @@
 import { expect } from '@open-wc/testing';
 import { stub, useFakeTimers } from 'sinon';
-import { AjaxClient, AjaxClientFetchError } from '@lion/ajax';
+import { Ajax, AjaxFetchError } from '@lion/ajax';
 
-describe('AjaxClient', () => {
+describe('Ajax', () => {
   /** @type {import('sinon').SinonStub} */
   let fetchStub;
-  /** @type {AjaxClient} */
+  /** @type {Ajax} */
   let ajax;
 
   beforeEach(() => {
     fetchStub = stub(window, 'fetch');
     fetchStub.returns(Promise.resolve(new Response('mock response')));
-    ajax = new AjaxClient();
+    ajax = new Ajax();
   });
 
   afterEach(() => {
@@ -42,7 +42,7 @@ describe('AjaxClient', () => {
         },
       };
       // When
-      const ajax1 = new AjaxClient(config);
+      const ajax1 = new Ajax(config);
       const result = ajax1.options;
       // Then
       expect(result).to.deep.equal(expected);
@@ -58,7 +58,7 @@ describe('AjaxClient', () => {
       };
       // When
       // @ts-expect-error
-      const ajax1 = new AjaxClient(config);
+      const ajax1 = new Ajax(config);
       const result = ajax1.options?.cacheOptions?.getCacheIdentifier;
       // Then
       expect(result).not.to.be.undefined;
@@ -84,7 +84,7 @@ describe('AjaxClient', () => {
       try {
         await ajax.fetch('/foo');
       } catch (e) {
-        expect(e).to.be.an.instanceOf(AjaxClientFetchError);
+        expect(e).to.be.an.instanceOf(AjaxFetchError);
         expect(e.request).to.be.an.instanceOf(Request);
         expect(e.response).to.be.an.instanceOf(Response);
         thrown = true;
@@ -99,7 +99,7 @@ describe('AjaxClient', () => {
       try {
         await ajax.fetch('/foo');
       } catch (e) {
-        expect(e).to.be.an.instanceOf(AjaxClientFetchError);
+        expect(e).to.be.an.instanceOf(AjaxFetchError);
         expect(e.request).to.be.an.instanceOf(Request);
         expect(e.response).to.be.an.instanceOf(Response);
         thrown = true;
@@ -141,7 +141,7 @@ describe('AjaxClient', () => {
 
     describe('given a json prefix', () => {
       it('strips json prefix from response before decoding', async () => {
-        const localAjax = new AjaxClient({ jsonPrefix: '//.,!' });
+        const localAjax = new Ajax({ jsonPrefix: '//.,!' });
         fetchStub.returns(Promise.resolve(new Response('//.,!{"a":1,"b":2}')));
         const response = await localAjax.fetchJson('/foo');
         expect(response.body).to.eql({ a: 1, b: 2 });
@@ -217,7 +217,7 @@ describe('AjaxClient', () => {
     });
 
     it('can be disabled', async () => {
-      const customAjax = new AjaxClient({ addAcceptLanguage: false });
+      const customAjax = new Ajax({ addAcceptLanguage: false });
       await customAjax.fetch('/foo');
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.has('accept-language')).to.be.false;
@@ -244,7 +244,7 @@ describe('AjaxClient', () => {
     });
 
     it('XSRF behavior can be disabled', async () => {
-      const customAjax = new AjaxClient({ xsrfCookieName: null, xsrfHeaderName: null });
+      const customAjax = new Ajax({ xsrfCookieName: null, xsrfHeaderName: null });
       await customAjax.fetch('/foo');
       await ajax.fetch('/foo');
 
@@ -253,7 +253,7 @@ describe('AjaxClient', () => {
     });
 
     it('XSRF token header and cookie can be customized', async () => {
-      const customAjax = new AjaxClient({
+      const customAjax = new Ajax({
         xsrfCookieName: 'CSRF-TOKEN',
         xsrfHeaderName: 'X-CSRF-TOKEN',
       });
@@ -283,9 +283,9 @@ describe('AjaxClient', () => {
       getCacheIdentifier = () => String(cacheId);
     });
 
-    it('allows configuring cache interceptors on the AjaxClient config', async () => {
+    it('allows configuring cache interceptors on the Ajax config', async () => {
       newCacheId();
-      const customAjax = new AjaxClient({
+      const customAjax = new Ajax({
         cacheOptions: {
           useCache: true,
           timeToLive: 100,
