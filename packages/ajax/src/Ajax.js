@@ -1,11 +1,9 @@
 /* eslint-disable consistent-return */
-import {
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-} from './interceptors-cache.js';
-import { acceptLanguageRequestInterceptor, createXSRFRequestInterceptor } from './interceptors.js';
+import { acceptLanguageRequestInterceptor } from './interceptors/acceptLanguageRequestInterceptor.js';
+import { createXsrfRequestInterceptor } from './interceptors/createXsrfRequestInterceptor.js';
+import { createCacheRequestInterceptor } from './interceptors/createCacheRequestInterceptor.js';
+import { createCacheResponseInterceptor } from './interceptors/createCacheResponseInterceptor.js';
 import { AjaxFetchError } from './AjaxFetchError.js';
-
 import './typedef.js';
 
 /**
@@ -45,16 +43,16 @@ export class Ajax {
 
     const { xsrfCookieName, xsrfHeaderName } = this.__config;
     if (xsrfCookieName && xsrfHeaderName) {
-      this.addRequestInterceptor(createXSRFRequestInterceptor(xsrfCookieName, xsrfHeaderName));
+      this.addRequestInterceptor(createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName));
     }
 
     const { cacheOptions } = this.__config;
     if (cacheOptions?.useCache) {
       this.addRequestInterceptor(
-        cacheRequestInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
+        createCacheRequestInterceptor(cacheOptions.getCacheIdentifier, cacheOptions),
       );
       this.addResponseInterceptor(
-        cacheResponseInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
+        createCacheResponseInterceptor(cacheOptions.getCacheIdentifier, cacheOptions),
       );
     }
   }

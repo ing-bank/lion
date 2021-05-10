@@ -6,8 +6,8 @@ import { renderLitAsNode } from '@lion/helpers';
 import {
   ajax,
   Ajax,
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
+  createCacheRequestInterceptor,
+  createCacheResponseInterceptor,
 } from '@lion/ajax';
 import '@lion/helpers/define';
 
@@ -25,8 +25,8 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 10, // 10 minutes
 };
 
-ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-ajax.addResponseInterceptor(cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions));
+ajax.addRequestInterceptor(createCacheRequestInterceptor(getCacheIdentifier, cacheOptions));
+ajax.addResponseInterceptor(createCacheResponseInterceptor(getCacheIdentifier, cacheOptions));
 ```
 
 ## GET request
@@ -174,8 +174,8 @@ see examples below.
 ```js
 import {
   ajax,
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
+  createCacheRequestInterceptor,
+  createCacheResponseInterceptor,
 } from '@lion-web/ajax';
 
 const globalCacheOptions = {
@@ -186,10 +186,8 @@ const globalCacheOptions = {
 // for instance when a current user is logged out
 const getCacheIdentifier = () => getActiveProfile().profileId;
 
-ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, globalCacheOptions));
-ajax.addResponseInterceptor(
-  cacheResponseInterceptorFactory(getCacheIdentifier, globalCacheOptions),
-);
+ajax.addRequestInterceptor(createCacheRequestInterceptor(getCacheIdentifier, globalCacheOptions));
+ajax.addResponseInterceptor(createCacheResponseInterceptor(getCacheIdentifier, globalCacheOptions));
 
 const { response, body } = await ajax.fetchJson('/my-url');
 ```

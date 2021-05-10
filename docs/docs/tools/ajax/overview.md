@@ -6,8 +6,8 @@ import { renderLitAsNode } from '@lion/helpers';
 import {
   ajax,
   Ajax,
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
+  createCacheRequestInterceptor,
+  createCacheResponseInterceptor,
 } from '@lion/ajax';
 import '@lion/helpers/define';
 
@@ -25,8 +25,8 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 10, // 10 minutes
 };
 
-ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-ajax.addResponseInterceptor(cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions));
+ajax.addRequestInterceptor(createCacheRequestInterceptor(getCacheIdentifier, cacheOptions));
+ajax.addResponseInterceptor(createCacheResponseInterceptor(getCacheIdentifier, cacheOptions));
 ```
 
 `ajax` is a small wrapper around `fetch` which:

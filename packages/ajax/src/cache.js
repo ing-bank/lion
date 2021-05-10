@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
-
 import './typedef.js';
 
 const SECOND = 1000;
@@ -147,7 +146,7 @@ export const searchParamSerializer = (params = {}) =>
  * and proactively clean it
  * @param {string} cacheIdentifier usually the refreshToken of the owner of the cache
  */
-const getCache = cacheIdentifier => {
+export const getCache = cacheIdentifier => {
   if (caches[cacheIdentifier]?._validateCache()) {
     return caches[cacheIdentifier];
   }
@@ -162,7 +161,7 @@ const getCache = cacheIdentifier => {
  * @param {CacheOptions} options Options to match cache
  * @returns {ValidatedCacheOptions}
  */
-export const validateOptions = ({
+export const validateCacheOptions = ({
   useCache = false,
   methods = ['get'],
   timeToLive,
@@ -220,124 +219,5 @@ export const validateOptions = ({
     invalidateUrls,
     invalidateUrlsRegex,
     requestIdentificationFn,
-  };
-};
-
-/**
- * Request interceptor to return relevant cached requests
- * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
- * @param {CacheOptions} globalCacheOptions
- * @returns {CachedRequestInterceptor}
- */
-export const cacheRequestInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
-
-  return /** @param {CacheRequest} cacheRequest */ async cacheRequest => {
-    const cacheOptions = validateOptions({
-      ...validatedInitialCacheOptions,
-      ...cacheRequest.cacheOptions,
-    });
-
-    cacheRequest.cacheOptions = cacheOptions;
-
-    // don't use cache if 'useCache' === false
-    if (!cacheOptions.useCache) {
-      return cacheRequest;
-    }
-
-    const cacheId = cacheOptions.requestIdentificationFn(cacheRequest, searchParamSerializer);
-    // cacheIdentifier is used to bind the cache to the current session
-    const currentCache = getCache(getCacheIdentifier());
-    const { method } = cacheRequest;
-
-    // don't use cache if the request method is not part of the configs methods
-    if (!cacheOptions.methods.includes(method.toLowerCase())) {
-      // If it's NOT one of the config.methods, invalidate caches
-      currentCache.delete(cacheId);
-      // also invalidate caches matching to cacheOptions
-      if (cacheOptions.invalidateUrls) {
-        cacheOptions.invalidateUrls.forEach(
-          /** @type {string} */ invalidateUrl => {
-            currentCache.delete(invalidateUrl);
-          },
-        );
-      }
-      // also invalidate caches matching to invalidateUrlsRegex
-      if (cacheOptions.invalidateUrlsRegex) {
-        currentCache.deleteMatched(cacheOptions.invalidateUrlsRegex);
-      }
-
-      return cacheRequest;
-    }
-
-    const pendingRequest = currentCache.getPendingRequest(cacheId);
-    if (pendingRequest) {
-      // there is another concurrent request, wait for it to finish
-      await pendingRequest;
-    }
-
-    const cacheResponse = currentCache.get(cacheId, cacheOptions.timeToLive);
-    if (cacheResponse) {
-      cacheRequest.cacheOptions = cacheRequest.cacheOptions ?? { useCache: false };
-      const response = /** @type {CacheResponse} */ cacheResponse.clone();
-      response.request = cacheRequest;
-      response.fromCache = true;
-      return response;
-    }
-
-    // we do want to use caching for this requesting, but it's not already cached
-    // mark this as a pending request, so that concurrent requests can reuse it from the cache
-    currentCache.setPendingRequest(cacheId);
-
-    return cacheRequest;
-  };
-};
-
-/**
- * Response interceptor to cache relevant requests
- * @param {function(): string} getCacheIdentifier used to invalidate cache if identifier is changed
- * @param {CacheOptions} globalCacheOptions
- * @returns {CachedResponseInterceptor}
- */
-export const cacheResponseInterceptorFactory = (getCacheIdentifier, globalCacheOptions) => {
-  const validatedInitialCacheOptions = validateOptions(globalCacheOptions);
-
-  /**
-   * Axios response https://github.com/axios/axios#response-schema
-   */
-  return /** @param {CacheResponse} cacheResponse */ async cacheResponse => {
-    if (!getCacheIdentifier()) {
-      throw new Error(`getCacheIdentifier returns falsy`);
-    }
-
-    if (!cacheResponse.request) {
-      throw new Error('Missing request in response.');
-    }
-
-    const cacheOptions = validateOptions({
-      ...validatedInitialCacheOptions,
-      ...cacheResponse.request?.cacheOptions,
-    });
-
-    // string that identifies cache entry
-    const cacheId = cacheOptions.requestIdentificationFn(
-      cacheResponse.request,
-      searchParamSerializer,
-    );
-    const currentCache = getCache(getCacheIdentifier());
-    const isAlreadyFromCache = !!cacheResponse.fromCache;
-    // caching all responses with not default `timeToLive`
-    const isCacheActive = cacheOptions.timeToLive > 0;
-    const isMethodSupported = cacheOptions.methods.includes(
-      cacheResponse.request.method.toLowerCase(),
-    );
-    // if the request is one of the options.methods; store response in cache
-    if (!isAlreadyFromCache && isCacheActive && isMethodSupported) {
-      // store the response data in the cache and mark request as resolved
-      currentCache.set(cacheId, cacheResponse.clone());
-    }
-
-    currentCache.resolvePendingRequest(cacheId);
-    return cacheResponse;
   };
 };

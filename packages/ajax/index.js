@@ -1,5 +1,8 @@
 import { Ajax } from './src/Ajax.js';
 
+export { Ajax } from './src/Ajax.js';
+export { AjaxFetchError } from './src/AjaxFetchError.js';
+
 export let ajax = new Ajax(); // eslint-disable-line import/no-mutable-exports
 
 /**
@@ -13,18 +16,7 @@ export function setAjax(newAjax) {
   ajax = newAjax;
 }
 
-export { Ajax } from './src/Ajax.js';
-export { AjaxFetchError } from './src/AjaxFetchError.js';
-
-// FIXME: Looks cleaner api if we don't export the below ones
-export {
-  acceptLanguageRequestInterceptor,
-  createXSRFRequestInterceptor,
-  getCookie,
-} from './src/interceptors.js';
-
-export {
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-  validateOptions,
-} from './src/interceptors-cache.js';
+export { acceptLanguageRequestInterceptor } from './src/interceptors/acceptLanguageRequestInterceptor.js';
+export { createXsrfRequestInterceptor } from './src/interceptors/createXsrfRequestInterceptor.js';
+export { createCacheRequestInterceptor } from './src/interceptors/createCacheRequestInterceptor.js';
+export { createCacheResponseInterceptor } from './src/interceptors/createCacheResponseInterceptor.js';
