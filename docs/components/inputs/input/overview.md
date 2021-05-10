@@ -22,7 +22,7 @@ export const main = () => html`<lion-input label="First Name"></lion-input>`;
   - **suffix**: can be used for addons to the input like a calculator, datepicker or addressbook. In these cases a button with an icon is used.
   - **before**: does not have an active use case yet, but the option is in place.
   - **after**: can be used to show a currency or percentage.
-- Delegates attributes like `type`, `disabled`, `placeholder` and `read-only` to the native input.
+- Delegates attributes like `type`, `disabled`, `placeholder` and `readonly` to the native input.
 - Can make use of [validation](../../docs/../../docs/systems/form/validate.md).
 
 ## Installation
