@@ -3,7 +3,7 @@
 ```js script
 import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import { Ajax, createCacheRequestInterceptor, createCacheResponseInterceptor } from '@lion/ajax';
+import { Ajax, createCacheInterceptors } from '@lion/ajax';
 import '@lion/helpers/define';
 
 const getCacheIdentifier = () => {
@@ -21,9 +21,13 @@ const cacheOptions = {
 };
 
 const ajax = new Ajax();
+const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+  getCacheIdentifier,
+  cacheOptions,
+);
 
-ajax.addRequestInterceptor(createCacheRequestInterceptor(getCacheIdentifier, cacheOptions));
-ajax.addResponseInterceptor(createCacheResponseInterceptor(getCacheIdentifier, cacheOptions));
+ajax.addRequestInterceptor(cacheRequestInterceptor);
+ajax.addResponseInterceptor(cacheResponseInterceptor);
 ```
 
 ## GET request
@@ -178,11 +182,7 @@ see examples below.
 > done on app-level
 
 ```js
-import {
-  Ajax,
-  createCacheRequestInterceptor,
-  createCacheResponseInterceptor,
-} from '@lion-web/ajax';
+import { Ajax, createCacheInterceptors } from '@lion-web/ajax';
 
 const globalCacheOptions = {
   useCache: true,
@@ -192,10 +192,13 @@ const globalCacheOptions = {
 // for instance when a current user is logged out
 const getCacheIdentifier = () => getActiveProfile().profileId;
 const ajax = new Ajax();
+const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+  getCacheIdentifier,
+  globalCacheOptions,
+);
 
-ajax.addRequestInterceptor(createCacheRequestInterceptor(getCacheIdentifier, globalCacheOptions));
-ajax.addResponseInterceptor(createCacheResponseInterceptor(getCacheIdentifier, globalCacheOptions));
-
+ajax.addRequestInterceptor(cacheRequestInterceptor);
+ajax.addResponseInterceptor(cacheResponseInterceptor);
 const { response, body } = await ajax.fetchJson('/my-url');
 ```
 

@@ -2,8 +2,7 @@
 import {
   acceptLanguageRequestInterceptor,
   createXsrfRequestInterceptor,
-  createCacheRequestInterceptor,
-  createCacheResponseInterceptor,
+  createCacheInterceptors,
 } from './interceptors/index.js';
 import { AjaxFetchError } from './AjaxFetchError.js';
 import './typedef.js';
@@ -50,12 +49,12 @@ export class Ajax {
 
     const { cacheOptions } = this.__config;
     if (cacheOptions?.useCache) {
-      this.addRequestInterceptor(
-        createCacheRequestInterceptor(cacheOptions.getCacheIdentifier, cacheOptions),
+      const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+        cacheOptions.getCacheIdentifier,
+        cacheOptions,
       );
-      this.addResponseInterceptor(
-        createCacheResponseInterceptor(cacheOptions.getCacheIdentifier, cacheOptions),
-      );
+      this.addRequestInterceptor(/** @type {RequestInterceptor} */ (cacheRequestInterceptor));
+      this.addResponseInterceptor(/** @type {ResponseInterceptor} */ (cacheResponseInterceptor));
     }
   }
 

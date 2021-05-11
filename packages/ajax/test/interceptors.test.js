@@ -1,13 +1,9 @@
 import { aTimeout, expect } from '@open-wc/testing';
 import { spy, stub, useFakeTimers } from 'sinon';
 import '../src/typedef.js';
-import { acceptLanguageRequestInterceptor } from '../src/interceptors/acceptLanguageRequestInterceptor.js';
-import {
-  createXsrfRequestInterceptor,
-  getCookie,
-} from '../src/interceptors/createXsrfRequestInterceptor.js';
-import { createCacheRequestInterceptor } from '../src/interceptors/createCacheRequestInterceptor.js';
-import { createCacheResponseInterceptor } from '../src/interceptors/createCacheResponseInterceptor.js';
+import { acceptLanguageRequestInterceptor } from '../src/interceptors/acceptLanguageHeader.js';
+import { createXsrfRequestInterceptor, getCookie } from '../src/interceptors/xsrfHeader.js';
+import { createCacheInterceptors } from '../src/interceptors/cacheInterceptors.js';
 import { Ajax } from '../index.js';
 
 const ajax = new Ajax();
@@ -89,14 +85,19 @@ describe('interceptors', () => {
      * @param {CacheOptions} options
      */
     const addCacheInterceptors = (ajaxInstance, options) => {
+      const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+        getCacheIdentifier,
+        options,
+      );
+
       const requestInterceptorIndex =
         ajaxInstance._requestInterceptors.push(
-          createCacheRequestInterceptor(getCacheIdentifier, options),
+          /** @type {RequestInterceptor} */ (cacheRequestInterceptor),
         ) - 1;
 
       const responseInterceptorIndex =
         ajaxInstance._responseInterceptors.push(
-          createCacheResponseInterceptor(getCacheIdentifier, options),
+          /** @type {ResponseInterceptor} */ (cacheResponseInterceptor),
         ) - 1;
 
       return {

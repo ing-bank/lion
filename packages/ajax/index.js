@@ -3,6 +3,5 @@ export { AjaxFetchError } from './src/AjaxFetchError.js';
 export {
   acceptLanguageRequestInterceptor,
   createXsrfRequestInterceptor,
-  createCacheRequestInterceptor,
-  createCacheResponseInterceptor,
+  createCacheInterceptors,
 } from './src/interceptors/index.js';

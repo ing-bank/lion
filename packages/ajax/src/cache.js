@@ -137,7 +137,7 @@ let caches = {};
  * @param {Params} params query string parameters object
  * @returns {string} of querystring parameters WITHOUT `?` or empty string ''
  */
-export const searchParamSerializer = (params = {}) =>
+export const stringifySearchParams = (params = {}) =>
   typeof params === 'object' && params !== null ? new URLSearchParams(params).toString() : '';
 
 /**
@@ -203,11 +203,9 @@ export const validateCacheOptions = ({
       throw new Error('Property `requestIdentificationFn` must be of type `function`');
     }
   } else {
-    requestIdentificationFn = /** @param {any} data */ (
-      { url, params },
-      searchParamsSerializer,
-    ) => {
-      const serializedParams = searchParamsSerializer(params);
+    // eslint-disable-next-line no-shadow
+    requestIdentificationFn = /** @param {any} data */ ({ url, params }, stringifySearchParams) => {
+      const serializedParams = stringifySearchParams(params);
       return serializedParams ? `${url}?${serializedParams}` : url;
     };
   }

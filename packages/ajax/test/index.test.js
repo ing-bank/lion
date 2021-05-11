@@ -4,8 +4,7 @@ import {
   AjaxFetchError,
   acceptLanguageRequestInterceptor,
   createXsrfRequestInterceptor,
-  createCacheRequestInterceptor,
-  createCacheResponseInterceptor,
+  createCacheInterceptors,
 } from '@lion/ajax';
 
 describe('public interface', () => {
@@ -25,11 +24,7 @@ describe('public interface', () => {
     expect(createXsrfRequestInterceptor).to.exist;
   });
 
-  it('exports createCacheRequestInterceptor', () => {
-    expect(createCacheRequestInterceptor).to.exist;
-  });
-
-  it('exports createCacheResponseInterceptor', () => {
-    expect(createCacheResponseInterceptor).to.exist;
+  it('exports createCacheInterceptors', () => {
+    expect(createCacheInterceptors).to.exist;
   });
 });
