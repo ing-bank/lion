@@ -1,8 +1,10 @@
 /* eslint-disable consistent-return */
-import { acceptLanguageRequestInterceptor } from './interceptors/acceptLanguageRequestInterceptor.js';
-import { createXsrfRequestInterceptor } from './interceptors/createXsrfRequestInterceptor.js';
-import { createCacheRequestInterceptor } from './interceptors/createCacheRequestInterceptor.js';
-import { createCacheResponseInterceptor } from './interceptors/createCacheResponseInterceptor.js';
+import {
+  acceptLanguageRequestInterceptor,
+  createXsrfRequestInterceptor,
+  createCacheRequestInterceptor,
+  createCacheResponseInterceptor,
+} from './interceptors/index.js';
 import { AjaxFetchError } from './AjaxFetchError.js';
 import './typedef.js';
 

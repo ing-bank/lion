@@ -1,7 +1,5 @@
 import { expect } from '@open-wc/testing';
 import {
-  ajax,
-  setAjax,
   Ajax,
   AjaxFetchError,
   acceptLanguageRequestInterceptor,
@@ -13,16 +11,6 @@ import {
 describe('public interface', () => {
   it('exports Ajax', () => {
     expect(Ajax).to.exist;
-  });
-
-  it('exports an instance of Ajax', () => {
-    expect(ajax).to.be.an.instanceOf(Ajax);
-  });
-
-  it('can replace ajax with another instance', () => {
-    const newAjax = new Ajax();
-    setAjax(newAjax);
-    expect(ajax).to.equal(newAjax);
   });
 
   it('exports AjaxFetchError', () => {

@@ -1,5 +1,5 @@
 /**
- * We have a method requestJson that encodes JS Object to
+ * We have a method fetchJson that encodes JS Object to
  * a string automatically for `body` property.
  * Sadly, Typescript doesn't allow us to extend RequestInit
  * and override body prop because it is incompatible, so we

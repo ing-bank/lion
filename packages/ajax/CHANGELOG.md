@@ -39,7 +39,7 @@
 
 ### Minor Changes
 
-- 2cd7993d: Set fromCache property on the Response, for user consumption. Allow setting cacheOptions on the Ajax upon instantiation. Create docs/demos.
+- 2cd7993d: Set fromCache property on the Response, for user consumption. Allow setting cacheOptions on the AjaxClient upon instantiation. Create docs/demos.
 
 ## 0.6.0
 

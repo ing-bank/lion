@@ -8,7 +8,9 @@ import {
 } from '../src/interceptors/createXsrfRequestInterceptor.js';
 import { createCacheRequestInterceptor } from '../src/interceptors/createCacheRequestInterceptor.js';
 import { createCacheResponseInterceptor } from '../src/interceptors/createCacheResponseInterceptor.js';
-import { ajax } from '../index.js';
+import { Ajax } from '../index.js';
+
+const ajax = new Ajax();
 
 describe('interceptors', () => {
   describe('getCookie()', () => {
