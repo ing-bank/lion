@@ -34,7 +34,7 @@ import { getFormControlMembers } from '@lion/form-core/test-helpers';
 /**
  * @typedef {import('@lion/core').LitElement} LitElement
  * @typedef {import('@lion/form-core').LionField} LionField
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost & HTMLElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
+ * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost & LitElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
  * @typedef {import('@lion/input').LionInput} LionInput
  * @typedef {import('@lion/select').LionSelect} LionSelect
  * @typedef {import('@lion/listbox').LionOption} LionOption
@@ -416,10 +416,10 @@ describe('detail.isTriggeredByUser', () => {
   /**
    * @param {FormControl & {value: string;}} el
    * @param {string} newViewValue
-   * @param {string | undefined} [triggerType]
+   * @param {{ triggerType?: string, labelInsteadOfInput?: boolean }} [optionals]
    */
-  function mimicUserInput(el, newViewValue, triggerType) {
-    const { _inputNode } = getFormControlMembers(el);
+  function mimicUserInput(el, newViewValue, optionals) {
+    const { _inputNode, _labelNode } = getFormControlMembers(el);
     const type = detectType(el);
     let userInputEv;
     if (type === 'RegularField') {
@@ -427,11 +427,15 @@ describe('detail.isTriggeredByUser', () => {
       el.value = newViewValue; // eslint-disable-line no-param-reassign
       _inputNode.dispatchEvent(new Event(userInputEv, { bubbles: true }));
     } else if (type === 'ChoiceField') {
-      _inputNode.dispatchEvent(new Event('change', { bubbles: true }));
+      if (optionals?.labelInsteadOfInput) {
+        _labelNode.click();
+      } else {
+        _inputNode.click();
+      }
     } else if (type === 'OptionChoiceField') {
-      if (!triggerType) {
+      if (!optionals?.triggerType) {
         el.dispatchEvent(new Event('click', { bubbles: true }));
-      } else if (triggerType === 'keypress') {
+      } else if (optionals?.triggerType === 'keypress') {
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
         el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', bubbles: true }));
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -480,9 +484,10 @@ describe('detail.isTriggeredByUser', () => {
       /**
        * @param {FormControl & {value: string}} formControl
        */
-      function resetChoiceFieldToForceRepropagation(formControl) {
+      async function resetChoiceFieldToForceRepropagation(formControl) {
         // eslint-disable-next-line no-param-reassign
         formControl.checked = false;
+        await formControl.updateComplete;
         spy.resetHistory();
       }
 
@@ -490,14 +495,18 @@ describe('detail.isTriggeredByUser', () => {
        * @param {FormControl & {value: string;}} formControl
        * @param {boolean | undefined} [testKeyboardBehavior]
        */
-      function expectCorrectEventMetaChoiceField(formControl, testKeyboardBehavior) {
+      async function expectCorrectEventMetaChoiceField(formControl, testKeyboardBehavior) {
         const type = detectType(formControl);
 
-        resetChoiceFieldToForceRepropagation(formControl);
+        await resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue');
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
 
-        resetChoiceFieldToForceRepropagation(formControl);
+        await resetChoiceFieldToForceRepropagation(formControl);
+        mimicUserInput(formControl, 'userValue', { labelInsteadOfInput: true });
+        expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
+
+        await resetChoiceFieldToForceRepropagation(formControl);
         // eslint-disable-next-line no-param-reassign
         formControl.checked = true;
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.false;
@@ -507,8 +516,8 @@ describe('detail.isTriggeredByUser', () => {
         expect(spy.secondCall.args[0].detail.isTriggeredByUser).to.be.false;
 
         if (type === 'OptionChoiceField' && testKeyboardBehavior) {
-          resetChoiceFieldToForceRepropagation(formControl);
-          mimicUserInput(formControl, 'userValue', 'keypress');
+          await resetChoiceFieldToForceRepropagation(formControl);
+          mimicUserInput(formControl, 'userValue', { triggerType: 'keypress' });
           // TODO: get rid of try/catch (?)...
           try {
             expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
@@ -523,7 +532,7 @@ describe('detail.isTriggeredByUser', () => {
       if (type === 'RegularField') {
         expectCorrectEventMetaRegularField(el);
       } else if (type === 'ChoiceField' || type === 'OptionChoiceField') {
-        expectCorrectEventMetaChoiceField(el);
+        await expectCorrectEventMetaChoiceField(el);
       } else if (type === 'ChoiceGroupField') {
         let childName = 'option';
         if (controlName.endsWith('-group')) {
@@ -536,7 +545,7 @@ describe('detail.isTriggeredByUser', () => {
         );
         el.appendChild(childrenEls);
         await el.registrationComplete;
-        expectCorrectEventMetaChoiceField(el.formElements[0], true);
+        await expectCorrectEventMetaChoiceField(el.formElements[0], true);
       } else if (type === 'FormOrFieldset') {
         const childrenEls = await fixture(
           html`<div><lion-input name="one"></lion-input><lion-input name="two"></lion-input></div>`,
