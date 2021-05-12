@@ -69,29 +69,6 @@ describe('lion-switch', () => {
     expect(document.activeElement).to.not.equal(_inputNode);
   });
 
-  it('clicking the switch or the label should fire the model-value-changed event with isTriggeredByUser: true', async () => {
-    let isTriggeredByUser = false;
-
-    /** @param {CustomEvent} ev */
-    const modelValueChanged = ev => {
-      isTriggeredByUser = ev.detail.isTriggeredByUser;
-    };
-
-    const el = await fixture(
-      html`<lion-switch
-        @model-value-changed=${modelValueChanged}
-        label="Enable Setting"
-      ></lion-switch>`,
-    );
-    const { _inputNode, _labelNode } = getSwitchMembers(el);
-
-    _inputNode.click();
-    expect(isTriggeredByUser).to.be.true;
-    isTriggeredByUser = false;
-    _labelNode.click();
-    expect(isTriggeredByUser).to.be.true;
-  });
-
   it('should sync its "disabled" state to child button', async () => {
     const el = await fixture(html`<lion-switch disabled></lion-switch>`);
     const { _inputNode } = getSwitchMembers(el);
