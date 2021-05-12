@@ -1,4 +1,4 @@
-export class AjaxClientFetchError extends Error {
+export class AjaxFetchError extends Error {
   /**
    * @param {Request} request
    * @param {Response} response

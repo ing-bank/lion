@@ -1,6 +1,6 @@
 /**
  * @typedef {import('../types/types').LionRequestInit} LionRequestInit
- * @typedef {import('../types/types').AjaxClientConfig} AjaxClientConfig
+ * @typedef {import('../types/types').AjaxConfig} AjaxConfig
  * @typedef {import('../types/types').RequestInterceptor} RequestInterceptor
  * @typedef {import('../types/types').ResponseInterceptor} ResponseInterceptor
  * @typedef {import('../types/types').CacheConfig} CacheConfig

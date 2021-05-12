@@ -3,12 +3,7 @@
 ```js script
 import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import {
-  ajax,
-  AjaxClient,
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-} from '@lion/ajax';
+import { ajax, createCacheInterceptors } from '@lion/ajax';
 import '@lion/helpers/define';
 
 const getCacheIdentifier = () => {
@@ -25,11 +20,16 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 10, // 10 minutes
 };
 
-ajax.addRequestInterceptor(cacheRequestInterceptorFactory(getCacheIdentifier, cacheOptions));
-ajax.addResponseInterceptor(cacheResponseInterceptorFactory(getCacheIdentifier, cacheOptions));
+const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+  getCacheIdentifier,
+  cacheOptions,
+);
+
+ajax.addRequestInterceptor(cacheRequestInterceptor);
+ajax.addResponseInterceptor(cacheResponseInterceptor);
 ```
 
-`ajax` is a small wrapper around `fetch` which:
+`Ajax` is a small wrapper around `fetch` which:
 
 - Allows globally registering request and response interceptors
 - Throws on 4xx and 5xx status codes
@@ -46,4 +46,4 @@ npm i --save @lion/ajax
 
 ### Relation to fetch
 
-`ajax` delegates all requests to fetch. `ajax.request` and `ajax.requestJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.
+`Ajax` delegates all requests to fetch. `ajax.fetch` and `ajax.fetchJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.

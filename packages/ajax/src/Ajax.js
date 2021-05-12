@@ -1,11 +1,10 @@
 /* eslint-disable consistent-return */
 import {
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-} from './interceptors-cache.js';
-import { acceptLanguageRequestInterceptor, createXSRFRequestInterceptor } from './interceptors.js';
-import { AjaxClientFetchError } from './AjaxClientFetchError.js';
-
+  acceptLanguageRequestInterceptor,
+  createXsrfRequestInterceptor,
+  createCacheInterceptors,
+} from './interceptors/index.js';
+import { AjaxFetchError } from './AjaxFetchError.js';
 import './typedef.js';
 
 /**
@@ -13,13 +12,13 @@ import './typedef.js';
  * intercept request and responses, for example to add authorization headers or logging. A
  * request can also be prevented from reaching the network at all by returning the Response directly.
  */
-export class AjaxClient {
+export class Ajax {
   /**
-   * @param {Partial<AjaxClientConfig>} config
+   * @param {Partial<AjaxConfig>} config
    */
   constructor(config = {}) {
     /**
-     * @type {Partial<AjaxClientConfig>}
+     * @type {Partial<AjaxConfig>}
      * @private
      */
     this.__config = {
@@ -45,23 +44,23 @@ export class AjaxClient {
 
     const { xsrfCookieName, xsrfHeaderName } = this.__config;
     if (xsrfCookieName && xsrfHeaderName) {
-      this.addRequestInterceptor(createXSRFRequestInterceptor(xsrfCookieName, xsrfHeaderName));
+      this.addRequestInterceptor(createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName));
     }
 
     const { cacheOptions } = this.__config;
     if (cacheOptions?.useCache) {
-      this.addRequestInterceptor(
-        cacheRequestInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
+      const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+        cacheOptions.getCacheIdentifier,
+        cacheOptions,
       );
-      this.addResponseInterceptor(
-        cacheResponseInterceptorFactory(cacheOptions.getCacheIdentifier, cacheOptions),
-      );
+      this.addRequestInterceptor(/** @type {RequestInterceptor} */ (cacheRequestInterceptor));
+      this.addResponseInterceptor(/** @type {ResponseInterceptor} */ (cacheResponseInterceptor));
     }
   }
 
   /**
    * Sets the config for the instance
-   * @param {Partial<AjaxClientConfig>} config configuration for the AjaxClass instance
+   * @param {Partial<AjaxConfig>} config configuration for the AjaxClass instance
    */
   set options(config) {
     this.__config = config;
@@ -103,7 +102,7 @@ export class AjaxClient {
    * @param {RequestInit & Partial<CacheRequestExtension>} [init]
    * @returns {Promise<Response>}
    */
-  async request(info, init) {
+  async fetch(info, init) {
     const request = /** @type {CacheRequest} */ (new Request(info, { ...init }));
     request.cacheOptions = init?.cacheOptions;
     request.params = init?.params;
@@ -121,7 +120,7 @@ export class AjaxClient {
     const interceptedResponse = await this.__interceptResponse(response);
 
     if (interceptedResponse.status >= 400 && interceptedResponse.status < 600) {
-      throw new AjaxClientFetchError(request, interceptedResponse);
+      throw new AjaxFetchError(request, interceptedResponse);
     }
     return interceptedResponse;
   }
@@ -135,7 +134,7 @@ export class AjaxClient {
    * @template T
    * @returns {Promise<{ response: Response, body: T }>}
    */
-  async requestJson(info, init) {
+  async fetchJson(info, init) {
     const lionInit = {
       ...init,
       headers: {
@@ -152,7 +151,7 @@ export class AjaxClient {
 
     // Now that we stringified lionInit.body, we can safely typecast LionRequestInit back to RequestInit
     const jsonInit = /** @type {RequestInit} */ (lionInit);
-    const response = await this.request(info, jsonInit);
+    const response = await this.fetch(info, jsonInit);
     let responseText = await response.text();
 
     const { jsonPrefix } = this.__config;

@@ -1,15 +1,12 @@
-export { ajax, setAjax } from './src/ajax.js';
-export { AjaxClient } from './src/AjaxClient.js';
-export { AjaxClientFetchError } from './src/AjaxClientFetchError.js';
+import { Ajax } from './src/Ajax.js';
 
+export { Ajax } from './src/Ajax.js';
+export { AjaxFetchError } from './src/AjaxFetchError.js';
 export {
   acceptLanguageRequestInterceptor,
-  createXSRFRequestInterceptor,
-  getCookie,
-} from './src/interceptors.js';
+  createXsrfRequestInterceptor,
+  createCacheInterceptors,
+} from './src/interceptors/index.js';
 
-export {
-  cacheRequestInterceptorFactory,
-  cacheResponseInterceptorFactory,
-  validateOptions,
-} from './src/interceptors-cache.js';
+// globally available instance
+export const ajax = new Ajax();

@@ -1,5 +1,5 @@
 /**
- * We have a method requestJson that encodes JS Object to
+ * We have a method fetchJson that encodes JS Object to
  * a string automatically for `body` property.
  * Sadly, Typescript doesn't allow us to extend RequestInit
  * and override body prop because it is incompatible, so we
@@ -10,7 +10,7 @@ export interface LionRequestInit extends Omit<RequestInit, 'body'> {
   request?: CacheRequest;
 }
 
-export interface AjaxClientConfig {
+export interface AjaxConfig {
   addAcceptLanguage: boolean;
   xsrfCookieName: string | null;
   xsrfHeaderName: string | null;
@@ -29,7 +29,7 @@ export type Params = { [key: string]: any };
 
 export type RequestIdentificationFn = (
   request: Partial<CacheRequest>,
-  searchParamsSerializer: (params: Params) => string,
+  stringifySearchParams: (params: Params) => string,
 ) => string;
 
 export interface CacheOptions {
