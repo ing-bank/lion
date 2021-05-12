@@ -122,7 +122,9 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
 
   /** @private */
   __handleButtonSwitchCheckedChanged() {
+    this._isHandlingUserInput = true;
     this.checked = this._inputNode.checked;
+    this._isHandlingUserInput = false;
   }
 
   /** @protected */
