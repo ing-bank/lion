@@ -14,10 +14,6 @@ body[layout='layout-home'] .markdown-body .call-to-action:nth-of-type(2):hover {
   text-decoration: underline;
 }
 
-mdjs-preview {
-  margin-bottom: 20px;
-}
-
 #main-header a {
   font-weight: normal;
 }
@@ -30,10 +26,6 @@ mdjs-preview {
   display: block;
 }
 
-#sidebar-nav {
-  padding: 2px;
-}
-
 #main-header a[href='/blog/'] {
   display: none;
 }
@@ -44,6 +36,56 @@ mdjs-preview {
   }
 }
 
+mdjs-preview {
+  margin-bottom: 20px;
+}
+
 mdjs-preview::part(iframe) {
   border-color: var(--primary-lines-color);
+}
+
+/* === Side nav === */
+rocket-navigation ul {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+rocket-navigation > ul > li > ul {
+  padding-left: 0;
+}
+
+rocket-navigation ul > li:last-of-type {
+  padding-bottom: 0;
+}
+
+rocket-navigation > ul > li > a {
+  font-weight: normal;
+}
+
+rocket-navigation > ul > li > a.active {
+  font-weight: bold;
+}
+
+rocket-navigation > ul > li > ul > li a {
+  padding-left: 13px;
+}
+
+rocket-navigation li.active:not(.anchor) > a {
+  font-weight: bold;
+}
+
+rocket-navigation ul > li > a {
+  display: inline-block;
+}
+
+rocket-navigation ul > li > ul > li a {
+  border-left: 2px solid transparent;
+}
+
+rocket-navigation ul > li.active > ul > li.current a {
+  border-left-color: var(--primary-color);
+}
+
+rocket-navigation ul > li.active > ul > li.current > ul {
+  display: none;
 }
