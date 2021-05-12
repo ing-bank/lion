@@ -52,434 +52,518 @@ export default html`
       <tbody>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell" start-of-last-week>
-            <button
-              aria-label="25 November 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">25</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Sunday</span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="26 November 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">26</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="27 November 2018 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">27</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="28 November 2018 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">28</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="29 November 2018 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">29</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell" last-day>
-            <button
-              aria-label="30 November 2018 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">30</span>
-            </button>
+              <span class="u-sr-only"> November 2018 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell" end-of-first-week first-day>
-            <button
-              aria-label="1 December 2018 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">1</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Saturday </span>
+            </div>
           </td>
         </tr>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell" start-of-first-full-week>
-            <button
-              aria-label="2 December 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">2</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Sunday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="3 December 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">3</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="4 December 2018 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">4</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="5 December 2018 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">5</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="6 December 2018 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">6</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="7 December 2018 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">7</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="8 December 2018 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">8</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Saturday </span>
+            </div>
           </td>
         </tr>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="9 December 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">9</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Sunday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="10 December 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">10</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="11 December 2018 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">11</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="12 December 2018 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">12</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="13 December 2018 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">13</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="14 December 2018 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">14</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="15 December 2018 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">15</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Saturday </span>
+            </div>
           </td>
         </tr>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="16 December 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">16</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Sunday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="17 December 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">17</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="18 December 2018 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">18</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="19 December 2018 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">19</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="20 December 2018 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">20</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="21 December 2018 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">21</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="22 December 2018 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">22</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Saturday </span>
+            </div>
           </td>
         </tr>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="23 December 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">23</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Sunday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="24 December 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">24</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="25 December 2018 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">25</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="26 December 2018 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">26</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="27 December 2018 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">27</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="28 December 2018 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">28</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell" end-of-last-full-week>
-            <button
-              aria-label="29 December 2018 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">29</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Saturday </span>
+            </div>
           </td>
         </tr>
         <tr role="row">
           <td class="calendar__day-cell" role="gridcell" start-of-last-week>
-            <button
-              aria-label="30 December 2018 Sunday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">30</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Sunday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" last-day role="gridcell">
-            <button
-              aria-label="31 December 2018 Monday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">31</span>
-            </button>
+              <span class="u-sr-only"> December 2018 Monday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell" first-day>
-            <button
-              aria-label="1 January 2019 Tuesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">1</span>
-            </button>
+              <span class="u-sr-only"> January 2019 Tuesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="2 January 2019 Wednesday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">2</span>
-            </button>
+              <span class="u-sr-only"> January 2019 Wednesday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="3 January 2019 Thursday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">3</span>
-            </button>
+              <span class="u-sr-only"> January 2019 Thursday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell">
-            <button
-              aria-label="4 January 2019 Friday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">4</span>
-            </button>
+              <span class="u-sr-only"> January 2019 Friday </span>
+            </div>
           </td>
           <td class="calendar__day-cell" role="gridcell" end-of-first-week>
-            <button
-              aria-label="5 January 2019 Saturday"
+            <div
+              role="button"
+              aria-disabled="false"
               aria-pressed="false"
               class="calendar__day-button"
               tabindex="-1"
             >
               <span class="calendar__day-button__text">5</span>
-            </button>
+              <span class="u-sr-only"> January 2019 Saturday </span>
+            </div>
           </td>
         </tr>
       </tbody>

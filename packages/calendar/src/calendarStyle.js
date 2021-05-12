@@ -54,6 +54,16 @@ export const calendarStyle = css`
     padding: 0;
     min-width: 40px;
     min-height: 40px;
+    /** give div[role=button][aria-disabled] same display type as native btn */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .calendar__day-button:focus {
+    border: 1px solid blue;
+    outline: none;
   }
 
   .calendar__day-button__text {
@@ -77,9 +87,23 @@ export const calendarStyle = css`
     border: 1px solid green;
   }
 
-  .calendar__day-button[disabled] {
+  .calendar__day-button[aria-disabled='true'] {
     background-color: #fff;
     color: #eee;
     outline: none;
+  }
+
+  .u-sr-only {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(100%);
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+    margin: 0;
+    padding: 0;
   }
 `;

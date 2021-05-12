@@ -34,7 +34,7 @@ export class DayObject {
    */
 
   get isDisabled() {
-    return this.buttonEl.hasAttribute('disabled');
+    return this.buttonEl.getAttribute('aria-disabled') === 'true';
   }
 
   get isSelected() {
@@ -54,7 +54,7 @@ export class DayObject {
   }
 
   get monthday() {
-    return Number(this.buttonEl.textContent);
+    return Number(this.buttonEl.children[0].textContent);
   }
 
   /**

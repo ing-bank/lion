@@ -11,14 +11,18 @@ describe('dayTemplate', () => {
     const el = await fixture(dayTemplate(day, { weekdays }));
     expect(el).dom.to.equal(`
       <td role="gridcell" class="calendar__day-cell">
-        <button
+        <div
+          aria-disabled="false"
+          role="button"
           class="calendar__day-button"
-          aria-label="19 April 2019 Friday"
           aria-pressed="false"
           tabindex="-1"
         >
           <span class="calendar__day-button__text">19</span>
-        </button>
+          <span class="u-sr-only">
+            April 2019 Friday
+          </span>
+        </div>
       </td>
     `);
   });
