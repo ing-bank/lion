@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- 0ddd38c0: member descriptions for editors and api tables
+
+### Patch Changes
+
+- @lion/input@0.14.1
+
 ## 0.9.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.13.0
+
+### Minor Changes
+
+- 0ddd38c0: member descriptions for editors and api tables
+
+### Patch Changes
+
+- Updated dependencies [0ddd38c0]
+- Updated dependencies [0ddd38c0]
+  - @lion/form-core@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
