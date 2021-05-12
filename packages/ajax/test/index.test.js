@@ -1,5 +1,6 @@
 import { expect } from '@open-wc/testing';
 import {
+  ajax,
   Ajax,
   AjaxFetchError,
   acceptLanguageRequestInterceptor,
@@ -8,6 +9,10 @@ import {
 } from '@lion/ajax';
 
 describe('public interface', () => {
+  it('exports ajax', () => {
+    expect(ajax).to.exist;
+  });
+
   it('exports Ajax', () => {
     expect(Ajax).to.exist;
   });

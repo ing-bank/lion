@@ -3,7 +3,7 @@
 ```js script
 import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import { Ajax, createCacheInterceptors } from '@lion/ajax';
+import { ajax, createCacheInterceptors } from '@lion/ajax';
 import '@lion/helpers/define';
 
 const getCacheIdentifier = () => {
@@ -20,7 +20,6 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 10, // 10 minutes
 };
 
-const ajax = new Ajax();
 const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
@@ -35,7 +34,6 @@ ajax.addResponseInterceptor(cacheResponseInterceptor);
 ```js preview-story
 export const getRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = name => {
     ajax
@@ -45,6 +43,7 @@ export const getRequest = () => {
         actionLogger.log(JSON.stringify(result, null, 2));
       });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -61,13 +60,13 @@ export const getRequest = () => {
 ## POST request
 
 ```js
-import { Ajax } from '@lion/ajax';
+import { ajax } from '@lion/ajax';
 
-const ajax = new Ajax();
 const response = await ajax.fetch('/api/users', {
   method: 'POST',
   body: JSON.stringify({ username: 'steve' }),
 });
+
 const newUser = await response.json();
 ```
 
@@ -82,7 +81,6 @@ The result will have the Response object on `.response` property, and the decode
 ```js preview-story
 export const getJsonRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = name => {
     ajax.fetchJson(`../assets/${name}.json`).then(result => {
@@ -90,6 +88,7 @@ export const getJsonRequest = () => {
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -106,8 +105,7 @@ export const getJsonRequest = () => {
 ## POST JSON request
 
 ```js
-import { Ajax } from '@lion/ajax';
-const ajax = new Ajax();
+import { ajax } from '@lion/ajax';
 
 const { response, body } = await ajax.fetchJson('/api/users', {
   method: 'POST',
@@ -122,7 +120,6 @@ Different from fetch, `Ajax` throws when the server returns a 4xx or 5xx, return
 ```js preview-story
 export const errorHandling = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = async () => {
     try {
@@ -141,6 +138,7 @@ export const errorHandling = () => {
       }
     }
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -173,25 +171,24 @@ requested response, based on the options that are being passed.
 
 ### Getting started
 
-Create an `ajax` instance and add interceptors to it, using a cache configuration
-which is applied on application level. If a developer wants to add specifics to cache behavior
-they have to provide a cache config per action (`get`, `post`, etc.) via `cacheOptions` field of local ajax config,
+Consume the global `ajax` instance and add interceptors to it, using a cache configuration which is applied on application level. If a developer wants to add specifics to cache behaviour they have to provide a cache config per action (`get`, `post`, etc.) via `cacheOptions` field of local ajax config,
 see examples below.
 
 > **Note**: make sure to add the **interceptors** only **once**. This is usually
 > done on app-level
 
 ```js
-import { Ajax, createCacheInterceptors } from '@lion-web/ajax';
+import { ajax, createCacheInterceptors } from '@lion-web/ajax';
 
 const globalCacheOptions = {
   useCache: true,
   timeToLive: 1000 * 60 * 5, // 5 minutes
 };
+
 // Cache is removed each time an identifier changes,
 // for instance when a current user is logged out
 const getCacheIdentifier = () => getActiveProfile().profileId;
-const ajax = new Ajax();
+
 const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
   getCacheIdentifier,
   globalCacheOptions,
@@ -199,10 +196,11 @@ const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheIntercept
 
 ajax.addRequestInterceptor(cacheRequestInterceptor);
 ajax.addResponseInterceptor(cacheResponseInterceptor);
+
 const { response, body } = await ajax.fetchJson('/my-url');
 ```
 
-Alternatively, most often for subclassers, you can extend or import `Ajax` yourself, and pass cacheOptions when instantiating the ajax.
+Alternatively, most often for sub-classers, you can extend or import `Ajax` yourself, and pass cacheOptions when instantiating the ajax.
 
 ```js
 import { Ajax } from '@lion/ajax';
@@ -226,7 +224,6 @@ which is either undefined for normal requests, or set to true for responses that
 ```js preview-story
 export const cache = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = name => {
     ajax.fetchJson(`../assets/${name}.json`).then(result => {
@@ -234,6 +231,7 @@ export const cache = () => {
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -254,7 +252,6 @@ In this demo, when we fetch naga, we always pass `useCache: false` so the Respon
 ```js preview-story
 export const cacheActionOptions = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = name => {
     let actionCacheOptions;
@@ -269,6 +266,7 @@ export const cacheActionOptions = () => {
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -302,7 +300,6 @@ After TTL expires, the next request will set the cache again, and for the next 3
 ```js preview-story
 export const cacheTimeToLive = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = () => {
     ajax
@@ -316,6 +313,7 @@ export const cacheTimeToLive = () => {
         actionLogger.log(JSON.stringify(result.body, null, 2));
       });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -337,7 +335,6 @@ Now we will allow you to change this identifier to invalidate the cache.
 ```js preview-story
 export const changeCacheIdentifier = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = () => {
     ajax.fetchJson(`../assets/pabu.json`).then(result => {
@@ -380,7 +377,6 @@ Therefore, we invalidate the cache, so the user gets the latest state from the d
 ```js preview-story
 export const nonGETRequest = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = (name, method) => {
     ajax.fetchJson(`../assets/${name}.json`, { method }).then(result => {
@@ -388,6 +384,7 @@ export const nonGETRequest = () => {
       actionLogger.log(JSON.stringify(result.body, null, 2));
     });
   };
+
   return html`
     <style>
       sb-action-logger {
@@ -424,7 +421,6 @@ In this demo, invalidating the `pabu` endpoint will invalidate `naga`, but not t
 ```js preview-story
 export const invalidateRules = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
-  const ajax = new Ajax();
 
   const fetchHandler = (name, method) => {
     const actionCacheOptions = {};
@@ -442,6 +438,7 @@ export const invalidateRules = () => {
         actionLogger.log(JSON.stringify(result.body, null, 2));
       });
   };
+
   return html`
     <style>
       sb-action-logger {

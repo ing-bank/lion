@@ -3,7 +3,7 @@
 ```js script
 import { html } from '@lion/core';
 import { renderLitAsNode } from '@lion/helpers';
-import { Ajax, createCacheInterceptors } from '@lion/ajax';
+import { ajax, createCacheInterceptors } from '@lion/ajax';
 import '@lion/helpers/define';
 
 const getCacheIdentifier = () => {
@@ -20,7 +20,6 @@ const cacheOptions = {
   timeToLive: 1000 * 60 * 10, // 10 minutes
 };
 
-const ajax = new Ajax();
 const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
