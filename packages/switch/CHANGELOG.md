@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.16.1
+
+### Patch Changes
+
+- e297c2e1: Fire model-value-changed event with isTriggeredByUser: true when clicking the switch-button.
+- Updated dependencies [0ddd38c0]
+- Updated dependencies [0ddd38c0]
+  - @lion/form-core@0.13.0
+
 ## 0.16.0
 
 ### Minor Changes

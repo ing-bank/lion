@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.12.1
+
+### Patch Changes
+
+- 0ddd38c0: configure in constructor, so property effects use preconfigured value
+- Updated dependencies [0ddd38c0]
+- Updated dependencies [0ddd38c0]
+  - @lion/form-core@0.13.0
+  - @lion/input@0.14.1
+  - @lion/validate-messages@0.6.1
+
 ## 0.12.0
 
 ### Minor Changes
