@@ -14,6 +14,10 @@ body[layout='layout-home'] .markdown-body .call-to-action:nth-of-type(2):hover {
   text-decoration: underline;
 }
 
+.markdown-body .page-title {
+  margin-top: 64px;
+}
+
 #main-header a {
   font-weight: normal;
 }
