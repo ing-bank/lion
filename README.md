@@ -1,9 +1,10 @@
 <p align="center">
   <img
-    width="60%"
-    src="./assets/logo.png"
+    width="20%"
+    src="./docs/_assets/logo.svg"
     alt="Lion"
   />
+  <h1 style="text-align: center;">Lion</h1>
 </p>
 
 <p align="center">
@@ -35,8 +36,6 @@
   ·
   <a href="https://lion-web.netlify.app/blog/">Blog</a>
 </p>
-
-<h1></h1>
 
 **Lion is a set of highly performant, accessible and flexible Web Components.!**
 
