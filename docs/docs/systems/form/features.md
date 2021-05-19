@@ -141,12 +141,10 @@ export const main = () => {
         </lion-input-stepper>
         <lion-textarea name="comments" label="Comments"></lion-textarea>
         <div class="buttons">
-          <lion-button raised>Submit</lion-button>
-          <lion-button
-            type="button"
-            raised
+          <lion-button-submit>Submit</lion-button-submit>
+          <lion-button-reset
             @click=${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
-            >Reset</lion-button
+            >Reset</lion-button-reset
           >
         </div>
       </form>

@@ -94,8 +94,8 @@ Due to our custom inputs being Web Components, it is possible to put HTML conten
 ```js preview-story
 export const ButtonsWithFields = () => html`
   <lion-input label="Prefix and suffix">
-    <lion-button slot="prefix" type="button">prefix</lion-button>
-    <lion-button slot="suffix" type="button">suffix</lion-button>
+    <lion-button slot="prefix">prefix</lion-button>
+    <lion-button slot="suffix">suffix</lion-button>
   </lion-input>
 `;
 ```

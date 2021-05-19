@@ -145,15 +145,15 @@ export class UmbrellaForm extends LitElement {
           </lion-input-stepper>
           <lion-textarea name="comments" label="Comments"></lion-textarea>
           <div class="buttons">
-            <lion-button id="submit_button" raised>Submit</lion-button>
-            <lion-button
+            <lion-button-submit id="submit_button" raised>Submit</lion-button-submit>
+            <lion-button-reset
               id="reset_button"
               type="button"
               raised
               @click="${() => {
                 this._lionFormNode.resetGroup();
               }}"
-              >Reset</lion-button
+              >Reset</lion-button-reset
             >
           </div>
         </form>

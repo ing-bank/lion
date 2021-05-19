@@ -10,7 +10,7 @@ import '@lion/form/define';
 
 ## Submit & Reset
 
-To submit a form, use a regular button (or `LionButton`) with `type="submit"` (which is default) somewhere inside the native `<form>`.
+To submit a form, use a regular button (or `LionButtonSubmit`) somewhere inside the native `<form>`.
 
 Then, add a `submit` handler on the `lion-form`.
 
