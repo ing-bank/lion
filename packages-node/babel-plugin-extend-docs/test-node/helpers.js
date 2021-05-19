@@ -18,16 +18,8 @@ const baseConfig = {
         to: 'WolfInput',
         paths: [
           {
-            from: './index.js',
-            to: './index.js',
-          },
-          {
-            from: './src/LionInput.js',
-            to: './index.js',
-          },
-          {
             from: '@lion/input',
-            to: './index.js',
+            to: 'wolf-web/input',
           },
         ],
       },
@@ -36,12 +28,8 @@ const baseConfig = {
         to: 'wolf-input',
         paths: [
           {
-            from: './lion-input.js',
-            to: './__element-definitions/wolf-input.js',
-          },
-          {
             from: '@lion/input/define',
-            to: './__element-definitions/wolf-input.js',
+            to: '#input/define',
           },
         ],
       },
@@ -53,16 +41,8 @@ const baseConfig = {
         to: 'WolfButton',
         paths: [
           {
-            from: './index.js',
-            to: './index.js',
-          },
-          {
-            from: './src/LionButton.js',
-            to: './index.js',
-          },
-          {
             from: '@lion/button',
-            to: './index.js',
+            to: 'wolf-web/button',
           },
         ],
       },
@@ -71,12 +51,8 @@ const baseConfig = {
         to: 'wolf-button',
         paths: [
           {
-            from: './lion-button.js',
-            to: './__element-definitions/wolf-button.js',
-          },
-          {
             from: '@lion/button/define',
-            to: './__element-definitions/wolf-button.js',
+            to: '#button/define',
           },
         ],
       },
@@ -88,16 +64,8 @@ const baseConfig = {
         to: 'WolfCheckbox',
         paths: [
           {
-            from: './index.js',
-            to: './index.js',
-          },
-          {
-            from: './src/LionCheckbox.js',
-            to: './index.js',
-          },
-          {
             from: '@lion/checkbox-group',
-            to: './index.js',
+            to: 'wolf-web/checkbox-group',
           },
         ],
       },
@@ -106,12 +74,8 @@ const baseConfig = {
         to: 'wolf-checkbox',
         paths: [
           {
-            from: './lion-checkbox.js',
-            to: './__element-definitions/wolf-checkbox.js',
-          },
-          {
-            from: '@lion/checkbox-group/lion-checkbox.js',
-            to: './__element-definitions/wolf-checkbox.js',
+            from: '@lion/checkbox-group/define',
+            to: '#checkbox-group/define',
           },
         ],
       },
@@ -123,16 +87,8 @@ const baseConfig = {
         to: 'localize',
         paths: [
           {
-            from: './index.js',
-            to: './localize.js',
-          },
-          {
-            from: './src/localize.js',
-            to: './localize.js',
-          },
-          {
             from: '@lion/localize',
-            to: './localize.js',
+            to: 'wolf-web/localize',
           },
         ],
       },
