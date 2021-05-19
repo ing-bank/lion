@@ -60,6 +60,30 @@ describe('LocalizeManager', () => {
     expect(document.documentElement.lang).to.equal('en-GB');
   });
 
+  it('empties storage after reset() is invoked', async () => {
+    manager = new LocalizeManager();
+
+    let deferredResolve;
+    manager.loadNamespace({
+      generic: () =>
+        new Promise(resolve => {
+          deferredResolve = () => resolve({ greeting: 'Hello!' });
+        }),
+    });
+
+    const { loadingComplete } = manager;
+
+    manager.reset();
+    expect(getProtectedMembers(manager).storage).to.be.empty;
+
+    // @ts-ignore
+    deferredResolve();
+    await loadingComplete;
+
+    // storage still needs to be empty after promise is fulfilled.
+    expect(getProtectedMembers(manager).storage).to.be.empty;
+  });
+
   it('has teardown() method removing all side effects', () => {
     manager = new LocalizeManager();
     const disconnectObserverSpy = sinon.spy(

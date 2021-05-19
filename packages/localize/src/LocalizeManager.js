@@ -340,8 +340,14 @@ export class LocalizeManager {
        * @param {Object} obj.default
        */
       obj => {
-        const data = isLocalizeESModule(obj) ? obj.default : obj;
-        this.addData(locale, namespace, data);
+        // add data only if we have the promise in cache
+        if (
+          this.__namespaceLoaderPromisesCache[locale] &&
+          this.__namespaceLoaderPromisesCache[locale][namespace] === loaderPromise
+        ) {
+          const data = isLocalizeESModule(obj) ? obj.default : obj;
+          this.addData(locale, namespace, data);
+        }
       },
     );
   }
