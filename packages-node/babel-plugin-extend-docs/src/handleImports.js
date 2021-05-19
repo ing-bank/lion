@@ -26,9 +26,8 @@ function renameAndStoreImports({ path, state, opts, types: t }) {
         if (specifier.imported.name === change.variable.from) {
           for (const { from, to } of change.variable.paths) {
             if (managed === false && from === path.node.source.value) {
-              const relativePart = '../'.repeat(getFolderDepth(state.filePath));
               const importAs = getImportAs(specifier, change.variable.to);
-              const newPath = joinPaths(relativePart, to);
+              const newPath = to;
 
               // rename so it replaces all occurrences
               path.scope.rename(specifier.local.name, importAs);
@@ -80,9 +79,15 @@ function replaceTagImports({ path, state, opts, types: t }) {
     if (change.tag && Array.isArray(change.tag.paths) && change.tag.paths.length > 0) {
       for (const { from, to } of change.tag.paths) {
         if (from === path.node.source.value) {
-          const relativePart = '../'.repeat(getFolderDepth(state.filePath));
-          const updatedPath = joinPaths(relativePart, to);
-          path.node.source = t.stringLiteral(updatedPath);
+          if (!from.includes('.')) {
+            // const relativePart = '../'.repeat(getFolderDepth(state.filePath));
+            const updatedPath = from.replace('@lion/', '#');
+            path.node.source = t.stringLiteral(updatedPath);
+          } else {
+            const relativePart = '../'.repeat(getFolderDepth(state.filePath));
+            const updatedPath = joinPaths(relativePart, to);
+            path.node.source = t.stringLiteral(updatedPath);
+          }
         }
       }
     }

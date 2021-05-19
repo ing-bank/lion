@@ -3,6 +3,7 @@ const babel = require('@babel/core');
 const babelPluginExtendDocs = require('../src/babelPluginExtendDocs.js');
 
 function executeBabel(input, options) {
+  console.log('**Executing babel..\n');
   const result = babel.transform(input, {
     plugins: [[babelPluginExtendDocs, options]],
   });

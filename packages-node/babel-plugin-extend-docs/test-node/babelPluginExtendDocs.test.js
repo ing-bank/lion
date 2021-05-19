@@ -52,7 +52,8 @@ describe('babel-plugin-extend-docs', () => {
     ].join('\n');
     const output = [
       `import someDefaultHelper, { someHelper } from "@lion/input";`,
-      `import { WolfInput, WolfButton } from "wolf-web/input";`,
+      `import { WolfInput } from "wolf-web/input";`,
+      `import { WolfButton } from "wolf-web/button";`,
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
@@ -60,8 +61,9 @@ describe('babel-plugin-extend-docs', () => {
   it('replaces local src class imports (5)', () => {
     const code = `import { LionInput, LionFoo, LionBar, someHelper } from '@lion/input';`;
     const output = [
-      `import { WolfInput, WolfFoo } from "wolf-web/input";`,
-      `import { WolfBar } from "../../../somewhere-else.js";`,
+      `import { WolfInput } from "wolf-web/input";`,
+      `import { WolfFoo } from "./index.js";`,
+      `import { WolfBar } from "./somewhere-else.js";`,
       `import { someHelper } from "@lion/input";`,
     ].join('\n');
     const config = {
@@ -112,6 +114,7 @@ describe('babel-plugin-extend-docs', () => {
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
+  // Does this test make sense anymore?
   it('allows separate import paths of managed imports', () => {
     const code1 = `import { LionInput } from '@lion/input';`;
     const code2 = `import { LionInput } from '@lion/input';`;
@@ -177,8 +180,8 @@ describe('babel-plugin-extend-docs', () => {
   });
 
   it('does NOT replace imports not in the config', () => {
-    const code = `import { FooInput } from '@lion/input';`;
-    const output = `import { FooInput } from "wolf-web/input";`;
+    const code = `import { FooInput } from '@lion/calendar';`;
+    const output = `import { FooInput } from "@lion/calendar";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
