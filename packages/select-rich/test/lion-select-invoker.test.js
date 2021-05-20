@@ -1,5 +1,6 @@
 import { LionButton } from '@lion/button';
-import { defineCE, expect, fixture, html } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import '@lion/select-rich/define-select-invoker';
 import { LionSelectInvoker } from '../src/LionSelectInvoker.js';
 
@@ -14,12 +15,12 @@ describe('lion-select-invoker', () => {
   });
 
   it('renders invoker info based on selectedElement child elements', async () => {
-    const el = /** @type {LionSelectInvoker} */ (await fixture(
-      html`<lion-select-invoker></lion-select-invoker>`,
-    ));
-    el.selectedElement = /** @type {LionOption} */ (await fixture(
-      `<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`,
-    ));
+    const el = /** @type {LionSelectInvoker} */ (
+      await fixture(html`<lion-select-invoker></lion-select-invoker>`)
+    );
+    el.selectedElement = /** @type {LionOption} */ (
+      await fixture(`<div class="option">Textnode<h2>I am</h2><p>2 lines</p></div>`)
+    );
     await el.updateComplete;
 
     expect(el._contentWrapperNode).lightDom.to.equal(
@@ -35,38 +36,38 @@ describe('lion-select-invoker', () => {
   });
 
   it('renders invoker info based on selectedElement textContent', async () => {
-    const el = /** @type {LionSelectInvoker} */ (await fixture(
-      html`<lion-select-invoker></lion-select-invoker>`,
-    ));
-    el.selectedElement = /** @type {LionOption} */ (await fixture(
-      `<div class="option">just textContent</div>`,
-    ));
+    const el = /** @type {LionSelectInvoker} */ (
+      await fixture(html`<lion-select-invoker></lion-select-invoker>`)
+    );
+    el.selectedElement = /** @type {LionOption} */ (
+      await fixture(`<div class="option">just textContent</div>`)
+    );
     await el.updateComplete;
 
     expect(el._contentWrapperNode).lightDom.to.equal('just textContent');
   });
 
   it('has tabindex="0"', async () => {
-    const el = /** @type {LionSelectInvoker} */ (await fixture(
-      html`<lion-select-invoker></lion-select-invoker>`,
-    ));
+    const el = /** @type {LionSelectInvoker} */ (
+      await fixture(html`<lion-select-invoker></lion-select-invoker>`)
+    );
     expect(el.tabIndex).to.equal(0);
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
   it('should not render after slot when singleOption is true', async () => {
-    const el = /** @type {LionSelectInvoker} */ (await fixture(html`
-      <lion-select-invoker .singleOption="${true}"></lion-select-invoker>
-    `));
+    const el = /** @type {LionSelectInvoker} */ (
+      await fixture(html` <lion-select-invoker .singleOption="${true}"></lion-select-invoker> `)
+    );
 
     expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to.not
       .exist;
   });
 
   it('should render after slot when singleOption is not true', async () => {
-    const el = /** @type {LionSelectInvoker} */ (await fixture(
-      html`<lion-select-invoker></lion-select-invoker>`,
-    ));
+    const el = /** @type {LionSelectInvoker} */ (
+      await fixture(html`<lion-select-invoker></lion-select-invoker>`)
+    );
 
     expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector('slot[name="after"]')).to.exist;
   });
@@ -85,15 +86,15 @@ describe('lion-select-invoker', () => {
       );
       const el = /** @type {LionSelectInvoker} */ (await fixture(`<${myTag}></${myTag}>`));
 
-      el.selectedElement = /** @type {LionOption} */ (await fixture(
-        `<div class="option">cat</div>`,
-      ));
+      el.selectedElement = /** @type {LionOption} */ (
+        await fixture(`<div class="option">cat</div>`)
+      );
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('cat selected');
 
-      el.selectedElement = /** @type {LionOption} */ (await fixture(
-        `<div class="option">dog</div>`,
-      ));
+      el.selectedElement = /** @type {LionOption} */ (
+        await fixture(`<div class="option">dog</div>`)
+      );
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('no valid selection');
     });

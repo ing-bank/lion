@@ -111,9 +111,10 @@ class PBoard extends DecorateMixin(LitElement) {
                     checked
                     @change="${({ target }) => {
                       // TODO: of course, logic depending on dom is never a good idea
-                      const groupBoxes = target.parentElement.nextElementSibling.querySelectorAll(
-                        'input[type=checkbox]',
-                      );
+                      const groupBoxes =
+                        target.parentElement.nextElementSibling.querySelectorAll(
+                          'input[type=checkbox]',
+                        );
                       const { checked } = target;
                       Array.from(groupBoxes).forEach(box => {
                         // eslint-disable-next-line no-param-reassign

@@ -1,5 +1,6 @@
 import { Validator } from '@lion/form-core';
-import { expect, fixture, html, unsafeStatic, triggerFocusFor, aTimeout } from '@open-wc/testing';
+import { expect, fixture, triggerFocusFor, aTimeout } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { getInputMembers } from '../test-helpers/index.js';
 import '@lion/input/define';
 
@@ -113,9 +114,11 @@ describe('<lion-input>', () => {
   });
 
   it('automatically creates an <input> element if not provided by user', async () => {
-    const el = /** @type {LionInput} */ (await fixture(html`
+    const el = /** @type {LionInput} */ (
+      await fixture(html`
       <${tag}></${tag}>
-    `));
+    `)
+    );
     const { _inputNode } = getInputMembers(el);
 
     expect(el.querySelector('input')).to.equal(_inputNode);
@@ -162,12 +165,14 @@ describe('<lion-input>', () => {
         return result;
       }
     };
-    const el = /** @type {LionInput} */ (await fixture(html`
+    const el = /** @type {LionInput} */ (
+      await fixture(html`
       <${tag}
         .validators=${[new HasX()]}
         .modelValue=${'a@b.nl'}
       ></${tag}>
-    `));
+    `)
+    );
     expect(el.hasFeedbackFor).to.deep.equal(['error']);
     expect(el.validationStates.error.HasX).to.exist;
 
@@ -189,11 +194,13 @@ describe('<lion-input>', () => {
     });
 
     it('delegates property selectionStart and selectionEnd', async () => {
-      const el = /** @type {LionInput} */ (await fixture(html`
+      const el = /** @type {LionInput} */ (
+        await fixture(html`
         <${tag}
           .modelValue=${'Some text to select'}
         ></${tag}>
-      `));
+      `)
+      );
       const { _inputNode } = getInputMembers(el);
 
       el.selectionStart = 5;

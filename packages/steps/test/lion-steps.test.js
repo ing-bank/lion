@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture as _fixture, oneEvent } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/steps/define';
 

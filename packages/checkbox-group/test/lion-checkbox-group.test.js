@@ -1,5 +1,6 @@
 import { localizeTearDown } from '@lion/localize/test-helpers';
-import { expect, fixture as _fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import '@lion/checkbox-group/define';
 
 /**

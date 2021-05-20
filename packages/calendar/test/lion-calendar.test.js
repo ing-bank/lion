@@ -813,12 +813,10 @@ describe('<lion-calendar>', () => {
         `);
         const elObj = new CalendarObject(el);
         expect(
-          elObj.checkForAllDayObjs(/** @param {DayObject} d */ d => d.el.hasAttribute('disabled'), [
-            1,
-            2,
-            30,
-            31,
-          ]),
+          elObj.checkForAllDayObjs(
+            /** @param {DayObject} d */ d => d.el.hasAttribute('disabled'),
+            [1, 2, 30, 31],
+          ),
         ).to.equal(true);
 
         clock.restore();

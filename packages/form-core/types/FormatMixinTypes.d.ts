@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { BooleanAttributePart, LitElement } from '@lion/core';
+import { LitElement } from '@lion/core';
 import { FormatNumberOptions } from '@lion/localize/types/LocalizeMixinTypes';
 import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';

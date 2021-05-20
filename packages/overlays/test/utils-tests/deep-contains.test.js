@@ -13,12 +13,14 @@ describe('deepContains()', () => {
       <input id="el-3">
     `;
     const shadowElementChild = /** @type {HTMLElement} */ (shadowRoot.querySelector('#el-1'));
-    const element = /** @type {HTMLElement} */ (await fixture(html`
-      <div id="light">
-        ${shadowElement}
-        <button id="light-el-1"></button>
-      </div>
-    `));
+    const element = /** @type {HTMLElement} */ (
+      await fixture(html`
+        <div id="light">
+          ${shadowElement}
+          <button id="light-el-1"></button>
+        </div>
+      `)
+    );
     const lightChildEl = /** @type {HTMLElement} */ (element.querySelector('#light-el-1'));
 
     expect(deepContains(element, element)).to.be.true;
@@ -59,12 +61,14 @@ describe('deepContains()', () => {
 
     const shadowElementChild = /** @type {HTMLElement} */ (shadowRoot.querySelector('#el-2'));
     const shadowElementChild2 = /** @type {HTMLElement} */ (shadowRoot2.querySelector('#el-2'));
-    const element = /** @type {HTMLElement} */ (await fixture(html`
-      <div id="light">
-        ${shadowElement} ${shadowElement2}
-        <button id="light-el-1"></button>
-      </div>
-    `));
+    const element = /** @type {HTMLElement} */ (
+      await fixture(html`
+        <div id="light">
+          ${shadowElement} ${shadowElement2}
+          <button id="light-el-1"></button>
+        </div>
+      `)
+    );
 
     expect(deepContains(element, shadowElementChild)).to.be.true;
     expect(deepContains(shadowElement, shadowElementChild)).to.be.true;
@@ -93,21 +97,26 @@ describe('deepContains()', () => {
     `;
     shadowRoot.insertBefore(shadowNestedElement, shadowRoot.lastElementChild);
 
-    const element = /** @type {HTMLElement} */ (await fixture(html`
-      <div id="light">
-        ${shadowElement}
-        <button id="light-el-1"></button>
-      </div>
-    `));
+    const element = /** @type {HTMLElement} */ (
+      await fixture(html`
+        <div id="light">
+          ${shadowElement}
+          <button id="light-el-1"></button>
+        </div>
+      `)
+    );
 
     const elementFirstChild = /** @type {HTMLElement} */ (element.firstElementChild);
     const elementFirstChildShadow = /** @type {ShadowRoot} */ (elementFirstChild.shadowRoot);
-    const elementFirstChildShadowChildren = /** @type {HTMLElement[]} */ (Array.from(
-      elementFirstChildShadow.children,
-    ));
-    const elementFirstChildShadowChildShadow = /** @type {ShadowRoot} */ (elementFirstChildShadowChildren[1]
-      .shadowRoot);
-    const elementFirstChildShadowChildShadowLastChild = /** @type {HTMLElement} */ (elementFirstChildShadowChildShadow.lastElementChild);
+    const elementFirstChildShadowChildren = /** @type {HTMLElement[]} */ (
+      Array.from(elementFirstChildShadow.children)
+    );
+    const elementFirstChildShadowChildShadow = /** @type {ShadowRoot} */ (
+      elementFirstChildShadowChildren[1].shadowRoot
+    );
+    const elementFirstChildShadowChildShadowLastChild = /** @type {HTMLElement} */ (
+      elementFirstChildShadowChildShadow.lastElementChild
+    );
 
     expect(deepContains(element, elementFirstChild)).to.be.true;
     expect(deepContains(element, elementFirstChildShadow)).to.be.true;

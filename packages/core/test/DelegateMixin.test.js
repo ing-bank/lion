@@ -1,4 +1,5 @@
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { LitElement } from '../index.js';
 import { DelegateMixin } from '../src/DelegateMixin.js';
@@ -83,9 +84,9 @@ describe('DelegateMixin', () => {
     const element = await fixture(`<${tag}><button slot="button">click me</button></${tag}>`);
     const cb = sinon.spy();
     element.addEventListener('click', cb);
-    const childEl = /** @type {HTMLElement} */ (Array.from(element.children)?.find(
-      child => child.slot === 'button',
-    ));
+    const childEl = /** @type {HTMLElement} */ (
+      Array.from(element.children)?.find(child => child.slot === 'button')
+    );
     childEl?.click();
     expect(cb.callCount).to.equal(1);
   });
@@ -343,14 +344,14 @@ describe('DelegateMixin', () => {
     const tagName = unsafeStatic(tag);
 
     // Here, the Application Developerd tries to set the type via attribute
-    const elementAttr = /** @type {ScheduledElement} */ (await fixture(
-      `<${tag} type="radio"></${tag}>`,
-    ));
+    const elementAttr = /** @type {ScheduledElement} */ (
+      await fixture(`<${tag} type="radio"></${tag}>`)
+    );
     expect(elementAttr.scheduledElement?.type).to.equal('radio');
     // Here, the Application Developer tries to set the type via property
-    const elementProp = /** @type {ScheduledElement} */ (await fixture(
-      html`<${tagName} .type=${'radio'}></${tagName}>`,
-    ));
+    const elementProp = /** @type {ScheduledElement} */ (
+      await fixture(html`<${tagName} .type=${'radio'}></${tagName}>`)
+    );
     expect(elementProp.scheduledElement?.type).to.equal('radio');
   });
 

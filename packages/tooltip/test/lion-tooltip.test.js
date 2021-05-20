@@ -1,4 +1,5 @@
-import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/tooltip/define';
 
@@ -21,12 +22,14 @@ describe('lion-tooltip', () => {
 
   describe('Basic', () => {
     it('shows content on mouseenter and hide on mouseleave', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       const eventMouseEnter = new Event('mouseenter');
       el.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
@@ -41,12 +44,14 @@ describe('lion-tooltip', () => {
     });
 
     it('shows content on mouseenter and remain shown on focusout', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       const eventMouseEnter = new Event('mouseenter');
       el.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
@@ -60,15 +65,17 @@ describe('lion-tooltip', () => {
     });
 
     it('shows content on focusin and hide on focusout', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
-      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
-        child => child.slot === 'invoker',
-      ));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
@@ -83,15 +90,17 @@ describe('lion-tooltip', () => {
     });
 
     it('shows content on focusin and remain shown on mouseleave', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
-      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
-        child => child.slot === 'invoker',
-      ));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);
       await el.updateComplete;
@@ -105,15 +114,17 @@ describe('lion-tooltip', () => {
     });
 
     it('stays hidden on disabled invoker', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker" disabled>Tooltip button</button>
-        </lion-tooltip>
-      `));
-      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
-        child => child.slot === 'invoker',
-      ));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker" disabled>Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
       const eventMouseEnter = new Event('mouseenter');
       el.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
@@ -127,15 +138,17 @@ describe('lion-tooltip', () => {
     });
 
     it('stays hidden on aria-disabled invoker', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker" aria-disabled="true">Tooltip button</button>
-        </lion-tooltip>
-      `));
-      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
-        child => child.slot === 'invoker',
-      ));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker" aria-disabled="true">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
       const eventMouseEnter = new Event('mouseenter');
       el.dispatchEvent(eventMouseEnter);
       await el.updateComplete;
@@ -149,17 +162,19 @@ describe('lion-tooltip', () => {
     });
 
     it('contains html when specified in tooltip content body', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">
-            This is Tooltip using <strong id="click_overlay">overlay</strong>
-          </div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
-      const invoker = /** @type {HTMLElement} */ (Array.from(el.children).find(
-        child => child.slot === 'invoker',
-      ));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">
+              This is Tooltip using <strong id="click_overlay">overlay</strong>
+            </div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
       const event = new Event('mouseenter');
       invoker.dispatchEvent(event);
       await el.updateComplete;
@@ -169,34 +184,38 @@ describe('lion-tooltip', () => {
 
   describe('Arrow', () => {
     it('shows when "has-arrow" is configured', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip has-arrow>
-          <div slot="content">
-            This is Tooltip using <strong id="click_overlay">overlay</strong>
-          </div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip has-arrow>
+            <div slot="content">
+              This is Tooltip using <strong id="click_overlay">overlay</strong>
+            </div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       expect(el._arrowNode).to.be.displayed;
     });
 
     it('makes sure positioning of the arrow is correct', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip
-          has-arrow
-          .config="${
-            /** @type {OverlayConfig} */ ({
-              popperConfig: {
-                placement: 'right',
-              },
-            })
-          }"
-          style="position: relative; top: 10px;"
-        >
-          <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
-          <button slot="invoker" style="height: 30px;">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip
+            has-arrow
+            .config="${
+              /** @type {OverlayConfig} */ ({
+                popperConfig: {
+                  placement: 'right',
+                },
+              })
+            }"
+            style="position: relative; top: 10px;"
+          >
+            <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
+            <button slot="invoker" style="height: 30px;">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
 
       el.opened = true;
 
@@ -221,12 +240,14 @@ describe('lion-tooltip', () => {
 
   describe('Positioning', () => {
     it('updates popper positioning correctly, without overriding other modifiers', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip style="position: absolute; top: 100px" opened>
-          <div slot="content">Hey there</div>
-          <div slot="invoker">Tooltip button</div>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip style="position: absolute; top: 100px" opened>
+            <div slot="content">Hey there</div>
+            <div slot="invoker">Tooltip button</div>
+          </lion-tooltip>
+        `)
+      );
 
       await aTimeout(0);
       // @ts-expect-error allow protected props in tests
@@ -253,12 +274,14 @@ describe('lion-tooltip', () => {
 
   describe('Accessibility', () => {
     it('should have a tooltip role set on the tooltip', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
 
       // FIXME: This should be refactored to Array.from(this.children).find(child => child.slot === 'content').
       // When this issue is fixed https://github.com/ing-bank/lion/issues/382
@@ -267,12 +290,14 @@ describe('lion-tooltip', () => {
     });
 
     it('should have aria-describedby role set on the invoker', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       const content = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
       const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot=invoker]'));
       expect(invoker.getAttribute('aria-describedby')).to.be.equal(content.id);
@@ -280,12 +305,14 @@ describe('lion-tooltip', () => {
     });
 
     it('should have aria-labelledby role set on the invoker when [ invoker-relation="label"]', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip invoker-relation="label">
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip invoker-relation="label">
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       const content = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
       const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot=invoker]'));
       expect(invoker.getAttribute('aria-describedby')).to.be.equal(null);
@@ -293,22 +320,26 @@ describe('lion-tooltip', () => {
     });
 
     it('should be accessible when closed', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       await expect(el).to.be.accessible;
     });
 
     it('should be accessible when opened', async () => {
-      const el = /** @type {LionTooltip} */ (await fixture(html`
-        <lion-tooltip>
-          <div slot="content">Hey there</div>
-          <button slot="invoker">Tooltip button</button>
-        </lion-tooltip>
-      `));
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
       const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
       const eventFocusIn = new Event('focusin');
       invoker.dispatchEvent(eventFocusIn);

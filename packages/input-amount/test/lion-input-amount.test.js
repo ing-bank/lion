@@ -18,30 +18,34 @@ describe('<lion-input-amount>', () => {
   });
 
   it('uses formatAmount for formatting', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
     expect(el.formatter).to.equal(formatAmount);
   });
 
   it('formatAmount uses currency provided on webcomponent', async () => {
     // JOD displays 3 fraction digits by default
     localize.locale = 'fr-FR';
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      html`<lion-input-amount currency="JOD" .modelValue="${123}"></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`<lion-input-amount currency="JOD" .modelValue="${123}"></lion-input-amount>`,
+      )
+    );
     expect(el.formattedValue).to.equal('123,000');
   });
 
   it('formatAmount uses locale provided in formatOptions', async () => {
-    let el = /** @type {LionInputAmount} */ (await fixture(
-      html`
-        <lion-input-amount
-          .formatOptions="${{ locale: 'en-GB' }}"
-          .modelValue="${123}"
-        ></lion-input-amount>
-      `,
-    ));
+    let el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`
+          <lion-input-amount
+            .formatOptions="${{ locale: 'en-GB' }}"
+            .modelValue="${123}"
+          ></lion-input-amount>
+        `,
+      )
+    );
     expect(el.formattedValue).to.equal('123.00');
     el = await fixture(
       html`
@@ -55,9 +59,11 @@ describe('<lion-input-amount>', () => {
   });
 
   it('ignores global locale change if property is provided', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(html`
-      <lion-input-amount .modelValue=${123456.78} .locale="${'en-GB'}"></lion-input-amount>
-    `));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(html`
+        <lion-input-amount .modelValue=${123456.78} .locale="${'en-GB'}"></lion-input-amount>
+      `)
+    );
     expect(el.formattedValue).to.equal('123,456.78'); // British
     localize.locale = 'nl-NL';
     await aTimeout(0);
@@ -65,24 +71,24 @@ describe('<lion-input-amount>', () => {
   });
 
   it('uses parseAmount for parsing', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
     expect(el.parser).to.equal(parseAmount);
   });
 
   it('sets inputmode attribute to decimal', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
     const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
     expect(_inputNode.getAttribute('inputmode')).to.equal('decimal');
   });
 
   it('has type="text" to activate default keyboard on mobile with all necessary symbols', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
     const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
     expect(_inputNode.type).to.equal('text');
   });
@@ -93,9 +99,9 @@ describe('<lion-input-amount>', () => {
   });
 
   it('displays currency if provided', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount currency="EUR"></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+    );
     expect(
       /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
         ?.innerText,
@@ -104,9 +110,9 @@ describe('<lion-input-amount>', () => {
 
   it('displays correct currency for TRY if locale is tr-TR', async () => {
     localize.locale = 'tr-TR';
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount currency="TRY"></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount currency="TRY"></lion-input-amount>`)
+    );
     expect(
       /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
         ?.innerText,
@@ -114,9 +120,9 @@ describe('<lion-input-amount>', () => {
   });
 
   it('can update currency', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount currency="EUR"></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+    );
     el.currency = 'USD';
     await el.updateComplete;
     expect(
@@ -126,9 +132,11 @@ describe('<lion-input-amount>', () => {
   });
 
   it('ignores currency if a suffix is already present', async () => {
-    const el = /** @type {LionInputAmount} */ (await fixture(
-      `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
-    ));
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
+      )
+    );
     expect(
       /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
         ?.innerText,
@@ -143,18 +151,18 @@ describe('<lion-input-amount>', () => {
 
   describe('Accessibility', () => {
     it('adds currency id to aria-labelledby of input', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(
-        `<lion-input-amount currency="EUR"></lion-input-amount>`,
-      ));
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+      );
       expect(el._currencyDisplayNode?.getAttribute('data-label')).to.be.not.null;
       const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
       expect(_inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode?.id);
     });
 
     it('adds an aria-label to currency slot', async () => {
-      const el = /** @type {LionInputAmount} */ (await fixture(
-        `<lion-input-amount currency="EUR"></lion-input-amount>`,
-      ));
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+      );
       expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('euros');
       el.currency = 'USD';
       await el.updateComplete;

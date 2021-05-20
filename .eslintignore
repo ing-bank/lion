@@ -7,3 +7,4 @@ storybook-static/
 _site-dev
 _site
 docs/_merged_*
+patches/

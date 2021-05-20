@@ -36,9 +36,8 @@ There are the following methods available to control the pagination.
 ```js preview-story
 export const methods = ({ shadowRoot }) => {
   setTimeout(() => {
-    shadowRoot.getElementById('pagination-method-demo').innerText = shadowRoot.getElementById(
-      'pagination-method',
-    ).current;
+    shadowRoot.getElementById('pagination-method-demo').innerText =
+      shadowRoot.getElementById('pagination-method').current;
   });
 
   return html`
@@ -80,9 +79,8 @@ export const methods = ({ shadowRoot }) => {
 ```js preview-story
 export const event = ({ shadowRoot }) => {
   setTimeout(() => {
-    shadowRoot.getElementById('pagination-event-demo-text').innerText = shadowRoot.getElementById(
-      'pagination-event-demo',
-    ).current;
+    shadowRoot.getElementById('pagination-event-demo-text').innerText =
+      shadowRoot.getElementById('pagination-event-demo').current;
   });
 
   return html`

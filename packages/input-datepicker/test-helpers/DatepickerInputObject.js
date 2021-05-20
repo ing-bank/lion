@@ -57,13 +57,15 @@ export class DatepickerInputObject {
   }
 
   get overlayHeadingEl() {
-    return /** @type {HTMLElement} */ (this.overlayEl &&
-      this.overlayEl.shadowRoot?.querySelector('.calendar-overlay__heading'));
+    return /** @type {HTMLElement} */ (
+      this.overlayEl && this.overlayEl.shadowRoot?.querySelector('.calendar-overlay__heading')
+    );
   }
 
   get overlayCloseButtonEl() {
-    return /** @type {HTMLElement} */ (this.calendarEl &&
-      this.overlayEl.shadowRoot?.querySelector('#close-button'));
+    return /** @type {HTMLElement} */ (
+      this.calendarEl && this.overlayEl.shadowRoot?.querySelector('#close-button')
+    );
   }
 
   get calendarEl() {

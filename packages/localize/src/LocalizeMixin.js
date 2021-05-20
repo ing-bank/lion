@@ -2,6 +2,7 @@ import { dedupeMixin, until, nothing } from '@lion/core';
 import { localize } from './localize.js';
 
 /**
+ * @typedef {import('@lion/core').DirectiveResult} DirectiveResult
  * @typedef {import('../types/LocalizeMixinTypes').LocalizeMixin} LocalizeMixin
  */
 
@@ -84,7 +85,7 @@ const LocalizeMixinImplementation = superclass =>
      * @param {Object.<string,?>} variables
      * @param {Object} [options]
      * @param {string} [options.locale]
-     * @return {string | function}
+     * @returns {string | DirectiveResult}
      */
     msgLit(keys, variables, options) {
       if (this.__localizeMessageSync) {

@@ -61,8 +61,8 @@ export const OverlayMixinImplementation = superclass =>
      * @param {string} name
      * @param {any} oldValue
      */
-    requestUpdateInternal(name, oldValue) {
-      super.requestUpdateInternal(name, oldValue);
+    requestUpdate(name, oldValue) {
+      super.requestUpdate(name, oldValue);
       if (name === 'opened' && this.opened !== oldValue) {
         this.dispatchEvent(new Event('opened-changed'));
       }

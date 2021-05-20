@@ -1,4 +1,5 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
@@ -64,28 +65,30 @@ describe('Form Integrations', () => {
 
   describe('Form Integrations', () => {
     it('does not become dirty when elements are prefilled', async () => {
-      const el = /** @type {UmbrellaForm} */ (await fixture(
-        html`<umbrella-form
-          .serializedValue="${{
-            full_name: { first_name: '', last_name: '' },
-            date: '2000-12-12',
-            datepicker: '2020-12-12',
-            bio: '',
-            money: '',
-            iban: '',
-            email: '',
-            checkers: ['foo', 'bar'],
-            dinosaurs: 'brontosaurus',
-            favoriteFruit: 'Banana',
-            favoriteMovie: 'Rocky',
-            favoriteColor: 'hotpink',
-            lyrics: '1',
-            range: 2.3,
-            terms: [],
-            comments: '',
-          }}"
-        ></umbrella-form>`,
-      ));
+      const el = /** @type {UmbrellaForm} */ (
+        await fixture(
+          html`<umbrella-form
+            .serializedValue="${{
+              full_name: { first_name: '', last_name: '' },
+              date: '2000-12-12',
+              datepicker: '2020-12-12',
+              bio: '',
+              money: '',
+              iban: '',
+              email: '',
+              checkers: ['foo', 'bar'],
+              dinosaurs: 'brontosaurus',
+              favoriteFruit: 'Banana',
+              favoriteMovie: 'Rocky',
+              favoriteColor: 'hotpink',
+              lyrics: '1',
+              range: 2.3,
+              terms: [],
+              comments: '',
+            }}"
+          ></umbrella-form>`,
+        )
+      );
 
       await el._lionFormNode.initComplete;
       expect(el._lionFormNode.dirty).to.be.false;

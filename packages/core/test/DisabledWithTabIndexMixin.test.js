@@ -1,6 +1,6 @@
 /* eslint-disable lit-a11y/tabindex-no-positive */
-import { expect, fixture, html } from '@open-wc/testing';
-
+import { expect, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { LitElement } from '../index.js';
 import { DisabledWithTabIndexMixin } from '../src/DisabledWithTabIndexMixin.js';
 
@@ -11,17 +11,17 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('has an initial tabIndex of 0', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html` <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index> `)
+    );
     expect(el.tabIndex).to.equal(0);
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
 
   it('sets tabIndex to -1 if disabled', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html` <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index> `)
+    );
     el.disabled = true;
     expect(el.tabIndex).to.equal(-1);
     await el.updateComplete;
@@ -29,9 +29,11 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('disabled does not override user provided tabindex', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index tabindex="5" disabled></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html`
+        <can-be-disabled-with-tab-index tabindex="5" disabled></can-be-disabled-with-tab-index>
+      `)
+    );
     expect(el.getAttribute('tabindex')).to.equal('-1');
     el.disabled = false;
     await el.updateComplete;
@@ -39,9 +41,11 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('can be disabled imperatively', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index disabled></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html`
+        <can-be-disabled-with-tab-index disabled></can-be-disabled-with-tab-index>
+      `)
+    );
     expect(el.getAttribute('tabindex')).to.equal('-1');
 
     el.disabled = false;
@@ -56,9 +60,9 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('will not allow to change tabIndex after makeRequestToBeDisabled()', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html` <can-be-disabled-with-tab-index></can-be-disabled-with-tab-index> `)
+    );
     el.makeRequestToBeDisabled();
 
     el.tabIndex = 5;
@@ -68,9 +72,11 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('will restore last tabIndex after retractRequestToBeDisabled()', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index tabindex="5"></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html`
+        <can-be-disabled-with-tab-index tabindex="5"></can-be-disabled-with-tab-index>
+      `)
+    );
     el.makeRequestToBeDisabled();
     expect(el.tabIndex).to.equal(-1);
     await el.updateComplete;
@@ -97,9 +103,11 @@ describe('DisabledWithTabIndexMixin', () => {
   });
 
   it('may allow multiple calls to retractRequestToBeDisabled', async () => {
-    const el = /** @type {WithTabIndex} */ (await fixture(html`
-      <can-be-disabled-with-tab-index disabled></can-be-disabled-with-tab-index>
-    `));
+    const el = /** @type {WithTabIndex} */ (
+      await fixture(html`
+        <can-be-disabled-with-tab-index disabled></can-be-disabled-with-tab-index>
+      `)
+    );
     el.retractRequestToBeDisabled();
     el.retractRequestToBeDisabled();
     expect(el.disabled).to.be.true;

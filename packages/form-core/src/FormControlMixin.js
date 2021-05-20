@@ -7,7 +7,6 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {import('@lion/core').CSSResult} CSSResult
  * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
- * @typedef {import('@lion/core').nothing} nothing
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import('./validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback
  * @typedef {import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
@@ -765,7 +764,6 @@ const FormControlMixinImplementation = superclass =>
       if (this._ariaLabelledNodes.includes(element)) {
         this._ariaLabelledNodes.splice(this._ariaLabelledNodes.indexOf(element), 1);
         this._ariaLabelledNodes = [...this._ariaLabelledNodes];
-
         // This value will be read when we need to reflect to attr
         /** @type {boolean} */
         this.__reorderAriaLabelledNodes = false;

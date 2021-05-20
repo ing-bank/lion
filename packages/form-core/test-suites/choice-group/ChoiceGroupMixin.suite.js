@@ -2,7 +2,9 @@ import { LitElement } from '@lion/core';
 import { LionInput } from '@lion/input';
 import '@lion/fieldset/define';
 import { FormGroupMixin, Required } from '@lion/form-core';
-import { expect, html, fixture, fixtureSync, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, fixtureSync } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
+
 import sinon from 'sinon';
 import { ChoiceGroupMixin } from '../../src/choice-group/ChoiceGroupMixin.js';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
@@ -41,13 +43,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
   describe(`ChoiceGroupMixin: ${cfg.parentTagString}`, () => {
     if (cfg.choiceType === 'single') {
       it('has a single modelValue representing the currently checked radio value', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'} checked></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
         expect(el.modelValue).to.equal('female');
         el.formElements[0].checked = true;
         expect(el.modelValue).to.equal('male');
@@ -56,13 +60,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
 
       it('has a single formattedValue representing the currently checked radio value', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} name="gender">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'} checked></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
         expect(el.formattedValue).to.equal('female');
         el.formElements[0].checked = true;
         expect(el.formattedValue).to.equal('male');
@@ -72,16 +78,20 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     }
 
     it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'} checked></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
-      const invalidChild = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      `)
+      );
+      const invalidChild = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${childTag} .modelValue=${'Lara'}></${childTag}>
-      `));
+      `)
+      );
 
       expect(() => {
         el.addFormElement(invalidChild);
@@ -91,31 +101,37 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('automatically sets the name property of child fields to its own name', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'female'} checked></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       expect(el.formElements[0].name).to.equal('gender[]');
       expect(el.formElements[1].name).to.equal('gender[]');
 
-      const validChild = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const validChild = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${childTag} .choiceValue=${'male'}></${childTag}>
-      `));
+      `)
+      );
       el.appendChild(validChild);
 
       expect(el.formElements[2].name).to.equal('gender[]');
     });
 
     it('automatically updates the name property of child fields to its own name', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag}></${childTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       expect(el.formElements[0].name).to.equal('gender[]');
       expect(el.formElements[1].name).to.equal('gender[]');
@@ -129,12 +145,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('prevents updating the name property of a child if it is different from its parent', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag}></${childTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       expect(el.formElements[0].name).to.equal('gender[]');
       expect(el.formElements[1].name).to.equal('gender[]');
@@ -146,12 +164,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('allows updating the name property of a child if parent tagName does not include childTagname', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTagFoo}></${childTagFoo}>
           <${childTagFoo}></${childTagFoo}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       expect(el.formElements[0].name).to.equal('gender[]');
       expect(el.formElements[1].name).to.equal('gender[]');
@@ -163,12 +183,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('allows setting the condition for syncing the name property of a child to parent', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTagBar}></${childTagBar}>
           <${childTagBar}></${childTagBar}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       expect(el.formElements[0].name).to.equal('gender[]');
       expect(el.formElements[1].name).to.equal('gender[]');
@@ -180,29 +202,35 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('adjusts the name of a child element if it has a different name than the group', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'female'} checked></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
-      const invalidChild = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const invalidChild = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${childTag} name="foo" .choiceValue=${'male'}></${childTag}>
-      `));
+      `)
+      );
       el.addFormElement(invalidChild);
       await invalidChild.updateComplete;
       expect(invalidChild.name).to.equal('gender[]');
     });
 
     it('can set initial modelValue on creation', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]" .modelValue=${'other'}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.equal('other');
@@ -213,13 +241,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can set initial serializedValue on creation', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]" .serializedValue=${'other'}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.serializedValue).to.equal('other');
@@ -230,13 +260,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can set initial formattedValue on creation', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]" .formattedValue=${'other'}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.formattedValue).to.equal('other');
@@ -247,13 +279,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('correctly handles modelValue being set before registrationComplete', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (fixtureSync(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        fixtureSync(html`
         <${parentTag} name="gender[]" .modelValue=${null}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         el.modelValue = 'other';
@@ -267,13 +301,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('correctly handles serializedValue being set before registrationComplete', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (fixtureSync(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        fixtureSync(html`
         <${parentTag} name="gender[]" .serializedValue=${null}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         // @ts-expect-error
@@ -289,13 +325,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can handle null and undefined modelValues', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]" .modelValue=${null}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.equal('');
@@ -315,12 +353,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     it('can handle complex data via choiceValue', async () => {
       const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="data[]">
           <${childTag} .choiceValue=${{ some: 'data' }}></${childTag}>
           <${childTag} .choiceValue=${date} checked></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.equal(date);
@@ -334,12 +374,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can handle 0 and empty string as valid values', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="data[]">
           <${childTag} .choiceValue=${0} checked></${childTag}>
           <${childTag} .choiceValue=${''}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.equal(0);
@@ -353,7 +395,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can check a choice by supplying an available modelValue', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag}
             .modelValue="${{ value: 'male', checked: false }}"
@@ -365,7 +408,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
             .modelValue="${{ value: 'other', checked: false }}"
           ></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.equal('female');
@@ -377,7 +421,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can check a choice by supplying an available modelValue even if this modelValue is an array or object', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag}
             .modelValue="${{ value: { v: 'male' }, checked: false }}"
@@ -389,7 +434,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
             .modelValue="${{ value: { v: 'other' }, checked: false }}"
           ></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.modelValue).to.eql({ v: 'female' });
@@ -407,7 +453,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 
     it('expect child nodes to only fire one model-value-changed event per instance', async () => {
       let counter = 0;
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag}
           name="gender[]"
           @model-value-changed=${() => {
@@ -420,7 +467,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
           ></${childTag}>
           <${childTag} .choiceValue=${'other'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       counter = 0; // reset after setup which may result in different results
 
@@ -454,14 +502,16 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can be required', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]" .validators=${[new Required()]}>
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag}
             .choiceValue=${{ subObject: 'satisfies required' }}
           ></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates.error).to.exist;
       expect(el.validationStates.error.Required).to.exist;
@@ -478,12 +528,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('returns serialized value', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       el.formElements[0].checked = true;
       if (cfg.choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('male');
@@ -493,12 +545,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('returns serialized value on unchecked state', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
 
       if (cfg.choiceType === 'single') {
         expect(el.serializedValue).to.deep.equal('');
@@ -508,12 +562,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     it('can be cleared', async () => {
-      const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+      const el = /** @type {ChoiceInputGroup} */ (
+        await fixture(html`
         <${parentTag} name="gender[]">
           <${childTag} .choiceValue=${'male'}></${childTag}>
           <${childTag} .choiceValue=${'female'}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       el.formElements[0].checked = true;
       el.clear();
 
@@ -526,13 +582,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 
     describe('multipleChoice', () => {
       it('has a single modelValue representing all currently checked values', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} multiple-choice name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'} checked></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         expect(el.modelValue).to.eql(['female']);
         el.formElements[0].checked = true;
@@ -542,13 +600,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
 
       it('has a single serializedValue representing all currently checked values', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} multiple-choice name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'} checked></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         expect(el.serializedValue).to.eql(['female']);
         el.formElements[0].checked = true;
@@ -558,13 +618,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
 
       it('has a single formattedValue representing all currently checked values', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} multiple-choice name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'} checked></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         expect(el.formattedValue).to.eql(['female']);
         el.formElements[0].checked = true;
@@ -574,13 +636,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
 
       it('can check multiple checkboxes by setting the modelValue', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} multiple-choice name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
             <${childTag} .choiceValue=${'female'}></${childTag}>
             <${childTag} .choiceValue=${'other'}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         el.modelValue = ['male', 'other'];
         expect(el.modelValue).to.eql(['male', 'other']);
@@ -589,13 +653,15 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
 
       it('unchecks non-matching checkboxes when setting the modelValue', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <${parentTag} multiple-choice name="gender[]">
             <${childTag} .choiceValue=${'male'} checked></${childTag}>
             <${childTag} .choiceValue=${'female'}></${childTag}>
             <${childTag} .choiceValue=${'other'} checked></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         expect(el.modelValue).to.eql(['male', 'other']);
         expect(el.formElements[0].checked).to.be.true;
@@ -610,7 +676,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 
     describe('Integration with a parent form/fieldset', () => {
       it('will serialize all children with their serializedValue', async () => {
-        const el = /** @type {ChoiceInputGroup} */ (await fixture(html`
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
           <lion-fieldset>
             <${parentTag} name="gender[]">
               <${childTag} .choiceValue=${'male'} checked disabled></${childTag}>
@@ -618,7 +685,8 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
               <${childTag} .choiceValue=${'other'}></${childTag}>
             </${parentTag}>
           </lion-fieldset>
-        `));
+        `)
+        );
 
         if (cfg.choiceType === 'single') {
           expect(el.serializedValue).to.deep.equal({ 'gender[]': ['female'] });
@@ -641,19 +709,19 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         </lion-fieldset>
       `);
 
-        const choiceGroupEl = /** @type {ChoiceInputGroup} */ (formEl.querySelector(
-          '[name=choice-group]',
-        ));
+        const choiceGroupEl = /** @type {ChoiceInputGroup} */ (
+          formEl.querySelector('[name=choice-group]')
+        );
         if (choiceGroupEl.multipleChoice) {
           return;
         }
         /** @typedef {{ checked: boolean }} checkedInterface */
-        const option1El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option1',
-        ));
-        const option2El = /** @type {HTMLElement & checkedInterface} */ (formEl.querySelector(
-          '#option2',
-        ));
+        const option1El = /** @type {HTMLElement & checkedInterface} */ (
+          formEl.querySelector('#option1')
+        );
+        const option2El = /** @type {HTMLElement & checkedInterface} */ (
+          formEl.querySelector('#option2')
+        );
         formEl.addEventListener('model-value-changed', formSpy);
         choiceGroupEl?.addEventListener('model-value-changed', choiceGroupSpy);
 

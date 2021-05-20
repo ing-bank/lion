@@ -2,14 +2,8 @@ import { unsafeHTML } from '@lion/core';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { Required, Validator } from '@lion/form-core';
-import {
-  expect,
-  fixture,
-  html,
-  triggerBlurFor,
-  triggerFocusFor,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { expect, fixture, triggerBlurFor, triggerFocusFor } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import '@lion/form-core/define-field';
@@ -60,31 +54,31 @@ describe('<lion-field>', () => {
   });
 
   it(`has a fieldName based on the label`, async () => {
-    const el1 = /** @type {LionField} */ (await fixture(
-      html`<${tag} label="foo">${inputSlot}</${tag}>`,
-    ));
+    const el1 = /** @type {LionField} */ (
+      await fixture(html`<${tag} label="foo">${inputSlot}</${tag}>`)
+    );
     const { _labelNode: _labelNode1 } = getFormControlMembers(el1);
 
     expect(el1.fieldName).to.equal(_labelNode1.textContent);
 
-    const el2 = /** @type {LionField} */ (await fixture(
-      html`<${tag}><label slot="label">bar</label>${inputSlot}</${tag}>`,
-    ));
+    const el2 = /** @type {LionField} */ (
+      await fixture(html`<${tag}><label slot="label">bar</label>${inputSlot}</${tag}>`)
+    );
     const { _labelNode: _labelNode2 } = getFormControlMembers(el2);
     expect(el2.fieldName).to.equal(_labelNode2.textContent);
   });
 
   it(`has a fieldName based on the name if no label exists`, async () => {
-    const el = /** @type {LionField} */ (await fixture(
-      html`<${tag} name="foo">${inputSlot}</${tag}>`,
-    ));
+    const el = /** @type {LionField} */ (
+      await fixture(html`<${tag} name="foo">${inputSlot}</${tag}>`)
+    );
     expect(el.fieldName).to.equal(el.name);
   });
 
   it(`can override fieldName`, async () => {
-    const el = /** @type {LionField} */ (await fixture(
-      html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlot}</${tag}>`,
-    ));
+    const el = /** @type {LionField} */ (
+      await fixture(html`<${tag} label="foo" .fieldName="${'bar'}">${inputSlot}</${tag}>`)
+    );
     // @ts-ignore [allow-protected] in test
     expect(el.__fieldName).to.equal(el.fieldName);
   });
@@ -134,9 +128,9 @@ describe('<lion-field>', () => {
   });
 
   it('can be cleared which erases value, validation and interaction states', async () => {
-    const el = /** @type {LionField} */ (await fixture(
-      html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`,
-    ));
+    const el = /** @type {LionField} */ (
+      await fixture(html`<${tag} value="Some value from attribute">${inputSlot}</${tag}>`)
+    );
     el.clear();
     expect(el.modelValue).to.equal('');
     el.modelValue = 'Some value from property';
@@ -146,10 +140,12 @@ describe('<lion-field>', () => {
   });
 
   it('can be reset which restores original modelValue', async () => {
-    const el = /** @type {LionField} */ (await fixture(html`
+    const el = /** @type {LionField} */ (
+      await fixture(html`
       <${tag} .modelValue="${'foo'}">
         ${inputSlot}
-      </${tag}>`));
+      </${tag}>`)
+    );
     expect(el._initialModelValue).to.equal('foo');
     el.modelValue = 'bar';
     el.reset();
@@ -171,13 +167,15 @@ describe('<lion-field>', () => {
         <div   slot="feedback"   id="feedback-[id]">[feedback] </span>
       </lion-field>
       ~~~`, async () => {
-      const el = /** @type {LionField} */ (await fixture(html`<${tag}>
+      const el = /** @type {LionField} */ (
+        await fixture(html`<${tag}>
             <label slot="label">My Name</label>
             ${inputSlot}
             <span slot="help-text">Enter your Name</span>
             <span slot="feedback">No name entered</span>
           </${tag}>
-        `));
+        `)
+      );
       const nativeInput = getSlot(el, 'input');
       // @ts-ignore allow protected accessors in tests
       const inputId = el._inputId;
@@ -188,14 +186,16 @@ describe('<lion-field>', () => {
 
     it(`allows additional slots (prefix, suffix, before, after) to be included in labelledby
     (via attribute data-label) and in describedby (via attribute data-description)`, async () => {
-      const el = /** @type {LionField} */ (await fixture(html`<${tag}>
+      const el = /** @type {LionField} */ (
+        await fixture(html`<${tag}>
             ${inputSlot}
             <span slot="before" data-label>[before]</span>
             <span slot="after"  data-label>[after]</span>
             <span slot="prefix" data-description>[prefix]</span>
             <span slot="suffix" data-description>[suffix]</span>
           </${tag}>
-        `));
+        `)
+      );
 
       const nativeInput = getSlot(el, 'input');
       // @ts-ignore allow protected accessors in tests
@@ -234,14 +234,16 @@ describe('<lion-field>', () => {
           return result;
         }
       };
-      const el = /** @type {LionField} */ (await fixture(html`
+      const el = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}
           .validators=${[new HasX()]}
           .modelValue=${'a@b.nl'}
         >
           ${inputSlot}
         </${tag}>
-      `));
+      `)
+      );
 
       /**
        * @param {import("../index.js").LionField} _sceneEl
@@ -303,7 +305,8 @@ describe('<lion-field>', () => {
           return result;
         }
       };
-      const disabledEl = /** @type {LionField} */ (await fixture(html`
+      const disabledEl = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}
           disabled
           .validators=${[new HasX()]}
@@ -311,15 +314,18 @@ describe('<lion-field>', () => {
         >
           ${inputSlot}
         </${tag}>
-      `));
-      const el = /** @type {LionField} */ (await fixture(html`
+      `)
+      );
+      const el = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}
           .validators=${[new HasX()]}
           .modelValue=${'a@b.nl'}
         >
           ${inputSlot}
         </${tag}>
-      `));
+      `)
+      );
 
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
       expect(el.validationStates.error.HasX).to.exist;
@@ -329,11 +335,13 @@ describe('<lion-field>', () => {
     });
 
     it('can be required', async () => {
-      const el = /** @type {LionField} */ (await fixture(html`
+      const el = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}
           .validators=${[new Required()]}
         >${inputSlot}</${tag}>
-      `));
+      `)
+      );
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
       expect(el.validationStates.error.Required).to.exist;
       el.modelValue = 'cat';
@@ -356,13 +364,15 @@ describe('<lion-field>', () => {
           return hasError;
         }
       };
-      const el = /** @type {LionField} */ (await fixture(html`
+      const el = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}
           .modelValue=${'init-string'}
           .formatter=${formatterSpy}
           .validators=${[new Bar()]}
         >${inputSlot}</${tag}>
-      `));
+      `)
+      );
 
       expect(formatterSpy.callCount).to.equal(0);
       expect(el.formattedValue).to.equal('init-string');
@@ -379,7 +389,8 @@ describe('<lion-field>', () => {
 
   describe(`Content projection`, () => {
     it('renders correctly all slot elements in light DOM', async () => {
-      const el = /** @type {LionField} */ (await fixture(html`
+      const el = /** @type {LionField} */ (
+        await fixture(html`
         <${tag}>
           <label slot="label">[label]</label>
           ${inputSlot}
@@ -390,7 +401,8 @@ describe('<lion-field>', () => {
           <span slot="suffix">[suffix]</span>
           <span slot="feedback">[feedback]</span>
         </${tag}>
-      `));
+      `)
+      );
 
       const names = [
         'label',
@@ -405,10 +417,9 @@ describe('<lion-field>', () => {
       names.forEach(slotName => {
         const slotLight = /** @type {HTMLElement} */ (el.querySelector(`[slot="${slotName}"]`));
         slotLight.setAttribute('test-me', 'ok');
-        // @ts-expect-error
-        const slot = /** @type {ShadowHTMLElement} */ (el.shadowRoot.querySelector(
-          `slot[name="${slotName}"]`,
-        ));
+        const slot = /** @type {ShadowHTMLElement} */ (
+          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`slot[name="${slotName}"]`)
+        );
         const assignedNodes = slot.assignedNodes();
         expect(assignedNodes.length).to.equal(1);
         expect(assignedNodes[0].getAttribute('test-me')).to.equal('ok');

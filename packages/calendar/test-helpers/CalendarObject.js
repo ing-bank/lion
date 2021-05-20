@@ -33,15 +33,15 @@ export class CalendarObject {
   }
 
   get nextYearButtonEl() {
-    return /** @type {HTMLElement & { ariaLabel: string }} */ (this.el.shadowRoot?.querySelectorAll(
-      '.calendar__next-button',
-    )[0]);
+    return /** @type {HTMLElement & { ariaLabel: string }} */ (
+      this.el.shadowRoot?.querySelectorAll('.calendar__next-button')[0]
+    );
   }
 
   get previousYearButtonEl() {
-    return /** @type {HTMLElement & { ariaLabel: string }} */ (this.el.shadowRoot?.querySelectorAll(
-      '.calendar__previous-button',
-    )[0]);
+    return /** @type {HTMLElement & { ariaLabel: string }} */ (
+      this.el.shadowRoot?.querySelectorAll('.calendar__previous-button')[0]
+    );
   }
 
   get nextMonthButtonEl() {
@@ -57,33 +57,43 @@ export class CalendarObject {
   }
 
   get weekdayHeaderEls() {
-    return /** @type {HTMLElement[]} */ (Array.from(
-      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll('.calendar__weekday-header'),
-    ));
+    return /** @type {HTMLElement[]} */ (
+      Array.from(
+        /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+          '.calendar__weekday-header',
+        ),
+      )
+    );
   }
 
   get dayEls() {
-    return /** @type {HTMLElement[]} */ (Array.from(
-      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
-        '.calendar__day-button[current-month]',
-      ),
-    ));
+    return /** @type {HTMLElement[]} */ (
+      Array.from(
+        /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+          '.calendar__day-button[current-month]',
+        ),
+      )
+    );
   }
 
   get previousMonthDayEls() {
-    return /** @type {HTMLElement[]} */ (Array.from(
-      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
-        '.calendar__day-button[previous-month]',
-      ),
-    ));
+    return /** @type {HTMLElement[]} */ (
+      Array.from(
+        /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+          '.calendar__day-button[previous-month]',
+        ),
+      )
+    );
   }
 
   get nextMonthDayEls() {
-    return /** @type {HTMLElement[]} */ (Array.from(
-      /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
-        '.calendar__day-button[next-month]',
-      ),
-    ));
+    return /** @type {HTMLElement[]} */ (
+      Array.from(
+        /** @type {ShadowRoot} */ (this.el.shadowRoot).querySelectorAll(
+          '.calendar__day-button[next-month]',
+        ),
+      )
+    );
   }
 
   get dayObjs() {
@@ -103,9 +113,11 @@ export class CalendarObject {
    */
   getDayEl(monthDayNumber) {
     // Relies on the fact that empty cells don't have .calendar__day-button[current-month]
-    return /** @type {HTMLElement} */ (this.el.shadowRoot?.querySelectorAll(
-      '.calendar__day-button[current-month]',
-    )[monthDayNumber - 1]);
+    return /** @type {HTMLElement} */ (
+      this.el.shadowRoot?.querySelectorAll('.calendar__day-button[current-month]')[
+        monthDayNumber - 1
+      ]
+    );
   }
 
   /**

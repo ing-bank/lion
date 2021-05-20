@@ -1,3 +1,3 @@
-const babelPlugin = require('./src/babelPluginExtendDocs');
+const babelPlugin = require('./src/babelPluginExtendDocs.js');
 
 module.exports = babelPlugin;

@@ -1,4 +1,5 @@
-import { expect, html, unsafeStatic, fixture } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';
@@ -111,9 +112,9 @@ const choiceDispatchesCountOnInteraction = (tagname, count) => {
   const tag = unsafeStatic(tagname);
   const spy = sinon.spy();
   it(getInteractionTitle(count), async () => {
-    const el = /** @type {HTMLElement & {checked: boolean}} */ (await fixture(
-      html`<${tag} .choiceValue="${'option'}"></${tag}>`,
-    ));
+    const el = /** @type {HTMLElement & {checked: boolean}} */ (
+      await fixture(html`<${tag} .choiceValue="${'option'}"></${tag}>`)
+    );
     el.addEventListener('model-value-changed', spy);
     el.checked = true;
     expect(spy.callCount).to.equal(count);
@@ -161,17 +162,17 @@ const choiceGroupDispatchesCountOnInteraction = (groupTagname, itemTagname, coun
     `);
 
     el.addEventListener('model-value-changed', spy);
-    const option2 = /** @type {HTMLElement & {checked: boolean}} */ (el.querySelector(
-      `${itemTagname}:nth-child(2)`,
-    ));
+    const option2 = /** @type {HTMLElement & {checked: boolean}} */ (
+      el.querySelector(`${itemTagname}:nth-child(2)`)
+    );
     option2.checked = true;
     expect(spy.callCount).to.equal(count);
 
     spy.resetHistory();
 
-    const option3 = /** @type {HTMLElement & {checked: boolean}} */ (el.querySelector(
-      `${itemTagname}:nth-child(3)`,
-    ));
+    const option3 = /** @type {HTMLElement & {checked: boolean}} */ (
+      el.querySelector(`${itemTagname}:nth-child(3)`)
+    );
     option3.checked = true;
     expect(spy.callCount).to.equal(count);
   });
@@ -233,15 +234,17 @@ describe('lion-select', () => {
 
     it(getInteractionTitle(interactionCount), async () => {
       const spy = sinon.spy();
-      const el = /** @type {LionSelect} */ (await fixture(html`
-        <lion-select>
-          <select slot="input">
-            <option value="option1"></option>
-            <option value="option2"></option>
-            <option value="option3"></option>
-          </select>
-        </lion-select>
-      `));
+      const el = /** @type {LionSelect} */ (
+        await fixture(html`
+          <lion-select>
+            <select slot="input">
+              <option value="option1"></option>
+              <option value="option2"></option>
+              <option value="option3"></option>
+            </select>
+          </lion-select>
+        `)
+      );
       el.addEventListener('model-value-changed', spy);
       const option2 = /** @type {HTMLOptionElement} */ (el.querySelector('option:nth-child(2)'));
 
@@ -464,9 +467,10 @@ describe('detail.isTriggeredByUser', () => {
       }
 
       const name = controlName === 'checkbox-group' ? 'test[]' : 'test';
-      const el = /** @type {LitElement & FormControl & {value: string} & {registrationComplete: Promise<boolean>} & {formElements: Array.<FormControl & {value: string}>}} */ (await fixture(
-        html`<${tag} name="${name}">${childrenEl}</${tag}>`,
-      ));
+      const el =
+        /** @type {LitElement & FormControl & {value: string} & {registrationComplete: Promise<boolean>} & {formElements: Array.<FormControl & {value: string}>}} */ (
+          await fixture(html`<${tag} name="${name}">${childrenEl}</${tag}>`)
+        );
       await el.registrationComplete;
       el.addEventListener('model-value-changed', spy);
 

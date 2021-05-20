@@ -1,12 +1,5 @@
-import {
-  expect,
-  fixture as _fixture,
-  html,
-  oneEvent,
-  aTimeout,
-  unsafeStatic,
-  defineCE,
-} from '@open-wc/testing';
+import { expect, fixture as _fixture, oneEvent, aTimeout, defineCE } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { spy } from 'sinon';
 import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
@@ -61,9 +54,9 @@ describe('<lion-form>', () => {
         </form>
       </lion-form>
     `);
-    const resetButton = /** @type {HTMLInputElement} */ (withDefaults.querySelector(
-      'input[type=reset]',
-    ));
+    const resetButton = /** @type {HTMLInputElement} */ (
+      withDefaults.querySelector('input[type=reset]')
+    );
 
     withDefaults.formElements.firstName.modelValue = 'updatedFoo';
     expect(withDefaults.modelValue).to.deep.equal({

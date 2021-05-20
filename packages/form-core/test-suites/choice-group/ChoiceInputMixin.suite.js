@@ -1,6 +1,7 @@
 import { Required } from '@lion/form-core';
 import { LionInput } from '@lion/input';
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
 import { ChoiceInputMixin } from '../../src/choice-group/ChoiceInputMixin.js';
@@ -15,6 +16,7 @@ customElements.define('choice-group-input', ChoiceInput);
 
 /**
  * @param {{ tagString?:string, tagType?: string}} [config]
+ * @deprecated
  */
 export function runChoiceInputMixinSuite({ tagString } = {}) {
   const cfg = {
@@ -29,9 +31,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
     });
 
     it('has choiceValue', async () => {
-      const el = /** @type {ChoiceInput} */ (await fixture(
-        html`<${tag} .choiceValue=${'foo'}></${tag}>`,
-      ));
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
+      );
 
       expect(el.choiceValue).to.equal('foo');
       expect(el.modelValue).to.deep.equal({
@@ -43,9 +45,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
     it('can handle complex data via choiceValue', async () => {
       const date = new Date(2018, 11, 24, 10, 33, 30, 0);
 
-      const el = /** @type {ChoiceInput} */ (await fixture(
-        html`<${tag} .choiceValue=${date}></${tag}>`,
-      ));
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`<${tag} .choiceValue=${date}></${tag}>`)
+      );
 
       expect(el.choiceValue).to.equal(date);
       expect(el.modelValue.value).to.equal(date);
@@ -53,14 +55,16 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     it('fires one "model-value-changed" event if choiceValue or checked state or modelValue changed', async () => {
       let counter = 0;
-      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`
       <${tag}
         @model-value-changed=${() => {
           counter += 1;
         }}
         .choiceValue=${'foo'}
       ></${tag}>
-    `));
+    `)
+      );
       expect(counter).to.equal(1); // undefined to set value
 
       el.checked = true;
@@ -78,7 +82,8 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     it('fires one "user-input-changed" event after user interaction', async () => {
       let counter = 0;
-      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`
       <${tag}
         @user-input-changed="${() => {
           counter += 1;
@@ -86,7 +91,8 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       >
         <input slot="input" />
       </${tag}>
-    `));
+    `)
+      );
       const { _inputNode } = getFormControlMembers(el);
 
       expect(counter).to.equal(0);
@@ -100,13 +106,15 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     it('fires one "click" event when clicking label or input, using the right target', async () => {
       const spy = sinon.spy();
-      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`
         <${tag}
           @click="${spy}"
         >
           <input slot="input" />
         </${tag}>
-      `));
+      `)
+      );
       const { _inputNode, _labelNode } = getFormControlMembers(el);
 
       el.click();
@@ -122,7 +130,8 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     it('adds "isTriggerByUser" flag on model-value-changed', async () => {
       let isTriggeredByUser;
-      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`
       <${tag}
         @model-value-changed="${(/** @type {CustomEvent} */ event) => {
           isTriggeredByUser = event.detail.isTriggeredByUser;
@@ -130,7 +139,8 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       >
         <input slot="input" />
       </${tag}>
-    `));
+    `)
+      );
       const { _inputNode } = getFormControlMembers(el);
 
       _inputNode.dispatchEvent(new CustomEvent('change', { bubbles: true }));
@@ -138,9 +148,11 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
     });
 
     it('can be required', async () => {
-      const el = /** @type {ChoiceInput} */ (await fixture(html`
+      const el = /** @type {ChoiceInput} */ (
+        await fixture(html`
       <${tag} .choiceValue=${'foo'} .validators=${[new Required()]}></${tag}>
-    `));
+    `)
+      );
 
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates.error).to.exist;
@@ -156,9 +168,11 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
         expect(el.checked).to.equal(false, 'initially unchecked');
 
-        const precheckedElementAttr = /** @type {ChoiceInput} */ (await fixture(html`
+        const precheckedElementAttr = /** @type {ChoiceInput} */ (
+          await fixture(html`
         <${tag} .checked=${true}></${tag}>
-      `));
+      `)
+        );
         expect(precheckedElementAttr.checked).to.equal(true, 'initially checked via attribute');
       });
 
@@ -196,9 +210,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       });
 
       it('synchronizes modelValue to checked state and vice versa', async () => {
-        const el = /** @type {ChoiceInput} */ (await fixture(
-          html`<${tag} .choiceValue=${'foo'}></${tag}>`,
-        ));
+        const el = /** @type {ChoiceInput} */ (
+          await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
+        );
         expect(el.checked).to.be.false;
         expect(el.modelValue).to.deep.equal({
           checked: false,
@@ -215,9 +229,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
       it('ensures optimal synchronize performance by preventing redundant computation steps', async () => {
         /* we are checking private apis here to make sure we do not have cyclical updates
         which can be quite common for these type of connected data */
-        const el = /** @type {ChoiceInput} */ (await fixture(
-          html`<${tag} .choiceValue=${'foo'}></${tag}>`,
-        ));
+        const el = /** @type {ChoiceInput} */ (
+          await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
+        );
         expect(el.checked).to.be.false;
 
         // @ts-ignore [allow-private] in test
@@ -245,11 +259,13 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         /** @param {ChoiceInput} el */
         const hasAttr = el => el.hasAttribute('checked');
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
-        const elChecked = /** @type {ChoiceInput} */ (await fixture(html`
+        const elChecked = /** @type {ChoiceInput} */ (
+          await fixture(html`
         <${tag} .checked=${true}>
           <input slot="input" />
         </${tag}>
-      `));
+      `)
+        );
         const { _inputNode } = getFormControlMembers(el);
         const { _inputNode: _inputNodeChecked } = getFormControlMembers(elChecked);
 
@@ -294,14 +310,16 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     describe('Format/parse/serialize loop', () => {
       it('creates a modelValue object like { checked: true, value: foo } on init', async () => {
-        const el = /** @type {ChoiceInput} */ (await fixture(
-          html`<${tag} .choiceValue=${'foo'}></${tag}>`,
-        ));
+        const el = /** @type {ChoiceInput} */ (
+          await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
+        );
         expect(el.modelValue).deep.equal({ value: 'foo', checked: false });
 
-        const elChecked = /** @type {ChoiceInput} */ (await fixture(html`
+        const elChecked = /** @type {ChoiceInput} */ (
+          await fixture(html`
         <${tag} .choiceValue=${'foo'} .checked=${true}></${tag}>
-      `));
+      `)
+        );
         expect(elChecked.modelValue).deep.equal({ value: 'foo', checked: true });
       });
 
@@ -309,9 +327,11 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
         const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
         expect(el.formattedValue).to.equal('');
 
-        const elementWithValue = /** @type {ChoiceInput} */ (await fixture(html`
+        const elementWithValue = /** @type {ChoiceInput} */ (
+          await fixture(html`
         <${tag} .choiceValue=${'foo'}></${tag}>
-      `));
+      `)
+        );
         expect(elementWithValue.formattedValue).to.equal('foo');
       });
 
@@ -325,9 +345,9 @@ export function runChoiceInputMixinSuite({ tagString } = {}) {
 
     describe('Interaction states', () => {
       it('is considered prefilled when checked and not considered prefilled when unchecked', async () => {
-        const el = /** @type {ChoiceInput} */ (await fixture(
-          html`<${tag} .checked=${true}></${tag}>`,
-        ));
+        const el = /** @type {ChoiceInput} */ (
+          await fixture(html`<${tag} .checked=${true}></${tag}>`)
+        );
         expect(el.prefilled).equal(true, 'checked element not considered prefilled');
 
         const elUnchecked = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));

@@ -72,8 +72,8 @@ const FormatMixinImplementation = superclass =>
      * @param {string} name
      * @param {any} oldVal
      */
-    requestUpdateInternal(name, oldVal) {
-      super.requestUpdateInternal(name, oldVal);
+    requestUpdate(name, oldVal) {
+      super.requestUpdate(name, oldVal);
 
       if (name === 'modelValue' && this.modelValue !== oldVal) {
         this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldVal });
@@ -525,8 +525,9 @@ const FormatMixinImplementation = superclass =>
         this._inputNode.removeEventListener('input', this._proxyInputEvent);
         this._inputNode.removeEventListener(
           this.formatOn,
-          /** @type {EventListenerOrEventListenerObject} */ (this
-            ._reflectBackFormattedValueDebounced),
+          /** @type {EventListenerOrEventListenerObject} */ (
+            this._reflectBackFormattedValueDebounced
+          ),
         );
         this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
         this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);

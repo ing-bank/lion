@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from '@lion/core';
 import { LocalizeMixin } from '@lion/localize';
 
@@ -200,9 +201,9 @@ export class LionPagination extends LocalizeMixin(LitElement) {
       const pos5 = this.current + 1;
       //  if pos 3 is lower than 4 we have a predefined list of elements
       if (pos4 <= 4) {
-        const list = /** @type {(number|'...')[]} */ ([...Array(this.__visiblePages)].map(
-          (_, idx) => start + idx,
-        ));
+        const list = /** @type {(number|'...')[]} */ (
+          [...Array(this.__visiblePages)].map((_, idx) => start + idx)
+        );
         list.push('...');
         list.push(this.count);
         return list;

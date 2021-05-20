@@ -1,4 +1,5 @@
-import { expect, html } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController } from '../src/OverlayController.js';
 import { overlays } from '../src/overlays.js';

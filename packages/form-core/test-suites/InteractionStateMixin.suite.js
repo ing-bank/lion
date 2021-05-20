@@ -82,9 +82,9 @@ export function runInteractionStateMixinSuite(customConfig) {
     });
 
     it('sets an attribute "filled" if the input has a non-empty modelValue', async () => {
-      const el = /** @type {IState} */ (await fixture(
-        html`<${tag} .modelValue=${'hello'}></${tag}>`,
-      ));
+      const el = /** @type {IState} */ (
+        await fixture(html`<${tag} .modelValue=${'hello'}></${tag}>`)
+      );
       expect(el.hasAttribute('filled')).to.equal(true);
       el.modelValue = '';
       await el.updateComplete;
@@ -97,9 +97,11 @@ export function runInteractionStateMixinSuite(customConfig) {
     it('fires "(touched|dirty)-state-changed" event when state changes', async () => {
       const touchedSpy = sinon.spy();
       const dirtySpy = sinon.spy();
-      const el = /** @type {IState} */ (await fixture(
-        html`<${tag} @touched-changed=${touchedSpy} @dirty-changed=${dirtySpy}></${tag}>`,
-      ));
+      const el = /** @type {IState} */ (
+        await fixture(
+          html`<${tag} @touched-changed=${touchedSpy} @dirty-changed=${dirtySpy}></${tag}>`,
+        )
+      );
 
       el.touched = true;
       expect(touchedSpy.callCount).to.equal(1);
@@ -109,14 +111,18 @@ export function runInteractionStateMixinSuite(customConfig) {
     });
 
     it('sets prefilled once instantiated', async () => {
-      const el = /** @type {IState} */ (await fixture(html`
+      const el = /** @type {IState} */ (
+        await fixture(html`
         <${tag} .modelValue=${'prefilled'}></${tag}>
-      `));
+      `)
+      );
       expect(el.prefilled).to.be.true;
 
-      const nonPrefilled = /** @type {IState} */ (await fixture(html`
+      const nonPrefilled = /** @type {IState} */ (
+        await fixture(html`
         <${tag} .modelValue=${''}></${tag}>
-      `));
+      `)
+      );
       expect(nonPrefilled.prefilled).to.be.false;
     });
 
@@ -125,9 +131,9 @@ export function runInteractionStateMixinSuite(customConfig) {
       (${cfg.allowedModelValueTypes.map(t => t.name).join(', ')})`, async () => {
       /** @typedef {{_inputNode: HTMLElement}} inputNodeInterface */
 
-      const el = /** @type {IState & inputNodeInterface} */ (await fixture(
-        html`<${tag}></${tag}>`,
-      ));
+      const el = /** @type {IState & inputNodeInterface} */ (
+        await fixture(html`<${tag}></${tag}>`)
+      );
 
       /**
        * @param {*} modelValue
@@ -213,9 +219,11 @@ export function runInteractionStateMixinSuite(customConfig) {
 
     describe('Validation integration with states', () => {
       it('has .shouldShowFeedbackFor indicating for which type to show messages', async () => {
-        const el = /** @type {IState} */ (await fixture(html`
+        const el = /** @type {IState} */ (
+          await fixture(html`
           <${tag}></${tag}>
-        `));
+        `)
+        );
         // @ts-ignore [allow-private] in test
         expect(el.shouldShowFeedbackFor).to.deep.equal([]);
         el.submitted = true;
@@ -225,9 +233,11 @@ export function runInteractionStateMixinSuite(customConfig) {
       });
 
       it('keeps the feedback component in sync', async () => {
-        const el = /** @type {IState} */ (await fixture(html`
+        const el = /** @type {IState} */ (
+          await fixture(html`
           <${tag} .validators=${[new MinLength(3)]}></${tag}>
-        `));
+        `)
+        );
         const { _feedbackNode } = getFormControlMembers(el);
 
         await el.updateComplete;
@@ -257,9 +267,9 @@ export function runInteractionStateMixinSuite(customConfig) {
         }
         const tagLeaveString = defineCE(IStateCustomBlur);
         const tagLeave = unsafeStatic(tagLeaveString);
-        const el = /** @type {IStateCustomBlur} */ (await fixture(
-          html`<${tagLeave}></${tagLeave}>`,
-        ));
+        const el = /** @type {IStateCustomBlur} */ (
+          await fixture(html`<${tagLeave}></${tagLeave}>`)
+        );
         el.dispatchEvent(new Event('custom-blur'));
         expect(el.touched).to.be.true;
       });

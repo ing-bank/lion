@@ -15,9 +15,8 @@ const {
   restoreSuppressNonCriticalLogs,
 } = require('../../../test-helpers/mock-log-service-helpers.js');
 
-const findCustomelementsQueryConfig = QueryService.getQueryConfigFromAnalyzer(
-  'find-customelements',
-);
+const findCustomelementsQueryConfig =
+  QueryService.getQueryConfigFromAnalyzer('find-customelements');
 const _providenceCfg = {
   targetProjectPaths: ['/fictional/project'], // defined in mockProject
 };

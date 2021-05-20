@@ -9,10 +9,8 @@ import { localize, setLocalize } from '../src/localize.js';
  */
 function getProtectedMembers(localizeManagerEl) {
   // @ts-ignore
-  const {
-    _autoLoadOnLocaleChange: autoLoadOnLocaleChange,
-    _fallbackLocale: fallbackLocale,
-  } = localizeManagerEl;
+  const { _autoLoadOnLocaleChange: autoLoadOnLocaleChange, _fallbackLocale: fallbackLocale } =
+    localizeManagerEl;
   return {
     autoLoadOnLocaleChange,
     fallbackLocale,

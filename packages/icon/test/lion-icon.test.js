@@ -1,5 +1,5 @@
-import { nothing, until } from '@lion/core';
-import { aTimeout, expect, fixture as _fixture, fixtureSync, html } from '@open-wc/testing';
+import { nothing, until, html } from '@lion/core';
+import { aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
 import '@lion/icon/define';
 import { icons } from '../src/icons.js';
 import hammerSvg from './hammer.svg.js';
@@ -145,7 +145,7 @@ describe('lion-icon', () => {
     await el.updateComplete;
     el.svg = nothing;
     await el.updateComplete;
-    expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
+    expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
 
   it('does not render "null" if changed from valid input to null', async () => {
@@ -153,7 +153,7 @@ describe('lion-icon', () => {
     await el.updateComplete;
     el.svg = nothing;
     await el.updateComplete;
-    expect(el.innerHTML).to.equal('<!----><!---->'); // don't use lightDom.to.equal(''), it gives false positives
+    expect(el.innerHTML).to.equal('<!---->'); // don't use lightDom.to.equal(''), it gives false positives
   });
 
   it('supports icons using an icon id', async () => {

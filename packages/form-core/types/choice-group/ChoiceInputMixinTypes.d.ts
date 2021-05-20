@@ -34,7 +34,7 @@ export declare class ChoiceInputHost {
   protected get _inputNode(): HTMLElement;
 
   protected _proxyInputEvent(): void;
-  protected requestUpdateInternal(name: string, oldValue: any): void;
+  protected requestUpdate(name: string, oldValue: any): void;
   protected _choiceGraphicTemplate(): TemplateResult;
   protected _afterTemplate(): TemplateResult;
   protected _preventDuplicateLabelClick(ev: Event): void;

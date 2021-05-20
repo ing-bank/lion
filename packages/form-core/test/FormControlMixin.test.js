@@ -1,4 +1,5 @@
-import { expect, html, defineCE, unsafeStatic, fixture } from '@open-wc/testing';
+import { expect, defineCE, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { LitElement } from '@lion/core';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
@@ -30,108 +31,130 @@ describe('FormControlMixin', () => {
 
   describe('Label and helpText api', () => {
     it('has a label', async () => {
-      const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elAttr = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag} label="Email address">${inputSlot}</${tag}>
-      `));
+      `)
+      );
 
       expect(elAttr.label).to.equal('Email address', 'as an attribute');
 
-      const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elProp = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}
           .label=${'Email address'}
         >${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(elProp.label).to.equal('Email address', 'as a property');
 
-      const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elElem = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <label slot="label">Email address</label>
           ${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(elElem.label).to.equal('Email address', 'as an element');
     });
 
     it('has a label that supports inner html', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <label slot="label">Email <span>address</span></label>
           ${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(el.label).to.equal('Email address');
     });
 
     it('only takes label of direct child', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <${tag} label="Email address">
             ${inputSlot}
           </${tag}>
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(el.label).to.equal('');
     });
 
     it('can have a help-text', async () => {
-      const elAttr = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elAttr = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag} help-text="We will not send you any spam">${inputSlot}</${tag}>
-      `));
+      `)
+      );
       expect(elAttr.helpText).to.equal('We will not send you any spam', 'as an attribute');
 
-      const elProp = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elProp = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}
           .helpText=${'We will not send you any spam'}
         >${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(elProp.helpText).to.equal('We will not send you any spam', 'as a property');
 
-      const elElem = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const elElem = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <div slot="help-text">We will not send you any spam</div>
           ${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
     });
 
     it('can have a help-text that supports inner html', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <div slot="help-text">We will not send you any <span>spam</span></div>
           ${inputSlot}
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(el.helpText).to.equal('We will not send you any spam');
     });
 
     it('only takes help-text of direct child', async () => {
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag}>
           <${tag} help-text="We will not send you any spam">
             ${inputSlot}
           </${tag}>
-        </${tag}>`));
+        </${tag}>`)
+      );
       expect(el.helpText).to.equal('');
     });
   });
 
   describe('Accessibility', () => {
     it('does not duplicate aria-describedby and aria-labelledby ids on reconnect', async () => {
-      const wrapper = /** @type {HTMLElement} */ (await fixture(html`
+      const wrapper = /** @type {HTMLElement} */ (
+        await fixture(html`
         <div id="wrapper">
           <${tag} help-text="This element will be disconnected/reconnected">${inputSlot}</${tag}>
         </div>
-      `));
+      `)
+      );
       const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
       const { _inputNode } = getFormControlMembers(el);
 
       const labelIdsBefore = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsBefore = /** @type {string} */ (_inputNode.getAttribute(
-        'aria-describedby',
-      ));
+      const descriptionIdsBefore = /** @type {string} */ (
+        _inputNode.getAttribute('aria-describedby')
+      );
       // Reconnect
       wrapper.removeChild(el);
       wrapper.appendChild(el);
       const labelIdsAfter = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
-      const descriptionIdsAfter = /** @type {string} */ (_inputNode.getAttribute(
-        'aria-describedby',
-      ));
+      const descriptionIdsAfter = /** @type {string} */ (
+        _inputNode.getAttribute('aria-describedby')
+      );
 
       expect(labelIdsBefore).to.equal(labelIdsAfter);
       expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
@@ -139,11 +162,13 @@ describe('FormControlMixin', () => {
 
     it('clicking the label should call `_onLabelClick`', async () => {
       const spy = sinon.spy();
-      const el = /** @type {FormControlMixinClass} */ (await fixture(html`
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
         <${tag} ._onLabelClick="${spy}">
           ${inputSlot}
         </${tag}>
-      `));
+      `)
+      );
       const { _labelNode } = getFormControlMembers(el);
 
       expect(spy).to.not.have.been.called;
@@ -232,7 +257,8 @@ describe('FormControlMixin', () => {
     describe('Adding extra labels and descriptions', () => {
       it(`supports centrally orchestrated labels/descriptions via addToAriaLabelledBy() /
       removeFromAriaLabelledBy() / addToAriaDescribedBy() / removeFromAriaDescribedBy()`, async () => {
-        const wrapper = /** @type {HTMLElement} */ (await fixture(html`
+        const wrapper = /** @type {HTMLElement} */ (
+          await fixture(html`
           <div id="wrapper">
             <${tag}>
               ${inputSlot}
@@ -241,7 +267,8 @@ describe('FormControlMixin', () => {
             </${tag}>
             <div id="additionalLabel"> This also needs to be read whenever the input has focus</div>
             <div id="additionalDescription"> Same for this </div>
-          </div>`));
+          </div>`)
+        );
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
         const { _inputNode } = getFormControlMembers(el);
 
@@ -257,9 +284,9 @@ describe('FormControlMixin', () => {
         expect(/** @type {string} */ (_inputNode.getAttribute('aria-labelledby'))).to.contain(
           `label-${inputId}`,
         );
-        const additionalLabel = /** @type {HTMLElement} */ (wrapper.querySelector(
-          '#additionalLabel',
-        ));
+        const additionalLabel = /** @type {HTMLElement} */ (
+          wrapper.querySelector('#additionalLabel')
+        );
         el.addToAriaLabelledBy(additionalLabel);
         await el.updateComplete;
         let labelledbyAttr = /** @type {string} */ (_inputNode.getAttribute('aria-labelledby'));
@@ -392,13 +419,15 @@ describe('FormControlMixin', () => {
       it('redispatches one event from host', async () => {
         const formSpy = sinon.spy();
         const fieldsetSpy = sinon.spy();
-        const formEl = /** @type {FormControlMixinClass} */ (await fixture(html`
+        const formEl = /** @type {FormControlMixinClass} */ (
+          await fixture(html`
           <${groupTag} name="form" ._repropagationRole=${'form-group'} @model-value-changed=${formSpy}>
             <${groupTag} name="fieldset" ._repropagationRole=${'form-group'} @model-value-changed=${fieldsetSpy}>
               <${tag} name="field"></${tag}>
             </${groupTag}>
           </${groupTag}>
-        `));
+        `)
+        );
         const fieldsetEl = formEl.querySelector('[name=fieldset]');
 
         expect(fieldsetSpy.callCount).to.equal(1);

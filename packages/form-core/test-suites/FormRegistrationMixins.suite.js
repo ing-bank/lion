@@ -36,11 +36,13 @@ export const runRegistrationSuite = customConfig => {
     const { parentTagString, childTagString } = cfg;
 
     it('can register a formElement', async () => {
-      const el = /** @type {RegistrarClass} */ (await fixture(html`
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
         <${parentTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       expect(el.formElements.length).to.equal(1);
     });
 
@@ -57,25 +59,29 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('can register a formElement with arbitrary dom tree in between registrar and registering', async () => {
-      const el = /** @type {RegistrarClass} */ (await fixture(html`
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
         <${parentTag}>
           <div>
             <${childTag}></${childTag}>
           </div>
         </${parentTag}>
-      `));
+      `)
+      );
       expect(el.formElements.length).to.equal(1);
     });
 
     it('supports nested registration parents', async () => {
-      const el = /** @type {RegistrarClass} */ (await fixture(html`
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
         <${parentTag}>
           <${parentTag} class="sub-group">
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
           </${parentTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       expect(el.formElements.length).to.equal(1);
 
       const subGroup = /** @type {RegistrarClass} */ (el.querySelector('.sub-group'));
@@ -95,20 +101,24 @@ export const runRegistrationSuite = customConfig => {
       }
       const tagWrapperString = defineCE(PerformUpdate);
       const tagWrapper = unsafeStatic(tagWrapperString);
-      const el = /** @type {PerformUpdate} */ (await fixture(html`
+      const el = /** @type {PerformUpdate} */ (
+        await fixture(html`
         <${tagWrapper}>
           <${childTag}></${childTag}>
         </${tagWrapper}>
-      `));
+      `)
+      );
       expect(el.formElements.length).to.equal(1);
     });
 
     it('can dynamically add/remove elements', async () => {
-      const el = /** @type {RegistrarClass} */ (await fixture(html`
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
         <${parentTag}>
           <${childTag}></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       const newField = await fixture(html`
         <${childTag}></${childTag}>
       `);
@@ -122,20 +132,24 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('adds elements to formElements in the right order (DOM)', async () => {
-      const el = /** @type {RegistrarClass} */ (await fixture(html`
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
         <${parentTag}>
           <${childTag} pos="0"></${childTag}>
           <${childTag} pos="1"></${childTag}>
           <${childTag} pos="2"></${childTag}>
         </${parentTag}>
-      `));
+      `)
+      );
       /** INSERT field before the pos=1 */
       /**
        * @typedef {Object.<string, string>} prop
        */
-      const newField = /** @type {RegisteringClass & prop} */ (await fixture(html`
+      const newField = /** @type {RegisteringClass & prop} */ (
+        await fixture(html`
         <${childTag}></${childTag}>
-      `));
+      `)
+      );
       newField.setAttribute('pos', 'inserted-before-1');
       el.insertBefore(newField, el.children[1]);
 
@@ -145,9 +159,11 @@ export const runRegistrationSuite = customConfig => {
       expect(el.formElements[1].getAttribute('pos')).to.equal('inserted-before-1');
 
       /** INSERT field before the pos=0 (e.g. at the top) */
-      const topField = /** @type {RegisteringClass & prop} */ (await fixture(html`
+      const topField = /** @type {RegisteringClass & prop} */ (
+        await fixture(html`
         <${childTag}></${childTag}>
-      `));
+      `)
+      );
       topField.setAttribute('pos', 'inserted-before-0');
       el.insertBefore(topField, el.children[0]);
 
@@ -159,9 +175,9 @@ export const runRegistrationSuite = customConfig => {
 
     describe('FormRegistrarPortalMixin', () => {
       it('forwards registrations to the .registrationTarget', async () => {
-        const el = /** @type {RegistrarClass} */ (await fixture(
-          html`<${parentTag}></${parentTag}>`,
-        ));
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`<${parentTag}></${parentTag}>`)
+        );
         await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -172,9 +188,9 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('can dynamically add/remove elements', async () => {
-        const el = /** @type {RegistrarClass} */ (await fixture(
-          html`<${parentTag}></${parentTag}>`,
-        ));
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`<${parentTag}></${parentTag}>`)
+        );
         const portal = await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -194,13 +210,15 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('adds elements to formElements in the right order', async () => {
-        const el = /** @type {RegistrarClass} */ (await fixture(html`
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`
           <${parentTag}>
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
             <${childTag}></${childTag}>
           </${parentTag}>
-        `));
+        `)
+        );
 
         expect(el.formElements.length).to.equal(3);
 
@@ -232,9 +250,9 @@ export const runRegistrationSuite = customConfig => {
       });
 
       it('keeps working if moving the portal itself', async () => {
-        const el = /** @type {RegistrarClass} */ (await fixture(
-          html`<${parentTag}></${parentTag}>`,
-        ));
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`<${parentTag}></${parentTag}>`)
+        );
         const portal = await fixture(html`
           <${portalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>
@@ -270,9 +288,9 @@ export const runRegistrationSuite = customConfig => {
         );
         const delayedPortalTag = unsafeStatic(delayedPortalString);
 
-        const el = /** @type {RegistrarClass} */ (await fixture(
-          html`<${parentTag}></${parentTag}>`,
-        ));
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`<${parentTag}></${parentTag}>`)
+        );
         await fixture(html`
           <${delayedPortalTag} .registrationTarget=${el}>
             <${childTag}></${childTag}>

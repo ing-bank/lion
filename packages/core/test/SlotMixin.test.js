@@ -108,9 +108,9 @@ describe('SlotMixin', () => {
     const tag = defineCE(SlotPrivateText);
     const el = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(el.didCreateConditionalSlot()).to.be.true;
-    const elUserSlot = /** @type {SlotPrivateText} */ (await fixture(
-      `<${tag}><p slot="conditional">foo</p><${tag}>`,
-    ));
+    const elUserSlot = /** @type {SlotPrivateText} */ (
+      await fixture(`<${tag}><p slot="conditional">foo</p><${tag}>`)
+    );
     expect(elUserSlot.didCreateConditionalSlot()).to.be.false;
     renderSlot = false;
     const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));

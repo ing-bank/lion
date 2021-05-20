@@ -16,3 +16,11 @@ trim_trailing_whitespace = false
 block_comment_start = /**
 block_comment = *
 block_comment_end = */
+
+[*.{d.ts,patch,editorconfig}]
+charset = unset
+indent_style = unset
+indent_size = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset

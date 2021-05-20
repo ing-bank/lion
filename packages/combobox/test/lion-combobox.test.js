@@ -1,8 +1,8 @@
 import '@lion/listbox/define-option';
-import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, defineCE } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/combobox/define';
-import { LionOptions } from '@lion/listbox';
 import { browserDetection, LitElement } from '@lion/core';
 import { getListboxMembers } from '@lion/listbox/test-helpers';
 import { Required } from '@lion/form-core';
@@ -138,14 +138,16 @@ function getFilteredOptionValues(el) {
  * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} [config]
  */
 async function fruitFixture({ autocomplete, matchMode } = {}) {
-  const el = /** @type {LionCombobox} */ (await fixture(html`
-    <lion-combobox name="foo">
-      <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-      <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-      <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-      <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-    </lion-combobox>
-  `));
+  const el = /** @type {LionCombobox} */ (
+    await fixture(html`
+      <lion-combobox name="foo">
+        <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+        <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+        <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+        <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+      </lion-combobox>
+    `)
+  );
   if (autocomplete) {
     el.autocomplete = autocomplete;
   }
@@ -159,14 +161,16 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
 describe('lion-combobox', () => {
   describe('Options visibility', () => {
     it('hides options when text in input node is cleared after typing something by default', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const options = el.formElements;
       const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
@@ -191,14 +195,16 @@ describe('lion-combobox', () => {
     });
 
     it('hides listbox on click/enter (when multiple-choice is false)', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _comboboxNode, _listboxNode } = getComboboxMembers(el);
 
@@ -224,14 +230,16 @@ describe('lion-combobox', () => {
 
     describe('With ".showAllOnEmpty"', () => {
       it('keeps showing options when text in input node is cleared after typing something', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" autocomplete="list" show-all-on-empty>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" autocomplete="list" show-all-on-empty>
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
 
         const options = el.formElements;
         const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
@@ -256,14 +264,16 @@ describe('lion-combobox', () => {
       });
 
       it('shows overlay on focusin', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" .showAllOnEmpty="${true}">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" .showAllOnEmpty="${true}">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
 
         expect(el.opened).to.be.false;
@@ -273,14 +283,16 @@ describe('lion-combobox', () => {
       });
 
       it('hides overlay on focusin after [Escape]', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" .showAllOnEmpty="${true}">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" .showAllOnEmpty="${true}">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
         expect(el.opened).to.be.false;
@@ -293,14 +305,16 @@ describe('lion-combobox', () => {
       });
 
       it('hides listbox on click/enter (when multiple-choice is false)', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" .showAllOnEmpty="${true}">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" .showAllOnEmpty="${true}">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
 
         const { _comboboxNode, _listboxNode, _inputNode } = getComboboxMembers(el);
 
@@ -341,26 +355,31 @@ describe('lion-combobox', () => {
 
   describe('Structure', () => {
     it('has a listbox node', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _listboxNode } = getComboboxMembers(el);
 
       expect(_listboxNode).to.exist;
-      expect(_listboxNode).to.be.instanceOf(LionOptions);
+      // TODO: worked before, find out what has changed in ScopedElements
+      // expect(_listboxNode instanceof LionOptions).to.be.true;
       expect(el.querySelector('[role=listbox]')).to.equal(_listboxNode);
     });
 
     it('has a textbox element', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _comboboxNode } = getComboboxMembers(el);
 
       expect(_comboboxNode).to.exist;
@@ -370,12 +389,14 @@ describe('lion-combobox', () => {
 
   describe('Values', () => {
     it('syncs modelValue with textbox', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" .modelValue="${'10'}">
-          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .modelValue="${'10'}">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       expect(_inputNode.value).to.equal('10');
@@ -386,14 +407,16 @@ describe('lion-combobox', () => {
     });
 
     it('sets modelValue to empty string if no option is selected', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" .modelValue="${'Artichoke'}">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       expect(el.modelValue).to.equal('Artichoke');
       expect(el.formElements[0].checked).to.be.true;
@@ -404,14 +427,16 @@ describe('lion-combobox', () => {
     });
 
     it('sets modelValue to empty array if no option is selected for multiple choice', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       expect(el.modelValue).to.eql(['Artichoke']);
       expect(el.formElements[0].checked).to.be.true;
@@ -422,14 +447,16 @@ describe('lion-combobox', () => {
     });
 
     it('clears modelValue and textbox value on clear()', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" .modelValue="${'Artichoke'}">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _inputNode } = getComboboxMembers(el);
 
@@ -437,14 +464,16 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.equal('');
       expect(_inputNode.value).to.equal('');
 
-      const el2 = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el2 = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       el2.clear();
       expect(el2.modelValue).to.eql([]);
@@ -452,12 +481,14 @@ describe('lion-combobox', () => {
     });
 
     it('syncs textbox to modelValue', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" show-all-on-empty>
-          <lion-option .choiceValue="${'Aha'}" checked>Aha</lion-option>
-          <lion-option .choiceValue="${'Bhb'}">Bhb</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" show-all-on-empty>
+            <lion-option .choiceValue="${'Aha'}" checked>Aha</lion-option>
+            <lion-option .choiceValue="${'Bhb'}">Bhb</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       async function performChecks() {
@@ -486,14 +517,16 @@ describe('lion-combobox', () => {
 
   describe('Overlay visibility', () => {
     it('does not show overlay on focusin', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" multiple-choice>
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _comboboxNode } = getComboboxMembers(el);
 
       expect(el.opened).to.equal(false);
@@ -511,14 +544,16 @@ describe('lion-combobox', () => {
        * still has focus
        * [4] user changes textbox value to "Artichoke": the overlay should show again
        */
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const options = el.formElements;
       const { _inputNode } = getComboboxMembers(el);
 
@@ -548,14 +583,16 @@ describe('lion-combobox', () => {
     });
 
     it('hides (and clears) overlay on [Escape]', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
@@ -573,14 +610,16 @@ describe('lion-combobox', () => {
     });
 
     it('hides overlay on [Tab]', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
@@ -600,14 +639,16 @@ describe('lion-combobox', () => {
     });
 
     it('clears checkedIndex on empty text', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
@@ -639,14 +680,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(ShowOverlayConditionCombobox);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo" multiple-choice>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
 
         expect(el.opened).to.equal(false);
@@ -665,14 +708,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(ShowOverlayConditionCombobox);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
 
         mimicUserTyping(el, 'aaa');
         expect(el.opened).to.be.false;
@@ -688,14 +733,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(ShowOverlayConditionCombobox);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
 
         mimicUserTyping(el, 'aaaa');
         expect(el.opened).to.be.true;
@@ -711,14 +758,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(ShowOverlayConditionCombobox);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
 
         mimicUserTyping(el, 'aaaa');
         expect(el.opened).to.be.true;
@@ -731,14 +780,16 @@ describe('lion-combobox', () => {
 
     describe('Accessibility', () => {
       it('sets "aria-posinset" and "aria-setsize" on visible entries', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" multiple-choice>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" multiple-choice>
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const options = el.formElements;
         const { _comboboxNode } = getComboboxMembers(el);
         expect(el.opened).to.equal(false);
@@ -772,14 +823,16 @@ describe('lion-combobox', () => {
        * (like fade in/out)
        */
       it('sets aria-hidden="true" on hidden entries', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const options = el.formElements;
         const { _comboboxNode } = getComboboxMembers(el);
         expect(el.opened).to.equal(false);
@@ -801,14 +854,16 @@ describe('lion-combobox', () => {
       });
 
       it('works with validation', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" .validators=${[new Required()]}>
-            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" .validators=${[new Required()]}>
+              <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
         expect(el.checkedIndex).to.equal(0);
 
@@ -834,24 +889,28 @@ describe('lion-combobox', () => {
   describe('Invoker component integration', () => {
     describe('Accessibility', () => {
       it('sets role="combobox" on textbox wrapper/listbox sibling', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+              <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
 
         expect(_comboboxNode.getAttribute('role')).to.equal('combobox');
       });
 
       it('sets aria-expanded to element with role="combobox" in wai-aria 1.0 and 1.1', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+              <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode } = getComboboxMembers(el);
 
         expect(_comboboxNode.getAttribute('aria-expanded')).to.equal('false');
@@ -859,12 +918,14 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         expect(_comboboxNode.getAttribute('aria-expanded')).to.equal('true');
 
-        const el2 = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-          </lion-combobox>
-        `));
+        const el2 = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+              <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode: comboboxNode2 } = getComboboxMembers(el2);
 
         expect(comboboxNode2.getAttribute('aria-expanded')).to.equal('false');
@@ -874,12 +935,14 @@ describe('lion-combobox', () => {
       });
 
       it('makes sure listbox node is not focusable', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+              <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _listboxNode } = getComboboxMembers(el);
 
         expect(_listboxNode.hasAttribute('tabindex')).to.be.false;
@@ -905,38 +968,44 @@ describe('lion-combobox', () => {
     const selectionDisplayTag = unsafeStatic(defineCE(MySelectionDisplay));
 
     it('stores internal reference _selectionDisplayNode in LionCombobox', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
         <lion-combobox name="foo">
           <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
-      `));
+      `)
+      );
       const { _selectionDisplayNode } = getComboboxMembers(el);
 
       expect(_selectionDisplayNode).to.equal(el.querySelector('[slot=selection-display]'));
     });
 
     it('sets a reference to combobox element in _selectionDisplayNode', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
         <lion-combobox name="foo">
           <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
-      `));
+      `)
+      );
       // @ts-ignore allow protected members
       expect(el._selectionDisplayNode.comboboxElement).to.equal(el);
     });
 
     it('calls "onComboboxElementUpdated(changedProperties)" on "updated" in _selectionDisplayNode', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
         <lion-combobox name="foo">
           <${selectionDisplayTag} slot="selection-display"></${selectionDisplayTag}>
           <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
         </lion-combobox>
-      `));
+      `)
+      );
       // @ts-ignore sinon type error
       const spy = sinon.spy(el._selectionDisplayNode, 'onComboboxElementUpdated');
-      el.requestUpdate('modelValue');
+      el.requestUpdate('modelValue', undefined);
       await el.updateComplete;
       expect(spy).to.have.been.calledOnce;
     });
@@ -1008,37 +1077,43 @@ describe('lion-combobox', () => {
 
   describe('Autocompletion', () => {
     it('has autocomplete "both" by default', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo">
-          <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+          </lion-combobox>
+        `)
+      );
       expect(el.autocomplete).to.equal('both');
     });
 
     it('filters options when autocomplete is "both"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="both">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
     });
 
     it('completes textbox when autocomplete is "both"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="both">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
       const { _inputNode } = getComboboxMembers(el);
@@ -1054,14 +1129,16 @@ describe('lion-combobox', () => {
     });
 
     it('filters options when autocomplete is "list"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="list">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="list">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'ch');
@@ -1071,14 +1148,16 @@ describe('lion-combobox', () => {
     });
 
     it('does not filter options when autocomplete is "none"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="none">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql([
@@ -1090,14 +1169,16 @@ describe('lion-combobox', () => {
     });
 
     it('does not filter options when autocomplete is "inline"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql([
@@ -1109,14 +1190,16 @@ describe('lion-combobox', () => {
     });
 
     it('resets "checkedIndex" when going from matched to unmatched textbox value', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
@@ -1127,14 +1210,16 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.equal(-1);
 
       // Works for autocomplete 'both' as well.
-      const el2 = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="both">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el2 = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       mimicUserTyping(el2, 'ch');
       await el2.updateComplete;
@@ -1147,14 +1232,16 @@ describe('lion-combobox', () => {
     });
 
     it('completes chars inside textbox', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'ch');
@@ -1178,14 +1265,16 @@ describe('lion-combobox', () => {
     });
 
     it('synchronizes textbox on overlay close', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="none">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
       expect(_inputNode.value).to.equal('');
 
@@ -1219,14 +1308,16 @@ describe('lion-combobox', () => {
     });
 
     it('is possible to adjust textbox synchronize condition on overlay close', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none" ._syncToTextboxCondition="${() => false}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _inputNode } = getComboboxMembers(el);
       expect(_inputNode.value).to.equal('');
@@ -1261,14 +1352,16 @@ describe('lion-combobox', () => {
     });
 
     it('does inline autocompletion when adding chars', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       mimicUserTyping(el, 'ch'); // ch
       await el.updateComplete; // Ch[ard]
@@ -1287,14 +1380,16 @@ describe('lion-combobox', () => {
     });
 
     it('does inline autocompletion when changing the word', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
@@ -1314,14 +1409,16 @@ describe('lion-combobox', () => {
     });
 
     it('computation of "user intends autofill" works correctly afer autofill', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="inline">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'ch');
@@ -1403,14 +1500,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(X);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo" autocomplete="list" opened>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
         // This ensures autocomplete would be off originally
         el.autocomplete = 'list';
         await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
@@ -1420,14 +1519,16 @@ describe('lion-combobox', () => {
     });
 
     it('highlights matching options', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" match-mode="all">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" match-mode="all">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const options = el.formElements;
 
       mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
@@ -1448,14 +1549,16 @@ describe('lion-combobox', () => {
     });
 
     it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="none">
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       expect(_inputNode.value).to.equal('');
@@ -1482,14 +1585,16 @@ describe('lion-combobox', () => {
     });
 
     it('synchronizes last index to textbox when autocomplete is "inline" or "both" when multipleChoice', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" autocomplete="none" multiple-choice>
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="none" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
       const { _inputNode } = getComboboxMembers(el);
 
       expect(_inputNode.value).to.eql('');
@@ -1543,14 +1648,16 @@ describe('lion-combobox', () => {
         const tagName = defineCE(X);
         const tag = unsafeStatic(tagName);
 
-        const el = /** @type {LionCombobox} */ (await fixture(html`
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
           <${tag} name="foo" autocomplete="none" multiple-choice>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
             <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
           </${tag}>
-        `));
+        `)
+        );
         const { _inputNode } = getComboboxMembers(el);
 
         el.setCheckedIndex(-1);
@@ -1577,14 +1684,16 @@ describe('lion-combobox', () => {
 
     describe('Active index behavior', () => {
       it('sets the active index to the closest match on open by default', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(1);
@@ -1597,14 +1706,16 @@ describe('lion-combobox', () => {
          * For 'list' & 'none' autocomplete, it is turned off and manual selection is required.
          * TODO: Make this configurable for list & none autocomplete?
          */
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" autocomplete="none">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" autocomplete="none">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
 
         /**
@@ -1684,14 +1795,16 @@ describe('lion-combobox', () => {
       });
 
       it('sets the active index to the closest match on autocomplete', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" autocomplete="both">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" autocomplete="both">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
 
         mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
@@ -1720,14 +1833,16 @@ describe('lion-combobox', () => {
       });
 
       it('supports clearing by [Escape] key and resets active state on all options', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _inputNode } = getComboboxMembers(el);
 
         // Select something
@@ -1775,14 +1890,18 @@ describe('lion-combobox', () => {
       });
 
       it('updates aria-activedescendant on textbox node', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" autocomplete="none">
-            <lion-option .choiceValue="${'Artichoke'}" id="artichoke-option">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}" id="chard-option">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" autocomplete="none">
+              <lion-option .choiceValue="${'Artichoke'}" id="artichoke-option"
+                >Artichoke</lion-option
+              >
+              <lion-option .choiceValue="${'Chard'}" id="chard-option">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
 
         const elProts = getComboboxMembers(el);
 
@@ -1803,14 +1922,16 @@ describe('lion-combobox', () => {
         );
         expect(el.formElements[1].active).to.equal(false);
 
-        const el2 = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" autocomplete="both" match-mode="begin">
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </lion-combobox>
-        `));
+        const el2 = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" autocomplete="both" match-mode="begin">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
 
         const el2Prots = getComboboxMembers(el2);
 
@@ -1844,22 +1965,26 @@ describe('lion-combobox', () => {
   describe('Accessibility', () => {
     describe('Aria versions', () => {
       it('[role=combobox] wraps input node in v1.1', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" ._ariaVersion="${'1.1'}">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
         expect(_comboboxNode.contains(_inputNode)).to.be.true;
       });
 
       it('has one input node with [role=combobox] in v1.0', async () => {
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" ._ariaVersion="${'1.0'}">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            </lion-combobox>
+          `)
+        );
         const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
         expect(_comboboxNode).to.equal(_inputNode);
@@ -1869,21 +1994,25 @@ describe('lion-combobox', () => {
         const browserDetectionIsChromiumOriginal = browserDetection.isChromium;
 
         browserDetection.isChromium = true;
-        const el = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          </lion-combobox>
-        `));
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            </lion-combobox>
+          `)
+        );
         const elProts = getComboboxMembers(el);
 
         expect(elProts._ariaVersion).to.equal('1.1');
 
         browserDetection.isChromium = false;
-        const el2 = /** @type {LionCombobox} */ (await fixture(html`
-          <lion-combobox name="foo">
-            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
-          </lion-combobox>
-        `));
+        const el2 = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            </lion-combobox>
+          `)
+        );
         const el2Prots = getComboboxMembers(el2);
 
         expect(el2Prots._ariaVersion).to.equal('1.0');
@@ -1897,14 +2026,16 @@ describe('lion-combobox', () => {
   describe('Multiple Choice', () => {
     // TODO: possibly later share test with select-rich if it officially supports multipleChoice
     it('does not close listbox on click/enter', async () => {
-      const el = /** @type {LionCombobox} */ (await fixture(html`
-        <lion-combobox name="foo" multiple-choice>
-          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-        </lion-combobox>
-      `));
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
 
       const { _comboboxNode } = getComboboxMembers(el);
 

@@ -33,9 +33,9 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    */
   // @ts-ignore [editor]: prevents vscode from complaining
   get _inputNode() {
-    return /** @type {LionSwitchButton} */ (Array.from(this.children).find(
-      el => el.slot === 'input',
-    ));
+    return /** @type {LionSwitchButton} */ (
+      Array.from(this.children).find(el => el.slot === 'input')
+    );
   }
 
   get slots() {

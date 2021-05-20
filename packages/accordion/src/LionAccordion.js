@@ -226,12 +226,12 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const invokers = /** @type {HTMLElement[]} */ (Array.from(
-      this.querySelectorAll('[slot="invoker"]'),
-    ));
-    const contents = /** @type {HTMLElement[]} */ (Array.from(
-      this.querySelectorAll('[slot="content"]'),
-    ));
+    const invokers = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="invoker"]'))
+    );
+    const contents = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="content"]'))
+    );
     if (invokers.length !== contents.length) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -356,9 +356,11 @@ export class LionAccordion extends LitElement {
     if (!(this.__store && this.__store[this.focusedIndex])) {
       return;
     }
-    const previousInvoker = /** @type {HTMLElement | undefined} */ (Array.from(this.children).find(
-      child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
-    ));
+    const previousInvoker = /** @type {HTMLElement | undefined} */ (
+      Array.from(this.children).find(
+        child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
+      )
+    );
     if (previousInvoker) {
       unfocusInvoker(previousInvoker);
     }

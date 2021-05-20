@@ -10,9 +10,9 @@ class LionFieldWithTextArea extends LionField {
    * @protected
    */
   get _inputNode() {
-    return /** @type {HTMLTextAreaElement} */ (Array.from(this.children).find(
-      el => el.slot === 'input',
-    ));
+    return /** @type {HTMLTextAreaElement} */ (
+      Array.from(this.children).find(el => el.slot === 'input')
+    );
   }
 }
 
@@ -161,6 +161,9 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     ];
   }
 
+  /**
+   * @returns {Promise<boolean>|Promise<boolean|any>}
+   */
   get updateComplete() {
     if (this.__textareaUpdateComplete) {
       return Promise.all([this.__textareaUpdateComplete, super.updateComplete]);

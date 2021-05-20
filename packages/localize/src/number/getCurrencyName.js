@@ -11,12 +11,14 @@ import { forceCurrencyNameForPHPEnGB } from './utils/normalize-get-currency-name
  * @returns {string} currency name like 'US dollar'
  */
 export function getCurrencyName(currencyIso, options) {
-  const parts = /** @type {FormatNumberPart[]} */ (formatNumberToParts(1, {
-    ...options,
-    style: 'currency',
-    currency: currencyIso,
-    currencyDisplay: 'name',
-  }));
+  const parts = /** @type {FormatNumberPart[]} */ (
+    formatNumberToParts(1, {
+      ...options,
+      style: 'currency',
+      currency: currencyIso,
+      currencyDisplay: 'name',
+    })
+  );
   let currencyName = parts
     .filter(p => p.type === 'currency')
     .map(o => o.value)

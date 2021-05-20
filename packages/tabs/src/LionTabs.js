@@ -323,12 +323,16 @@ export class LionTabs extends LitElement {
     ) {
       return;
     }
-    const previousButton = /** @type {HTMLElement} */ (Array.from(this.children).find(
-      child => child.slot === 'tab' && child.hasAttribute('selected'),
-    ));
-    const previousPanel = /** @type {HTMLElement} */ (Array.from(this.children).find(
-      child => child.slot === 'panel' && child.hasAttribute('selected'),
-    ));
+    const previousButton = /** @type {HTMLElement} */ (
+      Array.from(this.children).find(
+        child => child.slot === 'tab' && child.hasAttribute('selected'),
+      )
+    );
+    const previousPanel = /** @type {HTMLElement} */ (
+      Array.from(this.children).find(
+        child => child.slot === 'panel' && child.hasAttribute('selected'),
+      )
+    );
     if (previousButton) {
       deselectButton(previousButton);
     }

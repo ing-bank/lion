@@ -1,6 +1,8 @@
 import { LitElement } from '@lion/core';
 import { parseDate } from '@lion/localize';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
+
 import sinon from 'sinon';
 import { FormatMixin } from '../src/FormatMixin.js';
 import { Unparseable, Validator } from '../index.js';
@@ -95,7 +97,7 @@ export function runFormatMixinSuite(customConfig) {
   }
 
   describe('FormatMixin', async () => {
-    /** @type {{d: any}} */
+    /** @type {{_$litStatic$: any}} */
     let tag;
     /** @type {FormatClass} */
     let nonFormat;
@@ -148,9 +150,9 @@ export function runFormatMixinSuite(customConfig) {
      */
     describe('ModelValue', () => {
       it('fires `model-value-changed` for every programmatic modelValue change', async () => {
-        const el = /** @type {FormatClass} */ (await fixture(
-          html`<${tag}><input slot="input"></${tag}>`,
-        ));
+        const el = /** @type {FormatClass} */ (
+          await fixture(html`<${tag}><input slot="input"></${tag}>`)
+        );
         let counter = 0;
         let isTriggeredByUser = false;
 
@@ -172,18 +174,19 @@ export function runFormatMixinSuite(customConfig) {
       });
 
       it('fires `model-value-changed` for every user input, adding `isTriggeredByUser` in event detail', async () => {
-        const formatEl = /** @type {FormatClass} */ (await fixture(
-          html`<${tag}><input slot="input"></${tag}>`,
-        ));
+        const formatEl = /** @type {FormatClass} */ (
+          await fixture(html`<${tag}><input slot="input"></${tag}>`)
+        );
 
         let counter = 0;
         let isTriggeredByUser = false;
-        formatEl.addEventListener('model-value-changed', (
-          /** @param {CustomEvent} event */ event,
-        ) => {
-          counter += 1;
-          isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
-        });
+        formatEl.addEventListener(
+          'model-value-changed',
+          (/** @param {CustomEvent} event */ event) => {
+            counter += 1;
+            isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
+          },
+        );
 
         mimicUserInput(formatEl, generateValueBasedOnType());
         expect(counter).to.equal(1);
@@ -205,7 +208,8 @@ export function runFormatMixinSuite(customConfig) {
 
       it('synchronizes _inputNode.value as a fallback mechanism on init (when no modelValue provided)', async () => {
         // Note that in lion-field, the attribute would be put on <lion-field>, not on <input>
-        const formatElem = /** @type {FormatClass} */ (await fixture(html`
+        const formatElem = /** @type {FormatClass} */ (
+          await fixture(html`
           <${tag}
             value="string"
             .formatter=${/** @param {string} value */ value => `foo: ${value}`}
@@ -215,7 +219,8 @@ export function runFormatMixinSuite(customConfig) {
           >
             <input slot="input" value="string" />
           </${tag}>
-        `));
+        `)
+        );
         // Now check if the format/parse/serialize loop has been triggered
         await formatElem.updateComplete;
         expect(formatElem.formattedValue).to.equal('foo: string');
@@ -228,20 +233,23 @@ export function runFormatMixinSuite(customConfig) {
 
       describe('Unparseable values', () => {
         it('converts to Unparseable when wrong value inputted by user', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag} .parser=${
-            /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
-          }
+              /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
+            }
               >
               <input slot="input">
             </${tag}>
-          `));
+          `)
+          );
           mimicUserInput(el, 'test');
           expect(el.modelValue).to.be.an.instanceof(Unparseable);
         });
 
         it('preserves the viewValue when unparseable', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag}
               .parser=${
                 /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
@@ -249,14 +257,16 @@ export function runFormatMixinSuite(customConfig) {
             >
               <input slot="input">
             </${tag}>
-          `));
+          `)
+          );
           mimicUserInput(el, 'test');
           expect(el.formattedValue).to.equal('test');
           expect(el.value).to.equal('test');
         });
 
         it('displays the viewValue when modelValue is of type Unparseable', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag}
               .parser=${
                 /** @param {string} viewValue */ viewValue => Number(viewValue) || undefined
@@ -264,17 +274,20 @@ export function runFormatMixinSuite(customConfig) {
             >
               <input slot="input">
             </${tag}>
-          `));
+          `)
+          );
           el.modelValue = new Unparseable('foo');
           expect(el.value).to.equal('foo');
         });
 
         it('empty strings are not Unparseable', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag}>
               <input slot="input" value="string">
             </${tag}>
-          `));
+          `)
+          );
           // This could happen when the user erases the input value
           mimicUserInput(el, '');
           // For backwards compatibility, we keep the modelValue an empty string here.
@@ -303,11 +316,13 @@ export function runFormatMixinSuite(customConfig) {
 
       describe('Presenting value to end user', () => {
         it('reflects back formatted value to user on leave', async () => {
-          const formatEl = /** @type {FormatClass} */ (await fixture(html`
+          const formatEl = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
               <input slot="input" />
             </${tag}>
-          `));
+          `)
+          );
           const { _inputNode } = getFormControlMembers(formatEl);
 
           const generatedViewValue = generateValueBasedOnType({ viewValue: true });
@@ -322,11 +337,13 @@ export function runFormatMixinSuite(customConfig) {
         });
 
         it('reflects back .formattedValue immediately when .modelValue changed imperatively', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag} .formatter="${/** @param {string} value */ value => `foo: ${value}`}">
               <input slot="input" />
             </${tag}>
-          `));
+          `)
+          );
 
           const { _inputNode } = getFormControlMembers(el);
 
@@ -351,7 +368,8 @@ export function runFormatMixinSuite(customConfig) {
         const parserSpy = sinon.spy(value => value.replace('foo: ', ''));
         const serializerSpy = sinon.spy(value => `[foo] ${value}`);
         const preprocessorSpy = sinon.spy(value => value.replace('bar', ''));
-        const el = /** @type {FormatClass} */ (await fixture(html`
+        const el = /** @type {FormatClass} */ (
+          await fixture(html`
           <${tag}
             .formatter=${formatterSpy}
             .parser=${parserSpy}
@@ -361,7 +379,8 @@ export function runFormatMixinSuite(customConfig) {
           >
             <input slot="input">
           </${tag}>
-        `));
+        `)
+        );
         expect(formatterSpy.called).to.be.true;
         expect(serializerSpy.called).to.be.true;
 
@@ -407,11 +426,13 @@ export function runFormatMixinSuite(customConfig) {
             toggleValue: true,
           });
 
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag} .formatter=${formatterSpy}>
               <input slot="input" .value="${generatedViewValue}">
             </${tag}>
-          `));
+          `)
+          );
           expect(formatterSpy.callCount).to.equal(1);
 
           el.hasFeedbackFor.push('error');
@@ -446,9 +467,11 @@ export function runFormatMixinSuite(customConfig) {
 
         it('has formatOptions available in formatter', async () => {
           const formatterSpy = sinon.spy(value => `foo: ${value}`);
-          const generatedViewValue = /** @type {string} */ (generateValueBasedOnType({
-            viewValue: true,
-          }));
+          const generatedViewValue = /** @type {string} */ (
+            generateValueBasedOnType({
+              viewValue: true,
+            })
+          );
           await fixture(html`
             <${tag} value="${generatedViewValue}" .formatter="${formatterSpy}"
               .formatOptions="${{ locale: 'en-GB', decimalSeparator: '-' }}">
@@ -483,9 +506,11 @@ export function runFormatMixinSuite(customConfig) {
           }
 
           it('sets formatOptions.mode to "pasted" (and restores to "auto")', async () => {
-            const el = /** @type {FormatClass} */ (await fixture(html`
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `));
+          `)
+            );
             const formatterSpy = sinon.spy(el, 'formatter');
             paste(el);
             expect(formatterSpy).to.be.called;
@@ -496,9 +521,11 @@ export function runFormatMixinSuite(customConfig) {
           });
 
           it('sets protected value "_isPasting" for Subclassers', async () => {
-            const el = /** @type {FormatClass} */ (await fixture(html`
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `));
+          `)
+            );
             const formatterSpy = sinon.spy(el, 'formatter');
             paste(el);
             expect(formatterSpy).to.have.been.called;
@@ -510,9 +537,11 @@ export function runFormatMixinSuite(customConfig) {
           });
 
           it('calls formatter and "_reflectBackOn()"', async () => {
-            const el = /** @type {FormatClass} */ (await fixture(html`
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`
             <${tag}><input slot="input"></${tag}>
-          `));
+          `)
+            );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
             paste(el);
@@ -520,9 +549,11 @@ export function runFormatMixinSuite(customConfig) {
           });
 
           it(`updates viewValue when "_reflectBackOn()" configured to reflect`, async () => {
-            const el = /** @type {FormatClass} */ (await fixture(html`
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`
             <${reflectingTag}><input slot="input"></${reflectingTag}>
-          `));
+          `)
+            );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
             paste(el);
@@ -536,11 +567,13 @@ export function runFormatMixinSuite(customConfig) {
           /** @type {?} */
           const generatedValue = generateValueBasedOnType();
           const parserSpy = sinon.spy();
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
           <${tag} .parser="${parserSpy}">
             <input slot="input" .value="${generatedValue}">
           </${tag}>
-        `));
+        `)
+          );
 
           expect(parserSpy.callCount).to.equal(1);
           // This could happen for instance in a reset
@@ -562,11 +595,13 @@ export function runFormatMixinSuite(customConfig) {
           const toBeCorrectedVal = `${val}$`;
           const preprocessorSpy = sinon.spy(v => v.replace(/\$$/g, ''));
 
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
           <${tag} .preprocessor=${preprocessorSpy}>
             <input slot="input">
           </${tag}>
-        `));
+        `)
+          );
 
           const { _inputNode } = getFormControlMembers(el);
 
@@ -581,11 +616,13 @@ export function runFormatMixinSuite(customConfig) {
         });
 
         it('does not preprocess during composition', async () => {
-          const el = /** @type {FormatClass} */ (await fixture(html`
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
             <${tag} .preprocessor=${(/** @type {string} */ v) => v.replace(/\$$/g, '')}>
               <input slot="input">
             </${tag}>
-          `));
+          `)
+          );
 
           const { _inputNode } = getFormControlMembers(el);
 

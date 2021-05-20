@@ -66,9 +66,11 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('has .showsFeedbackFor indicating for which type it actually shows messages', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag} submitted .validators=${[new MinLength(3)]}>${lightDom}</${tag}>
-      `));
+      `)
+      );
 
       el.modelValue = 'a';
       await el.feedbackComplete;
@@ -87,14 +89,16 @@ export function runValidateMixinFeedbackPart() {
       }
       const elTagString = defineCE(ValidateElementCustomTypes);
       const elTag = unsafeStatic(elTagString);
-      const el = /** @type {ValidateElementCustomTypes} */ (await fixture(html`
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
         <${elTag}
           .submitted=${true}
           .validators=${[
             new MinLength(2, { type: 'x' }),
             new MinLength(3, { type: 'error' }),
           ]}>${lightDom}</${elTag}>
-      `));
+      `)
+      );
 
       el.modelValue = '1';
       await el.updateComplete;
@@ -116,12 +120,14 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('passes a message to the "._feedbackNode"', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .modelValue=${'cat'}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       expect(_feedbackNode.feedbackData).to.deep.equal([]);
@@ -132,13 +138,15 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('has configurable feedback visibility hook', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       await el.updateComplete;
@@ -153,13 +161,15 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('writes prioritized result to "._feedbackNode" based on Validator order', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid(), new MinLength(4)]}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       await el.updateComplete;
@@ -179,13 +189,15 @@ export function runValidateMixinFeedbackPart() {
         return 'this ends up in "._feedbackNode"';
       };
 
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       expect(_feedbackNode.feedbackData).to.be.undefined;
@@ -208,13 +220,15 @@ export function runValidateMixinFeedbackPart() {
         return 'this ends up in "._feedbackNode"';
       };
 
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .modelValue=${'cat'}
           .validators=${[new AlwaysInvalid()]}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       expect(_feedbackNode.feedbackData).to.be.undefined;
@@ -248,8 +262,9 @@ export function runValidateMixinFeedbackPart() {
         render() {
           let name = '';
           if (this.feedbackData && this.feedbackData.length > 0) {
-            const ctor = /** @type {typeof Validator} */ (this.feedbackData[0]?.validator
-              ?.constructor);
+            const ctor = /** @type {typeof Validator} */ (
+              this.feedbackData[0]?.validator?.constructor
+            );
             name = ctor.validatorName;
           }
           return html`Custom for ${name}`;
@@ -257,13 +272,15 @@ export function runValidateMixinFeedbackPart() {
       }
       const customFeedbackTagString = defineCE(ValidateElementCustomRender);
       const customFeedbackTag = unsafeStatic(customFeedbackTagString);
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .validators=${[new ContainsLowercaseA(), new AlwaysInvalid()]}>
           <${customFeedbackTag} slot="feedback"><${customFeedbackTag}>
         </${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       expect(_feedbackNode.localName).to.equal(customFeedbackTagString);
@@ -282,12 +299,14 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('supports custom messages in Validator instance configuration object', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .validators=${[new MinLength(3, { getMessage: () => 'custom via config' })]}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = 'a';
@@ -297,13 +316,15 @@ export function runValidateMixinFeedbackPart() {
     });
 
     it('updates the feedback component when locale changes', async () => {
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .validators=${[new MinLength(3)]}
           .modelValue=${'1'}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       await el.feedbackComplete;
@@ -323,7 +344,8 @@ export function runValidateMixinFeedbackPart() {
       }
       const elTagString = defineCE(ValidateElementCustomTypes);
       const elTag = unsafeStatic(elTagString);
-      const el = /** @type {ValidateElementCustomTypes} */ (await fixture(html`
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
         <${elTag}
           .submitted=${true}
           .validators=${[
@@ -331,7 +353,8 @@ export function runValidateMixinFeedbackPart() {
             new DefaultSuccess(null, { getMessage: () => 'This is a success message' }),
           ]}
         >${lightDom}</${elTag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = 'a';
@@ -347,13 +370,15 @@ export function runValidateMixinFeedbackPart() {
 
     describe('Accessibility', () => {
       it('sets [aria-invalid="true"] to "._inputNode" when there is an error', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             submitted
             .validators=${[new Required()]}
             .modelValue=${'a'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         const { _inputNode } = getFormControlMembers(el);
 
         const inputNode = _inputNode;
@@ -386,13 +411,15 @@ export function runValidateMixinFeedbackPart() {
         const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
         const constructorMessageSpy = sinon.spy(ctorValidator, 'getMessage');
 
-        el = /** @type {ValidateElementCustomTypes} */ (await fixture(html`
+        el = /** @type {ValidateElementCustomTypes} */ (
+          await fixture(html`
           <${elTag}
             .submitted=${true}
             .validators=${[constructorValidator]}
             .modelValue=${'cat'}
           >${lightDom}</${elTag}>
-        `));
+        `)
+        );
         await el.updateComplete;
         await el.feedbackComplete;
         expect(constructorMessageSpy.args[0][0]).to.eql({
@@ -408,13 +435,15 @@ export function runValidateMixinFeedbackPart() {
         const instanceMessageSpy = sinon.spy();
         const instanceValidator = new MinLength(4, { getMessage: instanceMessageSpy });
 
-        el = /** @type {ValidateElementCustomTypes} */ (await fixture(html`
+        el = /** @type {ValidateElementCustomTypes} */ (
+          await fixture(html`
           <${elTag}
             .submitted=${true}
             .validators=${[instanceValidator]}
             .modelValue=${'cat'}
           >${lightDom}</${elTag}>
-        `));
+        `)
+        );
         await el.updateComplete;
         await el.feedbackComplete;
         expect(instanceMessageSpy.args[0][0]).to.eql({
@@ -435,14 +464,16 @@ export function runValidateMixinFeedbackPart() {
         const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
         const spy = sinon.spy(ctorValidator, 'getMessage');
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .submitted=${true}
             .validators=${[constructorValidator]}
             .modelValue=${'cat'}
             .fieldName=${new Promise(resolve => resolve('myField'))}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         await el.updateComplete;
         await el.feedbackComplete;
         expect(spy.args[0][0]).to.eql({
@@ -464,14 +495,16 @@ export function runValidateMixinFeedbackPart() {
       const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
       const spy = sinon.spy(ctorValidator, 'getMessage');
 
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .validators=${[constructorValidator]}
           .modelValue=${'cat'}
           .fieldName=${new Promise(resolve => resolve('myField'))}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       await el.updateComplete;
       await el.feedbackComplete;
 
@@ -500,13 +533,15 @@ export function runValidateMixinFeedbackPart() {
        * The Queue system solves this by queueing the updateFeedbackComponent tasks and
        * await them one by one.
        */
-      const el = /** @type {ValidateElement} */ (await fixture(html`
+      const el = /** @type {ValidateElement} */ (
+        await fixture(html`
         <${tag}
           .submitted=${true}
           .validators=${[new MinLength(3)]}
           .modelValue=${'1'}
         >${lightDom}</${tag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       el.modelValue = '12345';

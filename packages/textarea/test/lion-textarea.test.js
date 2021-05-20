@@ -1,4 +1,5 @@
-import { aTimeout, expect, fixture as _fixture, html } from '@open-wc/testing';
+import { aTimeout, expect, fixture as _fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/textarea/define';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';

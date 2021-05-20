@@ -11,10 +11,8 @@ import { LocalizeManager } from '../src/LocalizeManager.js';
  */
 function getProtectedMembers(localizeManagerEl) {
   // @ts-ignore
-  const {
-    __storage: storage,
-    _supportExternalTranslationTools: supportExternalTranslationTools,
-  } = localizeManagerEl;
+  const { __storage: storage, _supportExternalTranslationTools: supportExternalTranslationTools } =
+    localizeManagerEl;
   return {
     storage,
     supportExternalTranslationTools,

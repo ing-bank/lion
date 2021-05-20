@@ -100,9 +100,9 @@ export class LionSteps extends LitElement {
   }
 
   get steps() {
-    const defaultSlot = /** @type {HTMLSlotElement} */ (this.shadowRoot?.querySelector(
-      'slot:not([name])',
-    ));
+    const defaultSlot = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot:not([name])')
+    );
     return /** @type {LionStep[]} */ (defaultSlot.assignedNodes()).filter(
       node => node.nodeType === Node.ELEMENT_NODE,
     );

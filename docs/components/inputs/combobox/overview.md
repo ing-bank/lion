@@ -24,7 +24,10 @@ import { lazyRender } from './src/lazyRender.js';
 export const main = () => html`
   <lion-combobox name="combo" label="Default">
     ${lazyRender(
-      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+      listboxData.map(
+        (entry, i) =>
+          html` <lion-option .checked="${i === 0}" .choiceValue="${entry}">${entry}</lion-option> `,
+      ),
     )}
   </lion-combobox>
 `;

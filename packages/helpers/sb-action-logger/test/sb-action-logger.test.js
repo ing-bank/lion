@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import '@lion/helpers/define-sb-action-logger';
 
 /**
@@ -53,9 +54,9 @@ describe('sb-action-logger', () => {
     it('shows a visual cue whenever something is logged to the logger', async () => {
       const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
-      const cueEl = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector(
-        '.header__log-cue-overlay',
-      ));
+      const cueEl = /** @type {HTMLElement} */ (
+        el.shadowRoot?.querySelector('.header__log-cue-overlay')
+      );
       expect(cueEl.classList.contains('header__log-cue-overlay--slide')).to.be.false;
 
       el.log('Hello, World!');
@@ -65,9 +66,9 @@ describe('sb-action-logger', () => {
     it('has a visual counter that counts the amount of total logs', async () => {
       const el = await fixture(html`<sb-action-logger></sb-action-logger>`);
 
-      const cueEl = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector(
-        '.header__log-cue-overlay',
-      ));
+      const cueEl = /** @type {HTMLElement} */ (
+        el.shadowRoot?.querySelector('.header__log-cue-overlay')
+      );
 
       expect(cueEl.classList.contains('.header__log-cue-overlay--slide')).to.be.false;
 
@@ -100,12 +101,12 @@ describe('sb-action-logger', () => {
 
       const loggerEl = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('.logger'));
 
-      const firstLogCount = /** @type {HTMLElement} */ (loggerEl.firstElementChild?.querySelector(
-        '.logger__log-count',
-      ));
-      const lastLogCount = /** @type {HTMLElement} */ (loggerEl.lastElementChild?.querySelector(
-        '.logger__log-count',
-      ));
+      const firstLogCount = /** @type {HTMLElement} */ (
+        loggerEl.firstElementChild?.querySelector('.logger__log-count')
+      );
+      const lastLogCount = /** @type {HTMLElement} */ (
+        loggerEl.lastElementChild?.querySelector('.logger__log-count')
+      );
 
       expect(loggerEl.children.length).to.equal(4);
       expect(firstLogCount.innerText).to.equal('3');

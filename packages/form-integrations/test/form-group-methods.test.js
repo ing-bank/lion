@@ -1,4 +1,5 @@
-import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
+import { elementUpdated, expect, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import './helpers/umbrella-form.js';
 import { getAllFieldsAndFormGroups } from './helpers/helpers.js';
 
@@ -81,9 +82,11 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
   });
 
   it('calling resetGroup() should reset all metadata (interaction states and initial values)', async () => {
-    const el = /** @type {UmbrellaForm} */ (await fixture(
-      html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
-    ));
+    const el = /** @type {UmbrellaForm} */ (
+      await fixture(
+        html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
+      )
+    );
     await el.updateComplete;
     const formEl = el._lionFormNode;
 
@@ -125,9 +128,11 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
 
   // Wait till ListboxMixin properly clears
   it('calling clearGroup() should clear all fields', async () => {
-    const el = /** @type {UmbrellaForm} */ (await fixture(
-      html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
-    ));
+    const el = /** @type {UmbrellaForm} */ (
+      await fixture(
+        html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
+      )
+    );
     await el.updateComplete;
     const formEl = el._lionFormNode;
 

@@ -162,9 +162,9 @@ export class LionButton extends DisabledWithTabIndexMixin(SlotMixin(LitElement))
    * @protected
    */
   get _nativeButtonNode() {
-    return /** @type {HTMLButtonElement} */ (Array.from(this.children).find(
-      child => child.slot === '_button',
-    ));
+    return /** @type {HTMLButtonElement} */ (
+      Array.from(this.children).find(child => child.slot === '_button')
+    );
   }
 
   get slots() {

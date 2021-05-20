@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { localize } from '@lion/localize';
 import {
   DefaultSuccess,

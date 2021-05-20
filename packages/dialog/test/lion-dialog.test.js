@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/dialog/define';
 
@@ -62,9 +63,9 @@ describe('lion-dialog', () => {
       el._overlayInvokerNode.click();
       expect(el.opened).to.be.true;
 
-      const overlaysContainer = /** @type {HTMLElement} */ (document.querySelector(
-        '.global-overlays',
-      ));
+      const overlaysContainer = /** @type {HTMLElement} */ (
+        document.querySelector('.global-overlays')
+      );
       const wrapperNode = Array.from(overlaysContainer.children)[1];
       const nestedDialog = /** @type {LionDialog} */ (wrapperNode.querySelector('lion-dialog'));
       // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay

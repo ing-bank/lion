@@ -3,6 +3,7 @@ import { css, html } from '@lion/core';
 
 /**
  * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {import('@lion/listbox').LionOption} LionOption
  */
 
@@ -105,7 +106,10 @@ export class LionSelectInvoker extends LionButton {
     this.removeEventListener('keydown', this.__handleKeydown);
   }
 
-  /** @protected */
+  /**
+   * @protected
+   * @returns {TemplateResult|Node[]|string|null}
+   */
   _contentTemplate() {
     if (this.selectedElement) {
       const labelNodes = Array.from(this.selectedElement.childNodes);
@@ -120,6 +124,7 @@ export class LionSelectInvoker extends LionButton {
   /**
    * To be overriden for a placeholder, used when `hasNoDefaultSelected` is true on the select rich
    * @protected
+   * @returns {TemplateResult}
    */
   // eslint-disable-next-line class-methods-use-this
   _noSelectionTemplate() {

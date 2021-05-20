@@ -157,8 +157,8 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
    * @param {?} oldValue
    * @override
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
+  requestUpdate(name, oldValue) {
+    super.requestUpdate(name, oldValue);
     if (this.isConnected && name === 'checked' && this.checked !== oldValue) {
       this.__checkedStateChange();
     }
