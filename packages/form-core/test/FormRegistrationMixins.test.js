@@ -1,5 +1,5 @@
 import { LitElement } from '@lion/core';
-import { html } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { runRegistrationSuite } from '../test-suites/FormRegistrationMixins.suite.js';
 
 runRegistrationSuite({

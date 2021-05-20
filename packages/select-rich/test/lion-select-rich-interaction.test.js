@@ -1,5 +1,6 @@
 import { Required } from '@lion/form-core';
-import { expect, html, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
+import { expect, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/core';
 import '@lion/core/differentKeyEventNamesShimIE';
 import '@lion/listbox/define';
@@ -37,45 +38,57 @@ describe('lion-select-rich interactions', () => {
       const originalIsMac = browserDetection.isMac;
 
       browserDetection.isMac = true;
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
+        `)
+      );
       expect(el.interactionMode).to.equal('mac');
-      const el2 = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich interaction-mode="windows/linux"
-          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
-        >
-      `));
+      const el2 = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="windows/linux"
+            ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+          >
+        `)
+      );
       expect(el2.interactionMode).to.equal('windows/linux');
 
       browserDetection.isMac = false;
-      const el3 = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
-      `));
+      const el3 = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich>
+        `)
+      );
       expect(el3.interactionMode).to.equal('windows/linux');
-      const el4 = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich interaction-mode="mac"
-          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
-        >
-      `));
+      const el4 = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac"
+            ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+          >
+        `)
+      );
       expect(el4.interactionMode).to.equal('mac');
       browserDetection.isMac = originalIsMac;
     });
 
     it('derives selectionFollowsFocus and navigateWithinInvoker from interactionMode', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich interaction-mode="windows/linux"
-          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
-        >
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="windows/linux"
+            ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+          >
+        `)
+      );
       expect(el.selectionFollowsFocus).to.be.true;
       expect(el.navigateWithinInvoker).to.be.true;
 
-      const el2 = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich interaction-mode="mac"
-          ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
-        >
-      `));
+      const el2 = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac"
+            ><lion-option .choiceValue=${10}>Item 1</lion-option></lion-select-rich
+          >
+        `)
+      );
       expect(el2.selectionFollowsFocus).to.be.false;
       expect(el2.navigateWithinInvoker).to.be.false;
     });
@@ -101,15 +114,17 @@ describe('lion-select-rich interactions', () => {
         });
       }
 
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich interaction-mode="windows/linux">
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-            <lion-option .choiceValue=${30}>Item 3</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="windows/linux">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+              <lion-option .choiceValue=${30}>Item 3</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
 
       const options = el.formElements;
       expect(el.checkedIndex).to.equal(0);
@@ -127,32 +142,38 @@ describe('lion-select-rich interactions', () => {
 
   describe('Disabled', () => {
     it('invoker cannot be focused if disabled', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich disabled>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich disabled>
+            <lion-options slot="input"></lion-options>
+          </lion-select-rich>
+        `)
+      );
       const { invoker } = getNodes(el);
       expect(invoker.tabIndex).to.equal(-1);
     });
 
     it('cannot be opened via click if disabled', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich disabled>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich disabled>
+            <lion-options slot="input"></lion-options>
+          </lion-select-rich>
+        `)
+      );
       const { invoker } = getNodes(el);
       invoker.click();
       expect(el.opened).to.be.false;
     });
 
     it('reflects disabled attribute to invoker', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich disabled>
-          <lion-options slot="input"></lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich disabled>
+            <lion-options slot="input"></lion-options>
+          </lion-select-rich>
+        `)
+      );
       const { invoker } = getNodes(el);
       expect(invoker.hasAttribute('disabled')).to.be.true;
       el.removeAttribute('disabled');
@@ -163,14 +184,16 @@ describe('lion-select-rich interactions', () => {
 
   describe('Interaction states', () => {
     it('becomes touched if blurred once', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich>
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
       const { invoker } = getNodes(el);
       expect(el.touched).to.be.false;
       await triggerFocusFor(invoker);
@@ -181,14 +204,16 @@ describe('lion-select-rich interactions', () => {
 
   describe('Accessibility', () => {
     it('sets [aria-invalid="true"] to "._invokerNode" when there is an error', async () => {
-      const el = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich .validators=${[new Required()]}>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${null}>Please select a value</lion-option>
-            <lion-option .modelValue=${{ value: 10, checked: true }}>Item 1</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `));
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich .validators=${[new Required()]}>
+            <lion-options slot="input">
+              <lion-option .choiceValue=${null}>Please select a value</lion-option>
+              <lion-option .modelValue=${{ value: 10, checked: true }}>Item 1</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
       const { invoker } = getNodes(el);
       const options = el.formElements;
       await el.feedbackComplete;

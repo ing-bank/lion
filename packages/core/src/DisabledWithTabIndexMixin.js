@@ -62,8 +62,8 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {?} oldValue
      */
-    requestUpdateInternal(name, oldValue) {
-      super.requestUpdateInternal(name, oldValue);
+    requestUpdate(name, oldValue) {
+      super.requestUpdate(name, oldValue);
 
       if (name === 'disabled') {
         if (this.disabled) {

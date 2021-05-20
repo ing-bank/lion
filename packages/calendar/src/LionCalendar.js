@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { html, LitElement } from '@lion/core';
 import {
   getMonthNames,
@@ -224,9 +225,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   focusCentralDate() {
-    const button = /** @type {HTMLElement} */ (this.shadowRoot?.querySelector(
-      'button[tabindex="0"]',
-    ));
+    const button = /** @type {HTMLElement} */ (
+      this.shadowRoot?.querySelector('button[tabindex="0"]')
+    );
     button.focus();
     this.__focusedDate = this.centralDate;
   }
@@ -267,9 +268,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
      * we can guard against adding events twice
      */
     if (!this.__eventsAdded) {
-      this.__contentWrapperElement = /** @type {HTMLButtonElement} */ (this.shadowRoot?.getElementById(
-        'js-content-wrapper',
-      ));
+      this.__contentWrapperElement = /** @type {HTMLButtonElement} */ (
+        this.shadowRoot?.getElementById('js-content-wrapper')
+      );
       this.__contentWrapperElement.addEventListener('click', this.__boundClickDateDelegation);
       this.__contentWrapperElement.addEventListener('focus', this.__boundFocusDateDelegation);
       this.__contentWrapperElement.addEventListener('blur', this.__boundBlurDateDelegation);
@@ -305,8 +306,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @param {string} name
    * @param {?} oldValue
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
+  requestUpdate(name, oldValue) {
+    super.requestUpdate(name, oldValue);
 
     const map = {
       disableDates: () => this.__disableDatesChanged(),
@@ -740,8 +741,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       !this.__focusedDate &&
       isDayButton(/** @type {HTMLElement} el */ (this.shadowRoot?.activeElement))
     ) {
-      this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (this.shadowRoot
-        ?.activeElement).date;
+      this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (
+        this.shadowRoot?.activeElement
+      ).date;
     }
   }
 

@@ -1,5 +1,6 @@
 /* eslint-disable no-new */
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
 
@@ -37,9 +38,9 @@ const withLocalTestConfig = () =>
   /** @type {OverlayConfig} */ ({
     placementMode: 'local',
     contentNode: /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`)),
-    invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-      <div role="button" style="width: 100px; height: 20px;">Invoker</div>
-    `)),
+    invokerNode: /** @type {HTMLElement} */ (
+      fixtureSync(html` <div role="button" style="width: 100px; height: 20px;">Invoker</div> `)
+    ),
   });
 
 afterEach(() => {
@@ -73,21 +74,23 @@ describe('OverlayController', () => {
        */
       async function createZNode(zIndexVal, { mode } = {}) {
         if (mode === 'global') {
-          contentNode = /** @type {HTMLElement} */ (await fixture(html`
-            <div class="z-index--${zIndexVal}">
-              <style>
-                .z-index--${zIndexVal} {
-                  z-index: ${zIndexVal};
-                }
-              </style>
-              I should be on top
-            </div>
-          `));
+          contentNode = /** @type {HTMLElement} */ (
+            await fixture(html`
+              <div class="z-index--${zIndexVal}">
+                <style>
+                  .z-index--${zIndexVal} {
+                    z-index: ${zIndexVal};
+                  }
+                </style>
+                I should be on top
+              </div>
+            `)
+          );
         }
         if (mode === 'inline') {
-          contentNode = /** @type {HTMLElement} */ (await fixture(
-            html` <div>I should be on top</div> `,
-          ));
+          contentNode = /** @type {HTMLElement} */ (
+            await fixture(html` <div>I should be on top</div> `)
+          );
           contentNode.style.zIndex = zIndexVal;
         }
         return contentNode;
@@ -160,11 +163,13 @@ describe('OverlayController', () => {
       });
 
       it('keeps local target for placement mode "local" when already connected', async () => {
-        const parentNode = /** @type {HTMLElement} */ (await fixture(html`
-          <div id="parent">
-            <div id="content">Content</div>
-          </div>
-        `));
+        const parentNode = /** @type {HTMLElement} */ (
+          await fixture(html`
+            <div id="parent">
+              <div id="content">Content</div>
+            </div>
+          `)
+        );
         const contentNode = /** @type {HTMLElement} */ (parentNode.querySelector('#content'));
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -300,12 +305,14 @@ describe('OverlayController', () => {
 
     describe('When contentWrapperNode needs to be provided for correct arrow positioning', () => {
       it('uses contentWrapperNode as provided for local positioning', async () => {
-        const el = /** @type {HTMLElement} */ (await fixture(html`
-          <div id="contentWrapperNode">
-            <div id="contentNode"></div>
-            <my-arrow></my-arrow>
-          </div>
-        `));
+        const el = /** @type {HTMLElement} */ (
+          await fixture(html`
+            <div id="contentWrapperNode">
+              <div id="contentNode"></div>
+              <my-arrow></my-arrow>
+            </div>
+          `)
+        );
 
         const contentNode = /** @type {HTMLElement} */ (el.querySelector('#contentNode'));
         const contentWrapperNode = el;
@@ -344,9 +351,9 @@ describe('OverlayController', () => {
       });
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
-        const contentNode = /** @type {HTMLElement} */ (await fixture(html`
-          <div><input id="input1" /><input id="input2" /></div>
-        `));
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
@@ -354,9 +361,9 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
-        const elOutside = /** @type {HTMLElement} */ (await fixture(
-          html`<button>click me</button>`,
-        ));
+        const elOutside = /** @type {HTMLElement} */ (
+          await fixture(html`<button>click me</button>`)
+        );
         const input1 = ctrl.contentNode.querySelectorAll('input')[0];
         const input2 = ctrl.contentNode.querySelectorAll('input')[1];
 
@@ -521,9 +528,11 @@ describe('OverlayController', () => {
           ...withGlobalTestConfig(),
           hidesOnOutsideClick: true,
           contentNode,
-          invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-            <div role="button" style="width: 100px; height: 20px;">Invoker</div>
-          `)),
+          invokerNode: /** @type {HTMLElement} */ (
+            fixtureSync(html`
+              <div role="button" style="width: 100px; height: 20px;">Invoker</div>
+            `)
+          ),
         });
         await ctrl.show();
         mimicClick(document.body, { releaseElement: contentNode });
@@ -578,12 +587,14 @@ describe('OverlayController', () => {
         );
         const tag = unsafeStatic(tagString);
         ctrl.updateConfig({
-          contentNode: /** @type {HTMLElement} */ (await fixture(html`
+          contentNode: /** @type {HTMLElement} */ (
+            await fixture(html`
             <div>
               <div>Content</div>
               <${tag}></${tag}>
             </div>
-          `)),
+          `)
+          ),
         });
         await ctrl.show();
 
@@ -603,9 +614,9 @@ describe('OverlayController', () => {
       });
 
       it('works with 3rd party code using "event.stopPropagation()" on bubble phase', async () => {
-        const invokerNode = /** @type {HTMLElement} */ (await fixture(
-          '<div role="button">Invoker</div>',
-        ));
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">Invoker</div>')
+        );
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -640,9 +651,9 @@ describe('OverlayController', () => {
       });
 
       it('works with 3rd party code using "event.stopPropagation()" on capture phase', async () => {
-        const invokerNode = /** @type {HTMLElement} */ (await fixture(
-          html`<div role="button">Invoker</div>`,
-        ));
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture(html`<div role="button">Invoker</div>`)
+        );
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
@@ -651,14 +662,16 @@ describe('OverlayController', () => {
           invokerNode,
         });
         const stopProp = (/** @type {Event} */ e) => e.stopPropagation();
-        const dom = /** @type {HTMLElement} */ (await fixture(`
+        const dom = /** @type {HTMLElement} */ (
+          await fixture(`
           <div>
             <div id="popup">${invokerNode}${ctrl.content}</div>
             <div id="third-party-noise">
               This element prevents our handlers from reaching the document click handler.
             </div>
           </div>
-        `));
+        `)
+        );
 
         const noiseEl = /** @type {HTMLElement} */ (dom.querySelector('#third-party-noise'));
 
@@ -679,12 +692,14 @@ describe('OverlayController', () => {
       });
 
       it('doesn\'t hide on "inside label" click', async () => {
-        const contentNode = /** @type {HTMLElement} */ (await fixture(`
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(`
           <div>
             <label for="test">test</label>
             <input id="test">
             Content
-          </div>`));
+          </div>`)
+        );
         const labelNode = /** @type {HTMLElement} */ (contentNode.querySelector('label[for=test]'));
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -723,9 +738,9 @@ describe('OverlayController', () => {
 
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
         const input = /** @type {HTMLElement} */ (await fixture('<input />'));
-        const contentNode = /** @type {HTMLElement} */ (await fixture(
-          '<div><textarea></textarea></div>',
-        ));
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><textarea></textarea></div>')
+        );
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           elementToFocusAfterHide: input,
@@ -762,9 +777,9 @@ describe('OverlayController', () => {
 
       it('allows to set elementToFocusAfterHide on show', async () => {
         const input = /** @type {HTMLElement} */ (await fixture('<input />'));
-        const contentNode = /** @type {HTMLElement} */ (await fixture(
-          '<div><textarea></textarea></div>',
-        ));
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><textarea></textarea></div>')
+        );
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           viewportConfig: {
@@ -1281,9 +1296,9 @@ describe('OverlayController', () => {
 
   describe('Accessibility', () => {
     it('synchronizes [aria-expanded] on invoker', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(
-        '<div role="button">invoker</div>',
-      ));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="button">invoker</div>')
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         handlesAccessibility: true,
@@ -1306,9 +1321,9 @@ describe('OverlayController', () => {
     });
 
     it('preserves content id when present', async () => {
-      const contentNode = /** @type {HTMLElement} */ (await fixture(
-        '<div id="preserved">content</div>',
-      ));
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture('<div id="preserved">content</div>')
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         handlesAccessibility: true,
@@ -1318,9 +1333,9 @@ describe('OverlayController', () => {
     });
 
     it('adds [role=dialog] on content', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(
-        '<div role="button">invoker</div>',
-      ));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="button">invoker</div>')
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         handlesAccessibility: true,
@@ -1330,12 +1345,12 @@ describe('OverlayController', () => {
     });
 
     it('preserves [role] on content when present', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(
-        '<div role="button">invoker</div>',
-      ));
-      const contentNode = /** @type {HTMLElement} */ (await fixture(
-        '<div role="menu">invoker</div>',
-      ));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="button">invoker</div>')
+      );
+      const contentNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="menu">invoker</div>')
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         handlesAccessibility: true,
@@ -1446,9 +1461,9 @@ describe('OverlayController', () => {
 
     describe('Tooltip', () => {
       it('adds [aria-describedby] on invoker', async () => {
-        const invokerNode = /** @type {HTMLElement} */ (await fixture(
-          '<div role="button">invoker</div>',
-        ));
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           handlesAccessibility: true,
@@ -1461,9 +1476,9 @@ describe('OverlayController', () => {
       });
 
       it('adds [aria-labelledby] on invoker when invokerRelation is label', async () => {
-        const invokerNode = /** @type {HTMLElement} */ (await fixture(
-          '<div role="button">invoker</div>',
-        ));
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           handlesAccessibility: true,
@@ -1478,9 +1493,9 @@ describe('OverlayController', () => {
       });
 
       it('adds [role=tooltip] on content', async () => {
-        const invokerNode = /** @type {HTMLElement} */ (await fixture(
-          '<div role="button">invoker</div>',
-        ));
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           handlesAccessibility: true,
@@ -1492,9 +1507,9 @@ describe('OverlayController', () => {
 
       describe('Teardown', () => {
         it('restores [role] on dialog content', async () => {
-          const invokerNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="button">invoker</div>',
-          ));
+          const invokerNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="button">invoker</div>')
+          );
           const ctrl = new OverlayController({
             ...withLocalTestConfig(),
             handlesAccessibility: true,
@@ -1506,12 +1521,12 @@ describe('OverlayController', () => {
         });
 
         it('restores [role] on tooltip content', async () => {
-          const invokerNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="button">invoker</div>',
-          ));
-          const contentNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="presentation">content</div>',
-          ));
+          const invokerNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="button">invoker</div>')
+          );
+          const contentNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="presentation">content</div>')
+          );
           const ctrl = new OverlayController({
             ...withLocalTestConfig(),
             handlesAccessibility: true,
@@ -1525,12 +1540,12 @@ describe('OverlayController', () => {
         });
 
         it('restores [aria-describedby] on content', async () => {
-          const invokerNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="button">invoker</div>',
-          ));
-          const contentNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="presentation">content</div>',
-          ));
+          const invokerNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="button">invoker</div>')
+          );
+          const contentNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="presentation">content</div>')
+          );
           const ctrl = new OverlayController({
             ...withLocalTestConfig(),
             handlesAccessibility: true,
@@ -1544,12 +1559,12 @@ describe('OverlayController', () => {
         });
 
         it('restores [aria-labelledby] on content', async () => {
-          const invokerNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="button">invoker</div>',
-          ));
-          const contentNode = /** @type {HTMLElement} */ (await fixture(
-            '<div role="presentation">content</div>',
-          ));
+          const invokerNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="button">invoker</div>')
+          );
+          const contentNode = /** @type {HTMLElement} */ (
+            await fixture('<div role="presentation">content</div>')
+          );
           const ctrl = new OverlayController({
             ...withLocalTestConfig(),
             handlesAccessibility: true,

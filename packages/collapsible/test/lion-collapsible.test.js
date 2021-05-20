@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 
 import '@lion/collapsible/define';
 
@@ -53,7 +54,7 @@ describe('<lion-collapsible>', () => {
     it('has [opened] on current expanded invoker which serves as styling hook', async () => {
       const collapsible = await fixture(defaultCollapsible);
       collapsible.opened = true;
-      await collapsible.requestUpdate();
+      await collapsible.updateComplete;
       expect(collapsible).to.have.attribute('opened');
     });
 
@@ -62,7 +63,7 @@ describe('<lion-collapsible>', () => {
       const collHeight1 = getProtectedMembers(collapsible);
       expect(collHeight1.contentHeight).to.equal('0px');
       collapsible.show();
-      await collapsible.requestUpdate();
+      await collapsible.updateComplete;
       const collHeight2 = getProtectedMembers(collapsible);
       expect(collHeight2.contentHeight).to.equal('32px');
     });
@@ -93,10 +94,10 @@ describe('<lion-collapsible>', () => {
     it('should listen to the open and close state change', async () => {
       const collapsible = await fixture(collapsibleWithEvents);
       collapsible.show();
-      await collapsible.requestUpdate();
+      await collapsible.updateComplete;
       expect(isCollapsibleOpen).to.equal(true);
       collapsible.hide();
-      await collapsible.requestUpdate();
+      await collapsible.updateComplete;
       expect(isCollapsibleOpen).to.equal(false);
     });
   });
@@ -131,7 +132,7 @@ describe('<lion-collapsible>', () => {
         const collapsibleElement = await fixture(defaultCollapsible);
         const invoker = collapsibleElement.querySelector('[slot=invoker]');
         collapsibleElement.opened = true;
-        await collapsibleElement.requestUpdate();
+        await collapsibleElement.updateComplete;
         expect(invoker).to.have.attribute('aria-expanded', 'true');
       });
     });

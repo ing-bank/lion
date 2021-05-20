@@ -1,4 +1,5 @@
-import { expect, fixture, html, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, fixture, defineCE } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { LionField } from '@lion/form-core';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { Required } from '../../src/validate/validators/Required.js';
@@ -31,9 +32,9 @@ describe('Required validation', async () => {
   const validator = new Required();
 
   it('get aria-required attribute if element is part of the right tag names', async () => {
-    const el = /** @type {FormControlHost & HTMLElement} */ (await fixture(
-      html`<${tag}></${tag}>`,
-    ));
+    const el = /** @type {FormControlHost & HTMLElement} */ (
+      await fixture(html`<${tag}></${tag}>`)
+    );
 
     Required._compatibleTags.forEach(tagName => {
       inputNodeTag = /** @type {HTMLElementWithValue} */ (document.createElement(tagName));
@@ -53,9 +54,9 @@ describe('Required validation', async () => {
     expect(_inputNode).to.not.have.attribute('aria-required');
   });
   it('get aria-required attribute if element is part of the right roles', async () => {
-    const el = /** @type {FormControlHost & HTMLElement} */ (await fixture(
-      html`<${tag}></${tag}>`,
-    ));
+    const el = /** @type {FormControlHost & HTMLElement} */ (
+      await fixture(html`<${tag}></${tag}>`)
+    );
 
     Required._compatibleRoles.forEach(role => {
       // @ts-ignore

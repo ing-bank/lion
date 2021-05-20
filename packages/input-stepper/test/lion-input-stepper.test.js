@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, nextFrame, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import '@lion/input-stepper/define';
 
 /**

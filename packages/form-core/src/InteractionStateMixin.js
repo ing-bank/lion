@@ -35,14 +35,14 @@ const InteractionStateMixinImplementation = superclass =>
      * @param {PropertyKey} name
      * @param {*} oldVal
      */
-    requestUpdateInternal(name, oldVal) {
-      super.requestUpdateInternal(name, oldVal);
+    requestUpdate(name, oldVal) {
+      super.requestUpdate(name, oldVal);
       if (name === 'touched' && this.touched !== oldVal) {
         this._onTouchedChanged();
       }
 
       if (name === 'modelValue') {
-        // We do this in requestUpdateInternal because we don't want to fire another re-render (e.g. when doing this in updated)
+        // We do this in requestUpdate because we don't want to fire another re-render (e.g. when doing this in updated)
         // Furthermore, we cannot do it on model-value-changed event because it isn't fired initially.
         this.filled = !this._isEmpty();
       }

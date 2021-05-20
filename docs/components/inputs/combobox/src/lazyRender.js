@@ -1,4 +1,5 @@
-import { directive } from '@lion/core';
+import { directive } from 'lit/directive.js';
+import { AsyncDirective } from 'lit/async-directive.js';
 
 /**
  * In order to speed up the first meaningful paint, use this directive
@@ -15,9 +16,14 @@ import { directive } from '@lion/core';
  *   )}
  * </lion-combobox>
  */
-export const lazyRender = directive(tplResult => part => {
-  setTimeout(() => {
-    part.setValue(tplResult);
-    part.commit();
-  });
-});
+export const lazyRender = directive(
+  class extends AsyncDirective {
+    render(tplResult) {
+      setTimeout(() => {
+        this.setValue(tplResult);
+      });
+    }
+  },
+);
+
+// export const lazyRender = () => {};

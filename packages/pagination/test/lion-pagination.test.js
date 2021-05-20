@@ -1,4 +1,5 @@
-import { html, fixture as _fixture, expect } from '@open-wc/testing';
+import { fixture as _fixture, expect } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
 import '@lion/pagination/define';
@@ -96,9 +97,9 @@ describe('Pagination', () => {
       const el = await fixture(html`
         <lion-pagination count="6" current="2" @current-changed=${changeSpy}></lion-pagination>
       `);
-      const page2 = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector(
-        "button[aria-current='true']",
-      ));
+      const page2 = /** @type {HTMLElement} */ (
+        el.shadowRoot?.querySelector("button[aria-current='true']")
+      );
       page2.click();
       expect(changeSpy).to.not.be.called;
       expect(el.current).to.equal(2);

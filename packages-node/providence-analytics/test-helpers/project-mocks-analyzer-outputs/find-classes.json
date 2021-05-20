@@ -179,7 +179,7 @@
                 "accessType": "public"
               },
               {
-                "name": "requestUpdateInternal",
+                "name": "requestUpdate",
                 "accessType": "protected"
               },
               {

@@ -1,4 +1,4 @@
-/* eslint-disable*/
+/* eslint-disable */
 // https://github.com/gustf/js-levenshtein/blob/master/index.js
 
 function _min(d0, d1, d2, bx, ay) {

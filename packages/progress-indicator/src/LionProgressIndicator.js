@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this, import/no-extraneous-dependencies */
 
 import { nothing, LitElement } from '@lion/core';
 import { localize, LocalizeMixin } from '@lion/localize';

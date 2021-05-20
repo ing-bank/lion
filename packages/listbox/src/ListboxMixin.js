@@ -149,6 +149,7 @@ const ListboxMixinImplementation = superclass =>
 
     static get scopedElements() {
       return {
+        // @ts-expect-error [external] fix types scopedElements
         ...super.scopedElements,
         'lion-options': LionOptions,
       };
@@ -158,9 +159,10 @@ const ListboxMixinImplementation = superclass =>
       return {
         ...super.slots,
         input: () => {
-          const lionOptions = /** @type {HTMLElement & FormRegistrarPortalHost} */ (document.createElement(
-            ListboxMixin.getScopedTagName('lion-options'),
-          ));
+          const lionOptions = /** @type {HTMLElement & FormRegistrarPortalHost} */ (
+            // @ts-expect-error [external] fix types scopedElements
+            document.createElement(ListboxMixin.getScopedTagName('lion-options'))
+          );
           lionOptions.setAttribute('data-tag-name', 'lion-options');
           lionOptions.registrationTarget = this;
           return lionOptions;
@@ -188,9 +190,9 @@ const ListboxMixinImplementation = superclass =>
      * @type {HTMLElement}
      */
     get _listboxActiveDescendantNode() {
-      return /** @type {HTMLElement} */ (this._listboxNode.querySelector(
-        `#${this._listboxActiveDescendant}`,
-      ));
+      return /** @type {HTMLElement} */ (
+        this._listboxNode.querySelector(`#${this._listboxActiveDescendant}`)
+      );
     }
 
     /**

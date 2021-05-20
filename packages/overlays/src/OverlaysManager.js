@@ -2,6 +2,7 @@ import { unsetSiblingsInert, setSiblingsInert } from './utils/inert-siblings.js'
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
 /**
+ * @typedef {import('@lion/core').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
  */
 
@@ -21,7 +22,7 @@ export class OverlaysManager {
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
     styleTag.setAttribute('data-global-overlays', '');
-    styleTag.textContent = globalOverlaysStyle.cssText;
+    styleTag.textContent = /** @type {CSSResult} */ (globalOverlaysStyle).cssText;
     document.head.appendChild(styleTag);
     return styleTag;
   }
@@ -232,9 +233,9 @@ export class OverlaysManager {
    */
   retractRequestToShowOnly(blockingCtrl) {
     if (this.__blockingMap.has(blockingCtrl)) {
-      const controllersWhichGotHidden = /** @type {OverlayController[]} */ (this.__blockingMap.get(
-        blockingCtrl,
-      ));
+      const controllersWhichGotHidden = /** @type {OverlayController[]} */ (
+        this.__blockingMap.get(blockingCtrl)
+      );
       controllersWhichGotHidden.map(ctrl => ctrl.show());
     }
   }

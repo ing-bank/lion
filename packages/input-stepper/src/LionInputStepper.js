@@ -1,6 +1,10 @@
-import { html, css } from '@lion/core';
+import { html, css, render } from '@lion/core';
 import { LionInput } from '@lion/input';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/form-core';
+
+/**
+ * @typedef {import('@lion/core').RenderOptions} RenderOptions
+ */
 
 /**
  * `LionInputStepper` is a class for custom input-stepper element (`<lion-input-stepper>` web component).
@@ -60,6 +64,9 @@ export class LionInputStepper extends LionInput {
       min: this.min,
       step: this.step,
     };
+
+    this.__increment = this.__increment.bind(this);
+    this.__decrement = this.__decrement.bind(this);
   }
 
   connectedCallback() {
@@ -69,6 +76,7 @@ export class LionInputStepper extends LionInput {
       min: this.min,
       step: this.step,
     };
+
     this.role = 'spinbutton';
     this.addEventListener('keydown', this.__keyDownHandler);
     this._inputNode.setAttribute('inputmode', 'decimal');
@@ -122,17 +130,17 @@ export class LionInputStepper extends LionInput {
       'aria-valuemin': this.values.min,
     };
 
-    const minMaxValidators = /** @type {(MaxNumber | MinNumber)[]} */ (Object.entries(
-      ariaAttributes,
-    )
-      .map(([key, val]) => {
-        if (val !== Infinity) {
-          this.setAttribute(key, `${val}`);
-          return key === 'aria-valuemax' ? new MaxNumber(val) : new MinNumber(val);
-        }
-        return null;
-      })
-      .filter(validator => validator !== null));
+    const minMaxValidators = /** @type {(MaxNumber | MinNumber)[]} */ (
+      Object.entries(ariaAttributes)
+        .map(([key, val]) => {
+          if (val !== Infinity) {
+            this.setAttribute(key, `${val}`);
+            return key === 'aria-valuemax' ? new MaxNumber(val) : new MinNumber(val);
+          }
+          return null;
+        })
+        .filter(validator => validator !== null)
+    );
     const validators = [new IsNumber(), ...minMaxValidators];
     this.defaultValidators.push(...validators);
   }
@@ -219,13 +227,13 @@ export class LionInputStepper extends LionInput {
    */
   __getIncrementButtonNode() {
     const renderParent = document.createElement('div');
-    /** @type {typeof LionInputStepper} */ (this.constructor).render(
+    render(
       this._incrementorTemplate(),
       renderParent,
-      {
+      /** @type {RenderOptions} */ ({
         scopeName: this.localName,
         eventContext: this,
-      },
+      }),
     );
     return renderParent.firstElementChild;
   }
@@ -237,13 +245,13 @@ export class LionInputStepper extends LionInput {
    */
   __getDecrementButtonNode() {
     const renderParent = document.createElement('div');
-    /** @type {typeof LionInputStepper} */ (this.constructor).render(
+    render(
       this._decrementorTemplate(),
       renderParent,
-      {
+      /** @type {RenderOptions} */ ({
         scopeName: this.localName,
         eventContext: this,
-      },
+      }),
     );
     return renderParent.firstElementChild;
   }

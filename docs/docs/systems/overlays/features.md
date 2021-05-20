@@ -14,7 +14,7 @@ import {
 import './assets/demo-overlay-system.js';
 import './assets/demo-overlay-backdrop.js';
 import './assets/applyDemoOverlayStyles.js';
-import { ref as r } from './assets/ref.js';
+import { ref, createRef } from 'lit/directives/ref.js';
 ```
 
 The overlay system allows to create different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
@@ -388,14 +388,21 @@ export const openedState = () => {
   const appState = {
     opened: false,
   };
-  const refs = {};
+  const myRefs = {
+    overlay: createRef(),
+    openedState: createRef(),
+  };
   function onOpenClosed(ev) {
     appState.opened = ev.target.opened;
-    refs.openedState.innerText = appState.opened;
+    myRefs.openedState.value.innerText = appState.opened;
   }
   return html`
-    appState.opened: <span #openedState=${r(refs)}>${appState.opened}</span>
-    <demo-overlay-system .opened="${appState.opened}" @opened-changed=${onOpenClosed}>
+    appState.opened: <span ${ref(myRefs.openedState)}>${appState.opened}</span>
+    <demo-overlay-system
+      ${ref(myRefs.overlay)}
+      .opened="${appState.opened}"
+      @opened-changed=${onOpenClosed}
+    >
       <button slot="invoker">Overlay</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -419,7 +426,10 @@ the `before-close` or `before-open` events.
 export const interceptingOpenClose = () => {
   // Application code
   let blockOverlay = true;
-  const refs = {};
+  const myRefs = {
+    statusButton: createRef(),
+    overlay: createRef(),
+  };
   function intercept(ev) {
     if (blockOverlay) {
       ev.preventDefault();
@@ -428,28 +438,29 @@ export const interceptingOpenClose = () => {
   return html`
     Overlay blocked state:
     <button
-      #statusButton=${r(refs)}
+      ${ref(myRefs.statusButton)}
       @click="${() => {
         blockOverlay = !blockOverlay;
-        refs.statusButton.textContent = blockOverlay;
+        myRefs.statusButton.value.textContent = blockOverlay;
       }}"
     >
       ${blockOverlay}
     </button>
     <demo-overlay-system
-      #overlay=${r(refs)}
+      ${ref(myRefs.overlay)}
       @before-closed=${intercept}
       @before-opened=${intercept}
     >
       <button
         slot="invoker"
-        @click=${() => console.log('blockOverlay', blockOverlay, 'opened', refs.overlay.opened)}
+        @click=${() =>
+          console.log('blockOverlay', blockOverlay, 'opened', myRefs.overlay.value.opened)}
       >
         Overlay
       </button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
-        <button @click=${() => (refs.overlay.opened = false)}>⨯</button>
+        <button @click=${() => (myRefs.overlay.value.opened = false)}>⨯</button>
       </div>
     </demo-overlay-system>
   `;

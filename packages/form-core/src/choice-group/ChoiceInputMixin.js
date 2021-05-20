@@ -53,8 +53,8 @@ const ChoiceInputMixinImplementation = superclass =>
      * @param {string} name
      * @param {any} oldValue
      */
-    requestUpdateInternal(name, oldValue) {
-      super.requestUpdateInternal(name, oldValue);
+    requestUpdate(name, oldValue) {
+      super.requestUpdate(name, oldValue);
 
       if (name === 'modelValue') {
         if (this.modelValue.checked !== this.checked) {
@@ -298,7 +298,7 @@ const ChoiceInputMixinImplementation = superclass =>
     /**
      * @override
      * hasChanged is designed for async (updated) callback, also check for sync
-     * (requestUpdateInternal) callback
+     * (requestUpdate) callback
      * @param {{ modelValue:unknown }} newV
      * @param {{ modelValue:unknown }} [old]
      * @protected
@@ -309,7 +309,7 @@ const ChoiceInputMixinImplementation = superclass =>
         _old = old.modelValue;
       }
       // @ts-expect-error [external]: lit private property
-      if (this.constructor._classProperties.get('modelValue').hasChanged(modelValue, _old)) {
+      if (this.constructor.elementProperties.get('modelValue').hasChanged(modelValue, _old)) {
         super._onModelValueChanged({ modelValue });
       }
     }

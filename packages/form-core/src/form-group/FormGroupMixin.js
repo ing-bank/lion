@@ -360,12 +360,11 @@ const FormGroupMixinImplementation = superclass =>
       if (values && typeof values === 'object') {
         Object.keys(values).forEach(name => {
           if (Array.isArray(this.formElements[name])) {
-            this.formElements[name].forEach((
-              /** @type {FormControl} */ el,
-              /** @type {number} */ index,
-            ) => {
-              el[property] = values[name][index]; // eslint-disable-line no-param-reassign
-            });
+            this.formElements[name].forEach(
+              (/** @type {FormControl} */ el, /** @type {number} */ index) => {
+                el[property] = values[name][index]; // eslint-disable-line no-param-reassign
+              },
+            );
           }
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];

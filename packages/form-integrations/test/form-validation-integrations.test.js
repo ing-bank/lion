@@ -1,4 +1,5 @@
-import { expect, fixture, html, defineCE, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, defineCE } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { Required, DefaultSuccess, Validator } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { LionInput } from '@lion/input';
@@ -41,7 +42,8 @@ describe('Form Validation Integrations', () => {
       }
       const elTagString = defineCE(ValidateElementCustomTypes);
       const elTag = unsafeStatic(elTagString);
-      const el = /** @type {ValidateElementCustomTypes} */ (await fixture(html`
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
         <${elTag}
           .validators=${[
             new Required(null, { getMessage: () => 'error' }),
@@ -49,7 +51,8 @@ describe('Form Validation Integrations', () => {
             new DefaultSuccess(),
           ]}
         >${lightDom}</${elTag}>
-      `));
+      `)
+      );
       const { _feedbackNode } = getFormControlMembers(el);
 
       expect(_feedbackNode.feedbackData?.length).to.equal(0);

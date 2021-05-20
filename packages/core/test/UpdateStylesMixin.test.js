@@ -1,4 +1,5 @@
-import { defineCE, expect, fixture, html } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { css, LitElement } from '../index.js';
 import { UpdateStylesMixin } from '../src/UpdateStylesMixin.js';
 

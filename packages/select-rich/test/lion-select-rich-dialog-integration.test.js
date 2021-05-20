@@ -1,6 +1,7 @@
 import { OverlayMixin } from '@lion/overlays';
 import { LitElement } from '@lion/core';
-import { defineCE, fixture, html, expect, unsafeStatic } from '@open-wc/testing';
+import { defineCE, fixture, expect } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import '@lion/listbox/define';
 import '@lion/select-rich/define';
 
@@ -27,14 +28,16 @@ describe('Select Rich Integration tests', () => {
     let properlyInstantiated = false;
 
     try {
-      const nestedEl = /** @type {LionSelectRich} */ (await fixture(html`
-        <lion-select-rich>
-          <lion-options slot="input">
-            <lion-option .choiceValue=${10}>Item 1</lion-option>
-            <lion-option .choiceValue=${20}>Item 2</lion-option>
-          </lion-options>
-        </lion-select-rich>
-      `));
+      const nestedEl = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich>
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
       await nestedEl.registrationComplete;
 
       await fixture(html`

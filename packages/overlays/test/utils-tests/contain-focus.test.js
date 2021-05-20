@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture, html, nextFrame } from '@open-wc/testing';
+import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { renderLitAsNode } from '@lion/helpers';
 import { getDeepActiveElement } from '../../src/utils/get-deep-active-element.js';
 import { getFocusableElements } from '../../src/utils/get-focusable-elements.js';

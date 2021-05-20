@@ -86,9 +86,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @type {LionSelectInvoker}
    */
   get _invokerNode() {
-    return /** @type {LionSelectInvoker} */ (Array.from(this.children).find(
-      child => child.slot === 'invoker',
-    ));
+    return /** @type {LionSelectInvoker} */ (
+      Array.from(this.children).find(child => child.slot === 'invoker')
+    );
   }
 
   /**
@@ -141,9 +141,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   connectedCallback() {
     super.connectedCallback();
-    this._invokerNode.selectedElement = this.formElements[
-      /**  @type {number} */ (this.checkedIndex)
-    ];
+    this._invokerNode.selectedElement =
+      this.formElements[/**  @type {number} */ (this.checkedIndex)];
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
     this.addEventListener('keyup', this.__onKeyUp);
@@ -159,8 +158,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @param {string} name
    * @param {unknown} oldValue
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
+  requestUpdate(name, oldValue) {
+    super.requestUpdate(name, oldValue);
     if (name === 'interactionMode') {
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();
@@ -287,9 +286,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   __syncInvokerElement() {
     // sync to invoker
     if (this._invokerNode) {
-      this._invokerNode.selectedElement = this.formElements[
-        /**  @type {number} */ (this.checkedIndex)
-      ];
+      this._invokerNode.selectedElement =
+        this.formElements[/**  @type {number} */ (this.checkedIndex)];
       /**
        * Manually update this, as the node reference may be the same, but the modelValue might not.
        * This would mean that it won't pass the LitElement dirty check.

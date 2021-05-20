@@ -3,15 +3,8 @@ import { renderLitAsNode } from '@lion/helpers';
 import { OverlayController } from '@lion/overlays';
 import { LionOption } from '@lion/listbox';
 import { mimicClick } from '@lion/overlays/test-helpers';
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  html,
-  nextFrame,
-  unsafeStatic,
-  fixture as _fixture,
-} from '@open-wc/testing';
+import { aTimeout, defineCE, expect, nextFrame, fixture as _fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/select-rich';
 import '@lion/core/differentKeyEventNamesShimIE';
 import '@lion/listbox/define';
@@ -164,9 +157,9 @@ describe('lion-select-rich', () => {
       );
       const tagString = unsafeStatic(tag);
 
-      const firstOption = /** @type {LionOption} */ (renderLitAsNode(
-        html`<${tagString} checked .choiceValue=${10}></${tagString}>`,
-      ));
+      const firstOption = /** @type {LionOption} */ (
+        renderLitAsNode(html`<${tagString} checked .choiceValue=${10}></${tagString}>`)
+      );
 
       const el = await fixture(html`
         <lion-select-rich>
@@ -238,9 +231,9 @@ describe('lion-select-rich', () => {
 
     it('syncs opened state with overlay shown', async () => {
       const el = await fixture(html` <lion-select-rich .opened=${true}></lion-select-rich> `);
-      const outerEl = /** @type {HTMLButtonElement} */ (await _fixture(
-        '<button>somewhere</button>',
-      ));
+      const outerEl = /** @type {HTMLButtonElement} */ (
+        await _fixture('<button>somewhere</button>')
+      );
 
       expect(el.opened).to.be.true;
 
@@ -384,8 +377,9 @@ describe('lion-select-rich', () => {
       expect(el.singleOption).to.be.false;
       expect(_invokerNode.singleOption).to.be.false;
 
-      const optionELm = el.formElements[0];
-      optionELm.parentNode.removeChild(optionELm);
+      const optionElm = el.formElements[0];
+      optionElm.parentNode.removeChild(optionElm);
+      // @ts-ignore [test] we don't need args in this case
       el.requestUpdate();
       await el.updateComplete;
       expect(el.singleOption).to.be.true;
@@ -394,6 +388,7 @@ describe('lion-select-rich', () => {
       const newOption = /** @type {LionOption} */ (document.createElement('lion-option'));
       newOption.choiceValue = 30;
       _inputNode.appendChild(newOption);
+      // @ts-ignore [test] allow to not provide args for testing purposes
       el.requestUpdate();
       await el.updateComplete;
       expect(el.singleOption).to.be.false;
@@ -665,14 +660,14 @@ describe('lion-select-rich', () => {
           }
         },
       );
-      const invokerTag = unsafeStatic(invokerTagName);
+      // const invokerTag = unsafeStatic(invokerTagName);
 
       const selectTagName = defineCE(
         class extends LionSelectRich {
           get slots() {
             return {
               ...super.slots,
-              invoker: () => document.createElement(invokerTag.d),
+              invoker: () => document.createElement(invokerTagName),
             };
           }
         },

@@ -74,9 +74,9 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(
-        /** @type {HTMLSlotElement} */ (elObj.overlayHeadingEl.querySelector(
-          'slot[name="heading"]',
-        )).assignedNodes()[0],
+        /** @type {HTMLSlotElement} */ (
+          elObj.overlayHeadingEl.querySelector('slot[name="heading"]')
+        ).assignedNodes()[0],
       ).lightDom.to.equal('Pick your date');
     });
 
@@ -90,9 +90,9 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(
-        /** @type {HTMLSlotElement} */ (elObj.overlayHeadingEl.querySelector(
-          'slot[name="heading"]',
-        )).assignedNodes()[0],
+        /** @type {HTMLSlotElement} */ (
+          elObj.overlayHeadingEl.querySelector('slot[name="heading"]')
+        ).assignedNodes()[0],
       ).lightDom.to.equal('foo');
     });
 
@@ -315,9 +315,9 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`
         <lion-input-datepicker calendar-heading="foo"></lion-input-datepicker>
       `);
-      const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
-        '[data-tag-name="lion-calendar"]',
-      ));
+      const calendarEl = /** @type {LionCalendar} */ (
+        el.shadowRoot?.querySelector('lion-calendar')
+      );
       const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
       // First set a fixed date as if selected by a user
       dateSelectedByUser(new Date('December 17, 2020 03:24:00 GMT+0000'));
@@ -342,9 +342,9 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`
         <lion-input-datepicker calendar-heading="foo"></lion-input-datepicker>
       `);
-      const calendarEl = /** @type {LionCalendar} */ (el.shadowRoot?.querySelector(
-        '[data-tag-name="lion-calendar"]',
-      ));
+      const calendarEl = /** @type {LionCalendar} */ (
+        el.shadowRoot?.querySelector('lion-calendar')
+      );
       const { dateSelectedByUser } = getProtectedMembersCalendar(calendarEl);
 
       // First set a fixed date as if selected by a user
@@ -356,9 +356,9 @@ describe('<lion-input-datepicker>', () => {
       await elObj.openCalendar();
 
       // Select the first date button, which is 29th of previous month (November)
-      const firstDateBtn = /** @type {HTMLButtonElement} */ (calendarEl?.shadowRoot?.querySelector(
-        '.calendar__day-button',
-      ));
+      const firstDateBtn = /** @type {HTMLButtonElement} */ (
+        calendarEl?.shadowRoot?.querySelector('.calendar__day-button')
+      );
       firstDateBtn.click();
 
       expect(/** @type {Date} */ (el.modelValue).getTime()).to.equal(

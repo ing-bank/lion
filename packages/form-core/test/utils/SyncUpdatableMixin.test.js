@@ -1,5 +1,6 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, fixtureSync } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
 
@@ -43,9 +44,9 @@ describe('SyncUpdatableMixin', () => {
 
       const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
-        html`<${tag} prop-b="b"></${tag}>`,
-      ));
+      const el = /** @type {UpdatableImplementation} */ (
+        fixtureSync(html`<${tag} prop-b="b"></${tag}>`)
+      );
 
       // Getters setters work as expected, without running property effects
       expect(el.propA).to.equal('init-a');
@@ -102,9 +103,9 @@ describe('SyncUpdatableMixin', () => {
 
       const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
-        html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`,
-      ));
+      const el = /** @type {UpdatableImplementation} */ (
+        fixtureSync(html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`)
+      );
 
       // Derived
       expect(el.derived).to.be.undefined;
@@ -114,19 +115,19 @@ describe('SyncUpdatableMixin', () => {
       expect(el.derived).to.equal('ab');
       expect(hasCalledRunPropertyEffect).to.be.true;
 
-      const el2 = /** @type {UpdatableImplementation} */ (await fixture(
-        html`<${tag} .propA="${'a'}"></${tag}>`,
-      ));
+      const el2 = /** @type {UpdatableImplementation} */ (
+        await fixture(html`<${tag} .propA="${'a'}"></${tag}>`)
+      );
       expect(el2.derived).to.equal('ainit-b');
 
-      const el3 = /** @type {UpdatableImplementation} */ (await fixture(
-        html`<${tag} .propB="${'b'}"></${tag}>`,
-      ));
+      const el3 = /** @type {UpdatableImplementation} */ (
+        await fixture(html`<${tag} .propB="${'b'}"></${tag}>`)
+      );
       expect(el3.derived).to.equal('init-ab');
 
-      const el4 = /** @type {UpdatableImplementation} */ (await fixture(
-        html`<${tag} .propA=${'a'} .propB="${'b'}"></${tag}>`,
-      ));
+      const el4 = /** @type {UpdatableImplementation} */ (
+        await fixture(html`<${tag} .propA=${'a'} .propB="${'b'}"></${tag}>`)
+      );
       expect(el4.derived).to.equal('ab');
     });
 
@@ -150,8 +151,8 @@ describe('SyncUpdatableMixin', () => {
          * @param {string} name
          * @param {*} oldValue
          */
-        requestUpdateInternal(name, oldValue) {
-          super.requestUpdateInternal(name, oldValue);
+        requestUpdate(name, oldValue) {
+          super.requestUpdate(name, oldValue);
           if (name === 'prop') {
             propChangedCount += 1;
           }
@@ -223,9 +224,9 @@ describe('SyncUpdatableMixin', () => {
 
       const tagString = defineCE(UpdatableImplementation);
       const tag = unsafeStatic(tagString);
-      const el = /** @type {UpdatableImplementation} */ (fixtureSync(
-        html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`,
-      ));
+      const el = /** @type {UpdatableImplementation} */ (
+        fixtureSync(html`<${tag} prop-b="b" .propA="${'a'}"></${tag}>`)
+      );
       const spy = sinon.spy(el, '_runPropertyEffect');
       expect(spy.callCount).to.equal(0);
 

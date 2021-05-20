@@ -218,8 +218,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   get _listboxNode() {
-    return /** @type {LionOptions} */ ((this._overlayCtrl && this._overlayCtrl.contentNode) ||
-      Array.from(this.children).find(child => child.slot === 'listbox'));
+    return /** @type {LionOptions} */ (
+      (this._overlayCtrl && this._overlayCtrl.contentNode) ||
+        Array.from(this.children).find(child => child.slot === 'listbox')
+    );
   }
 
   /**
@@ -310,8 +312,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {'disabled'|'modelValue'|'readOnly'|'focused'} name
    * @param {unknown} oldValue
    */
-  requestUpdateInternal(name, oldValue) {
-    super.requestUpdateInternal(name, oldValue);
+  requestUpdate(name, oldValue) {
+    super.requestUpdate(name, oldValue);
     if (name === 'disabled' || name === 'readOnly') {
       this.__setComboboxDisabledAndReadOnly();
     }
@@ -514,9 +516,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           phase: 'overlay-close',
         })
       ) {
-        this._inputNode.value = this.formElements[
-          /** @type {number} */ (this.checkedIndex)
-        ].choiceValue;
+        this._inputNode.value =
+          this.formElements[/** @type {number} */ (this.checkedIndex)].choiceValue;
       }
     } else {
       this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
@@ -703,7 +704,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     });
 
     // [7]. If no autofill took place, we are left with the previously matched option; correct this
-    if (!hasAutoFilled && autoselect && !this.multipleChoice) {
+    if (autoselect && !hasAutoFilled && !this.multipleChoice) {
       // This means there is no match for checkedIndex
       this.checkedIndex = -1;
     }
@@ -771,7 +772,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   _setupOverlayCtrl() {
     super._setupOverlayCtrl();
-    this.__initFilterListbox();
+    this.__shouldAutocompleteNextUpdate = true;
     this.__setupCombobox();
   }
 
@@ -861,13 +862,6 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (formControl) {
       formControl.classList.add('form-control');
     }
-  }
-
-  /**
-   * @private
-   */
-  __initFilterListbox() {
-    this._handleAutocompletion();
   }
 
   /**

@@ -1,5 +1,6 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { ValidateMixin } from '../../src/validate/ValidateMixin.js';
 import { Validator } from '../../src/validate/Validator.js';
@@ -171,9 +172,11 @@ describe('Validator', () => {
     const connectSpy = sinon.spy(myVal, 'onFormControlConnect');
     const disconnectSpy = sinon.spy(myVal, 'onFormControlDisconnect');
 
-    const el = /** @type {ValidateElement} */ (await fixture(html`
+    const el = /** @type {ValidateElement} */ (
+      await fixture(html`
       <${tag} .validators=${[myVal]}>${lightDom}</${tag}>
-    `));
+    `)
+    );
 
     expect(connectSpy.callCount).to.equal(1);
     expect(connectSpy.calledWith(el)).to.equal(true);

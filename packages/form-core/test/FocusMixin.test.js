@@ -1,9 +1,11 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, oneEvent } from '@open-wc/testing';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { FocusMixin } from '../src/FocusMixin.js';
 
-const windowWithOptionalPolyfill = /** @type {Window & typeof globalThis & {applyFocusVisiblePolyfill?: function}} */ (window);
+const windowWithOptionalPolyfill =
+  /** @type {Window & typeof globalThis & {applyFocusVisiblePolyfill?: function}} */ (window);
 
 /**
  * Checks two things:
@@ -74,9 +76,11 @@ describe('FocusMixin', () => {
   const tag = unsafeStatic(tagString);
 
   it('focuses/blurs the underlaying native element on .focus()/.blur()', async () => {
-    const el = /** @type {Focusable} */ (await fixture(html`
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+    );
     // @ts-ignore [allow-protected] in test
     const { _focusableNode } = el;
 
@@ -87,9 +91,11 @@ describe('FocusMixin', () => {
   });
 
   it('has an attribute focused when focused', async () => {
-    const el = /** @type {Focusable} */ (await fixture(html`
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+    );
 
     el.focus();
     await el.updateComplete;
@@ -101,9 +107,11 @@ describe('FocusMixin', () => {
   });
 
   it('becomes focused/blurred if the native element gets focused/blurred', async () => {
-    const el = /** @type {Focusable} */ (await fixture(html`
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+    );
     // @ts-ignore [allow-protected] in test
     const { _focusableNode } = el;
 
@@ -115,9 +123,11 @@ describe('FocusMixin', () => {
   });
 
   it('dispatches [focus, blur] events', async () => {
-    const el = /** @type {Focusable} */ (await fixture(html`
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+    );
     setTimeout(() => el.focus());
     const focusEv = await oneEvent(el, 'focus');
     expect(focusEv).to.be.instanceOf(Event);
@@ -137,9 +147,11 @@ describe('FocusMixin', () => {
   });
 
   it('dispatches [focusin, focusout] events with { bubbles: true, composed: true }', async () => {
-    const el = /** @type {Focusable} */ (await fixture(html`
+    const el = /** @type {Focusable} */ (
+      await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+    );
     setTimeout(() => el.focus());
     const focusinEv = await oneEvent(el, 'focusin');
     expect(focusinEv).to.be.instanceOf(Event);
@@ -160,9 +172,11 @@ describe('FocusMixin', () => {
 
   describe('Having :focus-visible within', () => {
     it('sets focusedVisible to true when focusable element matches :focus-visible', async () => {
-      const el = /** @type {Focusable} */ (await fixture(html`
+      const el = /** @type {Focusable} */ (
+        await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+      );
       // @ts-ignore [allow-protected] in test
       const { _focusableNode } = el;
 
@@ -204,9 +218,11 @@ describe('FocusMixin', () => {
     });
 
     it('has an attribute focused-visible when focusedVisible is true', async () => {
-      const el = /** @type {Focusable} */ (await fixture(html`
+      const el = /** @type {Focusable} */ (
+        await fixture(html`
       <${tag}><input slot="input"></${tag}>
-    `));
+    `)
+      );
       // @ts-ignore [allow-protected] in test
       const { _focusableNode } = el;
 
@@ -251,9 +267,11 @@ describe('FocusMixin', () => {
       });
 
       it('sets focusedVisible to true when focusable element if :focus-visible polyfill is loaded', async () => {
-        const el = /** @type {Focusable} */ (await fixture(html`
+        const el = /** @type {Focusable} */ (
+          await fixture(html`
         <${tag}><input slot="input"></${tag}>
-      `));
+      `)
+        );
 
         // @ts-ignore [allow-protected] in test
         const { _focusableNode } = el;

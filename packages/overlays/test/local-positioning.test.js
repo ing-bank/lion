@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { expect, fixture, fixtureSync, html } from '@open-wc/testing';
+import { expect, fixture, fixtureSync } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
 import { OverlayController } from '../src/OverlayController.js';
 import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers.js';
 
@@ -12,9 +13,9 @@ const withLocalTestConfig = () =>
   /** @type {OverlayConfig} */ ({
     placementMode: 'local',
     contentNode: /** @type {HTMLElement} */ (fixtureSync(html` <div>my content</div> `)),
-    invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-      <div role="button" style="width: 100px; height: 20px;">Invoker</div>
-    `)),
+    invokerNode: /** @type {HTMLElement} */ (
+      fixtureSync(html` <div role="button" style="width: 100px; height: 20px;">Invoker</div> `)
+    ),
   });
 
 describe('Local Positioning', () => {
@@ -35,12 +36,14 @@ describe('Local Positioning', () => {
       // smoke test for integration of popper
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div style="width: 80px; height: 30px; background: green;"></div>
-        `)),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 20px; height: 10px; background: orange;"></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 30px; background: green;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div role="button" style="width: 20px; height: 10px; background: orange;"></div>
+          `)
+        ),
       });
       await fixture(html`
         <div style="position: fixed; left: 100px; top: 100px;">
@@ -58,12 +61,18 @@ describe('Local Positioning', () => {
     it('uses top as the default placement', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div
+              role="button"
+              style="width: 100px; height: 20px;"
+              @click=${() => ctrl.show()}
+            ></div>
+          `)
+        ),
       });
       await fixture(html`
         <div style="position: fixed; left: 100px; top: 100px;">
@@ -77,12 +86,18 @@ describe('Local Positioning', () => {
     it('positions to preferred place if placement is set and space is available', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div
+              role="button"
+              style="width: 100px; height: 20px;"
+              @click=${() => ctrl.show()}
+            ></div>
+          `)
+        ),
         popperConfig: {
           placement: 'left-start',
         },
@@ -100,14 +115,16 @@ describe('Local Positioning', () => {
     it('positions to different place if placement is set and no space is available', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;">invoker</div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
-            content
-          </div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;">invoker</div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              content
+            </div>
+          `)
+        ),
         popperConfig: {
           placement: 'left',
         },
@@ -123,12 +140,18 @@ describe('Local Positioning', () => {
     it('allows the user to override default Popper modifiers', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div
+              role="button"
+              style="width: 100px; height: 20px;"
+              @click=${() => ctrl.show()}
+            ></div>
+          `)
+        ),
         popperConfig: {
           modifiers: [
             {
@@ -152,12 +175,18 @@ describe('Local Positioning', () => {
     it('positions the Popper element correctly on show', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div
+              role="button"
+              style="width: 100px; height: 20px;"
+              @click=${() => ctrl.show()}
+            ></div>
+          `)
+        ),
         popperConfig: {
           placement: 'top',
         },
@@ -185,12 +214,18 @@ describe('Local Positioning', () => {
     it.skip('updates placement properly even during hidden state', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}></div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div
+              role="button"
+              style="width: 100px; height: 20px;"
+              @click=${() => ctrl.show()}
+            ></div>
+          `)
+        ),
         popperConfig: {
           placement: 'top',
           modifiers: [
@@ -242,14 +277,16 @@ describe('Local Positioning', () => {
     it.skip('updates positioning correctly during shown state when config gets updated', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (fixtureSync(
-          html` <div style="width: 80px; height: 20px;"></div> `,
-        )),
-        invokerNode: /** @type {HTMLElement} */ (fixtureSync(html`
-          <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
-            Invoker
-          </div>
-        `)),
+        contentNode: /** @type {HTMLElement} */ (
+          fixtureSync(html` <div style="width: 80px; height: 20px;"></div> `)
+        ),
+        invokerNode: /** @type {HTMLElement} */ (
+          fixtureSync(html`
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              Invoker
+            </div>
+          `)
+        ),
         popperConfig: {
           placement: 'top',
           modifiers: [
@@ -287,9 +324,9 @@ describe('Local Positioning', () => {
     });
 
     it('can set the contentNode minWidth as the invokerNode width', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(html`
-        <div role="button" style="width: 60px;">invoker</div>
-      `));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         inheritsReferenceWidth: 'min',
@@ -300,9 +337,9 @@ describe('Local Positioning', () => {
     });
 
     it('can set the contentNode maxWidth as the invokerNode width', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(html`
-        <div role="button" style="width: 60px;">invoker</div>
-      `));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         inheritsReferenceWidth: 'max',
@@ -313,9 +350,9 @@ describe('Local Positioning', () => {
     });
 
     it('can set the contentNode width as the invokerNode width', async () => {
-      const invokerNode = /** @type {HTMLElement} */ (await fixture(html`
-        <div role="button" style="width: 60px;">invoker</div>
-      `));
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture(html` <div role="button" style="width: 60px;">invoker</div> `)
+      );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         inheritsReferenceWidth: 'full',

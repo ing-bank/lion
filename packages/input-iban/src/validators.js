@@ -1,4 +1,4 @@
-/* eslint-disable max-classes-per-file  */
+/* eslint-disable max-classes-per-file, import/no-extraneous-dependencies */
 
 import { localize } from '@lion/localize';
 import { Unparseable, Validator } from '@lion/form-core';

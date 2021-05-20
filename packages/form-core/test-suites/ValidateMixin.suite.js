@@ -117,21 +117,25 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('validates on initialization (once form field has bootstrapped/initialized)', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new Required()]}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
       it('revalidates when ".modelValue" changes', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         const validateSpy = sinon.spy(el, 'validate');
         el.modelValue = 'x';
@@ -139,13 +143,15 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('revalidates when child ".modelValue" changes', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             ._repropagationRole="${'fieldset'}"
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
           ><lion-field id="child"><input slot="input"></lion-field></${tag}>
-        `));
+        `)
+        );
         const validateSpy = sinon.spy(el, 'validate');
         /** @type {LionField} */ (el.querySelector('#child')).modelValue = 'test';
         await el.updateComplete;
@@ -153,12 +159,14 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('revalidates when ".validators" changes', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         const validateSpy = sinon.spy(el, 'validate');
         el.validators = [new MinLength(3)];
@@ -166,12 +174,14 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('clears current results when ".modelValue" changes', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new AlwaysValid()]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         // @ts-ignore [allow-private] in test
         const clearSpy = sinon.spy(el, '__clearValidationResults');
@@ -192,9 +202,11 @@ export function runValidateMixinSuite(customConfig) {
       it('firstly checks for empty values', async () => {
         const alwaysValid = new AlwaysValid();
         const alwaysValidExecuteSpy = sinon.spy(alwaysValid, 'execute');
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .validators=${[alwaysValid]}>${lightDom}</${tag}>
-        `));
+        `)
+        );
         // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
         const validateSpy = sinon.spy(el, 'validate');
@@ -210,9 +222,11 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('secondly checks for synchronous Validators: creates RegularValidationResult', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .validators=${[new AlwaysValid()]}>${lightDom}</${tag}>
-        `));
+        `)
+        );
         // @ts-ignore [allow-private] in test
         const isEmptySpy = sinon.spy(el, '__isEmpty');
         // @ts-ignore [allow-private] in test
@@ -222,11 +236,13 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('thirdly schedules asynchronous Validators: creates RegularValidationResult', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .validators=${[new AlwaysValid(), new AsyncAlwaysValid()]}>
             ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
         // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
         // @ts-ignore [allow-private] in test
@@ -242,12 +258,14 @@ export function runValidateMixinSuite(customConfig) {
           }
         }
 
-        let el = /** @type {ValidateElement} */ (await fixture(html`
+        let el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new AlwaysValid(), new MyResult()]}>
             ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
 
         // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
@@ -278,11 +296,13 @@ export function runValidateMixinSuite(customConfig) {
 
       describe('Finalization', () => {
         it('fires private "validate-performed" event on every cycle', async () => {
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${tag} .validators=${[new AlwaysValid(), new AsyncAlwaysInvalid()]}>
               ${lightDom}
             </${tag}>
-          `));
+          `)
+          );
           const cbSpy = sinon.spy();
           el.addEventListener('validate-performed', cbSpy);
           el.modelValue = 'nonEmpty';
@@ -290,11 +310,13 @@ export function runValidateMixinSuite(customConfig) {
         });
 
         it('resolves ".validateComplete" Promise', async () => {
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${tag} .validators=${[new AsyncAlwaysInvalid()]}>
               ${lightDom}
             </${tag}>
-          `));
+          `)
+          );
           el.modelValue = 'nonEmpty';
           // @ts-ignore [allow-private] in test
           const validateResolveSpy = sinon.spy(el, '__validateCompleteResolve');
@@ -395,9 +417,11 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('Validators will not be called on empty values', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .validators=${[new IsCat()]}>${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         el.modelValue = 'cat';
         expect(el.validationStates.error.IsCat).to.be.undefined;
@@ -410,12 +434,14 @@ export function runValidateMixinSuite(customConfig) {
       it('Validators get retriggered on parameter change', async () => {
         const isCatValidator = new IsCat('Felix');
         const catSpy = sinon.spy(isCatValidator, 'execute');
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[isCatValidator]}
             .modelValue=${'cat'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         el.modelValue = 'cat';
         expect(catSpy.callCount).to.equal(1);
         isCatValidator.param = 'Garfield';
@@ -459,13 +485,15 @@ export function runValidateMixinSuite(customConfig) {
       // default execution trigger is keyup (think of password availability backend)
       // can configure execution trigger (blur, etc?)
       it('handles "execute" functions returning promises', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .modelValue=${'dog'}
             .validators=${[new IsAsyncCat()]}>
           ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
 
         const validator = el.validators[0];
         expect(validator instanceof Validator).to.be.true;
@@ -476,9 +504,11 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('sets ".isPending/[is-pending]" when validation is in progress', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .modelValue=${'dog'}>${lightDom}</${tag}>
-        `));
+        `)
+        );
         expect(el.isPending).to.be.false;
         expect(el.hasAttribute('is-pending')).to.be.false;
 
@@ -498,11 +528,13 @@ export function runValidateMixinSuite(customConfig) {
         const asyncV = new IsAsyncCat();
         const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .modelValue=${'dog'}>
             ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
         // debounce started
         el.validators = [asyncV];
         expect(asyncVExecuteSpy.called).to.equal(0);
@@ -528,11 +560,13 @@ export function runValidateMixinSuite(customConfig) {
         const asyncV = new IsAsyncCat();
         const asyncVAbortSpy = sinon.spy(asyncV, 'abortExecution');
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag} .modelValue=${'dog'}>
             ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
         // debounce started
         el.validators = [asyncV];
         expect(asyncVAbortSpy.called).to.equal(0);
@@ -546,7 +580,8 @@ export function runValidateMixinSuite(customConfig) {
         const asyncV = new IsAsyncCat();
         const asyncVExecuteSpy = sinon.spy(asyncV, 'execute');
 
-        const el = /** @type {ValidateElement & { isFocused: boolean }} */ (await fixture(html`
+        const el = /** @type {ValidateElement & { isFocused: boolean }} */ (
+          await fixture(html`
           <${tag}
             .isFocused=${true}
             .modelValue=${'dog'}
@@ -558,7 +593,8 @@ export function runValidateMixinSuite(customConfig) {
             >
           ${lightDom}
           </${tag}>
-        `));
+        `)
+        );
 
         expect(asyncVExecuteSpy.called).to.equal(0);
         el.isFocused = false;
@@ -635,12 +671,14 @@ export function runValidateMixinSuite(customConfig) {
         const resultValidator = new MySuccessResultValidator();
         const resultValidateSpy = sinon.spy(resultValidator, 'executeOnResults');
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
             <${withSuccessTag}
               .validators=${[new MinLength(3), resultValidator]}
               .modelValue=${'myValue'}
             >${lightDom}</${withSuccessTag}>
-          `));
+          `)
+        );
         // @ts-ignore [allow-private] in test
         const prevValidationResult = el.__prevValidationResult;
         // @ts-ignore [allow-private] in test
@@ -671,12 +709,14 @@ export function runValidateMixinSuite(customConfig) {
         const validator = new AlwaysInvalid();
         const resultV = new AlwaysInvalidResult();
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[validator, resultV]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         // @ts-ignore [allow-private] in test
         const totalValidationResult = el.__validationResult;
@@ -686,12 +726,14 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Required Validator integration', () => {
       it('will result in erroneous state when form control is empty', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new Required()]}
             .modelValue=${''}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         expect(el.validationStates.error.Required).to.be.true;
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
 
@@ -701,12 +743,14 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('calls private ".__isEmpty" by default', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new Required()]}
             .modelValue=${''}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         const validator = /** @type {Validator} */ (el.validators.find(v => v instanceof Required));
         const executeSpy = sinon.spy(validator, 'execute');
         // @ts-ignore [allow-private] in test
@@ -725,12 +769,14 @@ export function runValidateMixinSuite(customConfig) {
         const customRequiredTagString = defineCE(_isEmptyValidate);
         const customRequiredTag = unsafeStatic(customRequiredTagString);
 
-        const el = /** @type {_isEmptyValidate} */ (await fixture(html`
+        const el = /** @type {_isEmptyValidate} */ (
+          await fixture(html`
           <${customRequiredTag}
             .validators=${[new Required()]}
             .modelValue=${{ model: 'foo' }}
           >${lightDom}</${customRequiredTag}>
-        `));
+        `)
+        );
 
         const providedIsEmptySpy = sinon.spy(el, '_isEmpty');
         el.modelValue = { model: '' };
@@ -741,24 +787,28 @@ export function runValidateMixinSuite(customConfig) {
       it('prevents other Validators from being called when input is empty', async () => {
         const alwaysInvalid = new AlwaysInvalid();
         const alwaysInvalidSpy = sinon.spy(alwaysInvalid, 'execute');
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new Required(), alwaysInvalid]}
             .modelValue=${''}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         expect(alwaysInvalidSpy.callCount).to.equal(0); // __isRequired returned false (invalid)
         el.modelValue = 'foo';
         expect(alwaysInvalidSpy.callCount).to.equal(1); // __isRequired returned true (valid)
       });
 
       it('adds [aria-required="true"] to "._inputNode"', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new Required()]}
             .modelValue=${''}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         const { _inputNode } = getFormControlMembers(el);
 
         expect(_inputNode?.getAttribute('aria-required')).to.equal('true');
@@ -779,11 +829,13 @@ export function runValidateMixinSuite(customConfig) {
       const preconfTag = unsafeStatic(preconfTagString);
 
       it('can be stored for custom inputs', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
         <${preconfTag}
           .validators=${[new MinLength(3)]}
           .modelValue=${'12'}
-        ></${preconfTag}>`));
+        ></${preconfTag}>`)
+        );
 
         expect(el.validationStates.error.AlwaysInvalid).to.be.true;
         expect(el.validationStates.error.MinLength).to.be.true;
@@ -800,10 +852,12 @@ export function runValidateMixinSuite(customConfig) {
         );
         const altPreconfTag = unsafeStatic(altPreconfTagString);
 
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${altPreconfTag}
             .modelValue=${'12'}
-          ></${altPreconfTag}>`));
+          ></${altPreconfTag}>`)
+        );
 
         expect(el.validationStates.error.MinLength).to.be.true;
         el.defaultValidators[0].param = 2;
@@ -811,10 +865,12 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('can be requested via "._allValidators" getter', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
         <${preconfTag}
           .validators=${[new MinLength(3)]}
-        ></${preconfTag}>`));
+        ></${preconfTag}>`)
+        );
         const { _allValidators } = getFormControlMembers(el);
 
         expect(el.validators.length).to.equal(1);
@@ -834,11 +890,13 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('State storage and reflection', () => {
       it('stores validity of individual Validators in ".validationStates.error[validator.validatorName]"', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .modelValue=${'a'}
             .validators=${[new MinLength(3), new AlwaysInvalid()]}
-          >${lightDom}</${tag}>`));
+          >${lightDom}</${tag}>`)
+        );
 
         expect(el.validationStates.error.MinLength).to.be.true;
         expect(el.validationStates.error.AlwaysInvalid).to.be.true;
@@ -849,11 +907,13 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('removes "non active" states whenever modelValue becomes undefined', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new MinLength(3)]}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         el.modelValue = 'a';
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
         expect(el.validationStates.error).to.not.eql({});
@@ -865,11 +925,13 @@ export function runValidateMixinSuite(customConfig) {
 
       it('clears current validation results when validators array updated', async () => {
         const validators = [new Required()];
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${validators}
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
         expect(el.validationStates.error).to.eql({ Required: true });
 
@@ -883,7 +945,8 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('can be configured to change visibility conditions per type', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
           .validators="${[new Required({}, { type: 'error' })]}"
           .feedbackCondition="${(
@@ -897,7 +960,8 @@ export function runValidateMixinSuite(customConfig) {
             return defaultCondition(type);
           }}"
           >${lightDom}</${tag}>
-        `));
+        `)
+        );
 
         expect(el.showsFeedbackFor).to.eql(['error']);
       });
@@ -905,13 +969,15 @@ export function runValidateMixinSuite(customConfig) {
       describe('Events', () => {
         it('fires "showsFeedbackForChanged" event async after feedbackData got synced to feedbackElement', async () => {
           const spy = sinon.spy();
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${tag}
               .submitted=${true}
               .validators=${[new MinLength(7)]}
-              @showsFeedbackForChanged=${spy};
+              @showsFeedbackForChanged=${spy}
             >${lightDom}</${tag}>
-          `));
+          `)
+          );
           el.modelValue = 'a';
           await el.updateComplete;
           expect(spy).to.have.callCount(1);
@@ -927,13 +993,15 @@ export function runValidateMixinSuite(customConfig) {
 
         it('fires "showsFeedbackFor{type}Changed" event async when type visibility changed', async () => {
           const spy = sinon.spy();
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${tag}
               .submitted=${true}
               .validators=${[new MinLength(7)]}
-              @showsFeedbackForErrorChanged=${spy};
+              @showsFeedbackForErrorChanged=${spy}
             >${lightDom}</${tag}>
-          `));
+          `)
+          );
           el.modelValue = 'a';
           await el.updateComplete;
           expect(spy).to.have.callCount(1);
@@ -949,13 +1017,15 @@ export function runValidateMixinSuite(customConfig) {
 
         it('fires "{type}StateChanged" event async when type validity changed', async () => {
           const spy = sinon.spy();
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${tag}
               .submitted=${true}
               .validators=${[new MinLength(7)]}
-              @errorStateChanged=${spy};
+              @errorStateChanged=${spy}
             >${lightDom}</${tag}>
-          `));
+          `)
+          );
           expect(spy).to.have.callCount(0);
 
           el.modelValue = 'a';
@@ -975,12 +1045,14 @@ export function runValidateMixinSuite(customConfig) {
 
     describe('Accessibility', () => {
       it.skip('calls "._inputNode.setCustomValidity(errorMessage)"', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .modelValue=${'123'}
             .validators=${[new MinLength(3, { message: 'foo' })]}>
             <input slot="input">
-          </${tag}>`));
+          </${tag}>`)
+        );
         const { _inputNode } = getFormControlMembers(el);
 
         if (_inputNode) {
@@ -1013,7 +1085,8 @@ export function runValidateMixinSuite(customConfig) {
       const customTypeTag = unsafeStatic(customTypeTagString);
 
       it('supports additional validationTypes in .hasFeedbackFor', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${customTypeTag}
             .validators=${[
               new MinLength(2, { type: 'x' }),
@@ -1022,7 +1095,8 @@ export function runValidateMixinSuite(customConfig) {
             ]}
             .modelValue=${'1234'}
           >${lightDom}</${customTypeTag}>
-        `));
+        `)
+        );
         expect(el.hasFeedbackFor).to.deep.equal([]);
 
         el.modelValue = '123'; // triggers y
@@ -1036,7 +1110,8 @@ export function runValidateMixinSuite(customConfig) {
       });
 
       it('supports additional validationTypes in .validationStates', async () => {
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${customTypeTag}
             .validators=${[
               new MinLength(2, { type: 'x' }),
@@ -1045,7 +1120,8 @@ export function runValidateMixinSuite(customConfig) {
             ]}
             .modelValue=${'1234'}
           >${lightDom}</${customTypeTag}>
-        `));
+        `)
+        );
         expect(el.validationStates).to.eql({
           x: {},
           error: {},
@@ -1076,7 +1152,8 @@ export function runValidateMixinSuite(customConfig) {
 
       it('orders feedback based on provided "validationTypes"', async () => {
         // we set submitted to always show error message in the test
-        const el = /** @type {ValidateElement} */ (await fixture(html`
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${customTypeTag}
             .submitted=${true}
             ._visibleMessagesAmount=${Infinity}
@@ -1087,7 +1164,8 @@ export function runValidateMixinSuite(customConfig) {
             ]}
             .modelValue=${'1'}
           >${lightDom}</${customTypeTag}>
-        `));
+        `)
+        );
         const { _feedbackNode } = getFormControlMembers(el);
 
         await el.feedbackComplete;
@@ -1132,13 +1210,15 @@ export function runValidateMixinSuite(customConfig) {
           const elTag = unsafeStatic(elTagString);
 
           // we set submitted to always show errors
-          const el = /** @type {ValidateHasX} */ (await fixture(html`
+          const el = /** @type {ValidateHasX} */ (
+            await fixture(html`
             <${elTag}
               .submitted=${true}
               .validators=${[new MinLength(2, { type: 'x' })]}
               .modelValue=${'1'}
             >${lightDom}</${elTag}>
-          `));
+          `)
+          );
           await el.feedbackComplete;
           expect(el.hasX).to.be.true;
           expect(el.hasXVisible).to.be.true;
@@ -1186,14 +1266,16 @@ export function runValidateMixinSuite(customConfig) {
 
           const spy = sinon.spy();
           // we set prefilled to always show errors
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${elTag}
               .prefilled=${true}
               @hasFeedbackForXChanged=${spy}
               .validators=${[new MinLength(2, { type: 'x' })]}
               .modelValue=${'1'}
             >${lightDom}</${elTag}>
-          `));
+          `)
+          );
           expect(spy).to.have.callCount(1);
           el.modelValue = '1';
           expect(spy).to.have.callCount(1);
@@ -1228,12 +1310,14 @@ export function runValidateMixinSuite(customConfig) {
             },
           );
           const elTag = unsafeStatic(elTagString);
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${elTag}
               .validators=${[new AlwaysInvalid()]}
               .modelValue=${'myValue'}
             >${lightDom}</${elTag}>
-          `));
+          `)
+          );
 
           // @ts-ignore [allow-protected] in test
           const spy = sinon.spy(el, '_updateShouldShowFeedbackFor');
@@ -1282,14 +1366,16 @@ export function runValidateMixinSuite(customConfig) {
             },
           );
           const elTag = unsafeStatic(elTagString);
-          const el = /** @type {ValidateElement} */ (await fixture(html`
+          const el = /** @type {ValidateElement} */ (
+            await fixture(html`
             <${elTag}
               .validators=${[
                 new AlwaysInvalid({}, { type: 'error' }),
                 new AlwaysInvalid({}, { type: 'info' }),
               ]}
             >${lightDom}</${elTag}>
-          `));
+          `)
+          );
 
           for (const [modelValue, expected] of [
             ['A', ['error']],
