@@ -320,7 +320,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (name === 'modelValue' && this.modelValue && this.modelValue !== oldValue) {
       if (this._syncToTextboxCondition(this.modelValue, this._oldModelValue)) {
         if (!this.multipleChoice) {
-          this._setTextboxValue(this.modelValue);
+          const textboxValue = this._getTextboxValueFromOption(
+            this.formElements[/** @type {number} */ (this.checkedIndex)],
+          );
+          this._setTextboxValue(textboxValue);
         } else {
           this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
         }
@@ -337,8 +340,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   __unsyncCheckedIndexOnInputChange() {
     const autoselect = this._autoSelectCondition();
-    if (!this.multipleChoice && !autoselect && !this._inputNode.value.startsWith(this.modelValue)) {
-      this.checkedIndex = -1;
+    const checkedElement = this.formElements[/** @type {number} */ (this.checkedIndex)];
+    if (!this.multipleChoice && !autoselect && checkedElement) {
+      const textboxValue = this._getTextboxValueFromOption(checkedElement);
+      if (!this._inputNode.value.startsWith(textboxValue)) {
+        this.checkedIndex = -1;
+      }
     }
   }
 
@@ -396,8 +403,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   matchCondition(option, textboxValue) {
     let idx = -1;
-    if (typeof option.choiceValue === 'string' && typeof textboxValue === 'string') {
-      idx = option.choiceValue.toLowerCase().indexOf(textboxValue.toLowerCase());
+    const inputValue = this._getTextboxValueFromOption(option);
+    if (typeof inputValue === 'string' && typeof textboxValue === 'string') {
+      idx = inputValue.toLowerCase().indexOf(textboxValue.toLowerCase());
     }
 
     if (this.matchMode === 'all') {
@@ -450,6 +458,17 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       return /** @type {boolean} */ (this.opened);
     }
     return true;
+  }
+
+  /**
+   * Return the value to be used for the input value
+   * @overridable
+   * @param {LionOption} option
+   * @returns {string}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _getTextboxValueFromOption(option) {
+    return option.choiceValue;
   }
 
   /**
@@ -516,8 +535,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           phase: 'overlay-close',
         })
       ) {
-        this._inputNode.value =
-          this.formElements[/** @type {number} */ (this.checkedIndex)].choiceValue;
+        this._inputNode.value = this._getTextboxValueFromOption(
+          this.formElements[/** @type {number} */ (this.checkedIndex)],
+        );
       }
     } else {
       this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
@@ -656,11 +676,10 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           // and _inputNode.value
 
           if (isInlineAutoFillCandidate) {
-            const stringValues =
-              typeof option.choiceValue === 'string' && typeof curValue === 'string';
+            const textboxValue = this._getTextboxValueFromOption(option);
+            const stringValues = typeof textboxValue === 'string' && typeof curValue === 'string';
             const beginsWith =
-              stringValues &&
-              option.choiceValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
+              stringValues && textboxValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
             // We only can do proper inline autofilling when the beginning of the word matches
             if (beginsWith) {
               this.__textboxInlineComplete(option);
@@ -727,7 +746,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   __textboxInlineComplete(option = this.formElements[this.activeIndex]) {
     const prevLen = this._inputNode.value.length;
-    this._inputNode.value = option.choiceValue;
+    this._inputNode.value = this._getTextboxValueFromOption(option);
     this._inputNode.selectionStart = prevLen;
     this._inputNode.selectionEnd = this._inputNode.value.length;
   }
@@ -849,9 +868,14 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @param {string[]} oldModelValue
    * @protected
    */
+  // eslint-disable-next-line no-unused-vars
   _syncToTextboxMultiple(modelValue, oldModelValue = []) {
-    const diff = modelValue.filter(x => !oldModelValue.includes(x)).toString();
-    this._setTextboxValue(diff); // or last selected value?
+    const diff = modelValue.filter(x => !oldModelValue.includes(x));
+    const newValue = this.formElements
+      .filter(option => diff.includes(option.choiceValue))
+      .map(option => this._getTextboxValueFromOption(option))
+      .join(' ');
+    this._setTextboxValue(newValue); // or last selected value?
   }
 
   /**

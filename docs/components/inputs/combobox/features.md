@@ -15,6 +15,7 @@ availability of the popup.
 ```js script
 import { LitElement, html, repeat } from '@lion/core';
 import { listboxData } from '../../../../packages/listbox/docs/listboxData.js';
+import { LionCombobox } from '../../../../packages/combobox/src/LionCombobox.js';
 import '@lion/listbox/define';
 import '@lion/combobox/define';
 import './src/demo-selection-display.js';
@@ -325,6 +326,49 @@ class DemoServerSide extends LitElement {
 }
 customElements.define('demo-server-side', DemoServerSide);
 export const serverSideCompletion = () => html`<demo-server-side></demo-server-side>`;
+```
+
+## Set complex object in choiceValue
+
+A common use case is to set a complex object in the `choiceValue` property. By default, `LionCombobox` will display in the text input the `modelValue`. By overriding the `_getTextboxValueFromOption` method, you can choose which value will be used for the input value.
+
+```js preview-story
+class ComplexObjectCombobox extends LionCombobox {
+  /**
+   * Override how the input text is filled
+   * @param {LionOption} option
+   * @returns {string}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _getTextboxValueFromOption(option) {
+    return option.label;
+  }
+}
+
+customElements.define('complex-object-combobox', ComplexObjectCombobox);
+
+const onModelValueChanged = event => {
+  console.log(`event.target.modelValue: ${JSON.stringify(event.target.modelValue)}`);
+};
+
+const listboxDataObject = listboxData.map(e => {
+  return { label: e, name: e };
+});
+
+export const complexObjectChoiceValue = () => html` <complex-object-combobox
+  name="combo"
+  label="Display only the label once selected"
+  @model-value-changed="${onModelValueChanged}"
+>
+  ${lazyRender(
+    listboxDataObject.map(
+      entry =>
+        html`
+          <lion-option .choiceValue="${entry}" .label="${entry.label}">${entry.label}</lion-option>
+        `,
+    ),
+  )}
+</complex-object-combobox>`;
 ```
 
 ## Listbox compatibility

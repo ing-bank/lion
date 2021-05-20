@@ -1680,6 +1680,211 @@ describe('lion-combobox', () => {
         el.setCheckedIndex([0]);
         expect(_inputNode.value).to.equal('Artichoke--multi');
       });
+
+      describe('Override _getTextboxValueFromOption', () => {
+        it('allows to override "_getTextboxValueFromOption" and sync to textbox when multiple', async () => {
+          class X extends LionCombobox {
+            /**
+             * Return the value to be used for the input value
+             * @overridable
+             * @param {?} option
+             * @returns {string}
+             */
+            // eslint-disable-next-line class-methods-use-this
+            _getTextboxValueFromOption(option) {
+              return option.label;
+            }
+          }
+          const tagName = defineCE(X);
+          const tag = unsafeStatic(tagName);
+
+          const el = /** @type {LionCombobox} */ (
+            await fixture(html`
+            <${tag} name="foo" autocomplete="both" multiple-choice>
+              <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
+              value: 'Artichoke',
+            }}">Artichoke</lion-option>
+              <lion-option .label="${'Chard as label'}" .choiceValue="${{
+              value: 'Chard',
+            }}">Chard</lion-option>
+              <lion-option .label="${'Chicory as label'}" .choiceValue="${{
+              value: 'Chicory',
+            }}">Chicory</lion-option>
+              <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
+              value: 'Victoria Plum',
+            }}">Victoria Plum</lion-option>
+            </${tag}>
+          `)
+          );
+          const { _inputNode } = getComboboxMembers(el);
+          el.setCheckedIndex(-1);
+
+          // Act
+          el.setCheckedIndex([0]);
+
+          // Assert
+          expect(_inputNode.value).to.equal('Artichoke as label');
+
+          // Act
+          el.setCheckedIndex([3]);
+
+          // Assert
+          expect(_inputNode.value).to.equal('Victoria Plum as label');
+        });
+
+        it('allows to override "_getTextboxValueFromOption" and sync modelValue with textbox', async () => {
+          class X extends LionCombobox {
+            /**
+             * Return the value to be used for the input value
+             * @overridable
+             * @param {?} option
+             * @returns {string}
+             */
+            // eslint-disable-next-line class-methods-use-this
+            _getTextboxValueFromOption(option) {
+              return option.label;
+            }
+          }
+          const tagName = defineCE(X);
+          const tag = unsafeStatic(tagName);
+
+          const el = /** @type {LionCombobox} */ (
+            await fixture(html`
+            <${tag} name="foo">
+              <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
+              value: 'Artichoke',
+            }}">Artichoke</lion-option>
+              <lion-option .label="${'Chard as label'}" .choiceValue="${{
+              value: 'Chard',
+            }}" checked>Chard</lion-option>
+              <lion-option .label="${'Chicory as label'}" .choiceValue="${{
+              value: 'Chicory',
+            }}">Chicory</lion-option>
+              <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
+              value: 'Victoria Plum',
+            }}">Victoria Plum</lion-option>
+            </${tag}>
+          `)
+          );
+          const { _inputNode } = getComboboxMembers(el);
+
+          // Assume
+          expect(_inputNode.value).to.equal('Chard as label');
+
+          // Act
+          el.modelValue = { value: 'Chicory' };
+          await el.updateComplete;
+
+          // Assert
+          expect(_inputNode.value).to.equal('Chicory as label');
+        });
+
+        it('allows to override "_getTextboxValueFromOption" and clears modelValue and textbox value on clear()', async () => {
+          class X extends LionCombobox {
+            /**
+             * Return the value to be used for the input value
+             * @overridable
+             * @param {?} option
+             * @returns {string}
+             */
+            // eslint-disable-next-line class-methods-use-this
+            _getTextboxValueFromOption(option) {
+              return option.label;
+            }
+          }
+          const tagName = defineCE(X);
+          const tag = unsafeStatic(tagName);
+
+          const el = /** @type {LionCombobox} */ (
+            await fixture(html`
+            <${tag} name="foo" .modelValue="${{ value: 'Artichoke' }}">
+              <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
+              value: 'Artichoke',
+            }}">Artichoke</lion-option>
+              <lion-option .label="${'Chard as label'}" .choiceValue="${{
+              value: 'Chard',
+            }}">Chard</lion-option>
+              <lion-option .label="${'Chicory as label'}" .choiceValue="${{
+              value: 'Chicory',
+            }}">Chicory</lion-option>
+              <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
+              value: 'Victoria Plum',
+            }}">Victoria Plum</lion-option>
+            </${tag}>
+          `)
+          );
+          const { _inputNode } = getComboboxMembers(el);
+
+          // Assume
+          expect(_inputNode.value).to.equal('Artichoke as label');
+
+          // Act
+          el.clear();
+
+          // Assert
+          expect(el.modelValue).to.equal('');
+          expect(_inputNode.value).to.equal('');
+        });
+
+        it('allows to override "_getTextboxValueFromOption" and syncs textbox to modelValue', async () => {
+          class X extends LionCombobox {
+            /**
+             * Return the value to be used for the input value
+             * @overridable
+             * @param {?} option
+             * @returns {string}
+             */
+            // eslint-disable-next-line class-methods-use-this
+            _getTextboxValueFromOption(option) {
+              return option.label;
+            }
+          }
+          const tagName = defineCE(X);
+          const tag = unsafeStatic(tagName);
+
+          const el = /** @type {LionCombobox} */ (
+            await fixture(html`
+            <${tag} name="foo">
+              <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
+              value: 'Artichoke',
+            }}">Artichoke</lion-option>
+              <lion-option .label="${'Chard as label'}" .choiceValue="${{
+              value: 'Chard',
+            }}">Chard</lion-option>
+              <lion-option .label="${'Chicory as label'}" .choiceValue="${{
+              value: 'Chicory',
+            }}">Chicory</lion-option>
+              <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
+              value: 'Victoria Plum',
+            }}">Victoria Plum</lion-option>
+            </${tag}>
+          `)
+          );
+          const { _inputNode } = getComboboxMembers(el);
+
+          async function performChecks() {
+            el.formElements[0].click();
+            await el.updateComplete;
+
+            // FIXME: fix properly for Webkit
+            // expect(_inputNode.value).to.equal('Aha');
+            expect(el.checkedIndex).to.equal(0);
+
+            mimicUserTyping(el, 'Arti');
+            await el.updateComplete;
+            expect(_inputNode.value).to.equal('Arti');
+
+            await el.updateComplete;
+            expect(el.checkedIndex).to.equal(-1);
+          }
+
+          el.autocomplete = 'none';
+          await performChecks();
+
+          el.autocomplete = 'list';
+          await performChecks();
+        });
+      });
     });
 
     describe('Active index behavior', () => {
