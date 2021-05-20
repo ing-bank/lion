@@ -49,12 +49,14 @@ describe('ArrowMixin', () => {
   });
 
   it('shows by default', async () => {
-    const el = /** @type {ArrowTest} */ (await fixture(html`
-      <arrow-test>
-        <div slot="content">This is a tooltip</div>
-        <button slot="invoker">Tooltip button</button>
-      </arrow-test>
-    `));
+    const el = /** @type {ArrowTest} */ (
+      await fixture(html`
+        <arrow-test>
+          <div slot="content">This is a tooltip</div>
+          <button slot="invoker">Tooltip button</button>
+        </arrow-test>
+      `)
+    );
     expect(el.hasAttribute('has-arrow')).to.be.true;
 
     const arrowNode = /** @type {Element} */ (el._arrowNode);
@@ -62,12 +64,14 @@ describe('ArrowMixin', () => {
   });
 
   it('hides the arrow when has-arrow is false', async () => {
-    const el = /** @type {ArrowTest} */ (await fixture(html`
-      <arrow-test>
-        <div slot="content">This is a tooltip</div>
-        <button slot="invoker">Tooltip button</button>
-      </arrow-test>
-    `));
+    const el = /** @type {ArrowTest} */ (
+      await fixture(html`
+        <arrow-test>
+          <div slot="content">This is a tooltip</div>
+          <button slot="invoker">Tooltip button</button>
+        </arrow-test>
+      `)
+    );
     el.hasArrow = false;
     await el.updateComplete;
     expect(el.hasAttribute('has-arrow')).to.be.false;
@@ -76,21 +80,23 @@ describe('ArrowMixin', () => {
   });
 
   it('makes sure positioning of the arrow is correct', async () => {
-    const el = /** @type {ArrowTest} */ (await fixture(html`
-      <arrow-test
-        .config="${
-          /** @type {import('../types/OverlayConfig').OverlayConfig} */ ({
-            popperConfig: {
-              placement: 'right',
-            },
-          })
-        }"
-        style="position: relative; top: 10px;"
-      >
-        <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
-        <button slot="invoker" style="height: 30px;">Tooltip button</button>
-      </arrow-test>
-    `));
+    const el = /** @type {ArrowTest} */ (
+      await fixture(html`
+        <arrow-test
+          .config="${
+            /** @type {import('../types/OverlayConfig').OverlayConfig} */ ({
+              popperConfig: {
+                placement: 'right',
+              },
+            })
+          }"
+          style="position: relative; top: 10px;"
+        >
+          <div slot="content" style="height: 30px; background-color: red;">Hey there</div>
+          <button slot="invoker" style="height: 30px;">Tooltip button</button>
+        </arrow-test>
+      `)
+    );
 
     el.opened = true;
 

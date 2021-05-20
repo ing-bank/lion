@@ -21,9 +21,9 @@ class LionFieldWithSelect extends LionField {
    * @returns {HTMLSelectElement}
    */
   get _inputNode() {
-    return /** @type {HTMLSelectElement} */ (Array.from(this.children).find(
-      el => el.slot === 'input',
-    ));
+    return /** @type {HTMLSelectElement} */ (
+      Array.from(this.children).find(el => el.slot === 'input')
+    );
   }
 }
 

@@ -25,11 +25,8 @@ const promptAnalyzerModule = require('../../src/cli/prompt-analyzer-menu.js');
 const { toPosixPath } = require('../../src/program/utils/to-posix-path.js');
 const { getExtendDocsResults } = require('../../src/cli/launch-providence-with-extend-docs.js');
 
-const {
-  pathsArrayFromCs,
-  pathsArrayFromCollectionName,
-  appendProjectDependencyPaths,
-} = cliHelpersModule;
+const { pathsArrayFromCs, pathsArrayFromCollectionName, appendProjectDependencyPaths } =
+  cliHelpersModule;
 
 const queryResults = [];
 

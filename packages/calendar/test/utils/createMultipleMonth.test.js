@@ -11,9 +11,8 @@ function compareMultipleMonth(obj) {
       week.days.forEach((day, dayi) => {
         // @ts-expect-error since we are converting Date to ISO string, but that's okay for our test Date comparisons
         // eslint-disable-next-line no-param-reassign
-        obj.months[monthi].weeks[weeki].days[dayi].date = obj.months[monthi].weeks[weeki].days[
-          dayi
-        ].date.toISOString();
+        obj.months[monthi].weeks[weeki].days[dayi].date =
+          obj.months[monthi].weeks[weeki].days[dayi].date.toISOString();
       });
     });
   });

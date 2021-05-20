@@ -235,9 +235,9 @@ export class LocalizeManager {
   loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
 
-    const namespace = /** @type {string} */ (isDynamicImport
-      ? Object.keys(namespaceObj)[0]
-      : namespaceObj);
+    const namespace = /** @type {string} */ (
+      isDynamicImport ? Object.keys(namespaceObj)[0] : namespaceObj
+    );
 
     if (this._isNamespaceInCache(locale, namespace)) {
       return Promise.resolve();

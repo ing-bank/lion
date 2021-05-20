@@ -31,13 +31,13 @@ const FormRegistrarPortalMixinImplementation = superclass =>
        * @type {(FormRegistrarPortalHost & HTMLElement) | undefined}
        */
       this.registrationTarget = undefined;
-      this.__redispatchEventForFormRegistrarPortalMixin = this.__redispatchEventForFormRegistrarPortalMixin.bind(
-        this,
-      );
+      this.__redispatchEventForFormRegistrarPortalMixin =
+        this.__redispatchEventForFormRegistrarPortalMixin.bind(this);
       this.addEventListener(
         'form-element-register',
-        /** @type {EventListenerOrEventListenerObject} */ (this
-          .__redispatchEventForFormRegistrarPortalMixin),
+        /** @type {EventListenerOrEventListenerObject} */ (
+          this.__redispatchEventForFormRegistrarPortalMixin
+        ),
       );
     }
 

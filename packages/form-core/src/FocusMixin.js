@@ -1,6 +1,7 @@
 import { dedupeMixin } from '@lion/core';
 
-const windowWithOptionalPolyfill = /** @type {Window & typeof globalThis & {applyFocusVisiblePolyfill?: function}} */ (window);
+const windowWithOptionalPolyfill =
+  /** @type {Window & typeof globalThis & {applyFocusVisiblePolyfill?: function}} */ (window);
 const polyfilledNodes = new WeakMap();
 
 /**

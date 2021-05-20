@@ -9,10 +9,12 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * @returns {number} fraction for the given currency
  */
 export function getFractionDigits(currency = 'EUR') {
-  const parts = /** @type {FormatNumberPart[]} */ (formatNumberToParts(123, {
-    style: 'currency',
-    currency,
-  }));
+  const parts = /** @type {FormatNumberPart[]} */ (
+    formatNumberToParts(123, {
+      style: 'currency',
+      currency,
+    })
+  );
   const [fractionPart] = parts.filter(part => part.type === 'fraction');
   return fractionPart ? fractionPart.value.length : 0;
 }

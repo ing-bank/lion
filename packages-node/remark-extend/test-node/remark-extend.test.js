@@ -149,7 +149,8 @@ describe('remarkExtend', () => {
 
   it('throws if an import file does not exist', async () => {
     await expectThrowsAsync(() => execute("```js ::import('./fixtures/not-available.md')\n```"), {
-      errorMatch: /The import "\.\/fixtures\/not-available.md" in "test-file.md" does not exist\. Resolved to ".*"\.$/,
+      errorMatch:
+        /The import "\.\/fixtures\/not-available.md" in "test-file.md" does not exist\. Resolved to ".*"\.$/,
     });
   });
 
@@ -157,7 +158,8 @@ describe('remarkExtend', () => {
     const input =
       "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=Does not exit])')\n```";
     await expectThrowsAsync(() => execute(input), {
-      errorMatch: /The start selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\.$/,
+      errorMatch:
+        /The start selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\.$/,
     });
   });
 
@@ -165,7 +167,8 @@ describe('remarkExtend', () => {
     const input =
       "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=Does not exit])')\n```";
     await expectThrowsAsync(() => execute(input), {
-      errorMatch: /The end selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\./,
+      errorMatch:
+        /The end selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\./,
     });
   });
 

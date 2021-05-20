@@ -244,8 +244,9 @@ export class OverlayController extends EventTargetShim {
    * @type {HTMLElement}
    */
   get contentWrapperNode() {
-    return /** @type {HTMLElement} */ (this.__contentWrapperNode ||
-      this.config?.contentWrapperNode);
+    return /** @type {HTMLElement} */ (
+      this.__contentWrapperNode || this.config?.contentWrapperNode
+    );
   }
 
   /**
@@ -262,8 +263,9 @@ export class OverlayController extends EventTargetShim {
    * @type {HTMLElement}
    */
   get elementToFocusAfterHide() {
-    return /** @type {HTMLElement} */ (this.__elementToFocusAfterHide ||
-      this.config?.elementToFocusAfterHide);
+    return /** @type {HTMLElement} */ (
+      this.__elementToFocusAfterHide || this.config?.elementToFocusAfterHide
+    );
   }
 
   /**
@@ -588,8 +590,9 @@ export class OverlayController extends EventTargetShim {
     if (this.__isContentNodeProjected && this.contentWrapperNode.isConnected) {
       // We need to keep track of the original local context.
       /** config [l2], [l4] */
-      this.__originalContentParent = /** @type {HTMLElement} */ (this.contentWrapperNode
-        .parentNode);
+      this.__originalContentParent = /** @type {HTMLElement} */ (
+        this.contentWrapperNode.parentNode
+      );
     } else if (cfgToAdd.contentNode && cfgToAdd.contentNode.isConnected) {
       // We need to keep track of the original local context.
       /** config [l1], [l3], [g1] */
@@ -905,8 +908,9 @@ export class OverlayController extends EventTargetShim {
 
   /** @protected */
   _restoreFocus() {
-    const { activeElement } = /** @type {* & ShadowRoot} */ (this
-      .__contentWrapperNode).getRootNode();
+    const { activeElement } = /** @type {* & ShadowRoot} */ (
+      this.__contentWrapperNode
+    ).getRootNode();
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
     if (

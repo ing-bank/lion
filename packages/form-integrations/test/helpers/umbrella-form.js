@@ -22,9 +22,9 @@ import '@lion/input-stepper/define';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
-    return /** @type {import('@lion/form').LionForm} */ (this.shadowRoot?.querySelector(
-      'lion-form',
-    ));
+    return /** @type {import('@lion/form').LionForm} */ (
+      this.shadowRoot?.querySelector('lion-form')
+    );
   }
 
   /**
