@@ -1,0 +1,13 @@
+diff --git a/node_modules/@rocket/cli/preset/_includes/layout-simulator.njk b/node_modules/@rocket/cli/preset/_includes/layout-simulator.njk
+index e8a48ba..c0916fe 100644
+--- a/node_modules/@rocket/cli/preset/_includes/layout-simulator.njk
++++ b/node_modules/@rocket/cli/preset/_includes/layout-simulator.njk
+@@ -11,7 +11,7 @@
+       }
+     </style>
+     <script type="module">
+-      import { render } from 'lit-html';
++      import { render } from 'lit';
+ 
+       async function onHashChange() {
+         const urlParts = new URLSearchParams(document.location.hash.substr(1));
