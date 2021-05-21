@@ -30,7 +30,7 @@ class SoccerPlayer {
 
 ## Private
 
-Methods and properties are protected when they contain two underscores or are explicitly marked as private in the code. They can be only used within the class where they are defined (developers of Lion components).
+Methods and properties are private when they contain two underscores or are explicitly marked as private in the code. They can be only used within the class where they are defined (developers of Lion components).
 
 ```js
 class SoccerPlayer {
