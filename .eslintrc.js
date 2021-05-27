@@ -17,6 +17,7 @@ module.exports = {
         '**/demo/**/*.js',
         '**/docs/**/*.js',
         '**/*.config.js',
+        '**/scripts/**/*.js',
       ],
       rules: {
         'lit/binding-positions': 'off',
