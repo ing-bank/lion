@@ -386,6 +386,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       // Only update list in render cycle
       this._handleAutocompletion();
       this.__shouldAutocompleteNextUpdate = false;
+      this.__listboxContentChanged = false;
     }
 
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
@@ -479,6 +480,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _onListboxContentChanged() {
     super._onListboxContentChanged();
     this.__shouldAutocompleteNextUpdate = true;
+    this.__listboxContentChanged = true;
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -609,7 +611,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       prevValue.length &&
       curValue.length &&
       prevValue[0].toLowerCase() !== curValue[0].toLowerCase();
-    return userIsAddingChars || userStartsNewWord;
+    return (
+      userIsAddingChars ||
+      userStartsNewWord ||
+      (this.__listboxContentChanged && this.__hadUserIntendsInlineAutoFill)
+    );
   }
 
   /* eslint-enable no-param-reassign, class-methods-use-this */
@@ -629,7 +635,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   _handleAutocompletion() {
     const hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
 
-    const curValue = this._inputNode.value;
+    const inputValue = this._inputNode.value;
+    const inputSelectionStart = this._inputNode.selectionStart;
+    const curValue =
+      hasSelection && inputSelectionStart ? inputValue.slice(0, inputSelectionStart) : inputValue;
+
     const prevValue =
       hasSelection || this.__hadSelectionLastAutofill
         ? this.__prevCboxValueNonSelected
@@ -734,6 +744,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     this.__prevCboxValue = this._inputNode.value;
     this.__hadSelectionLastAutofill =
       this._inputNode.value.length !== this._inputNode.selectionStart;
+    this.__hadUserIntendsInlineAutoFill = userIntendsInlineAutoFill;
 
     // [9]. Reposition overlay
     if (this._overlayCtrl && this._overlayCtrl._popper) {
@@ -745,10 +756,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @private
    */
   __textboxInlineComplete(option = this.formElements[this.activeIndex]) {
-    const prevLen = this._inputNode.value.length;
-    this._inputNode.value = this._getTextboxValueFromOption(option);
-    this._inputNode.selectionStart = prevLen;
-    this._inputNode.selectionEnd = this._inputNode.value.length;
+    const newValue = this._getTextboxValueFromOption(option);
+
+    // Make sure that we don't lose inputNode.selectionStart and inputNode.selectionEnd
+    if (this._inputNode.value !== newValue) {
+      const prevLen = this._inputNode.value.length;
+      this._inputNode.value = newValue;
+      this._inputNode.selectionStart = prevLen;
+      this._inputNode.selectionEnd = this._inputNode.value.length;
+    }
   }
 
   /**

@@ -266,7 +266,7 @@ function fetchMyData(val) {
   if (rejectPrev) {
     rejectPrev();
   }
-  const results = comboboxData.filter(item => item.toLowerCase().includes(val.toLowerCase()));
+  const results = listboxData.filter(item => item.toLowerCase().includes(val.toLowerCase()));
   return new Promise((resolve, reject) => {
     rejectPrev = reject;
     setTimeout(() => {
