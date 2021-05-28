@@ -19,8 +19,8 @@
   "scripts": {
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
-    "start": "es-dev-server -c demo/server.config.js --root-dir ../../",
-    "start:no-babel": "es-dev-server -c demo/server.no-babel.config.js --root-dir ../../",
+    "start": "web-dev-server -c demo/server.config.mjs",
+    "start:no-babel": "web-dev-server -c demo/server.no-babel.config.mjs",
     "test": "npm run test:node",
     "test:node": "mocha test-node",
     "test:watch": "mocha test-node --watch"
@@ -35,5 +35,11 @@
   "exports": {
     ".": "./index.js",
     "./docs/": "./docs/"
+  },
+  "imports": {
+    "#source/counter": "./demo/src/SourceCounter.js",
+    "#source/counter/define": "./demo/src/define.js",
+    "#extension/counter": "./demo/my-extension/ExtensionCounter.js",
+    "#extension/counter/define": "./demo/my-extension/define.js"
   }
 }

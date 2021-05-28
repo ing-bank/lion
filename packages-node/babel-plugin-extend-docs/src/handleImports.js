@@ -1,15 +1,5 @@
 /* eslint-disable no-param-reassign */
 
-const { joinPaths } = require('./helpers.js');
-
-/**
- * -1 because filepath is an absolute path starting with '/' and we turn it into a relative path without a '/' at the start
- * @param {*} filePath
- */
-function getFolderDepth(filePath) {
-  return [...filePath.match(new RegExp(/\/|\\/, 'g'))].length - 1;
-}
-
 function getImportAs(specifier, newImportName) {
   if (specifier.local && specifier.local.name && specifier.local.name !== specifier.imported.name) {
     return specifier.local.name;
@@ -23,12 +13,10 @@ function renameAndStoreImports({ path, state, opts, types: t }) {
 
     if (t.isIdentifier(specifier.imported) && specifier.type === 'ImportSpecifier') {
       for (const change of opts.changes) {
-        if (specifier.imported.name === change.variable.from) {
+        if (change.variable && specifier.imported.name === change.variable.from) {
           for (const { from, to } of change.variable.paths) {
             if (managed === false && from === path.node.source.value) {
-              const relativePart = '../'.repeat(getFolderDepth(state.filePath));
               const importAs = getImportAs(specifier, change.variable.to);
-              const newPath = joinPaths(relativePart, to);
 
               // rename so it replaces all occurrences
               path.scope.rename(specifier.local.name, importAs);
@@ -38,7 +26,7 @@ function renameAndStoreImports({ path, state, opts, types: t }) {
               state.importedStorage.push({
                 action: 'change',
                 specifier,
-                path: newPath,
+                path: to,
               });
               managed = true;
             }
@@ -75,14 +63,12 @@ function generateImportStatements({ state, types: t }) {
   return res;
 }
 
-function replaceTagImports({ path, state, opts, types: t }) {
+function replaceTagImports({ path, opts, types: t }) {
   for (const change of opts.changes) {
     if (change.tag && Array.isArray(change.tag.paths) && change.tag.paths.length > 0) {
       for (const { from, to } of change.tag.paths) {
         if (from === path.node.source.value) {
-          const relativePart = '../'.repeat(getFolderDepth(state.filePath));
-          const updatedPath = joinPaths(relativePart, to);
-          path.node.source = t.stringLiteral(updatedPath);
+          path.node.source = t.stringLiteral(to);
         }
       }
     }

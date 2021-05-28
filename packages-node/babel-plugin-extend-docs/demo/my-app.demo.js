@@ -1,9 +1,10 @@
+/* eslint-disable import/extensions */
 import { LitElement, html } from '@lion/core';
 
-import { MyCounter } from './src/MyCounter.js';
-import './my-counter.js';
+import { SourceCounter } from '#source/counter';
+import '#source/counter/define';
 
-class TenCounter extends MyCounter {
+class TenCounter extends SourceCounter {
   inc() {
     this.count += 10;
   }
@@ -15,7 +16,7 @@ class MyApp extends LitElement {
     return html`
       <h1>Example App</h1>
       <hr />
-      <my-counter></my-counter>
+      <source-counter></source-counter>
       <hr />
       <ten-counter></ten-counter>
     `;

@@ -1,16 +1,12 @@
-const fs = require('fs');
-
-const { joinPaths } = require('./helpers.js');
-
 const tagExample = [
   'Should be example:',
   '  {',
-  "    from: 'my-counter',",
-  "    to: 'my-extension',",
+  "    from: 'source-counter',",
+  "    to: 'extension-counter',",
   '    paths: [',
   '      {',
-  "         from: './my-counter.js',",
-  "         to: './my-extension/my-extension.js'",
+  "         from: '@source/counter/define',",
+  "         to: 'extension/counter/define'",
   '      }',
   '    ]',
   '  }',
@@ -19,12 +15,12 @@ const tagExample = [
 const variableExample = [
   'Should be example:',
   '  {',
-  "    from: 'MyCounter',",
-  "    to: 'MyExtension',",
+  "    from: 'SourceCounter',",
+  "    to: 'ExtensionCounter',",
   '    paths: [',
   '      {',
-  "         from: './index.js',",
-  "         to: './my-extension/index.js'",
+  "         from: '@source/counter',",
+  "         to: 'extension/counter'",
   '      }',
   '    ]',
   '  }',
@@ -37,7 +33,7 @@ function formatJsonErrorMessage(json) {
   return `\n  ${JSON.stringify(json, null, 2).split('\n').join('\n  ')}`;
 }
 
-function validatePaths(paths, given, intro, example, options) {
+function validatePaths(paths, given, intro, example) {
   if (!Array.isArray(paths) || (Array.isArray(paths) && paths.length === 0)) {
     const errorMsg = [
       intro,
@@ -60,18 +56,11 @@ function validatePaths(paths, given, intro, example, options) {
     }
     if (typeof pathObj.to !== 'string' || !pathObj.to) {
       throw new Error(errorMsg);
-    } else if (options.throwOnNonExistingPathToFiles === true) {
-      const filePath = joinPaths(options.rootPath, pathObj.to);
-      if (!(fs.existsSync(filePath) && fs.lstatSync(filePath).isFile())) {
-        throw new Error(
-          `babel-plugin-extend-docs: Rewriting import from "${pathObj.from}" to "${pathObj.to}" but we could not find a file at "${filePath}".`,
-        );
-      }
     }
   }
 }
 
-function validateChanges(changes, options) {
+function validateChanges(changes) {
   if (!Array.isArray(changes) || (Array.isArray(changes) && changes.length === 0)) {
     const errorMsg = [
       'babel-plugin-extend-docs: The required changes array is missing.',
@@ -92,7 +81,7 @@ function validateChanges(changes, options) {
         throw new Error(errorMsg);
       }
 
-      validatePaths(tag.paths, tag, intro, tagExample, options);
+      validatePaths(tag.paths, tag, intro, tagExample);
     }
 
     if (change.variable) {
@@ -109,39 +98,16 @@ function validateChanges(changes, options) {
       if (typeof variable.to !== 'string' || !variable.to) {
         throw new Error(errorMsg);
       }
-
-      validatePaths(variable.paths, variable, intro, variableExample, options);
+      validatePaths(variable.paths, variable, intro, variableExample);
     }
   }
 }
 
 function validateOptions(_options) {
   const options = {
-    throwOnNonExistingPathToFiles: true,
-    throwOnNonExistingRootPath: true,
     ..._options,
   };
-  if (options.throwOnNonExistingRootPath) {
-    if (!options.rootPath) {
-      throw new Error(
-        `babel-plugin-extend-docs: You need to provide a rootPath option (string)\nExample: rootPath: path.resolve('.')`,
-      );
-    }
-    if (!fs.existsSync(options.rootPath)) {
-      throw new Error(
-        `babel-plugin-extend-docs: The provided rootPath "${options.rootPath}" does not exist.`,
-      );
-    }
-    if (!fs.lstatSync(options.rootPath).isDirectory()) {
-      throw new Error(
-        `babel-plugin-extend-docs: The provided rootPath "${options.rootPath}" is not a directory.`,
-      );
-    }
-  }
-  validateChanges(options.changes, {
-    throwOnNonExistingPathToFiles: options.throwOnNonExistingPathToFiles,
-    rootPath: options.rootPath,
-  });
+  validateChanges(options.changes);
 }
 
 module.exports = {

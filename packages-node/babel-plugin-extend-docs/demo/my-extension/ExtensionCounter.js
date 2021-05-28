@@ -1,7 +1,7 @@
 import { html, css } from '@lion/core';
-import { MyCounter } from '../src/MyCounter.js';
+import { SourceCounter } from '../src/SourceCounter.js';
 
-export class MyExtension extends MyCounter {
+export class ExtensionCounter extends SourceCounter {
   static get styles() {
     return [
       ...super.styles,
@@ -14,6 +14,6 @@ export class MyExtension extends MyCounter {
   }
 
   _renderHeader() {
-    return html`<h2>I am MyExtension</h2> `;
+    return html`<h2>I am ExtensionCounter</h2> `;
   }
 }

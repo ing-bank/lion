@@ -4,64 +4,47 @@ const { executeBabel, baseConfig } = require('./helpers.js');
 
 const testConfig = {
   ...baseConfig,
-  throwOnNonExistingPathToFiles: false,
-  throwOnNonExistingRootPath: false,
-  __filePath: '/node_module/@lion/input/README.md',
 };
 
 describe('babel-plugin-extend-docs', () => {
-  it('replaces local src class imports (1)', () => {
-    const code = `import { LionInput } from './src/LionInput.js';`;
-    const output = `import { WolfInput } from "../../../index.js";`;
+  it('replaces src class imports (1)', () => {
+    const code = `import { LionInput } from '@lion/input';`;
+    const output = `import { WolfInput } from "wolf-web/input";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
   it('renames classes everywhere', () => {
     const code = [
-      `import { LionInput } from './src/LionInput.js';`,
+      `import { LionInput } from '@lion/input';`,
       `class Foo extends LionInput {}`,
     ].join('\n');
     const output = [
-      `import { WolfInput } from "../../../index.js";`,
+      `import { WolfInput } from "wolf-web/input";`,
       '',
       `class Foo extends WolfInput {}`,
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
-  it('replaces local src class imports (2)', () => {
-    const code = `import { LionInput } from './src/LionInput.js';`;
-    const output = `import { WolfInput } from "../../../../index.js";`;
-    const config = {
-      ...testConfig,
-      __filePath: '/node_module/@lion/input/docs/README.md',
-    };
-    expect(executeBabel(code, config)).to.equal(output);
-  });
-
-  it('replaces local src class imports (3)', () => {
-    const code = `import { LionInput as Foo } from './src/LionInput.js';`;
-    const output = `import { WolfInput as Foo } from "../../../index.js";`;
-    expect(executeBabel(code, testConfig)).to.equal(output);
-  });
-
-  it('replaces local src class imports (4)', () => {
+  it('replaces src class imports (2)', () => {
     const code = [
-      `import someDefaultHelper, { LionInput, someHelper } from './src/LionInput.js';`,
+      `import someDefaultHelper, { LionInput, someHelper } from '@lion/input';`,
       `import { LionButton } from '@lion/button';`,
     ].join('\n');
     const output = [
-      `import someDefaultHelper, { someHelper } from "./src/LionInput.js";`,
-      `import { WolfInput, WolfButton } from "../../../index.js";`,
+      `import someDefaultHelper, { someHelper } from "@lion/input";`,
+      `import { WolfInput } from "wolf-web/input";`,
+      `import { WolfButton } from "wolf-web/button";`,
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
-  it('replaces local src class imports (5)', () => {
+  it('replaces src class imports (3)', () => {
     const code = `import { LionInput, LionFoo, LionBar, someHelper } from '@lion/input';`;
     const output = [
-      `import { WolfInput, WolfFoo } from "../../../index.js";`,
-      `import { WolfBar } from "../../../somewhere-else.js";`,
+      `import { WolfInput } from "wolf-web/input";`,
+      `import { WolfFoo } from "./index.js";`,
+      `import { WolfBar } from "./somewhere-else.js";`,
       `import { someHelper } from "@lion/input";`,
     ].join('\n');
     const config = {
@@ -95,7 +78,6 @@ describe('babel-plugin-extend-docs', () => {
           },
         },
       ],
-      __filePath: '/node_module/@lion/input/README.md',
     };
     expect(executeBabel(code, config)).to.equal(output);
   });
@@ -106,91 +88,27 @@ describe('babel-plugin-extend-docs', () => {
       import { LionInput } from '@lion/input';
     `;
     const output = [
-      `import { localize } from "../../../localize.js";`,
-      `import { WolfInput } from "../../../index.js";`,
+      `import { localize } from "wolf-web/localize";`,
+      `import { WolfInput } from "wolf-web/input";`,
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
-  it('allows separate import paths of managed imports', () => {
-    const code1 = `import { LionInput } from '@lion/input';`;
-    const code2 = `import { LionInput } from './src/LionInput.js';`;
-    const output1 = `import { WolfInput } from "../../../index.js";`;
-    const output2 = `import { WolfInput } from "../../../packages/input/src/WolfInput.js";`;
-    const config = {
-      ...testConfig,
-      changes: [
-        {
-          description: 'LionInput',
-          variable: {
-            from: 'LionInput',
-            to: 'WolfInput',
-            paths: [
-              {
-                from: '@lion/input',
-                to: './index.js',
-              },
-              {
-                from: './src/LionInput.js',
-                to: './packages/input/src/WolfInput.js',
-              },
-            ],
-          },
-        },
-      ],
-      __filePath: '/node_module/@lion/input/README.md',
-    };
-    expect(executeBabel(code1, config)).to.equal(output1);
-    expect(executeBabel(code2, config)).to.equal(output2);
-  });
-
-  it('replaces local index.js class imports (1)', () => {
-    const code = `import { LionInput } from './index.js';`;
-    const output = `import { WolfInput } from "../../../index.js";`;
-    expect(executeBabel(code, testConfig)).to.equal(output);
-  });
-
-  it('replaces local index.js class imports (2)', () => {
-    const code = `import { LionInput } from './index.js';`;
-    const output = `import { WolfInput } from "../../../../index.js";`;
-    const config = {
-      ...testConfig,
-      __filePath: '/node_module/@lion/input/docs/README.md',
-    };
-    expect(executeBabel(code, config)).to.equal(output);
-  });
-
-  it('works with local index.js class imports with an empty relative path', () => {
-    const code = `import { LionInput } from './index.js';`;
-    const output = `import { WolfInput } from "./index.js";`;
-    const config = {
-      ...testConfig,
-      __filePath: './README.md',
-    };
-    expect(executeBabel(code, config)).to.equal(output);
-  });
-
   it('replaces `@lion` class imports', () => {
     const code = `import { LionInput } from '@lion/input';`;
-    const output = `import { WolfInput } from "../../../index.js";`;
+    const output = `import { WolfInput } from "wolf-web/input";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
-  it('does NOT replace imports no in the config', () => {
-    const code = `import { FooInput } from '@lion/input';`;
-    const output = `import { FooInput } from "@lion/input";`;
-    expect(executeBabel(code, testConfig)).to.equal(output);
-  });
-
-  it('replaces local tag imports', () => {
-    const code = `import './lion-input.js';`;
-    const output = `import "../../../__element-definitions/wolf-input.js";`;
+  it('does NOT replace imports not in the config', () => {
+    const code = `import { FooInput } from '@lion/calendar';`;
+    const output = `import { FooInput } from "@lion/calendar";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
   it('replaces `@lion` tag imports', () => {
     const code = `import '@lion/input/define';`;
-    const output = `import "../../../__element-definitions/wolf-input.js";`;
+    const output = `import "#input/define";`;
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
@@ -346,7 +264,7 @@ describe('babel-plugin-extend-docs', () => {
     const code = `import * as all from '@lion/input';`;
     const output = `
       import { notRenameHelper } from "@lion/input";
-      import { WolfInput } from "../../../index.js";
+      import { WolfInput } from "wolf-web/input";
       const all = { LionInput: WolfInput, someHelper };
     `;
     expect(executeBabel(code, testConfig)).to.equal(output);
