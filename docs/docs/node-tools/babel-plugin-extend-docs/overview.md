@@ -10,25 +10,32 @@ npm i -D babel-plugin-extend-docs
 ```
 
 We want to only execute `babel-plugin-extend-docs` on the actual files we want to modify/extend.
-We recommend using [babel overrides](https://babeljs.io/docs/en/options#overrides) for it.
 
-👉 _babel.config.js_
+You may also consider using [babel overrides](https://babeljs.io/docs/en/options#overrides).
+
+👉 _web-dev-server.config.js_
 
 ```js
+import path from 'path';
+import { fromRollup } from '@web/dev-server-rollup';
+import rollupBabel from '@rollup/plugin-babel';
+
 const extendDocsConfig = {
-  rootPath: process.cwd(), // or `path.resolve('./')` as plugin needs to know the rootPath of your project
   changes: [
     // possible changes as described below
   ],
 };
 
-module.exports = {
-  overrides: [
-    {
-      // plugin will only be executed on files that match this pattern
-      test: ['./node_modules/source-library/demos/**/*.js'],
-      plugins: [['babel-plugin-extend-docs', extendDocsConfig]],
-    },
+// note that you need to use `.default` for babel
+const babel = fromRollup(rollupBabel.default);
+
+export default {
+  nodeResolve: true,
+  plugins: [
+    babel({
+      include: ['./glob/to/files/**/*.js'],
+      plugins: [[path.resolve('./'), extendDocsConfig]],
+    }),
   ],
 };
 ```
@@ -63,14 +70,11 @@ changes: [
 
 ### Paths
 
-Both `variable` and `tag` are required to have a `paths` array which defines how to remap import paths. As demos can use multiple ways to import all of them needs to be written down in the config.
+Both `variable` and `tag` are required to have a `paths` array which defines how to remap import paths. Generally it should be a single entry.
 
 ```js
 paths: [
-  { from: './index.js', to: './my-extension/index.js' },
-  { from: '../index.js', to: '../my-extension/index.js' },
-  { from: './src/MyCounter.js', to: './my-extension/index.js' },
-  { from: '../src/MyCounter.js', to: '../my-extension/index.js' },
+  { from: 'source-pkg/counter', to: 'extension-pkg/counter' },
 ],
 ```
 
@@ -80,28 +84,28 @@ We have an existing demo code which we want to reuse.
 
 ```js
 import { LitElement, html } from '@lion/core';
-import './my-counter.js';
+import 'source-pkg/counter/define';
 class MyApp extends LitElement {
   render() {
     return html`
       <h1>Example App</h1>
-      <my-counter></my-counter>
+      <source-counter></source-counter>
     `;
   }
 }
 customElements.define('my-app', MyApp);
 ```
 
-We created a "better" version of `<my-counter>` so we would like to use that in the demo.
-Our extension is called `<my-extension>` and is available in `./my-extension/my-extension.js`.
+We created a "better" version of `<source-counter>` so we would like to use that in the demo.
+Our extension is called `<extension-counter>` and is available via `extension-pkg/counter/define`.
 
 Within `babel-plugin-extend-docs` we can define to replace the tag + it's import.
 
 ```js
 tag: {
-  from: 'my-counter',
-  to: 'my-extension',
-  paths: [{ from: './my-counter.js', to: './my-extension/my-extension.js' }],
+  from: 'source-counter',
+  to: 'extension-counter',
+  paths: [{ from: 'source-pkg/counter/define', to: 'extension-pkg/counter/define' }],
 }
 ```
 
@@ -109,12 +113,12 @@ tag: {
 
 ```js
 import { LitElement, html } from '@lion/core';
-import './my-extension/my-extension.js';
+import 'extension-pkg/counter/define';
 class MyApp extends LitElement {
   render() {
     return html`
       <h1>Example App</h1>
-      <my-extension></my-extension>
+      <extension-counter></extension-counter>
     `;
   }
 }
@@ -127,13 +131,14 @@ We have an existing demo code which we want to reuse.
 
 ```js
 import { LitElement, html } from '@lion/core';
-import { MyCounter } from './src/MyCounter.js';
-class TenCounter extends MyCounter {
+import { SourceCounter } from 'source-pkg/counter';
+class TenCounter extends SourceCounter {
   inc() {
     this.count += 10;
   }
 }
 customElements.define('ten-counter', TenCounter);
+
 class MyApp extends LitElement {
   render() {
     return html`
@@ -145,16 +150,16 @@ class MyApp extends LitElement {
 customElements.define('my-app', MyApp);
 ```
 
-We created a "better" version of `MyCounter` so we would like that `TenCounter` now extends it instead.
+We created a "better" version of `SourceCounter` so we would like that `TenCounter` now extends it instead.
 
 Within `babel-plugin-extend-docs` we can define to replace the class + it's import.
 
 ```js
 variable: {
-  from: 'MyCounter',
-  to: 'MyExtension',
+  from: 'SourceCounter',
+  to: 'ExtensionCounter',
   paths: [
-    { from: './src/MyCounter.js', to: './my-extension/index.js' },
+    { from: 'source-pkg/counter', to: 'extension-pkg/counter' },
   ],
 },
 ```
@@ -163,8 +168,8 @@ variable: {
 
 ```js
 import { LitElement, html } from '@lion/core';
-import { MyExtension } from './my-extension/index.js';
-class TenCounter extends MyExtension {
+import { SourceCounter } from 'extension-pkg/counter';
+class TenCounter extends SourceCounter {
   inc() {
     this.count += 10;
   }
@@ -184,41 +189,45 @@ customElements.define('my-app', MyApp);
 ## Full Demo & Api Example
 
 You can run the example locally via `npm run start` or look at its [source code](https://github.com/ing-bank/lion/tree/master/packages-node/babel-plugin-extend-docs/demo/).
-_Note we are configuring babel via the [server.config.js](https://github.com/ing-bank/lion/tree/master/packages-node/babel-plugin-extend-docs/demo/server.config.js)_
+_Note we are configuring babel via the [server.config.mjs](https://github.com/ing-bank/lion/tree/master/packages-node/babel-plugin-extend-docs/demo/server.config.mjs)_
 
-👉 _babel.config.js_
+👉 _server.config.mjs_
 
 ```js
-const path = require('path');
+import path from 'path';
+import { fromRollup } from '@web/dev-server-rollup';
+import rollupBabel from '@rollup/plugin-babel';
 
 const extendDocsConfig = {
-  rootPath: path.resolve('./demo'),
   changes: [
     {
-      name: 'MyCounter',
+      name: 'SourceCounter',
       variable: {
-        from: 'MyCounter',
-        to: 'MyExtension',
-        paths: [
-          { from: './index.js', to: './my-extension/index.js' },
-          { from: './src/MyCounter.js', to: './my-extension/index.js' },
-        ],
+        from: 'SourceCounter',
+        to: 'ExtensionCounter',
+        paths: [{ from: '#source/counter', to: '#extension/counter' }],
       },
       tag: {
-        from: 'my-counter',
-        to: 'my-extension',
-        paths: [{ from: './my-counter.js', to: './my-extension/my-extension.js' }],
+        from: 'source-counter',
+        to: 'extension-counter',
+        paths: [{ from: '#source/counter/define', to: '#extension/counter/define' }],
       },
     },
   ],
 };
 
-module.exports = {
-  overrides: [
-    {
-      test: ['./node_modules/@lion/*/README.md', './node_modules/@lion/*/docs/**/*.md',
-      plugins: [['babel-plugin-docs-extend', extendDocsConfig]],
-    },
+// note that you need to use `.default` for babel
+const babel = fromRollup(rollupBabel.default);
+
+export default {
+  nodeResolve: true,
+  watch: true,
+  open: 'demo/',
+  plugins: [
+    babel({
+      include: ['./demo/**/*.demo.js'],
+      plugins: [[path.resolve('./'), extendDocsConfig]],
+    }),
   ],
 };
 ```

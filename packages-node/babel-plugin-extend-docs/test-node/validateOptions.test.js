@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const path = require('path');
-const { executeBabel, baseConfig } = require('./helpers.js');
+const { executeBabel } = require('./helpers.js');
 
 function formatJsonErrorMessage(json) {
   if (!json) {
@@ -10,30 +10,6 @@ function formatJsonErrorMessage(json) {
 }
 
 describe('babel-plugin-extend-docs: validateOptions', () => {
-  it('throws if no rootPath string is provided', () => {
-    expect(() => executeBabel('', { ...baseConfig })).to.throw(
-      `babel-plugin-extend-docs: You need to provide a rootPath option (string)\nExample: rootPath: path.resolve('.')`,
-    );
-  });
-
-  it('throws if rootPath does not exist', () => {
-    expect(() => executeBabel('', { ...baseConfig, rootPath: 'something' })).to.throw(
-      `babel-plugin-extend-docs: The provided rootPath "something" does not exist.`,
-    );
-  });
-
-  it('throws if rootPath is not a directory', () => {
-    const rootPath = path.resolve('./index.js');
-    expect(() => {
-      executeBabel('', {
-        ...baseConfig,
-        rootPath,
-      });
-    }).to.throw(
-      `babel-plugin-extend-docs: The provided rootPath "${rootPath}" is not a directory.`,
-    );
-  });
-
   it('throws if no changes array is provided', () => {
     expect(() => {
       executeBabel('', {
@@ -45,12 +21,12 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
         `Given: ${formatJsonErrorMessage(undefined)}`,
         'Should be example:',
         '  {',
-        "    from: 'my-counter',",
-        "    to: 'my-extension',",
+        "    from: 'source-counter',",
+        "    to: 'extension-counter',",
         '    paths: [',
         '      {',
-        "         from: './my-counter.js',",
-        "         to: './my-extension/my-extension.js'",
+        "         from: '@source/counter/define',",
+        "         to: 'extension/counter/define'",
         '      }',
         '    ]',
         '  }',
@@ -72,12 +48,12 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
           `Given: ${formatJsonErrorMessage(tag)}`,
           'Should be example:',
           '  {',
-          "    from: 'my-counter',",
-          "    to: 'my-extension',",
+          "    from: 'source-counter',",
+          "    to: 'extension-counter',",
           '    paths: [',
           '      {',
-          "         from: './my-counter.js',",
-          "         to: './my-extension/my-extension.js'",
+          "         from: '@source/counter/define',",
+          "         to: 'extension/counter/define'",
           '      }',
           '    ]',
           '  }',
@@ -126,12 +102,12 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
           `Given: ${formatJsonErrorMessage(variable)}`,
           'Should be example:',
           '  {',
-          "    from: 'MyCounter',",
-          "    to: 'MyExtension',",
+          "    from: 'SourceCounter',",
+          "    to: 'ExtensionCounter',",
           '    paths: [',
           '      {',
-          "         from: './index.js',",
-          "         to: './my-extension/index.js'",
+          "         from: '@source/counter',",
+          "         to: 'extension/counter'",
           '      }',
           '    ]',
           '  }',
@@ -164,33 +140,6 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
     variableThrowsErrorFor({ ...pathSetup, paths: [{ to: './index.js' }] }, pathMsg);
     variableThrowsErrorFor({ ...pathSetup, paths: [{ from: './index.js', to: '' }] }, pathMsg);
     variableThrowsErrorFor({ ...pathSetup, paths: [{ from: '', to: './index.js' }] }, pathMsg);
-  });
-
-  it('throws if "to path" could not be found on file system', () => {
-    expect(() => {
-      executeBabel('', {
-        changes: [
-          {
-            tag: {
-              from: 'lion-input',
-              to: 'wolf-input',
-              paths: [
-                {
-                  from: './lion-input.js',
-                  to: './non-existing/wolf-input.js',
-                },
-              ],
-            },
-          },
-        ],
-        rootPath: path.resolve('./'),
-      });
-    }).to.throw(
-      [
-        'babel-plugin-extend-docs: Rewriting import from "./lion-input.js" to "./non-existing/wolf-input.js" but we ',
-        `could not find a file at "${path.resolve('./')}/non-existing/wolf-input.js".`,
-      ].join(''),
-    );
   });
 
   it('does NOT throws if "to path" could be found on file system', () => {

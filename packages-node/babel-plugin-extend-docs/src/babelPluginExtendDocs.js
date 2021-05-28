@@ -30,12 +30,6 @@ function insertImportStatements({ imports, path }) {
 module.exports = ({ types: t }) => ({
   visitor: {
     ImportDeclaration(path, state) {
-      // If a filePath is not passed explicitly by the user, take the filename provided by babel
-      // and subtract the rootpath from it, to get the desired filePath relative to the root.
-      state.filePath = state.opts.__filePath
-        ? state.opts.__filePath
-        : state.file.opts.filename.replace(state.opts.rootPath, '');
-
       if (path.node.specifiers.length > 0) {
         renameAndStoreImports({ path, state, opts: state.opts, types: t });
       } else {
@@ -52,7 +46,6 @@ module.exports = ({ types: t }) => ({
         validateOptions(state.opts);
 
         state.importedStorage = [];
-        state.filePath = '';
       },
       exit: (path, state) => {
         const imports = generateImportStatements({ state, types: t });

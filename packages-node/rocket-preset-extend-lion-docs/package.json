@@ -1,0 +1,47 @@
+{
+  "name": "rocket-preset-extend-lion-docs",
+  "version": "0.0.0",
+  "description": "A rocket preset to reuse lion documentation inside your design system extension",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/rocket-preset-extend-lion-docs"
+  },
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "docs",
+    "preset",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs",
+    "test": "npm run test:node",
+    "test:node": "mocha test-node",
+    "test:watch": "mocha test-node --watch"
+  },
+  "dependencies": {
+    "@babel/core": "^7.10.1",
+    "es-module-lexer": "^0.3.6",
+    "plugins-manager": "^0.2.1",
+    "remark-extend": "0.4.2",
+    "unist-util-visit": "^2.0.2"
+  },
+  "keywords": [
+    "docs",
+    "lion",
+    "rocket"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./index.js"
+  }
+}

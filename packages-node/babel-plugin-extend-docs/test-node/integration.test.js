@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const path = require('path');
 const { executeBabel } = require('./helpers.js');
 
 const extendDocsConfig = {
@@ -9,27 +8,22 @@ const extendDocsConfig = {
       variable: {
         from: 'MyCounter',
         to: 'MyExtension',
-        paths: [
-          { from: './index.js', to: './my-extension/index.js' },
-          { from: './src/MyCounter.js', to: './my-extension/index.js' },
-        ],
+        paths: [{ from: 'source/counter', to: 'extension/counter' }],
       },
       tag: {
         from: 'my-counter',
         to: 'my-extension',
-        paths: [{ from: './my-counter.js', to: './my-extension/my-extension.js' }],
+        paths: [{ from: 'source/counter/define', to: '#counter/define' }],
       },
     },
   ],
-  rootPath: path.resolve('./demo'),
-  __filePath: '/my-app.demo.js',
 };
 
 describe('babel-plugin-extend-docs: integration tests', () => {
   it('works for the demo', () => {
     const code = `import { LitElement, html } from '@lion/core';
-import { MyCounter } from './src/MyCounter.js';
-import './my-counter.js';
+import { MyCounter } from 'source/counter';
+import 'source/counter/define';
 
 class TenCounter extends MyCounter {
   inc() {
@@ -53,8 +47,8 @@ class MyApp extends LitElement {
 customElements.define('my-app', MyApp);
 `;
     const output = `import { LitElement, html } from "@lion/core";
-import { MyExtension } from "./my-extension/index.js";
-import "./my-extension/my-extension.js";
+import { MyExtension } from "extension/counter";
+import "#counter/define";
 
 class TenCounter extends MyExtension {
   inc() {
