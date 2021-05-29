@@ -72,7 +72,7 @@ Or creating your own Web Component which uses the Overlay System
 import { LitElement } from '@lion/core';
 import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
 
-class MyOverlayComponent extends LitElement {
+class MyOverlayComponent extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
     return {
       ...withModalDialogConfig,
