@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.19.2
+
+### Patch Changes
+
+- Updated dependencies [72067c0d]
+  - @lion/core@0.18.0
+  - @lion/form-core@0.14.0
+
 ## 0.19.1
 
 ### Patch Changes

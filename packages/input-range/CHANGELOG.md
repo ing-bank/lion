@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.10.1
+
+### Patch Changes
+
+- Updated dependencies [72067c0d]
+  - @lion/core@0.18.0
+  - @lion/input@0.15.0
+  - @lion/localize@0.20.0
+
 ## 0.10.0
 
 ### Minor Changes
