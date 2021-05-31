@@ -800,7 +800,7 @@ export const backendValidation = () => {
         <lion-checkbox-group name="simulateError">
           <lion-checkbox label="Check to simulate a backend error"></lion-checkbox>
         </lion-checkbox-group>
-        <lion-button raised>Submit</lion-button>
+        <lion-button-submit>Submit</lion-button-submit>
       </form>
     </lion-form>
   `;

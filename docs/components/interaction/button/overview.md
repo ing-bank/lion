@@ -8,14 +8,14 @@ import '@lion/button/define';
 ```
 
 ```js preview-story
-export const main = () => html`<lion-button>Default</lion-button>`;
+export const main = () => html` <lion-button>Default</lion-button> `;
 ```
 
 ## Features
 
 - Clickable area that is bigger than visual size
-- Works with native form / inputs
-- Has integration for implicit form submission similar to how native `<form>`, `<input>` and `<button>` work together.
+- A special `button-reset` and `button-submit` works with native form / inputs
+- `button-submit` has integration for implicit form submission similar to how native `<form>`, `<input>` and `<button>` work together.
 
 ## Installation
 
@@ -24,7 +24,7 @@ npm i --save @lion/button
 ```
 
 ```js
-import { LionButton } from '@lion/button';
+import { LionButton, LionButtonReset, LionButtonSubmit } from '@lion/button';
 // or
 import '@lion/button/define';
 ```

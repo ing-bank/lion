@@ -49,7 +49,10 @@
   "customElementsManifest": "custom-elements.json",
   "exports": {
     ".": "./index.js",
-    "./define": "./lion-button.js",
+    "./define-button": "./lion-button.js",
+    "./define-button-reset": "./lion-button-reset.js",
+    "./define-button-submit": "./lion-button-submit.js",
+    "./define": "./define.js",
     "./docs/": "./docs/"
   }
 }
