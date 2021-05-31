@@ -9,5 +9,5 @@ This simplified the internal logic a lot. For more details please see [package e
 BREAKING CHANGES:
 
 - we no longer support relative import paths in demos
-- no need to pass on a `rootPath` or `\_\_filePath`` anymore
+- no need to pass on a `rootPath` or `__filePath` anymore
 - option `throwOnNonExistingPathToFiles` and `throwOnNonExistingRootPath` got removed
