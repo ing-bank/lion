@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-stepper",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "This component enables the user to increase and decrease a numeric value by predefined range.",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,9 +36,9 @@
     "lion-input-stepper.js"
   ],
   "dependencies": {
-    "@lion/core": "0.17.0",
-    "@lion/form-core": "0.13.0",
-    "@lion/input": "0.14.1"
+    "@lion/core": "0.18.0",
+    "@lion/form-core": "0.14.0",
+    "@lion/input": "0.15.0"
   },
   "keywords": [
     "input",

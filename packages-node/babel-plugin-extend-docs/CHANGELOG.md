@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 0ca86031: Work with package entry points (exports) and internal imports.
+
+  This simplified the internal logic a lot. For more details please see [package entry points](https://nodejs.org/dist/latest-v16.x/docs/api/packages.html#packages_exports) in the node documentation.
+
+  BREAKING CHANGES:
+
+  - we no longer support relative import paths in demos
+  - no need to pass on a `rootPath` or `__filePath` anymore
+  - option `throwOnNonExistingPathToFiles` and `throwOnNonExistingRootPath` got removed
+
 ## 0.4.1
 
 ### Patch Changes
