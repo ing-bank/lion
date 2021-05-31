@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- 57b2fb9f: - BREAKING: In `lion-button` package split of separate buttons for reset & submit:
+
+  - LionButton (a clean fundament, **use outside forms**)
+  - LionButtonReset (logic for. submit and reset events, but without implicit form submission logic: **use for reset buttons**)
+  - LionButtonSubmit (full featured button: **use for submit buttons and buttons with dynamic types**)
+
+  - fixed axe criterium for LionButton (which contained a native button to support form submission)
+  - removed `_beforeTemplate()` & `_afterTemplate()` from LionButton
+
+### Patch Changes
+
+- Updated dependencies [57b2fb9f]
+  - @lion/button@0.14.0
+  - @lion/select-rich@0.27.0
+
 ## 0.8.0
 
 ### Minor Changes
