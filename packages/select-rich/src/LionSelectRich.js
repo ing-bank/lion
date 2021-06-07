@@ -72,9 +72,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     return {
       ...super.slots,
       invoker: () => {
-        const invokerEl = document.createElement(
-          LionSelectRich.getScopedTagName('lion-select-invoker'),
-        );
+        // @ts-ignore we load a polyfill to support createElement on shadowRoot
+        const invokerEl = this.shadowRoot.createElement('lion-select-invoker');
         invokerEl.setAttribute('data-tag-name', 'lion-select-invoker');
         return invokerEl;
       },

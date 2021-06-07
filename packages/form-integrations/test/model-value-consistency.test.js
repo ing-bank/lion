@@ -267,7 +267,8 @@ describe('lion-select', () => {
   });
 });
 
-['combobox', 'listbox', 'select-rich'].forEach(chunk => {
+// TODO: change back order when scoped-elements (polyfill) fixed side effects
+['select-rich', 'combobox', 'listbox'].forEach(chunk => {
   const tagname = `lion-${chunk}`;
   const tag = unsafeStatic(tagname);
   describe(`${tagname}`, () => {
@@ -341,6 +342,7 @@ describe('lion-fieldset', () => {
 
 describe('detail.isTriggeredByUser', () => {
   const allFormControls = [
+    'switch', // TODO: move back below when scoped-elements (polyfill) fixed side effects
     // 1) Fields
     'field',
     // 1a) Input Fields
@@ -357,7 +359,7 @@ describe('detail.isTriggeredByUser', () => {
     'option',
     'checkbox',
     'radio',
-    'switch',
+    // 'switch',
     // 1c) Choice Group Fields
     'select',
     'listbox',
@@ -472,6 +474,7 @@ describe('detail.isTriggeredByUser', () => {
           await fixture(html`<${tag} name="${name}">${childrenEl}</${tag}>`)
         );
       await el.registrationComplete;
+
       el.addEventListener('model-value-changed', spy);
 
       /**
@@ -504,6 +507,7 @@ describe('detail.isTriggeredByUser', () => {
 
         await resetChoiceFieldToForceRepropagation(formControl);
         mimicUserInput(formControl, 'userValue');
+
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
 
         await resetChoiceFieldToForceRepropagation(formControl);

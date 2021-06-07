@@ -99,13 +99,11 @@ export const ValidateMixinImplementation = superclass =>
        * @typedef {Object} ScopedElementsObj
        * @property {getScopedTagName} getScopedTagName
        */
-      const ctor = /** @type {typeof ValidateMixin & ScopedElementsObj} */ (this.constructor);
       return {
         ...super.slots,
         feedback: () => {
-          const feedbackEl = document.createElement(
-            ctor.getScopedTagName('lion-validation-feedback'),
-          );
+          // @ts-ignore we load a polyfill to support createElement on shadowRoot
+          const feedbackEl = this.shadowRoot.createElement('lion-validation-feedback');
           feedbackEl.setAttribute('data-tag-name', 'lion-validation-feedback');
           return feedbackEl;
         },
