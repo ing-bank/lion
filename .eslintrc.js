@@ -7,6 +7,7 @@ module.exports = {
         'wc/guard-super-call': 'off', // types will prevent you from calling the super if it's not in the base class, making the guard unnecessary
         'no-await-in-loop': 'off',
         'import/no-unresolved': 'off', // eslint not smart enough atm to understand package exports maps
+        'import/no-extraneous-dependencies': 'off', // eslint not smart enough atm to understand package exports maps
       },
     },
     {
@@ -17,6 +18,7 @@ module.exports = {
         '**/demo/**/*.js',
         '**/docs/**/*.js',
         '**/*.config.js',
+        'scripts/**/*.js',
       ],
       rules: {
         'lit/binding-positions': 'off',

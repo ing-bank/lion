@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - lit-legacy
 
 jobs:
   release:
@@ -48,3 +48,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Update lit-legacy dist-tags for @lion packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm run publish-legacy-dist-tags
