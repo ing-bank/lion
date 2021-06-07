@@ -637,14 +637,14 @@ export function runListboxMixinSuite(customConfig = {}) {
             const options = el.formElements;
             el.checkedIndex = 0;
             mimicKeyPress(_listboxNode, 'ArrowDown');
-            mimicKeyPress(_listboxNode, ' ');
+            mimicKeyPress(_listboxNode, 'Enter');
 
             expect(options[1].checked).to.be.true;
             el.checkedIndex = 0;
             // @ts-ignore allow protected member access in test
             el._listboxReceivesNoFocus = true;
             mimicKeyPress(_listboxNode, 'ArrowDown');
-            mimicKeyPress(_listboxNode, ' ');
+            mimicKeyPress(_listboxNode, 'Enter');
 
             expect(options[1].checked).to.be.false;
           });
@@ -892,6 +892,8 @@ export function runListboxMixinSuite(customConfig = {}) {
           el._uncheckChildren();
 
           // Space
+          // @ts-ignore allow protected members in tests
+          el._spaceShouldSelect = true;
           el.activeIndex = 0;
           mimicKeyPress(_listboxNode, ' ');
 
@@ -901,6 +903,40 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(options[0].checked).to.equal(true);
           expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
           // also deselect
+          mimicKeyPress(_listboxNode, ' ');
+
+          expect(options[0].checked).to.equal(true);
+          expect(el.modelValue).to.eql(['Artichoke']);
+        });
+
+        it('by default, does not select on space key', async () => {
+          const el = await fixture(html`
+            <${tag} name="foo" multiple-choice>
+              <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
+              <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
+              <${optionTag} .choiceValue="${'Chicory'}">Chicory</${optionTag}>
+              <${optionTag} .choiceValue="${'Victoria Plum'}">Victoria Plum</${optionTag}>
+            </${tag}>
+          `);
+          const { _listboxNode } = getListboxMembers(el);
+          const options = el.formElements;
+
+          // @ts-ignore feature detection select-rich || combobox
+          if (el.navigateWithinInvoker !== undefined || el._listboxReceivesNoFocus) {
+            // Note we don't have multipleChoice in the select-rich yet.
+            // TODO: implement in future when requested
+            // if suite is run for combobox, we don't respond to [Space]
+            return;
+          }
+
+          el.activeIndex = 0;
+          mimicKeyPress(_listboxNode, ' ');
+          expect(options[0].checked).to.equal(false);
+          expect(el.modelValue).to.eql([]);
+
+          // @ts-ignore allow protected members in tests
+          el._spaceShouldSelect = true;
+          el.activeIndex = 0;
           mimicKeyPress(_listboxNode, ' ');
 
           expect(options[0].checked).to.equal(true);

@@ -319,6 +319,13 @@ const ListboxMixinImplementation = superclass =>
       this._listboxReceivesNoFocus = false;
 
       /**
+       * Whether the space ' ' key should complete selection or
+       * be interpreted as a character.
+       * @protected
+       */
+      this._spaceShouldSelect = false;
+
+      /**
        * @type {string | string[] | undefined}
        * @protected
        */
@@ -591,7 +598,7 @@ const ListboxMixinImplementation = superclass =>
       switch (key) {
         case ' ':
         case 'Enter': {
-          if (key === ' ' && this._listboxReceivesNoFocus) {
+          if (key === ' ' && (this._listboxReceivesNoFocus || !this._spaceShouldSelect)) {
             return;
           }
           ev.preventDefault();

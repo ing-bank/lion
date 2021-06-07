@@ -51,6 +51,8 @@ export declare class ListboxHost {
 
   protected _listboxReceivesNoFocus: boolean;
 
+  protected _spaceShouldSelect: boolean;
+
   protected _uncheckChildren(): void;
 
   private __setupListboxNode(): void;
