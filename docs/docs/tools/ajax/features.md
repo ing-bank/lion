@@ -425,7 +425,7 @@ export const invalidateRules = () => {
   const fetchHandler = (name, method) => {
     const actionCacheOptions = {};
     if (name === 'pabu') {
-      actionCacheOptions.invalidateUrlsRegex = /\/packages\/ajax\/docs\/naga.json/;
+      actionCacheOptions.invalidateUrlsRegex = /\/docs\/tools\/ajax\/assets\/naga.json/;
     }
 
     ajax
