@@ -16,6 +16,8 @@ import { LionOptions } from './LionOptions.js';
  * @typedef {import('../types/ListboxMixinTypes').ListboxHost} ListboxHost
  * @typedef {import('@lion/form-core/types/registration/FormRegistrarPortalMixinTypes').FormRegistrarPortalHost} FormRegistrarPortalHost
  * @typedef {import('@lion/form-core/types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
+ * @typedef {{clientHeight: number, offsetTop: number}} MockElement
+ * @typedef {{scrollTop: number, clientHeight: number}} MockContainerElement
  */
 
 // TODO: consider adding methods below to @lion/helpers
@@ -58,8 +60,8 @@ function uuid() {
 }
 
 /**
- * @param {HTMLElement} container
- * @param {HTMLElement} element
+ * @param {HTMLElement | MockContainerElement} container
+ * @param {HTMLElement | MockElement} element
  * @param {Boolean} [partial]
  */
 function isInView(container, element, partial = false) {
@@ -754,9 +756,35 @@ const ListboxMixinImplementation = superclass =>
         return;
       }
       this._activeDescendantOwnerNode.setAttribute('aria-activedescendant', el.id);
-      if (!isInView(this._scrollTargetNode, el)) {
+      const offsetTop = this.getOffsetTop(el);
+      const mockScrollTargetNode = {
+        scrollTop: this._scrollTargetNode.scrollTop + offsetTop,
+        clientHeight: this._scrollTargetNode.clientHeight - offsetTop,
+      };
+      const mockElement = {
+        offsetTop,
+        clientHeight: el.clientHeight,
+      };
+      if (!isInView(mockScrollTargetNode, mockElement)) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
+    }
+
+    /**
+     * offsetTop is not sufficient by itself due to sticky/fixed elements, see:
+     * https://medium.com/@alexcambose/js-offsettop-property-is-not-great-and-here-is-why-b79842ef7582
+     *
+     * @param {HTMLElement | null} element
+     */
+    // eslint-disable-next-line class-methods-use-this
+    getOffsetTop(element) {
+      let _element = element;
+      let offsetTop = 0;
+      while (_element) {
+        offsetTop += _element.offsetTop;
+        _element = /** @type {HTMLElement | null} */ (_element.offsetParent);
+      }
+      return offsetTop;
     }
 
     /**
