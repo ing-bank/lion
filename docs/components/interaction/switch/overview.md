@@ -4,7 +4,7 @@ A web component that is used to toggle a property or feature on or off. Toggling
 
 ```js script
 import { html } from '@lion/core';
-import '@lion/switch/define';
+import '@lion/switch/define-switch';
 ```
 
 ```js preview-story
@@ -26,5 +26,5 @@ npm i --save @lion/switch
 ```js
 import { LionSwitch } from '@lion/switch';
 // or
-import '@lion/switch/define';
+import '@lion/switch/define-switch';
 ```

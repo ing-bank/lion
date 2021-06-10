@@ -159,10 +159,8 @@ const ListboxMixinImplementation = superclass =>
       return {
         ...super.slots,
         input: () => {
-          const lionOptions = /** @type {HTMLElement & FormRegistrarPortalHost} */ (
-            // @ts-expect-error [external] fix types scopedElements
-            document.createElement(ListboxMixin.getScopedTagName('lion-options'))
-          );
+          // @ts-ignore we load a polyfill to support createElement on shadowRoot
+          const lionOptions = this.shadowRoot.createElement('lion-options');
           lionOptions.setAttribute('data-tag-name', 'lion-options');
           lionOptions.registrationTarget = this;
           return lionOptions;
