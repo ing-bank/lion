@@ -76,7 +76,6 @@ describe('lion-switch-button', () => {
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
-      expect(e.composed).to.be.true;
     };
     checkCall(handlerSpy.getCall(0));
     checkCall(handlerSpy.getCall(1));
@@ -93,7 +92,6 @@ describe('lion-switch-button', () => {
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
-      expect(e.composed).to.be.true;
     };
     checkCall(handlerSpy.getCall(0));
     checkCall(handlerSpy.getCall(1));

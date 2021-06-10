@@ -142,7 +142,6 @@ describe('lion-switch', () => {
       const e = call.args[0];
       expect(e).to.be.an.instanceof(Event);
       expect(e.bubbles).to.be.true;
-      expect(e.composed).to.be.true;
     };
     checkCall(handlerSpy.getCall(0));
     checkCall(handlerSpy.getCall(1));
@@ -155,6 +154,23 @@ describe('lion-switch', () => {
     el.checked = true;
     await el.updateComplete;
     expect(handlerSpy.callCount).to.equal(1);
+  });
+
+  it('should not propagate the "checked-changed" event further up when caught by switch', async () => {
+    const handlerSpy = sinon.spy();
+    const parentHandlerSpy = sinon.spy();
+    const el = await fixture(
+      html`
+        <div @checked-changed=${parentHandlerSpy}>
+          <lion-switch @checked-changed=${handlerSpy} .choiceValue=${'foo'}></lion-switch>
+        </div>
+      `,
+    );
+    const switchEl = /** @type {LionSwitch} */ (el.firstElementChild);
+    switchEl.checked = true;
+    await switchEl.updateComplete;
+    expect(handlerSpy.callCount).to.equal(1);
+    expect(parentHandlerSpy.callCount).to.equal(0);
   });
 
   it('can be configured to show feedback messages immediately', async () => {
