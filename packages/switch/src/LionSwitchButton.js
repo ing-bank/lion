@@ -114,7 +114,6 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   __checkedStateChange() {
     this.dispatchEvent(
       new Event('checked-changed', {
-        composed: true,
         bubbles: true,
       }),
     );
