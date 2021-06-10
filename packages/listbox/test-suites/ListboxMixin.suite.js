@@ -3,7 +3,7 @@ import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
-import { expect, fixture as _fixture, defineCE } from '@open-wc/testing';
+import { expect, fixture as _fixture, defineCE, aTimeout, nextFrame } from '@open-wc/testing';
 import { html, unsafeStatic } from 'lit/static-html.js';
 
 import sinon from 'sinon';
@@ -319,6 +319,57 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(el.checkedIndex).to.equal(1);
         expect(el.serializedValue).to.equal('hotpink');
       });
+
+      it('scrolls active element into view when necessary, takes into account sticky/fixed elements', async () => {
+        const el = await fixture(html`
+          <div style="position: relative">
+            <div style="position: sticky; top: 0px; width: 100%; height: 40px; background-color: purple; z-index: 1;">Header 1</div>
+            <div style="position: relative">
+              <div style="position: sticky; top: 40px; width: 100%; height: 40px; background-color: beige; z-index: 1;">Header 2</div>
+              <${tag} id="color" name="color" label="Favorite color" has-no-default-selected>
+                <${optionTag} style="height: 300px" .choiceValue=${'red'}>Red</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'teal'}>Teal</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'1'}>1</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'2'}>2</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'3'}>3</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'4'}>4</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'5'}>5</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'6'}>6</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'7'}>7</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'8'}>8</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'9'}>9</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'10'}>10</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'11'}>11</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'12'}>12</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'13'}>13</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'14'}>14</${optionTag}>
+                <${optionTag} style="height: 300px" .choiceValue=${'15'}>15</${optionTag}>
+              </${tag}>
+            </div>
+          </div>
+        `);
+        const listboxEl = /** @type {LionListbox} */ (el.querySelector('#color'));
+
+        const firstOption = /** @type {LionOption} */ (listboxEl.formElements[0]);
+        const lastOption = /** @type {LionOption} */ (
+          listboxEl.formElements[listboxEl.formElements.length - 1]
+        );
+        await listboxEl.updateComplete;
+        await nextFrame();
+
+        // Scroll to last option and wait for browser scroll animation (works)
+        lastOption.active = true;
+        await aTimeout(1000);
+
+        // FIXME: For some reason in this test, it is not doing the scroll back up..
+        // Scroll to last option and wait for browser scroll animation
+        firstOption.active = true;
+        await aTimeout(1000);
+
+        // top should be offset 2x40px (sticky header elems) instead of 0px
+        expect(firstOption.getBoundingClientRect().top).to.equal(80);
+      }).timeout(5000);
     });
 
     describe('Accessibility', () => {
