@@ -85,6 +85,22 @@ function isInView(container, element, partial = false) {
 }
 
 /**
+ * offsetTop is not sufficient by itself due to sticky/fixed elements, see:
+ * https://medium.com/@alexcambose/js-offsettop-property-is-not-great-and-here-is-why-b79842ef7582
+ *
+ * @param {HTMLElement | null} element
+ *
+ * @returns {number}
+ */
+function getOffsetTop(element) {
+  if (!element) {
+    return 0;
+  }
+
+  return element.offsetTop + getOffsetTop(/** @type {HTMLElement | null} */ (element.offsetParent));
+}
+
+/**
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
@@ -756,7 +772,7 @@ const ListboxMixinImplementation = superclass =>
         return;
       }
       this._activeDescendantOwnerNode.setAttribute('aria-activedescendant', el.id);
-      const offsetTop = this.getOffsetTop(el);
+      const offsetTop = getOffsetTop(el);
       const mockScrollTargetNode = {
         scrollTop: this._scrollTargetNode.scrollTop + offsetTop,
         clientHeight: this._scrollTargetNode.clientHeight - offsetTop,
@@ -768,23 +784,6 @@ const ListboxMixinImplementation = superclass =>
       if (!isInView(mockScrollTargetNode, mockElement)) {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
-    }
-
-    /**
-     * offsetTop is not sufficient by itself due to sticky/fixed elements, see:
-     * https://medium.com/@alexcambose/js-offsettop-property-is-not-great-and-here-is-why-b79842ef7582
-     *
-     * @param {HTMLElement | null} element
-     */
-    // eslint-disable-next-line class-methods-use-this
-    getOffsetTop(element) {
-      let _element = element;
-      let offsetTop = 0;
-      while (_element) {
-        offsetTop += _element.offsetTop;
-        _element = /** @type {HTMLElement | null} */ (_element.offsetParent);
-      }
-      return offsetTop;
     }
 
     /**
