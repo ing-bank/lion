@@ -343,6 +343,15 @@ export function runListboxMixinSuite(customConfig = {}) {
         `);
         const listboxEl = /** @type {LionListbox} */ (el.querySelector('#color'));
 
+        // Skip test if listbox cannot receive focus, e.g. in combobox
+        // Skip test if the listbox is controlled by overlay system,
+        // since these overlays "overlay" any fixed/sticky items, meaning
+        // the active item will not be hidden by them.
+        // @ts-ignore allow protected members in tests
+        if (listboxEl._listboxReceivesNoFocus || listboxEl._overlayCtrl) {
+          return;
+        }
+
         Object.defineProperty(listboxEl, '_scrollTargetNode', {
           get: () => el,
         });
@@ -363,7 +372,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         // top should be offset 2x40px (sticky header elems) instead of 0px
         expect(el.scrollTop).to.equal(116);
-      }).timeout(5000);
+      });
     });
 
     describe('Accessibility', () => {

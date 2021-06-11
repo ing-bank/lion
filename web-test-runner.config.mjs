@@ -31,7 +31,7 @@ export default {
   },
   testFramework: {
     config: {
-      timeout: '3000',
+      timeout: '5000',
     },
   },
   browsers: [
@@ -39,10 +39,8 @@ export default {
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups: packages.map(pkg => {
-    return {
-      name: pkg,
-      files: `packages/${pkg}/test/**/*.test.js`,
-    };
-  }),
+  groups: packages.map(pkg => ({
+    name: pkg,
+    files: `packages/${pkg}/test/**/*.test.js`,
+  })),
 };
