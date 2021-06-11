@@ -1457,6 +1457,11 @@ describe('lion-combobox', () => {
           this.requestUpdate();
         }
 
+        fillAllOptions() {
+          this.options = [...listboxData];
+          this.requestUpdate();
+        }
+
         get combobox() {
           return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
         }
@@ -1487,6 +1492,50 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         await el.updateComplete;
         expect(spy).to.have.been.calledTwice;
+      });
+
+      it('should handle dynamic options', async () => {
+        // Arrange
+        const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        await el.combobox.registrationComplete;
+
+        // Act (start typing)
+        mimicUserTyping(el.combobox, 'l');
+        // simulate fetching data from server
+        el.clearOptions();
+        await el.updateComplete;
+        await el.updateComplete;
+        el.fillAllOptions();
+        await el.updateComplete;
+        await el.updateComplete;
+
+        // Assert
+        const { _inputNode } = getComboboxMembers(el.combobox);
+        expect(_inputNode.value).to.equal('lorem');
+        expect(_inputNode.selectionStart).to.equal(1);
+        expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+        expect(getFilteredOptionValues(el.combobox)).to.eql(['lorem', 'dolor']);
+
+        // Act (continue typing)
+        mimicUserTyping(el.combobox, 'lo');
+        // simulate fetching data from server
+        el.clearOptions();
+        await el.updateComplete;
+        await el.updateComplete;
+        el.fillAllOptions();
+        await el.updateComplete;
+        await el.updateComplete;
+
+        // Assert
+        expect(_inputNode.value).to.equal('lorem');
+        expect(_inputNode.selectionStart).to.equal(2);
+        expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+        expect(getFilteredOptionValues(el.combobox)).to.eql(['lorem', 'dolor']);
+
+        // We don't autocomplete when characters are removed
+        mimicUserTyping(el.combobox, 'l'); // The user pressed backspace (number of chars decreased)
+        expect(_inputNode.value).to.equal('l');
+        expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
       });
     });
 
