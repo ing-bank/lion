@@ -44,14 +44,23 @@ function generateVariableChange({
   sourceClassPrefix = 'Lion',
   sourceBareImport = '@lion/',
 }) {
-  const pureClassName = className.replace(sourceClassPrefix, '');
+  let _sourceClassPrefix = sourceClassPrefix;
+  let _classPrefix = classPrefix;
+  let pureClassName = className;
   const purePkgName = pkgName.replace(sourceBareImport, '');
+
+  if (className.startsWith(sourceClassPrefix)) {
+    pureClassName = className.replace(sourceClassPrefix, '');
+  } else {
+    _sourceClassPrefix = '';
+    _classPrefix = '';
+  }
 
   return {
     name: `${pkgName} - ${className}`,
     variable: {
-      from: `${sourceClassPrefix}${pureClassName}`,
-      to: `${classPrefix}${pureClassName}`,
+      from: `${_sourceClassPrefix}${pureClassName}`,
+      to: `${_classPrefix}${pureClassName}`,
       paths: [
         {
           from: `${sourceBareImport}${purePkgName}`,
