@@ -14,26 +14,33 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @param {object} opts
  * @param {string} [opts.rootDir]
  * @param {string} [opts.nodeModulesDir]
+ * @param {string} [opts.npmScope]
  * @param {string} opts.classPrefix
  * @param {string} opts.classBareImport
  * @param {string} opts.tagPrefix
  * @param {string} opts.tagBareImport
+ * @param {string} opts.tagBareImport
+ * @param {string} [opts.exportsMapJsonFileName]
  * @returns
  */
 export async function extendLionDocs({
   rootDir,
   nodeModulesDir,
+  npmScope,
   classPrefix,
   classBareImport,
   tagPrefix,
   tagBareImport,
+  exportsMapJsonFileName,
 }) {
   const changes = await generateExtendDocsConfig({
     nodeModulesDir,
+    npmScope,
     classPrefix,
     classBareImport,
     tagPrefix,
     tagBareImport,
+    exportsMapJsonFileName,
   });
   const extendDocsConfig = {
     changes,
