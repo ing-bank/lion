@@ -123,11 +123,11 @@ export async function generateExtendDocsConfig({
   await init;
   const options = { classPrefix, classBareImport, tagPrefix, tagBareImport };
 
-  const folderToCheck = path.join(_nodeModulesDir, npmScope);
+  const folderToCheck = npmScope ? path.join(_nodeModulesDir, npmScope) : _nodeModulesDir;
   const packages = fs
     .readdirSync(folderToCheck)
     .filter(dir => fs.statSync(path.join(folderToCheck, dir)).isDirectory())
-    .map(dir => `${npmScope}/${dir}`);
+    .map(dir => (npmScope ? `${npmScope}/${dir}` : dir));
 
   const changes = [];
   for (const pkgName of packages) {

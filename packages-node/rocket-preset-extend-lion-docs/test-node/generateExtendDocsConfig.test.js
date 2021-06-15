@@ -74,6 +74,41 @@ describe('generateExtendDocsConfig', () => {
     ]);
   });
 
+  it('works if there is no npm scope sub folder', async () => {
+    const result = await execute('fixtures/no-node-modules-scope-folder', {
+      npmScope: '',
+    });
+
+    expect(result).to.deep.equal([
+      {
+        name: 'accordion - LionAccordion',
+        variable: {
+          from: 'LionAccordion',
+          to: 'IngAccordion',
+          paths: [
+            {
+              from: '@lion/accordion',
+              to: 'ing-web/accordion',
+            },
+          ],
+        },
+      },
+      {
+        name: 'accordion/define',
+        tag: {
+          from: 'lion-accordion',
+          to: 'ing-accordion',
+          paths: [
+            {
+              from: '@lion/accordion/define',
+              to: '#accordion/define',
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
   it('can customize the target', async () => {
     const result = await execute('fixtures/accordion', {
       classPrefix: 'Wolf',
