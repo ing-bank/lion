@@ -17,6 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @param {string} [options.classBareImport]
  * @param {string} [options.tagPrefix]
  * @param {string} [options.tagBareImport]
+ * @param {string} [options.exportsMapJsonFileName]
  * @returns
  */
 async function execute(input, options = {}) {
@@ -43,6 +44,41 @@ async function execute(input, options = {}) {
 describe('generateExtendDocsConfig', () => {
   it('works for packages with a single class and tag export', async () => {
     const result = await execute('fixtures/accordion');
+
+    expect(result).to.deep.equal([
+      {
+        name: '@lion/accordion - LionAccordion',
+        variable: {
+          from: 'LionAccordion',
+          to: 'IngAccordion',
+          paths: [
+            {
+              from: '@lion/accordion',
+              to: 'ing-web/accordion',
+            },
+          ],
+        },
+      },
+      {
+        name: '@lion/accordion/define',
+        tag: {
+          from: 'lion-accordion',
+          to: 'ing-accordion',
+          paths: [
+            {
+              from: '@lion/accordion/define',
+              to: '#accordion/define',
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
+  it('can configure the name of the json file that contains the export map', async () => {
+    const result = await execute('fixtures/export-map-json', {
+      exportsMapJsonFileName: 'exports.json',
+    });
 
     expect(result).to.deep.equal([
       {
