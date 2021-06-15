@@ -109,6 +109,26 @@ describe('generateExtendDocsConfig', () => {
     ]);
   });
 
+  it('can handle exports without a prefix', async () => {
+    const result = await execute('fixtures/core');
+
+    expect(result).to.deep.equal([
+      {
+        name: '@lion/core - calculateSum',
+        variable: {
+          from: 'calculateSum',
+          to: 'calculateSum',
+          paths: [
+            {
+              from: '@lion/core',
+              to: 'ing-web/core',
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
   it('can customize the target', async () => {
     const result = await execute('fixtures/accordion', {
       classPrefix: 'Wolf',
