@@ -118,6 +118,7 @@ function generateTagChange({
  * @param {string} opts.classBareImport
  * @param {string} opts.tagPrefix
  * @param {string} opts.tagBareImport
+ * @param {string} [opts.exportsMapJsonFileName]
  * @returns
  */
 export async function generateExtendDocsConfig({
@@ -127,6 +128,7 @@ export async function generateExtendDocsConfig({
   classBareImport,
   tagPrefix,
   tagBareImport,
+  exportsMapJsonFileName = 'package.json',
 }) {
   const _nodeModulesDir = nodeModulesDir || path.resolve('./node_modules');
   await init;
@@ -141,7 +143,7 @@ export async function generateExtendDocsConfig({
   const changes = [];
   for (const pkgName of packages) {
     const pkgPath = path.join(_nodeModulesDir, ...pkgName.split('/'));
-    const pkgJsonPath = path.join(pkgPath, 'package.json');
+    const pkgJsonPath = path.join(pkgPath, exportsMapJsonFileName);
     const pkgJsonString = await fs.promises.readFile(pkgJsonPath, 'utf8');
     const pkgJson = JSON.parse(pkgJsonString);
     const pkgExports = pkgJson.exports;
