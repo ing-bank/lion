@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.28.1
+
+### Patch Changes
+
+- c57f42a3: Export overlay utils so they can be used on their own
+
 ## 0.28.0
 
 ### Minor Changes

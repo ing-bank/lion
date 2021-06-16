@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- 159d6839: Better support when options change dynamically
+
+### Patch Changes
+
+- Updated dependencies [f320b8b4]
+- Updated dependencies [c57f42a3]
+  - @lion/form-core@0.14.1
+  - @lion/listbox@0.10.1
+  - @lion/overlays@0.28.1
+
 ## 0.7.0
 
 ### Minor Changes
