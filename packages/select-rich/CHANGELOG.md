@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.27.1
+
+### Patch Changes
+
+- f320b8b4: use customElementRegistry from component registry for slots used via SlotMixin
+- Updated dependencies [f320b8b4]
+- Updated dependencies [c57f42a3]
+  - @lion/form-core@0.14.1
+  - @lion/listbox@0.10.1
+  - @lion/overlays@0.28.1
+
 ## 0.27.0
 
 ### Minor Changes

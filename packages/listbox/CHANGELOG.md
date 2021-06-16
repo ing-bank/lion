@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.10.1
+
+### Patch Changes
+
+- f320b8b4: use customElementRegistry from component registry for slots used via SlotMixin
+- Updated dependencies [f320b8b4]
+  - @lion/form-core@0.14.1
+
 ## 0.10.0
 
 ### Minor Changes

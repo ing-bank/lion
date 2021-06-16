@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.20.1
+
+### Patch Changes
+
+- 5ca3d275: Fix localize race condition where data was being added while namespace loader promise was no longer in cache.
+
 ## 0.20.0
 
 ### Minor Changes

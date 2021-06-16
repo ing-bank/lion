@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.14.1
+
+### Patch Changes
+
+- f320b8b4: use customElementRegistry from component registry for slots used via SlotMixin
+- Updated dependencies [5ca3d275]
+  - @lion/localize@0.20.1
+
 ## 0.14.0
 
 ### Minor Changes

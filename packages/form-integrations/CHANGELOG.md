@@ -1,5 +1,36 @@
 # Change Log
 
+## 0.9.1
+
+### Patch Changes
+
+- f320b8b4: use customElementRegistry from component registry for slots used via SlotMixin
+- Updated dependencies [159d6839]
+- Updated dependencies [f320b8b4]
+- Updated dependencies [077113ba]
+- Updated dependencies [5ca3d275]
+  - @lion/combobox@0.8.0
+  - @lion/form-core@0.14.1
+  - @lion/listbox@0.10.1
+  - @lion/select-rich@0.27.1
+  - @lion/switch@0.17.1
+  - @lion/localize@0.20.1
+  - @lion/checkbox-group@0.18.1
+  - @lion/fieldset@0.19.3
+  - @lion/input@0.15.1
+  - @lion/input-amount@0.14.1
+  - @lion/input-date@0.12.3
+  - @lion/input-datepicker@0.23.1
+  - @lion/input-email@0.13.3
+  - @lion/input-iban@0.16.1
+  - @lion/input-stepper@0.6.1
+  - @lion/radio-group@0.18.1
+  - @lion/select@0.14.1
+  - @lion/textarea@0.13.1
+  - @lion/validate-messages@0.7.1
+  - @lion/input-range@0.10.2
+  - @lion/form@0.12.1
+
 ## 0.9.0
 
 ### Minor Changes

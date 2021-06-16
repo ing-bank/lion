@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.17.1
+
+### Patch Changes
+
+- f320b8b4: use customElementRegistry from component registry for slots used via SlotMixin
+- 077113ba: Stop checked-changed event from propagating when caught by lion-switch element.
+- Updated dependencies [f320b8b4]
+  - @lion/form-core@0.14.1
+
 ## 0.17.0
 
 ### Minor Changes
