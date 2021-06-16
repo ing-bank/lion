@@ -4,6 +4,14 @@ import path from 'path';
 import { init, parse } from 'es-module-lexer/dist/lexer.js';
 
 /**
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isComment(value) {
+  return value.startsWith('//') || value.startsWith('/*') || value.startsWith('*/');
+}
+
+/**
  * @param {string} src
  * @returns
  */
@@ -16,12 +24,16 @@ function getImportNames(src) {
     const full = src.substring(importObj.ss, importObj.se);
     if (full.includes('{')) {
       const namesString = full.substring(full.indexOf('{') + 1, full.indexOf('}'));
-      namesString.split(',').forEach(name => {
-        names.push(name.trim());
+      namesString.split('\n').forEach(nameLine => {
+        nameLine.split(',').forEach(name => {
+          const trimmedNamed = name.trim();
+          if (trimmedNamed && !isComment(trimmedNamed)) {
+            names.push(name.trim());
+          }
+        });
       });
     }
   }
-
   return names;
 }
 

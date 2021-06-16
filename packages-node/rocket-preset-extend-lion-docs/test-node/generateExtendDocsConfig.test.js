@@ -165,6 +165,52 @@ describe('generateExtendDocsConfig', () => {
     ]);
   });
 
+  it('can handle exports with multiple lines', async () => {
+    const result = await execute('fixtures/multi-line');
+
+    expect(result).to.deep.equal([
+      {
+        name: '@lion/core - html',
+        variable: {
+          from: 'html',
+          to: 'html',
+          paths: [
+            {
+              from: '@lion/core',
+              to: 'ing-web/core',
+            },
+          ],
+        },
+      },
+      {
+        name: '@lion/core - CSSResult',
+        variable: {
+          from: 'CSSResult',
+          to: 'CSSResult',
+          paths: [
+            {
+              from: '@lion/core',
+              to: 'ing-web/core',
+            },
+          ],
+        },
+      },
+      {
+        name: '@lion/core - adoptStyles',
+        variable: {
+          from: 'adoptStyles',
+          to: 'adoptStyles',
+          paths: [
+            {
+              from: '@lion/core',
+              to: 'ing-web/core',
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
   it('can customize the target', async () => {
     const result = await execute('fixtures/accordion', {
       classPrefix: 'Wolf',
