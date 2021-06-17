@@ -63,6 +63,8 @@ export declare class ListboxHost {
 
   protected _listboxOnKeyUp(ev: KeyboardEvent): void;
 
+  protected _scrollIntoView(el: HTMLElement, scrollTargetEl: HTMLElement | undefined): void;
+
   protected _setupListboxNode(): void;
 
   protected _teardownListboxNode(): void;

@@ -1701,7 +1701,7 @@
     "@open-wc/dedupe-mixin" "^1.3.0"
     lit-html "^1.0.0"
 
-"@open-wc/scoped-elements@^2.0.0", "@open-wc/scoped-elements@^2.0.0-next.0":
+"@open-wc/scoped-elements@^2.0.0-next.0":
   version "2.0.0-next.3"
   resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-2.0.0-next.3.tgz#adbd9d6fddc67158fd11ffe78c5e11aefdaaf8af"
   integrity sha512-9dT+0ea/RKO3s2m5H+U8gwG7m1jE89JhgWKI6FnkG4pE9xMx8KACoLZZcUfogVjb6/vKaIeoCj6Mqm+2HiqCeQ==
@@ -1709,6 +1709,15 @@
     "@lit/reactive-element" "^1.0.0-rc.1"
     "@open-wc/dedupe-mixin" "^1.3.0"
     "@webcomponents/scoped-custom-element-registry" "0.0.1"
+
+"@open-wc/scoped-elements@^2.0.0-next.3":
+  version "2.0.0-next.4"
+  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-2.0.0-next.4.tgz#d8294358e3e8ad2ba44200ab805549fde49245f6"
+  integrity sha512-BMd5n5BHLi3FBhwhPbBuN7pZdi8I1CIQn10aKLZtg9aplVhN2BG1rwr0ANebXJ6fdq8m1PE1wQAaCXYCcEBTEQ==
+  dependencies:
+    "@lit/reactive-element" "^1.0.0-rc.1"
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@webcomponents/scoped-custom-element-registry" "0.0.2"
 
 "@open-wc/semantic-dom-diff@^0.13.16":
   version "0.13.21"
@@ -2789,6 +2798,11 @@
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@webcomponents/scoped-custom-element-registry/-/scoped-custom-element-registry-0.0.1.tgz#196365260a019f87bddbded154ab09faf0e666fc"
   integrity sha512-ef5/v4U2vCxrnSMpo41LSWTjBOXCQ4JOt4+Y6PaSd8ympYioPhOP6E1tKmIk2ppwLSjCKbTyYf7ocHvwDat7bA==
+
+"@webcomponents/scoped-custom-element-registry@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@webcomponents/scoped-custom-element-registry/-/scoped-custom-element-registry-0.0.2.tgz#c863d163cb39c60063808e5ae23e06a1766fbe5f"
+  integrity sha512-lKCoZfKoE3FHvmmj2ytaLBB8Grxp4HaxfSzaGlIZN6xXnOILfpCO0PFJkAxanefLGJWMho4kRY5PhgxWFhmSOw==
 
 "@webcomponents/shadycss@^1.10.2":
   version "1.10.2"
