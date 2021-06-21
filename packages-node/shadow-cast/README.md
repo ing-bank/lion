@@ -1,11 +1,14 @@
 # ShadowCast
 
-Every traditional css component casts a shadow.
+Every css component casts a shadow.
 That is: when used in shadow dom, it needs a counterpart built from different selectors.
 In a shadow dom context, it will be necessary to map ‘traditional selectors’ to concepts like ‘:host’ and ‘::slotted’.
-Also, states exposed by a custom (usually via host attributes) should be mapped.What is a traditional css component actually?
-What is meant by a traditional css component is a set of css rules that are designed to be mapped to a light dom structure.
-Examples of these libraries are:
+Also, states exposed by a custom (usually via host attributes) should be mapped.
+
+## What is a traditional css component actually?
+
+What is meant by a traditional css component is a set of css rules designed to be mapped to a light dom structure.
+Examples of these compononent can be found in libraries like:
 
 - Bootstrap
 - Material Design css
@@ -14,7 +17,8 @@ Examples of these libraries are:
 
 ### Traditional css components in modern contexts
 
-Let’s illustrate the problems with traditional css components with a practical example. Assume we have a css library called ‘ds’ (an abbreviation for design system). It can be thought of as a library similar to material-design-web.It contains the following ‘ds-formfield’ component:
+Let’s illustrate the problems with traditional css components with a practical example.
+Assume we have a css library called ‘ds’ (an abbreviation for design system). It can be thought of as a library similar to material-design-web.It contains the following ‘ds-formfield’ component:
 
 ```css
 .ds-formfield {

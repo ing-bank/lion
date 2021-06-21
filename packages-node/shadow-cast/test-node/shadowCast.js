@@ -310,7 +310,7 @@ describe('transformHtml', () => {
     // to a host.
     const htmlSource = `
       <div class="comp" ::host::=".comp" ::states::="[invalid]:.comp--invalid, [warning]:.comp--warning">
-        <input class="comp__input" ::slot::="input">
+        <input class="comp__input" ::slot::="input:.comp__input">
         <div class="comp__body" ::states::="[invalid]:.comp__body--invalid">
           ::slot::
         </div>
