@@ -1,0 +1,34 @@
+{
+  "name": "ast-utils",
+  "version": "0.0.1",
+  "description": "Utils for csstree, parse5 and Babel",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "test-node"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha test-node",
+    "test:watch": "mocha test-node --watch"
+  },
+  "keywords": [
+    "ast",
+    "utils"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.14.5",
+    "@babel/types": "^7.14.5",
+    "css-tree": "^1.1.3",
+    "parse5": "^6.0.1",
+    "prettier": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/css-tree": "^1.0.5"
+  }
+}
