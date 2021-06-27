@@ -1,0 +1,257 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+.mdc-segmented-button {
+  display: inline-block;
+  font-size: 0;
+}
+
+.mdc-touch-target-wrapper {
+  display: inline;
+}
+
+.mdc-elevation-overlay {
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  /* @alternate */
+  opacity: var(--mdc-elevation-overlay-opacity, 0);
+  transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #fff;
+  /* @alternate */
+  background-color: var(--mdc-elevation-overlay-color, #fff);
+}
+
+.mdc-segmented-button__segment {
+  border-color: rgba(0, 0, 0, 0.12);
+  /* @alternate */
+  border-color: var(--mdc-segmented-button-outline-color, rgba(0, 0, 0, 0.12));
+}
+
+.mdc-segmented-button__segment {
+  color: rgba(0, 0, 0, 0.6);
+  /* @alternate */
+  color: var(--mdc-segmented-button-unselected-ink-color, rgba(0, 0, 0, 0.6));
+}
+
+.mdc-segmented-button__segment {
+  background-color: white;
+  /* @alternate */
+  background-color: var(--mdc-segmented-button-unselected-container-fill-color, white);
+}
+
+.mdc-segmented-button__segment--selected {
+  color: #6200ee;
+  /* @alternate */
+  color: var(--mdc-segmented-button-selected-ink-color, #6200ee);
+}
+
+.mdc-segmented-button__segment--selected {
+  background-color: rgba(98, 0, 238, 0.08);
+  /* @alternate */
+  background-color: var(--mdc-segmented-button-selected-container-fill-color, rgba(98, 0, 238, 0.08));
+}
+
+.mdc-segmented-button__segment {
+  /* @alternate */
+  position: relative;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(--mdc-typography-button-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+  font-size: 0.875rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-button-font-size, 0.875rem);
+  line-height: 2.25rem;
+  /* @alternate */
+  line-height: var(--mdc-typography-button-line-height, 2.25rem);
+  font-weight: 500;
+  /* @alternate */
+  font-weight: var(--mdc-typography-button-font-weight, 500);
+  letter-spacing: 0.0892857143em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-button-letter-spacing, 0.0892857143em);
+  text-decoration: none;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-button-text-decoration, none);
+          text-decoration: var(--mdc-typography-button-text-decoration, none);
+  text-transform: uppercase;
+  /* @alternate */
+  text-transform: var(--mdc-typography-button-text-transform, uppercase);
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  height: 36px;
+  min-width: 48px;
+  padding: 0 12px;
+  border-width: 1px 0 1px 1px;
+}
+.mdc-segmented-button__segment .mdc-elevation-overlay {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  /* @noflip */
+  left: 0;
+}
+.mdc-segmented-button__segment:hover {
+  cursor: pointer;
+}
+.mdc-segmented-button__segment:focus {
+  outline-width: 0;
+}
+.mdc-segmented-button__segment:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.mdc-segmented-button__segment:last-child {
+  border-right-width: 1px;
+  border-radius: 0 4px 4px 0;
+}
+.mdc-segmented-button__segment .mdc-segmented-button__segment__touch {
+  position: absolute;
+  top: 50%;
+  height: 48px;
+  left: 0;
+  right: 0;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.mdc-segmented-button__segment .mdc-segmented-button__segment--touch {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.mdc-touch-target-wrapper .mdc-segmented-button__segment {
+  border-radius: 0;
+  border-right-width: 0;
+}
+.mdc-touch-target-wrapper:first-child .mdc-segmented-button__segment {
+  border-radius: 4px 0 0 4px;
+}
+.mdc-touch-target-wrapper:last-child .mdc-segmented-button__segment {
+  border-right-width: 1px;
+  border-radius: 0 4px 4px 0;
+}
+
+.mdc-segmented-button__icon {
+  width: 24px;
+  font-size: 18px;
+}
+
+.mdc-segmented-button__icon + .mdc-segmented-button__label {
+  padding-left: 6px;
+}
+
+.mdc-segmented-button__segment {
+  --mdc-ripple-fg-size: 0;
+  --mdc-ripple-left: 0;
+  --mdc-ripple-top: 0;
+  --mdc-ripple-fg-scale: 1;
+  --mdc-ripple-fg-translate-end: 0;
+  --mdc-ripple-fg-translate-start: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  will-change: transform, opacity;
+  overflow: hidden;
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::before,
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::after {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  content: "";
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::before {
+  transition: opacity 15ms linear, background-color 15ms linear;
+  z-index: 1;
+  /* @alternate */
+  z-index: var(--mdc-ripple-z-index, 1);
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::after {
+  z-index: 0;
+  /* @alternate */
+  z-index: var(--mdc-ripple-z-index, 0);
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded .mdc-segmented-button__ripple::before {
+  -webkit-transform: scale(var(--mdc-ripple-fg-scale, 1));
+          transform: scale(var(--mdc-ripple-fg-scale, 1));
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded .mdc-segmented-button__ripple::after {
+  top: 0;
+  /* @noflip */
+  left: 0;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded--unbounded .mdc-segmented-button__ripple::after {
+  top: var(--mdc-ripple-top, 0);
+  /* @noflip */
+  left: var(--mdc-ripple-left, 0);
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded--foreground-activation .mdc-segmented-button__ripple::after {
+  -webkit-animation: mdc-ripple-fg-radius-in 225ms forwards, mdc-ripple-fg-opacity-in 75ms forwards;
+          animation: mdc-ripple-fg-radius-in 225ms forwards, mdc-ripple-fg-opacity-in 75ms forwards;
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded--foreground-deactivation .mdc-segmented-button__ripple::after {
+  -webkit-animation: mdc-ripple-fg-opacity-out 150ms;
+          animation: mdc-ripple-fg-opacity-out 150ms;
+  -webkit-transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+          transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::before,
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::after {
+  top: calc(50% - 100%);
+  /* @noflip */
+  left: calc(50% - 100%);
+  width: 200%;
+  height: 200%;
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded .mdc-segmented-button__ripple::after {
+  width: var(--mdc-ripple-fg-size, 100%);
+  height: var(--mdc-ripple-fg-size, 100%);
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple::before, .mdc-segmented-button__segment .mdc-segmented-button__ripple::after {
+  background-color: #6200ee;
+  /* @alternate */
+  background-color: var(--mdc-ripple-color, #6200ee);
+}
+.mdc-segmented-button__segment:hover .mdc-segmented-button__ripple::before, .mdc-segmented-button__segment.mdc-ripple-surface--hover .mdc-segmented-button__ripple::before {
+  opacity: 0.04;
+  /* @alternate */
+  opacity: var(--mdc-ripple-hover-opacity, 0.04);
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded--background-focused .mdc-segmented-button__ripple::before, .mdc-segmented-button__segment.mdc-ripple-upgraded:focus-within .mdc-segmented-button__ripple::before, .mdc-segmented-button__segment:not(.mdc-ripple-upgraded):focus .mdc-segmented-button__ripple::before, .mdc-segmented-button__segment:not(.mdc-ripple-upgraded):focus-within .mdc-segmented-button__ripple::before {
+  transition-duration: 75ms;
+  opacity: 0.12;
+  /* @alternate */
+  opacity: var(--mdc-ripple-focus-opacity, 0.12);
+}
+.mdc-segmented-button__segment:not(.mdc-ripple-upgraded) .mdc-segmented-button__ripple::after {
+  transition: opacity 150ms linear;
+}
+.mdc-segmented-button__segment:not(.mdc-ripple-upgraded):active .mdc-segmented-button__ripple::after {
+  transition-duration: 75ms;
+  opacity: 0.12;
+  /* @alternate */
+  opacity: var(--mdc-ripple-press-opacity, 0.12);
+}
+.mdc-segmented-button__segment.mdc-ripple-upgraded {
+  --mdc-ripple-fg-opacity: var(--mdc-ripple-press-opacity, 0.12);
+}
+.mdc-segmented-button__segment .mdc-segmented-button__ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/*# sourceMappingURL=mdc.segmented-button.css.map*/

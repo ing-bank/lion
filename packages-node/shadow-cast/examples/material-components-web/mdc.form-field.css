@@ -1,0 +1,114 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+.mdc-form-field {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(
+    --mdc-typography-body2-font-family,
+    var(--mdc-typography-font-family, Roboto, sans-serif)
+  );
+  font-size: 0.875rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-body2-font-size, 0.875rem);
+  line-height: 1.25rem;
+  /* @alternate */
+  line-height: var(--mdc-typography-body2-line-height, 1.25rem);
+  font-weight: 400;
+  /* @alternate */
+  font-weight: var(--mdc-typography-body2-font-weight, 400);
+  letter-spacing: 0.0178571429em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-body2-letter-spacing, 0.0178571429em);
+  text-decoration: inherit;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-body2-text-decoration, inherit);
+  text-decoration: var(--mdc-typography-body2-text-decoration, inherit);
+  text-transform: inherit;
+  /* @alternate */
+  text-transform: var(--mdc-typography-body2-text-transform, inherit);
+  color: rgba(0, 0, 0, 0.87);
+  /* @alternate */
+  color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.mdc-form-field > label {
+  /* @noflip */
+  margin-left: 0;
+  /* @noflip */
+  margin-right: auto;
+  /* @noflip */
+  padding-left: 4px;
+  /* @noflip */
+  padding-right: 0;
+  order: 0;
+}
+[dir='rtl'] .mdc-form-field > label,
+.mdc-form-field > label[dir='rtl'] {
+  /* @noflip */
+  margin-left: auto;
+  /* @noflip */
+  margin-right: 0;
+}
+
+[dir='rtl'] .mdc-form-field > label,
+.mdc-form-field > label[dir='rtl'] {
+  /* @noflip */
+  padding-left: 0;
+  /* @noflip */
+  padding-right: 4px;
+}
+
+.mdc-form-field--nowrap > label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.mdc-form-field--align-end > label {
+  /* @noflip */
+  margin-left: auto;
+  /* @noflip */
+  margin-right: 0;
+  /* @noflip */
+  padding-left: 0;
+  /* @noflip */
+  padding-right: 4px;
+  order: -1;
+}
+[dir='rtl'] .mdc-form-field--align-end > label,
+.mdc-form-field--align-end > label[dir='rtl'] {
+  /* @noflip */
+  margin-left: 0;
+  /* @noflip */
+  margin-right: auto;
+}
+
+[dir='rtl'] .mdc-form-field--align-end > label,
+.mdc-form-field--align-end > label[dir='rtl'] {
+  /* @noflip */
+  padding-left: 4px;
+  /* @noflip */
+  padding-right: 0;
+}
+
+.mdc-form-field--space-between {
+  justify-content: space-between;
+}
+.mdc-form-field--space-between > label {
+  margin: 0;
+}
+[dir='rtl'] .mdc-form-field--space-between > label,
+.mdc-form-field--space-between > label[dir='rtl'] {
+  margin: 0;
+}
+
+/*# sourceMappingURL=mdc.form-field.css.map*/

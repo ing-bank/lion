@@ -22,6 +22,15 @@ function formatHtml(code) {
 }
 
 /**
+ * Formats the generated codemod html output via Prettier
+ * @param {string} code css file
+ * @returns {string} formatted css fragment
+ */
+function formatCss(code) {
+  return prettier.format(code, { parser: 'css' });
+}
+
+/**
  * Takes a babel ast node and formats this as a piece of Javascript source code
  * @param {*} astNode Babel ast node
  * @returns {string} js fragment
@@ -46,18 +55,16 @@ function generateJs(astNode) {
  * @param {string} code
  */
 function trimLines(code) {
-  return (
-    code
-      // .join('\n')
-      .split('\n')
-      .filter(_ => _.trim()) // filter out empty lines
-      .join('\n')
-  );
+  return code
+    .split('\n')
+    .filter(_ => _.trim()) // filter out empty lines
+    .join('\n');
 }
 
 module.exports = {
   formatJs,
   formatHtml,
+  formatCss,
   generateJs,
   trimLines,
 };

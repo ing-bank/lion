@@ -1,0 +1,87 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+/**
+ * @license
+ * Copyright 2018 Google Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+.mdc-tab-scroller {
+  overflow-y: hidden;
+}
+.mdc-tab-scroller.mdc-tab-scroller--animating .mdc-tab-scroller__scroll-content {
+  transition: 250ms -webkit-transform cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 250ms transform cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 250ms transform cubic-bezier(0.4, 0, 0.2, 1), 250ms -webkit-transform cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mdc-tab-scroller__test {
+  position: absolute;
+  top: -9999px;
+  width: 100px;
+  height: 100px;
+  overflow-x: scroll;
+}
+
+.mdc-tab-scroller__scroll-area {
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  overflow-x: hidden;
+}
+
+.mdc-tab-scroller__scroll-area::-webkit-scrollbar,
+.mdc-tab-scroller__test::-webkit-scrollbar {
+  display: none;
+}
+
+.mdc-tab-scroller__scroll-area--scroll {
+  overflow-x: scroll;
+}
+
+.mdc-tab-scroller__scroll-content {
+  position: relative;
+  display: flex;
+  flex: 1 0 auto;
+  -webkit-transform: none;
+          transform: none;
+  will-change: transform;
+}
+
+.mdc-tab-scroller--align-start .mdc-tab-scroller__scroll-content {
+  justify-content: flex-start;
+}
+
+.mdc-tab-scroller--align-end .mdc-tab-scroller__scroll-content {
+  justify-content: flex-end;
+}
+
+.mdc-tab-scroller--align-center .mdc-tab-scroller__scroll-content {
+  justify-content: center;
+}
+
+.mdc-tab-scroller--animating .mdc-tab-scroller__scroll-area {
+  -webkit-overflow-scrolling: auto;
+}
+
+/*# sourceMappingURL=mdc.tab-scroller.css.map*/

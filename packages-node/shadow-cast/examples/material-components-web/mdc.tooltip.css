@@ -1,0 +1,293 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+.mdc-tooltip__surface {
+  border-radius: 4px;
+  /* @alternate */
+  border-radius: var(--mdc-shape-small, 4px);
+}
+
+.mdc-tooltip__caret-surface-top,
+.mdc-tooltip__caret-surface-bottom {
+  border-radius: 4px;
+  /* @alternate */
+  border-radius: var(--mdc-shape-small, 4px);
+}
+
+.mdc-tooltip__surface {
+  color: white;
+  /* @alternate */
+  color: var(--mdc-theme-text-primary-on-dark, white);
+}
+
+.mdc-tooltip__surface {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.mdc-tooltip__surface {
+  word-break: break-all;
+  /* @alternate */
+  word-break: var(--mdc-tooltip-word-break, normal);
+  overflow-wrap: anywhere;
+}
+
+.mdc-tooltip {
+  z-index: 9;
+}
+
+.mdc-tooltip--showing-transition .mdc-tooltip__surface-animation {
+  transition: opacity 150ms 0ms cubic-bezier(0, 0, 0.2, 1), -webkit-transform 150ms 0ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity 150ms 0ms cubic-bezier(0, 0, 0.2, 1), transform 150ms 0ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity 150ms 0ms cubic-bezier(0, 0, 0.2, 1), transform 150ms 0ms cubic-bezier(0, 0, 0.2, 1), -webkit-transform 150ms 0ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mdc-tooltip--hide-transition .mdc-tooltip__surface-animation {
+  transition: opacity 75ms 0ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+.mdc-tooltip__title {
+  color: rgba(0, 0, 0, 0.87);
+  /* @alternate */
+  color: var(--mdc-theme-text-primary-on-light, rgba(0, 0, 0, 0.87));
+}
+
+.mdc-tooltip__content {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.mdc-tooltip__content-link {
+  color: #6200ee;
+  /* @alternate */
+  color: var(--mdc-theme-primary, #6200ee);
+}
+
+.mdc-tooltip {
+  position: fixed;
+  display: none;
+}
+.mdc-tooltip.mdc-tooltip--rich .mdc-tooltip__surface {
+  background-color: #fff;
+}
+.mdc-tooltip.mdc-tooltip--rich .mdc-tooltip__caret-surface-top,
+.mdc-tooltip.mdc-tooltip--rich .mdc-tooltip__caret-surface-bottom {
+  background-color: #fff;
+}
+
+.mdc-tooltip-wrapper--rich {
+  position: relative;
+}
+
+.mdc-tooltip--shown,
+.mdc-tooltip--showing,
+.mdc-tooltip--hide {
+  display: inline-flex;
+}
+.mdc-tooltip--shown.mdc-tooltip--rich,
+.mdc-tooltip--showing.mdc-tooltip--rich,
+.mdc-tooltip--hide.mdc-tooltip--rich {
+  display: inline-block;
+  /* @noflip */
+  left: -320px;
+  position: absolute;
+}
+
+.mdc-tooltip__surface {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(--mdc-typography-caption-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+  font-size: 0.75rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-caption-font-size, 0.75rem);
+  font-weight: 400;
+  /* @alternate */
+  font-weight: var(--mdc-typography-caption-font-weight, 400);
+  letter-spacing: 0.0333333333em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-caption-letter-spacing, 0.0333333333em);
+  text-decoration: inherit;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-caption-text-decoration, inherit);
+          text-decoration: var(--mdc-typography-caption-text-decoration, inherit);
+  text-transform: inherit;
+  /* @alternate */
+  text-transform: var(--mdc-typography-caption-text-transform, inherit);
+  line-height: 16px;
+  padding: 4px 8px;
+  min-width: 40px;
+  max-width: 200px;
+  min-height: 24px;
+  max-height: 40vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+}
+.mdc-tooltip__surface::before {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+.mdc-tooltip--rich .mdc-tooltip__surface {
+  /* @alternate */
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  align-items: flex-start;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  line-height: 20px;
+  min-height: 24px;
+  min-width: 40px;
+  max-width: 320px;
+  position: relative;
+}
+.mdc-tooltip--rich .mdc-tooltip__surface .mdc-elevation-overlay {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  /* @noflip */
+  left: 0;
+}
+.mdc-tooltip--multiline .mdc-tooltip__surface {
+  /* @noflip */
+  text-align: left;
+}
+[dir=rtl] .mdc-tooltip--multiline .mdc-tooltip__surface, .mdc-tooltip--multiline .mdc-tooltip__surface[dir=rtl] {
+  /* @noflip */
+  text-align: right;
+}
+
+.mdc-tooltip__surface .mdc-tooltip__title {
+  display: block;
+  margin-top: 0;
+  /* @alternate */
+  line-height: normal;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(--mdc-typography-subtitle2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+  font-size: 0.875rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-subtitle2-font-size, 0.875rem);
+  font-weight: 500;
+  /* @alternate */
+  font-weight: var(--mdc-typography-subtitle2-font-weight, 500);
+  letter-spacing: 0.0071428571em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-subtitle2-letter-spacing, 0.0071428571em);
+  text-decoration: inherit;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-subtitle2-text-decoration, inherit);
+          text-decoration: var(--mdc-typography-subtitle2-text-decoration, inherit);
+  text-transform: inherit;
+  /* @alternate */
+  text-transform: var(--mdc-typography-subtitle2-text-transform, inherit);
+  margin: 0 8px;
+}
+.mdc-tooltip__surface .mdc-tooltip__title::before {
+  display: inline-block;
+  width: 0;
+  height: 28px;
+  content: "";
+  vertical-align: 0;
+}
+.mdc-tooltip__surface .mdc-tooltip__content {
+  display: block;
+  margin-top: 0;
+  /* @alternate */
+  line-height: normal;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(--mdc-typography-body2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+  font-size: 0.875rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-body2-font-size, 0.875rem);
+  font-weight: 400;
+  /* @alternate */
+  font-weight: var(--mdc-typography-body2-font-weight, 400);
+  letter-spacing: 0.0178571429em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-body2-letter-spacing, 0.0178571429em);
+  text-decoration: inherit;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-body2-text-decoration, inherit);
+          text-decoration: var(--mdc-typography-body2-text-decoration, inherit);
+  text-transform: inherit;
+  /* @alternate */
+  text-transform: var(--mdc-typography-body2-text-transform, inherit);
+  max-width: calc(100% - 2 * 8px);
+  margin: 0 8px 16px 8px;
+  /* @noflip */
+  text-align: left;
+}
+.mdc-tooltip__surface .mdc-tooltip__content::before {
+  display: inline-block;
+  width: 0;
+  height: 24px;
+  content: "";
+  vertical-align: 0;
+}
+[dir=rtl] .mdc-tooltip__surface .mdc-tooltip__content, .mdc-tooltip__surface .mdc-tooltip__content[dir=rtl] {
+  /* @noflip */
+  text-align: right;
+}
+
+.mdc-tooltip__surface .mdc-tooltip__content-link {
+  text-decoration: none;
+}
+
+.mdc-tooltip__surface-animation {
+  opacity: 0;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+  will-change: transform, opacity;
+}
+.mdc-tooltip--shown .mdc-tooltip__surface-animation {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  opacity: 1;
+}
+.mdc-tooltip--hide .mdc-tooltip__surface-animation {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+
+.mdc-tooltip__caret-surface-top,
+.mdc-tooltip__caret-surface-bottom {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  -webkit-transform: rotate(35deg) skewY(20deg) scaleX(0.9396926208);
+          transform: rotate(35deg) skewY(20deg) scaleX(0.9396926208);
+}
+.mdc-tooltip__caret-surface-top .mdc-elevation-overlay,
+.mdc-tooltip__caret-surface-bottom .mdc-elevation-overlay {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  /* @noflip */
+  left: 0;
+}
+
+.mdc-tooltip__caret-surface-bottom {
+  /* @alternate */
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  outline: 1px solid transparent;
+  z-index: -1;
+}
+
+/*# sourceMappingURL=mdc.tooltip.css.map*/

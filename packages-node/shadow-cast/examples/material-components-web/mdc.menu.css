@@ -1,0 +1,164 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+@-webkit-keyframes mdc-ripple-fg-radius-in {
+  from {
+    -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-transform: translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1);
+            transform: translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1);
+  }
+  to {
+    -webkit-transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+            transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+  }
+}
+@keyframes mdc-ripple-fg-radius-in {
+  from {
+    -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-transform: translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1);
+            transform: translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1);
+  }
+  to {
+    -webkit-transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+            transform: translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1));
+  }
+}
+@-webkit-keyframes mdc-ripple-fg-opacity-in {
+  from {
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    opacity: 0;
+  }
+  to {
+    opacity: var(--mdc-ripple-fg-opacity, 0);
+  }
+}
+@keyframes mdc-ripple-fg-opacity-in {
+  from {
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    opacity: 0;
+  }
+  to {
+    opacity: var(--mdc-ripple-fg-opacity, 0);
+  }
+}
+@-webkit-keyframes mdc-ripple-fg-opacity-out {
+  from {
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    opacity: var(--mdc-ripple-fg-opacity, 0);
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes mdc-ripple-fg-opacity-out {
+  from {
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    opacity: var(--mdc-ripple-fg-opacity, 0);
+  }
+  to {
+    opacity: 0;
+  }
+}
+.mdc-elevation-overlay {
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  /* @alternate */
+  opacity: var(--mdc-elevation-overlay-opacity, 0);
+  transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #fff;
+  /* @alternate */
+  background-color: var(--mdc-elevation-overlay-color, #fff);
+}
+
+.mdc-menu {
+  min-width: 112px;
+  /* @alternate */
+  min-width: var(--mdc-menu-min-width, 112px);
+}
+.mdc-menu .mdc-deprecated-list-item__meta {
+  color: rgba(0, 0, 0, 0.87);
+}
+.mdc-menu .mdc-deprecated-list-item__graphic {
+  color: rgba(0, 0, 0, 0.87);
+}
+.mdc-menu .mdc-deprecated-list {
+  color: rgba(0, 0, 0, 0.87);
+  /* @alternate */
+  position: relative;
+}
+.mdc-menu .mdc-deprecated-list .mdc-elevation-overlay {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  /* @noflip */
+  left: 0;
+}
+.mdc-menu .mdc-deprecated-list-divider {
+  margin: 8px 0;
+}
+.mdc-menu .mdc-deprecated-list-item {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.mdc-menu .mdc-deprecated-list-item--disabled {
+  cursor: auto;
+}
+.mdc-menu a.mdc-deprecated-list-item .mdc-deprecated-list-item__text,
+.mdc-menu a.mdc-deprecated-list-item .mdc-deprecated-list-item__graphic {
+  pointer-events: none;
+}
+
+.mdc-menu__selection-group {
+  padding: 0;
+  fill: currentColor;
+}
+.mdc-menu__selection-group .mdc-deprecated-list-item {
+  /* @noflip */
+  padding-left: 56px;
+  /* @noflip */
+  padding-right: 16px;
+}
+[dir=rtl] .mdc-menu__selection-group .mdc-deprecated-list-item, .mdc-menu__selection-group .mdc-deprecated-list-item[dir=rtl] {
+  /* @noflip */
+  padding-left: 16px;
+  /* @noflip */
+  padding-right: 56px;
+}
+
+.mdc-menu__selection-group .mdc-menu__selection-group-icon {
+  /* @noflip */
+  left: 16px;
+  /* @noflip */
+  right: initial;
+  display: none;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+[dir=rtl] .mdc-menu__selection-group .mdc-menu__selection-group-icon, .mdc-menu__selection-group .mdc-menu__selection-group-icon[dir=rtl] {
+  /* @noflip */
+  left: initial;
+  /* @noflip */
+  right: 16px;
+}
+
+.mdc-menu-item--selected .mdc-menu__selection-group-icon {
+  display: inline;
+}
+
+/*# sourceMappingURL=mdc.menu.css.map*/

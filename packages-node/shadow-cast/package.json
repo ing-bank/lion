@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "test": "npm run test:node",
-    "test:node": "mocha test-node",
-    "test:watch": "mocha test-node --watch"
+    "test:node": "mocha test-node/**/**/*.test.js",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [
     "style",

@@ -1,0 +1,97 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
+.mdc-notched-outline {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  /* @noflip */
+  text-align: left;
+  pointer-events: none;
+}
+[dir=rtl] .mdc-notched-outline, .mdc-notched-outline[dir=rtl] {
+  /* @noflip */
+  text-align: right;
+}
+
+.mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing {
+  box-sizing: border-box;
+  height: 100%;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  pointer-events: none;
+}
+.mdc-notched-outline__leading {
+  /* @noflip */
+  border-left: 1px solid;
+  /* @noflip */
+  border-right: none;
+  width: 12px;
+}
+[dir=rtl] .mdc-notched-outline__leading, .mdc-notched-outline__leading[dir=rtl] {
+  /* @noflip */
+  border-left: none;
+  /* @noflip */
+  border-right: 1px solid;
+}
+
+.mdc-notched-outline__trailing {
+  /* @noflip */
+  border-left: none;
+  /* @noflip */
+  border-right: 1px solid;
+  flex-grow: 1;
+}
+[dir=rtl] .mdc-notched-outline__trailing, .mdc-notched-outline__trailing[dir=rtl] {
+  /* @noflip */
+  border-left: 1px solid;
+  /* @noflip */
+  border-right: none;
+}
+
+.mdc-notched-outline__notch {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: calc(100% - 12px * 2);
+}
+.mdc-notched-outline .mdc-floating-label {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+}
+.mdc-notched-outline .mdc-floating-label--float-above {
+  text-overflow: clip;
+}
+.mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+  max-width: calc(100% / 0.75);
+}
+
+.mdc-notched-outline--notched .mdc-notched-outline__notch {
+  /* @noflip */
+  padding-left: 0;
+  /* @noflip */
+  padding-right: 8px;
+  border-top: none;
+}
+[dir=rtl] .mdc-notched-outline--notched .mdc-notched-outline__notch, .mdc-notched-outline--notched .mdc-notched-outline__notch[dir=rtl] {
+  /* @noflip */
+  padding-left: 8px;
+  /* @noflip */
+  padding-right: 0;
+}
+
+.mdc-notched-outline--no-label .mdc-notched-outline__notch {
+  display: none;
+}
+
+/*# sourceMappingURL=mdc.notched-outline.css.map*/
