@@ -7,13 +7,9 @@ const { dissectCssSelectorPart, getSelectorPartNode } = require('./transformCss.
  * @typedef {import('../types/csstree').CssNodePlain} CssNodePlain
  * @typedef {import('../types/csstree').CssNode} CssNode
  * @typedef {import('../types/shadow-cast').CssTransformConfig} CssTransformConfig
- */
-
-/**
  * @typedef {import('parse5').Document} Document
  * @typedef {import('parse5').Element} Element
  * @typedef {import('parse5').DefaultTreeElement} DefaultTreeElement
- *
  * @typedef {Element & {attrs: {name:string, value:string}[], childNodes:P5Node[], nodeName:string, tagName:string, value?:string}} P5Node
  * @typedef {{childNodes: P5Node[]}} AstFragment
  * @typedef {{host: string, slots: {[key: string]: string[]}, states:{[key: string]: string[]}, slotsHtml:string[], shadowHtml:string}} AnnotatedHtmlSelectorResult
@@ -134,6 +130,24 @@ function handleStatesAndSlots(curNode, parentNode, result) {
 }
 
 /**
+ * @param {P5Node} curNode
+ */
+function getAllClassesInHtml(curNode) {
+  /** @type {string[]} */
+  const result = [];
+  curNode.childNodes.forEach(childNode => {
+    const classAttr = childNode.attrs?.find(a => a.name === 'class');
+    if (classAttr) {
+      result.push(...classAttr.value.split(' ').map(c => `.${c}`));
+    }
+    if (childNode.childNodes?.length) {
+      result.push(...getAllClassesInHtml(childNode));
+    }
+  });
+  return result;
+}
+
+/**
  * @param {string} htmlSource
  */
 function transformHtml(htmlSource) {
@@ -147,6 +161,8 @@ function transformHtml(htmlSource) {
   if (ast.childNodes.length > 1) {
     throw new Error('Please provide an html template with 1 root node');
   }
+
+  const classesInHtml = getAllClassesInHtml(/** @type {P5Node } */ (ast));
 
   /** @type {AnnotatedHtmlSelectorResult} */
   const result = { host: '', slots: {}, states: {}, slotsHtml: [], shadowHtml: '' };
@@ -165,6 +181,9 @@ function transformHtml(htmlSource) {
     }),
     shadowHtml: result.shadowHtml,
     slotsHtml: result.slotsHtml,
+    meta: {
+      classesInHtml,
+    },
   };
 }
 

@@ -51,5 +51,6 @@ export type CssTransformConfig = {
   host?: string;
   slots?: { [key: string]: string[] };
   states?: { [key: string]: string[] };
-  settings?: { contextSelectorHandler?: ReplaceFn; getStateSelectorParts?: Function };
+  settings?: { contextSelectorHandler?: ReplaceFn; getCategorizedSelectorParts?: Function };
+  htmlMeta?: { classesInHtml: string[] };
 };

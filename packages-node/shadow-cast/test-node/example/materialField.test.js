@@ -3,7 +3,7 @@ const path = require('path');
 
 const { transformHtmlAndCss } = require('../../src/transformHtmlAndCss.js');
 const { formatCss } = require('../../src/tools/formatting-utils.js');
-const { getBemModifiers } = require('../../src/tools/bemAnalyzer.js');
+const { getBemSelectorParts } = require('../../src/tools/getBemSelectorParts.js');
 
 describe('mdc-text-field', () => {
   it('works', async () => {
@@ -128,6 +128,13 @@ describe('mdc-text-field', () => {
       '[with-leading-icon]:.mdc-text-field--with-leading-icon',
       '[with-trailing-icon]:.mdc-text-field--with-trailing-icon',
       '[float-above]:.mdc-text-field--float-above',
+
+      '[no-label]:.mdc-text-field--no-label',
+      '[label-floating]:.mdc-text-field--label-floating',
+      '[end-aligned]:.mdc-text-field--end-aligned',
+      '[textarea]:.mdc-text-field--textarea',
+      '[with-internal-counter]:.mdc-text-field--with-internal-counter',
+      '[ltr-text]:.mdc-text-field--ltr-text',
     ];
 
     const annotatedHtml = `
@@ -145,9 +152,9 @@ describe('mdc-text-field', () => {
     const result = transformHtmlAndCss(annotatedHtml, {
       cssSources: [mdcTextField],
       settings: {
-        getStateSelectorParts: getBemModifiers,
+        getCategorizedSelectorParts: getBemSelectorParts,
       },
     });
-    console.log('result\n\n', formatCss(result.shadowCss));
+    // console.log('result\n\n', formatCss(result.shadowCss));
   });
 });

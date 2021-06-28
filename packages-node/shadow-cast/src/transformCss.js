@@ -20,6 +20,7 @@ const csstree = require('css-tree');
  * @typedef {(traversedSelector: SelectorChildNodePlain) => boolean} MatcherFn
  * @typedef {{matcher: MatcherFn; replaceFn: ReplaceFn;}} Transform
  * @typedef {{host?: Transform, slots?: Transform[], states?: Transform[]}} Transforms
+ * @typedef {{type:'deletion'|string, action:function, originalCode:string}[]} ActionList
  */
 
 /**
@@ -467,11 +468,33 @@ function walkRule(ruleNode, transforms, astContext, settings, actionList) {
  * @param {CssTransformConfig} config
  * @returns
  */
-function transformCss({ cssSources, host, states, slots, settings }) {
+function transformCss({ cssSources, host, states, slots, settings, htmlMeta }) {
   // const cssContents = cssSources.map(s => (typeof s === 'string' ? s : s.content));
   const stylesheetNode = /** @type {StyleSheet & {children:CssNode[]}} */ (csstree.parse(
     cssSources.join('\n'),
   ));
+
+  /**
+   * This stats object will help identify whether all the provided configurations are covered.
+   * For instance, we configure states
+   * "{'[invalid]': ['.comp--invalid'], '[warning]': ['.comp--warning'] }"
+   * in the following css: ".comp--invalid { color: blue }".
+   * ".comp--warning" is not covered, which will be reported.
+   * @type {Partial<{states: string[], host: string, slots: string[]}>}
+   */
+  // TODO: implement
+  // eslint-disable-next-line no-unused-vars
+  const stats = {};
+
+  // We use this for reporting afterwards
+  let selectorPartsFoundInSource;
+  if (typeof settings?.getCategorizedSelectorParts === 'function') {
+    selectorPartsFoundInSource = settings.getCategorizedSelectorParts(stylesheetNode);
+  }
+  const stateSelectorPartsLookedFor = Object.values(
+    /** @type {{[key:string]:string[]}} */ (states),
+    // @ts-expect-error
+  ).flat();
 
   /**
    * Stores are parsed source selectors that will be used to find matches in the source ast.
@@ -492,7 +515,12 @@ function transformCss({ cssSources, host, states, slots, settings }) {
    */
   const actionList = [];
 
-  // @ts-ignore
+  /**
+   * ==============================================================================================
+   * Traverse and transform
+   */
+
+  // @ts-expect-error
   csstree.toPlainObject(stylesheetNode).children.forEach((
     /** @type {Rule|import('css-tree').Atrule} */ ruleOrAtRuleNode,
   ) => {
@@ -508,11 +536,45 @@ function transformCss({ cssSources, host, states, slots, settings }) {
     }
   });
 
+  /**
+   * ==============================================================================================
+   * Perform deferred actions (like deletions that cannot be performed during csstree.walk)
+   * and report.
+   */
   actionList.forEach(action => {
     action.action();
+    // eslint-disable-next-line no-console
+    console.info(`applied action of type "${action.type}" for code "${action.originalCode}"`);
   });
 
-  // });
+  /** @type {string[]} */
+  const neglectedStates = [];
+  selectorPartsFoundInSource.states.forEach((/** @type {string} */ ssp) => {
+    if (!stateSelectorPartsLookedFor.includes(ssp) && ssp.startsWith(`${host}--`)) {
+      neglectedStates.push(ssp);
+    }
+  });
+
+  const allSelectorPartsFound = [
+    ...selectorPartsFoundInSource.states,
+    ...selectorPartsFoundInSource.elements,
+    ...selectorPartsFoundInSource.hosts,
+  ];
+  htmlMeta?.classesInHtml.forEach(c => {
+    if (!allSelectorPartsFound.includes(c)) {
+      // eslint-disable-next-line no-console
+      console.info(`This selector is found in css, but not in html: ${c}`);
+    }
+  });
+
+  // eslint-disable-next-line no-console
+  console.info(
+    `The following state SelectorParts were found in css source, but not covered in configuration:\n\n${neglectedStates.join(
+      '\n',
+    )}\n`,
+  );
+
+  // TODO: also find out which states were configured, but never found
   return csstree.generate(stylesheetNode);
 }
 
@@ -521,7 +583,3 @@ module.exports = {
   dissectCssSelectorPart,
   getSelectorPartNode,
 };
-
-/**
- * @typedef {{type:'deletion'|string, action:function, originalCode:string}[]} ActionList
- */

@@ -15,7 +15,11 @@ const { transformCss } = require('./transformCss.js');
  */
 function transformHtmlAndCss(annotatedHtmlString, cssTransformConfig) {
   const htmlResult = transformHtml(annotatedHtmlString);
-  const cssResult = transformCss({ ...htmlResult.cssTransformConfig, ...cssTransformConfig });
+  const cssResult = transformCss({
+    ...htmlResult.cssTransformConfig,
+    ...cssTransformConfig,
+    htmlMeta: htmlResult.meta,
+  });
   // Override for now, allow deep merge via options
   return {
     shadowHtml: htmlResult.shadowHtml,
