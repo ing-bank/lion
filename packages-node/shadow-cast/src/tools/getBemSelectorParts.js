@@ -25,16 +25,11 @@ function getBemSelectorParts(bemCodeOrStylesheet) {
   csstree.walk(stylesheetNode, cssNode => {
     if (cssNode.type === 'ClassSelector') {
       const selectorPart = csstree.generate(cssNode);
-      // add BEM elements
       if (cssNode.name.includes('__')) {
         elements.add(selectorPart);
-      }
-      // add BEM modifiers
-      else if (cssNode.name.includes('--')) {
+      } else if (cssNode.name.includes('--')) {
         modifiers.add(selectorPart);
-      }
-      // add BEM blocks
-      else {
+      } else {
         blocks.add(selectorPart);
       }
     }
@@ -42,7 +37,7 @@ function getBemSelectorParts(bemCodeOrStylesheet) {
 
   const resultsPerBlock = Array.from(blocks).map(block => {
     const elms = Array.from(elements).filter(e => e.startsWith(`${e}__`));
-    const mods = Array.from(modifiers).filter(m => m.startsWith(`${m}__`));
+    const mods = Array.from(modifiers).filter(m => m.startsWith(`${m}--`));
     return { host: block, elements: elms, states: mods };
   });
 

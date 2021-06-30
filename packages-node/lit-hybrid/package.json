@@ -1,0 +1,25 @@
+{
+  "name": "lit-hybrid",
+  "version": "0.0.1",
+  "description": "The 'double lit experiment' brought to practice",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "test-node"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha test-node/**/**/*.test.js",
+    "test:watch": "npm run test -- --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "lit": "^2.0.0-rc.2",
+    "lit-html": "^1.0.0",
+    "lit-element": "^2.0.0"
+  }
+}
