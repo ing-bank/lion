@@ -243,6 +243,31 @@ describe('<lion-input-datepicker>', () => {
       ).to.be.true;
     });
 
+    it('fires model-value-changed with isTriggeredByUser on click', async () => {
+      let isTriggeredByUser;
+      const myDate = new Date('2019/12/15');
+      const myOtherDate = new Date('2019/12/18');
+      const el = await fixture(html`
+        <lion-input-datepicker
+          .modelValue="${myDate}"
+          @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+            isTriggeredByUser = event.detail.isTriggeredByUser;
+          }}"
+        >
+        </lion-input-datepicker>
+      `);
+
+      const elObj = new DatepickerInputObject(el);
+      // Make sure the calendar overlay is opened
+      await elObj.openCalendar();
+      expect(elObj.overlayController.isShown).to.equal(true);
+      // Mimic user input: should fire the 'user-selected-date-changed' event
+      await elObj.selectMonthDay(myOtherDate.getDate());
+      await el.updateComplete; // safari take a little longer
+      expect(isTriggeredByUser).to.be.true;
+      expect(el.value).to.equal('18/12/2019');
+    });
+
     describe('Validators', () => {
       /**
        * Validators are the Application Developer facing API in <lion-input-datepicker>:

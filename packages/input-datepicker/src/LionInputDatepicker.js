@@ -193,6 +193,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this._hideOnUserSelect = true;
     /** @protected */
     this._syncOnUserSelect = true;
+    /** @protected */
+    this._isHandlingCalendarUserInput = false;
 
     /** @private */
     this.__openCalendarOverlay = this.__openCalendarOverlay.bind(this);
@@ -374,8 +376,20 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     }
     if (this._syncOnUserSelect) {
       // Synchronize new selectedDate value to input
+      this._isHandlingUserInput = true;
+      this._isHandlingCalendarUserInput = true;
       this.modelValue = selectedDate;
+      this._isHandlingUserInput = false;
+      this._isHandlingCalendarUserInput = false;
     }
+  }
+
+  /**
+   * @enhance FormatMixin: sync to view value after handling calendar user input
+   * @protected
+   */
+  _reflectBackOn() {
+    return super._reflectBackOn() || this._isHandlingCalendarUserInput;
   }
 
   /**
