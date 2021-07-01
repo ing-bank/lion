@@ -451,6 +451,7 @@ describe('detail.isTriggeredByUser', () => {
 
   allFormControls.forEach(controlName => {
     it(`lion-${controlName} adds "detail.isTriggeredByUser" to model-value-changed event`, async () => {
+      // TODO: add test for user input via calendar
       const spy = sinon.spy();
 
       const tagname = `lion-${controlName}`;
