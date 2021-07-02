@@ -24,9 +24,15 @@ const csstree = require('css-tree');
  */
 
 /**
- * Use inside a ReplaceFn to see whether we deal with a 'context selector'.
- * Assuming a host has already matched.
- * A context selector is a selector
+ * ================
+ * Helper functions
+ * ==============================================================================================
+ */
+
+/**
+ * Helper function to be used inside a ReplaceFn to see whether we deal with a 'context Selector'.
+ * A context Selector is a Selector that would not be applicable in shadow context, like
+ * '[dir=rtl] .comp'
  * @param {CssNodePlain[]} preceedingSiblings
  */
 function hasLeadingWhitespace(preceedingSiblings) {
@@ -53,7 +59,15 @@ function getSelectorPartNode(originalSelectorPart) {
 }
 
 /**
- * Returns the type and value of a selector part
+ * Helper function that returns a CssNodePlain for a parsed SelectorPart
+ * @param {CssNode} selectorPart
+ */
+function getSelectorEntry(selectorPart) {
+  return /** @type {SelectorPlain} */ (csstree.toPlainObject(selectorPart)).children[0];
+}
+
+/**
+ * Returns the type and value of a SelectorPart
  * See https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#selectors
  * @param {CssNodePlain} selectorPartNode a selcetor part: so '.x' and not '.x .y'
  */
@@ -73,8 +87,10 @@ function dissectCssSelectorPart(selectorPartNode) {
 }
 
 /**
+ * Finds matching Selector, based on matcherFn
  * @param {Selector} sourceSelector like the result of '.my-comp my-comp__part'
  * @param {MatcherFn} matcherFn like the result of configured host: '.my-comp'
+ * @returns {CssNodePlain|undefined} matchedSelector
  */
 function matchSelector(sourceSelector, matcherFn) {
   /** @type {SelectorChildNodePlain[]} */
@@ -158,7 +174,7 @@ function replaceSelector(astContext, match, replaceFn, actionList) {
       if (replacementNodes.length) {
         plainSelector.children = replacementNodes;
       } else {
-        // delete complete selector
+        // Delete complete selector
         // @ts-expect-error
         plainSelector._action.type = 'deletion';
         actionList.push({
@@ -194,11 +210,10 @@ function replaceSelector(astContext, match, replaceFn, actionList) {
 }
 
 /**
- * @param {CssNode} selector
+ * =============================================================
+ * Transforms for different Selector parts (host, slots, states)
+ * ==============================================================================================
  */
-function getSelectorEntry(selector) {
-  return /** @type {SelectorPlain} */ (csstree.toPlainObject(selector)).children[0];
-}
 
 /**
  * @param {string|undefined} host
@@ -266,7 +281,7 @@ function getSlotsTransform(slots) {
 /**
  * @param {{[key: string]: string[]}|undefined} states
  * @param {string|undefined} host
-] */
+ */
 function getStatesTransform(states, host) {
   if (!states) {
     return undefined;
@@ -463,6 +478,12 @@ function walkRule(ruleNode, transforms, astContext, settings, actionList) {
     }
   });
 }
+
+/**
+ * ============
+ * Main program
+ * ==============================================================================================
+ */
 
 /**
  * @param {CssTransformConfig} config
