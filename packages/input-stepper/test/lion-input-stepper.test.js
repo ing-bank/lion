@@ -45,6 +45,61 @@ describe('<lion-input-stepper>', () => {
       expect(el._inputNode.min).to.equal(el.min.toString());
       expect(el._inputNode.max).to.equal(el.max.toString());
     });
+
+    it('should remove the disabled attribute of the decrement button when the min property changes to below the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      el.modelValue = 100;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal('true');
+      el.min = 99;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal(null);
+    });
+
+    it('should add the disabled attribute of the decrement button when the min property changes to the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      el.modelValue = 101;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal(null);
+      el.min = 101;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal('true');
+    });
+
+    it('should remove the disabled attribute of the increment button when the max property changes to above the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 200;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
+      el.max = 201;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+    });
+
+    it('should add the disabled attribute of the increment button when the max property changes to the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+      el.max = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
+    });
+
+    it('should react to changes in the modelValue by adjusting the disabled state of the button', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+      el.modelValue = 200;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
+    });
   });
 
   describe('Accessibility', () => {

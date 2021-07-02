@@ -88,14 +88,20 @@ export class LionInputStepper extends LionInput {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('modelValue')) {
+      this.__toggleSpinnerButtonsState();
+    }
+
     if (changedProperties.has('min')) {
       this._inputNode.min = `${this.min}`;
       this.values.min = this.min;
+      this.__toggleSpinnerButtonsState();
     }
 
     if (changedProperties.has('max')) {
       this._inputNode.max = `${this.max}`;
       this.values.max = this.max;
+      this.__toggleSpinnerButtonsState();
     }
 
     if (changedProperties.has('step')) {
