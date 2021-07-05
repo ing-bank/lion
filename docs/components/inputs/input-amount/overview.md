@@ -10,7 +10,7 @@ Valid characters are digits and separators. Formatting happens on-blur.
 If there are no valid characters in the input whatsoever, it will provide an error feedback.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-amount/define';
 ```
 

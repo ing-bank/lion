@@ -12,7 +12,7 @@ With the `formatNumber` you can safely display a number for all languages.
 The input value is `1234.56`.
 
 ```js script
-import { html, css } from '@lion/core';
+import { html, css } from '@mdjs/mdjs-preview';
 import { formatNumber, formatNumberToParts } from '@lion/localize';
 import allLocales from './assets/all-locales.js';
 

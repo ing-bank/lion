@@ -4,7 +4,7 @@ This is a meta package to show interaction between various form elements.
 For usage and installation please see the appropriate packages.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/button/define';
 import '@lion/checkbox-group/define';
 import '@lion/combobox/define';

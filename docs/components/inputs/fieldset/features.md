@@ -1,7 +1,7 @@
 # Inputs >> Fieldset >> Features ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { localize } from '@lion/localize';
 import { MinLength, Validator, Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';

@@ -9,7 +9,7 @@ application, and you don't need to worry about carefully coordinating the dynami
 For security reasons, icons are defined using lit-html templates to guarantee XSS safety:
 
 ```js
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 
 export default html` <svg focusable="false" ...>...</svg> `;
 ```

@@ -3,7 +3,7 @@
 A web component that allows users to quickly move between a small number of equally important views.
 
 ```js script
-import { LitElement, html } from '@lion/core';
+import { LitElement, html } from '@mdjs/mdjs-preview';
 import '@lion/tabs/define';
 ```
 

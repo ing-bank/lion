@@ -7,7 +7,7 @@ multiple options to be selected is a `multi-select listbox`.
 > From [listbox wai-aria best practices](https://www.w3.org/TR/wai-aria-practices/#Listbox)
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/listbox/define';
 ```
 

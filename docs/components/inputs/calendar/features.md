@@ -1,7 +1,7 @@
 # Inputs >> Calendar >> Features ||20
 
 ```js script
-import { html, css } from '@lion/core';
+import { html, css } from '@mdjs/mdjs-preview';
 import '@lion/calendar/define';
 ```
 

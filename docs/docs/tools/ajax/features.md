@@ -1,7 +1,7 @@
 # Tools >> Ajax >> Features ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { renderLitAsNode } from '@lion/helpers';
 import { ajax, createCacheInterceptors } from '@lion/ajax';
 import '@lion/helpers/define';

@@ -1,7 +1,7 @@
 # Content >> Tabs >> Examples ||30
 
 ```js script
-import { LitElement, html } from '@lion/core';
+import { LitElement, html } from '@mdjs/mdjs-preview';
 import './src/lea-tabs.js';
 import './src/lea-tab.js';
 import './src/lea-tab-panel.js';

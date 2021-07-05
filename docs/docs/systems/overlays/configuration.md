@@ -1,7 +1,7 @@
 # Systems >> Overlays >> Configuration ||40
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import './assets/demo-overlay-system.js';
 import './assets/applyDemoOverlayStyles.js';
 ```

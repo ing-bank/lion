@@ -4,7 +4,7 @@ A web component based on the generic text input field.
 Its purpose is to provide a way for users to fill in an IBAN (International Bank Account Number).
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-iban/define';
 ```
 

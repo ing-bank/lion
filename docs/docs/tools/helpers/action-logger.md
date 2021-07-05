@@ -3,7 +3,7 @@
 A visual element to show action logs in demos `sb-action-logger`
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/helpers/define';
 ```
 

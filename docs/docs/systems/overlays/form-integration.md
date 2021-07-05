@@ -1,7 +1,7 @@
 # Systems >> Overlays >> Form Integrations ||60
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-datepicker/define';
 import '@lion/listbox/define';
 import '@lion/listbox/define';

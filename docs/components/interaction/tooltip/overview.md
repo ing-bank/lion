@@ -4,7 +4,7 @@ A web component used for basic popups on hover.
 Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard, or if the invoker element is focused.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/tooltip/define';
 ```
 

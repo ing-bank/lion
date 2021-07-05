@@ -1,7 +1,7 @@
 # Systems >> Form >> Interaction States ||22
 
 ```js script
-import { html, render } from '@lion/core';
+import { html, render } from '@mdjs/mdjs-preview';
 import { renderLitAsNode } from '@lion/helpers';
 import '@lion/input/define';
 import '@lion/input-date/define';

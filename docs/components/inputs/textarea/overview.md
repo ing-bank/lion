@@ -4,7 +4,7 @@ A webcomponent that enhances the functionality of the native `<input type="texta
 Its purpose is to provide a way for users to write text that is multiple lines long.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/textarea/define';
 ```
 

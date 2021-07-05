@@ -6,7 +6,7 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 > You should use our `checkbox` elements as children in checkbox group.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/checkbox-group/define';
 ```
 

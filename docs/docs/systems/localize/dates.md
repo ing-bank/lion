@@ -12,7 +12,7 @@ With the `formatDate` you can safely display dates for all languages.
 The input value is `new Date('1987/05/12')`.
 
 ```js script
-import { css, html } from '@lion/core';
+import { css, html } from '@mdjs/mdjs-preview';
 import { formatNumber, formatNumberToParts, formatDate } from '@lion/localize';
 import allLocales from './assets/all-locales.js';
 

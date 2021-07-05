@@ -1,7 +1,7 @@
 # Content >> Tabs >> Features ||20
 
 ```js script
-import { LitElement, html } from '@lion/core';
+import { LitElement, html } from '@mdjs/mdjs-preview';
 
 import '@lion/tabs/define';
 ```

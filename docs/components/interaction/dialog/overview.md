@@ -4,7 +4,7 @@ A web component that wraps a modal dialog controller.
 Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/dialog/define';
 
 import { demoStyle } from './src/demoStyle.js';

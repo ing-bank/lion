@@ -1,7 +1,7 @@
 # How To >> Extend a native Input ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { LionInput } from '@lion/input';
 import { LionInputDate } from '@lion/input-date';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';

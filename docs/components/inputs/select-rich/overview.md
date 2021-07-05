@@ -8,7 +8,7 @@ Its implementation is based on the following Design pattern:
 <https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html>
 
 ```js script
-import { LitElement, html } from '@lion/core';
+import { LitElement, html } from '@mdjs/mdjs-preview';
 import '@lion/listbox/define';
 import '@lion/select-rich/define';
 ```

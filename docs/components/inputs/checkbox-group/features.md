@@ -1,7 +1,7 @@
 # Inputs >> Checkbox Group >> Features ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/checkbox-group/define';
 ```
 

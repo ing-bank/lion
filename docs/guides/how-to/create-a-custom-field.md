@@ -1,7 +1,7 @@
 # How To >> Create a custom field ||20
 
 ```js script
-import { html, css, LitElement } from '@lion/core';
+import { html, css, LitElement } from '@mdjs/mdjs-preview';
 import { LionField } from '@lion/form-core';
 import '@lion/form-core/define';
 import '../../docs/systems/form/assets/h-output.js';

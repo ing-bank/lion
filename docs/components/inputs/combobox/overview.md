@@ -13,7 +13,7 @@ availability of the pop-up.
 > Fore more information, consult [Combobox wai-aria design pattern](https://www.w3.org/TR/wai-aria-practices/#combobox)
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { listboxData } from '../../../../packages/listbox/docs/listboxData.js';
 import '@lion/listbox/define';
 import '@lion/combobox/define';

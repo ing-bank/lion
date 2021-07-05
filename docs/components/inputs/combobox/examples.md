@@ -1,7 +1,7 @@
 # Inputs >> Combobox >> Examples ||30
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import './src/md-combobox/md-combobox.js';
 import './src/gh-combobox/gh-combobox.js';
 import './src/wa-combobox/wa-combobox.js';

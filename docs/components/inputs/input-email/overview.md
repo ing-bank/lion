@@ -3,7 +3,7 @@
 A web component based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-email/define';
 ```
 
