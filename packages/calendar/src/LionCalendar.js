@@ -34,40 +34,55 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         'lion-calendar': /** @param {string} locale */ locale => {
           switch (locale) {
             case 'bg-BG':
+            case 'bg':
               return import('@lion/calendar/translations/bg.js');
             case 'cs-CZ':
+            case 'cs':
               return import('@lion/calendar/translations/cs.js');
             case 'de-AT':
             case 'de-DE':
+            case 'de':
               return import('@lion/calendar/translations/de.js');
             case 'en-AU':
             case 'en-GB':
             case 'en-PH':
             case 'en-US':
+            case 'en':
               return import('@lion/calendar/translations/en.js');
             case 'es-ES':
+            case 'es':
               return import('@lion/calendar/translations/es.js');
             case 'fr-FR':
             case 'fr-BE':
+            case 'fr':
               return import('@lion/calendar/translations/fr.js');
             case 'hu-HU':
+            case 'hu':
               return import('@lion/calendar/translations/hu.js');
             case 'it-IT':
+            case 'it':
               return import('@lion/calendar/translations/it.js');
             case 'nl-BE':
             case 'nl-NL':
+            case 'nl':
               return import('@lion/calendar/translations/nl.js');
             case 'pl-PL':
+            case 'pl':
               return import('@lion/calendar/translations/pl.js');
             case 'ro-RO':
+            case 'ro':
               return import('@lion/calendar/translations/ro.js');
             case 'ru-RU':
+            case 'ru':
               return import('@lion/calendar/translations/ru.js');
             case 'sk-SK':
+            case 'sk':
               return import('@lion/calendar/translations/sk.js');
             case 'uk-UA':
+            case 'uk':
               return import('@lion/calendar/translations/uk.js');
             case 'zh-CN':
+            case 'zh':
               return import('@lion/calendar/translations/zh.js');
             default:
               return import('@lion/calendar/translations/en.js');
