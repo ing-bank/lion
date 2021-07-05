@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 3b388c1d: - fixed the button toggling so it is always toggled if relevant values change
+  - fires user-input-changed only on increment/decrement
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/form-core@0.14.2
+  - @lion/input@0.15.2
+  - @lion/core@0.18.1
+
 ## 0.6.1
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.13.4
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/form-core@0.14.2
+  - @lion/input@0.15.2
+  - @lion/core@0.18.1
+  - @lion/localize@0.20.2
+  - @lion/validate-messages@0.7.2
+
 ## 0.13.3
 
 ### Patch Changes

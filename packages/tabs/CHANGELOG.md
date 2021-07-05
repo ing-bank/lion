@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [84131205]
+  - @lion/core@0.18.1
+
 ## 0.9.0
 
 ### Minor Changes

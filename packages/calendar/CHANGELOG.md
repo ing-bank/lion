@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.16.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/core@0.18.1
+  - @lion/localize@0.20.2
+
 ## 0.16.1
 
 ### Patch Changes

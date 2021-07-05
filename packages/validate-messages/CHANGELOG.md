@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/form-core@0.14.2
+  - @lion/localize@0.20.2
+
 ## 0.7.1
 
 ### Patch Changes

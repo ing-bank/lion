@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.28.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/core@0.18.1
+
 ## 0.28.1
 
 ### Patch Changes

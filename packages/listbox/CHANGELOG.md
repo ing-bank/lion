@@ -1,5 +1,15 @@
 # @lion/listbox
 
+## 0.10.2
+
+### Patch Changes
+
+- dd1655e0: Always scrollIntoView and let the scrollIntoView method handle redundancy instead of implementing a "naive" isInView method.
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/form-core@0.14.2
+  - @lion/core@0.18.1
+
 ## 0.10.1
 
 ### Patch Changes

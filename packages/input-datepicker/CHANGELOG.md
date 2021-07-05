@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.23.3
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/calendar@0.16.2
+  - @lion/form-core@0.14.2
+  - @lion/input-date@0.12.4
+  - @lion/core@0.18.1
+  - @lion/localize@0.20.2
+  - @lion/overlays@0.28.2
+  - @lion/validate-messages@0.7.2
+
 ## 0.23.2
 
 ### Patch Changes

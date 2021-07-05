@@ -1,5 +1,37 @@
 # Change Log
 
+## 0.9.3
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [3b388c1d]
+- Updated dependencies [dd1655e0]
+- Updated dependencies [84131205]
+  - @lion/input-stepper@0.6.2
+  - @lion/listbox@0.10.2
+  - @lion/button@0.14.1
+  - @lion/checkbox-group@0.18.2
+  - @lion/combobox@0.8.1
+  - @lion/fieldset@0.19.4
+  - @lion/form@0.12.2
+  - @lion/form-core@0.14.2
+  - @lion/input@0.15.2
+  - @lion/input-amount@0.14.2
+  - @lion/input-date@0.12.4
+  - @lion/input-datepicker@0.23.3
+  - @lion/input-email@0.13.4
+  - @lion/input-iban@0.16.2
+  - @lion/input-range@0.10.3
+  - @lion/radio-group@0.18.2
+  - @lion/select@0.14.2
+  - @lion/core@0.18.1
+  - @lion/localize@0.20.2
+  - @lion/validate-messages@0.7.2
+  - @lion/select-rich@0.27.2
+  - @lion/switch@0.17.3
+  - @lion/textarea@0.13.2
+
 ## 0.9.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.12.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/fieldset@0.19.4
+
 ## 0.12.1
 
 ### Patch Changes
