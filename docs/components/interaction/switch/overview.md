@@ -1,15 +1,21 @@
 # Interaction >> Switch >> Overview ||10
 
-A web component that is used to toggle a property or feature on or off. Toggling the component on or off should have immediate action and should not require pressing any additional buttons (submit) to confirm what just happened. Switch is not a Checkbox in disguise and should not be used as part of a form.
+<p class="paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/switch/define-switch';
 ```
 
 ```js preview-story
-export const main = () => html` <lion-switch label="Label" help-text="Help text"></lion-switch> `;
+export const main = () => html`<lion-switch label="Label" help-text="Help text"></lion-switch>`;
 ```
+
+## When to use
+
+- Toggling the component on or off has an immediate action (no confirmation by the user required).
+- The Switch is typically used in setting applications.
+- The Switch is not a Checkbox in disguise and can not be used as part of a form.
 
 ## Features
 
@@ -17,7 +23,9 @@ export const main = () => html` <lion-switch label="Label" help-text="Help text"
 - Pre-select an option by setting the `checked` boolean attribute
 - Get or set the value of the choice - `choiceValue()`
 
-## Installation
+## How to use
+
+### Installation
 
 ```bash
 npm i --save @lion/switch

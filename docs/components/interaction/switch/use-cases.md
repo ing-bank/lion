@@ -1,7 +1,7 @@
-# Interaction >> Switch >> Features ||20
+# Interaction >> Switch >> Use Cases ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { Validator } from '@lion/form-core';
 import { LionSwitch } from '@lion/switch';
 import '@lion/switch/define';
