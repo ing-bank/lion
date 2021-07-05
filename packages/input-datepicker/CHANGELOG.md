@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.2
+
+### Patch Changes
+
+- 7e75e18f: set isTriggeredByUser in model-value-changed event to true, when value has been changed via the calendar
+
 ## 0.23.1
 
 ### Patch Changes

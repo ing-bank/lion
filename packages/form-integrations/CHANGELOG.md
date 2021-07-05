@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [7e75e18f]
+- Updated dependencies [62eb21e6]
+  - @lion/input-datepicker@0.23.2
+  - @lion/switch@0.17.2
+
 ## 0.9.1
 
 ### Patch Changes
