@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.13.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/core@0.18.1
+  - @lion/overlays@0.28.2
+
 ## 0.13.1
 
 ### Patch Changes

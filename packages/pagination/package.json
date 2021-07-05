@@ -1,6 +1,6 @@
 {
   "name": "@lion/pagination",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A component that handles pagination.",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,8 +36,8 @@
     "lion-pagination.js"
   ],
   "dependencies": {
-    "@lion/core": "0.18.0",
-    "@lion/localize": "0.20.1"
+    "@lion/core": "0.18.1",
+    "@lion/localize": "0.20.2"
   },
   "keywords": [
     "lion",

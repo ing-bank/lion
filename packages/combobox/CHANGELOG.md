@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [dd1655e0]
+- Updated dependencies [84131205]
+  - @lion/listbox@0.10.2
+  - @lion/form-core@0.14.2
+  - @lion/core@0.18.1
+  - @lion/overlays@0.28.2
+
 ## 0.8.0
 
 ### Minor Changes

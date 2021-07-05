@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.15.2
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+- Updated dependencies [84131205]
+  - @lion/form-core@0.14.2
+
 ## 0.15.1
 
 ### Patch Changes

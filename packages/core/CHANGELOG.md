@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.1
+
+### Patch Changes
+
+- 84131205: use mdjs-preview in docs for lit compatibility
+
 ## 0.18.0
 
 ### Minor Changes
