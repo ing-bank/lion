@@ -3,7 +3,7 @@ import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
-import { expect, fixture as _fixture, defineCE } from '@open-wc/testing';
+import { expect, aTimeout, nextFrame, fixture as _fixture, defineCE } from '@open-wc/testing';
 import { html, unsafeStatic } from 'lit/static-html.js';
 
 import sinon from 'sinon';
@@ -318,6 +318,60 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         expect(el.checkedIndex).to.equal(1);
         expect(el.serializedValue).to.equal('hotpink');
+      });
+
+      it('scrolls active element into view when necessary, takes into account sticky/fixed elements', async () => {
+        const el = await fixture(html`
+          <div id="scrolling-element" style="position: relative;  overflow-y: scroll; height: 570px;">
+            <div style="position: sticky; top: 0px; width: 100%; height: 100px; background-color: purple; z-index: 1;">Header 1</div>
+            <div style="position: relative">
+              <div style="position: sticky; top: 100px; width: 100%; height: 50px; background-color: beige; z-index: 1;">Header 2</div>
+              <${tag} id="color" name="color" has-no-default-selected>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'red'}>Red</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'hotpink'}>Hotpink</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'teal'}>Teal</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'1'}>1</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'2'}>2</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'3'}>3</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'4'}>4</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>5</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'5'}>6</${optionTag}>
+                <${optionTag} style="height: 50px; scroll-margin-top: 150px;" .choiceValue=${'6'}>7</${optionTag}>
+              </${tag}>
+            </div>
+          </div>
+        `);
+        const listboxEl = /** @type {LionListbox} */ (el.querySelector('#color'));
+
+        // Skip test if listbox cannot receive focus, e.g. in combobox
+        // Skip test if the listbox is controlled by overlay system,
+        // since these overlays "overlay" any fixed/sticky items, meaning
+        // the active item will not be hidden by them.
+        // @ts-ignore allow protected members in tests
+        if (listboxEl._listboxReceivesNoFocus || listboxEl._overlayCtrl) {
+          return;
+        }
+
+        Object.defineProperty(listboxEl, '_scrollTargetNode', {
+          get: () => el,
+        });
+
+        const thirdOption = /** @type {LionOption} */ (listboxEl.formElements[2]);
+        const lastOption = /** @type {LionOption} */ (
+          listboxEl.formElements[listboxEl.formElements.length - 1]
+        );
+        await listboxEl.updateComplete;
+        await nextFrame();
+
+        // Scroll to last option and wait for browser scroll animation (works)
+        lastOption.active = true;
+        await aTimeout(1000);
+
+        thirdOption.active = true;
+        await aTimeout(1000);
+
+        // top should be offset 2x40px (sticky header elems) instead of 0px
+        expect(el.scrollTop).to.equal(116);
       });
     });
 
