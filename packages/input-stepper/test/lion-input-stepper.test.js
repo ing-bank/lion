@@ -37,6 +37,40 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('-1');
     });
 
+    it('fires one "user-input-changed" event on + button click', async () => {
+      let counter = 0;
+      const el = await fixture(html`
+        <lion-input-stepper
+          name="year"
+          label="Years"
+          @user-input-changed="${() => {
+            counter += 1;
+          }}"
+        >
+        </lion-input-stepper>
+      `);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(counter).to.equal(1);
+    });
+
+    it('fires one "user-input-changed" event on - button click', async () => {
+      let counter = 0;
+      const el = await fixture(html`
+        <lion-input-stepper
+          name="year"
+          label="Years"
+          @user-input-changed="${() => {
+            counter += 1;
+          }}"
+        >
+        </lion-input-stepper>
+      `);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      decrementButton?.dispatchEvent(new Event('click'));
+      expect(counter).to.equal(1);
+    });
+
     it('should update min and max attributes when min and max property change', async () => {
       const el = await fixture(inputStepperWithAttrs);
       el.min = 100;

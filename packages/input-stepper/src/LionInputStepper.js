@@ -171,11 +171,6 @@ export class LionInputStepper extends LionInput {
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     this.setAttribute('aria-valuenow', `${this.currentValue}`);
-    this.dispatchEvent(
-      new CustomEvent('user-input-changed', {
-        bubbles: true,
-      }),
-    );
   }
 
   /**
@@ -202,6 +197,7 @@ export class LionInputStepper extends LionInput {
     if (newValue <= max || max === Infinity) {
       this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
+      this._proxyInputEvent();
     }
   }
 
@@ -215,6 +211,7 @@ export class LionInputStepper extends LionInput {
     if (newValue >= min || min === Infinity) {
       this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
+      this._proxyInputEvent();
     }
   }
 
